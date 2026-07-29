@@ -24,7 +24,7 @@ public class Pac3DAnimationController {
     public void update(GameContext gameContext, Pac3D pac3D) {
         final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
-        final PacPowerSystem pacPowerSystem = gameContext.systems().pacPower;
+        final PacPowerSystem pacPowerSystem = gameContext.systems().pacPower();
 
         final boolean lighted = pac.state() != Pac.State.DEAD;
         if (lighted) {

@@ -153,7 +153,7 @@ public final class TengenMsPacMan_ActorFactory {
     }
 
     private static void selectRandomWishDir(Ghost ghost, GameContext gameContext) {
-        final WorldNavigationSystem navigator = gameContext.systems().navigator;
+        final WorldNavigationSystem navigator = gameContext.systems().navigator();
         final GameLevel level = gameContext.assertLevel();
         final Vector2i ghostTile = WorldNavigationSystem.computeTile(ghost);
         final boolean teleporting = level.worldMap().terrainLayer().isTileInPortalSpace(ghostTile);

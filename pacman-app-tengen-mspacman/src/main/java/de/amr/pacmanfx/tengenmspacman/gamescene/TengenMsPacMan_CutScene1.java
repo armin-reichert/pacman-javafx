@@ -7,12 +7,12 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.GameSystems;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
+import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -95,7 +95,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
 
     @Override
     public void onActivate() {
-        final WorldNavigationSystem navigator = gameContext().systems().navigator;
+        final WorldNavigationSystem navigator = gameContext().systems().navigator();
 
         final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
         final SpriteAnimationContainer spriteAnimations = appContext().ui().sprites().animations();
@@ -157,7 +157,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
 
         clapperboard.tick();
 
-        List.of(pacMan, msPacMan, inky, pinky).forEach(sys.motor::moveAccelerated);
+        List.of(pacMan, msPacMan, inky, pinky).forEach(sys.motor()::moveAccelerated);
 
         if (collided) {
             if (inky.position().y > MIDDLE_LANE) {
@@ -173,58 +173,58 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
             switch ((int) gameStateTick) {
                 case 130 -> {
                     pacMan.visibility().show();
-                    sys.navigator.setSpeed(pacMan, SPEED_CHASING);
-                    sys.spriteAnim.select(pacMan, TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
-                    sys.spriteAnim.playSelected(pacMan);
+                    sys.navigator().setSpeed(pacMan, SPEED_CHASING);
+                    sys.spriteAnim().select(pacMan, TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
+                    sys.spriteAnim().playSelected(pacMan);
 
                     msPacMan.visibility().show();
-                    sys.navigator.setSpeed(msPacMan, SPEED_CHASING);
-                    sys.spriteAnim.select(msPacMan, CommonAnimationID.PAC_MUNCHING);
-                    sys.spriteAnim.playSelected(msPacMan);
+                    sys.navigator().setSpeed(msPacMan, SPEED_CHASING);
+                    sys.spriteAnim().select(msPacMan, CommonAnimationID.PAC_MUNCHING);
+                    sys.spriteAnim().playSelected(msPacMan);
                 }
                 case 160 -> {
                     inky.visibility().show();
-                    sys.navigator.setSpeed(inky, SPEED_CHASING);
-                    sys.spriteAnim.select(inky, CommonAnimationID.GHOST_NORMAL);
-                    sys.spriteAnim.playSelected(inky);
+                    sys.navigator().setSpeed(inky, SPEED_CHASING);
+                    sys.spriteAnim().select(inky, CommonAnimationID.GHOST_NORMAL);
+                    sys.spriteAnim().playSelected(inky);
 
                     pinky.visibility().show();
-                    sys.navigator.setSpeed(pinky, SPEED_CHASING);
-                    sys.spriteAnim.select(pinky, CommonAnimationID.GHOST_NORMAL);
-                    sys.spriteAnim.playSelected(pinky);
+                    sys.navigator().setSpeed(pinky, SPEED_CHASING);
+                    sys.spriteAnim().select(pinky, CommonAnimationID.GHOST_NORMAL);
+                    sys.spriteAnim().playSelected(pinky);
                 }
                 case 400 -> {
                     msPacMan.position().set(LEFT_BORDER, MIDDLE_LANE);
-                    sys.navigator.setMoveDir(msPacMan, Direction.RIGHT);
+                    sys.navigator().setMoveDir(msPacMan, Direction.RIGHT);
 
                     pacMan.position().set(RIGHT_BORDER, MIDDLE_LANE);
-                    sys.navigator.setMoveDir(pacMan, Direction.LEFT);
+                    sys.navigator().setMoveDir(pacMan, Direction.LEFT);
 
                     pinky.position().set(msPacMan.position().x - WorldMap.TS * 11, msPacMan.position().y);
-                    sys.navigator.setMoveDir(pinky, Direction.RIGHT);
-                    sys.navigator.setWishDir(pinky, Direction.RIGHT);
+                    sys.navigator().setMoveDir(pinky, Direction.RIGHT);
+                    sys.navigator().setWishDir(pinky, Direction.RIGHT);
 
                     inky.position().set(pacMan.position().x + WorldMap.TS * 11, pacMan.position().y);
-                    sys.navigator.setMoveDir(inky, Direction.LEFT);
-                    sys.navigator.setWishDir(inky, Direction.LEFT);
+                    sys.navigator().setMoveDir(inky, Direction.LEFT);
+                    sys.navigator().setWishDir(inky, Direction.LEFT);
                 }
                 case 454 -> List.of(pacMan, msPacMan).forEach(pac -> {
-                    sys.navigator.setMoveDir(pac, Direction.UP);
-                    sys.navigator.setSpeed(pac, SPEED_RISING);
+                    sys.navigator().setMoveDir(pac, Direction.UP);
+                    sys.navigator().setSpeed(pac, SPEED_RISING);
                 });
                 case 498 -> {
                     collided = true;
 
-                    sys.navigator.setMoveDir(inky, Direction.RIGHT);
-                    sys.navigator.setWishDir(inky, Direction.RIGHT);
-                    sys.navigator.setSpeed(inky, SPEED_AFTER_COLLISION);
+                    sys.navigator().setMoveDir(inky, Direction.RIGHT);
+                    sys.navigator().setWishDir(inky, Direction.RIGHT);
+                    sys.navigator().setSpeed(inky, SPEED_AFTER_COLLISION);
 
                     inky.movement().setVelY(inky.movement().velY() - 2.0f);
                     inky.movement().setAcceleration(0, 0.4f);
 
-                    sys.navigator.setMoveDir(pinky, Direction.LEFT);
-                    sys.navigator.setWishDir(pinky, Direction.LEFT);
-                    sys.navigator.setSpeed(pinky, SPEED_AFTER_COLLISION);
+                    sys.navigator().setMoveDir(pinky, Direction.LEFT);
+                    sys.navigator().setWishDir(pinky, Direction.LEFT);
+                    sys.navigator().setSpeed(pinky, SPEED_AFTER_COLLISION);
 
                     pinky.movement().setVelY(pinky.movement().velY() - 2.0f);
                     pinky.movement().setAcceleration(0, 0.4f);
@@ -233,14 +233,14 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
                     inky.visibility().hide();
                     pinky.visibility().hide();
 
-                    sys.navigator.setSpeed(pacMan, 0);
-                    sys.navigator.setMoveDir(pacMan, Direction.LEFT);
-                    sys.navigator.setSpeed(msPacMan, 0);
-                    sys.navigator.setMoveDir(msPacMan, Direction.RIGHT);
+                    sys.navigator().setSpeed(pacMan, 0);
+                    sys.navigator().setMoveDir(pacMan, Direction.LEFT);
+                    sys.navigator().setSpeed(msPacMan, 0);
+                    sys.navigator().setMoveDir(msPacMan, Direction.RIGHT);
                 }
                 case 545 -> {
-                    sys.spriteAnim.resetSelected(pacMan);
-                    sys.spriteAnim.resetSelected(msPacMan);
+                    sys.spriteAnim().resetSelected(pacMan);
+                    sys.spriteAnim().resetSelected(msPacMan);
                 }
                 case 560 -> {
                     heart.position().set(0.5f * (pacMan.position().x + msPacMan.position().x), pacMan.position().y - tilesPx(2));

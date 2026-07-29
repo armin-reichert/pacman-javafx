@@ -115,7 +115,7 @@ public class RuleBasedPacSteering implements Steering {
     }
 
     private void takeAction(GameContext gameContext, CollectedData data) {
-        final WorldNavigationSystem navigator = gameContext.systems().navigator;
+        final WorldNavigationSystem navigator = gameContext.systems().navigator();
 
         final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
@@ -141,7 +141,7 @@ public class RuleBasedPacSteering implements Steering {
         if (worldNavigation.info.moved && !level.worldMap().terrainLayer().isIntersection(pacTile))
             return;
 
-        final PacPowerSystem pacPowerSystem = gameContext.systems().pacPower;
+        final PacPowerSystem pacPowerSystem = gameContext.systems().pacPower();
         if (!data.frightenedGhosts.isEmpty()
             && pacPowerSystem.powerTicksRemaining(pac) >= GameConstants.SIMULATION_FPS) {
             final Ghost prey = data.frightenedGhosts.getFirst();
@@ -268,7 +268,7 @@ public class RuleBasedPacSteering implements Steering {
         final FoodLayer foodLayer = worldMap.foodLayer();
         final Pac pac = level.entities().pac();
         final Vector2i pacManTile = WorldNavigationSystem.computeTile(pac);
-        final PacPowerSystem pacPowerSystem = gameContext.systems().pacPower;
+        final PacPowerSystem pacPowerSystem = gameContext.systems().pacPower();
         final long powerTicksRemaining = pacPowerSystem.powerTicksRemaining(pac);
         final boolean enoughTimeLeft = powerTicksRemaining > 2L * GameConstants.SIMULATION_FPS;
         final List<Vector2i> foodTiles = new ArrayList<>();

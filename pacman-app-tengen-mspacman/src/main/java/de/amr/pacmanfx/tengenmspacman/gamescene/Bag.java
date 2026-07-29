@@ -54,7 +54,7 @@ public class Bag extends Actor {
 
     public void setOpen(GameContext gameContext, boolean open) {
         this.open = open;
-        gameContext.systems().spriteAnim.select(this, open ? CommonAnimationID.JUNIOR : CommonAnimationID.BAG);
+        gameContext.systems().spriteAnim().select(this, open ? CommonAnimationID.JUNIOR : CommonAnimationID.BAG);
     }
 
     public boolean isOpen() {

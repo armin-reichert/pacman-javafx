@@ -8,10 +8,10 @@ import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.GameSystems;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
+import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
@@ -99,15 +99,15 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene2D {
     }
 
     private void enterStateChasing(GameSystems sys) {
-        sys.navigator.setMoveDir(pacMan, Direction.RIGHT);
+        sys.navigator().setMoveDir(pacMan, Direction.RIGHT);
 
-        sys.spriteAnim.select(pacMan, CommonAnimationID.MR_PAC_MAN_MUNCHING);
-        sys.spriteAnim.playSelected(pacMan);
+        sys.spriteAnim().select(pacMan, CommonAnimationID.MR_PAC_MAN_MUNCHING);
+        sys.spriteAnim().playSelected(pacMan);
 
-        sys.navigator.setMoveDir(msPacMan, Direction.RIGHT);
+        sys.navigator().setMoveDir(msPacMan, Direction.RIGHT);
 
-        sys.spriteAnim.select(msPacMan, CommonAnimationID.PAC_MUNCHING);
-        sys.spriteAnim.playSelected(msPacMan);
+        sys.spriteAnim().select(msPacMan, CommonAnimationID.PAC_MUNCHING);
+        sys.spriteAnim().playSelected(msPacMan);
 
         setSceneState(SceneState.CHASING, TickTimer.INDEFINITE);
     }
@@ -116,55 +116,55 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene2D {
         if (sceneTimer.atSecond(4.5)) {
             pacMan.position().set(TS * (-2), UPPER_Y);
             pacMan.visibility().show();
-            sys.navigator.setMoveDir(pacMan, Direction.RIGHT);
-            sys.navigator.setSpeed(pacMan, 2.0f);
+            sys.navigator().setMoveDir(pacMan, Direction.RIGHT);
+            sys.navigator().setSpeed(pacMan, 2.0f);
 
             msPacMan.position().set(TS * (-8), UPPER_Y);
             msPacMan.visibility().show();
-            sys.navigator.setMoveDir(msPacMan, Direction.RIGHT);
-            sys.navigator.setSpeed(msPacMan, 2.0f);
+            sys.navigator().setMoveDir(msPacMan, Direction.RIGHT);
+            sys.navigator().setSpeed(msPacMan, 2.0f);
         }
         else if (sceneTimer.atSecond(9)) {
             pacMan.position().set(TS * 36, LOWER_Y);
-            sys.navigator.setMoveDir(pacMan, Direction.LEFT);
-            sys.navigator.setSpeed(pacMan, 2.0f);
+            sys.navigator().setMoveDir(pacMan, Direction.LEFT);
+            sys.navigator().setSpeed(pacMan, 2.0f);
 
             msPacMan.position().set(TS * 30, LOWER_Y);
-            sys.navigator.setMoveDir(msPacMan, Direction.LEFT);
-            sys.navigator.setSpeed(msPacMan, 2.0f);
+            sys.navigator().setMoveDir(msPacMan, Direction.LEFT);
+            sys.navigator().setSpeed(msPacMan, 2.0f);
         }
         else if (sceneTimer.atSecond(13.5)) {
             pacMan.position().set(TS * (-2), MIDDLE_Y);
-            sys.navigator.setMoveDir(pacMan, Direction.RIGHT);
-            sys.navigator.setSpeed(pacMan, 2.0f);
+            sys.navigator().setMoveDir(pacMan, Direction.RIGHT);
+            sys.navigator().setSpeed(pacMan, 2.0f);
 
             msPacMan.position().set(TS * (-8), MIDDLE_Y);
-            sys.navigator.setMoveDir(msPacMan, Direction.RIGHT);
-            sys.navigator.setSpeed(msPacMan, 2.0f);
+            sys.navigator().setMoveDir(msPacMan, Direction.RIGHT);
+            sys.navigator().setSpeed(msPacMan, 2.0f);
         }
         else if (sceneTimer.atSecond(17.5)) {
             pacMan.position().set(TS * 42, UPPER_Y);
-            sys.navigator.setMoveDir(pacMan, Direction.LEFT);
-            sys.navigator.setSpeed(pacMan, 4.0f);
+            sys.navigator().setMoveDir(pacMan, Direction.LEFT);
+            sys.navigator().setSpeed(pacMan, 4.0f);
 
             msPacMan.position().set(TS * 30, UPPER_Y);
-            sys.navigator.setMoveDir(msPacMan, Direction.LEFT);
-            sys.navigator.setSpeed(msPacMan, 4.0f);
+            sys.navigator().setMoveDir(msPacMan, Direction.LEFT);
+            sys.navigator().setSpeed(msPacMan, 4.0f);
         }
         else if (sceneTimer.atSecond(18.5)) {
             pacMan.position().set(TS * (-2), LOWER_Y);
-            sys.navigator.setMoveDir(pacMan, Direction.RIGHT);
-            sys.navigator.setSpeed(pacMan, 4.0f);
+            sys.navigator().setMoveDir(pacMan, Direction.RIGHT);
+            sys.navigator().setSpeed(pacMan, 4.0f);
 
             msPacMan.position().set(TS * (-14), LOWER_Y);
-            sys.navigator.setMoveDir(msPacMan, Direction.RIGHT);
-            sys.navigator.setSpeed(msPacMan, 4.0f);
+            sys.navigator().setMoveDir(msPacMan, Direction.RIGHT);
+            sys.navigator().setSpeed(msPacMan, 4.0f);
         }
         else if (sceneTimer.atSecond(23)) {
             gameState().triggerTimeout();
         }
         else {
-            List.of(pacMan, msPacMan).forEach(sys.motor::moveAccelerated);
+            List.of(pacMan, msPacMan).forEach(sys.motor()::moveAccelerated);
         }
     }
 }

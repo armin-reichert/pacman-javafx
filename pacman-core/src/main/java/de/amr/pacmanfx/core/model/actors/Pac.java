@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.core.model.actors;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.GameSystems;
+import de.amr.pacmanfx.core.model.GameSystemsImpl;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.component.common.Movement;
 import de.amr.pacmanfx.core.model.component.pac.PacCheats;
@@ -16,6 +16,7 @@ import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
 import de.amr.pacmanfx.core.model.component.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.rules.ActorSpeedRules;
 import de.amr.pacmanfx.core.steering.Steering;
 
@@ -114,8 +115,8 @@ public class Pac extends Actor implements UpdatableEntity {
             return;
         }
 
-        sys.pacDigestion.update(this);
-        if (sys.pacDigestion.isResting(this)) {
+        sys.pacDigestion().update(this);
+        if (sys.pacDigestion().isResting(this)) {
             return;
         }
 
@@ -123,17 +124,17 @@ public class Pac extends Actor implements UpdatableEntity {
             automaticSteering.steer(this, gameContext);
         }
 
-        final float speed = sys.pacPower.isPowerActive(this)
+        final float speed = sys.pacPower().isPowerActive(this)
             ? speedRules.pacSpeedWhenHasPower(level)
             : speedRules.pacSpeed(level);
 
-        sys.navigator.setSpeed(this, speed);
-        sys.navigator.tryMovingOrTeleporting(this, level);
+        sys.navigator().setSpeed(this, speed);
+        sys.navigator().tryMovingOrTeleporting(this, level);
 
         if (worldNavigation().info.moved) {
-            sys.spriteAnim.playSelected(this);
+            sys.spriteAnim().playSelected(this);
         } else {
-            sys.spriteAnim.stopSelected(this);
+            sys.spriteAnim().stopSelected(this);
         }
     }
 

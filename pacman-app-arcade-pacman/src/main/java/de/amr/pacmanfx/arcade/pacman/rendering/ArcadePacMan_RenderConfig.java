@@ -137,7 +137,7 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
             default -> throw new IllegalArgumentException("Unknown personality: " + personality);
         };
 
-        final SpriteAnimSystem animSystem = gameContext.systems().spriteAnim;
+        final SpriteAnimSystem animSystem = gameContext.systems().spriteAnim();
         animSystem.setAnimations(ghost, createGhostAnimations(container, personality));
         animSystem.select(ghost, CommonAnimationID.GHOST_NORMAL);
 

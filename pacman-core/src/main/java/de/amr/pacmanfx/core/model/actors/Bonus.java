@@ -79,7 +79,7 @@ public class Bonus extends Actor implements UpdatableEntity {
     }
 
     public void setInactive(GameContext gameContext) {
-        final WorldNavigationSystem navigator = gameContext.systems().navigator;
+        final WorldNavigationSystem navigator = gameContext.systems().navigator();
 
         visibility().hide();
         navigator.setSpeed(this, 0);
@@ -98,7 +98,7 @@ public class Bonus extends Actor implements UpdatableEntity {
     }
 
     public void showEdibleAndStartWandering(GameContext gameContext, float speed) {
-        final WorldNavigationSystem navigator = gameContext.systems().navigator;
+        final WorldNavigationSystem navigator = gameContext.systems().navigator();
 
         visibility().show();
 
@@ -120,7 +120,7 @@ public class Bonus extends Actor implements UpdatableEntity {
         final var route = new ArrayList<>(waypoints);
         final Vector2i first = route.removeFirst();
 
-        final WorldNavigationSystem navigator = gameContext.systems().navigator;
+        final WorldNavigationSystem navigator = gameContext.systems().navigator();
 
         navigator.placeAtTile(this, first);
         navigator.setMoveDir(this, leftToRight ? Direction.RIGHT : Direction.LEFT);
@@ -130,7 +130,7 @@ public class Bonus extends Actor implements UpdatableEntity {
     }
 
     public void showEatenForSeconds(GameContext gameContext, float seconds) {
-        final WorldNavigationSystem navigator = gameContext.systems().navigator;
+        final WorldNavigationSystem navigator = gameContext.systems().navigator();
 
         visibility().show();
         navigator.setSpeed(this, 0);
@@ -170,7 +170,7 @@ public class Bonus extends Actor implements UpdatableEntity {
     }
 
     private boolean wanderMaze(GameContext gameContext) {
-        final WorldNavigationSystem navigator = gameContext.systems().navigator;
+        final WorldNavigationSystem navigator = gameContext.systems().navigator();
         final GameLevel level = gameContext.assertLevel();
 
         routeNavigation.steer(this, gameContext);

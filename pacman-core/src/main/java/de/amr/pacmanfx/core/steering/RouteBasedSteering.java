@@ -40,7 +40,7 @@ public class RouteBasedSteering implements Steering {
 
     @Override
     public void steer(Actor actor, GameContext gameContext) {
-        final WorldNavigationSystem navigator = gameContext.systems().navigator;
+        final WorldNavigationSystem navigator = gameContext.systems().navigator();
         final WorldNavigation worldNavigation = actor.assertComponent(WorldNavigation.class);
 
         final GameLevel level = gameContext.assertLevel();

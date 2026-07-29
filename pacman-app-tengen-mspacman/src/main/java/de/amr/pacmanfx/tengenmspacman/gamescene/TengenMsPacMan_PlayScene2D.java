@@ -311,7 +311,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
         if (message instanceof MovingGameLevelMessage movingMessage) {
             final Font font = Font.font(BaseRenderer.ARCADE_FONT.getFamily(), TS);
             final double width = Ufx.textWidth(GAME_OVER_MESSAGE_TEXT, font);
-            final MovementSystem motor = gameContext().systems().motor;
+            final MovementSystem motor = gameContext().systems().motor();
             movingMessage.startMovement(motor, unscaledWidth(), width);
         }
     }
@@ -320,7 +320,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
         final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
         final SpriteAnimationContainer animationContainer = appContext().ui().sprites().animations();
 
-        final SpriteAnimSystem animSystem = appContext().currentGameContext().systems().spriteAnim;
+        final SpriteAnimSystem animSystem = appContext().currentGameContext().systems().spriteAnim();
 
         final Pac pac = level.entities().pac();
         if (!animSystem.hasAnimations(pac)) {

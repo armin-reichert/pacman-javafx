@@ -5,13 +5,13 @@
 package de.amr.pacmanfx.core.model.systems.ghost;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.GameSystems;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.component.ghost.GhostStateComponent;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.systems.pac.PacPowerSystem;
 import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import org.tinylog.Logger;
@@ -49,7 +49,7 @@ public class GhostStateSystem {
         
         ghost.assertComponent(GhostStateComponent.class).setState(newState);
 
-        initAnimation(ghost, gameContext.systems().spriteAnim); 
+        initAnimation(ghost, gameContext.systems().spriteAnim());
     }
     
     private void initAnimation(Ghost ghost, SpriteAnimSystem animSystem) {
@@ -75,12 +75,12 @@ public class GhostStateSystem {
     private void updateStateLocked(GameContext gameContext, Ghost ghost, float speed) {
         final GameSystems sys = gameContext.systems();
 
-        sys.ghostHouseAccess.stayInHouse(gameContext, ghost, speed);
+        sys.ghostHouseAccess().stayInHouse(gameContext, ghost, speed);
 
         if (isThreatenedByPac(gameContext, ghost)) {
             ghost.playFrightenedAnimation(gameContext);
         } else {
-            sys.spriteAnim.select(ghost, CommonAnimationID.GHOST_NORMAL);
+            sys.spriteAnim().select(ghost, CommonAnimationID.GHOST_NORMAL);
         }
     }
 
@@ -115,7 +115,7 @@ public class GhostStateSystem {
      * @see <a href="https://www.youtube.com/watch?v=eFP0_rkjwlY">YouTube: How Frightened Ghosts Decide Where to Go</a>
      */
     private void updateStateFrightened(GameContext gameContext, Ghost ghost, float speed) {
-        gameContext.systems().roamingNavigator.roam(gameContext, ghost, speed);
+        gameContext.systems().roamingNavigator().roam(gameContext, ghost, speed);
         ghost.playFrightenedAnimation(gameContext);
     }
 
@@ -133,7 +133,7 @@ public class GhostStateSystem {
     private void updateStateLeavingHouse(GameContext gameContext, Ghost ghost, float speed) {
         final GameSystems sys = gameContext.systems();
 
-        boolean leftHouse = sys.ghostHouseAccess.leaveHouse(gameContext, ghost, speed);
+        boolean leftHouse = sys.ghostHouseAccess().leaveHouse(gameContext, ghost, speed);
         boolean threatened =  isThreatenedByPac(gameContext, ghost);
 
         if (leftHouse) {
@@ -145,7 +145,7 @@ public class GhostStateSystem {
                 //TODO use system
                 ghost.playFrightenedAnimation(gameContext);
             } else {
-                sys.spriteAnim.select(ghost, CommonAnimationID.GHOST_NORMAL);
+                sys.spriteAnim().select(ghost, CommonAnimationID.GHOST_NORMAL);
             }
         }
     }
@@ -157,19 +157,19 @@ public class GhostStateSystem {
      * to the ghost house to be revived. Hallelujah!
      */
     private void updateStateReturningToHouse(GameContext gameContext, Ghost ghost, float speed) {
-        gameContext.systems().ghostHouseAccess.reachHouse(gameContext, ghost, speed);
+        gameContext.systems().ghostHouseAccess().reachHouse(gameContext, ghost, speed);
     }
 
     // --- ENTERING_HOUSE ---
 
     private void updateStateEnteringHouse(GameContext gameContext, Ghost ghost, float speed) {
-        gameContext.systems().ghostHouseAccess.enterHouse(gameContext, ghost, speed);
+        gameContext.systems().ghostHouseAccess().enterHouse(gameContext, ghost, speed);
     }
 
     // helper
 
     private boolean isThreatenedByPac(GameContext gameContext, Ghost ghost) {
-        final PacPowerSystem pacPowerSystem = gameContext.systems().pacPower;
+        final PacPowerSystem pacPowerSystem = gameContext.systems().pacPower();
         final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
         return pacPowerSystem.isPowerActive(pac) && !level.isInGhostKilledChain(ghost);

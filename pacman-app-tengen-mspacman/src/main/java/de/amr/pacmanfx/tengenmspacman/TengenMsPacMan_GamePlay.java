@@ -69,7 +69,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
     @Override
     public GameLevel createLevel(GameContext gameContext, int levelNumber, boolean demoLevel) {
-        final WorldNavigationSystem navigator = gameContext.systems().navigator;
+        final WorldNavigationSystem navigator = gameContext.systems().navigator();
 
         final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) gameContext.model();
 

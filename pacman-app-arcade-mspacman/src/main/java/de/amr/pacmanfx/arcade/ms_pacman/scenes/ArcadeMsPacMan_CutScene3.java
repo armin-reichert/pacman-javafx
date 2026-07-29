@@ -7,10 +7,10 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.GameSystems;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
+import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -144,24 +144,24 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
     private void enterDeliverJuniorState(GameSystems sys, SceneState newState) {
         pacMan.position().set(TS * 3, GROUND_Y - 4);
         pacMan.visibility().show();
-        sys.navigator.setMoveDir(pacMan, Direction.RIGHT);
+        sys.navigator().setMoveDir(pacMan, Direction.RIGHT);
 
-        sys.spriteAnim.select(pacMan, CommonAnimationID.MR_PAC_MAN_MUNCHING);
-        sys.spriteAnim.stopSelected(pacMan);
+        sys.spriteAnim().select(pacMan, CommonAnimationID.MR_PAC_MAN_MUNCHING);
+        sys.spriteAnim().stopSelected(pacMan);
 
         msPacMan.position().set(TS * 5, GROUND_Y - 4);
         msPacMan.visibility().show();
-        sys.navigator.setMoveDir(msPacMan, Direction.RIGHT);
+        sys.navigator().setMoveDir(msPacMan, Direction.RIGHT);
 
-        sys.spriteAnim.select(msPacMan, CommonAnimationID.PAC_MUNCHING);
-        sys.spriteAnim.stopSelected(msPacMan);
+        sys.spriteAnim().select(msPacMan, CommonAnimationID.PAC_MUNCHING);
+        sys.spriteAnim().stopSelected(msPacMan);
 
         stork.position().set(TS * 30, TS * 12);
         stork.visibility().show();
-        sys.motor.setVelocity(stork, -0.8f, 0);
+        sys.motor().setVelocity(stork, -0.8f, 0);
 
-        sys.spriteAnim.select(stork, CommonAnimationID.STORK_FLYING);
-        sys.spriteAnim.playSelected(stork);
+        sys.spriteAnim().select(stork, CommonAnimationID.STORK_FLYING);
+        sys.spriteAnim().playSelected(stork);
 
         bag.position().set(stork.position().x - 14, stork.position().y + 3);
         bag.visibility().show();
@@ -176,7 +176,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
     }
 
     private void updateDeliverJuniorState() {
-        final MovementSystem motor = gameContext().systems().motor;
+        final MovementSystem motor = gameContext().systems().motor();
 
         // release bag from beak when stork reaches tile 20
         if (stork.position().x <= 20 * WorldMap.TS && !bagReleased) {

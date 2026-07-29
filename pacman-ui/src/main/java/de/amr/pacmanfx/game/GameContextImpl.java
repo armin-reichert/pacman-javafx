@@ -14,7 +14,7 @@ import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.gameplay.HuntingStepResult;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.GameSystems;
+import de.amr.pacmanfx.core.model.GameSystemsImpl;
 import de.amr.pacmanfx.core.model.HUDState;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.state.GameState;
@@ -28,7 +28,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameContextImpl implements GameContext {
 
-    private final GameSystems systems = new GameSystems();
+    private final GameSystemsImpl systems = new GameSystemsImpl();
 
     private final CoinMechanism coinMechanism;
 
@@ -88,7 +88,7 @@ public class GameContextImpl implements GameContext {
     }
 
     @Override
-    public GameSystems systems() {
+    public GameSystemsImpl systems() {
         return systems;
     }
 

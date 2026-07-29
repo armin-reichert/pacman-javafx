@@ -51,7 +51,7 @@ public interface Arcade_PlayScene2D_GameEventHandler extends DefaultGameEventLis
 
     @Override
     default void onGameContinued(GameContinuedEvent e) {
-        final SpriteAnimSystem animSystem = gameContext().systems().spriteAnim;
+        final SpriteAnimSystem animSystem = gameContext().systems().spriteAnim();
         //TODO make animation systems from animation manager class
         gameContext().model().optLevel().ifPresent(level -> ActorAnimationManager.resetActorAnimations(animSystem, level));
     }

@@ -8,10 +8,10 @@ import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.gameplay.HuntingStepResult;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.GameSystems;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
+import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.rules.GameRules;
 import org.tinylog.Logger;
 
@@ -37,8 +37,8 @@ public class CommonGameLevelPlayingState extends GameState {
         level.heartbeat().setStartState(Pulse.State.ON);
         level.heartbeat().restart();
 
-        sys.spriteAnim.playSelected(pac);
-        level.entities().ghosts().forEach(sys.spriteAnim::playSelected);
+        sys.spriteAnim().playSelected(pac);
+        level.entities().ghosts().forEach(sys.spriteAnim()::playSelected);
 
         // This call fires a game event!
         level.huntingRules().startFirstPhase(gameContext, level.number());

@@ -25,7 +25,7 @@ public class Ghost3DAppearanceController {
         final Pac pac = level.entities().pac();
         final Ghost ghost = ghost3D.ghost();
 
-        final PacPowerSystem pacPowerSystem = gameContext.systems().pacPower;
+        final PacPowerSystem pacPowerSystem = gameContext.systems().pacPower();
         final boolean powerActive = pacPowerSystem.isPowerActive(pac);
         final boolean powerFading = pacPowerSystem.isPowerFading(level, pac);
 

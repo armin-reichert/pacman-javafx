@@ -53,7 +53,7 @@ public class MovingGameLevelMessage extends GameLevelMessage {
             return;
         }
 
-        final MovementSystem motor = gameContext.systems().motor;
+        final MovementSystem motor = gameContext.systems().motor();
         motor.moveAccelerated(this);
         if (wrapped) {
             if (position().x >= startPosition.x()) {

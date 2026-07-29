@@ -96,7 +96,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         final var canvas = new Canvas(quality * width, quality * height);
         canvas.getGraphicsContext2D().setImageSmoothing(false); // important for crisp image!
 
-        final var hudRenderer = new TengenMsPacMan_HeadsUpDisplay_Renderer(gameContext().systems().spriteAnim, canvas);
+        final var hudRenderer = new TengenMsPacMan_HeadsUpDisplay_Renderer(gameContext().systems().spriteAnim(), canvas);
         hudRenderer.setScaling(quality);
         hudRenderer.fillCanvas(backgroundColor);
         hudRenderer.drawLevelNumberBox(levelNumber, 0, 0);

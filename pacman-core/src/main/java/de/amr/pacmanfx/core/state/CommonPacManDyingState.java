@@ -9,10 +9,10 @@ import de.amr.pacmanfx.core.event.PacDeadEvent;
 import de.amr.pacmanfx.core.event.PacDyingEvent;
 import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.GameSystems;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 
 import static java.util.Objects.requireNonNull;
 
@@ -53,10 +53,10 @@ public class CommonPacManDyingState extends GameState {
         level.entities().optBonus().ifPresent(bonus -> bonus.setInactive(gameContext));
 
         // Pac-Man stops moving and is prepared for "dying" animation
-        sys.navigator.setSpeed(pac, 0);
-        sys.pacPower.reset(pac);
+        sys.navigator().setSpeed(pac, 0);
+        sys.pacPower().reset(pac);
 
-        sys.spriteAnim.stopSelected(pac);
+        sys.spriteAnim().stopSelected(pac);
 
         pac.setState(Pac.State.DEAD);
 
@@ -86,11 +86,11 @@ public class CommonPacManDyingState extends GameState {
         }
         else if (tick == hideGhostsTick) {
             level.entities().ghosts().forEach(ghost -> ghost.visibility().hide());
-            sys.spriteAnim.select(pac, CommonAnimationID.PAC_DYING);
-            sys.spriteAnim.resetSelected(pac);
+            sys.spriteAnim().select(pac, CommonAnimationID.PAC_DYING);
+            sys.spriteAnim().resetSelected(pac);
         }
         else if (tick == animationStartTick) {
-            sys.spriteAnim.playSelected(pac);
+            sys.spriteAnim().playSelected(pac);
             gameContext.eventManager().publishGameEvent(new PacDyingEvent(pac));
         }
         else if (tick == hidePacTick) {

@@ -35,7 +35,7 @@ public class SteeringActions {
 
         @Override
         public void doAction() {
-            final WorldNavigationSystem navigator = gameContext().systems().navigator;
+            final WorldNavigationSystem navigator = gameContext().systems().navigator();
             gameContext().model().optLevel().ifPresent(level -> navigator.setWishDir(level.entities().pac(), dir));
         }
 

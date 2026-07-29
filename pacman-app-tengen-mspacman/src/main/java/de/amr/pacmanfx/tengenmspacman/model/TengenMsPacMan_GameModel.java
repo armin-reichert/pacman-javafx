@@ -10,7 +10,6 @@ import de.amr.pacmanfx.core.GameException;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.tengenmspacman.rules.TengenMsPacMan_GameRules;
@@ -91,7 +90,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         requireNonNull(pac);
         boosterActive = active;
 
-        final SpriteAnimSystem animSystem = gameContext.systems().spriteAnim;
+        final SpriteAnimSystem animSystem = gameContext.systems().spriteAnim();
         animSystem.select(pac, active ? TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER : CommonAnimationID.PAC_MUNCHING);
     }
 

@@ -8,11 +8,11 @@ import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.GameSystems;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -91,7 +91,7 @@ class XXL_ChaseAnimation {
 
         timeline.getKeyFrames().setAll(new KeyFrame(FRAME_TIME, _ -> update(sys)));
 
-        actorRenderer = renderConfig.createActorRenderer(sys.spriteAnim, canvas);
+        actorRenderer = renderConfig.createActorRenderer(sys.spriteAnim(), canvas);
         actorRenderer.scalingProperty().bind(scalingProperty());
 
         final var factory = new ArcadePacMan_ActorFactory();
@@ -100,13 +100,13 @@ class XXL_ChaseAnimation {
         pac.position().setX(numTilesX * WorldMap.TS);
         pac.visibility().show();
 
-        sys.navigator.setMoveDir(pac, Direction.LEFT);
-        sys.navigator.setWishDir(pac, Direction.LEFT);
-        sys.navigator.setSpeed(pac, PAC_FLEEING_SPEED);
+        sys.navigator().setMoveDir(pac, Direction.LEFT);
+        sys.navigator().setWishDir(pac, Direction.LEFT);
+        sys.navigator().setSpeed(pac, PAC_FLEEING_SPEED);
 
-        sys.spriteAnim.setAnimations(pac, renderConfig.createPacAnimations(container));
-        sys.spriteAnim.select(pac, CommonAnimationID.PAC_MUNCHING);
-        sys.spriteAnim.playSelected(pac);
+        sys.spriteAnim().setAnimations(pac, renderConfig.createPacAnimations(container));
+        sys.spriteAnim().select(pac, CommonAnimationID.PAC_MUNCHING);
+        sys.spriteAnim().playSelected(pac);
 
         ghosts = List.of(
             renderConfig.createAnimatedGhost(gameContext, container, GameModel.RED_GHOST_SHADOW),
@@ -118,12 +118,12 @@ class XXL_ChaseAnimation {
             ghost.position().setX((numTilesX + 4) * WorldMap.TS + ghost.personality() * GHOST_DISTANCE);
             ghost.visibility().show();
 
-            sys.navigator.setMoveDir(ghost, Direction.LEFT);
-            sys.navigator.setWishDir(ghost, Direction.LEFT);
-            sys.navigator.setSpeed(ghost, GHOST_CHASE_SPEED);
+            sys.navigator().setMoveDir(ghost, Direction.LEFT);
+            sys.navigator().setWishDir(ghost, Direction.LEFT);
+            sys.navigator().setSpeed(ghost, GHOST_CHASE_SPEED);
 
-            sys.spriteAnim.select(ghost, CommonAnimationID.GHOST_NORMAL);
-            sys.spriteAnim.playSelected(ghost);
+            sys.spriteAnim().select(ghost, CommonAnimationID.GHOST_NORMAL);
+            sys.spriteAnim().playSelected(ghost);
         }
 
         collisions.clear();
@@ -146,23 +146,23 @@ class XXL_ChaseAnimation {
     }
 
     private void pacManChasesGhosts(GameSystems sys) {
-        moveActors(sys.motor);
+        moveActors(sys.motor());
         // If ghosts and Pac leave screen at right border, ghosts start chasing Pac moving left
         if (pac.position().x > (numTilesX + 14) * WorldMap.TS) {
-            sys.navigator.setMoveDir(pac, Direction.LEFT);
-            sys.navigator.setWishDir(pac, Direction.LEFT);
+            sys.navigator().setMoveDir(pac, Direction.LEFT);
+            sys.navigator().setWishDir(pac, Direction.LEFT);
             pac.position().setX(numTilesX * WorldMap.TS);
 
             for (Ghost ghost : ghosts) {
                 ghost.position().setX((numTilesX + 4) * WorldMap.TS + ghost.personality() * 2 * WorldMap.TS);
                 ghost.visibility().show();
 
-                sys.navigator.setMoveDir(ghost, Direction.LEFT);
-                sys.navigator.setWishDir(ghost, Direction.LEFT);
-                sys.navigator.setSpeed(ghost, 1.05f);
+                sys.navigator().setMoveDir(ghost, Direction.LEFT);
+                sys.navigator().setWishDir(ghost, Direction.LEFT);
+                sys.navigator().setSpeed(ghost, 1.05f);
 
-                sys.spriteAnim.select(ghost, CommonAnimationID.GHOST_NORMAL);
-                sys.spriteAnim.playSelected(ghost);
+                sys.spriteAnim().select(ghost, CommonAnimationID.GHOST_NORMAL);
+                sys.spriteAnim().playSelected(ghost);
             }
 
             state = ChasingState.GHOSTS_CHASING_PAC;
@@ -182,7 +182,7 @@ class XXL_ChaseAnimation {
                 if (colliding(pac, ghost) && collisions.stream().noneMatch(collision -> collision.ghost() == ghost)) {
                     final var collision = new Collision(ghost, System.currentTimeMillis());
                     collisions.add(collision);
-                    sys.spriteAnim.selectAndSetFrame(ghost, CommonAnimationID.GHOST_POINTS, i);
+                    sys.spriteAnim().selectAndSetFrame(ghost, CommonAnimationID.GHOST_POINTS, i);
                     break;
                 }
             }
@@ -194,23 +194,23 @@ class XXL_ChaseAnimation {
     }
 
     private void ghostsChasePacMan(GameSystems sys) {
-        moveActors(sys.motor);
+        moveActors(sys.motor());
 
         if (ghosts.getLast().position().x < -4 * WorldMap.TS) { // ghosts left screen on the left side
             pac.position().setX(-(numTilesX - 6) * WorldMap.TS);
-            sys.navigator.setMoveDir(pac, Direction.RIGHT);
-            sys.navigator.setWishDir(pac, Direction.RIGHT);
+            sys.navigator().setMoveDir(pac, Direction.RIGHT);
+            sys.navigator().setWishDir(pac, Direction.RIGHT);
 
             for (Ghost ghost : ghosts) {
                 ghost.visibility().show();
                 ghost.position().setX(pac.position().x + 22 * WorldMap.TS + ghost.personality() * GHOST_DISTANCE);
 
-                sys.navigator.setMoveDir(ghost, Direction.RIGHT);
-                sys.navigator.setWishDir(ghost, Direction.RIGHT);
-                sys.navigator.setSpeed(ghost, 0.58f);
+                sys.navigator().setMoveDir(ghost, Direction.RIGHT);
+                sys.navigator().setWishDir(ghost, Direction.RIGHT);
+                sys.navigator().setSpeed(ghost, 0.58f);
 
-                sys.spriteAnim.select(ghost, CommonAnimationID.GHOST_FRIGHTENED);
-                sys.spriteAnim.playSelected(ghost);
+                sys.spriteAnim().select(ghost, CommonAnimationID.GHOST_FRIGHTENED);
+                sys.spriteAnim().playSelected(ghost);
             }
 
             // Let Pac-Man chase the ghosts from left to right side of the screen

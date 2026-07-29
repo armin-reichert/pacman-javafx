@@ -14,11 +14,11 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.GameSystems;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -99,12 +99,12 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
         msPacMan.position().set(WorldMap.TS * 31, WorldMap.TS * 20);
         msPacMan.visibility().show();
 
-        sys.navigator.setMoveDir(msPacMan, Direction.LEFT);
-        sys.navigator.setSpeed(msPacMan, ACTOR_SPEED);
+        sys.navigator().setMoveDir(msPacMan, Direction.LEFT);
+        sys.navigator().setSpeed(msPacMan, ACTOR_SPEED);
 
-        sys.spriteAnim.setAnimations(msPacMan, renderConfig.createPacAnimations(container));
-        sys.spriteAnim.select(msPacMan, CommonAnimationID.PAC_MUNCHING);
-        sys.spriteAnim.playSelected(msPacMan);
+        sys.spriteAnim().setAnimations(msPacMan, renderConfig.createPacAnimations(container));
+        sys.spriteAnim().select(msPacMan, CommonAnimationID.PAC_MUNCHING);
+        sys.spriteAnim().playSelected(msPacMan);
 
         ghosts = List.of(
             renderConfig.createAnimatedGhost(gameContext(), container, GameModel.RED_GHOST_SHADOW),
@@ -117,14 +117,14 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
             ghost.position().set(WorldMap.TS * 33.5f, WorldMap.TS * 20);
             ghost.visibility().show();
 
-            sys.navigator.setMoveDir(ghost, Direction.LEFT);
-            sys.navigator.setWishDir(ghost, Direction.LEFT);
-            sys.navigator.setSpeed(ghost, ACTOR_SPEED);
+            sys.navigator().setMoveDir(ghost, Direction.LEFT);
+            sys.navigator().setWishDir(ghost, Direction.LEFT);
+            sys.navigator().setSpeed(ghost, ACTOR_SPEED);
 
-            sys.spriteAnim.select(ghost, CommonAnimationID.GHOST_NORMAL);
-            sys.spriteAnim.playSelected(ghost);
+            sys.spriteAnim().select(ghost, CommonAnimationID.GHOST_NORMAL);
+            sys.spriteAnim().playSelected(ghost);
 
-            sys.ghostState.changeState(gameContext(), ghost, GhostState.HUNTING_PAC);
+            sys.ghostState().changeState(gameContext(), ghost, GhostState.HUNTING_PAC);
         }
 
         presentedGhostPersonality = GameModel.RED_GHOST_SHADOW;
@@ -177,11 +177,11 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
                 if (ghost.worldNavigation().moveDir() == Direction.LEFT) {
                     if (ghost.position().x <= STOP_X_GHOST) {
                         ghost.position().setX(STOP_X_GHOST);
-                        sys.navigator.setMoveDir(ghost, Direction.UP);
-                        sys.navigator.setWishDir(ghost, Direction.UP);
+                        sys.navigator().setMoveDir(ghost, Direction.UP);
+                        sys.navigator().setWishDir(ghost, Direction.UP);
                         scene.numTicksBeforeRising = 2;
                     } else {
-                        sys.motor.moveAccelerated(ghost);
+                        sys.motor().moveAccelerated(ghost);
                     }
                 }
                 else if (ghost.worldNavigation().moveDir() == Direction.UP) {
@@ -190,13 +190,13 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
                         scene.numTicksBeforeRising--;
                     }
                     else if (ghost.position().y <= endPositionY) {
-                        sys.navigator.setSpeed(ghost, 0);
-                        sys.spriteAnim.stopSelected(ghost);
-                        sys.spriteAnim.resetSelected(ghost);
+                        sys.navigator().setSpeed(ghost, 0);
+                        sys.spriteAnim().stopSelected(ghost);
+                        sys.spriteAnim().resetSelected(ghost);
                         return true;
                     }
                     else {
-                        sys.motor.moveAccelerated(ghost);
+                        sys.motor().moveAccelerated(ghost);
                     }
                 }
                 return false;
@@ -211,10 +211,10 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
 
                 scene.marquee.timer().doTick();
 
-                sys.motor.moveAccelerated(msPacMan);
+                sys.motor().moveAccelerated(msPacMan);
                 if (msPacMan.position().x <= STOP_X_MS_PACMAN) {
-                    sys.navigator.setSpeed(msPacMan, 0);
-                    sys.spriteAnim.resetSelected(msPacMan);
+                    sys.navigator().setSpeed(msPacMan, 0);
+                    sys.spriteAnim().resetSelected(msPacMan);
                     scene.sceneFlow.enterState(scene, READY_TO_PLAY);
                 }
             }

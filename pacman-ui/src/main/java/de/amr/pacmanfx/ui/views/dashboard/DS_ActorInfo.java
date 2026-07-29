@@ -57,7 +57,7 @@ public class DS_ActorInfo extends GameDashboardSection {
         addDynamicInfo("Movement",  supplyGhostText(appContext, this::actorMovementText,  personality));
         addDynamicInfo("Tile",      supplyGhostText(appContext, this::actorLocationText,  personality));
         addDynamicInfo("Animation", supplyGhostText(appContext,
-            (_, ghost) -> ghostAnimationText(appContext.currentGameContext().systems().spriteAnim, ghost),
+            (_, ghost) -> ghostAnimationText(appContext.currentGameContext().systems().spriteAnim(), ghost),
             personality));
     }
 
@@ -102,7 +102,7 @@ public class DS_ActorInfo extends GameDashboardSection {
         return () -> appContext.currentGameContext().model().optLevel()
             .map(level -> level.entities().pac())
             .map(pac -> pacPowerText(
-                appContext.currentGameContext().systems().pacPower, pac
+                appContext.currentGameContext().systems().pacPower(), pac
             ))
             .orElse(NO_INFO);
     }
@@ -119,7 +119,7 @@ public class DS_ActorInfo extends GameDashboardSection {
 
     private Supplier<String> supplyPacAnimationText(GameAppContext appContext) {
         return () -> appContext.currentGameContext().model().optLevel().map(level -> {
-            final SpriteAnimSystem animSystem = appContext.currentGameContext().systems().spriteAnim;
+            final SpriteAnimSystem animSystem = appContext.currentGameContext().systems().spriteAnim();
             final Pac pac = level.entities().pac();
             if (animSystem.selectedAnimationID(pac) != null) {
                 return "%s:%d".formatted(animSystem.selectedAnimationID(pac), animSystem.currentFrame(pac));

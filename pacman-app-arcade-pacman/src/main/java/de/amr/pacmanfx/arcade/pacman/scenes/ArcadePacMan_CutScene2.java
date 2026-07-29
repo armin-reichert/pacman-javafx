@@ -12,11 +12,11 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.GameSystems;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
+import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -99,12 +99,12 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
             case TICK_DRESS_STRETCHED_LARGE  -> setDressState(STRETCHED_LARGE);
             case TICK_BLINKY_STOPS_MOVING    -> blinkyStopsMoving(sys);
             case TICK_DRESS_RAPTURES         -> dressRaptures(sys);
-            case TICK_BLINK_INSPECTS_DAMAGE  -> blinkyInspectsDamagedDress(sys.spriteAnim);
+            case TICK_BLINK_INSPECTS_DAMAGE  -> blinkyInspectsDamagedDress(sys.spriteAnim());
             case TICK_ANIMATION_ENDS         -> endTheShow();
         }
 
-        sys.motor.moveAccelerated(pacMan);
-        sys.motor.moveAccelerated(blinky);
+        sys.motor().moveAccelerated(pacMan);
+        sys.motor().moveAccelerated(blinky);
     }
 
     private void blinkyInspectsDamagedDress(SpriteAnimSystem animSystem) {
@@ -123,17 +123,17 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
 
     private void dressRaptures(GameSystems sys) {
         blinky.position().x -= 4;
-        sys.spriteAnim.select(blinky, CommonAnimationID.BLINKY_DAMAGED);
+        sys.spriteAnim().select(blinky, CommonAnimationID.BLINKY_DAMAGED);
         setDressState(NailDressState.RAPTURED);
     }
 
     private void blinkyStopsMoving(GameSystems sys) {
-        sys.navigator.setSpeed(blinky, 0);
-        sys.spriteAnim.stopSelected(blinky);
+        sys.navigator().setSpeed(blinky, 0);
+        sys.spriteAnim().stopSelected(blinky);
     }
 
     private void blinkyGetsCaughtOnNail(GameSystems sys) {
-        sys.navigator.setSpeed(blinky, 0.09f);
+        sys.navigator().setSpeed(blinky, 0.09f);
 
         //TODO
         //blinkyAnimation(CommonAnimationID.GHOST_NORMAL).setFrameDurationTicks(32);
@@ -142,24 +142,24 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
     private void blinkyStartsRunning(GameSystems sys) {
         blinky.visibility().show();
 
-        sys.navigator.placeAtTile(blinky, 28, 20, -3, 0);
-        sys.navigator.setMoveDir(blinky, Direction.LEFT);
-        sys.navigator.setWishDir(blinky, Direction.LEFT);
-        sys.navigator.setSpeed(blinky, 1.25f);
+        sys.navigator().placeAtTile(blinky, 28, 20, -3, 0);
+        sys.navigator().setMoveDir(blinky, Direction.LEFT);
+        sys.navigator().setWishDir(blinky, Direction.LEFT);
+        sys.navigator().setSpeed(blinky, 1.25f);
 
-        sys.spriteAnim.select(blinky, CommonAnimationID.GHOST_NORMAL);
-        sys.spriteAnim.playSelected(blinky);
+        sys.spriteAnim().select(blinky, CommonAnimationID.GHOST_NORMAL);
+        sys.spriteAnim().playSelected(blinky);
     }
 
     private void pacManStartsRunning(GameSystems sys) {
         pacMan.visibility().show();
 
-        sys.navigator.placeAtTile(pacMan, 28, 20);
-        sys.navigator.setMoveDir(pacMan, Direction.LEFT);
-        sys.navigator.setSpeed(pacMan, 1.15f);
+        sys.navigator().placeAtTile(pacMan, 28, 20);
+        sys.navigator().setMoveDir(pacMan, Direction.LEFT);
+        sys.navigator().setSpeed(pacMan, 1.15f);
 
-        sys.spriteAnim.select(pacMan, CommonAnimationID.PAC_MUNCHING);
-        sys.spriteAnim.playSelected(pacMan);
+        sys.spriteAnim().select(pacMan, CommonAnimationID.PAC_MUNCHING);
+        sys.spriteAnim().playSelected(pacMan);
     }
 
     private void setDressState(NailDressState state) {

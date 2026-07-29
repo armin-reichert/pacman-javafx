@@ -10,8 +10,8 @@ import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.GameSystems;
 import de.amr.pacmanfx.core.model.actors.*;
+import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -135,12 +135,12 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
                 scene.msPacMan.position().set(WorldMap.TS * 33, ACTOR_Y);
                 scene.msPacMan.visibility().show();
 
-                sys.navigator.setMoveDir(scene.msPacMan, Direction.LEFT);
-                sys.navigator.setSpeed(scene.msPacMan, SPEED);
+                sys.navigator().setMoveDir(scene.msPacMan, Direction.LEFT);
+                sys.navigator().setSpeed(scene.msPacMan, SPEED);
 
-                sys.spriteAnim.setAnimations(scene.msPacMan, renderConfig.createPacAnimations(spriteAnimations));
-                sys.spriteAnim.select(scene.msPacMan, CommonAnimationID.PAC_MUNCHING);
-                sys.spriteAnim.playSelected(scene.msPacMan);
+                sys.spriteAnim().setAnimations(scene.msPacMan, renderConfig.createPacAnimations(spriteAnimations));
+                sys.spriteAnim().select(scene.msPacMan, CommonAnimationID.PAC_MUNCHING);
+                sys.spriteAnim().playSelected(scene.msPacMan);
 
                 scene.ghosts = List.of(
                     renderConfig.createAnimatedGhost(scene.gameContext(), spriteAnimations, GameModel.RED_GHOST_SHADOW),
@@ -153,13 +153,13 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
                     ghost.position().set(WorldMap.TS * 33, ACTOR_Y);
                     ghost.visibility().show();
 
-                    sys.navigator.setMoveDir(ghost, Direction.LEFT);
-                    sys.navigator.setWishDir(ghost, Direction.LEFT);
-                    sys.navigator.setSpeed(ghost, SPEED);
+                    sys.navigator().setMoveDir(ghost, Direction.LEFT);
+                    sys.navigator().setWishDir(ghost, Direction.LEFT);
+                    sys.navigator().setSpeed(ghost, SPEED);
 
-                    sys.spriteAnim.playSelected(ghost);
+                    sys.spriteAnim().playSelected(ghost);
 
-                    sys.ghostState.changeState(scene.gameContext(), ghost, GhostState.HUNTING_PAC);
+                    sys.ghostState().changeState(scene.gameContext(), ghost, GhostState.HUNTING_PAC);
                 }
                 scene.ghostIndex = 0;
             }
@@ -194,8 +194,8 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
             }
 
             boolean letGhostMarchIn(TengenMsPacMan_IntroScene scene) {
-                final MovementSystem motor = scene.gameContext().systems().motor;
-                final WorldNavigationSystem navigator = scene.gameContext().systems().navigator;
+                final MovementSystem motor = scene.gameContext().systems().motor();
+                final WorldNavigationSystem navigator = scene.gameContext().systems().navigator();
 
                 final Ghost ghost = scene.ghosts.get(scene.ghostIndex);
                 if (ghost.worldNavigation().moveDir() == Direction.LEFT) {
@@ -242,10 +242,10 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
 
                 scene.marquee.update(timer.tickCount());
 
-                sys.motor.moveAccelerated(scene.msPacMan);
+                sys.motor().moveAccelerated(scene.msPacMan);
                 if (scene.msPacMan.position().x <= MS_PAC_MAN_STOP_X) {
-                    sys.navigator.setSpeed(scene.msPacMan, 0);
-                    sys.spriteAnim.resetSelected(scene.msPacMan);
+                    sys.navigator().setSpeed(scene.msPacMan, 0);
+                    sys.spriteAnim().resetSelected(scene.msPacMan);
                 }
                 if (timer.atSecond(8)) {
                     // start demo level or show options

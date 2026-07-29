@@ -6,13 +6,13 @@ package de.amr.pacmanfx.core.model.actors;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.GameSystems;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.component.ghost.Elroy;
 import de.amr.pacmanfx.core.model.component.ghost.GhostStateComponent;
 import de.amr.pacmanfx.core.model.component.ghost.GhostWorldPlacement;
 import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 
 import java.util.Collection;
 
@@ -65,7 +65,7 @@ public class Ghost extends Actor implements UpdatableEntity {
 
     @Override
     public void update(GameContext gameContext) {
-        gameContext.systems().ghostState.update(gameContext, this);
+        gameContext.systems().ghostState().update(gameContext, this);
     }
 
     @Override
@@ -95,13 +95,13 @@ public class Ghost extends Actor implements UpdatableEntity {
         final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
 
-        if (sys.pacPower.isPowerStartingFading(level, pac)) {
-            sys.spriteAnim.select(this, CommonAnimationID.GHOST_FLASHING);
-            sys.spriteAnim.playSelected(this);
+        if (sys.pacPower().isPowerStartingFading(level, pac)) {
+            sys.spriteAnim().select(this, CommonAnimationID.GHOST_FLASHING);
+            sys.spriteAnim().playSelected(this);
         }
-        else if (!sys.pacPower.isPowerFading(level, pac)) {
-            sys.spriteAnim.select(this, CommonAnimationID.GHOST_FRIGHTENED);
-            sys.spriteAnim.playSelected(this);
+        else if (!sys.pacPower().isPowerFading(level, pac)) {
+            sys.spriteAnim().select(this, CommonAnimationID.GHOST_FRIGHTENED);
+            sys.spriteAnim().playSelected(this);
         }
     }
 }

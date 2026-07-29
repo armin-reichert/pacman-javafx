@@ -13,7 +13,7 @@ import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.component.pac.PacPower;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
+import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.systems.ghost.GhostStateSystem;
 import org.tinylog.Logger;
 
@@ -31,7 +31,7 @@ public final class PacPowerSystem {
         requireNonNull(gameContext);
         requireNonNull(pac);
 
-        final GhostStateSystem ghostStateSystem = gameContext.systems().ghostState;
+        final GhostStateSystem ghostStateSystem = gameContext.systems().ghostState();
 
         final PacPower power = pac.power();
         final GameLevel level = gameContext.assertLevel();
@@ -56,11 +56,10 @@ public final class PacPowerSystem {
     }
 
     public void start(GameContext gameContext, Pac pac) {
-        final GhostStateSystem ghostStateSystem = gameContext.systems().ghostState;
-        final WorldNavigationSystem navigator = gameContext.systems().navigator;
+        final GameSystems sys = gameContext.systems();
 
         final GameLevel level = gameContext.assertLevel();
-        level.ghostsInAnyOfStates(TURNBACK_STATES).forEach(navigator::requestTurnBack);
+        level.ghostsInAnyOfStates(TURNBACK_STATES).forEach(sys.navigator()::requestTurnBack);
 
         final float seconds = level.pacPowerSeconds();
         if (seconds > 0) {
@@ -69,7 +68,7 @@ public final class PacPowerSystem {
             pac.power().timer().restartTicks(ticks);
             Logger.debug("Power timer activated, {} ticks ({0.00} sec)", ticks, seconds);
             level.ghostsInState(GhostState.HUNTING_PAC)
-                .forEach(ghost -> ghostStateSystem.changeState(gameContext, ghost, GhostState.FRIGHTENED));
+                .forEach(ghost -> sys.ghostState().changeState(gameContext, ghost, GhostState.FRIGHTENED));
             gameContext.eventManager().publishGameEvent(new PacGetsPowerEvent(pac));
         }
     }

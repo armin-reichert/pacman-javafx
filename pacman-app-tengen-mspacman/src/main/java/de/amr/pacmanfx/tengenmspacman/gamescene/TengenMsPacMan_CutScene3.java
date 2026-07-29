@@ -6,10 +6,10 @@ package de.amr.pacmanfx.tengenmspacman.gamescene;
 import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.GameSystems;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
+import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
@@ -125,47 +125,47 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
                     pacMan.position().set(WorldMap.TS * 3, GROUND_Y - 4);
                     pacMan.visibility().show();
 
-                    sys.navigator.setMoveDir(pacMan, Direction.RIGHT);
-                    sys.navigator.setSpeed(pacMan, 0);
+                    sys.navigator().setMoveDir(pacMan, Direction.RIGHT);
+                    sys.navigator().setSpeed(pacMan, 0);
 
-                    sys.spriteAnim.select(pacMan, TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
-                    sys.spriteAnim.stopSelected(pacMan);
+                    sys.spriteAnim().select(pacMan, TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
+                    sys.spriteAnim().stopSelected(pacMan);
 
                     msPacMan.position().set(WorldMap.TS * 5, GROUND_Y - 4);
                     msPacMan.visibility().show();
 
-                    sys.navigator.setMoveDir(msPacMan, Direction.RIGHT);
-                    sys.navigator.setSpeed(msPacMan, 0);
+                    sys.navigator().setMoveDir(msPacMan, Direction.RIGHT);
+                    sys.navigator().setSpeed(msPacMan, 0);
 
-                    sys.spriteAnim.select(msPacMan, CommonAnimationID.PAC_MUNCHING);
-                    sys.spriteAnim.stopSelected(msPacMan);
+                    sys.spriteAnim().select(msPacMan, CommonAnimationID.PAC_MUNCHING);
+                    sys.spriteAnim().stopSelected(msPacMan);
 
                     stork.position().set(RIGHT_BORDER, WorldMap.TS * 7);
                     stork.visibility().show();
-                    sys.motor.setVelocity(stork, -0.8f, 0);
+                    sys.motor().setVelocity(stork, -0.8f, 0);
 
-                    sys.spriteAnim.select(stork, CommonAnimationID.STORK_FLYING);
-                    sys.spriteAnim.playSelected(stork);
+                    sys.spriteAnim().select(stork, CommonAnimationID.STORK_FLYING);
+                    sys.spriteAnim().playSelected(stork);
 
                     flyingBag.setOpen(gameContext, false);
                     stork.setBagReleasedFromBeak(false);
                 }
                 case 240 -> {
                     // stork releases bag, bag starts falling
-                    sys.motor.setVelocity(stork, -1f, 0); // faster, no bag to carry!
+                    sys.motor().setVelocity(stork, -1f, 0); // faster, no bag to carry!
                     stork.setBagReleasedFromBeak(true);
 
                     flyingBag.position().set(stork.position().x - 15, stork.position().y + 8);
                     flyingBag.visibility().show();
-                    sys.motor.setVelocity(flyingBag, -0.5f, 0);
-                    sys.motor.setAcceleration(flyingBag, 0, 0.1f);
+                    sys.motor().setVelocity(flyingBag, -0.5f, 0);
+                    sys.motor().setAcceleration(flyingBag, 0, 0.1f);
                 }
                 case 320 -> // reaches ground, starts bouncing
-                    sys.motor.setVelocityX(flyingBag, -0.5f);
+                    sys.motor().setVelocityX(flyingBag, -0.5f);
                 case 380 -> {
                     flyingBag.setOpen(gameContext, true);
-                    sys.motor.setVelocity(flyingBag, 0, 0);
-                    sys.motor.setAcceleration(flyingBag, 0, 0);
+                    sys.motor().setVelocity(flyingBag, 0, 0);
+                    sys.motor().setAcceleration(flyingBag, 0, 0);
                 }
                 case 640 -> darkness = true;
                 case TICK_EXPIRES -> gameState().triggerTimeout();
@@ -174,13 +174,13 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
 
         clapperboard.tick();
 
-        sys.motor.moveAccelerated(stork);
+        sys.motor().moveAccelerated(stork);
 
         if (!flyingBag.isOpen()) {
-            sys.motor.moveAccelerated(flyingBag);
+            sys.motor().moveAccelerated(flyingBag);
             if (flyingBag.position().y > GROUND_Y) {
                 flyingBag.position().setY(GROUND_Y);
-                sys.motor.setVelocity(flyingBag,
+                sys.motor().setVelocity(flyingBag,
                     0.9f * flyingBag.movement().velX(),
                     -0.3f * flyingBag.movement().velY()
                 );

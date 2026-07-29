@@ -4,11 +4,11 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.GameSystems;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.component.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import org.tinylog.Logger;
 
@@ -134,7 +134,7 @@ public class ArcadeMsPacMan_ActorFactory extends ArcadePacMan_ActorFactory {
             final boolean acceptable = dir != ghost.worldNavigation().moveDir().opposite()
                 && policy.canAccessTile(level, ghost, neighbor);
             if (acceptable) {
-                sys.navigator.setWishDir(ghost, dir);
+                sys.navigator().setWishDir(ghost, dir);
                 Logger.debug("{} selects random wish direction {}", ghost.name(), dir);
                 break;
             }

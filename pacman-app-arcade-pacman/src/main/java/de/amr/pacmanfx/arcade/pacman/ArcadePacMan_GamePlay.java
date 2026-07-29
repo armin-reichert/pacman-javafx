@@ -92,7 +92,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         requireNonNull(gameContext);
         requireValidLevelNumber(levelNumber);
 
-        final WorldNavigationSystem navigator = gameContext.systems().navigator;
+        final WorldNavigationSystem navigator = gameContext.systems().navigator();
 
         final GameModel model = gameContext.model();
         final WorldMap worldMap = model.mapSelector().supplyWorldMap(levelNumber);
