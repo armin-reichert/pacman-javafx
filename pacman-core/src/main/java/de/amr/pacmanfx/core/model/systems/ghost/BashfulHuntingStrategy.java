@@ -9,6 +9,7 @@ import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
+import de.amr.pacmanfx.core.model.systems.world.WorldMovementPolicy;
 
 import static de.amr.pacmanfx.core.model.GameModel.RED_GHOST_SHADOW;
 import static de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem.computeTile;
@@ -24,7 +25,7 @@ public class BashfulHuntingStrategy implements GhostHuntingStrategy {
     }
 
     @Override
-    public void hunt(GameLevel level, Ghost ghost, float speed) {
+    public void hunt(GameLevel level, Ghost ghost, float speed, WorldMovementPolicy  worldMovementPolicy) {
         requireNonNull(level);
         requireNonNull(ghost);
 
@@ -33,7 +34,7 @@ public class BashfulHuntingStrategy implements GhostHuntingStrategy {
             : computeScatterTile(level.worldMap(), ghost);
 
         navigator.setSpeed(ghost, speed);
-        navigator.tryMovingTowardsTargetTile(ghost, level, targetTile);
+        navigator.tryMovingTowardsTargetTile(ghost, level, targetTile, worldMovementPolicy);
     }
 
     // 1. Compute the position 2 tiles ahead of Pac-Man in the current direction. Take the overflow bug

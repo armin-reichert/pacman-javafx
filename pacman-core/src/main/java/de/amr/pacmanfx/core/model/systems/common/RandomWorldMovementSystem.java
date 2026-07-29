@@ -9,7 +9,8 @@ import de.amr.basics.math.RandomNumberSupport;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Actor;
-import de.amr.pacmanfx.core.model.component.world.WorldMovementPolicy;
+import de.amr.pacmanfx.core.model.actors.Ghost;
+import de.amr.pacmanfx.core.model.systems.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import org.tinylog.Logger;
@@ -34,30 +35,30 @@ public class RandomWorldMovementSystem {
              Roam if you want to, without anything but the love we feel!
          </cite>
      */
-    public void roam(GameContext gameContext, Actor actor, float speed) {
+    public void roam(GameContext gameContext, Ghost ghost, float speed) {
         requireNonNull(gameContext);
-        requireNonNull(actor);
+        requireNonNull(ghost);
 
-        final WorldNavigation navigation = actor.assertComponent(WorldNavigation.class);
+        final GameSystems sys = gameContext.systems();
+        final WorldNavigation navigation = ghost.assertComponent(WorldNavigation.class);
         final GameLevel level = gameContext.assertLevel();
 
-        final Vector2i tile = WorldNavigationSystem.computeTile(actor);
+        final Vector2i tile = WorldNavigationSystem.computeTile(ghost);
         final boolean teleporting = level.worldMap().terrainLayer().isTileInPortalSpace(tile);
 
         final boolean stuck = !navigation.info.moved;
         if ((navigation.isNewTileEntered() || stuck) && !teleporting) {
-            final Direction dir = computeRoamingDirection(level, actor, tile);
-            navigator.setWishDir(actor, dir);
-            Logger.debug("Ghost {} takes random wish direction {}", actor.name(), dir);
+            final Direction dir = computeRoamingDirection(level, ghost, sys.ghostWorldMovementPolicy(), tile);
+            navigator.setWishDir(ghost, dir);
+            Logger.debug("Ghost {} takes random wish direction {}", ghost.name(), dir);
         }
-        navigator.setSpeed(actor, speed);
-        navigator.tryMovingOrTeleporting(actor, level);
+        navigator.setSpeed(ghost, speed);
+        navigator.tryMovingOrTeleporting(ghost, level, sys.ghostWorldMovementPolicy());
     }
 
     // try a random direction towards an accessible tile, do not turn back unless there is no other way
-    private Direction computeRoamingDirection(GameLevel level, Actor actor, Vector2i currentTile) {
+    private Direction computeRoamingDirection(GameLevel level, Actor actor, WorldMovementPolicy policy, Vector2i currentTile) {
         final WorldNavigation navigation = actor.assertComponent(WorldNavigation.class);
-        final WorldMovementPolicy policy = actor.assertComponent(WorldMovementPolicy.class);
 
         final Direction oppositeDir = navigation.moveDir().opposite();
         Direction selectedDir = choosePseudoRandomDirection();

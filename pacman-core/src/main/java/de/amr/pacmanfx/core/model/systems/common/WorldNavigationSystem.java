@@ -10,9 +10,9 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.component.common.Movement;
 import de.amr.pacmanfx.core.model.component.common.Position;
-import de.amr.pacmanfx.core.model.component.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import org.tinylog.Logger;
@@ -173,12 +173,12 @@ public class WorldNavigationSystem {
         motor.setVelocity(actor, moveDirVec.x() * speed, moveDirVec.y() * speed);
     }
 
-    public void navigateTowardsTarget(Actor actor, GameLevel level) {
+    public void navigateTowardsTarget(Actor actor, GameLevel level, WorldMovementPolicy  movementPolicy) {
         requireNonNull(actor);
         requireNonNull(level);
+        requireNonNull(movementPolicy);
 
         final WorldNavigation navigation = actor.assertComponent(WorldNavigation.class);
-        final WorldMovementPolicy movementPolicy = actor.assertComponent(WorldMovementPolicy.class);
 
         if (!navigation.isNewTileEntered() && navigation.info.moved || navigation.targetTile() == null) {
             return; // we don't need no navigation, dim dit didit didit...
@@ -207,16 +207,17 @@ public class WorldNavigationSystem {
         setWishDir(actor, candidateDir != null ? candidateDir : navigation.moveDir().opposite());
     }
 
-    public void tryMovingTowardsTargetTile(Actor actor, GameLevel level, Vector2i targetTile) {
+    public void tryMovingTowardsTargetTile(Actor actor, GameLevel level, Vector2i targetTile, WorldMovementPolicy  movementPolicy) {
         requireNonNull(actor);
         requireNonNull(level);
         requireNonNull(targetTile);
+        requireNonNull(movementPolicy);
 
         final WorldNavigation navigation = actor.assertComponent(WorldNavigation.class);
         navigation.setTargetTile(targetTile);
-        navigateTowardsTarget(actor, level);
+        navigateTowardsTarget(actor, level, movementPolicy);
 
-        tryMovingOrTeleporting(actor, level);
+        tryMovingOrTeleporting(actor, level, movementPolicy);
     }
 
     /**
@@ -225,12 +226,11 @@ public class WorldNavigationSystem {
      * First checks if the actor can be teleported, then if the actor can move to its wish direction. If this is not
      * possible, it keeps moving to its current move direction.
      */
-    public void tryMovingOrTeleporting(Actor actor, GameLevel level) {
+    public void tryMovingOrTeleporting(Actor actor, GameLevel level, WorldMovementPolicy movementPolicy) {
         requireNonNull(actor);
         requireNonNull(level);
 
         final WorldNavigation navigation = actor.assertComponent(WorldNavigation.class);
-        final WorldMovementPolicy movementPolicy = actor.assertComponent(WorldMovementPolicy.class);
 
         navigation.info.clear();
         if (navigation.canTeleport()) {
@@ -243,11 +243,11 @@ public class WorldNavigationSystem {
             setWishDir(actor, navigation.moveDir().opposite());
             navigation.setTurnBackRequested(false);
         }
-        tryMovingTowards(actor, level, computeTile(actor), navigation.wishDir());
+        tryMovingTowards(actor, level, movementPolicy, computeTile(actor), navigation.wishDir());
         if (navigation.info.moved) {
             setMoveDir(actor, navigation.wishDir());
         } else {
-            tryMovingTowards(actor, level, computeTile(actor), navigation.moveDir());
+            tryMovingTowards(actor, level, movementPolicy, computeTile(actor), navigation.moveDir());
         }
     }
 
@@ -264,9 +264,8 @@ public class WorldNavigationSystem {
         return false; // no vertical teleporting yet
     }
 
-    private void tryMovingTowards(Actor actor, GameLevel level, Vector2i tileBeforeMoving, Direction dir) {
+    private void tryMovingTowards(Actor actor, GameLevel level, WorldMovementPolicy movementPolicy, Vector2i tileBeforeMoving, Direction dir) {
         final Movement movement = actor.assertComponent(Movement.class);
-        final WorldMovementPolicy movementPolicy = actor.assertComponent(WorldMovementPolicy.class);
         final WorldNavigation navigation = actor.assertComponent(WorldNavigation.class);
 
         final Vector2f newVelocity = dir.vector().scaled(movement.speed());

@@ -8,11 +8,12 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 
 public interface GhostHuntingStrategy {
 
-    void hunt(GameLevel level, Ghost ghost, float speed);
+    void hunt(GameLevel level, Ghost ghost, float speed, WorldMovementPolicy worldMovementPolicy);
 
     default Vector2i computeScatterTile(WorldMap worldMap, Ghost ghost) {
         return worldMap.terrainLayer().ghostScatterTile(ghost.personality());

@@ -8,7 +8,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.component.ghost.Elroy;
-import de.amr.pacmanfx.core.model.component.world.WorldMovementPolicy;
+import de.amr.pacmanfx.core.model.systems.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.systems.ghost.GhostHuntingStrategy;
@@ -33,19 +33,19 @@ public abstract class ArcadeMsPacMan_RandomizedHuntingStrategy implements GhostH
     protected abstract Vector2i computeChasingTargetTile(GameLevel level);
 
     @Override
-    public void hunt(GameLevel level, Ghost ghost, float speed) {
+    public void hunt(GameLevel level, Ghost ghost, float speed, WorldMovementPolicy worldMovementPolicy) {
         requireNonNull(level);
         requireNonNull(ghost);
 
         if (level.huntingRules().phaseIndex() == 0) { // first scatter phase
-            moveRandomlyThroughWorld(level, ghost, speed);
+            moveRandomlyThroughWorld(level, ghost, speed, worldMovementPolicy);
         }
         else {
-            normalHunt(level, ghost, speed);
+            normalHunt(level, ghost, speed, worldMovementPolicy);
         }
     }
 
-    protected void normalHunt(GameLevel level, Ghost ghost, float speed) {
+    protected void normalHunt(GameLevel level, Ghost ghost, float speed, WorldMovementPolicy worldMovementPolicy) {
         final boolean chaseOverride = ghost.hasComponent(Elroy.class) && ghost.assertComponent(Elroy.class).enabled();
         final boolean chase = level.huntingRules().isChasing() || chaseOverride;
         final Vector2i targetTile = chase
@@ -53,37 +53,36 @@ public abstract class ArcadeMsPacMan_RandomizedHuntingStrategy implements GhostH
             : computeScatterTile(level.worldMap(), ghost);
 
         navigator.setSpeed(ghost, speed);
-        navigator.tryMovingTowardsTargetTile(ghost, level, targetTile);
+        navigator.tryMovingTowardsTargetTile(ghost, level, targetTile, worldMovementPolicy);
     }
     
-    protected void moveRandomlyThroughWorld(GameLevel level, Ghost ghost, float speed) {
+    protected void moveRandomlyThroughWorld(GameLevel level, Ghost ghost, float speed, WorldMovementPolicy worldMovementPolicy) {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final Vector2i tile = WorldNavigationSystem.computeTile(ghost);
 
         final boolean teleporting = terrain.isTileInPortalSpace(tile);
         if (teleporting) {
             navigator.setSpeed(ghost, speed);
-            navigator.tryMovingOrTeleporting(ghost, level);
+            navigator.tryMovingOrTeleporting(ghost, level, worldMovementPolicy);
             return;
         }
 
         final boolean changeWishDirection = !ghost.worldNavigation().info.moved
           || (ghost.worldNavigation().isNewTileEntered() && terrain.isIntersection(tile));
         if (changeWishDirection) {
-            selectRandomWishDir(ghost, level);
+            selectRandomWishDir(ghost, level, worldMovementPolicy);
         }
         navigator.setSpeed(ghost, speed);
-        navigator.tryMovingOrTeleporting(ghost, level);
+        navigator.tryMovingOrTeleporting(ghost, level, worldMovementPolicy);
     }
 
-    private void selectRandomWishDir(Ghost ghost, GameLevel level) {
-        final WorldMovementPolicy policy = ghost.assertComponent(WorldMovementPolicy.class);
+    private void selectRandomWishDir(Ghost ghost, GameLevel level, WorldMovementPolicy worldMovementPolicy) {
         final Vector2i ghostTile = WorldNavigationSystem.computeTile(ghost);
 
         for (final Direction dir : Direction.shuffled()) {
             final Vector2i neighbor = ghostTile.plus(dir.vector());
             final boolean acceptable = dir != ghost.worldNavigation().moveDir().opposite()
-                && policy.canAccessTile(level, ghost, neighbor);
+                && worldMovementPolicy.canAccessTile(level, ghost, neighbor);
             if (acceptable) {
                 navigator.setWishDir(ghost, dir);
                 Logger.info("{} selects random wish direction {}", ghost.name(), dir);

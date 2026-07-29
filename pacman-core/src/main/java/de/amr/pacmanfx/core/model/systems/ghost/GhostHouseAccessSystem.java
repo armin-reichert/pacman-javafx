@@ -11,6 +11,7 @@ import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.component.common.Position;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
+import de.amr.pacmanfx.core.model.systems.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.world.House;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 
@@ -136,7 +137,7 @@ public class GhostHouseAccessSystem {
     //TODO extract state change
     public void reachHouse(GameContext gameContext, Ghost ghost, float speed) {
         final GameSystems sys = gameContext.systems();
-
+        final WorldMovementPolicy policy = sys.ghostWorldMovementPolicy();
         final GameLevel level = gameContext.assertLevel();
 
         final Position position = ghost.position();
@@ -156,8 +157,8 @@ public class GhostHouseAccessSystem {
             //TODO use system method
             ghost.worldNavigation().setTargetTile(house.leftDoorTile());
             sys.navigator().setSpeed(ghost, speed);
-            sys.navigator().navigateTowardsTarget(ghost,  level);
-            sys.navigator().tryMovingOrTeleporting(ghost, level);
+            sys.navigator().navigateTowardsTarget(ghost, level, policy);
+            sys.navigator().tryMovingOrTeleporting(ghost, level, policy);
         }
     }
 }

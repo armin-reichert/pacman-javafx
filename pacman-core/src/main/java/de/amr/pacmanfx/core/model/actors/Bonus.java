@@ -11,10 +11,9 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.core.event.BonusExpiredEvent;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
-import de.amr.pacmanfx.core.model.component.bonus.BonusWorldMovementPolicy;
 import de.amr.pacmanfx.core.model.component.common.Movement;
 import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
-import de.amr.pacmanfx.core.model.component.world.WorldMovementPolicy;
+import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.core.steering.RouteBasedSteering;
@@ -49,7 +48,6 @@ public class Bonus extends Actor implements UpdatableEntity {
     public Bonus(int symbolCode, int points) {
         setComponent(Movement.class, new Movement());
         setComponent(WorldNavigation.class, new WorldNavigation());
-        setComponent(WorldMovementPolicy.class, new BonusWorldMovementPolicy());
 
         this.name = "Bonus-symbol:%d-points:%d".formatted(symbolCode, points);
         this.symbolCode = Validations.requireNonNegativeInt(symbolCode);
@@ -174,7 +172,7 @@ public class Bonus extends Actor implements UpdatableEntity {
     }
 
     private boolean wanderMaze(GameContext gameContext) {
-        final WorldNavigationSystem navigator = gameContext.systems().navigator();
+        final GameSystems sys =  gameContext.systems();
         final GameLevel level = gameContext.assertLevel();
 
         routeNavigation.steer(this, gameContext);
@@ -182,8 +180,8 @@ public class Bonus extends Actor implements UpdatableEntity {
         final Vector2i tile = WorldNavigationSystem.computeTile(this);
         boolean mazeExitReached = routeNavigation.isRouteTraversed() || level.worldMap().terrainLayer().isTileInPortalSpace(tile);
         if (!mazeExitReached) {
-            navigator.navigateTowardsTarget(this,  level);
-            navigator.tryMovingOrTeleporting(this, level);
+            sys.navigator().navigateTowardsTarget(this, level, sys.bonusWorldMovementPolicy());
+            sys.navigator().tryMovingOrTeleporting(this, level, sys.bonusWorldMovementPolicy());
             jump();
         }
         return mazeExitReached;

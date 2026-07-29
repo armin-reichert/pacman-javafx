@@ -2,15 +2,13 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core.model.component.world;
+package de.amr.pacmanfx.core.model.systems.world;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Actor;
-import de.amr.pacmanfx.core.model.component.ActorComponent;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 
-public interface WorldMovementPolicy extends ActorComponent {
+public interface WorldMovementPolicy {
 
     boolean canAccessTile(GameLevel level, Actor actor, Vector2i tile);
 

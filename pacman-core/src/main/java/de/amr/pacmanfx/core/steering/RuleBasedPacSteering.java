@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
-import de.amr.pacmanfx.core.model.component.world.WorldMovementPolicy;
+import de.amr.pacmanfx.core.model.systems.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.pac.PacPowerSystem;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
@@ -116,7 +116,7 @@ public class RuleBasedPacSteering implements Steering {
 
     private void takeAction(GameContext gameContext, CollectedData data) {
         final WorldNavigationSystem navigator = gameContext.systems().navigator();
-
+        final WorldMovementPolicy worldMovementPolicy = gameContext.systems().pacWorldMovementPolicy();
         final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
         final Vector2i pacTile = WorldNavigationSystem.computeTile(pac);
@@ -158,7 +158,7 @@ public class RuleBasedPacSteering implements Steering {
             worldNavigation.setTargetTile(findTileFarthestFromGhosts(gameContext, pac, findNearestFoodTiles(gameContext)));
         }
         worldNavigation.optTargetTile().ifPresent(_ -> {
-            navigator.navigateTowardsTarget(pac, level);
+            navigator.navigateTowardsTarget(pac, level, worldMovementPolicy);
             Logger.trace("Navigated towards {}, moveDir={} wishDir={}",
                 worldNavigation.targetTile(), worldNavigation.moveDir(), worldNavigation.wishDir());
         });
@@ -178,11 +178,11 @@ public class RuleBasedPacSteering implements Steering {
     }
 
     private Ghost findHuntingGhostAhead(GameContext gameContext) {
+        final WorldMovementPolicy worldMovementPolicy = gameContext.systems().pacWorldMovementPolicy();
         final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
 
         final WorldNavigation worldNavigation = pac.worldNavigation();
-        final WorldMovementPolicy worldMovementPolicy = pac.assertComponent(WorldMovementPolicy.class);
 
         final Vector2i pacManTile = WorldNavigationSystem.computeTile(pac);
 
@@ -214,14 +214,14 @@ public class RuleBasedPacSteering implements Steering {
     }
 
     private Ghost findHuntingGhostBehind(GameContext gameContext, Pac pac) {
-        final WorldNavigation worldNavigation = pac.worldNavigation();
-        final WorldMovementPolicy worldMovementPolicy = pac.assertComponent(WorldMovementPolicy.class);
+        final WorldMovementPolicy worldMovementPolicy = gameContext.systems().pacWorldMovementPolicy();
+        final WorldNavigation navigation = pac.worldNavigation();
 
         final GameLevel level = gameContext.assertLevel();
         final Vector2i pacManTile = WorldNavigationSystem.computeTile(pac);
 
         for (int i = 1; i <= CollectedData.MAX_GHOST_BEHIND_DETECTION_DIST; ++i) {
-            var behind = pacManTile.plus(worldNavigation.moveDir().opposite().vector().scaled(i));
+            var behind = pacManTile.plus(navigation.moveDir().opposite().vector().scaled(i));
             if (!worldMovementPolicy.canAccessTile(level, pac, behind)) {
                 break;
             }
@@ -237,10 +237,9 @@ public class RuleBasedPacSteering implements Steering {
     }
 
     private Direction findEscapeDirectionExcluding(GameContext gameContext, Collection<Direction> forbidden) {
+        final WorldMovementPolicy worldMovementPolicy = gameContext.systems().pacWorldMovementPolicy();
         final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
-
-        final WorldMovementPolicy worldMovementPolicy = pac.assertComponent(WorldMovementPolicy.class);
 
         final Vector2i pacTile = WorldNavigationSystem.computeTile(pac);
         final List<Direction> escapes = new ArrayList<>(4);

@@ -8,7 +8,9 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
+import de.amr.pacmanfx.core.model.systems.world.WorldMovementPolicy;
 
 import java.util.List;
 
@@ -38,28 +40,29 @@ public class RouteBasedSteering implements Steering {
         routeTraversed = false;
     }
 
+    //TODO It is assumed that the actor is a Pac
     @Override
     public void steer(Actor actor, GameContext gameContext) {
-        final WorldNavigationSystem navigator = gameContext.systems().navigator();
-        final WorldNavigation worldNavigation = actor.assertComponent(WorldNavigation.class);
-
+        final GameSystems sys = gameContext.systems();
+        final WorldNavigation navigation = actor.assertComponent(WorldNavigation.class);
         final GameLevel level = gameContext.assertLevel();
 
         if (targetIndex == route.size()) {
             routeTraversed = true;
         }
-        else if (worldNavigation.optTargetTile().isEmpty()) {
-            worldNavigation.setTargetTile(route.get(targetIndex));
+        else if (navigation.optTargetTile().isEmpty()) {
+            //TODO Use system method
+            navigation.setTargetTile(route.get(targetIndex));
         }
         else if (WorldNavigationSystem.computeTile(actor).equals(route.get(targetIndex))) {
-            selectNextTargetTile(navigator, level, actor);
+            selectNextTargetTile(sys.navigator(), sys.pacWorldMovementPolicy(), level, actor);
         }
         else {
-            navigator.navigateTowardsTarget(actor, level);
+            sys.navigator().navigateTowardsTarget(actor, level, sys.pacWorldMovementPolicy());
         }
     }
 
-    private void selectNextTargetTile(WorldNavigationSystem navigator, GameLevel level, Actor actor) {
+    private void selectNextTargetTile(WorldNavigationSystem navigator, WorldMovementPolicy policy, GameLevel level, Actor actor) {
         final WorldNavigation navigation = actor.assertComponent(WorldNavigation.class);
         ++targetIndex;
         if (targetIndex < route.size()) {
@@ -67,7 +70,7 @@ public class RouteBasedSteering implements Steering {
             navigation.setTargetTile(route.get(targetIndex));
 
             // The next line is important!
-            navigator.navigateTowardsTarget(actor, level);
+            navigator.navigateTowardsTarget(actor, level, policy);
         }
     }
 }

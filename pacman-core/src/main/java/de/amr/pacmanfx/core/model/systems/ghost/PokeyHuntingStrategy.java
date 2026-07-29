@@ -8,6 +8,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
+import de.amr.pacmanfx.core.model.systems.world.WorldMovementPolicy;
 
 import static java.util.Objects.requireNonNull;
 
@@ -20,7 +21,7 @@ public class PokeyHuntingStrategy implements GhostHuntingStrategy {
     }
 
     @Override
-    public void hunt(GameLevel level, Ghost ghost, float speed) {
+    public void hunt(GameLevel level, Ghost ghost, float speed, WorldMovementPolicy worldMovementPolicy) {
         requireNonNull(level);
         requireNonNull(ghost);
 
@@ -29,7 +30,7 @@ public class PokeyHuntingStrategy implements GhostHuntingStrategy {
             : level.worldMap().terrainLayer().ghostScatterTile(ghost.personality());
 
         navigator.setSpeed(ghost, speed);
-        navigator.tryMovingTowardsTargetTile(ghost, level, targetTile);
+        navigator.tryMovingTowardsTargetTile(ghost, level, targetTile, worldMovementPolicy);
     }
 
     private Vector2i computeChasingTargetTile(GameLevel level, Ghost ghost) {

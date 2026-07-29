@@ -4,15 +4,16 @@
 
 package de.amr.pacmanfx.core.model.systems.common;
 
-
 import de.amr.pacmanfx.core.model.systems.ghost.GhostHouseAccessSystem;
 import de.amr.pacmanfx.core.model.systems.ghost.GhostHuntingStrategy;
 import de.amr.pacmanfx.core.model.systems.ghost.GhostStateSystem;
 import de.amr.pacmanfx.core.model.systems.pac.PacDigestionSystem;
 import de.amr.pacmanfx.core.model.systems.pac.PacPowerSystem;
 import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
+import de.amr.pacmanfx.core.model.systems.world.WorldMovementPolicy;
 
 public interface GameSystems {
+
     SpriteAnimSystem spriteAnim();
 
     MovementSystem motor();
@@ -20,6 +21,8 @@ public interface GameSystems {
     WorldNavigationSystem navigator();
 
     RandomWorldMovementSystem roamingNavigator();
+
+    WorldMovementPolicy pacWorldMovementPolicy();
 
     PacPowerSystem pacPower();
 
@@ -29,5 +32,9 @@ public interface GameSystems {
 
     GhostHouseAccessSystem ghostHouseAccess();
 
+    WorldMovementPolicy ghostWorldMovementPolicy();
+
     GhostHuntingStrategy ghostHuntingStrategy(byte personality);
+
+    WorldMovementPolicy bonusWorldMovementPolicy();
 }

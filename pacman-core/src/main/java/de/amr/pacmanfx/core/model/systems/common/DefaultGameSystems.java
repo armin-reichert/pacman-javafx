@@ -5,10 +5,13 @@
 package de.amr.pacmanfx.core.model.systems.common;
 
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.systems.bonus.BonusWorldMovementPolicy;
 import de.amr.pacmanfx.core.model.systems.ghost.*;
 import de.amr.pacmanfx.core.model.systems.pac.PacDigestionSystem;
 import de.amr.pacmanfx.core.model.systems.pac.PacPowerSystem;
+import de.amr.pacmanfx.core.model.systems.pac.PacWorldMovementPolicy;
 import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
+import de.amr.pacmanfx.core.model.systems.world.WorldMovementPolicy;
 
 public class DefaultGameSystems implements GameSystems {
 
@@ -18,30 +21,37 @@ public class DefaultGameSystems implements GameSystems {
     protected WorldNavigationSystem navigator = new WorldNavigationSystem(motor);
     protected RandomWorldMovementSystem roamingNavigator = new RandomWorldMovementSystem(navigator);
 
+    protected WorldMovementPolicy pacWorldMovementPolicy;
     protected PacPowerSystem pacPower;
     protected PacDigestionSystem pacDigestion;
 
     protected GhostStateSystem ghostState;
     protected GhostHouseAccessSystem ghostHouseAccess;
+    protected GhostWorldMovementPolicy ghostWorldMovementPolicy;
 
     protected GhostHuntingStrategy orangeGhostPokeyHuntingStrategy;
     protected GhostHuntingStrategy cyanGhostBashfulHuntingStrategy;
     protected GhostHuntingStrategy redGhostShadowHuntingStrategy;
     protected GhostHuntingStrategy pinkGhostSpeedyHuntingStrategy;
 
+    protected WorldMovementPolicy bonusWorldMovementPolicy;
+
     public DefaultGameSystems() {
         createPacSystems();
         createGhostSystems();
+        bonusWorldMovementPolicy = new BonusWorldMovementPolicy();
     }
 
     protected void createPacSystems() {
         pacPower = new PacPowerSystem();
         pacDigestion = new PacDigestionSystem();
+        pacWorldMovementPolicy = new PacWorldMovementPolicy();
     }
 
     protected void createGhostSystems() {
         ghostState = new GhostStateSystem();
         ghostHouseAccess = new GhostHouseAccessSystem();
+        ghostWorldMovementPolicy = new GhostWorldMovementPolicy();
 
         redGhostShadowHuntingStrategy = createShadowHuntingStrategy();
         pinkGhostSpeedyHuntingStrategy = createSpeedyHuntingStrategy();
@@ -107,6 +117,10 @@ public class DefaultGameSystems implements GameSystems {
         return pacDigestion;
     }
 
+    public WorldMovementPolicy pacWorldMovementPolicy() {
+        return pacWorldMovementPolicy;
+    }
+
     @Override
     public GhostStateSystem ghostState() {
         return ghostState;
@@ -118,6 +132,11 @@ public class DefaultGameSystems implements GameSystems {
     }
 
     @Override
+    public GhostWorldMovementPolicy ghostWorldMovementPolicy() {
+        return ghostWorldMovementPolicy;
+    }
+
+    @Override
     public GhostHuntingStrategy ghostHuntingStrategy(byte personality) {
         return switch (personality) {
             case GameModel.RED_GHOST_SHADOW -> redGhostShadowHuntingStrategy;
@@ -126,5 +145,10 @@ public class DefaultGameSystems implements GameSystems {
             case GameModel.ORANGE_GHOST_POKEY -> orangeGhostPokeyHuntingStrategy;
             default -> throw new IllegalArgumentException("Unknown personality: " + personality);
         };
+    }
+
+    @Override
+    public WorldMovementPolicy bonusWorldMovementPolicy() {
+        return bonusWorldMovementPolicy;
     }
 }

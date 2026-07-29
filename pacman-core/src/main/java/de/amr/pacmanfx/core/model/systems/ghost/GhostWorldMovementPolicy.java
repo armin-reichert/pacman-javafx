@@ -2,13 +2,14 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core.model.component.ghost;
+package de.amr.pacmanfx.core.model.systems.ghost;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
-import de.amr.pacmanfx.core.model.component.world.WorldMovementPolicy;
+import de.amr.pacmanfx.core.model.component.ghost.GhostWorldPlacement;
+import de.amr.pacmanfx.core.model.systems.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
@@ -22,9 +23,6 @@ import static de.amr.basics.math.Direction.UP;
 import static java.util.Objects.requireNonNull;
 
 public class GhostWorldMovementPolicy implements WorldMovementPolicy {
-
-    @Override
-    public void reset() {}
 
     @Override
     public boolean canAccessTile(GameLevel level, Actor actor, Vector2i tile) {

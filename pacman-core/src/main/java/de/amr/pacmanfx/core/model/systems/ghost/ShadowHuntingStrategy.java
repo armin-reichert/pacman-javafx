@@ -9,6 +9,7 @@ import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.component.ghost.Elroy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
+import de.amr.pacmanfx.core.model.systems.world.WorldMovementPolicy;
 
 import static java.util.Objects.requireNonNull;
 
@@ -21,7 +22,7 @@ public class ShadowHuntingStrategy implements GhostHuntingStrategy {
     }
 
     @Override
-    public void hunt(GameLevel level, Ghost ghost, float speed) {
+    public void hunt(GameLevel level, Ghost ghost, float speed, WorldMovementPolicy worldMovementPolicy) {
         requireNonNull(level);
         requireNonNull(ghost);
 
@@ -31,7 +32,7 @@ public class ShadowHuntingStrategy implements GhostHuntingStrategy {
             : computeScatterTile(level.worldMap(), ghost);
 
         navigator.setSpeed(ghost, speed);
-        navigator.tryMovingTowardsTargetTile(ghost, level, targetTile);
+        navigator.tryMovingTowardsTargetTile(ghost, level, targetTile, worldMovementPolicy);
     }
 
     private Vector2i computeChasingTargetTile(GameLevel level) {

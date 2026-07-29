@@ -9,11 +9,9 @@ import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.component.common.Movement;
 import de.amr.pacmanfx.core.model.component.pac.PacCheats;
 import de.amr.pacmanfx.core.model.component.pac.PacDigestion;
-import de.amr.pacmanfx.core.model.component.pac.PacManWorldMovementPolicy;
 import de.amr.pacmanfx.core.model.component.pac.PacPower;
 import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
-import de.amr.pacmanfx.core.model.component.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.rules.ActorSpeedRules;
@@ -40,7 +38,6 @@ public class Pac extends Actor implements UpdatableEntity {
 
         setComponent(Movement.class, new Movement());
         setComponent(WorldNavigation.class, new WorldNavigation());
-        setComponent(WorldMovementPolicy.class, new PacManWorldMovementPolicy());
         setComponent(PacDigestion.class, new PacDigestion());
         setComponent(PacPower.class, new PacPower());
         setComponent(PacCheats.class, new PacCheats());
@@ -132,7 +129,7 @@ public class Pac extends Actor implements UpdatableEntity {
             : speedRules.pacSpeed(level);
 
         sys.navigator().setSpeed(this, speed);
-        sys.navigator().tryMovingOrTeleporting(this, level);
+        sys.navigator().tryMovingOrTeleporting(this, level, sys.pacWorldMovementPolicy());
 
         if (worldNavigation().info.moved) {
             sys.spriteAnim().playSelected(this);

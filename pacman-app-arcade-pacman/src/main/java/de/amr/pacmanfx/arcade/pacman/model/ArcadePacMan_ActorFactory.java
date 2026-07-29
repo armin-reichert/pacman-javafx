@@ -11,10 +11,8 @@ import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.component.common.Movement;
 import de.amr.pacmanfx.core.model.component.ghost.Elroy;
 import de.amr.pacmanfx.core.model.component.ghost.GhostStateComponent;
-import de.amr.pacmanfx.core.model.component.ghost.GhostWorldMovementPolicy;
 import de.amr.pacmanfx.core.model.component.ghost.GhostWorldPlacement;
 import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
-import de.amr.pacmanfx.core.model.component.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
 import de.amr.pacmanfx.core.model.world.House;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
@@ -76,7 +74,6 @@ public class ArcadePacMan_ActorFactory {
         ghost.setComponent(Movement.class, new Movement());
         ghost.setComponent(WorldNavigation.class, new WorldNavigation());
         ghost.setComponent(GhostWorldPlacement.class, new GhostWorldPlacement());
-        ghost.setComponent(WorldMovementPolicy.class, new GhostWorldMovementPolicy());
         ghost.setComponent(GhostStateComponent.class, new GhostStateComponent());
         ghost.setComponent(SpriteAnim.class, new SpriteAnim());
         //TODO where does this belong?
