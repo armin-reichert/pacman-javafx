@@ -6,6 +6,10 @@ package de.amr.pacmanfx.ui;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.*;
+import de.amr.pacmanfx.core.event.GameEvent;
+import de.amr.pacmanfx.core.event.base.GameEventListener;
+import de.amr.pacmanfx.core.event.gameplay.GameStateChangeEvent;
+import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;

@@ -6,9 +6,9 @@ package de.amr.pacmanfx.core.model.systems.pac;
 
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.event.PacGetsPowerEvent;
-import de.amr.pacmanfx.core.event.PacLostPowerEvent;
-import de.amr.pacmanfx.core.event.PacPowerFadesEvent;
+import de.amr.pacmanfx.core.event.pac.PacGetsPowerEvent;
+import de.amr.pacmanfx.core.event.pac.PacLostPowerEvent;
+import de.amr.pacmanfx.core.event.pac.PacPowerFadesEvent;
 import de.amr.pacmanfx.core.model.component.ghost.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.component.pac.PacPowerComponent;

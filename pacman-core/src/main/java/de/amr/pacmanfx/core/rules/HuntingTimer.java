@@ -7,7 +7,7 @@ package de.amr.pacmanfx.core.rules;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.event.HuntingPhaseStartedEvent;
+import de.amr.pacmanfx.core.event.gameplay.HuntingPhaseStartedEvent;
 import org.tinylog.Logger;
 
 import java.util.Optional;

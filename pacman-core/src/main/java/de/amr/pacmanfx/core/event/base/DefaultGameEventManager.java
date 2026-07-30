@@ -1,5 +1,6 @@
-package de.amr.pacmanfx.core.event;
+package de.amr.pacmanfx.core.event.base;
 
+import de.amr.pacmanfx.core.event.GameEvent;
 import org.tinylog.Logger;
 
 import java.util.HashSet;
@@ -7,7 +8,7 @@ import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 
-public class GameEventManagerImpl implements GameEventManager {
+public class DefaultGameEventManager implements GameEventManager {
 
     private final Set<GameEventListener> subscribers = new HashSet<>();
 

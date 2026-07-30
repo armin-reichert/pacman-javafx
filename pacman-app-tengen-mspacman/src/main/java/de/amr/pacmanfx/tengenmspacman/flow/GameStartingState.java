@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.tengenmspacman.flow;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.event.GameStartedEvent;
-import de.amr.pacmanfx.core.event.LevelStartedEvent;
+import de.amr.pacmanfx.core.event.gameplay.GameStartedEvent;
+import de.amr.pacmanfx.core.event.gameplay.LevelStartedEvent;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.level.GameLevel;

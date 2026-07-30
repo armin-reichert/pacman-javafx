@@ -1,5 +1,14 @@
-package de.amr.pacmanfx.core.event;
+package de.amr.pacmanfx.core.event.base;
 
+import de.amr.pacmanfx.core.event.*;
+import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
+import de.amr.pacmanfx.core.event.bonus.BonusEatenEvent;
+import de.amr.pacmanfx.core.event.bonus.BonusExpiredEvent;
+import de.amr.pacmanfx.core.event.gameplay.*;
+import de.amr.pacmanfx.core.event.ghost.GhostEatenEvent;
+import de.amr.pacmanfx.core.event.ghost.GhostEntersHouseEvent;
+import de.amr.pacmanfx.core.event.ghost.GhostStartsReturningHomeEvent;
+import de.amr.pacmanfx.core.event.pac.*;
 import org.tinylog.Logger;
 
 /**

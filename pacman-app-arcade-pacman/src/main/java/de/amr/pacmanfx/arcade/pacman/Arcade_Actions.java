@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.pacman;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.event.CreditAddedEvent;
+import de.amr.pacmanfx.core.event.gameplay.CreditAddedEvent;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.core.state.GameStateID;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;

@@ -4,8 +4,8 @@
 package de.amr.pacmanfx.core.model.test;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.event.GameEventManager;
-import de.amr.pacmanfx.core.event.LevelStartedEvent;
+import de.amr.pacmanfx.core.event.base.GameEventManager;
+import de.amr.pacmanfx.core.event.gameplay.LevelStartedEvent;
 import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.model.GameModel;

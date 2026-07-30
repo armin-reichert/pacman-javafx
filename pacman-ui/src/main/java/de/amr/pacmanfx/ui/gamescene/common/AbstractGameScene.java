@@ -6,9 +6,9 @@ package de.amr.pacmanfx.ui.gamescene.common;
 
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.event.CreditAddedEvent;
-import de.amr.pacmanfx.core.event.DefaultGameEventListener;
-import de.amr.pacmanfx.core.event.GameEventManager;
+import de.amr.pacmanfx.core.event.gameplay.CreditAddedEvent;
+import de.amr.pacmanfx.core.event.base.DefaultGameEventListener;
+import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.core.gameplay.GameFlowController;
 import de.amr.pacmanfx.core.model.GameModel;

@@ -6,8 +6,8 @@ package de.amr.pacmanfx.game;
 
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.event.GameEventManager;
-import de.amr.pacmanfx.core.event.GameEventManagerImpl;
+import de.amr.pacmanfx.core.event.base.GameEventManager;
+import de.amr.pacmanfx.core.event.base.DefaultGameEventManager;
 import de.amr.pacmanfx.core.gameplay.GameFlowController;
 import de.amr.pacmanfx.core.gameplay.FrameContext;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
@@ -42,7 +42,7 @@ public class GameContextImpl implements GameContext {
         this.gameVariant = requireNonNull(gameVariant);
         this.coinMechanism = requireNonNull(coinMechanism);
         this.hudState = new HUDState();
-        this.eventManager = new GameEventManagerImpl();
+        this.eventManager = new DefaultGameEventManager();
     }
 
     @Override

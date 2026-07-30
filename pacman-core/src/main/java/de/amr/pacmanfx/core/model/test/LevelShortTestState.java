@@ -4,8 +4,8 @@
 package de.amr.pacmanfx.core.model.test;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.event.BonusEatenEvent;
-import de.amr.pacmanfx.core.event.LevelStartedEvent;
+import de.amr.pacmanfx.core.event.bonus.BonusEatenEvent;
+import de.amr.pacmanfx.core.event.gameplay.LevelStartedEvent;
 import de.amr.pacmanfx.core.event.TestStartedEvent;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.GameEntity;

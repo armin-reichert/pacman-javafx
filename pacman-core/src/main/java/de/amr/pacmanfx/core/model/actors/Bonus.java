@@ -7,7 +7,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Validations;
-import de.amr.pacmanfx.core.event.BonusExpiredEvent;
+import de.amr.pacmanfx.core.event.bonus.BonusExpiredEvent;
 import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.component.BonusMoveAndJumpAnimationComponent;

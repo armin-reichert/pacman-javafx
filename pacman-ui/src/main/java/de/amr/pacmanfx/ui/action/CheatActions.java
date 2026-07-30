@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.event.PacEatsFoodEvent;
+import de.amr.pacmanfx.core.event.pac.PacEatsFoodEvent;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Ghost;

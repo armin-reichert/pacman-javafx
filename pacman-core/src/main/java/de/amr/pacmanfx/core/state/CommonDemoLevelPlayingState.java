@@ -7,8 +7,8 @@ package de.amr.pacmanfx.core.state;
 
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.event.LevelCreatedEvent;
-import de.amr.pacmanfx.core.event.LevelStartedEvent;
+import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
+import de.amr.pacmanfx.core.event.gameplay.LevelStartedEvent;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.GameEntity;

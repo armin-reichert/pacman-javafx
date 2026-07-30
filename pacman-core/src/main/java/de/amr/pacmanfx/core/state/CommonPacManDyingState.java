@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.core.state;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.event.PacDeadEvent;
-import de.amr.pacmanfx.core.event.PacDyingEvent;
+import de.amr.pacmanfx.core.event.pac.PacDeadEvent;
+import de.amr.pacmanfx.core.event.pac.PacDyingEvent;
 import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.GameEntity;
