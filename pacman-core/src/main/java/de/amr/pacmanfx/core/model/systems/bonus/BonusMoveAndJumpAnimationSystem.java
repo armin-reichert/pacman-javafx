@@ -39,24 +39,18 @@ public class BonusMoveAndJumpAnimationSystem {
         jump(bonus);
     }
 
-    public void reset(Bonus bonus) {
-        requireNonNull(bonus);
-
-        final BonusMoveAndJumpAnimationComponent animation = bonus.requireComponent(BonusMoveAndJumpAnimationComponent.class);
+    public void reset(BonusMoveAndJumpAnimationComponent animation) {
+        requireNonNull(animation);
         animation.pulse().reset();
     }
 
-    public void start(Bonus bonus) {
-        requireNonNull(bonus);
-
-        final BonusMoveAndJumpAnimationComponent animation = bonus.requireComponent(BonusMoveAndJumpAnimationComponent.class);
+    public void start(BonusMoveAndJumpAnimationComponent animation) {
+        requireNonNull(animation);
         animation.pulse().restart();
     }
 
-    public void stop(Bonus bonus) {
-        requireNonNull(bonus);
-
-        final BonusMoveAndJumpAnimationComponent animation = bonus.requireComponent(BonusMoveAndJumpAnimationComponent.class);
+    public void stop(BonusMoveAndJumpAnimationComponent animation) {
+        requireNonNull(animation);
         animation.pulse().stop();
     }
 

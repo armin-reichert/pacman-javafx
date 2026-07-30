@@ -13,6 +13,8 @@ import de.amr.pacmanfx.core.model.component.bonus.BonusStateComponent;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 
+import java.util.Optional;
+
 import static java.util.Objects.requireNonNull;
 
 public class BonusStateSystem {
@@ -28,7 +30,8 @@ public class BonusStateSystem {
 
         switch (bonusState.state()) {
             case EDIBLE -> {
-                if (bonus.supportsMoveAndJumpAnimation()) {
+                final Optional<BonusMoveAndJumpAnimationComponent> animationComp = bonus.optMoveAndJumpAnimation();
+                if (animationComp.isPresent()) {
                     bonus.optComponent(BonusMoveAndJumpAnimationComponent.class).ifPresent(animation -> {
                         sys.bonusJumpAnimation().update(level, bonus);
                         bonusState.setEdibleStateExpired(animation.targetReached() || bonusState.timer().hasExpired());
@@ -63,9 +66,7 @@ public class BonusStateSystem {
         //TODO reconsider this:
         sys.navigator().setSpeed(bonus, 0);
 
-        if (bonus.supportsMoveAndJumpAnimation()) {
-            sys.bonusJumpAnimation().reset(bonus);
-        }
+        bonus.optMoveAndJumpAnimation().ifPresent(animation -> sys.bonusJumpAnimation().reset(animation));
     }
 
     public void showEdibleForSeconds(Bonus bonus, float seconds) {
@@ -89,9 +90,7 @@ public class BonusStateSystem {
         //TODO use system method:
         bonus.worldNavigation().setTargetTile(null);
 
-        if (bonus.supportsMoveAndJumpAnimation()) {
-            sys.bonusJumpAnimation().start(bonus);
-        }
+        bonus.optMoveAndJumpAnimation().ifPresent(animation -> sys.bonusJumpAnimation().start(animation));
     }
 
     public void showEatenForSeconds(GameSystems sys, Bonus bonus, float seconds) {
@@ -105,8 +104,6 @@ public class BonusStateSystem {
         //TODO reconsider this:
         sys.navigator().setSpeed(bonus, 0);
 
-        if (bonus.supportsMoveAndJumpAnimation()) {
-            sys.bonusJumpAnimation().stop(bonus);
-        }
+        bonus.optMoveAndJumpAnimation().ifPresent(animation -> sys.bonusJumpAnimation().stop(animation));
     }
 }

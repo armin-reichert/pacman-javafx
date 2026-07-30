@@ -14,10 +14,10 @@ import de.amr.pacmanfx.core.model.component.bonus.BonusState;
 import de.amr.pacmanfx.core.model.component.bonus.BonusStateComponent;
 import de.amr.pacmanfx.core.model.component.common.MovementComponent;
 import de.amr.pacmanfx.core.model.component.world.WorldNavigationComponent;
-import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import org.tinylog.Logger;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
@@ -64,6 +64,12 @@ public class Bonus extends GameEntity implements UpdatableEntity {
         return requireComponent(BonusStateComponent.class);
     }
 
+    public Optional<BonusMoveAndJumpAnimationComponent> optMoveAndJumpAnimation() {
+        return hasComponent(BonusMoveAndJumpAnimationComponent.class)
+            ? Optional.of(requireComponent(BonusMoveAndJumpAnimationComponent.class))
+            : Optional.empty();
+    }
+
     public int symbolCode() {
         return symbolCode;
     }
@@ -95,16 +101,11 @@ public class Bonus extends GameEntity implements UpdatableEntity {
     public void setMazeRoute(GameContext gameContext, List<Vector2i> waypoints, boolean leftToRight) {
         requireNonNull(gameContext);
 
-        if (supportsMoveAndJumpAnimation()) {
-            final GameSystems sys = gameContext.systems();
-            sys.bonusJumpAnimation().setMazeRoute(this, waypoints, leftToRight);
+        if (optMoveAndJumpAnimation().isPresent()) {
+            gameContext.systems().bonusJumpAnimation().setMazeRoute(this, waypoints, leftToRight);
         }
         else {
-            Logger.error("Cannot set bonus route: No bonus animation support!");
+            Logger.warn("Cannot set bonus route: No bonus animation support!");
         }
-    }
-
-    public boolean supportsMoveAndJumpAnimation() {
-        return hasComponent(BonusMoveAndJumpAnimationComponent.class);
     }
 }
