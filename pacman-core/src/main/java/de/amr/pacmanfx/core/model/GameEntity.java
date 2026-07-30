@@ -2,11 +2,10 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core.model.actors;
+package de.amr.pacmanfx.core.model;
 
-import de.amr.pacmanfx.core.model.component.GameEntityComponent;
-import de.amr.pacmanfx.core.model.component.common.Position;
-import de.amr.pacmanfx.core.model.component.common.Visibility;
+import de.amr.pacmanfx.core.model.component.common.PositionComponent;
+import de.amr.pacmanfx.core.model.component.common.VisibilityComponent;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -26,8 +25,8 @@ public class GameEntity {
     public GameEntity() {
         name = getClass().getSimpleName() + "#" + Integer.toHexString(hashCode()); // default name
 
-        setComponent(Position.class, new Position());
-        setComponent(Visibility.class, new Visibility(false));
+        setComponent(PositionComponent.class, new PositionComponent());
+        setComponent(VisibilityComponent.class, new VisibilityComponent(false));
     }
 
     public <T extends GameEntityComponent> void setComponent(Class<T> type, T component) {
@@ -59,12 +58,12 @@ public class GameEntity {
         return Optional.ofNullable(component).map(componentClass::cast);
     }
 
-    public final Position position() {
-        return requireComponent(Position.class);
+    public final PositionComponent position() {
+        return requireComponent(PositionComponent.class);
     }
 
-    public final Visibility visibility() {
-        return requireComponent(Visibility.class);
+    public final VisibilityComponent visibility() {
+        return requireComponent(VisibilityComponent.class);
     }
 
     public void setName(String name) {

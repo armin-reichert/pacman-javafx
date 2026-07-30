@@ -10,10 +10,10 @@ import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.actors.GameEntity;
-import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
-import de.amr.pacmanfx.core.model.component.common.Movement;
-import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
+import de.amr.pacmanfx.core.model.GameEntity;
+import de.amr.pacmanfx.core.model.actors.ActorAnimationID;
+import de.amr.pacmanfx.core.model.component.common.MovementComponent;
+import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnimComponent;
 import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.BLUE_BAG;
@@ -30,13 +30,13 @@ public class Bag extends GameEntity {
 
         private SpriteAnimation createAnimation(Identifier animationID, SpriteAnimationContainer container) {
             return switch (animationID) {
-                case CommonAnimationID.JUNIOR ->
+                case ActorAnimationID.JUNIOR ->
                     new SpriteAnimationBuilder()
                         .singleSprite(spriteSheet.findSprite(JUNIOR_PAC))
                         .initiallyStopped()
                         .build(container);
 
-                case CommonAnimationID.BAG ->
+                case ActorAnimationID.BAG ->
                     new SpriteAnimationBuilder()
                         .singleSprite(spriteSheet.findSprite(BLUE_BAG))
                         .initiallyStopped()
@@ -51,18 +51,18 @@ public class Bag extends GameEntity {
 
     public Bag(SpriteAnimationContainer container) {
         name = "Birkin";
-        setComponent(Movement.class, new Movement());
-        setComponent(SpriteAnim.class, new SpriteAnim());
-        requireComponent(SpriteAnim.class).setAnimations(new BagAnimations(container));
+        setComponent(MovementComponent.class, new MovementComponent());
+        setComponent(SpriteAnimComponent.class, new SpriteAnimComponent());
+        requireComponent(SpriteAnimComponent.class).setAnimations(new BagAnimations(container));
     }
 
-    public Movement movement() {
-        return requireComponent(Movement.class);
+    public MovementComponent movement() {
+        return requireComponent(MovementComponent.class);
     }
 
     public void setOpen(GameContext gameContext, boolean open) {
         this.open = open;
-        gameContext.systems().spriteAnim().select(this, open ? CommonAnimationID.JUNIOR : CommonAnimationID.BAG);
+        gameContext.systems().spriteAnim().select(this, open ? ActorAnimationID.JUNIOR : ActorAnimationID.BAG);
     }
 
     public boolean isOpen() {

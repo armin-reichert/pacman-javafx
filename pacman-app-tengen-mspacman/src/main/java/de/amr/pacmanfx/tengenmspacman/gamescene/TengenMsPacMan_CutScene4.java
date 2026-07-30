@@ -8,9 +8,9 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
+import de.amr.pacmanfx.core.model.actors.ActorAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
+import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnimComponent;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -84,10 +84,10 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
         final var factory = TengenMsPacMan_ActorFactory.instance();
 
         msPacMan = factory.createMsPacMan();
-        msPacMan.requireComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        msPacMan.requireComponent(SpriteAnimComponent.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         pacMan = factory.createPacMan();
-        pacMan.requireComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        pacMan.requireComponent(SpriteAnimComponent.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         juniors = new ArrayList<>();
         juniorCreationTimes = new ArrayList<>();
@@ -134,7 +134,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
                     sys.navigator().setMoveDir(msPacMan, Direction.LEFT);
                     sys.navigator().setSpeed(msPacMan, 1f);
 
-                    sys.spriteAnim().select(msPacMan, CommonAnimationID.PAC_MUNCHING);
+                    sys.spriteAnim().select(msPacMan, ActorAnimationID.PAC_MUNCHING);
                     sys.spriteAnim().playSelected(msPacMan);
                 }
                 case 230 -> {
@@ -150,7 +150,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
                     sys.spriteAnim().select(pacMan, TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
                     sys.spriteAnim().playSelected(pacMan);
 
-                    sys.spriteAnim().select(msPacMan, CommonAnimationID.PAC_MUNCHING);
+                    sys.spriteAnim().select(msPacMan, ActorAnimationID.PAC_MUNCHING);
                     sys.spriteAnim().playSelected(msPacMan);
                 }
                 case 520 -> {

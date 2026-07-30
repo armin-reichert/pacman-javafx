@@ -5,7 +5,7 @@ package de.amr.pacmanfx.tengenmspacman.model;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.component.common.Movement;
+import de.amr.pacmanfx.core.model.component.common.MovementComponent;
 import de.amr.pacmanfx.core.model.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
@@ -27,7 +27,7 @@ public class MovingGameLevelMessage extends GameLevelMessage {
 
     public MovingGameLevelMessage(GameLevelMessageType messageType, Vector2f startPosition, int delayTicks) {
         super(messageType);
-        setComponent(Movement.class, new Movement());
+        setComponent(MovementComponent.class, new MovementComponent());
         this.startPosition = requireNonNull(startPosition);
         this.delayTicks = delayTicks;
         position().set(startPosition);

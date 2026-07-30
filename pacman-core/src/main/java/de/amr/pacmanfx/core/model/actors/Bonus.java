@@ -8,10 +8,12 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.core.event.BonusExpiredEvent;
+import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
-import de.amr.pacmanfx.core.model.component.BonusMoveAndJumpAnimation;
-import de.amr.pacmanfx.core.model.component.common.Movement;
-import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
+import de.amr.pacmanfx.core.model.component.BonusMoveAndJumpAnimationComponent;
+import de.amr.pacmanfx.core.model.component.bonus.BonusState;
+import de.amr.pacmanfx.core.model.component.common.MovementComponent;
+import de.amr.pacmanfx.core.model.component.world.WorldNavigationComponent;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import org.tinylog.Logger;
@@ -41,8 +43,8 @@ public class Bonus extends GameEntity implements UpdatableEntity {
         this.timer = new TickTimer("Bonus-Timer");
         this.name = "Bonus-symbol:%d-points:%d".formatted(symbolCode, points);
 
-        setComponent(Movement.class, new Movement());
-        setComponent(WorldNavigation.class, new WorldNavigation());
+        setComponent(MovementComponent.class, new MovementComponent());
+        setComponent(WorldNavigationComponent.class, new WorldNavigationComponent());
 
         // To add support for animated maze walking, the following component has to be added
         //setComponent(BonusJumpAnimation.class, new BonusJumpAnimation());
@@ -70,7 +72,7 @@ public class Bonus extends GameEntity implements UpdatableEntity {
         switch (state) {
             case EDIBLE -> {
                 if (supportsMoveAndJumpAnimation()) {
-                    optComponent(BonusMoveAndJumpAnimation.class).ifPresent(animation -> {
+                    optComponent(BonusMoveAndJumpAnimationComponent.class).ifPresent(animation -> {
                         sys.bonusJumpAnimation().update(level, this);
                         edibleStateExpired = animation.targetReached() || timer.hasExpired();
                     });
@@ -100,12 +102,12 @@ public class Bonus extends GameEntity implements UpdatableEntity {
             symbolCode, points, timer.remainingTicks(), state);
     }
 
-    public Movement movement() {
-        return requireComponent(Movement.class);
+    public MovementComponent movement() {
+        return requireComponent(MovementComponent.class);
     }
 
-    public WorldNavigation worldMovement() {
-        return requireComponent(WorldNavigation.class);
+    public WorldNavigationComponent worldMovement() {
+        return requireComponent(WorldNavigationComponent.class);
     }
 
     public BonusState state() {
@@ -187,7 +189,7 @@ public class Bonus extends GameEntity implements UpdatableEntity {
     }
 
     private boolean supportsMoveAndJumpAnimation() {
-        return hasComponent(BonusMoveAndJumpAnimation.class);
+        return hasComponent(BonusMoveAndJumpAnimationComponent.class);
     }
 
 }

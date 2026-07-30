@@ -5,13 +5,14 @@
 package de.amr.pacmanfx.core.model.actors;
 
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
-import de.amr.pacmanfx.core.model.component.common.Movement;
-import de.amr.pacmanfx.core.model.component.pac.PacCheats;
-import de.amr.pacmanfx.core.model.component.pac.PacDigestion;
-import de.amr.pacmanfx.core.model.component.pac.PacPower;
-import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
-import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
+import de.amr.pacmanfx.core.model.component.common.MovementComponent;
+import de.amr.pacmanfx.core.model.component.pac.PacCheatsComponent;
+import de.amr.pacmanfx.core.model.component.pac.PacDigestionComponent;
+import de.amr.pacmanfx.core.model.component.pac.PacPowerComponent;
+import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnimComponent;
+import de.amr.pacmanfx.core.model.component.world.WorldNavigationComponent;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.rules.ActorSpeedRules;
@@ -36,34 +37,34 @@ public class Pac extends GameEntity implements UpdatableEntity {
     public Pac(String name) {
         this.name = requireNonNull(name);
 
-        setComponent(Movement.class, new Movement());
-        setComponent(WorldNavigation.class, new WorldNavigation());
-        setComponent(PacDigestion.class, new PacDigestion());
-        setComponent(PacPower.class, new PacPower());
-        setComponent(PacCheats.class, new PacCheats());
-        setComponent(SpriteAnim.class, new SpriteAnim());
+        setComponent(MovementComponent.class, new MovementComponent());
+        setComponent(WorldNavigationComponent.class, new WorldNavigationComponent());
+        setComponent(PacDigestionComponent.class, new PacDigestionComponent());
+        setComponent(PacPowerComponent.class, new PacPowerComponent());
+        setComponent(PacCheatsComponent.class, new PacCheatsComponent());
+        setComponent(SpriteAnimComponent.class, new SpriteAnimComponent());
 
         state = State.ACTIVE;
     }
 
-    public Movement movement() {
-        return requireComponent(Movement.class);
+    public MovementComponent movement() {
+        return requireComponent(MovementComponent.class);
     }
 
-    public WorldNavigation worldNavigation() {
-        return requireComponent(WorldNavigation.class);
+    public WorldNavigationComponent worldNavigation() {
+        return requireComponent(WorldNavigationComponent.class);
     }
 
-    public PacDigestion digestion() {
-        return requireComponent(PacDigestion.class);
+    public PacDigestionComponent digestion() {
+        return requireComponent(PacDigestionComponent.class);
     }
 
-    public PacPower power() {
-        return requireComponent(PacPower.class);
+    public PacPowerComponent power() {
+        return requireComponent(PacPowerComponent.class);
     }
 
-    public PacCheats cheats() {
-        return requireComponent(PacCheats.class);
+    public PacCheatsComponent cheats() {
+        return requireComponent(PacCheatsComponent.class);
     }
 
     @Override
@@ -93,7 +94,7 @@ public class Pac extends GameEntity implements UpdatableEntity {
         worldNavigation().corneringSpeedDelta = 1.5f; // no real cornering implementation but better than nothing
 
         //TODO check this
-        requireComponent(SpriteAnim.class).delegate().select(CommonAnimationID.PAC_MUNCHING);
+        requireComponent(SpriteAnimComponent.class).delegate().select(ActorAnimationID.PAC_MUNCHING);
     }
 
     public State state() {
@@ -111,7 +112,7 @@ public class Pac extends GameEntity implements UpdatableEntity {
         final ActorSpeedRules speedRules = gameContext.model().rules().actorSpeedRules();
         final GameLevel level = gameContext.assertLevel();
 
-        if (state == State.DEAD || digestion().restingTicks() == PacDigestion.REST_FOREVER) {
+        if (state == State.DEAD || digestion().restingTicks() == PacDigestionComponent.REST_FOREVER) {
             return;
         }
 

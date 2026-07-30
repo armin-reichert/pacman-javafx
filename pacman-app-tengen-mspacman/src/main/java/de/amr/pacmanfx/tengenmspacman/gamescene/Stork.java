@@ -7,10 +7,10 @@ import de.amr.basics.Identifier;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.core.model.actors.GameEntity;
-import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
-import de.amr.pacmanfx.core.model.component.common.Movement;
-import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
+import de.amr.pacmanfx.core.model.GameEntity;
+import de.amr.pacmanfx.core.model.actors.ActorAnimationID;
+import de.amr.pacmanfx.core.model.component.common.MovementComponent;
+import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnimComponent;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
@@ -27,7 +27,7 @@ public class Stork extends GameEntity {
         }
 
         private SpriteAnimation createAnimation(Identifier animationID, SpriteAnimationContainer container) {
-            if (animationID.equals(CommonAnimationID.STORK_FLYING)) {
+            if (animationID.equals(ActorAnimationID.STORK_FLYING)) {
                 return new SpriteAnimationBuilder()
                     .sprites(spriteSheet.findSprites(STORK))
                     .frameTicks(8)
@@ -42,9 +42,9 @@ public class Stork extends GameEntity {
 
     public Stork(SpriteAnimationContainer container) {
         name = "Beatrix von";
-        setComponent(Movement.class, new Movement());
-        setComponent(SpriteAnim.class, new SpriteAnim());
-        requireComponent(SpriteAnim.class).setAnimations(new StorkAnimations(container));
+        setComponent(MovementComponent.class, new MovementComponent());
+        setComponent(SpriteAnimComponent.class, new SpriteAnimComponent());
+        requireComponent(SpriteAnimComponent.class).setAnimations(new StorkAnimations(container));
     }
 
     public void setBagReleasedFromBeak(boolean released) {

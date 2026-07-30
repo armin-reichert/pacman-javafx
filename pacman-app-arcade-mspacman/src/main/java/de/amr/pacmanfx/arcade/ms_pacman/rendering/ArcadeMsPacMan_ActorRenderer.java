@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.Clapperboard;
+import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
@@ -56,11 +57,11 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
 
     private RectShort computeGhostSprite(Ghost ghost) {
         RectShort sprite;
-        if (animSystem().isSelected(ghost, CommonAnimationID.GHOST_NORMAL)) {
+        if (animSystem().isSelected(ghost, ActorAnimationID.GHOST_NORMAL)) {
             final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.worldNavigation().wishDir());
             sprite = spriteOrDefault(sprites, animSystem().currentFrame(ghost));
         }
-        else if (animSystem().isSelected(ghost, CommonAnimationID.GHOST_EYES)) {
+        else if (animSystem().isSelected(ghost, ActorAnimationID.GHOST_EYES)) {
             sprite = spriteSheet().ghostEyesSprite(ghost.worldNavigation().wishDir());
         }
         else {
@@ -74,11 +75,11 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
 
     private RectShort computePacSprite(Pac pac) {
         RectShort sprite;
-        if (animSystem().isSelected(pac, CommonAnimationID.PAC_MUNCHING)) {
+        if (animSystem().isSelected(pac, ActorAnimationID.PAC_MUNCHING)) {
             final RectShort[] sprites = spriteSheet().msPacManMunchingSprites(pac.worldNavigation().moveDir());
             sprite = spriteOrDefault(sprites, animSystem().currentFrame(pac));
         }
-        else if (animSystem().isSelected(pac, CommonAnimationID.MR_PAC_MAN_MUNCHING)) {
+        else if (animSystem().isSelected(pac, ActorAnimationID.MR_PAC_MAN_MUNCHING)) {
             final RectShort[] sprites = spriteSheet().mrPacManMunchingSprites(pac.worldNavigation().moveDir());
             sprite = spriteOrDefault(sprites, animSystem().currentFrame(pac));
         }

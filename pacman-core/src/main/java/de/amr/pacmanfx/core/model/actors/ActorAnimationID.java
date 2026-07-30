@@ -6,7 +6,7 @@ package de.amr.pacmanfx.core.model.actors;
 
 import de.amr.basics.Identifier;
 
-public enum CommonAnimationID implements Identifier {
+public enum ActorAnimationID implements Identifier {
     PAC_MUNCHING,
     PAC_DYING,
     PAC_FULL,

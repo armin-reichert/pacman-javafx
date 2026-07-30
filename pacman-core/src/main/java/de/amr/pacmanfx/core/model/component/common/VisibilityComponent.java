@@ -4,17 +4,17 @@
 
 package de.amr.pacmanfx.core.model.component.common;
 
-import de.amr.pacmanfx.core.model.component.GameEntityComponent;
+import de.amr.pacmanfx.core.model.GameEntityComponent;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
-public class Visibility implements GameEntityComponent {
+public class VisibilityComponent implements GameEntityComponent {
 
     private final boolean defaultVisibility;
 
     private BooleanProperty visible;
 
-    public Visibility(boolean defaultVisibility) {
+    public VisibilityComponent(boolean defaultVisibility) {
         this.defaultVisibility = defaultVisibility;
     }
 

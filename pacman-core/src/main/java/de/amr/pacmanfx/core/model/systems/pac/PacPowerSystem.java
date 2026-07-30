@@ -9,9 +9,9 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.PacGetsPowerEvent;
 import de.amr.pacmanfx.core.event.PacLostPowerEvent;
 import de.amr.pacmanfx.core.event.PacPowerFadesEvent;
-import de.amr.pacmanfx.core.model.actors.GhostState;
+import de.amr.pacmanfx.core.model.component.ghost.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.core.model.component.pac.PacPower;
+import de.amr.pacmanfx.core.model.component.pac.PacPowerComponent;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.systems.ghost.GhostStateSystem;
@@ -33,7 +33,7 @@ public final class PacPowerSystem {
 
         final GhostStateSystem ghostStateSystem = gameContext.systems().ghostState();
 
-        final PacPower power = pac.power();
+        final PacPowerComponent power = pac.power();
         final GameLevel level = gameContext.assertLevel();
 
         if (isPowerActive(pac)) {

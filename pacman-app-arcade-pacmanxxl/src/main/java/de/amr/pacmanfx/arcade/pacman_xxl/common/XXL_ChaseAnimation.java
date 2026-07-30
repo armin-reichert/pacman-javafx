@@ -8,8 +8,8 @@ import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.actors.GameEntity;
-import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
+import de.amr.pacmanfx.core.model.GameEntity;
+import de.amr.pacmanfx.core.model.actors.ActorAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
@@ -105,7 +105,7 @@ class XXL_ChaseAnimation {
         sys.navigator().setSpeed(pac, PAC_FLEEING_SPEED);
 
         sys.spriteAnim().setAnimations(pac, renderConfig.createPacAnimations(container));
-        sys.spriteAnim().select(pac, CommonAnimationID.PAC_MUNCHING);
+        sys.spriteAnim().select(pac, ActorAnimationID.PAC_MUNCHING);
         sys.spriteAnim().playSelected(pac);
 
         ghosts = List.of(
@@ -122,7 +122,7 @@ class XXL_ChaseAnimation {
             sys.navigator().setWishDir(ghost, Direction.LEFT);
             sys.navigator().setSpeed(ghost, GHOST_CHASE_SPEED);
 
-            sys.spriteAnim().select(ghost, CommonAnimationID.GHOST_NORMAL);
+            sys.spriteAnim().select(ghost, ActorAnimationID.GHOST_NORMAL);
             sys.spriteAnim().playSelected(ghost);
         }
 
@@ -161,7 +161,7 @@ class XXL_ChaseAnimation {
                 sys.navigator().setWishDir(ghost, Direction.LEFT);
                 sys.navigator().setSpeed(ghost, 1.05f);
 
-                sys.spriteAnim().select(ghost, CommonAnimationID.GHOST_NORMAL);
+                sys.spriteAnim().select(ghost, ActorAnimationID.GHOST_NORMAL);
                 sys.spriteAnim().playSelected(ghost);
             }
 
@@ -182,7 +182,7 @@ class XXL_ChaseAnimation {
                 if (colliding(pac, ghost) && collisions.stream().noneMatch(collision -> collision.ghost() == ghost)) {
                     final var collision = new Collision(ghost, System.currentTimeMillis());
                     collisions.add(collision);
-                    sys.spriteAnim().selectAndSetFrame(ghost, CommonAnimationID.GHOST_POINTS, i);
+                    sys.spriteAnim().selectAndSetFrame(ghost, ActorAnimationID.GHOST_POINTS, i);
                     break;
                 }
             }
@@ -209,7 +209,7 @@ class XXL_ChaseAnimation {
                 sys.navigator().setWishDir(ghost, Direction.RIGHT);
                 sys.navigator().setSpeed(ghost, 0.58f);
 
-                sys.spriteAnim().select(ghost, CommonAnimationID.GHOST_FRIGHTENED);
+                sys.spriteAnim().select(ghost, ActorAnimationID.GHOST_FRIGHTENED);
                 sys.spriteAnim().playSelected(ghost);
             }
 

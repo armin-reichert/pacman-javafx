@@ -10,10 +10,10 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_PacAnimations;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
+import de.amr.pacmanfx.core.model.actors.ActorAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
+import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnimComponent;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -44,7 +44,7 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene2D {
         final var factory = ArcadePacMan_ActorFactory.instance();
 
         pacMan = factory.createPacMan();
-        pacMan.requireComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(container));
+        pacMan.requireComponent(SpriteAnimComponent.class).setAnimations(renderConfig.createPacAnimations(container));
 
         blinky = renderConfig.createAnimatedGhost(gameContext(), container, GhostPersonality.RED_GHOST_SHADOW);
 
@@ -92,7 +92,7 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene2D {
         sys.navigator().setWishDir(blinky, Direction.RIGHT);
         sys.navigator().setSpeed(blinky, 0.75f);
 
-        sys.spriteAnim().select(blinky, CommonAnimationID.GHOST_FRIGHTENED);
+        sys.spriteAnim().select(blinky, ActorAnimationID.GHOST_FRIGHTENED);
         sys.spriteAnim().playSelected(blinky);
     }
 
@@ -103,7 +103,7 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene2D {
         sys.navigator().setMoveDir(pacMan, Direction.LEFT);
         sys.navigator().setSpeed(pacMan, 1.25f);
 
-        sys.spriteAnim().select(pacMan, CommonAnimationID.PAC_MUNCHING);
+        sys.spriteAnim().select(pacMan, ActorAnimationID.PAC_MUNCHING);
         sys.spriteAnim().playSelected(pacMan);
 
         blinky.show();
@@ -113,7 +113,7 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene2D {
         sys.navigator().setWishDir(blinky, Direction.LEFT);
         sys.navigator().setSpeed(blinky, 1.3f);
 
-        sys.spriteAnim().select(blinky, CommonAnimationID.GHOST_NORMAL);
+        sys.spriteAnim().select(blinky, ActorAnimationID.GHOST_NORMAL);
         sys.spriteAnim().playSelected(blinky);
     }
 }

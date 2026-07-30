@@ -8,7 +8,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.HUDState;
-import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
+import de.amr.pacmanfx.core.model.actors.ActorAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
@@ -344,12 +344,12 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
     private void resetPacAnimation(SpriteAnimSystem animSystem, Pac pac) {
         animSystem.select(pac, gameModel().isBoosterActive()
             ? TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER
-            : CommonAnimationID.PAC_MUNCHING);
+            : ActorAnimationID.PAC_MUNCHING);
         animSystem.resetSelected(pac);
     }
 
     private void resetGhostAnimation(SpriteAnimSystem animSystem, Ghost ghost) {
-        animSystem.select(ghost, CommonAnimationID.GHOST_NORMAL);
+        animSystem.select(ghost, ActorAnimationID.GHOST_NORMAL);
         animSystem.resetSelected(ghost);
     }
 }

@@ -7,12 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.model;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.core.model.component.common.Movement;
-import de.amr.pacmanfx.core.model.component.ghost.Elroy;
-import de.amr.pacmanfx.core.model.component.ghost.GhostStateComponent;
-import de.amr.pacmanfx.core.model.component.ghost.GhostWorldPlacement;
-import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
-import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
+import de.amr.pacmanfx.core.model.component.ghost.ElroyComponent;
 
 public class ArcadePacMan_ActorFactory {
 
@@ -34,40 +29,26 @@ public class ArcadePacMan_ActorFactory {
 
     public Ghost createRedGhost() {
         final Ghost ghost = new Ghost(GhostPersonality.RED_GHOST_SHADOW, "Blinky");
-        registerCommonComponents(ghost);
-        ghost.setComponent(Elroy.class, new Elroy());
+        ghost.setComponent(ElroyComponent.class, new ElroyComponent());
         ghost.reset();
         return ghost;
     }
 
     public Ghost createPinkGhost() {
         final Ghost ghost = new Ghost(GhostPersonality.PINK_GHOST_SPEEDY, "Pinky");
-        registerCommonComponents(ghost);
         ghost.reset();
         return ghost;
     }
 
     public Ghost createCyanGhost() {
         final Ghost ghost = new Ghost(GhostPersonality.CYAN_GHOST_BASHFUL, "Inky");
-        registerCommonComponents(ghost);
         ghost.reset();
         return ghost;
     }
 
     public Ghost createOrangeGhost() {
         final Ghost ghost = new Ghost(GhostPersonality.ORANGE_GHOST_POKEY, "Clyde");
-        registerCommonComponents(ghost);
         ghost.reset();
         return ghost;
-    }
-
-    private void registerCommonComponents(Ghost ghost) {
-        ghost.setComponent(Movement.class, new Movement());
-        ghost.setComponent(WorldNavigation.class, new WorldNavigation());
-        ghost.setComponent(GhostWorldPlacement.class, new GhostWorldPlacement());
-        ghost.setComponent(GhostStateComponent.class, new GhostStateComponent());
-        ghost.setComponent(SpriteAnim.class, new SpriteAnim());
-        //TODO where does this belong?
-        ghost.worldNavigation().corneringSpeedDelta = -1.25f;
     }
 }

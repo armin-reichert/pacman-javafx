@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
-import de.amr.pacmanfx.core.model.actors.GameEntity;
+import de.amr.pacmanfx.core.model.GameEntity;
 import javafx.scene.text.Font;
 
 import static java.util.Objects.requireNonNull;

@@ -15,11 +15,11 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
+import de.amr.pacmanfx.core.model.actors.ActorAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
-import de.amr.pacmanfx.core.model.actors.GhostState;
+import de.amr.pacmanfx.core.model.component.ghost.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
+import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnimComponent;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -35,8 +35,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.core.model.actors.GhostState.EATEN;
-import static de.amr.pacmanfx.core.model.actors.GhostState.FRIGHTENED;
+import static de.amr.pacmanfx.core.model.component.ghost.GhostState.EATEN;
+import static de.amr.pacmanfx.core.model.component.ghost.GhostState.FRIGHTENED;
 
 /**
  * The ghosts are presented one by one, then Pac-Man is chased by the ghosts, turns the cards and hunts the ghosts himself.
@@ -126,7 +126,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
         final var factory = ArcadePacMan_ActorFactory.instance();
 
         pacMan = factory.createPacMan();
-        pacMan.requireComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        pacMan.requireComponent(SpriteAnimComponent.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         ghosts[0] = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GhostPersonality.RED_GHOST_SHADOW);
         ghosts[1] = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GhostPersonality.PINK_GHOST_SPEEDY);
@@ -156,7 +156,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
         sys.navigator().setMoveDir(pacMan, Direction.LEFT);
         sys.navigator().setSpeed(pacMan, CHASING_SPEED);
 
-        sys.spriteAnim().select(pacMan, CommonAnimationID.PAC_MUNCHING);
+        sys.spriteAnim().select(pacMan, ActorAnimationID.PAC_MUNCHING);
         sys.spriteAnim().playSelected(pacMan);
 
         for (Ghost ghost : ghosts) {
@@ -167,7 +167,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
             sys.navigator().setWishDir(ghost, Direction.LEFT);
             sys.navigator().setSpeed(ghost, CHASING_SPEED);
 
-            sys.spriteAnim().select(pacMan, CommonAnimationID.PAC_MUNCHING);
+            sys.spriteAnim().select(pacMan, ActorAnimationID.PAC_MUNCHING);
             sys.spriteAnim().playSelected(pacMan);
 
             sys.ghostState().changeState(gameContext, ghost, GhostState.HUNTING_PAC);
@@ -214,7 +214,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
     private void turnCardsRestartPacMan(GameSystems sys) {
         sys.navigator().setSpeed(pacMan, CHASING_SPEED);
 
-        sys.spriteAnim().select(pacMan, CommonAnimationID.PAC_MUNCHING);
+        sys.spriteAnim().select(pacMan, ActorAnimationID.PAC_MUNCHING);
         sys.spriteAnim().playSelected(pacMan);
     }
 
@@ -245,7 +245,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
         final GameSystems sys = gameContext.systems();
 
         sys.ghostState().changeState(gameContext, victim, EATEN);
-        sys.spriteAnim().selectAndSetFrame(victim, CommonAnimationID.GHOST_POINTS, numGhostsEaten++);
+        sys.spriteAnim().selectAndSetFrame(victim, ActorAnimationID.GHOST_POINTS, numGhostsEaten++);
 
         pacMan.hide();
         sys.navigator().setSpeed(pacMan, 0);
@@ -268,7 +268,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
             } else {
                 ghost.show();
                 sys.navigator().setSpeed(ghost, GHOST_FRIGHTENED_SPEED);
-                sys.spriteAnim().select(ghost, CommonAnimationID.GHOST_FRIGHTENED);
+                sys.spriteAnim().select(ghost, ActorAnimationID.GHOST_FRIGHTENED);
                 sys.spriteAnim().playSelected(ghost);
             }
         }

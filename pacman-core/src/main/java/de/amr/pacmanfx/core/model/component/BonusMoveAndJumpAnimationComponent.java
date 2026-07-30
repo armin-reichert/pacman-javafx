@@ -5,10 +5,11 @@
 package de.amr.pacmanfx.core.model.component;
 
 import de.amr.basics.timer.Pulse;
+import de.amr.pacmanfx.core.model.GameEntityComponent;
 import de.amr.pacmanfx.core.model.actors.Bonus;
 import de.amr.pacmanfx.core.steering.RouteGuidedActorSteering;
 
-public class BonusMoveAndJumpAnimation implements GameEntityComponent {
+public class BonusMoveAndJumpAnimationComponent implements GameEntityComponent {
 
     private static final int PULSE_CHANGE_TICKS = 10;
 
@@ -16,7 +17,7 @@ public class BonusMoveAndJumpAnimation implements GameEntityComponent {
     private RouteGuidedActorSteering<Bonus> routeNavigation;
     private boolean targetReached;
 
-    public BonusMoveAndJumpAnimation() {
+    public BonusMoveAndJumpAnimationComponent() {
         pulse = new Pulse(PULSE_CHANGE_TICKS, Pulse.State.OFF);
     }
 

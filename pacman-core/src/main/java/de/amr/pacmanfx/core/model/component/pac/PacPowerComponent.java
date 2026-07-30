@@ -5,9 +5,9 @@
 package de.amr.pacmanfx.core.model.component.pac;
 
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.core.model.component.GameEntityComponent;
+import de.amr.pacmanfx.core.model.GameEntityComponent;
 
-public class PacPower implements GameEntityComponent {
+public class PacPowerComponent implements GameEntityComponent {
 
     private final TickTimer timer = new TickTimer("PacPower-Timer");
 

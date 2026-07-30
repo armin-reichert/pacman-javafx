@@ -12,11 +12,11 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.actors.GameEntity;
-import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
+import de.amr.pacmanfx.core.model.GameEntity;
+import de.amr.pacmanfx.core.model.actors.ActorAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
+import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnimComponent;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -87,18 +87,18 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         final var factory = new ArcadeMsPacMan_ActorFactory();
 
         pacMan = factory.createPacMan();
-        pacMan.requireComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        pacMan.requireComponent(SpriteAnimComponent.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         msPacMan = factory.createMsPacMan();
-        msPacMan.requireComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        msPacMan.requireComponent(SpriteAnimComponent.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         inky = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GhostPersonality.CYAN_GHOST_BASHFUL);
 
         pinky = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GhostPersonality.PINK_GHOST_SPEEDY);
 
         heart = new GameEntity();
-        heart.setComponent(SpriteAnim.class, new SpriteAnim());
-        heart.requireComponent(SpriteAnim.class).setAnimations(singleSpriteAnimation(spriteSheet.findSprite(SpriteID.HEART)));
+        heart.setComponent(SpriteAnimComponent.class, new SpriteAnimComponent());
+        heart.requireComponent(SpriteAnimComponent.class).setAnimations(singleSpriteAnimation(spriteSheet.findSprite(SpriteID.HEART)));
 
         clapperboard = new Clapperboard("1", "THEY MEET");
         clapperboard.position().set(tilesPx(3), tilesPx(10));
@@ -134,7 +134,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         sys.navigator().setMoveDir(pacMan, Direction.RIGHT);
         sys.navigator().setSpeed(pacMan, SPEED_PAC_CHASING);
 
-        sys.spriteAnim().select(pacMan, CommonAnimationID.MR_PAC_MAN_MUNCHING);
+        sys.spriteAnim().select(pacMan, ActorAnimationID.MR_PAC_MAN_MUNCHING);
         sys.spriteAnim().playSelected(pacMan);
 
         inky.position().set(pacMan.position().x - 6 * WorldMap.TS, pacMan.position().y);
@@ -144,7 +144,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         sys.navigator().setMoveDir(inky, Direction.RIGHT);
         sys.navigator().setWishDir(inky, Direction.RIGHT);
 
-        sys.spriteAnim().select(inky, CommonAnimationID.GHOST_NORMAL);
+        sys.spriteAnim().select(inky, ActorAnimationID.GHOST_NORMAL);
         sys.spriteAnim().playSelected(inky);
 
         msPacMan.position().set(WorldMap.TS * 30, LOWER_Y);
@@ -153,7 +153,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         sys.navigator().setMoveDir(msPacMan, Direction.LEFT);
         sys.navigator().setSpeed(msPacMan, SPEED_PAC_CHASING);
 
-        sys.spriteAnim().select(msPacMan, CommonAnimationID.PAC_MUNCHING);
+        sys.spriteAnim().select(msPacMan, ActorAnimationID.PAC_MUNCHING);
         sys.spriteAnim().playSelected(msPacMan);
 
         pinky.position().set(msPacMan.position().x + 6 * WorldMap.TS, msPacMan.position().y);
@@ -163,7 +163,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         sys.navigator().setWishDir(pinky, Direction.LEFT);
         sys.navigator().setSpeed(pinky, SPEED_GHOST_CHASING);
 
-        sys.spriteAnim().select(pinky, CommonAnimationID.GHOST_NORMAL);
+        sys.spriteAnim().select(pinky, ActorAnimationID.GHOST_NORMAL);
         sys.spriteAnim().playSelected(pinky);
 
         setState(SceneState.CHASED_BY_GHOSTS, TickTimer.INDEFINITE);

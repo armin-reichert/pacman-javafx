@@ -5,17 +5,20 @@
 package de.amr.pacmanfx.core.model.actors;
 
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
-import de.amr.pacmanfx.core.model.component.common.Movement;
+import de.amr.pacmanfx.core.model.component.common.MovementComponent;
+import de.amr.pacmanfx.core.model.component.ghost.GhostState;
 import de.amr.pacmanfx.core.model.component.ghost.GhostStateComponent;
-import de.amr.pacmanfx.core.model.component.ghost.GhostWorldPlacement;
-import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
+import de.amr.pacmanfx.core.model.component.ghost.GhostWorldPlacementComponent;
+import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnimComponent;
+import de.amr.pacmanfx.core.model.component.world.WorldNavigationComponent;
 
 import static java.util.Objects.requireNonNull;
 
 /**
- * Common ghost base class. The specific ghosts differ in their hunting behavior and their look.
+ * A ghost. Ghosts differ in their personality which defines attack behavior and look.
  */
 public class Ghost extends GameEntity implements UpdatableEntity {
 
@@ -24,27 +27,31 @@ public class Ghost extends GameEntity implements UpdatableEntity {
     public Ghost(GhostPersonality personality, String name) {
         this.personality = requireNonNull(personality);
         this.name = requireNonNull(name);
+
+        setComponent(MovementComponent.class, new MovementComponent());
+        setComponent(WorldNavigationComponent.class, new WorldNavigationComponent());
+        setComponent(GhostWorldPlacementComponent.class, new GhostWorldPlacementComponent());
+        setComponent(GhostStateComponent.class, new GhostStateComponent());
+        setComponent(SpriteAnimComponent.class, new SpriteAnimComponent());
+
+        //TODO where does this belong?
+        worldNavigation().corneringSpeedDelta = -1.25f;
     }
 
-    /**
-     * @return this ghost's personality, see {@link GhostPersonality#RED_GHOST_SHADOW},
-     * {@link GhostPersonality#PINK_GHOST_SPEEDY}, {@link GhostPersonality#CYAN_GHOST_BASHFUL} and
-     * {@link GhostPersonality#ORANGE_GHOST_POKEY}.
-     */
     public GhostPersonality personality() {
         return personality;
     }
 
-    public Movement movement() {
-        return requireComponent(Movement.class);
+    public MovementComponent movement() {
+        return requireComponent(MovementComponent.class);
     }
 
-    public GhostWorldPlacement worldPlacement() {
-        return requireComponent(GhostWorldPlacement.class);
+    public GhostWorldPlacementComponent worldPlacement() {
+        return requireComponent(GhostWorldPlacementComponent.class);
     }
 
-    public WorldNavigation worldNavigation() {
-        return requireComponent(WorldNavigation.class);
+    public WorldNavigationComponent worldNavigation() {
+        return requireComponent(WorldNavigationComponent.class);
     }
 
     public GhostState state() {

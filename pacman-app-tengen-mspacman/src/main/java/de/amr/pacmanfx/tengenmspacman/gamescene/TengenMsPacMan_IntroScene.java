@@ -9,8 +9,10 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.actors.*;
+import de.amr.pacmanfx.core.model.component.ghost.GhostState;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
@@ -143,7 +145,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
                 sys.navigator().setSpeed(scene.msPacMan, SPEED);
 
                 sys.spriteAnim().setAnimations(scene.msPacMan, renderConfig.createPacAnimations(spriteAnimations));
-                sys.spriteAnim().select(scene.msPacMan, CommonAnimationID.PAC_MUNCHING);
+                sys.spriteAnim().select(scene.msPacMan, ActorAnimationID.PAC_MUNCHING);
                 sys.spriteAnim().playSelected(scene.msPacMan);
 
                 scene.ghosts = List.of(

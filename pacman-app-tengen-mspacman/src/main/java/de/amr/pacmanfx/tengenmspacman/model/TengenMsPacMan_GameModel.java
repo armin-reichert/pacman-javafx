@@ -8,7 +8,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameException;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
+import de.amr.pacmanfx.core.model.actors.ActorAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -91,7 +91,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         boosterActive = active;
 
         final SpriteAnimSystem animSystem = gameContext.systems().spriteAnim();
-        animSystem.select(pac, active ? TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER : CommonAnimationID.PAC_MUNCHING);
+        animSystem.select(pac, active ? TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER : ActorAnimationID.PAC_MUNCHING);
     }
 
     public void setMapCategory(MapCategory mapCategory) {

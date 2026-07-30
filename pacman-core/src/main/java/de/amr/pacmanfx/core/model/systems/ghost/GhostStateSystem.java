@@ -5,9 +5,9 @@
 package de.amr.pacmanfx.core.model.systems.ghost;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
+import de.amr.pacmanfx.core.model.actors.ActorAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
-import de.amr.pacmanfx.core.model.actors.GhostState;
+import de.amr.pacmanfx.core.model.component.ghost.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.component.ghost.GhostStateComponent;
 import de.amr.pacmanfx.core.model.level.GameLevel;
@@ -62,7 +62,7 @@ public class GhostStateSystem {
         if (isThreatenedByPac(gameContext, ghost)) {
             playFrightenedAnimation(gameContext, ghost);
         } else {
-            sys.spriteAnim().select(ghost, CommonAnimationID.GHOST_NORMAL);
+            sys.spriteAnim().select(ghost, ActorAnimationID.GHOST_NORMAL);
         }
     }
 
@@ -127,7 +127,7 @@ public class GhostStateSystem {
             if (threatened) {
                 playFrightenedAnimation(gameContext, ghost);
             } else {
-                sys.spriteAnim().select(ghost, CommonAnimationID.GHOST_NORMAL);
+                sys.spriteAnim().select(ghost, ActorAnimationID.GHOST_NORMAL);
             }
         }
     }
@@ -162,15 +162,15 @@ public class GhostStateSystem {
     private void initAnimation(Ghost ghost, SpriteAnimSystem animSystem) {
         switch (ghost.state()) {
             case LOCKED, HUNTING_PAC -> {
-                animSystem.select(ghost, CommonAnimationID.GHOST_NORMAL);
+                animSystem.select(ghost, ActorAnimationID.GHOST_NORMAL);
                 animSystem.playSelected(ghost);
             }
             case ENTERING_HOUSE, RETURNING_HOME -> {
-                animSystem.select(ghost, CommonAnimationID.GHOST_EYES);
+                animSystem.select(ghost, ActorAnimationID.GHOST_EYES);
                 animSystem.playSelected(ghost);
             }
             case FRIGHTENED -> {
-                animSystem.select(ghost, CommonAnimationID.GHOST_FRIGHTENED);
+                animSystem.select(ghost, ActorAnimationID.GHOST_FRIGHTENED);
                 animSystem.playSelected(ghost);
             }
             case EATEN -> {}
@@ -183,11 +183,11 @@ public class GhostStateSystem {
         final Pac pac = level.entities().pac();
 
         if (sys.pacPower().isPowerStartingFading(level, pac)) {
-            sys.spriteAnim().select(ghost, CommonAnimationID.GHOST_FLASHING);
+            sys.spriteAnim().select(ghost, ActorAnimationID.GHOST_FLASHING);
             sys.spriteAnim().playSelected(ghost);
         }
         else if (!sys.pacPower().isPowerFading(level, pac)) {
-            sys.spriteAnim().select(ghost, CommonAnimationID.GHOST_FRIGHTENED);
+            sys.spriteAnim().select(ghost, ActorAnimationID.GHOST_FRIGHTENED);
             sys.spriteAnim().playSelected(ghost);
         }
     }

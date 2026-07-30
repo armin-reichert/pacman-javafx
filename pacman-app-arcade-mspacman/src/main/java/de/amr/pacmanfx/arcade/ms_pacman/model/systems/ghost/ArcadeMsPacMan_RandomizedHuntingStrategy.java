@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.model.systems.ghost;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.model.actors.Ghost;
-import de.amr.pacmanfx.core.model.component.ghost.Elroy;
+import de.amr.pacmanfx.core.model.component.ghost.ElroyComponent;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.systems.ghost.GhostHuntingStrategy;
@@ -46,7 +46,7 @@ public abstract class ArcadeMsPacMan_RandomizedHuntingStrategy implements GhostH
     }
 
     protected void normalHunt(GameLevel level, Ghost ghost, float speed, WorldMovementPolicy worldMovementPolicy) {
-        final boolean chaseOverride = ghost.hasComponent(Elroy.class) && ghost.requireComponent(Elroy.class).enabled();
+        final boolean chaseOverride = ghost.hasComponent(ElroyComponent.class) && ghost.requireComponent(ElroyComponent.class).enabled();
         final boolean chase = level.huntingRules().isChasing() || chaseOverride;
         final Vector2i targetTile = chase
             ? computeChasingTargetTile(level)

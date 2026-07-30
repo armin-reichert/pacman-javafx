@@ -5,10 +5,10 @@
 package de.amr.pacmanfx.core.model.systems.ghost;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.model.actors.GameEntity;
+import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.actors.Ghost;
-import de.amr.pacmanfx.core.model.actors.GhostState;
-import de.amr.pacmanfx.core.model.component.ghost.GhostWorldPlacement;
+import de.amr.pacmanfx.core.model.component.ghost.GhostState;
+import de.amr.pacmanfx.core.model.component.ghost.GhostWorldPlacementComponent;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.systems.world.WorldMovementPolicy;
@@ -43,7 +43,7 @@ public class GhostWorldMovementPolicy implements WorldMovementPolicy {
             return terrainLayer.isTileInPortalSpace(tile);
         }
 
-        final GhostWorldPlacement worldPlacement = actor.requireComponent(GhostWorldPlacement.class);
+        final GhostWorldPlacementComponent worldPlacement = actor.requireComponent(GhostWorldPlacementComponent.class);
         final Vector2i myTile = WorldNavigationSystem.computeTile(actor);
 
         // Hunting ghosts cannot enter some tiles in Pac-Man game from below

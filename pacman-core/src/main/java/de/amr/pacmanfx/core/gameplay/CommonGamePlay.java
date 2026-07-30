@@ -11,6 +11,8 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.*;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.*;
+import de.amr.pacmanfx.core.model.component.bonus.BonusState;
+import de.amr.pacmanfx.core.model.component.ghost.GhostState;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
@@ -329,7 +331,7 @@ public abstract class CommonGamePlay implements GamePlay {
         sys.ghostState().changeState(gameContext, eatenGhost, GhostState.EATEN);
 
         // Animation index is 0-based, animation frame 0 shows points for *first* killed ghost...
-        sys.spriteAnim().selectAndSetFrame(eatenGhost, CommonAnimationID.GHOST_POINTS, killedBefore);
+        sys.spriteAnim().selectAndSetFrame(eatenGhost, ActorAnimationID.GHOST_POINTS, killedBefore);
 
         level.addToGhostKillChain(eatenGhost);
         level.entities().pac().hide();
@@ -359,14 +361,14 @@ public abstract class CommonGamePlay implements GamePlay {
         sys.navigator().setSpeed(pac, 0);
 
         sys.spriteAnim().stopSelected(pac);
-        sys.spriteAnim().select(pac, CommonAnimationID.PAC_FULL);
+        sys.spriteAnim().select(pac, ActorAnimationID.PAC_FULL);
 
         level.entities().ghosts().forEach(ghost -> {
             sys.navigator().setSpeed(ghost, 0);
 
             //TODO check in emulator if ghost animation is reset to normal
             sys.spriteAnim().stopSelected(ghost);
-            sys.spriteAnim().select(ghost, CommonAnimationID.GHOST_NORMAL);
+            sys.spriteAnim().select(ghost, ActorAnimationID.GHOST_NORMAL);
         });
 
         level.optBonus().ifPresent(bonus -> bonus.setInactive(gameContext.systems()));

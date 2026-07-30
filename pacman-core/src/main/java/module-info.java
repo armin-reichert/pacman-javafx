@@ -35,4 +35,5 @@ module de.amr.pacmanfx.core {
     exports de.amr.pacmanfx.core.model.systems.spriteanim;
     exports de.amr.pacmanfx.core.model.systems.world;
     exports de.amr.pacmanfx.core.model.systems.bonus;
+    exports de.amr.pacmanfx.core.model.component.bonus;
 }

@@ -6,7 +6,7 @@ package de.amr.pacmanfx.core.model.component.world;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.model.component.GameEntityComponent;
+import de.amr.pacmanfx.core.model.GameEntityComponent;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
@@ -15,7 +15,7 @@ import java.util.Optional;
 
 import static de.amr.basics.math.Direction.RIGHT;
 
-public class WorldNavigation implements GameEntityComponent {
+public class WorldNavigationComponent implements GameEntityComponent {
 
     public static final Direction DEFAULT_MOVE_DIR = RIGHT;
     public static final Direction DEFAULT_WISH_DIR = RIGHT;
@@ -39,7 +39,7 @@ public class WorldNavigation implements GameEntityComponent {
     //TODO: store in frame context?
     public final WorldNavigationInfo info = new WorldNavigationInfo();
 
-    public WorldNavigation() {}
+    public WorldNavigationComponent() {}
 
     @Override
     public void reset() {

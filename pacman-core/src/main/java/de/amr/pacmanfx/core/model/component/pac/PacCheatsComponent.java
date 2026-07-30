@@ -4,11 +4,11 @@
 
 package de.amr.pacmanfx.core.model.component.pac;
 
-import de.amr.pacmanfx.core.model.component.GameEntityComponent;
+import de.amr.pacmanfx.core.model.GameEntityComponent;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
-public class PacCheats implements GameEntityComponent {
+public class PacCheatsComponent implements GameEntityComponent {
 
     private final BooleanProperty immune = new SimpleBooleanProperty(false);
 

@@ -15,7 +15,9 @@ import de.amr.pacmanfx.core.event.BonusActivatedEvent;
 import de.amr.pacmanfx.core.event.GameEventManager;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.*;
-import de.amr.pacmanfx.core.model.component.BonusMoveAndJumpAnimation;
+import de.amr.pacmanfx.core.model.component.BonusMoveAndJumpAnimationComponent;
+import de.amr.pacmanfx.core.model.component.bonus.BonusState;
+import de.amr.pacmanfx.core.model.component.ghost.GhostState;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
@@ -178,7 +180,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         level.selectNextBonus();
         final int bonusSymbolCode = level.bonusSymbolCode(level.currentBonusIndex());
         final var bonus = new Bonus(bonusSymbolCode, model.rules().scoringRules().pointsForBonus(bonusSymbolCode));
-        bonus.setComponent(BonusMoveAndJumpAnimation.class, new BonusMoveAndJumpAnimation());
+        bonus.setComponent(BonusMoveAndJumpAnimationComponent.class, new BonusMoveAndJumpAnimationComponent());
         if (terrain.horizontalPortals().isEmpty()) {
             final Vector2i bonusTile = terrain.getTilePropertyOrDefault(WorldMapPropertyName.POS_BONUS, new Vector2i(13, 20));
             bonus.position().set(WorldMap.halfTileRightOf(bonusTile));

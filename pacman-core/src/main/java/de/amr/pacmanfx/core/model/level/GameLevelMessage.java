@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.core.model.level;
 
 import de.amr.basics.math.Vector2f;
-import de.amr.pacmanfx.core.model.actors.GameEntity;
+import de.amr.pacmanfx.core.model.GameEntity;
 
 import static java.util.Objects.requireNonNull;
 

@@ -10,7 +10,7 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.scenes.*;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
+import de.amr.pacmanfx.core.model.actors.ActorAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -137,7 +137,7 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
 
         final SpriteAnimSystem animSystem = gameContext.systems().spriteAnim();
         animSystem.setAnimations(ghost, createGhostAnimations(container, personality));
-        animSystem.select(ghost, CommonAnimationID.GHOST_NORMAL);
+        animSystem.select(ghost, ActorAnimationID.GHOST_NORMAL);
 
         return ghost;
     }

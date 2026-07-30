@@ -7,10 +7,10 @@ package de.amr.pacmanfx.core.model.systems.common;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.model.actors.GameEntity;
-import de.amr.pacmanfx.core.model.component.common.Movement;
-import de.amr.pacmanfx.core.model.component.common.Position;
-import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
+import de.amr.pacmanfx.core.model.GameEntity;
+import de.amr.pacmanfx.core.model.component.common.MovementComponent;
+import de.amr.pacmanfx.core.model.component.common.PositionComponent;
+import de.amr.pacmanfx.core.model.component.world.WorldNavigationComponent;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
@@ -24,13 +24,13 @@ public class WorldNavigationSystem {
 
     public static Vector2f computeCenter(GameEntity actor) {
         requireNonNull(actor);
-        final Position position = actor.position();
+        final PositionComponent position = actor.position();
         return new Vector2f(position.x + WorldMap.HTS, position.y + WorldMap.HTS);
     }
 
     public static Vector2i computeTile(GameEntity actor) {
         requireNonNull(actor);
-        final Position position = actor.position();
+        final PositionComponent position = actor.position();
         final float cx = position.x + WorldMap.HTS;
         final float cy = position.y + WorldMap.HTS;
         return WorldMap.computeTileAt(cx, cy);
@@ -41,7 +41,7 @@ public class WorldNavigationSystem {
      */
     public static Vector2f computeTileOffset(GameEntity actor) {
         requireNonNull(actor);
-        final Position position = actor.position();
+        final PositionComponent position = actor.position();
         final Vector2i tile = computeTile(actor);
         return new Vector2f(position.x - tile.x() * WorldMap.TS, position.y - tile.y() * WorldMap.TS);
     }
@@ -52,7 +52,7 @@ public class WorldNavigationSystem {
      */
     public static Vector2i tilesAhead(GameEntity actor, int numTiles) {
         requireNonNull(actor);
-        final WorldNavigation worldNavigation = actor.requireComponent(WorldNavigation.class);
+        final WorldNavigationComponent worldNavigation = actor.requireComponent(WorldNavigationComponent.class);
 
         return computeTile(actor).plus(worldNavigation.moveDir().vector().scaled(numTiles));
     }
@@ -65,7 +65,7 @@ public class WorldNavigationSystem {
     public static Vector2i tilesAheadWithOverflowBug(GameEntity actor, int numTiles) {
         requireNonNull(actor);
 
-        final WorldNavigation worldNavigation = actor.requireComponent(WorldNavigation.class);
+        final WorldNavigationComponent worldNavigation = actor.requireComponent(WorldNavigationComponent.class);
 
         Vector2i ahead = tilesAhead(actor, numTiles);
         if (worldNavigation.moveDir() == UP) {
@@ -89,10 +89,10 @@ public class WorldNavigationSystem {
         requireNonNull(actor);
         requireNonNull(dir);
 
-        final Movement movement = actor.requireComponent(Movement.class);
-        final WorldNavigation navigation = actor.requireComponent(WorldNavigation.class);
+        final MovementComponent movement = actor.requireComponent(MovementComponent.class);
+        final WorldNavigationComponent navigation = actor.requireComponent(WorldNavigationComponent.class);
 
-        if (navigation.moveDir() == null && dir.equals(WorldNavigation.DEFAULT_MOVE_DIR)) return;
+        if (navigation.moveDir() == null && dir.equals(WorldNavigationComponent.DEFAULT_MOVE_DIR)) return;
         navigation.moveDirProperty().set(dir);
         float speed = movement.speed();
         motor.setVelocity(actor, dir.vector().x() * speed, dir.vector().y() * speed);
@@ -107,16 +107,16 @@ public class WorldNavigationSystem {
         requireNonNull(actor);
         requireNonNull(dir);
 
-        final WorldNavigation navigation = actor.requireComponent(WorldNavigation.class);
+        final WorldNavigationComponent navigation = actor.requireComponent(WorldNavigationComponent.class);
 
-        if (navigation.wishDir() == null && dir.equals(WorldNavigation.DEFAULT_WISH_DIR)) return;
+        if (navigation.wishDir() == null && dir.equals(WorldNavigationComponent.DEFAULT_WISH_DIR)) return;
         navigation.wishDirProperty().set(dir);
     }
 
     public void requestTurnBack(GameEntity actor) {
         requireNonNull(actor);
 
-        final WorldNavigation navigation = actor.requireComponent(WorldNavigation.class);
+        final WorldNavigationComponent navigation = actor.requireComponent(WorldNavigationComponent.class);
         navigation.setTurnBackRequested(true);
     }
 
@@ -132,8 +132,8 @@ public class WorldNavigationSystem {
     public void placeAtTile(GameEntity actor, int tx, int ty, float ox, float oy) {
         requireNonNull(actor);
 
-        final Position position = actor.position();
-        final WorldNavigation navigation = actor.requireComponent(WorldNavigation.class);
+        final PositionComponent position = actor.position();
+        final WorldNavigationComponent navigation = actor.requireComponent(WorldNavigationComponent.class);
 
         final Vector2i prevTile = computeTile(actor);
         position.setX(tx * WorldMap.TS + ox);
@@ -164,7 +164,7 @@ public class WorldNavigationSystem {
     public void setSpeed(GameEntity actor, float speed) {
         requireNonNull(actor);
 
-        final WorldNavigation navigation = actor.requireComponent(WorldNavigation.class);
+        final WorldNavigationComponent navigation = actor.requireComponent(WorldNavigationComponent.class);
 
         if (speed < 0) {
             throw new IllegalArgumentException("Speed must not be negative but is: " + speed);
@@ -178,7 +178,7 @@ public class WorldNavigationSystem {
         requireNonNull(level);
         requireNonNull(movementPolicy);
 
-        final WorldNavigation navigation = actor.requireComponent(WorldNavigation.class);
+        final WorldNavigationComponent navigation = actor.requireComponent(WorldNavigationComponent.class);
 
         if (!navigation.isNewTileEntered() && navigation.info.moved || navigation.targetTile() == null) {
             return; // we don't need no navigation, dim dit didit didit...
@@ -190,7 +190,7 @@ public class WorldNavigationSystem {
         }
         Direction candidateDir = null;
         double minDistToTarget = Double.MAX_VALUE;
-        for (Direction dir : WorldNavigation.NAVIGATION_ORDER) {
+        for (Direction dir : WorldNavigationComponent.NAVIGATION_ORDER) {
             if (dir == navigation.moveDir().opposite()) {
                 continue; // reversing the move direction is not allowed  (except to get out of dead-ends, see below)
             }
@@ -213,7 +213,7 @@ public class WorldNavigationSystem {
         requireNonNull(targetTile);
         requireNonNull(movementPolicy);
 
-        final WorldNavigation navigation = actor.requireComponent(WorldNavigation.class);
+        final WorldNavigationComponent navigation = actor.requireComponent(WorldNavigationComponent.class);
         navigation.setTargetTile(targetTile);
         navigateTowardsTarget(actor, level, movementPolicy);
 
@@ -230,7 +230,7 @@ public class WorldNavigationSystem {
         requireNonNull(actor);
         requireNonNull(level);
 
-        final WorldNavigation navigation = actor.requireComponent(WorldNavigation.class);
+        final WorldNavigationComponent navigation = actor.requireComponent(WorldNavigationComponent.class);
 
         navigation.info.clear();
         if (navigation.canTeleport()) {
@@ -252,7 +252,7 @@ public class WorldNavigationSystem {
     }
 
     private boolean tryTeleporting(GameEntity actor, TerrainLayer terrain) {
-        final WorldNavigation navigation = actor.requireComponent(WorldNavigation.class);
+        final WorldNavigationComponent navigation = actor.requireComponent(WorldNavigationComponent.class);
 
         if (navigation.moveDir().isHorizontal()) {
             return terrain.horizontalPortals().stream()
@@ -265,8 +265,8 @@ public class WorldNavigationSystem {
     }
 
     private void tryMovingTowards(GameEntity actor, GameLevel level, WorldMovementPolicy movementPolicy, Vector2i tileBeforeMoving, Direction dir) {
-        final Movement movement = actor.requireComponent(Movement.class);
-        final WorldNavigation navigation = actor.requireComponent(WorldNavigation.class);
+        final MovementComponent movement = actor.requireComponent(MovementComponent.class);
+        final WorldNavigationComponent navigation = actor.requireComponent(WorldNavigationComponent.class);
 
         final Vector2f newVelocity = dir.vector().scaled(movement.speed());
         final Vector2f touchPosition = computeCenter(actor).plus(dir.vector().scaled((float) WorldMap.HTS)).plus(newVelocity);

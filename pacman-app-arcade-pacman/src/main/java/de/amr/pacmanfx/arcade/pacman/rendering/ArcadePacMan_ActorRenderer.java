@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.RectShort;
+import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
@@ -52,7 +53,7 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
     }
 
     private RectShort computePacSprite(SpriteAnimSystem animSystem, Pac pac) {
-        if (animSystem.isSelected(pac, CommonAnimationID.PAC_MUNCHING)) {
+        if (animSystem.isSelected(pac, ActorAnimationID.PAC_MUNCHING)) {
             final Direction dir = pac.worldNavigation().moveDir();
             final RectShort[] sprites = spriteSheet().pacMunchingSprites(dir);
             return spriteOrDefault(sprites, animSystem.currentFrame(pac));
@@ -63,11 +64,11 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
     }
 
     private RectShort computeGhostSprite(SpriteAnimSystem animSystem, Ghost ghost) {
-        if (animSystem.isSelected(ghost, CommonAnimationID.GHOST_NORMAL)) {
+        if (animSystem.isSelected(ghost, ActorAnimationID.GHOST_NORMAL)) {
             final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.worldNavigation().wishDir());
             return spriteOrDefault(sprites, animSystem.currentFrame(ghost));
         }
-        else if (animSystem.isSelected(ghost, CommonAnimationID.GHOST_EYES)) {
+        else if (animSystem.isSelected(ghost, ActorAnimationID.GHOST_EYES)) {
             return spriteSheet().ghostEyesSprite(ghost.worldNavigation().wishDir());
         }
         else {

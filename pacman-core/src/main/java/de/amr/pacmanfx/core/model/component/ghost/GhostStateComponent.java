@@ -4,8 +4,7 @@
 
 package de.amr.pacmanfx.core.model.component.ghost;
 
-import de.amr.pacmanfx.core.model.actors.GhostState;
-import de.amr.pacmanfx.core.model.component.GameEntityComponent;
+import de.amr.pacmanfx.core.model.GameEntityComponent;
 
 import static java.util.Objects.requireNonNull;
 

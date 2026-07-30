@@ -7,7 +7,7 @@ package de.amr.pacmanfx.core.gameplay;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.model.actors.Bonus;
 import de.amr.pacmanfx.core.model.actors.Ghost;
-import de.amr.pacmanfx.core.model.component.common.Position;
+import de.amr.pacmanfx.core.model.component.common.PositionComponent;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 
 import java.util.ArrayList;
@@ -101,7 +101,7 @@ public final class HuntingStepResult {
         return lines;
     }
 
-    private Vector2i computeTile(Position position) {
+    private Vector2i computeTile(PositionComponent position) {
         final float cx = position.x + WorldMap.HTS;
         final float cy = position.y + WorldMap.HTS;
         return WorldMap.computeTileAt(cx, cy);

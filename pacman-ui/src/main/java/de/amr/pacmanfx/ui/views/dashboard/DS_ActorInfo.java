@@ -8,12 +8,12 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.actors.GameEntity;
+import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.actors.Ghost;
-import de.amr.pacmanfx.core.model.actors.GhostState;
+import de.amr.pacmanfx.core.model.component.ghost.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.core.model.component.common.Movement;
-import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
+import de.amr.pacmanfx.core.model.component.common.MovementComponent;
+import de.amr.pacmanfx.core.model.component.world.WorldNavigationComponent;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.systems.pac.PacPowerSystem;
@@ -74,7 +74,7 @@ public class DS_ActorInfo extends GameDashboardSection {
     private String actorLocationText(GameLevel level, GameEntity actor) {
         if (actor == null) return NO_INFO;
 
-        final WorldNavigation worldNavigation = actor.requireComponent(WorldNavigation.class);
+        final WorldNavigationComponent worldNavigation = actor.requireComponent(WorldNavigationComponent.class);
 
         final Vector2i tile = WorldNavigationSystem.computeTile(actor);
         final Vector2f tileOffset = WorldNavigationSystem.computeTileOffset(actor);
@@ -88,8 +88,8 @@ public class DS_ActorInfo extends GameDashboardSection {
     private String actorMovementText(GameLevel level, GameEntity actor) {
         if (actor == null) return NO_INFO;
 
-        return actor.optComponent(Movement.class).map(movement -> {
-            final WorldNavigation navigation = actor.requireComponent(WorldNavigation.class);
+        return actor.optComponent(MovementComponent.class).map(movement -> {
+            final WorldNavigationComponent navigation = actor.requireComponent(WorldNavigationComponent.class);
             final float speed = movement.speed() * GameConstants.SIMULATION_FPS;
             final boolean blocked = !navigation.info.moved;
             final String turnbackHint = navigation.isTurnBackRequested() ? "REV!" : "";

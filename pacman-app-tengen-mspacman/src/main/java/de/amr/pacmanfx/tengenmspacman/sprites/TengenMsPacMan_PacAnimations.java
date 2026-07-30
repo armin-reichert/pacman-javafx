@@ -8,7 +8,7 @@ import de.amr.basics.math.RectShort;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
+import de.amr.pacmanfx.core.model.actors.ActorAnimationID;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
 
@@ -26,16 +26,16 @@ public class TengenMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
     private SpriteAnimation createAnimation(Identifier animationID, SpriteAnimationContainer container) {
 
         return switch (animationID) {
-            case CommonAnimationID.PAC_FULL -> new SpriteAnimationBuilder()
+            case ActorAnimationID.PAC_FULL -> new SpriteAnimationBuilder()
                 .singleSprite(spriteSheet.findSprite(SpriteID.MS_PAC_FULL))
                 .build(container);
 
-            case CommonAnimationID.PAC_DYING -> new SpriteAnimationBuilder()
+            case ActorAnimationID.PAC_DYING -> new SpriteAnimationBuilder()
                 .sprites(pacDyingSprites(spriteSheet))
                 .frameTicks(8)
                 .build(container);
 
-            case CommonAnimationID.PAC_MUNCHING -> new SpriteAnimationBuilder()
+            case ActorAnimationID.PAC_MUNCHING -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.findSprites(SpriteID.MS_PAC_MUNCHING))
                 .frameTicks(2)
                 .repeated()

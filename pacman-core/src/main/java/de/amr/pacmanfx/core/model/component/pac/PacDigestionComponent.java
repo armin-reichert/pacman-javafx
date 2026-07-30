@@ -4,9 +4,9 @@
 
 package de.amr.pacmanfx.core.model.component.pac;
 
-import de.amr.pacmanfx.core.model.component.GameEntityComponent;
+import de.amr.pacmanfx.core.model.GameEntityComponent;
 
-public class PacDigestion implements GameEntityComponent {
+public class PacDigestionComponent implements GameEntityComponent {
 
     public static final byte REST_FOREVER = -1;
 

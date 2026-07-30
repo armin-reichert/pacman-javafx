@@ -8,8 +8,8 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.model.actors.Bonus;
-import de.amr.pacmanfx.core.model.component.BonusMoveAndJumpAnimation;
-import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
+import de.amr.pacmanfx.core.model.component.BonusMoveAndJumpAnimationComponent;
+import de.amr.pacmanfx.core.model.component.world.WorldNavigationComponent;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.systems.world.WorldMovementPolicy;
@@ -42,21 +42,21 @@ public class BonusMoveAndJumpAnimationSystem {
     public void reset(Bonus bonus) {
         requireNonNull(bonus);
 
-        final BonusMoveAndJumpAnimation animation = bonus.requireComponent(BonusMoveAndJumpAnimation.class);
+        final BonusMoveAndJumpAnimationComponent animation = bonus.requireComponent(BonusMoveAndJumpAnimationComponent.class);
         animation.pulse().reset();
     }
 
     public void start(Bonus bonus) {
         requireNonNull(bonus);
 
-        final BonusMoveAndJumpAnimation animation = bonus.requireComponent(BonusMoveAndJumpAnimation.class);
+        final BonusMoveAndJumpAnimationComponent animation = bonus.requireComponent(BonusMoveAndJumpAnimationComponent.class);
         animation.pulse().restart();
     }
 
     public void stop(Bonus bonus) {
         requireNonNull(bonus);
 
-        final BonusMoveAndJumpAnimation animation = bonus.requireComponent(BonusMoveAndJumpAnimation.class);
+        final BonusMoveAndJumpAnimationComponent animation = bonus.requireComponent(BonusMoveAndJumpAnimationComponent.class);
         animation.pulse().stop();
     }
 
@@ -69,7 +69,7 @@ public class BonusMoveAndJumpAnimationSystem {
             return;
         }
 
-        final BonusMoveAndJumpAnimation animation = bonus.requireComponent(BonusMoveAndJumpAnimation.class);
+        final BonusMoveAndJumpAnimationComponent animation = bonus.requireComponent(BonusMoveAndJumpAnimationComponent.class);
 
         final var route = new ArrayList<>(waypoints);
         final Vector2i first = route.removeFirst();
@@ -82,7 +82,7 @@ public class BonusMoveAndJumpAnimationSystem {
     }
 
     private void wanderMaze(GameLevel level, Bonus bonus) {
-        final BonusMoveAndJumpAnimation animation = bonus.requireComponent(BonusMoveAndJumpAnimation.class);
+        final BonusMoveAndJumpAnimationComponent animation = bonus.requireComponent(BonusMoveAndJumpAnimationComponent.class);
         animation.routeNavigation().steer(bonus, level);
         final Vector2i tile = WorldNavigationSystem.computeTile(bonus);
         boolean mazeExitReached = animation.routeNavigation().isRouteTraversed() || level.worldMap().terrainLayer().isTileInPortalSpace(tile);
@@ -94,8 +94,8 @@ public class BonusMoveAndJumpAnimationSystem {
     }
 
     private void jump(Bonus bonus) {
-        final WorldNavigation navigation = bonus.requireComponent(WorldNavigation.class);
-        final BonusMoveAndJumpAnimation animation = bonus.requireComponent(BonusMoveAndJumpAnimation.class);
+        final WorldNavigationComponent navigation = bonus.requireComponent(WorldNavigationComponent.class);
+        final BonusMoveAndJumpAnimationComponent animation = bonus.requireComponent(BonusMoveAndJumpAnimationComponent.class);
         animation.pulse().triggerPulse();
         if (animation.pulse().pulseTriggered()) {
             float pixels = navigation.moveDir().isVertical() ? 3.0f : 2.0f;

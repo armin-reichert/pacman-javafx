@@ -6,7 +6,7 @@ package de.amr.pacmanfx.core.model.systems.ghost;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.model.actors.Ghost;
-import de.amr.pacmanfx.core.model.component.ghost.Elroy;
+import de.amr.pacmanfx.core.model.component.ghost.ElroyComponent;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.systems.world.WorldMovementPolicy;
@@ -26,7 +26,7 @@ public class ShadowHuntingStrategy implements GhostHuntingStrategy {
         requireNonNull(level);
         requireNonNull(ghost);
 
-        final boolean chase = level.huntingRules().isChasing() || ghost.requireComponent(Elroy.class).enabled();
+        final boolean chase = level.huntingRules().isChasing() || ghost.requireComponent(ElroyComponent.class).enabled();
         final Vector2i targetTile = chase
             ? computeChasingTargetTile(level)
             : computeScatterTile(level.worldMap(), ghost);
