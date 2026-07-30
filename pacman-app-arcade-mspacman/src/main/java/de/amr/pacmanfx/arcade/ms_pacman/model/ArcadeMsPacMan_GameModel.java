@@ -6,12 +6,8 @@ package de.amr.pacmanfx.arcade.ms_pacman.model;
 
 import de.amr.pacmanfx.arcade.ms_pacman.rules.ArcadeMsPacMan_GameRules;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.actors.Ghost;
-import de.amr.pacmanfx.core.model.component.ghost.ElroyComponent;
-import de.amr.pacmanfx.core.model.world.WorldMapSelector;
 import de.amr.pacmanfx.core.model.rules.GameRules;
-import org.tinylog.Logger;
+import de.amr.pacmanfx.core.model.world.WorldMapSelector;
 
 import static java.util.Objects.requireNonNull;
 
@@ -39,7 +35,6 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         this.mapSelector = requireNonNull(mapSelector);
         rules = new ArcadeMsPacMan_GameRules();
         levelCounter = new ArcadeMsPacMan_LevelCounter();
-        configureGateKeeper();
     }
 
     @Override
@@ -56,21 +51,5 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
     @Override
     public GameRules rules() {
         return rules;
-    }
-
-    // Helpers
-
-    private void configureGateKeeper() {
-        gateKeeper.setGhostReleasedCallback((level, releasedPrisoner) -> {
-            if (releasedPrisoner.personality() == GhostPersonality.ORANGE_GHOST_POKEY) {
-                final Ghost blinky = level.ghost(GhostPersonality.RED_GHOST_SHADOW);
-                final ElroyComponent elroy = blinky.requireComponent(ElroyComponent.class);
-                if (elroy.boost() != ElroyComponent.Boost.NONE && !elroy.enabled()) {
-                    elroy.setEnabled(true);
-                    Logger.debug("Re-enabled {}'s Elroy state ({}). Reason; ({} got released):",
-                        blinky.name(), elroy, releasedPrisoner.name());
-                }
-            }
-        });
     }
 }
