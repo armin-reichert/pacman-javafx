@@ -18,7 +18,7 @@ module de.amr.pacmanfx.core {
     exports de.amr.pacmanfx.core.steering;
     exports de.amr.pacmanfx.core;
     exports de.amr.pacmanfx.core.model.level;
-    exports de.amr.pacmanfx.core.score;
+    exports de.amr.pacmanfx.core.model.score;
     exports de.amr.pacmanfx.core.gameplay;
     exports de.amr.pacmanfx.core.state;
     exports de.amr.pacmanfx.core.model.rules;

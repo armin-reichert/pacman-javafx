@@ -27,8 +27,8 @@ import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.systems.pac.PacDigestionSystem;
 import de.amr.pacmanfx.core.model.world.*;
 import de.amr.pacmanfx.core.model.rules.CollisionStrategy;
-import de.amr.pacmanfx.core.score.PropertyFileScore;
-import de.amr.pacmanfx.core.score.Score;
+import de.amr.pacmanfx.core.model.score.PropertyFileScore;
+import de.amr.pacmanfx.core.model.score.Score;
 import org.tinylog.Logger;
 
 import java.io.IOException;
