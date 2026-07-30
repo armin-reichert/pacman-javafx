@@ -9,10 +9,12 @@ import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GamePlay;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.world.WorldMapSelectionMode;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
 
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
+import static java.util.Objects.requireNonNull;
 
 public class XXL_PacMan_GamePlay extends ArcadePacMan_GamePlay {
 
@@ -20,6 +22,8 @@ public class XXL_PacMan_GamePlay extends ArcadePacMan_GamePlay {
 
     @Override
     public GameLevel buildDemoLevel(GameContext gameContext) {
+        requireNonNull(gameContext);
+        final GameSystems sys = gameContext.systems();
         final XXL_PacMan_GameModel xxlModel = (XXL_PacMan_GameModel) gameContext.model();
 
         xxlModel.mapSelector().setSelectionMode(WorldMapSelectionMode.NO_CUSTOM_MAPS);
@@ -33,7 +37,9 @@ public class XXL_PacMan_GamePlay extends ArcadePacMan_GamePlay {
         pac.cheats().setUsingAutopilot(true);
 
         // Demo level map could be a custom map, so use generic auto-steering that also can cope with dead-ends:
-        final var demoLevelSteering = new RuleGuidedPacSteering();
+        final var demoLevelSteering = new RuleGuidedPacSteering(
+            sys.navigator(), sys.pacWorldMovementPolicy(), sys.pacPower()
+        );
         pac.setAutomaticSteering(demoLevelSteering);
         demoLevelSteering.init();
 

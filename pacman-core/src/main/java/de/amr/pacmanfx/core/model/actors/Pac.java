@@ -121,7 +121,7 @@ public class Pac extends Actor implements UpdatableEntity {
         }
 
         if (cheats().isUsingAutopilot()) {
-            automaticSteering.steer(this, gameContext);
+            automaticSteering.steer(this, level);
         }
 
         final float speed = sys.pacPower().isPowerActive(this)

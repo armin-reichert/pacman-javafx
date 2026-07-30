@@ -16,6 +16,7 @@ import de.amr.pacmanfx.core.event.GameEventManager;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.world.*;
 import de.amr.pacmanfx.core.rules.HuntingTimer;
@@ -72,7 +73,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         level.setPacPowerSeconds(levelData.secPacPower());
         level.setPacPowerFadingSeconds(0.5f * numFlashes); //TODO correct?
 
-        createAndSetMsPacMan(level);
+        createAndSetMsPacMan(gameContext.systems(), level);
         createAndSetGhosts(level, terrain.assertHouse());
 
         level.setBonusSymbolCode(0, model.rules().selectBonusSymbolCode(level.number(), 0));
@@ -85,10 +86,12 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         return level;
     }
 
-    protected void createAndSetMsPacMan(GameLevel level) {
+    protected void createAndSetMsPacMan(GameSystems sys, GameLevel level) {
         final var factory = new ArcadeMsPacMan_ActorFactory();
         final Pac msPacMan = factory.createMsPacMan();
-        msPacMan.setAutomaticSteering(new RuleGuidedPacSteering());
+        msPacMan.setAutomaticSteering(new RuleGuidedPacSteering(
+            sys.navigator(), sys.pacWorldMovementPolicy(), sys.pacPower()
+        ));
         level.setPac(msPacMan);
     }
 
@@ -112,6 +115,9 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
 
     @Override
     public GameLevel buildDemoLevel(GameContext gameContext) {
+        requireNonNull(gameContext);
+        final GameSystems sys = gameContext.systems();
+
         final int demoLevelNumber = 1;
 
         final GameModel model = gameContext.model();
@@ -121,7 +127,11 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         pac.cheats().setImmune(false);
         pac.cheats().setUsingAutopilot(true);
 
-        final var demoLevelSteering = new RuleGuidedPacSteering();
+        final var demoLevelSteering = new RuleGuidedPacSteering(
+            sys.navigator(),
+            sys.pacWorldMovementPolicy(),
+            sys.pacPower()
+        );
         pac.setAutomaticSteering(demoLevelSteering);
         demoLevelSteering.init();
 

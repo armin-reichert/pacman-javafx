@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.core.model.systems.common;
 
 import de.amr.pacmanfx.core.model.GhostPersonality;
+import de.amr.pacmanfx.core.model.systems.bonus.BonusJumpAnimationSystem;
 import de.amr.pacmanfx.core.model.systems.bonus.BonusWorldMovementPolicy;
 import de.amr.pacmanfx.core.model.systems.ghost.*;
 import de.amr.pacmanfx.core.model.systems.pac.PacDigestionSystem;
@@ -15,11 +16,11 @@ import de.amr.pacmanfx.core.model.systems.world.WorldMovementPolicy;
 
 public class DefaultGameSystems implements GameSystems {
 
-    protected SpriteAnimSystem spriteAnim = new SpriteAnimSystem();
-
     protected MovementSystem motor =  new MovementSystem();
     protected WorldNavigationSystem navigator = new WorldNavigationSystem(motor);
     protected RandomWorldMovementSystem roamingNavigator = new RandomWorldMovementSystem(navigator);
+
+    protected SpriteAnimSystem spriteAnim = new SpriteAnimSystem();
 
     protected WorldMovementPolicy pacWorldMovementPolicy;
     protected PacPowerSystem pacPower;
@@ -35,11 +36,12 @@ public class DefaultGameSystems implements GameSystems {
     protected GhostHuntingStrategy pinkGhostSpeedyHuntingStrategy;
 
     protected WorldMovementPolicy bonusWorldMovementPolicy;
+    protected BonusJumpAnimationSystem bonusJumpAnimationSystem;
 
     public DefaultGameSystems() {
         createPacSystems();
         createGhostSystems();
-        bonusWorldMovementPolicy = new BonusWorldMovementPolicy();
+        createBonusSystems(navigator);
     }
 
     protected void createPacSystems() {
@@ -57,6 +59,11 @@ public class DefaultGameSystems implements GameSystems {
         pinkGhostSpeedyHuntingStrategy = createSpeedyHuntingStrategy();
         cyanGhostBashfulHuntingStrategy = createBashfulHuntingStrategy();
         orangeGhostPokeyHuntingStrategy = createPokeyHuntingStrategy();
+    }
+
+    protected void createBonusSystems(WorldNavigationSystem navigator) {
+        bonusWorldMovementPolicy = new BonusWorldMovementPolicy();
+        bonusJumpAnimationSystem = new BonusJumpAnimationSystem(navigator, bonusWorldMovementPolicy);
     }
 
     /**
@@ -149,5 +156,9 @@ public class DefaultGameSystems implements GameSystems {
     @Override
     public WorldMovementPolicy bonusWorldMovementPolicy() {
         return bonusWorldMovementPolicy;
+    }
+
+    public BonusJumpAnimationSystem bonusJumpAnimation() {
+        return bonusJumpAnimationSystem;
     }
 }

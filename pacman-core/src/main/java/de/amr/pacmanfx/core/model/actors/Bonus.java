@@ -3,23 +3,20 @@
  */
 package de.amr.pacmanfx.core.model.actors;
 
-import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
-import de.amr.basics.timer.Pulse;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.core.event.BonusExpiredEvent;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
+import de.amr.pacmanfx.core.model.component.BonusJumpAnimation;
 import de.amr.pacmanfx.core.model.component.common.Movement;
 import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.systems.bonus.BonusJumpAnimationSystem;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
-import de.amr.pacmanfx.core.steering.RouteGuidedActorSteering;
-import org.tinylog.Logger;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Objects.requireNonNull;
@@ -33,28 +30,21 @@ import static java.util.Objects.requireNonNull;
  */
 public class Bonus extends Actor implements UpdatableEntity {
 
-    private static final int PULSE_CHANGE_TICKS = 10;
-
     private final TickTimer timer;
     private final int symbolCode;
     private final int points;
 
     private BonusState state;
 
-    // moving bonus only
-    private final Pulse jumpingAnimation;
-    private RouteGuidedActorSteering<Bonus> routeNavigation;
-
     public Bonus(int symbolCode, int points) {
-        setComponent(Movement.class, new Movement());
-        setComponent(WorldNavigation.class, new WorldNavigation());
-
         this.name = "Bonus-symbol:%d-points:%d".formatted(symbolCode, points);
         this.symbolCode = Validations.requireNonNegativeInt(symbolCode);
         this.points = Validations.requireNonNegativeInt(points);
         this.timer = new TickTimer("Bonus-Timer");
 
-        this.jumpingAnimation = new Pulse(PULSE_CHANGE_TICKS, Pulse.State.OFF);
+        setComponent(Movement.class, new Movement());
+        setComponent(WorldNavigation.class, new WorldNavigation());
+        setComponent(BonusJumpAnimation.class, new BonusJumpAnimation());
 
         reset();
         worldMovement().setCanTeleport(false); // override default value (true)
@@ -81,70 +71,61 @@ public class Bonus extends Actor implements UpdatableEntity {
     }
 
     public void setInactive(GameContext gameContext) {
-        final WorldNavigationSystem navigator = gameContext.systems().navigator();
-
-        hide();
-        navigator.setSpeed(this, 0);
-
-        jumpingAnimation.reset();
+        requireNonNull(gameContext);
+        final GameSystems sys = gameContext.systems();
 
         state = BonusState.INACTIVE;
         timer.restartIndefinitely();
+        hide();
+        sys.navigator().setSpeed(this, 0);
+        sys.bonusJumpAnimation().reset(this);
     }
 
     public void showEdibleForSeconds(float seconds) {
-        show();
-
         state = BonusState.EDIBLE;
         timer.restartSeconds(seconds);
+        show();
     }
 
     public void showEdibleAndStartWandering(GameContext gameContext, float speed) {
-        final WorldNavigationSystem navigator = gameContext.systems().navigator();
-
-        show();
-
-        navigator.setSpeed(this, speed);
-        worldMovement().setTargetTile(null);
-
-        jumpingAnimation.restart();
+        final GameSystems sys = gameContext.systems();
 
         state = BonusState.EDIBLE;
         timer.restartIndefinitely();
+        show();
+        sys.navigator().setSpeed(this, speed);
+        //TODO use system method:
+        worldMovement().setTargetTile(null);
+        sys.bonusJumpAnimation().start(this);
     }
 
     public void setMazeRoute(GameContext gameContext, List<Vector2i> waypoints, boolean leftToRight) {
-        requireNonNull(waypoints);
-        if (waypoints.isEmpty()) {
-            Logger.error("Bonus route must not be empty");
-            return;
-        }
-        final var route = new ArrayList<>(waypoints);
-        final Vector2i first = route.removeFirst();
+        requireNonNull(gameContext);
 
-        final WorldNavigationSystem navigator = gameContext.systems().navigator();
-
-        navigator.placeAtTile(this, first);
-        navigator.setMoveDir(this, leftToRight ? Direction.RIGHT : Direction.LEFT);
-        navigator.setWishDir(this, leftToRight ? Direction.RIGHT : Direction.LEFT);
-
-        routeNavigation = new RouteGuidedActorSteering<>(route);
+        final GameSystems sys = gameContext.systems();
+        sys.bonusJumpAnimation().setMazeRoute(this, waypoints, leftToRight);
     }
 
     public void showEatenForSeconds(GameContext gameContext, float seconds) {
+        requireNonNull(gameContext);
+
         final WorldNavigationSystem navigator = gameContext.systems().navigator();
-
-        show();
-        navigator.setSpeed(this, 0);
-
-        jumpingAnimation.stop();
+        final BonusJumpAnimationSystem animationSystem = gameContext.systems().bonusJumpAnimation();
 
         state = BonusState.EATEN;
         timer.restartSeconds(seconds);
+        show();
+        navigator.setSpeed(this, 0);
+        animationSystem.stop(this);
     }
 
     @Override
     public void update(GameContext gameContext) {
+        requireNonNull(gameContext);
+        final GameSystems sys = gameContext.systems();
+        final BonusJumpAnimation animation = assertComponent(BonusJumpAnimation.class);
+        final GameLevel level = gameContext.assertLevel();
+
         timer.doTick();
         switch (state) {
             case EDIBLE -> {
@@ -153,8 +134,8 @@ public class Bonus extends Actor implements UpdatableEntity {
                     edibleStateOver = timer.hasExpired();
                 }
                 else {
-                    boolean mazeExitReached = wanderMaze(gameContext);
-                    edibleStateOver = mazeExitReached || timer.hasExpired();
+                    sys.bonusJumpAnimation().update(level, this);
+                    edibleStateOver = animation.targetReached() || timer.hasExpired();
                 }
                 if (edibleStateOver) {
                     setInactive(gameContext);
@@ -171,35 +152,9 @@ public class Bonus extends Actor implements UpdatableEntity {
         }
     }
 
-    private boolean wanderMaze(GameContext gameContext) {
-        final GameSystems sys =  gameContext.systems();
-        final GameLevel level = gameContext.assertLevel();
-
-        routeNavigation.steer(this, gameContext);
-
-        final Vector2i tile = WorldNavigationSystem.computeTile(this);
-        boolean mazeExitReached = routeNavigation.isRouteTraversed() || level.worldMap().terrainLayer().isTileInPortalSpace(tile);
-        if (!mazeExitReached) {
-            sys.navigator().navigateTowardsTarget(this, level, sys.bonusWorldMovementPolicy());
-            sys.navigator().tryMovingOrTeleporting(this, level, sys.bonusWorldMovementPolicy());
-            jump();
-        }
-        return mazeExitReached;
-    }
-
-    //TODO check in emulator what's exactly going on
-    private void jump() {
-        jumpingAnimation.triggerPulse();
-        if (jumpingAnimation.pulseTriggered()) {
-            float pixels = worldMovement().moveDir().isVertical() ? 3.0f : 2.0f;
-            float dy = jumpingAnimation.state() == Pulse.State.ON ? -pixels : pixels;
-            position().y += dy;
-        }
-    }
-
     @Override
     public String toString() {
-        return "Bonus{symbol=%s, points=%d, ticksRemaining=%d, state=%s, animation=%s}"
-            .formatted(symbolCode, points, timer.remainingTicks(), state, jumpingAnimation);
+        return "Bonus{symbol=%s, points=%d, ticksRemaining=%d, state=%s}"
+            .formatted(symbolCode, points, timer.remainingTicks(), state);
     }
 }

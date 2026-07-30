@@ -5,11 +5,9 @@
 package de.amr.pacmanfx.core.steering;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.systems.world.WorldMovementPolicy;
 
@@ -22,11 +20,16 @@ import static java.util.Objects.requireNonNull;
  */
 public class RouteGuidedActorSteering<A extends Actor> implements Steering<A> {
 
+    private final WorldNavigationSystem navigator;
+    private final WorldMovementPolicy worldMovementPolicy;
+
     private final List<Vector2i> route;
     private int targetIndex;
     private boolean routeTraversed;
 
-    public RouteGuidedActorSteering(List<Vector2i> route) {
+    public RouteGuidedActorSteering(WorldNavigationSystem navigator, WorldMovementPolicy worldMovementPolicy, List<Vector2i> route) {
+        this.navigator = requireNonNull(navigator);
+        this.worldMovementPolicy = requireNonNull(worldMovementPolicy);
         this.route = requireNonNull(route);
         init();
     }
@@ -42,35 +45,35 @@ public class RouteGuidedActorSteering<A extends Actor> implements Steering<A> {
     }
 
     @Override
-    public void steer(A actor, GameContext gameContext) {
-        final GameSystems sys = gameContext.systems();
+    public void steer(A actor, GameLevel level) {
+        requireNonNull(actor);
+        requireNonNull(level);
+
         final WorldNavigation navigation = actor.assertComponent(WorldNavigation.class);
-        final GameLevel level = gameContext.assertLevel();
 
         if (targetIndex == route.size()) {
             routeTraversed = true;
         }
         else if (navigation.optTargetTile().isEmpty()) {
-            //TODO Use system method
+            //TODO Use navigator method
             navigation.setTargetTile(route.get(targetIndex));
         }
         else if (WorldNavigationSystem.computeTile(actor).equals(route.get(targetIndex))) {
-            selectNextTargetTile(sys.navigator(), sys.pacWorldMovementPolicy(), level, actor);
+            selectNextTargetTile(level, actor);
         }
         else {
-            sys.navigator().navigateTowardsTarget(actor, level, sys.pacWorldMovementPolicy());
+            navigator.navigateTowardsTarget(actor, level, worldMovementPolicy);
         }
     }
 
-    private void selectNextTargetTile(WorldNavigationSystem navigator, WorldMovementPolicy policy, GameLevel level, Actor actor) {
+    private void selectNextTargetTile(GameLevel level, Actor actor) {
         final WorldNavigation navigation = actor.assertComponent(WorldNavigation.class);
         ++targetIndex;
         if (targetIndex < route.size()) {
-            //TODO Use system method instead
+            //TODO Use navigator method instead
             navigation.setTargetTile(route.get(targetIndex));
-
             // The next line is important!
-            navigator.navigateTowardsTarget(actor, level, policy);
+            navigator.navigateTowardsTarget(actor, level, worldMovementPolicy);
         }
     }
 }

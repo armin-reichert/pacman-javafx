@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.core.model.systems.common;
 
 import de.amr.pacmanfx.core.model.GhostPersonality;
+import de.amr.pacmanfx.core.model.systems.bonus.BonusJumpAnimationSystem;
 import de.amr.pacmanfx.core.model.systems.ghost.GhostHouseAccessSystem;
 import de.amr.pacmanfx.core.model.systems.ghost.GhostHuntingStrategy;
 import de.amr.pacmanfx.core.model.systems.ghost.GhostStateSystem;
@@ -38,4 +39,6 @@ public interface GameSystems {
     GhostHuntingStrategy ghostHuntingStrategy(GhostPersonality personality);
 
     WorldMovementPolicy bonusWorldMovementPolicy();
+
+    BonusJumpAnimationSystem bonusJumpAnimation();
 }
