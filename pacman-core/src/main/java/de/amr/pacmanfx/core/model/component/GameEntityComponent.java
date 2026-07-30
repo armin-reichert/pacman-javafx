@@ -4,6 +4,6 @@
 
 package de.amr.pacmanfx.core.model.component;
 
-public interface ActorComponent {
+public interface GameEntityComponent {
     void reset();
 }

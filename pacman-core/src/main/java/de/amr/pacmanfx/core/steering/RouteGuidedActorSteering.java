@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.core.steering;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.model.actors.Actor;
+import de.amr.pacmanfx.core.model.actors.GameEntity;
 import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
@@ -18,7 +18,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Steers an actor such that it follows a given route.
  */
-public class RouteGuidedActorSteering<A extends Actor> implements Steering<A> {
+public class RouteGuidedActorSteering<A extends GameEntity> implements Steering<A> {
 
     private final WorldNavigationSystem navigator;
     private final WorldMovementPolicy worldMovementPolicy;
@@ -49,7 +49,7 @@ public class RouteGuidedActorSteering<A extends Actor> implements Steering<A> {
         requireNonNull(actor);
         requireNonNull(level);
 
-        final WorldNavigation navigation = actor.assertComponent(WorldNavigation.class);
+        final WorldNavigation navigation = actor.requireComponent(WorldNavigation.class);
 
         if (targetIndex == route.size()) {
             routeTraversed = true;
@@ -66,8 +66,8 @@ public class RouteGuidedActorSteering<A extends Actor> implements Steering<A> {
         }
     }
 
-    private void selectNextTargetTile(GameLevel level, Actor actor) {
-        final WorldNavigation navigation = actor.assertComponent(WorldNavigation.class);
+    private void selectNextTargetTile(GameLevel level, GameEntity actor) {
+        final WorldNavigation navigation = actor.requireComponent(WorldNavigation.class);
         ++targetIndex;
         if (targetIndex < route.size()) {
             //TODO Use navigator method instead

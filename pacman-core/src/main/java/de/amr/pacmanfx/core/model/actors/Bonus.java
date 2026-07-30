@@ -26,7 +26,7 @@ import static java.util.Objects.requireNonNull;
  *
  * <p>TODO: That's not exactly the original Ms. Pac-Man behaviour with predefined "fruit paths".
  */
-public class Bonus extends Actor implements UpdatableEntity {
+public class Bonus extends GameEntity implements UpdatableEntity {
 
     private final TickTimer timer;
     private final int symbolCode;
@@ -101,11 +101,11 @@ public class Bonus extends Actor implements UpdatableEntity {
     }
 
     public Movement movement() {
-        return assertComponent(Movement.class);
+        return requireComponent(Movement.class);
     }
 
     public WorldNavigation worldMovement() {
-        return assertComponent(WorldNavigation.class);
+        return requireComponent(WorldNavigation.class);
     }
 
     public BonusState state() {

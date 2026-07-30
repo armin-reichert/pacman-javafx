@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.gamescene;
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.actors.Actor;
+import de.amr.pacmanfx.core.model.actors.GameEntity;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.component.common.Movement;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
@@ -29,7 +29,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
     private static final float GHOST_Y = tilesPx(21.5f);
 
     public boolean gray;
-    public Actor movingText;
+    public GameEntity movingText;
     public Ghost ghost;
     public Color shadeOfBlue;
 
@@ -42,7 +42,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
     @Override
     public void onActivate() {
         actionBindings().dispose();
-        movingText = new Actor();
+        movingText = new GameEntity();
         movingText.setComponent(Movement.class, new Movement());
         movingText.position().set(tilesPx(9), unscaledHeight()); // lower border of screen
         ghost = appContext().variants().currentVariant().config().renderConfig().createAnimatedGhost(

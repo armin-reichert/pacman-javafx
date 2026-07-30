@@ -51,7 +51,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
     public Color[] ghostColors;
 
     public Marquee marquee;
-    public Actor presents;
+    public GameEntity presents;
     public Pac msPacMan;
     public List<Ghost> ghosts;
     public int ghostIndex;
@@ -91,7 +91,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
         marquee.position().set(MARQUEE_X, MARQUEE_Y);
         marquee.scalingProperty().bind(scalingProperty());
 
-        presents = new Actor();
+        presents = new GameEntity();
         presents.position().set(9 * WorldMap.TS, MARQUEE_Y - WorldMap.TS);
 
         flow.restartState(this, SceneState.WAITING_FOR_START);

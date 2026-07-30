@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.core.model.component.world;
 
-public class WorldMovementInfo {
+public class WorldNavigationInfo {
     public boolean moved;
     public boolean tunnelEntered;
     public boolean tunnelLeft;

@@ -64,7 +64,7 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
         gateKeeper.setGhostReleasedCallback((level, releasedPrisoner) -> {
             if (releasedPrisoner.personality() == GhostPersonality.ORANGE_GHOST_POKEY) {
                 final Ghost blinky = level.ghost(GhostPersonality.RED_GHOST_SHADOW);
-                final Elroy elroy = blinky.assertComponent(Elroy.class);
+                final Elroy elroy = blinky.requireComponent(Elroy.class);
                 if (elroy.boost() != Elroy.Boost.NONE && !elroy.enabled()) {
                     elroy.setEnabled(true);
                     Logger.debug("Re-enabled {}'s Elroy state ({}). Reason; ({} got released):",

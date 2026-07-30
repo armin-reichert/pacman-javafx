@@ -42,21 +42,21 @@ public class BonusMoveAndJumpAnimationSystem {
     public void reset(Bonus bonus) {
         requireNonNull(bonus);
 
-        final BonusMoveAndJumpAnimation animation = bonus.assertComponent(BonusMoveAndJumpAnimation.class);
+        final BonusMoveAndJumpAnimation animation = bonus.requireComponent(BonusMoveAndJumpAnimation.class);
         animation.pulse().reset();
     }
 
     public void start(Bonus bonus) {
         requireNonNull(bonus);
 
-        final BonusMoveAndJumpAnimation animation = bonus.assertComponent(BonusMoveAndJumpAnimation.class);
+        final BonusMoveAndJumpAnimation animation = bonus.requireComponent(BonusMoveAndJumpAnimation.class);
         animation.pulse().restart();
     }
 
     public void stop(Bonus bonus) {
         requireNonNull(bonus);
 
-        final BonusMoveAndJumpAnimation animation = bonus.assertComponent(BonusMoveAndJumpAnimation.class);
+        final BonusMoveAndJumpAnimation animation = bonus.requireComponent(BonusMoveAndJumpAnimation.class);
         animation.pulse().stop();
     }
 
@@ -69,7 +69,7 @@ public class BonusMoveAndJumpAnimationSystem {
             return;
         }
 
-        final BonusMoveAndJumpAnimation animation = bonus.assertComponent(BonusMoveAndJumpAnimation.class);
+        final BonusMoveAndJumpAnimation animation = bonus.requireComponent(BonusMoveAndJumpAnimation.class);
 
         final var route = new ArrayList<>(waypoints);
         final Vector2i first = route.removeFirst();
@@ -82,7 +82,7 @@ public class BonusMoveAndJumpAnimationSystem {
     }
 
     private void wanderMaze(GameLevel level, Bonus bonus) {
-        final BonusMoveAndJumpAnimation animation = bonus.assertComponent(BonusMoveAndJumpAnimation.class);
+        final BonusMoveAndJumpAnimation animation = bonus.requireComponent(BonusMoveAndJumpAnimation.class);
         animation.routeNavigation().steer(bonus, level);
         final Vector2i tile = WorldNavigationSystem.computeTile(bonus);
         boolean mazeExitReached = animation.routeNavigation().isRouteTraversed() || level.worldMap().terrainLayer().isTileInPortalSpace(tile);
@@ -94,8 +94,8 @@ public class BonusMoveAndJumpAnimationSystem {
     }
 
     private void jump(Bonus bonus) {
-        final WorldNavigation navigation = bonus.assertComponent(WorldNavigation.class);
-        final BonusMoveAndJumpAnimation animation = bonus.assertComponent(BonusMoveAndJumpAnimation.class);
+        final WorldNavigation navigation = bonus.requireComponent(WorldNavigation.class);
+        final BonusMoveAndJumpAnimation animation = bonus.requireComponent(BonusMoveAndJumpAnimation.class);
         animation.pulse().triggerPulse();
         if (animation.pulse().pulseTriggered()) {
             float pixels = navigation.moveDir().isVertical() ? 3.0f : 2.0f;

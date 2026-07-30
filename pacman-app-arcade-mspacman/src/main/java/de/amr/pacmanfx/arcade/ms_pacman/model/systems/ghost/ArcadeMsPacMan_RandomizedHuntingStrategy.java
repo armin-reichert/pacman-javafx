@@ -46,7 +46,7 @@ public abstract class ArcadeMsPacMan_RandomizedHuntingStrategy implements GhostH
     }
 
     protected void normalHunt(GameLevel level, Ghost ghost, float speed, WorldMovementPolicy worldMovementPolicy) {
-        final boolean chaseOverride = ghost.hasComponent(Elroy.class) && ghost.assertComponent(Elroy.class).enabled();
+        final boolean chaseOverride = ghost.hasComponent(Elroy.class) && ghost.requireComponent(Elroy.class).enabled();
         final boolean chase = level.huntingRules().isChasing() || chaseOverride;
         final Vector2i targetTile = chase
             ? computeChasingTargetTile(level)

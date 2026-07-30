@@ -84,7 +84,7 @@ public class RuleGuidedPacSteering implements Steering<Pac> {
 
     @Override
     public void steer(Pac pac, GameLevel level) {
-        final WorldNavigation worldNavigation = pac.assertComponent(WorldNavigation.class);
+        final WorldNavigation worldNavigation = pac.requireComponent(WorldNavigation.class);
 
         if (worldNavigation.info.moved && !worldNavigation.isNewTileEntered()) {
             return;

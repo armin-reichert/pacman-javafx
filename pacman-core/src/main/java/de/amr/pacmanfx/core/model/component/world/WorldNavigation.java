@@ -6,7 +6,7 @@ package de.amr.pacmanfx.core.model.component.world;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.model.component.ActorComponent;
+import de.amr.pacmanfx.core.model.component.GameEntityComponent;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
@@ -15,7 +15,7 @@ import java.util.Optional;
 
 import static de.amr.basics.math.Direction.RIGHT;
 
-public class WorldNavigation implements ActorComponent {
+public class WorldNavigation implements GameEntityComponent {
 
     public static final Direction DEFAULT_MOVE_DIR = RIGHT;
     public static final Direction DEFAULT_WISH_DIR = RIGHT;
@@ -37,7 +37,7 @@ public class WorldNavigation implements ActorComponent {
     public float corneringSpeedDelta;
 
     //TODO: store in frame context?
-    public final WorldMovementInfo info = new WorldMovementInfo();
+    public final WorldNavigationInfo info = new WorldNavigationInfo();
 
     public WorldNavigation() {}
 
@@ -54,7 +54,7 @@ public class WorldNavigation implements ActorComponent {
 
     @Override
     public String toString() {
-        return "WorldMovement{" +
+        return "WorldNavigation{" +
             "moveDir=" + moveDir() +
             ", wishDir=" + wishDir() +
             ", targetTile=" + targetTile() +
@@ -62,7 +62,6 @@ public class WorldNavigation implements ActorComponent {
             ", turnBackRequested=" + turnBackRequested +
             ", canTeleport=" + canTeleport +
             ", corneringSpeedDelta=" + corneringSpeedDelta +
-            ", info=" + info +
             '}';
     }
 

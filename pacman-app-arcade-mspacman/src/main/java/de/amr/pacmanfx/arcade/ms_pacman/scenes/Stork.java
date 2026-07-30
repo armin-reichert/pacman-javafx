@@ -9,13 +9,13 @@ import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
-import de.amr.pacmanfx.core.model.actors.Actor;
+import de.amr.pacmanfx.core.model.actors.GameEntity;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.component.common.Movement;
 import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
 
-public class Stork extends Actor {
+public class Stork extends GameEntity {
 
     public static class StorkAnimations extends SpriteAnimationMap<SpriteID> {
 
@@ -40,10 +40,10 @@ public class Stork extends Actor {
         name = "Beatrix von";
         setComponent(Movement.class, new Movement());
         setComponent(SpriteAnim.class, new SpriteAnim());
-        assertComponent(SpriteAnim.class).setAnimations(new StorkAnimations(animationSet));
+        requireComponent(SpriteAnim.class).setAnimations(new StorkAnimations(animationSet));
     }
 
     public Movement movement() {
-        return assertComponent(Movement.class);
+        return requireComponent(Movement.class);
     }
 }

@@ -5,7 +5,7 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.actors.Actor;
+import de.amr.pacmanfx.core.model.actors.GameEntity;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -77,7 +77,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
     private final TengenMsPacMan_GameLevelRenderer levelRenderer;
     private final TengenMsPacMan_ActorRenderer actorRenderer;
     private final BaseDebugInfoRenderer debugRenderer;
-    private final List<Actor> actorsInZOrder = new ArrayList<>();
+    private final List<GameEntity> actorsInZOrder = new ArrayList<>();
 
     public TengenMsPacMan_PlayScene2D_Renderer(
         GameVariantRenderConfig renderConfig, AbstractGameScene2D scene, SpriteAnimSystem animSystem, Canvas canvas) {

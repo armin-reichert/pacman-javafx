@@ -170,7 +170,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
         // In Tengen, actors are shown immediately
         level.entities().pac().show();
-        level.entities().ghosts().forEach(Actor::show);
+        level.entities().ghosts().forEach(GameEntity::show);
 
         if (tengenModel.pacBoosterMode() == PacBooster.ALWAYS_ON) {
             tengenModel.activatePacBooster(gameContext, level.entities().pac(), true);

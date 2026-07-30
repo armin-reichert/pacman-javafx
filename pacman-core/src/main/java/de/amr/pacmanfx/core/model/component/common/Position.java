@@ -5,9 +5,9 @@
 package de.amr.pacmanfx.core.model.component.common;
 
 import de.amr.basics.math.Vector2f;
-import de.amr.pacmanfx.core.model.component.ActorComponent;
+import de.amr.pacmanfx.core.model.component.GameEntityComponent;
 
-public final class Position implements ActorComponent {
+public final class Position implements GameEntityComponent {
 
     public float x;
     public float y;

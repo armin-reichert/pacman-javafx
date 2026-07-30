@@ -8,76 +8,76 @@ package de.amr.pacmanfx.core.model.systems.spriteanim;
 import de.amr.basics.Identifier;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.spriteanim.SpriteAnimationAccess;
-import de.amr.pacmanfx.core.model.actors.Actor;
+import de.amr.pacmanfx.core.model.actors.GameEntity;
 import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 
 import static java.util.Objects.requireNonNull;
 
 public class SpriteAnimSystem {
 
-    public void setAnimations(Actor actor, SpriteAnimationAccess animations) {
-        actor.assertComponent(SpriteAnim.class).setAnimations(animations);
+    public void setAnimations(GameEntity actor, SpriteAnimationAccess animations) {
+        actor.requireComponent(SpriteAnim.class).setAnimations(animations);
     }
 
-    private SpriteAnimationAccess spriteAnim(Actor actor) {
-        return actor.assertComponent(SpriteAnim.class).delegate();
+    private SpriteAnimationAccess spriteAnim(GameEntity actor) {
+        return actor.requireComponent(SpriteAnim.class).delegate();
     }
 
-    public boolean hasNoAnimations(Actor actor) {
+    public boolean hasNoAnimations(GameEntity actor) {
         return spriteAnim(actor).isEmpty();
     }
 
-    public Object animation(Actor actor, Identifier animationID) {
+    public Object animation(GameEntity actor, Identifier animationID) {
         return spriteAnim(actor).animation(animationID);
     }
 
-    public void selectAndSetFrame(Actor actor, Identifier animationID, int frameIndex) {
+    public void selectAndSetFrame(GameEntity actor, Identifier animationID, int frameIndex) {
         select(actor, animationID);
         setAnimationFrame(actor, animationID, frameIndex);
     }
 
-    public Identifier selectedAnimationID(Actor actor) {
+    public Identifier selectedAnimationID(GameEntity actor) {
         return spriteAnim(actor).selectedAnimationID();
     }
 
-    public boolean isSelected(Actor actor, Identifier animationID) {
+    public boolean isSelected(GameEntity actor, Identifier animationID) {
         requireNonNull(animationID);
         final Identifier selectedID = selectedAnimationID(actor);
         return selectedID != null && animationID.identifies(selectedAnimationID(actor));
     }
 
-    public void setAnimationFrame(Actor actor, Identifier animationID, int frameIndex) {
+    public void setAnimationFrame(GameEntity actor, Identifier animationID, int frameIndex) {
         spriteAnim(actor).setAnimationFrame(animationID, frameIndex);
     }
 
-    public void select(Actor actor, Identifier animationID) {
+    public void select(GameEntity actor, Identifier animationID) {
         spriteAnim(actor).select(animationID);
     }
 
-    public RectShort currentSprite(Actor actor) {
+    public RectShort currentSprite(GameEntity actor) {
         return spriteAnim(actor).currentSprite();
     }
 
-    public void advanceFrame(Actor actor) {
+    public void advanceFrame(GameEntity actor) {
         final int currentFrame = currentFrame(actor);
         if (currentFrame < spriteAnim(actor).numFrames()) {
 
         }
     }
 
-    public int currentFrame(Actor actor) {
+    public int currentFrame(GameEntity actor) {
         return spriteAnim(actor).currentFrame();
     }
 
-    public void playSelected(Actor actor) {
+    public void playSelected(GameEntity actor) {
         spriteAnim(actor).playSelected();
     }
 
-    public void stopSelected(Actor actor) {
+    public void stopSelected(GameEntity actor) {
         spriteAnim(actor).stopSelected();
     }
 
-    public void resetSelected(Actor actor) {
+    public void resetSelected(GameEntity actor) {
         spriteAnim(actor).resetSelected();
     }
 }

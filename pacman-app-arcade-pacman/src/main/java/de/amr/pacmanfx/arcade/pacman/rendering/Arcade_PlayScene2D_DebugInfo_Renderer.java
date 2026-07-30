@@ -5,7 +5,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.actors.Actor;
+import de.amr.pacmanfx.core.model.actors.GameEntity;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
@@ -30,7 +30,7 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
     private static final List<Direction> CLOCK_ORDER = List.of(Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT);
 
     private final SpriteAnimSystem animSystem;
-    private final List<Actor> actorsInZOrder = new ArrayList<>();
+    private final List<GameEntity> actorsInZOrder = new ArrayList<>();
 
     public Arcade_PlayScene2D_DebugInfo_Renderer(SpriteAnimSystem animSystem, Canvas canvas) {
         super(canvas);

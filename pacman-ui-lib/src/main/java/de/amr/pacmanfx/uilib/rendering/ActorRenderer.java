@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.uilib.rendering;
 
-import de.amr.pacmanfx.core.model.actors.Actor;
+import de.amr.pacmanfx.core.model.actors.GameEntity;
 
 public interface ActorRenderer extends Renderer {
 
@@ -13,5 +13,5 @@ public interface ActorRenderer extends Renderer {
      *
      * @param actor the actor to draw
      */
-    void drawActor(Actor actor);
+    void drawActor(GameEntity actor);
 }

@@ -7,7 +7,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.actors.Actor;
+import de.amr.pacmanfx.core.model.actors.GameEntity;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
@@ -55,7 +55,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
     private static final float SPEED_AFTER_COLLISION = 0.5f;
 
     private Clapperboard clapperboard;
-    private Actor heart;
+    private GameEntity heart;
     private Pac pacMan;
     private Pac msPacMan;
     private Ghost inky;
@@ -73,7 +73,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
         return clapperboard;
     }
 
-    public Actor heart() {
+    public GameEntity heart() {
         return heart;
     }
 
@@ -114,13 +114,13 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
         final var factory = TengenMsPacMan_ActorFactory.instance();
 
         msPacMan = factory.createMsPacMan();
-        msPacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        msPacMan.requireComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
         msPacMan.position().set(RIGHT_BORDER, LOWER_LANE);
         navigator.setMoveDir(msPacMan, Direction.LEFT);
         navigator.setSpeed(msPacMan, 0);
 
         pacMan = factory.createPacMan();
-        pacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        pacMan.requireComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
         pacMan.position().set(LEFT_BORDER, UPPER_LANE);
         navigator.setMoveDir(pacMan, Direction.RIGHT);
         navigator.setSpeed(pacMan, 0);
@@ -137,9 +137,9 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
         pinky.position().set(RIGHT_BORDER, LOWER_LANE);
         navigator.setSpeed(pinky, 0);
 
-        heart = new Actor();
+        heart = new GameEntity();
         heart.setComponent(SpriteAnim.class, new SpriteAnim());
-        heart.assertComponent(SpriteAnim.class).setAnimations(singleSpriteAnimation(spriteSheet.findSprite(SpriteID.HEART)));
+        heart.requireComponent(SpriteAnim.class).setAnimations(singleSpriteAnimation(spriteSheet.findSprite(SpriteID.HEART)));
 
         collided = false;
 

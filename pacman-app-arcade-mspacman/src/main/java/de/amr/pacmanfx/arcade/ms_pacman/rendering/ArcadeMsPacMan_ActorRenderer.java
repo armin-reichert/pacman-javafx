@@ -41,7 +41,7 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     }
 
     @Override
-    public void drawActor(Actor actor) {
+    public void drawActor(GameEntity actor) {
         requireNonNull(actor);
         if (!actor.visibility().isVisible()) return;
         final Vector2f center = WorldNavigationSystem.computeCenter(actor);

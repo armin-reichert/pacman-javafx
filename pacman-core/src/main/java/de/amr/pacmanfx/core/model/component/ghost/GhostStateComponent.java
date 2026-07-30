@@ -5,11 +5,11 @@
 package de.amr.pacmanfx.core.model.component.ghost;
 
 import de.amr.pacmanfx.core.model.actors.GhostState;
-import de.amr.pacmanfx.core.model.component.ActorComponent;
+import de.amr.pacmanfx.core.model.component.GameEntityComponent;
 
 import static java.util.Objects.requireNonNull;
 
-public class GhostStateComponent implements ActorComponent {
+public class GhostStateComponent implements GameEntityComponent {
 
     public static final GhostState DEFAULT_STATE = GhostState.LOCKED;
 

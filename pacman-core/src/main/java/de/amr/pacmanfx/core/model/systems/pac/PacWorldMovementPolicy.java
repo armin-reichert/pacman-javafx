@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.core.model.systems.pac;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.model.actors.Actor;
+import de.amr.pacmanfx.core.model.actors.GameEntity;
 import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.world.WorldMovementPolicy;
@@ -16,13 +16,13 @@ import static java.util.Objects.requireNonNull;
 public class PacWorldMovementPolicy implements WorldMovementPolicy {
 
     @Override
-    public boolean canTurnBack(Actor actor) {
-        final WorldNavigation worldNavigation = actor.assertComponent(WorldNavigation.class);
+    public boolean canTurnBack(GameEntity actor) {
+        final WorldNavigation worldNavigation = actor.requireComponent(WorldNavigation.class);
         return worldNavigation.isNewTileEntered();
     }
 
     @Override
-    public boolean canAccessTile(GameLevel level, Actor actor, Vector2i tile) {
+    public boolean canAccessTile(GameLevel level, GameEntity actor, Vector2i tile) {
         requireNonNull(level);
         requireNonNull(tile);
         requireNonNull(tile);

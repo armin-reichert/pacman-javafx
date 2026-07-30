@@ -4,11 +4,10 @@
 
 package de.amr.pacmanfx.core.steering;
 
-import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.actors.Actor;
+import de.amr.pacmanfx.core.model.actors.GameEntity;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 
-public interface Steering<A extends Actor> {
+public interface Steering<A extends GameEntity> {
 
     default void init() {}
 

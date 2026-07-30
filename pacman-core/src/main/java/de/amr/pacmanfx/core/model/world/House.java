@@ -7,7 +7,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.actors.Actor;
+import de.amr.pacmanfx.core.model.actors.GameEntity;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 
 import static de.amr.basics.math.Vector2f.vec2_float;
@@ -65,7 +65,7 @@ public interface House {
      * @param actor some actor
      * @return tells if the given actor is located inside the house
      */
-    default boolean isVisitedBy(Actor actor) {
+    default boolean isVisitedBy(GameEntity actor) {
         requireNonNull(actor);
         final Vector2i actorTile = WorldNavigationSystem.computeTile(actor);
         return contains(actorTile);

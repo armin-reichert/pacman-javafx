@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.actors.Actor;
+import de.amr.pacmanfx.core.model.actors.GameEntity;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -40,7 +40,7 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
     private final GameLevelRenderer levelRenderer;
     private final ActorRenderer actorRenderer;
     private final BaseDebugInfoRenderer debugRenderer;
-    private final List<Actor> actorsInZOrder = new ArrayList<>();
+    private final List<GameEntity> actorsInZOrder = new ArrayList<>();
 
     public Arcade_PlayScene2D_Renderer(AbstractGameScene2D scene, SpriteAnimSystem animSystem, Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(canvas);

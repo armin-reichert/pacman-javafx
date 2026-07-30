@@ -8,7 +8,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.GameStartedEvent;
 import de.amr.pacmanfx.core.event.LevelStartedEvent;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.actors.Actor;
+import de.amr.pacmanfx.core.model.actors.GameEntity;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.core.state.GameStateID;
@@ -44,7 +44,7 @@ public class ArcadeGameStartingState extends GameState {
         }
         else if (tick == TICK_NEW_GAME_SHOW_GUYS) {
             level.entities().pac().show();
-            level.entities().ghosts().forEach(Actor::show);
+            level.entities().ghosts().forEach(GameEntity::show);
         }
         else if (tick == TICK_NEW_GAME_START_PLAYING) {
             model.setPlaying(true);

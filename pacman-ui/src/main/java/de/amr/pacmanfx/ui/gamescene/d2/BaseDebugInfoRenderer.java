@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui.gamescene.d2;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.core.model.actors.Actor;
+import de.amr.pacmanfx.core.model.actors.GameEntity;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
@@ -47,12 +47,12 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
         drawTileGrid(scene.unscaledWidth(), scene.unscaledHeight(), Color.LIGHTGRAY);
     }
 
-    public void drawMovingActorInfo(SpriteAnimSystem animSystem, Actor actor) {
+    public void drawMovingActorInfo(SpriteAnimSystem animSystem, GameEntity actor) {
         if (!actor.visibility().isVisible()) {
             return;
         }
 
-        final WorldNavigation worldNavigation = actor.assertComponent(WorldNavigation.class);
+        final WorldNavigation worldNavigation = actor.requireComponent(WorldNavigation.class);
 
         ctx.setFill(Color.FORESTGREEN);
         if (actor instanceof Pac pac) {
@@ -72,7 +72,7 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
         }
     }
 
-    private void drawAnimationInfo(SpriteAnimSystem animSystem, Actor actor, Object selectedID) {
+    private void drawAnimationInfo(SpriteAnimSystem animSystem, GameEntity actor, Object selectedID) {
         ctx.save();
         String text = "[%s:%d]".formatted(selectedID, animSystem.currentFrame(actor));
         double x = scaled(actor.position().x - 4), y = scaled(actor.position().y - 4);
@@ -81,8 +81,8 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
         ctx.restore();
     }
 
-    private void drawDirectionIndicator(Actor actor) {
-        final WorldNavigation worldNavigation = actor.assertComponent(WorldNavigation.class);
+    private void drawDirectionIndicator(GameEntity actor) {
+        final WorldNavigation worldNavigation = actor.requireComponent(WorldNavigation.class);
 
         ctx.save();
         Vector2f center = WorldNavigationSystem.computeCenter(actor);

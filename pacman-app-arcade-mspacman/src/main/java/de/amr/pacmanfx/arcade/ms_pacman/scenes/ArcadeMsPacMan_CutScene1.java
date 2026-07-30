@@ -12,7 +12,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.actors.Actor;
+import de.amr.pacmanfx.core.model.actors.GameEntity;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
@@ -52,7 +52,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
     public Pac msPacMan;
     public Ghost inky;
     public Ghost pinky;
-    public Actor heart;
+    public GameEntity heart;
     public Clapperboard clapperboard;
 
     public ArcadeMsPacMan_CutScene1(GameAppContext appContext) {
@@ -87,18 +87,18 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         final var factory = new ArcadeMsPacMan_ActorFactory();
 
         pacMan = factory.createPacMan();
-        pacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        pacMan.requireComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         msPacMan = factory.createMsPacMan();
-        msPacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        msPacMan.requireComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         inky = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GhostPersonality.CYAN_GHOST_BASHFUL);
 
         pinky = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GhostPersonality.PINK_GHOST_SPEEDY);
 
-        heart = new Actor();
+        heart = new GameEntity();
         heart.setComponent(SpriteAnim.class, new SpriteAnim());
-        heart.assertComponent(SpriteAnim.class).setAnimations(singleSpriteAnimation(spriteSheet.findSprite(SpriteID.HEART)));
+        heart.requireComponent(SpriteAnim.class).setAnimations(singleSpriteAnimation(spriteSheet.findSprite(SpriteID.HEART)));
 
         clapperboard = new Clapperboard("1", "THEY MEET");
         clapperboard.position().set(tilesPx(3), tilesPx(10));

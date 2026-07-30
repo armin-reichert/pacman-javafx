@@ -22,7 +22,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Base class for Pac-Man / Ms. Pac-Man.
  */
-public class Pac extends Actor implements UpdatableEntity {
+public class Pac extends GameEntity implements UpdatableEntity {
 
     public enum State {ACTIVE, DEAD }
 
@@ -47,23 +47,23 @@ public class Pac extends Actor implements UpdatableEntity {
     }
 
     public Movement movement() {
-        return assertComponent(Movement.class);
+        return requireComponent(Movement.class);
     }
 
     public WorldNavigation worldNavigation() {
-        return assertComponent(WorldNavigation.class);
+        return requireComponent(WorldNavigation.class);
     }
 
     public PacDigestion digestion() {
-        return assertComponent(PacDigestion.class);
+        return requireComponent(PacDigestion.class);
     }
 
     public PacPower power() {
-        return assertComponent(PacPower.class);
+        return requireComponent(PacPower.class);
     }
 
     public PacCheats cheats() {
-        return assertComponent(PacCheats.class);
+        return requireComponent(PacCheats.class);
     }
 
     @Override
@@ -93,7 +93,7 @@ public class Pac extends Actor implements UpdatableEntity {
         worldNavigation().corneringSpeedDelta = 1.5f; // no real cornering implementation but better than nothing
 
         //TODO check this
-        assertComponent(SpriteAnim.class).delegate().select(CommonAnimationID.PAC_MUNCHING);
+        requireComponent(SpriteAnim.class).delegate().select(CommonAnimationID.PAC_MUNCHING);
     }
 
     public State state() {

@@ -16,6 +16,7 @@ import de.amr.pacmanfx.core.gameplay.FrameContext;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.HUDState;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.component.ghost.Elroy;
@@ -31,7 +32,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
-import static de.amr.pacmanfx.core.model.GameModel.RED_GHOST_SHADOW;
 import static java.util.function.Predicate.not;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -199,8 +199,8 @@ public class TestEatingFood {
     @DisplayName("Test Cruise Elroy Mode")
     public void testCruiseElroyMode() {
         context.model().optLevel().ifPresent(level -> {
-            final Ghost blinky = level.ghost(RED_GHOST_SHADOW);
-            final Elroy elroy = blinky.assertComponent(Elroy.class);
+            final Ghost blinky = level.ghost(GhostPersonality.RED_GHOST_SHADOW);
+            final Elroy elroy = blinky.requireComponent(Elroy.class);
             final FoodLayer foodLayer = level.worldMap().foodLayer();
             final LevelData data = ArcadePacMan_GameRules.levelData(level.number());
             while (foodLayer.remainingFoodCount() > data.numDotsLeftElroy1()) {

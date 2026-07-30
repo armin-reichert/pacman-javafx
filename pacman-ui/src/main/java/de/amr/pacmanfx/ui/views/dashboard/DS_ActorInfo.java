@@ -8,7 +8,7 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.actors.Actor;
+import de.amr.pacmanfx.core.model.actors.GameEntity;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
@@ -71,10 +71,10 @@ public class DS_ActorInfo extends GameDashboardSection {
         };
     }
 
-    private String actorLocationText(GameLevel level, Actor actor) {
+    private String actorLocationText(GameLevel level, GameEntity actor) {
         if (actor == null) return NO_INFO;
 
-        final WorldNavigation worldNavigation = actor.assertComponent(WorldNavigation.class);
+        final WorldNavigation worldNavigation = actor.requireComponent(WorldNavigation.class);
 
         final Vector2i tile = WorldNavigationSystem.computeTile(actor);
         final Vector2f tileOffset = WorldNavigationSystem.computeTileOffset(actor);
@@ -85,11 +85,11 @@ public class DS_ActorInfo extends GameDashboardSection {
             worldNavigation.isNewTileEntered() ? " NEW" : "");
     }
 
-    private String actorMovementText(GameLevel level, Actor actor) {
+    private String actorMovementText(GameLevel level, GameEntity actor) {
         if (actor == null) return NO_INFO;
 
         return actor.optComponent(Movement.class).map(movement -> {
-            final WorldNavigation navigation = actor.assertComponent(WorldNavigation.class);
+            final WorldNavigation navigation = actor.requireComponent(WorldNavigation.class);
             final float speed = movement.speed() * GameConstants.SIMULATION_FPS;
             final boolean blocked = !navigation.info.moved;
             final String turnbackHint = navigation.isTurnBackRequested() ? "REV!" : "";

@@ -45,7 +45,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     }
 
     @Override
-    public void drawActor(Actor actor) {
+    public void drawActor(GameEntity actor) {
         requireNonNull(actor);
         if (!actor.visibility().isVisible()) return;
 

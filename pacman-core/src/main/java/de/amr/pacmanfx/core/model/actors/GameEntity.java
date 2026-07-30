@@ -4,10 +4,9 @@
 
 package de.amr.pacmanfx.core.model.actors;
 
-import de.amr.pacmanfx.core.model.component.ActorComponent;
+import de.amr.pacmanfx.core.model.component.GameEntityComponent;
 import de.amr.pacmanfx.core.model.component.common.Position;
 import de.amr.pacmanfx.core.model.component.common.Visibility;
-import org.tinylog.Logger;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -15,55 +14,57 @@ import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
-public class Actor {
+/**
+ * Game entities are composed of entity (pure data) components and there are entity "systems" working on them.
+ */
+public class GameEntity {
 
-    private final Map<Class<? extends ActorComponent>, ActorComponent> components = new LinkedHashMap<>();
+    private final Map<Class<? extends GameEntityComponent>, GameEntityComponent> components = new LinkedHashMap<>();
 
     protected String name;
 
-    public Actor() {
-        name = super.toString(); // default name
+    public GameEntity() {
+        name = getClass().getSimpleName() + "#" + Integer.toHexString(hashCode()); // default name
 
         setComponent(Position.class, new Position());
         setComponent(Visibility.class, new Visibility(false));
     }
 
-    public <T extends ActorComponent> void setComponent(Class<T> type, T component) {
+    public <T extends GameEntityComponent> void setComponent(Class<T> type, T component) {
         requireNonNull(type);
         requireNonNull(component);
         if (components.containsKey(type)) {
-            Logger.warn("Component for class {} is already registered! Not overwritten!", type.getSimpleName());
-            return;
+            throw new IllegalArgumentException("Component for class: " + type.getSimpleName() + " is already registered!");
         }
         components.put(type, component);
     }
 
-    public <T extends ActorComponent> T assertComponent(Class<T> componentClass) {
+    public <T extends GameEntityComponent> T requireComponent(Class<T> componentClass) {
         requireNonNull(componentClass);
-        final ActorComponent component = components.get(componentClass);
+        final GameEntityComponent component = components.get(componentClass);
         if (component == null) {
             throw new IllegalArgumentException("No component found for class %s".formatted(componentClass.getSimpleName()));
         }
         return componentClass.cast(component);
     }
 
-    public <T extends ActorComponent> boolean hasComponent(Class<T> componentClass) {
+    public <T extends GameEntityComponent> boolean hasComponent(Class<T> componentClass) {
         requireNonNull(componentClass);
         return components.get(componentClass) != null;
     }
 
-    public <T extends ActorComponent> Optional<T> optComponent(Class<T> componentClass) {
+    public <T extends GameEntityComponent> Optional<T> optComponent(Class<T> componentClass) {
         requireNonNull(componentClass);
-        final ActorComponent component = components.get(componentClass);
-        return Optional.ofNullable(componentClass.cast(component));
+        final GameEntityComponent component = components.get(componentClass);
+        return Optional.ofNullable(component).map(componentClass::cast);
     }
 
     public final Position position() {
-        return assertComponent(Position.class);
+        return requireComponent(Position.class);
     }
 
     public final Visibility visibility() {
-        return assertComponent(Visibility.class);
+        return requireComponent(Visibility.class);
     }
 
     public void setName(String name) {
@@ -82,7 +83,7 @@ public class Actor {
      * Note: actor is invisible by default!
      */
     public void reset() {
-        components.values().forEach(ActorComponent::reset);
+        components.values().forEach(GameEntityComponent::reset);
     }
 
     public void show() {
@@ -95,11 +96,15 @@ public class Actor {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("name=").append(name);
+        StringBuilder b = new StringBuilder();
+        b.append("{name=").append(name).append(", components=[");
+        boolean first = true;
         for (var component : components.values()) {
-            builder.append("[").append(component).append("]\n");
+            if (!first) b.append(", ");
+            b.append(component);
+            first = false;
         }
-        return builder.toString();
+        b.append("]}");
+        return b.toString();
     }
 }

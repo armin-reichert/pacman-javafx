@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.tengenmspacman.gamescene;
 
 import de.amr.basics.math.RectShort;
-import de.amr.pacmanfx.core.model.actors.Actor;
+import de.amr.pacmanfx.core.model.actors.GameEntity;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 
@@ -15,7 +15,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Animated movie clapperboard.
  */
-public class Clapperboard extends Actor {
+public class Clapperboard extends GameEntity {
 
     public enum State { HIDDEN, WIDE_OPEN, OPEN, CLOSED }
 

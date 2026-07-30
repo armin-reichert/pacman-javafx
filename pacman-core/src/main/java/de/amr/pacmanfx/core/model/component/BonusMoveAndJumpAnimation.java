@@ -8,7 +8,7 @@ import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.model.actors.Bonus;
 import de.amr.pacmanfx.core.steering.RouteGuidedActorSteering;
 
-public class BonusMoveAndJumpAnimation implements ActorComponent {
+public class BonusMoveAndJumpAnimation implements GameEntityComponent {
 
     private static final int PULSE_CHANGE_TICKS = 10;
 

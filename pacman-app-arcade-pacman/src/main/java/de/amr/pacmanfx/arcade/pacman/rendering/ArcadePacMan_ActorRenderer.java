@@ -36,13 +36,13 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
     }
 
     @Override
-    public void drawActor(Actor actor) {
+    public void drawActor(GameEntity actor) {
         requireNonNull(actor);
         if (!actor.visibility().isVisible()) return;
         drawSpriteCentered(computeSprite(animSystem, actor), WorldNavigationSystem.computeCenter(actor));
     }
 
-    private RectShort computeSprite(SpriteAnimSystem animSystem, Actor actor) {
+    private RectShort computeSprite(SpriteAnimSystem animSystem, GameEntity actor) {
         return switch (actor) {
             case Pac pac -> computePacSprite(animSystem, pac);
             case Ghost ghost -> computeGhostSprite(animSystem, ghost);

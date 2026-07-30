@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.core.model.systems.ghost;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.model.actors.Actor;
+import de.amr.pacmanfx.core.model.actors.GameEntity;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.GhostState;
 import de.amr.pacmanfx.core.model.component.ghost.GhostWorldPlacement;
@@ -28,7 +28,7 @@ public class GhostWorldMovementPolicy implements WorldMovementPolicy {
     private static final Set<GhostState> TURN_BACK_STATES = Set.of(GhostState.HUNTING_PAC, GhostState.FRIGHTENED);
 
     @Override
-    public boolean canAccessTile(GameLevel level, Actor actor, Vector2i tile) {
+    public boolean canAccessTile(GameLevel level, GameEntity actor, Vector2i tile) {
         requireNonNull(level);
         requireNonNull(actor);
         requireNonNull(tile);
@@ -43,7 +43,7 @@ public class GhostWorldMovementPolicy implements WorldMovementPolicy {
             return terrainLayer.isTileInPortalSpace(tile);
         }
 
-        final GhostWorldPlacement worldPlacement = actor.assertComponent(GhostWorldPlacement.class);
+        final GhostWorldPlacement worldPlacement = actor.requireComponent(GhostWorldPlacement.class);
         final Vector2i myTile = WorldNavigationSystem.computeTile(actor);
 
         // Hunting ghosts cannot enter some tiles in Pac-Man game from below
@@ -63,7 +63,7 @@ public class GhostWorldMovementPolicy implements WorldMovementPolicy {
     }
 
     @Override
-    public boolean canTurnBack(Actor actor) {
+    public boolean canTurnBack(GameEntity actor) {
         if (actor instanceof Ghost ghost) {
             return ghost.worldNavigation().isNewTileEntered() && isOneOf(ghost.state(), TURN_BACK_STATES);
         }

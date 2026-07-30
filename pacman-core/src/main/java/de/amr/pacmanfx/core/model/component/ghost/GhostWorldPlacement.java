@@ -6,7 +6,7 @@ package de.amr.pacmanfx.core.model.component.ghost;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.model.component.ActorComponent;
+import de.amr.pacmanfx.core.model.component.GameEntityComponent;
 import de.amr.pacmanfx.core.model.world.House;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
 
@@ -15,7 +15,7 @@ import java.util.Set;
 import static de.amr.pacmanfx.core.model.world.WorldMap.halfTileRightOf;
 import static java.util.Objects.requireNonNull;
 
-public class GhostWorldPlacement implements ActorComponent {
+public class GhostWorldPlacement implements GameEntityComponent {
 
     private House house;
 
@@ -24,6 +24,15 @@ public class GhostWorldPlacement implements ActorComponent {
     private Vector2f startPosition;
 
     public GhostWorldPlacement() {
+    }
+
+    @Override
+    public String toString() {
+        return "GhostWorldPlacement{" +
+            "house=" + house +
+            ", specialTerrainTiles=" + specialTerrainTiles +
+            ", startPosition=" + startPosition +
+            '}';
     }
 
     public void init(TerrainLayer terrain, House house, String startTileProperty) {

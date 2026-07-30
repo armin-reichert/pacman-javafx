@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.tengenmspacman.gamescene;
 
-import de.amr.pacmanfx.core.model.actors.Actor;
+import de.amr.pacmanfx.core.model.actors.GameEntity;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -11,7 +11,7 @@ import javafx.scene.canvas.GraphicsContext;
 
 import java.util.BitSet;
 
-public class Marquee extends Actor {
+public class Marquee extends GameEntity {
     private static final int NUM_BULBS = 96;
 
     private final DoubleProperty scaling = new SimpleDoubleProperty(1.0);

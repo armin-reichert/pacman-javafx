@@ -4,11 +4,11 @@
 package de.amr.pacmanfx.core.model.level;
 
 import de.amr.basics.math.Vector2f;
-import de.amr.pacmanfx.core.model.actors.Actor;
+import de.amr.pacmanfx.core.model.actors.GameEntity;
 
 import static java.util.Objects.requireNonNull;
 
-public class GameLevelMessage extends Actor {
+public class GameLevelMessage extends GameEntity {
 
     private final GameLevelMessageType type;
 

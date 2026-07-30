@@ -187,7 +187,7 @@ public class GameLevel {
      */
     public void hidePacAndGhosts() {
         entities.pac().hide();
-        entities.ghosts().forEach(Actor::hide);
+        entities.ghosts().forEach(GameEntity::hide);
     }
 
     // Ghost kill chain

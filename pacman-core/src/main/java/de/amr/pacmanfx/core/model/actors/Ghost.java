@@ -17,7 +17,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Common ghost base class. The specific ghosts differ in their hunting behavior and their look.
  */
-public class Ghost extends Actor implements UpdatableEntity {
+public class Ghost extends GameEntity implements UpdatableEntity {
 
     private final GhostPersonality personality;
 
@@ -36,19 +36,19 @@ public class Ghost extends Actor implements UpdatableEntity {
     }
 
     public Movement movement() {
-        return assertComponent(Movement.class);
+        return requireComponent(Movement.class);
     }
 
     public GhostWorldPlacement worldPlacement() {
-        return assertComponent(GhostWorldPlacement.class);
+        return requireComponent(GhostWorldPlacement.class);
     }
 
     public WorldNavigation worldNavigation() {
-        return assertComponent(WorldNavigation.class);
+        return requireComponent(WorldNavigation.class);
     }
 
     public GhostState state() {
-        return assertComponent(GhostStateComponent.class).state();
+        return requireComponent(GhostStateComponent.class).state();
     }
 
     @Override
@@ -61,8 +61,6 @@ public class Ghost extends Actor implements UpdatableEntity {
         return "Ghost{" +
             "personality=" + personality +
             ", state=" + state() +
-            ", worldPlacement=" + worldPlacement() +
-            ", worldNavigation=" + worldNavigation() +
             ", " + super.toString() +
             '}';
     }

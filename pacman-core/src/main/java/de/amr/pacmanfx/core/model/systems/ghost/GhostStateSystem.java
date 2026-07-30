@@ -47,7 +47,7 @@ public class GhostStateSystem {
             //TODO return from function?
         }
         
-        ghost.assertComponent(GhostStateComponent.class).setState(newState);
+        ghost.requireComponent(GhostStateComponent.class).setState(newState);
 
         initAnimation(ghost, gameContext.systems().spriteAnim());
     }

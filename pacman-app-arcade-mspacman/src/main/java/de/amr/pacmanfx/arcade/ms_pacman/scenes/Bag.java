@@ -10,7 +10,7 @@ import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.actors.Actor;
+import de.amr.pacmanfx.core.model.actors.GameEntity;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.component.common.Movement;
 import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
@@ -19,7 +19,7 @@ import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.BLUE_BAG;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.JUNIOR_PAC;
 
-public class Bag extends Actor {
+public class Bag extends GameEntity {
 
     public static class BagAnimations extends SpriteAnimationMap<SpriteID> {
 
@@ -53,11 +53,11 @@ public class Bag extends Actor {
         name = "Birkin";
         setComponent(Movement.class, new Movement());
         setComponent(SpriteAnim.class, new SpriteAnim());
-        assertComponent(SpriteAnim.class).setAnimations(new BagAnimations(container));
+        requireComponent(SpriteAnim.class).setAnimations(new BagAnimations(container));
     }
 
     public Movement movement() {
-        return assertComponent(Movement.class);
+        return requireComponent(Movement.class);
     }
 
     public void setOpen(GameContext gameContext, boolean open) {

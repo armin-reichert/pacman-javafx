@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
-import de.amr.pacmanfx.core.model.actors.Actor;
+import de.amr.pacmanfx.core.model.actors.GameEntity;
 import javafx.scene.text.Font;
 
 import static java.util.Objects.requireNonNull;
@@ -12,7 +12,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Animated clapperboard.
  */
-public class Clapperboard extends Actor {
+public class Clapperboard extends GameEntity {
 
     public static final byte WIDE_OPEN = 0, OPEN = 1, CLOSED = 2;
 

@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.core.model.systems.bonus;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.model.actors.Actor;
+import de.amr.pacmanfx.core.model.actors.GameEntity;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
@@ -15,12 +15,12 @@ import static java.util.Objects.requireNonNull;
 public class BonusWorldMovementPolicy implements WorldMovementPolicy {
 
     @Override
-    public boolean canTurnBack(Actor actor) {
+    public boolean canTurnBack(GameEntity actor) {
         return false;
     }
 
     @Override
-    public boolean canAccessTile(GameLevel level, Actor actor, Vector2i tile) {
+    public boolean canAccessTile(GameLevel level, GameEntity actor, Vector2i tile) {
         requireNonNull(level);
         requireNonNull(tile);
 

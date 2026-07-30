@@ -61,7 +61,7 @@ public class Arcade_ActorSpeedRules implements ActorSpeedRules {
         final int levelNumber = level.number();
         final LevelData data = ArcadePacMan_GameRules.levelData(levelNumber);
         if (ghost.hasComponent(Elroy.class)) {
-            return switch (ghost.assertComponent(Elroy.class).boost()) {
+            return switch (ghost.requireComponent(Elroy.class).boost()) {
                 case NONE -> data.pctGhostSpeed()  * BASE_SPEED_ONE_PERCENT;
                 case MEDIUM -> data.pctElroy1Speed() * BASE_SPEED_ONE_PERCENT;
                 case LARGE -> data.pctElroy2Speed() * BASE_SPEED_ONE_PERCENT;
