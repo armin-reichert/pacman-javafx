@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.core.model.systems.common;
 
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.systems.bonus.BonusJumpAnimationSystem;
+import de.amr.pacmanfx.core.model.systems.bonus.BonusMoveAndJumpAnimationSystem;
 import de.amr.pacmanfx.core.model.systems.bonus.BonusWorldMovementPolicy;
 import de.amr.pacmanfx.core.model.systems.ghost.*;
 import de.amr.pacmanfx.core.model.systems.pac.PacDigestionSystem;
@@ -36,7 +36,7 @@ public class DefaultGameSystems implements GameSystems {
     protected GhostHuntingStrategy pinkGhostSpeedyHuntingStrategy;
 
     protected WorldMovementPolicy bonusWorldMovementPolicy;
-    protected BonusJumpAnimationSystem bonusJumpAnimationSystem;
+    protected BonusMoveAndJumpAnimationSystem bonusMoveAndJumpAnimationSystem;
 
     public DefaultGameSystems() {
         createPacSystems();
@@ -63,7 +63,7 @@ public class DefaultGameSystems implements GameSystems {
 
     protected void createBonusSystems(WorldNavigationSystem navigator) {
         bonusWorldMovementPolicy = new BonusWorldMovementPolicy();
-        bonusJumpAnimationSystem = new BonusJumpAnimationSystem(navigator, bonusWorldMovementPolicy);
+        bonusMoveAndJumpAnimationSystem = new BonusMoveAndJumpAnimationSystem(navigator, bonusWorldMovementPolicy);
     }
 
     /**
@@ -158,7 +158,7 @@ public class DefaultGameSystems implements GameSystems {
         return bonusWorldMovementPolicy;
     }
 
-    public BonusJumpAnimationSystem bonusJumpAnimation() {
-        return bonusJumpAnimationSystem;
+    public BonusMoveAndJumpAnimationSystem bonusJumpAnimation() {
+        return bonusMoveAndJumpAnimationSystem;
     }
 }
