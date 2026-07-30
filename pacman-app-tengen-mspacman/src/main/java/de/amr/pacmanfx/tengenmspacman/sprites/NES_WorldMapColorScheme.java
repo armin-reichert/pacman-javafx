@@ -3,13 +3,13 @@
  */
 package de.amr.pacmanfx.tengenmspacman.sprites;
 
-import de.amr.basics.math.RandomNumberSupport;import de.amr.pacmanfx.core.model.world.MapColorScheme;
+import de.amr.basics.math.RandomNumberSupport;import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 
 /**
- * The color schemes used in the Tengen Ms. Pac-Man maps. That was quite some work to figure these out.
+ * The world map color schemes used in the Tengen Ms. Pac-Man maps. That was quite some work to figure these out!
  */
-public enum NES_MapColorScheme implements MapColorScheme {
+public enum NES_WorldMapColorScheme implements WorldMapColorScheme {
     /** This scheme is used for highlighted maze in flashing animation. */
     _0F_20_0F_BLACK_WHITE_BLACK   (0x0f, 0x20, 0x0f),
 
@@ -44,13 +44,13 @@ public enum NES_MapColorScheme implements MapColorScheme {
     _28_16_20_YELLOW_RED_WHITE    (0x28, 0x16, 0x20),
     _28_20_2A_YELLOW_WHITE_GREEN  (0x28, 0x20, 0x2a);
 
-    NES_MapColorScheme(int fillIndex, int strokeIndex, int pelletIndex) {
-        fill = NES_Palette.rgb((byte) fillIndex);
+    NES_WorldMapColorScheme(int fillIndex, int strokeIndex, int pelletIndex) {
+        fill   = NES_Palette.rgb((byte) fillIndex);
         stroke = NES_Palette.rgb((byte) strokeIndex);
         pellet = NES_Palette.rgb((byte) pelletIndex);
     }
 
-    public static NES_MapColorScheme randomScheme() {
+    public static NES_WorldMapColorScheme randomScheme() {
         // ignore first entry (black white)
         return values()[RandomNumberSupport.randomInt(1, values().length)];
     }

@@ -8,7 +8,7 @@ import de.amr.basics.Disposable;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.world.ArcadeHouse;
-import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
+import de.amr.pacmanfx.core.model.world.WorldMapColorSchemeImpl;
 import de.amr.pacmanfx.ui.settings.world.House3DSettings;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.model3D.world.ArcadeHouse3D;
@@ -36,7 +36,7 @@ public class MazeHouse3D implements UpdatableEntity, Disposable {
      * @param house            the logical ghost house from the game world
      */
     public MazeHouse3D(
-        WorldMapColorScheme colorScheme,
+        WorldMapColorSchemeImpl colorScheme,
         House3DSettings config3D,
         AnimationRegistry animations,
         ArcadeHouse house)

@@ -36,7 +36,7 @@ public class XXL_MapSelector implements WorldMapSelector, PathWatchEventListener
 
     private final ObservableList<WorldMap> customMaps = FXCollections.observableArrayList();
     private final List<WorldMap> builtinMaps = new ArrayList<>();
-    private final List<WorldMapColorScheme> builtInMapColorSchemes = new ArrayList<>();
+    private final List<WorldMapColorSchemeImpl> builtInMapColorSchemes = new ArrayList<>();
 
     private WorldMapSelectionMode selectionMode;
 
@@ -174,7 +174,7 @@ public class XXL_MapSelector implements WorldMapSelector, PathWatchEventListener
         final var worldMap = new WorldMap(prototype);
 
         // If selected map is a built-in map, use a random color scheme to get variation
-        final WorldMapColorScheme colorScheme = builtinMaps.contains(prototype)
+        final WorldMapColorSchemeImpl colorScheme = builtinMaps.contains(prototype)
             ? builtInMapColorSchemes.get(randomInt(0, builtInMapColorSchemes.size()))
             : WorldMapSelector.extractColorScheme(prototype);
         worldMap.setConfigValue(WorldMapConfigKey.COLOR_SCHEME, colorScheme);

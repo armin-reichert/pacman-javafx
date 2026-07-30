@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
-import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
+import de.amr.pacmanfx.core.model.world.WorldMapColorSchemeImpl;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
@@ -31,7 +31,7 @@ public interface GameVariantRenderConfig {
 
     SpriteSheet<?> spriteSheet();
 
-    WorldMapColorScheme colorScheme(WorldMap worldMap, WorldSettings worldSettings);
+    WorldMapColorSchemeImpl colorScheme(WorldMap worldMap, WorldSettings worldSettings);
 
     GameLevelRenderer createGameLevelRenderer(SpriteAnimSystem animSystem, Canvas canvas);
 

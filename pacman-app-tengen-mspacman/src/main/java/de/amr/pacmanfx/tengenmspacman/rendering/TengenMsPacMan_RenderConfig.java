@@ -11,9 +11,9 @@ import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
-import de.amr.pacmanfx.core.model.world.MapColorScheme;
-import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
+import de.amr.pacmanfx.core.model.world.WorldMap;
+import de.amr.pacmanfx.core.model.world.WorldMapColorSchemeImpl;
 import de.amr.pacmanfx.core.model.world.WorldMapConfigKey;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.gamescene.*;
@@ -34,6 +34,8 @@ import javafx.scene.paint.Color;
 
 import java.util.EnumMap;
 import java.util.Map;
+
+import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
 
@@ -72,7 +74,7 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     private final AssetMap assets;
 
     public TengenMsPacMan_RenderConfig(AssetMap assets) {
-        this.assets = assets;
+        this.assets = requireNonNull(assets);
     }
 
     @Override
@@ -86,10 +88,13 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public WorldMapColorScheme colorScheme(WorldMap worldMap, WorldSettings worldSettings) {
-        final MapColorScheme scheme = worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
-        final WorldMapColorScheme colorScheme = new WorldMapColorScheme(
-            scheme.wallFill(), scheme.wallStroke(), scheme.door(), scheme.pellet());
+    public WorldMapColorSchemeImpl colorScheme(WorldMap worldMap, WorldSettings worldSettings) {
+        requireNonNull(worldMap);
+        requireNonNull(worldSettings);
+
+        final WorldMapColorScheme spec = worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
+        final WorldMapColorSchemeImpl colorScheme = new WorldMapColorSchemeImpl(
+            spec.wallFill(), spec.wallStroke(), spec.door(), spec.pellet());
         return GlobalAssets.enhanceContrast(worldSettings, colorScheme);
     }
 

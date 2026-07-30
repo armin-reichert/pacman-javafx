@@ -14,7 +14,7 @@ public final class NES_Palette {
 
     private NES_Palette() {}
 
-    public static final String[] RGB = {
+    public static final String[] RGB_VALUES = {
         // 00,     01,      02,        03,      04,       05,       06,       07
         "666666", "002a88", "1412a7", "3b00a4", "5c007e", "6e0040", "6c0600", "561d00",
 
@@ -41,30 +41,30 @@ public final class NES_Palette {
     };
 
     // Map of RGB color values to JavaFX color objects
-    public static final Color[] COLORS = Stream.of(NES_Palette.RGB).map(Color::valueOf).toArray(Color[]::new);
+    public static final Color[] COLORS = Stream.of(NES_Palette.RGB_VALUES).map(Color::valueOf).toArray(Color[]::new);
 
     /**
-     * @param index NES color palette index
+     * @param paletteIndex NES color palette index
      * @return RGB color for palette entry
      */
-    public static Color color(int index) {
-        return NES_Palette.COLORS[index];
+    public static Color color(int paletteIndex) {
+        return NES_Palette.COLORS[paletteIndex];
     }
 
     /**
      * Returns the RGB color value for the NES palette entry at the given index.
      *
-     * @param index byte number from range {@code 00} to {@code 3F}
+     * @param paletteIndex byte number from range {@code 00} to {@code 3F}
      * @return color in RGB hex string notation e.g. "bcbe00"
      */
-    public static String rgb(int index) {
-        if (isValidIndex(index)) {
-            return RGB[index];
+    public static String rgb(int paletteIndex) {
+        if (!isValidPaletteIndex(paletteIndex)) {
+            throw new IllegalArgumentException("Illegal NES palette index: " + paletteIndex);
         }
-        throw new IllegalArgumentException("Illegal NES palette index: " + index);
+        return RGB_VALUES[paletteIndex];
     }
 
-    private static boolean isValidIndex(int index) {
-        return 0 <= index && index < RGB.length;
+    private static boolean isValidPaletteIndex(int index) {
+        return 0 <= index && index < RGB_VALUES.length;
     }
 }

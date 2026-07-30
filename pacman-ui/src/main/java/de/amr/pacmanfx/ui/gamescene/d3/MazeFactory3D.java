@@ -2,7 +2,7 @@ package de.amr.pacmanfx.ui.gamescene.d3;
 
 import de.amr.pacmanfx.core.model.world.ArcadeHouse;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
-import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
+import de.amr.pacmanfx.core.model.world.WorldMapColorSchemeImpl;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.Maze3D;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.MazeHouse3D;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
@@ -23,7 +23,7 @@ public class MazeFactory3D {
     public static final int WALL_TOP_SPECULAR_POWER = 128;
 
     public Maze3D createMaze3D(
-        TerrainLayer terrain, WorldSettings config, WorldMapColorScheme colorScheme,
+        TerrainLayer terrain, WorldSettings config, WorldMapColorSchemeImpl colorScheme,
         AnimationRegistry animationRegistry)
     {
         requireNonNull(terrain);
@@ -49,7 +49,7 @@ public class MazeFactory3D {
         return maze3D;
     }
 
-    private Map<String, PhongMaterial> createMazeMaterialMap(WorldMapColorScheme colorScheme) {
+    private Map<String, PhongMaterial> createMazeMaterialMap(WorldMapColorSchemeImpl colorScheme) {
         final PhongMaterial floorMaterial = new PhongMaterial();
         floorMaterial.setSpecularPower(FLOOR_SPECULAR_POWER);
 

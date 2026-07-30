@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.gamescene.d3;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
-import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
+import de.amr.pacmanfx.core.model.world.WorldMapColorSchemeImpl;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.Maze3D;
 import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
@@ -54,7 +54,7 @@ public class DefaultFactory3D implements Factory3D {
     @Override
     public Maze3D createMaze3D(
         TerrainLayer terrain, WorldSettings settings,
-        WorldMapColorScheme colorScheme, AnimationRegistry animationRegistry) {
+        WorldMapColorSchemeImpl colorScheme, AnimationRegistry animationRegistry) {
 
         return mazeFactory3D.createMaze3D(terrain, settings, colorScheme, animationRegistry);
     }

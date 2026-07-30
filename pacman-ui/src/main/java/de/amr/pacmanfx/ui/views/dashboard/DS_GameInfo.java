@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.FoodLayer;
-import de.amr.pacmanfx.core.model.world.MapColorScheme;
+import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.model.world.WorldMapConfigKey;
 import de.amr.pacmanfx.core.rules.ActorSpeedRules;
@@ -63,7 +63,7 @@ public class DS_GameInfo extends GameDashboardSection {
         addDynamicInfo("Fill/Stroke/Pellet", fnGameLevelInfo(appContext,
             level -> {
                 final WorldMap worldMap = level.worldMap();
-                MapColorScheme colorScheme = null;
+                WorldMapColorScheme colorScheme = null;
                 if (worldMap.hasConfigValue(WorldMapConfigKey.COLOR_SCHEME)) {
                     colorScheme = worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
                 }

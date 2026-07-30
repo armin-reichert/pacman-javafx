@@ -105,7 +105,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         requireNonNull(level);
         final WorldMap worldMap = level.worldMap();
         final MapImageSet recoloredMazeSprites = worldMap.getConfigValue(MapConfigKey.MAP_IMAGE_SET);
-        final NES_MapColorScheme colorScheme = recoloredMazeSprites.mapImage().colorScheme();
+        final NES_WorldMapColorScheme colorScheme = recoloredMazeSprites.mapImage().colorScheme();
         final Color pelletColor = Color.valueOf(colorScheme.pellet());
         final boolean blinkingOn = level.heartbeat().state() == Pulse.State.ON;
 
@@ -153,7 +153,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
     }
 
     private void drawGameOverMessage(GameLevel level, GameLevelMessage message) {
-        final NES_MapColorScheme colorScheme = level.worldMap().getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
+        final NES_WorldMapColorScheme colorScheme = level.worldMap().getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
         final Color color = level.isDemoLevel()
             ? Color.valueOf(colorScheme.wallStroke())
             : assets.color("color.game_over_message");

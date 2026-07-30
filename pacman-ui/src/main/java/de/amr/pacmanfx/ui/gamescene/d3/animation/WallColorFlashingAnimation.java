@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.gamescene.d3.animation;
 
-import de.amr.pacmanfx.core.model.world.WorldMapColorScheme;
+import de.amr.pacmanfx.core.model.world.WorldMapColorSchemeImpl;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Transition;
@@ -24,7 +24,7 @@ public class WallColorFlashingAnimation extends ManagedAnimation {
     private final Color fromColor;
     private final Color toColor;
 
-    public WallColorFlashingAnimation(WorldMapColorScheme colorScheme, PhongMaterial wallMaterial) {
+    public WallColorFlashingAnimation(WorldMapColorSchemeImpl colorScheme, PhongMaterial wallMaterial) {
         super("Wall Color Flashing");
         this.fromColor = Color.valueOf(colorScheme.wallFill());
         this.toColor = Color.valueOf(colorScheme.wallStroke());

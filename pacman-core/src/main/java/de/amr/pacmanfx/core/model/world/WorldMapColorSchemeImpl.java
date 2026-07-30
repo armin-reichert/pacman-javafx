@@ -1,0 +1,7 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+package de.amr.pacmanfx.core.model.world;
+
+public record WorldMapColorSchemeImpl(String wallFill, String wallStroke, String door, String pellet)
+    implements WorldMapColorScheme {}

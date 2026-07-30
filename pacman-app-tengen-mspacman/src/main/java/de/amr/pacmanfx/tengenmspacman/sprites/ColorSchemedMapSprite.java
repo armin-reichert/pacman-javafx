@@ -6,4 +6,4 @@ package de.amr.pacmanfx.tengenmspacman.sprites;
 import de.amr.basics.math.RectShort;
 import javafx.scene.image.Image;
 
-public record ColorSchemedMapSprite(Image spriteSheetImage, RectShort sprite, NES_MapColorScheme colorScheme) {}
+public record ColorSchemedMapSprite(Image spriteSheetImage, RectShort sprite, NES_WorldMapColorScheme colorScheme) {}

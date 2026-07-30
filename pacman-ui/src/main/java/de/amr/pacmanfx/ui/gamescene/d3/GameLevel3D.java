@@ -155,7 +155,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     public void createAnimations(ParticlesAnimationConfig particlesConfig) {
         final GameVariantRenderConfig renderConfig = gameVariant.renderConfig();
-        final WorldMapColorScheme mapColorScheme = renderConfig.colorScheme(level.worldMap(), gameVariant.worldSettings());
+        final WorldMapColorSchemeImpl mapColorScheme = renderConfig.colorScheme(level.worldMap(), gameVariant.worldSettings());
         animationRegistry.register(AnimationID.WALL_COLOR_FLASHING,
             new WallColorFlashingAnimation(mapColorScheme, maze3D.materials().get("wallTopMaterial")));
         animationRegistry.register(AnimationID.LEVEL_COMPLETED_FULL, new LevelCompletedAnimation(this));
@@ -272,7 +272,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     // Private area, no trespassing!
 
     private void createMaze3D() {
-        final WorldMapColorScheme colorScheme = gameVariant.renderConfig().colorScheme(level.worldMap(), gameVariant.worldSettings());
+        final WorldMapColorSchemeImpl colorScheme = gameVariant.renderConfig().colorScheme(level.worldMap(), gameVariant.worldSettings());
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
         maze3D = gameVariant.factory3D().createMaze3D(
@@ -288,7 +288,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private void createFood3D() {
-        final WorldMapColorScheme colorScheme = gameVariant.renderConfig().colorScheme(level.worldMap(), gameVariant.worldSettings());
+        final WorldMapColorSchemeImpl colorScheme = gameVariant.renderConfig().colorScheme(level.worldMap(), gameVariant.worldSettings());
         final FoodLayer foodLayer = level.worldMap().foodLayer();
 
         final PhongMaterial foodMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.pellet()));

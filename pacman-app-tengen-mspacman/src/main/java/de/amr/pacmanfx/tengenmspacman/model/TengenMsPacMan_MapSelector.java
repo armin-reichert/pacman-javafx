@@ -8,7 +8,7 @@ import de.amr.pacmanfx.core.model.world.WorldMapConfigKey;
 import de.amr.pacmanfx.core.model.world.WorldMapParseException;
 import de.amr.pacmanfx.core.model.world.WorldMapSelector;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig;
-import de.amr.pacmanfx.tengenmspacman.sprites.NES_MapColorScheme;
+import de.amr.pacmanfx.tengenmspacman.sprites.NES_WorldMapColorScheme;
 import de.amr.pacmanfx.tengenmspacman.sprites.NonArcadeMapsSpriteSheet;
 import org.tinylog.Logger;
 
@@ -19,7 +19,7 @@ import java.util.Map;
 
 import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
 import static de.amr.pacmanfx.tengenmspacman.model.MapCategory.*;
-import static de.amr.pacmanfx.tengenmspacman.sprites.NES_MapColorScheme.*;
+import static de.amr.pacmanfx.tengenmspacman.sprites.NES_WorldMapColorScheme.*;
 
 /**
  * Selects and configures the correct maze for each level in the Tengen NES Ms. Pac-Man port.
@@ -90,7 +90,7 @@ public class TengenMsPacMan_MapSelector implements WorldMapSelector {
         }
     }
 
-    private WorldMap configuredMap(MapCategory category, int number, NES_MapColorScheme nesColorScheme) {
+    private WorldMap configuredMap(MapCategory category, int number, NES_WorldMapColorScheme nesColorScheme) {
         final var worldMap = new WorldMap(mapPrototypes.get(category).get(number - 1));
         worldMap.setConfigValue(WorldMapConfigKey.MAP_NUMBER, number);
         worldMap.setConfigValue(TengenMsPacMan_GameVariantConfig.MapConfigKey.MAP_CATEGORY, category);
@@ -100,7 +100,7 @@ public class TengenMsPacMan_MapSelector implements WorldMapSelector {
     }
 
     private WorldMap randomlyConfiguredMap(MapCategory category, int number) {
-        final WorldMap worldMap = configuredMap(category, number, NES_MapColorScheme.randomScheme());
+        final WorldMap worldMap = configuredMap(category, number, NES_WorldMapColorScheme.randomScheme());
         worldMap.setConfigValue(TengenMsPacMan_GameVariantConfig.MapConfigKey.MULTIPLE_FLASH_COLORS, true);
         return worldMap;
     }
