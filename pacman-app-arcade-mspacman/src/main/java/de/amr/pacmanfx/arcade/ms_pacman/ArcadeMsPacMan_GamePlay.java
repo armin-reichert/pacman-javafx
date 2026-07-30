@@ -19,7 +19,7 @@ import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.world.*;
 import de.amr.pacmanfx.core.rules.HuntingTimer;
-import de.amr.pacmanfx.core.steering.RuleBasedPacSteering;
+import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
 import org.tinylog.Logger;
 
 import java.util.List;
@@ -88,7 +88,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
     protected void createAndSetMsPacMan(GameLevel level) {
         final var factory = new ArcadeMsPacMan_ActorFactory();
         final Pac msPacMan = factory.createMsPacMan();
-        msPacMan.setAutomaticSteering(new RuleBasedPacSteering());
+        msPacMan.setAutomaticSteering(new RuleGuidedPacSteering());
         level.setPac(msPacMan);
     }
 
@@ -122,7 +122,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         pac.cheats().setImmune(false);
         pac.cheats().setUsingAutopilot(true);
 
-        final var demoLevelSteering = new RuleBasedPacSteering();
+        final var demoLevelSteering = new RuleGuidedPacSteering();
         pac.setAutomaticSteering(demoLevelSteering);
         demoLevelSteering.init();
 

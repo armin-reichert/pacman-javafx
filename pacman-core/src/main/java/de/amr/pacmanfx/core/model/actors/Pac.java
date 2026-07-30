@@ -28,7 +28,7 @@ public class Pac extends Actor implements UpdatableEntity {
 
     private State state;
 
-    private Steering automaticSteering;
+    private Steering<Pac> automaticSteering;
 
     /**
      * @param name a readable name. Any honest Pac-Man and Pac-Woman should have a name! Period.
@@ -81,7 +81,7 @@ public class Pac extends Actor implements UpdatableEntity {
             '}';
     }
 
-    public void setAutomaticSteering(Steering steering) {
+    public void setAutomaticSteering(Steering<Pac> steering) {
         automaticSteering = requireNonNull(steering);
     }
 

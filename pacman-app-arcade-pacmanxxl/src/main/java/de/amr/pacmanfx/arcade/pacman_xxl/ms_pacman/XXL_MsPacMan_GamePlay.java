@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.WorldMapSelectionMode;
-import de.amr.pacmanfx.core.steering.RuleBasedPacSteering;
+import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
 
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
 
@@ -32,7 +32,7 @@ public class XXL_MsPacMan_GamePlay extends ArcadeMsPacMan_GamePlay {
         pac.cheats().setUsingAutopilot(true);
 
         // Demo level map could be a custom map, so use generic auto-steering that also can cope with dead-ends:
-        final var demoLevelSteering = new RuleBasedPacSteering();
+        final var demoLevelSteering = new RuleGuidedPacSteering();
         pac.setAutomaticSteering(demoLevelSteering);
         demoLevelSteering.init();
 

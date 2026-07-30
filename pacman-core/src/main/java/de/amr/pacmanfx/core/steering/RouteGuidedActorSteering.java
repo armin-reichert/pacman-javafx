@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.core.steering;
 
 import de.amr.basics.math.Vector2i;
@@ -19,13 +20,13 @@ import static java.util.Objects.requireNonNull;
 /**
  * Steers an actor such that it follows a given route.
  */
-public class RouteBasedSteering implements Steering {
+public class RouteGuidedActorSteering<A extends Actor> implements Steering<A> {
 
     private final List<Vector2i> route;
     private int targetIndex;
     private boolean routeTraversed;
 
-    public RouteBasedSteering(List<Vector2i> route) {
+    public RouteGuidedActorSteering(List<Vector2i> route) {
         this.route = requireNonNull(route);
         init();
     }
@@ -40,9 +41,8 @@ public class RouteBasedSteering implements Steering {
         routeTraversed = false;
     }
 
-    //TODO It is assumed that the actor is a Pac
     @Override
-    public void steer(Actor actor, GameContext gameContext) {
+    public void steer(A actor, GameContext gameContext) {
         final GameSystems sys = gameContext.systems();
         final WorldNavigation navigation = actor.assertComponent(WorldNavigation.class);
         final GameLevel level = gameContext.assertLevel();

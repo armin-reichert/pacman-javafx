@@ -25,8 +25,8 @@ import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.world.*;
 import de.amr.pacmanfx.core.rules.HuntingTimer;
-import de.amr.pacmanfx.core.steering.RouteBasedSteering;
-import de.amr.pacmanfx.core.steering.RuleBasedPacSteering;
+import de.amr.pacmanfx.core.steering.RouteGuidedActorSteering;
+import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
 
 import java.util.List;
 import java.util.Map;
@@ -136,7 +136,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     protected void createAndSetPacMan(GameLevel level) {
         final var factory = ArcadePacMan_ActorFactory.instance();
         final Pac pacMan = factory.createPacMan();
-        pacMan.setAutomaticSteering(new RuleBasedPacSteering());
+        pacMan.setAutomaticSteering(new RuleGuidedPacSteering());
         level.setPac(pacMan);
     }
 
@@ -179,7 +179,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         pac.cheats().setImmune(false);
         pac.cheats().setUsingAutopilot(true);
 
-        final var demoLevelSteering = new RouteBasedSteering(DEMO_LEVEL_ROUTE);
+        final var demoLevelSteering = new RouteGuidedActorSteering<Pac>(DEMO_LEVEL_ROUTE);
         pac.setAutomaticSteering(demoLevelSteering);
         demoLevelSteering.init();
 

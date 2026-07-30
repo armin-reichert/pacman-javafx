@@ -16,7 +16,7 @@ import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
-import de.amr.pacmanfx.core.steering.RouteBasedSteering;
+import de.amr.pacmanfx.core.steering.RouteGuidedActorSteering;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ public class Bonus extends Actor implements UpdatableEntity {
 
     // moving bonus only
     private final Pulse jumpingAnimation;
-    private RouteBasedSteering routeNavigation;
+    private RouteGuidedActorSteering<Bonus> routeNavigation;
 
     public Bonus(int symbolCode, int points) {
         setComponent(Movement.class, new Movement());
@@ -128,7 +128,7 @@ public class Bonus extends Actor implements UpdatableEntity {
         navigator.setMoveDir(this, leftToRight ? Direction.RIGHT : Direction.LEFT);
         navigator.setWishDir(this, leftToRight ? Direction.RIGHT : Direction.LEFT);
 
-        routeNavigation = new RouteBasedSteering(route);
+        routeNavigation = new RouteGuidedActorSteering<>(route);
     }
 
     public void showEatenForSeconds(GameContext gameContext, float seconds) {

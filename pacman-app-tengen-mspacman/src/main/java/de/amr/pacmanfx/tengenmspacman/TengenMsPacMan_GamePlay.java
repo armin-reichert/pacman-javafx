@@ -19,7 +19,7 @@ import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.world.*;
 import de.amr.pacmanfx.core.rules.HuntingTimer;
-import de.amr.pacmanfx.core.steering.RuleBasedPacSteering;
+import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
 import de.amr.pacmanfx.tengenmspacman.model.*;
 import de.amr.pacmanfx.tengenmspacman.rules.TengenMsPacMan_GameRules;
 import org.tinylog.Logger;
@@ -135,7 +135,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         pac.cheats().setImmune(false);
         pac.cheats().setUsingAutopilot(true);
 
-        final var demoLevelSteering = new RuleBasedPacSteering();
+        final var demoLevelSteering = new RuleGuidedPacSteering();
         pac.setAutomaticSteering(demoLevelSteering);
         demoLevelSteering.init();
 
@@ -240,7 +240,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final var factory = TengenMsPacMan_ActorFactory.instance();
         final Pac msPacMan = factory.createMsPacMan();
 
-        msPacMan.setAutomaticSteering(new RuleBasedPacSteering());
+        msPacMan.setAutomaticSteering(new RuleGuidedPacSteering());
         model.activatePacBooster(gameContext, msPacMan, model.pacBoosterMode() == PacBooster.ALWAYS_ON);
 
         level.setPac(msPacMan);

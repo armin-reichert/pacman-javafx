@@ -25,10 +25,8 @@ import java.util.stream.Collectors;
 
 /**
  * Pac-Man steering based on a set of rules.
- *
- * @author Armin Reichert
  */
-public class RuleBasedPacSteering implements Steering {
+public class RuleGuidedPacSteering implements Steering<Pac> {
 
     private static class CollectedData {
 
@@ -70,8 +68,8 @@ public class RuleBasedPacSteering implements Steering {
     }
 
     @Override
-    public void steer(Actor actor, GameContext gameContext) {
-        final WorldNavigation worldNavigation = actor.assertComponent(WorldNavigation.class);
+    public void steer(Pac pac, GameContext gameContext) {
+        final WorldNavigation worldNavigation = pac.assertComponent(WorldNavigation.class);
 
         if (worldNavigation.info.moved && !worldNavigation.isNewTileEntered()) {
             return;
