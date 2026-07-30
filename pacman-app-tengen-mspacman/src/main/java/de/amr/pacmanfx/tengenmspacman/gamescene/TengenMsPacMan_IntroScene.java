@@ -137,7 +137,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
 
                 scene.msPacMan = factory.createMsPacMan();
                 scene.msPacMan.position().set(WorldMap.TS * 33, ACTOR_Y);
-                scene.msPacMan.visibility().show();
+                scene.msPacMan.show();
 
                 sys.navigator().setMoveDir(scene.msPacMan, Direction.LEFT);
                 sys.navigator().setSpeed(scene.msPacMan, SPEED);
@@ -155,7 +155,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
 
                 for (Ghost ghost : scene.ghosts) {
                     ghost.position().set(WorldMap.TS * 33, ACTOR_Y);
-                    ghost.visibility().show();
+                    ghost.show();
 
                     sys.navigator().setMoveDir(ghost, Direction.LEFT);
                     sys.navigator().setWishDir(ghost, Direction.LEFT);

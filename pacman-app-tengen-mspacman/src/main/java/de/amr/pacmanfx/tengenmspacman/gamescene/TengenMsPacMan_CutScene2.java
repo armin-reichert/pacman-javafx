@@ -73,7 +73,7 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene2D {
 
         clapperboard = new Clapperboard(2, "THE CHASE");
         clapperboard.position().set(3 * WorldMap.TS, 10 * WorldMap.TS);
-        clapperboard.visibility().show();
+        clapperboard.show();
         clapperboard.startAnimation();
 
         final var factory = TengenMsPacMan_ActorFactory.instance();
@@ -102,7 +102,7 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene2D {
             switch ((int) gameStateTick) {
                 case 270 -> {
                     msPacMan.position().set(LEFT_BORDER, UPPER_LANE);
-                    msPacMan.visibility().show();
+                    msPacMan.show();
 
                     sys.navigator().setSpeed(msPacMan, 2.0f);
                     sys.navigator().setMoveDir(msPacMan, Direction.RIGHT);
@@ -112,7 +112,7 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene2D {
                 }
                 case 320 -> {
                     pacMan.position().set(LEFT_BORDER, UPPER_LANE);
-                    pacMan.visibility().show();
+                    pacMan.show();
 
                     sys.navigator().setSpeed(pacMan, 2.0f);
                     sys.navigator().setMoveDir(pacMan, Direction.RIGHT);

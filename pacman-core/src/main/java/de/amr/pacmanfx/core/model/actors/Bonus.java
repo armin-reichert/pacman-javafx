@@ -83,7 +83,7 @@ public class Bonus extends Actor implements UpdatableEntity {
     public void setInactive(GameContext gameContext) {
         final WorldNavigationSystem navigator = gameContext.systems().navigator();
 
-        visibility().hide();
+        hide();
         navigator.setSpeed(this, 0);
 
         jumpingAnimation.reset();
@@ -93,7 +93,7 @@ public class Bonus extends Actor implements UpdatableEntity {
     }
 
     public void showEdibleForSeconds(float seconds) {
-        visibility().show();
+        show();
 
         state = BonusState.EDIBLE;
         timer.restartSeconds(seconds);
@@ -102,7 +102,7 @@ public class Bonus extends Actor implements UpdatableEntity {
     public void showEdibleAndStartWandering(GameContext gameContext, float speed) {
         final WorldNavigationSystem navigator = gameContext.systems().navigator();
 
-        visibility().show();
+        show();
 
         navigator.setSpeed(this, speed);
         worldMovement().setTargetTile(null);
@@ -134,7 +134,7 @@ public class Bonus extends Actor implements UpdatableEntity {
     public void showEatenForSeconds(GameContext gameContext, float seconds) {
         final WorldNavigationSystem navigator = gameContext.systems().navigator();
 
-        visibility().show();
+        show();
         navigator.setSpeed(this, 0);
 
         jumpingAnimation.stop();

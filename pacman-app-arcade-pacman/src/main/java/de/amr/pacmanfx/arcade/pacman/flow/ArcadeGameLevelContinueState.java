@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.flow;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.GameContinuedEvent;
 import de.amr.pacmanfx.core.flow.GameFlowController;
+import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.state.GameState;
@@ -26,8 +27,8 @@ public class ArcadeGameLevelContinueState extends GameState {
         final GameLevel level = gameContext.assertLevel();
 
         gameContext.gamePlay().prepareLevelForPlaying(gameContext);
-        level.entities().pac().visibility().show();
-        level.entities().ghosts().forEach(ghost -> ghost.visibility().show());
+        level.entities().pac().show();
+        level.entities().ghosts().forEach(Actor::show);
 
         gameContext.gamePlay().showLevelMessage(level, GameLevelMessageType.READY);
         gameContext.hudState().hideCredit().showLivesCounter();

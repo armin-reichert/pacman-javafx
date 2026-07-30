@@ -97,7 +97,7 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene2D {
     }
 
     private void startBlinkyChasingPacMan(GameSystems sys) {
-        pacMan.visibility().show();
+        pacMan.show();
 
         sys.navigator().placeAtTile(pacMan, 29, 20);
         sys.navigator().setMoveDir(pacMan, Direction.LEFT);
@@ -106,7 +106,7 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene2D {
         sys.spriteAnim().select(pacMan, CommonAnimationID.PAC_MUNCHING);
         sys.spriteAnim().playSelected(pacMan);
 
-        blinky.visibility().show();
+        blinky.show();
 
         sys.navigator().placeAtTile(blinky, 32, 20);
         sys.navigator().setMoveDir(blinky, Direction.LEFT);

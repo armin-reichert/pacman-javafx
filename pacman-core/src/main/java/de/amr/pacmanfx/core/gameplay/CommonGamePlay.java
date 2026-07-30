@@ -332,7 +332,7 @@ public abstract class CommonGamePlay implements GamePlay {
         sys.spriteAnim().selectAndSetFrame(eatenGhost, CommonAnimationID.GHOST_POINTS, killedBefore);
 
         level.addToGhostKillChain(eatenGhost);
-        level.entities().pac().visibility().hide();
+        level.entities().pac().hide();
         level.entities().ghosts().forEach(sys.spriteAnim()::stopSelected);
 
         eventManager.publishGameEvent(new GhostEatenEvent(eatenGhost));

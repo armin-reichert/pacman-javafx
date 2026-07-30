@@ -8,17 +8,15 @@ import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
-import de.amr.pacmanfx.core.model.actors.Bonus;
-import de.amr.pacmanfx.core.model.actors.Ghost;
-import de.amr.pacmanfx.core.model.actors.GhostState;
-import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.rules.HuntingRules;
 
 import java.util.*;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.core.Validations.*;
+import static de.amr.pacmanfx.core.Validations.requireNonNegativeInt;
+import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -188,8 +186,8 @@ public class GameLevel {
      * Makes Pac-Man and the ghosts invisible.
      */
     public void hidePacAndGhosts() {
-        entities.pac().visibility().hide();
-        entities.ghosts().forEach(ghost -> ghost.visibility().hide());
+        entities.pac().hide();
+        entities.ghosts().forEach(Actor::hide);
     }
 
     // Ghost kill chain

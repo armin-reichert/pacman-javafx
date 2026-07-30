@@ -97,7 +97,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
 
         msPacMan = factory.createMsPacMan();
         msPacMan.position().set(WorldMap.TS * 31, WorldMap.TS * 20);
-        msPacMan.visibility().show();
+        msPacMan.show();
 
         sys.navigator().setMoveDir(msPacMan, Direction.LEFT);
         sys.navigator().setSpeed(msPacMan, ACTOR_SPEED);
@@ -115,7 +115,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
 
         for (Ghost ghost : ghosts) {
             ghost.position().set(WorldMap.TS * 33.5f, WorldMap.TS * 20);
-            ghost.visibility().show();
+            ghost.show();
 
             sys.navigator().setMoveDir(ghost, Direction.LEFT);
             sys.navigator().setWishDir(ghost, Direction.LEFT);

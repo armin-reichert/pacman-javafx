@@ -98,7 +98,7 @@ public class LevelMediumTestState extends GameState {
         final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
 
-        pac.visibility().show();
+        pac.show();
 
         pac.cheats().usingAutopilotProperty().unbind();
         pac.cheats().setUsingAutopilot(true);
@@ -107,7 +107,7 @@ public class LevelMediumTestState extends GameState {
 
         final List<Ghost> ghosts = level.entities().ghosts();
         ghosts.forEach(ghost -> {
-            ghost.visibility().show();
+            ghost.show();
             sys.spriteAnim().playSelected(ghost);
         });
 

@@ -98,7 +98,7 @@ class XXL_ChaseAnimation {
 
         pac = factory.createPacMan();
         pac.position().setX(numTilesX * WorldMap.TS);
-        pac.visibility().show();
+        pac.show();
 
         sys.navigator().setMoveDir(pac, Direction.LEFT);
         sys.navigator().setWishDir(pac, Direction.LEFT);
@@ -116,7 +116,7 @@ class XXL_ChaseAnimation {
         );
         for (Ghost ghost : ghosts) {
             ghost.position().setX((numTilesX + 4) * WorldMap.TS + ghost.personality().ordinal() * GHOST_DISTANCE);
-            ghost.visibility().show();
+            ghost.show();
 
             sys.navigator().setMoveDir(ghost, Direction.LEFT);
             sys.navigator().setWishDir(ghost, Direction.LEFT);
@@ -155,7 +155,7 @@ class XXL_ChaseAnimation {
 
             for (Ghost ghost : ghosts) {
                 ghost.position().setX((numTilesX + 4) * WorldMap.TS + ghost.personality().ordinal() * 2 * WorldMap.TS);
-                ghost.visibility().show();
+                ghost.show();
 
                 sys.navigator().setMoveDir(ghost, Direction.LEFT);
                 sys.navigator().setWishDir(ghost, Direction.LEFT);
@@ -173,7 +173,7 @@ class XXL_ChaseAnimation {
                 final Collision collision = collisions.get(i);
                 if (now - collision.time() >= 1000) {
                     collisions.remove(collision);
-                    collision.ghost.visibility().hide();
+                    collision.ghost.hide();
                 }
             }
             // Collision check
@@ -202,7 +202,7 @@ class XXL_ChaseAnimation {
             sys.navigator().setWishDir(pac, Direction.RIGHT);
 
             for (Ghost ghost : ghosts) {
-                ghost.visibility().show();
+                ghost.show();
                 ghost.position().setX(pac.position().x + 22 * WorldMap.TS + ghost.personality().ordinal() * GHOST_DISTANCE);
 
                 sys.navigator().setMoveDir(ghost, Direction.RIGHT);

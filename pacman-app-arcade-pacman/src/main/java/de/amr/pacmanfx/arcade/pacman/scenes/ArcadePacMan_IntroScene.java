@@ -151,7 +151,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
         blinking.start();
 
         pacMan.position().set(WorldMap.TS * 28, WorldMap.TS * 20);
-        pacMan.visibility().show();
+        pacMan.show();
 
         sys.navigator().setMoveDir(pacMan, Direction.LEFT);
         sys.navigator().setSpeed(pacMan, CHASING_SPEED);
@@ -161,7 +161,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
 
         for (Ghost ghost : ghosts) {
             ghost.position().set(pacMan.position().x + 16 * ghost.personality().ordinal() + 18, pacMan.position().y);
-            ghost.visibility().show();
+            ghost.show();
 
             sys.navigator().setMoveDir(ghost, Direction.LEFT);
             sys.navigator().setWishDir(ghost, Direction.LEFT);
@@ -247,7 +247,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
         sys.ghostState().changeState(gameContext, victim, EATEN);
         sys.spriteAnim().selectAndSetFrame(victim, CommonAnimationID.GHOST_POINTS, numGhostsEaten++);
 
-        pacMan.visibility().hide();
+        pacMan.hide();
         sys.navigator().setSpeed(pacMan, 0);
 
         for (Ghost ghost : ghosts) {
@@ -259,14 +259,14 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
     }
 
     private void continueChasing(GameSystems sys) {
-        pacMan.visibility().show();
+        pacMan.show();
         sys.navigator().setSpeed(pacMan, CHASING_SPEED);
 
         for (Ghost ghost : ghosts) {
             if (ghost.state() == EATEN) {
-                ghost.visibility().hide();
+                ghost.hide();
             } else {
-                ghost.visibility().show();
+                ghost.show();
                 sys.navigator().setSpeed(ghost, GHOST_FRIGHTENED_SPEED);
                 sys.spriteAnim().select(ghost, CommonAnimationID.GHOST_FRIGHTENED);
                 sys.spriteAnim().playSelected(ghost);
@@ -335,7 +335,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
             @Override
             public void onEnter(ArcadePacMan_IntroScene scene) {
                 timer.restartTicks(TICK_CHASING_PAC_MAN_END);
-                scene.pacMan.visibility().hide();
+                scene.pacMan.hide();
             }
 
             @Override
@@ -378,7 +378,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
             public void onUpdate(ArcadePacMan_IntroScene scene) {
                 final long tick = timer.tickCount();
                 if (tick == TICK_CHASING_GHOSTS_END) {
-                    scene.pacMan.visibility().hide();
+                    scene.pacMan.hide();
                     scene.flow.enterState(scene, WAIT_FOR_DEMO_LEVEL);
                 } else {
                     scene.chaseGhosts(scene.gameContext(), tick);
@@ -397,7 +397,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
                 final GameContext gameContext = scene.gameContext();
 
                 if (timer.tickCount() == TICK_START_DEMO_LEVEL) {
-                    scene.ghosts[GhostPersonality.ORANGE_GHOST_POKEY.ordinal()].visibility().hide();
+                    scene.ghosts[GhostPersonality.ORANGE_GHOST_POKEY.ordinal()].hide();
                     scene.gameFlow().enterState(gameContext, GameStateID.GAME_OR_LEVEL_STARTING);
                 }
             }

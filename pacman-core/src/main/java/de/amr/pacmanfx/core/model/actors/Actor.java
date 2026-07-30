@@ -85,6 +85,14 @@ public class Actor {
         components.values().forEach(ActorComponent::reset);
     }
 
+    public void show() {
+        visibility().set(true);
+    }
+
+    public void hide() {
+        visibility().set(false);
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();

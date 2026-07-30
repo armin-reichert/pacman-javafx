@@ -115,12 +115,12 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene2D {
     private void updateStateChasing(GameSystems sys) {
         if (sceneTimer.atSecond(4.5)) {
             pacMan.position().set(TS * (-2), UPPER_Y);
-            pacMan.visibility().show();
+            pacMan.show();
             sys.navigator().setMoveDir(pacMan, Direction.RIGHT);
             sys.navigator().setSpeed(pacMan, 2.0f);
 
             msPacMan.position().set(TS * (-8), UPPER_Y);
-            msPacMan.visibility().show();
+            msPacMan.show();
             sys.navigator().setMoveDir(msPacMan, Direction.RIGHT);
             sys.navigator().setSpeed(msPacMan, 2.0f);
         }

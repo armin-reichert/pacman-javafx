@@ -39,14 +39,6 @@ public class Visibility implements ActorComponent {
         visibleProperty().set(value);
     }
 
-    public void show() {
-        set(true);
-    }
-
-    public void hide() {
-        set(false);
-    }
-
     @Override
     public String toString() {
         return "Visibility{" +

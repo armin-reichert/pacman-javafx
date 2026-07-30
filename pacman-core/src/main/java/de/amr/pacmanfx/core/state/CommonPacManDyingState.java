@@ -9,6 +9,7 @@ import de.amr.pacmanfx.core.event.PacDeadEvent;
 import de.amr.pacmanfx.core.event.PacDyingEvent;
 import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.actors.CommonAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.component.ghost.Elroy;
@@ -86,7 +87,7 @@ public class CommonPacManDyingState extends GameState {
             }
         }
         else if (tick == hideGhostsTick) {
-            level.entities().ghosts().forEach(ghost -> ghost.visibility().hide());
+            level.entities().ghosts().forEach(Actor::hide);
             sys.spriteAnim().select(pac, CommonAnimationID.PAC_DYING);
             sys.spriteAnim().resetSelected(pac);
         }
@@ -95,7 +96,7 @@ public class CommonPacManDyingState extends GameState {
             gameContext.eventManager().publishGameEvent(new PacDyingEvent(pac));
         }
         else if (tick == hidePacTick) {
-            pac.visibility().hide();
+            pac.hide();
             level.optBonus().ifPresent(bonus -> bonus.setInactive(gameContext)); //TODO check this
         }
         else if (tick == pacDeadTick) {

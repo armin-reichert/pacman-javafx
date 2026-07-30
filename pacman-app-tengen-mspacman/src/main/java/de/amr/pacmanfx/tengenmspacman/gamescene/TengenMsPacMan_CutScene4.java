@@ -78,7 +78,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
 
         clapperboard = new Clapperboard(4, "THE END");
         clapperboard.position().set(tilesPx(3), tilesPx(10));
-        clapperboard.visibility().show();
+        clapperboard.show();
         clapperboard.startAnimation();
 
         final var factory = TengenMsPacMan_ActorFactory.instance();
@@ -120,7 +120,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
             switch (eventTick) {
                 case 130 -> {
                     pacMan.position().set(LEFT_BORDER, LOWER_LANE);
-                    pacMan.visibility().show();
+                    pacMan.show();
 
                     sys.navigator().setMoveDir(pacMan, Direction.RIGHT);
                     sys.navigator().setSpeed(pacMan, 1f);
@@ -129,7 +129,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
                     sys.spriteAnim().playSelected(pacMan);
 
                     msPacMan.position().set(RIGHT_BORDER, LOWER_LANE);
-                    msPacMan.visibility().show();
+                    msPacMan.show();
 
                     sys.navigator().setMoveDir(msPacMan, Direction.LEFT);
                     sys.navigator().setSpeed(msPacMan, 1f);
@@ -175,8 +175,8 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
                     sys.navigator().setMoveDir(msPacMan, Direction.UP);
                 }
                 case 720 -> {
-                    pacMan.visibility().hide();
-                    msPacMan.visibility().hide();
+                    pacMan.hide();
+                    msPacMan.hide();
                 }
                 case 904, 968, 1032, 1096, 1160, 1224, 1288, 1352 -> spawnJunior(sys, renderConfig, gameStateTick);
                 case 1500 -> optSoundEffects().ifPresent(GameSoundEffects::stopAll);
@@ -194,7 +194,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
 
         final Pac junior = factory.createPacMan();
         junior.position().set((float) randomX, unscaledHeight() - 4 * TS);
-        junior.visibility().show();
+        junior.show();
 
         sys.navigator().setMoveDir(junior, Direction.UP);
         sys.navigator().setSpeed(junior, 2);

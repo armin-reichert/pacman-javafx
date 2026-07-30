@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.gamescene.d3.animation;
 
+import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.ui.gamescene.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.Maze3D;
@@ -39,10 +40,10 @@ public class LevelCompletedAnimationShort extends ManagedAnimation {
         final Maze3D maze3D = level3D.maze3D();
         final GameLevel level = level3D.level();
         return new SequentialTransition(
-            pauseSecThen(0.5, () -> level.entities().ghosts().forEach(ghost -> ghost.visibility().hide())),
+            pauseSecThen(0.5, () -> level.entities().ghosts().forEach(Actor::hide)),
             pauseSec(0.5),
             createMazeWallsSwingingAnimation(maze3D, level.numFlashes()),
-            pauseSecThen(0.5, () -> level.entities().pac().visibility().hide())
+            pauseSecThen(0.5, () -> level.entities().pac().hide())
         );
     }
 }

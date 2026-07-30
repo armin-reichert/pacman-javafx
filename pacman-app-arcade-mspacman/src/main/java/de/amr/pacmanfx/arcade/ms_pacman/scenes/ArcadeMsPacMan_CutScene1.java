@@ -129,7 +129,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
 
     private void enterStateChasedByGhosts(GameSystems sys) {
         pacMan.position().set(WorldMap.TS * (-2), UPPER_Y);
-        pacMan.visibility().show();
+        pacMan.show();
 
         sys.navigator().setMoveDir(pacMan, Direction.RIGHT);
         sys.navigator().setSpeed(pacMan, SPEED_PAC_CHASING);
@@ -138,7 +138,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         sys.spriteAnim().playSelected(pacMan);
 
         inky.position().set(pacMan.position().x - 6 * WorldMap.TS, pacMan.position().y);
-        inky.visibility().show();
+        inky.show();
 
         sys.navigator().setSpeed(inky, SPEED_GHOST_CHASING);
         sys.navigator().setMoveDir(inky, Direction.RIGHT);
@@ -148,7 +148,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         sys.spriteAnim().playSelected(inky);
 
         msPacMan.position().set(WorldMap.TS * 30, LOWER_Y);
-        msPacMan.visibility().show();
+        msPacMan.show();
 
         sys.navigator().setMoveDir(msPacMan, Direction.LEFT);
         sys.navigator().setSpeed(msPacMan, SPEED_PAC_CHASING);
@@ -157,7 +157,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         sys.spriteAnim().playSelected(msPacMan);
 
         pinky.position().set(msPacMan.position().x + 6 * WorldMap.TS, msPacMan.position().y);
-        pinky.visibility().show();
+        pinky.show();
 
         sys.navigator().setMoveDir(pinky, Direction.LEFT);
         sys.navigator().setWishDir(pinky, Direction.LEFT);
@@ -255,11 +255,11 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         sys.spriteAnim().stopSelected(msPacMan);
         sys.spriteAnim().resetSelected(msPacMan);
 
-        inky.visibility().hide();
-        pinky.visibility().hide();
+        inky.hide();
+        pinky.hide();
 
         heart.position().set((pacMan.position().x + msPacMan.position().x) * 0.5f, pacMan.position().y - WorldMap.TS * 2);
-        heart.visibility().show();
+        heart.show();
 
         setState(SceneState.IN_HEAVEN, 3L * GameConstants.SIMULATION_FPS);
     }

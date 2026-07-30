@@ -35,7 +35,7 @@ public class CommonEatingGhostState extends GameState {
         final GameLevel level = model.optLevel().orElseThrow();
 
         if (timer().hasExpired()) {
-            level.entities().pac().visibility().show();
+            level.entities().pac().show();
             level.ghostsInState(GhostState.EATEN).forEach(
                 ghost -> sys.ghostState().changeState(gameContext, ghost, GhostState.RETURNING_HOME));
             level.entities().ghosts().forEach(sys.spriteAnim()::playSelected);

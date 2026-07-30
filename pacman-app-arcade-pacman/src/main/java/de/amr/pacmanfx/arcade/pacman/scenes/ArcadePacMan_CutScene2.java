@@ -117,7 +117,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
     }
 
     private void endTheShow() {
-        blinky.visibility().hide();
+        blinky.hide();
         gameState().triggerTimeout();
     }
 
@@ -139,7 +139,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
     }
 
     private void blinkyStartsRunning(GameSystems sys) {
-        blinky.visibility().show();
+        blinky.show();
 
         sys.navigator().placeAtTile(blinky, 28, 20, -3, 0);
         sys.navigator().setMoveDir(blinky, Direction.LEFT);
@@ -151,7 +151,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
     }
 
     private void pacManStartsRunning(GameSystems sys) {
-        pacMan.visibility().show();
+        pacMan.show();
 
         sys.navigator().placeAtTile(pacMan, 28, 20);
         sys.navigator().setMoveDir(pacMan, Direction.LEFT);

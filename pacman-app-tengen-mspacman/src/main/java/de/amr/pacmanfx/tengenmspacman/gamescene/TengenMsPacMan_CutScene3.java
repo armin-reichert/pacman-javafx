@@ -88,7 +88,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
 
         clapperboard = new Clapperboard(3, "JUNIOR");
         clapperboard.position().set(3 * WorldMap.TS, 10 * WorldMap.TS);
-        clapperboard.visibility().show();
+        clapperboard.show();
         clapperboard.startAnimation();
 
         final var factory = TengenMsPacMan_ActorFactory.instance();
@@ -123,7 +123,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
             switch ((int) gameStateTick) {
                 case 130 -> {
                     pacMan.position().set(WorldMap.TS * 3, GROUND_Y - 4);
-                    pacMan.visibility().show();
+                    pacMan.show();
 
                     sys.navigator().setMoveDir(pacMan, Direction.RIGHT);
                     sys.navigator().setSpeed(pacMan, 0);
@@ -132,7 +132,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
                     sys.spriteAnim().stopSelected(pacMan);
 
                     msPacMan.position().set(WorldMap.TS * 5, GROUND_Y - 4);
-                    msPacMan.visibility().show();
+                    msPacMan.show();
 
                     sys.navigator().setMoveDir(msPacMan, Direction.RIGHT);
                     sys.navigator().setSpeed(msPacMan, 0);
@@ -141,7 +141,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
                     sys.spriteAnim().stopSelected(msPacMan);
 
                     stork.position().set(RIGHT_BORDER, WorldMap.TS * 7);
-                    stork.visibility().show();
+                    stork.show();
                     sys.motor().setVelocity(stork, -0.8f, 0);
 
                     sys.spriteAnim().select(stork, CommonAnimationID.STORK_FLYING);
@@ -156,7 +156,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
                     stork.setBagReleasedFromBeak(true);
 
                     flyingBag.position().set(stork.position().x - 15, stork.position().y + 8);
-                    flyingBag.visibility().show();
+                    flyingBag.show();
                     sys.motor().setVelocity(flyingBag, -0.5f, 0);
                     sys.motor().setAcceleration(flyingBag, 0, 0.1f);
                 }

@@ -6,6 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.flow;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.GameContinuedEvent;
+import de.amr.pacmanfx.core.model.actors.Actor;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.core.state.GameStateID;
@@ -23,10 +24,10 @@ public class GameLevelContinueState extends GameState {
         final GameLevel level = gameContext.assertLevel();
 
         gameContext.gamePlay().prepareLevelForPlaying(gameContext);
-        level.entities().pac().visibility().show();
-        level.entities().ghosts().forEach(ghost -> ghost.visibility().show());
+        level.entities().pac().show();
+        level.entities().ghosts().forEach(Actor::show);
 
-        gameContext.eventManager().publishGameEvent(new GameContinuedEvent());
+       gameContext.eventManager().publishGameEvent(new GameContinuedEvent());
     }
 
     @Override

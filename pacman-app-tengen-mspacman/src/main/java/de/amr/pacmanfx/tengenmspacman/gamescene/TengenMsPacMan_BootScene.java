@@ -62,7 +62,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
             case   7 -> gray(true);
             case  12 -> gray(false);
             case  21 -> {
-                movingText.visibility().show();
+                movingText.show();
                 sys.motor().setVelocity(movingText, 0, -WorldMap.HTS);
             }
             case  55 -> {
@@ -71,15 +71,15 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
             }
             case 113 -> {
                 ghost.position().set(unscaledWidth() - WorldMap.TS, GHOST_Y);
-                ghost.visibility().show();
+                ghost.show();
                 sys.navigator().setMoveDir(ghost, Direction.LEFT);
                 sys.navigator().setWishDir(ghost, Direction.LEFT);
                 sys.navigator().setSpeed(ghost, WorldMap.TS);
             }
             case 181 -> sys.motor().setVelocity(movingText, 0, WorldMap.TS);
             case 203 -> {
-                movingText.visibility().hide();
-                ghost.visibility().hide();
+                movingText.hide();
+                ghost.hide();
             }
             case 204 -> gray(true);
             case 214 -> gray(false);
