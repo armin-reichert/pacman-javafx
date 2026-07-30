@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_RenderConfig;
-import de.amr.pacmanfx.core.flow.GameFlowController;
+import de.amr.pacmanfx.core.gameplay.GameFlowController;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;

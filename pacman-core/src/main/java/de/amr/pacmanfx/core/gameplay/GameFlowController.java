@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core.flow;
+package de.amr.pacmanfx.core.gameplay;
 
 import de.amr.basics.Identifier;
 import de.amr.basics.fsm.State;

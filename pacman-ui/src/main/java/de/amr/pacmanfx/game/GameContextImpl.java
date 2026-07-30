@@ -8,7 +8,7 @@ import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.GameEventManager;
 import de.amr.pacmanfx.core.event.GameEventManagerImpl;
-import de.amr.pacmanfx.core.flow.GameFlowController;
+import de.amr.pacmanfx.core.gameplay.GameFlowController;
 import de.amr.pacmanfx.core.gameplay.FrameContext;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.gameplay.HuntingStepResult;

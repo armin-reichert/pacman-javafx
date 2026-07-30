@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.flow.GameFlowController;
+import de.amr.pacmanfx.core.gameplay.GameFlowController;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.config.TengenJsonConfigLoader;

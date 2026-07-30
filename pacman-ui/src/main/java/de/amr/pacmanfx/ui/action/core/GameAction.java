@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.action.core;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Validations;
-import de.amr.pacmanfx.core.flow.GameFlowController;
+import de.amr.pacmanfx.core.gameplay.GameFlowController;
 import org.tinylog.Logger;
 
 /**

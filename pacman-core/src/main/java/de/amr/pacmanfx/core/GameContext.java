@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.core;
 
 import de.amr.pacmanfx.core.event.GameEventManager;
-import de.amr.pacmanfx.core.flow.GameFlowController;
+import de.amr.pacmanfx.core.gameplay.GameFlowController;
 import de.amr.pacmanfx.core.gameplay.FrameContext;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.model.GameCheats;

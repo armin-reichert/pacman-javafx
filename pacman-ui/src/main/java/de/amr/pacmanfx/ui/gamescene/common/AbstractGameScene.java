@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.event.CreditAddedEvent;
 import de.amr.pacmanfx.core.event.DefaultGameEventListener;
 import de.amr.pacmanfx.core.event.GameEventManager;
 import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
-import de.amr.pacmanfx.core.flow.GameFlowController;
+import de.amr.pacmanfx.core.gameplay.GameFlowController;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
