@@ -241,7 +241,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         final Vector2i bonusTile = level.worldMap().terrainLayer()
             .getTilePropertyOrDefault(WorldMapPropertyName.POS_BONUS, ArcadePacMan_GameModel.DEFAULT_BONUS_TILE);
         bonus.position().set(WorldMap.halfTileRightOf(bonusTile));
-        bonus.showEdibleForSeconds(randomFloat(9, 10));
+        bonus.showEdibleForSeconds(gameContext, randomFloat(9, 10));
         level.setBonus(bonus);
 
         eventManager.publishGameEvent(new BonusActivatedEvent(bonus));

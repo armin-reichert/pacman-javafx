@@ -377,7 +377,7 @@ public abstract class CommonGamePlay implements GamePlay {
             sys.spriteAnim().select(ghost, ActorAnimationID.GHOST_NORMAL);
         });
 
-        level.optBonus().ifPresent(bonus -> bonus.setInactive(gameContext.systems()));
+        level.optBonus().ifPresent(bonus -> bonus.setInactive(gameContext));
     }
 
     // Scoring
