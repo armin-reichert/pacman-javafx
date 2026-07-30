@@ -210,13 +210,17 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     @Override
     public void onEatPellet(GameContext gameContext, Vector2i tile) {
         super.onEatPellet(gameContext, tile);
-        checkRedGhostCruiseElroyActivation(gameContext.assertLevel());
+
+        final GameLevel level = gameContext.assertLevel();
+        checkCruiseElroyActivation(level, level.ghost(GhostPersonality.RED_GHOST_SHADOW).assertComponent(Elroy.class));
     }
 
     @Override
     public void onEatEnergizer(GameContext gameContext, Vector2i tile) {
         super.onEatEnergizer(gameContext, tile);
-        checkRedGhostCruiseElroyActivation(gameContext.assertLevel());
+
+        final GameLevel level = gameContext.assertLevel();
+        checkCruiseElroyActivation(level, level.ghost(GhostPersonality.RED_GHOST_SHADOW).assertComponent(Elroy.class));
     }
 
     @Override
@@ -239,18 +243,13 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         eventManager.publishGameEvent(new BonusActivatedEvent(bonus));
     }
 
-    protected void checkRedGhostCruiseElroyActivation(GameLevel level) {
-        final Ghost redGhost = level.ghost(GhostPersonality.RED_GHOST_SHADOW);
-        if (redGhost != null) {
-            final LevelData data = ArcadePacMan_GameRules.levelData(level.number());
-            final int uneatenFoodCount = level.worldMap().foodLayer().remainingFoodCount();
-            if (uneatenFoodCount == data.numDotsLeftElroy1()) {
-                redGhost.assertComponent(Elroy.class).setBoost(Elroy.Boost.MEDIUM);
-            } else if (uneatenFoodCount == data.numDotsLeftElroy2()) {
-                redGhost.assertComponent(Elroy.class).setBoost(Elroy.Boost.LARGE);
-            }
-        } else {
-            throw new IllegalStateException("Red ghost not existing in this level");
+    protected void checkCruiseElroyActivation(GameLevel level, Elroy elroy) {
+        final LevelData data = ArcadePacMan_GameRules.levelData(level.number());
+        final int uneatenFoodCount = level.worldMap().foodLayer().remainingFoodCount();
+        if (uneatenFoodCount == data.numDotsLeftElroy1()) {
+            elroy.setBoost(Elroy.Boost.MEDIUM);
+        } else if (uneatenFoodCount == data.numDotsLeftElroy2()) {
+            elroy.setBoost(Elroy.Boost.LARGE);
         }
     }
 }
