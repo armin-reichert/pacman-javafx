@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
-
 import de.amr.basics.math.RectShort;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.GameContext;
@@ -58,14 +57,6 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
         BONUS_VALUE_SPRITE_INDEX.put(BonusSymbol.FLOWER,     13); // "TEN!000"
     }
 
-    public static int bonusValueSpriteIndex(int bonusSymbolCode) {
-        if (bonusSymbolCode < 0 || bonusSymbolCode >= BonusSymbol.values().length) {
-            throw new IllegalArgumentException("Illegal bonus symbol code: " + bonusSymbolCode);
-        }
-        final BonusSymbol symbol = BonusSymbol.values()[bonusSymbolCode];
-        return BONUS_VALUE_SPRITE_INDEX.getOrDefault(symbol, bonusSymbolCode);
-    }
-
     /** Shades of blue sequence used by animation. */
     private static final Color[] SHADES_OF_BLUE = {
         NES_Palette.color(0x01), NES_Palette.color(0x11), NES_Palette.color(0x21), NES_Palette.color(0x31)
@@ -77,7 +68,6 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     public static Color shadeOfBlue(long tick) {
         return SHADES_OF_BLUE[(int) (tick % 64) / 16];
     }
-
 
     private final AssetMap assets;
 
@@ -132,7 +122,7 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
 
     @Override
     public TengenMsPacMan_ActorRenderer createActorRenderer(SpriteAnimSystem animSystem, Canvas canvas) {
-        return new TengenMsPacMan_ActorRenderer(animSystem, canvas);
+        return new TengenMsPacMan_ActorRenderer(this, animSystem, canvas);
     }
 
     @Override
@@ -179,5 +169,13 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
         final int spriteIndex = bonusValueSpriteIndex(symbolCode);
         final RectShort sprite = spriteSheet().findSprites(SpriteID.BONUS_VALUES)[spriteIndex];
         return spriteSheet().image(sprite);
+    }
+
+    public int bonusValueSpriteIndex(int bonusSymbolCode) {
+        if (bonusSymbolCode < 0 || bonusSymbolCode >= BonusSymbol.values().length) {
+            throw new IllegalArgumentException("Illegal bonus symbol code: " + bonusSymbolCode);
+        }
+        final BonusSymbol symbol = BonusSymbol.values()[bonusSymbolCode];
+        return BONUS_VALUE_SPRITE_INDEX.getOrDefault(symbol, bonusSymbolCode);
     }
 }

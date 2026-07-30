@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.math.Direction;
@@ -24,10 +25,12 @@ import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements SpriteRenderer, ActorRenderer {
 
+    private final TengenMsPacMan_RenderConfig renderConfig;
     private final SpriteAnimSystem animSystem;
 
-    public TengenMsPacMan_ActorRenderer(SpriteAnimSystem animSystem, Canvas canvas) {
+    public TengenMsPacMan_ActorRenderer(TengenMsPacMan_RenderConfig renderConfig, SpriteAnimSystem animSystem, Canvas canvas) {
         super(canvas);
+        this.renderConfig = requireNonNull(renderConfig);
         this.animSystem = requireNonNull(animSystem);
     }
 
@@ -48,7 +51,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
 
         final Vector2f center = WorldNavigationSystem.computeCenter(actor);
         switch (actor) {
-            case Bonus bonus -> drawSpriteCentered(computeBonusSprite(bonus), center);
+            case Bonus bonus -> drawSpriteCentered(computeBonusSprite(renderConfig, bonus), center);
             case Ghost ghost -> drawSpriteCentered(computeGhostSprite(ghost), center);
             case Pac pac -> drawFacingSpriteCentered(computePacSprite(pac), center);
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
@@ -108,12 +111,12 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         }
     }
 
-    private RectShort computeBonusSprite(Bonus bonus) {
+    private RectShort computeBonusSprite(TengenMsPacMan_RenderConfig renderConfig, Bonus bonus) {
         return switch (bonus.state()) {
             case EDIBLE -> spriteOrDefault(spriteSheet().findSprites(SpriteID.BONUS_SYMBOLS), bonus.symbolCode());
-            // Note: sprite sheet has bonus values in wrong order!
+            // Note: sprite sheet has bonus values in different order!
             case EATEN -> spriteOrDefault(spriteSheet().findSprites(SpriteID.BONUS_VALUES),
-                TengenMsPacMan_RenderConfig.bonusValueSpriteIndex(bonus.symbolCode()));
+                renderConfig.bonusValueSpriteIndex(bonus.symbolCode()));
             case INACTIVE -> RectShort.NULL_RECTANGLE;
         };
     }
