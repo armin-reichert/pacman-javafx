@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.component.ghost.GhostState;
 import de.amr.pacmanfx.core.model.world.WorldMap;
-import de.amr.pacmanfx.core.rules.HuntingRules;
+import de.amr.pacmanfx.core.model.rules.HuntingRules;
 
 import java.util.*;
 import java.util.stream.Stream;

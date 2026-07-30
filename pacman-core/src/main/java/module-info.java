@@ -21,7 +21,7 @@ module de.amr.pacmanfx.core {
     exports de.amr.pacmanfx.core.score;
     exports de.amr.pacmanfx.core.gameplay;
     exports de.amr.pacmanfx.core.state;
-    exports de.amr.pacmanfx.core.rules;
+    exports de.amr.pacmanfx.core.model.rules;
     exports de.amr.pacmanfx.core.model.component;
     exports de.amr.pacmanfx.core.model.component.common;
     exports de.amr.pacmanfx.core.model.component.ghost;

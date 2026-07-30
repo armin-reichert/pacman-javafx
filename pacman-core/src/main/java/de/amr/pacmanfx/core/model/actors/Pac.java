@@ -15,7 +15,7 @@ import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnimComponent;
 import de.amr.pacmanfx.core.model.component.world.WorldNavigationComponent;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
-import de.amr.pacmanfx.core.rules.ActorSpeedRules;
+import de.amr.pacmanfx.core.model.rules.ActorSpeedRules;
 import de.amr.pacmanfx.core.steering.Steering;
 
 import static java.util.Objects.requireNonNull;

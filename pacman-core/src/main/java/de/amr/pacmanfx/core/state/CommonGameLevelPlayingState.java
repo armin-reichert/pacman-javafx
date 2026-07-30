@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
-import de.amr.pacmanfx.core.rules.GameRules;
+import de.amr.pacmanfx.core.model.rules.GameRules;
 import org.tinylog.Logger;
 
 import java.util.List;

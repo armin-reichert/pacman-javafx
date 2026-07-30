@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.component.ghost.ElroyComponent;
 import de.amr.pacmanfx.core.model.world.WorldMapSelector;
-import de.amr.pacmanfx.core.rules.GameRules;
+import de.amr.pacmanfx.core.model.rules.GameRules;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.core.model.world.WorldMap.tile;

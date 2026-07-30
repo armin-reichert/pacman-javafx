@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.tengenmspacman.rules;
 
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.rules.ScoringRules;
+import de.amr.pacmanfx.core.model.rules.ScoringRules;
 import de.amr.pacmanfx.tengenmspacman.model.BonusSymbol;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import javafx.beans.property.ObjectProperty;
@@ -13,7 +13,7 @@ import javafx.beans.property.SimpleObjectProperty;
 
 import java.util.EnumMap;
 
-import static de.amr.pacmanfx.core.rules.ScoringRules.crossedScoreLine;
+import static de.amr.pacmanfx.core.model.rules.ScoringRules.crossedScoreLine;
 
 public class TengenMsPacMan_ScoringRules implements ScoringRules {
 
