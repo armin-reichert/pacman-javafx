@@ -212,7 +212,9 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         super.onEatPellet(gameContext, tile);
 
         final GameLevel level = gameContext.assertLevel();
-        checkCruiseElroyActivation(level, level.ghost(GhostPersonality.RED_GHOST_SHADOW).assertComponent(Elroy.class));
+        final LevelData data = ArcadePacMan_GameRules.levelData(level.number());
+        final Elroy elroy = level.ghost(GhostPersonality.RED_GHOST_SHADOW).assertComponent(Elroy.class);
+        checkCruiseElroyActivation(level, data, elroy);
     }
 
     @Override
@@ -220,7 +222,9 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         super.onEatEnergizer(gameContext, tile);
 
         final GameLevel level = gameContext.assertLevel();
-        checkCruiseElroyActivation(level, level.ghost(GhostPersonality.RED_GHOST_SHADOW).assertComponent(Elroy.class));
+        final LevelData data = ArcadePacMan_GameRules.levelData(level.number());
+        final Elroy elroy = level.ghost(GhostPersonality.RED_GHOST_SHADOW).assertComponent(Elroy.class);
+        checkCruiseElroyActivation(level, data, elroy);
     }
 
     @Override
@@ -243,8 +247,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         eventManager.publishGameEvent(new BonusActivatedEvent(bonus));
     }
 
-    protected void checkCruiseElroyActivation(GameLevel level, Elroy elroy) {
-        final LevelData data = ArcadePacMan_GameRules.levelData(level.number());
+    private void checkCruiseElroyActivation(GameLevel level, LevelData data, Elroy elroy) {
         final int uneatenFoodCount = level.worldMap().foodLayer().remainingFoodCount();
         if (uneatenFoodCount == data.numDotsLeftElroy1()) {
             elroy.setBoost(Elroy.Boost.MEDIUM);
