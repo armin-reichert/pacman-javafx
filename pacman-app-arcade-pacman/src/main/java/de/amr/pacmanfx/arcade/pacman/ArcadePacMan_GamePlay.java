@@ -29,7 +29,6 @@ import de.amr.pacmanfx.core.steering.RouteGuidedActorSteering;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -123,7 +122,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         level.setPacPowerFadingSeconds(0.5f * levelData.numFlashes()); //TODO correct?
 
         createAndSetPacMan(level);
-        createAndSetGhosts(gameContext, level, house);
+        createAndSetGhosts(level, house);
 
         level.setBonusSymbolCode(0, model.rules().selectBonusSymbolCode(level.number(), 0));
         level.setBonusSymbolCode(1, model.rules().selectBonusSymbolCode(level.number(), 1));
@@ -140,32 +139,27 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         level.setPac(pacMan);
     }
 
-    protected void createAndSetGhosts(GameContext gameContext, GameLevel level, House house) {
+    protected void createAndSetGhosts(GameLevel level, House house) {
         final var factory = ArcadePacMan_ActorFactory.instance();
-        final Map<GhostPersonality, Ghost> ghosts = Map.of(
-            GhostPersonality.RED_GHOST_SHADOW,   factory.createRedGhost(),
-            GhostPersonality.PINK_GHOST_SPEEDY,  factory.createPinkGhost(),
-            GhostPersonality.CYAN_GHOST_BASHFUL, factory.createCyanGhost(),
-            GhostPersonality.ORANGE_GHOST_POKEY, factory.createOrangeGhost()
-        );
+
+        final Ghost redGhost    = factory.createRedGhost();
+        final Ghost pinkGhost   = factory.createPinkGhost();
+        final Ghost cyanGhost   = factory.createCyanGhost();
+        final Ghost orangeGhost = factory.createOrangeGhost();
 
         final TerrainLayer terrain = level.worldMap().terrainLayer();
+
         // Special tiles where attacking ghosts cannot move up
         final Set<Vector2i> oneWayTiles = terrain.tiles()
             .filter(tile -> terrain.content(tile) == TerrainTile.ONE_WAY_DOWN.$)
             .collect(Collectors.toUnmodifiableSet());
 
-        factory.initWorldPlacement(ghosts.get(GhostPersonality.RED_GHOST_SHADOW),   terrain, house, WorldMapPropertyName.POS_GHOST_1_RED,    oneWayTiles);
-        factory.initWorldPlacement(ghosts.get(GhostPersonality.PINK_GHOST_SPEEDY),  terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK,   oneWayTiles);
-        factory.initWorldPlacement(ghosts.get(GhostPersonality.CYAN_GHOST_BASHFUL), terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN,   oneWayTiles);
-        factory.initWorldPlacement(ghosts.get(GhostPersonality.ORANGE_GHOST_POKEY), terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE, oneWayTiles);
+        redGhost.worldPlacement()   .init(terrain, house, WorldMapPropertyName.POS_GHOST_1_RED,    oneWayTiles);
+        pinkGhost.worldPlacement()  .init(terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK,   oneWayTiles);
+        cyanGhost.worldPlacement()  .init(terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN,   oneWayTiles);
+        orangeGhost.worldPlacement().init(terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE, oneWayTiles);
 
-        level.setGhosts(
-            ghosts.get(GhostPersonality.RED_GHOST_SHADOW),
-            ghosts.get(GhostPersonality.PINK_GHOST_SPEEDY),
-            ghosts.get(GhostPersonality.CYAN_GHOST_BASHFUL),
-            ghosts.get(GhostPersonality.ORANGE_GHOST_POKEY)
-        );
+        level.setGhosts(redGhost, pinkGhost, cyanGhost, orangeGhost);
     }
 
     @Override

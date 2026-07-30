@@ -73,7 +73,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         level.setPacPowerFadingSeconds(0.5f * numFlashes); //TODO correct?
 
         createAndSetMsPacMan(level);
-        createAndSetGhosts(gameContext, level, terrain.assertHouse());
+        createAndSetGhosts(level, terrain.assertHouse());
 
         level.setBonusSymbolCode(0, model.rules().selectBonusSymbolCode(level.number(), 0));
         level.setBonusSymbolCode(1, model.rules().selectBonusSymbolCode(level.number(), 1));
@@ -92,7 +92,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         level.setPac(msPacMan);
     }
 
-    protected void createAndSetGhosts(GameContext gameContext, GameLevel level, House house) {
+    protected void createAndSetGhosts(GameLevel level, House house) {
         final var factory = new ArcadeMsPacMan_ActorFactory();
 
         final Ghost redGhost = factory.createRedGhost();
@@ -101,12 +101,11 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         final Ghost orangeGhost = factory.createOrangeGhost();
 
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        final Set<Vector2i> specialTiles = Set.of();
 
-        factory.initWorldPlacement(redGhost, terrain, house, WorldMapPropertyName.POS_GHOST_1_RED, specialTiles);
-        factory.initWorldPlacement(pinkGhost, terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK, specialTiles);
-        factory.initWorldPlacement(cyanGhost, terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN, specialTiles);
-        factory.initWorldPlacement(orangeGhost, terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE, specialTiles);
+        redGhost.worldPlacement()   .init(terrain, house, WorldMapPropertyName.POS_GHOST_1_RED);
+        pinkGhost.worldPlacement()  .init(terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK);
+        cyanGhost.worldPlacement()  .init(terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN);
+        orangeGhost.worldPlacement().init(terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE);
 
         level.setGhosts(redGhost, pinkGhost, cyanGhost, orangeGhost);
     }

@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.arcade.pacman.model;
 
-import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
@@ -14,12 +13,6 @@ import de.amr.pacmanfx.core.model.component.ghost.GhostStateComponent;
 import de.amr.pacmanfx.core.model.component.ghost.GhostWorldPlacement;
 import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnim;
 import de.amr.pacmanfx.core.model.component.world.WorldNavigation;
-import de.amr.pacmanfx.core.model.world.House;
-import de.amr.pacmanfx.core.model.world.TerrainLayer;
-
-import java.util.Set;
-
-import static de.amr.pacmanfx.core.model.world.WorldMap.halfTileRightOf;
 
 public class ArcadePacMan_ActorFactory {
 
@@ -66,18 +59,6 @@ public class ArcadePacMan_ActorFactory {
         registerCommonComponents(ghost);
         ghost.reset();
         return ghost;
-    }
-
-    public void initWorldPlacement(
-        Ghost ghost,
-        TerrainLayer terrain,
-        House house,
-        String startTileProperty,
-        Set<Vector2i> specialTiles)
-    {
-        ghost.worldPlacement().setHouse(house);
-        ghost.worldPlacement().setSpecialTerrainTiles(specialTiles);
-        ghost.worldPlacement().setStartPosition(halfTileRightOf(terrain.getTileProperty(startTileProperty)));
     }
 
     private void registerCommonComponents(Ghost ghost) {

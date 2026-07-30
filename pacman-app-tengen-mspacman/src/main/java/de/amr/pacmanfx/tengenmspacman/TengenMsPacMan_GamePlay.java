@@ -101,7 +101,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
             ? ARCADE_MAP_GAME_OVER_TICKS : NON_ARCADE_MAP_GAME_OVER_TICKS);
 
         setMsPacMan(gameContext, model, level);
-        setGhosts(level, house);
+        createAndSetGhosts(level, house);
 
         //TODO not sure about this:
         level.setBonusSymbolCode(0, model.rules().selectBonusSymbolCode(level.number(), 0));
@@ -246,20 +246,20 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         level.setPac(msPacMan);
     }
 
-    private void setGhosts(GameLevel level, House house) {
+    private void createAndSetGhosts(GameLevel level, House house) {
         final var factory = TengenMsPacMan_ActorFactory.instance();
 
-        final Ghost redGhost = factory.createRedGhost();
-        final Ghost pinkGhost = factory.createPinkGhost();
-        final Ghost cyanGhost = factory.createCyanGhost();
+        final Ghost redGhost    = factory.createRedGhost();
+        final Ghost pinkGhost   = factory.createPinkGhost();
+        final Ghost cyanGhost   = factory.createCyanGhost();
         final Ghost orangeGhost = factory.createOrangeGhost();
 
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
-        factory.initWorldPlacement(redGhost,    terrain, house, WorldMapPropertyName.POS_GHOST_1_RED);
-        factory.initWorldPlacement(pinkGhost,   terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK);
-        factory.initWorldPlacement(cyanGhost,   terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN);
-        factory.initWorldPlacement(orangeGhost, terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE);
+        redGhost.worldPlacement()   .init(terrain, house, WorldMapPropertyName.POS_GHOST_1_RED);
+        pinkGhost.worldPlacement()  .init(terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK);
+        cyanGhost.worldPlacement()  .init(terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN);
+        orangeGhost.worldPlacement().init(terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE);
 
         level.setGhosts(redGhost, pinkGhost, cyanGhost, orangeGhost);
     }

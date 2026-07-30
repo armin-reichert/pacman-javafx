@@ -23,7 +23,9 @@ import static java.util.function.Predicate.not;
 
 public final class TerrainLayer extends WorldMapLayer {
 
-    private static Vector2f halfTileRightOf(Vector2i tile) { return vec2_float(tile.x() * WorldMap.TS + WorldMap.HTS, tile.y() * WorldMap.TS); }
+    private static Vector2f halfTileRightOf(Vector2i tile) {
+        return vec2_float(tile.x() * WorldMap.TS + WorldMap.HTS, tile.y() * WorldMap.TS);
+    }
 
     private final Vector2i[] scatterTiles = new Vector2i[4];
     private Vector2f pacStartPosition;
