@@ -79,10 +79,6 @@ public class GameBox implements Disposable {
             if (cartridge == null) {
                 Logger.error("NULL cartridge detected! Are you kidding me?");
             } else {
-                if (!GameConstants.GAME_VARIANT_NAME_PATTERN.matcher(cartridge.id().name()).matches()) {
-                    throw new IllegalArgumentException("Game variant name '%s' does not match required syntax '%s'"
-                        .formatted(cartridge.id().name(), GameConstants.GAME_VARIANT_NAME_PATTERN));
-                }
                 final boolean added = cartridges.add(cartridge);
                 if (added) {
                     Logger.info("Cartridge {} inserted into machine", cartridge.id().name());
