@@ -133,7 +133,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
 
                 timer.restartTicks(TickTimer.INDEFINITE);
 
-                final var factory = new TengenMsPacMan_ActorFactory();
+                final var factory = TengenMsPacMan_ActorFactory.instance();
 
                 scene.msPacMan = factory.createMsPacMan();
                 scene.msPacMan.position().set(WorldMap.TS * 33, ACTOR_Y);

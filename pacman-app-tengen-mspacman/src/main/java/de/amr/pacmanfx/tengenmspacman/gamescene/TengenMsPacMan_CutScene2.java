@@ -76,7 +76,7 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene2D {
         clapperboard.visibility().show();
         clapperboard.startAnimation();
 
-        final var factory = new TengenMsPacMan_ActorFactory();
+        final var factory = TengenMsPacMan_ActorFactory.instance();
 
         msPacMan = factory.createMsPacMan();
         msPacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));

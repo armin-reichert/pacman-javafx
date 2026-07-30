@@ -81,7 +81,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
         clapperboard.visibility().show();
         clapperboard.startAnimation();
 
-        final var factory = new TengenMsPacMan_ActorFactory();
+        final var factory = TengenMsPacMan_ActorFactory.instance();
 
         msPacMan = factory.createMsPacMan();
         msPacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
@@ -190,7 +190,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
 
         double randomX = 8 * TS + (8 * TS) * Math.random();
 
-        final var factory = new TengenMsPacMan_ActorFactory();
+        final var factory = TengenMsPacMan_ActorFactory.instance();
 
         final Pac junior = factory.createPacMan();
         junior.position().set((float) randomX, unscaledHeight() - 4 * TS);

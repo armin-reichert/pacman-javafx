@@ -41,7 +41,7 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene2D {
     public void onActivate() {
         final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
         final SpriteAnimationContainer container = appContext().ui().sprites().animations();
-        final var factory = new ArcadePacMan_ActorFactory();
+        final var factory = ArcadePacMan_ActorFactory.instance();
 
         pacMan = factory.createPacMan();
         pacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(container));

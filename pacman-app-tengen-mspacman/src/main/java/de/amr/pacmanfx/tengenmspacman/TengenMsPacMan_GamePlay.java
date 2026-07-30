@@ -237,7 +237,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     // private
 
     private void setMsPacMan(GameContext gameContext, TengenMsPacMan_GameModel model, GameLevel level) {
-        final var factory = new TengenMsPacMan_ActorFactory();
+        final var factory = TengenMsPacMan_ActorFactory.instance();
         final Pac msPacMan = factory.createMsPacMan();
 
         msPacMan.setAutomaticSteering(new RuleBasedPacSteering());
@@ -247,7 +247,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     }
 
     private void setGhosts(GameLevel level, House house) {
-        final var factory = new TengenMsPacMan_ActorFactory();
+        final var factory = TengenMsPacMan_ActorFactory.instance();
 
         final Ghost redGhost = factory.createRedGhost();
         final Ghost pinkGhost = factory.createPinkGhost();

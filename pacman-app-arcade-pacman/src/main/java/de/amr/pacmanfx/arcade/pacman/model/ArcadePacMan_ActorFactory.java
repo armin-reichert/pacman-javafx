@@ -23,6 +23,16 @@ import static de.amr.pacmanfx.core.model.world.WorldMap.halfTileRightOf;
 
 public class ArcadePacMan_ActorFactory {
 
+    private static class SingletonHolder {
+        static final ArcadePacMan_ActorFactory SINGLETON = new ArcadePacMan_ActorFactory();
+    }
+
+    public static ArcadePacMan_ActorFactory instance() {
+        return SingletonHolder.SINGLETON;
+    }
+
+    protected ArcadePacMan_ActorFactory() {}
+
     public Pac createPacMan() {
         final var pacMan = new Pac("Pac-Man");
         pacMan.reset();

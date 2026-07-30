@@ -6,6 +6,14 @@ import de.amr.pacmanfx.core.model.actors.Pac;
 
 public class ArcadeMsPacMan_ActorFactory extends ArcadePacMan_ActorFactory {
 
+    private static class SingletonHolder {
+        static final ArcadeMsPacMan_ActorFactory SINGLETON = new ArcadeMsPacMan_ActorFactory();
+    }
+
+    public static ArcadeMsPacMan_ActorFactory instance() {
+        return SingletonHolder.SINGLETON;
+    }
+
     public Pac createMsPacMan() {
         return new Pac("Ms. Pac-Man");
     }

@@ -123,7 +123,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
 
         blinking = new Pulse(10, Pulse.State.ON);
 
-        final var factory = new ArcadePacMan_ActorFactory();
+        final var factory = ArcadePacMan_ActorFactory.instance();
 
         pacMan = factory.createPacMan();
         pacMan.assertComponent(SpriteAnim.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));

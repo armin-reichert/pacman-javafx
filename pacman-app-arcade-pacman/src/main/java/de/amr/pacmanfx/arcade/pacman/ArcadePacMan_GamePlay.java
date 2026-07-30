@@ -134,14 +134,14 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     }
 
     protected void createAndSetPacMan(GameLevel level) {
-        final var factory = new ArcadePacMan_ActorFactory();
+        final var factory = ArcadePacMan_ActorFactory.instance();
         final Pac pacMan = factory.createPacMan();
         pacMan.setAutomaticSteering(new RuleBasedPacSteering());
         level.setPac(pacMan);
     }
 
     protected void createAndSetGhosts(GameContext gameContext, GameLevel level, House house) {
-        final var factory = new ArcadePacMan_ActorFactory();
+        final var factory = ArcadePacMan_ActorFactory.instance();
         final Map<GhostPersonality, Ghost> ghosts = Map.of(
             GhostPersonality.RED_GHOST_SHADOW,   factory.createRedGhost(),
             GhostPersonality.PINK_GHOST_SPEEDY,  factory.createPinkGhost(),
