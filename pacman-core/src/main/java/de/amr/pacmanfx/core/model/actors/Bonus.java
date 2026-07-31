@@ -60,7 +60,7 @@ public class Bonus extends GameEntity implements UpdatableEntity {
         return requireComponent(WorldNavigationComp.class);
     }
 
-    public BonusStateComp bonusState() {
+    public BonusStateComp stateComp() {
         return requireComponent(BonusStateComp.class);
     }
 
@@ -79,7 +79,7 @@ public class Bonus extends GameEntity implements UpdatableEntity {
     }
 
     public BonusState state() {
-        return bonusState().state();
+        return stateComp().state();
     }
 
     public void setInactive(GameContext gameContext) {

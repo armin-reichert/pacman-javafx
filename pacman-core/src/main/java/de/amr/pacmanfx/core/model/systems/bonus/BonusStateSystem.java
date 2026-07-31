@@ -14,8 +14,6 @@ import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 
-import java.util.Optional;
-
 import static java.util.Objects.requireNonNull;
 
 public class BonusStateSystem {
@@ -31,34 +29,36 @@ public class BonusStateSystem {
 
         final GameSystems sys = gameContext.systems();
         final GameLevel level = gameContext.assertLevel();
-        final BonusStateComp bonusState = bonus.requireComponent(BonusStateComp.class);
 
-        bonusState.timer().doTick();
+        final BonusStateComp stateComp = bonus.stateComp();
+        final BonusMoveAndJumpComp moveAndJumpComp = bonus.optMoveAndJumpComponent().orElse(null);
 
-        switch (bonusState.state()) {
+        stateComp.timer().doTick();
+
+        switch (stateComp.state()) {
+
             case EDIBLE -> {
-                final Optional<BonusMoveAndJumpComp> animationComp = bonus.optMoveAndJumpComponent();
-                if (animationComp.isPresent()) {
-                    bonus.optComponent(BonusMoveAndJumpComp.class).ifPresent(animation -> {
-                        sys.bonusMoveAndJump().update(level, bonus);
-                        bonusState.setEdibleStateExpired(animation.targetReached() || bonusState.timer().hasExpired());
-                    });
+                if (moveAndJumpComp != null) {
+                    sys.bonusMoveAndJump().update(level, bonus);
+                    stateComp.setEdibleStateExpired(moveAndJumpComp.targetReached() || stateComp.timer().hasExpired());
                 }
                 else {
                     // Fixed position bonus expires using timer. Animated bonus expires when entering portal.
-                    bonusState.setEdibleStateExpired(bonusState.timer().hasExpired());
+                    stateComp.setEdibleStateExpired(stateComp.timer().hasExpired());
                 }
-                if (bonusState.edibleStateExpired()) {
+                if (stateComp.edibleStateExpired()) {
                     setInactive(bonus, sys.bonusMoveAndJump());
                     gameContext.eventManager().publishGameEvent(new BonusExpiredEvent(bonus));
                 }
             }
+
             case EATEN -> {
-                if (bonusState.timer().hasExpired()) {
+                if (stateComp.timer().hasExpired()) {
                     setInactive(bonus, sys.bonusMoveAndJump());
                     gameContext.eventManager().publishGameEvent(new BonusExpiredEvent(bonus));
                 }
             }
+
             case INACTIVE -> {}
         }
     }
@@ -66,9 +66,9 @@ public class BonusStateSystem {
     public void setInactive(Bonus bonus, BonusMoveAndJumpSystem moveAndJumpSystem) {
         requireNonNull(moveAndJumpSystem);
 
-        final BonusStateComp bonusState = bonus.requireComponent(BonusStateComp.class);
-        bonusState.setState(BonusState.INACTIVE);
-        bonusState.timer().restartIndefinitely();
+        final BonusStateComp stateComp = bonus.stateComp();
+        stateComp.setState(BonusState.INACTIVE);
+        stateComp.timer().restartIndefinitely();
 
         bonus.hide();
 
@@ -78,40 +78,41 @@ public class BonusStateSystem {
     }
 
     public void showEdibleForSeconds(Bonus bonus, float seconds) {
-        final BonusStateComp bonusState = bonus.requireComponent(BonusStateComp.class);
+        requireNonNull(bonus);
 
-        bonusState.setState(BonusState.EDIBLE);
-        bonusState.timer().restartSeconds(seconds);
+        final BonusStateComp stateComp = bonus.stateComp();
+        stateComp.setState(BonusState.EDIBLE);
+        stateComp.timer().restartSeconds(seconds);
+
         bonus.show();
     }
 
     public void showEdibleAndStartWandering(GameSystems sys, Bonus bonus, float speed) {
-        final BonusStateComp bonusState = bonus.requireComponent(BonusStateComp.class);
+        requireNonNull(sys);
+        requireNonNull(bonus);
 
-        bonusState.setState(BonusState.EDIBLE);
-        bonusState.timer().restartIndefinitely();
+        final BonusStateComp stateComp = bonus.stateComp();
+        stateComp.setState(BonusState.EDIBLE);
+        stateComp.timer().restartIndefinitely();
+
         bonus.show();
 
-        //TODO reconsider this:
         navigator.setSpeed(bonus, speed);
-
         //TODO use system method:
         bonus.worldNavigation().setTargetTile(null);
 
-        bonus.optMoveAndJumpComponent().ifPresent(animation -> sys.bonusMoveAndJump().start(animation));
+        bonus.optMoveAndJumpComponent().ifPresent(moveAndJumpComp -> sys.bonusMoveAndJump().start(moveAndJumpComp));
     }
 
-    /**
-     * @param bonus the bonus game entity
-     * @param seconds number of seconds bonus is displayed as eaten
-     */
     public void showEatenForSeconds(Bonus bonus, float seconds) {
         requireNonNull(bonus);
 
-        final BonusStateComp bonusState = bonus.requireComponent(BonusStateComp.class);
+        final BonusStateComp stateComp = bonus.stateComp();
+        stateComp.setState(BonusState.EATEN);
+        stateComp.timer().restartSeconds(seconds);
 
-        bonusState.setState(BonusState.EATEN);
-        bonusState.timer().restartSeconds(seconds);
+        bonus.show();
+
         navigator.setSpeed(bonus, 0);
     }
 }
