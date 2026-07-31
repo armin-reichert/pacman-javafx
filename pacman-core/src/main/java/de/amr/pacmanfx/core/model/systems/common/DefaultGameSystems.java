@@ -43,7 +43,7 @@ public class DefaultGameSystems implements GameSystems {
     public DefaultGameSystems() {
         createPacSystems();
         createGhostSystems();
-        createBonusSystems(navigator);
+        createBonusSystems();
     }
 
     protected void createPacSystems() {
@@ -63,8 +63,8 @@ public class DefaultGameSystems implements GameSystems {
         orangeGhostPokeyHuntingStrategy = createPokeyHuntingStrategy();
     }
 
-    protected void createBonusSystems(WorldNavigationSystem navigator) {
-        bonusStateSystem = new BonusStateSystem(navigator);
+    protected void createBonusSystems() {
+        bonusStateSystem = new BonusStateSystem(navigator, bonusMoveAndJumpSystem);
         bonusWorldMovementPolicy = new BonusWorldMovementPolicy();
         bonusMoveAndJumpSystem = new BonusMoveAndJumpSystem(navigator, bonusWorldMovementPolicy);
     }

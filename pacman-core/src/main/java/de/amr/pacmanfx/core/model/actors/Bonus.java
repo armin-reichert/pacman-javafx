@@ -58,7 +58,10 @@ public class Bonus extends GameEntity implements UpdatableEntity {
 
     @Override
     public void update(GameContext gameContext) {
-        gameContext.systems().bonusState().update(gameContext, this);
+        gameContext.systems().bonusState().update(
+            gameContext.eventManager(),
+            gameContext.assertLevel(),
+            this);
     }
 
     // Component access

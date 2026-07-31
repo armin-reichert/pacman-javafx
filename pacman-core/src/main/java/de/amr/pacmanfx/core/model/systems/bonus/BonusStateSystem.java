@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.core.model.systems.bonus;
 
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.event.bonus.BonusExpiredEvent;
 import de.amr.pacmanfx.core.model.actors.Bonus;
 import de.amr.pacmanfx.core.model.comp.bonus.MoveAndJumpComp;
@@ -19,17 +20,14 @@ import static java.util.Objects.requireNonNull;
 public class BonusStateSystem {
 
     private final WorldNavigationSystem navigator;
+    private final BonusMoveAndJumpSystem moveAndJumpSystem;
 
-    public BonusStateSystem(WorldNavigationSystem navigator) {
+    public BonusStateSystem(WorldNavigationSystem navigator, BonusMoveAndJumpSystem moveAndJumpSystem) {
         this.navigator = requireNonNull(navigator);
+        this.moveAndJumpSystem = moveAndJumpSystem;
     }
 
-    public void update(GameContext gameContext, Bonus bonus) {
-        requireNonNull(gameContext);
-
-        final GameSystems sys = gameContext.systems();
-        final GameLevel level = gameContext.assertLevel();
-
+    public void update(GameEventManager eventManager, GameLevel level, Bonus bonus) {
         final BonusStateComp stateComp = bonus.bonusStateComp();
         final MoveAndJumpComp moveAndJumpComp = bonus.optMoveAndJump().orElse(null);
 
@@ -39,7 +37,7 @@ public class BonusStateSystem {
 
             case EDIBLE -> {
                 if (moveAndJumpComp != null) {
-                    sys.bonusMoveAndJump().update(level, bonus);
+                    moveAndJumpSystem.update(level, bonus);
                     stateComp.setEdibleStateExpired(moveAndJumpComp.targetReached() || stateComp.timer().hasExpired());
                 }
                 else {
@@ -47,15 +45,15 @@ public class BonusStateSystem {
                     stateComp.setEdibleStateExpired(stateComp.timer().hasExpired());
                 }
                 if (stateComp.edibleStateExpired()) {
-                    setInactive(bonus, sys.bonusMoveAndJump());
-                    gameContext.eventManager().publishGameEvent(new BonusExpiredEvent(bonus));
+                    setInactive(bonus, moveAndJumpSystem);
+                    eventManager.publishGameEvent(new BonusExpiredEvent(bonus));
                 }
             }
 
             case EATEN -> {
                 if (stateComp.timer().hasExpired()) {
-                    setInactive(bonus, sys.bonusMoveAndJump());
-                    gameContext.eventManager().publishGameEvent(new BonusExpiredEvent(bonus));
+                    setInactive(bonus, moveAndJumpSystem);
+                    eventManager.publishGameEvent(new BonusExpiredEvent(bonus));
                 }
             }
 
