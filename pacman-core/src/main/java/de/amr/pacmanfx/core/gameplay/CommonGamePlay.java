@@ -183,6 +183,9 @@ public abstract class CommonGamePlay implements GamePlay {
             }
         });
 
+        //TODO change to this style for all entities
+        gameContext.systems().bonusState().update(gameContext);
+
         if (doubleChecked) {
             detectCollisions(gameContext);
         }

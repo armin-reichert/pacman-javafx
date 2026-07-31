@@ -4,10 +4,8 @@
 
 package de.amr.pacmanfx.core.model.actors;
 
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.core.model.GameEntity;
-import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.comp.bonus.BonusState;
 import de.amr.pacmanfx.core.model.comp.bonus.BonusStateComp;
 import de.amr.pacmanfx.core.model.comp.bonus.MoveAndJumpComp;
@@ -22,7 +20,7 @@ import java.util.Optional;
  *
  * <p>TODO: That's not exactly the original Ms. Pac-Man behaviour with predefined "fruit paths".
  */
-public class Bonus extends GameEntity implements UpdatableEntity {
+public class Bonus extends GameEntity {
 
     public static Bonus createStaticBonus(int symbolCode, int points) {
         return new Bonus(false, symbolCode, points);
@@ -49,14 +47,6 @@ public class Bonus extends GameEntity implements UpdatableEntity {
 
             optWorldNavigation().ifPresent(worldNavigation -> worldNavigation.setCanTeleport(false));
         }
-    }
-
-    @Override
-    public void update(GameContext gameContext) {
-        gameContext.systems().bonusState().update(
-            gameContext.eventManager(),
-            gameContext.assertLevel(),
-            this);
     }
 
     // Component access

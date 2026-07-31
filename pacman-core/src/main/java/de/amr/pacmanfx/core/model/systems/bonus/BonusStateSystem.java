@@ -4,14 +4,17 @@
 
 package de.amr.pacmanfx.core.model.systems.bonus;
 
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.event.bonus.BonusExpiredEvent;
+import de.amr.pacmanfx.core.gameplay.FrameContext;
 import de.amr.pacmanfx.core.model.actors.Bonus;
 import de.amr.pacmanfx.core.model.comp.bonus.BonusState;
 import de.amr.pacmanfx.core.model.comp.bonus.BonusStateComp;
 import de.amr.pacmanfx.core.model.comp.bonus.MoveAndJumpComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
+import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
@@ -25,7 +28,14 @@ public class BonusStateSystem {
         this.moveAndJumpSystem = requireNonNull(moveAndJumpSystem);
     }
 
-    public void update(GameEventManager eventManager, GameLevel level, Bonus bonus) {
+    public void update(GameContext gameContext) {
+        requireNonNull(gameContext);
+
+        final GameLevel level = gameContext.assertLevel();
+        level.entities().optBonus().ifPresent(bonus -> update(gameContext.eventManager(), level, bonus, gameContext.thisFrame()));
+    }
+
+    private void update(GameEventManager eventManager, GameLevel level, Bonus bonus, FrameContext frame) {
         final BonusStateComp stateComp = bonus.bonusStateComp();
         final MoveAndJumpComp moveAndJumpComp = bonus.optMoveAndJump().orElse(null);
 
@@ -57,6 +67,8 @@ public class BonusStateSystem {
 
             case INACTIVE -> {}
         }
+
+        Logger.info("Bonus {} updated at tick {}", bonus.hashCode(), frame.tick());
     }
 
     public void setInactive(Bonus bonus) {

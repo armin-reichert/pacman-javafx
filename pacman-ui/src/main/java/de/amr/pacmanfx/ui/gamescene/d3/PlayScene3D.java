@@ -259,6 +259,9 @@ public class PlayScene3D extends AbstractGameScene
             .filter(UpdatableEntity.class::isInstance).map(UpdatableEntity.class::cast)
             .forEach(entity -> entity.update(gameContext()));
 
+        //TODO change to this style for all entities
+        //gameContext.systems().bonusState().update(gameContext);
+
         perspectiveManager.updatePerspective(level);
         updateHUD3D(level);
 
