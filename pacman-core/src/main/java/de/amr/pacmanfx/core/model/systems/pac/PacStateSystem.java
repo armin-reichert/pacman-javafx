@@ -48,19 +48,15 @@ public class PacStateSystem {
         pac.stateComp().setState(pacState);
     }
 
-    public boolean notBlocked(Pac pac) {
-        return !(pac.movement().hasZeroSpeed() ||didNotMoveThroughWorld(pac));
-    }
-
-    private boolean didNotMoveThroughWorld(Pac pac) {
-        return !pac.worldNavigation().info.moved;
-    }
-
-
     public void update(GameContext gameContext) {
         requireNonNull(gameContext);
         final GameLevel level = gameContext.assertLevel();
         update(gameContext.cheats(), level, level.entities().pac());
+    }
+
+    //TODO This does not belong here
+    public void setAutomaticSteering(Steering<Pac> steering) {
+        automaticSteering = requireNonNull(steering);
     }
 
     private void update(
@@ -100,7 +96,11 @@ public class PacStateSystem {
         }
     }
 
-    public void setAutomaticSteering(Steering<Pac> steering) {
-        automaticSteering = requireNonNull(steering);
+    public boolean notBlocked(Pac pac) {
+        return !(pac.movement().hasZeroSpeed() ||didNotMoveThroughWorld(pac));
+    }
+
+    private boolean didNotMoveThroughWorld(Pac pac) {
+        return !pac.worldNavigation().info.moved;
     }
 }
