@@ -30,7 +30,7 @@ public class MovingGameLevelMessage extends GameLevelMessage {
         setComponent(MovementComp.class, new MovementComp());
         this.startPosition = requireNonNull(startPosition);
         this.delayTicks = delayTicks;
-        position().set(startPosition);
+        pos().set(startPosition);
     }
 
     public void startMovement(MovementSystem motor, float rightEdge, double messageTextWidth) {
@@ -56,12 +56,12 @@ public class MovingGameLevelMessage extends GameLevelMessage {
         final MovementSystem motor = gameContext.systems().motor();
         motor.moveAccelerated(this);
         if (wrapped) {
-            if (position().x >= startPosition.x()) {
-                position().set(startPosition);
+            if (pos().x() >= startPosition.x()) {
+                pos().set(startPosition);
                 stopMovement(motor);
             }
-        } else if (position().x > wrapX) {
-            position().setX(-0.5 * width);
+        } else if (pos().x() > wrapX) {
+            pos().setX(-0.5 * width);
             wrapped = true;
         }
     }

@@ -82,7 +82,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
         bag.setOpen(gameContext(), false);
 
         clapperboard = new Clapperboard("3", "JUNIOR");
-        clapperboard.position().set(tilesPx(3), tilesPx(10));
+        clapperboard.pos().set(tilesPx(3), tilesPx(10));
         clapperboard.startAnimation();
     }
 
@@ -142,21 +142,21 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
     // State DELIVER_JUNIOR
 
     private void enterDeliverJuniorState(GameSystems sys, SceneState newState) {
-        pacMan.position().set(TS * 3, GROUND_Y - 4);
+        pacMan.pos().set(TS * 3, GROUND_Y - 4);
         pacMan.show();
         sys.navigator().setMoveDir(pacMan, Direction.RIGHT);
 
         sys.spriteAnim().select(pacMan, ActorAnimationID.MR_PAC_MAN_MUNCHING);
         sys.spriteAnim().stopSelected(pacMan);
 
-        msPacMan.position().set(TS * 5, GROUND_Y - 4);
+        msPacMan.pos().set(TS * 5, GROUND_Y - 4);
         msPacMan.show();
         sys.navigator().setMoveDir(msPacMan, Direction.RIGHT);
 
         sys.spriteAnim().select(msPacMan, ActorAnimationID.PAC_MUNCHING);
         sys.spriteAnim().stopSelected(msPacMan);
 
-        stork.position().set(TS * 30, TS * 12);
+        stork.pos().set(TS * 30, TS * 12);
         stork.show();
         sys.motor().setVelocity(stork, -0.8f, 0);
 
@@ -164,7 +164,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
         sys.spriteAnim().playSelected(stork);
 
         bag.setOpen(gameContext(), false);
-        bag.position().set(stork.position().x - 14, stork.position().y + 3);
+        bag.pos().set(stork.pos().x() - 14, stork.pos().y() + 3);
         bag.show();
         sys.motor().setVelocityX(bag, stork.movement().velX());
         sys.motor().setAcceleration(bag, 0, 0);
@@ -179,7 +179,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
         final MovementSystem motor = gameContext().systems().motor();
 
         // release bag from beak when stork reaches tile 20
-        if (stork.position().x <= 20 * WorldMap.TS && !bagReleased) {
+        if (stork.pos().x() <= 20 * WorldMap.TS && !bagReleased) {
             motor.setAcceleration(bag, 0, 0.04f); // set y-gravity to let bag fall to ground
             motor.setVelocity(stork, -1, 0); // fly faster without this heavy bag
             bagReleased = true;
@@ -187,14 +187,14 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
 
         if (!bag.isOpen()) {
             motor.moveAccelerated(bag);
-            if (bag.position().y >= GROUND_Y) {
+            if (bag.pos().y() >= GROUND_Y) {
                 ++numBagBounces;
                 if (numBagBounces < 3) {
                     bag.movement().setVelocity(-0.2f, -1.0f / numBagBounces); // add upwards velocity to bounce
-                    bag.position().setY(GROUND_Y);
+                    bag.pos().setY(GROUND_Y);
                 } else {
                     bag.setOpen(gameContext(), true);
-                    bag.position().setY(GROUND_Y);
+                    bag.pos().setY(GROUND_Y);
                     motor.setVelocity(bag, 0, 0);
                     motor.setAcceleration(bag, 0, 0);
                     Logger.info("Delivery of Junior at tick {}", sceneTick);            }

@@ -36,7 +36,7 @@ public class Marquee extends GameEntity {
     }
 
     public void draw(GraphicsContext ctx) {
-        double xMin = position().x, xMax = xMin + 132, yMin = position().y, yMax = yMin + 60;
+        double xMin = pos().x(), xMax = xMin + 132, yMin = pos().y(), yMax = yMin + 60;
         for (int i = 0; i < NUM_BULBS; ++i) {
             boolean on = bulbOn.get(i);
             ctx.setFill(NES_Palette.color(on ? 0x20 : 0x15));

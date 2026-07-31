@@ -20,7 +20,7 @@ public class GameLevelMessage extends GameEntity {
     public GameLevelMessage(GameLevelMessageType type, Vector2f pos) {
         this.name = "GameLevelMessage";
         this.type = requireNonNull(type);
-        position().set(pos);
+        pos().set(pos);
     }
 
     public GameLevelMessageType type() {

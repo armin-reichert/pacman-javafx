@@ -150,7 +150,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
 
         blinking.start();
 
-        pacMan.position().set(WorldMap.TS * 28, WorldMap.TS * 20);
+        pacMan.pos().set(WorldMap.TS * 28, WorldMap.TS * 20);
         pacMan.show();
 
         sys.navigator().setMoveDir(pacMan, Direction.LEFT);
@@ -160,7 +160,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
         sys.spriteAnim().playSelected(pacMan);
 
         for (Ghost ghost : ghosts) {
-            ghost.position().set(pacMan.position().x + 16 * ghost.personality().ordinal() + 18, pacMan.position().y);
+            ghost.pos().set(pacMan.pos().x() + 16 * ghost.personality().ordinal() + 18, pacMan.pos().y());
             ghost.show();
 
             sys.navigator().setMoveDir(ghost, Direction.LEFT);
@@ -187,12 +187,12 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
         final Ghost pinkGhost = ghosts[GhostPersonality.PINK_GHOST_SPEEDY.ordinal()];
         final Ghost cyanGhost = ghosts[GhostPersonality.CYAN_GHOST_BASHFUL.ordinal()];
         if (tick_0_to_5 == 2) {
-            pinkGhost.position().setX(pinkGhost.position().x + 0.5);
-            cyanGhost.position().setX(cyanGhost.position().x - 0.5);
+            pinkGhost.pos().setX(pinkGhost.pos().x() + 0.5);
+            cyanGhost.pos().setX(cyanGhost.pos().x() - 0.5);
         }
         else if (tick_0_to_5 == 5) {
-            pinkGhost.position().setX(pinkGhost.position().x - 0.5);
-            cyanGhost.position().setX(cyanGhost.position().x + 0.5);
+            pinkGhost.pos().setX(pinkGhost.pos().x() - 0.5);
+            cyanGhost.pos().setX(cyanGhost.pos().x() + 0.5);
         }
     }
 

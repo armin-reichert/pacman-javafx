@@ -85,7 +85,7 @@ public final class HuntingStepResult {
     public List<String> asText() {
         var lines = new ArrayList<String>();
         for (Ghost ghost : ghostsCollidingWithPac()) {
-            final Vector2i ghostTile = computeTile(ghost.position());
+            final Vector2i ghostTile = computeTile(ghost.pos());
             lines.add("%s collided with Pac at tile %s, state after collision: %s".formatted(ghost.name(), ghostTile, ghost.state()));
         }
         if (energizerFound()) {
@@ -95,15 +95,15 @@ public final class HuntingStepResult {
             lines.add("Bonus eaten: " + edibleBonus());
         }
         for (Ghost ghost : ghostsKilled()) {
-            final Vector2i ghostTile = computeTile(ghost.position());
+            final Vector2i ghostTile = computeTile(ghost.pos());
             lines.add("%s killed at %s".formatted(ghost.name(), ghostTile));
         }
         return lines;
     }
 
     private Vector2i computeTile(PositionComp position) {
-        final float cx = position.x + WorldMap.HTS;
-        final float cy = position.y + WorldMap.HTS;
+        final float cx = position.x() + WorldMap.HTS;
+        final float cy = position.y() + WorldMap.HTS;
         return WorldMap.computeTileAt(cx, cy);
     }
 }

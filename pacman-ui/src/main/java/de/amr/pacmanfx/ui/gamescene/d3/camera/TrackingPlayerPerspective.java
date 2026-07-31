@@ -36,8 +36,8 @@ public class TrackingPlayerPerspective implements Perspective<GameLevel> {
         double speedX = 0.03;
         double speedY = 0.06;
         double worldWidth = level.worldMap().numCols() * WorldMap.TS;
-        double targetX = Math.clamp(pac.position().x, 80, worldWidth - 80);
-        double targetY = pac.position().y + 150;
+        double targetX = Math.clamp(pac.pos().x(), 80, worldWidth - 80);
+        double targetY = pac.pos().y() + 150;
         camera.setTranslateX(lerp(camera.getTranslateX(), targetX, speedX));
         camera.setTranslateY(lerp(camera.getTranslateY(), targetY, speedY));
     }

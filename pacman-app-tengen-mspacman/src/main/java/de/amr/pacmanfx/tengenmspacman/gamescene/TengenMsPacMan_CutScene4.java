@@ -77,7 +77,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
         final SpriteAnimationContainer spriteAnimations = appContext().ui().sprites().animations();
 
         clapperboard = new Clapperboard(4, "THE END");
-        clapperboard.position().set(tilesPx(3), tilesPx(10));
+        clapperboard.pos().set(tilesPx(3), tilesPx(10));
         clapperboard.show();
         clapperboard.startAnimation();
 
@@ -119,7 +119,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
             final short eventTick = (short) gameStateTick;
             switch (eventTick) {
                 case 130 -> {
-                    pacMan.position().set(LEFT_BORDER, LOWER_LANE);
+                    pacMan.pos().set(LEFT_BORDER, LOWER_LANE);
                     pacMan.show();
 
                     sys.navigator().setMoveDir(pacMan, Direction.RIGHT);
@@ -128,7 +128,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
                     sys.spriteAnim().select(pacMan, TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
                     sys.spriteAnim().playSelected(pacMan);
 
-                    msPacMan.position().set(RIGHT_BORDER, LOWER_LANE);
+                    msPacMan.pos().set(RIGHT_BORDER, LOWER_LANE);
                     msPacMan.show();
 
                     sys.navigator().setMoveDir(msPacMan, Direction.LEFT);
@@ -193,7 +193,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
         final var factory = TengenMsPacMan_ActorFactory.instance();
 
         final Pac junior = factory.createPacMan();
-        junior.position().set((float) randomX, unscaledHeight() - 4 * TS);
+        junior.pos().set((float) randomX, unscaledHeight() - 4 * TS);
         junior.show();
 
         sys.navigator().setMoveDir(junior, Direction.UP);
@@ -223,11 +223,11 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
             computeNewMoveDir(sys.navigator(), junior);
         }
         sys.motor().moveAccelerated(junior);
-        if (junior.position().x > unscaledWidth()) {
-            junior.position().setX(0);
+        if (junior.pos().x() > unscaledWidth()) {
+            junior.pos().setX(0);
         }
-        if (junior.position().x < 0) {
-            junior.position().setX(unscaledWidth());
+        if (junior.pos().x() < 0) {
+            junior.pos().setX(unscaledWidth());
         }
     }
 

@@ -24,15 +24,15 @@ public class WorldNavigationSystem {
 
     public static Vector2f computeCenter(GameEntity actor) {
         requireNonNull(actor);
-        final PositionComp position = actor.position();
-        return new Vector2f(position.x + WorldMap.HTS, position.y + WorldMap.HTS);
+        final PositionComp position = actor.pos();
+        return new Vector2f(position.x() + WorldMap.HTS, position.y() + WorldMap.HTS);
     }
 
     public static Vector2i computeTile(GameEntity actor) {
         requireNonNull(actor);
-        final PositionComp position = actor.position();
-        final float cx = position.x + WorldMap.HTS;
-        final float cy = position.y + WorldMap.HTS;
+        final PositionComp position = actor.pos();
+        final float cx = position.x() + WorldMap.HTS;
+        final float cy = position.y() + WorldMap.HTS;
         return WorldMap.computeTileAt(cx, cy);
     }
 
@@ -41,9 +41,9 @@ public class WorldNavigationSystem {
      */
     public static Vector2f computeTileOffset(GameEntity actor) {
         requireNonNull(actor);
-        final PositionComp position = actor.position();
+        final PositionComp position = actor.pos();
         final Vector2i tile = computeTile(actor);
-        return new Vector2f(position.x - tile.x() * WorldMap.TS, position.y - tile.y() * WorldMap.TS);
+        return new Vector2f(position.x() - tile.x() * WorldMap.TS, position.y() - tile.y() * WorldMap.TS);
     }
 
     /**
@@ -132,7 +132,7 @@ public class WorldNavigationSystem {
     public void placeAtTile(GameEntity actor, int tx, int ty, float ox, float oy) {
         requireNonNull(actor);
 
-        final PositionComp position = actor.position();
+        final PositionComp position = actor.pos();
         final WorldNavigationComp navigation = actor.requireComponent(WorldNavigationComp.class);
 
         final Vector2i prevTile = computeTile(actor);

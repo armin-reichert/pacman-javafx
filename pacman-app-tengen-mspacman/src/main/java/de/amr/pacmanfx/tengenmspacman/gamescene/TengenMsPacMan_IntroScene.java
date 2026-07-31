@@ -90,11 +90,11 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
             .toArray(Color[]::new);
 
         marquee = new Marquee();
-        marquee.position().set(MARQUEE_X, MARQUEE_Y);
+        marquee.pos().set(MARQUEE_X, MARQUEE_Y);
         marquee.scalingProperty().bind(scalingProperty());
 
         presents = new GameEntity();
-        presents.position().set(9 * WorldMap.TS, MARQUEE_Y - WorldMap.TS);
+        presents.pos().set(9 * WorldMap.TS, MARQUEE_Y - WorldMap.TS);
 
         flow.restartState(this, SceneState.WAITING_FOR_START);
     }
@@ -138,7 +138,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
                 final var factory = TengenMsPacMan_ActorFactory.instance();
 
                 scene.msPacMan = factory.createMsPacMan();
-                scene.msPacMan.position().set(WorldMap.TS * 33, ACTOR_Y);
+                scene.msPacMan.pos().set(WorldMap.TS * 33, ACTOR_Y);
                 scene.msPacMan.show();
 
                 sys.navigator().setMoveDir(scene.msPacMan, Direction.LEFT);
@@ -156,7 +156,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
                 );
 
                 for (Ghost ghost : scene.ghosts) {
-                    ghost.position().set(WorldMap.TS * 33, ACTOR_Y);
+                    ghost.pos().set(WorldMap.TS * 33, ACTOR_Y);
                     ghost.show();
 
                     sys.navigator().setMoveDir(ghost, Direction.LEFT);
@@ -205,14 +205,14 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
 
                 final Ghost ghost = scene.ghosts.get(scene.ghostIndex);
                 if (ghost.worldNavigation().moveDir() == Direction.LEFT) {
-                    if (ghost.position().x <= GHOST_STOP_X) {
-                        ghost.position().setX(GHOST_STOP_X);
+                    if (ghost.pos().x() <= GHOST_STOP_X) {
+                        ghost.pos().setX(GHOST_STOP_X);
                         navigator.setMoveDir(ghost, Direction.UP);
                         navigator.setWishDir(ghost, Direction.UP);
                         scene.waitBeforeRising = 2;
                     } else {
                         motor.moveAccelerated(ghost);
-                        Logger.debug("{} moves {} x={}", ghost.name(), ghost.worldNavigation().moveDir(), ghost.position().x);
+                        Logger.debug("{} moves {} x={}", ghost.name(), ghost.worldNavigation().moveDir(), ghost.pos().x());
                     }
                 }
                 else if (ghost.worldNavigation().moveDir() == Direction.UP) {
@@ -220,7 +220,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
                     if (scene.waitBeforeRising > 0) {
                         scene.waitBeforeRising--;
                     }
-                    else if (ghost.position().y <= endPositionY) {
+                    else if (ghost.pos().y() <= endPositionY) {
                         navigator.setSpeed(ghost, 0);
                         navigator.setMoveDir(ghost, Direction.RIGHT);
                         navigator.setWishDir(ghost, Direction.RIGHT);
@@ -249,7 +249,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
                 scene.marquee.update(timer.tickCount());
 
                 sys.motor().moveAccelerated(scene.msPacMan);
-                if (scene.msPacMan.position().x <= MS_PAC_MAN_STOP_X) {
+                if (scene.msPacMan.pos().x() <= MS_PAC_MAN_STOP_X) {
                     sys.navigator().setSpeed(scene.msPacMan, 0);
                     sys.spriteAnim().resetSelected(scene.msPacMan);
                 }

@@ -124,7 +124,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
 
     private void drawClapperBoard(Clapperboard clapperboard) {
         clapperboard.sprite().ifPresent(sprite -> {
-            double numberX = clapperboard.position().x + 8, numberY = clapperboard.position().y + 18; // baseline
+            double numberX = clapperboard.pos().x() + 8, numberY = clapperboard.pos().y() + 18; // baseline
             drawSpriteCentered(sprite, WorldNavigationSystem.computeCenter(clapperboard));
             // over-paint number from sprite sheet
             ctx.save();
@@ -137,7 +137,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             ctx.setFill(NES_Palette.color(0x20));
             ctx.fillText(String.valueOf(clapperboard.number()), scaled(numberX), scaled(numberY));
             if (clapperboard.isTextVisible()) {
-                double textX = clapperboard.position().x + sprite.width(), textY = clapperboard.position().y + 2;
+                double textX = clapperboard.pos().x() + sprite.width(), textY = clapperboard.pos().y() + 2;
                 ctx.fillText(clapperboard.text(), scaled(textX), scaled(textY));
             }
         });
@@ -148,7 +148,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         if (stork.isBagReleasedFromBeak()) {
             // Sprite sheet has no stork without bag under its beak so we over-paint the bag
             ctx.setFill(backgroundColor());
-            ctx.fillRect(scaled(stork.position().x - 13), scaled(stork.position().y + 3), scaled(8), scaled(10));
+            ctx.fillRect(scaled(stork.pos().x() - 13), scaled(stork.pos().y() + 3), scaled(8), scaled(10));
         }
     }
 

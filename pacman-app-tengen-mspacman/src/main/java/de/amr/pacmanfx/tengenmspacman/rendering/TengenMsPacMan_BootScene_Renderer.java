@@ -36,7 +36,7 @@ public class TengenMsPacMan_BootScene_Renderer extends BaseRenderer implements G
             actorRenderer.fillCanvas(NES_Palette.color(0x10));
         } else {
             actorRenderer.fillText(TENGEN_PRESENTS, bootScene.shadeOfBlue, actorRenderer.arcadeFont8(),
-                bootScene.movingText.position().x, bootScene.movingText.position().y);
+                bootScene.movingText.pos().x(), bootScene.movingText.pos().y());
             actorRenderer.drawActor(bootScene.ghost);
         }
 

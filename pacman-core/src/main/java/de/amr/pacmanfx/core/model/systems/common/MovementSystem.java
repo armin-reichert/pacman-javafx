@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.model.comp.common.PositionComp;
 public final class MovementSystem {
 
     public void moveAccelerated(GameEntity actor) {
-        final PositionComp position = actor.position();
+        final PositionComp position = actor.pos();
         actor.optComponent(MovementComp.class).ifPresent(movement -> {
             position.add(movement.velX(), movement.velY());
             movement.add(movement.accX(), movement.accY());

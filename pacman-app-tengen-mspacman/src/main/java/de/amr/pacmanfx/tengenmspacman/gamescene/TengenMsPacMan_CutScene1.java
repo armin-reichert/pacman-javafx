@@ -107,7 +107,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
             joypad.keyForButton(JoypadButton.START));
 
         clapperboard = new Clapperboard(1, "THEY MEET");
-        clapperboard.position().set(3 * WorldMap.TS, 10 * WorldMap.TS);
+        clapperboard.pos().set(3 * WorldMap.TS, 10 * WorldMap.TS);
         clapperboard.show();
         clapperboard.startAnimation();
 
@@ -115,26 +115,26 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
 
         msPacMan = factory.createMsPacMan();
         msPacMan.requireComponent(SpriteAnimComp.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
-        msPacMan.position().set(RIGHT_BORDER, LOWER_LANE);
+        msPacMan.pos().set(RIGHT_BORDER, LOWER_LANE);
         navigator.setMoveDir(msPacMan, Direction.LEFT);
         navigator.setSpeed(msPacMan, 0);
 
         pacMan = factory.createPacMan();
         pacMan.requireComponent(SpriteAnimComp.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
-        pacMan.position().set(LEFT_BORDER, UPPER_LANE);
+        pacMan.pos().set(LEFT_BORDER, UPPER_LANE);
         navigator.setMoveDir(pacMan, Direction.RIGHT);
         navigator.setSpeed(pacMan, 0);
 
         inky = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GhostPersonality.CYAN_GHOST_BASHFUL);
         navigator.setMoveDir(inky, Direction.RIGHT);
         navigator.setWishDir(inky, Direction.RIGHT);
-        inky.position().set(LEFT_BORDER, UPPER_LANE);
+        inky.pos().set(LEFT_BORDER, UPPER_LANE);
         navigator.setSpeed(inky, 0);
 
         pinky = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GhostPersonality.PINK_GHOST_SPEEDY);
         navigator.setMoveDir(pinky, Direction.LEFT);
         navigator.setWishDir(pinky, Direction.LEFT);
-        pinky.position().set(RIGHT_BORDER, LOWER_LANE);
+        pinky.pos().set(RIGHT_BORDER, LOWER_LANE);
         navigator.setSpeed(pinky, 0);
 
         heart = new GameEntity();
@@ -160,11 +160,11 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
         List.of(pacMan, msPacMan, inky, pinky).forEach(sys.motor()::moveAccelerated);
 
         if (collided) {
-            if (inky.position().y > MIDDLE_LANE) {
-                inky.position().setY(MIDDLE_LANE);
+            if (inky.pos().y() > MIDDLE_LANE) {
+                inky.pos().setY(MIDDLE_LANE);
             }
-            if (pinky.position().y > MIDDLE_LANE) {
-                pinky.position().setY(MIDDLE_LANE);
+            if (pinky.pos().y() > MIDDLE_LANE) {
+                pinky.pos().setY(MIDDLE_LANE);
             }
         }
 
@@ -194,17 +194,17 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
                     sys.spriteAnim().playSelected(pinky);
                 }
                 case 400 -> {
-                    msPacMan.position().set(LEFT_BORDER, MIDDLE_LANE);
+                    msPacMan.pos().set(LEFT_BORDER, MIDDLE_LANE);
                     sys.navigator().setMoveDir(msPacMan, Direction.RIGHT);
 
-                    pacMan.position().set(RIGHT_BORDER, MIDDLE_LANE);
+                    pacMan.pos().set(RIGHT_BORDER, MIDDLE_LANE);
                     sys.navigator().setMoveDir(pacMan, Direction.LEFT);
 
-                    pinky.position().set(msPacMan.position().x - WorldMap.TS * 11, msPacMan.position().y);
+                    pinky.pos().set(msPacMan.pos().x() - WorldMap.TS * 11, msPacMan.pos().y());
                     sys.navigator().setMoveDir(pinky, Direction.RIGHT);
                     sys.navigator().setWishDir(pinky, Direction.RIGHT);
 
-                    inky.position().set(pacMan.position().x + WorldMap.TS * 11, pacMan.position().y);
+                    inky.pos().set(pacMan.pos().x() + WorldMap.TS * 11, pacMan.pos().y());
                     sys.navigator().setMoveDir(inky, Direction.LEFT);
                     sys.navigator().setWishDir(inky, Direction.LEFT);
                 }
@@ -243,7 +243,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
                     sys.spriteAnim().resetSelected(msPacMan);
                 }
                 case 560 -> {
-                    heart.position().set(0.5f * (pacMan.position().x + msPacMan.position().x), pacMan.position().y - tilesPx(2));
+                    heart.pos().set(0.5f * (pacMan.pos().x() + msPacMan.pos().x()), pacMan.pos().y() - tilesPx(2));
                     heart.show();
                 }
                 case 760 -> {

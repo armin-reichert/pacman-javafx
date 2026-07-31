@@ -73,7 +73,7 @@ public class Pac extends GameEntity implements UpdatableEntity {
             "name=" + name +
             ", state=" + state +
             ", visible=" + visibility() +
-            ", position=" + position() +
+            ", position=" + pos() +
             ", movement=" + movement() +
             ", worldNavigation=" + worldNavigation() +
             ", digestion=" + digestion() +

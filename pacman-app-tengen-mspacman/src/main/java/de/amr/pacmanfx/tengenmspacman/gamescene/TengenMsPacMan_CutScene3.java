@@ -87,7 +87,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
             joypad.keyForButton(JoypadButton.START));
 
         clapperboard = new Clapperboard(3, "JUNIOR");
-        clapperboard.position().set(3 * WorldMap.TS, 10 * WorldMap.TS);
+        clapperboard.pos().set(3 * WorldMap.TS, 10 * WorldMap.TS);
         clapperboard.show();
         clapperboard.startAnimation();
 
@@ -122,7 +122,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
         if (gameStateTick <= TICK_EXPIRES) {
             switch ((int) gameStateTick) {
                 case 130 -> {
-                    pacMan.position().set(WorldMap.TS * 3, GROUND_Y - 4);
+                    pacMan.pos().set(WorldMap.TS * 3, GROUND_Y - 4);
                     pacMan.show();
 
                     sys.navigator().setMoveDir(pacMan, Direction.RIGHT);
@@ -131,7 +131,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
                     sys.spriteAnim().select(pacMan, TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
                     sys.spriteAnim().stopSelected(pacMan);
 
-                    msPacMan.position().set(WorldMap.TS * 5, GROUND_Y - 4);
+                    msPacMan.pos().set(WorldMap.TS * 5, GROUND_Y - 4);
                     msPacMan.show();
 
                     sys.navigator().setMoveDir(msPacMan, Direction.RIGHT);
@@ -140,7 +140,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
                     sys.spriteAnim().select(msPacMan, ActorAnimationID.PAC_MUNCHING);
                     sys.spriteAnim().stopSelected(msPacMan);
 
-                    stork.position().set(RIGHT_BORDER, WorldMap.TS * 7);
+                    stork.pos().set(RIGHT_BORDER, WorldMap.TS * 7);
                     stork.show();
                     sys.motor().setVelocity(stork, -0.8f, 0);
 
@@ -155,7 +155,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
                     sys.motor().setVelocity(stork, -1f, 0); // faster, no bag to carry!
                     stork.setBagReleasedFromBeak(true);
 
-                    flyingBag.position().set(stork.position().x - 15, stork.position().y + 8);
+                    flyingBag.pos().set(stork.pos().x() - 15, stork.pos().y() + 8);
                     flyingBag.show();
                     sys.motor().setVelocity(flyingBag, -0.5f, 0);
                     sys.motor().setAcceleration(flyingBag, 0, 0.1f);
@@ -178,8 +178,8 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
 
         if (!flyingBag.isOpen()) {
             sys.motor().moveAccelerated(flyingBag);
-            if (flyingBag.position().y > GROUND_Y) {
-                flyingBag.position().setY(GROUND_Y);
+            if (flyingBag.pos().y() > GROUND_Y) {
+                flyingBag.pos().setY(GROUND_Y);
                 sys.motor().setVelocity(flyingBag,
                     0.9f * flyingBag.movement().velX(),
                     -0.3f * flyingBag.movement().velY()

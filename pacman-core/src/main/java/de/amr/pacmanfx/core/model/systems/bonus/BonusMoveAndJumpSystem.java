@@ -93,7 +93,7 @@ public class BonusMoveAndJumpSystem {
         if (moveAndJumpComp.pulse().pulseTriggered()) {
             float jumpDelta = navigationComp.moveDir().isVertical() ? 3.0f : 2.0f;
             float dy = moveAndJumpComp.pulse().state() == Pulse.State.ON ? -jumpDelta : jumpDelta;
-            bonus.position().y += dy;
+            bonus.pos().setY(bonus.pos().y() + dy);
         }
     }
 }

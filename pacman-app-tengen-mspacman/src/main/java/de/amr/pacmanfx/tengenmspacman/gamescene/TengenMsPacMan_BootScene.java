@@ -44,7 +44,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
         actionBindings().dispose();
         movingText = new GameEntity();
         movingText.setComponent(MovementComp.class, new MovementComp());
-        movingText.position().set(tilesPx(9), unscaledHeight()); // lower border of screen
+        movingText.pos().set(tilesPx(9), unscaledHeight()); // lower border of screen
         ghost = appContext().variants().currentVariant().config().renderConfig().createAnimatedGhost(
             gameContext(),
             appContext().ui().sprites().animations(),
@@ -66,11 +66,11 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
                 sys.motor().setVelocity(movingText, 0, -WorldMap.HTS);
             }
             case  55 -> {
-                movingText.position().set(tilesPx(9), tilesPx(13));
+                movingText.pos().set(tilesPx(9), tilesPx(13));
                 sys.motor().setVelocity(movingText, 0, 0);
             }
             case 113 -> {
-                ghost.position().set(unscaledWidth() - WorldMap.TS, GHOST_Y);
+                ghost.pos().set(unscaledWidth() - WorldMap.TS, GHOST_Y);
                 ghost.show();
                 sys.navigator().setMoveDir(ghost, Direction.LEFT);
                 sys.navigator().setWishDir(ghost, Direction.LEFT);

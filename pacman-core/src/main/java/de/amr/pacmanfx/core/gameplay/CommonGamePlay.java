@@ -81,7 +81,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
         final Pac pac = level.entities().pac();
         pac.reset(); // initially invisible!
-        pac.position().set(terrain.pacStartPosition());
+        pac.pos().set(terrain.pacStartPosition());
         pac.power().timer().resetToIndefiniteDuration();
 
         sys.navigator().setMoveDir(pac, Direction.LEFT);
@@ -91,7 +91,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
         level.entities().ghosts().forEach(ghost -> {
             ghost.reset(); // initially invisible!
-            ghost.position().set(ghost.worldPlacement().startPosition());
+            ghost.pos().set(ghost.worldPlacement().startPosition());
             final Direction direction = house.ghostStartDirection(ghost.personality());
             sys.navigator().setMoveDir(ghost, direction);
             sys.navigator().setWishDir(ghost, direction);
@@ -148,7 +148,7 @@ public abstract class CommonGamePlay implements GamePlay {
     @Override
     public void showLevelMessage(GameLevel level, GameLevelMessageType type) {
         final var message = new GameLevelMessage(type);
-        message.position().set(level.worldMap().terrainLayer().messageCenterPosition());
+        message.pos().set(level.worldMap().terrainLayer().messageCenterPosition());
         level.setMessage(message);
     }
 
@@ -258,9 +258,9 @@ public abstract class CommonGamePlay implements GamePlay {
 
         terrain.hPortalContainingTile(pacTile).ifPresent(hPortal -> {
             if (pac.worldNavigation().moveDir() == Direction.LEFT) {
-                pac.position().setX(hPortal.rightBorderEntryTile().x() * WorldMap.TS + WorldMap.HTS);
+                pac.pos().setX(hPortal.rightBorderEntryTile().x() * WorldMap.TS + WorldMap.HTS);
             } else if (pac.worldNavigation().moveDir() == Direction.RIGHT) {
-                pac.position().setX(hPortal.leftBorderEntryTile().x() * WorldMap.TS - WorldMap.HTS);
+                pac.pos().setX(hPortal.leftBorderEntryTile().x() * WorldMap.TS - WorldMap.HTS);
             }
             // Not sure if colliding ghosts should also be moved back to visible area
             Logger.info("Detected collision while teleporting, moved Pac-Man back into world");

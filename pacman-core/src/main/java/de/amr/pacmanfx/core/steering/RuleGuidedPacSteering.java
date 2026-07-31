@@ -162,7 +162,7 @@ public class RuleGuidedPacSteering implements Steering<Pac> {
         else if (isEdibleBonusNearPac(level, pac)) {
             Logger.trace("Active bonus detected, get it!");
             level.optBonus().ifPresent(bonus -> worldNavigation.setTargetTile(
-                WorldMap.computeTileAt(bonus.position().x, bonus.position().y)));
+                WorldMap.computeTileAt(bonus.pos().x(), bonus.pos().y())));
         } 
         else {
             worldNavigation.setTargetTile(findTileFarthestFromGhosts(

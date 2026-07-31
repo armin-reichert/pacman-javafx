@@ -72,7 +72,7 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene2D {
             joypad.keyForButton(JoypadButton.START));
 
         clapperboard = new Clapperboard(2, "THE CHASE");
-        clapperboard.position().set(3 * WorldMap.TS, 10 * WorldMap.TS);
+        clapperboard.pos().set(3 * WorldMap.TS, 10 * WorldMap.TS);
         clapperboard.show();
         clapperboard.startAnimation();
 
@@ -101,7 +101,7 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene2D {
         if (gameStateTick <= TICK_EXPIRES) {
             switch ((int) gameStateTick) {
                 case 270 -> {
-                    msPacMan.position().set(LEFT_BORDER, UPPER_LANE);
+                    msPacMan.pos().set(LEFT_BORDER, UPPER_LANE);
                     msPacMan.show();
 
                     sys.navigator().setSpeed(msPacMan, 2.0f);
@@ -111,7 +111,7 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene2D {
                     sys.spriteAnim().playSelected(msPacMan);
                 }
                 case 320 -> {
-                    pacMan.position().set(LEFT_BORDER, UPPER_LANE);
+                    pacMan.pos().set(LEFT_BORDER, UPPER_LANE);
                     pacMan.show();
 
                     sys.navigator().setSpeed(pacMan, 2.0f);
@@ -121,42 +121,42 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene2D {
                     sys.spriteAnim().playSelected(pacMan);
                 }
                 case 520 -> {
-                    pacMan.position().set(RIGHT_BORDER, LOWER_LANE);
+                    pacMan.pos().set(RIGHT_BORDER, LOWER_LANE);
                     sys.navigator().setMoveDir(pacMan, Direction.LEFT);
                     sys.navigator().setSpeed(pacMan, 2.0f);
                 }
                 case 570 -> {
-                    msPacMan.position().set(RIGHT_BORDER, LOWER_LANE);
+                    msPacMan.pos().set(RIGHT_BORDER, LOWER_LANE);
                     sys.navigator().setMoveDir(msPacMan, Direction.LEFT);
                     sys.navigator().setSpeed(msPacMan, 2.0f);
                 }
                 case 780 -> {
-                    msPacMan.position().set(LEFT_BORDER, MIDDLE_LANE);
+                    msPacMan.pos().set(LEFT_BORDER, MIDDLE_LANE);
                     sys.navigator().setMoveDir(msPacMan, Direction.RIGHT);
                     sys.navigator().setSpeed(msPacMan, 2.0f);
                 }
                 case 830 -> {
-                    pacMan.position().set(LEFT_BORDER, MIDDLE_LANE);
+                    pacMan.pos().set(LEFT_BORDER, MIDDLE_LANE);
                     sys.navigator().setMoveDir(pacMan, Direction.RIGHT);
                     sys.navigator().setSpeed(pacMan, 2.0f);
                 }
                 case 1040 -> {
-                    pacMan.position().set(RIGHT_BORDER, UPPER_LANE);
+                    pacMan.pos().set(RIGHT_BORDER, UPPER_LANE);
                     sys.navigator().setMoveDir(pacMan, Direction.LEFT);
                     sys.navigator().setSpeed(pacMan, 4.0f); //TODO correct?
                 }
                 case 1055 -> {
-                    msPacMan.position().set(RIGHT_BORDER, UPPER_LANE);
+                    msPacMan.pos().set(RIGHT_BORDER, UPPER_LANE);
                     sys.navigator().setMoveDir(msPacMan, Direction.LEFT);
                     sys.navigator().setSpeed(msPacMan, 4.0f);
                 }
                 case 1105 -> {
-                    msPacMan.position().set(LEFT_BORDER, LOWER_LANE);
+                    msPacMan.pos().set(LEFT_BORDER, LOWER_LANE);
                     sys.navigator().setMoveDir(msPacMan, Direction.RIGHT);
                     sys.navigator().setSpeed(msPacMan, 4.0f);
                 }
                 case 1120 -> {
-                    pacMan.position().set(LEFT_BORDER, LOWER_LANE);
+                    pacMan.pos().set(LEFT_BORDER, LOWER_LANE);
                     sys.navigator().setMoveDir(pacMan, Direction.RIGHT);
                     sys.navigator().setSpeed(pacMan, 4.0f);
                 }

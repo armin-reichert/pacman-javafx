@@ -58,7 +58,7 @@ public class GameEntity {
         return Optional.ofNullable(component).map(componentClass::cast);
     }
 
-    public final PositionComp position() {
+    public final PositionComp pos() {
         return requireComponent(PositionComp.class);
     }
 

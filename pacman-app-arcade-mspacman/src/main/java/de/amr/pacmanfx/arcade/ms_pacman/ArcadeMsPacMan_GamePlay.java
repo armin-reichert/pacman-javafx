@@ -183,7 +183,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         bonus.setComponent(BonusMoveAndJumpComp.class, new BonusMoveAndJumpComp());
         if (terrain.horizontalPortals().isEmpty()) {
             final Vector2i bonusTile = terrain.getTilePropertyOrDefault(WorldMapPropertyName.POS_BONUS, new Vector2i(13, 20));
-            bonus.position().set(WorldMap.halfTileRightOf(bonusTile));
+            bonus.pos().set(WorldMap.halfTileRightOf(bonusTile));
             bonus.showEdibleForSeconds(gameContext, randomFloat(9, 10));
         } else {
             computeBonusRoute(gameContext, bonus, terrain, house);

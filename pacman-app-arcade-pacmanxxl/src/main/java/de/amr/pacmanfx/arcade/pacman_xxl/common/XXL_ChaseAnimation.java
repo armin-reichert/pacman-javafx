@@ -97,7 +97,7 @@ class XXL_ChaseAnimation {
         final ArcadePacMan_ActorFactory factory = ArcadePacMan_ActorFactory.instance();
 
         pac = factory.createPacMan();
-        pac.position().setX(numTilesX * WorldMap.TS);
+        pac.pos().setX(numTilesX * WorldMap.TS);
         pac.show();
 
         sys.navigator().setMoveDir(pac, Direction.LEFT);
@@ -115,7 +115,7 @@ class XXL_ChaseAnimation {
             renderConfig.createAnimatedGhost(gameContext, container, GhostPersonality.ORANGE_GHOST_POKEY)
         );
         for (Ghost ghost : ghosts) {
-            ghost.position().setX((numTilesX + 4) * WorldMap.TS + ghost.personality().ordinal() * GHOST_DISTANCE);
+            ghost.pos().setX((numTilesX + 4) * WorldMap.TS + ghost.personality().ordinal() * GHOST_DISTANCE);
             ghost.show();
 
             sys.navigator().setMoveDir(ghost, Direction.LEFT);
@@ -148,13 +148,13 @@ class XXL_ChaseAnimation {
     private void pacManChasesGhosts(GameSystems sys) {
         moveActors(sys.motor());
         // If ghosts and Pac leave screen at right border, ghosts start chasing Pac moving left
-        if (pac.position().x > (numTilesX + 14) * WorldMap.TS) {
+        if (pac.pos().x() > (numTilesX + 14) * WorldMap.TS) {
             sys.navigator().setMoveDir(pac, Direction.LEFT);
             sys.navigator().setWishDir(pac, Direction.LEFT);
-            pac.position().setX(numTilesX * WorldMap.TS);
+            pac.pos().setX(numTilesX * WorldMap.TS);
 
             for (Ghost ghost : ghosts) {
-                ghost.position().setX((numTilesX + 4) * WorldMap.TS + ghost.personality().ordinal() * 2 * WorldMap.TS);
+                ghost.pos().setX((numTilesX + 4) * WorldMap.TS + ghost.personality().ordinal() * 2 * WorldMap.TS);
                 ghost.show();
 
                 sys.navigator().setMoveDir(ghost, Direction.LEFT);
@@ -190,20 +190,20 @@ class XXL_ChaseAnimation {
     }
 
     private static boolean colliding(GameEntity either, GameEntity other) {
-        return Math.abs(either.position().x - other.position().x) < 1;
+        return Math.abs(either.pos().x() - other.pos().x()) < 1;
     }
 
     private void ghostsChasePacMan(GameSystems sys) {
         moveActors(sys.motor());
 
-        if (ghosts.getLast().position().x < -4 * WorldMap.TS) { // ghosts left screen on the left side
-            pac.position().setX(-(numTilesX - 6) * WorldMap.TS);
+        if (ghosts.getLast().pos().x() < -4 * WorldMap.TS) { // ghosts left screen on the left side
+            pac.pos().setX(-(numTilesX - 6) * WorldMap.TS);
             sys.navigator().setMoveDir(pac, Direction.RIGHT);
             sys.navigator().setWishDir(pac, Direction.RIGHT);
 
             for (Ghost ghost : ghosts) {
                 ghost.show();
-                ghost.position().setX(pac.position().x + 22 * WorldMap.TS + ghost.personality().ordinal() * GHOST_DISTANCE);
+                ghost.pos().setX(pac.pos().x() + 22 * WorldMap.TS + ghost.personality().ordinal() * GHOST_DISTANCE);
 
                 sys.navigator().setMoveDir(ghost, Direction.RIGHT);
                 sys.navigator().setWishDir(ghost, Direction.RIGHT);

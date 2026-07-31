@@ -28,21 +28,21 @@ public class GhostHouseAccessSystem {
         final GameSystems sys = gameContext.systems();
 
         final House house = ghost.worldPlacement().house();
-        final PositionComp position = ghost.position();
+        final PositionComp position = ghost.pos();
 
         if (house.isVisitedBy(ghost)) {
             // locked inside house: jumping
             final float minY = (house.minTile().y() + 1) * WorldMap.TS + WorldMap.HTS;
             final float maxY = (house.maxTile().y() - 1) * WorldMap.TS - WorldMap.HTS;
-            if (position.y <= minY) {
+            if (position.y() <= minY) {
                 sys.navigator().setMoveDir(ghost, DOWN);
                 sys.navigator().setWishDir(ghost, DOWN);
             }
-            else if (position.y >= maxY) {
+            else if (position.y() >= maxY) {
                 sys.navigator().setMoveDir(ghost, UP);
                 sys.navigator().setWishDir(ghost, UP);
             }
-            position.setY(Math.clamp(position.y, minY, maxY));
+            position.setY(Math.clamp(position.y(), minY, maxY));
             sys.navigator().setSpeed(ghost, speed);
             sys.motor().moveAccelerated(ghost);
         }
@@ -62,11 +62,11 @@ public class GhostHouseAccessSystem {
     public boolean leaveHouse(GameContext gameContext, Ghost ghost, float speed) {
         final GameSystems sys = gameContext.systems();
 
-        final PositionComp position = ghost.position();
+        final PositionComp position = ghost.pos();
         final House house = ghost.worldPlacement().house();
         final Vector2f houseEntryPosition = house.entryPosition();
 
-        if (position.y <= houseEntryPosition.y()) {
+        if (position.y() <= houseEntryPosition.y()) {
             position.setY(houseEntryPosition.y());
             sys.navigator().setMoveDir(ghost, LEFT);
             sys.navigator().setWishDir(ghost, LEFT);
@@ -77,7 +77,7 @@ public class GhostHouseAccessSystem {
             return true;
         }
         else {
-            final float centerX = position.x + WorldMap.HTS;
+            final float centerX = position.x() + WorldMap.HTS;
             final float houseCenterX = house.center().x();
             if (differsAtMost(0.5f * speed, centerX, houseCenterX)) {
                 // align horizontally and raise
@@ -105,7 +105,7 @@ public class GhostHouseAccessSystem {
     public void enterHouse(GameContext gameContext, Ghost ghost, float speed) {
         final GameSystems sys = gameContext.systems();
 
-        final PositionComp position = ghost.position();
+        final PositionComp position = ghost.pos();
         final House house = ghost.worldPlacement().house();
         final Vector2f revivalPosition = WorldMap.halfTileRightOf(house.ghostRevivalTile(ghost.personality()));
         final Vector2f positionVec = position.asVector2f();
@@ -117,15 +117,15 @@ public class GhostHouseAccessSystem {
             sys.ghostState().changeState(gameContext, ghost, GhostState.LOCKED);
             return;
         }
-        if (position.y < revivalPosition.y()) {
+        if (position.y() < revivalPosition.y()) {
             sys.navigator().setMoveDir(ghost, DOWN);
             sys.navigator().setWishDir(ghost, DOWN);
         }
-        else if (position.x > revivalPosition.x()) {
+        else if (position.x() > revivalPosition.x()) {
             sys.navigator().setMoveDir(ghost, LEFT);
             sys.navigator().setWishDir(ghost, LEFT);
         }
-        else if (position.x < revivalPosition.x()) {
+        else if (position.x() < revivalPosition.x()) {
             sys.navigator().setMoveDir(ghost, RIGHT);
             sys.navigator().setWishDir(ghost, RIGHT);
         }
@@ -140,7 +140,7 @@ public class GhostHouseAccessSystem {
         final WorldMovementPolicy policy = sys.ghostWorldMovementPolicy();
         final GameLevel level = gameContext.assertLevel();
 
-        final PositionComp position = ghost.position();
+        final PositionComp position = ghost.pos();
         final House house = ghost.worldPlacement().house();
         final Vector2f houseEntry = house.entryPosition();
         final Vector2f positionVec =  position.asVector2f();

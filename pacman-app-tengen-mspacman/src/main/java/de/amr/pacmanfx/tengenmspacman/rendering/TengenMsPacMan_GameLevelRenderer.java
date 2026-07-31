@@ -155,13 +155,13 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
     private void drawGameOverMessage(GameLevel level, GameLevelMessage message) {
         final NES_WorldMapColorScheme colorScheme = level.worldMap().getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
         final Color color = level.isDemoLevel()
-            ? Color.valueOf(colorScheme.wallStroke())
-            : assets.color("color.game_over_message");
-        fillTextCentered(GAME_OVER_MESSAGE_TEXT, color, arcadeFont8(), message.position().x, message.position().y);
+            ? Color.valueOf(colorScheme.wallStroke()) : assets.color("color.game_over_message");
+        fillTextCentered(GAME_OVER_MESSAGE_TEXT, color, arcadeFont8(), message.pos().x(), message.pos().y());
     }
 
     private void drawReadyMessage(GameLevelMessage message) {
-        fillTextCentered(READY_MESSAGE_TEXT, assets.color("color.ready_message"), arcadeFont8(), message.position().x, message.position().y);
+        fillTextCentered(READY_MESSAGE_TEXT, assets.color("color.ready_message"), arcadeFont8(),
+            message.pos().x(), message.pos().y());
     }
 
     public void drawDoor(WorldMap worldMap) {

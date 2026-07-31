@@ -9,13 +9,21 @@ import de.amr.pacmanfx.core.model.GameEntityComponent;
 
 public final class PositionComp implements GameEntityComponent {
 
-    public float x;
-    public float y;
+    private float x;
+    private float y;
 
     @Override
     public void reset() {
         x = 0f;
         y = 0f;
+    }
+
+    public float x() {
+        return x;
+    }
+
+    public float y() {
+        return y;
     }
 
     public void setX(double x) {
@@ -36,9 +44,14 @@ public final class PositionComp implements GameEntityComponent {
         y = v.y();
     }
 
-    public void add(float vx, float vy) {
-        x += vx;
-        y += vy;
+    public void add(float dx, float dy) {
+        x += dx;
+        y += dy;
+    }
+
+    public void subtract(float dx, float dy) {
+        x -= dx;
+        y -= dy;
     }
 
     public Vector2f asVector2f() {

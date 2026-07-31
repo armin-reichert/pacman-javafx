@@ -101,7 +101,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         heart.requireComponent(SpriteAnimComp.class).setAnimations(singleSpriteAnimation(spriteSheet.findSprite(SpriteID.HEART)));
 
         clapperboard = new Clapperboard("1", "THEY MEET");
-        clapperboard.position().set(tilesPx(3), tilesPx(10));
+        clapperboard.pos().set(tilesPx(3), tilesPx(10));
         clapperboard.startAnimation();
     }
 
@@ -128,7 +128,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
     }
 
     private void enterStateChasedByGhosts(GameSystems sys) {
-        pacMan.position().set(WorldMap.TS * (-2), UPPER_Y);
+        pacMan.pos().set(WorldMap.TS * (-2), UPPER_Y);
         pacMan.show();
 
         sys.navigator().setMoveDir(pacMan, Direction.RIGHT);
@@ -137,7 +137,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         sys.spriteAnim().select(pacMan, ActorAnimationID.MR_PAC_MAN_MUNCHING);
         sys.spriteAnim().playSelected(pacMan);
 
-        inky.position().set(pacMan.position().x - 6 * WorldMap.TS, pacMan.position().y);
+        inky.pos().set(pacMan.pos().x() - 6 * WorldMap.TS, pacMan.pos().y());
         inky.show();
 
         sys.navigator().setSpeed(inky, SPEED_GHOST_CHASING);
@@ -147,7 +147,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         sys.spriteAnim().select(inky, ActorAnimationID.GHOST_NORMAL);
         sys.spriteAnim().playSelected(inky);
 
-        msPacMan.position().set(WorldMap.TS * 30, LOWER_Y);
+        msPacMan.pos().set(WorldMap.TS * 30, LOWER_Y);
         msPacMan.show();
 
         sys.navigator().setMoveDir(msPacMan, Direction.LEFT);
@@ -156,7 +156,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         sys.spriteAnim().select(msPacMan, ActorAnimationID.PAC_MUNCHING);
         sys.spriteAnim().playSelected(msPacMan);
 
-        pinky.position().set(msPacMan.position().x + 6 * WorldMap.TS, msPacMan.position().y);
+        pinky.pos().set(msPacMan.pos().x() + 6 * WorldMap.TS, msPacMan.pos().y());
         pinky.show();
 
         sys.navigator().setMoveDir(pinky, Direction.LEFT);
@@ -170,7 +170,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
     }
 
     private void updateStateChasedByGhosts(GameSystems sys) {
-        if (inky.position().x > WorldMap.TS * 30) {
+        if (inky.pos().x() > WorldMap.TS * 30) {
             enterStateComingTogether(sys);
         }
         else {
@@ -179,17 +179,17 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
     }
 
     private void enterStateComingTogether(GameSystems sys) {
-        msPacMan.position().set(WorldMap.TS * (-3), MIDDLE_Y);
+        msPacMan.pos().set(WorldMap.TS * (-3), MIDDLE_Y);
         sys.navigator().setMoveDir(msPacMan, Direction.RIGHT);
 
-        pinky.position().set(msPacMan.position().x - 5 * WorldMap.TS, msPacMan.position().y);
+        pinky.pos().set(msPacMan.pos().x() - 5 * WorldMap.TS, msPacMan.pos().y());
         sys.navigator().setMoveDir(pinky, Direction.RIGHT);
         sys.navigator().setWishDir(pinky, Direction.RIGHT);
 
-        pacMan.position().set(WorldMap.TS * 31, MIDDLE_Y);
+        pacMan.pos().set(WorldMap.TS * 31, MIDDLE_Y);
         sys.navigator().setMoveDir(pacMan, Direction.LEFT);
 
-        inky.position().set(pacMan.position().x + 5 * WorldMap.TS, pacMan.position().y);
+        inky.pos().set(pacMan.pos().x() + 5 * WorldMap.TS, pacMan.pos().y());
         sys.navigator().setMoveDir(inky, Direction.LEFT);
         sys.navigator().setWishDir(inky, Direction.LEFT);
 
@@ -198,12 +198,12 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
 
     private void updateStateComingTogether(GameSystems sys) {
         // Pac-Man and Ms. Pac-Man reach end position?
-        if (pacMan.worldNavigation().moveDir() == Direction.UP && pacMan.position().y < UPPER_Y) {
+        if (pacMan.worldNavigation().moveDir() == Direction.UP && pacMan.pos().y() < UPPER_Y) {
             enterStateInHeaven(sys);
         }
 
         // Pac-Man and Ms. Pac-Man meet?
-        else if (pacMan.worldNavigation().moveDir() == Direction.LEFT && pacMan.position().x - msPacMan.position().x < WorldMap.TS * 2) {
+        else if (pacMan.worldNavigation().moveDir() == Direction.LEFT && pacMan.pos().x() - msPacMan.pos().x() < WorldMap.TS * 2) {
             sys.navigator().setMoveDir(pacMan, Direction.UP);
             sys.navigator().setSpeed(pacMan, SPEED_RISING);
             sys.navigator().setMoveDir(msPacMan, Direction.UP);
@@ -211,7 +211,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         }
 
         // Inky and Pinky collide?
-        else if (inky.worldNavigation().moveDir() == Direction.LEFT && inky.position().x - pinky.position().x < WorldMap.TS * 2) {
+        else if (inky.worldNavigation().moveDir() == Direction.LEFT && inky.pos().x() - pinky.pos().x() < WorldMap.TS * 2) {
             sys.navigator().setMoveDir(inky, Direction.RIGHT);
             sys.navigator().setWishDir(inky, Direction.RIGHT);
             sys.navigator().setSpeed(inky, SPEED_GHOST_AFTER_COLLISION);
@@ -231,12 +231,12 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
             List.of(pacMan, msPacMan, inky, pinky).forEach(sys.motor()::moveAccelerated);
 
             // Collision with ground?
-            if (inky.position().y > MIDDLE_Y) {
-                inky.position().setY(MIDDLE_Y);
+            if (inky.pos().y() > MIDDLE_Y) {
+                inky.pos().setY(MIDDLE_Y);
                 inky.movement().setAcceleration(0, 0);
             }
-            if (pinky.position().y > MIDDLE_Y) {
-                pinky.position().setY(MIDDLE_Y);
+            if (pinky.pos().y() > MIDDLE_Y) {
+                pinky.pos().setY(MIDDLE_Y);
                 pinky.movement().setAcceleration(0, 0);
             }
         }
@@ -258,7 +258,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         inky.hide();
         pinky.hide();
 
-        heart.position().set((pacMan.position().x + msPacMan.position().x) * 0.5f, pacMan.position().y - WorldMap.TS * 2);
+        heart.pos().set((pacMan.pos().x() + msPacMan.pos().x()) * 0.5f, pacMan.pos().y() - WorldMap.TS * 2);
         heart.show();
 
         setState(SceneState.IN_HEAVEN, 3L * GameConstants.SIMULATION_FPS);
