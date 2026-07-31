@@ -40,7 +40,8 @@ public class XXL_PacMan_GamePlay extends ArcadePacMan_GamePlay {
         final var demoLevelSteering = new RuleGuidedPacSteering(
             sys.worldNavigator(), sys.pacWorldMovementPolicy(), sys.pacPower()
         );
-        pac.setAutomaticSteering(demoLevelSteering);
+        //TODO does not belong into this system
+        sys.pacState().setAutomaticSteering(demoLevelSteering);
         demoLevelSteering.init();
 
         xxlModel.gateKeeper().setLevelNumber(levelNumber);

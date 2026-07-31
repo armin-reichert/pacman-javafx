@@ -12,6 +12,7 @@ import de.amr.pacmanfx.core.model.systems.ghost.GhostHuntingStrategy;
 import de.amr.pacmanfx.core.model.systems.ghost.GhostStateSystem;
 import de.amr.pacmanfx.core.model.systems.pac.PacDigestionSystem;
 import de.amr.pacmanfx.core.model.systems.pac.PacPowerSystem;
+import de.amr.pacmanfx.core.model.systems.pac.PacStateSystem;
 import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.systems.world.WorldMovementPolicy;
 
@@ -26,6 +27,8 @@ public interface GameSystems {
     RandomWorldMovementSystem roamingNavigator();
 
     WorldMovementPolicy pacWorldMovementPolicy();
+
+    PacStateSystem pacState();
 
     PacPowerSystem pacPower();
 

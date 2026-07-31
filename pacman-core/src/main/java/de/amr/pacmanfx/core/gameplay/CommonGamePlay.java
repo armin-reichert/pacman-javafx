@@ -162,6 +162,8 @@ public abstract class CommonGamePlay implements GamePlay {
         final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
         final ArcadeHouseGateKeeper gateKeeper = model.gateKeeper();
+
+        //TODO enable this later again
         final boolean doubleChecked = model.rules().actorCollisionRules().isCollisionDoubleChecked();
 
         level.heartbeat().triggerPulse();
@@ -172,24 +174,16 @@ public abstract class CommonGamePlay implements GamePlay {
         }
 
         gameContext.systems().pacPower().update(gameContext, pac);
+        gameContext.systems().pacState().update(gameContext);
+        gameContext.systems().bonusState().update(gameContext);
 
-        // If double-check active, do an additional collision check before Pac has moved
-        level.entities()
-            .forEach(entity -> {
-            if (entity != pac) {
-                if (entity instanceof UpdatableEntity updatableEntity) {
-                    updatableEntity.update(gameContext);
-                }
+        //TODO remove this kind of updates and call entity systems update-methods instead
+        level.entities().forEach(entity -> {
+            if (entity instanceof UpdatableEntity updatableEntity) {
+                updatableEntity.update(gameContext);
             }
         });
 
-        //TODO change to this style for all entities
-        gameContext.systems().bonusState().update(gameContext);
-
-        if (doubleChecked) {
-            detectCollisions(gameContext);
-        }
-        pac.update(gameContext);
 
         detectCollisions(gameContext);
         evalCollisions(gameContext);

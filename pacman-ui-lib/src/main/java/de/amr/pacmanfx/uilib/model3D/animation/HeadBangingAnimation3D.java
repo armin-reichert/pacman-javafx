@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.uilib.model3D.animation;
 
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.actors.PacState;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3DMovementAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -63,7 +64,7 @@ public class HeadBangingAnimation3D extends Pac3DMovementAnimation {
 
     public void update(Pac pac) {
         final var rotateTransition = (RotateTransition) animationFX();
-        final boolean animate = pac.state() == Pac.State.ACTIVE && !pac.isBlocked();
+        final boolean animate = pac.state() == PacState.ACTIVE && pac.notBlocked();
         if (animate) {
             final Point3D axis = pac.worldNavigation().moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
             if (!axis.equals(rotateTransition.getAxis())) {

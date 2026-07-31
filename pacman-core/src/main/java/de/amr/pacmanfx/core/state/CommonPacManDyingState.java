@@ -12,6 +12,7 @@ import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.ActorAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.actors.PacState;
 import de.amr.pacmanfx.core.model.comp.ghost.ElroyComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
@@ -60,7 +61,7 @@ public class CommonPacManDyingState extends GameState {
 
         sys.spriteAnim().stopSelected(pac);
 
-        pac.setState(Pac.State.DEAD);
+        pac.setState(PacState.DEAD);
 
         waitForTimeout();
 
@@ -104,7 +105,7 @@ public class CommonPacManDyingState extends GameState {
         }
         else {
             level.heartbeat().triggerPulse();
-            pac.update(gameContext);
+            sys.pacState().update(gameContext);
         }
     }
 }

@@ -144,7 +144,8 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final var demoLevelSteering = new RuleGuidedPacSteering(
             sys.worldNavigator(), sys.pacWorldMovementPolicy(), sys.pacPower()
         );
-        pac.setAutomaticSteering(demoLevelSteering);
+        //TODO does not belong into this system
+        sys.pacState().setAutomaticSteering(demoLevelSteering);
         demoLevelSteering.init();
 
         model.gateKeeper().setLevelNumber(1);
@@ -251,7 +252,8 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final var factory = TengenMsPacMan_ActorFactory.instance();
         final Pac msPacMan = factory.createMsPacMan();
 
-        msPacMan.setAutomaticSteering(new RuleGuidedPacSteering(
+        //TODO does not belong into this system
+        sys.pacState().setAutomaticSteering(new RuleGuidedPacSteering(
             sys.worldNavigator(), sys.pacWorldMovementPolicy(), sys.pacPower()
         ));
         model.activatePacBooster(gameContext, msPacMan, model.pacBoosterMode() == PacBooster.ALWAYS_ON);

@@ -16,7 +16,7 @@ public class PacDigestionSystem {
         }
     }
 
-    public boolean isResting(Pac pac) {
+    public boolean mustRest(Pac pac) {
         return pac.digestion().restingTicks() > 0;
     }
 

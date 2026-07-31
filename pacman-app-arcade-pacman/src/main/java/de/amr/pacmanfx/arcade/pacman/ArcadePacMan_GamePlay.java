@@ -136,7 +136,8 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     protected void createAndSetPacMan(GameSystems sys, GameLevel level) {
         final var factory = ArcadePacMan_ActorFactory.instance();
         final Pac pacMan = factory.createPacMan();
-        pacMan.setAutomaticSteering(new RuleGuidedPacSteering(
+        //TODO Probably does not belong into the PacState system
+        sys.pacState().setAutomaticSteering(new RuleGuidedPacSteering(
             sys.worldNavigator(), sys.pacWorldMovementPolicy(), sys.pacPower()
         ));
         level.setPac(pacMan);
@@ -180,7 +181,8 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         final var demoLevelSteering = new RouteGuidedActorSteering<Pac>(
             sys.worldNavigator(), sys.pacWorldMovementPolicy(), DEMO_LEVEL_ROUTE
         );
-        pac.setAutomaticSteering(demoLevelSteering);
+        //TODO does not belong into this system
+        sys.pacState().setAutomaticSteering(demoLevelSteering);
         demoLevelSteering.init();
 
         model.gateKeeper().setLevelNumber(1);

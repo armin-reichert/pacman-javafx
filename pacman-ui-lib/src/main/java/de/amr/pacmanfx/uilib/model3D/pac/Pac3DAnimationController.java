@@ -2,6 +2,7 @@ package de.amr.pacmanfx.uilib.model3D.pac;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.actors.PacState;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.pac.PacPowerSystem;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -26,12 +27,12 @@ public class Pac3DAnimationController {
         final Pac pac = level.entities().pac();
         final PacPowerSystem pacPowerSystem = gameContext.systems().pacPower();
 
-        final boolean lighted = pac.state() != Pac.State.DEAD;
+        final boolean lighted = pac.state() != PacState.DEAD;
         if (lighted) {
             pac3D.powerLight().ifPresent(light -> updatePowerLight(pacPowerSystem, pac, light));
         }
 
-        final boolean walking = pac.state() == Pac.State.ACTIVE && !pac.isBlocked();
+        final boolean walking = pac.state() == PacState.ACTIVE && pac.notBlocked();
         if (walking) {
             animations.optAnimation(Pac3D.AnimationID.MOVING, Pac3DMovementAnimation.class).ifPresent(walkingAnimation -> {
                 walkingAnimation.playOrContinue();
@@ -60,7 +61,7 @@ public class Pac3DAnimationController {
         final long powerTicksRemaining = pacPowerSystem.powerTicksRemaining(pac);
         final long powerTicksTotal = pacPowerSystem.powerTicksTotal(pac);
 
-        if (powerActive && pac.visibility().isVisible() && pac.state() != Pac.State.DEAD) {
+        if (powerActive && pac.visibility().isVisible() && pac.state() != PacState.DEAD) {
             powerLight.setLightOn(true);
             final float maxRange = (powerTicksRemaining / (float) powerTicksTotal) * 60 + 30;
             powerLight.setMaxRange(maxRange);

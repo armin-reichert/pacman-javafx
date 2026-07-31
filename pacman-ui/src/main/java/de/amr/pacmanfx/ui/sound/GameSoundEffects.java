@@ -8,6 +8,7 @@ import de.amr.basics.math.RandomNumberSupport;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.core.model.actors.Ghost;
+import de.amr.pacmanfx.core.model.actors.PacState;
 import de.amr.pacmanfx.core.model.comp.ghost.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
@@ -254,7 +255,7 @@ public class GameSoundEffects implements Disposable {
      * @param ghosts stream of all ghosts in the level
      */
     public void playGhostSounds(Pac pac, Collection<Ghost> ghosts) {
-        boolean ghostReturning = pac.state() != Pac.State.DEAD && ghosts.stream().anyMatch(g ->
+        boolean ghostReturning = pac.state() != PacState.DEAD && ghosts.stream().anyMatch(g ->
                 g.state() == GhostState.RETURNING_HOME || g.state() == GhostState.ENTERING_HOUSE);
         if (ghostReturning) {
             playGhostReturningToHouseSound();
