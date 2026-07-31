@@ -8,7 +8,7 @@ import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.ActorAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnimComponent;
+import de.amr.pacmanfx.core.model.comp.spriteanim.SpriteAnimComp;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -94,10 +94,10 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
         final var factory = TengenMsPacMan_ActorFactory.instance();
 
         msPacMan = factory.createMsPacMan();
-        msPacMan.requireComponent(SpriteAnimComponent.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        msPacMan.requireComponent(SpriteAnimComp.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         pacMan = factory.createPacMan();
-        pacMan.requireComponent(SpriteAnimComponent.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        pacMan.requireComponent(SpriteAnimComp.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         stork = new Stork(spriteAnimations);
 

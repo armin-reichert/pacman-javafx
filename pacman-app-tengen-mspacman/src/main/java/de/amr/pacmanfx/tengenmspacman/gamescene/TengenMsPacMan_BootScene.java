@@ -8,7 +8,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.actors.Ghost;
-import de.amr.pacmanfx.core.model.component.common.MovementComponent;
+import de.amr.pacmanfx.core.model.comp.common.MovementComp;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.state.GameState;
@@ -43,7 +43,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
     public void onActivate() {
         actionBindings().dispose();
         movingText = new GameEntity();
-        movingText.setComponent(MovementComponent.class, new MovementComponent());
+        movingText.setComponent(MovementComp.class, new MovementComp());
         movingText.position().set(tilesPx(9), unscaledHeight()); // lower border of screen
         ghost = appContext().variants().currentVariant().config().renderConfig().createAnimatedGhost(
             gameContext(),

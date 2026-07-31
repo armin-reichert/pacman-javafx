@@ -7,8 +7,8 @@ package de.amr.pacmanfx.core.model.systems.ghost;
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Ghost;
-import de.amr.pacmanfx.core.model.component.ghost.GhostState;
-import de.amr.pacmanfx.core.model.component.common.PositionComponent;
+import de.amr.pacmanfx.core.model.comp.ghost.GhostState;
+import de.amr.pacmanfx.core.model.comp.common.PositionComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.systems.world.WorldMovementPolicy;
@@ -28,7 +28,7 @@ public class GhostHouseAccessSystem {
         final GameSystems sys = gameContext.systems();
 
         final House house = ghost.worldPlacement().house();
-        final PositionComponent position = ghost.position();
+        final PositionComp position = ghost.position();
 
         if (house.isVisitedBy(ghost)) {
             // locked inside house: jumping
@@ -62,7 +62,7 @@ public class GhostHouseAccessSystem {
     public boolean leaveHouse(GameContext gameContext, Ghost ghost, float speed) {
         final GameSystems sys = gameContext.systems();
 
-        final PositionComponent position = ghost.position();
+        final PositionComp position = ghost.position();
         final House house = ghost.worldPlacement().house();
         final Vector2f houseEntryPosition = house.entryPosition();
 
@@ -105,7 +105,7 @@ public class GhostHouseAccessSystem {
     public void enterHouse(GameContext gameContext, Ghost ghost, float speed) {
         final GameSystems sys = gameContext.systems();
 
-        final PositionComponent position = ghost.position();
+        final PositionComp position = ghost.position();
         final House house = ghost.worldPlacement().house();
         final Vector2f revivalPosition = WorldMap.halfTileRightOf(house.ghostRevivalTile(ghost.personality()));
         final Vector2f positionVec = position.asVector2f();
@@ -140,7 +140,7 @@ public class GhostHouseAccessSystem {
         final WorldMovementPolicy policy = sys.ghostWorldMovementPolicy();
         final GameLevel level = gameContext.assertLevel();
 
-        final PositionComponent position = ghost.position();
+        final PositionComp position = ghost.position();
         final House house = ghost.worldPlacement().house();
         final Vector2f houseEntry = house.entryPosition();
         final Vector2f positionVec =  position.asVector2f();

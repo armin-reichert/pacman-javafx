@@ -8,12 +8,12 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
-import de.amr.pacmanfx.core.model.component.common.MovementComponent;
-import de.amr.pacmanfx.core.model.component.ghost.GhostState;
-import de.amr.pacmanfx.core.model.component.ghost.GhostStateComponent;
-import de.amr.pacmanfx.core.model.component.ghost.GhostWorldPlacementComponent;
-import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnimComponent;
-import de.amr.pacmanfx.core.model.component.world.WorldNavigationComponent;
+import de.amr.pacmanfx.core.model.comp.common.MovementComp;
+import de.amr.pacmanfx.core.model.comp.ghost.GhostState;
+import de.amr.pacmanfx.core.model.comp.ghost.GhostStateComp;
+import de.amr.pacmanfx.core.model.comp.ghost.GhostWorldPlacementComp;
+import de.amr.pacmanfx.core.model.comp.spriteanim.SpriteAnimComp;
+import de.amr.pacmanfx.core.model.comp.world.WorldNavigationComp;
 
 import static java.util.Objects.requireNonNull;
 
@@ -28,11 +28,11 @@ public class Ghost extends GameEntity implements UpdatableEntity {
         this.personality = requireNonNull(personality);
         this.name = requireNonNull(name);
 
-        setComponent(MovementComponent.class, new MovementComponent());
-        setComponent(WorldNavigationComponent.class, new WorldNavigationComponent());
-        setComponent(GhostWorldPlacementComponent.class, new GhostWorldPlacementComponent());
-        setComponent(GhostStateComponent.class, new GhostStateComponent());
-        setComponent(SpriteAnimComponent.class, new SpriteAnimComponent());
+        setComponent(MovementComp.class, new MovementComp());
+        setComponent(WorldNavigationComp.class, new WorldNavigationComp());
+        setComponent(GhostWorldPlacementComp.class, new GhostWorldPlacementComp());
+        setComponent(GhostStateComp.class, new GhostStateComp());
+        setComponent(SpriteAnimComp.class, new SpriteAnimComp());
 
         //TODO where does this belong?
         worldNavigation().corneringSpeedDelta = -1.25f;
@@ -42,20 +42,20 @@ public class Ghost extends GameEntity implements UpdatableEntity {
         return personality;
     }
 
-    public MovementComponent movement() {
-        return requireComponent(MovementComponent.class);
+    public MovementComp movement() {
+        return requireComponent(MovementComp.class);
     }
 
-    public GhostWorldPlacementComponent worldPlacement() {
-        return requireComponent(GhostWorldPlacementComponent.class);
+    public GhostWorldPlacementComp worldPlacement() {
+        return requireComponent(GhostWorldPlacementComp.class);
     }
 
-    public WorldNavigationComponent worldNavigation() {
-        return requireComponent(WorldNavigationComponent.class);
+    public WorldNavigationComp worldNavigation() {
+        return requireComponent(WorldNavigationComp.class);
     }
 
     public GhostState state() {
-        return requireComponent(GhostStateComponent.class).state();
+        return requireComponent(GhostStateComp.class).state();
     }
 
     @Override

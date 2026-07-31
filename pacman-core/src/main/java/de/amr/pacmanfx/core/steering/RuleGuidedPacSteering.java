@@ -7,9 +7,9 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.model.actors.*;
-import de.amr.pacmanfx.core.model.component.bonus.BonusState;
-import de.amr.pacmanfx.core.model.component.ghost.GhostState;
-import de.amr.pacmanfx.core.model.component.world.WorldNavigationComponent;
+import de.amr.pacmanfx.core.model.comp.bonus.BonusState;
+import de.amr.pacmanfx.core.model.comp.ghost.GhostState;
+import de.amr.pacmanfx.core.model.comp.world.WorldNavigationComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.systems.pac.PacPowerSystem;
@@ -86,7 +86,7 @@ public class RuleGuidedPacSteering implements Steering<Pac> {
 
     @Override
     public void steer(Pac pac, GameLevel level) {
-        final WorldNavigationComponent worldNavigation = pac.requireComponent(WorldNavigationComponent.class);
+        final WorldNavigationComp worldNavigation = pac.requireComponent(WorldNavigationComp.class);
 
         if (worldNavigation.info.moved && !worldNavigation.isNewTileEntered()) {
             return;
@@ -131,7 +131,7 @@ public class RuleGuidedPacSteering implements Steering<Pac> {
     private void takeAction(GameLevel level, CollectedData data) {
         final Pac pac = level.entities().pac();
         final Vector2i pacTile = WorldNavigationSystem.computeTile(pac);
-        final WorldNavigationComponent worldNavigation = pac.worldNavigation();
+        final WorldNavigationComp worldNavigation = pac.worldNavigation();
         
         if (data.hunterAhead != null) {
             Direction escapeDir;
@@ -188,7 +188,7 @@ public class RuleGuidedPacSteering implements Steering<Pac> {
 
     private Ghost findHuntingGhostAhead(GameLevel level) {
         final Pac pac = level.entities().pac();
-        final WorldNavigationComponent worldNavigation = pac.worldNavigation();
+        final WorldNavigationComp worldNavigation = pac.worldNavigation();
         final Vector2i pacManTile = WorldNavigationSystem.computeTile(pac);
 
         boolean energizerFound = false;
@@ -219,7 +219,7 @@ public class RuleGuidedPacSteering implements Steering<Pac> {
     }
 
     private Ghost findHuntingGhostBehind(GameLevel level, Pac pac) {
-        final WorldNavigationComponent navigation = pac.worldNavigation();
+        final WorldNavigationComp navigation = pac.worldNavigation();
         final Vector2i pacManTile = WorldNavigationSystem.computeTile(pac);
 
         for (int i = 1; i <= CollectedData.MAX_GHOST_BEHIND_DETECTION_DIST; ++i) {

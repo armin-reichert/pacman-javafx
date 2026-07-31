@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.actors.*;
-import de.amr.pacmanfx.core.model.component.ghost.GhostState;
+import de.amr.pacmanfx.core.model.comp.ghost.GhostState;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;

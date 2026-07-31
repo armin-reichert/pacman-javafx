@@ -16,7 +16,7 @@ import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.actors.ActorAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnimComponent;
+import de.amr.pacmanfx.core.model.comp.spriteanim.SpriteAnimComp;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -69,7 +69,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
         final var factory = ArcadePacMan_ActorFactory.instance();
 
         pacMan = factory.createPacMan();
-        pacMan.requireComponent(SpriteAnimComponent.class).setAnimations(renderConfig.createPacAnimations(spriteAnimationContainer));
+        pacMan.requireComponent(SpriteAnimComp.class).setAnimations(renderConfig.createPacAnimations(spriteAnimationContainer));
 
         blinky = renderConfig.createAnimatedGhost(gameContext(), spriteAnimationContainer, GhostPersonality.RED_GHOST_SHADOW);
 

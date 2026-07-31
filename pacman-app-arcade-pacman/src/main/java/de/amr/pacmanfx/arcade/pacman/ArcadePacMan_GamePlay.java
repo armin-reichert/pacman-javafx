@@ -17,9 +17,9 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.actors.Bonus;
 import de.amr.pacmanfx.core.model.actors.Ghost;
-import de.amr.pacmanfx.core.model.component.ghost.GhostState;
+import de.amr.pacmanfx.core.model.comp.ghost.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.core.model.component.ghost.ElroyComponent;
+import de.amr.pacmanfx.core.model.comp.ghost.ElroyComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
@@ -249,16 +249,16 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
     private void checkCruiseElroyActivation(GameLevel level) {
         final Ghost redGhost = level.ghost(GhostPersonality.RED_GHOST_SHADOW);
-        if (!redGhost.hasComponent(ElroyComponent.class)) {
+        if (!redGhost.hasComponent(ElroyComp.class)) {
             return;
         }
-        final ElroyComponent elroy = redGhost.requireComponent(ElroyComponent.class);
+        final ElroyComp elroy = redGhost.requireComponent(ElroyComp.class);
         final LevelData data = ArcadePacMan_GameRules.levelData(level.number());
         final int remainingFoodCount = level.worldMap().foodLayer().remainingFoodCount();
         if (remainingFoodCount == data.numDotsLeftElroy1()) {
-            elroy.setBoost(ElroyComponent.Boost.MEDIUM);
+            elroy.setBoost(ElroyComp.Boost.MEDIUM);
         } else if (remainingFoodCount == data.numDotsLeftElroy2()) {
-            elroy.setBoost(ElroyComponent.Boost.LARGE);
+            elroy.setBoost(ElroyComp.Boost.LARGE);
         }
     }
 }

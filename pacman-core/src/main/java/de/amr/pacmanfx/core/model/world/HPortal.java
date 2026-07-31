@@ -5,7 +5,7 @@ package de.amr.pacmanfx.core.model.world;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.model.GameEntity;
-import de.amr.pacmanfx.core.model.component.world.WorldNavigationComponent;
+import de.amr.pacmanfx.core.model.comp.world.WorldNavigationComp;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import org.tinylog.Logger;
 
@@ -47,7 +47,7 @@ public record HPortal(Vector2i leftBorderEntryTile, Vector2i rightBorderEntryTil
         requireNonNull(navigator);
         requireNonNull(actor);
 
-        final WorldNavigationComponent worldNavigation = actor.requireComponent(WorldNavigationComponent.class);
+        final WorldNavigationComp worldNavigation = actor.requireComponent(WorldNavigationComp.class);
 
         final Vector2i actorTile = WorldNavigationSystem.computeTile(actor);
         final float offsetX = WorldNavigationSystem.computeTileOffset(actor).x();

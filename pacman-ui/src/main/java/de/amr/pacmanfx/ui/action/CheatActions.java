@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.event.pac.PacEatsFoodEvent;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Ghost;
-import de.amr.pacmanfx.core.model.component.ghost.GhostState;
+import de.amr.pacmanfx.core.model.comp.ghost.GhostState;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.core.state.GameStateID;

@@ -2,13 +2,13 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core.model.component.ghost;
+package de.amr.pacmanfx.core.model.comp.ghost;
 
 import de.amr.pacmanfx.core.model.GameEntityComponent;
 
 import static java.util.Objects.requireNonNull;
 
-public class ElroyComponent implements GameEntityComponent {
+public class ElroyComp implements GameEntityComponent {
 
     public enum Boost { NONE, MEDIUM, LARGE }
 

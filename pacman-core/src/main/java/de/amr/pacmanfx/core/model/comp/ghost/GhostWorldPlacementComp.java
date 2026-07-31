@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core.model.component.ghost;
+package de.amr.pacmanfx.core.model.comp.ghost;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
@@ -15,7 +15,7 @@ import java.util.Set;
 import static de.amr.pacmanfx.core.model.world.WorldMap.halfTileRightOf;
 import static java.util.Objects.requireNonNull;
 
-public class GhostWorldPlacementComponent implements GameEntityComponent {
+public class GhostWorldPlacementComp implements GameEntityComponent {
 
     private House house;
 
@@ -23,7 +23,7 @@ public class GhostWorldPlacementComponent implements GameEntityComponent {
 
     private Vector2f startPosition;
 
-    public GhostWorldPlacementComponent() {
+    public GhostWorldPlacementComp() {
     }
 
     @Override

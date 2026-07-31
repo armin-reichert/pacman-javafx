@@ -10,7 +10,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.ActorAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnimComponent;
+import de.amr.pacmanfx.core.model.comp.spriteanim.SpriteAnimComp;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -67,10 +67,10 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene2D {
         final var factory = new ArcadeMsPacMan_ActorFactory();
 
         pacMan = factory.createPacMan();
-        pacMan.requireComponent(SpriteAnimComponent.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        pacMan.requireComponent(SpriteAnimComp.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         msPacMan = factory.createMsPacMan();
-        msPacMan.requireComponent(SpriteAnimComponent.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        msPacMan.requireComponent(SpriteAnimComp.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         clapperboard = new Clapperboard("2", "THE CHASE");
         clapperboard.position().set(tilesPx(3), tilesPx(10));

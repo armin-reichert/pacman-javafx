@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.core.model;
 
-import de.amr.pacmanfx.core.model.component.common.PositionComponent;
-import de.amr.pacmanfx.core.model.component.common.VisibilityComponent;
+import de.amr.pacmanfx.core.model.comp.common.PositionComp;
+import de.amr.pacmanfx.core.model.comp.common.VisibilityComp;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -25,8 +25,8 @@ public class GameEntity {
     public GameEntity() {
         name = getClass().getSimpleName() + "#" + Integer.toHexString(hashCode()); // default name
 
-        setComponent(PositionComponent.class, new PositionComponent());
-        setComponent(VisibilityComponent.class, new VisibilityComponent(false));
+        setComponent(PositionComp.class, new PositionComp());
+        setComponent(VisibilityComp.class, new VisibilityComp(false));
     }
 
     public <T extends GameEntityComponent> void setComponent(Class<T> type, T component) {
@@ -58,12 +58,12 @@ public class GameEntity {
         return Optional.ofNullable(component).map(componentClass::cast);
     }
 
-    public final PositionComponent position() {
-        return requireComponent(PositionComponent.class);
+    public final PositionComp position() {
+        return requireComponent(PositionComp.class);
     }
 
-    public final VisibilityComponent visibility() {
-        return requireComponent(VisibilityComponent.class);
+    public final VisibilityComp visibility() {
+        return requireComponent(VisibilityComp.class);
     }
 
     public void setName(String name) {

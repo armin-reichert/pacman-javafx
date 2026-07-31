@@ -6,7 +6,7 @@ package de.amr.pacmanfx.core.model.systems.pac;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.model.GameEntity;
-import de.amr.pacmanfx.core.model.component.world.WorldNavigationComponent;
+import de.amr.pacmanfx.core.model.comp.world.WorldNavigationComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
@@ -17,7 +17,7 @@ public class PacWorldMovementPolicy implements WorldMovementPolicy {
 
     @Override
     public boolean canTurnBack(GameEntity actor) {
-        final WorldNavigationComponent worldNavigation = actor.requireComponent(WorldNavigationComponent.class);
+        final WorldNavigationComp worldNavigation = actor.requireComponent(WorldNavigationComp.class);
         return worldNavigation.isNewTileEntered();
     }
 

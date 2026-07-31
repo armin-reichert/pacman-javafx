@@ -9,8 +9,8 @@ import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.actors.ActorAnimationID;
-import de.amr.pacmanfx.core.model.component.common.MovementComponent;
-import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnimComponent;
+import de.amr.pacmanfx.core.model.comp.common.MovementComp;
+import de.amr.pacmanfx.core.model.comp.spriteanim.SpriteAnimComp;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
@@ -42,9 +42,9 @@ public class Stork extends GameEntity {
 
     public Stork(SpriteAnimationContainer container) {
         name = "Beatrix von";
-        setComponent(MovementComponent.class, new MovementComponent());
-        setComponent(SpriteAnimComponent.class, new SpriteAnimComponent());
-        requireComponent(SpriteAnimComponent.class).setAnimations(new StorkAnimations(container));
+        setComponent(MovementComp.class, new MovementComp());
+        setComponent(SpriteAnimComp.class, new SpriteAnimComp());
+        requireComponent(SpriteAnimComp.class).setAnimations(new StorkAnimations(container));
     }
 
     public void setBagReleasedFromBeak(boolean released) {

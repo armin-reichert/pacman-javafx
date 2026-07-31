@@ -2,14 +2,14 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core.model.component.bonus;
+package de.amr.pacmanfx.core.model.comp.bonus;
 
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.model.GameEntityComponent;
 
 import java.util.Objects;
 
-public class BonusStateComponent implements GameEntityComponent {
+public class BonusStateComp implements GameEntityComponent {
 
     private boolean edibleStateExpired;
 
@@ -17,7 +17,7 @@ public class BonusStateComponent implements GameEntityComponent {
 
     private final TickTimer timer;
 
-    public BonusStateComponent() {
+    public BonusStateComp() {
         this.timer = new TickTimer("Bonus-Timer");    }
 
     public void setState(BonusState state) {

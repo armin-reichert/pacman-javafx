@@ -1,9 +1,9 @@
-package de.amr.pacmanfx.core.model.component.spriteanim;
+package de.amr.pacmanfx.core.model.comp.spriteanim;
 
 import de.amr.basics.spriteanim.SpriteAnimationAccess;
 import de.amr.pacmanfx.core.model.GameEntityComponent;
 
-public class SpriteAnimComponent implements GameEntityComponent {
+public class SpriteAnimComp implements GameEntityComponent {
 
     private SpriteAnimationAccess delegate = SpriteAnimationAccess.emptyAnimation();
 

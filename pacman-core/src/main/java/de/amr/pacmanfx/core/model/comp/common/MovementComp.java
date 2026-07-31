@@ -2,11 +2,11 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core.model.component.common;
+package de.amr.pacmanfx.core.model.comp.common;
 
 import de.amr.pacmanfx.core.model.GameEntityComponent;
 
-public class MovementComponent implements GameEntityComponent {
+public class MovementComp implements GameEntityComponent {
 
     private float velX;
     private float velY;

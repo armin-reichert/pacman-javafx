@@ -7,7 +7,7 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.core.model.component.world.WorldNavigationComponent;
+import de.amr.pacmanfx.core.model.comp.world.WorldNavigationComp;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -52,7 +52,7 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
             return;
         }
 
-        final WorldNavigationComponent worldNavigation = actor.requireComponent(WorldNavigationComponent.class);
+        final WorldNavigationComp worldNavigation = actor.requireComponent(WorldNavigationComp.class);
 
         ctx.setFill(Color.FORESTGREEN);
         if (actor instanceof Pac pac) {
@@ -82,7 +82,7 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
     }
 
     private void drawDirectionIndicator(GameEntity actor) {
-        final WorldNavigationComponent worldNavigation = actor.requireComponent(WorldNavigationComponent.class);
+        final WorldNavigationComp worldNavigation = actor.requireComponent(WorldNavigationComp.class);
 
         ctx.save();
         Vector2f center = WorldNavigationSystem.computeCenter(actor);

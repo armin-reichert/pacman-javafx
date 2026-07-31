@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.rules;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.Ghost;
-import de.amr.pacmanfx.core.model.component.ghost.ElroyComponent;
+import de.amr.pacmanfx.core.model.comp.ghost.ElroyComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
@@ -60,8 +60,8 @@ public class Arcade_ActorSpeedRules implements ActorSpeedRules {
     public float ghostSpeedAttacking(GameLevel level, Ghost ghost) {
         final int levelNumber = level.number();
         final LevelData data = ArcadePacMan_GameRules.levelData(levelNumber);
-        if (ghost.hasComponent(ElroyComponent.class)) {
-            return switch (ghost.requireComponent(ElroyComponent.class).boost()) {
+        if (ghost.hasComponent(ElroyComp.class)) {
+            return switch (ghost.requireComponent(ElroyComp.class).boost()) {
                 case NONE -> data.pctGhostSpeed()  * BASE_SPEED_ONE_PERCENT;
                 case MEDIUM -> data.pctElroy1Speed() * BASE_SPEED_ONE_PERCENT;
                 case LARGE -> data.pctElroy2Speed() * BASE_SPEED_ONE_PERCENT;

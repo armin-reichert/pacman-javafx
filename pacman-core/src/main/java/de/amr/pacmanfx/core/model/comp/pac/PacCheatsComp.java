@@ -2,13 +2,13 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core.model.component.pac;
+package de.amr.pacmanfx.core.model.comp.pac;
 
 import de.amr.pacmanfx.core.model.GameEntityComponent;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
-public class PacCheatsComponent implements GameEntityComponent {
+public class PacCheatsComp implements GameEntityComponent {
 
     private final BooleanProperty immune = new SimpleBooleanProperty(false);
 

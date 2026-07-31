@@ -2,12 +2,12 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core.model.component.common;
+package de.amr.pacmanfx.core.model.comp.common;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.model.GameEntityComponent;
 
-public final class PositionComponent implements GameEntityComponent {
+public final class PositionComp implements GameEntityComponent {
 
     public float x;
     public float y;

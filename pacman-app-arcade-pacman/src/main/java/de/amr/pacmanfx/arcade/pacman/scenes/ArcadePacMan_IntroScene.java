@@ -17,9 +17,9 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.actors.ActorAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
-import de.amr.pacmanfx.core.model.component.ghost.GhostState;
+import de.amr.pacmanfx.core.model.comp.ghost.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnimComponent;
+import de.amr.pacmanfx.core.model.comp.spriteanim.SpriteAnimComp;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -35,8 +35,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.core.model.component.ghost.GhostState.EATEN;
-import static de.amr.pacmanfx.core.model.component.ghost.GhostState.FRIGHTENED;
+import static de.amr.pacmanfx.core.model.comp.ghost.GhostState.EATEN;
+import static de.amr.pacmanfx.core.model.comp.ghost.GhostState.FRIGHTENED;
 
 /**
  * The ghosts are presented one by one, then Pac-Man is chased by the ghosts, turns the cards and hunts the ghosts himself.
@@ -126,7 +126,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
         final var factory = ArcadePacMan_ActorFactory.instance();
 
         pacMan = factory.createPacMan();
-        pacMan.requireComponent(SpriteAnimComponent.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        pacMan.requireComponent(SpriteAnimComp.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         ghosts[0] = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GhostPersonality.RED_GHOST_SHADOW);
         ghosts[1] = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GhostPersonality.PINK_GHOST_SPEEDY);

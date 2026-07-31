@@ -7,9 +7,9 @@ package de.amr.pacmanfx.core.model.systems.ghost;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.ActorAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
-import de.amr.pacmanfx.core.model.component.ghost.GhostState;
+import de.amr.pacmanfx.core.model.comp.ghost.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.core.model.component.ghost.GhostStateComponent;
+import de.amr.pacmanfx.core.model.comp.ghost.GhostStateComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.systems.pac.PacPowerSystem;
@@ -47,7 +47,7 @@ public class GhostStateSystem {
             //TODO return from function?
         }
         
-        ghost.requireComponent(GhostStateComponent.class).setState(newState);
+        ghost.requireComponent(GhostStateComp.class).setState(newState);
 
         initAnimation(ghost, gameContext.systems().spriteAnim());
     }

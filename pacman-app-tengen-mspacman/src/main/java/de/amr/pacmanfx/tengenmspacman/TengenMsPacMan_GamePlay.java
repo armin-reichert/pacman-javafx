@@ -14,9 +14,9 @@ import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
 import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.*;
-import de.amr.pacmanfx.core.model.component.BonusMoveAndJumpAnimationComponent;
-import de.amr.pacmanfx.core.model.component.bonus.BonusState;
-import de.amr.pacmanfx.core.model.component.ghost.GhostState;
+import de.amr.pacmanfx.core.model.comp.bonus.BonusMoveAndJumpComp;
+import de.amr.pacmanfx.core.model.comp.bonus.BonusState;
+import de.amr.pacmanfx.core.model.comp.ghost.GhostState;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
@@ -233,7 +233,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
         final int symbolCode = level.bonusSymbolCode(level.currentBonusIndex());
         final Bonus bonus = new Bonus(symbolCode, model.rules().scoringRules().pointsForBonus(symbolCode));
-        bonus.setComponent(BonusMoveAndJumpAnimationComponent.class, new BonusMoveAndJumpAnimationComponent());
+        bonus.setComponent(BonusMoveAndJumpComp.class, new BonusMoveAndJumpComp());
         bonus.setMazeRoute(gameContext, route, leftToRight);
         bonus.showEdibleAndStartWandering(gameContext, model.rules().actorSpeedRules().bonusSpeed(level));
         Logger.debug("Moving bonus created, route: {} ({})", route, leftToRight ? "left to right" : "right to left");

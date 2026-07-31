@@ -5,7 +5,7 @@ package de.amr.pacmanfx.tengenmspacman.gamescene;
 
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.model.GameEntity;
-import de.amr.pacmanfx.core.model.component.world.WorldNavigationComponent;
+import de.amr.pacmanfx.core.model.comp.world.WorldNavigationComp;
 import de.amr.pacmanfx.core.model.world.TerrainLayer;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -109,7 +109,7 @@ public class PlayScene2DCamera extends ParallelCamera {
     }
 
     private void updateTrackingMode(double mapHeightPixels, GameEntity movingActor) {
-        final WorldNavigationComponent worldNavigation = movingActor.requireComponent(WorldNavigationComponent.class);
+        final WorldNavigationComp worldNavigation = movingActor.requireComponent(WorldNavigationComp.class);
 
         double relY = movingActor.position().y / mapHeightPixels;
         if (relY < 0.5 || relY < 0.6 && worldNavigation.moveDir() == Direction.UP) {

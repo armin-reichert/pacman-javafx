@@ -9,11 +9,11 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
-import de.amr.pacmanfx.core.model.component.BonusMoveAndJumpAnimationComponent;
-import de.amr.pacmanfx.core.model.component.bonus.BonusState;
-import de.amr.pacmanfx.core.model.component.bonus.BonusStateComponent;
-import de.amr.pacmanfx.core.model.component.common.MovementComponent;
-import de.amr.pacmanfx.core.model.component.world.WorldNavigationComponent;
+import de.amr.pacmanfx.core.model.comp.bonus.BonusMoveAndJumpComp;
+import de.amr.pacmanfx.core.model.comp.bonus.BonusState;
+import de.amr.pacmanfx.core.model.comp.bonus.BonusStateComp;
+import de.amr.pacmanfx.core.model.comp.common.MovementComp;
+import de.amr.pacmanfx.core.model.comp.world.WorldNavigationComp;
 import org.tinylog.Logger;
 
 import java.util.List;
@@ -37,9 +37,9 @@ public class Bonus extends GameEntity implements UpdatableEntity {
         this.points = Validations.requireNonNegativeInt(points);
         this.name = "Bonus-symbol:%d-points:%d".formatted(symbolCode, points);
 
-        setComponent(MovementComponent.class, new MovementComponent());
-        setComponent(WorldNavigationComponent.class, new WorldNavigationComponent());
-        setComponent(BonusStateComponent.class, new BonusStateComponent());
+        setComponent(MovementComp.class, new MovementComp());
+        setComponent(WorldNavigationComp.class, new WorldNavigationComp());
+        setComponent(BonusStateComp.class, new BonusStateComp());
         // To add support for animated maze walking, the following component has to be added
         //setComponent(BonusJumpAnimation.class, new BonusJumpAnimation());
 
@@ -52,21 +52,21 @@ public class Bonus extends GameEntity implements UpdatableEntity {
         gameContext.systems().bonusState().update(gameContext, this);
     }
 
-    public MovementComponent movement() {
-        return requireComponent(MovementComponent.class);
+    public MovementComp movement() {
+        return requireComponent(MovementComp.class);
     }
 
-    public WorldNavigationComponent worldNavigation() {
-        return requireComponent(WorldNavigationComponent.class);
+    public WorldNavigationComp worldNavigation() {
+        return requireComponent(WorldNavigationComp.class);
     }
 
-    public BonusStateComponent bonusState() {
-        return requireComponent(BonusStateComponent.class);
+    public BonusStateComp bonusState() {
+        return requireComponent(BonusStateComp.class);
     }
 
-    public Optional<BonusMoveAndJumpAnimationComponent> optMoveAndJumpAnimation() {
-        return hasComponent(BonusMoveAndJumpAnimationComponent.class)
-            ? Optional.of(requireComponent(BonusMoveAndJumpAnimationComponent.class))
+    public Optional<BonusMoveAndJumpComp> optMoveAndJumpAnimation() {
+        return hasComponent(BonusMoveAndJumpComp.class)
+            ? Optional.of(requireComponent(BonusMoveAndJumpComp.class))
             : Optional.empty();
     }
 

@@ -2,14 +2,14 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core.model.component;
+package de.amr.pacmanfx.core.model.comp.bonus;
 
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.model.GameEntityComponent;
 import de.amr.pacmanfx.core.model.actors.Bonus;
 import de.amr.pacmanfx.core.steering.RouteGuidedActorSteering;
 
-public class BonusMoveAndJumpAnimationComponent implements GameEntityComponent {
+public class BonusMoveAndJumpComp implements GameEntityComponent {
 
     private static final int PULSE_CHANGE_TICKS = 10;
 
@@ -17,7 +17,7 @@ public class BonusMoveAndJumpAnimationComponent implements GameEntityComponent {
     private RouteGuidedActorSteering<Bonus> routeNavigation;
     private boolean targetReached;
 
-    public BonusMoveAndJumpAnimationComponent() {
+    public BonusMoveAndJumpComp() {
         pulse = new Pulse(PULSE_CHANGE_TICKS, Pulse.State.OFF);
     }
 

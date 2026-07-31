@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.model;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.core.model.component.ghost.ElroyComponent;
+import de.amr.pacmanfx.core.model.comp.ghost.ElroyComp;
 
 public class ArcadePacMan_ActorFactory {
 
@@ -29,7 +29,7 @@ public class ArcadePacMan_ActorFactory {
 
     public Ghost createRedGhost() {
         final Ghost ghost = new Ghost(GhostPersonality.RED_GHOST_SHADOW, "Blinky");
-        ghost.setComponent(ElroyComponent.class, new ElroyComponent());
+        ghost.setComponent(ElroyComp.class, new ElroyComp());
         ghost.reset();
         return ghost;
     }

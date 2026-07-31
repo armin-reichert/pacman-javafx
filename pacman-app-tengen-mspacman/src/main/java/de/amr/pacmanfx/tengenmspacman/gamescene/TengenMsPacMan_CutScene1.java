@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.actors.ActorAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.core.model.component.spriteanim.SpriteAnimComponent;
+import de.amr.pacmanfx.core.model.comp.spriteanim.SpriteAnimComp;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -114,13 +114,13 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
         final var factory = TengenMsPacMan_ActorFactory.instance();
 
         msPacMan = factory.createMsPacMan();
-        msPacMan.requireComponent(SpriteAnimComponent.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        msPacMan.requireComponent(SpriteAnimComp.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
         msPacMan.position().set(RIGHT_BORDER, LOWER_LANE);
         navigator.setMoveDir(msPacMan, Direction.LEFT);
         navigator.setSpeed(msPacMan, 0);
 
         pacMan = factory.createPacMan();
-        pacMan.requireComponent(SpriteAnimComponent.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        pacMan.requireComponent(SpriteAnimComp.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
         pacMan.position().set(LEFT_BORDER, UPPER_LANE);
         navigator.setMoveDir(pacMan, Direction.RIGHT);
         navigator.setSpeed(pacMan, 0);
@@ -138,8 +138,8 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
         navigator.setSpeed(pinky, 0);
 
         heart = new GameEntity();
-        heart.setComponent(SpriteAnimComponent.class, new SpriteAnimComponent());
-        heart.requireComponent(SpriteAnimComponent.class).setAnimations(singleSpriteAnimation(spriteSheet.findSprite(SpriteID.HEART)));
+        heart.setComponent(SpriteAnimComp.class, new SpriteAnimComp());
+        heart.requireComponent(SpriteAnimComp.class).setAnimations(singleSpriteAnimation(spriteSheet.findSprite(SpriteID.HEART)));
 
         collided = false;
 

@@ -10,7 +10,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.actors.Ghost;
-import de.amr.pacmanfx.core.model.component.world.WorldNavigationComponent;
+import de.amr.pacmanfx.core.model.comp.world.WorldNavigationComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.world.WorldMovementPolicy;
 import org.tinylog.Logger;
@@ -40,7 +40,7 @@ public class RandomWorldMovementSystem {
         requireNonNull(ghost);
 
         final GameSystems sys = gameContext.systems();
-        final WorldNavigationComponent navigation = ghost.requireComponent(WorldNavigationComponent.class);
+        final WorldNavigationComp navigation = ghost.requireComponent(WorldNavigationComp.class);
         final GameLevel level = gameContext.assertLevel();
 
         final Vector2i tile = WorldNavigationSystem.computeTile(ghost);
@@ -58,7 +58,7 @@ public class RandomWorldMovementSystem {
 
     // try a random direction towards an accessible tile, do not turn back unless there is no other way
     private Direction computeRoamingDirection(GameLevel level, GameEntity actor, WorldMovementPolicy policy, Vector2i currentTile) {
-        final WorldNavigationComponent navigation = actor.requireComponent(WorldNavigationComponent.class);
+        final WorldNavigationComp navigation = actor.requireComponent(WorldNavigationComp.class);
 
         final Direction oppositeDir = navigation.moveDir().opposite();
         Direction selectedDir = choosePseudoRandomDirection();

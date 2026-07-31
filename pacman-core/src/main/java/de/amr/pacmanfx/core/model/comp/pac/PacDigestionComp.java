@@ -2,11 +2,11 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core.model.component.pac;
+package de.amr.pacmanfx.core.model.comp.pac;
 
 import de.amr.pacmanfx.core.model.GameEntityComponent;
 
-public class PacDigestionComponent implements GameEntityComponent {
+public class PacDigestionComp implements GameEntityComponent {
 
     public static final byte REST_FOREVER = -1;
 

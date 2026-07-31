@@ -7,9 +7,9 @@ package de.amr.pacmanfx.core.model.systems.bonus;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.bonus.BonusExpiredEvent;
 import de.amr.pacmanfx.core.model.actors.Bonus;
-import de.amr.pacmanfx.core.model.component.BonusMoveAndJumpAnimationComponent;
-import de.amr.pacmanfx.core.model.component.bonus.BonusState;
-import de.amr.pacmanfx.core.model.component.bonus.BonusStateComponent;
+import de.amr.pacmanfx.core.model.comp.bonus.BonusMoveAndJumpComp;
+import de.amr.pacmanfx.core.model.comp.bonus.BonusState;
+import de.amr.pacmanfx.core.model.comp.bonus.BonusStateComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 
@@ -24,15 +24,15 @@ public class BonusStateSystem {
 
         final GameSystems sys = gameContext.systems();
         final GameLevel level = gameContext.assertLevel();
-        final BonusStateComponent bonusState = bonus.requireComponent(BonusStateComponent.class);
+        final BonusStateComp bonusState = bonus.requireComponent(BonusStateComp.class);
 
         bonusState.timer().doTick();
 
         switch (bonusState.state()) {
             case EDIBLE -> {
-                final Optional<BonusMoveAndJumpAnimationComponent> animationComp = bonus.optMoveAndJumpAnimation();
+                final Optional<BonusMoveAndJumpComp> animationComp = bonus.optMoveAndJumpAnimation();
                 if (animationComp.isPresent()) {
-                    bonus.optComponent(BonusMoveAndJumpAnimationComponent.class).ifPresent(animation -> {
+                    bonus.optComponent(BonusMoveAndJumpComp.class).ifPresent(animation -> {
                         sys.bonusJumpAnimation().update(level, bonus);
                         bonusState.setEdibleStateExpired(animation.targetReached() || bonusState.timer().hasExpired());
                     });
@@ -57,7 +57,7 @@ public class BonusStateSystem {
     }
 
     public void setInactive(Bonus bonus, GameSystems sys) {
-        final BonusStateComponent bonusState = bonus.requireComponent(BonusStateComponent.class);
+        final BonusStateComp bonusState = bonus.requireComponent(BonusStateComp.class);
 
         bonusState.setState(BonusState.INACTIVE);
         bonusState.timer().restartIndefinitely();
@@ -70,7 +70,7 @@ public class BonusStateSystem {
     }
 
     public void showEdibleForSeconds(Bonus bonus, float seconds) {
-        final BonusStateComponent bonusState = bonus.requireComponent(BonusStateComponent.class);
+        final BonusStateComp bonusState = bonus.requireComponent(BonusStateComp.class);
 
         bonusState.setState(BonusState.EDIBLE);
         bonusState.timer().restartSeconds(seconds);
@@ -78,7 +78,7 @@ public class BonusStateSystem {
     }
 
     public void showEdibleAndStartWandering(GameSystems sys, Bonus bonus, float speed) {
-        final BonusStateComponent bonusState = bonus.requireComponent(BonusStateComponent.class);
+        final BonusStateComp bonusState = bonus.requireComponent(BonusStateComp.class);
 
         bonusState.setState(BonusState.EDIBLE);
         bonusState.timer().restartIndefinitely();
@@ -95,7 +95,7 @@ public class BonusStateSystem {
 
     public void showEatenForSeconds(GameSystems sys, Bonus bonus, float seconds) {
         requireNonNull(sys);
-        final BonusStateComponent bonusState = bonus.requireComponent(BonusStateComponent.class);
+        final BonusStateComp bonusState = bonus.requireComponent(BonusStateComp.class);
 
         bonusState.setState(BonusState.EATEN);
         bonusState.timer().restartSeconds(seconds);

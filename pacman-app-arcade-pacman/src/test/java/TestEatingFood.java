@@ -19,7 +19,7 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.HUDState;
 import de.amr.pacmanfx.core.model.actors.Ghost;
-import de.amr.pacmanfx.core.model.component.ghost.ElroyComponent;
+import de.amr.pacmanfx.core.model.comp.ghost.ElroyComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.DefaultGameSystems;
 import de.amr.pacmanfx.core.model.world.FoodLayer;
@@ -200,29 +200,29 @@ public class TestEatingFood {
     public void testCruiseElroyMode() {
         context.model().optLevel().ifPresent(level -> {
             final Ghost blinky = level.ghost(GhostPersonality.RED_GHOST_SHADOW);
-            final ElroyComponent elroy = blinky.requireComponent(ElroyComponent.class);
+            final ElroyComp elroy = blinky.requireComponent(ElroyComp.class);
             final FoodLayer foodLayer = level.worldMap().foodLayer();
             final LevelData data = ArcadePacMan_GameRules.levelData(level.number());
             while (foodLayer.remainingFoodCount() > data.numDotsLeftElroy1()) {
-                assertEquals(ElroyComponent.Boost.NONE, elroy.boost());
+                assertEquals(ElroyComp.Boost.NONE, elroy.boost());
                 eatNextPellet(level);
             }
-            assertEquals(ElroyComponent.Boost.MEDIUM, elroy.boost());
+            assertEquals(ElroyComp.Boost.MEDIUM, elroy.boost());
             while (foodLayer.remainingFoodCount() > data.numDotsLeftElroy2()) {
-                assertEquals(ElroyComponent.Boost.MEDIUM, elroy.boost());
+                assertEquals(ElroyComp.Boost.MEDIUM, elroy.boost());
                 eatNextPellet(level);
             }
-            assertEquals(ElroyComponent.Boost.LARGE, elroy.boost());
+            assertEquals(ElroyComp.Boost.LARGE, elroy.boost());
             while (foodLayer.remainingFoodCount() > foodLayer.energizerTiles().size()) {
-                assertEquals(ElroyComponent.Boost.LARGE, elroy.boost());
+                assertEquals(ElroyComp.Boost.LARGE, elroy.boost());
                 eatNextPellet(level);
             }
-            assertEquals(ElroyComponent.Boost.LARGE, elroy.boost());
+            assertEquals(ElroyComp.Boost.LARGE, elroy.boost());
             while (foodLayer.remainingFoodCount() > 0) {
-                assertEquals(ElroyComponent.Boost.LARGE, elroy.boost());
+                assertEquals(ElroyComp.Boost.LARGE, elroy.boost());
                 eatNextEnergizer(level);
             }
-            assertEquals(ElroyComponent.Boost.LARGE, elroy.boost());
+            assertEquals(ElroyComp.Boost.LARGE, elroy.boost());
         });
     }
 

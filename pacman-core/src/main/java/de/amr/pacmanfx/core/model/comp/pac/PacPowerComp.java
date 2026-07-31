@@ -2,12 +2,12 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core.model.component.pac;
+package de.amr.pacmanfx.core.model.comp.pac;
 
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.model.GameEntityComponent;
 
-public class PacPowerComponent implements GameEntityComponent {
+public class PacPowerComp implements GameEntityComponent {
 
     private final TickTimer timer = new TickTimer("PacPower-Timer");
 

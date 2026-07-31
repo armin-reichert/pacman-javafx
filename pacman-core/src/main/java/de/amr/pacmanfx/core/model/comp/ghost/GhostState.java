@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.core.model.component.ghost;
+package de.amr.pacmanfx.core.model.comp.ghost;
 
 /**
  * A ghost is exactly in one of these states at any point in time.

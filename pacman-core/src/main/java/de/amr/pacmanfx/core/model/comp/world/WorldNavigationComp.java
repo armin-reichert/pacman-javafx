@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core.model.component.world;
+package de.amr.pacmanfx.core.model.comp.world;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
@@ -15,7 +15,7 @@ import java.util.Optional;
 
 import static de.amr.basics.math.Direction.RIGHT;
 
-public class WorldNavigationComponent implements GameEntityComponent {
+public class WorldNavigationComp implements GameEntityComponent {
 
     public static final Direction DEFAULT_MOVE_DIR = RIGHT;
     public static final Direction DEFAULT_WISH_DIR = RIGHT;
@@ -39,7 +39,7 @@ public class WorldNavigationComponent implements GameEntityComponent {
     //TODO: store in frame context?
     public final WorldNavigationInfo info = new WorldNavigationInfo();
 
-    public WorldNavigationComponent() {}
+    public WorldNavigationComp() {}
 
     @Override
     public void reset() {
