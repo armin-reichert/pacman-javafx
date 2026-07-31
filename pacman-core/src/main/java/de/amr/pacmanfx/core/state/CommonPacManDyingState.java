@@ -5,11 +5,11 @@
 package de.amr.pacmanfx.core.state;
 
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.core.event.pac.PacDeadEvent;
 import de.amr.pacmanfx.core.event.pac.PacDyingEvent;
-import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
-import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.GameEntity;
+import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.ActorAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.comp.ghost.ElroyComp;
@@ -52,10 +52,10 @@ public class CommonPacManDyingState extends GameState {
         level.huntingRules().stop();
 
         level.entities().ghosts().forEach(ghost -> ghost.optComponent(ElroyComp.class).ifPresent(elroy -> elroy.setEnabled(false)));
-        level.entities().optBonus().ifPresent(bonus -> sys.bonusState().setInactive(bonus, sys.bonusMoveAndJump()));
+        level.entities().optBonus().ifPresent(bonus -> sys.bonusState().setInactive(bonus));
 
         // Pac-Man stops moving and is prepared for "dying" animation
-        sys.navigator().setSpeed(pac, 0);
+        sys.worldNavigator().setSpeed(pac, 0);
         sys.pacPower().reset(pac);
 
         sys.spriteAnim().stopSelected(pac);
@@ -97,7 +97,7 @@ public class CommonPacManDyingState extends GameState {
         }
         else if (tick == hidePacTick) {
             pac.hide();
-            level.optBonus().ifPresent(bonus -> sys.bonusState().setInactive(bonus, sys.bonusMoveAndJump()));
+            level.optBonus().ifPresent(bonus -> sys.bonusState().setInactive(bonus));
         }
         else if (tick == pacDeadTick) {
             gameContext.eventManager().publishGameEvent(new PacDeadEvent(pac));

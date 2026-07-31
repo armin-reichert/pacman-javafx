@@ -59,7 +59,7 @@ public final class PacPowerSystem {
         final GameSystems sys = gameContext.systems();
 
         final GameLevel level = gameContext.assertLevel();
-        level.ghostsInAnyOfStates(TURNBACK_STATES).forEach(sys.navigator()::requestTurnBack);
+        level.ghostsInAnyOfStates(TURNBACK_STATES).forEach(sys.worldNavigator()::requestTurnBack);
 
         final float seconds = level.pacPowerSeconds();
         if (seconds > 0) {

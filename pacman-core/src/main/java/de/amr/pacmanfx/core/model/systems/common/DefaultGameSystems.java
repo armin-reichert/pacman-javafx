@@ -108,7 +108,7 @@ public class DefaultGameSystems implements GameSystems {
     }
 
     @Override
-    public WorldNavigationSystem navigator() {
+    public WorldNavigationSystem worldNavigator() {
         return navigator;
     }
 

@@ -79,18 +79,18 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene2D {
     }
 
     private void startBigPacManChasingBlinky(GameSystems sys) {
-        sys.navigator().placeAtTile(pacMan, -3, 18, 0, 6.5f);
-        sys.navigator().setMoveDir(pacMan, Direction.RIGHT);
+        sys.worldNavigator().placeAtTile(pacMan, -3, 18, 0, 6.5f);
+        sys.worldNavigator().setMoveDir(pacMan, Direction.RIGHT);
 
         sys.spriteAnim().select(pacMan, ArcadePacMan_PacAnimations.AnimationID.ANIM_BIG_PAC_MAN);
         sys.spriteAnim().playSelected(pacMan);
     }
 
     private void startBlinkyEscapingPacMan(GameSystems sys) {
-        sys.navigator().placeAtTile(blinky, -2, 20, 4, 0);
-        sys.navigator().setMoveDir(blinky, Direction.RIGHT);
-        sys.navigator().setWishDir(blinky, Direction.RIGHT);
-        sys.navigator().setSpeed(blinky, 0.75f);
+        sys.worldNavigator().placeAtTile(blinky, -2, 20, 4, 0);
+        sys.worldNavigator().setMoveDir(blinky, Direction.RIGHT);
+        sys.worldNavigator().setWishDir(blinky, Direction.RIGHT);
+        sys.worldNavigator().setSpeed(blinky, 0.75f);
 
         sys.spriteAnim().select(blinky, ActorAnimationID.GHOST_FRIGHTENED);
         sys.spriteAnim().playSelected(blinky);
@@ -99,19 +99,19 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene2D {
     private void startBlinkyChasingPacMan(GameSystems sys) {
         pacMan.show();
 
-        sys.navigator().placeAtTile(pacMan, 29, 20);
-        sys.navigator().setMoveDir(pacMan, Direction.LEFT);
-        sys.navigator().setSpeed(pacMan, 1.25f);
+        sys.worldNavigator().placeAtTile(pacMan, 29, 20);
+        sys.worldNavigator().setMoveDir(pacMan, Direction.LEFT);
+        sys.worldNavigator().setSpeed(pacMan, 1.25f);
 
         sys.spriteAnim().select(pacMan, ActorAnimationID.PAC_MUNCHING);
         sys.spriteAnim().playSelected(pacMan);
 
         blinky.show();
 
-        sys.navigator().placeAtTile(blinky, 32, 20);
-        sys.navigator().setMoveDir(blinky, Direction.LEFT);
-        sys.navigator().setWishDir(blinky, Direction.LEFT);
-        sys.navigator().setSpeed(blinky, 1.3f);
+        sys.worldNavigator().placeAtTile(blinky, 32, 20);
+        sys.worldNavigator().setMoveDir(blinky, Direction.LEFT);
+        sys.worldNavigator().setWishDir(blinky, Direction.LEFT);
+        sys.worldNavigator().setSpeed(blinky, 1.3f);
 
         sys.spriteAnim().select(blinky, ActorAnimationID.GHOST_NORMAL);
         sys.spriteAnim().playSelected(blinky);

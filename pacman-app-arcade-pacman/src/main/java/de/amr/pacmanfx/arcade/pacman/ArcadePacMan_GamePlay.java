@@ -92,7 +92,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         requireNonNull(gameContext);
         requireValidLevelNumber(levelNumber);
 
-        final WorldNavigationSystem navigator = gameContext.systems().navigator();
+        final WorldNavigationSystem navigator = gameContext.systems().worldNavigator();
 
         final GameModel model = gameContext.model();
         final WorldMap worldMap = model.mapSelector().supplyWorldMap(levelNumber);
@@ -137,7 +137,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         final var factory = ArcadePacMan_ActorFactory.instance();
         final Pac pacMan = factory.createPacMan();
         pacMan.setAutomaticSteering(new RuleGuidedPacSteering(
-            sys.navigator(), sys.pacWorldMovementPolicy(), sys.pacPower()
+            sys.worldNavigator(), sys.pacWorldMovementPolicy(), sys.pacPower()
         ));
         level.setPac(pacMan);
     }
@@ -178,7 +178,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         pac.cheats().setUsingAutopilot(true);
 
         final var demoLevelSteering = new RouteGuidedActorSteering<Pac>(
-            sys.navigator(), sys.pacWorldMovementPolicy(), DEMO_LEVEL_ROUTE
+            sys.worldNavigator(), sys.pacWorldMovementPolicy(), DEMO_LEVEL_ROUTE
         );
         pac.setAutomaticSteering(demoLevelSteering);
         demoLevelSteering.init();

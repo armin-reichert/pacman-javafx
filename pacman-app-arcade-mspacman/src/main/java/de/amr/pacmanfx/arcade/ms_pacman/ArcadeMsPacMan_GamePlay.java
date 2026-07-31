@@ -46,7 +46,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         requireNonNull(gameContext);
         requireValidLevelNumber(levelNumber);
 
-        final WorldNavigationSystem navigator = gameContext.systems().navigator();
+        final WorldNavigationSystem navigator = gameContext.systems().worldNavigator();
 
         final GameModel model = gameContext.model();
         final WorldMap worldMap = model.mapSelector().supplyWorldMap(levelNumber);
@@ -93,7 +93,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         final var factory = new ArcadeMsPacMan_ActorFactory();
         final Pac msPacMan = factory.createMsPacMan();
         msPacMan.setAutomaticSteering(new RuleGuidedPacSteering(
-            sys.navigator(), sys.pacWorldMovementPolicy(), sys.pacPower()
+            sys.worldNavigator(), sys.pacWorldMovementPolicy(), sys.pacPower()
         ));
         level.setPac(msPacMan);
     }
@@ -131,7 +131,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         pac.cheats().setUsingAutopilot(true);
 
         final var demoLevelSteering = new RuleGuidedPacSteering(
-            sys.navigator(),
+            sys.worldNavigator(),
             sys.pacWorldMovementPolicy(),
             sys.pacPower()
         );
@@ -191,7 +191,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
             bonus = Bonus.createMovingBonus(symbolCode, value);
             computeBonusRoute(gameContext, bonus, terrain, house);
             final float speed = model.rules().actorSpeedRules().bonusSpeed(level);
-            sys.bonusState().showEdibleAndStartWandering(bonus, speed, sys.bonusMoveAndJump());
+            sys.bonusState().showEdibleAndStartWandering(bonus, speed, sys.worldNavigator(), sys.bonusMoveAndJump());
         }
 
         level.setBonus(bonus);

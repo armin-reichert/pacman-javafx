@@ -4,15 +4,13 @@
 
 package de.amr.pacmanfx.core.model.systems.bonus;
 
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.event.bonus.BonusExpiredEvent;
 import de.amr.pacmanfx.core.model.actors.Bonus;
-import de.amr.pacmanfx.core.model.comp.bonus.MoveAndJumpComp;
 import de.amr.pacmanfx.core.model.comp.bonus.BonusState;
 import de.amr.pacmanfx.core.model.comp.bonus.BonusStateComp;
+import de.amr.pacmanfx.core.model.comp.bonus.MoveAndJumpComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 
 import static java.util.Objects.requireNonNull;
@@ -45,14 +43,14 @@ public class BonusStateSystem {
                     stateComp.setEdibleStateExpired(stateComp.timer().hasExpired());
                 }
                 if (stateComp.edibleStateExpired()) {
-                    setInactive(bonus, moveAndJumpSystem);
+                    setInactive(bonus);
                     eventManager.publishGameEvent(new BonusExpiredEvent(bonus));
                 }
             }
 
             case EATEN -> {
                 if (stateComp.timer().hasExpired()) {
-                    setInactive(bonus, moveAndJumpSystem);
+                    setInactive(bonus);
                     eventManager.publishGameEvent(new BonusExpiredEvent(bonus));
                 }
             }
@@ -61,9 +59,7 @@ public class BonusStateSystem {
         }
     }
 
-    public void setInactive(Bonus bonus, BonusMoveAndJumpSystem bonusMoveAndJumpSystem) {
-        requireNonNull(bonusMoveAndJumpSystem);
-
+    public void setInactive(Bonus bonus) {
         bonus.hide();
 
         final BonusStateComp stateComp = bonus.bonusStateComp();
@@ -74,7 +70,7 @@ public class BonusStateSystem {
             navigator.setSpeed(bonus, 0);
         }
 
-        bonus.optMoveAndJump().ifPresent(bonusMoveAndJumpSystem::reset);
+        bonus.optMoveAndJump().ifPresent(moveAndJumpSystem::reset);
     }
 
     public void showEdibleForSeconds(Bonus bonus, float seconds) {
@@ -87,7 +83,11 @@ public class BonusStateSystem {
         stateComp.timer().restartSeconds(seconds);
     }
 
-    public void showEdibleAndStartWandering(Bonus bonus, float speed, BonusMoveAndJumpSystem moveAndJumpSystem) {
+    public void showEdibleAndStartWandering(
+        Bonus bonus, float speed,
+        WorldNavigationSystem navigator,
+        BonusMoveAndJumpSystem moveAndJumpSystem
+    ) {
         requireNonNull(bonus);
 
         final BonusStateComp stateComp = bonus.bonusStateComp();
@@ -97,11 +97,9 @@ public class BonusStateSystem {
         bonus.show();
 
         if (bonus.optMovement().isPresent()) {
-            navigator.setSpeed(bonus, speed);
+            this.navigator.setSpeed(bonus, speed);
         }
-
-        //TODO use system method:
-        bonus.optWorldNavigation().ifPresent(worldNavigation -> worldNavigation.setTargetTile(null));
+        navigator.clearTargetTile(bonus);
         bonus.optMoveAndJump().ifPresent(moveAndJumpSystem::start);
     }
 

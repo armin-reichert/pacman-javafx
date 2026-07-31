@@ -75,7 +75,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
     @Override
     public GameLevel createLevel(GameContext gameContext, int levelNumber, boolean demoLevel) {
-        final WorldNavigationSystem navigator = gameContext.systems().navigator();
+        final WorldNavigationSystem navigator = gameContext.systems().worldNavigator();
 
         final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) gameContext.model();
 
@@ -142,7 +142,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         pac.cheats().setUsingAutopilot(true);
 
         final var demoLevelSteering = new RuleGuidedPacSteering(
-            sys.navigator(), sys.pacWorldMovementPolicy(), sys.pacPower()
+            sys.worldNavigator(), sys.pacWorldMovementPolicy(), sys.pacPower()
         );
         pac.setAutomaticSteering(demoLevelSteering);
         demoLevelSteering.init();
@@ -238,7 +238,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final float speed = model.rules().actorSpeedRules().bonusSpeed(level);
         final Bonus bonus = Bonus.createMovingBonus(symbolCode, value);
         sys.bonusMoveAndJump().setRoute(bonus, route, leftToRight);
-        sys.bonusState().showEdibleAndStartWandering(bonus, speed, sys.bonusMoveAndJump());
+        sys.bonusState().showEdibleAndStartWandering(bonus, speed, sys.worldNavigator(), sys.bonusMoveAndJump());
 
         level.setBonus(bonus);
         eventManager.publishGameEvent(new BonusActivatedEvent(bonus));
@@ -252,7 +252,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final Pac msPacMan = factory.createMsPacMan();
 
         msPacMan.setAutomaticSteering(new RuleGuidedPacSteering(
-            sys.navigator(), sys.pacWorldMovementPolicy(), sys.pacPower()
+            sys.worldNavigator(), sys.pacWorldMovementPolicy(), sys.pacPower()
         ));
         model.activatePacBooster(gameContext, msPacMan, model.pacBoosterMode() == PacBooster.ALWAYS_ON);
 

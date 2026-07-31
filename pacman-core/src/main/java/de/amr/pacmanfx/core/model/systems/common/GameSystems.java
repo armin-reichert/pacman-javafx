@@ -21,7 +21,7 @@ public interface GameSystems {
 
     MovementSystem motor();
 
-    WorldNavigationSystem navigator();
+    WorldNavigationSystem worldNavigator();
 
     RandomWorldMovementSystem roamingNavigator();
 

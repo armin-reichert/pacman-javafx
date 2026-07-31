@@ -99,12 +99,12 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene2D {
     }
 
     private void enterStateChasing(GameSystems sys) {
-        sys.navigator().setMoveDir(pacMan, Direction.RIGHT);
+        sys.worldNavigator().setMoveDir(pacMan, Direction.RIGHT);
 
         sys.spriteAnim().select(pacMan, ActorAnimationID.MR_PAC_MAN_MUNCHING);
         sys.spriteAnim().playSelected(pacMan);
 
-        sys.navigator().setMoveDir(msPacMan, Direction.RIGHT);
+        sys.worldNavigator().setMoveDir(msPacMan, Direction.RIGHT);
 
         sys.spriteAnim().select(msPacMan, ActorAnimationID.PAC_MUNCHING);
         sys.spriteAnim().playSelected(msPacMan);
@@ -116,49 +116,49 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene2D {
         if (sceneTimer.atSecond(4.5)) {
             pacMan.pos().set(TS * (-2), UPPER_Y);
             pacMan.show();
-            sys.navigator().setMoveDir(pacMan, Direction.RIGHT);
-            sys.navigator().setSpeed(pacMan, 2.0f);
+            sys.worldNavigator().setMoveDir(pacMan, Direction.RIGHT);
+            sys.worldNavigator().setSpeed(pacMan, 2.0f);
 
             msPacMan.pos().set(TS * (-8), UPPER_Y);
             msPacMan.show();
-            sys.navigator().setMoveDir(msPacMan, Direction.RIGHT);
-            sys.navigator().setSpeed(msPacMan, 2.0f);
+            sys.worldNavigator().setMoveDir(msPacMan, Direction.RIGHT);
+            sys.worldNavigator().setSpeed(msPacMan, 2.0f);
         }
         else if (sceneTimer.atSecond(9)) {
             pacMan.pos().set(TS * 36, LOWER_Y);
-            sys.navigator().setMoveDir(pacMan, Direction.LEFT);
-            sys.navigator().setSpeed(pacMan, 2.0f);
+            sys.worldNavigator().setMoveDir(pacMan, Direction.LEFT);
+            sys.worldNavigator().setSpeed(pacMan, 2.0f);
 
             msPacMan.pos().set(TS * 30, LOWER_Y);
-            sys.navigator().setMoveDir(msPacMan, Direction.LEFT);
-            sys.navigator().setSpeed(msPacMan, 2.0f);
+            sys.worldNavigator().setMoveDir(msPacMan, Direction.LEFT);
+            sys.worldNavigator().setSpeed(msPacMan, 2.0f);
         }
         else if (sceneTimer.atSecond(13.5)) {
             pacMan.pos().set(TS * (-2), MIDDLE_Y);
-            sys.navigator().setMoveDir(pacMan, Direction.RIGHT);
-            sys.navigator().setSpeed(pacMan, 2.0f);
+            sys.worldNavigator().setMoveDir(pacMan, Direction.RIGHT);
+            sys.worldNavigator().setSpeed(pacMan, 2.0f);
 
             msPacMan.pos().set(TS * (-8), MIDDLE_Y);
-            sys.navigator().setMoveDir(msPacMan, Direction.RIGHT);
-            sys.navigator().setSpeed(msPacMan, 2.0f);
+            sys.worldNavigator().setMoveDir(msPacMan, Direction.RIGHT);
+            sys.worldNavigator().setSpeed(msPacMan, 2.0f);
         }
         else if (sceneTimer.atSecond(17.5)) {
             pacMan.pos().set(TS * 42, UPPER_Y);
-            sys.navigator().setMoveDir(pacMan, Direction.LEFT);
-            sys.navigator().setSpeed(pacMan, 4.0f);
+            sys.worldNavigator().setMoveDir(pacMan, Direction.LEFT);
+            sys.worldNavigator().setSpeed(pacMan, 4.0f);
 
             msPacMan.pos().set(TS * 30, UPPER_Y);
-            sys.navigator().setMoveDir(msPacMan, Direction.LEFT);
-            sys.navigator().setSpeed(msPacMan, 4.0f);
+            sys.worldNavigator().setMoveDir(msPacMan, Direction.LEFT);
+            sys.worldNavigator().setSpeed(msPacMan, 4.0f);
         }
         else if (sceneTimer.atSecond(18.5)) {
             pacMan.pos().set(TS * (-2), LOWER_Y);
-            sys.navigator().setMoveDir(pacMan, Direction.RIGHT);
-            sys.navigator().setSpeed(pacMan, 4.0f);
+            sys.worldNavigator().setMoveDir(pacMan, Direction.RIGHT);
+            sys.worldNavigator().setSpeed(pacMan, 4.0f);
 
             msPacMan.pos().set(TS * (-14), LOWER_Y);
-            sys.navigator().setMoveDir(msPacMan, Direction.RIGHT);
-            sys.navigator().setSpeed(msPacMan, 4.0f);
+            sys.worldNavigator().setMoveDir(msPacMan, Direction.RIGHT);
+            sys.worldNavigator().setSpeed(msPacMan, 4.0f);
         }
         else if (sceneTimer.atSecond(23)) {
             gameState().triggerTimeout();

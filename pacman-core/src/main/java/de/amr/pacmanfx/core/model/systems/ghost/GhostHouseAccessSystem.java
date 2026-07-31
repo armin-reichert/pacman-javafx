@@ -35,20 +35,20 @@ public class GhostHouseAccessSystem {
             final float minY = (house.minTile().y() + 1) * WorldMap.TS + WorldMap.HTS;
             final float maxY = (house.maxTile().y() - 1) * WorldMap.TS - WorldMap.HTS;
             if (position.y() <= minY) {
-                sys.navigator().setMoveDir(ghost, DOWN);
-                sys.navigator().setWishDir(ghost, DOWN);
+                sys.worldNavigator().setMoveDir(ghost, DOWN);
+                sys.worldNavigator().setWishDir(ghost, DOWN);
             }
             else if (position.y() >= maxY) {
-                sys.navigator().setMoveDir(ghost, UP);
-                sys.navigator().setWishDir(ghost, UP);
+                sys.worldNavigator().setMoveDir(ghost, UP);
+                sys.worldNavigator().setWishDir(ghost, UP);
             }
             position.setY(Math.clamp(position.y(), minY, maxY));
-            sys.navigator().setSpeed(ghost, speed);
+            sys.worldNavigator().setSpeed(ghost, speed);
             sys.motor().moveAccelerated(ghost);
         }
         else {
             // locked outside of house: standing still
-            sys.navigator().setSpeed(ghost, 0);
+            sys.worldNavigator().setSpeed(ghost, 0);
         }
     }
 
@@ -68,8 +68,8 @@ public class GhostHouseAccessSystem {
 
         if (position.y() <= houseEntryPosition.y()) {
             position.setY(houseEntryPosition.y());
-            sys.navigator().setMoveDir(ghost, LEFT);
-            sys.navigator().setWishDir(ghost, LEFT);
+            sys.worldNavigator().setMoveDir(ghost, LEFT);
+            sys.worldNavigator().setWishDir(ghost, LEFT);
 
             // don't change direction directly when outside house
             ghost.worldNavigation().setNewTileEntered(false);
@@ -82,16 +82,16 @@ public class GhostHouseAccessSystem {
             if (differsAtMost(0.5f * speed, centerX, houseCenterX)) {
                 // align horizontally and raise
                 position.setX(houseCenterX - WorldMap.HTS);
-                sys.navigator().setMoveDir(ghost, UP);
-                sys.navigator().setWishDir(ghost, UP);
+                sys.worldNavigator().setMoveDir(ghost, UP);
+                sys.worldNavigator().setWishDir(ghost, UP);
             }
             else {
                 // move sidewards until center axis is reached
-                sys.navigator().setMoveDir(ghost, centerX < houseCenterX ? RIGHT : LEFT);
-                sys.navigator().setWishDir(ghost, centerX < houseCenterX ? RIGHT : LEFT);
+                sys.worldNavigator().setMoveDir(ghost, centerX < houseCenterX ? RIGHT : LEFT);
+                sys.worldNavigator().setWishDir(ghost, centerX < houseCenterX ? RIGHT : LEFT);
             }
 
-            sys.navigator().setSpeed(ghost, speed);
+            sys.worldNavigator().setSpeed(ghost, speed);
             sys.motor().moveAccelerated(ghost);
 
             return false;
@@ -111,25 +111,25 @@ public class GhostHouseAccessSystem {
         final Vector2f positionVec = position.asVector2f();
         if (positionVec.roughlyEquals(revivalPosition, 0.5f * speed, 0.5f * speed)) {
             position.set(revivalPosition.x(), revivalPosition.y());
-            sys.navigator().setMoveDir(ghost, UP);
-            sys.navigator().setWishDir(ghost, UP);
+            sys.worldNavigator().setMoveDir(ghost, UP);
+            sys.worldNavigator().setWishDir(ghost, UP);
 
             sys.ghostState().changeState(gameContext, ghost, GhostState.LOCKED);
             return;
         }
         if (position.y() < revivalPosition.y()) {
-            sys.navigator().setMoveDir(ghost, DOWN);
-            sys.navigator().setWishDir(ghost, DOWN);
+            sys.worldNavigator().setMoveDir(ghost, DOWN);
+            sys.worldNavigator().setWishDir(ghost, DOWN);
         }
         else if (position.x() > revivalPosition.x()) {
-            sys.navigator().setMoveDir(ghost, LEFT);
-            sys.navigator().setWishDir(ghost, LEFT);
+            sys.worldNavigator().setMoveDir(ghost, LEFT);
+            sys.worldNavigator().setWishDir(ghost, LEFT);
         }
         else if (position.x() < revivalPosition.x()) {
-            sys.navigator().setMoveDir(ghost, RIGHT);
-            sys.navigator().setWishDir(ghost, RIGHT);
+            sys.worldNavigator().setMoveDir(ghost, RIGHT);
+            sys.worldNavigator().setWishDir(ghost, RIGHT);
         }
-        sys.navigator().setSpeed(ghost, speed);
+        sys.worldNavigator().setSpeed(ghost, speed);
 
         sys.motor().moveAccelerated(ghost);
     }
@@ -146,8 +146,8 @@ public class GhostHouseAccessSystem {
         final Vector2f positionVec =  position.asVector2f();
         if (positionVec.roughlyEquals(houseEntry, speed, 0)) {
             position.set(houseEntry.x(), houseEntry.y());
-            sys.navigator().setMoveDir(ghost, DOWN);
-            sys.navigator().setWishDir(ghost, DOWN);
+            sys.worldNavigator().setMoveDir(ghost, DOWN);
+            sys.worldNavigator().setWishDir(ghost, DOWN);
 
             //TODO check if this should be done here
             sys.ghostState().changeState(gameContext, ghost, GhostState.ENTERING_HOUSE);
@@ -156,9 +156,9 @@ public class GhostHouseAccessSystem {
         else {
             //TODO use system method
             ghost.worldNavigation().setTargetTile(house.leftDoorTile());
-            sys.navigator().setSpeed(ghost, speed);
-            sys.navigator().navigateTowardsTarget(ghost, level, policy);
-            sys.navigator().tryMovingOrTeleporting(ghost, level, policy);
+            sys.worldNavigator().setSpeed(ghost, speed);
+            sys.worldNavigator().navigateTowardsTarget(ghost, level, policy);
+            sys.worldNavigator().tryMovingOrTeleporting(ghost, level, policy);
         }
     }
 }

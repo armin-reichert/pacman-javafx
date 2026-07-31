@@ -77,9 +77,9 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene2D {
     }
 
     private void startBlinkyRunningNaked(GameSystems sys) {
-        sys.navigator().placeAtTile(blinky, -1, 20);
-        sys.navigator().setMoveDir(blinky, Direction.RIGHT);
-        sys.navigator().setWishDir(blinky, Direction.RIGHT);
+        sys.worldNavigator().placeAtTile(blinky, -1, 20);
+        sys.worldNavigator().setMoveDir(blinky, Direction.RIGHT);
+        sys.worldNavigator().setWishDir(blinky, Direction.RIGHT);
 
         sys.spriteAnim().select(blinky, ActorAnimationID.BLINKY_NAKED);
         sys.spriteAnim().playSelected(blinky);
@@ -88,19 +88,19 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene2D {
     private void startBlinkyChasingPacMan(GameSystems sys) {
         pacMan.show();
 
-        sys.navigator().placeAtTile(pacMan, 29, 20);
-        sys.navigator().setMoveDir(pacMan, Direction.LEFT);
-        sys.navigator().setSpeed(pacMan, 1.25f);
+        sys.worldNavigator().placeAtTile(pacMan, 29, 20);
+        sys.worldNavigator().setMoveDir(pacMan, Direction.LEFT);
+        sys.worldNavigator().setSpeed(pacMan, 1.25f);
 
         sys.spriteAnim().select(pacMan, ActorAnimationID.PAC_MUNCHING);
         sys.spriteAnim().playSelected(pacMan);
 
         blinky.show();
 
-        sys.navigator().placeAtTile(blinky, 35, 20);
-        sys.navigator().setMoveDir(blinky, Direction.LEFT);
-        sys.navigator().setWishDir(blinky, Direction.LEFT);
-        sys.navigator().setSpeed(blinky, 1.25f);
+        sys.worldNavigator().placeAtTile(blinky, 35, 20);
+        sys.worldNavigator().setMoveDir(blinky, Direction.LEFT);
+        sys.worldNavigator().setWishDir(blinky, Direction.LEFT);
+        sys.worldNavigator().setSpeed(blinky, 1.25f);
 
         sys.spriteAnim().select(blinky, ActorAnimationID.BLINKY_PATCHED);
         sys.spriteAnim().playSelected(blinky);

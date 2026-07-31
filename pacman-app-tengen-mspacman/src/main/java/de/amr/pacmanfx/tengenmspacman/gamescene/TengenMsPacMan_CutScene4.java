@@ -122,8 +122,8 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
                     pacMan.pos().set(LEFT_BORDER, LOWER_LANE);
                     pacMan.show();
 
-                    sys.navigator().setMoveDir(pacMan, Direction.RIGHT);
-                    sys.navigator().setSpeed(pacMan, 1f);
+                    sys.worldNavigator().setMoveDir(pacMan, Direction.RIGHT);
+                    sys.worldNavigator().setSpeed(pacMan, 1f);
 
                     sys.spriteAnim().select(pacMan, TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
                     sys.spriteAnim().playSelected(pacMan);
@@ -131,18 +131,18 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
                     msPacMan.pos().set(RIGHT_BORDER, LOWER_LANE);
                     msPacMan.show();
 
-                    sys.navigator().setMoveDir(msPacMan, Direction.LEFT);
-                    sys.navigator().setSpeed(msPacMan, 1f);
+                    sys.worldNavigator().setMoveDir(msPacMan, Direction.LEFT);
+                    sys.worldNavigator().setSpeed(msPacMan, 1f);
 
                     sys.spriteAnim().select(msPacMan, ActorAnimationID.PAC_MUNCHING);
                     sys.spriteAnim().playSelected(msPacMan);
                 }
                 case 230 -> {
-                    sys.navigator().setSpeed(pacMan, 0);
+                    sys.worldNavigator().setSpeed(pacMan, 0);
                     sys.spriteAnim().stopSelected(pacMan);
                     sys.spriteAnim().resetSelected(pacMan);
 
-                    sys.navigator().setSpeed(msPacMan, 0);
+                    sys.worldNavigator().setSpeed(msPacMan, 0);
                     sys.spriteAnim().stopSelected(msPacMan);
                     sys.spriteAnim().resetSelected(msPacMan);
                 }
@@ -169,10 +169,10 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
                     sys.spriteAnim().playSelected(msPacMan);
                 }
                 case 650 -> {
-                    sys.navigator().setSpeed(pacMan, 1.5f); // TODO not sure
-                    sys.navigator().setMoveDir(pacMan, Direction.UP);
-                    sys.navigator().setSpeed(msPacMan, 1.5f); // TODO not sure
-                    sys.navigator().setMoveDir(msPacMan, Direction.UP);
+                    sys.worldNavigator().setSpeed(pacMan, 1.5f); // TODO not sure
+                    sys.worldNavigator().setMoveDir(pacMan, Direction.UP);
+                    sys.worldNavigator().setSpeed(msPacMan, 1.5f); // TODO not sure
+                    sys.worldNavigator().setMoveDir(msPacMan, Direction.UP);
                 }
                 case 720 -> {
                     pacMan.hide();
@@ -196,8 +196,8 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
         junior.pos().set((float) randomX, unscaledHeight() - 4 * TS);
         junior.show();
 
-        sys.navigator().setMoveDir(junior, Direction.UP);
-        sys.navigator().setSpeed(junior, 2);
+        sys.worldNavigator().setMoveDir(junior, Direction.UP);
+        sys.worldNavigator().setSpeed(junior, 2);
 
         sys.spriteAnim().setAnimations(junior, renderConfig.createPacAnimations(spriteAnimations));
         sys.spriteAnim().select(junior, TengenMsPacMan_AnimationID.ANIM_JUNIOR);
@@ -220,7 +220,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
         long creationTime = juniorCreationTimes.get(index);
         long lifeTime = tick - creationTime;
         if (lifeTime> 0 && lifeTime % 10 == 0) {
-            computeNewMoveDir(sys.navigator(), junior);
+            computeNewMoveDir(sys.worldNavigator(), junior);
         }
         sys.motor().moveAccelerated(junior);
         if (junior.pos().x() > unscaledWidth()) {

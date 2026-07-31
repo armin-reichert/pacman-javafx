@@ -144,14 +144,14 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
     private void enterDeliverJuniorState(GameSystems sys, SceneState newState) {
         pacMan.pos().set(TS * 3, GROUND_Y - 4);
         pacMan.show();
-        sys.navigator().setMoveDir(pacMan, Direction.RIGHT);
+        sys.worldNavigator().setMoveDir(pacMan, Direction.RIGHT);
 
         sys.spriteAnim().select(pacMan, ActorAnimationID.MR_PAC_MAN_MUNCHING);
         sys.spriteAnim().stopSelected(pacMan);
 
         msPacMan.pos().set(TS * 5, GROUND_Y - 4);
         msPacMan.show();
-        sys.navigator().setMoveDir(msPacMan, Direction.RIGHT);
+        sys.worldNavigator().setMoveDir(msPacMan, Direction.RIGHT);
 
         sys.spriteAnim().select(msPacMan, ActorAnimationID.PAC_MUNCHING);
         sys.spriteAnim().stopSelected(msPacMan);

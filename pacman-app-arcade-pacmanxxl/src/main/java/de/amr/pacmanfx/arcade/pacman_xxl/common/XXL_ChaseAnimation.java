@@ -100,9 +100,9 @@ class XXL_ChaseAnimation {
         pac.pos().setX(numTilesX * WorldMap.TS);
         pac.show();
 
-        sys.navigator().setMoveDir(pac, Direction.LEFT);
-        sys.navigator().setWishDir(pac, Direction.LEFT);
-        sys.navigator().setSpeed(pac, PAC_FLEEING_SPEED);
+        sys.worldNavigator().setMoveDir(pac, Direction.LEFT);
+        sys.worldNavigator().setWishDir(pac, Direction.LEFT);
+        sys.worldNavigator().setSpeed(pac, PAC_FLEEING_SPEED);
 
         sys.spriteAnim().setAnimations(pac, renderConfig.createPacAnimations(container));
         sys.spriteAnim().select(pac, ActorAnimationID.PAC_MUNCHING);
@@ -118,9 +118,9 @@ class XXL_ChaseAnimation {
             ghost.pos().setX((numTilesX + 4) * WorldMap.TS + ghost.personality().ordinal() * GHOST_DISTANCE);
             ghost.show();
 
-            sys.navigator().setMoveDir(ghost, Direction.LEFT);
-            sys.navigator().setWishDir(ghost, Direction.LEFT);
-            sys.navigator().setSpeed(ghost, GHOST_CHASE_SPEED);
+            sys.worldNavigator().setMoveDir(ghost, Direction.LEFT);
+            sys.worldNavigator().setWishDir(ghost, Direction.LEFT);
+            sys.worldNavigator().setSpeed(ghost, GHOST_CHASE_SPEED);
 
             sys.spriteAnim().select(ghost, ActorAnimationID.GHOST_NORMAL);
             sys.spriteAnim().playSelected(ghost);
@@ -149,17 +149,17 @@ class XXL_ChaseAnimation {
         moveActors(sys.motor());
         // If ghosts and Pac leave screen at right border, ghosts start chasing Pac moving left
         if (pac.pos().x() > (numTilesX + 14) * WorldMap.TS) {
-            sys.navigator().setMoveDir(pac, Direction.LEFT);
-            sys.navigator().setWishDir(pac, Direction.LEFT);
+            sys.worldNavigator().setMoveDir(pac, Direction.LEFT);
+            sys.worldNavigator().setWishDir(pac, Direction.LEFT);
             pac.pos().setX(numTilesX * WorldMap.TS);
 
             for (Ghost ghost : ghosts) {
                 ghost.pos().setX((numTilesX + 4) * WorldMap.TS + ghost.personality().ordinal() * 2 * WorldMap.TS);
                 ghost.show();
 
-                sys.navigator().setMoveDir(ghost, Direction.LEFT);
-                sys.navigator().setWishDir(ghost, Direction.LEFT);
-                sys.navigator().setSpeed(ghost, 1.05f);
+                sys.worldNavigator().setMoveDir(ghost, Direction.LEFT);
+                sys.worldNavigator().setWishDir(ghost, Direction.LEFT);
+                sys.worldNavigator().setSpeed(ghost, 1.05f);
 
                 sys.spriteAnim().select(ghost, ActorAnimationID.GHOST_NORMAL);
                 sys.spriteAnim().playSelected(ghost);
@@ -198,16 +198,16 @@ class XXL_ChaseAnimation {
 
         if (ghosts.getLast().pos().x() < -4 * WorldMap.TS) { // ghosts left screen on the left side
             pac.pos().setX(-(numTilesX - 6) * WorldMap.TS);
-            sys.navigator().setMoveDir(pac, Direction.RIGHT);
-            sys.navigator().setWishDir(pac, Direction.RIGHT);
+            sys.worldNavigator().setMoveDir(pac, Direction.RIGHT);
+            sys.worldNavigator().setWishDir(pac, Direction.RIGHT);
 
             for (Ghost ghost : ghosts) {
                 ghost.show();
                 ghost.pos().setX(pac.pos().x() + 22 * WorldMap.TS + ghost.personality().ordinal() * GHOST_DISTANCE);
 
-                sys.navigator().setMoveDir(ghost, Direction.RIGHT);
-                sys.navigator().setWishDir(ghost, Direction.RIGHT);
-                sys.navigator().setSpeed(ghost, 0.58f);
+                sys.worldNavigator().setMoveDir(ghost, Direction.RIGHT);
+                sys.worldNavigator().setWishDir(ghost, Direction.RIGHT);
+                sys.worldNavigator().setSpeed(ghost, 0.58f);
 
                 sys.spriteAnim().select(ghost, ActorAnimationID.GHOST_FRIGHTENED);
                 sys.spriteAnim().playSelected(ghost);

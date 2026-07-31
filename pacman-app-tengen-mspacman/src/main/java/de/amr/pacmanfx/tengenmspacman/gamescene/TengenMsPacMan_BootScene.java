@@ -72,9 +72,9 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
             case 113 -> {
                 ghost.pos().set(unscaledWidth() - WorldMap.TS, GHOST_Y);
                 ghost.show();
-                sys.navigator().setMoveDir(ghost, Direction.LEFT);
-                sys.navigator().setWishDir(ghost, Direction.LEFT);
-                sys.navigator().setSpeed(ghost, WorldMap.TS);
+                sys.worldNavigator().setMoveDir(ghost, Direction.LEFT);
+                sys.worldNavigator().setWishDir(ghost, Direction.LEFT);
+                sys.worldNavigator().setSpeed(ghost, WorldMap.TS);
             }
             case 181 -> sys.motor().setVelocity(movingText, 0, WorldMap.TS);
             case 203 -> {

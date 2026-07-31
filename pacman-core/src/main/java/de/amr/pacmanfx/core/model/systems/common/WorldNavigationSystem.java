@@ -113,6 +113,10 @@ public class WorldNavigationSystem {
         navigation.wishDirProperty().set(dir);
     }
 
+    public void clearTargetTile(GameEntity gameEntity) {
+        gameEntity.optComponent(WorldNavigationComp.class).ifPresent(comp -> comp.setTargetTile(null));
+    }
+
     public void requestTurnBack(GameEntity actor) {
         requireNonNull(actor);
 

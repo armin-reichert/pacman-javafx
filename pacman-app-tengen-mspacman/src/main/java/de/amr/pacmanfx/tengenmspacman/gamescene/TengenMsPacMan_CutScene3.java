@@ -125,8 +125,8 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
                     pacMan.pos().set(WorldMap.TS * 3, GROUND_Y - 4);
                     pacMan.show();
 
-                    sys.navigator().setMoveDir(pacMan, Direction.RIGHT);
-                    sys.navigator().setSpeed(pacMan, 0);
+                    sys.worldNavigator().setMoveDir(pacMan, Direction.RIGHT);
+                    sys.worldNavigator().setSpeed(pacMan, 0);
 
                     sys.spriteAnim().select(pacMan, TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
                     sys.spriteAnim().stopSelected(pacMan);
@@ -134,8 +134,8 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
                     msPacMan.pos().set(WorldMap.TS * 5, GROUND_Y - 4);
                     msPacMan.show();
 
-                    sys.navigator().setMoveDir(msPacMan, Direction.RIGHT);
-                    sys.navigator().setSpeed(msPacMan, 0);
+                    sys.worldNavigator().setMoveDir(msPacMan, Direction.RIGHT);
+                    sys.worldNavigator().setSpeed(msPacMan, 0);
 
                     sys.spriteAnim().select(msPacMan, ActorAnimationID.PAC_MUNCHING);
                     sys.spriteAnim().stopSelected(msPacMan);

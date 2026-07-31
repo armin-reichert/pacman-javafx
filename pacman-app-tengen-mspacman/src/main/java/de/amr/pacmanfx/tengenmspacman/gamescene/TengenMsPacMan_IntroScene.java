@@ -141,8 +141,8 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
                 scene.msPacMan.pos().set(WorldMap.TS * 33, ACTOR_Y);
                 scene.msPacMan.show();
 
-                sys.navigator().setMoveDir(scene.msPacMan, Direction.LEFT);
-                sys.navigator().setSpeed(scene.msPacMan, SPEED);
+                sys.worldNavigator().setMoveDir(scene.msPacMan, Direction.LEFT);
+                sys.worldNavigator().setSpeed(scene.msPacMan, SPEED);
 
                 sys.spriteAnim().setAnimations(scene.msPacMan, renderConfig.createPacAnimations(spriteAnimations));
                 sys.spriteAnim().select(scene.msPacMan, ActorAnimationID.PAC_MUNCHING);
@@ -159,9 +159,9 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
                     ghost.pos().set(WorldMap.TS * 33, ACTOR_Y);
                     ghost.show();
 
-                    sys.navigator().setMoveDir(ghost, Direction.LEFT);
-                    sys.navigator().setWishDir(ghost, Direction.LEFT);
-                    sys.navigator().setSpeed(ghost, SPEED);
+                    sys.worldNavigator().setMoveDir(ghost, Direction.LEFT);
+                    sys.worldNavigator().setWishDir(ghost, Direction.LEFT);
+                    sys.worldNavigator().setSpeed(ghost, SPEED);
 
                     sys.spriteAnim().playSelected(ghost);
 
@@ -201,7 +201,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
 
             boolean letGhostMarchIn(TengenMsPacMan_IntroScene scene) {
                 final MovementSystem motor = scene.gameContext().systems().motor();
-                final WorldNavigationSystem navigator = scene.gameContext().systems().navigator();
+                final WorldNavigationSystem navigator = scene.gameContext().systems().worldNavigator();
 
                 final Ghost ghost = scene.ghosts.get(scene.ghostIndex);
                 if (ghost.worldNavigation().moveDir() == Direction.LEFT) {
@@ -250,7 +250,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
 
                 sys.motor().moveAccelerated(scene.msPacMan);
                 if (scene.msPacMan.pos().x() <= MS_PAC_MAN_STOP_X) {
-                    sys.navigator().setSpeed(scene.msPacMan, 0);
+                    sys.worldNavigator().setSpeed(scene.msPacMan, 0);
                     sys.spriteAnim().resetSelected(scene.msPacMan);
                 }
                 if (timer.atSecond(8)) {

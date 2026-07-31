@@ -128,12 +128,12 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
     }
 
     private void blinkyStopsMoving(GameSystems sys) {
-        sys.navigator().setSpeed(blinky, 0);
+        sys.worldNavigator().setSpeed(blinky, 0);
         sys.spriteAnim().stopSelected(blinky);
     }
 
     private void blinkyGetsCaughtOnNail(GameSystems sys) {
-        sys.navigator().setSpeed(blinky, 0.09f);
+        sys.worldNavigator().setSpeed(blinky, 0.09f);
         //TODO
         //blinkyAnimation(CommonAnimationID.GHOST_NORMAL).setFrameDurationTicks(32);
     }
@@ -141,10 +141,10 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
     private void blinkyStartsRunning(GameSystems sys) {
         blinky.show();
 
-        sys.navigator().placeAtTile(blinky, 28, 20, -3, 0);
-        sys.navigator().setMoveDir(blinky, Direction.LEFT);
-        sys.navigator().setWishDir(blinky, Direction.LEFT);
-        sys.navigator().setSpeed(blinky, 1.25f);
+        sys.worldNavigator().placeAtTile(blinky, 28, 20, -3, 0);
+        sys.worldNavigator().setMoveDir(blinky, Direction.LEFT);
+        sys.worldNavigator().setWishDir(blinky, Direction.LEFT);
+        sys.worldNavigator().setSpeed(blinky, 1.25f);
 
         sys.spriteAnim().select(blinky, ActorAnimationID.GHOST_NORMAL);
         sys.spriteAnim().playSelected(blinky);
@@ -153,9 +153,9 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
     private void pacManStartsRunning(GameSystems sys) {
         pacMan.show();
 
-        sys.navigator().placeAtTile(pacMan, 28, 20);
-        sys.navigator().setMoveDir(pacMan, Direction.LEFT);
-        sys.navigator().setSpeed(pacMan, 1.15f);
+        sys.worldNavigator().placeAtTile(pacMan, 28, 20);
+        sys.worldNavigator().setMoveDir(pacMan, Direction.LEFT);
+        sys.worldNavigator().setSpeed(pacMan, 1.15f);
 
         sys.spriteAnim().select(pacMan, ActorAnimationID.PAC_MUNCHING);
         sys.spriteAnim().playSelected(pacMan);

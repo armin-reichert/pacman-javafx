@@ -38,7 +38,7 @@ public class XXL_PacMan_GamePlay extends ArcadePacMan_GamePlay {
 
         // Demo level map could be a custom map, so use generic auto-steering that also can cope with dead-ends:
         final var demoLevelSteering = new RuleGuidedPacSteering(
-            sys.navigator(), sys.pacWorldMovementPolicy(), sys.pacPower()
+            sys.worldNavigator(), sys.pacWorldMovementPolicy(), sys.pacPower()
         );
         pac.setAutomaticSteering(demoLevelSteering);
         demoLevelSteering.init();

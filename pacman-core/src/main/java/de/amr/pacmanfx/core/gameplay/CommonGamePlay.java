@@ -17,19 +17,22 @@ import de.amr.pacmanfx.core.event.ghost.GhostEatenEvent;
 import de.amr.pacmanfx.core.event.pac.PacEatsFoodEvent;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
-import de.amr.pacmanfx.core.model.actors.*;
+import de.amr.pacmanfx.core.model.actors.ActorAnimationID;
+import de.amr.pacmanfx.core.model.actors.Bonus;
+import de.amr.pacmanfx.core.model.actors.Ghost;
+import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.comp.bonus.BonusState;
 import de.amr.pacmanfx.core.model.comp.ghost.GhostState;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
+import de.amr.pacmanfx.core.model.rules.CollisionStrategy;
+import de.amr.pacmanfx.core.model.score.PropertyFileScore;
+import de.amr.pacmanfx.core.model.score.Score;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.systems.pac.PacDigestionSystem;
 import de.amr.pacmanfx.core.model.world.*;
-import de.amr.pacmanfx.core.model.rules.CollisionStrategy;
-import de.amr.pacmanfx.core.model.score.PropertyFileScore;
-import de.amr.pacmanfx.core.model.score.Score;
 import org.tinylog.Logger;
 
 import java.io.IOException;
@@ -85,8 +88,8 @@ public abstract class CommonGamePlay implements GamePlay {
         pac.pos().set(terrain.pacStartPosition());
         pac.power().timer().resetToIndefiniteDuration();
 
-        sys.navigator().setMoveDir(pac, Direction.LEFT);
-        sys.navigator().setWishDir(pac, Direction.LEFT);
+        sys.worldNavigator().setMoveDir(pac, Direction.LEFT);
+        sys.worldNavigator().setWishDir(pac, Direction.LEFT);
 
         sys.spriteAnim().resetSelected(pac);
 
@@ -94,8 +97,8 @@ public abstract class CommonGamePlay implements GamePlay {
             ghost.reset(); // initially invisible!
             ghost.pos().set(ghost.worldPlacement().startPosition());
             final Direction direction = house.ghostStartDirection(ghost.personality());
-            sys.navigator().setMoveDir(ghost, direction);
-            sys.navigator().setWishDir(ghost, direction);
+            sys.worldNavigator().setMoveDir(ghost, direction);
+            sys.worldNavigator().setWishDir(ghost, direction);
             sys.ghostState().changeState(gameContext, ghost, GhostState.LOCKED);
             sys.spriteAnim().resetSelected(ghost);
         });
@@ -366,20 +369,20 @@ public abstract class CommonGamePlay implements GamePlay {
         final Pac pac = level.entities().pac();
         pac.power().reset();
 
-        sys.navigator().setSpeed(pac, 0);
+        sys.worldNavigator().setSpeed(pac, 0);
 
         sys.spriteAnim().stopSelected(pac);
         sys.spriteAnim().select(pac, ActorAnimationID.PAC_FULL);
 
         level.entities().ghosts().forEach(ghost -> {
-            sys.navigator().setSpeed(ghost, 0);
+            sys.worldNavigator().setSpeed(ghost, 0);
 
             //TODO check in emulator if ghost animation is reset to normal
             sys.spriteAnim().stopSelected(ghost);
             sys.spriteAnim().select(ghost, ActorAnimationID.GHOST_NORMAL);
         });
 
-        level.optBonus().ifPresent(bonus -> sys.bonusState().setInactive(bonus, sys.bonusMoveAndJump()));
+        level.optBonus().ifPresent(bonus -> sys.bonusState().setInactive(bonus));
     }
 
     // Scoring
