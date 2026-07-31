@@ -24,7 +24,7 @@ public class MsPacManDyingAnimation3D extends ManagedAnimation {
     }
 
     private Animation createAnimation() {
-        var spinning = new RotateTransition(Duration.seconds(0.25), msPacMan3D);
+        var spinning = new RotateTransition(Duration.seconds(0.25), msPacMan3D.root());
         spinning.setAxis(Rotate.Z_AXIS);
         spinning.setFromAngle(0);
         spinning.setToAngle(360);

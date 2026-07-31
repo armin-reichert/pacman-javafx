@@ -22,9 +22,9 @@ public class Ghost3DTransformController {
         final Ghost ghost = ghost3D.ghost();
         final Vector2f center = WorldNavigationSystem.computeCenter(ghost);
 
-        ghost3D.setTranslateX(center.x());
-        ghost3D.setTranslateY(center.y());
-        ghost3D.setTranslateZ(-0.5 * ghost3D.getBoundsInParent().getDepth());
+        ghost3D.root().setTranslateX(center.x());
+        ghost3D.root().setTranslateY(center.y());
+        ghost3D.root().setTranslateZ(-0.5 * ghost3D.root().getBoundsInParent().getDepth());
 
         ghost3D.facingRotate().setAngle(switch (ghost.worldNavigation().wishDir()) {
             case LEFT  -> 0;
@@ -36,7 +36,7 @@ public class Ghost3DTransformController {
         gameContext.optLevel().ifPresent(level -> {
             final boolean outside = center.x() < WorldMap.HTS
                 || center.x() > WorldMap.TS * level.worldMap().numCols() - WorldMap.HTS;
-            ghost3D.setVisible(ghost.visibility().isVisible() && !outside);
+            ghost3D.root().setVisible(ghost.visibility().isVisible() && !outside);
         });
     }
 }

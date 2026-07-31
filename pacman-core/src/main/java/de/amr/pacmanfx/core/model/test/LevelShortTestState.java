@@ -11,6 +11,7 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
+import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.state.GameState;
 import de.amr.pacmanfx.core.state.GameStateID;
 
@@ -43,9 +44,11 @@ public class LevelShortTestState extends GameState {
 
     @Override
     public void onUpdate(GameContext gameContext) {
+        final GameSystems sys = gameContext.systems();
         final GameModel model = gameContext.model();
         final GameLevel level = model.optLevel().orElseThrow();
         final float START = 1.0f;
+
         if (timer().atSecond(START)) {
             gameContext.gamePlay().prepareLevelForPlaying(gameContext);
             level.entities().pac().show();
@@ -65,7 +68,7 @@ public class LevelShortTestState extends GameState {
         }
         else if (timer().atSecond(START + 5)) {
             level.optBonus().ifPresent(bonus -> {
-                bonus.showEatenForSeconds(gameContext, 2);
+                sys.bonusState().showEatenForSeconds(bonus, 2);
                 gameContext.eventManager().publishGameEvent(new BonusEatenEvent(bonus));
             });
         }
@@ -74,7 +77,7 @@ public class LevelShortTestState extends GameState {
         }
         else if (timer().atSecond(START + 8)) {
             level.optBonus().ifPresent(bonus -> {
-                bonus.showEatenForSeconds(gameContext, 2);
+                sys.bonusState().showEatenForSeconds(bonus, 2);
                 gameContext.eventManager().publishGameEvent(new BonusEatenEvent(bonus));
             });
         }

@@ -6,6 +6,7 @@ package de.amr.pacmanfx.uilib.model3D.pac;
 
 import de.amr.basics.Identifier;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.uilib.Ufx;
@@ -26,7 +27,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * (Ms.) Pac-Man 3D representations.
  */
-public class Pac3D extends Group implements UpdatableEntity, DisposableGraphicsObject {
+public class Pac3D extends GameEntity implements UpdatableEntity, DisposableGraphicsObject {
 
     public enum AnimationID implements Identifier {
         CHEWING,
@@ -34,6 +35,7 @@ public class Pac3D extends Group implements UpdatableEntity, DisposableGraphicsO
         MOVING
     }
 
+    private final Group root = new Group();
     private final ObjectProperty<DrawMode> drawMode = new SimpleObjectProperty<>(DrawMode.FILL);
 
     private final AnimationRegistry animations;
@@ -69,10 +71,14 @@ public class Pac3D extends Group implements UpdatableEntity, DisposableGraphicsO
         final Group facingGroup = new Group(bodyGroup);
         facingGroup.getTransforms().addAll(facingRotate);
 
-        getChildren().setAll(facingGroup);
+        root.getChildren().setAll(facingGroup);
 
         Ufx.bindDrawMode(bodyGroup, drawMode);
         Ufx.bindDrawMode(jaw, drawMode);
+    }
+
+    public Group root() {
+        return root;
     }
 
     public ObjectProperty<DrawMode> drawModeProperty() {
@@ -113,7 +119,7 @@ public class Pac3D extends Group implements UpdatableEntity, DisposableGraphicsO
             animations.optAnimation(animID).ifPresent(ManagedAnimation::dispose);
         }
         cleanupLight(powerLight);
-        cleanupGroup(this, true);
+        cleanupGroup(root, true);
     }
 
     @Override

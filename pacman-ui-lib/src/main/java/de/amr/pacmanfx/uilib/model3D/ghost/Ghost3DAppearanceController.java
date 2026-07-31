@@ -99,7 +99,7 @@ public class Ghost3DAppearanceController {
     }
 
     private void lookEaten(Ghost3D ghost3D) {
-        ghost3D.setVisible(false);
+        ghost3D.root().setVisible(false);
     }
 
     private void selectMaterialSet(Ghost3D ghost3D, GhostComponentMaterialSet materialSet) {

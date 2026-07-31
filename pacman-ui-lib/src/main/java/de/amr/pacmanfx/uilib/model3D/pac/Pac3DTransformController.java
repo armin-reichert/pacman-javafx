@@ -14,18 +14,18 @@ public class Pac3DTransformController {
 
     public void init(Pac3D pac3D, GameContext gameContext) {
         update(gameContext, pac3D);
-        pac3D.setTranslateZ(-8); //TODO
-        pac3D.setScaleX(1.0);
-        pac3D.setScaleY(1.0);
-        pac3D.setScaleZ(1.0);
+        pac3D.root().setTranslateZ(-8); //TODO
+        pac3D.root().setScaleX(1.0);
+        pac3D.root().setScaleY(1.0);
+        pac3D.root().setScaleZ(1.0);
     }
 
     public void update(GameContext gameContext, Pac3D pac3D) {
         final Pac pac = pac3D.pac();
         final Vector2f center = WorldNavigationSystem.computeCenter(pac);
 
-        pac3D.setTranslateX(center.x());
-        pac3D.setTranslateY(center.y());
+        pac3D.root().setTranslateX(center.x());
+        pac3D.root().setTranslateY(center.y());
 
         pac3D.facingRotate().setAngle(switch (pac.worldNavigation().moveDir()) {
             case LEFT  -> 0;
@@ -37,7 +37,7 @@ public class Pac3DTransformController {
         gameContext.optLevel().ifPresent(level -> {
             final boolean outside = center.x() < WorldMap.HTS
                 || center.x() > WorldMap.TS * level.worldMap().numCols() - WorldMap.HTS;
-            pac3D.setVisible(pac.visibility().isVisible() && !outside);
+            pac3D.root().setVisible(pac.visibility().isVisible() && !outside);
         });
     }
 }

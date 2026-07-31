@@ -24,7 +24,7 @@ public class BonusStateSystem {
 
     public BonusStateSystem(WorldNavigationSystem navigator, BonusMoveAndJumpSystem moveAndJumpSystem) {
         this.navigator = requireNonNull(navigator);
-        this.moveAndJumpSystem = moveAndJumpSystem;
+        this.moveAndJumpSystem = requireNonNull(moveAndJumpSystem);
     }
 
     public void update(GameEventManager eventManager, GameLevel level, Bonus bonus) {
@@ -87,8 +87,7 @@ public class BonusStateSystem {
         stateComp.timer().restartSeconds(seconds);
     }
 
-    public void showEdibleAndStartWandering(GameSystems sys, Bonus bonus, float speed) {
-        requireNonNull(sys);
+    public void showEdibleAndStartWandering(Bonus bonus, float speed, BonusMoveAndJumpSystem moveAndJumpSystem) {
         requireNonNull(bonus);
 
         final BonusStateComp stateComp = bonus.bonusStateComp();
@@ -103,8 +102,7 @@ public class BonusStateSystem {
 
         //TODO use system method:
         bonus.optWorldNavigation().ifPresent(worldNavigation -> worldNavigation.setTargetTile(null));
-
-        bonus.optMoveAndJump().ifPresent(moveAndJumpComp -> sys.bonusMoveAndJump().start(moveAndJumpComp));
+        bonus.optMoveAndJump().ifPresent(moveAndJumpSystem::start);
     }
 
     public void showEatenForSeconds(Bonus bonus, float seconds) {

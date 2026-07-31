@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.ui.gamescene.d3.entities;
 
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.actors.Pac;
@@ -29,7 +30,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Displays for each remaining live a Pac-Man sitting on a pillar tracking the Pac-Man in the maze.
  */
-public class LivesCounter3D extends Group implements UpdatableEntity, DisposableGraphicsObject {
+public class LivesCounter3D extends GameEntity implements UpdatableEntity, DisposableGraphicsObject {
 
     private final ObjectProperty<Color> pillarColor = new SimpleObjectProperty<>(Color.grayRgb(200));
     private final ObjectProperty<PhongMaterial> pillarMaterial = new SimpleObjectProperty<>(new PhongMaterial());
@@ -71,6 +72,8 @@ public class LivesCounter3D extends Group implements UpdatableEntity, Disposable
         }
     }
 
+    private final Group root = new Group();
+
     public LivesCounter3D(Factory3D factory3D, WorldSettings worldConfig) {
         requireNonNull(factory3D);
         requireNonNull(worldConfig);
@@ -79,7 +82,7 @@ public class LivesCounter3D extends Group implements UpdatableEntity, Disposable
         plateMaterial.bind((plateColor.map(Ufx::coloredPhongMaterial)));
 
         final var standsGroup = new Group();
-        getChildren().add(standsGroup);
+        root.getChildren().add(standsGroup);
 
         final var counterShapes = new Node[worldConfig.livesCounter().numShapes()];
         for (int i = 0; i < counterShapes.length; ++i) {
@@ -103,12 +106,16 @@ public class LivesCounter3D extends Group implements UpdatableEntity, Disposable
             final double shapeRadius = 0.5 * shape.getBoundsInParent().getHeight(); // take scale transform into account!
             shape.translateZProperty().bind(stand.pillar.heightProperty().add(plateThickness).add(shapeRadius).negate());
             shape.visibleProperty().bind(livesCount.map(count -> count.intValue() > (int) shape.getUserData()));
-            getChildren().add(shape);
+            root.getChildren().add(shape);
         }
 
         for (Node shape : counterShapes) {
             trackers.add(new NodePositionTracker(shape));
         }
+    }
+
+    public Group root() {
+        return root;
     }
 
     @Override
@@ -123,7 +130,7 @@ public class LivesCounter3D extends Group implements UpdatableEntity, Disposable
         plateRadius.unbind();
         plateMaterial.unbind();
 
-        cleanupGroup(this, true);
+        cleanupGroup(root, true);
     }
 
     public void startTracking(Node target) {
@@ -164,6 +171,6 @@ public class LivesCounter3D extends Group implements UpdatableEntity, Disposable
         }
 
         livesCountProperty().set(lifeCount);
-        setVisible(true);
+        root.setVisible(true);
     }
 }

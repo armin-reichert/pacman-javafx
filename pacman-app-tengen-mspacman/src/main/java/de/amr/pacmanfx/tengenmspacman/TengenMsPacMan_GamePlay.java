@@ -192,6 +192,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
     @Override
     public void activateNextBonus(GameContext gameContext) {
+        final GameSystems sys = gameContext.systems();
         final GameModel model = gameContext.model();
         final GameLevel level = gameContext.assertLevel();
         final GameEventManager eventManager = gameContext.eventManager();
@@ -236,8 +237,8 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final int value = model.rules().scoringRules().pointsForBonus(symbolCode);
         final float speed = model.rules().actorSpeedRules().bonusSpeed(level);
         final Bonus bonus = Bonus.createMovingBonus(symbolCode, value);
-        bonus.setRoute(gameContext, route, leftToRight);
-        bonus.showEdibleAndStartWandering(gameContext, speed);
+        sys.bonusMoveAndJump().setRoute(bonus, route, leftToRight);
+        sys.bonusState().showEdibleAndStartWandering(bonus, speed, sys.bonusMoveAndJump());
 
         level.setBonus(bonus);
         eventManager.publishGameEvent(new BonusActivatedEvent(bonus));

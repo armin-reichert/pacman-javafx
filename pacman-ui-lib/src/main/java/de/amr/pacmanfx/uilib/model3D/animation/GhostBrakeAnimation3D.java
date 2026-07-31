@@ -17,16 +17,16 @@ import static java.util.Objects.requireNonNull;
 
 public class GhostBrakeAnimation3D extends ManagedAnimation {
 
-    private final Ghost3D ghostAppearance3D;
+    private final Ghost3D ghost3D;
 
-    public GhostBrakeAnimation3D(Ghost3D ghostAppearance3D) {
-        super("Ghost Braking (%s)".formatted(ghostAppearance3D.ghost().name()));
-        this.ghostAppearance3D = requireNonNull(ghostAppearance3D);
+    public GhostBrakeAnimation3D(Ghost3D ghost3D) {
+        super("Ghost Braking (%s)".formatted(ghost3D.ghost().name()));
+        this.ghost3D = requireNonNull(ghost3D);
         setFactory(this::createAnimationFX);
     }
 
     private Animation createAnimationFX() {
-        var rotateTransition = new RotateTransition(Duration.seconds(0.5), ghostAppearance3D);
+        var rotateTransition = new RotateTransition(Duration.seconds(0.5), ghost3D.root());
         rotateTransition.setAxis(Rotate.Y_AXIS);
         rotateTransition.setAutoReverse(true);
         rotateTransition.setCycleCount(2);
@@ -38,7 +38,7 @@ public class GhostBrakeAnimation3D extends ManagedAnimation {
     public void playFromStart() {
         var rotateTransition = (RotateTransition) animationFX();
         rotateTransition.stop();
-        rotateTransition.setByAngle(ghostAppearance3D.ghost().worldNavigation().moveDir() == Direction.LEFT ? -35 : 35);
+        rotateTransition.setByAngle(ghost3D.ghost().worldNavigation().moveDir() == Direction.LEFT ? -35 : 35);
         rotateTransition.playFromStart();
     }
 
@@ -46,14 +46,14 @@ public class GhostBrakeAnimation3D extends ManagedAnimation {
     public void playOrContinue() {
         var rotateTransition = (RotateTransition) animationFX();
         rotateTransition.stop();
-        rotateTransition.setByAngle(ghostAppearance3D.ghost().worldNavigation().moveDir() == Direction.LEFT ? -35 : 35);
+        rotateTransition.setByAngle(ghost3D.ghost().worldNavigation().moveDir() == Direction.LEFT ? -35 : 35);
         rotateTransition.play();
     }
 
     @Override
     public void stop() {
         super.stop();
-        ghostAppearance3D.setRotationAxis(Rotate.Y_AXIS);
-        ghostAppearance3D.setRotate(0);
+        ghost3D.root().setRotationAxis(Rotate.Y_AXIS);
+        ghost3D.root().setRotate(0);
     }
 }

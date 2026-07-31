@@ -36,7 +36,7 @@ public class Pac3DFactory {
 
         animations.register(Pac3D.AnimationID.CHEWING, new PacChewingAnimation3D(pacMan3D));
         animations.register(Pac3D.AnimationID.DYING,   new PacManDyingAnimation3D(pacMan3D));
-        animations.register(Pac3D.AnimationID.MOVING,  new HeadBangingAnimation3D(pacMan3D));
+        animations.register(Pac3D.AnimationID.MOVING,  new HeadBangingAnimation3D(pacMan3D.root()));
 
         return pacMan3D;
     }
@@ -49,7 +49,7 @@ public class Pac3DFactory {
 
         animations.register(Pac3D.AnimationID.CHEWING, new PacChewingAnimation3D(msPacMan3D));
         animations.register(Pac3D.AnimationID.DYING,   new MsPacManDyingAnimation3D(msPacMan3D));
-        animations.register(Pac3D.AnimationID.MOVING,  new HipSwayingAnimation3D(msPacMan3D));
+        animations.register(Pac3D.AnimationID.MOVING,  new HipSwayingAnimation3D(msPacMan3D.root()));
 
         return msPacMan3D;
     }
@@ -57,8 +57,8 @@ public class Pac3DFactory {
     private static void addPowerLight(Pac3D pac3D, Color color) {
         final var powerLight = new PointLight();
         powerLight.setColor(color);
-        powerLight.translateXProperty().bind(pac3D.translateXProperty());
-        powerLight.translateYProperty().bind(pac3D.translateYProperty());
+        powerLight.translateXProperty().bind(pac3D.root().translateXProperty());
+        powerLight.translateYProperty().bind(pac3D.root().translateYProperty());
         powerLight.setTranslateZ(-30);
         pac3D.setPowerLight(powerLight);
     }

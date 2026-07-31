@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.gamescene.d3.entities;
 
 import de.amr.basics.Identifier;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.settings.world.LevelCounter3DSettings;
@@ -30,11 +31,13 @@ import java.util.List;
 import static de.amr.pacmanfx.core.model.world.WorldMap.HTS;
 import static java.util.Objects.requireNonNull;
 
-public class LevelCounter3D extends Group implements UpdatableEntity, DisposableGraphicsObject {
+public class LevelCounter3D extends GameEntity implements UpdatableEntity, DisposableGraphicsObject {
 
     public enum AnimationID implements Identifier {
         LEVEL_COUNTER_SPINNING
     }
+
+    private final Group root = new Group();
 
     private final AnimationRegistry animations;
     private final GameVariantConfig gameVariant;
@@ -44,12 +47,16 @@ public class LevelCounter3D extends Group implements UpdatableEntity, Disposable
         this.gameVariant = requireNonNull(gameVariant);
     }
 
+    public Group root() {
+        return root;
+    }
+
     @Override
     public void init(GameContext gameContext) {
         final LevelCounter3DSettings config = gameVariant.worldSettings().levelCounter();
         final float cubeSize = config.symbolSize();
         final List<Integer> symbolCodes = gameContext.model().levelCounter().symbolCodes();
-        getChildren().clear();
+        root.getChildren().clear();
         for (int i = 0; i < symbolCodes.size(); ++i) {
             final Integer symbolCode = symbolCodes.get(i);
             final Image symbolImage = gameVariant.renderConfig().bonusSymbolImage(symbolCode);
@@ -60,7 +67,7 @@ public class LevelCounter3D extends Group implements UpdatableEntity, Disposable
             cube.setTranslateX(-i * 16); // arranged from right to left
             cube.setTranslateY(0);
             cube.setTranslateZ(-HTS);
-            getChildren().add(cube);
+            root.getChildren().add(cube);
         }
 
         animations.optAnimation(AnimationID.LEVEL_COUNTER_SPINNING).ifPresent(ManagedAnimation::dispose);
@@ -75,8 +82,8 @@ public class LevelCounter3D extends Group implements UpdatableEntity, Disposable
 
         spinningAnimation.setFactory(() -> {
             final var cubesAnimation = new ParallelTransition();
-            for (int i = 0; i < getChildren().size(); ++i) {
-                final Node cube = getChildren().get(i);
+            for (int i = 0; i < root.getChildren().size(); ++i) {
+                final Node cube = root.getChildren().get(i);
                 final var spinning = new RotateTransition(Duration.seconds(6), cube);
                 spinning.setCycleCount(Animation.INDEFINITE);
                 spinning.setInterpolator(Interpolator.LINEAR);
@@ -93,6 +100,6 @@ public class LevelCounter3D extends Group implements UpdatableEntity, Disposable
     @Override
     public void dispose() {
         animations.optAnimation(AnimationID.LEVEL_COUNTER_SPINNING).ifPresent(ManagedAnimation::dispose);
-        cleanupGroup(this, true);
+        cleanupGroup(root, true);
     }
 }

@@ -8,11 +8,12 @@ import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.UpdatableEntity;
-import de.amr.pacmanfx.core.model.actors.*;
+import de.amr.pacmanfx.core.model.actors.Bonus;
+import de.amr.pacmanfx.core.model.actors.Ghost;
+import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.comp.ghost.GhostState;
-import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.model.rules.HuntingRules;
+import de.amr.pacmanfx.core.model.world.WorldMap;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -27,7 +28,7 @@ import static java.util.Objects.requireNonNull;
 public class GameLevel {
 
     // This is just an experimental class for a general entity set with cache
-    public static class EntitySetWithCache implements Iterable<UpdatableEntity> {
+    public static class EntitySetWithCache implements Iterable<GameEntity> {
 
         private final GameLevelEntitySet entitySet = new GameLevelEntitySet();
 
@@ -35,18 +36,18 @@ public class GameLevel {
         private List<Ghost> cachedGhosts;
         private Bonus cachedBonus;
 
-        private void maybeInvalidateCache(UpdatableEntity entity) {
+        private void maybeInvalidateCache(GameEntity entity) {
             if (entity instanceof Pac) cachedPac = null;
             if (entity instanceof Ghost) cachedGhosts = null;
             if (entity instanceof Bonus) cachedBonus = null;
         }
 
-        public void add(UpdatableEntity entity) {
+        public void add(GameEntity entity) {
             entitySet.add(entity);
             maybeInvalidateCache(entity);
         }
 
-        public void remove(UpdatableEntity entity) {
+        public void remove(GameEntity entity) {
             entitySet.remove(entity);
             maybeInvalidateCache(entity);
         }
@@ -74,7 +75,7 @@ public class GameLevel {
         }
 
         @Override
-        public Iterator<UpdatableEntity> iterator() {
+        public Iterator<GameEntity> iterator() {
             return entitySet.iterator();
         }
     }

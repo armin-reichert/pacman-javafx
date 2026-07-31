@@ -16,6 +16,7 @@ import de.amr.pacmanfx.core.event.gameplay.SpecialScoreEvent;
 import de.amr.pacmanfx.core.event.ghost.GhostEatenEvent;
 import de.amr.pacmanfx.core.event.pac.PacEatsFoodEvent;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.actors.*;
 import de.amr.pacmanfx.core.model.comp.bonus.BonusState;
 import de.amr.pacmanfx.core.model.comp.ghost.GhostState;
@@ -170,9 +171,12 @@ public abstract class CommonGamePlay implements GamePlay {
         gameContext.systems().pacPower().update(gameContext, pac);
 
         // If double-check active, do an additional collision check before Pac has moved
-        level.entities().forEach(entity -> {
+        level.entities()
+            .forEach(entity -> {
             if (entity != pac) {
-                entity.update(gameContext);
+                if (entity instanceof UpdatableEntity updatableEntity) {
+                    updatableEntity.update(gameContext);
+                }
             }
         });
 
@@ -305,10 +309,11 @@ public abstract class CommonGamePlay implements GamePlay {
         requireNonNull(gameContext);
         requireNonNull(bonus);
 
+        final GameSystems sys = gameContext.systems();
         final GameModel model = gameContext.model();
         final GameLevel level = gameContext.assertLevel();
 
-        bonus.showEatenForSeconds(gameContext, model.rules().eatenBonusDisplaySeconds());
+        sys.bonusState().showEatenForSeconds(bonus, model.rules().eatenBonusDisplaySeconds());
 
         scorePoints(gameContext, bonus.points(), level.number());
         Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
@@ -374,7 +379,7 @@ public abstract class CommonGamePlay implements GamePlay {
             sys.spriteAnim().select(ghost, ActorAnimationID.GHOST_NORMAL);
         });
 
-        level.optBonus().ifPresent(bonus -> bonus.setInactive(gameContext));
+        level.optBonus().ifPresent(bonus -> sys.bonusState().setInactive(bonus, sys.bonusMoveAndJump()));
     }
 
     // Scoring

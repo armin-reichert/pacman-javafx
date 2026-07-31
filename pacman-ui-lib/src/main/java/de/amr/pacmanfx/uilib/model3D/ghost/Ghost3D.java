@@ -6,6 +6,7 @@ package de.amr.pacmanfx.uilib.model3D.ghost;
 
 import de.amr.basics.Identifier;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.actors.Ghost;
@@ -33,7 +34,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Represents the 3D appearance of a ghost.
  */
-public class Ghost3D extends Group implements UpdatableEntity, DisposableGraphicsObject {
+public class Ghost3D extends GameEntity implements UpdatableEntity, DisposableGraphicsObject {
 
     public enum AnimationID implements Identifier {
         BRAKING, DRESS, FLASHING;
@@ -47,6 +48,8 @@ public class Ghost3D extends Group implements UpdatableEntity, DisposableGraphic
     public record AnimationKey(AnimationID animationID, GhostPersonality ghostID) {}
 
     private final ObjectProperty<DrawMode> drawMode = new SimpleObjectProperty<>(DrawMode.FILL);
+
+    private final Group root = new Group();
 
     private final AnimationRegistry animations;
     private final Ghost ghost;
@@ -81,6 +84,10 @@ public class Ghost3D extends Group implements UpdatableEntity, DisposableGraphic
         registerAnimations();
     }
 
+    public Group root() {
+        return root;
+    }
+
     @Override
     public void init(GameContext gameContext) {
         assertControllersAssigned();
@@ -100,7 +107,7 @@ public class Ghost3D extends Group implements UpdatableEntity, DisposableGraphic
         for (AnimationID animationID : AnimationID.values()) {
             animations.optAnimation(animationID.key(ghost)).ifPresent(ManagedAnimation::dispose);
         }
-        cleanupGroup(this, true);
+        cleanupGroup(root, true);
 
         transformController = null;
         appearanceController = null;
@@ -217,10 +224,10 @@ public class Ghost3D extends Group implements UpdatableEntity, DisposableGraphic
             settings().size3D() / dressBounds.getWidth(),
             settings().size3D() / dressBounds.getHeight(),
             settings().size3D() / dressBounds.getDepth());
-        getTransforms().add(scaling);
+        root.getTransforms().add(scaling);
 
         // 6. Add the facing group as the only child
-        getChildren().setAll(facingGroup);
+        root.getChildren().setAll(facingGroup);
 
         // 7. Bind draw mode
         dressMeshView.drawModeProperty().bind(drawMode);

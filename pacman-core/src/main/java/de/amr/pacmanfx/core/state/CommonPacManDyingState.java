@@ -52,7 +52,7 @@ public class CommonPacManDyingState extends GameState {
         level.huntingRules().stop();
 
         level.entities().ghosts().forEach(ghost -> ghost.optComponent(ElroyComp.class).ifPresent(elroy -> elroy.setEnabled(false)));
-        level.entities().optBonus().ifPresent(bonus -> bonus.setInactive(gameContext));
+        level.entities().optBonus().ifPresent(bonus -> sys.bonusState().setInactive(bonus, sys.bonusMoveAndJump()));
 
         // Pac-Man stops moving and is prepared for "dying" animation
         sys.navigator().setSpeed(pac, 0);
@@ -97,7 +97,7 @@ public class CommonPacManDyingState extends GameState {
         }
         else if (tick == hidePacTick) {
             pac.hide();
-            level.optBonus().ifPresent(bonus -> bonus.setInactive(gameContext)); //TODO check this
+            level.optBonus().ifPresent(bonus -> sys.bonusState().setInactive(bonus, sys.bonusMoveAndJump()));
         }
         else if (tick == pacDeadTick) {
             gameContext.eventManager().publishGameEvent(new PacDeadEvent(pac));

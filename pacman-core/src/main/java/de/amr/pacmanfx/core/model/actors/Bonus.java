@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.core.model.actors;
 
-import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.core.model.GameEntity;
@@ -14,12 +13,8 @@ import de.amr.pacmanfx.core.model.comp.bonus.BonusStateComp;
 import de.amr.pacmanfx.core.model.comp.bonus.MoveAndJumpComp;
 import de.amr.pacmanfx.core.model.comp.common.MovementComp;
 import de.amr.pacmanfx.core.model.comp.world.WorldNavigationComp;
-import org.tinylog.Logger;
 
-import java.util.List;
 import java.util.Optional;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * A bonus that either stays at a fixed position or jumps through the world, starting at some portal,
@@ -94,37 +89,5 @@ public class Bonus extends GameEntity implements UpdatableEntity {
 
     public int points() {
         return points;
-    }
-
-    public void setInactive(GameContext gameContext) {
-        requireNonNull(gameContext);
-        gameContext.systems().bonusState().setInactive(this, gameContext.systems().bonusMoveAndJump());
-    }
-
-    public void showEdibleForSeconds(GameContext gameContext, float seconds) {
-        requireNonNull(gameContext);
-        gameContext.systems().bonusState().showEdibleForSeconds(this, seconds);
-    }
-
-    public void showEatenForSeconds(GameContext gameContext, float seconds) {
-        requireNonNull(gameContext);
-        gameContext.systems().bonusState().showEatenForSeconds(this, seconds);
-    }
-
-    public void showEdibleAndStartWandering(GameContext gameContext, float speed) {
-        requireNonNull(gameContext);
-        gameContext.systems().bonusState().showEdibleAndStartWandering(gameContext.systems(), this, speed);
-    }
-
-    public void setRoute(GameContext gameContext, List<Vector2i> waypoints, boolean leftToRight) {
-        requireNonNull(gameContext);
-        requireNonNull(waypoints);
-
-        if (optMoveAndJump().isPresent()) {
-            gameContext.systems().bonusMoveAndJump().setRoute(this, waypoints, leftToRight);
-        }
-        else {
-            Logger.warn("Cannot set bonus route: No bonus animation support!");
-        }
     }
 }

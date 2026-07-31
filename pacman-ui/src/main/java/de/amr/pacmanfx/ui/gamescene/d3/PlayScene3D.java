@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.ui.gamescene.d3;
 
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.FoodLayer;
 import de.amr.pacmanfx.core.model.world.WorldMap;
@@ -185,7 +186,9 @@ public class PlayScene3D extends AbstractGameScene
         level3DEmbedder.getChildren().setAll(level3D);
 
         level3D.createAnimations(Game3DSettingsVM.DEFAULT_PARTICLE_ANIMATION_CONFIG);
-        level3D.entities().selectAll().forEach(entity -> entity.init(gameContext));
+        level3D.entities().selectAll()
+            .filter(UpdatableEntity.class::isInstance).map(UpdatableEntity.class::cast)
+            .forEach(entity -> entity.init(gameContext));
         level3D.startLivesCounterTrackingPac();
 
         Logger.info("New 3D game level created");
@@ -252,7 +255,9 @@ public class PlayScene3D extends AbstractGameScene
             return;
         }
 
-        level3D.entities().selectAll().forEach(entity -> entity.update(gameContext()));
+        level3D.entities().selectAll()
+            .filter(UpdatableEntity.class::isInstance).map(UpdatableEntity.class::cast)
+            .forEach(entity -> entity.update(gameContext()));
 
         perspectiveManager.updatePerspective(level);
         updateHUD3D(level);

@@ -160,6 +160,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
     public void activateNextBonus(GameContext gameContext) {
         requireNonNull(gameContext);
 
+        final GameSystems sys = gameContext.systems();
         final GameModel model = gameContext.model();
         final GameLevel level = gameContext.assertLevel();
 
@@ -185,11 +186,12 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
             bonus = Bonus.createStaticBonus(symbolCode, value);
             final Vector2i bonusTile = terrain.getTilePropertyOrDefault(WorldMapPropertyName.POS_BONUS, new Vector2i(13, 20));
             bonus.pos().set(WorldMap.halfTileRightOf(bonusTile));
-            bonus.showEdibleForSeconds(gameContext, randomFloat(9, 10));
+            sys.bonusState().showEdibleForSeconds(bonus, randomFloat(9, 10));
         } else {
             bonus = Bonus.createMovingBonus(symbolCode, value);
             computeBonusRoute(gameContext, bonus, terrain, house);
-            bonus.showEdibleAndStartWandering(gameContext, model.rules().actorSpeedRules().bonusSpeed(level));
+            final float speed = model.rules().actorSpeedRules().bonusSpeed(level);
+            sys.bonusState().showEdibleAndStartWandering(bonus, speed, sys.bonusMoveAndJump());
         }
 
         level.setBonus(bonus);
@@ -242,7 +244,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         final Vector2i backyard = houseEntry.plus(0, house.sizeInTiles().y() + 1);
         final List<Vector2i> route = Stream.of(entryTile, houseEntry, backyard, houseEntry, exitTile).toList();
 
-        bonus.setRoute(gameContext, route, leftToRight);
+        gameContext.systems().bonusMoveAndJump().setRoute(bonus, route, leftToRight);
         Logger.info("Moving bonus route: {} (crossing {})", route, leftToRight ? "left to right" : "right to left");
     }
 }

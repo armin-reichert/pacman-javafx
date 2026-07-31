@@ -6,6 +6,7 @@ package de.amr.pacmanfx.uilib.model3D.world;
 import de.amr.basics.Identifier;
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.actors.Bonus;
 import de.amr.pacmanfx.core.model.comp.bonus.BonusState;
@@ -37,7 +38,7 @@ import static java.util.Objects.requireNonNull;
  * on each of its faces. When eaten, the bonus symbol is replaced by the points earned for eating the bonus.
  * For a moving bonus, the rotating cube moves through the world and rotates towards its current move direction.</p>
  */
-public class Bonus3D implements UpdatableEntity, DisposableGraphicsObject {
+public class Bonus3D extends GameEntity implements UpdatableEntity, DisposableGraphicsObject {
 
     public enum AnimationID implements Identifier {
         BONUS_EDIBLE,

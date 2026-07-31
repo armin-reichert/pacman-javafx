@@ -77,7 +77,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     public static class EntitySet extends GameLevelEntitySet {
-
         // Cached for faster access
         private Pac3D pac3D;
         private List<Ghost3D> ghosts3D = new ArrayList<>(4); // order: RED, PINK, CYAN, ORANGE
@@ -168,7 +167,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Starts the lives counter symbols following Pac-Man with their eyes.
      */
     public void startLivesCounterTrackingPac() {
-        entitySet.livesCounter3D.startTracking(entitySet.pac3D);
+        entitySet.livesCounter3D.startTracking(entitySet.pac3D.root());
     }
 
     @Override
@@ -250,9 +249,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     public void setDrawMode(DrawMode drawMode) {
         requireNonNull(drawMode);
-        Ufx.setDrawMode(entitySet.pac3D, drawMode);
+        Ufx.setDrawMode(entitySet.pac3D.root(), drawMode);
         for (Ghost3D ghost3D : entitySet.ghosts3D) {
-            Ufx.setDrawMode(ghost3D, drawMode);
+            Ufx.setDrawMode(ghost3D.root(), drawMode);
         }
         Ufx.setDrawMode(maze3D, drawMode);
     }
@@ -368,17 +367,17 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private void createLivesCounter3D() {
         entitySet.livesCounter3D = new LivesCounter3D(gameVariant.factory3D(), gameVariant.worldSettings());
-        entitySet.livesCounter3D.setTranslateX(2 * WorldMap.TS);
-        entitySet.livesCounter3D.setTranslateY(2 * WorldMap.TS);
+        entitySet.livesCounter3D.root().setTranslateX(2 * WorldMap.TS);
+        entitySet.livesCounter3D.root().setTranslateY(2 * WorldMap.TS);
         entitySet.add(entitySet.livesCounter3D);
     }
 
     private void createLevelCounter3D() {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         entitySet.levelCounter3D = new LevelCounter3D(animationRegistry, gameVariant);
-        entitySet.levelCounter3D.setTranslateX(tilesPx(terrain.numCols() - 2));
-        entitySet.levelCounter3D.setTranslateY(tilesPx(2));
-        entitySet.levelCounter3D.setTranslateZ(-gameVariant.worldSettings().levelCounter().elevation());
+        entitySet.levelCounter3D.root().setTranslateX(tilesPx(terrain.numCols() - 2));
+        entitySet.levelCounter3D.root().setTranslateY(tilesPx(2));
+        entitySet.levelCounter3D.root().setTranslateZ(-gameVariant.worldSettings().levelCounter().elevation());
         entitySet.add(entitySet.levelCounter3D);
     }
 
@@ -398,11 +397,11 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     // Order matters for correct transparency!
     private void buildHierarchy() {
-        getChildren().add(entitySet.levelCounter3D);
-        getChildren().add(entitySet.livesCounter3D);
-        getChildren().add(entitySet.pac3D);
+        getChildren().add(entitySet.levelCounter3D.root());
+        getChildren().add(entitySet.livesCounter3D.root());
+        getChildren().add(entitySet.pac3D.root());
         entitySet.pac3D.powerLight().ifPresent(getChildren()::add);
-        for (var ghost3D : entitySet.ghosts3D) { getChildren().add(ghost3D); }
+        for (var ghost3D : entitySet.ghosts3D) { getChildren().add(ghost3D.root()); }
         entitySet.energizer3DByTile.values().stream().map(Energizer3D::shape).forEach(getChildren()::add);
         entitySet.pellet3DByTile.values().stream().map(Pellet3D::shape).forEach(getChildren()::add);
         getChildren().add(maze3D.particlesGroup());

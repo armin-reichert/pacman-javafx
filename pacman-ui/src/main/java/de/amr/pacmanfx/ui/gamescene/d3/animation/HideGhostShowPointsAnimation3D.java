@@ -23,8 +23,8 @@ public class HideGhostShowPointsAnimation3D extends ManagedAnimation {
             final var numberBoxRising = new NumberBoxRisingAnimation3D(numberBox3D, risingHeight).createAnimation();
 
             final var hideGhostShortly = new Timeline(
-                new KeyFrame(Duration.ZERO,       new KeyValue(ghost3D.visibleProperty(), false)),
-                new KeyFrame(Duration.seconds(1), new KeyValue(ghost3D.visibleProperty(), true))
+                new KeyFrame(Duration.ZERO,       new KeyValue(ghost3D.root().visibleProperty(), false)),
+                new KeyFrame(Duration.seconds(1), new KeyValue(ghost3D.root().visibleProperty(), true))
             );
 
             return new ParallelTransition(

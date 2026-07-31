@@ -17,6 +17,7 @@ import de.amr.pacmanfx.core.event.ghost.GhostEatenEvent;
 import de.amr.pacmanfx.core.event.pac.PacEatsFoodEvent;
 import de.amr.pacmanfx.core.event.pac.PacGetsPowerEvent;
 import de.amr.pacmanfx.core.event.pac.PacLostPowerEvent;
+import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
@@ -162,7 +163,9 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
             level3D.energizers3D().forEach(Energizer3D::startPumping);
             level3D.messageManager().showMessage(MessageManager3D.MessageType.TEST, level.number());
         }
-        assertLevel3D().entities().selectAll().forEach(e -> e.init(gameContext));
+        assertLevel3D().entities().selectAll()
+            .filter(UpdatableEntity.class::isInstance).map(UpdatableEntity.class::cast)
+            .forEach(e -> e.init(gameContext));
         gameScene().replaceActionBindings(level);
         gameScene().fadeInAnimation().playFromStart();
     }
@@ -231,7 +234,9 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 
     private void onStartingGameOrLevel() {
         gameScene().optGameLevel3D().ifPresent(level3D ->
-            level3D.entities().selectAll().forEach(entity -> entity.init(gameContext())));
+            level3D.entities().selectAll()
+                .filter(UpdatableEntity.class::isInstance).map(UpdatableEntity.class::cast)
+                .forEach(entity -> entity.init(gameContext())));
     }
 
     private void onHuntingStart(GameContext gameContext) {
@@ -293,9 +298,9 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 
             final Factory3D factory3D = appContext().variants().currentVariant().config().factory3D();
             final Node numberBox3D = factory3D.createNumberBox3D(appContext().variants().currentVariant().config(), killIndex);
-            numberBox3D.setTranslateX(ghost3D.getTranslateX());
-            numberBox3D.setTranslateY(ghost3D.getTranslateY());
-            numberBox3D.setTranslateZ(ghost3D.getTranslateZ());
+            numberBox3D.setTranslateX(ghost3D.root().getTranslateX());
+            numberBox3D.setTranslateY(ghost3D.root().getTranslateY());
+            numberBox3D.setTranslateZ(ghost3D.root().getTranslateZ());
             level3D.getChildren().add(numberBox3D);
 
             if (numberBox3D instanceof NumberBox3D box3D) {

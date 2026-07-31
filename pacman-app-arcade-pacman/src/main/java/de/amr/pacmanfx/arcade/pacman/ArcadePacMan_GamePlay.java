@@ -231,6 +231,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     public void activateNextBonus(GameContext gameContext) {
         requireNonNull(gameContext);
 
+        final GameSystems sys = gameContext.systems();
         final GameModel model = gameContext.model();
         final GameLevel level = gameContext.assertLevel();
         final GameEventManager eventManager = gameContext.eventManager();
@@ -245,7 +246,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
         final Bonus bonus = Bonus.createStaticBonus(symbolCode, value);
         bonus.pos().set(WorldMap.halfTileRightOf(tile));
-        bonus.showEdibleForSeconds(gameContext, edibleSec);
+        sys.bonusState().showEdibleForSeconds(bonus, edibleSec);
 
         level.setBonus(bonus);
         eventManager.publishGameEvent(new BonusActivatedEvent(bonus));
