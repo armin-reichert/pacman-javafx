@@ -4,10 +4,8 @@
 
 package de.amr.pacmanfx.core.model.actors;
 
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.comp.common.MovementComp;
 import de.amr.pacmanfx.core.model.comp.ghost.GhostState;
 import de.amr.pacmanfx.core.model.comp.ghost.GhostStateComp;
@@ -20,7 +18,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * A ghost. Ghosts differ in their personality which defines attack behavior and look.
  */
-public class Ghost extends GameEntity implements UpdatableEntity {
+public class Ghost extends GameEntity {
 
     private final GhostPersonality personality;
 
@@ -56,11 +54,6 @@ public class Ghost extends GameEntity implements UpdatableEntity {
 
     public GhostState state() {
         return requireComponent(GhostStateComp.class).state();
-    }
-
-    @Override
-    public void update(GameContext gameContext) {
-        gameContext.systems().ghostState().update(gameContext, this);
     }
 
     @Override

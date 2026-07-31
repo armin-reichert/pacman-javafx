@@ -5,18 +5,18 @@
 package de.amr.pacmanfx.core.state;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.comp.ghost.GhostState;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.systems.common.GameSystems;
+import de.amr.pacmanfx.core.model.systems.ghost.GhostStateSystem;
+import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 
-import java.util.Set;
-
+/**
+ * When a ghost has been eaten by Pac-Man, the game play freezes for a second, the ghost is displayed by the
+ * points earned and only ghost returning to the house or entering and exiting the house are updated.
+ */
 public class CommonEatingGhostState extends GameState {
 
-    // Ghosts in these states are updated during this game state
-    public static final Set<GhostState> UPDATED_GHOST_STATES_WHILE_EATEN = Set.of(
-        GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE);
+    private static final int FREEZE_TICKS = 60;
 
     public CommonEatingGhostState() {
         super(GameStateID.GAME_LEVEL_EATING_GHOST);
@@ -24,29 +24,30 @@ public class CommonEatingGhostState extends GameState {
 
     @Override
     public void onEnter(GameContext gameContext) {
-        timer().restartTicks(60);
+        timer().restartTicks(FREEZE_TICKS);
     }
 
     @Override
     public void onUpdate(GameContext gameContext) {
-        final GameSystems sys = gameContext.systems();
+        final GameLevel level = gameContext.assertLevel();
 
-        final GameModel model = gameContext.model();
-        final GameLevel level = model.optLevel().orElseThrow();
+        level.heartbeat().triggerPulse();
+
+        // Ensure ghosts that are returning home or accessing the house are being updated
+        gameContext.systems().ghostState().update(gameContext);
 
         if (timer().hasExpired()) {
             level.entities().pac().show();
+
+            final GhostStateSystem ghostStateSystem = gameContext.systems().ghostState();
+            final SpriteAnimSystem spriteAnimSystem = gameContext.systems().spriteAnim();
+
             level.ghostsInState(GhostState.EATEN).forEach(
-                ghost -> sys.ghostState().changeState(gameContext, ghost, GhostState.RETURNING_HOME));
-            level.entities().ghosts().forEach(sys.spriteAnim()::playSelected);
+                ghost -> ghostStateSystem.changeState(gameContext, ghost, GhostState.RETURNING_HOME));
+
+            level.entities().ghosts().forEach(spriteAnimSystem::playSelected);
+
             gameContext.flow().resumePreviousState(gameContext);
-        }
-        else {
-            if (timer().tickCount() < 60) {
-                level.ghostsInAnyOfStates(UPDATED_GHOST_STATES_WHILE_EATEN).forEach(
-                    ghost -> ghost.update(gameContext));
-                level.heartbeat().triggerPulse();
-            }
         }
     }
 }

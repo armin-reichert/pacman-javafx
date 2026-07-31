@@ -73,6 +73,7 @@ public class PacStateSystem {
         }
 
         digestionSystem.update(pac);
+
         if (digestionSystem.mustRest(pac)) {
             return;
         }

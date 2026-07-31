@@ -167,6 +167,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final boolean doubleChecked = model.rules().actorCollisionRules().isCollisionDoubleChecked();
 
         level.heartbeat().triggerPulse();
+
         level.huntingRules().update(model.rules(), level.number());
 
         if (gateKeeper != null) {
@@ -175,6 +176,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
         gameContext.systems().pacPower().update(gameContext, pac);
         gameContext.systems().pacState().update(gameContext);
+        gameContext.systems().ghostState().update(gameContext);
         gameContext.systems().bonusState().update(gameContext);
 
         //TODO remove this kind of updates and call entity systems update-methods instead

@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.core.model.systems.ghost;
 
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.actors.ActorAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.comp.ghost.GhostState;
@@ -14,18 +15,39 @@ import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.systems.pac.PacPowerSystem;
 import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
+import de.amr.pacmanfx.core.state.GameState;
+import de.amr.pacmanfx.core.state.GameStateID;
 import org.tinylog.Logger;
+
+import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 
 public class GhostStateSystem {
+
+    // Ghosts in these states are updated other ghost(s) are eaten and hunting is frozen
+    public static final Set<GhostState> UPDATED_GHOST_STATES_WHILE_EATEN = Set.of(
+        GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE);
+
+    public void update(GameContext gameContext) {
+        requireNonNull(gameContext);
+
+        final GameLevel level = gameContext.assertLevel();
+        switch (gameContext.state().id()) {
+            case GameStateID.GAME_LEVEL_EATING_GHOST -> {
+                level.ghostsInAnyOfStates(UPDATED_GHOST_STATES_WHILE_EATEN).forEach(ghost -> update(gameContext, ghost));
+            }
+            default -> {
+                level.entities().ghosts().forEach(ghost -> update(gameContext, ghost));
+            }
+        }
+    }
 
     public void update(GameContext gameContext, Ghost ghost) {
         requireNonNull(gameContext);
         requireNonNull(ghost);
 
         final float speed = gameContext.model().rules().actorSpeedRules().ghostSpeed(gameContext, ghost);
-
         switch (ghost.state()) {
             case LOCKED         -> updateStateLocked(gameContext, ghost, speed);
             case LEAVING_HOUSE  -> updateStateLeavingHouse(gameContext, ghost, speed);
