@@ -83,23 +83,28 @@ public class Bonus extends GameEntity implements UpdatableEntity {
     }
 
     public void setInactive(GameContext gameContext) {
+        requireNonNull(gameContext);
         gameContext.systems().bonusState().setInactive(this, gameContext.systems());
     }
 
     public void showEdibleForSeconds(GameContext gameContext, float seconds) {
+        requireNonNull(gameContext);
         gameContext.systems().bonusState().showEdibleForSeconds(this, seconds);
     }
 
     public void showEatenForSeconds(GameContext gameContext, float seconds) {
-        gameContext.systems().bonusState().showEatenForSeconds(gameContext.systems(), this, seconds);
+        requireNonNull(gameContext);
+        gameContext.systems().bonusState().showEatenForSeconds(gameContext.systems().navigator(), this, seconds);
     }
 
     public void showEdibleAndStartWandering(GameContext gameContext, float speed) {
+        requireNonNull(gameContext);
         gameContext.systems().bonusState().showEdibleAndStartWandering(gameContext.systems(), this, speed);
     }
 
     public void setRoute(GameContext gameContext, List<Vector2i> waypoints, boolean leftToRight) {
         requireNonNull(gameContext);
+        requireNonNull(waypoints);
 
         if (optMoveAndJumpAnimation().isPresent()) {
             gameContext.systems().bonusJumpAnimation().setRoute(this, waypoints, leftToRight);

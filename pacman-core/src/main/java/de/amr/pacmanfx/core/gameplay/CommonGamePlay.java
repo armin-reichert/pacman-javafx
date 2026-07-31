@@ -307,14 +307,13 @@ public abstract class CommonGamePlay implements GamePlay {
 
         final GameModel model = gameContext.model();
         final GameLevel level = gameContext.assertLevel();
-        final GameEventManager eventManager = gameContext.eventManager();
 
         bonus.showEatenForSeconds(gameContext, model.rules().eatenBonusDisplaySeconds());
 
         scorePoints(gameContext, bonus.points(), level.number());
         Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
 
-        eventManager.publishGameEvent(new BonusEatenEvent(bonus));
+        gameContext.eventManager().publishGameEvent(new BonusEatenEvent(bonus));
     }
 
     @Override
@@ -323,10 +322,8 @@ public abstract class CommonGamePlay implements GamePlay {
         requireNonNull(eatenGhost);
 
         final GameSystems sys = gameContext.systems();
-
         final GameModel model = gameContext.model();
         final GameLevel level = gameContext.assertLevel();
-        final GameEventManager eventManager = gameContext.eventManager();
 
         final int killedBefore = level.ghostKillChainSize();
         final int points = model.rules().scoringRules().pointsForGhost(killedBefore);
@@ -338,12 +335,12 @@ public abstract class CommonGamePlay implements GamePlay {
 
         // Animation index is 0-based, animation frame 0 shows points for *first* killed ghost...
         sys.spriteAnim().selectAndSetFrame(eatenGhost, ActorAnimationID.GHOST_POINTS, killedBefore);
+        level.entities().ghosts().forEach(sys.spriteAnim()::stopSelected);
 
         level.addToGhostKillChain(eatenGhost);
         level.entities().pac().hide();
-        level.entities().ghosts().forEach(sys.spriteAnim()::stopSelected);
 
-        eventManager.publishGameEvent(new GhostEatenEvent(eatenGhost));
+        gameContext.eventManager().publishGameEvent(new GhostEatenEvent(eatenGhost));
     }
 
     @Override

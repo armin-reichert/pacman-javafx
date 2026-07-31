@@ -12,6 +12,7 @@ import de.amr.pacmanfx.core.model.comp.bonus.BonusState;
 import de.amr.pacmanfx.core.model.comp.bonus.BonusStateComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
+import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 
 import java.util.Optional;
 
@@ -93,17 +94,19 @@ public class BonusStateSystem {
         bonus.optMoveAndJumpAnimation().ifPresent(animation -> sys.bonusJumpAnimation().start(animation));
     }
 
-    public void showEatenForSeconds(GameSystems sys, Bonus bonus, float seconds) {
-        requireNonNull(sys);
+    /**
+     * @param navigator world navigation system
+     * @param bonus the bonus game entity
+     * @param seconds number of seconds bonus is displayed as eaten
+     */
+    public void showEatenForSeconds(WorldNavigationSystem navigator, Bonus bonus, float seconds) {
+        requireNonNull(navigator);
+        requireNonNull(bonus);
+
         final BonusStateComp bonusState = bonus.requireComponent(BonusStateComp.class);
 
         bonusState.setState(BonusState.EATEN);
         bonusState.timer().restartSeconds(seconds);
-        bonus.show();
-
-        //TODO reconsider this:
-        sys.navigator().setSpeed(bonus, 0);
-
-        bonus.optMoveAndJumpAnimation().ifPresent(animation -> sys.bonusJumpAnimation().stop(animation));
+        navigator.setSpeed(bonus, 0);
     }
 }
