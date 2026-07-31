@@ -5,6 +5,7 @@ import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.actors.PacState;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.pac.PacPowerSystem;
+import de.amr.pacmanfx.core.model.systems.pac.PacStateSystem;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.scene.PointLight;
@@ -25,6 +26,7 @@ public class Pac3DAnimationController {
     public void update(GameContext gameContext, Pac3D pac3D) {
         final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
+        final PacStateSystem pacStateSystem = gameContext.systems().pacState();
         final PacPowerSystem pacPowerSystem = gameContext.systems().pacPower();
 
         final boolean lighted = pac.state() != PacState.DEAD;
@@ -32,11 +34,11 @@ public class Pac3DAnimationController {
             pac3D.powerLight().ifPresent(light -> updatePowerLight(pacPowerSystem, pac, light));
         }
 
-        final boolean walking = pac.state() == PacState.ACTIVE && pac.notBlocked();
+        final boolean walking = pac.state() == PacState.ACTIVE && pacStateSystem.notBlocked(pac);
         if (walking) {
             animations.optAnimation(Pac3D.AnimationID.MOVING, Pac3DMovementAnimation.class).ifPresent(walkingAnimation -> {
                 walkingAnimation.playOrContinue();
-                walkingAnimation.update(pac);
+                walkingAnimation.update(pacStateSystem, pac);
             });
             animations.optAnimation(Pac3D.AnimationID.CHEWING).ifPresent(ManagedAnimation::playOrContinue);
         }

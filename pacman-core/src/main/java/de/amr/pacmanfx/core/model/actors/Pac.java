@@ -88,11 +88,4 @@ public class Pac extends GameEntity {
         return stateComp().state();
     }
 
-    public boolean notBlocked() {
-        return !movement().hasZeroSpeed() && !didNotMoveThroughWorld();
-    }
-
-    private boolean didNotMoveThroughWorld() {
-        return !worldNavigation().info.moved;
-    }
 }

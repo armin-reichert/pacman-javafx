@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.uilib.model3D.pac;
 
 import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.systems.pac.PacStateSystem;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 
 public abstract class Pac3DMovementAnimation extends ManagedAnimation {
@@ -13,7 +14,7 @@ public abstract class Pac3DMovementAnimation extends ManagedAnimation {
         super(label);
     }
 
-    public abstract void update(Pac pac);
+    public abstract void update(PacStateSystem pacStateSystem, Pac pac);
 
     public abstract void setPowerMode(boolean power);
 }

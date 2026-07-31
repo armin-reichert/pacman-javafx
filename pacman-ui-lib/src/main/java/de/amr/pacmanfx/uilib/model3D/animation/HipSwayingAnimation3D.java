@@ -5,6 +5,7 @@ package de.amr.pacmanfx.uilib.model3D.animation;
 
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.actors.PacState;
+import de.amr.pacmanfx.core.model.systems.pac.PacStateSystem;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3DMovementAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -75,8 +76,8 @@ public class HipSwayingAnimation3D extends Pac3DMovementAnimation {
         }
     }
 
-    public void update(Pac pac) {
-        final boolean animate = pac.state() == PacState.ACTIVE && pac.notBlocked();
+    public void update(PacStateSystem pacStateSystem, Pac pac) {
+        final boolean animate = pac.state() == PacState.ACTIVE && pacStateSystem.notBlocked(pac);
         if (animate) {
             playOrContinue();
         } else {

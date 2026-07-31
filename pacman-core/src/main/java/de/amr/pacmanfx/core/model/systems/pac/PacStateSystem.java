@@ -48,6 +48,15 @@ public class PacStateSystem {
         pac.stateComp().setState(pacState);
     }
 
+    public boolean notBlocked(Pac pac) {
+        return !(pac.movement().hasZeroSpeed() ||didNotMoveThroughWorld(pac));
+    }
+
+    private boolean didNotMoveThroughWorld(Pac pac) {
+        return !pac.worldNavigation().info.moved;
+    }
+
+
     public void update(GameContext gameContext) {
         requireNonNull(gameContext);
         final GameLevel level = gameContext.assertLevel();
