@@ -236,14 +236,18 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         final GameEventManager eventManager = gameContext.eventManager();
 
         level.selectNextBonus();
-        final int bonusSymbolCode = level.bonusSymbolCode(level.currentBonusIndex());
-        final Bonus bonus = new Bonus(bonusSymbolCode, model.rules().scoringRules().pointsForBonus(bonusSymbolCode));
-        final Vector2i bonusTile = level.worldMap().terrainLayer()
-            .getTilePropertyOrDefault(WorldMapPropertyName.POS_BONUS, ArcadePacMan_GameModel.DEFAULT_BONUS_TILE);
-        bonus.pos().set(WorldMap.halfTileRightOf(bonusTile));
-        bonus.showEdibleForSeconds(gameContext, randomFloat(9, 10));
-        level.setBonus(bonus);
 
+        final int symbolCode = level.bonusSymbolCode(level.currentBonusIndex());
+        final int value = model.rules().scoringRules().pointsForBonus(symbolCode);
+        final float edibleSec = randomFloat(9, 10);
+        final Vector2i tile = level.worldMap().terrainLayer().getTilePropertyOrDefault(
+            WorldMapPropertyName.POS_BONUS, ArcadePacMan_GameModel.DEFAULT_BONUS_TILE);
+
+        final Bonus bonus = Bonus.createStaticBonus(symbolCode, value);
+        bonus.pos().set(WorldMap.halfTileRightOf(tile));
+        bonus.showEdibleForSeconds(gameContext, edibleSec);
+
+        level.setBonus(bonus);
         eventManager.publishGameEvent(new BonusActivatedEvent(bonus));
     }
 

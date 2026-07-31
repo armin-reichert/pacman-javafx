@@ -12,17 +12,17 @@ import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.arcade.pacman.rules.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
-import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.actors.*;
-import de.amr.pacmanfx.core.model.comp.bonus.BonusMoveAndJumpComp;
+import de.amr.pacmanfx.core.model.actors.Bonus;
+import de.amr.pacmanfx.core.model.actors.Ghost;
+import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.comp.bonus.BonusState;
 import de.amr.pacmanfx.core.model.comp.ghost.GhostState;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.rules.HuntingTimer;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.world.*;
-import de.amr.pacmanfx.core.model.rules.HuntingTimer;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
 import org.tinylog.Logger;
 
@@ -162,7 +162,6 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
 
         final GameModel model = gameContext.model();
         final GameLevel level = gameContext.assertLevel();
-        final GameEventManager eventManager = gameContext.eventManager();
 
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
@@ -178,20 +177,23 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         }
 
         level.selectNextBonus();
-        final int bonusSymbolCode = level.bonusSymbolCode(level.currentBonusIndex());
-        final var bonus = new Bonus(bonusSymbolCode, model.rules().scoringRules().pointsForBonus(bonusSymbolCode));
-        bonus.setComponent(BonusMoveAndJumpComp.class, new BonusMoveAndJumpComp());
+
+        final int symbolCode = level.bonusSymbolCode(level.currentBonusIndex());
+        final int value = model.rules().scoringRules().pointsForBonus(symbolCode);
+        Bonus bonus;
         if (terrain.horizontalPortals().isEmpty()) {
+            bonus = Bonus.createStaticBonus(symbolCode, value);
             final Vector2i bonusTile = terrain.getTilePropertyOrDefault(WorldMapPropertyName.POS_BONUS, new Vector2i(13, 20));
             bonus.pos().set(WorldMap.halfTileRightOf(bonusTile));
             bonus.showEdibleForSeconds(gameContext, randomFloat(9, 10));
         } else {
+            bonus = Bonus.createMovingBonus(symbolCode, value);
             computeBonusRoute(gameContext, bonus, terrain, house);
             bonus.showEdibleAndStartWandering(gameContext, model.rules().actorSpeedRules().bonusSpeed(level));
         }
 
         level.setBonus(bonus);
-        eventManager.publishGameEvent(new BonusActivatedEvent(bonus));
+        gameContext.eventManager().publishGameEvent(new BonusActivatedEvent(bonus));
     }
 
     @Override

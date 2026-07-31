@@ -4,6 +4,8 @@
 
 package de.amr.pacmanfx.uilib.model3D.animation;
 
+import de.amr.basics.math.Direction;
+import de.amr.pacmanfx.core.model.actors.Bonus;
 import de.amr.pacmanfx.uilib.model3D.world.Bonus3D;
 
 public class BonusRollingAnimation3D {
@@ -16,24 +18,28 @@ public class BonusRollingAnimation3D {
     }
 
     public void update() {
-        switch (bonus3D.bonus().worldNavigation().moveDir()) {
-            case UP -> {
-                addRotX(-ANGLE_DELTA);
-                bonus3D.rotateY().setAngle(0);
+        final Bonus bonus = bonus3D.bonus();
+        bonus.optWorldNavigation().ifPresent(worldNavigation -> {
+            final Direction moveDir = worldNavigation.moveDir();
+            switch (moveDir) {
+                case UP -> {
+                    addRotX(-ANGLE_DELTA);
+                    bonus3D.rotateY().setAngle(0);
+                }
+                case DOWN  -> {
+                    addRotX(ANGLE_DELTA);
+                    bonus3D.rotateY().setAngle(0);
+                }
+                case LEFT  -> {
+                    bonus3D.rotateX().setAngle(0);
+                    addRotY(ANGLE_DELTA);
+                }
+                case RIGHT -> {
+                    bonus3D.rotateX().setAngle(0);
+                    addRotY(-ANGLE_DELTA);
+                }
             }
-            case DOWN  -> {
-                addRotX(ANGLE_DELTA);
-                bonus3D.rotateY().setAngle(0);
-            }
-            case LEFT  -> {
-                bonus3D.rotateX().setAngle(0);
-                addRotY(ANGLE_DELTA);
-            }
-            case RIGHT -> {
-                bonus3D.rotateX().setAngle(0);
-                addRotY(-ANGLE_DELTA);
-            }
-        }
+        });
     }
 
     private void addRotX(double delta) {

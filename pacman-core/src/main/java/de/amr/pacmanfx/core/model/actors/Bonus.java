@@ -29,22 +29,33 @@ import static java.util.Objects.requireNonNull;
  */
 public class Bonus extends GameEntity implements UpdatableEntity {
 
+    public static Bonus createStaticBonus(int symbolCode, int points) {
+        return new Bonus(false, symbolCode, points);
+    }
+
+    public static Bonus createMovingBonus(int symbolCode, int points) {
+        return new Bonus(true, symbolCode, points);
+    }
+
     private final int symbolCode;
     private final int points;
 
-    public Bonus(int symbolCode, int points) {
+    private Bonus(boolean moving, int symbolCode, int points) {
         this.symbolCode = Validations.requireNonNegativeInt(symbolCode);
         this.points = Validations.requireNonNegativeInt(points);
         this.name = "Bonus-symbol:%d-points:%d".formatted(symbolCode, points);
 
-        setComponent(MovementComp.class, new MovementComp());
-        setComponent(WorldNavigationComp.class, new WorldNavigationComp());
         setComponent(BonusStateComp.class, new BonusStateComp());
-        // To add support for animated maze walking, the following component has to be added
-        //setComponent(BonusJumpAnimation.class, new BonusJumpAnimation());
+
+        if (moving) {
+            setComponent(MovementComp.class, new MovementComp());
+            setComponent(WorldNavigationComp.class, new WorldNavigationComp());
+            setComponent(BonusMoveAndJumpComp.class, new BonusMoveAndJumpComp());
+
+            optWorldNavigation().ifPresent(worldNavigation -> worldNavigation.setCanTeleport(false));
+        }
 
         reset();
-        worldNavigation().setCanTeleport(false); // override default value (true)
     }
 
     @Override
@@ -52,16 +63,18 @@ public class Bonus extends GameEntity implements UpdatableEntity {
         gameContext.systems().bonusState().update(gameContext, this);
     }
 
-    public MovementComp movement() {
-        return requireComponent(MovementComp.class);
-    }
-
-    public WorldNavigationComp worldNavigation() {
-        return requireComponent(WorldNavigationComp.class);
-    }
+    // Component access
 
     public BonusStateComp stateComp() {
         return requireComponent(BonusStateComp.class);
+    }
+
+    public Optional<MovementComp> optMovement() {
+        return optComponent(MovementComp.class);
+    }
+
+    public Optional<WorldNavigationComp> optWorldNavigation() {
+        return optComponent(WorldNavigationComp.class);
     }
 
     public Optional<BonusMoveAndJumpComp> optMoveAndJumpComponent() {
@@ -69,6 +82,8 @@ public class Bonus extends GameEntity implements UpdatableEntity {
             ? Optional.of(requireComponent(BonusMoveAndJumpComp.class))
             : Optional.empty();
     }
+
+    // API
 
     public int symbolCode() {
         return symbolCode;

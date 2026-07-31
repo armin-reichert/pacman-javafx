@@ -66,25 +66,27 @@ public class BonusStateSystem {
     public void setInactive(Bonus bonus, BonusMoveAndJumpSystem moveAndJumpSystem) {
         requireNonNull(moveAndJumpSystem);
 
+        bonus.hide();
+
         final BonusStateComp stateComp = bonus.stateComp();
         stateComp.setState(BonusState.INACTIVE);
         stateComp.timer().restartIndefinitely();
 
-        bonus.hide();
+        if (bonus.optMovement().isPresent()) {
+            navigator.setSpeed(bonus, 0);
+        }
 
-        //TODO reconsider this:
-        navigator.setSpeed(bonus, 0);
         bonus.optMoveAndJumpComponent().ifPresent(moveAndJumpSystem::reset);
     }
 
     public void showEdibleForSeconds(Bonus bonus, float seconds) {
         requireNonNull(bonus);
 
+        bonus.show();
+
         final BonusStateComp stateComp = bonus.stateComp();
         stateComp.setState(BonusState.EDIBLE);
         stateComp.timer().restartSeconds(seconds);
-
-        bonus.show();
     }
 
     public void showEdibleAndStartWandering(GameSystems sys, Bonus bonus, float speed) {
@@ -97,9 +99,12 @@ public class BonusStateSystem {
 
         bonus.show();
 
-        navigator.setSpeed(bonus, speed);
+        if (bonus.optMovement().isPresent()) {
+            navigator.setSpeed(bonus, speed);
+        }
+
         //TODO use system method:
-        bonus.worldNavigation().setTargetTile(null);
+        bonus.optWorldNavigation().ifPresent(worldNavigation -> worldNavigation.setTargetTile(null));
 
         bonus.optMoveAndJumpComponent().ifPresent(moveAndJumpComp -> sys.bonusMoveAndJump().start(moveAndJumpComp));
     }
@@ -107,12 +112,14 @@ public class BonusStateSystem {
     public void showEatenForSeconds(Bonus bonus, float seconds) {
         requireNonNull(bonus);
 
+        bonus.show();
+
         final BonusStateComp stateComp = bonus.stateComp();
         stateComp.setState(BonusState.EATEN);
         stateComp.timer().restartSeconds(seconds);
 
-        bonus.show();
-
-        navigator.setSpeed(bonus, 0);
+        if (bonus.optMovement().isPresent()) {
+            navigator.setSpeed(bonus, 0);
+        }
     }
 }
