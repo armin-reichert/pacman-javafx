@@ -20,6 +20,12 @@ import static java.util.Objects.requireNonNull;
 
 public class BonusStateSystem {
 
+    private final WorldNavigationSystem navigator;
+
+    public BonusStateSystem(WorldNavigationSystem navigator) {
+        this.navigator = requireNonNull(navigator);
+    }
+
     public void update(GameContext gameContext, Bonus bonus) {
         requireNonNull(gameContext);
 
@@ -31,10 +37,10 @@ public class BonusStateSystem {
 
         switch (bonusState.state()) {
             case EDIBLE -> {
-                final Optional<BonusMoveAndJumpComp> animationComp = bonus.optMoveAndJumpAnimation();
+                final Optional<BonusMoveAndJumpComp> animationComp = bonus.optMoveAndJumpComponent();
                 if (animationComp.isPresent()) {
                     bonus.optComponent(BonusMoveAndJumpComp.class).ifPresent(animation -> {
-                        sys.bonusJumpAnimation().update(level, bonus);
+                        sys.bonusMoveAndJump().update(level, bonus);
                         bonusState.setEdibleStateExpired(animation.targetReached() || bonusState.timer().hasExpired());
                     });
                 }
@@ -43,13 +49,13 @@ public class BonusStateSystem {
                     bonusState.setEdibleStateExpired(bonusState.timer().hasExpired());
                 }
                 if (bonusState.edibleStateExpired()) {
-                    setInactive(bonus, sys);
+                    setInactive(bonus, sys.bonusMoveAndJump());
                     gameContext.eventManager().publishGameEvent(new BonusExpiredEvent(bonus));
                 }
             }
             case EATEN -> {
                 if (bonusState.timer().hasExpired()) {
-                    setInactive(bonus, sys);
+                    setInactive(bonus, sys.bonusMoveAndJump());
                     gameContext.eventManager().publishGameEvent(new BonusExpiredEvent(bonus));
                 }
             }
@@ -57,17 +63,18 @@ public class BonusStateSystem {
         }
     }
 
-    public void setInactive(Bonus bonus, GameSystems sys) {
-        final BonusStateComp bonusState = bonus.requireComponent(BonusStateComp.class);
+    public void setInactive(Bonus bonus, BonusMoveAndJumpSystem moveAndJumpSystem) {
+        requireNonNull(moveAndJumpSystem);
 
+        final BonusStateComp bonusState = bonus.requireComponent(BonusStateComp.class);
         bonusState.setState(BonusState.INACTIVE);
         bonusState.timer().restartIndefinitely();
+
         bonus.hide();
 
         //TODO reconsider this:
-        sys.navigator().setSpeed(bonus, 0);
-
-        bonus.optMoveAndJumpAnimation().ifPresent(animation -> sys.bonusJumpAnimation().reset(animation));
+        navigator.setSpeed(bonus, 0);
+        bonus.optMoveAndJumpComponent().ifPresent(moveAndJumpSystem::reset);
     }
 
     public void showEdibleForSeconds(Bonus bonus, float seconds) {
@@ -86,21 +93,19 @@ public class BonusStateSystem {
         bonus.show();
 
         //TODO reconsider this:
-        sys.navigator().setSpeed(bonus, speed);
+        navigator.setSpeed(bonus, speed);
 
         //TODO use system method:
         bonus.worldNavigation().setTargetTile(null);
 
-        bonus.optMoveAndJumpAnimation().ifPresent(animation -> sys.bonusJumpAnimation().start(animation));
+        bonus.optMoveAndJumpComponent().ifPresent(animation -> sys.bonusMoveAndJump().start(animation));
     }
 
     /**
-     * @param navigator world navigation system
      * @param bonus the bonus game entity
      * @param seconds number of seconds bonus is displayed as eaten
      */
-    public void showEatenForSeconds(WorldNavigationSystem navigator, Bonus bonus, float seconds) {
-        requireNonNull(navigator);
+    public void showEatenForSeconds(Bonus bonus, float seconds) {
         requireNonNull(bonus);
 
         final BonusStateComp bonusState = bonus.requireComponent(BonusStateComp.class);

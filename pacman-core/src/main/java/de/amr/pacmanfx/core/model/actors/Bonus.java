@@ -64,7 +64,7 @@ public class Bonus extends GameEntity implements UpdatableEntity {
         return requireComponent(BonusStateComp.class);
     }
 
-    public Optional<BonusMoveAndJumpComp> optMoveAndJumpAnimation() {
+    public Optional<BonusMoveAndJumpComp> optMoveAndJumpComponent() {
         return hasComponent(BonusMoveAndJumpComp.class)
             ? Optional.of(requireComponent(BonusMoveAndJumpComp.class))
             : Optional.empty();
@@ -84,7 +84,7 @@ public class Bonus extends GameEntity implements UpdatableEntity {
 
     public void setInactive(GameContext gameContext) {
         requireNonNull(gameContext);
-        gameContext.systems().bonusState().setInactive(this, gameContext.systems());
+        gameContext.systems().bonusState().setInactive(this, gameContext.systems().bonusMoveAndJump());
     }
 
     public void showEdibleForSeconds(GameContext gameContext, float seconds) {
@@ -94,7 +94,7 @@ public class Bonus extends GameEntity implements UpdatableEntity {
 
     public void showEatenForSeconds(GameContext gameContext, float seconds) {
         requireNonNull(gameContext);
-        gameContext.systems().bonusState().showEatenForSeconds(gameContext.systems().navigator(), this, seconds);
+        gameContext.systems().bonusState().showEatenForSeconds(this, seconds);
     }
 
     public void showEdibleAndStartWandering(GameContext gameContext, float speed) {
@@ -106,8 +106,8 @@ public class Bonus extends GameEntity implements UpdatableEntity {
         requireNonNull(gameContext);
         requireNonNull(waypoints);
 
-        if (optMoveAndJumpAnimation().isPresent()) {
-            gameContext.systems().bonusJumpAnimation().setRoute(this, waypoints, leftToRight);
+        if (optMoveAndJumpComponent().isPresent()) {
+            gameContext.systems().bonusMoveAndJump().setRoute(this, waypoints, leftToRight);
         }
         else {
             Logger.warn("Cannot set bonus route: No bonus animation support!");

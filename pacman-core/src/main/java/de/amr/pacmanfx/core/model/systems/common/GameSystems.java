@@ -43,5 +43,5 @@ public interface GameSystems {
 
     WorldMovementPolicy bonusWorldMovementPolicy();
 
-    BonusMoveAndJumpSystem bonusJumpAnimation();
+    BonusMoveAndJumpSystem bonusMoveAndJump();
 }
