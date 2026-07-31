@@ -42,6 +42,12 @@ public class PacStateSystem {
         this.spriteAnimSystem = spriteAnimSystem;
     }
 
+    public void setState(Pac pac, PacState pacState) {
+        requireNonNull(pac);
+        requireNonNull(pacState);
+        pac.stateComp().setState(pacState);
+    }
+
     public void update(GameContext gameContext) {
         requireNonNull(gameContext);
         final GameLevel level = gameContext.assertLevel();

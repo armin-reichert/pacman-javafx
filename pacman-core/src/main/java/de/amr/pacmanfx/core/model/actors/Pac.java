@@ -9,6 +9,7 @@ import de.amr.pacmanfx.core.model.comp.common.MovementComp;
 import de.amr.pacmanfx.core.model.comp.pac.PacCheatsComp;
 import de.amr.pacmanfx.core.model.comp.pac.PacDigestionComp;
 import de.amr.pacmanfx.core.model.comp.pac.PacPowerComp;
+import de.amr.pacmanfx.core.model.comp.pac.PacStateComp;
 import de.amr.pacmanfx.core.model.comp.spriteanim.SpriteAnimComp;
 import de.amr.pacmanfx.core.model.comp.world.WorldNavigationComp;
 
@@ -18,8 +19,6 @@ import static java.util.Objects.requireNonNull;
  * Base class for Pac-Man / Ms. Pac-Man.
  */
 public class Pac extends GameEntity {
-
-    private PacState state;
 
     /**
      * @param name a readable name. Any honest Pac-Man and Pac-Woman should have a name! Period.
@@ -32,9 +31,8 @@ public class Pac extends GameEntity {
         setComponent(PacDigestionComp.class, new PacDigestionComp());
         setComponent(PacPowerComp.class, new PacPowerComp());
         setComponent(PacCheatsComp.class, new PacCheatsComp());
+        setComponent(PacStateComp.class, new PacStateComp());
         setComponent(SpriteAnimComp.class, new SpriteAnimComp());
-
-        state = PacState.ACTIVE;
     }
 
     //TODO state entity component
@@ -59,11 +57,15 @@ public class Pac extends GameEntity {
         return requireComponent(PacCheatsComp.class);
     }
 
+    public PacStateComp stateComp() {
+        return requireComponent(PacStateComp.class);
+    }
+
     @Override
     public String toString() {
         return "Pac{" +
             "name=" + name +
-            ", state=" + state +
+            ", state=" + state() +
             ", visible=" + visibility() +
             ", position=" + pos() +
             ", movement=" + movement() +
@@ -77,20 +79,13 @@ public class Pac extends GameEntity {
     @Override
     public void reset() {
         super.reset();
-
-        state = PacState.ACTIVE;
         worldNavigation().corneringSpeedDelta = 1.5f; // no real cornering implementation but better than nothing
-
         //TODO check this
         requireComponent(SpriteAnimComp.class).delegate().select(ActorAnimationID.PAC_MUNCHING);
     }
 
     public PacState state() {
-        return state;
-    }
-
-    public void setState(PacState state) {
-        this.state = requireNonNull(state);
+        return stateComp().state();
     }
 
     public boolean notBlocked() {

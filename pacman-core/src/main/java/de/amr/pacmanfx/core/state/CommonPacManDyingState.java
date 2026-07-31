@@ -61,7 +61,7 @@ public class CommonPacManDyingState extends GameState {
 
         sys.spriteAnim().stopSelected(pac);
 
-        pac.setState(PacState.DEAD);
+        sys.pacState().setState(pac, PacState.DEAD);
 
         waitForTimeout();
 
