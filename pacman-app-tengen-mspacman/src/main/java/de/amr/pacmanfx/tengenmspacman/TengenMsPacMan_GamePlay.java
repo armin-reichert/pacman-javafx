@@ -238,7 +238,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final float speed = model.rules().actorSpeedRules().bonusSpeed(level);
         final Bonus bonus = Bonus.createMovingBonus(symbolCode, value);
         sys.bonusMoveAndJump().setRoute(bonus, route, leftToRight);
-        sys.bonusState().showEdibleAndStartWandering(bonus, speed, sys.worldNavigator(), sys.bonusMoveAndJump());
+        sys.bonusState().showEdibleAndStartWandering(bonus, speed);
 
         level.setBonus(bonus);
         eventManager.publishGameEvent(new BonusActivatedEvent(bonus));

@@ -191,7 +191,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
             bonus = Bonus.createMovingBonus(symbolCode, value);
             computeBonusRoute(gameContext, bonus, terrain, house);
             final float speed = model.rules().actorSpeedRules().bonusSpeed(level);
-            sys.bonusState().showEdibleAndStartWandering(bonus, speed, sys.worldNavigator(), sys.bonusMoveAndJump());
+            sys.bonusState().showEdibleAndStartWandering(bonus, speed);
         }
 
         level.setBonus(bonus);

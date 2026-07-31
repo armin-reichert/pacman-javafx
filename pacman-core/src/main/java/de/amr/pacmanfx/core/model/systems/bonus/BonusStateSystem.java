@@ -83,11 +83,7 @@ public class BonusStateSystem {
         stateComp.timer().restartSeconds(seconds);
     }
 
-    public void showEdibleAndStartWandering(
-        Bonus bonus, float speed,
-        WorldNavigationSystem navigator,
-        BonusMoveAndJumpSystem moveAndJumpSystem
-    ) {
+    public void showEdibleAndStartWandering(Bonus bonus, float speed) {
         requireNonNull(bonus);
 
         final BonusStateComp stateComp = bonus.bonusStateComp();
