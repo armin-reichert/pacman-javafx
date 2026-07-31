@@ -54,7 +54,7 @@ public class BonusMoveAndJumpSystem {
         animation.pulse().stop();
     }
 
-    public void setMazeRoute(Bonus bonus, List<Vector2i> waypoints, boolean leftToRight) {
+    public void setRoute(Bonus bonus, List<Vector2i> waypoints, boolean fromLeftToRight) {
         requireNonNull(bonus);
         requireNonNull(waypoints);
 
@@ -63,37 +63,36 @@ public class BonusMoveAndJumpSystem {
             return;
         }
 
-        final BonusMoveAndJumpComp animation = bonus.requireComponent(BonusMoveAndJumpComp.class);
-
         final var route = new ArrayList<>(waypoints);
-        final Vector2i first = route.removeFirst();
+        final Direction initialDir = fromLeftToRight ? Direction.RIGHT : Direction.LEFT;
+        navigator.placeAtTile(bonus, route.removeFirst());
+        navigator.setMoveDir(bonus, initialDir);
+        navigator.setWishDir(bonus, initialDir);
 
-        navigator.placeAtTile(bonus, first);
-        navigator.setMoveDir(bonus, leftToRight ? Direction.RIGHT : Direction.LEFT);
-        navigator.setWishDir(bonus, leftToRight ? Direction.RIGHT : Direction.LEFT);
-
-        animation.setRouteNavigation(new RouteGuidedActorSteering<>(navigator, worldMovementPolicy, route));
+        final var steering = new RouteGuidedActorSteering<Bonus>(navigator, worldMovementPolicy, route);
+        bonus.requireComponent(BonusMoveAndJumpComp.class).setRouteNavigation(steering);
     }
 
     private void wanderMaze(GameLevel level, Bonus bonus) {
-        final BonusMoveAndJumpComp animation = bonus.requireComponent(BonusMoveAndJumpComp.class);
-        animation.routeNavigation().steer(bonus, level);
+        final BonusMoveAndJumpComp moveAndJumpComp = bonus.requireComponent(BonusMoveAndJumpComp.class);
+        moveAndJumpComp.routeNavigation().steer(bonus, level);
         final Vector2i tile = WorldNavigationSystem.computeTile(bonus);
-        boolean mazeExitReached = animation.routeNavigation().isRouteTraversed() || level.worldMap().terrainLayer().isTileInPortalSpace(tile);
-        if (!mazeExitReached) {
+        boolean exitPortalReached = moveAndJumpComp.routeNavigation().isRouteTraversed()
+            || level.worldMap().terrainLayer().isTileInPortalSpace(tile);
+        if (!exitPortalReached) {
             navigator.navigateTowardsTarget(bonus, level, worldMovementPolicy);
             navigator.tryMovingOrTeleporting(bonus, level, worldMovementPolicy);
         }
-        animation.setTargetReached(mazeExitReached);
+        moveAndJumpComp.setTargetReached(exitPortalReached);
     }
 
     private void jump(Bonus bonus) {
-        final WorldNavigationComp navigation = bonus.requireComponent(WorldNavigationComp.class);
-        final BonusMoveAndJumpComp animation = bonus.requireComponent(BonusMoveAndJumpComp.class);
-        animation.pulse().triggerPulse();
-        if (animation.pulse().pulseTriggered()) {
-            float pixels = navigation.moveDir().isVertical() ? 3.0f : 2.0f;
-            float dy = animation.pulse().state() == Pulse.State.ON ? -pixels : pixels;
+        final WorldNavigationComp navigationComp   = bonus.requireComponent(WorldNavigationComp.class);
+        final BonusMoveAndJumpComp moveAndJumpComp = bonus.requireComponent(BonusMoveAndJumpComp.class);
+        moveAndJumpComp.pulse().triggerPulse();
+        if (moveAndJumpComp.pulse().pulseTriggered()) {
+            float jumpDelta = navigationComp.moveDir().isVertical() ? 3.0f : 2.0f;
+            float dy = moveAndJumpComp.pulse().state() == Pulse.State.ON ? -jumpDelta : jumpDelta;
             bonus.position().y += dy;
         }
     }

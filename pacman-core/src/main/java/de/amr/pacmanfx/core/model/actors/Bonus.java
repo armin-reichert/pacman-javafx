@@ -98,11 +98,11 @@ public class Bonus extends GameEntity implements UpdatableEntity {
         gameContext.systems().bonusState().showEdibleAndStartWandering(gameContext.systems(), this, speed);
     }
 
-    public void setMazeRoute(GameContext gameContext, List<Vector2i> waypoints, boolean leftToRight) {
+    public void setRoute(GameContext gameContext, List<Vector2i> waypoints, boolean leftToRight) {
         requireNonNull(gameContext);
 
         if (optMoveAndJumpAnimation().isPresent()) {
-            gameContext.systems().bonusJumpAnimation().setMazeRoute(this, waypoints, leftToRight);
+            gameContext.systems().bonusJumpAnimation().setRoute(this, waypoints, leftToRight);
         }
         else {
             Logger.warn("Cannot set bonus route: No bonus animation support!");
