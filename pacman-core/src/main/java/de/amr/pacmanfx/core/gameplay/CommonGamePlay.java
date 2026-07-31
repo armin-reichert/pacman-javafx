@@ -460,7 +460,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final Pac pac = level.entities().pac();
         final Bonus bonus = level.entities().optBonus().orElse(null);
         gameContext.thisFrame().huntingStep().setEdibleBonus(null);
-        if (bonus != null && bonus.bonusState() == BonusState.EDIBLE && strategy.collide(pac, bonus)) {
+        if (bonus != null && bonus.state() == BonusState.EDIBLE && strategy.collide(pac, bonus)) {
             gameContext.thisFrame().huntingStep().setEdibleBonus(bonus);
         }
     }

@@ -165,7 +165,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
 
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
-        if (level.optBonus().isPresent() && level.optBonus().get().bonusState() == BonusState.EDIBLE) {
+        if (level.optBonus().isPresent() && level.optBonus().get().state() == BonusState.EDIBLE) {
             Logger.info("Previous bonus is still active, skip this bonus");
             return;
         }

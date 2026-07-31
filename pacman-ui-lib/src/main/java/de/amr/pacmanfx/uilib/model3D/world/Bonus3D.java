@@ -95,7 +95,7 @@ public class Bonus3D implements UpdatableEntity, DisposableGraphicsObject {
 
     @Override
     public void update(GameContext gameContext) {
-        switch (bonus.bonusState()) {
+        switch (bonus.state()) {
             case INACTIVE, EATEN -> {}
             case EDIBLE -> {
                 final WorldMap worldMap = gameContext.assertLevel().worldMap();
@@ -170,6 +170,6 @@ public class Bonus3D implements UpdatableEntity, DisposableGraphicsObject {
         translate.setZ(-WorldMap.HTS);
 
         boolean outsideWorld = center.x() < WorldMap.HTS || center.x() > worldMap.numCols() * WorldMap.TS - WorldMap.HTS;
-        root.setVisible(bonus.bonusState() == BonusState.EDIBLE && !outsideWorld);
+        root.setVisible(bonus.state() == BonusState.EDIBLE && !outsideWorld);
     }
 }

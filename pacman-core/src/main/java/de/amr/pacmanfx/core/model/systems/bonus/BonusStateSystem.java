@@ -30,7 +30,7 @@ public class BonusStateSystem {
         final GameSystems sys = gameContext.systems();
         final GameLevel level = gameContext.assertLevel();
 
-        final BonusStateComp stateComp = bonus.state();
+        final BonusStateComp stateComp = bonus.bonusStateComp();
         final MoveAndJumpComp moveAndJumpComp = bonus.optMoveAndJump().orElse(null);
 
         stateComp.timer().doTick();
@@ -68,7 +68,7 @@ public class BonusStateSystem {
 
         bonus.hide();
 
-        final BonusStateComp stateComp = bonus.state();
+        final BonusStateComp stateComp = bonus.bonusStateComp();
         stateComp.setState(BonusState.INACTIVE);
         stateComp.timer().restartIndefinitely();
 
@@ -84,7 +84,7 @@ public class BonusStateSystem {
 
         bonus.show();
 
-        final BonusStateComp stateComp = bonus.state();
+        final BonusStateComp stateComp = bonus.bonusStateComp();
         stateComp.setState(BonusState.EDIBLE);
         stateComp.timer().restartSeconds(seconds);
     }
@@ -93,7 +93,7 @@ public class BonusStateSystem {
         requireNonNull(sys);
         requireNonNull(bonus);
 
-        final BonusStateComp stateComp = bonus.state();
+        final BonusStateComp stateComp = bonus.bonusStateComp();
         stateComp.setState(BonusState.EDIBLE);
         stateComp.timer().restartIndefinitely();
 
@@ -114,7 +114,7 @@ public class BonusStateSystem {
 
         bonus.show();
 
-        final BonusStateComp stateComp = bonus.state();
+        final BonusStateComp stateComp = bonus.bonusStateComp();
         stateComp.setState(BonusState.EATEN);
         stateComp.timer().restartSeconds(seconds);
 
