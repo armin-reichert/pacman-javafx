@@ -111,7 +111,7 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
 
     // TODO decouple symbol code from sprite index
     private RectShort computeBonusSprite(Bonus bonus) {
-        return switch (bonus.state()) {
+        return switch (bonus.bonusState()) {
             case EDIBLE -> spriteOrDefault(spriteSheet().findSprites(SpriteID.BONUS_SYMBOLS), bonus.symbolCode());
             case EATEN ->  spriteOrDefault(spriteSheet().findSprites(SpriteID.BONUS_VALUES), bonus.symbolCode());
             case INACTIVE -> RectShort.NULL_RECTANGLE;

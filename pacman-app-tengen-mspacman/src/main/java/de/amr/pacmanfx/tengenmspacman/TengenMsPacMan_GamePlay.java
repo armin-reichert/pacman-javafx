@@ -198,7 +198,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
         //TODO Find out how Tengen really implemented this
-        if (level.optBonus().isPresent() && level.optBonus().get().state() == BonusState.EDIBLE) {
+        if (level.optBonus().isPresent() && level.optBonus().get().bonusState() == BonusState.EDIBLE) {
             Logger.info("Previous bonus is still active, skip this bonus");
             return;
         }

@@ -9,9 +9,9 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
-import de.amr.pacmanfx.core.model.comp.bonus.BonusMoveAndJumpComp;
 import de.amr.pacmanfx.core.model.comp.bonus.BonusState;
 import de.amr.pacmanfx.core.model.comp.bonus.BonusStateComp;
+import de.amr.pacmanfx.core.model.comp.bonus.MoveAndJumpComp;
 import de.amr.pacmanfx.core.model.comp.common.MovementComp;
 import de.amr.pacmanfx.core.model.comp.world.WorldNavigationComp;
 import org.tinylog.Logger;
@@ -50,12 +50,10 @@ public class Bonus extends GameEntity implements UpdatableEntity {
         if (moving) {
             setComponent(MovementComp.class, new MovementComp());
             setComponent(WorldNavigationComp.class, new WorldNavigationComp());
-            setComponent(BonusMoveAndJumpComp.class, new BonusMoveAndJumpComp());
+            setComponent(MoveAndJumpComp.class, new MoveAndJumpComp());
 
             optWorldNavigation().ifPresent(worldNavigation -> worldNavigation.setCanTeleport(false));
         }
-
-        reset();
     }
 
     @Override
@@ -65,7 +63,7 @@ public class Bonus extends GameEntity implements UpdatableEntity {
 
     // Component access
 
-    public BonusStateComp stateComp() {
+    public BonusStateComp state() {
         return requireComponent(BonusStateComp.class);
     }
 
@@ -77,10 +75,8 @@ public class Bonus extends GameEntity implements UpdatableEntity {
         return optComponent(WorldNavigationComp.class);
     }
 
-    public Optional<BonusMoveAndJumpComp> optMoveAndJumpComponent() {
-        return hasComponent(BonusMoveAndJumpComp.class)
-            ? Optional.of(requireComponent(BonusMoveAndJumpComp.class))
-            : Optional.empty();
+    public Optional<MoveAndJumpComp> optMoveAndJump() {
+        return optComponent(MoveAndJumpComp.class);
     }
 
     // API
@@ -93,8 +89,8 @@ public class Bonus extends GameEntity implements UpdatableEntity {
         return points;
     }
 
-    public BonusState state() {
-        return stateComp().state();
+    public BonusState bonusState() {
+        return state().state();
     }
 
     public void setInactive(GameContext gameContext) {
@@ -121,7 +117,7 @@ public class Bonus extends GameEntity implements UpdatableEntity {
         requireNonNull(gameContext);
         requireNonNull(waypoints);
 
-        if (optMoveAndJumpComponent().isPresent()) {
+        if (optMoveAndJump().isPresent()) {
             gameContext.systems().bonusMoveAndJump().setRoute(this, waypoints, leftToRight);
         }
         else {

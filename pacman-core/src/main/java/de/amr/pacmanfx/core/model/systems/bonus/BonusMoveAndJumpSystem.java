@@ -8,7 +8,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.model.actors.Bonus;
-import de.amr.pacmanfx.core.model.comp.bonus.BonusMoveAndJumpComp;
+import de.amr.pacmanfx.core.model.comp.bonus.MoveAndJumpComp;
 import de.amr.pacmanfx.core.model.comp.world.WorldNavigationComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
@@ -39,17 +39,17 @@ public class BonusMoveAndJumpSystem {
         jump(bonus);
     }
 
-    public void reset(BonusMoveAndJumpComp animation) {
+    public void reset(MoveAndJumpComp animation) {
         requireNonNull(animation);
         animation.pulse().reset();
     }
 
-    public void start(BonusMoveAndJumpComp animation) {
+    public void start(MoveAndJumpComp animation) {
         requireNonNull(animation);
         animation.pulse().restart();
     }
 
-    public void stop(BonusMoveAndJumpComp animation) {
+    public void stop(MoveAndJumpComp animation) {
         requireNonNull(animation);
         animation.pulse().stop();
     }
@@ -70,11 +70,11 @@ public class BonusMoveAndJumpSystem {
         navigator.setWishDir(bonus, initialDir);
 
         final var steering = new RouteGuidedActorSteering<Bonus>(navigator, worldMovementPolicy, route);
-        bonus.requireComponent(BonusMoveAndJumpComp.class).setRouteNavigation(steering);
+        bonus.requireComponent(MoveAndJumpComp.class).setRouteNavigation(steering);
     }
 
     private void wanderMaze(GameLevel level, Bonus bonus) {
-        final BonusMoveAndJumpComp moveAndJumpComp = bonus.requireComponent(BonusMoveAndJumpComp.class);
+        final MoveAndJumpComp moveAndJumpComp = bonus.requireComponent(MoveAndJumpComp.class);
         moveAndJumpComp.routeNavigation().steer(bonus, level);
         final Vector2i tile = WorldNavigationSystem.computeTile(bonus);
         boolean exitPortalReached = moveAndJumpComp.routeNavigation().isRouteTraversed()
@@ -88,7 +88,7 @@ public class BonusMoveAndJumpSystem {
 
     private void jump(Bonus bonus) {
         final WorldNavigationComp navigationComp   = bonus.requireComponent(WorldNavigationComp.class);
-        final BonusMoveAndJumpComp moveAndJumpComp = bonus.requireComponent(BonusMoveAndJumpComp.class);
+        final MoveAndJumpComp moveAndJumpComp = bonus.requireComponent(MoveAndJumpComp.class);
         moveAndJumpComp.pulse().triggerPulse();
         if (moveAndJumpComp.pulse().pulseTriggered()) {
             float jumpDelta = navigationComp.moveDir().isVertical() ? 3.0f : 2.0f;

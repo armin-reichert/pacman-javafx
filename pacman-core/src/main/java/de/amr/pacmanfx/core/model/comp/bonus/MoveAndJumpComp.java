@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.model.GameEntityComponent;
 import de.amr.pacmanfx.core.model.actors.Bonus;
 import de.amr.pacmanfx.core.steering.RouteGuidedActorSteering;
 
-public class BonusMoveAndJumpComp implements GameEntityComponent {
+public class MoveAndJumpComp implements GameEntityComponent {
 
     private static final int PULSE_CHANGE_TICKS = 10;
 
@@ -17,7 +17,7 @@ public class BonusMoveAndJumpComp implements GameEntityComponent {
     private RouteGuidedActorSteering<Bonus> routeNavigation;
     private boolean targetReached;
 
-    public BonusMoveAndJumpComp() {
+    public MoveAndJumpComp() {
         pulse = new Pulse(PULSE_CHANGE_TICKS, Pulse.State.OFF);
     }
 

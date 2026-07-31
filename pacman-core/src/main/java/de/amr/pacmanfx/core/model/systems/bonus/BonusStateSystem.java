@@ -7,7 +7,7 @@ package de.amr.pacmanfx.core.model.systems.bonus;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.bonus.BonusExpiredEvent;
 import de.amr.pacmanfx.core.model.actors.Bonus;
-import de.amr.pacmanfx.core.model.comp.bonus.BonusMoveAndJumpComp;
+import de.amr.pacmanfx.core.model.comp.bonus.MoveAndJumpComp;
 import de.amr.pacmanfx.core.model.comp.bonus.BonusState;
 import de.amr.pacmanfx.core.model.comp.bonus.BonusStateComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;
@@ -30,8 +30,8 @@ public class BonusStateSystem {
         final GameSystems sys = gameContext.systems();
         final GameLevel level = gameContext.assertLevel();
 
-        final BonusStateComp stateComp = bonus.stateComp();
-        final BonusMoveAndJumpComp moveAndJumpComp = bonus.optMoveAndJumpComponent().orElse(null);
+        final BonusStateComp stateComp = bonus.state();
+        final MoveAndJumpComp moveAndJumpComp = bonus.optMoveAndJump().orElse(null);
 
         stateComp.timer().doTick();
 
@@ -63,12 +63,12 @@ public class BonusStateSystem {
         }
     }
 
-    public void setInactive(Bonus bonus, BonusMoveAndJumpSystem moveAndJumpSystem) {
-        requireNonNull(moveAndJumpSystem);
+    public void setInactive(Bonus bonus, BonusMoveAndJumpSystem bonusMoveAndJumpSystem) {
+        requireNonNull(bonusMoveAndJumpSystem);
 
         bonus.hide();
 
-        final BonusStateComp stateComp = bonus.stateComp();
+        final BonusStateComp stateComp = bonus.state();
         stateComp.setState(BonusState.INACTIVE);
         stateComp.timer().restartIndefinitely();
 
@@ -76,7 +76,7 @@ public class BonusStateSystem {
             navigator.setSpeed(bonus, 0);
         }
 
-        bonus.optMoveAndJumpComponent().ifPresent(moveAndJumpSystem::reset);
+        bonus.optMoveAndJump().ifPresent(bonusMoveAndJumpSystem::reset);
     }
 
     public void showEdibleForSeconds(Bonus bonus, float seconds) {
@@ -84,7 +84,7 @@ public class BonusStateSystem {
 
         bonus.show();
 
-        final BonusStateComp stateComp = bonus.stateComp();
+        final BonusStateComp stateComp = bonus.state();
         stateComp.setState(BonusState.EDIBLE);
         stateComp.timer().restartSeconds(seconds);
     }
@@ -93,7 +93,7 @@ public class BonusStateSystem {
         requireNonNull(sys);
         requireNonNull(bonus);
 
-        final BonusStateComp stateComp = bonus.stateComp();
+        final BonusStateComp stateComp = bonus.state();
         stateComp.setState(BonusState.EDIBLE);
         stateComp.timer().restartIndefinitely();
 
@@ -106,7 +106,7 @@ public class BonusStateSystem {
         //TODO use system method:
         bonus.optWorldNavigation().ifPresent(worldNavigation -> worldNavigation.setTargetTile(null));
 
-        bonus.optMoveAndJumpComponent().ifPresent(moveAndJumpComp -> sys.bonusMoveAndJump().start(moveAndJumpComp));
+        bonus.optMoveAndJump().ifPresent(moveAndJumpComp -> sys.bonusMoveAndJump().start(moveAndJumpComp));
     }
 
     public void showEatenForSeconds(Bonus bonus, float seconds) {
@@ -114,7 +114,7 @@ public class BonusStateSystem {
 
         bonus.show();
 
-        final BonusStateComp stateComp = bonus.stateComp();
+        final BonusStateComp stateComp = bonus.state();
         stateComp.setState(BonusState.EATEN);
         stateComp.timer().restartSeconds(seconds);
 
