@@ -12,8 +12,8 @@ import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.ActorAnimationID;
 import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.core.model.comp.pac.PacState;
 import de.amr.pacmanfx.core.model.comp.ghost.ElroyComp;
+import de.amr.pacmanfx.core.model.comp.pac.PacState;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 
@@ -21,22 +21,18 @@ import static java.util.Objects.requireNonNull;
 
 public final class GameState_PacManDying extends GameState {
 
-    private final int hideGhostsTick;
-    private final int animationStartTick;
-    private final int hidePacTick;
-    private final int pacDeadTick;
-
-    public GameState_PacManDying(
+    public record Timing(
         int hideGhostsTick,
         int animationStartTick,
         int hidePacTick,
-        int pacDeadTick)
+        int pacDeadTick) {}
+
+    private final Timing timing;
+
+    public GameState_PacManDying(Timing timing)
     {
         super(CommonGameStateID.GAME_LEVEL_PACMAN_DYING);
-        this.hideGhostsTick = hideGhostsTick;
-        this.animationStartTick = animationStartTick;
-        this.hidePacTick = hidePacTick;
-        this.pacDeadTick = pacDeadTick;
+        this.timing = requireNonNull(timing);
     }
 
     @Override
@@ -87,20 +83,20 @@ public final class GameState_PacManDying extends GameState {
                     ? CommonGameStateID.GAME_OVER : CommonGameStateID.GAME_OR_LEVEL_STARTING);
             }
         }
-        else if (tick == hideGhostsTick) {
+        else if (tick == timing.hideGhostsTick()) {
             level.entities().ghosts().forEach(GameEntity::hide);
             sys.spriteAnim().select(pac, ActorAnimationID.PAC_DYING);
             sys.spriteAnim().resetSelected(pac);
         }
-        else if (tick == animationStartTick) {
+        else if (tick == timing.animationStartTick()) {
             sys.spriteAnim().playSelected(pac);
             gameContext.eventManager().publishGameEvent(new PacDyingEvent(pac));
         }
-        else if (tick == hidePacTick) {
+        else if (tick == timing.hidePacTick()) {
             pac.hide();
             level.optBonus().ifPresent(bonus -> sys.bonusState().setInactive(bonus));
         }
-        else if (tick == pacDeadTick) {
+        else if (tick == timing.pacDeadTick()) {
             gameContext.eventManager().publishGameEvent(new PacDeadEvent(pac));
         }
         else {

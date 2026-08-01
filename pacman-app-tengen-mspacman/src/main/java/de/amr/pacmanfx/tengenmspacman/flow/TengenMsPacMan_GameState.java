@@ -24,7 +24,7 @@ public enum TengenMsPacMan_GameState {
     GAME_LEVEL_COMPLETE         (new GameLevelCompleteState()),
     GAME_LEVEL_TRANSITION       (new GameState_LevelTransition()),
     GAME_LEVEL_EATING_GHOST     (new GameState_EatingGhost()),
-    GAME_LEVEL_PACMAN_DYING     (new GameState_PacManDying(60, 90, 190, 240)),
+    GAME_LEVEL_PACMAN_DYING     (new GameState_PacManDying(new GameState_PacManDying.Timing(60, 90, 190, 240))),
     GAME_OVER                   (new GameOverState()),
     GAME_LEVEL_INTERMISSION     (new GameLevelIntermissionState());
 
