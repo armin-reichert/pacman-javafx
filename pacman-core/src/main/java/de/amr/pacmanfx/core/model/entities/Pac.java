@@ -14,9 +14,9 @@ import de.amr.pacmanfx.core.model.comp.world.WorldNavigationComp;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Base class for Pac-Man / Ms. Pac-Man.
+ * Pac-Man / Ms. Pac-Man.
  */
-public class Pac extends GameEntity {
+public final class Pac extends GameEntity {
 
     /**
      * @param name a readable name. Any honest Pac-Man and Pac-Woman should have a name! Period.

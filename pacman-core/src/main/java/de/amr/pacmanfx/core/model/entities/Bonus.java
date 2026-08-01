@@ -20,7 +20,7 @@ import java.util.Optional;
  *
  * <p>TODO: That's not exactly the original Ms. Pac-Man behaviour with predefined "fruit paths".
  */
-public class Bonus extends GameEntity {
+public final class Bonus extends GameEntity {
 
     public static Bonus createStaticBonus(int symbolCode, int points) {
         return new Bonus(false, symbolCode, points);

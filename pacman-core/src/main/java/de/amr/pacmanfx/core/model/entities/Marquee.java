@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.model.comp.marquee.MarqueeLayoutComp;
 import de.amr.pacmanfx.core.model.comp.marquee.MarqueeRunnerComp;
 import de.amr.pacmanfx.core.model.comp.marquee.MarqueeVisualComp;
 
-public class Marquee extends GameEntity {
+public final class Marquee extends GameEntity {
 
     public Marquee() {
         setComponent(MarqueeRunnerComp.class, new MarqueeRunnerComp());

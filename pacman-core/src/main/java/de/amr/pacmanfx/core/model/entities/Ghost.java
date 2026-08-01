@@ -18,7 +18,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * A ghost. Ghosts differ in their personality which defines attack behavior and look.
  */
-public class Ghost extends GameEntity {
+public final class Ghost extends GameEntity {
 
     private final GhostPersonality personality;
 
