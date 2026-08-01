@@ -10,6 +10,7 @@ import de.amr.pacmanfx.core.model.systems.bonus.BonusStateSystem;
 import de.amr.pacmanfx.core.model.systems.ghost.GhostHouseAccessSystem;
 import de.amr.pacmanfx.core.model.systems.ghost.GhostHuntingStrategy;
 import de.amr.pacmanfx.core.model.systems.ghost.GhostStateSystem;
+import de.amr.pacmanfx.core.model.systems.pac.PacAnimationSystem;
 import de.amr.pacmanfx.core.model.systems.pac.PacDigestionSystem;
 import de.amr.pacmanfx.core.model.systems.pac.PacPowerSystem;
 import de.amr.pacmanfx.core.model.systems.pac.PacStateSystem;
@@ -33,6 +34,8 @@ public interface GameSystems {
     PacPowerSystem pacPower();
 
     PacDigestionSystem pacDigestion();
+
+    PacAnimationSystem pacAnimation();
 
     GhostStateSystem ghostState();
 

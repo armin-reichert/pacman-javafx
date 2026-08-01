@@ -9,10 +9,7 @@ import de.amr.pacmanfx.core.model.systems.bonus.BonusMoveAndJumpSystem;
 import de.amr.pacmanfx.core.model.systems.bonus.BonusStateSystem;
 import de.amr.pacmanfx.core.model.systems.bonus.BonusWorldMovementPolicy;
 import de.amr.pacmanfx.core.model.systems.ghost.*;
-import de.amr.pacmanfx.core.model.systems.pac.PacDigestionSystem;
-import de.amr.pacmanfx.core.model.systems.pac.PacPowerSystem;
-import de.amr.pacmanfx.core.model.systems.pac.PacStateSystem;
-import de.amr.pacmanfx.core.model.systems.pac.PacWorldMovementPolicy;
+import de.amr.pacmanfx.core.model.systems.pac.*;
 import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.systems.world.WorldMovementPolicy;
 
@@ -28,6 +25,7 @@ public class DefaultGameSystems implements GameSystems {
     protected PacStateSystem pacState;
     protected PacPowerSystem pacPower;
     protected PacDigestionSystem pacDigestion;
+    protected PacAnimationSystem pacAnimation;
 
     protected GhostStateSystem ghostState;
     protected GhostHouseAccessSystem ghostHouseAccess;
@@ -56,9 +54,9 @@ public class DefaultGameSystems implements GameSystems {
             navigator,
             pacWorldMovementPolicy,
             pacDigestion,
-            pacPower,
-            spriteAnim
+            pacPower
         );
+        pacAnimation = new PacAnimationSystem(spriteAnim);
     }
 
     protected void createGhostSystems() {
@@ -143,6 +141,11 @@ public class DefaultGameSystems implements GameSystems {
 
     public WorldMovementPolicy pacWorldMovementPolicy() {
         return pacWorldMovementPolicy;
+    }
+
+    @Override
+    public PacAnimationSystem pacAnimation() {
+        return pacAnimation;
     }
 
     @Override

@@ -6,13 +6,12 @@ package de.amr.pacmanfx.core.model.systems.pac;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameCheats;
-import de.amr.pacmanfx.core.model.entities.Pac;
-import de.amr.pacmanfx.core.model.comp.pac.PacState;
 import de.amr.pacmanfx.core.model.comp.pac.PacDigestionComp;
+import de.amr.pacmanfx.core.model.comp.pac.PacState;
+import de.amr.pacmanfx.core.model.entities.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.rules.ActorSpeedRules;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
-import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.systems.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.steering.Steering;
 
@@ -24,7 +23,6 @@ public class PacStateSystem {
     private final WorldMovementPolicy movementPolicy;
     private final PacDigestionSystem digestionSystem;
     private final PacPowerSystem powerSystem;
-    private final SpriteAnimSystem spriteAnimSystem;
 
     private Steering<Pac> automaticSteering;
 
@@ -32,14 +30,12 @@ public class PacStateSystem {
         WorldNavigationSystem navigator,
         WorldMovementPolicy movementPolicy,
         PacDigestionSystem digestionSystem,
-        PacPowerSystem powerSystem,
-        SpriteAnimSystem spriteAnimSystem)
+        PacPowerSystem powerSystem)
     {
         this.navigator = navigator;
         this.movementPolicy = movementPolicy;
         this.digestionSystem = digestionSystem;
         this.powerSystem = powerSystem;
-        this.spriteAnimSystem = spriteAnimSystem;
     }
 
     public void setState(Pac pac, PacState pacState) {
@@ -88,13 +84,6 @@ public class PacStateSystem {
 
         navigator.setSpeed(pac, speed);
         navigator.tryMovingOrTeleporting(pac, level, movementPolicy);
-
-        //TODO This should be called outside, leave it here for now
-        if (pac.worldNavigation().info.moved) {
-            spriteAnimSystem.playSelected(pac);
-        } else {
-            spriteAnimSystem.stopSelected(pac);
-        }
     }
 
     public boolean notBlocked(Pac pac) {
