@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.pacmanfx.arcade.ms_pacman.entities.Marquee;
+import de.amr.pacmanfx.arcade.ms_pacman.entities.MarqueeTimerComp;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 
@@ -22,7 +23,9 @@ public class MarqueeRenderer extends BaseRenderer {
      * </p>
      */
     public void drawMarquee(Marquee marquee) {
-        long tick = marquee.timer().tickCount();
+        final MarqueeTimerComp timerComp = marquee.timer();
+
+        long tick = timerComp.runner().tickCount();
         ctx.setFill(marquee.bulbOffColor());
         for (int bulbIndex = 0; bulbIndex < marquee.totalBulbCount(); ++bulbIndex) {
             drawMarqueeBulb(marquee, bulbIndex);

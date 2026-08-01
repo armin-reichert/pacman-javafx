@@ -10,6 +10,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.Marquee;
+import de.amr.pacmanfx.arcade.ms_pacman.entities.MarqueeSystem;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
@@ -92,7 +93,8 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
         marquee = new Marquee(60, 88, 132, 60, 96, 6, 16);
         marquee.setBulbOffColor(ARCADE_RED);
         marquee.setBulbOnColor(ARCADE_WHITE);
-        marquee.timer().restartIndefinitely();
+
+        MarqueeSystem.instance().start(marquee);
 
         final var factory = new ArcadeMsPacMan_ActorFactory();
 
@@ -150,7 +152,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
 
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                scene.marquee.timer().doTick();
+                MarqueeSystem.instance().update(scene.marquee);
                 if (timer.atSecond(1)) {
                     scene.sceneFlow.enterState(scene, GHOSTS_MARCHING_IN);
                 }
@@ -160,7 +162,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
         GHOSTS_MARCHING_IN {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                scene.marquee.timer().doTick();
+                MarqueeSystem.instance().update(scene.marquee);
                 boolean atEndPosition = letGhostWalkIn(scene);
                 if (atEndPosition) {
                     if (scene.ghostPresented == GhostPersonality.ORANGE_GHOST_POKEY) {
@@ -210,7 +212,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
                 final GameSystems sys = scene.gameContext().systems();
                 final Pac msPacMan = scene.msPacMan;
 
-                scene.marquee.timer().doTick();
+                MarqueeSystem.instance().update(scene.marquee);
 
                 sys.motor().move(msPacMan);
                 if (msPacMan.pos().x() <= STOP_X_MS_PACMAN) {
@@ -226,7 +228,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
                 final GameContext gameContext = scene.appContext().currentGameContext();
                 final boolean canPlay = !gameContext.coinMechanism().isEmpty();
-                scene.marquee.timer().doTick();
+                MarqueeSystem.instance().update(scene.marquee);
                 if (timer.atSecond(2.0) && !canPlay) {
                     scene.gameFlow().enterState(gameContext, CommonGameStateID.GAME_OR_LEVEL_STARTING); // play demo level after 2 seconds
                 }
