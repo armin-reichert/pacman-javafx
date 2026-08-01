@@ -174,6 +174,7 @@ public abstract class CommonGamePlay implements GamePlay {
             gateKeeper.unlockGhostIfPossible(gameContext);
         }
 
+        gameContext.systems().pacAutoSteering().update(level, pac);
         gameContext.systems().pacPower().update(gameContext, pac);
         gameContext.systems().pacState().update(gameContext);
         gameContext.systems().pacAnimation().update(pac);
@@ -188,7 +189,6 @@ public abstract class CommonGamePlay implements GamePlay {
                 updatableEntity.update(gameContext);
             }
         });
-
 
         detectCollisions(gameContext);
         evalCollisions(gameContext);

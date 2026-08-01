@@ -22,6 +22,7 @@ public class DefaultGameSystems implements GameSystems {
     protected SpriteAnimSystem spriteAnim = new SpriteAnimSystem();
 
     protected WorldMovementPolicy pacWorldMovementPolicy;
+    protected PacAutoSteeringSystem pacAutoSteering;
     protected PacStateSystem pacState;
     protected PacPowerSystem pacPower;
     protected PacDigestionSystem pacDigestion;
@@ -50,6 +51,7 @@ public class DefaultGameSystems implements GameSystems {
         pacPower = new PacPowerSystem();
         pacDigestion = new PacDigestionSystem();
         pacWorldMovementPolicy = new PacWorldMovementPolicy();
+        pacAutoSteering = new PacAutoSteeringSystem();
         pacState = new PacStateSystem(
             navigator,
             pacWorldMovementPolicy,
@@ -122,6 +124,11 @@ public class DefaultGameSystems implements GameSystems {
     @Override
     public RandomWorldMovementSystem roamingNavigator() {
         return roamingNavigator;
+    }
+
+    @Override
+    public PacAutoSteeringSystem pacAutoSteering() {
+        return pacAutoSteering;
     }
 
     @Override

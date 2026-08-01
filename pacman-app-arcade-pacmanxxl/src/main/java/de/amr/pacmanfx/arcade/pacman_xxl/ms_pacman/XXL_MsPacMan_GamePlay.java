@@ -35,13 +35,12 @@ public class XXL_MsPacMan_GamePlay extends ArcadeMsPacMan_GamePlay {
         pac.cheats().setImmune(false);
         pac.cheats().setUsingAutopilot(true);
 
-        // Demo level map could be a custom map, so use generic auto-steering that also can cope with dead-ends:
-        final var demoLevelSteering = new RuleGuidedPacSteering(
-            sys.worldNavigator(), sys.pacWorldMovementPolicy(), sys.pacPower()
+        final var steering = new RuleGuidedPacSteering(
+            sys.worldNavigator(),
+            sys.pacWorldMovementPolicy(),
+            sys.pacPower()
         );
-        //TODO does not belong into this system
-        sys.pacState().setAutomaticSteering(demoLevelSteering);
-        demoLevelSteering.init();
+        pac.autoSteering().setSteering(steering);
 
         xxlModel.gateKeeper().setLevelNumber(levelNumber);
         xxlModel.levelCounter().setEnabled(false);

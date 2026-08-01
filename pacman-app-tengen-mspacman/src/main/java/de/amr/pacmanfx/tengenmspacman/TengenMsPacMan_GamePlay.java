@@ -13,11 +13,11 @@ import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
 import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
 import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.comp.bonus.BonusState;
+import de.amr.pacmanfx.core.model.comp.ghost.GhostState;
 import de.amr.pacmanfx.core.model.entities.Bonus;
 import de.amr.pacmanfx.core.model.entities.Ghost;
 import de.amr.pacmanfx.core.model.entities.Pac;
-import de.amr.pacmanfx.core.model.comp.bonus.BonusState;
-import de.amr.pacmanfx.core.model.comp.ghost.GhostState;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
@@ -141,12 +141,12 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         pac.cheats().setImmune(false);
         pac.cheats().setUsingAutopilot(true);
 
-        final var demoLevelSteering = new RuleGuidedPacSteering(
-            sys.worldNavigator(), sys.pacWorldMovementPolicy(), sys.pacPower()
+        final var steering = new RuleGuidedPacSteering(
+            sys.worldNavigator(),
+            sys.pacWorldMovementPolicy(),
+            sys.pacPower()
         );
-        //TODO does not belong into this system
-        sys.pacState().setAutomaticSteering(demoLevelSteering);
-        demoLevelSteering.init();
+        pac.autoSteering().setSteering(steering);
 
         model.gateKeeper().setLevelNumber(1);
         model.levelCounter().setEnabled(true);
@@ -252,10 +252,10 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final var factory = TengenMsPacMan_ActorFactory.instance();
         final Pac msPacMan = factory.createMsPacMan();
 
-        //TODO does not belong into this system
-        sys.pacState().setAutomaticSteering(new RuleGuidedPacSteering(
+        msPacMan.autoSteering().setSteering(new RuleGuidedPacSteering(
             sys.worldNavigator(), sys.pacWorldMovementPolicy(), sys.pacPower()
         ));
+
         model.activatePacBooster(gameContext, msPacMan, model.pacBoosterMode() == PacBooster.ALWAYS_ON);
 
         level.setPac(msPacMan);

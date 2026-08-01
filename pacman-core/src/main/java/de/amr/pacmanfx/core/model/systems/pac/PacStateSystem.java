@@ -24,8 +24,6 @@ public class PacStateSystem {
     private final PacDigestionSystem digestionSystem;
     private final PacPowerSystem powerSystem;
 
-    private Steering automaticSteering;
-
     public PacStateSystem(
         WorldNavigationSystem navigator,
         WorldMovementPolicy movementPolicy,
@@ -50,11 +48,6 @@ public class PacStateSystem {
         update(gameContext.cheats(), level, level.entities().pac());
     }
 
-    //TODO This does not belong here
-    public void setAutomaticSteering(Steering steering) {
-        automaticSteering = requireNonNull(steering);
-    }
-
     private void update(
         GameCheats cheats,
         GameLevel level,
@@ -72,10 +65,6 @@ public class PacStateSystem {
 
         if (digestionSystem.mustRest(pac)) {
             return;
-        }
-
-        if (cheats.isPacUsingAutopilot() || level.isDemoLevel()) {
-            automaticSteering.steer(pac, level);
         }
 
         final float speed = powerSystem.isPowerActive(pac)

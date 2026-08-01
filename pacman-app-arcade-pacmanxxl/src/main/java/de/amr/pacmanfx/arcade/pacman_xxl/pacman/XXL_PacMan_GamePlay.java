@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl.pacman;
 
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GamePlay;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.model.comp.common.AutoSteeringComp;
 import de.amr.pacmanfx.core.model.entities.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
@@ -37,12 +38,12 @@ public class XXL_PacMan_GamePlay extends ArcadePacMan_GamePlay {
         pac.cheats().setUsingAutopilot(true);
 
         // Demo level map could be a custom map, so use generic auto-steering that also can cope with dead-ends:
-        final var demoLevelSteering = new RuleGuidedPacSteering(
-            sys.worldNavigator(), sys.pacWorldMovementPolicy(), sys.pacPower()
+        final var steering = new RuleGuidedPacSteering(
+            sys.worldNavigator(),
+            sys.pacWorldMovementPolicy(),
+            sys.pacPower()
         );
-        //TODO does not belong into this system
-        sys.pacState().setAutomaticSteering(demoLevelSteering);
-        demoLevelSteering.init();
+        pac.autoSteering().setSteering(steering);
 
         xxlModel.gateKeeper().setLevelNumber(levelNumber);
         xxlModel.levelCounter().setEnabled(false);

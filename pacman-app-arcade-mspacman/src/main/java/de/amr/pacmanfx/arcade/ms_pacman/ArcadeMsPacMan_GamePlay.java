@@ -13,6 +13,7 @@ import de.amr.pacmanfx.arcade.pacman.rules.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.comp.common.AutoSteeringComp;
 import de.amr.pacmanfx.core.model.entities.Bonus;
 import de.amr.pacmanfx.core.model.entities.Ghost;
 import de.amr.pacmanfx.core.model.entities.Pac;
@@ -92,10 +93,11 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
     protected void createAndSetMsPacMan(GameSystems sys, GameLevel level) {
         final var factory = new ArcadeMsPacMan_ActorFactory();
         final Pac msPacMan = factory.createMsPacMan();
-        //TODO does not belong into this system
-        sys.pacState().setAutomaticSteering(new RuleGuidedPacSteering(
+
+        msPacMan.autoSteering().setSteering(new RuleGuidedPacSteering(
             sys.worldNavigator(), sys.pacWorldMovementPolicy(), sys.pacPower()
         ));
+
         level.setPac(msPacMan);
     }
 
@@ -131,14 +133,12 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         pac.cheats().setImmune(false);
         pac.cheats().setUsingAutopilot(true);
 
-        final var demoLevelSteering = new RuleGuidedPacSteering(
+        final var steering = new RuleGuidedPacSteering(
             sys.worldNavigator(),
             sys.pacWorldMovementPolicy(),
             sys.pacPower()
         );
-        //TODO does not belong into this system
-        sys.pacState().setAutomaticSteering(demoLevelSteering);
-        demoLevelSteering.init();
+        pac.autoSteering().setSteering(steering);
 
         model.gateKeeper().setLevelNumber(demoLevelNumber);
         model.levelCounter().setEnabled(true);

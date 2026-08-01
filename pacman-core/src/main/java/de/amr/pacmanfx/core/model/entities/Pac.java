@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.core.model.entities;
 
 import de.amr.pacmanfx.core.model.GameEntity;
+import de.amr.pacmanfx.core.model.comp.common.AutoSteeringComp;
 import de.amr.pacmanfx.core.model.comp.common.MovementComp;
 import de.amr.pacmanfx.core.model.comp.pac.*;
 import de.amr.pacmanfx.core.model.comp.spriteanim.SpriteAnimComp;
@@ -25,6 +26,7 @@ public class Pac extends GameEntity {
 
         setComponent(MovementComp.class, new MovementComp());
         setComponent(WorldNavigationComp.class, new WorldNavigationComp());
+        setComponent(AutoSteeringComp.class, new AutoSteeringComp());
         setComponent(PacDigestionComp.class, new PacDigestionComp());
         setComponent(PacPowerComp.class, new PacPowerComp());
         setComponent(PacCheatsComp.class, new PacCheatsComp());
@@ -32,14 +34,16 @@ public class Pac extends GameEntity {
         setComponent(SpriteAnimComp.class, new SpriteAnimComp());
     }
 
-    //TODO state entity component
-
     public MovementComp movement() {
         return requireComponent(MovementComp.class);
     }
 
     public WorldNavigationComp worldNavigation() {
         return requireComponent(WorldNavigationComp.class);
+    }
+
+    public AutoSteeringComp autoSteering() {
+        return requireComponent(AutoSteeringComp.class);
     }
 
     public PacDigestionComp digestion() {
