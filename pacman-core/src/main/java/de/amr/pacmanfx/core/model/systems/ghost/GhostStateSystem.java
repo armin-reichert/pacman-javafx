@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.core.model.systems.ghost;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.actors.ActorAnimationID;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.comp.ghost.GhostState;
@@ -15,8 +14,7 @@ import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.systems.pac.PacPowerSystem;
 import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
-import de.amr.pacmanfx.core.state.GameState;
-import de.amr.pacmanfx.core.state.GameStateID;
+import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import org.tinylog.Logger;
 
 import java.util.Set;
@@ -34,7 +32,7 @@ public class GhostStateSystem {
 
         final GameLevel level = gameContext.assertLevel();
         switch (gameContext.state().id()) {
-            case GameStateID.GAME_LEVEL_EATING_GHOST -> {
+            case CommonGameStateID.GAME_LEVEL_EATING_GHOST -> {
                 level.ghostsInAnyOfStates(UPDATED_GHOST_STATES_WHILE_EATEN).forEach(ghost -> update(gameContext, ghost));
             }
             default -> {

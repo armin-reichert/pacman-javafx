@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.core.state.GameState;
-import de.amr.pacmanfx.core.state.GameStateID;
+import de.amr.pacmanfx.core.gamestate.GameState;
+import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -125,7 +125,7 @@ public class UISettingsActions {
 
             private boolean isLevelPlaying() {
                 final GameState gameState = gameContext().state();
-                return GameStateID.GAME_LEVEL_PLAYING.identifies(gameState);
+                return CommonGameStateID.GAME_LEVEL_PLAYING.identifies(gameState);
             }
         };
 

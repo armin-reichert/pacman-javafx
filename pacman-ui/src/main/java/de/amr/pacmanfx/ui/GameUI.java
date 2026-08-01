@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.event.GameEvent;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
 import de.amr.pacmanfx.core.event.gameplay.GameStateChangeEvent;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
-import de.amr.pacmanfx.core.state.GameStateID;
+import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
@@ -169,7 +169,7 @@ public class GameUI implements GameEventListener {
                 views.gamePlayView().onLevelCreated(gameContext, e.level());
             }
             case GameStateChangeEvent e -> {
-                if (GameStateID.GAME_LEVEL_COMPLETE.identifies(e.newState())) {
+                if (CommonGameStateID.GAME_LEVEL_COMPLETE.identifies(e.newState())) {
                     views.gamePlayView().onLevelCompleted();
                 }
             }

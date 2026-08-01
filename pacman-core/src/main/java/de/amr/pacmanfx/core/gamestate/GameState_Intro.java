@@ -2,14 +2,14 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core.state;
+package de.amr.pacmanfx.core.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
 
-public class CommonGameIntroState extends GameState {
+public final class GameState_Intro extends GameState {
 
-    public CommonGameIntroState() {
-        super(GameStateID.GAME_INTRO);
+    public GameState_Intro() {
+        super(CommonGameStateID.GAME_INTRO);
     }
 
     @Override
@@ -22,7 +22,7 @@ public class CommonGameIntroState extends GameState {
     @Override
     public void onUpdate(GameContext gameContext) {
         if (timer().hasExpired()) {
-            gameContext.flow().enterState(gameContext, GameStateID.GAME_OR_LEVEL_STARTING);
+            gameContext.flow().enterState(gameContext, CommonGameStateID.GAME_OR_LEVEL_STARTING);
         }
     }
 }

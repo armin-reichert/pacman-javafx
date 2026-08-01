@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.basics.math.Direction;
-import de.amr.pacmanfx.core.state.GameStateID;
+import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.gamescene.SceneDisplay;
 import de.amr.pacmanfx.tengenmspacman.model.PacBooster;
@@ -45,14 +45,14 @@ public final class TengenMsPacMan_Actions {
         actionEnterStartScreen = new GameAction(appContext, "enter_start_screen") {
             @Override
             public void doAction() {
-                gameFlow().enterState(gameContext(), GameStateID.GAME_PREPARATION);
+                gameFlow().enterState(gameContext(), CommonGameStateID.GAME_PREPARATION);
             }
         };
 
         actionQuitDemoLevel = new GameAction(appContext, "quit_demo_level") {
             @Override
             public void doAction() {
-                gameFlow().enterState(gameContext(), GameStateID.GAME_PREPARATION);
+                gameFlow().enterState(gameContext(), CommonGameStateID.GAME_PREPARATION);
             }
 
             @Override
@@ -64,7 +64,7 @@ public final class TengenMsPacMan_Actions {
         actionStartPlaying = new GameAction(appContext, "start_playing") {
             @Override
             public void doAction() {
-                gameFlow().enterState(gameContext(), GameStateID.GAME_OR_LEVEL_STARTING);
+                gameFlow().enterState(gameContext(), CommonGameStateID.GAME_OR_LEVEL_STARTING);
             }
         };
 

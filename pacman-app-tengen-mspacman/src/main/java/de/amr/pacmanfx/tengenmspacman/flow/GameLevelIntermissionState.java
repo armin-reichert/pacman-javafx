@@ -8,8 +8,8 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.gameplay.GameFlowController;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.state.GameState;
-import de.amr.pacmanfx.core.state.GameStateID;
+import de.amr.pacmanfx.core.gamestate.GameState;
+import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 
@@ -18,7 +18,7 @@ import java.util.OptionalInt;
 public class GameLevelIntermissionState extends GameState {
 
     public GameLevelIntermissionState() {
-        super(GameStateID.GAME_LEVEL_INTERMISSION);
+        super(CommonGameStateID.GAME_LEVEL_INTERMISSION);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class GameLevelIntermissionState extends GameState {
         final GameModel model = gameContext.model();
 
         if (timer().hasExpired()) {
-            flow.enterState(gameContext, model.isPlaying() ? GameStateID.GAME_LEVEL_TRANSITION : GameStateID.GAME_INTRO);
+            flow.enterState(gameContext, model.isPlaying() ? CommonGameStateID.GAME_LEVEL_TRANSITION : CommonGameStateID.GAME_INTRO);
         }
     }
 

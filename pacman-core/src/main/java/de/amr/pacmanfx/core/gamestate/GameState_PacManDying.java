@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core.state;
+package de.amr.pacmanfx.core.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
@@ -19,20 +19,20 @@ import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 
 import static java.util.Objects.requireNonNull;
 
-public class CommonPacManDyingState extends GameState {
+public final class GameState_PacManDying extends GameState {
 
     private final int hideGhostsTick;
     private final int animationStartTick;
     private final int hidePacTick;
     private final int pacDeadTick;
 
-    public CommonPacManDyingState(
+    public GameState_PacManDying(
         int hideGhostsTick,
         int animationStartTick,
         int hidePacTick,
         int pacDeadTick)
     {
-        super(GameStateID.GAME_LEVEL_PACMAN_DYING);
+        super(CommonGameStateID.GAME_LEVEL_PACMAN_DYING);
         this.hideGhostsTick = hideGhostsTick;
         this.animationStartTick = animationStartTick;
         this.hidePacTick = hidePacTick;
@@ -80,11 +80,11 @@ public class CommonPacManDyingState extends GameState {
 
         if (timer().hasExpired()) {
             if (level.isDemoLevel()) {
-                gameContext.flow().enterState(gameContext, GameStateID.GAME_OVER);
+                gameContext.flow().enterState(gameContext, CommonGameStateID.GAME_OVER);
             } else {
                 model.addLives(-1);
                 gameContext.flow().enterState(gameContext, model.lifeCount() == 0
-                    ? GameStateID.GAME_OVER : GameStateID.GAME_OR_LEVEL_STARTING);
+                    ? CommonGameStateID.GAME_OVER : CommonGameStateID.GAME_OR_LEVEL_STARTING);
             }
         }
         else if (tick == hideGhostsTick) {

@@ -12,8 +12,8 @@ import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
-import de.amr.pacmanfx.core.state.GameState;
-import de.amr.pacmanfx.core.state.GameStateID;
+import de.amr.pacmanfx.core.gamestate.GameState;
+import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 
 public class LevelShortTestState extends GameState {
 
@@ -88,7 +88,7 @@ public class LevelShortTestState extends GameState {
         }
         else if (timer().atSecond(START + 10)) {
             if (level.number() == lastTestedLevelNumber) {
-                gameContext.flow().restartState(gameContext, GameStateID.BOOT);
+                gameContext.flow().restartState(gameContext, CommonGameStateID.BOOT);
             } else {
                 waitForTimeout();
                 gameContext.gamePlay().startNextLevel(gameContext);

@@ -10,8 +10,8 @@ import de.amr.pacmanfx.core.event.gameplay.LevelStartedEvent;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.state.GameState;
-import de.amr.pacmanfx.core.state.GameStateID;
+import de.amr.pacmanfx.core.gamestate.GameState;
+import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 
 public class ArcadeGameStartingState extends GameState {
 
@@ -20,7 +20,7 @@ public class ArcadeGameStartingState extends GameState {
     static final int TICK_NEW_GAME_START_PLAYING = 240;
 
     public ArcadeGameStartingState() {
-        super(GameStateID.GAME_STARTING);
+        super(CommonGameStateID.GAME_STARTING);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class ArcadeGameStartingState extends GameState {
         }
         else if (tick == TICK_NEW_GAME_START_PLAYING) {
             model.setPlaying(true);
-            gameContext.flow().enterState(gameContext, GameStateID.GAME_LEVEL_PLAYING);
+            gameContext.flow().enterState(gameContext, CommonGameStateID.GAME_LEVEL_PLAYING);
         }
     }
 

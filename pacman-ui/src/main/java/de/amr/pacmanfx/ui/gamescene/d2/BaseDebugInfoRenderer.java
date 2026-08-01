@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.model.comp.world.WorldNavigationComp;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
-import de.amr.pacmanfx.core.state.GameState;
+import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;

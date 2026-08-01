@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
-import de.amr.pacmanfx.core.state.GameState;
+import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig.MapConfigKey;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_PlayScene2D;

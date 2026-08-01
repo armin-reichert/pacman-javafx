@@ -20,7 +20,7 @@ import de.amr.pacmanfx.core.model.comp.ghost.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.world.WorldMap;
-import de.amr.pacmanfx.core.state.GameStateID;
+import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -227,11 +227,11 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
                 final boolean canPlay = !gameContext.coinMechanism().isEmpty();
                 scene.marquee.timer().doTick();
                 if (timer.atSecond(2.0) && !canPlay) {
-                    scene.gameFlow().enterState(gameContext, GameStateID.GAME_OR_LEVEL_STARTING); // play demo level after 2 seconds
+                    scene.gameFlow().enterState(gameContext, CommonGameStateID.GAME_OR_LEVEL_STARTING); // play demo level after 2 seconds
                 }
                 //TODO can this happen at all?
                 else if (timer.atSecond(5)) {
-                    scene.gameFlow().enterState(gameContext, GameStateID.GAME_PREPARATION);
+                    scene.gameFlow().enterState(gameContext, CommonGameStateID.GAME_PREPARATION);
                 }
             }
         };

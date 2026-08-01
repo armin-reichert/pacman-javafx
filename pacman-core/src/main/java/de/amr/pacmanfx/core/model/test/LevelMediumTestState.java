@@ -13,8 +13,8 @@ import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
-import de.amr.pacmanfx.core.state.GameState;
-import de.amr.pacmanfx.core.state.GameStateID;
+import de.amr.pacmanfx.core.gamestate.GameState;
+import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 
 import java.util.List;
 
@@ -64,7 +64,7 @@ public class LevelMediumTestState extends GameState {
             if (level.number() == lastTestedLevelNumber) {
                 // All levels tested, return to intro page
                 eventManager.publishGameEvent(new StopAllSoundsEvent());
-                gameContext.flow().enterState(gameContext, GameStateID.GAME_INTRO);
+                gameContext.flow().enterState(gameContext, CommonGameStateID.GAME_INTRO);
             }
             else {
                 // Test next level
@@ -76,13 +76,13 @@ public class LevelMediumTestState extends GameState {
         else {
             gameContext.gamePlay().hunt(gameContext);
             if (model.rules().isLevelCompleted(level)) {
-                gameContext.flow().enterState(gameContext, GameStateID.GAME_INTRO);
+                gameContext.flow().enterState(gameContext, CommonGameStateID.GAME_INTRO);
             }
             else if (gameContext.thisFrame().huntingStep().pacKilled()) {
                 triggerTimeout();
             }
             else if (gameContext.thisFrame().huntingStep().hasGhostBeenKilled()) {
-                gameContext.flow().enterState(gameContext, GameStateID.GAME_LEVEL_EATING_GHOST);
+                gameContext.flow().enterState(gameContext, CommonGameStateID.GAME_LEVEL_EATING_GHOST);
             }
         }
     }

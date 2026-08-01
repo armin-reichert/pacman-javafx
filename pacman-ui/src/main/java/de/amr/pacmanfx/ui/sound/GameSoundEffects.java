@@ -13,7 +13,7 @@ import de.amr.pacmanfx.core.model.comp.ghost.GhostState;
 import de.amr.pacmanfx.core.model.actors.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.pac.PacPowerSystem;
-import de.amr.pacmanfx.core.state.GameStateID;
+import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.media.AudioClip;
@@ -196,7 +196,7 @@ public class GameSoundEffects implements Disposable {
         if (!soundManager.isEnabled()) {
             return;
         }
-        if (GameStateID.GAME_LEVEL_PLAYING.identifies(gameContext.state())) {
+        if (CommonGameStateID.GAME_LEVEL_PLAYING.identifies(gameContext.state())) {
             playSiren(gameContext);
             playGhostSounds(level.entities().pac(), level.entities().ghosts());
         }

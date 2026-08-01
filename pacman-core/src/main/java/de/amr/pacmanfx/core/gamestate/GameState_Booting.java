@@ -2,14 +2,14 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core.state;
+package de.amr.pacmanfx.core.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
 
 /**
  * Corresponds to the screen showing all these random symbols from the Arcade video memory.
  */
-public class CommonGameBootState extends GameState {
+public final class GameState_Booting extends GameState {
 
     public interface Timing {
         int HEX_CODES      = 60;
@@ -18,9 +18,9 @@ public class CommonGameBootState extends GameState {
         int EXPIRATION     = 240;
     }
 
-    public CommonGameBootState() {
+    public GameState_Booting() {
         // "Das muss das Boot abkönnen! Jawohl, Herr Kaleu!"
-        super(GameStateID.BOOT);
+        super(CommonGameStateID.BOOT);
     }
 
     @Override
@@ -32,7 +32,7 @@ public class CommonGameBootState extends GameState {
     @Override
     public void onUpdate(GameContext gameContext) {
         if (timer().hasExpired()) {
-            gameContext.flow().enterState(gameContext, GameStateID.GAME_INTRO);
+            gameContext.flow().enterState(gameContext, CommonGameStateID.GAME_INTRO);
         }
     }
 }

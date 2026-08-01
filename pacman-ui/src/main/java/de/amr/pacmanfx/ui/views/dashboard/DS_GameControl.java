@@ -8,8 +8,8 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.test.CutScenesTestState;
-import de.amr.pacmanfx.core.state.GameState;
-import de.amr.pacmanfx.core.state.GameStateID;
+import de.amr.pacmanfx.core.gamestate.GameState;
+import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import javafx.scene.control.Button;
@@ -74,17 +74,17 @@ public class DS_GameControl extends GameDashboardSection {
         final GameState state = gameContext.state();
 
         choiceBoxInitialLives.setValue(model.initialLifeCount());
-        choiceBoxInitialLives.setDisable(!GameStateID.GAME_INTRO.identifies(state));
+        choiceBoxInitialLives.setDisable(!CommonGameStateID.GAME_INTRO.identifies(state));
 
-        final boolean creditDisabled = !state.isOneOf(GameStateID.GAME_INTRO, GameStateID.GAME_PREPARATION);
+        final boolean creditDisabled = !state.isOneOf(CommonGameStateID.GAME_INTRO, CommonGameStateID.GAME_PREPARATION);
         spinnerCredit.setDisable(creditDisabled);
 
-        final boolean booting = GameStateID.BOOT.identifies(state);
+        final boolean booting = CommonGameStateID.BOOT.identifies(state);
         buttonGroupLevelActions[GAME_LEVEL_START].setDisable(booting || !canStartLevel(appContext, state));
         buttonGroupLevelActions[GAME_LEVEL_NEXT] .setDisable(booting || !canEnterNextLevel(model, state));
         buttonGroupLevelActions[GAME_LEVEL_QUIT] .setDisable(booting || model.optLevel().isEmpty());
 
-        buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(booting || !GameStateID.GAME_INTRO.identifies(state));
+        buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(booting || !CommonGameStateID.GAME_INTRO.identifies(state));
         buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT].setDisable(booting || !(state instanceof CutScenesTestState));
 
         cbCollisionCheckedTwice.setSelected(gameContext.model().rules().actorCollisionRules().isCollisionDoubleChecked());
@@ -94,10 +94,10 @@ public class DS_GameControl extends GameDashboardSection {
         boolean isArcadeGame = GameVariantID.isArcadeGameName(appContext.variants().currentVariantName());
         if (!isArcadeGame) return true; //TODO not 100% correct but we cannot access Tengen game model from here
         return !appContext.currentGameContext().coinMechanism().isEmpty()
-            && gameState.isOneOf(GameStateID.GAME_INTRO, GameStateID.GAME_PREPARATION);
+            && gameState.isOneOf(CommonGameStateID.GAME_INTRO, CommonGameStateID.GAME_PREPARATION);
     }
 
     private boolean canEnterNextLevel(GameModel game, GameState gameState) {
-        return game.isPlaying() && GameStateID.GAME_LEVEL_PLAYING.identifies(gameState);
+        return game.isPlaying() && CommonGameStateID.GAME_LEVEL_PLAYING.identifies(gameState);
     }
 }

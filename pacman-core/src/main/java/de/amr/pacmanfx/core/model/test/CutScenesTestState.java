@@ -5,8 +5,8 @@ package de.amr.pacmanfx.core.model.test;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.GenericChangeEvent;
-import de.amr.pacmanfx.core.state.GameState;
-import de.amr.pacmanfx.core.state.GameStateID;
+import de.amr.pacmanfx.core.gamestate.GameState;
+import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 
 public class CutScenesTestState extends GameState {
 
@@ -31,7 +31,7 @@ public class CutScenesTestState extends GameState {
                 //TODO find another solution and get rid of this event type
                 gameContext.eventManager().publishGameEvent(new GenericChangeEvent("Cut Scene Test"));
             } else {
-                gameContext.flow().enterState(gameContext, GameStateID.GAME_INTRO);
+                gameContext.flow().enterState(gameContext, CommonGameStateID.GAME_INTRO);
             }
         }
     }

@@ -24,7 +24,7 @@ import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.model.rules.CollisionStrategy;
-import de.amr.pacmanfx.core.state.GameStateID;
+import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -398,7 +398,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
 
                 if (timer.tickCount() == TICK_START_DEMO_LEVEL) {
                     scene.ghosts[GhostPersonality.ORANGE_GHOST_POKEY.ordinal()].hide();
-                    scene.gameFlow().enterState(gameContext, GameStateID.GAME_OR_LEVEL_STARTING);
+                    scene.gameFlow().enterState(gameContext, CommonGameStateID.GAME_OR_LEVEL_STARTING);
                 }
             }
         };

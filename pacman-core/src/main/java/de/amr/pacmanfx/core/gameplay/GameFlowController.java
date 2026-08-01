@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.test.CutScenesTestState;
 import de.amr.pacmanfx.core.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.core.model.test.LevelShortTestState;
-import de.amr.pacmanfx.core.state.GameState;
+import de.amr.pacmanfx.core.gamestate.GameState;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 

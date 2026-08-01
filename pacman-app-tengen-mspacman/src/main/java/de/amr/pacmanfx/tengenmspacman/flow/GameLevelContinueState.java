@@ -8,15 +8,15 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.gameplay.GameContinuedEvent;
 import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.state.GameState;
-import de.amr.pacmanfx.core.state.GameStateID;
+import de.amr.pacmanfx.core.gamestate.GameState;
+import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 
 public class GameLevelContinueState extends GameState {
 
     static final short TICK_RESUME_HUNTING = 240;
 
     public GameLevelContinueState() {
-        super(GameStateID.GAME_LEVEL_CONTINUE);
+        super(CommonGameStateID.GAME_LEVEL_CONTINUE);
     }
 
     @Override
@@ -34,7 +34,7 @@ public class GameLevelContinueState extends GameState {
     public void onUpdate(GameContext gameContext) {
         final long tick = timer().tickCount();
         if (tick == TICK_RESUME_HUNTING) {
-            gameContext.flow().enterState(gameContext, GameStateID.GAME_LEVEL_PLAYING);
+            gameContext.flow().enterState(gameContext, CommonGameStateID.GAME_LEVEL_PLAYING);
         }
     }
 }

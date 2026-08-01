@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.FoodLayer;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.model.score.Score;
-import de.amr.pacmanfx.core.state.GameStateID;
+import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
@@ -296,7 +296,7 @@ public class PlayScene3D extends AbstractGameScene
         final GameContext gameContext = gameContext();
         onDeactivate();
         appContext.ui().sounds().setEnabled(false);
-        gameFlow().enterState(gameContext, GameStateID.GAME_OVER);
+        gameFlow().enterState(gameContext, CommonGameStateID.GAME_OVER);
     }
 
     // Other stuff

@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core.state;
+package de.amr.pacmanfx.core.gamestate;
 
 
 import de.amr.basics.timer.Pulse;
@@ -19,12 +19,12 @@ import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.rules.GameRules;
 import org.tinylog.Logger;
 
-public class CommonDemoLevelPlayingState extends GameState {
+public final class GameState_DemoLevelPlaying extends GameState {
 
     private final int huntingStartTick;
 
-    public CommonDemoLevelPlayingState(int huntingStartTick) {
-        super(GameStateID.DEMO_LEVEL_PLAYING);
+    public GameState_DemoLevelPlaying(int huntingStartTick) {
+        super(CommonGameStateID.DEMO_LEVEL_PLAYING);
         this.huntingStartTick = huntingStartTick;
     }
 
@@ -81,19 +81,19 @@ public class CommonDemoLevelPlayingState extends GameState {
         }
     }
 
-    private GameStateID computeNextState(GameContext gameContext) {
+    private CommonGameStateID computeNextState(GameContext gameContext) {
         final GameLevel level = gameContext.assertLevel();
         final GameRules rules = gameContext.model().rules();
 
         if (rules.isLevelCompleted(level)) {
-            return GameStateID.GAME_INTRO;
+            return CommonGameStateID.GAME_INTRO;
         }
         else if (gameContext.thisFrame().huntingStep().pacKilled()) {
-            return GameStateID.GAME_LEVEL_PACMAN_DYING;
+            return CommonGameStateID.GAME_LEVEL_PACMAN_DYING;
         }
         else if (gameContext.thisFrame().huntingStep().hasGhostBeenKilled()) {
-            return GameStateID.GAME_LEVEL_EATING_GHOST;
+            return CommonGameStateID.GAME_LEVEL_EATING_GHOST;
         }
-        return GameStateID.DEMO_LEVEL_PLAYING;
+        return CommonGameStateID.DEMO_LEVEL_PLAYING;
     }
 }

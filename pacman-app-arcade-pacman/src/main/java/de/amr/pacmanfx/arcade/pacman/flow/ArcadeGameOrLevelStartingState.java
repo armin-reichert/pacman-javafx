@@ -5,13 +5,13 @@
 package de.amr.pacmanfx.arcade.pacman.flow;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.state.GameState;
-import de.amr.pacmanfx.core.state.GameStateID;
+import de.amr.pacmanfx.core.gamestate.GameState;
+import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 
 public class ArcadeGameOrLevelStartingState extends GameState {
 
     public ArcadeGameOrLevelStartingState() {
-        super(GameStateID.GAME_OR_LEVEL_STARTING);
+        super(CommonGameStateID.GAME_OR_LEVEL_STARTING);
     }
 
     @Override
@@ -24,13 +24,13 @@ public class ArcadeGameOrLevelStartingState extends GameState {
         gameContext.flow().enterState(gameContext, computeNextState(gameContext));
     }
 
-    private GameStateID computeNextState(GameContext gameContext) {
+    private CommonGameStateID computeNextState(GameContext gameContext) {
         if (gameContext.model().isPlaying()) {
-            return GameStateID.GAME_LEVEL_CONTINUE;
+            return CommonGameStateID.GAME_LEVEL_CONTINUE;
         }
         if (!gameContext.coinMechanism().isEmpty()) {
-            return GameStateID.GAME_STARTING;
+            return CommonGameStateID.GAME_STARTING;
         }
-        return  GameStateID.DEMO_LEVEL_PLAYING;
+        return  CommonGameStateID.DEMO_LEVEL_PLAYING;
     }
 }

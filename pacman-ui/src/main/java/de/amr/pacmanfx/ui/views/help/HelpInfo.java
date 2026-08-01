@@ -5,8 +5,8 @@ package de.amr.pacmanfx.ui.views.help;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameCheats;
-import de.amr.pacmanfx.core.state.GameState;
-import de.amr.pacmanfx.core.state.GameStateID;
+import de.amr.pacmanfx.core.gamestate.GameState;
+import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.uilib.Ufx;
 import javafx.geometry.Insets;
@@ -31,14 +31,14 @@ public class HelpInfo {
         final boolean demoLevel = gameContext.gamePlay().isDemoLevelRunning(gameContext);
 
         final HelpInfo helpInfo = new HelpInfo(appContext);
-        if (GameStateID.GAME_INTRO.identifies(state)) {
+        if (CommonGameStateID.GAME_INTRO.identifies(state)) {
             helpInfo.addInfoForIntroScene();
         }
-        else if (GameStateID.GAME_PREPARATION.identifies(state)) {
+        else if (CommonGameStateID.GAME_PREPARATION.identifies(state)) {
             helpInfo.addInfoForCreditScene();
         }
-        else if (state.isOneOf(GameStateID.GAME_OR_LEVEL_STARTING, GameStateID.GAME_LEVEL_PLAYING,
-            GameStateID.GAME_LEVEL_PACMAN_DYING, GameStateID.GAME_LEVEL_EATING_GHOST)) {
+        else if (state.isOneOf(CommonGameStateID.GAME_OR_LEVEL_STARTING, CommonGameStateID.GAME_LEVEL_PLAYING,
+            CommonGameStateID.GAME_LEVEL_PACMAN_DYING, CommonGameStateID.GAME_LEVEL_EATING_GHOST)) {
             if (demoLevel) {
                 helpInfo.addInfoForDemoLevelPlayScene();
             } else {

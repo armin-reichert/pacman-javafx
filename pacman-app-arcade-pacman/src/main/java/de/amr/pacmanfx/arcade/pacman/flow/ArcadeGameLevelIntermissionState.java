@@ -7,13 +7,13 @@ package de.amr.pacmanfx.arcade.pacman.flow;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.gameplay.GameFlowController;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.state.GameState;
-import de.amr.pacmanfx.core.state.GameStateID;
+import de.amr.pacmanfx.core.gamestate.GameState;
+import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 
 public class ArcadeGameLevelIntermissionState extends GameState {
 
     public ArcadeGameLevelIntermissionState() {
-        super(GameStateID.GAME_LEVEL_INTERMISSION);
+        super(CommonGameStateID.GAME_LEVEL_INTERMISSION);
     }
 
     @Override
@@ -27,7 +27,7 @@ public class ArcadeGameLevelIntermissionState extends GameState {
         final GameFlowController gameFlow = gameContext.flow();
         final GameModel model = gameContext.model();
         if (timer().hasExpired()) {
-            gameFlow.enterState(gameContext, model.isPlaying() ? GameStateID.GAME_LEVEL_TRANSITION : GameStateID.GAME_INTRO);
+            gameFlow.enterState(gameContext, model.isPlaying() ? CommonGameStateID.GAME_LEVEL_TRANSITION : CommonGameStateID.GAME_INTRO);
         }
     }
 

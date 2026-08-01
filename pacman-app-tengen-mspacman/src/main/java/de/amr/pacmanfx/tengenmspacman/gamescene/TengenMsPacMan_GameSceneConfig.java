@@ -7,7 +7,7 @@ import de.amr.basics.Identifier;
 import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.test.CutScenesTestState;
-import de.amr.pacmanfx.core.state.GameStateID;
+import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameStateID;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameSceneConfig;
@@ -53,16 +53,16 @@ public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
             return AbstractGameSceneConfig.cutSceneID(testState.testedCutSceneNumber);
         }
 
-        if (GameStateID.BOOT.identifies(state)) {
+        if (CommonGameStateID.BOOT.identifies(state)) {
             return CommonGameSceneID.BOOT_SCENE;
         }
-        if (GameStateID.GAME_LEVEL_INTERMISSION.identifies(state)) {
+        if (CommonGameStateID.GAME_LEVEL_INTERMISSION.identifies(state)) {
             return resolveCutSceneID(gameContext);
         }
-        if (GameStateID.GAME_INTRO.identifies(state)) {
+        if (CommonGameStateID.GAME_INTRO.identifies(state)) {
             return CommonGameSceneID.INTRO_SCENE;
         }
-        if (GameStateID.GAME_PREPARATION.identifies(state)) {
+        if (CommonGameStateID.GAME_PREPARATION.identifies(state)) {
             return CommonGameSceneID.START_SCENE;
         }
         if (TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME.identifies(state)) {

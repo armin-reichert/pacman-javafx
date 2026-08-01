@@ -11,8 +11,8 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.comp.ghost.GhostState;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.state.GameState;
-import de.amr.pacmanfx.core.state.GameStateID;
+import de.amr.pacmanfx.core.gamestate.GameState;
+import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
@@ -75,7 +75,7 @@ public final class CheatActions {
             @Override
             public boolean isEnabled() {
                 final GameState gameState = gameContext().state();
-                return normalLevel(appContext).isPresent() && GameStateID.GAME_LEVEL_PLAYING.identifies(gameState);
+                return normalLevel(appContext).isPresent() && CommonGameStateID.GAME_LEVEL_PLAYING.identifies(gameState);
             }
         };
 
@@ -94,14 +94,14 @@ public final class CheatActions {
                 if (!killableGhosts.isEmpty()) {
                     level.clearGhostKillChain(); // start again with lowest number for killing ghost
                     killableGhosts.forEach(ghost -> gameContext.gamePlay().onEatGhost(gameContext, ghost));
-                    gameContext.flow().enterState(gameContext, GameStateID.GAME_LEVEL_EATING_GHOST);
+                    gameContext.flow().enterState(gameContext, CommonGameStateID.GAME_LEVEL_EATING_GHOST);
                 }
             }
 
             @Override
             public boolean isEnabled() {
                 final GameState gameState = gameContext().state();
-                return normalLevel(appContext).isPresent() && GameStateID.GAME_LEVEL_PLAYING.identifies(gameState);
+                return normalLevel(appContext).isPresent() && CommonGameStateID.GAME_LEVEL_PLAYING.identifies(gameState);
             }
         };
 
@@ -110,7 +110,7 @@ public final class CheatActions {
             public void doAction() {
                 final GameContext gameContext = gameContext();
                 gameContext.cheats().notifyCheatUsed();
-                gameFlow().enterState(gameContext, GameStateID.GAME_LEVEL_COMPLETE);
+                gameFlow().enterState(gameContext, CommonGameStateID.GAME_LEVEL_COMPLETE);
             }
 
             @Override
@@ -118,7 +118,7 @@ public final class CheatActions {
                 final GameState state = gameContext().state();
                 final GameLevel level = normalLevel(this.appContext).orElse(null);
                 return level != null
-                    && GameStateID.GAME_LEVEL_PLAYING.identifies(state)
+                    && CommonGameStateID.GAME_LEVEL_PLAYING.identifies(state)
                     && level.number() < gameContext().model().rules().lastLevelNumber();
             }
         };

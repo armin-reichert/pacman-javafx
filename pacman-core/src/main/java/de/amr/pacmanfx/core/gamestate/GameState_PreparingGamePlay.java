@@ -2,14 +2,14 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core.state;
+package de.amr.pacmanfx.core.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
 
-public class CommonGamePreparationState extends GameState {
+public final class GameState_PreparingGamePlay extends GameState {
 
-    public CommonGamePreparationState() {
-        super(GameStateID.GAME_PREPARATION);
+    public GameState_PreparingGamePlay() {
+        super(CommonGameStateID.GAME_PREPARATION);
     }
 
     @Override

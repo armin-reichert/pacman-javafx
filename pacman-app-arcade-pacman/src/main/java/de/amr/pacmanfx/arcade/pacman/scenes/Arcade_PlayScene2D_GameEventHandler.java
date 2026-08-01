@@ -16,8 +16,8 @@ import de.amr.pacmanfx.core.event.pac.*;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.test.TestStateID;
-import de.amr.pacmanfx.core.state.GameState;
-import de.amr.pacmanfx.core.state.GameStateID;
+import de.amr.pacmanfx.core.gamestate.GameState;
+import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationManager;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
@@ -78,7 +78,7 @@ public interface Arcade_PlayScene2D_GameEventHandler extends DefaultGameEventLis
         Logger.info("Enter game state '{}'", e.newState().name());
         final GameState newState = (GameState) e.newState();
 
-        if (GameStateID.GAME_LEVEL_COMPLETE.identifies(newState)) {
+        if (CommonGameStateID.GAME_LEVEL_COMPLETE.identifies(newState)) {
             final GameLevel level = gameContext().model().assertLevel();
             optSoundEffects().ifPresent(GameSoundEffects::stopAll);
 
@@ -86,7 +86,7 @@ public interface Arcade_PlayScene2D_GameEventHandler extends DefaultGameEventLis
             playScene().setLevelCompletedAnimation(completedAnimation);
             completedAnimation.play();
         }
-        else if (GameStateID.GAME_OVER.identifies(newState)) {
+        else if (CommonGameStateID.GAME_OVER.identifies(newState)) {
             gameContext().hudState().showCredit();
             optSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);
         }

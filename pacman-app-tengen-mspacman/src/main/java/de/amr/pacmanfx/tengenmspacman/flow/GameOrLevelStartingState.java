@@ -5,15 +5,15 @@
 package de.amr.pacmanfx.tengenmspacman.flow;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.state.GameState;
-import de.amr.pacmanfx.core.state.GameStateID;
+import de.amr.pacmanfx.core.gamestate.GameState;
+import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import org.tinylog.Logger;
 
 public class GameOrLevelStartingState extends GameState {
 
     public GameOrLevelStartingState() {
-        super(GameStateID.GAME_OR_LEVEL_STARTING);
+        super(CommonGameStateID.GAME_OR_LEVEL_STARTING);
     }
 
     @Override
@@ -34,13 +34,13 @@ public class GameOrLevelStartingState extends GameState {
         gameContext.flow().enterState(gameContext, computeNextState(model));
     }
 
-    private GameStateID computeNextState(TengenMsPacMan_GameModel model) {
+    private CommonGameStateID computeNextState(TengenMsPacMan_GameModel model) {
         if (model.isPlaying()) {
-            return GameStateID.GAME_LEVEL_CONTINUE;
+            return CommonGameStateID.GAME_LEVEL_CONTINUE;
         }
         if (model.canStartNewGame()) {
-            return GameStateID.GAME_STARTING;
+            return CommonGameStateID.GAME_STARTING;
         }
-        return GameStateID.DEMO_LEVEL_PLAYING;
+        return CommonGameStateID.DEMO_LEVEL_PLAYING;
     }
 }

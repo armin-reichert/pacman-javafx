@@ -9,15 +9,15 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
-import de.amr.pacmanfx.core.state.GameState;
-import de.amr.pacmanfx.core.state.GameStateID;
+import de.amr.pacmanfx.core.gamestate.GameState;
+import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 
 public class GameOverState extends GameState {
 
     public GameOverState() {
-        super(GameStateID.GAME_OVER);
+        super(CommonGameStateID.GAME_OVER);
     }
 
     @Override
@@ -48,7 +48,7 @@ public class GameOverState extends GameState {
 
             final Identifier nextStateID = level.isDemoLevel()
                 ? TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME
-                : model.canContinueOnGameOver() ? GameStateID.GAME_PREPARATION : GameStateID.GAME_INTRO;
+                : model.canContinueOnGameOver() ? CommonGameStateID.GAME_PREPARATION : CommonGameStateID.GAME_INTRO;
 
             gameContext.flow().enterState(gameContext, nextStateID);
         }

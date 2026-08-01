@@ -22,8 +22,8 @@ import de.amr.pacmanfx.core.model.actors.Ghost;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.test.TestStateID;
-import de.amr.pacmanfx.core.state.GameState;
-import de.amr.pacmanfx.core.state.GameStateID;
+import de.amr.pacmanfx.core.gamestate.GameState;
+import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.HideGhostShowPointsAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
@@ -85,22 +85,22 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         if (gameState.id() instanceof TestStateID) {
             handleTestState(appContext().ui().viewModel().common3D, gameContext());
         }
-        else if (GameStateID.GAME_OR_LEVEL_STARTING.identifies(newState)) {
+        else if (CommonGameStateID.GAME_OR_LEVEL_STARTING.identifies(newState)) {
             onStartingGameOrLevel();
         }
-        else if (GameStateID.GAME_LEVEL_PLAYING.identifies(newState)) {
+        else if (CommonGameStateID.GAME_LEVEL_PLAYING.identifies(newState)) {
             onHuntingStart(gameContext());
         }
-        else if (GameStateID.GAME_LEVEL_PACMAN_DYING.identifies(newState)) {
+        else if (CommonGameStateID.GAME_LEVEL_PACMAN_DYING.identifies(newState)) {
             onPacManDying(gameContext());
         }
-        else if (GameStateID.GAME_LEVEL_EATING_GHOST.identifies(newState)) {
+        else if (CommonGameStateID.GAME_LEVEL_EATING_GHOST.identifies(newState)) {
             onGhostsKilled(gameContext().thisFrame().huntingStep().ghostsKilled());
         }
-        else if (GameStateID.GAME_LEVEL_COMPLETE.identifies(newState)) {
+        else if (CommonGameStateID.GAME_LEVEL_COMPLETE.identifies(newState)) {
             onLevelComplete();
         }
-        else if (GameStateID.GAME_OVER.identifies(newState)) {
+        else if (CommonGameStateID.GAME_OVER.identifies(newState)) {
             onGameOver();
         }
     }

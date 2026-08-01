@@ -10,8 +10,8 @@ import de.amr.pacmanfx.core.gameplay.GameFlowController;
 import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
-import de.amr.pacmanfx.core.state.GameState;
-import de.amr.pacmanfx.core.state.GameStateID;
+import de.amr.pacmanfx.core.gamestate.GameState;
+import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 
 public class ArcadeGameLevelContinueState extends GameState {
 
@@ -19,7 +19,7 @@ public class ArcadeGameLevelContinueState extends GameState {
     static final int TICK_CONTINUE_LEVEL = 60;
 
     public ArcadeGameLevelContinueState() {
-        super(GameStateID.GAME_LEVEL_CONTINUE);
+        super(CommonGameStateID.GAME_LEVEL_CONTINUE);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class ArcadeGameLevelContinueState extends GameState {
             gameContext.eventManager().publishGameEvent(new GameContinuedEvent());
         }
         else if (tick == TICK_RESUME_HUNTING) {
-            gameFlow.enterState(gameContext, GameStateID.GAME_LEVEL_PLAYING);
+            gameFlow.enterState(gameContext, CommonGameStateID.GAME_LEVEL_PLAYING);
         }
     }
 }

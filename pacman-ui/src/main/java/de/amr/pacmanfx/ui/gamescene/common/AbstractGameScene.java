@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.core.gameplay.GameFlowController;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.state.GameState;
+import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;

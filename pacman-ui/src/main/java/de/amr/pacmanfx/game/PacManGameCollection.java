@@ -14,7 +14,7 @@ import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.event.gameplay.GameStateChangeEvent;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.score.PropertyFileScore;
-import de.amr.pacmanfx.core.state.GameStateID;
+import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -158,7 +158,7 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
 
     @Override
     public void startPlaying() {
-        gameContext.flow().restartState(gameContext, GameStateID.BOOT);
+        gameContext.flow().restartState(gameContext, CommonGameStateID.BOOT);
         ui.views().selectGamePlayView();
         GameSimulation.start(this);
     }

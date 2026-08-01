@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.tengenmspacman.flow;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.state.GameState;
-import de.amr.pacmanfx.core.state.GameStateID;
+import de.amr.pacmanfx.core.gamestate.GameState;
+import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 
 /**
  * Corresponds to the screen showing the people that have contributed to the game. Here, a second
@@ -26,7 +26,7 @@ public class ShowingHallOfFameState extends GameState {
     @Override
     public void onUpdate(GameContext gameContext) {
         if (timer().hasExpired()) {
-            gameContext.flow().enterState(gameContext, GameStateID.GAME_INTRO);
+            gameContext.flow().enterState(gameContext, CommonGameStateID.GAME_INTRO);
         }
     }
 }

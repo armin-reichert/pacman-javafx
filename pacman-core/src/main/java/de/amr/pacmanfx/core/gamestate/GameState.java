@@ -2,21 +2,17 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core.state;
+package de.amr.pacmanfx.core.gamestate;
 
 import de.amr.basics.Identifier;
 import de.amr.basics.fsm.State;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
-import org.tinylog.Logger;
 
 import java.util.Arrays;
 import java.util.Objects;
 
-/**
- * Represents a game state like "booting", "intro", "playing" etc. Each game state has an internal tick timer.
- */
-public class GameState implements State<GameContext>, Identifier {
+public abstract class GameState implements State<GameContext>, Identifier {
 
     private final Identifier id;
     private final TickTimer timer;
@@ -37,21 +33,6 @@ public class GameState implements State<GameContext>, Identifier {
     @Override
     public String name() {
         return id.name();
-    }
-
-    @Override
-    public void onEnter(GameContext gameContext) {
-        Logger.trace("onEnter");
-    }
-
-    @Override
-    public void onUpdate(GameContext gameContext) {
-        Logger.trace("onUpdate");
-    }
-
-    @Override
-    public void onExit(GameContext gameContext) {
-        Logger.trace("onExit");
     }
 
     @Override

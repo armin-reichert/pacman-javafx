@@ -8,8 +8,8 @@ import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.gameplay.CreditAddedEvent;
-import de.amr.pacmanfx.core.state.GameState;
-import de.amr.pacmanfx.core.state.GameStateID;
+import de.amr.pacmanfx.core.gamestate.GameState;
+import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -37,7 +37,7 @@ public final class Arcade_Actions {
                 appContext.ui().sounds().setEnabled(true);
                 coinMechanism.insertCoin();
                 gameContext.eventManager().publishGameEvent(new CreditAddedEvent(1));
-                gameFlow().enterState(gameContext, GameStateID.GAME_PREPARATION);
+                gameFlow().enterState(gameContext, CommonGameStateID.GAME_PREPARATION);
             }
 
             @Override
@@ -50,8 +50,8 @@ public final class Arcade_Actions {
                     return true;
                 }
                 final GameState gameState = gameContext().state();
-                return GameStateID.GAME_INTRO.identifies(gameState)
-                    || GameStateID.GAME_PREPARATION.identifies(gameState);
+                return CommonGameStateID.GAME_INTRO.identifies(gameState)
+                    || CommonGameStateID.GAME_PREPARATION.identifies(gameState);
             }
         };
 
@@ -68,8 +68,8 @@ public final class Arcade_Actions {
                     return false;
                 }
                 final GameState state = gameContext().state();
-                return (GameStateID.GAME_INTRO.identifies(state)
-                    || GameStateID.GAME_PREPARATION.identifies(state));
+                return (CommonGameStateID.GAME_INTRO.identifies(state)
+                    || CommonGameStateID.GAME_PREPARATION.identifies(state));
             }
         };
 

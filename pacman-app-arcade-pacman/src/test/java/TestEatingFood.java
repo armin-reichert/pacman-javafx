@@ -23,7 +23,7 @@ import de.amr.pacmanfx.core.model.comp.ghost.ElroyComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.DefaultGameSystems;
 import de.amr.pacmanfx.core.model.world.FoodLayer;
-import de.amr.pacmanfx.core.state.GameState;
+import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.game.GameBox;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;

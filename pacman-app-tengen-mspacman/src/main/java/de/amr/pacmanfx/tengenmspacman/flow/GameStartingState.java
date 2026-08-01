@@ -10,8 +10,8 @@ import de.amr.pacmanfx.core.event.gameplay.LevelStartedEvent;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.state.GameState;
-import de.amr.pacmanfx.core.state.GameStateID;
+import de.amr.pacmanfx.core.gamestate.GameState;
+import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 
 public class GameStartingState extends GameState {
@@ -21,7 +21,7 @@ public class GameStartingState extends GameState {
     static final short TICK_START_PLAYING = 250;
 
     public GameStartingState() {
-        super(GameStateID.GAME_STARTING);
+        super(CommonGameStateID.GAME_STARTING);
     }
 
     @Override
@@ -49,7 +49,7 @@ public class GameStartingState extends GameState {
         }
         else if (tick == TICK_START_PLAYING) {
             model.setPlaying(true);
-            gameContext.flow().enterState(gameContext, GameStateID.GAME_LEVEL_PLAYING);
+            gameContext.flow().enterState(gameContext, CommonGameStateID.GAME_LEVEL_PLAYING);
         }
     }
 }
