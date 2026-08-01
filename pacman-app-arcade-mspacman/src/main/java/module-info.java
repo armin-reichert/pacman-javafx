@@ -25,4 +25,5 @@ open module de.amr.pacmanfx.arcade.ms_pacman {
     exports de.amr.pacmanfx.arcade.ms_pacman.scenes;
     exports de.amr.pacmanfx.arcade.ms_pacman.rules;
     exports de.amr.pacmanfx.arcade.ms_pacman.entities;
+    exports de.amr.pacmanfx.arcade.ms_pacman.entities.marquee;
 }

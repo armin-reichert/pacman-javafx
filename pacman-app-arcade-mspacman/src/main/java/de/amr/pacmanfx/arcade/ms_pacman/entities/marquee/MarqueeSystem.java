@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.arcade.ms_pacman.entities;
+package de.amr.pacmanfx.arcade.ms_pacman.entities.marquee;
 
 public class MarqueeSystem {
 
@@ -15,10 +15,10 @@ public class MarqueeSystem {
     }
 
     public void update(Marquee marquee) {
-        marquee.timer().runner().doTick();
+        marquee.runner().tickTimer().doTick();
     }
 
     public void start(Marquee marquee) {
-        marquee.timer().runner().restartIndefinitely();
+        marquee.runner().tickTimer().restartIndefinitely();
     }
 }

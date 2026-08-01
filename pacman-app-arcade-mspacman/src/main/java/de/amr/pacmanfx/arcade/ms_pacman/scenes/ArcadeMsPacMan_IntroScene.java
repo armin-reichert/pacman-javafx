@@ -9,8 +9,8 @@ import de.amr.basics.fsm.StateMachine;
 import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.arcade.ms_pacman.entities.Marquee;
-import de.amr.pacmanfx.arcade.ms_pacman.entities.MarqueeSystem;
+import de.amr.pacmanfx.arcade.ms_pacman.entities.marquee.Marquee;
+import de.amr.pacmanfx.arcade.ms_pacman.entities.marquee.MarqueeSystem;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
@@ -91,8 +91,8 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
         final GameSystems sys = gameContext().systems();
 
         marquee = new Marquee(60, 88, 132, 60, 96, 6, 16);
-        marquee.setBulbOffColor(ARCADE_RED);
-        marquee.setBulbOnColor(ARCADE_WHITE);
+        marquee.visualization().setBulbOffColor(ARCADE_RED);
+        marquee.visualization().setBulbOnColor(ARCADE_WHITE);
 
         MarqueeSystem.instance().start(marquee);
 

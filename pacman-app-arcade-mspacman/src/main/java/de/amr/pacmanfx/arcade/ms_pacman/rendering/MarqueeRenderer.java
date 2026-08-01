@@ -4,8 +4,9 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
-import de.amr.pacmanfx.arcade.ms_pacman.entities.Marquee;
-import de.amr.pacmanfx.arcade.ms_pacman.entities.MarqueeTimerComp;
+import de.amr.pacmanfx.arcade.ms_pacman.entities.marquee.Marquee;
+import de.amr.pacmanfx.arcade.ms_pacman.entities.marquee.MarqueeTimerComp;
+import de.amr.pacmanfx.arcade.ms_pacman.entities.marquee.MarqueeVisualization;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 
@@ -23,20 +24,22 @@ public class MarqueeRenderer extends BaseRenderer {
      * </p>
      */
     public void drawMarquee(Marquee marquee) {
-        final MarqueeTimerComp timerComp = marquee.timer();
+        final MarqueeTimerComp runner = marquee.runner();
+        final MarqueeVisualization visualization = marquee.visualization();
 
-        long tick = timerComp.runner().tickCount();
-        ctx.setFill(marquee.bulbOffColor());
+        final long tick = runner.tickTimer().tickCount();
+
+        ctx.setFill(visualization.bulbOffColor());
         for (int bulbIndex = 0; bulbIndex < marquee.totalBulbCount(); ++bulbIndex) {
             drawMarqueeBulb(marquee, bulbIndex);
         }
         int firstBrightIndex = (int) (tick % marquee.totalBulbCount());
-        ctx.setFill(marquee.bulbOnColor());
+        ctx.setFill(visualization.bulbOnColor());
         for (int i = 0; i < marquee.brightBulbsCount(); ++i) {
             drawMarqueeBulb(marquee, (firstBrightIndex + i * marquee.brightBulbsDistance()) % marquee.totalBulbCount());
         }
         // simulate bug from original Arcade game
-        ctx.setFill(marquee.bulbOffColor());
+        ctx.setFill(visualization.bulbOffColor());
         for (int bulbIndex = 81; bulbIndex < marquee.totalBulbCount(); bulbIndex += 2) {
             drawMarqueeBulb(marquee, bulbIndex);
         }

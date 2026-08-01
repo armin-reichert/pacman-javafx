@@ -1,10 +1,9 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.arcade.ms_pacman.entities;
+package de.amr.pacmanfx.arcade.ms_pacman.entities.marquee;
 
 import de.amr.pacmanfx.core.model.GameEntity;
-import javafx.scene.paint.Color;
 
 public class Marquee extends GameEntity {
 
@@ -13,11 +12,11 @@ public class Marquee extends GameEntity {
     private final int totalBulbCount;
     private final int brightBulbsCount;
     private final int brightBulbsDistance;
-    private Color bulbOnColor = Color.WHITE;
-    private Color bulbOffColor = Color.GREEN;
 
     public Marquee(int x, int y, float width, float height, int totalBulbCount, int brightBulbsCount, int brightBulbsDistance) {
         setComponent(MarqueeTimerComp.class, new MarqueeTimerComp());
+        setComponent(MarqueeVisualization.class, new MarqueeVisualization());
+
         pos().set(x, y);
         this.width = width;
         this.height = height;
@@ -26,8 +25,12 @@ public class Marquee extends GameEntity {
         this.brightBulbsDistance = brightBulbsDistance;
     }
 
-    public MarqueeTimerComp timer() {
+    public MarqueeTimerComp runner() {
         return requireComponent(MarqueeTimerComp.class);
+    }
+
+    public MarqueeVisualization visualization() {
+        return requireComponent(MarqueeVisualization.class);
     }
 
     public float width() {
@@ -36,22 +39,6 @@ public class Marquee extends GameEntity {
 
     public float height() {
         return height;
-    }
-
-    public Color bulbOnColor() {
-        return bulbOnColor;
-    }
-
-    public void setBulbOnColor(Color bulbOnColor) {
-        this.bulbOnColor = bulbOnColor;
-    }
-
-    public Color bulbOffColor() {
-        return bulbOffColor;
-    }
-
-    public void setBulbOffColor(Color bulbOffColor) {
-        this.bulbOffColor = bulbOffColor;
     }
 
     public int totalBulbCount() {
