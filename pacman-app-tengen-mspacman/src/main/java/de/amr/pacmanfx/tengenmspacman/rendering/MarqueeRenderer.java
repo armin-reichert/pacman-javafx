@@ -122,9 +122,9 @@ public class MarqueeRenderer extends BaseRenderer {
         else { // left edge top-to-bottom
             int d = index - corners.nw();
             x = minX;
-            y = minY + d * 4;
+            y = minY + d * bs;
         }
 
-        ctx.fillRect(scaled(x), scaled(y), scaled(2), scaled(2));
+        ctx.fillRect(scaled(x), scaled(y), scaled(.5*bs), scaled(.5*bs));
     }
 }
