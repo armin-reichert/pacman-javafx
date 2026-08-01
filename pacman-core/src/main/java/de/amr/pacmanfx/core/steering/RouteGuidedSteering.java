@@ -18,7 +18,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Steers an actor such that it follows a given route.
  */
-public class RouteGuidedActorSteering<A extends GameEntity> implements Steering<A> {
+public class RouteGuidedSteering implements Steering {
 
     private final WorldNavigationSystem navigator;
     private final WorldMovementPolicy worldMovementPolicy;
@@ -27,7 +27,7 @@ public class RouteGuidedActorSteering<A extends GameEntity> implements Steering<
     private int targetIndex;
     private boolean routeTraversed;
 
-    public RouteGuidedActorSteering(WorldNavigationSystem navigator, WorldMovementPolicy worldMovementPolicy, List<Vector2i> route) {
+    public RouteGuidedSteering(WorldNavigationSystem navigator, WorldMovementPolicy worldMovementPolicy, List<Vector2i> route) {
         this.navigator = requireNonNull(navigator);
         this.worldMovementPolicy = requireNonNull(worldMovementPolicy);
         this.route = requireNonNull(route);
@@ -45,11 +45,11 @@ public class RouteGuidedActorSteering<A extends GameEntity> implements Steering<
     }
 
     @Override
-    public void steer(A actor, GameLevel level) {
-        requireNonNull(actor);
+    public void steer(GameEntity gameEntity, GameLevel level) {
+        requireNonNull(gameEntity);
         requireNonNull(level);
 
-        final WorldNavigationComp navigation = actor.requireComponent(WorldNavigationComp.class);
+        final WorldNavigationComp navigation = gameEntity.requireComponent(WorldNavigationComp.class);
 
         if (targetIndex == route.size()) {
             routeTraversed = true;
@@ -58,11 +58,11 @@ public class RouteGuidedActorSteering<A extends GameEntity> implements Steering<
             //TODO Use navigator method
             navigation.setTargetTile(route.get(targetIndex));
         }
-        else if (WorldNavigationSystem.computeTile(actor).equals(route.get(targetIndex))) {
-            selectNextTargetTile(level, actor);
+        else if (WorldNavigationSystem.computeTile(gameEntity).equals(route.get(targetIndex))) {
+            selectNextTargetTile(level, gameEntity);
         }
         else {
-            navigator.navigateTowardsTarget(actor, level, worldMovementPolicy);
+            navigator.navigateTowardsTarget(gameEntity, level, worldMovementPolicy);
         }
     }
 

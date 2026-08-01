@@ -6,15 +6,14 @@ package de.amr.pacmanfx.core.model.comp.bonus;
 
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.model.GameEntityComponent;
-import de.amr.pacmanfx.core.model.entities.Bonus;
-import de.amr.pacmanfx.core.steering.RouteGuidedActorSteering;
+import de.amr.pacmanfx.core.steering.RouteGuidedSteering;
 
 public class MoveAndJumpComp implements GameEntityComponent {
 
     private static final int PULSE_CHANGE_TICKS = 10;
 
     private final Pulse pulse;
-    private RouteGuidedActorSteering<Bonus> routeNavigation;
+    private RouteGuidedSteering routeNavigation;
     private boolean targetReached;
 
     public MoveAndJumpComp() {
@@ -25,11 +24,11 @@ public class MoveAndJumpComp implements GameEntityComponent {
         return pulse;
     }
 
-    public void setRouteNavigation(RouteGuidedActorSteering<Bonus> routeNavigation) {
+    public void setRouteNavigation(RouteGuidedSteering routeNavigation) {
         this.routeNavigation = routeNavigation;
     }
 
-    public RouteGuidedActorSteering<Bonus> routeNavigation() {
+    public RouteGuidedSteering routeNavigation() {
         return routeNavigation;
     }
 

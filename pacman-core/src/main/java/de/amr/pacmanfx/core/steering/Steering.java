@@ -7,9 +7,9 @@ package de.amr.pacmanfx.core.steering;
 import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 
-public interface Steering<A extends GameEntity> {
+public interface Steering {
 
     default void init() {}
 
-    void steer(A actor, GameLevel level);
+    void steer(GameEntity gameEntity, GameLevel level);
 }

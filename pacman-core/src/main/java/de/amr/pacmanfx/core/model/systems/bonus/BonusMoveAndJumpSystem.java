@@ -13,7 +13,7 @@ import de.amr.pacmanfx.core.model.comp.world.WorldNavigationComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.systems.world.WorldMovementPolicy;
-import de.amr.pacmanfx.core.steering.RouteGuidedActorSteering;
+import de.amr.pacmanfx.core.steering.RouteGuidedSteering;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
@@ -69,7 +69,7 @@ public class BonusMoveAndJumpSystem {
         navigator.setMoveDir(bonus, initialDir);
         navigator.setWishDir(bonus, initialDir);
 
-        final var steering = new RouteGuidedActorSteering<Bonus>(navigator, worldMovementPolicy, route);
+        final var steering = new RouteGuidedSteering(navigator, worldMovementPolicy, route);
         bonus.requireComponent(MoveAndJumpComp.class).setRouteNavigation(steering);
     }
 

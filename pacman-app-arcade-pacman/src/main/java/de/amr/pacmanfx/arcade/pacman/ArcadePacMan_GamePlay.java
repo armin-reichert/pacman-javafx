@@ -26,7 +26,7 @@ import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.world.*;
 import de.amr.pacmanfx.core.model.rules.HuntingTimer;
-import de.amr.pacmanfx.core.steering.RouteGuidedActorSteering;
+import de.amr.pacmanfx.core.steering.RouteGuidedSteering;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
 
 import java.util.List;
@@ -178,7 +178,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         pac.cheats().setImmune(false);
         pac.cheats().setUsingAutopilot(true);
 
-        final var demoLevelSteering = new RouteGuidedActorSteering<Pac>(
+        final var demoLevelSteering = new RouteGuidedSteering(
             sys.worldNavigator(), sys.pacWorldMovementPolicy(), DEMO_LEVEL_ROUTE
         );
         //TODO does not belong into this system

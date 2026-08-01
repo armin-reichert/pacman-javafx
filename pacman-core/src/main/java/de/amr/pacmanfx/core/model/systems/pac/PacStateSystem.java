@@ -24,7 +24,7 @@ public class PacStateSystem {
     private final PacDigestionSystem digestionSystem;
     private final PacPowerSystem powerSystem;
 
-    private Steering<Pac> automaticSteering;
+    private Steering automaticSteering;
 
     public PacStateSystem(
         WorldNavigationSystem navigator,
@@ -51,7 +51,7 @@ public class PacStateSystem {
     }
 
     //TODO This does not belong here
-    public void setAutomaticSteering(Steering<Pac> steering) {
+    public void setAutomaticSteering(Steering steering) {
         automaticSteering = requireNonNull(steering);
     }
 

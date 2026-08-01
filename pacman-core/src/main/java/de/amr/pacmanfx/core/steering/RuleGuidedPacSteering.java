@@ -6,6 +6,7 @@ package de.amr.pacmanfx.core.steering;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameConstants;
+import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.entities.*;
 import de.amr.pacmanfx.core.model.comp.bonus.BonusState;
 import de.amr.pacmanfx.core.model.comp.ghost.GhostState;
@@ -29,7 +30,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Pac-Man steering based on a set of rules.
  */
-public class RuleGuidedPacSteering implements Steering<Pac> {
+public class RuleGuidedPacSteering implements Steering {
 
     private static class CollectedData {
 
@@ -85,8 +86,8 @@ public class RuleGuidedPacSteering implements Steering<Pac> {
     }
 
     @Override
-    public void steer(Pac pac, GameLevel level) {
-        final WorldNavigationComp worldNavigation = pac.requireComponent(WorldNavigationComp.class);
+    public void steer(GameEntity gameEntity, GameLevel level) {
+        final WorldNavigationComp worldNavigation = gameEntity.requireComponent(WorldNavigationComp.class);
 
         if (worldNavigation.info.moved && !worldNavigation.isNewTileEntered()) {
             return;
