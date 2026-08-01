@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.core.gameplay;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.model.actors.Bonus;
-import de.amr.pacmanfx.core.model.actors.Ghost;
+import de.amr.pacmanfx.core.model.entities.Bonus;
+import de.amr.pacmanfx.core.model.entities.Ghost;
 import de.amr.pacmanfx.core.model.comp.common.PositionComp;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 

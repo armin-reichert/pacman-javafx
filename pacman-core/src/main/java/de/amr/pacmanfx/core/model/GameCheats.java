@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.core.model;
 
-import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.entities.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;

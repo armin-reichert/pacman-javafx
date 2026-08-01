@@ -9,20 +9,20 @@ import de.amr.basics.fsm.StateMachine;
 import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.arcade.ms_pacman.entities.marquee.Marquee;
-import de.amr.pacmanfx.arcade.ms_pacman.entities.marquee.MarqueeSystem;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.actors.ActorAnimationID;
-import de.amr.pacmanfx.core.model.actors.Ghost;
-import de.amr.pacmanfx.core.model.comp.ghost.GhostState;
-import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.core.model.systems.common.GameSystems;
-import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
+import de.amr.pacmanfx.core.model.GhostPersonality;
+import de.amr.pacmanfx.core.model.comp.ghost.GhostState;
+import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
+import de.amr.pacmanfx.core.model.entities.Ghost;
+import de.amr.pacmanfx.core.model.entities.Marquee;
+import de.amr.pacmanfx.core.model.entities.Pac;
+import de.amr.pacmanfx.core.model.systems.common.GameSystems;
+import de.amr.pacmanfx.core.model.systems.marquee.MarqueeSystem;
+import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -144,8 +144,8 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
         marquee.layout().setBrightBulbsCount(6);
         marquee.layout().setBrightBulbsDistance(16);
 
-        marquee.visualization().setBulbOffColor(ARCADE_RED);
-        marquee.visualization().setBulbOnColor(ARCADE_WHITE);
+        marquee.visualization().setBulbOffColor(ARCADE_RED.toString());
+        marquee.visualization().setBulbOnColor(ARCADE_WHITE.toString());
     }
 
     // Scene flow state machine

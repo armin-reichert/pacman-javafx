@@ -5,6 +5,6 @@
 package de.amr.pacmanfx.core.event.ghost;
 
 import de.amr.pacmanfx.core.event.GameEvent;
-import de.amr.pacmanfx.core.model.actors.Ghost;
+import de.amr.pacmanfx.core.model.entities.Ghost;
 
 public record GhostEatenEvent(Ghost ghost) implements GameEvent {}

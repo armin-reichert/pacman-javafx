@@ -6,7 +6,7 @@ package de.amr.pacmanfx.uilib.model3D.ghost;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.actors.Ghost;
+import de.amr.pacmanfx.core.model.entities.Ghost;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 

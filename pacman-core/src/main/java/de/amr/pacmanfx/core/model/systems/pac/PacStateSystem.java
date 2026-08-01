@@ -6,7 +6,7 @@ package de.amr.pacmanfx.core.model.systems.pac;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameCheats;
-import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.entities.Pac;
 import de.amr.pacmanfx.core.model.comp.pac.PacState;
 import de.amr.pacmanfx.core.model.comp.pac.PacDigestionComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;

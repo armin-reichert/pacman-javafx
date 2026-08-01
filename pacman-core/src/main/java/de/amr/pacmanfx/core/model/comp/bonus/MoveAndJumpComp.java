@@ -6,7 +6,7 @@ package de.amr.pacmanfx.core.model.comp.bonus;
 
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.model.GameEntityComponent;
-import de.amr.pacmanfx.core.model.actors.Bonus;
+import de.amr.pacmanfx.core.model.entities.Bonus;
 import de.amr.pacmanfx.core.steering.RouteGuidedActorSteering;
 
 public class MoveAndJumpComp implements GameEntityComponent {

@@ -2,7 +2,9 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.arcade.ms_pacman.entities.marquee;
+package de.amr.pacmanfx.core.model.systems.marquee;
+
+import de.amr.pacmanfx.core.model.entities.Marquee;
 
 public class MarqueeSystem {
 

@@ -6,7 +6,7 @@ package de.amr.pacmanfx.core.steering;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameConstants;
-import de.amr.pacmanfx.core.model.actors.*;
+import de.amr.pacmanfx.core.model.entities.*;
 import de.amr.pacmanfx.core.model.comp.bonus.BonusState;
 import de.amr.pacmanfx.core.model.comp.ghost.GhostState;
 import de.amr.pacmanfx.core.model.comp.world.WorldNavigationComp;

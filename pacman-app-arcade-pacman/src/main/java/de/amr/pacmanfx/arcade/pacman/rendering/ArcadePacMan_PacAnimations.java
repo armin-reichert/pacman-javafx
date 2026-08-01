@@ -8,7 +8,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.core.model.actors.ActorAnimationID;
+import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
 import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
 
 public class ArcadePacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {

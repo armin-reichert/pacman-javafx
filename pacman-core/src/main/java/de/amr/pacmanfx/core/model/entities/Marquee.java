@@ -2,9 +2,12 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.arcade.ms_pacman.entities.marquee;
+package de.amr.pacmanfx.core.model.entities;
 
 import de.amr.pacmanfx.core.model.GameEntity;
+import de.amr.pacmanfx.core.model.comp.marquee.MarqueeLayoutComp;
+import de.amr.pacmanfx.core.model.comp.marquee.MarqueeRunnerComp;
+import de.amr.pacmanfx.core.model.comp.marquee.MarqueeVisualComp;
 
 public class Marquee extends GameEntity {
 

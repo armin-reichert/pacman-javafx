@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.tengenmspacman.model;
 
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.actors.Ghost;
-import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.entities.Ghost;
+import de.amr.pacmanfx.core.model.entities.Pac;
 
 public final class TengenMsPacMan_ActorFactory {
 

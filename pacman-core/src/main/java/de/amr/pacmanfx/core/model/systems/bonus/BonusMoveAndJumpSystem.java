@@ -7,7 +7,7 @@ package de.amr.pacmanfx.core.model.systems.bonus;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
-import de.amr.pacmanfx.core.model.actors.Bonus;
+import de.amr.pacmanfx.core.model.entities.Bonus;
 import de.amr.pacmanfx.core.model.comp.bonus.MoveAndJumpComp;
 import de.amr.pacmanfx.core.model.comp.world.WorldNavigationComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;

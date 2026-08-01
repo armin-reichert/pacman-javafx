@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.actors.Ghost;
-import de.amr.pacmanfx.core.model.actors.Pac;
+import de.amr.pacmanfx.core.model.entities.Ghost;
+import de.amr.pacmanfx.core.model.entities.Pac;
 import de.amr.pacmanfx.core.model.comp.ghost.ElroyComp;
 
 public class ArcadePacMan_ActorFactory {

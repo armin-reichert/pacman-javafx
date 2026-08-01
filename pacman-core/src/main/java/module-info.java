@@ -12,7 +12,7 @@ module de.amr.pacmanfx.core {
 
     exports de.amr.pacmanfx.core.event;
     exports de.amr.pacmanfx.core.model;
-    exports de.amr.pacmanfx.core.model.actors;
+    exports de.amr.pacmanfx.core.model.entities;
     exports de.amr.pacmanfx.core.model.world;
     exports de.amr.pacmanfx.core.model.test;
     exports de.amr.pacmanfx.core.steering;
@@ -24,10 +24,12 @@ module de.amr.pacmanfx.core {
     exports de.amr.pacmanfx.core.model.rules;
     exports de.amr.pacmanfx.core.model.comp.common;
     exports de.amr.pacmanfx.core.model.comp.ghost;
+    exports de.amr.pacmanfx.core.model.comp.marquee;
     exports de.amr.pacmanfx.core.model.comp.pac;
     exports de.amr.pacmanfx.core.model.comp.world;
     exports de.amr.pacmanfx.core.model.comp.spriteanim;
     exports de.amr.pacmanfx.core.model.systems.ghost;
+    exports de.amr.pacmanfx.core.model.systems.marquee;
     exports de.amr.pacmanfx.core.model.systems.pac;
     exports de.amr.pacmanfx.core.model.systems.common;
     exports de.amr.pacmanfx.core.model.systems.spriteanim;

@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.core.model.rules;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.actors.Ghost;
+import de.amr.pacmanfx.core.model.entities.Ghost;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 
 public interface ActorSpeedRules {

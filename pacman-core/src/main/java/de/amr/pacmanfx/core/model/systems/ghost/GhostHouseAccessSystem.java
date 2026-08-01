@@ -6,7 +6,7 @@ package de.amr.pacmanfx.core.model.systems.ghost;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.actors.Ghost;
+import de.amr.pacmanfx.core.model.entities.Ghost;
 import de.amr.pacmanfx.core.model.comp.ghost.GhostState;
 import de.amr.pacmanfx.core.model.comp.common.PositionComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;

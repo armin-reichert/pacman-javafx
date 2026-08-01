@@ -2,30 +2,28 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.arcade.ms_pacman.entities.marquee;
-
+package de.amr.pacmanfx.core.model.comp.marquee;
 
 import de.amr.pacmanfx.core.model.GameEntityComponent;
-import javafx.scene.paint.Color;
 
 public class MarqueeVisualComp implements GameEntityComponent {
 
-    private Color bulbOnColor = Color.WHITE;
-    private Color bulbOffColor = Color.GREEN;
+    private String bulbOnColor = "#fff";
+    private String bulbOffColor = "333";
 
-    public Color bulbOnColor() {
+    public String bulbOnColor() {
         return bulbOnColor;
     }
 
-    public void setBulbOnColor(Color bulbOnColor) {
+    public void setBulbOnColor(String bulbOnColor) {
         this.bulbOnColor = bulbOnColor;
     }
 
-    public Color bulbOffColor() {
+    public String bulbOffColor() {
         return bulbOffColor;
     }
 
-    public void setBulbOffColor(Color bulbOffColor) {
+    public void setBulbOffColor(String bulbOffColor) {
         this.bulbOffColor = bulbOffColor;
     }
 
