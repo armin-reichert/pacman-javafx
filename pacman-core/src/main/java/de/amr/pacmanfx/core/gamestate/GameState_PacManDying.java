@@ -49,6 +49,7 @@ public final class GameState_PacManDying extends GameState {
         game.systems().worldNavigator().setSpeed(pac, 0);
         game.systems().pacPower().reset(pac);
         game.systems().pacState().setState(pac, PacState.DEAD);
+        game.systems().pacAnimation().stop(pac);
 
         waitForTimeout();
         game.eventManager().publishGameEvent(new StopAllSoundsEvent());
@@ -70,8 +71,10 @@ public final class GameState_PacManDying extends GameState {
                 gameContext.flow().enterState(gameContext, model.lifeCount() == 0
                     ? CommonGameStateID.GAME_OVER : CommonGameStateID.GAME_OR_LEVEL_STARTING);
             }
+            return;
         }
-        else if (tick == timing.hideGhostsTick()) {
+
+        if (tick == timing.hideGhostsTick()) {
             level.entities().ghosts().forEach(GameEntity::hide);
             gameContext.systems().pacAnimation().selectDyingAnimation(pac);
         }

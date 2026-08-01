@@ -69,7 +69,7 @@ public class BonusStateSystem {
             case INACTIVE -> {}
         }
 
-        Logger.info("Bonus {} updated at tick {}", bonus.hashCode(), frame.tick());
+        Logger.debug("Bonus {} updated at tick {}", bonus.hashCode(), frame.tick());
     }
 
     public void setInactive(Bonus bonus) {

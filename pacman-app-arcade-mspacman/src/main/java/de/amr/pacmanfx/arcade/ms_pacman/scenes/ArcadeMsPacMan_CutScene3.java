@@ -74,10 +74,10 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
         final var factory = new ArcadeMsPacMan_ActorFactory();
 
         pacMan = factory.createPacMan();
-        pacMan.requireComponent(SpriteAnimComp.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        pacMan.spriteAnimation().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         msPacMan = factory.createMsPacMan();
-        msPacMan.requireComponent(SpriteAnimComp.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        msPacMan.spriteAnimation().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         stork = new Stork(spriteAnimations);
 

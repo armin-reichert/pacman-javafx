@@ -114,13 +114,13 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
         final var factory = TengenMsPacMan_ActorFactory.instance();
 
         msPacMan = factory.createMsPacMan();
-        msPacMan.requireComponent(SpriteAnimComp.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        msPacMan.spriteAnimation().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
         msPacMan.pos().set(RIGHT_BORDER, LOWER_LANE);
         navigator.setMoveDir(msPacMan, Direction.LEFT);
         navigator.setSpeed(msPacMan, 0);
 
         pacMan = factory.createPacMan();
-        pacMan.requireComponent(SpriteAnimComp.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        pacMan.spriteAnimation().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
         pacMan.pos().set(LEFT_BORDER, UPPER_LANE);
         navigator.setMoveDir(pacMan, Direction.RIGHT);
         navigator.setSpeed(pacMan, 0);
@@ -138,8 +138,9 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
         navigator.setSpeed(pinky, 0);
 
         heart = new GameEntity();
-        heart.setComponent(SpriteAnimComp.class, new SpriteAnimComp());
-        heart.requireComponent(SpriteAnimComp.class).setAnimations(singleSpriteAnimation(spriteSheet.findSprite(SpriteID.HEART)));
+        final SpriteAnimComp heartAnimationComp = new SpriteAnimComp();
+        heartAnimationComp.setAnimations(singleSpriteAnimation(spriteSheet.findSprite(SpriteID.HEART)));
+        heart.setComponent(SpriteAnimComp.class, heartAnimationComp);
 
         collided = false;
 

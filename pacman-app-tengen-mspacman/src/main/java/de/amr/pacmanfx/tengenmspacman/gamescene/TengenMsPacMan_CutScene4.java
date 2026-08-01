@@ -84,10 +84,10 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
         final var factory = TengenMsPacMan_ActorFactory.instance();
 
         msPacMan = factory.createMsPacMan();
-        msPacMan.requireComponent(SpriteAnimComp.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        msPacMan.spriteAnimation().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         pacMan = factory.createPacMan();
-        pacMan.requireComponent(SpriteAnimComp.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        pacMan.spriteAnimation().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         juniors = new ArrayList<>();
         juniorCreationTimes = new ArrayList<>();

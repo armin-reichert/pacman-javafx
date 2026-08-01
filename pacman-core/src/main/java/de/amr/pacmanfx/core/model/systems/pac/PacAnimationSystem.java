@@ -26,6 +26,10 @@ public class PacAnimationSystem {
         }
     }
 
+    public void stop(Pac pac) {
+        spriteAnimSystem.stopSelected(pac);
+    }
+
     public void selectDyingAnimation(Pac pac) {
         spriteAnimSystem.select(pac, ActorAnimationID.PAC_DYING);
         spriteAnimSystem.resetSelected(pac);

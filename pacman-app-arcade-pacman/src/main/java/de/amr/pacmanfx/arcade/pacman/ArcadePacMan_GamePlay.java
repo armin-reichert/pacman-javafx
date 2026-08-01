@@ -171,7 +171,6 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     public GameLevel buildDemoLevel(GameContext gameContext) {
         requireNonNull(gameContext);
 
-        final GameSystems sys = gameContext.systems();
         final GameModel model = gameContext.model();
         final GameLevel demoLevel = createLevel(gameContext, 1, true);
 
@@ -179,10 +178,12 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         pac.cheats().setImmune(false);
         pac.cheats().setUsingAutopilot(true);
 
-        final var steering = new RouteGuidedSteering(
-            sys.worldNavigator(), sys.pacWorldMovementPolicy(), DEMO_LEVEL_ROUTE
-        );
-        pac.autoSteering().setSteering(steering);
+        // Overwrite autosteering for demo level by fixed route steering
+        pac.autoSteering().setSteering(new RouteGuidedSteering(
+            gameContext.systems().worldNavigator(),
+            gameContext.systems().pacWorldMovementPolicy(),
+            DEMO_LEVEL_ROUTE
+        ));
 
         model.gateKeeper().setLevelNumber(1);
         model.levelCounter().setEnabled(true);

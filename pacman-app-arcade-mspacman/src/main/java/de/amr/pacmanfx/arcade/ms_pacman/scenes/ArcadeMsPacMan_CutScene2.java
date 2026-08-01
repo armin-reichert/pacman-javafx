@@ -68,10 +68,10 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene2D {
         final var factory = new ArcadeMsPacMan_ActorFactory();
 
         pacMan = factory.createPacMan();
-        pacMan.requireComponent(SpriteAnimComp.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        pacMan.spriteAnimation().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         msPacMan = factory.createMsPacMan();
-        msPacMan.requireComponent(SpriteAnimComp.class).setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        msPacMan.spriteAnimation().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         clapperboard = new Clapperboard("2", "THE CHASE");
         clapperboard.pos().set(tilesPx(3), tilesPx(10));

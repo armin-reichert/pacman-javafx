@@ -13,7 +13,6 @@ import de.amr.pacmanfx.arcade.pacman.rules.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.comp.common.AutoSteeringComp;
 import de.amr.pacmanfx.core.model.entities.Bonus;
 import de.amr.pacmanfx.core.model.entities.Ghost;
 import de.amr.pacmanfx.core.model.entities.Pac;

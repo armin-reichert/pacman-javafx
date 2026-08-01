@@ -20,7 +20,7 @@ public class SpriteAnimSystem {
     }
 
     private SpriteAnimationAccess spriteAnim(GameEntity actor) {
-        return actor.requireComponent(SpriteAnimComp.class).delegate();
+        return actor.requireComponent(SpriteAnimComp.class).animation();
     }
 
     public boolean hasNoAnimations(GameEntity actor) {

@@ -62,6 +62,10 @@ public class Pac extends GameEntity {
         return requireComponent(PacStateComp.class);
     }
 
+    public SpriteAnimComp spriteAnimation() {
+        return requireComponent(SpriteAnimComp.class);
+    }
+
     @Override
     public String toString() {
         return "Pac{" +
@@ -81,8 +85,7 @@ public class Pac extends GameEntity {
     public void reset() {
         super.reset();
         worldNavigation().corneringSpeedDelta = 1.5f; // no real cornering implementation but better than nothing
-        //TODO check this
-        requireComponent(SpriteAnimComp.class).delegate().select(ActorAnimationID.PAC_MUNCHING);
+        spriteAnimation().animation().select(ActorAnimationID.PAC_MUNCHING);
     }
 
     public PacState state() {
