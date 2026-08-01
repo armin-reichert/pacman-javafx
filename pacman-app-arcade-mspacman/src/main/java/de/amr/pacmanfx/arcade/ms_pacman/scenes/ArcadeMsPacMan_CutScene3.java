@@ -5,6 +5,9 @@ package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
+import de.amr.pacmanfx.arcade.ms_pacman.entities.Bag;
+import de.amr.pacmanfx.arcade.ms_pacman.entities.Clapperboard;
+import de.amr.pacmanfx.arcade.ms_pacman.entities.Stork;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.actors.ActorAnimationID;

@@ -19,7 +19,7 @@ public class BonusRollingAnimation3D {
 
     public void update() {
         final Bonus bonus = bonus3D.bonus();
-        bonus.optWorldNavigationComp().ifPresent(worldNavigation -> {
+        bonus.optWorldNavigation().ifPresent(worldNavigation -> {
             final Direction moveDir = worldNavigation.moveDir();
             switch (moveDir) {
                 case UP -> {

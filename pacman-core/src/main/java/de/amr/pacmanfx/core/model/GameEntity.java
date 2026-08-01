@@ -29,7 +29,7 @@ public class GameEntity {
         setComponent(VisibilityComp.class, new VisibilityComp(false));
     }
 
-    public <T extends GameEntityComponent> void setComponent(Class<T> type, T component) {
+    public final <T extends GameEntityComponent> void setComponent(Class<T> type, T component) {
         requireNonNull(type);
         requireNonNull(component);
         if (components.containsKey(type)) {
@@ -38,7 +38,7 @@ public class GameEntity {
         components.put(type, component);
     }
 
-    public <T extends GameEntityComponent> T requireComponent(Class<T> componentClass) {
+    public final <T extends GameEntityComponent> T requireComponent(Class<T> componentClass) {
         requireNonNull(componentClass);
         final GameEntityComponent component = components.get(componentClass);
         if (component == null) {
@@ -47,12 +47,12 @@ public class GameEntity {
         return componentClass.cast(component);
     }
 
-    public <T extends GameEntityComponent> boolean hasComponent(Class<T> componentClass) {
+    public final <T extends GameEntityComponent> boolean hasComponent(Class<T> componentClass) {
         requireNonNull(componentClass);
         return components.get(componentClass) != null;
     }
 
-    public <T extends GameEntityComponent> Optional<T> optComponent(Class<T> componentClass) {
+    public final <T extends GameEntityComponent> Optional<T> optComponent(Class<T> componentClass) {
         requireNonNull(componentClass);
         final GameEntityComponent component = components.get(componentClass);
         return Optional.ofNullable(component).map(componentClass::cast);
@@ -60,19 +60,19 @@ public class GameEntity {
 
     // Component API
 
-    public PositionComp pos() {
+    public final PositionComp pos() {
         return requireComponent(PositionComp.class);
     }
 
-    public VisibilityComp visibility() {
+    public final VisibilityComp visibility() {
         return requireComponent(VisibilityComp.class);
     }
 
-    public Optional<MovementComp> optMovementComp() {
+    public final Optional<MovementComp> optMovement() {
         return optComponent(MovementComp.class);
     }
 
-    public void setName(String name) {
+    public final void setName(String name) {
         this.name = requireNonNull(name);
     }
 
@@ -91,11 +91,11 @@ public class GameEntity {
         components.values().forEach(GameEntityComponent::reset);
     }
 
-    public void show() {
+    public final void show() {
         visibility().set(true);
     }
 
-    public void hide() {
+    public final void hide() {
         visibility().set(false);
     }
 

@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
-import de.amr.pacmanfx.arcade.ms_pacman.scenes.Marquee;
+import de.amr.pacmanfx.arcade.ms_pacman.entities.Marquee;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 
@@ -40,8 +40,8 @@ public class MarqueeRenderer extends BaseRenderer {
     }
 
     private void drawMarqueeBulb(Marquee marquee, int bulbIndex) {
-        final double minX = marquee.x(), minY = marquee.y();
-        final double maxX = marquee.x() + marquee.width(), maxY = marquee.y() + marquee.height();
+        final double minX = marquee.pos().x(), minY = marquee.pos().y();
+        final double maxX = marquee.pos().x() + marquee.width(), maxY = marquee.pos().y() + marquee.height();
         double x, y;
         if (bulbIndex <= 33) { // lower edge left-to-right
             x = minX + 4 * bulbIndex;

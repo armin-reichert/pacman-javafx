@@ -36,8 +36,8 @@ public class BonusStateSystem {
     }
 
     private void update(GameEventManager eventManager, GameLevel level, Bonus bonus, FrameContext frame) {
-        final BonusStateComp stateComp = bonus.bonusStateComp();
-        final MoveAndJumpComp moveAndJumpComp = bonus.optMoveAndJumpComp().orElse(null);
+        final BonusStateComp stateComp = bonus.bonusState();
+        final MoveAndJumpComp moveAndJumpComp = bonus.optMoveAndJump().orElse(null);
 
         stateComp.timer().doTick();
 
@@ -74,15 +74,15 @@ public class BonusStateSystem {
     public void setInactive(Bonus bonus) {
         bonus.hide();
 
-        final BonusStateComp stateComp = bonus.bonusStateComp();
+        final BonusStateComp stateComp = bonus.bonusState();
         stateComp.setState(BonusState.INACTIVE);
         stateComp.timer().restartIndefinitely();
 
-        if (bonus.optMovementComp().isPresent()) {
+        if (bonus.optMovement().isPresent()) {
             navigator.setSpeed(bonus, 0);
         }
 
-        bonus.optMoveAndJumpComp().ifPresent(moveAndJumpSystem::reset);
+        bonus.optMoveAndJump().ifPresent(moveAndJumpSystem::reset);
     }
 
     public void showEdibleForSeconds(Bonus bonus, float seconds) {
@@ -90,7 +90,7 @@ public class BonusStateSystem {
 
         bonus.show();
 
-        final BonusStateComp stateComp = bonus.bonusStateComp();
+        final BonusStateComp stateComp = bonus.bonusState();
         stateComp.setState(BonusState.EDIBLE);
         stateComp.timer().restartSeconds(seconds);
     }
@@ -98,17 +98,17 @@ public class BonusStateSystem {
     public void showEdibleAndStartWandering(Bonus bonus, float speed) {
         requireNonNull(bonus);
 
-        final BonusStateComp stateComp = bonus.bonusStateComp();
+        final BonusStateComp stateComp = bonus.bonusState();
         stateComp.setState(BonusState.EDIBLE);
         stateComp.timer().restartIndefinitely();
 
         bonus.show();
 
-        if (bonus.optMovementComp().isPresent()) {
+        if (bonus.optMovement().isPresent()) {
             this.navigator.setSpeed(bonus, speed);
         }
         navigator.clearTargetTile(bonus);
-        bonus.optMoveAndJumpComp().ifPresent(moveAndJumpSystem::start);
+        bonus.optMoveAndJump().ifPresent(moveAndJumpSystem::start);
     }
 
     public void showEatenForSeconds(Bonus bonus, float seconds) {
@@ -116,11 +116,11 @@ public class BonusStateSystem {
 
         bonus.show();
 
-        final BonusStateComp stateComp = bonus.bonusStateComp();
+        final BonusStateComp stateComp = bonus.bonusState();
         stateComp.setState(BonusState.EATEN);
         stateComp.timer().restartSeconds(seconds);
 
-        if (bonus.optMovementComp().isPresent()) {
+        if (bonus.optMovement().isPresent()) {
             navigator.setSpeed(bonus, 0);
         }
     }

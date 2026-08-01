@@ -1,12 +1,14 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.arcade.ms_pacman.scenes;
+package de.amr.pacmanfx.arcade.ms_pacman.entities;
 
 import de.amr.basics.timer.TickTimer;
+import de.amr.pacmanfx.core.model.GameEntity;
 import javafx.scene.paint.Color;
 
-public class Marquee {
+public class Marquee extends GameEntity {
+
     private final TickTimer timer = new TickTimer("Marquee-Timer");
     private final float width;
     private final float height;
@@ -15,25 +17,14 @@ public class Marquee {
     private final int brightBulbsDistance;
     private Color bulbOnColor = Color.WHITE;
     private Color bulbOffColor = Color.GREEN;
-    private final int x;
-    private final int y;
 
     public Marquee(int x, int y, float width, float height, int totalBulbCount, int brightBulbsCount, int brightBulbsDistance) {
-        this.x = x;
-        this.y = y;
+        pos().set(x, y);
         this.width = width;
         this.height = height;
         this.totalBulbCount = totalBulbCount;
         this.brightBulbsCount = brightBulbsCount;
         this.brightBulbsDistance = brightBulbsDistance;
-    }
-
-    public int x() {
-        return x;
-    }
-
-    public int y() {
-        return y;
     }
 
     public TickTimer timer() {

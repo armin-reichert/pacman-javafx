@@ -45,32 +45,28 @@ public class Bonus extends GameEntity {
             setComponent(WorldNavigationComp.class, new WorldNavigationComp());
             setComponent(MoveAndJumpComp.class, new MoveAndJumpComp());
 
-            optWorldNavigationComp().ifPresent(worldNavigation -> worldNavigation.setCanTeleport(false));
+            optWorldNavigation().ifPresent(worldNavigation -> worldNavigation.setCanTeleport(false));
         }
     }
 
     // Component access
 
-    public BonusStateComp bonusStateComp() {
+    public BonusStateComp bonusState() {
         return requireComponent(BonusStateComp.class);
     }
 
-    public Optional<MovementComp> optMovementComp() {
-        return optComponent(MovementComp.class);
-    }
-
-    public Optional<WorldNavigationComp> optWorldNavigationComp() {
+    public Optional<WorldNavigationComp> optWorldNavigation() {
         return optComponent(WorldNavigationComp.class);
     }
 
-    public Optional<MoveAndJumpComp> optMoveAndJumpComp() {
+    public Optional<MoveAndJumpComp> optMoveAndJump() {
         return optComponent(MoveAndJumpComp.class);
     }
 
     // API
 
     public BonusState state() {
-        return bonusStateComp().state();
+        return bonusState().state();
     }
 
     public int symbolCode() {
