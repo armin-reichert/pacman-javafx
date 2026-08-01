@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.core.gamestate;
 
-import de.amr.basics.Identifier;
+import de.amr.basics.Naming;
 import de.amr.basics.fsm.State;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
@@ -12,22 +12,22 @@ import de.amr.pacmanfx.core.GameContext;
 import java.util.Arrays;
 import java.util.Objects;
 
-public abstract class GameState implements State<GameContext>, Identifier {
+public abstract class GameState implements State<GameContext>, Naming {
 
-    private final Identifier id;
+    private final Naming id;
     private final TickTimer timer;
 
-    public GameState(Identifier id) {
+    public GameState(Naming id) {
         this.id = Objects.requireNonNull(id);
         this.timer = new TickTimer("GameStateTimer-" + getClass().getSimpleName());
     }
 
-    public Identifier id() {
+    public Naming id() {
         return id;
     }
 
-    public boolean isOneOf(Identifier... options) {
-        return Arrays.asList(options).contains(id);
+    public boolean nameIsOneOf(Naming... names) {
+        return Arrays.asList(names).contains(id);
     }
 
     @Override

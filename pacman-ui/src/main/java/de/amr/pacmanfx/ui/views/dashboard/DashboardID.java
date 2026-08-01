@@ -4,9 +4,9 @@
 
 package de.amr.pacmanfx.ui.views.dashboard;
 
-import de.amr.basics.Identifier;
+import de.amr.basics.Naming;
 
-public enum DashboardID implements Identifier {
+public enum DashboardID implements Naming {
     README,
     GENERAL,
     GAME_CONTROL,

@@ -125,7 +125,7 @@ public class UISettingsActions {
 
             private boolean isLevelPlaying() {
                 final GameState gameState = gameContext().state();
-                return CommonGameStateID.GAME_LEVEL_PLAYING.identifies(gameState);
+                return CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(gameState);
             }
         };
 

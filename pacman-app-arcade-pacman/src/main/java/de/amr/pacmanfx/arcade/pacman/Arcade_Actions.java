@@ -50,8 +50,8 @@ public final class Arcade_Actions {
                     return true;
                 }
                 final GameState gameState = gameContext().state();
-                return CommonGameStateID.GAME_INTRO.identifies(gameState)
-                    || CommonGameStateID.GAME_PREPARATION.identifies(gameState);
+                return CommonGameStateID.GAME_INTRO.hasSameNameAs(gameState)
+                    || CommonGameStateID.GAME_PREPARATION.hasSameNameAs(gameState);
             }
         };
 
@@ -68,8 +68,8 @@ public final class Arcade_Actions {
                     return false;
                 }
                 final GameState state = gameContext().state();
-                return (CommonGameStateID.GAME_INTRO.identifies(state)
-                    || CommonGameStateID.GAME_PREPARATION.identifies(state));
+                return (CommonGameStateID.GAME_INTRO.hasSameNameAs(state)
+                    || CommonGameStateID.GAME_PREPARATION.hasSameNameAs(state));
             }
         };
 

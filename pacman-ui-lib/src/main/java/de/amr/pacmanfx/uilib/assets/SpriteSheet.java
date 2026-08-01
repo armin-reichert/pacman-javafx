@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.uilib.assets;
 
-import de.amr.basics.Identifier;
+import de.amr.basics.Naming;
 import de.amr.basics.math.RectShort;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;
@@ -13,7 +13,7 @@ import javafx.scene.image.WritableImage;
  *
  * @param <ID> sprite ID type, for example some enumeration type.
  */
-public interface SpriteSheet<ID extends Identifier> {
+public interface SpriteSheet<ID extends Naming> {
 
     /**
      * @return the sprite sheet image

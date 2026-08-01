@@ -78,7 +78,7 @@ public interface Arcade_PlayScene2D_GameEventHandler extends DefaultGameEventLis
         Logger.info("Enter game state '{}'", e.newState().name());
         final GameState newState = (GameState) e.newState();
 
-        if (CommonGameStateID.GAME_LEVEL_COMPLETE.identifies(newState)) {
+        if (CommonGameStateID.GAME_LEVEL_COMPLETE.hasSameNameAs(newState)) {
             final GameLevel level = gameContext().model().assertLevel();
             optSoundEffects().ifPresent(GameSoundEffects::stopAll);
 
@@ -86,7 +86,7 @@ public interface Arcade_PlayScene2D_GameEventHandler extends DefaultGameEventLis
             playScene().setLevelCompletedAnimation(completedAnimation);
             completedAnimation.play();
         }
-        else if (CommonGameStateID.GAME_OVER.identifies(newState)) {
+        else if (CommonGameStateID.GAME_OVER.hasSameNameAs(newState)) {
             gameContext().hudState().showCredit();
             optSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);
         }

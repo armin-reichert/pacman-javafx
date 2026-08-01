@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
-import de.amr.basics.Identifier;
+import de.amr.basics.Naming;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
@@ -28,7 +28,7 @@ public class Bag extends GameEntity {
             factory = id -> createAnimation(id, container);
         }
 
-        private SpriteAnimation createAnimation(Identifier animationID, SpriteAnimationContainer container) {
+        private SpriteAnimation createAnimation(Naming animationID, SpriteAnimationContainer container) {
             return switch (animationID) {
                 case ActorAnimationID.JUNIOR ->
                     new SpriteAnimationBuilder()

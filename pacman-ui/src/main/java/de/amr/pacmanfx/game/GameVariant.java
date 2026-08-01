@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.game;
 
-import de.amr.basics.Identifier;
+import de.amr.basics.Naming;
 import de.amr.pacmanfx.core.gameplay.GameFlowController;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.model.GameCheats;
@@ -24,7 +24,7 @@ public class GameVariant {
     private final GameCheats cheats;
     private final GameVariantConfig config;
     private final Set<GameExtension> extensions;
-    private final Map<Identifier, Object> extensionValues;
+    private final Map<Naming, Object> extensionValues;
 
     public GameVariant(Cartridge cartridge) {
         systems = cartridge.systemsFactory().get();
@@ -65,11 +65,11 @@ public class GameVariant {
         return extensions;
     }
 
-    public Map<Identifier, Object> extensionValues() {
+    public Map<Naming, Object> extensionValues() {
         return extensionValues;
     }
 
-    public <T> T getExtensionValue(GameAppContext appContext, Identifier id, Class<T> type) {
+    public <T> T getExtensionValue(GameAppContext appContext, Naming id, Class<T> type) {
         final Object cached = extensionValues.get(id);
         if (cached != null) {
             return type.cast(cached);

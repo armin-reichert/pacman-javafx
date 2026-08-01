@@ -85,22 +85,22 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         if (gameState.id() instanceof TestStateID) {
             handleTestState(appContext().ui().viewModel().common3D, gameContext());
         }
-        else if (CommonGameStateID.GAME_OR_LEVEL_STARTING.identifies(newState)) {
+        else if (CommonGameStateID.GAME_OR_LEVEL_STARTING.hasSameNameAs(newState)) {
             onStartingGameOrLevel();
         }
-        else if (CommonGameStateID.GAME_LEVEL_PLAYING.identifies(newState)) {
+        else if (CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(newState)) {
             onHuntingStart(gameContext());
         }
-        else if (CommonGameStateID.GAME_LEVEL_PACMAN_DYING.identifies(newState)) {
+        else if (CommonGameStateID.GAME_LEVEL_PACMAN_DYING.hasSameNameAs(newState)) {
             onPacManDying(gameContext());
         }
-        else if (CommonGameStateID.GAME_LEVEL_EATING_GHOST.identifies(newState)) {
+        else if (CommonGameStateID.GAME_LEVEL_EATING_GHOST.hasSameNameAs(newState)) {
             onGhostsKilled(gameContext().thisFrame().huntingStep().ghostsKilled());
         }
-        else if (CommonGameStateID.GAME_LEVEL_COMPLETE.identifies(newState)) {
+        else if (CommonGameStateID.GAME_LEVEL_COMPLETE.hasSameNameAs(newState)) {
             onLevelComplete();
         }
-        else if (CommonGameStateID.GAME_OVER.identifies(newState)) {
+        else if (CommonGameStateID.GAME_OVER.hasSameNameAs(newState)) {
             onGameOver();
         }
     }

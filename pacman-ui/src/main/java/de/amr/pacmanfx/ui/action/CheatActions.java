@@ -75,7 +75,7 @@ public final class CheatActions {
             @Override
             public boolean isEnabled() {
                 final GameState gameState = gameContext().state();
-                return normalLevel(appContext).isPresent() && CommonGameStateID.GAME_LEVEL_PLAYING.identifies(gameState);
+                return normalLevel(appContext).isPresent() && CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(gameState);
             }
         };
 
@@ -101,7 +101,7 @@ public final class CheatActions {
             @Override
             public boolean isEnabled() {
                 final GameState gameState = gameContext().state();
-                return normalLevel(appContext).isPresent() && CommonGameStateID.GAME_LEVEL_PLAYING.identifies(gameState);
+                return normalLevel(appContext).isPresent() && CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(gameState);
             }
         };
 
@@ -118,7 +118,7 @@ public final class CheatActions {
                 final GameState state = gameContext().state();
                 final GameLevel level = normalLevel(this.appContext).orElse(null);
                 return level != null
-                    && CommonGameStateID.GAME_LEVEL_PLAYING.identifies(state)
+                    && CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(state)
                     && level.number() < gameContext().model().rules().lastLevelNumber();
             }
         };

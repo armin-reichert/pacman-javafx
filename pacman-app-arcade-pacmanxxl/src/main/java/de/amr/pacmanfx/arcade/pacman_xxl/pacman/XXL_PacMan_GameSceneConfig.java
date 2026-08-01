@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.arcade.pacman_xxl.pacman;
 
-import de.amr.basics.Identifier;
+import de.amr.basics.Naming;
 import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.arcade.pacman.scenes.*;
 import de.amr.pacmanfx.core.GameContext;
@@ -23,7 +23,7 @@ class XXL_PacMan_GameSceneConfig extends AbstractGameSceneConfig {
     public XXL_PacMan_GameSceneConfig() {}
 
     @Override
-    protected AbstractGameScene createGameScene(GameAppContext appContext, Identifier sceneID) {
+    protected AbstractGameScene createGameScene(GameAppContext appContext, Naming sceneID) {
         requireNonNull(sceneID);
         return switch (sceneID) {
             case CommonGameSceneID.BOOT_SCENE -> new Arcade_BootScene2D(appContext);
@@ -39,23 +39,23 @@ class XXL_PacMan_GameSceneConfig extends AbstractGameSceneConfig {
     }
 
     @Override
-    protected Identifier determineSceneID(GameUISettingsVM viewModel, GameContext gameContext) {
+    protected Naming determineSceneID(GameUISettingsVM viewModel, GameContext gameContext) {
         final State<GameContext> state = gameContext.state();
 
         if (state instanceof CutScenesTestState testState) {
             return AbstractGameSceneConfig.cutSceneID(testState.testedCutSceneNumber);
         }
 
-        if (CommonGameStateID.BOOT.identifies(state)) {
+        if (CommonGameStateID.BOOT.hasSameNameAs(state)) {
             return CommonGameSceneID.BOOT_SCENE;
         }
-        if (CommonGameStateID.GAME_LEVEL_INTERMISSION.identifies(state)) {
+        if (CommonGameStateID.GAME_LEVEL_INTERMISSION.hasSameNameAs(state)) {
             return resolveCutSceneID(gameContext);
         }
-        if (CommonGameStateID.GAME_INTRO.identifies(state)) {
+        if (CommonGameStateID.GAME_INTRO.hasSameNameAs(state)) {
             return CommonGameSceneID.INTRO_SCENE;
         }
-        if (CommonGameStateID.GAME_PREPARATION.identifies(state)) {
+        if (CommonGameStateID.GAME_PREPARATION.hasSameNameAs(state)) {
             return CommonGameSceneID.START_SCENE;
         }
         return viewModel.common3D.view3DEnabledProperty.get() ? CommonGameSceneID.PLAY_SCENE_3D : CommonGameSceneID.PLAY_SCENE_2D;

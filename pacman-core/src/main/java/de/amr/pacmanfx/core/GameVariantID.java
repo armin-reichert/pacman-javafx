@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.core;
 
-import de.amr.basics.Identifier;
+import de.amr.basics.Naming;
 
 import java.util.stream.Stream;
 
@@ -12,7 +12,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Standard game variants. String value ({@link GameVariantID#name()} is uses in map keys etc.
  */
-public enum GameVariantID implements Identifier {
+public enum GameVariantID implements Naming {
     ARCADE_PACMAN,
     ARCADE_MS_PACMAN,
     ARCADE_PACMAN_XXL,

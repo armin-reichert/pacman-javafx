@@ -5,14 +5,14 @@
 package de.amr.pacmanfx.ui.views.dashboard;
 
 
-import de.amr.basics.Identifier;
+import de.amr.basics.Naming;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 
 import java.util.Optional;
 
 public interface DashboardFactory {
 
-    Optional<Identifier> identify(String id);
+    Optional<Naming> identify(String id);
 
-    GameDashboardSection createSection(GameDashboard dashboard, Identifier id, TranslationManager translations);
+    GameDashboardSection createSection(GameDashboard dashboard, Naming id, TranslationManager translations);
 }

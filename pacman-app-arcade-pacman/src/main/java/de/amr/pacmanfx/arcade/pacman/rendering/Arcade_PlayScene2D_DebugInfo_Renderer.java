@@ -77,7 +77,7 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
             final GameState state = scene.gameState();
             final String gameStateText = state.name() + " (Tick %d)".formatted(state.timer().tickCount());
             String huntingPhaseText = "";
-            if (CommonGameStateID.GAME_LEVEL_PLAYING.identifies(state)) {
+            if (CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(state)) {
                 final HuntingRules huntingRules = level.huntingRules();
                 huntingPhaseText = " %s (Tick %d)".formatted(huntingRules.currentHuntingPhase(), huntingRules.tickCount());
             }

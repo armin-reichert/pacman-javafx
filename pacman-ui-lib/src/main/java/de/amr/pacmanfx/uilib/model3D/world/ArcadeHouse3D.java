@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.uilib.model3D.world;
 
-import de.amr.basics.Identifier;
+import de.amr.basics.Naming;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
@@ -54,7 +54,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadeHouse3D extends Group implements DisposableGraphicsObject {
 
-    public enum AnimationID implements Identifier {
+    public enum AnimationID implements Naming {
         HOUSE_DOORS_MELTING
     }
 

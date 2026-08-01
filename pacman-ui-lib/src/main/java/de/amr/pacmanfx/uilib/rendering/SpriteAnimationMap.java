@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.uilib.rendering;
 
-import de.amr.basics.Identifier;
+import de.amr.basics.Naming;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationAccess;
@@ -21,30 +21,30 @@ import static java.util.Objects.requireNonNull;
  *
  * @param <ID> Sprite animation ID type
  */
-public abstract class SpriteAnimationMap<ID extends Identifier> implements SpriteAnimationAccess {
+public abstract class SpriteAnimationMap<ID extends Naming> implements SpriteAnimationAccess {
 
     protected final SpriteSheet<ID> spriteSheet;
-    protected final Map<Identifier, SpriteAnimation> animationsByID = new HashMap<>();
-    protected Identifier selectedAnimationID;
-    protected Function<Identifier, SpriteAnimation> factory;
+    protected final Map<Naming, SpriteAnimation> animationsByID = new HashMap<>();
+    protected Naming selectedAnimationID;
+    protected Function<Naming, SpriteAnimation> factory;
 
     public SpriteAnimationMap(SpriteSheet<ID> spriteSheet) {
         this.spriteSheet = requireNonNull(spriteSheet);
     }
 
-    public void setFactory(Function<Identifier, SpriteAnimation> factory) {
+    public void setFactory(Function<Naming, SpriteAnimation> factory) {
         this.factory = factory;
     }
 
     public SpriteSheet<ID> spriteSheet() { return spriteSheet; }
 
-    public boolean isSelected(Identifier id) {
+    public boolean isSelected(Naming id) {
         requireNonNull(id);
         return id.equals(selectedAnimationID);
     }
 
     @Override
-    public void select(Identifier animationID) {
+    public void select(Naming animationID) {
         selectedAnimationID = animationID;
     }
 
@@ -55,7 +55,7 @@ public abstract class SpriteAnimationMap<ID extends Identifier> implements Sprit
     }
 
     @Override
-    public SpriteAnimation animation(Identifier animationID) {
+    public SpriteAnimation animation(Naming animationID) {
         if (!animationsByID.containsKey(animationID)) {
             SpriteAnimation spriteAnimation = factory.apply(animationID);
             animationsByID.put(animationID, spriteAnimation);
@@ -63,7 +63,7 @@ public abstract class SpriteAnimationMap<ID extends Identifier> implements Sprit
         return animationsByID.get(animationID);
     }
 
-    public void setAnimation(Identifier animationID, SpriteAnimation animation) {
+    public void setAnimation(Naming animationID, SpriteAnimation animation) {
         requireNonNull(animationID);
         requireNonNull(animation);
         animationsByID.put(animationID, animation);
@@ -74,12 +74,12 @@ public abstract class SpriteAnimationMap<ID extends Identifier> implements Sprit
     }
 
     @Override
-    public Identifier selectedAnimationID() {
+    public Naming selectedAnimationID() {
         return selectedAnimationID;
     }
 
     @Override
-    public void setAnimationFrame(Identifier animationID, int frameIndex) {
+    public void setAnimationFrame(Naming animationID, int frameIndex) {
         if (!animationID.equals(selectedAnimationID)) {
             selectedAnimationID = animationID;
             if (currentAnimation() != null) {

@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.tengenmspacman.sprites;
 
-import de.amr.basics.Identifier;
+import de.amr.basics.Naming;
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig;
@@ -25,7 +25,7 @@ public final class ArcadeMapsSpriteSheet implements SpriteSheet<ArcadeMapsSprite
         return LazyThreadSafeSingletonHolder.SINGLETON;
     }
 
-    public enum MapID implements Identifier {
+    public enum MapID implements Naming {
         MAP1, MAP2, MAP3, MAP4, MAP5, MAP6, MAP7, MAP8, MAP9
     }
 

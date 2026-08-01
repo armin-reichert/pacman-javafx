@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.uilib.model3D.pac;
 
-import de.amr.basics.Identifier;
+import de.amr.basics.Naming;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
@@ -29,7 +29,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class Pac3D extends GameEntity implements UpdatableEntity, DisposableGraphicsObject {
 
-    public enum AnimationID implements Identifier {
+    public enum AnimationID implements Naming {
         CHEWING,
         DYING,
         MOVING

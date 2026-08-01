@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.core.gameplay;
 
-import de.amr.basics.Identifier;
+import de.amr.basics.Naming;
 import de.amr.basics.fsm.State;
 import de.amr.basics.fsm.StateMachine;
 import de.amr.pacmanfx.core.GameContext;
@@ -41,16 +41,16 @@ public class GameFlowController extends StateMachine<GameContext> {
         return (GameState) super.state();
     }
 
-    public void enterState(GameContext gameContext, Identifier id) {
+    public void enterState(GameContext gameContext, Naming id) {
         requireNonNull(id);
         enterStateWithName(gameContext, id.name());
     }
 
-    public void restartState(GameContext gameContext, Identifier stateID) {
+    public void restartState(GameContext gameContext, Naming stateID) {
         restartState(gameContext, stateID.name());
     }
 
-    public Optional<State<GameContext>> optState(Identifier stateID) {
+    public Optional<State<GameContext>> optState(Naming stateID) {
         return super.optState(stateID.name());
     }
 

@@ -1,7 +1,7 @@
 package de.amr.pacmanfx.tengenmspacman;
 
-import de.amr.basics.Identifier;
+import de.amr.basics.Naming;
 
-public enum TengenMsPacMan_GameExtension implements Identifier {
+public enum TengenMsPacMan_GameExtension implements Naming {
     UI_SETTINGS, ACTIONS
 }

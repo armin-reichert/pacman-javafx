@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.tengenmspacman.sprites;
 
-import de.amr.basics.Identifier;
+import de.amr.basics.Naming;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
@@ -23,7 +23,7 @@ public class TengenMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
         factory = id -> createAnimation(id, container);
     }
 
-    private SpriteAnimation createAnimation(Identifier animationID, SpriteAnimationContainer container) {
+    private SpriteAnimation createAnimation(Naming animationID, SpriteAnimationContainer container) {
 
         return switch (animationID) {
             case ActorAnimationID.PAC_FULL -> new SpriteAnimationBuilder()

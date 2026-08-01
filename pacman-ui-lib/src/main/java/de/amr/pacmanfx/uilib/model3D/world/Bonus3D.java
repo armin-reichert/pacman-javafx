@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.uilib.model3D.world;
 
-import de.amr.basics.Identifier;
+import de.amr.basics.Naming;
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameEntity;
@@ -40,7 +40,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class Bonus3D extends GameEntity implements UpdatableEntity, DisposableGraphicsObject {
 
-    public enum AnimationID implements Identifier {
+    public enum AnimationID implements Naming {
         BONUS_EDIBLE,
         BONUS_EATEN
     }

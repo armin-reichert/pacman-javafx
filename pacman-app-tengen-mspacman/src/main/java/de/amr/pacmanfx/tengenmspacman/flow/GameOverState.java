@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.tengenmspacman.flow;
 
-import de.amr.basics.Identifier;
+import de.amr.basics.Naming;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.level.GameLevel;
@@ -46,7 +46,7 @@ public class GameOverState extends GameState {
         if (timer().hasExpired()) {
             level.clearMessage();
 
-            final Identifier nextStateID = level.isDemoLevel()
+            final Naming nextStateID = level.isDemoLevel()
                 ? TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME
                 : model.canContinueOnGameOver() ? CommonGameStateID.GAME_PREPARATION : CommonGameStateID.GAME_INTRO;
 

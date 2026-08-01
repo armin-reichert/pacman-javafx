@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.gamescene.d3;
 
-import de.amr.basics.Identifier;
+import de.amr.basics.Naming;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.math.Vector3f;
 import de.amr.pacmanfx.core.GameContext;
@@ -68,7 +68,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
-    public enum AnimationID implements Identifier {
+    public enum AnimationID implements Naming {
         GHOST_LIGHT,
         LEVEL_COMPLETED_FULL, 
         LEVEL_COMPLETED_SHORT,

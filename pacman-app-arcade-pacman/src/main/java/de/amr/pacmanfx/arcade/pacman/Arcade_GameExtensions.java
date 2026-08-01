@@ -1,7 +1,7 @@
 package de.amr.pacmanfx.arcade.pacman;
 
-import de.amr.basics.Identifier;
+import de.amr.basics.Naming;
 
-public enum Arcade_GameExtensions implements Identifier {
+public enum Arcade_GameExtensions implements Naming {
     ACTIONS,
 }

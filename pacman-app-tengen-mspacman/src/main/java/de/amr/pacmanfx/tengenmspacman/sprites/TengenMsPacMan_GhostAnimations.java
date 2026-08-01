@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.tengenmspacman.sprites;
 
-import de.amr.basics.Identifier;
+import de.amr.basics.Naming;
 import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
@@ -33,7 +33,7 @@ public class TengenMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID>
         return (TengenMsPacMan_SpriteSheet) spriteSheet;
     }
 
-    private SpriteAnimation createAnimation(Identifier animationID, SpriteAnimationContainer container) {
+    private SpriteAnimation createAnimation(Naming animationID, SpriteAnimationContainer container) {
 
         return switch (animationID) {
             case ActorAnimationID.GHOST_NORMAL -> new SpriteAnimationBuilder()
@@ -68,7 +68,7 @@ public class TengenMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID>
     }
 
     @Override
-    public void setAnimationFrame(Identifier animationID, int frameIndex) {
+    public void setAnimationFrame(Naming animationID, int frameIndex) {
         super.setAnimationFrame(animationID, frameIndex);
         if (ActorAnimationID.GHOST_POINTS.equals(animationID)) {
             animation(ActorAnimationID.GHOST_POINTS).setFrame(frameIndex);

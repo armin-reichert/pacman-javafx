@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.action.core;
 
-import de.amr.basics.Identifier;
+import de.amr.basics.Naming;
 import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
@@ -32,7 +32,7 @@ public interface GameAppContext {
 
     DirectoryWatchdog watchdog();
 
-    default <T> T getExtensionValue(Identifier id, Class<T> type) {
+    default <T> T getExtensionValue(Naming id, Class<T> type) {
         return variants().currentVariant().getExtensionValue(this, id, type);
     }
 }

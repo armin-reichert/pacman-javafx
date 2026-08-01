@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.views.dashboard;
 
-import de.amr.basics.Identifier;
+import de.amr.basics.Naming;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.uilib.widgets.Dashboard;
 import de.amr.pacmanfx.uilib.widgets.DashboardSection;
@@ -45,7 +45,7 @@ public class GameDashboard extends Dashboard<GameDashboardSection> {
         getChildren().setAll(reorderedSections);
     }
 
-    private Optional<GameDashboardSection> findById(Identifier id) {
+    private Optional<GameDashboardSection> findById(Naming id) {
         return sections().filter(section -> id.equals(section.id())).findFirst();
     }
 }

@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.core.model.systems.spriteanim;
 
 
-import de.amr.basics.Identifier;
+import de.amr.basics.Naming;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.spriteanim.SpriteAnimationAccess;
 import de.amr.pacmanfx.core.model.GameEntity;
@@ -27,30 +27,30 @@ public class SpriteAnimSystem {
         return spriteAnim(actor).isEmpty();
     }
 
-    public Object animation(GameEntity actor, Identifier animationID) {
+    public Object animation(GameEntity actor, Naming animationID) {
         return spriteAnim(actor).animation(animationID);
     }
 
-    public void selectAndSetFrame(GameEntity actor, Identifier animationID, int frameIndex) {
+    public void selectAndSetFrame(GameEntity actor, Naming animationID, int frameIndex) {
         select(actor, animationID);
         setAnimationFrame(actor, animationID, frameIndex);
     }
 
-    public Identifier selectedAnimationID(GameEntity actor) {
+    public Naming selectedAnimationID(GameEntity actor) {
         return spriteAnim(actor).selectedAnimationID();
     }
 
-    public boolean isSelected(GameEntity actor, Identifier animationID) {
+    public boolean isSelected(GameEntity actor, Naming animationID) {
         requireNonNull(animationID);
-        final Identifier selectedID = selectedAnimationID(actor);
-        return selectedID != null && animationID.identifies(selectedAnimationID(actor));
+        final Naming selectedID = selectedAnimationID(actor);
+        return selectedID != null && animationID.hasSameNameAs(selectedAnimationID(actor));
     }
 
-    public void setAnimationFrame(GameEntity actor, Identifier animationID, int frameIndex) {
+    public void setAnimationFrame(GameEntity actor, Naming animationID, int frameIndex) {
         spriteAnim(actor).setAnimationFrame(animationID, frameIndex);
     }
 
-    public void select(GameEntity actor, Identifier animationID) {
+    public void select(GameEntity actor, Naming animationID) {
         spriteAnim(actor).select(animationID);
     }
 

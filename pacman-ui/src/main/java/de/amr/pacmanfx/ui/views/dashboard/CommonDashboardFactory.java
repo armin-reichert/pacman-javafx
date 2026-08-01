@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.views.dashboard;
 
 
-import de.amr.basics.Identifier;
+import de.amr.basics.Naming;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 
 import java.util.Optional;
@@ -25,7 +25,7 @@ public final class CommonDashboardFactory implements DashboardFactory {
     }
 
     @Override
-    public Optional<Identifier> identify(String id) {
+    public Optional<Naming> identify(String id) {
         try {
             return Optional.of(DashboardID.valueOf(id));
         }
@@ -35,7 +35,7 @@ public final class CommonDashboardFactory implements DashboardFactory {
     }
 
     @Override
-    public GameDashboardSection createSection(GameDashboard dashboard, Identifier id, TranslationManager translations) {
+    public GameDashboardSection createSection(GameDashboard dashboard, Naming id, TranslationManager translations) {
         requireNonNull(dashboard);
         requireNonNull(id);
         requireNonNull(translations);
@@ -63,7 +63,7 @@ public final class CommonDashboardFactory implements DashboardFactory {
         return section;
     }
 
-    private static String titleKey(Identifier id) {
+    private static String titleKey(Naming id) {
         requireNonNull(id);
         return switch (id) {
             case DashboardID.ABOUT          -> "infobox.about.title";

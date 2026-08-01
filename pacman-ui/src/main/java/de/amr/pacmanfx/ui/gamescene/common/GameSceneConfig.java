@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.gamescene.common;
 
 import de.amr.basics.Disposable;
-import de.amr.basics.Identifier;
+import de.amr.basics.Naming;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -18,11 +18,11 @@ import java.util.Optional;
  */
 public interface GameSceneConfig extends Disposable {
 
-    boolean gameSceneHasID(GameScene gameScene, Identifier sceneID);
+    boolean gameSceneHasID(GameScene gameScene, Naming sceneID);
 
     Optional<GameScene> selectGameScene(GameAppContext appContext, GameModel model);
 
-    Identifier resolveCutSceneID(GameContext gameContext);
+    Naming resolveCutSceneID(GameContext gameContext);
 
     boolean sceneDecorationRequested(GameScene gameScene);
 }

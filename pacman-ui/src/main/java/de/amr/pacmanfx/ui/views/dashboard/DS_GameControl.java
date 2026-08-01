@@ -74,17 +74,17 @@ public class DS_GameControl extends GameDashboardSection {
         final GameState state = gameContext.state();
 
         choiceBoxInitialLives.setValue(model.initialLifeCount());
-        choiceBoxInitialLives.setDisable(!CommonGameStateID.GAME_INTRO.identifies(state));
+        choiceBoxInitialLives.setDisable(!CommonGameStateID.GAME_INTRO.hasSameNameAs(state));
 
-        final boolean creditDisabled = !state.isOneOf(CommonGameStateID.GAME_INTRO, CommonGameStateID.GAME_PREPARATION);
+        final boolean creditDisabled = !state.nameIsOneOf(CommonGameStateID.GAME_INTRO, CommonGameStateID.GAME_PREPARATION);
         spinnerCredit.setDisable(creditDisabled);
 
-        final boolean booting = CommonGameStateID.BOOT.identifies(state);
+        final boolean booting = CommonGameStateID.BOOT.hasSameNameAs(state);
         buttonGroupLevelActions[GAME_LEVEL_START].setDisable(booting || !canStartLevel(appContext, state));
         buttonGroupLevelActions[GAME_LEVEL_NEXT] .setDisable(booting || !canEnterNextLevel(model, state));
         buttonGroupLevelActions[GAME_LEVEL_QUIT] .setDisable(booting || model.optLevel().isEmpty());
 
-        buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(booting || !CommonGameStateID.GAME_INTRO.identifies(state));
+        buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(booting || !CommonGameStateID.GAME_INTRO.hasSameNameAs(state));
         buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT].setDisable(booting || !(state instanceof CutScenesTestState));
 
         cbCollisionCheckedTwice.setSelected(gameContext.model().rules().actorCollisionRules().isCollisionDoubleChecked());
@@ -94,10 +94,10 @@ public class DS_GameControl extends GameDashboardSection {
         boolean isArcadeGame = GameVariantID.isArcadeGameName(appContext.variants().currentVariantName());
         if (!isArcadeGame) return true; //TODO not 100% correct but we cannot access Tengen game model from here
         return !appContext.currentGameContext().coinMechanism().isEmpty()
-            && gameState.isOneOf(CommonGameStateID.GAME_INTRO, CommonGameStateID.GAME_PREPARATION);
+            && gameState.nameIsOneOf(CommonGameStateID.GAME_INTRO, CommonGameStateID.GAME_PREPARATION);
     }
 
     private boolean canEnterNextLevel(GameModel game, GameState gameState) {
-        return game.isPlaying() && CommonGameStateID.GAME_LEVEL_PLAYING.identifies(gameState);
+        return game.isPlaying() && CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(gameState);
     }
 }
