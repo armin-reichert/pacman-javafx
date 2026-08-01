@@ -6,17 +6,22 @@ import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 public class PacAnimationSystem {
     private final SpriteAnimSystem spriteAnimSystem;
 
-
     public PacAnimationSystem(SpriteAnimSystem spriteAnimSystem) {
         this.spriteAnimSystem = spriteAnimSystem;
     }
 
     public void update(Pac pac) {
-        if (pac.worldNavigation().info.moved) {
-            spriteAnimSystem.playSelected(pac);
-        } else {
-            spriteAnimSystem.stopSelected(pac);
-        }
+        switch (pac.state()) {
+            case ACTIVE -> {
+                if (pac.worldNavigation().info.moved) {
+                    spriteAnimSystem.playSelected(pac);
+                } else {
+                    spriteAnimSystem.stopSelected(pac);
+                }
+            }
+            case DEAD -> {
 
+            }
+        }
     }
 }
