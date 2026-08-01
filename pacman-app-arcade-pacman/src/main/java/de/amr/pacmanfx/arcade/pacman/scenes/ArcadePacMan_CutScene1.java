@@ -73,8 +73,8 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene2D {
             gameState().triggerTimeout();
         }
         if (sceneTick >= ANIMATION_START_TICK) {
-            sys.motor().moveAccelerated(pacMan);
-            sys.motor().moveAccelerated(blinky);
+            sys.motor().move(pacMan);
+            sys.motor().move(blinky);
         }
     }
 

@@ -164,7 +164,7 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene2D {
             gameState().triggerTimeout();
         }
         else {
-            List.of(pacMan, msPacMan).forEach(sys.motor()::moveAccelerated);
+            List.of(pacMan, msPacMan).forEach(sys.motor()::move);
         }
     }
 }

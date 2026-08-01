@@ -5,32 +5,29 @@
 package de.amr.pacmanfx.core.model.systems.common;
 
 import de.amr.pacmanfx.core.model.GameEntity;
-import de.amr.pacmanfx.core.model.comp.common.MovementComp;
-import de.amr.pacmanfx.core.model.comp.common.PositionComp;
 
-public final class MovementSystem {
+public class MovementSystem {
 
-    public void moveAccelerated(GameEntity actor) {
-        final PositionComp position = actor.pos();
-        actor.optComponent(MovementComp.class).ifPresent(movement -> {
-            position.add(movement.velX(), movement.velY());
-            movement.add(movement.accX(), movement.accY());
+    public void move(GameEntity actor) {
+        actor.optMovementComp().ifPresent(movement -> {
+            actor.pos().add(movement.velocityX(), movement.velocityY());
+            movement.addVelocity(movement.accelerationX(), movement.accelerationY());
         });
     }
 
     public void setVelocity(GameEntity actor, float vx, float vy) {
-        actor.optComponent(MovementComp.class).ifPresent(movement -> movement.setVelocity(vx, vy));
+        actor.optMovementComp().ifPresent(movement -> movement.setVelocity(vx, vy));
     }
 
     public void setVelocityX(GameEntity actor, float vx) {
-        actor.optComponent(MovementComp.class).ifPresent(movement -> movement.setVelX(vx));
+        actor.optMovementComp().ifPresent(movement -> movement.setVelocityX(vx));
     }
 
     public void setVelocityY(GameEntity actor, float vy) {
-        actor.optComponent(MovementComp.class).ifPresent(movement -> movement.setVelY(vy));
+        actor.optMovementComp().ifPresent(movement -> movement.setVelocityY(vy));
     }
 
     public void setAcceleration(GameEntity actor, float ax, float ay) {
-        actor.optComponent(MovementComp.class).ifPresent(movement -> movement.setAcceleration(ax, ay));
+        actor.optMovementComp().ifPresent(movement -> movement.setAcceleration(ax, ay));
     }
 }

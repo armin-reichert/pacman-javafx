@@ -89,8 +89,8 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
             }
         }
         shadeOfBlue = TengenMsPacMan_RenderConfig.shadeOfBlue(stateTick);
-        sys.motor().moveAccelerated(ghost);
-        sys.motor().moveAccelerated(movingText);
+        sys.motor().move(ghost);
+        sys.motor().move(movingText);
     }
 
     private void gray(boolean b)  { gray = b; }

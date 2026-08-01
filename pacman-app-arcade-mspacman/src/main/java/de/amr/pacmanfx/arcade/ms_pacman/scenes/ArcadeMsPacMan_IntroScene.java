@@ -181,7 +181,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
                         sys.worldNavigator().setWishDir(ghost, Direction.UP);
                         scene.numTicksBeforeRising = 2;
                     } else {
-                        sys.motor().moveAccelerated(ghost);
+                        sys.motor().move(ghost);
                     }
                 }
                 else if (ghost.worldNavigation().moveDir() == Direction.UP) {
@@ -196,7 +196,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
                         return true;
                     }
                     else {
-                        sys.motor().moveAccelerated(ghost);
+                        sys.motor().move(ghost);
                     }
                 }
                 return false;
@@ -211,7 +211,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
 
                 scene.marquee.timer().doTick();
 
-                sys.motor().moveAccelerated(msPacMan);
+                sys.motor().move(msPacMan);
                 if (msPacMan.pos().x() <= STOP_X_MS_PACMAN) {
                     sys.worldNavigator().setSpeed(msPacMan, 0);
                     sys.spriteAnim().resetSelected(msPacMan);

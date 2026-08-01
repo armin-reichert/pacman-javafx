@@ -139,9 +139,9 @@ class XXL_ChaseAnimation {
     }
 
     private void moveActors(MovementSystem movementSystem) {
-        movementSystem.moveAccelerated(pac);
+        movementSystem.move(pac);
         for (Ghost ghost : ghosts) {
-            movementSystem.moveAccelerated(ghost);
+            movementSystem.move(ghost);
         }
     }
 

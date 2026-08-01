@@ -166,7 +166,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
         bag.setOpen(gameContext(), false);
         bag.pos().set(stork.pos().x() - 14, stork.pos().y() + 3);
         bag.show();
-        sys.motor().setVelocityX(bag, stork.movement().velX());
+        sys.motor().setVelocityX(bag, stork.movement().velocityX());
         sys.motor().setAcceleration(bag, 0, 0);
 
         bagReleased = false;
@@ -186,7 +186,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
         }
 
         if (!bag.isOpen()) {
-            motor.moveAccelerated(bag);
+            motor.move(bag);
             if (bag.pos().y() >= GROUND_Y) {
                 ++numBagBounces;
                 if (numBagBounces < 3) {
@@ -201,6 +201,6 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
             }
         }
 
-        motor.moveAccelerated(stork);
+        motor.move(stork);
     }
 }

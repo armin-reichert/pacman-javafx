@@ -174,7 +174,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
             enterStateComingTogether(sys);
         }
         else {
-            List.of(pacMan, msPacMan, inky, pinky).forEach(sys.motor()::moveAccelerated);
+            List.of(pacMan, msPacMan, inky, pinky).forEach(sys.motor()::move);
         }
     }
 
@@ -216,19 +216,19 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
             sys.worldNavigator().setWishDir(inky, Direction.RIGHT);
             sys.worldNavigator().setSpeed(inky, SPEED_GHOST_AFTER_COLLISION);
 
-            sys.motor().setVelocityY(inky, inky.movement().velY() - 2.0f);
+            sys.motor().setVelocityY(inky, inky.movement().velocityY() - 2.0f);
             sys.motor().setAcceleration(inky, 0, 0.4f);
 
             sys.worldNavigator().setMoveDir(pinky, Direction.LEFT);
             sys.worldNavigator().setWishDir(pinky, Direction.LEFT);
             sys.worldNavigator().setSpeed(pinky, SPEED_GHOST_AFTER_COLLISION);
 
-            sys.motor().setVelocityY(pinky, pinky.movement().velY() - 2.0f);
+            sys.motor().setVelocityY(pinky, pinky.movement().velocityY() - 2.0f);
             sys.motor().setAcceleration(pinky, 0, 0.4f);
         }
 
         else {
-            List.of(pacMan, msPacMan, inky, pinky).forEach(sys.motor()::moveAccelerated);
+            List.of(pacMan, msPacMan, inky, pinky).forEach(sys.motor()::move);
 
             // Collision with ground?
             if (inky.pos().y() > MIDDLE_Y) {

@@ -163,8 +163,8 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene2D {
                 case 1380 -> gameState().triggerTimeout();
             }
 
-            sys.motor().moveAccelerated(pacMan);
-            sys.motor().moveAccelerated(msPacMan);
+            sys.motor().move(pacMan);
+            sys.motor().move(msPacMan);
 
             clapperboard.tick();
         }

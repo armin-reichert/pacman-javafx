@@ -109,8 +109,8 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
 
         clapperboard.tick();
 
-        sys.motor().moveAccelerated(pacMan);
-        sys.motor().moveAccelerated(msPacMan);
+        sys.motor().move(pacMan);
+        sys.motor().move(msPacMan);
         for (int i = 0; i < juniors.size(); ++i) {
             updateJunior(sys, gameStateTick, i);
         }
@@ -222,7 +222,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
         if (lifeTime> 0 && lifeTime % 10 == 0) {
             computeNewMoveDir(sys.worldNavigator(), junior);
         }
-        sys.motor().moveAccelerated(junior);
+        sys.motor().move(junior);
         if (junior.pos().x() > unscaledWidth()) {
             junior.pos().setX(0);
         }

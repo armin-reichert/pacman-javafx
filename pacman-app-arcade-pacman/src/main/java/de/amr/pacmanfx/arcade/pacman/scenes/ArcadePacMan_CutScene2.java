@@ -103,8 +103,8 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
             case TICK_ANIMATION_ENDS         -> endTheShow();
         }
 
-        sys.motor().moveAccelerated(pacMan);
-        sys.motor().moveAccelerated(blinky);
+        sys.motor().move(pacMan);
+        sys.motor().move(blinky);
     }
 
     private void blinkyInspectsDamagedDress(SpriteAnimSystem animSystem) {

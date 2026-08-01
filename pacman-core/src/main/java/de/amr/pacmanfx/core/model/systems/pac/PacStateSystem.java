@@ -98,7 +98,7 @@ public class PacStateSystem {
     }
 
     public boolean notBlocked(Pac pac) {
-        return !(pac.movement().hasZeroSpeed() ||didNotMoveThroughWorld(pac));
+        return !(pac.movement().hasZeroVelocity() ||didNotMoveThroughWorld(pac));
     }
 
     private boolean didNotMoveThroughWorld(Pac pac) {

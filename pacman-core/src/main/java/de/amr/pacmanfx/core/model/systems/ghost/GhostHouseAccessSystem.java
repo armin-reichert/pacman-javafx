@@ -44,7 +44,7 @@ public class GhostHouseAccessSystem {
             }
             position.setY(Math.clamp(position.y(), minY, maxY));
             sys.worldNavigator().setSpeed(ghost, speed);
-            sys.motor().moveAccelerated(ghost);
+            sys.motor().move(ghost);
         }
         else {
             // locked outside of house: standing still
@@ -92,7 +92,7 @@ public class GhostHouseAccessSystem {
             }
 
             sys.worldNavigator().setSpeed(ghost, speed);
-            sys.motor().moveAccelerated(ghost);
+            sys.motor().move(ghost);
 
             return false;
         }
@@ -131,7 +131,7 @@ public class GhostHouseAccessSystem {
         }
         sys.worldNavigator().setSpeed(ghost, speed);
 
-        sys.motor().moveAccelerated(ghost);
+        sys.motor().move(ghost);
     }
 
     //TODO extract state change

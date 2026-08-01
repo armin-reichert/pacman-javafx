@@ -8,82 +8,82 @@ import de.amr.pacmanfx.core.model.GameEntityComponent;
 
 public class MovementComp implements GameEntityComponent {
 
-    private float velX;
-    private float velY;
+    private float vx;
+    private float vy;
 
     private float accX;
-    private float accY;
+    private float ay;
 
     @Override
     public void reset() {
-        velX = 0;
-        velY = 0;
+        vx = 0;
+        vy = 0;
         accX = 0;
-        accY = 0;
+        ay = 0;
     }
 
-    public float velX() {
-        return velX;
+    public float velocityX() {
+        return vx;
     }
 
-    public final void setVelX(double velX) {
-        this.velX = (float) velX;
+    public final void setVelocityX(double vx) {
+        this.vx = (float) vx;
     }
 
-    public float velY() {
-        return velY;
+    public float velocityY() {
+        return vy;
     }
 
-    public final void setVelY(double velY) {
-        this.velY = (float) velY;
+    public final void setVelocityY(double vy) {
+        this.vy = (float) vy;
     }
 
     public final void setVelocity(double vx, double vy) {
-        this.velX = (float) vx;
-        this.velY = (float) vy;
+        this.vx = (float) vx;
+        this.vy = (float) vy;
     }
 
     public float speed() {
-        return (float) Math.hypot(velX, velY);
+        return (float) Math.hypot(vx, vy);
     }
 
-    public float accX() {
+    public float accelerationX() {
         return accX;
     }
 
-    public final void setAccX(double accX) {
-        this.accX = (float) accX;
+    public final void setAccelerationX(double ax) {
+        this.accX = (float) ax;
     }
 
-    public float accY() {
-        return accY;
+    public float accelerationY() {
+        return ay;
     }
 
-    public final void setAccY(double accY) {
-        this.accY = (float) accY;
+    public final void setAccelerationY(double ay) {
+        this.ay = (float) ay;
     }
 
     public final void setAcceleration(double ax, double ay) {
         this.accX = (float) ax;
-        this.accY = (float) ay;
+        this.ay = (float) ay;
     }
 
-    public void add(float ax, float ay) {
-        velX += ax;
-        velY += ay;
+    public void addVelocity(float vx, float vy) {
+        this.vx += vx;
+        this.vy += vy;
     }
 
-    public boolean hasZeroSpeed() {
-        return velX == 0 && velY == 0;
+    public boolean hasZeroVelocity() {
+        return vx == 0 && vy == 0;
     }
 
     @Override
     public String toString() {
         return "Movement{" +
-            "velX=" + velX +
-            ", velY=" + velY +
-            ", accX=" + accX +
-            ", accY=" + accY +
+            "velocityX=" + vx +
+            ", velocityY=" + vy +
+            ", accelerationX=" + accX +
+            ", accelerationY=" + ay +
             '}';
     }
 }

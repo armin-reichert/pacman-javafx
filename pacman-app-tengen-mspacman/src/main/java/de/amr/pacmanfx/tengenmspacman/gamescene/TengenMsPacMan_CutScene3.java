@@ -174,15 +174,15 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
 
         clapperboard.tick();
 
-        sys.motor().moveAccelerated(stork);
+        sys.motor().move(stork);
 
         if (!flyingBag.isOpen()) {
-            sys.motor().moveAccelerated(flyingBag);
+            sys.motor().move(flyingBag);
             if (flyingBag.pos().y() > GROUND_Y) {
                 flyingBag.pos().setY(GROUND_Y);
                 sys.motor().setVelocity(flyingBag,
-                    0.9f * flyingBag.movement().velX(),
-                    -0.3f * flyingBag.movement().velY()
+                    0.9f * flyingBag.movement().velocityX(),
+                    -0.3f * flyingBag.movement().velocityY()
                 );
             }
         }

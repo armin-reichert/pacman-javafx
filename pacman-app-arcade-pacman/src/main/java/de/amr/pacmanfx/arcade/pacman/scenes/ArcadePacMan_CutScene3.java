@@ -67,8 +67,8 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene2D {
             case TICK_ANIMATION_ENDS       -> gameState().triggerTimeout();
         }
 
-        sys.motor().moveAccelerated(pacMan);
-        sys.motor().moveAccelerated(blinky);
+        sys.motor().move(pacMan);
+        sys.motor().move(blinky);
     }
 
     private void startAnimation(GameSystems sys) {

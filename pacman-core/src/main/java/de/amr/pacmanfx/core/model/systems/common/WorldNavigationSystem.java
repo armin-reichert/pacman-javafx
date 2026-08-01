@@ -301,12 +301,12 @@ public class WorldNavigationSystem {
             final Vector2f cornerVelocity = newVelocity.plus(dir.vector().scaled(navigation.corneringSpeedDelta));
             Logger.trace("{} velocity around corner: {}", actor.name(), cornerVelocity.length());
             motor.setVelocity(actor, cornerVelocity.x(), cornerVelocity.y());
-            motor.moveAccelerated(actor);
+            motor.move(actor);
             // Reset velocity after moving
             motor.setVelocity(actor, newVelocity.x(), newVelocity.y());
         } else {
             motor.setVelocity(actor, newVelocity.x(), newVelocity.y());
-            motor.moveAccelerated(actor);
+            motor.move(actor);
         }
 
         final Vector2i tileAfterMoving = computeTile(actor);

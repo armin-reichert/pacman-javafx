@@ -177,9 +177,9 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
     private void chasePacMan(long tick) {
         final MovementSystem motor = gameContext().systems().motor();
         blinking.triggerPulse();
-        motor.moveAccelerated(pacMan);
+        motor.move(pacMan);
         for (Ghost ghost : ghosts) {
-            motor.moveAccelerated(ghost);
+            motor.move(ghost);
         }
 
         // "shaking" effect
@@ -223,9 +223,9 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
 
         blinking.triggerPulse();
 
-        sys.motor().moveAccelerated(pacMan);
+        sys.motor().move(pacMan);
 
-        for (Ghost ghost : ghosts) { sys.motor().moveAccelerated(ghost); }
+        for (Ghost ghost : ghosts) { sys.motor().move(ghost); }
 
         edibleGhost().ifPresent(victim -> eatGhostAndStopChasing(gameContext, victim, tick));
 

@@ -157,7 +157,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
 
         clapperboard.tick();
 
-        List.of(pacMan, msPacMan, inky, pinky).forEach(sys.motor()::moveAccelerated);
+        List.of(pacMan, msPacMan, inky, pinky).forEach(sys.motor()::move);
 
         if (collided) {
             if (inky.pos().y() > MIDDLE_LANE) {
@@ -219,14 +219,14 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
                     sys.worldNavigator().setWishDir(inky, Direction.RIGHT);
                     sys.worldNavigator().setSpeed(inky, SPEED_AFTER_COLLISION);
 
-                    inky.movement().setVelY(inky.movement().velY() - 2.0f);
+                    inky.movement().setVelocityY(inky.movement().velocityY() - 2.0f);
                     inky.movement().setAcceleration(0, 0.4f);
 
                     sys.worldNavigator().setMoveDir(pinky, Direction.LEFT);
                     sys.worldNavigator().setWishDir(pinky, Direction.LEFT);
                     sys.worldNavigator().setSpeed(pinky, SPEED_AFTER_COLLISION);
 
-                    pinky.movement().setVelY(pinky.movement().velY() - 2.0f);
+                    pinky.movement().setVelocityY(pinky.movement().velocityY() - 2.0f);
                     pinky.movement().setAcceleration(0, 0.4f);
                 }
                 case 530 -> {
