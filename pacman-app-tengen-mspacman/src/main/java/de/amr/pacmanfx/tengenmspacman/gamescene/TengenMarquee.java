@@ -11,14 +11,14 @@ import javafx.scene.canvas.GraphicsContext;
 
 import java.util.BitSet;
 
-public class Marquee extends GameEntity {
-    private static final int NUM_BULBS = 96;
+public class TengenMarquee extends GameEntity {
+    public static final int NUM_BULBS = 96;
 
     private final DoubleProperty scaling = new SimpleDoubleProperty(1.0);
     private final BitSet bulbOn = new BitSet(NUM_BULBS);
     private long marqueeProgress;
 
-    public Marquee() {
+    public TengenMarquee() {
     }
 
     public DoubleProperty scalingProperty() {

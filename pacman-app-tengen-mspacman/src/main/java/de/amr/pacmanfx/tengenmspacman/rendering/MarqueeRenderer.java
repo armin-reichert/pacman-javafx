@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.arcade.ms_pacman.rendering;
+package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.pacmanfx.core.model.comp.marquee.MarqueeLayoutComp;
 import de.amr.pacmanfx.core.model.comp.marquee.MarqueeRunnerComp;
@@ -15,6 +15,8 @@ import javafx.scene.paint.Color;
 /**
  * Renders a marquee with some highlighted bulbs that seem to circle in counter-clockwise order. Imitates the bug from the
  * original Arcade game where bulbs on the left side of the marquee are only working every second tick.
+ *
+ * TODO: this is a 1:1 copy of the renderer in the Arcade subproject. should be reused
  */
 public class MarqueeRenderer extends BaseRenderer {
 

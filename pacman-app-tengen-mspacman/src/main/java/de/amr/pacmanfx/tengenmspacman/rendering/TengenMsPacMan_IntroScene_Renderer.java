@@ -45,7 +45,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
     private final SpriteAnimSystem animSystem;
     private final ActorRenderer actorRenderer;
     private final BaseDebugInfoRenderer debugRenderer;
-
+    private final MarqueeRenderer marqueeRenderer;
     private final TengenMsPacMan_UISettings uiSettings;
 
     public TengenMsPacMan_IntroScene_Renderer(
@@ -55,8 +55,10 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
         requireNonNull(scene);
         this.animSystem = requireNonNull(animSystem);
 
+        marqueeRenderer = scene.configureRenderer(new MarqueeRenderer(canvas));
         actorRenderer = scene.configureRenderer(renderConfig.createActorRenderer(animSystem, canvas));
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
+
         uiSettings = scene.appContext().getExtensionValue(
             TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
     }
@@ -104,12 +106,12 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
             }
 
             case SceneState.SHOWING_MARQUEE -> {
-                intro.marquee.draw(ctx());
+                drawMarquee(intro);
                 fillText(QUOTED_MS_PACMAN, NES_Palette.color(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
             }
 
             case SceneState.GHOSTS_MARCHING_IN -> {
-                intro.marquee.draw(ctx());
+                drawMarquee(intro);
                 fillText(QUOTED_MS_PACMAN, NES_Palette.color(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
                 if (intro.ghostIndex == 0) {
                     fillText(WITH, NES_Palette.color(0x20), MARQUEE_X + 12, MARQUEE_Y + 23);
@@ -121,7 +123,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
             }
 
             case SceneState.MS_PACMAN_MARCHING_IN -> {
-                intro.marquee.draw(ctx());
+                drawMarquee(intro);
                 fillText(QUOTED_MS_PACMAN, NES_Palette.color(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
                 fillText(STARRING, NES_Palette.color(0x20), MARQUEE_X + 12, MARQUEE_Y + 22);
                 fillText(MS_PAC_MAN, NES_Palette.color(0x28), MARQUEE_X + 28, MARQUEE_Y + 38);
@@ -139,5 +141,10 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
         if (scene.appContext().ui().viewModel().debugModeOnProperty.get()) {
             debugRenderer.draw(scene, globalTick);
         }
+    }
+
+    private void drawMarquee(TengenMsPacMan_IntroScene intro) {
+//        intro.tengenMarquee.draw(ctx);
+        marqueeRenderer.drawMarquee(intro.marquee);
     }
 }

@@ -34,8 +34,11 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer implements 
 
     private final Image copyrightImage;
 
-    public ArcadeMsPacMan_IntroScene_Renderer(GameVariantRenderConfig renderConfig, AbstractGameScene2D scene,
-                                              SpriteAnimSystem animSystem, Canvas canvas) {
+    public ArcadeMsPacMan_IntroScene_Renderer(
+        GameVariantRenderConfig renderConfig,
+        AbstractGameScene2D scene,
+        SpriteAnimSystem animSystem,
+        Canvas canvas) {
 
         super(canvas);
 

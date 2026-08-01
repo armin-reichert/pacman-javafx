@@ -9,34 +9,34 @@ import de.amr.pacmanfx.core.model.GameEntityComponent;
 
 public class MarqueeLayoutComp implements GameEntityComponent {
 
-    private float width;
-    private float height;
-    private int totalBulbCount;
+    private int numBulbsHorizontally;
+    private int numBulbsVertically;
+    private int bulbSize;
     private int brightBulbsCount;
     private int brightBulbsDistance;
 
-    public float width() {
-        return width;
+    public int numBulbsHorizontally() {
+        return numBulbsHorizontally;
     }
 
-    public void setWidth(float width) {
-        this.width = width;
+    public void setNumBulbsHorizontally(int numBulbsHorizontally) {
+        this.numBulbsHorizontally = numBulbsHorizontally;
     }
 
-    public float height() {
-        return height;
+    public int numBulbsVertically() {
+        return numBulbsVertically;
     }
 
-    public void setHeight(float height) {
-        this.height = height;
+    public void setNumBulbsVertically(int numBulbsVertically) {
+        this.numBulbsVertically = numBulbsVertically;
     }
 
-    public int totalBulbCount() {
-        return totalBulbCount;
+    public int bulbSize() {
+        return bulbSize;
     }
 
-    public void setTotalBulbCount(int totalBulbCount) {
-        this.totalBulbCount = totalBulbCount;
+    public void setBulbSize(int bulbSize) {
+        this.bulbSize = bulbSize;
     }
 
     public int brightBulbsCount() {

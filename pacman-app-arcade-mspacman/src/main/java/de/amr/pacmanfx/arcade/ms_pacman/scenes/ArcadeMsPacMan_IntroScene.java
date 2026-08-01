@@ -138,9 +138,9 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
 
         marquee.pos().set(60, 88);
 
-        marquee.layout().setWidth(132);
-        marquee.layout().setHeight(60);
-        marquee.layout().setTotalBulbCount(96);
+        marquee.layout().setNumBulbsHorizontally(35);
+        marquee.layout().setNumBulbsVertically(15);
+        marquee.layout().setBulbSize(4);
         marquee.layout().setBrightBulbsCount(6);
         marquee.layout().setBrightBulbsDistance(16);
 

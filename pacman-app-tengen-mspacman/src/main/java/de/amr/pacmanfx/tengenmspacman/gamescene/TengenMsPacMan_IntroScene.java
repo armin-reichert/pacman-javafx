@@ -11,11 +11,15 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.entities.*;
 import de.amr.pacmanfx.core.model.comp.ghost.GhostState;
+import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
+import de.amr.pacmanfx.core.model.entities.Ghost;
+import de.amr.pacmanfx.core.model.entities.Marquee;
+import de.amr.pacmanfx.core.model.entities.Pac;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
+import de.amr.pacmanfx.core.model.systems.marquee.MarqueeSystem;
 import de.amr.pacmanfx.core.model.world.WorldMap;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -24,6 +28,7 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
+import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
@@ -41,6 +46,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
 
     // Anchor point for everything
     public static final int MARQUEE_X = 60, MARQUEE_Y = 64;
+
     public static final int ACTOR_Y = MARQUEE_Y + 72;
     public static final int GHOST_STOP_X = MARQUEE_X - 18;
     public static final int MS_PAC_MAN_STOP_X = MARQUEE_X + 62;
@@ -54,6 +60,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
 
     public Marquee marquee;
     public GameEntity presents;
+
     public Pac msPacMan;
     public List<Ghost> ghosts;
     public int ghostIndex;
@@ -89,15 +96,31 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
             .map(personality -> ghostSettings.get(personality.ordinal()).colors().normal().dressColor())
             .toArray(Color[]::new);
 
-        marquee = new Marquee();
-        marquee.pos().set(MARQUEE_X, MARQUEE_Y);
-        marquee.scalingProperty().bind(scalingProperty());
+        marquee = createMarquee();
 
         presents = new GameEntity();
         presents.pos().set(9 * WorldMap.TS, MARQUEE_Y - WorldMap.TS);
 
         flow.restartState(this, SceneState.WAITING_FOR_START);
     }
+
+    private Marquee createMarquee() {
+        final var marquee = new Marquee();
+
+        marquee.pos().set(MARQUEE_X, MARQUEE_Y);
+
+        marquee.layout().setNumBulbsHorizontally(35);
+        marquee.layout().setNumBulbsVertically(15);
+        marquee.layout().setBulbSize(4);
+        marquee.layout().setBrightBulbsCount(6);
+        marquee.layout().setBrightBulbsDistance(16);
+
+        marquee.visualization().setBulbOnColor(NES_Palette.rgb(0x20));
+        marquee.visualization().setBulbOffColor(NES_Palette.rgb(0x15));
+
+        return marquee;
+    }
+
 
     @Override
     public void onTick(GameContext gameContext) {
@@ -134,6 +157,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
                 final SpriteAnimationContainer spriteAnimations = scene.appContext().ui().sprites().animations();
 
                 timer.restartTicks(TickTimer.INDEFINITE);
+                MarqueeSystem.instance().start(scene.marquee);
 
                 final var factory = TengenMsPacMan_ActorFactory.instance();
 
@@ -172,7 +196,8 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
 
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
-                scene.marquee.update(timer.tickCount());
+                MarqueeSystem.instance().update(scene.marquee);
+
                 if (timer.atSecond(1)) {
                     scene.flow.enterState(scene, GHOSTS_MARCHING_IN);
                 }
@@ -188,7 +213,8 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
 
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
-                scene.marquee.update(timer.tickCount());
+                MarqueeSystem.instance().update(scene.marquee);
+
                 boolean reachedEndPosition = letGhostMarchIn(scene);
                 if (reachedEndPosition) {
                     if (scene.ghostIndex == 3) {
@@ -246,7 +272,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
                 final GameContext gameContext = scene.gameContext();
                 final GameSystems sys = gameContext.systems();
 
-                scene.marquee.update(timer.tickCount());
+                MarqueeSystem.instance().update(scene.marquee);
 
                 sys.motor().move(scene.msPacMan);
                 if (scene.msPacMan.pos().x() <= MS_PAC_MAN_STOP_X) {
