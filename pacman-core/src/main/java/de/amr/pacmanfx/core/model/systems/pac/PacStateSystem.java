@@ -78,7 +78,7 @@ public class PacStateSystem {
             return;
         }
 
-        if (cheats.isPacUsingAutopilot()) {
+        if (cheats.isPacUsingAutopilot() || level.isDemoLevel()) {
             automaticSteering.steer(pac, level);
         }
 
