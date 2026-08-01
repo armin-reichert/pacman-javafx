@@ -91,9 +91,8 @@ public class WorldNavigationSystem {
 
         final MovementComp movement = actor.requireComponent(MovementComp.class);
         final WorldNavigationComp navigation = actor.requireComponent(WorldNavigationComp.class);
-
-        if (navigation.moveDir() == null && dir.equals(WorldNavigationComp.DEFAULT_MOVE_DIR)) return;
         navigation.setMoveDir(dir);
+
         float speed = movement.speed();
         motor.setVelocity(actor, dir.vector().x() * speed, dir.vector().y() * speed);
     }
@@ -108,8 +107,6 @@ public class WorldNavigationSystem {
         requireNonNull(dir);
 
         final WorldNavigationComp navigation = actor.requireComponent(WorldNavigationComp.class);
-
-        if (navigation.wishDir() == null && dir.equals(WorldNavigationComp.DEFAULT_WISH_DIR)) return;
         navigation.setWishDir(dir);
     }
 

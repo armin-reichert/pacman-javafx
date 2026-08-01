@@ -16,6 +16,7 @@ import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import org.tinylog.Logger;
 
+import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
 
 public class BonusStateSystem {
@@ -104,11 +105,14 @@ public class BonusStateSystem {
 
         bonus.show();
 
-        if (bonus.optMovement().isPresent()) {
-            this.navigator.setSpeed(bonus, speed);
+        if (bonus.optMoveAndJump().isPresent()) {
+            navigator.setSpeed(bonus, speed);
         }
         navigator.clearTargetTile(bonus);
-        bonus.optMoveAndJump().ifPresent(moveAndJumpSystem::start);
+        bonus.optMoveAndJump().ifPresent(moveAndJump -> {
+            moveAndJumpSystem.start(moveAndJump);
+            navigator.setSpeed(bonus, speed);
+        });
     }
 
     public void showEatenForSeconds(Bonus bonus, float seconds) {
