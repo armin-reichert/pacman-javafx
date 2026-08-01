@@ -25,8 +25,8 @@ public class WorldNavigationComp implements GameEntityComponent {
     /** Order in which directions are selected when navigation decision is met. */
     public static final List<Direction> NAVIGATION_ORDER = List.of(Direction.UP, Direction.LEFT, Direction.DOWN, Direction.RIGHT);
 
-    private ObjectProperty<Direction> moveDir;
-    private ObjectProperty<Direction> wishDir;
+    private Direction moveDir;
+    private Direction wishDir;
     private ObjectProperty<Vector2i> targetTile;
 
     private boolean newTileEntered;
@@ -43,8 +43,8 @@ public class WorldNavigationComp implements GameEntityComponent {
 
     @Override
     public void reset() {
-        moveDirProperty().setValue(DEFAULT_MOVE_DIR);
-        wishDirProperty().setValue(DEFAULT_WISH_DIR);
+        setMoveDir(DEFAULT_MOVE_DIR);
+        setWishDir(DEFAULT_WISH_DIR);
         targetTileProperty().setValue(DEFAULT_TARGET_TILE);
         newTileEntered = false;
         turnBackRequested = false;
@@ -95,30 +95,20 @@ public class WorldNavigationComp implements GameEntityComponent {
         return Optional.ofNullable(targetTile());
     }
 
+    public void setMoveDir(Direction moveDir) {
+        this.moveDir = moveDir;
+    }
 
-    public final ObjectProperty<Direction> moveDirProperty() {
-        if (moveDir == null) {
-            moveDir = new SimpleObjectProperty<>(DEFAULT_MOVE_DIR);
-        }
+    public Direction moveDir() {
         return moveDir;
     }
 
-    /**
-     * @return The current move direction.
-     */
-    public Direction moveDir() {
-        return moveDir != null ? moveDir.get() : DEFAULT_MOVE_DIR;
-    }
-
-    public final ObjectProperty<Direction> wishDirProperty() {
-        if (wishDir == null) {
-            wishDir = new SimpleObjectProperty<>(DEFAULT_WISH_DIR);
-        }
-        return wishDir;
+    public void setWishDir(Direction wishDir) {
+        this.wishDir = wishDir;
     }
 
     public Direction wishDir() {
-        return wishDir != null ? wishDir.get() : DEFAULT_WISH_DIR;
+        return wishDir;
     }
 
     public boolean isNewTileEntered() {
