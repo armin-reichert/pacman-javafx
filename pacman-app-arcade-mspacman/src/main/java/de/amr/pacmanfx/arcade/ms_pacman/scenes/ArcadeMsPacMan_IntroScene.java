@@ -90,10 +90,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
 
         final GameSystems sys = gameContext().systems();
 
-        marquee = new Marquee(60, 88, 132, 60, 96, 6, 16);
-        marquee.visualization().setBulbOffColor(ARCADE_RED);
-        marquee.visualization().setBulbOnColor(ARCADE_WHITE);
-
+        createMarquee();
         MarqueeSystem.instance().start(marquee);
 
         final var factory = new ArcadeMsPacMan_ActorFactory();
@@ -134,6 +131,21 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
         numTicksBeforeRising = 0;
 
         appContext().ui().sounds().voice().playAfterSec(1, GlobalAssets.VoiceID.EXPLAIN_GAME_START.media());
+    }
+
+    private void createMarquee() {
+        marquee = new Marquee();
+
+        marquee.pos().set(60, 88);
+
+        marquee.layout().setWidth(132);
+        marquee.layout().setHeight(60);
+        marquee.layout().setTotalBulbCount(96);
+        marquee.layout().setBrightBulbsCount(6);
+        marquee.layout().setBrightBulbsDistance(16);
+
+        marquee.visualization().setBulbOffColor(ARCADE_RED);
+        marquee.visualization().setBulbOnColor(ARCADE_WHITE);
     }
 
     // Scene flow state machine

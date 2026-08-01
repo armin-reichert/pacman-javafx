@@ -8,7 +8,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.entities.marquee;
 import de.amr.pacmanfx.core.model.GameEntityComponent;
 import javafx.scene.paint.Color;
 
-public class MarqueeVisualization implements GameEntityComponent {
+public class MarqueeVisualComp implements GameEntityComponent {
 
     private Color bulbOnColor = Color.WHITE;
     private Color bulbOffColor = Color.GREEN;
