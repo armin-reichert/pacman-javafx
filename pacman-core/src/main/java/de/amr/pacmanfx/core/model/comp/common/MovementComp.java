@@ -11,14 +11,14 @@ public class MovementComp implements GameEntityComponent {
     private float vx;
     private float vy;
 
-    private float accX;
+    private float ax;
     private float ay;
 
     @Override
     public void reset() {
         vx = 0;
         vy = 0;
-        accX = 0;
+        ax = 0;
         ay = 0;
     }
 
@@ -48,11 +48,11 @@ public class MovementComp implements GameEntityComponent {
     }
 
     public float accelerationX() {
-        return accX;
+        return ax;
     }
 
     public final void setAccelerationX(double ax) {
-        this.accX = (float) ax;
+        this.ax = (float) ax;
     }
 
     public float accelerationY() {
@@ -64,7 +64,7 @@ public class MovementComp implements GameEntityComponent {
     }
 
     public final void setAcceleration(double ax, double ay) {
-        this.accX = (float) ax;
+        this.ax = (float) ax;
         this.ay = (float) ay;
     }
 
@@ -82,7 +82,7 @@ public class MovementComp implements GameEntityComponent {
         return "Movement{" +
             "velocityX=" + vx +
             ", velocityY=" + vy +
-            ", accelerationX=" + accX +
+            ", accelerationX=" + ax +
             ", accelerationY=" + ay +
             '}';
     }

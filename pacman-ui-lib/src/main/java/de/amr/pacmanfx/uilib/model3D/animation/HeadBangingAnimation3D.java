@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.uilib.model3D.animation;
 
 import de.amr.pacmanfx.core.model.actors.Pac;
-import de.amr.pacmanfx.core.model.actors.PacState;
+import de.amr.pacmanfx.core.model.comp.pac.PacState;
 import de.amr.pacmanfx.core.model.systems.pac.PacStateSystem;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3DMovementAnimation;
 import javafx.animation.Animation;

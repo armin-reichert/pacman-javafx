@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.core.model.comp.pac;
 
 import de.amr.pacmanfx.core.model.GameEntityComponent;
-import de.amr.pacmanfx.core.model.actors.PacState;
 
 import java.util.Objects;
 

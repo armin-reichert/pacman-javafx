@@ -6,10 +6,7 @@ package de.amr.pacmanfx.core.model.actors;
 
 import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.comp.common.MovementComp;
-import de.amr.pacmanfx.core.model.comp.pac.PacCheatsComp;
-import de.amr.pacmanfx.core.model.comp.pac.PacDigestionComp;
-import de.amr.pacmanfx.core.model.comp.pac.PacPowerComp;
-import de.amr.pacmanfx.core.model.comp.pac.PacStateComp;
+import de.amr.pacmanfx.core.model.comp.pac.*;
 import de.amr.pacmanfx.core.model.comp.spriteanim.SpriteAnimComp;
 import de.amr.pacmanfx.core.model.comp.world.WorldNavigationComp;
 
