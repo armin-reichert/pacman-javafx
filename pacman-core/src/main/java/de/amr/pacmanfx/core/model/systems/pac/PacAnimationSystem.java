@@ -1,5 +1,6 @@
 package de.amr.pacmanfx.core.model.systems.pac;
 
+import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
 import de.amr.pacmanfx.core.model.entities.Pac;
 import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 
@@ -23,5 +24,14 @@ public class PacAnimationSystem {
 
             }
         }
+    }
+
+    public void selectDyingAnimation(Pac pac) {
+        spriteAnimSystem.select(pac, ActorAnimationID.PAC_DYING);
+        spriteAnimSystem.resetSelected(pac);
+    }
+
+    public void playDyingAnimation(Pac pac) {
+        spriteAnimSystem.playSelected(pac);
     }
 }

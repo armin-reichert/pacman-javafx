@@ -10,12 +10,10 @@ import de.amr.pacmanfx.core.event.pac.PacDeadEvent;
 import de.amr.pacmanfx.core.event.pac.PacDyingEvent;
 import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
 import de.amr.pacmanfx.core.model.entities.Pac;
 import de.amr.pacmanfx.core.model.comp.ghost.ElroyComp;
 import de.amr.pacmanfx.core.model.comp.pac.PacState;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 
 import static java.util.Objects.requireNonNull;
 
@@ -36,38 +34,28 @@ public final class GameState_PacManDying extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext gameContext) {
-        requireNonNull(gameContext);
+    public void onEnter(GameContext game) {
+        requireNonNull(game);
 
-        final GameSystems sys = gameContext.systems();
-
-        final GameLevel level = gameContext.assertLevel();
+        final GameLevel level = game.assertLevel();
         final Pac pac = level.entities().pac();
 
-        gameContext.model().gateKeeper().resetCounterAndSetEnabled(true);
-
+        game.model().gateKeeper().resetCounterAndSetEnabled(true);
         level.huntingRules().stop();
 
         level.entities().ghosts().forEach(ghost -> ghost.optComponent(ElroyComp.class).ifPresent(elroy -> elroy.setEnabled(false)));
-        level.entities().optBonus().ifPresent(bonus -> sys.bonusState().setInactive(bonus));
+        level.entities().optBonus().ifPresent(bonus -> game.systems().bonusState().setInactive(bonus));
 
-        // Pac-Man stops moving and is prepared for "dying" animation
-        sys.worldNavigator().setSpeed(pac, 0);
-        sys.pacPower().reset(pac);
-
-        sys.spriteAnim().stopSelected(pac);
-
-        sys.pacState().setState(pac, PacState.DEAD);
+        game.systems().worldNavigator().setSpeed(pac, 0);
+        game.systems().pacPower().reset(pac);
+        game.systems().pacState().setState(pac, PacState.DEAD);
 
         waitForTimeout();
-
-        gameContext.eventManager().publishGameEvent(new StopAllSoundsEvent());
+        game.eventManager().publishGameEvent(new StopAllSoundsEvent());
     }
 
     @Override
     public void onUpdate(GameContext gameContext) {
-        final GameSystems sys = gameContext.systems();
-
         final GameModel model = gameContext.model();
         final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
@@ -85,23 +73,22 @@ public final class GameState_PacManDying extends GameState {
         }
         else if (tick == timing.hideGhostsTick()) {
             level.entities().ghosts().forEach(GameEntity::hide);
-            sys.spriteAnim().select(pac, ActorAnimationID.PAC_DYING);
-            sys.spriteAnim().resetSelected(pac);
+            gameContext.systems().pacAnimation().selectDyingAnimation(pac);
         }
         else if (tick == timing.animationStartTick()) {
-            sys.spriteAnim().playSelected(pac);
+            gameContext.systems().pacAnimation().playDyingAnimation(pac);
             gameContext.eventManager().publishGameEvent(new PacDyingEvent(pac));
         }
         else if (tick == timing.hidePacTick()) {
             pac.hide();
-            level.optBonus().ifPresent(bonus -> sys.bonusState().setInactive(bonus));
+            level.optBonus().ifPresent(bonus -> gameContext.systems().bonusState().setInactive(bonus));
         }
         else if (tick == timing.pacDeadTick()) {
             gameContext.eventManager().publishGameEvent(new PacDeadEvent(pac));
         }
         else {
             level.heartbeat().triggerPulse();
-            sys.pacState().update(gameContext);
+            gameContext.systems().pacState().update(gameContext);
         }
     }
 }
