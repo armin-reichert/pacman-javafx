@@ -1,19 +1,19 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.arcade.ms_pacman.entities;
 
-import de.amr.basics.spriteanim.SpriteAnimationContainer;
+package de.amr.pacmanfx.arcade.ms_pacman.entities.stork;
+
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.components.MovementComp;
 import de.amr.pacmanfx.core.ecs.components.SpriteAnimComp;
 
-public class Bag extends GameEntity {
+public class Stork extends GameEntity {
 
-    private boolean open;
+    private boolean bagReleasedFromBeak;
 
-    public Bag(SpriteAnimationContainer container) {
-        name = "Birkin";
+    public Stork() {
+        setName("Beatrix von");
         setComponent(MovementComp.class, new MovementComp());
         setComponent(SpriteAnimComp.class, new SpriteAnimComp());
     }
@@ -26,11 +26,11 @@ public class Bag extends GameEntity {
         return requireComponent(SpriteAnimComp.class);
     }
 
-    public void setOpen(boolean open) {
-        this.open = open;
+    public void setBagReleasedFromBeak(boolean released) {
+        bagReleasedFromBeak = released;
     }
 
-    public boolean isOpen() {
-        return open;
+    public boolean isBagReleasedFromBeak() {
+        return bagReleasedFromBeak;
     }
 }

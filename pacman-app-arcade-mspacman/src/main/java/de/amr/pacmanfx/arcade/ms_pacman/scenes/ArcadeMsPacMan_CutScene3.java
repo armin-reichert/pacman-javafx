@@ -5,7 +5,12 @@ package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.arcade.ms_pacman.entities.*;
+import de.amr.pacmanfx.arcade.ms_pacman.entities.bag.Bag;
+import de.amr.pacmanfx.arcade.ms_pacman.entities.bag.BagAnimationSystem;
+import de.amr.pacmanfx.arcade.ms_pacman.entities.bag.BagSpriteAnimationMap;
+import de.amr.pacmanfx.arcade.ms_pacman.entities.clapperboard.Clapperboard;
+import de.amr.pacmanfx.arcade.ms_pacman.entities.stork.Stork;
+import de.amr.pacmanfx.arcade.ms_pacman.entities.stork.StorkSpriteAnimationMap;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.common.GameSystems;
@@ -42,7 +47,6 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
     public Bag bag;
     public Clapperboard clapperboard;
 
-    private boolean bagReleased;
     private int numBagBounces;
 
     private SceneState sceneState;
@@ -78,6 +82,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
         msPacMan.spriteAnimation().setAnimations(renderConfig.createPacAnimations(animationContainer));
 
         stork = new Stork();
+        stork.setBagReleasedFromBeak(false);
         stork.spriteAnim().setAnimations(new StorkSpriteAnimationMap(animationContainer));
 
         bag = new Bag(animationContainer);
@@ -172,7 +177,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
         sys.motor().setVelocityX(bag, stork.movement().velocityX());
         sys.motor().setAcceleration(bag, 0, 0);
 
-        bagReleased = false;
+        stork.setBagReleasedFromBeak(false);
         numBagBounces = 0;
 
         sceneState = newState;
@@ -182,10 +187,10 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
         final MovementSystem motor = gameContext().systems().motor();
 
         // release bag from beak when stork reaches tile 20
-        if (stork.pos().x() <= 20 * WorldMap.TS && !bagReleased) {
+        if (stork.pos().x() <= 20 * WorldMap.TS && !stork.isBagReleasedFromBeak()) {
             motor.setAcceleration(bag, 0, 0.04f); // set y-gravity to let bag fall to ground
             motor.setVelocity(stork, -1, 0); // fly faster without this heavy bag
-            bagReleased = true;
+            stork.setBagReleasedFromBeak(true);
         }
 
         if (!bag.isOpen()) {
