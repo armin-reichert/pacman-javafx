@@ -5,6 +5,8 @@
 package de.amr.pacmanfx.core.ecs.systems.common;
 
 import de.amr.pacmanfx.core.ecs.systems.pac.*;
+import de.amr.pacmanfx.core.ecs.systems.world.RandomWorldMovementSystem;
+import de.amr.pacmanfx.core.ecs.systems.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.ecs.systems.bonus.BonusMoveAndJumpSystem;
 import de.amr.pacmanfx.core.ecs.systems.bonus.BonusStateSystem;

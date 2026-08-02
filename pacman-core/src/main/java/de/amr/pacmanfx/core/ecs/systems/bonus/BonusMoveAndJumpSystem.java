@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.model.entities.bonus.Bonus;
 import de.amr.pacmanfx.core.model.entities.bonus.MoveAndJumpComp;
 import de.amr.pacmanfx.core.ecs.components.WorldNavigationComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.ecs.systems.common.WorldNavigationSystem;
+import de.amr.pacmanfx.core.ecs.systems.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.ecs.systems.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.steering.RouteGuidedSteering;
 import org.tinylog.Logger;

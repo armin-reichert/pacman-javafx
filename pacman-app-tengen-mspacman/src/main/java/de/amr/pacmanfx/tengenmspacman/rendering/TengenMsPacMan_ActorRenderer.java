@@ -13,7 +13,7 @@ import de.amr.pacmanfx.core.model.entities.*;
 import de.amr.pacmanfx.core.model.entities.bonus.Bonus;
 import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
-import de.amr.pacmanfx.core.ecs.systems.common.WorldNavigationSystem;
+import de.amr.pacmanfx.core.ecs.systems.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.ecs.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.tengenmspacman.gamescene.Clapperboard;
 import de.amr.pacmanfx.tengenmspacman.gamescene.Stork;

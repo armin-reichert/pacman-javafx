@@ -15,7 +15,7 @@ import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.ecs.components.MovementComp;
 import de.amr.pacmanfx.core.ecs.components.WorldNavigationComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.ecs.systems.common.WorldNavigationSystem;
+import de.amr.pacmanfx.core.ecs.systems.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.ecs.systems.pac.PacPowerSystem;
 import de.amr.pacmanfx.core.ecs.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;

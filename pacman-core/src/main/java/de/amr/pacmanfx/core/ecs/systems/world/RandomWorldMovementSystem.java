@@ -2,17 +2,17 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core.ecs.systems.common;
+package de.amr.pacmanfx.core.ecs.systems.world;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.RandomNumberSupport;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.ecs.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.ecs.components.WorldNavigationComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.ecs.systems.world.WorldMovementPolicy;
 import org.tinylog.Logger;
 
 import static de.amr.basics.math.Direction.*;

@@ -2,10 +2,14 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core.ecs.systems.common;
+package de.amr.pacmanfx.core.ecs.systems;
 
+import de.amr.pacmanfx.core.ecs.systems.common.GameSystems;
+import de.amr.pacmanfx.core.ecs.systems.common.MovementSystem;
 import de.amr.pacmanfx.core.ecs.systems.ghost.*;
 import de.amr.pacmanfx.core.ecs.systems.pac.*;
+import de.amr.pacmanfx.core.ecs.systems.world.RandomWorldMovementSystem;
+import de.amr.pacmanfx.core.ecs.systems.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.ecs.systems.bonus.BonusMoveAndJumpSystem;
 import de.amr.pacmanfx.core.ecs.systems.bonus.BonusStateSystem;

@@ -9,11 +9,11 @@ import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.ecs.systems.common.WorldNavigationSystem;
+import de.amr.pacmanfx.core.ecs.systems.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.ecs.systems.world.WorldMovementPolicy;
 
-import static de.amr.pacmanfx.core.ecs.systems.common.WorldNavigationSystem.computeTile;
-import static de.amr.pacmanfx.core.ecs.systems.common.WorldNavigationSystem.tilesAheadWithOverflowBug;
+import static de.amr.pacmanfx.core.ecs.systems.world.WorldNavigationSystem.computeTile;
+import static de.amr.pacmanfx.core.ecs.systems.world.WorldNavigationSystem.tilesAheadWithOverflowBug;
 import static java.util.Objects.requireNonNull;
 
 public class BashfulHuntingStrategy implements GhostHuntingStrategy {

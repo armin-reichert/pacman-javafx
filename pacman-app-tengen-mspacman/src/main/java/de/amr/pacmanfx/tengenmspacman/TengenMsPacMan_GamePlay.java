@@ -23,7 +23,7 @@ import de.amr.pacmanfx.core.model.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.model.rules.HuntingTimer;
 import de.amr.pacmanfx.core.ecs.systems.common.GameSystems;
-import de.amr.pacmanfx.core.ecs.systems.common.WorldNavigationSystem;
+import de.amr.pacmanfx.core.ecs.systems.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.world.*;
 import de.amr.pacmanfx.core.model.world.house.ArcadeHouse;
 import de.amr.pacmanfx.core.model.world.house.House;

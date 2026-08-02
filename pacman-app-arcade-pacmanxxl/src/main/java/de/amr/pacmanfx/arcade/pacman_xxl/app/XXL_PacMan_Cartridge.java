@@ -7,7 +7,7 @@ import de.amr.pacmanfx.arcade.pacman_xxl.pacman.XXL_PacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.XXL_PacMan_GamePlay;
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.XXL_PacMan_GameVariantConfig;
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.core.ecs.systems.common.DefaultGameSystems;
+import de.amr.pacmanfx.core.ecs.systems.DefaultGameSystems;
 import de.amr.pacmanfx.game.Cartridge;
 import de.amr.pacmanfx.game.GameExtension;
 

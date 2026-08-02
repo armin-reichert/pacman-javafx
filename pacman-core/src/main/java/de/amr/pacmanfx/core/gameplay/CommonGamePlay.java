@@ -30,7 +30,7 @@ import de.amr.pacmanfx.core.model.rules.CollisionStrategy;
 import de.amr.pacmanfx.core.model.score.PropertyFileScore;
 import de.amr.pacmanfx.core.model.score.Score;
 import de.amr.pacmanfx.core.ecs.systems.common.GameSystems;
-import de.amr.pacmanfx.core.ecs.systems.common.WorldNavigationSystem;
+import de.amr.pacmanfx.core.ecs.systems.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.ecs.systems.pac.PacDigestionSystem;
 import de.amr.pacmanfx.core.model.world.house.ArcadeHouseGateKeeper;
 import de.amr.pacmanfx.core.model.world.house.House;

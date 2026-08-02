@@ -43,4 +43,5 @@ module de.amr.pacmanfx.core {
     exports de.amr.pacmanfx.core.model.world.obstacle;
     exports de.amr.pacmanfx.core.ecs;
     exports de.amr.pacmanfx.core.ecs.components;
+    exports de.amr.pacmanfx.core.ecs.systems;
 }
