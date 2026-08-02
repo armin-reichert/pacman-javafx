@@ -6,7 +6,7 @@ package de.amr.pacmanfx.uilib.model3D.animation;
 
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.entities.pac.PacState;
-import de.amr.pacmanfx.core.model.systems.pac.PacStateSystem;
+import de.amr.pacmanfx.core.ecs.systems.pac.PacStateSystem;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3DMovementAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;

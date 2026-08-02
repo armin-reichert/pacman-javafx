@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.core.model.level;
 
 import de.amr.basics.timer.Pulse;
-import de.amr.pacmanfx.core.model.GameEntity;
+import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.entities.bonus.Bonus;

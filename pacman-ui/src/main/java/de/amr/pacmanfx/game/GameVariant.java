@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.gameplay.GameFlowController;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.systems.common.GameSystems;
+import de.amr.pacmanfx.core.ecs.systems.common.GameSystems;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 
 import java.util.HashMap;

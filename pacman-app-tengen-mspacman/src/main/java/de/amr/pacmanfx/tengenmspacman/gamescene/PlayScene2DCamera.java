@@ -4,8 +4,8 @@
 package de.amr.pacmanfx.tengenmspacman.gamescene;
 
 import de.amr.basics.math.Direction;
-import de.amr.pacmanfx.core.model.GameEntity;
-import de.amr.pacmanfx.core.model.comp.WorldNavigationComp;
+import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.ecs.components.WorldNavigationComp;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;

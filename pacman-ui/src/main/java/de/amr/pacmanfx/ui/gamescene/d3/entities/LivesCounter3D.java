@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.gamescene.d3.entities;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.GameEntity;
+import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;

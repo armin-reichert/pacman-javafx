@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.model.entities.pac.PacState;
 import de.amr.pacmanfx.core.model.entities.ghost.GhostState;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.systems.pac.PacPowerSystem;
+import de.amr.pacmanfx.core.ecs.systems.pac.PacPowerSystem;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;

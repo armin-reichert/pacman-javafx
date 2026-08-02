@@ -9,9 +9,9 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.model.entities.ghost.ElroyComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
-import de.amr.pacmanfx.core.model.systems.ghost.GhostHuntingStrategy;
-import de.amr.pacmanfx.core.model.systems.world.WorldMovementPolicy;
+import de.amr.pacmanfx.core.ecs.systems.common.WorldNavigationSystem;
+import de.amr.pacmanfx.core.ecs.systems.ghost.GhostHuntingStrategy;
+import de.amr.pacmanfx.core.ecs.systems.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import org.tinylog.Logger;
 

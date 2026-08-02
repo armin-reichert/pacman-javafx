@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.gamescene.d3.entities;
 
 import de.amr.basics.Naming;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.GameEntity;
+import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.settings.world.LevelCounter3DSettings;

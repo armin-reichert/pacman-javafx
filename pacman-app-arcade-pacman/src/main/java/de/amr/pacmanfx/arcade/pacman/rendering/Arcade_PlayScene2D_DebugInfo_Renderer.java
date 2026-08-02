@@ -5,9 +5,9 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.GameEntity;
+import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
+import de.amr.pacmanfx.core.ecs.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.rules.HuntingRules;

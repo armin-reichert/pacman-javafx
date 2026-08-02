@@ -4,9 +4,9 @@
 package de.amr.pacmanfx.core.model.world;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.model.GameEntity;
-import de.amr.pacmanfx.core.model.comp.WorldNavigationComp;
-import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
+import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.ecs.components.WorldNavigationComp;
+import de.amr.pacmanfx.core.ecs.systems.common.WorldNavigationSystem;
 import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;

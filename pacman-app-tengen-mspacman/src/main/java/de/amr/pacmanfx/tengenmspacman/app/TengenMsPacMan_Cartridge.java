@@ -1,7 +1,7 @@
 package de.amr.pacmanfx.tengenmspacman.app;
 
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.core.model.systems.common.DefaultGameSystems;
+import de.amr.pacmanfx.core.ecs.systems.common.DefaultGameSystems;
 import de.amr.pacmanfx.game.Cartridge;
 import de.amr.pacmanfx.game.GameExtension;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;

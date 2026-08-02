@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.gamescene.d3.camera;
 
-import de.amr.pacmanfx.core.model.comp.PositionComp;
+import de.amr.pacmanfx.core.ecs.components.PositionComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import javafx.scene.PerspectiveCamera;

@@ -14,7 +14,7 @@ import de.amr.pacmanfx.core.event.gameplay.*;
 import de.amr.pacmanfx.core.event.ghost.GhostEatenEvent;
 import de.amr.pacmanfx.core.event.pac.*;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
+import de.amr.pacmanfx.core.ecs.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;

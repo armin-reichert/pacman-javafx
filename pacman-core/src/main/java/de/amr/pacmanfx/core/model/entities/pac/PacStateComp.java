@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.core.model.entities.pac;
 
-import de.amr.pacmanfx.core.model.GameEntityComponent;
+import de.amr.pacmanfx.core.ecs.GameEntityComponent;
 
 import java.util.Objects;
 

@@ -10,10 +10,10 @@ import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.GameEntity;
+import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
-import de.amr.pacmanfx.core.model.comp.MovementComp;
-import de.amr.pacmanfx.core.model.comp.SpriteAnimComp;
+import de.amr.pacmanfx.core.ecs.components.MovementComp;
+import de.amr.pacmanfx.core.ecs.components.SpriteAnimComp;
 import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
 
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.BLUE_BAG;

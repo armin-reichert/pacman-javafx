@@ -6,7 +6,7 @@ package de.amr.pacmanfx.uilib.model3D.ghost;
 
 import de.amr.basics.Naming;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.GameEntity;
+import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.entities.ghost.Ghost;

@@ -6,7 +6,7 @@ package de.amr.pacmanfx.core.model.entities.ghost;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.model.GameEntityComponent;
+import de.amr.pacmanfx.core.ecs.GameEntityComponent;
 import de.amr.pacmanfx.core.model.world.house.House;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 

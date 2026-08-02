@@ -8,7 +8,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GamePlay;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.systems.common.GameSystems;
+import de.amr.pacmanfx.core.ecs.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
 

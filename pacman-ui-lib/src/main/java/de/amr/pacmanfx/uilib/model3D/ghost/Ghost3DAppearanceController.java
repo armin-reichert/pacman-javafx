@@ -8,7 +8,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.systems.pac.PacPowerSystem;
+import de.amr.pacmanfx.core.ecs.systems.pac.PacPowerSystem;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 
 public class Ghost3DAppearanceController {

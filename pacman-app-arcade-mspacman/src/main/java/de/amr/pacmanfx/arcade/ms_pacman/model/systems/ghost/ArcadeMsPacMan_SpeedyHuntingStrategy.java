@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.model.systems.ghost;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
+import de.amr.pacmanfx.core.ecs.systems.common.WorldNavigationSystem;
 
 /**
  * In Ms. Pac-Man, Blinky ("Shadow") and Pinky ("Speedy")  move randomly during the *first* scatter phase. Some say,

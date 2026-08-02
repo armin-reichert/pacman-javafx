@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.core.model.entities.marquee;
 
 
-import de.amr.pacmanfx.core.model.GameEntityComponent;
+import de.amr.pacmanfx.core.ecs.GameEntityComponent;
 
 public class MarqueeLayoutComp implements GameEntityComponent {
 

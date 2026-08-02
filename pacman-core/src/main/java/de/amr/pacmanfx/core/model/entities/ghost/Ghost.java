@@ -4,11 +4,11 @@
 
 package de.amr.pacmanfx.core.model.entities.ghost;
 
-import de.amr.pacmanfx.core.model.GameEntity;
+import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.comp.MovementComp;
-import de.amr.pacmanfx.core.model.comp.SpriteAnimComp;
-import de.amr.pacmanfx.core.model.comp.WorldNavigationComp;
+import de.amr.pacmanfx.core.ecs.components.MovementComp;
+import de.amr.pacmanfx.core.ecs.components.SpriteAnimComp;
+import de.amr.pacmanfx.core.ecs.components.WorldNavigationComp;
 
 import static java.util.Objects.requireNonNull;
 

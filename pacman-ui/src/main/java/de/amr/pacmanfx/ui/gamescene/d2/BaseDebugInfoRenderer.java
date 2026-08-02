@@ -5,11 +5,11 @@ package de.amr.pacmanfx.ui.gamescene.d2;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.core.model.GameEntity;
+import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
-import de.amr.pacmanfx.core.model.comp.WorldNavigationComp;
-import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
-import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
+import de.amr.pacmanfx.core.ecs.components.WorldNavigationComp;
+import de.amr.pacmanfx.core.ecs.systems.common.WorldNavigationSystem;
+import de.amr.pacmanfx.core.ecs.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;

@@ -8,7 +8,7 @@ import de.amr.basics.Naming;
 import de.amr.pacmanfx.core.gameplay.GameFlowController;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.systems.common.GameSystems;
+import de.amr.pacmanfx.core.ecs.systems.common.GameSystems;
 
 import java.util.Set;
 import java.util.function.Supplier;

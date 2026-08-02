@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.core.model.entities.pac;
 
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.core.model.GameEntityComponent;
+import de.amr.pacmanfx.core.ecs.GameEntityComponent;
 
 public class PacPowerComp implements GameEntityComponent {
 

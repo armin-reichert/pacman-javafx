@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.core.steering;
 
-import de.amr.pacmanfx.core.model.GameEntity;
+import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 
 public interface Steering {
