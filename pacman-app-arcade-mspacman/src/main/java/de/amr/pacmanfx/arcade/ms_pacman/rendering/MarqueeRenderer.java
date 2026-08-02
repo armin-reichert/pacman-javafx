@@ -4,10 +4,7 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
-import de.amr.pacmanfx.core.model.entities.marquee.MarqueeLayoutComp;
-import de.amr.pacmanfx.core.model.entities.marquee.MarqueeRunnerComp;
-import de.amr.pacmanfx.core.model.entities.marquee.MarqueeVisualComp;
-import de.amr.pacmanfx.core.model.entities.marquee.Marquee;
+import de.amr.pacmanfx.core.model.entities.marquee.*;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -17,9 +14,6 @@ import javafx.scene.paint.Color;
  * original Arcade game where bulbs on the left side of the marquee are only working every second tick.
  */
 public class MarqueeRenderer extends BaseRenderer {
-
-    // Index 0 is the lower-left (south-west) corner, then index follows border in counter-clockwise order
-    record CornerIndices(int sw, int se, int ne, int nw) {}
 
     public MarqueeRenderer(Canvas canvas) {
         super(canvas);
@@ -37,11 +31,8 @@ public class MarqueeRenderer extends BaseRenderer {
         final MarqueeLayoutComp layout = marquee.layout();
         final MarqueeVisualComp visualization = marquee.visualization();
 
+        final int n = layout.numBulbs();
         final long tick = runner.tickTimer().tickCount();
-        final int n = numBulbs(layout);
-
-        final CornerIndices corners = computeCornerIndices(marquee);
-
         int firstBrightIndex = (int) (tick % n);
 
         final Color offColor = Color.valueOf(visualization.bulbOffColor());
@@ -49,13 +40,14 @@ public class MarqueeRenderer extends BaseRenderer {
 
         ctx.setFill(offColor);
         for (int i = 0; i < n; ++i) {
-            drawBulb(marquee, corners, i);
+            drawBulb(marquee, layout.corners(), i);
         }
 
+        final MarqueeCorners corners = layout.corners();
         ctx.setFill(onColor);
         for (int i = 0; i < layout.brightBulbsCount(); ++i) {
             final int index = (firstBrightIndex + i * layout.brightBulbsDistance()) % n;
-            // Simulate "broken bulbs on left side" bug from orginal Arcade game
+            // Simulate "broken bulbs on left side" bug from original Arcade game
             final boolean broken = index >= corners.nw() && (index - corners.nw()) % 2 == 0;
             if (!broken) {
                 drawBulb(marquee, corners, index);
@@ -63,24 +55,7 @@ public class MarqueeRenderer extends BaseRenderer {
         }
     }
 
-    private int numBulbs(MarqueeLayoutComp layout) {
-        final int bh = layout.numBulbsHorizontally();
-        final int bv = layout.numBulbsVertically();
-        return 2 * (bh + bv) - 4;
-    }
-
-    private CornerIndices computeCornerIndices(Marquee marquee) {
-        final MarqueeLayoutComp layout = marquee.layout();
-        final int bh = layout.numBulbsHorizontally();
-        final int bv = layout.numBulbsVertically();
-        final int sw = 0;
-        final int se = sw + bh - 1;
-        final int ne = se + bv - 1;
-        final int nw = ne + bh - 1;
-        return new CornerIndices(sw, se, ne, nw);
-    }
-
-    private void drawBulb(Marquee marquee, CornerIndices corners, int index) {
+    private void drawBulb(Marquee marquee, MarqueeCorners corners, int index) {
         final MarqueeLayoutComp layout = marquee.layout();
 
         final int bh = layout.numBulbsHorizontally();

@@ -14,6 +14,13 @@ public class MarqueeLayoutComp implements GameEntityComponent {
     private int bulbSize;
     private int brightBulbsCount;
     private int brightBulbsDistance;
+    private MarqueeCorners corners;
+
+    public int numBulbs() {
+        final int bh = numBulbsHorizontally;
+        final int bv = numBulbsVertically;
+        return 2 * (bh + bv) - 4;
+    }
 
     public int numBulbsHorizontally() {
         return numBulbsHorizontally;
@@ -21,6 +28,7 @@ public class MarqueeLayoutComp implements GameEntityComponent {
 
     public void setNumBulbsHorizontally(int numBulbsHorizontally) {
         this.numBulbsHorizontally = numBulbsHorizontally;
+        corners = null;
     }
 
     public int numBulbsVertically() {
@@ -29,6 +37,7 @@ public class MarqueeLayoutComp implements GameEntityComponent {
 
     public void setNumBulbsVertically(int numBulbsVertically) {
         this.numBulbsVertically = numBulbsVertically;
+        corners = null;
     }
 
     public int bulbSize() {
@@ -55,7 +64,24 @@ public class MarqueeLayoutComp implements GameEntityComponent {
         this.brightBulbsDistance = brightBulbsDistance;
     }
 
+    public MarqueeCorners corners() {
+        if (corners == null) {
+            corners = computeCornerIndices();
+        }
+        return corners;
+    }
+
     @Override
     public void reset() {
+    }
+
+    private MarqueeCorners computeCornerIndices() {
+        final int bh = numBulbsHorizontally;
+        final int bv = numBulbsVertically;
+        final int sw = 0;
+        final int se = sw + bh - 1;
+        final int ne = se + bv - 1;
+        final int nw = ne + bh - 1;
+        return new MarqueeCorners(sw, se, ne, nw);
     }
 }
