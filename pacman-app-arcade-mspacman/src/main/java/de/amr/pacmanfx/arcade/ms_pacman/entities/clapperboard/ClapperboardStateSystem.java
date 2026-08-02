@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.entities.clapperboard;
 
-
 public class ClapperboardStateSystem {
 
     public static void startFlapAnimation(Clapperboard clapperboard) {

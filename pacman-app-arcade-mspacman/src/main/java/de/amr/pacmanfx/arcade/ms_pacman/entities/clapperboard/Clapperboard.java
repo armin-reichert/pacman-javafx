@@ -26,22 +26,4 @@ public class Clapperboard extends GameEntity {
     public ClapperboardStateComp state() {
         return requireComponent(ClapperboardStateComp.class);
     }
-
-    public static void update(Clapperboard clapperboard) {
-        final ClapperboardStateComp state = clapperboard.state();
-
-        if (!state.running()) return;
-
-        //TODO Verify exact tick values
-        switch (state.tick()) {
-            case 48 -> state.setState(ClapperboardState.OPEN);
-            case 54 -> state.setState(ClapperboardState.CLOSED);
-            case 59 -> state.setState(ClapperboardState.WIDE_OPEN);
-            case 88 -> {
-                clapperboard.hide();
-                state.setRunning(false);
-            }
-        }
-        state.setTick(state.tick() + 1);
-    }
 }
