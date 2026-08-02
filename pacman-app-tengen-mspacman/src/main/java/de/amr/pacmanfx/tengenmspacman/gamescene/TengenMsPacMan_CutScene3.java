@@ -6,9 +6,9 @@ package de.amr.pacmanfx.tengenmspacman.gamescene;
 import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.ecs.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
-import de.amr.pacmanfx.core.ecs.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.entities.*;
@@ -99,7 +99,8 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
         pacMan = factory.createPacMan();
         pacMan.spriteAnimation().setAnimations(renderConfig.createPacAnimations(animationContainer));
 
-        stork = new Stork(animationContainer);
+        stork = new Stork();
+        stork.spriteAnim().setAnimations(new StorkSpriteAnimationMap(animationContainer));
 
         bag = new Bag();
         bag.spriteAnim().setAnimations(new BagAnimationSpriteMap(animationContainer));
@@ -123,8 +124,8 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
         if (gameStateTick <= TICK_EXPIRES) {
             switch ((int) gameStateTick) {
                 case 130 -> {
-                    pacMan.pos().set(WorldMap.TS * 3, GROUND_Y - 4);
                     pacMan.show();
+                    pacMan.pos().set(WorldMap.TS * 3, GROUND_Y - 4);
 
                     sys.worldNavigator().setMoveDir(pacMan, Direction.RIGHT);
                     sys.worldNavigator().setSpeed(pacMan, 0);
@@ -141,8 +142,8 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
                     sys.spriteAnim().select(msPacMan, ActorAnimationID.PAC_MUNCHING);
                     sys.spriteAnim().stopSelected(msPacMan);
 
-                    stork.pos().set(RIGHT_BORDER, WorldMap.TS * 7);
                     stork.show();
+                    stork.pos().set(RIGHT_BORDER, WorldMap.TS * 7);
                     sys.motor().setVelocity(stork, -0.8f, 0);
 
                     sys.spriteAnim().select(stork, ActorAnimationID.STORK_FLYING);
@@ -156,8 +157,8 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
                     sys.motor().setVelocity(stork, -1f, 0); // faster, no bag to carry!
                     stork.setBagReleasedFromBeak(true);
 
-                    bag.pos().set(stork.pos().x() - 15, stork.pos().y() + 8);
                     bag.show();
+                    bag.pos().set(stork.pos().x() - 15, stork.pos().y() + 8);
                     sys.motor().setVelocity(bag, -0.5f, 0);
                     sys.motor().setAcceleration(bag, 0, 0.1f);
                 }
