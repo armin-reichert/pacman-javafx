@@ -6,6 +6,7 @@ package de.amr.pacmanfx.core.model.entities.marquee;
 
 
 import de.amr.pacmanfx.core.ecs.GameEntityComponent;
+import de.amr.pacmanfx.core.ecs.components.PositionComp;
 
 public class MarqueeLayoutComp implements GameEntityComponent {
 
@@ -16,11 +17,16 @@ public class MarqueeLayoutComp implements GameEntityComponent {
     private int brightBulbsDistance;
     private MarqueeCorners corners;
 
+    public MarqueeArea computeArea(PositionComp pos) {
+        return new MarqueeArea(pos.x(), pos.y(), pos.x() + (numBulbsHorizontally - 1) * bulbSize, pos.y() + (numBulbsVertically - 1) * bulbSize);
+    }
+
     public int numBulbs() {
         final int bh = numBulbsHorizontally;
         final int bv = numBulbsVertically;
         return 2 * (bh + bv) - 4;
     }
+
 
     public int numBulbsHorizontally() {
         return numBulbsHorizontally;

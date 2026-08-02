@@ -31,6 +31,9 @@ public class MarqueeRenderer extends BaseRenderer {
         final MarqueeLayoutComp layout = marquee.layout();
         final MarqueeVisualComp visualization = marquee.visualization();
 
+        final MarqueeArea area = layout.computeArea(marquee.pos());
+        final MarqueeCorners corners = layout.corners();
+
         final int n = layout.numBulbs();
         final long tick = runner.tickTimer().tickCount();
         int firstBrightIndex = (int) (tick % n);
@@ -39,33 +42,22 @@ public class MarqueeRenderer extends BaseRenderer {
         final Color onColor = Color.valueOf(visualization.bulbOnColor());
 
         ctx.setFill(offColor);
-        for (int i = 0; i < n; ++i) {
-            drawBulb(marquee, layout.corners(), i);
+        for (int index = 0; index < n; ++index) {
+            drawBulb(area, corners, layout.bulbSize(), index);
         }
 
-        final MarqueeCorners corners = layout.corners();
         ctx.setFill(onColor);
         for (int i = 0; i < layout.brightBulbsCount(); ++i) {
             final int index = (firstBrightIndex + i * layout.brightBulbsDistance()) % n;
             // Simulate "broken bulbs on left side" bug from original Arcade game
             final boolean broken = index >= corners.nw() && (index - corners.nw()) % 2 == 0;
             if (!broken) {
-                drawBulb(marquee, corners, index);
+                drawBulb(area, corners, layout.bulbSize(), index);
             }
         }
     }
 
-    private void drawBulb(Marquee marquee, MarqueeCorners corners, int index) {
-        final MarqueeLayoutComp layout = marquee.layout();
-
-        final int bh = layout.numBulbsHorizontally();
-        final int bv = layout.numBulbsVertically();
-        final int bs = layout.bulbSize();
-
-        final float minX = marquee.pos().x();
-        final float minY = marquee.pos().y();
-        final float maxX = minX + (bh - 1) * bs;
-        final float maxY = minY + (bv - 1) * bs;
+    private void drawBulb(MarqueeArea a, MarqueeCorners corners, float bs, int index) {
 
         // Example: bh=35, bv=15
 
@@ -79,25 +71,25 @@ public class MarqueeRenderer extends BaseRenderer {
         double x, y;
 
         if (index < corners.se()) { // [0;se}: lower edge left-to-right: 0..
-            x = minX + index * bs;
-            y = maxY;
+            x = a.minX() + index * bs;
+            y = a.maxY();
         }
         else if (index < corners.ne()) { // [se;ne): right edge bottom-to-top
             int d = index - corners.se();
-            x = maxX;
-            y = maxY - d * bs;
+            x = a.maxX();
+            y = a.maxY() - d * bs;
         }
         else if (index < corners.nw()) { // [ne;nw): upper edge right-to-left
             int d = index - corners.ne();
-            x = maxX - d * bs;
-            y = minY;
+            x = a.maxX() - d * bs;
+            y = a.minY();
         }
         else { // left edge top-to-bottom
             int d = index - corners.nw();
-            x = minX;
-            y = minY + d * bs;
+            x = a.minX();
+            y = a.minY() + d * bs;
         }
 
-        ctx.fillRect(scaled(x), scaled(y), scaled(.5*bs), scaled(.5*bs));
+        ctx.fillRect(scaled(x), scaled(y), scaled(0.5 * bs), scaled(0.5 * bs));
     }
 }
