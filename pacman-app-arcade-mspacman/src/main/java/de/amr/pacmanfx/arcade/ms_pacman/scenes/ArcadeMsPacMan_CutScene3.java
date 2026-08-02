@@ -5,15 +5,13 @@ package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.arcade.ms_pacman.entities.Bag;
-import de.amr.pacmanfx.arcade.ms_pacman.entities.Clapperboard;
-import de.amr.pacmanfx.arcade.ms_pacman.entities.Stork;
+import de.amr.pacmanfx.arcade.ms_pacman.entities.*;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
-import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.ecs.systems.common.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.common.MovementSystem;
+import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
+import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -64,24 +62,26 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
     @Override
     public void onTick(GameContext gameContext) {
         updateSceneState();
+        BagAnimationSystem.update(bag);
     }
 
     private void initScene() {
         final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
-        final SpriteAnimationContainer spriteAnimations = appContext().ui().sprites().animations();
+        final SpriteAnimationContainer animationContainer = appContext().ui().sprites().animations();
 
         final var factory = new ArcadeMsPacMan_ActorFactory();
 
         pacMan = factory.createPacMan();
-        pacMan.spriteAnimation().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        pacMan.spriteAnimation().setAnimations(renderConfig.createPacAnimations(animationContainer));
 
         msPacMan = factory.createMsPacMan();
-        msPacMan.spriteAnimation().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        msPacMan.spriteAnimation().setAnimations(renderConfig.createPacAnimations(animationContainer));
 
-        stork = new Stork(spriteAnimations);
+        stork = new Stork(animationContainer);
 
-        bag = new Bag(spriteAnimations);
-        bag.setOpen(gameContext(), false);
+        bag = new Bag(animationContainer);
+        bag.spriteAnim().setAnimations(new BagSpriteAnimationMap(animationContainer));
+        bag.setOpen(false);
 
         clapperboard = new Clapperboard("3", "JUNIOR");
         clapperboard.pos().set(tilesPx(3), tilesPx(10));
@@ -165,7 +165,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
         sys.spriteAnim().select(stork, ActorAnimationID.STORK_FLYING);
         sys.spriteAnim().playSelected(stork);
 
-        bag.setOpen(gameContext(), false);
+        bag.setOpen(false);
         bag.pos().set(stork.pos().x() - 14, stork.pos().y() + 3);
         bag.show();
         sys.motor().setVelocityX(bag, stork.movement().velocityX());
@@ -195,7 +195,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
                     bag.movement().setVelocity(-0.2f, -1.0f / numBagBounces); // add upwards velocity to bounce
                     bag.pos().setY(GROUND_Y);
                 } else {
-                    bag.setOpen(gameContext(), true);
+                    bag.setOpen(true);
                     bag.pos().setY(GROUND_Y);
                     motor.setVelocity(bag, 0, 0);
                     motor.setAcceleration(bag, 0, 0);
