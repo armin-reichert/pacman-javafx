@@ -5,9 +5,9 @@
 package de.amr.pacmanfx.core.ecs.systems.ghost;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.core.ecs.systems.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.ecs.systems.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 
 public interface GhostHuntingStrategy {

@@ -5,9 +5,9 @@ package de.amr.pacmanfx.uilib.model3D.world;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.obstacle.Obstacle;
 import de.amr.pacmanfx.core.model.world.obstacle.ObstacleSegment;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import javafx.util.Callback;
 import org.tinylog.Logger;
 

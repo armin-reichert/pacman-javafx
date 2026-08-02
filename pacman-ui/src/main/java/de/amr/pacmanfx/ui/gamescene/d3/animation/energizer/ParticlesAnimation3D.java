@@ -26,7 +26,8 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import static de.amr.basics.math.RandomNumberSupport.*;
+import static de.amr.basics.math.RandomNumberSupport.chance;
+import static de.amr.basics.math.RandomNumberSupport.randomFloat;
 import static java.util.Objects.requireNonNull;
 
 /**

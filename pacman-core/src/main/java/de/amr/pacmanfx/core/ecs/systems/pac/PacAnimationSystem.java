@@ -1,8 +1,8 @@
 package de.amr.pacmanfx.core.ecs.systems.pac;
 
+import de.amr.pacmanfx.core.ecs.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
-import de.amr.pacmanfx.core.ecs.systems.spriteanim.SpriteAnimSystem;
 
 public class PacAnimationSystem {
     private final SpriteAnimSystem spriteAnimSystem;

@@ -11,12 +11,12 @@ import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
-import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.rendering.SpritesheetAnimationMap;
 
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.BLUE_BAG;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.JUNIOR_PAC;
 
-public class BagSpriteAnimationMap extends SpriteAnimationMap<SpriteID> {
+public class BagSpriteAnimationMap extends SpritesheetAnimationMap<SpriteID> {
 
     public BagSpriteAnimationMap(SpriteAnimationContainer container) {
         super(ArcadeMsPacMan_SpriteSheet.instance());

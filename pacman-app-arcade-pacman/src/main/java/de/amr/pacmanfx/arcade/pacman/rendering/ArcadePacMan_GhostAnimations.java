@@ -10,11 +10,11 @@ import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
-import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.rendering.SpritesheetAnimationMap;
 
 import java.util.Objects;
 
-public class ArcadePacMan_GhostAnimations extends SpriteAnimationMap<SpriteID> {
+public class ArcadePacMan_GhostAnimations extends SpritesheetAnimationMap<SpriteID> {
 
     private final GhostPersonality personality;
 

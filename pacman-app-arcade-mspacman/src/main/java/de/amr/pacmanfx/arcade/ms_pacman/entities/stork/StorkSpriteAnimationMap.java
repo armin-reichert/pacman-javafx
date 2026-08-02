@@ -11,9 +11,9 @@ import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
-import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.rendering.SpritesheetAnimationMap;
 
-public class StorkSpriteAnimationMap extends SpriteAnimationMap<SpriteID> {
+public class StorkSpriteAnimationMap extends SpritesheetAnimationMap<SpriteID> {
 
     public StorkSpriteAnimationMap(SpriteAnimationContainer container) {
         super(ArcadeMsPacMan_SpriteSheet.instance());

@@ -5,10 +5,10 @@
 package de.amr.pacmanfx.core.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.entities.ghost.GhostState;
-import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.ecs.systems.ghost.GhostStateSystem;
 import de.amr.pacmanfx.core.ecs.systems.spriteanim.SpriteAnimSystem;
+import de.amr.pacmanfx.core.model.entities.ghost.GhostState;
+import de.amr.pacmanfx.core.model.level.GameLevel;
 
 /**
  * When a ghost has been eaten by Pac-Man, the game play freezes for a second, the ghost is displayed by the

@@ -1,13 +1,10 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.uilib.rendering;
+package de.amr.basics.spriteanim;
 
 import de.amr.basics.Named;
 import de.amr.basics.math.RectShort;
-import de.amr.basics.spriteanim.SpriteAnimation;
-import de.amr.basics.spriteanim.SpriteAnimationAccess;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import org.tinylog.Logger;
 
 import java.util.HashMap;
@@ -18,25 +15,16 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * A sprite animation container implementing the sprite animation accessor facade.
- *
- * @param <ID> Sprite animation ID type
  */
-public abstract class SpriteAnimationMap<ID extends Named> implements SpriteAnimationAccess {
+public abstract class LazySpriteAnimationSet implements SpriteAnimationAccess {
 
-    protected final SpriteSheet<ID> spriteSheet;
     protected final Map<Named, SpriteAnimation> animationsByID = new HashMap<>();
     protected Named selectedAnimationID;
     protected Function<Named, SpriteAnimation> factory;
 
-    public SpriteAnimationMap(SpriteSheet<ID> spriteSheet) {
-        this.spriteSheet = requireNonNull(spriteSheet);
-    }
-
     public void setFactory(Function<Named, SpriteAnimation> factory) {
         this.factory = factory;
     }
-
-    public SpriteSheet<ID> spriteSheet() { return spriteSheet; }
 
     public boolean isSelected(Named id) {
         requireNonNull(id);

@@ -6,11 +6,11 @@ package de.amr.pacmanfx.core.model;
 
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.LevelCounter;
-import de.amr.pacmanfx.core.model.world.house.ArcadeHouseGateKeeper;
-import de.amr.pacmanfx.core.model.world.map.WorldMapSelector;
 import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.core.model.score.PropertyFileScore;
 import de.amr.pacmanfx.core.model.score.Score;
+import de.amr.pacmanfx.core.model.world.house.ArcadeHouseGateKeeper;
+import de.amr.pacmanfx.core.model.world.map.WorldMapSelector;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;

@@ -6,9 +6,9 @@ package de.amr.pacmanfx.tengenmspacman.model;
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.components.MovementComp;
+import de.amr.pacmanfx.core.ecs.systems.common.MovementSystem;
 import de.amr.pacmanfx.core.model.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
-import de.amr.pacmanfx.core.ecs.systems.common.MovementSystem;
 
 import static java.util.Objects.requireNonNull;
 

@@ -5,13 +5,13 @@ package de.amr.pacmanfx.core.model.world.house;
 
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.ecs.systems.common.GameSystems;
+import de.amr.pacmanfx.core.ecs.systems.pac.PacDigestionSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.model.entities.ghost.GhostState;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.ecs.systems.common.GameSystems;
-import de.amr.pacmanfx.core.ecs.systems.pac.PacDigestionSystem;
 import org.tinylog.Logger;
 
 import java.util.Arrays;

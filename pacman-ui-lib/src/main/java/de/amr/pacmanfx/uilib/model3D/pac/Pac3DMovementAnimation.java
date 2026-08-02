@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.uilib.model3D.pac;
 
-import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.ecs.systems.pac.PacStateSystem;
+import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 
 public abstract class Pac3DMovementAnimation extends ManagedAnimation {

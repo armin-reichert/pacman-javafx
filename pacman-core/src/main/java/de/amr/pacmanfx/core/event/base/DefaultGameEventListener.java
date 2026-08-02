@@ -1,6 +1,9 @@
 package de.amr.pacmanfx.core.event.base;
 
-import de.amr.pacmanfx.core.event.*;
+import de.amr.pacmanfx.core.event.GameEvent;
+import de.amr.pacmanfx.core.event.GenericChangeEvent;
+import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
+import de.amr.pacmanfx.core.event.TestStartedEvent;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
 import de.amr.pacmanfx.core.event.bonus.BonusEatenEvent;
 import de.amr.pacmanfx.core.event.bonus.BonusExpiredEvent;

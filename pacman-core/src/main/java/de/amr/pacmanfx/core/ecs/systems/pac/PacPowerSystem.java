@@ -6,6 +6,8 @@ package de.amr.pacmanfx.core.ecs.systems.pac;
 
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.ecs.systems.common.GameSystems;
+import de.amr.pacmanfx.core.ecs.systems.ghost.GhostStateSystem;
 import de.amr.pacmanfx.core.event.pac.PacGetsPowerEvent;
 import de.amr.pacmanfx.core.event.pac.PacLostPowerEvent;
 import de.amr.pacmanfx.core.event.pac.PacPowerFadesEvent;
@@ -13,8 +15,6 @@ import de.amr.pacmanfx.core.model.entities.ghost.GhostState;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.entities.pac.PacPowerComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.ecs.systems.common.GameSystems;
-import de.amr.pacmanfx.core.ecs.systems.ghost.GhostStateSystem;
 import org.tinylog.Logger;
 
 import java.util.Set;

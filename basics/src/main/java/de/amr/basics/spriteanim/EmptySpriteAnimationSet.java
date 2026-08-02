@@ -10,7 +10,7 @@ import de.amr.basics.math.RectShort;
 /**
  * Null object for sprite animation facade interface.
  */
-public class EmptySpriteAnimationAccess implements SpriteAnimationAccess {
+public class EmptySpriteAnimationSet implements SpriteAnimationAccess {
 
     @Override
     public Object animation(Named animationID) {

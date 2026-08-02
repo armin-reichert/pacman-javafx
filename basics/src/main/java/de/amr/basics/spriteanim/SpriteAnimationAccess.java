@@ -14,14 +14,14 @@ import static java.util.Objects.requireNonNull;
  */
 public interface SpriteAnimationAccess {
 
-    SpriteAnimationAccess EMPTY_SPRITE_ANIMATION_ACCESSOR = new EmptySpriteAnimationAccess();
+    SpriteAnimationAccess EMPTY_SPRITE_ANIMATION_ACCESSOR = new EmptySpriteAnimationSet();
 
     static SpriteAnimationAccess emptyAnimation() {
         return EMPTY_SPRITE_ANIMATION_ACCESSOR;
     }
 
     static SpriteAnimationAccess singleSpriteAnimation(RectShort sprite) {
-        return new SingleSpriteAnimationAccess(sprite);
+        return new SingletonSpriteAnimationSet(sprite);
     }
 
     default boolean isEmpty() {

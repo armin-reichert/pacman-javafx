@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman;
 
 import de.amr.basics.math.RectShort;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
+import de.amr.basics.spriteanim.LazySpriteAnimationSet;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.*;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.*;
@@ -14,10 +15,10 @@ import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_PlayScene2D_Renderer;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.ecs.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
 import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
-import de.amr.pacmanfx.core.ecs.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorSchemeImpl;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
@@ -29,7 +30,6 @@ import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
-import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -113,12 +113,12 @@ public class XXL_MsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public SpriteAnimationMap<SpriteID> createGhostAnimations(SpriteAnimationContainer container, GhostPersonality personality) {
+    public LazySpriteAnimationSet createGhostAnimations(SpriteAnimationContainer container, GhostPersonality personality) {
         return new ArcadeMsPacMan_GhostAnimations(container, personality);
     }
 
     @Override
-    public SpriteAnimationMap<SpriteID> createPacAnimations(SpriteAnimationContainer container) {
+    public LazySpriteAnimationSet createPacAnimations(SpriteAnimationContainer container) {
         return new ArcadeMsPacMan_PacAnimations(container);
     }
 

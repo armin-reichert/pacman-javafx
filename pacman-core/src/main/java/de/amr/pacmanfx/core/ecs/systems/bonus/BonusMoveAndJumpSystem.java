@@ -7,12 +7,12 @@ package de.amr.pacmanfx.core.ecs.systems.bonus;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
+import de.amr.pacmanfx.core.ecs.components.WorldNavigationComp;
+import de.amr.pacmanfx.core.ecs.systems.world.WorldMovementPolicy;
+import de.amr.pacmanfx.core.ecs.systems.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.entities.bonus.Bonus;
 import de.amr.pacmanfx.core.model.entities.bonus.MoveAndJumpComp;
-import de.amr.pacmanfx.core.ecs.components.WorldNavigationComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.ecs.systems.world.WorldNavigationSystem;
-import de.amr.pacmanfx.core.ecs.systems.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.steering.RouteGuidedSteering;
 import org.tinylog.Logger;
 

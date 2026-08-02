@@ -12,9 +12,9 @@ import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
-import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.rendering.SpritesheetAnimationMap;
 
-public class BagAnimationSpriteMap extends SpriteAnimationMap<SpriteID> {
+public class BagAnimationSpriteMap extends SpritesheetAnimationMap<SpriteID> {
 
     public BagAnimationSpriteMap(SpriteAnimationContainer container) {
         super(TengenMsPacMan_SpriteSheet.instance());

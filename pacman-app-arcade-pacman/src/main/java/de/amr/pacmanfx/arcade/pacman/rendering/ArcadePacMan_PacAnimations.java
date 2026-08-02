@@ -9,9 +9,9 @@ import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
-import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.rendering.SpritesheetAnimationMap;
 
-public class ArcadePacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
+public class ArcadePacMan_PacAnimations extends SpritesheetAnimationMap<SpriteID> {
 
     public enum AnimationID implements Named {
         ANIM_BIG_PAC_MAN,

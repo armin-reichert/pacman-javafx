@@ -9,9 +9,9 @@ import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
-import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.rendering.SpritesheetAnimationMap;
 
-public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
+public class ArcadeMsPacMan_PacAnimations extends SpritesheetAnimationMap<SpriteID> {
 
     public ArcadeMsPacMan_PacAnimations(SpriteAnimationContainer container) {
         super(ArcadeMsPacMan_SpriteSheet.instance());

@@ -10,11 +10,11 @@ import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
-import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
+import de.amr.pacmanfx.uilib.rendering.SpritesheetAnimationMap;
 
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID> {
+public class TengenMsPacMan_GhostAnimations extends SpritesheetAnimationMap<SpriteID> {
 
     public static final int NORMAL_TICKS = 8;  // TODO check this in emulator
     public static final int FRIGHTENED_TICKS = 8;  // TODO check this in emulator

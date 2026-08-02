@@ -1,11 +1,11 @@
 package de.amr.pacmanfx.uilib.model3D.pac;
 
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.ecs.systems.pac.PacPowerSystem;
+import de.amr.pacmanfx.core.ecs.systems.pac.PacStateSystem;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.entities.pac.PacState;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.ecs.systems.pac.PacPowerSystem;
-import de.amr.pacmanfx.core.ecs.systems.pac.PacStateSystem;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.scene.PointLight;

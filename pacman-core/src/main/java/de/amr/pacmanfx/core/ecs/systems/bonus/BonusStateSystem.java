@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.core.ecs.systems.bonus;
 
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.ecs.systems.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.event.bonus.BonusExpiredEvent;
 import de.amr.pacmanfx.core.gameplay.FrameContext;
@@ -13,7 +14,6 @@ import de.amr.pacmanfx.core.model.entities.bonus.BonusState;
 import de.amr.pacmanfx.core.model.entities.bonus.BonusStateComp;
 import de.amr.pacmanfx.core.model.entities.bonus.MoveAndJumpComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.ecs.systems.world.WorldNavigationSystem;
 import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
