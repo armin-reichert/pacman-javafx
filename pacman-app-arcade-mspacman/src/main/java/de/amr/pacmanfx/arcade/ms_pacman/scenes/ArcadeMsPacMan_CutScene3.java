@@ -77,7 +77,8 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
         msPacMan = factory.createMsPacMan();
         msPacMan.spriteAnimation().setAnimations(renderConfig.createPacAnimations(animationContainer));
 
-        stork = new Stork(animationContainer);
+        stork = new Stork();
+        stork.spriteAnim().setAnimations(new StorkSpriteAnimationMap(animationContainer));
 
         bag = new Bag(animationContainer);
         bag.spriteAnim().setAnimations(new BagSpriteAnimationMap(animationContainer));

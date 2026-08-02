@@ -15,7 +15,10 @@ import java.util.Optional;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Game entities are composed of entity (pure data) components and there are entity "systems" working on them.
+ * Game entities are composed of entity (pure data) components. Entity "systems" use these components.
+ * <p>
+ * Each game entity by default contains the components "position" and "visibility".
+ * </p>
  */
 public class GameEntity {
 

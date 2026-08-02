@@ -3,47 +3,23 @@
  */
 package de.amr.pacmanfx.arcade.ms_pacman.entities;
 
-import de.amr.basics.Naming;
-import de.amr.basics.spriteanim.SpriteAnimation;
-import de.amr.basics.spriteanim.SpriteAnimationBuilder;
-import de.amr.basics.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
 import de.amr.pacmanfx.core.ecs.components.MovementComp;
 import de.amr.pacmanfx.core.ecs.components.SpriteAnimComp;
-import de.amr.pacmanfx.uilib.rendering.SpriteAnimationMap;
 
 public class Stork extends GameEntity {
 
-    public static class StorkAnimations extends SpriteAnimationMap<SpriteID> {
-
-        public StorkAnimations(SpriteAnimationContainer container) {
-            super(ArcadeMsPacMan_SpriteSheet.instance());
-            factory = id -> createAnimation(id, container);
-        }
-
-        private SpriteAnimation createAnimation(Naming animationID, SpriteAnimationContainer container) {
-            if (animationID.equals(ActorAnimationID.STORK_FLYING)) {
-                return new SpriteAnimationBuilder()
-                    .sprites(spriteSheet.findSprites(SpriteID.STORK))
-                    .frameTicks(8)
-                    .repeated()
-                    .build(container);
-            }
-            throw new IllegalArgumentException("Illegal animation ID: " + animationID);
-        }
-    }
-
-    public Stork(SpriteAnimationContainer animationSet) {
+    public Stork() {
         name = "Beatrix von";
         setComponent(MovementComp.class, new MovementComp());
         setComponent(SpriteAnimComp.class, new SpriteAnimComp());
-        requireComponent(SpriteAnimComp.class).setAnimations(new StorkAnimations(animationSet));
     }
 
     public MovementComp movement() {
         return requireComponent(MovementComp.class);
+    }
+
+    public SpriteAnimComp spriteAnim() {
+        return requireComponent(SpriteAnimComp.class);
     }
 }
