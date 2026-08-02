@@ -19,7 +19,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameEntity {
 
-    private final Map<Class<? extends GameEntityComponent>, GameEntityComponent> components = new LinkedHashMap<>(3);
+    private final Map<Class<? extends GameEntityComponent>, GameEntityComponent> components = new LinkedHashMap<>(7);
 
     protected String name;
 
