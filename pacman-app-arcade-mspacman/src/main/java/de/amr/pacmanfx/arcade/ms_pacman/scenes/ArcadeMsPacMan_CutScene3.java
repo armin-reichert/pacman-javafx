@@ -9,6 +9,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.entities.bag.Bag;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.bag.BagAnimationSystem;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.bag.BagSpriteAnimationMap;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.clapperboard.Clapperboard;
+import de.amr.pacmanfx.arcade.ms_pacman.entities.clapperboard.ClapperboardStateSystem;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.stork.Stork;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.stork.StorkSpriteAnimationMap;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
@@ -89,9 +90,9 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
         bag.spriteAnim().setAnimations(new BagSpriteAnimationMap(animationContainer));
         bag.setOpen(false);
 
-        clapperboard = new Clapperboard("3", "JUNIOR");
+        clapperboard = new Clapperboard(3, "JUNIOR");
         clapperboard.pos().set(tilesPx(3), tilesPx(10));
-        clapperboard.startAnimation();
+        ClapperboardStateSystem.startFlapAnimation(clapperboard);
     }
 
     // Scene controller state machine
@@ -141,7 +142,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
     // State CLAPPERBOARD
 
     private void updateClapperboardState() {
-        clapperboard.tick();
+        ClapperboardStateSystem.update(clapperboard);
         if (sceneTick == SceneState.CLAPPERBOARD.start() + 60) {
             appContext().ui().sounds().play(PacManGameSoundID.INTERMISSION_3);
         }

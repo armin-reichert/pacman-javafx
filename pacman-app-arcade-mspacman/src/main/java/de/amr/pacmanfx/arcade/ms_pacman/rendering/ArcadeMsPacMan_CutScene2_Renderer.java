@@ -34,7 +34,6 @@ public class ArcadeMsPacMan_CutScene2_Renderer extends BaseRenderer implements G
         clearCanvas();
 
         if (scene instanceof ArcadeMsPacMan_CutScene2 cutScene) {
-            cutScene.clapperboard.setFont(arcadeFont8());
             Stream.of(
                 cutScene.clapperboard,
                 cutScene.msPacMan,

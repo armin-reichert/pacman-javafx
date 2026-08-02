@@ -4,27 +4,15 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.entities.clapperboard;
 
-import de.amr.pacmanfx.core.ecs.GameEntity;
 
-/**
- * Animated movie clapperboard.
- */
-public class Clapperboard extends GameEntity {
+public class ClapperboardStateSystem {
 
-    public Clapperboard(int number, String text) {
-        setComponent(ClapperboardStateComp.class, new ClapperboardStateComp());
-        setComponent(ClapperboardInscriptionComp.class, new ClapperboardInscriptionComp());
-
-        inscription().setNumber(number);
-        inscription().setText(text);
-    }
-
-    public ClapperboardInscriptionComp inscription() {
-        return requireComponent(ClapperboardInscriptionComp.class);
-    }
-
-    public ClapperboardStateComp state() {
-        return requireComponent(ClapperboardStateComp.class);
+    public static void startFlapAnimation(Clapperboard clapperboard) {
+        clapperboard.show();
+        clapperboard.state().setTick(0);
+        clapperboard.state().setTextVisible(true);
+        clapperboard.state().setState(ClapperboardState.WIDE_OPEN);
+        clapperboard.state().setRunning(true);
     }
 
     public static void update(Clapperboard clapperboard) {

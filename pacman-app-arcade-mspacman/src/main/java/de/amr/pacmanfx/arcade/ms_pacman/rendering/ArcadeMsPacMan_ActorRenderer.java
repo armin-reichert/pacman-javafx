@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.clapperboard.Clapperboard;
+import de.amr.pacmanfx.arcade.ms_pacman.entities.clapperboard.ClapperboardAnimationSystem;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.model.entities.*;
 import de.amr.pacmanfx.core.model.entities.bonus.Bonus;
@@ -96,20 +97,21 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     }
 
     private void drawClapperBoard(Clapperboard clapperboard) {
-        final RectShort[] sprites = spriteSheet().findSprites(SpriteID.CLAPPERBOARD);
-        final int spriteIndex = clapperboard.state(); //TODO decouple state and index in sprite sheet
-        if (0 <= spriteIndex && spriteIndex < sprites.length) {
-            final RectShort sprite = sprites[spriteIndex];
+        if (!clapperboard.visibility().isVisible()) return;
+        ClapperboardAnimationSystem.sprite(clapperboard).ifPresent(sprite -> {
             drawSpriteCentered(sprite, WorldNavigationSystem.computeCenter(clapperboard));
+
             // Draw number and title
+            final String number = String.valueOf(clapperboard.inscription().number());
+            final String text = clapperboard.inscription().text();
             final double numberX = scaled(clapperboard.pos().x() + sprite.width() - 25);
             final double textX = scaled(clapperboard.pos().x() + sprite.width());
             final double y = scaled(clapperboard.pos().y() + 18);
-            ctx.setFont(clapperboard.font());
+            ctx.setFont(arcadeFont8());
             ctx.setFill(ARCADE_WHITE);
-            ctx.fillText(clapperboard.number(), numberX, y);
-            ctx.fillText(clapperboard.text(), textX, y);
-        }
+            ctx.fillText(number, numberX, y);
+            ctx.fillText(text, textX, y);
+        });
     }
 
     // TODO decouple symbol code from sprite index

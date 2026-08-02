@@ -7,11 +7,12 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.clapperboard.Clapperboard;
+import de.amr.pacmanfx.arcade.ms_pacman.entities.clapperboard.ClapperboardStateSystem;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.ecs.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
-import de.amr.pacmanfx.core.ecs.systems.common.GameSystems;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
@@ -72,9 +73,9 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene2D {
         msPacMan = factory.createMsPacMan();
         msPacMan.spriteAnimation().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
-        clapperboard = new Clapperboard("2", "THE CHASE");
+        clapperboard = new Clapperboard(2, "THE CHASE");
         clapperboard.pos().set(tilesPx(3), tilesPx(10));
-        clapperboard.startAnimation();
+        ClapperboardStateSystem.startFlapAnimation(clapperboard);
     }
 
     // Scene controller state machine
@@ -91,7 +92,7 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene2D {
     }
 
     private void updateStateClapperboard(GameSystems sys) {
-        clapperboard.tick();
+        ClapperboardStateSystem.update(clapperboard);
         if (sceneTimer.hasExpired()) {
             appContext().ui().sounds().play(PacManGameSoundID.INTERMISSION_2);
             enterStateChasing(sys);

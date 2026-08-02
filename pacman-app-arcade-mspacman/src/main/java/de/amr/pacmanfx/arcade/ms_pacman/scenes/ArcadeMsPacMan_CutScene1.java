@@ -7,6 +7,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.clapperboard.Clapperboard;
+import de.amr.pacmanfx.arcade.ms_pacman.entities.clapperboard.ClapperboardStateSystem;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
@@ -101,9 +102,9 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         heart.setComponent(SpriteAnimComp.class, new SpriteAnimComp());
         heart.requireComponent(SpriteAnimComp.class).setAnimations(singleSpriteAnimation(spriteSheet.findSprite(SpriteID.HEART)));
 
-        clapperboard = new Clapperboard("1", "THEY MEET");
+        clapperboard = new Clapperboard(1, "THEY MEET");
         clapperboard.pos().set(tilesPx(3), tilesPx(10));
-        clapperboard.startAnimation();
+        ClapperboardStateSystem.startFlapAnimation(clapperboard);
     }
 
     // Scene controller state machine
@@ -120,7 +121,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
     }
 
     private void updateStateClapperboard(GameSystems sys) {
-        clapperboard.tick();
+        ClapperboardStateSystem.update(clapperboard);
         if (sceneTimer.atSecond(1)) {
             appContext().ui().sounds().play(PacManGameSoundID.INTERMISSION_1);
         } else if (sceneTimer.hasExpired()) {
