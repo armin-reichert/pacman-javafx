@@ -11,9 +11,9 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
 
-public class ArcadeGameOverState extends GameState {
+public class ArcadeGameState_GameOver extends GameState {
 
-    public ArcadeGameOverState() {
+    public ArcadeGameState_GameOver() {
         super(CommonGameStateID.GAME_OVER);
     }
 

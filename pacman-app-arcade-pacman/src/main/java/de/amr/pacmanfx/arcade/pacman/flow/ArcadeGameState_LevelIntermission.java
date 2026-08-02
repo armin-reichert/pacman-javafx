@@ -10,9 +10,9 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.model.GameModel;
 
-public class ArcadeGameLevelIntermissionState extends GameState {
+public class ArcadeGameState_LevelIntermission extends GameState {
 
-    public ArcadeGameLevelIntermissionState() {
+    public ArcadeGameState_LevelIntermission() {
         super(CommonGameStateID.GAME_LEVEL_INTERMISSION);
     }
 

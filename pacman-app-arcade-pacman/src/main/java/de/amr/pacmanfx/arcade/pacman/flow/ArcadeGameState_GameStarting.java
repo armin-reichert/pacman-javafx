@@ -13,13 +13,13 @@ import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 
-public class ArcadeGameStartingState extends GameState {
+public class ArcadeGameState_GameStarting extends GameState {
 
     static final int TICK_NEW_GAME_START_LEVEL = 2;
     static final int TICK_NEW_GAME_SHOW_GUYS = 60;
     static final int TICK_NEW_GAME_START_PLAYING = 240;
 
-    public ArcadeGameStartingState() {
+    public ArcadeGameState_GameStarting() {
         super(CommonGameStateID.GAME_STARTING);
     }
 

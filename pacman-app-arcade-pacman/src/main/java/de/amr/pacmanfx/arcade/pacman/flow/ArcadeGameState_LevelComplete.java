@@ -10,9 +10,9 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 
-public class ArcadeGameLevelCompleteState extends GameState {
+public class ArcadeGameState_LevelComplete extends GameState {
 
-    public ArcadeGameLevelCompleteState() {
+    public ArcadeGameState_LevelComplete() {
         super(CommonGameStateID.GAME_LEVEL_COMPLETE);
     }
 
