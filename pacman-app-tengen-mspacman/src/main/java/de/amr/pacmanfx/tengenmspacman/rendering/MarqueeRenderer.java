@@ -29,30 +29,37 @@ public class MarqueeRenderer extends BaseRenderer {
     public void drawMarquee(Marquee marquee) {
         final MarqueeRunnerComp runner = marquee.runner();
         final MarqueeLayoutComp layout = marquee.layout();
-        final MarqueeVisualComp visualization = marquee.visualization();
+        final MarqueeVisualComp visualComp = marquee.visualization();
 
         final MarqueeArea area = layout.computeArea(marquee.pos());
         final MarqueeCorners corners = layout.corners();
 
         final int n = layout.numBulbs();
         final long tick = runner.tickTimer().tickCount();
-        int firstBrightIndex = (int) (tick % n);
 
-        final Color offColor = Color.valueOf(visualization.bulbOffColor());
-        final Color onColor = Color.valueOf(visualization.bulbOnColor());
+        final Color offColor = Color.valueOf(visualComp.bulbOffColor());
+        final Color onColor = Color.valueOf(visualComp.bulbOnColor());
 
-        ctx.setFill(offColor);
+        drawDarkBulbs(offColor, n, area, corners, layout.bulbSize());
+        drawBrightBulbs(onColor, n, layout.brightBulbsCount(), (int) (tick % n), area, corners, layout.bulbSize(), layout.brightBulbsDistance());
+    }
+
+    private void drawDarkBulbs(Color color, int n, MarqueeArea area, MarqueeCorners corners, float bulbSize) {
+        ctx.setFill(color);
         for (int index = 0; index < n; ++index) {
-            drawBulb(area, corners, layout.bulbSize(), index);
+            drawBulb(area, corners, bulbSize, index);
         }
+    }
 
-        ctx.setFill(onColor);
-        for (int i = 0; i < layout.brightBulbsCount(); ++i) {
-            final int index = (firstBrightIndex + i * layout.brightBulbsDistance()) % n;
+    private void drawBrightBulbs(Color color, int n, int count, int firstIndex, MarqueeArea area, MarqueeCorners corners,
+                                 float bulbSize, int bulbDist) {
+        ctx.setFill(color);
+        for (int i = 0; i < count; ++i) {
+            final int index = (firstIndex + i * bulbDist) % n;
             // Simulate "broken bulbs on left side" bug from original Arcade game
             final boolean broken = index >= corners.nw() && (index - corners.nw()) % 2 == 0;
             if (!broken) {
-                drawBulb(area, corners, layout.bulbSize(), index);
+                drawBulb(area, corners, bulbSize, index);
             }
         }
     }
