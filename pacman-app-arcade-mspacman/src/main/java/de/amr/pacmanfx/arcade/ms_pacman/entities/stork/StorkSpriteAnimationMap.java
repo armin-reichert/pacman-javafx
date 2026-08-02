@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.entities.stork;
 
-import de.amr.basics.Naming;
+import de.amr.basics.Named;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
@@ -20,7 +20,7 @@ public class StorkSpriteAnimationMap extends SpriteAnimationMap<SpriteID> {
         factory = id -> createAnimation(id, container);
     }
 
-    private SpriteAnimation createAnimation(Naming animationID, SpriteAnimationContainer container) {
+    private SpriteAnimation createAnimation(Named animationID, SpriteAnimationContainer container) {
         if (animationID.equals(ActorAnimationID.STORK_FLYING)) {
             return new SpriteAnimationBuilder()
                 .sprites(spriteSheet.findSprites(SpriteID.STORK))

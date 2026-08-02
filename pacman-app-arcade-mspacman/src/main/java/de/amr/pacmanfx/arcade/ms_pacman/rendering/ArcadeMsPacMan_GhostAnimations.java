@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
-import de.amr.basics.Naming;
+import de.amr.basics.Named;
 import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
@@ -25,7 +25,7 @@ public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID>
         factory = id -> createAnimation(id, container);
     }
 
-    private SpriteAnimation createAnimation(Naming animationID, SpriteAnimationContainer container) {
+    private SpriteAnimation createAnimation(Named animationID, SpriteAnimationContainer container) {
 
         return switch (animationID) {
             case ActorAnimationID.GHOST_NORMAL -> new SpriteAnimationBuilder()
@@ -65,7 +65,7 @@ public class ArcadeMsPacMan_GhostAnimations extends SpriteAnimationMap<SpriteID>
     }
 
     @Override
-    public void setAnimationFrame(Naming animationID, int frameIndex) {
+    public void setAnimationFrame(Named animationID, int frameIndex) {
         super.setAnimationFrame(animationID, frameIndex);
         if (ActorAnimationID.GHOST_POINTS.equals(animationID)) {
             animation(ActorAnimationID.GHOST_POINTS).setFrame(frameIndex);

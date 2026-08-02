@@ -4,8 +4,7 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.entities.bag;
 
-
-import de.amr.basics.Naming;
+import de.amr.basics.Named;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
@@ -24,16 +23,14 @@ public class BagSpriteAnimationMap extends SpriteAnimationMap<SpriteID> {
         factory = id -> createAnimation(id, container);
     }
 
-    private SpriteAnimation createAnimation(Naming animationID, SpriteAnimationContainer container) {
+    private SpriteAnimation createAnimation(Named animationID, SpriteAnimationContainer container) {
         return switch (animationID) {
             case ActorAnimationID.JUNIOR -> new SpriteAnimationBuilder()
                 .singleSprite(spriteSheet.findSprite(JUNIOR_PAC))
-                .initiallyStopped()
                 .build(container);
 
             case ActorAnimationID.BAG -> new SpriteAnimationBuilder()
                 .singleSprite(spriteSheet.findSprite(BLUE_BAG))
-                .initiallyStopped()
                 .build(container);
 
             default -> throw new IllegalArgumentException("Illegal animation ID: " + animationID);

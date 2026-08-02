@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.uilib.model3D.ghost;
 
-import de.amr.basics.Naming;
+import de.amr.basics.Named;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.model.GhostPersonality;
@@ -36,7 +36,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class Ghost3D extends GameEntity implements UpdatableEntity, DisposableGraphicsObject {
 
-    public enum AnimationID implements Naming {
+    public enum AnimationID implements Named {
         BRAKING, DRESS, FLASHING;
 
         public AnimationKey key(Ghost ghost) {

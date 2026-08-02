@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.gamescene.common;
 
-import de.amr.basics.Naming;
+import de.amr.basics.Named;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.level.GameLevel;
@@ -21,7 +21,7 @@ import static java.util.Objects.requireNonNull;
 
 public abstract class AbstractGameSceneConfig implements GameSceneConfig {
 
-    public static Naming cutSceneID(int n) {
+    public static Named cutSceneID(int n) {
         return switch (n) {
             case 1 -> CommonGameSceneID.CUTSCENE_1;
             case 2 -> CommonGameSceneID.CUTSCENE_2;
@@ -31,13 +31,13 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
         };
     }
 
-    protected final Map<Naming, GameScene> scenesByID = new HashMap<>();
+    protected final Map<Named, GameScene> scenesByID = new HashMap<>();
 
     public AbstractGameSceneConfig() {}
 
-    protected abstract GameScene createGameScene(GameAppContext appContext, Naming Identifier);
+    protected abstract GameScene createGameScene(GameAppContext appContext, Named Identifier);
 
-    protected abstract Naming determineSceneID(GameUISettingsVM viewModel, GameContext gameContext);
+    protected abstract Named determineSceneID(GameUISettingsVM viewModel, GameContext gameContext);
 
     @Override
     public void dispose() {
@@ -47,7 +47,7 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
     }
 
     @Override
-    public Naming resolveCutSceneID(GameContext gameContext) {
+    public Named resolveCutSceneID(GameContext gameContext) {
         final GameLevel level = gameContext.assertLevel();
         final OptionalInt cutSceneNumber = gameContext.model().rules().cutSceneAfterLevel(level.number());
         if (cutSceneNumber.isEmpty()) {
@@ -65,13 +65,13 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
     @Override
     public final Optional<GameScene> selectGameScene(GameAppContext appContext, GameModel model) {
         requireNonNull(appContext);
-        final Naming Identifier = determineSceneID(appContext.ui().viewModel(), appContext.currentGameContext());
+        final Named Identifier = determineSceneID(appContext.ui().viewModel(), appContext.currentGameContext());
         final GameScene gameScene = scenesByID.computeIfAbsent(Identifier, id -> createGameScene(appContext, id));
         return Optional.of(gameScene);
     }
 
     @Override
-    public final boolean gameSceneHasID(GameScene gameScene, Naming Identifier) {
+    public final boolean gameSceneHasID(GameScene gameScene, Named Identifier) {
         requireNonNull(gameScene);
         requireNonNull(Identifier);
         return scenesByID.get(Identifier) == gameScene;

@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.entities.bag;
 
-
 import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
 
 public class BagAnimationSystem {
@@ -12,5 +11,4 @@ public class BagAnimationSystem {
     public static void update(Bag bag) {
         bag.spriteAnim().animation().select(bag.isOpen() ? ActorAnimationID.JUNIOR : ActorAnimationID.BAG);
     }
-
 }

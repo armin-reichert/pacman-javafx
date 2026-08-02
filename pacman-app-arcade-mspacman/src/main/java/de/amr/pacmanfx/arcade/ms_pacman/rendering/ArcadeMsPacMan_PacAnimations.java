@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
-import de.amr.basics.Naming;
+import de.amr.basics.Named;
 import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
@@ -18,7 +18,7 @@ public class ArcadeMsPacMan_PacAnimations extends SpriteAnimationMap<SpriteID> {
         factory = id -> createAnimation(id, container);
     }
 
-    private SpriteAnimation createAnimation(Naming animationID, SpriteAnimationContainer container) {
+    private SpriteAnimation createAnimation(Named animationID, SpriteAnimationContainer container) {
 
         return switch (animationID) {
             case ActorAnimationID.PAC_FULL -> new SpriteAnimationBuilder()

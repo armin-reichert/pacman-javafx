@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.arcade.pacman;
 
-import de.amr.basics.Naming;
+import de.amr.basics.Named;
 import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.arcade.pacman.scenes.*;
 import de.amr.pacmanfx.core.GameContext;
@@ -22,7 +22,7 @@ class ArcadePacMan_GameSceneConfig extends AbstractGameSceneConfig {
     public ArcadePacMan_GameSceneConfig() {}
 
     @Override
-    protected AbstractGameScene createGameScene(GameAppContext appContext, Naming sceneID) {
+    protected AbstractGameScene createGameScene(GameAppContext appContext, Named sceneID) {
         requireNonNull(appContext);
         requireNonNull(sceneID);
         return switch (sceneID) {
@@ -39,7 +39,7 @@ class ArcadePacMan_GameSceneConfig extends AbstractGameSceneConfig {
     }
 
     @Override
-    protected Naming determineSceneID(GameUISettingsVM viewModel, GameContext gameContext) {
+    protected Named determineSceneID(GameUISettingsVM viewModel, GameContext gameContext) {
         requireNonNull(gameContext);
         final State<GameContext> state = gameContext.state();
         if (state instanceof CutScenesTestState testState) {

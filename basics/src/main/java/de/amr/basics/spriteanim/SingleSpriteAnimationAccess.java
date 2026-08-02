@@ -3,7 +3,7 @@
  */
 package de.amr.basics.spriteanim;
 
-import de.amr.basics.Naming;
+import de.amr.basics.Named;
 import de.amr.basics.math.RectShort;
 
 import static java.util.Objects.requireNonNull;
@@ -25,20 +25,20 @@ record SingleSpriteAnimationAccess(RectShort sprite) implements SpriteAnimationA
     }
 
     @Override
-    public Object animation(Naming animationID) {
+    public Object animation(Named animationID) {
         return null;
     }
 
     @Override
-    public Naming selectedAnimationID() {
+    public Named selectedAnimationID() {
         return null;
     }
 
     @Override
-    public void setAnimationFrame(Naming animationID, int frameIndex) {}
+    public void setAnimationFrame(Named animationID, int frameIndex) {}
 
     @Override
-    public void select(Naming animationID) {}
+    public void select(Named animationID) {}
 
     @Override
     public int currentFrame() {

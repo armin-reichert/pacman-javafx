@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.gamescene.common;
 
-import de.amr.basics.Naming;
+import de.amr.basics.Named;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
@@ -89,7 +89,7 @@ public class GameSceneManager {
      * @param sceneID scene identifier
      * @return {@code true} if the active scene has the given ID
      */
-    public boolean hasGameSceneID(GameScene gameScene, Naming sceneID) {
+    public boolean hasGameSceneID(GameScene gameScene, Named sceneID) {
         requireNonNull(gameScene);
         requireNonNull(sceneID);
 
@@ -103,7 +103,7 @@ public class GameSceneManager {
      * @param sceneID scene identifier
      * @return {@code true} if the active scene has the given ID
      */
-    public boolean currentGameSceneHasID(Naming sceneID) {
+    public boolean currentGameSceneHasID(Named sceneID) {
         requireNonNull(sceneID);
 
         final GameScene currentGameScene = currentGameSceneProperty().get();

@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.arcade.pacman_xxl.pacman;
 
-import de.amr.basics.Naming;
+import de.amr.basics.Named;
 import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.arcade.pacman.scenes.*;
 import de.amr.pacmanfx.core.GameContext;
@@ -23,7 +23,7 @@ class XXL_PacMan_GameSceneConfig extends AbstractGameSceneConfig {
     public XXL_PacMan_GameSceneConfig() {}
 
     @Override
-    protected AbstractGameScene createGameScene(GameAppContext appContext, Naming sceneID) {
+    protected AbstractGameScene createGameScene(GameAppContext appContext, Named sceneID) {
         requireNonNull(sceneID);
         return switch (sceneID) {
             case CommonGameSceneID.BOOT_SCENE -> new Arcade_BootScene2D(appContext);
@@ -39,7 +39,7 @@ class XXL_PacMan_GameSceneConfig extends AbstractGameSceneConfig {
     }
 
     @Override
-    protected Naming determineSceneID(GameUISettingsVM viewModel, GameContext gameContext) {
+    protected Named determineSceneID(GameUISettingsVM viewModel, GameContext gameContext) {
         final State<GameContext> state = gameContext.state();
 
         if (state instanceof CutScenesTestState testState) {

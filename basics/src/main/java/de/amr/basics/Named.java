@@ -6,11 +6,11 @@ package de.amr.basics;
 
 import static java.util.Objects.requireNonNull;
 
-public interface Naming {
+public interface Named {
 
     String name();
 
-    default boolean hasSameNameAs(Naming entity) {
+    default boolean hasSameNameAs(Named entity) {
         requireNonNull(entity);
         return entity.name().equals(name());
     }

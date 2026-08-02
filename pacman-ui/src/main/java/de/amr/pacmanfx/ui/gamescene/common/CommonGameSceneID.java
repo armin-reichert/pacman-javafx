@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.gamescene.common;
 
-import de.amr.basics.Naming;
+import de.amr.basics.Named;
 
 /**
  * Common scene identifiers shared across most game variants.
@@ -12,7 +12,7 @@ import de.amr.basics.Naming;
  * These cover the standard Pac‑Man flow: boot, intro, start menu, 2D/3D play scenes,
  * and the four intermission cutscenes.
  */
-public enum CommonGameSceneID implements Naming {
+public enum CommonGameSceneID implements Named {
     BOOT_SCENE,
     INTRO_SCENE,
     START_SCENE,

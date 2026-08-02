@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.tengenmspacman.dashboard;
 
-import de.amr.basics.Naming;
+import de.amr.basics.Named;
 import de.amr.pacmanfx.ui.views.dashboard.*;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 
@@ -27,8 +27,8 @@ public class TengenDashboardFactory implements DashboardFactory {
     }
 
     @Override
-    public Optional<Naming> identify(String id) {
-        final Optional<Naming> commonID = CommonDashboardFactory.instance().identify(id);
+    public Optional<Named> identify(String id) {
+        final Optional<Named> commonID = CommonDashboardFactory.instance().identify(id);
         if (commonID.isPresent()) {
             return commonID;
         }
@@ -36,7 +36,7 @@ public class TengenDashboardFactory implements DashboardFactory {
     }
 
     @Override
-    public GameDashboardSection createSection(GameDashboard dashboard, Naming id, TranslationManager translations) {
+    public GameDashboardSection createSection(GameDashboard dashboard, Named id, TranslationManager translations) {
         return switch (id) {
             case DashboardID _ -> CommonDashboardFactory.instance().createSection(dashboard, id, translations);
             case TengenMsPacMan_DashboardID tengenID -> {

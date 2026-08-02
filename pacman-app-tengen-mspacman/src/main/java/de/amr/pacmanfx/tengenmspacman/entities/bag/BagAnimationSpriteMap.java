@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.tengenmspacman.entities.bag;
 
 
-import de.amr.basics.Naming;
+import de.amr.basics.Named;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
@@ -21,7 +21,7 @@ public class BagAnimationSpriteMap extends SpriteAnimationMap<SpriteID> {
         factory = id -> createAnimation(id, container);
     }
 
-    private SpriteAnimation createAnimation(Naming animationID, SpriteAnimationContainer container) {
+    private SpriteAnimation createAnimation(Named animationID, SpriteAnimationContainer container) {
 
         return switch (animationID) {
             case ActorAnimationID.BAG -> new SpriteAnimationBuilder()

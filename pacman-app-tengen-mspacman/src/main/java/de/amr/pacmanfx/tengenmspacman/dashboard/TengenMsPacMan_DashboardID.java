@@ -5,9 +5,9 @@
 package de.amr.pacmanfx.tengenmspacman.dashboard;
 
 
-import de.amr.basics.Naming;
+import de.amr.basics.Named;
 
 /**
  * Defines additional Tengen-specific dashboard IDs
  */
-public enum TengenMsPacMan_DashboardID implements Naming {JOYPAD}
+public enum TengenMsPacMan_DashboardID implements Named {JOYPAD}

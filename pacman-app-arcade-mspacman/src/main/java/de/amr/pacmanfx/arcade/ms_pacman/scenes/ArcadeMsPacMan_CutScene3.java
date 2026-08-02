@@ -86,7 +86,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
         stork.setBagReleasedFromBeak(false);
         stork.spriteAnim().setAnimations(new StorkSpriteAnimationMap(animationContainer));
 
-        bag = new Bag(animationContainer);
+        bag = new Bag();
         bag.spriteAnim().setAnimations(new BagSpriteAnimationMap(animationContainer));
         bag.setOpen(false);
 

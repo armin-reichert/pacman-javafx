@@ -4,7 +4,7 @@
 
 package de.amr.basics.fsm;
 
-import de.amr.basics.Naming;
+import de.amr.basics.Named;
 import de.amr.basics.timer.TickTimer;
 
 /**
@@ -13,7 +13,7 @@ import de.amr.basics.timer.TickTimer;
  * @param <C> the (context) type that the hook methods {@link #onEnter(C)}, {@link #onUpdate(C)}, {@link #onExit(C)} get
  *            passed as parameter
  */
-public interface State<C> extends Naming {
+public interface State<C> extends Named {
 
     /**
      * The hook method that gets executed when the state is entered.

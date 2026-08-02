@@ -3,9 +3,9 @@
  */
 package de.amr.pacmanfx.tengenmspacman.sprites;
 
-import de.amr.basics.Naming;
+import de.amr.basics.Named;
 
-public enum TengenMsPacMan_AnimationID implements Naming {
+public enum TengenMsPacMan_AnimationID implements Named {
     MS_PAC_MAN_BOOSTER,
     MS_PAC_MAN_WAVING_HAND,
     MS_PAC_MAN_TURNING_AWAY,

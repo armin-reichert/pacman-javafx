@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.uilib.widgets;
 
-import de.amr.basics.Naming;
+import de.amr.basics.Named;
 import javafx.scene.Node;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.GridPane;
@@ -13,12 +13,12 @@ import static java.util.Objects.requireNonNull;
 
 public class DashboardSection extends TitledPane {
 
-    protected final Naming id;
+    protected final Named id;
     protected final GridPane grid = new GridPane();
     protected int rowIndex;
     protected boolean displayedStandalone;
 
-    public DashboardSection(Naming id) {
+    public DashboardSection(Named id) {
         this.id = requireNonNull(id);
 
         getStyleClass().add("dashboard-section");
@@ -30,7 +30,7 @@ public class DashboardSection extends TitledPane {
         setDisplayedStandalone(false);
     }
 
-    public Naming id() {
+    public Named id() {
         return id;
     }
 

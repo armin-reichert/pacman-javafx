@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.tengenmspacman.gamescene;
 
-import de.amr.basics.Naming;
+import de.amr.basics.Named;
 import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.test.CutScenesTestState;
@@ -28,7 +28,7 @@ public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
     }
 
     @Override
-    protected GameScene createGameScene(GameAppContext appContext, Naming sceneID) {
+    protected GameScene createGameScene(GameAppContext appContext, Named sceneID) {
         requireNonNull(sceneID);
         return switch (sceneID) {
             case CommonGameSceneID.BOOT_SCENE -> new TengenMsPacMan_BootScene(appContext);
@@ -46,7 +46,7 @@ public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
     }
 
     @Override
-    protected Naming determineSceneID(GameUISettingsVM viewModel, GameContext gameContext) {
+    protected Named determineSceneID(GameUISettingsVM viewModel, GameContext gameContext) {
         final State<GameContext> state = gameContext.state();
 
         if (state instanceof CutScenesTestState testState) {

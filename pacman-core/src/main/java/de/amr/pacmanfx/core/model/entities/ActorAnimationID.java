@@ -4,9 +4,9 @@
 
 package de.amr.pacmanfx.core.model.entities;
 
-import de.amr.basics.Naming;
+import de.amr.basics.Named;
 
-public enum ActorAnimationID implements Naming {
+public enum ActorAnimationID implements Named {
     PAC_MUNCHING,
     PAC_DYING,
     PAC_FULL,
