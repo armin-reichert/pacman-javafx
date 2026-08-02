@@ -11,6 +11,7 @@ import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.ecs.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
+import de.amr.pacmanfx.tengenmspacman.entities.*;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -41,7 +42,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
     private Pac pacMan;
     private Pac msPacMan;
     private Stork stork;
-    private Bag flyingBag;
+    private Bag bag;
 
     private boolean darkness;
 
@@ -68,7 +69,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
     }
 
     public Bag flyingBag() {
-        return flyingBag;
+        return bag;
     }
 
     public boolean darkness() {
@@ -78,7 +79,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
     @Override
     public void onActivate() {
         final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
-        final SpriteAnimationContainer spriteAnimations = appContext().ui().sprites().animations();
+        final SpriteAnimationContainer animationContainer = appContext().ui().sprites().animations();
 
         // Quit cut scene when "START" button on "joypad" is pressed
         final Joypad joypad = input().joypad();
@@ -93,14 +94,15 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
         final var factory = TengenMsPacMan_ActorFactory.instance();
 
         msPacMan = factory.createMsPacMan();
-        msPacMan.spriteAnimation().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        msPacMan.spriteAnimation().setAnimations(renderConfig.createPacAnimations(animationContainer));
 
         pacMan = factory.createPacMan();
-        pacMan.spriteAnimation().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        pacMan.spriteAnimation().setAnimations(renderConfig.createPacAnimations(animationContainer));
 
-        stork = new Stork(spriteAnimations);
+        stork = new Stork(animationContainer);
 
-        flyingBag = new Bag(spriteAnimations);
+        bag = new Bag();
+        bag.spriteAnim().setAnimations(new BagAnimationSpriteMap(animationContainer));
 
         darkness = false;
 
@@ -146,7 +148,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
                     sys.spriteAnim().select(stork, ActorAnimationID.STORK_FLYING);
                     sys.spriteAnim().playSelected(stork);
 
-                    flyingBag.setOpen(gameContext, false);
+                    bag.setOpen(false);
                     stork.setBagReleasedFromBeak(false);
                 }
                 case 240 -> {
@@ -154,17 +156,17 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
                     sys.motor().setVelocity(stork, -1f, 0); // faster, no bag to carry!
                     stork.setBagReleasedFromBeak(true);
 
-                    flyingBag.pos().set(stork.pos().x() - 15, stork.pos().y() + 8);
-                    flyingBag.show();
-                    sys.motor().setVelocity(flyingBag, -0.5f, 0);
-                    sys.motor().setAcceleration(flyingBag, 0, 0.1f);
+                    bag.pos().set(stork.pos().x() - 15, stork.pos().y() + 8);
+                    bag.show();
+                    sys.motor().setVelocity(bag, -0.5f, 0);
+                    sys.motor().setAcceleration(bag, 0, 0.1f);
                 }
                 case 320 -> // reaches ground, starts bouncing
-                    sys.motor().setVelocityX(flyingBag, -0.5f);
+                    sys.motor().setVelocityX(bag, -0.5f);
                 case 380 -> {
-                    flyingBag.setOpen(gameContext, true);
-                    sys.motor().setVelocity(flyingBag, 0, 0);
-                    sys.motor().setAcceleration(flyingBag, 0, 0);
+                    bag.setOpen(true);
+                    sys.motor().setVelocity(bag, 0, 0);
+                    sys.motor().setAcceleration(bag, 0, 0);
                 }
                 case 640 -> darkness = true;
                 case TICK_EXPIRES -> gameState().triggerTimeout();
@@ -175,15 +177,17 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
 
         sys.motor().move(stork);
 
-        if (!flyingBag.isOpen()) {
-            sys.motor().move(flyingBag);
-            if (flyingBag.pos().y() > GROUND_Y) {
-                flyingBag.pos().setY(GROUND_Y);
-                sys.motor().setVelocity(flyingBag,
-                    0.9f * flyingBag.movement().velocityX(),
-                    -0.3f * flyingBag.movement().velocityY()
+        if (!bag.isOpen()) {
+            sys.motor().move(bag);
+            if (bag.pos().y() > GROUND_Y) {
+                bag.pos().setY(GROUND_Y);
+                sys.motor().setVelocity(bag,
+                    0.9f * bag.movement().velocityX(),
+                    -0.3f * bag.movement().velocityY()
                 );
             }
         }
+
+        BagAnimationSystem.update(bag);
     }
 }

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.tengenmspacman.gamescene;
+package de.amr.pacmanfx.tengenmspacman.entities;
 
 import de.amr.basics.Naming;
 import de.amr.basics.spriteanim.SpriteAnimation;
