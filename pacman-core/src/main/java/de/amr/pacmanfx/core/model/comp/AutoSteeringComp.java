@@ -1,4 +1,4 @@
-package de.amr.pacmanfx.core.model.comp.common;
+package de.amr.pacmanfx.core.model.comp;
 
 import de.amr.pacmanfx.core.model.GameEntityComponent;
 import de.amr.pacmanfx.core.steering.Steering;

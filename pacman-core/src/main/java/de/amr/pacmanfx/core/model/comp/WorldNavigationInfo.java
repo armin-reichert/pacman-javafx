@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core.model.comp.world;
+package de.amr.pacmanfx.core.model.comp;
 
 public class WorldNavigationInfo {
     public boolean moved;

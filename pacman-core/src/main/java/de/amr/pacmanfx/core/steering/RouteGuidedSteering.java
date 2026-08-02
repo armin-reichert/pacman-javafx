@@ -6,7 +6,7 @@ package de.amr.pacmanfx.core.steering;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.model.GameEntity;
-import de.amr.pacmanfx.core.model.comp.world.WorldNavigationComp;
+import de.amr.pacmanfx.core.model.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.systems.world.WorldMovementPolicy;

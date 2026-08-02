@@ -8,7 +8,7 @@ import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.model.entities.ghost.GhostState;
-import de.amr.pacmanfx.core.model.comp.common.PositionComp;
+import de.amr.pacmanfx.core.model.comp.PositionComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.systems.world.WorldMovementPolicy;

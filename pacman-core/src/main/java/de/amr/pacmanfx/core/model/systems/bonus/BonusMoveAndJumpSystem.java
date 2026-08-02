@@ -9,7 +9,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.model.entities.bonus.Bonus;
 import de.amr.pacmanfx.core.model.entities.bonus.MoveAndJumpComp;
-import de.amr.pacmanfx.core.model.comp.world.WorldNavigationComp;
+import de.amr.pacmanfx.core.model.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.systems.world.WorldMovementPolicy;

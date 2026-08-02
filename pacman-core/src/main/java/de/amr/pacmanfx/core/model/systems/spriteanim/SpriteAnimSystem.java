@@ -9,7 +9,7 @@ import de.amr.basics.Naming;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.spriteanim.SpriteAnimationAccess;
 import de.amr.pacmanfx.core.model.GameEntity;
-import de.amr.pacmanfx.core.model.comp.spriteanim.SpriteAnimComp;
+import de.amr.pacmanfx.core.model.comp.SpriteAnimComp;
 
 import static java.util.Objects.requireNonNull;
 

@@ -6,9 +6,9 @@ package de.amr.pacmanfx.core.model.entities.ghost;
 
 import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.comp.common.MovementComp;
-import de.amr.pacmanfx.core.model.comp.spriteanim.SpriteAnimComp;
-import de.amr.pacmanfx.core.model.comp.world.WorldNavigationComp;
+import de.amr.pacmanfx.core.model.comp.MovementComp;
+import de.amr.pacmanfx.core.model.comp.SpriteAnimComp;
+import de.amr.pacmanfx.core.model.comp.WorldNavigationComp;
 
 import static java.util.Objects.requireNonNull;
 

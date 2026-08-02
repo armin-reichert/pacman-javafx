@@ -4,9 +4,9 @@
 
 package de.amr.pacmanfx.core.model;
 
-import de.amr.pacmanfx.core.model.comp.common.MovementComp;
-import de.amr.pacmanfx.core.model.comp.common.PositionComp;
-import de.amr.pacmanfx.core.model.comp.common.VisibilityComp;
+import de.amr.pacmanfx.core.model.comp.MovementComp;
+import de.amr.pacmanfx.core.model.comp.PositionComp;
+import de.amr.pacmanfx.core.model.comp.VisibilityComp;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

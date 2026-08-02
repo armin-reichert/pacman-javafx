@@ -22,7 +22,6 @@ module de.amr.pacmanfx.core {
     exports de.amr.pacmanfx.core.gameplay;
     exports de.amr.pacmanfx.core.gamestate;
     exports de.amr.pacmanfx.core.model.rules;
-    exports de.amr.pacmanfx.core.model.comp.common;
     exports de.amr.pacmanfx.core.model.comp.world;
     exports de.amr.pacmanfx.core.model.comp.spriteanim;
     exports de.amr.pacmanfx.core.model.systems.ghost;
@@ -44,4 +43,5 @@ module de.amr.pacmanfx.core {
     exports de.amr.pacmanfx.core.model.world.map;
     exports de.amr.pacmanfx.core.model.world.house;
     exports de.amr.pacmanfx.core.model.world.obstacle;
+    exports de.amr.pacmanfx.core.model.comp;
 }

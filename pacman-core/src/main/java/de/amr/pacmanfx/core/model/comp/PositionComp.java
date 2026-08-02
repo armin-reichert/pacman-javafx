@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core.model.comp.common;
+package de.amr.pacmanfx.core.model.comp;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.model.GameEntityComponent;

@@ -5,10 +5,10 @@
 package de.amr.pacmanfx.core.model.entities.pac;
 
 import de.amr.pacmanfx.core.model.GameEntity;
-import de.amr.pacmanfx.core.model.comp.common.AutoSteeringComp;
-import de.amr.pacmanfx.core.model.comp.common.MovementComp;
-import de.amr.pacmanfx.core.model.comp.spriteanim.SpriteAnimComp;
-import de.amr.pacmanfx.core.model.comp.world.WorldNavigationComp;
+import de.amr.pacmanfx.core.model.comp.AutoSteeringComp;
+import de.amr.pacmanfx.core.model.comp.MovementComp;
+import de.amr.pacmanfx.core.model.comp.SpriteAnimComp;
+import de.amr.pacmanfx.core.model.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
 
 import static java.util.Objects.requireNonNull;
