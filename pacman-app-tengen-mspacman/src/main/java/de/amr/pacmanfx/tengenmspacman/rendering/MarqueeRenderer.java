@@ -34,69 +34,99 @@ public class MarqueeRenderer extends BaseRenderer {
         final MarqueeArea area = layout.computeArea(marquee.pos());
         final MarqueeCorners corners = layout.corners();
 
-        final int n = layout.numBulbs();
+        final int numBulbs = layout.numBulbs();
+        final int bulbSize = layout.bulbSize();
+        final double scaledBulbRadius = scaled(0.5 * bulbSize);
+
+        drawDarkBulbs(
+            area,
+            corners,
+            Color.valueOf(visualComp.bulbOffColor()),
+            numBulbs,
+            bulbSize,
+            scaledBulbRadius);
+
         final long tick = runner.tickTimer().tickCount();
-
-        final Color offColor = Color.valueOf(visualComp.bulbOffColor());
-        final Color onColor = Color.valueOf(visualComp.bulbOnColor());
-
-        drawDarkBulbs(offColor, n, area, corners, layout.bulbSize());
-        drawBrightBulbs(onColor, n, layout.brightBulbsCount(), (int) (tick % n), area, corners, layout.bulbSize(), layout.brightBulbsDistance());
+        drawBrightBulbs(
+            area,
+            corners,
+            Color.valueOf(visualComp.bulbOnColor()),
+            numBulbs,
+            layout.brightBulbsCount(),
+            layout.brightBulbsDistance(),
+            (int) (tick % numBulbs),
+            bulbSize,
+            scaledBulbRadius);
     }
 
-    private void drawDarkBulbs(Color color, int n, MarqueeArea area, MarqueeCorners corners, float bulbSize) {
+    private void drawDarkBulbs(
+        MarqueeArea area,
+        MarqueeCorners corners,
+        Color color,
+        int numBulbs,
+        int bulbSize,
+        double bulbRadius) {
+
         ctx.setFill(color);
-        for (int index = 0; index < n; ++index) {
-            drawBulb(area, corners, bulbSize, index);
+        for (int index = 0; index < numBulbs; ++index) {
+            drawBulb(area, corners, index, bulbSize, bulbRadius);
         }
     }
 
-    private void drawBrightBulbs(Color color, int n, int count, int firstIndex, MarqueeArea area, MarqueeCorners corners,
-                                 float bulbSize, int bulbDist) {
+    private void drawBrightBulbs(
+        MarqueeArea area,
+        MarqueeCorners corners,
+        Color color,
+        int numBulbs,
+        int brightBulbsCount,
+        int brightBulbsDist,
+        int firstBrightBulbIndex,
+        int bulbSize,
+        double bulbRadius) {
+
         ctx.setFill(color);
-        for (int i = 0; i < count; ++i) {
-            final int index = (firstIndex + i * bulbDist) % n;
+        for (int i = 0; i < brightBulbsCount; ++i) {
+            final int index = (firstBrightBulbIndex + i * brightBulbsDist) % numBulbs;
             // Simulate "broken bulbs on left side" bug from original Arcade game
             final boolean broken = index >= corners.nw() && (index - corners.nw()) % 2 == 0;
             if (!broken) {
-                drawBulb(area, corners, bulbSize, index);
+                drawBulb(area, corners, index, bulbSize, bulbRadius);
             }
         }
     }
 
-    private void drawBulb(MarqueeArea a, MarqueeCorners corners, float bs, int index) {
-
-        // Example: bh=35, bv=15
-
-        // 82                   48
-        //
-        //
-        //
-        //
-        // 0 1 2 ...            34
-
+    // Example: bh=35, bv=15
+    // 82                   48
+    //
+    //
+    //
+    //
+    // 0 1 2 ...            34
+    private void drawBulb(MarqueeArea area, MarqueeCorners corners, int bulbIndex, int bulbSize, double scaledRadius) {
         double x, y;
-
-        if (index < corners.se()) { // [0;se}: lower edge left-to-right: 0..
-            x = a.minX() + index * bs;
-            y = a.maxY();
+        if (bulbIndex < corners.se()) {
+            // [0;se): bottom edge left-to-right
+            x = area.minX() + bulbIndex * bulbSize;
+            y = area.maxY();
         }
-        else if (index < corners.ne()) { // [se;ne): right edge bottom-to-top
-            int d = index - corners.se();
-            x = a.maxX();
-            y = a.maxY() - d * bs;
+        else if (bulbIndex < corners.ne()) {
+            // [se;ne): right edge bottom-to-top
+            final int d = bulbIndex - corners.se();
+            x = area.maxX();
+            y = area.maxY() - d * bulbSize;
         }
-        else if (index < corners.nw()) { // [ne;nw): upper edge right-to-left
-            int d = index - corners.ne();
-            x = a.maxX() - d * bs;
-            y = a.minY();
+        else if (bulbIndex < corners.nw()) {
+            // [ne;nw): upper edge right-to-left
+            final int d = bulbIndex - corners.ne();
+            x = area.maxX() - d * bulbSize;
+            y = area.minY();
         }
-        else { // left edge top-to-bottom
-            int d = index - corners.nw();
-            x = a.minX();
-            y = a.minY() + d * bs;
+        else {
+            // left edge top-to-bottom
+            final int d = bulbIndex - corners.nw();
+            x = area.minX();
+            y = area.minY() + d * bulbSize;
         }
-
-        ctx.fillRect(scaled(x), scaled(y), scaled(0.5 * bs), scaled(0.5 * bs));
+        ctx.fillRect(scaled(x), scaled(y), scaledRadius, scaledRadius);
     }
 }
