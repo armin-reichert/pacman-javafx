@@ -1,86 +1,29 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.tengenmspacman.entities;
 
-import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
-import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
-
-import java.util.Optional;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * Animated movie clapperboard.
  */
 public class Clapperboard extends GameEntity {
 
-    public enum State { HIDDEN, WIDE_OPEN, OPEN, CLOSED }
-
-    private final int number;
-    private final String text;
-
-    private State state;
-    private int tick;
-    private boolean textVisible;
-    private boolean running;
-
     public Clapperboard(int number, String text) {
-        this.name = "Clapperboard";
-        this.number = number;
-        this.text = requireNonNull(text);
+        setComponent(ClapperboardStateComp.class, new ClapperboardStateComp());
+        setComponent(ClapperboardInscriptionComp.class, new ClapperboardInscriptionComp());
+
+        inscription().setNumber(number);
+        inscription().setText(text);
     }
 
-    public int number() {
-        return number;
+    public ClapperboardInscriptionComp inscription() {
+        return requireComponent(ClapperboardInscriptionComp.class);
     }
 
-    public String text() {
-        return text;
-    }
-
-    public boolean isTextVisible() {
-        return textVisible;
-    }
-
-    public Optional<RectShort> sprite() {
-        RectShort[] sprites = TengenMsPacMan_SpriteSheet.instance().findSprites(SpriteID.CLAPPERBOARD);
-        return switch (state) {
-            case HIDDEN -> Optional.empty();
-            case WIDE_OPEN -> Optional.of(sprites[0]);
-            case OPEN -> Optional.of(sprites[1]);
-            case CLOSED -> Optional.of(sprites[2]);
-        };
-    }
-
-    public void startAnimation() {
-        tick = 0;
-        textVisible = true;
-        state = State.CLOSED;
-        running = true;
-    }
-
-    public void tick() {
-        if (!running) return;
-
-        //TODO Verify exact tick values
-        switch (tick) {
-            case 3 -> state = State.OPEN;
-            case 5 -> state = State.WIDE_OPEN;
-            case 65 -> {
-                state = State.CLOSED;
-                textVisible = false;
-            }
-            case 69 -> state = State.OPEN;
-            case 71 -> state = State.WIDE_OPEN;
-            case 129 -> {
-                state = State.HIDDEN;
-                running = false;
-            }
-            default -> {}
-        }
-        ++tick;
+    public ClapperboardStateComp state() {
+        return requireComponent(ClapperboardStateComp.class);
     }
 }

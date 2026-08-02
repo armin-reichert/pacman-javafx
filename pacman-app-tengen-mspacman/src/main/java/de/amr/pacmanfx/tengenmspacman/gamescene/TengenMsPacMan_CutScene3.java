@@ -89,7 +89,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
         clapperboard = new Clapperboard(3, "JUNIOR");
         clapperboard.pos().set(3 * WorldMap.TS, 10 * WorldMap.TS);
         clapperboard.show();
-        clapperboard.startAnimation();
+        ClapperboardStateSystem.startFlapAnimation(clapperboard);
 
         final var factory = TengenMsPacMan_ActorFactory.instance();
 
@@ -174,7 +174,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
             }
         }
 
-        clapperboard.tick();
+        ClapperboardStateSystem.update(clapperboard);
 
         sys.motor().move(stork);
 

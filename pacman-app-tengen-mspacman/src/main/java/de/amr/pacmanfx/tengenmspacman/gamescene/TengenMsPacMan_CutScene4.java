@@ -15,6 +15,7 @@ import de.amr.pacmanfx.core.ecs.systems.world.WorldNavigationSystem;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
 import de.amr.pacmanfx.tengenmspacman.entities.Clapperboard;
+import de.amr.pacmanfx.tengenmspacman.entities.ClapperboardStateSystem;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
@@ -79,7 +80,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
         clapperboard = new Clapperboard(4, "THE END");
         clapperboard.pos().set(tilesPx(3), tilesPx(10));
         clapperboard.show();
-        clapperboard.startAnimation();
+        ClapperboardStateSystem.startFlapAnimation(clapperboard);
 
         final var factory = TengenMsPacMan_ActorFactory.instance();
 
@@ -107,7 +108,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
         final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
         final long gameStateTick = gameState().timer().tickCount();
 
-        clapperboard.tick();
+        ClapperboardStateSystem.update(clapperboard);
 
         sys.motor().move(pacMan);
         sys.motor().move(msPacMan);

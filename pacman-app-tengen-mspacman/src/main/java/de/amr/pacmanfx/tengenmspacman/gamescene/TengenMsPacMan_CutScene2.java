@@ -12,6 +12,7 @@ import de.amr.pacmanfx.core.ecs.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.entities.Clapperboard;
+import de.amr.pacmanfx.tengenmspacman.entities.ClapperboardStateSystem;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -72,9 +73,9 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene2D {
             joypad.keyForButton(JoypadButton.START));
 
         clapperboard = new Clapperboard(2, "THE CHASE");
-        clapperboard.pos().set(3 * WorldMap.TS, 10 * WorldMap.TS);
         clapperboard.show();
-        clapperboard.startAnimation();
+        clapperboard.pos().set(3 * WorldMap.TS, 10 * WorldMap.TS);
+        ClapperboardStateSystem.startFlapAnimation(clapperboard);
 
         final var factory = TengenMsPacMan_ActorFactory.instance();
 
@@ -166,7 +167,7 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene2D {
             sys.motor().move(pacMan);
             sys.motor().move(msPacMan);
 
-            clapperboard.tick();
+            ClapperboardStateSystem.update(clapperboard);
         }
     }
 }

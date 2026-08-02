@@ -16,6 +16,7 @@ import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.ecs.systems.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.ecs.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.tengenmspacman.entities.Clapperboard;
+import de.amr.pacmanfx.tengenmspacman.entities.ClapperboardAnimationSystem;
 import de.amr.pacmanfx.tengenmspacman.entities.Stork;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
@@ -126,7 +127,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     }
 
     private void drawClapperBoard(Clapperboard clapperboard) {
-        clapperboard.sprite().ifPresent(sprite -> {
+        ClapperboardAnimationSystem.sprite(clapperboard).ifPresent(sprite -> {
             double numberX = clapperboard.pos().x() + 8, numberY = clapperboard.pos().y() + 18; // baseline
             drawSpriteCentered(sprite, WorldNavigationSystem.computeCenter(clapperboard));
             // over-paint number from sprite sheet
@@ -138,10 +139,13 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
 
             ctx.setFont(arcadeFont8());
             ctx.setFill(NES_Palette.color(0x20));
-            ctx.fillText(String.valueOf(clapperboard.number()), scaled(numberX), scaled(numberY));
-            if (clapperboard.isTextVisible()) {
+
+            final String number = String.valueOf(clapperboard.inscription().number());
+            final String text = clapperboard.inscription().text();
+            ctx.fillText(number, scaled(numberX), scaled(numberY));
+            if (clapperboard.state().textVisible()) {
                 double textX = clapperboard.pos().x() + sprite.width(), textY = clapperboard.pos().y() + 2;
-                ctx.fillText(clapperboard.text(), scaled(textX), scaled(textY));
+                ctx.fillText(text, scaled(textX), scaled(textY));
             }
         });
     }

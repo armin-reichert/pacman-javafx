@@ -6,17 +6,18 @@ package de.amr.pacmanfx.tengenmspacman.gamescene;
 import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
-import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
-import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.ecs.components.SpriteAnimComp;
 import de.amr.pacmanfx.core.ecs.systems.common.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.world.WorldNavigationSystem;
+import de.amr.pacmanfx.core.model.GhostPersonality;
+import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
+import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
+import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.entities.Clapperboard;
+import de.amr.pacmanfx.tengenmspacman.entities.ClapperboardStateSystem;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
@@ -108,9 +109,10 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
             joypad.keyForButton(JoypadButton.START));
 
         clapperboard = new Clapperboard(1, "THEY MEET");
-        clapperboard.pos().set(3 * WorldMap.TS, 10 * WorldMap.TS);
         clapperboard.show();
-        clapperboard.startAnimation();
+        clapperboard.pos().set(3 * WorldMap.TS, 10 * WorldMap.TS);
+
+        ClapperboardStateSystem.startFlapAnimation(clapperboard);
 
         final var factory = TengenMsPacMan_ActorFactory.instance();
 
@@ -157,7 +159,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
     public void onTick(GameContext gameContext) {
         final GameSystems sys = gameContext.systems();
 
-        clapperboard.tick();
+        ClapperboardStateSystem.update(clapperboard);
 
         List.of(pacMan, msPacMan, inky, pinky).forEach(sys.motor()::move);
 
