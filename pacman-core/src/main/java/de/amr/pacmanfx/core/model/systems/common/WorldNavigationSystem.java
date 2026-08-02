@@ -13,8 +13,8 @@ import de.amr.pacmanfx.core.model.comp.common.PositionComp;
 import de.amr.pacmanfx.core.model.comp.world.WorldNavigationComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.world.WorldMovementPolicy;
-import de.amr.pacmanfx.core.model.world.TerrainLayer;
-import de.amr.pacmanfx.core.model.world.WorldMap;
+import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
+import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import org.tinylog.Logger;
 
 import static de.amr.basics.math.Direction.UP;

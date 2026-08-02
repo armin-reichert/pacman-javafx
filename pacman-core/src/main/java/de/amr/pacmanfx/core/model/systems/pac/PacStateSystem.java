@@ -6,14 +6,13 @@ package de.amr.pacmanfx.core.model.systems.pac;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GameCheats;
-import de.amr.pacmanfx.core.model.comp.pac.PacDigestionComp;
-import de.amr.pacmanfx.core.model.comp.pac.PacState;
-import de.amr.pacmanfx.core.model.entities.Pac;
+import de.amr.pacmanfx.core.model.entities.pac.PacDigestionComp;
+import de.amr.pacmanfx.core.model.entities.pac.PacState;
+import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.rules.ActorSpeedRules;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.systems.world.WorldMovementPolicy;
-import de.amr.pacmanfx.core.steering.Steering;
 
 import static java.util.Objects.requireNonNull;
 

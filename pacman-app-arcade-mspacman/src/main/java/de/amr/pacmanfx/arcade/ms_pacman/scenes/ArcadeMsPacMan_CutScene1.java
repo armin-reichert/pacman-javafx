@@ -15,11 +15,11 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.GameEntity;
 import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
-import de.amr.pacmanfx.core.model.entities.Ghost;
-import de.amr.pacmanfx.core.model.entities.Pac;
+import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
+import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.comp.spriteanim.SpriteAnimComp;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
-import de.amr.pacmanfx.core.model.world.WorldMap;
+import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
@@ -28,7 +28,7 @@ import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import java.util.List;
 
 import static de.amr.basics.spriteanim.SpriteAnimationAccess.singleSpriteAnimation;
-import static de.amr.pacmanfx.core.model.world.WorldMap.tilesPx;
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 
 /**
  * Intermission scene 1: "They meet".

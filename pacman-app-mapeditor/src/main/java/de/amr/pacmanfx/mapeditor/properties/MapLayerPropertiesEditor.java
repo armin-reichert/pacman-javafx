@@ -3,9 +3,9 @@
  */
 package de.amr.pacmanfx.mapeditor.properties;
 
-import de.amr.pacmanfx.core.model.world.WorldMap;
-import de.amr.pacmanfx.core.model.world.WorldMapLayer;
-import de.amr.pacmanfx.core.model.world.WorldMapLayerID;
+import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.core.model.world.map.WorldMapLayer;
+import de.amr.pacmanfx.core.model.world.map.WorldMapLayerID;
 import de.amr.pacmanfx.mapeditor.MessageType;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import javafx.beans.property.BooleanProperty;
@@ -20,7 +20,7 @@ import org.tinylog.Logger;
 
 import java.util.*;
 
-import static de.amr.pacmanfx.core.model.world.WorldMapPropertyName.*;
+import static de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 
 public class MapLayerPropertiesEditor extends BorderPane {

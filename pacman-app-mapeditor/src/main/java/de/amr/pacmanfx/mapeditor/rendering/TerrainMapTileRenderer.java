@@ -7,7 +7,12 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.model.world.*;
+import de.amr.pacmanfx.core.model.world.map.TerrainTile;
+import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.core.model.world.map.WorldMapParser;
+import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
+import de.amr.pacmanfx.core.model.world.obstacle.Obstacle;
+import de.amr.pacmanfx.core.model.world.obstacle.ObstacleSegment;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapColoring;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapRenderer;
@@ -30,7 +35,7 @@ import java.util.Set;
 import java.util.function.BiPredicate;
 
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
-import static de.amr.pacmanfx.core.model.world.WorldMap.HTS;
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.HTS;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 

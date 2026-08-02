@@ -16,13 +16,12 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
-import de.amr.pacmanfx.core.model.entities.Ghost;
-import de.amr.pacmanfx.core.model.comp.ghost.GhostState;
-import de.amr.pacmanfx.core.model.entities.Pac;
-import de.amr.pacmanfx.core.model.comp.spriteanim.SpriteAnimComp;
+import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
+import de.amr.pacmanfx.core.model.entities.ghost.GhostState;
+import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.systems.common.MovementSystem;
-import de.amr.pacmanfx.core.model.world.WorldMap;
+import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.rules.CollisionStrategy;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -35,8 +34,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.core.model.comp.ghost.GhostState.EATEN;
-import static de.amr.pacmanfx.core.model.comp.ghost.GhostState.FRIGHTENED;
+import static de.amr.pacmanfx.core.model.entities.ghost.GhostState.EATEN;
+import static de.amr.pacmanfx.core.model.entities.ghost.GhostState.FRIGHTENED;
 
 /**
  * The ghosts are presented one by one, then Pac-Man is chased by the ghosts, turns the cards and hunts the ghosts himself.

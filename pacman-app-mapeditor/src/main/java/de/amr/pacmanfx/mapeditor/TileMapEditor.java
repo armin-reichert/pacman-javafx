@@ -3,10 +3,10 @@
  */
 package de.amr.pacmanfx.mapeditor;
 
-import de.amr.pacmanfx.core.model.world.WorldMap;
-import de.amr.pacmanfx.core.model.world.WorldMapChecker;
-import de.amr.pacmanfx.core.model.world.WorldMapParseException;
-import de.amr.pacmanfx.core.model.world.WorldMapWriter;
+import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.core.model.world.map.WorldMapChecker;
+import de.amr.pacmanfx.core.model.world.map.WorldMapParseException;
+import de.amr.pacmanfx.core.model.world.map.WorldMapWriter;
 import de.amr.pacmanfx.mapeditor.actions.Action_CreateEmptyMap;
 import de.amr.pacmanfx.mapeditor.actions.Action_SaveMapFileInteractively;
 import javafx.animation.AnimationTimer;

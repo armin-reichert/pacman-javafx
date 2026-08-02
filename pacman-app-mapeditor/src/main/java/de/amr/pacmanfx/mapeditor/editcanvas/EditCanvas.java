@@ -6,9 +6,9 @@ package de.amr.pacmanfx.mapeditor.editcanvas;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.model.world.FoodLayer;
-import de.amr.pacmanfx.core.model.world.TerrainLayer;
-import de.amr.pacmanfx.core.model.world.WorldMap;
+import de.amr.pacmanfx.core.model.world.map.FoodLayer;
+import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
+import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.mapeditor.EditMode;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUtils;
@@ -36,7 +36,7 @@ import javafx.scene.text.Font;
 
 import java.util.function.Predicate;
 
-import static de.amr.pacmanfx.core.model.world.WorldMapPropertyName.COLOR_FOOD;
+import static de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName.COLOR_FOOD;
 import static de.amr.pacmanfx.mapeditor.TileMapEditorGlobals.ACTOR_SPRITES;
 import static de.amr.pacmanfx.mapeditor.TileMapEditorUtils.getColorFromMapLayer;
 import static java.util.Objects.requireNonNull;

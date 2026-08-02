@@ -3,10 +3,10 @@
  */
 package de.amr.pacmanfx.mapeditor;
 
-import de.amr.pacmanfx.core.model.world.WorldMap;
-import de.amr.pacmanfx.core.model.world.WorldMapLayer;
-import de.amr.pacmanfx.core.model.world.WorldMapLayerID;
-import de.amr.pacmanfx.core.model.world.WorldMapPropertyName;
+import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.core.model.world.map.WorldMapLayer;
+import de.amr.pacmanfx.core.model.world.map.WorldMapLayerID;
+import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
 import de.amr.pacmanfx.mapeditor.actions.*;
 import de.amr.pacmanfx.mapeditor.editcanvas.EditCanvas;
 import de.amr.pacmanfx.mapeditor.editcanvas.TemplateImageCanvas;

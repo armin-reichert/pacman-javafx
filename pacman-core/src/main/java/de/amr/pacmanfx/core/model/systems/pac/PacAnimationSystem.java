@@ -1,7 +1,7 @@
 package de.amr.pacmanfx.core.model.systems.pac;
 
 import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
-import de.amr.pacmanfx.core.model.entities.Pac;
+import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.systems.spriteanim.SpriteAnimSystem;
 
 public class PacAnimationSystem {

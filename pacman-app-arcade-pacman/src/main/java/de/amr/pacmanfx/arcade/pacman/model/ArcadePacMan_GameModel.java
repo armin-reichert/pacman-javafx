@@ -7,13 +7,13 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.rules.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.entities.Ghost;
-import de.amr.pacmanfx.core.model.comp.ghost.ElroyComp;
-import de.amr.pacmanfx.core.model.world.WorldMapSelector;
+import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
+import de.amr.pacmanfx.core.model.entities.ghost.ElroyComp;
+import de.amr.pacmanfx.core.model.world.map.WorldMapSelector;
 import de.amr.pacmanfx.core.model.rules.GameRules;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.core.model.world.WorldMap.tile;
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.tile;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_GameModel extends GameModel {

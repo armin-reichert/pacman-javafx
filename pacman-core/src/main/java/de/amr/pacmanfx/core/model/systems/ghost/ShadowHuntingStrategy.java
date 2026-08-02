@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.core.model.systems.ghost;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.model.entities.Ghost;
-import de.amr.pacmanfx.core.model.comp.ghost.ElroyComp;
+import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
+import de.amr.pacmanfx.core.model.entities.ghost.ElroyComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.systems.world.WorldMovementPolicy;

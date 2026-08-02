@@ -4,14 +4,18 @@
 package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.model.world.*;
+import de.amr.pacmanfx.core.model.world.map.FoodTile;
+import de.amr.pacmanfx.core.model.world.map.TerrainTile;
+import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
+import de.amr.pacmanfx.core.model.world.obstacle.Obstacle;
 import de.amr.pacmanfx.mapeditor.MessageType;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 
-import static de.amr.pacmanfx.core.model.world.WorldMap.HTS;
-import static de.amr.pacmanfx.core.model.world.WorldMap.computeTileAt;
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.HTS;
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.computeTileAt;
 import static java.util.Objects.requireNonNull;
 
 public class Action_IdentifyTileAndObstacle extends EditorUIAction<String> {

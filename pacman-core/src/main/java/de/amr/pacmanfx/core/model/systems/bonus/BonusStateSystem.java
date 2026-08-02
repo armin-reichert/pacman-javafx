@@ -8,15 +8,14 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.event.bonus.BonusExpiredEvent;
 import de.amr.pacmanfx.core.gameplay.FrameContext;
-import de.amr.pacmanfx.core.model.entities.Bonus;
-import de.amr.pacmanfx.core.model.comp.bonus.BonusState;
-import de.amr.pacmanfx.core.model.comp.bonus.BonusStateComp;
-import de.amr.pacmanfx.core.model.comp.bonus.MoveAndJumpComp;
+import de.amr.pacmanfx.core.model.entities.bonus.Bonus;
+import de.amr.pacmanfx.core.model.entities.bonus.BonusState;
+import de.amr.pacmanfx.core.model.entities.bonus.BonusStateComp;
+import de.amr.pacmanfx.core.model.entities.bonus.MoveAndJumpComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.WorldNavigationSystem;
 import org.tinylog.Logger;
 
-import static java.util.Objects.nonNull;
 import static java.util.Objects.requireNonNull;
 
 public class BonusStateSystem {

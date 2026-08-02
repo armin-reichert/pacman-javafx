@@ -5,7 +5,7 @@ package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.model.world.*;
+import de.amr.pacmanfx.core.model.world.map.*;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import org.tinylog.Logger;
 

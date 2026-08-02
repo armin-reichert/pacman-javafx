@@ -3,10 +3,10 @@
  */
 package de.amr.pacmanfx.tengenmspacman.model;
 
-import de.amr.pacmanfx.core.model.world.WorldMap;
-import de.amr.pacmanfx.core.model.world.WorldMapConfigKey;
-import de.amr.pacmanfx.core.model.world.WorldMapParseException;
-import de.amr.pacmanfx.core.model.world.WorldMapSelector;
+import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
+import de.amr.pacmanfx.core.model.world.map.WorldMapParseException;
+import de.amr.pacmanfx.core.model.world.map.WorldMapSelector;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig;
 import de.amr.pacmanfx.tengenmspacman.sprites.NES_WorldMapColorScheme;
 import de.amr.pacmanfx.tengenmspacman.sprites.NonArcadeMapsSpriteSheet;

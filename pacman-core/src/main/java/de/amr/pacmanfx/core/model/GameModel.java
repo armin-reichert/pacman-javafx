@@ -6,8 +6,8 @@ package de.amr.pacmanfx.core.model;
 
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.LevelCounter;
-import de.amr.pacmanfx.core.model.world.ArcadeHouseGateKeeper;
-import de.amr.pacmanfx.core.model.world.WorldMapSelector;
+import de.amr.pacmanfx.core.model.world.house.ArcadeHouseGateKeeper;
+import de.amr.pacmanfx.core.model.world.map.WorldMapSelector;
 import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.core.model.score.PropertyFileScore;
 import de.amr.pacmanfx.core.model.score.Score;

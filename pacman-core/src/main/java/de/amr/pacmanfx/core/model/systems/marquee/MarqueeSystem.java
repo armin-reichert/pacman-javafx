@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.core.model.systems.marquee;
 
-import de.amr.pacmanfx.core.model.entities.Marquee;
+import de.amr.pacmanfx.core.model.entities.marquee.Marquee;
 
 public class MarqueeSystem {
 

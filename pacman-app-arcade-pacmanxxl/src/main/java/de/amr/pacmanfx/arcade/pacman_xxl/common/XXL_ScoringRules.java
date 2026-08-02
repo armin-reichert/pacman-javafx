@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
 import de.amr.pacmanfx.arcade.ms_pacman.rules.ArcadeMsPacMan_ScoringRules;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.world.FoodLayer;
+import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 
 public class XXL_ScoringRules extends ArcadeMsPacMan_ScoringRules {
 

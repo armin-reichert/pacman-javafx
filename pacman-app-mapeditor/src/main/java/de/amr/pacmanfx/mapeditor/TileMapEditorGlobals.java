@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.mapeditor;
 
 import de.amr.basics.math.RectShort;
-import de.amr.pacmanfx.core.model.world.WorldMapPropertyName;
+import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
 import de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;

@@ -3,9 +3,9 @@
  */
 package de.amr.pacmanfx.mapeditor.editcanvas;
 
-import de.amr.pacmanfx.core.model.world.FoodTile;
-import de.amr.pacmanfx.core.model.world.TerrainTile;
-import de.amr.pacmanfx.core.model.world.WorldMap;
+import de.amr.pacmanfx.core.model.world.map.FoodTile;
+import de.amr.pacmanfx.core.model.world.map.TerrainTile;
+import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import javafx.scene.paint.Color;
 
 import java.util.Arrays;

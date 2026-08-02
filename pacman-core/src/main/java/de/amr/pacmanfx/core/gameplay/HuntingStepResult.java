@@ -5,10 +5,10 @@
 package de.amr.pacmanfx.core.gameplay;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.model.entities.Bonus;
-import de.amr.pacmanfx.core.model.entities.Ghost;
+import de.amr.pacmanfx.core.model.entities.bonus.Bonus;
+import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.model.comp.common.PositionComp;
-import de.amr.pacmanfx.core.model.world.WorldMap;
+import de.amr.pacmanfx.core.model.world.map.WorldMap;
 
 import java.util.ArrayList;
 import java.util.HashSet;

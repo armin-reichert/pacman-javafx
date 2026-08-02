@@ -28,7 +28,7 @@ import javafx.util.Duration;
 
 import java.util.List;
 
-import static de.amr.pacmanfx.core.model.world.WorldMap.HTS;
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.HTS;
 import static java.util.Objects.requireNonNull;
 
 public class LevelCounter3D extends GameEntity implements UpdatableEntity, DisposableGraphicsObject {

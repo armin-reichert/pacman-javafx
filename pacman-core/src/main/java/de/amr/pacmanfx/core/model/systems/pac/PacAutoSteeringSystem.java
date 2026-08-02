@@ -1,6 +1,6 @@
 package de.amr.pacmanfx.core.model.systems.pac;
 
-import de.amr.pacmanfx.core.model.entities.Pac;
+import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 
 public class PacAutoSteeringSystem {

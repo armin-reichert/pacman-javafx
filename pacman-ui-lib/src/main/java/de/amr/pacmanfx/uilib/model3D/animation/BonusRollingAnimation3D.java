@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.uilib.model3D.animation;
 
 import de.amr.basics.math.Direction;
-import de.amr.pacmanfx.core.model.entities.Bonus;
+import de.amr.pacmanfx.core.model.entities.bonus.Bonus;
 import de.amr.pacmanfx.uilib.model3D.world.Bonus3D;
 
 public class BonusRollingAnimation3D {

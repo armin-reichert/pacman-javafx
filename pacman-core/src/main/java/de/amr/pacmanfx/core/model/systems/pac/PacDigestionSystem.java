@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.core.model.systems.pac;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.entities.Pac;
+import de.amr.pacmanfx.core.model.entities.pac.Pac;
 
 public class PacDigestionSystem {
 

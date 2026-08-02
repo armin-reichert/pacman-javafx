@@ -23,9 +23,6 @@ module de.amr.pacmanfx.core {
     exports de.amr.pacmanfx.core.gamestate;
     exports de.amr.pacmanfx.core.model.rules;
     exports de.amr.pacmanfx.core.model.comp.common;
-    exports de.amr.pacmanfx.core.model.comp.ghost;
-    exports de.amr.pacmanfx.core.model.comp.marquee;
-    exports de.amr.pacmanfx.core.model.comp.pac;
     exports de.amr.pacmanfx.core.model.comp.world;
     exports de.amr.pacmanfx.core.model.comp.spriteanim;
     exports de.amr.pacmanfx.core.model.systems.ghost;
@@ -35,10 +32,16 @@ module de.amr.pacmanfx.core {
     exports de.amr.pacmanfx.core.model.systems.spriteanim;
     exports de.amr.pacmanfx.core.model.systems.world;
     exports de.amr.pacmanfx.core.model.systems.bonus;
-    exports de.amr.pacmanfx.core.model.comp.bonus;
     exports de.amr.pacmanfx.core.event.base;
     exports de.amr.pacmanfx.core.event.pac;
     exports de.amr.pacmanfx.core.event.ghost;
     exports de.amr.pacmanfx.core.event.bonus;
     exports de.amr.pacmanfx.core.event.gameplay;
+    exports de.amr.pacmanfx.core.model.entities.pac;
+    exports de.amr.pacmanfx.core.model.entities.bonus;
+    exports de.amr.pacmanfx.core.model.entities.ghost;
+    exports de.amr.pacmanfx.core.model.entities.marquee;
+    exports de.amr.pacmanfx.core.model.world.map;
+    exports de.amr.pacmanfx.core.model.world.house;
+    exports de.amr.pacmanfx.core.model.world.obstacle;
 }

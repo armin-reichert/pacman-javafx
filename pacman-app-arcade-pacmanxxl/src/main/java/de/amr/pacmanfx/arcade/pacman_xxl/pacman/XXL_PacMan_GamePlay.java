@@ -7,11 +7,10 @@ package de.amr.pacmanfx.arcade.pacman_xxl.pacman;
 
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GamePlay;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.comp.common.AutoSteeringComp;
-import de.amr.pacmanfx.core.model.entities.Pac;
+import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.systems.common.GameSystems;
-import de.amr.pacmanfx.core.model.world.WorldMapSelectionMode;
+import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
 
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
