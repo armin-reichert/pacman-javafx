@@ -66,7 +66,6 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
     @Override
     public void onTick(GameContext gameContext) {
         updateSceneState();
-        bag.spriteAnim().animation().select(bag.isOpen() ? ActorAnimationID.JUNIOR : ActorAnimationID.BAG);
     }
 
     private void initScene() {
@@ -87,7 +86,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
 
         bag = new Bag();
         bag.spriteAnim().setAnimations(new BagSAM(animationContainer));
-        bag.setOpen(false);
+        closeBag();
 
         clapperboard = new Clapperboard("3", "JUNIOR");
         clapperboard.pos().set(tilesPx(3), tilesPx(10));
@@ -171,11 +170,11 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
         sys.spriteAnim().select(stork, ActorAnimationID.STORK_FLYING);
         sys.spriteAnim().playSelected(stork);
 
-        bag.setOpen(false);
         bag.pos().set(stork.pos().x() - 14, stork.pos().y() + 3);
         bag.show();
         sys.motor().setVelocityX(bag, stork.movement().velocityX());
         sys.motor().setAcceleration(bag, 0, 0);
+        closeBag();
 
         stork.setBagReleasedFromBeak(false);
         numBagBounces = 0;
@@ -201,7 +200,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
                     bag.movement().setVelocity(-0.2f, -1.0f / numBagBounces); // add upwards velocity to bounce
                     bag.pos().setY(GROUND_Y);
                 } else {
-                    bag.setOpen(true);
+                    openBag();
                     bag.pos().setY(GROUND_Y);
                     motor.setVelocity(bag, 0, 0);
                     motor.setAcceleration(bag, 0, 0);
@@ -210,5 +209,15 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
         }
 
         motor.move(stork);
+    }
+
+    private void closeBag() {
+        bag.setOpen(false);
+        bag.spriteAnim().animation().select(ActorAnimationID.BAG);
+    }
+
+    private void openBag() {
+        bag.setOpen(true);
+        bag.spriteAnim().animation().select(ActorAnimationID.JUNIOR);
     }
 }
