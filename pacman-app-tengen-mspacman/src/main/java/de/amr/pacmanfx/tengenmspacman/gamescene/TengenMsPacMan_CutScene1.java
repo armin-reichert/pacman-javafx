@@ -7,7 +7,6 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.components.SpriteAnimComp;
 import de.amr.pacmanfx.core.ecs.systems.common.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
@@ -16,10 +15,10 @@ import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
+import de.amr.pacmanfx.tengenmspacman.entities.Heart;
 import de.amr.pacmanfx.tengenmspacman.entities.clapperboard.Clapperboard;
 import de.amr.pacmanfx.tengenmspacman.entities.clapperboard.ClapperboardStateSystem;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
-import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -30,7 +29,6 @@ import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import java.util.List;
 
-import static de.amr.basics.spriteanim.SpriteAnimationAccessor.singleSpriteAnimationMap;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig.NES_SCREEN_WIDTH;
@@ -114,36 +112,33 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
 
         ClapperboardStateSystem.startFlapAnimation(clapperboard);
 
-        final var factory = TengenMsPacMan_ActorFactory.instance();
+        final var actorFactory = TengenMsPacMan_ActorFactory.instance();
 
-        msPacMan = factory.createMsPacMan();
+        msPacMan = actorFactory.createMsPacMan();
         msPacMan.spriteAnimation().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
         msPacMan.pos().set(RIGHT_BORDER, LOWER_LANE);
         navigator.setMoveDir(msPacMan, Direction.LEFT);
         navigator.setSpeed(msPacMan, 0);
 
-        pacMan = factory.createPacMan();
+        pacMan = actorFactory.createPacMan();
         pacMan.spriteAnimation().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
         pacMan.pos().set(LEFT_BORDER, UPPER_LANE);
         navigator.setMoveDir(pacMan, Direction.RIGHT);
         navigator.setSpeed(pacMan, 0);
 
         inky = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GhostPersonality.CYAN_GHOST_BASHFUL);
+        inky.pos().set(LEFT_BORDER, UPPER_LANE);
         navigator.setMoveDir(inky, Direction.RIGHT);
         navigator.setWishDir(inky, Direction.RIGHT);
-        inky.pos().set(LEFT_BORDER, UPPER_LANE);
         navigator.setSpeed(inky, 0);
 
         pinky = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GhostPersonality.PINK_GHOST_SPEEDY);
+        pinky.pos().set(RIGHT_BORDER, LOWER_LANE);
         navigator.setMoveDir(pinky, Direction.LEFT);
         navigator.setWishDir(pinky, Direction.LEFT);
-        pinky.pos().set(RIGHT_BORDER, LOWER_LANE);
         navigator.setSpeed(pinky, 0);
 
-        heart = new GameEntity();
-        final SpriteAnimComp heartAnimationComp = new SpriteAnimComp();
-        heartAnimationComp.setAnimations(singleSpriteAnimationMap(spriteSheet.findSprite(SpriteID.HEART)));
-        heart.setComponent(SpriteAnimComp.class, heartAnimationComp);
+        heart = new Heart();
 
         collided = false;
 
