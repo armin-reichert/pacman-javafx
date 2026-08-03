@@ -17,11 +17,19 @@ import static java.util.Objects.requireNonNull;
 /**
  * A sprite animation container implementing the sprite animation accessor facade.
  */
-public abstract class LazySpriteAnimationMap implements SpriteAnimationAccessor {
+public class LazySpriteAnimationMap implements SpriteAnimationAccessor {
 
-    protected final Map<Named, SpriteAnimation> animationsByID = new HashMap<>();
+    private Map<Named, SpriteAnimation> animationsByID;
     protected Named selectedAnimationID;
     protected Function<Named, SpriteAnimation> factory;
+
+    protected LazySpriteAnimationMap() {}
+
+    private void createMapIfNotExisting() {
+        if (animationsByID == null) {
+            animationsByID = new HashMap<>();
+        }
+    }
 
     public void setFactory(Function<Named, SpriteAnimation> factory) {
         this.factory = factory;
@@ -39,15 +47,16 @@ public abstract class LazySpriteAnimationMap implements SpriteAnimationAccessor 
 
     @Override
     public RectShort currentSprite() {
-        final SpriteAnimation currentAnimation = currentAnimation();
-        return currentAnimation == null ? null : currentAnimation.sprite();
+        final SpriteAnimation anim = currentAnimation();
+        return anim == null ? null : anim.sprite();
     }
 
     @Override
     public SpriteAnimation animation(Named animationID) {
+        createMapIfNotExisting();
         if (!animationsByID.containsKey(animationID)) {
-            SpriteAnimation spriteAnimation = factory.apply(animationID);
-            animationsByID.put(animationID, spriteAnimation);
+            final SpriteAnimation anim = factory.apply(animationID);
+            animationsByID.put(animationID, anim);
         }
         return animationsByID.get(animationID);
     }
@@ -55,6 +64,7 @@ public abstract class LazySpriteAnimationMap implements SpriteAnimationAccessor 
     public void setAnimation(Named animationID, SpriteAnimation animation) {
         requireNonNull(animationID);
         requireNonNull(animation);
+        createMapIfNotExisting();
         animationsByID.put(animationID, animation);
     }
 
@@ -71,42 +81,48 @@ public abstract class LazySpriteAnimationMap implements SpriteAnimationAccessor 
     public void setAnimationFrame(Named animationID, int frameIndex) {
         if (!animationID.equals(selectedAnimationID)) {
             selectedAnimationID = animationID;
-            if (currentAnimation() != null) {
-                currentAnimation().setFrame(0);
-            } else {
-                Logger.warn("No animation with ID {} exists", animationID);
-            }
+        }
+        final SpriteAnimation anim = currentAnimation();
+        if (anim != null) {
+            anim.setFrame(frameIndex);
+        } else {
+            Logger.warn("Cannot set animation to frame {}: no animation with ID {} exists", frameIndex, animationID);
         }
     }
 
     @Override
     public int currentFrame() {
-        return currentAnimation() != null ? currentAnimation().frame() : -1;
+        final SpriteAnimation anim = currentAnimation();
+        return anim != null ? anim.frame() : -1;
     }
 
     @Override
     public int numFrames() {
-        return currentAnimation() != null ? currentAnimation().numFrames() : 0;
+        final SpriteAnimation anim = currentAnimation();
+        return anim != null ? anim.numFrames() : 0;
     }
 
     @Override
     public void playSelected() {
-        if (currentAnimation() != null) {
-            currentAnimation().start();
+        final SpriteAnimation anim = currentAnimation();
+        if (anim != null) {
+            anim.start();
         }
     }
 
     @Override
     public void stopSelected() {
-        if (currentAnimation() != null) {
-            currentAnimation().stop();
+        final SpriteAnimation anim = currentAnimation();
+        if (anim != null) {
+            anim.stop();
         }
     }
 
     @Override
     public void resetSelected() {
-        if (currentAnimation() != null) {
-            currentAnimation().reset();
+        final SpriteAnimation anim = currentAnimation();
+        if (anim != null) {
+            anim.reset();
         }
     }
 }
