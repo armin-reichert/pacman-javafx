@@ -116,7 +116,10 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
                 ClapperboardStateSystem.startFlapAnimation(clapperboard);
                 playMusic();
             }
-            case TICK_EXPIRES -> gameState().triggerTimeout();
+            case TICK_EXPIRES -> {
+                gameState().triggerTimeout();
+                return;
+            }
         }
 
         ClapperboardStateSystem.update(clapperboard);
