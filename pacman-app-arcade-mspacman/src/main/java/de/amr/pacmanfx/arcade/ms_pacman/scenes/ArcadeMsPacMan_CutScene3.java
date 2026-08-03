@@ -5,7 +5,6 @@ package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.arcade.ms_pacman.entities.bag.Bag;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.bag.BagAnimationSystem;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.bag.BagSAM;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.stork.StorkSAM;
@@ -14,6 +13,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.common.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.common.MovementSystem;
 import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
+import de.amr.pacmanfx.core.model.entities.bag.Bag;
 import de.amr.pacmanfx.core.model.entities.clapperboard.Clapperboard;
 import de.amr.pacmanfx.core.model.entities.clapperboard.ClapperboardStateSystem;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;

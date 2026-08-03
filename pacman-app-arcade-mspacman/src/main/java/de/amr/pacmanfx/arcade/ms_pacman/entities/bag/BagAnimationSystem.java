@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.arcade.ms_pacman.entities.bag;
 
 import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
+import de.amr.pacmanfx.core.model.entities.bag.Bag;
 
 public class BagAnimationSystem {
 

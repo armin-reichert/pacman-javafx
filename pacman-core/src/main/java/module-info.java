@@ -46,4 +46,5 @@ module de.amr.pacmanfx.core {
     exports de.amr.pacmanfx.core.ecs.components;
     exports de.amr.pacmanfx.core.ecs.systems;
     exports de.amr.pacmanfx.core.model.entities.clapperboard;
+    exports de.amr.pacmanfx.core.model.entities.bag;
 }
