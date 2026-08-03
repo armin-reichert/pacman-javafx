@@ -44,7 +44,7 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene2D {
         final var factory = ArcadePacMan_ActorFactory.instance();
 
         pacMan = factory.createPacMan();
-        pacMan.spriteAnimation().setAnimations(renderConfig.createPacAnimations(container));
+        pacMan.spriteAnim().setAnimations(renderConfig.createPacAnimations(container));
 
         blinky = renderConfig.createAnimatedGhost(gameContext(), container, GhostPersonality.RED_GHOST_SHADOW);
 

@@ -73,17 +73,15 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene2D {
             joypad.keyForButton(JoypadButton.START));
 
         clapperboard = new Clapperboard("2", "THE CHASE");
-        clapperboard.show();
         clapperboard.pos().set(3 * WorldMap.TS, 10 * WorldMap.TS);
-        ClapperboardStateSystem.startFlapAnimation(clapperboard);
 
         final var factory = TengenMsPacMan_ActorFactory.instance();
 
         msPacMan = factory.createMsPacMan();
-        msPacMan.spriteAnimation().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        msPacMan.spriteAnim().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         pacMan = factory.createPacMan();
-        pacMan.spriteAnimation().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        pacMan.spriteAnim().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         appContext().ui().sounds().play(PacManGameSoundID.INTERMISSION_2);
     }
@@ -101,6 +99,10 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene2D {
 
         if (gameStateTick <= TICK_EXPIRES) {
             switch ((int) gameStateTick) {
+                case 0 -> {
+                    clapperboard.show();
+                    ClapperboardStateSystem.startFlapAnimation(clapperboard);
+                }
                 case 270 -> {
                     msPacMan.pos().set(LEFT_BORDER, UPPER_LANE);
                     msPacMan.show();

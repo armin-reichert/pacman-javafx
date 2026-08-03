@@ -79,16 +79,14 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
 
         clapperboard = new Clapperboard("4", "THE END");
         clapperboard.pos().set(tilesPx(3), tilesPx(10));
-        clapperboard.show();
-        ClapperboardStateSystem.startFlapAnimation(clapperboard);
 
         final var factory = TengenMsPacMan_ActorFactory.instance();
 
         msPacMan = factory.createMsPacMan();
-        msPacMan.spriteAnimation().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        msPacMan.spriteAnim().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         pacMan = factory.createPacMan();
-        pacMan.spriteAnimation().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        pacMan.spriteAnim().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         juniors = new ArrayList<>();
         juniorCreationTimes = new ArrayList<>();
@@ -119,6 +117,10 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
         if (gameStateTick <= TICK_EXPIRES) {
             final short eventTick = (short) gameStateTick;
             switch (eventTick) {
+                case 0 -> {
+                    clapperboard.show();
+                    ClapperboardStateSystem.startFlapAnimation(clapperboard);
+                }
                 case 130 -> {
                     pacMan.pos().set(LEFT_BORDER, LOWER_LANE);
                     pacMan.show();

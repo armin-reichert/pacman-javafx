@@ -84,10 +84,10 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         final var factory = new ArcadeMsPacMan_ActorFactory();
 
         pacMan = factory.createPacMan();
-        pacMan.spriteAnimation().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        pacMan.spriteAnim().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         msPacMan = factory.createMsPacMan();
-        msPacMan.spriteAnimation().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        msPacMan.spriteAnim().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         inky = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GhostPersonality.CYAN_GHOST_BASHFUL);
 

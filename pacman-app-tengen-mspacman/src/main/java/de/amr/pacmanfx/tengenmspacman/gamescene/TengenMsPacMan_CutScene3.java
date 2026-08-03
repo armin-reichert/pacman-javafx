@@ -94,16 +94,14 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
 
         clapperboard = new Clapperboard("3", "JUNIOR");
         clapperboard.pos().set(3 * WorldMap.TS, 10 * WorldMap.TS);
-        clapperboard.show();
-        ClapperboardStateSystem.startFlapAnimation(clapperboard);
 
         final var factory = TengenMsPacMan_ActorFactory.instance();
 
         msPacMan = factory.createMsPacMan();
-        msPacMan.spriteAnimation().setAnimations(renderConfig.createPacAnimations(animationContainer));
+        msPacMan.spriteAnim().setAnimations(renderConfig.createPacAnimations(animationContainer));
 
         pacMan = factory.createPacMan();
-        pacMan.spriteAnimation().setAnimations(renderConfig.createPacAnimations(animationContainer));
+        pacMan.spriteAnim().setAnimations(renderConfig.createPacAnimations(animationContainer));
 
         stork = new Stork();
         stork.spriteAnim().setAnimations(new StorkSAM(animationContainer));
@@ -129,6 +127,10 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
 
         if (gameStateTick <= TICK_EXPIRES) {
             switch ((int) gameStateTick) {
+                case 0 -> {
+                    clapperboard.show();
+                    ClapperboardStateSystem.startFlapAnimation(clapperboard);
+                }
                 case 130 -> {
                     pacMan.show();
                     pacMan.pos().set(WorldMap.TS * 3, GROUND_Y - 4);

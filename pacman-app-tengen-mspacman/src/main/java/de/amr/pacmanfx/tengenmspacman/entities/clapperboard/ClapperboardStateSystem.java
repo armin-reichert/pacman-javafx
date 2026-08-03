@@ -33,8 +33,6 @@ public class ClapperboardStateSystem {
                 state.setState(ClapperboardState.HIDDEN);
                 state.setRunning(false);
             }
-            default -> {
-            }
         }
         state.setTick(state.tick() + 1);
     }

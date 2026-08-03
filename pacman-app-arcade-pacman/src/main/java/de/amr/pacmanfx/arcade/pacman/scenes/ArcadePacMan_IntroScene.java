@@ -125,7 +125,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
         final var factory = ArcadePacMan_ActorFactory.instance();
 
         pacMan = factory.createPacMan();
-        pacMan.spriteAnimation().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        pacMan.spriteAnim().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         ghosts[0] = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GhostPersonality.RED_GHOST_SHADOW);
         ghosts[1] = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GhostPersonality.PINK_GHOST_SPEEDY);
