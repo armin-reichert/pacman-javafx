@@ -13,10 +13,10 @@ import de.amr.pacmanfx.core.ecs.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.ecs.systems.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
 import de.amr.pacmanfx.core.model.entities.bonus.Bonus;
+import de.amr.pacmanfx.core.model.entities.clapperboard.Clapperboard;
 import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
-import de.amr.pacmanfx.tengenmspacman.entities.clapperboard.Clapperboard;
-import de.amr.pacmanfx.tengenmspacman.entities.clapperboard.ClapperboardAnimationSystem;
+import de.amr.pacmanfx.tengenmspacman.entities.clapperboard.TengenMsPacMan_ClapperboardAnimationSystem;
 import de.amr.pacmanfx.tengenmspacman.entities.stork.Stork;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
@@ -127,7 +127,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     }
 
     private void drawClapperBoard(Clapperboard clapperboard) {
-        ClapperboardAnimationSystem.sprite(clapperboard).ifPresent(sprite -> {
+        TengenMsPacMan_ClapperboardAnimationSystem.sprite(clapperboard).ifPresent(sprite -> {
             double numberX = clapperboard.pos().x() + 8, numberY = clapperboard.pos().y() + 18; // baseline
             drawSpriteCentered(sprite, WorldNavigationSystem.computeCenter(clapperboard));
             // over-paint number from sprite sheet

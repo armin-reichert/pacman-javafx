@@ -5,7 +5,11 @@
 package de.amr.pacmanfx.tengenmspacman.entities.clapperboard;
 
 
-public class ClapperboardStateSystem {
+import de.amr.pacmanfx.core.model.entities.clapperboard.Clapperboard;
+import de.amr.pacmanfx.core.model.entities.clapperboard.ClapperboardState;
+import de.amr.pacmanfx.core.model.entities.clapperboard.ClapperboardStateComp;
+
+public class TengenMsPacMan_ClapperboardStateSystem {
 
     public static void startFlapAnimation(Clapperboard clapperboard) {
         clapperboard.state().setTick(0);
@@ -30,7 +34,7 @@ public class ClapperboardStateSystem {
             case 69 -> state.setState(ClapperboardState.OPEN);
             case 71 -> state.setState(ClapperboardState.WIDE_OPEN);
             case 129 -> {
-                state.setState(ClapperboardState.HIDDEN);
+                clapperboard.hide();
                 state.setRunning(false);
             }
         }

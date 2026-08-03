@@ -12,11 +12,11 @@ import de.amr.pacmanfx.core.ecs.systems.common.MovementSystem;
 import de.amr.pacmanfx.core.ecs.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.ecs.systems.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
+import de.amr.pacmanfx.core.model.entities.clapperboard.Clapperboard;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
-import de.amr.pacmanfx.tengenmspacman.entities.clapperboard.Clapperboard;
-import de.amr.pacmanfx.tengenmspacman.entities.clapperboard.ClapperboardStateSystem;
+import de.amr.pacmanfx.tengenmspacman.entities.clapperboard.TengenMsPacMan_ClapperboardStateSystem;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
@@ -99,14 +99,14 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
         final long tick = gameState().timer().tickCount();
         if (tick == TICK_CLAP) {
             clapperboard.show();
-            ClapperboardStateSystem.startFlapAnimation(clapperboard);
+            TengenMsPacMan_ClapperboardStateSystem.startFlapAnimation(clapperboard);
             playMusic();
         }
         else if (tick == TICK_EXPIRES) {
             gameContext().flow().enterState(gameContext(), TengenMsPacMan_GameState.GAME_PREPARATION.state());
 
         }
-        ClapperboardStateSystem.update(clapperboard);
+        TengenMsPacMan_ClapperboardStateSystem.update(clapperboard);
         playCutScene(game, tick);
     }
 

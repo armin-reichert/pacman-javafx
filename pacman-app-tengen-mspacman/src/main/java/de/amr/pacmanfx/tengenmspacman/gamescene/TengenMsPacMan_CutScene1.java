@@ -11,13 +11,13 @@ import de.amr.pacmanfx.core.ecs.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.ecs.systems.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
+import de.amr.pacmanfx.core.model.entities.clapperboard.Clapperboard;
 import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.entities.Heart;
-import de.amr.pacmanfx.tengenmspacman.entities.clapperboard.Clapperboard;
-import de.amr.pacmanfx.tengenmspacman.entities.clapperboard.ClapperboardStateSystem;
+import de.amr.pacmanfx.tengenmspacman.entities.clapperboard.TengenMsPacMan_ClapperboardStateSystem;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.action.core.GameAction;
@@ -113,7 +113,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
             case TICK_CLAP -> {
                 getReady(gameContext());
                 clapperboard.show();
-                ClapperboardStateSystem.startFlapAnimation(clapperboard);
+                TengenMsPacMan_ClapperboardStateSystem.startFlapAnimation(clapperboard);
                 playMusic();
             }
             case TICK_EXPIRES -> {
@@ -122,7 +122,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
             }
         }
 
-        ClapperboardStateSystem.update(clapperboard);
+        TengenMsPacMan_ClapperboardStateSystem.update(clapperboard);
         playCutScene(game, tick);
     }
 
