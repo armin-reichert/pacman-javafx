@@ -167,15 +167,15 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
             level3D.messageManager().showMessage(MessageManager3D.MessageType.TEST, level.number());
         }
 
-        assertLevel3D().init(gameContext);
+        final GameLevel3D level3D = assertLevel3D();
+        level3D.init(gameContext);
 
-        //TODO replace alls this
-        assertLevel3D().entities3D().selectAll()
+        //TODO replace all this 3D wrapper crap and use the game entities from the model!
+        level3D.entities3D().selectAll()
             .filter(UpdatableEntity.class::isInstance).map(UpdatableEntity.class::cast)
             .forEach(e -> e.init(gameContext));
 
         gameScene().replaceActionBindings(level);
-
         gameScene().fadeInAnimation().playFromStart();
     }
 
@@ -263,7 +263,10 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     }
 
     private void onPacManDying(GameContext gameContext) {
+        final GameLevel level = gameContext.assertLevel();
         final GameLevel3D level3D = assertLevel3D();
+
+        //TODO convert to CMS component
         final Pac3D pac3D = level3D.entities3D().pac3D();
 
         optSoundEffects().ifPresent(GameSoundEffects::stopAll);
@@ -272,10 +275,10 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.GHOST_LIGHT).ifPresent(ManagedAnimation::stop);
         level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.WALL_COLOR_FLASHING).ifPresent(ManagedAnimation::stop);
 
+        //TODO get rid of 3D wrappers for ghosts
         level3D.entities3D().ghosts3D().forEach(Ghost3D::stopAllAnimations);
-        gameContext.assertLevel().entities().optBonus().ifPresent(bonus -> {
-            Bonus3DSystem.makeBonusLookExpired(bonus, level3D.animationRegistry());
-        });
+
+        level.entities().optBonus().ifPresent(bonus -> Bonus3DSystem.makeBonusLookExpired(bonus, level3D.animationRegistry()));
 
         gameContext.state().waitForTimeout();
 
