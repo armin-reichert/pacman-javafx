@@ -13,6 +13,7 @@ import de.amr.pacmanfx.core.model.entities.bonus.Bonus;
 import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelEntitySet;
+import de.amr.pacmanfx.core.model.level.LevelCounter;
 import de.amr.pacmanfx.core.model.world.house.House;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
@@ -27,9 +28,11 @@ import de.amr.pacmanfx.ui.gamescene.d3.animation.WallColorFlashingAnimation;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ExplosionConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimationConfig;
-import de.amr.pacmanfx.ui.gamescene.d3.entities.LevelCounter3D;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.LivesCounter3D;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.Maze3D;
+import de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter.LevelCounter3DAnimationID;
+import de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter.LevelCounter3DSystem;
+import de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter.LevelCounterView3DComp;
 import de.amr.pacmanfx.ui.settings.world.Bonus3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Pellet3DSettings;
@@ -87,7 +90,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         private Pac3D pac3D;
         private List<Ghost3D> ghosts3D = new ArrayList<>(4); // order: RED, PINK, CYAN, ORANGE
         private LivesCounter3D livesCounter3D;
-        private LevelCounter3D levelCounter3D;
         private final Map<Vector2i, Energizer3D> energizer3DByTile = new HashMap<>();
         private final Map<Vector2i, Pellet3D> pellet3DByTile = new HashMap<>();
 
@@ -99,7 +101,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
                 ghosts3D = null;
             }
             livesCounter3D = null;
-            levelCounter3D = null;
             energizer3DByTile.clear();
             pellet3DByTile.clear();
         }
@@ -117,7 +118,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     // Access to game model
     private final GameLevel level;
 
-    private final GameVariantConfig gameVariant;
+    private final GameVariantConfig gameVariantConfig;
 
     private final GameUISettingsVM viewModel;
 
@@ -138,18 +139,17 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         GameUISettingsVM viewModel,
         GameContext gameContext,
         GameLevel level,
-        GameVariantConfig gameVariant
+        GameVariantConfig gameVariantConfig
     ) {
         this.viewModel = requireNonNull(viewModel);
         requireNonNull(gameContext);
         this.level = requireNonNull(level);
-        this.gameVariant = requireNonNull(gameVariant);
+        this.gameVariantConfig = requireNonNull(gameVariantConfig);
 
         createMaze3D();
         createFood3D();
         createPac3D();
         createGhosts3D(gameContext);
-        createLevelCounter3D();
         createLivesCounter3D();
         createMessageManager();
 
@@ -158,9 +158,13 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         setMouseTransparent(true); // this increases performance they say...
     }
 
+    public void init(GameContext gameContext) {
+        createLevelCounterView3D(gameContext.model().levelCounter());
+    }
+
     public void createAnimations(ParticlesAnimationConfig particlesConfig) {
-        final GameVariantRenderConfig renderConfig = gameVariant.renderConfig();
-        final WorldMapColorSchemeImpl mapColorScheme = renderConfig.colorScheme(level.worldMap(), gameVariant.worldSettings());
+        final GameVariantRenderConfig renderConfig = gameVariantConfig.renderConfig();
+        final WorldMapColorSchemeImpl mapColorScheme = renderConfig.colorScheme(level.worldMap(), gameVariantConfig.worldSettings());
         animationRegistry.register(AnimationID.WALL_COLOR_FLASHING,
             new WallColorFlashingAnimation(mapColorScheme, maze3D.materials().get("wallTopMaterial")));
         animationRegistry.register(AnimationID.LEVEL_COMPLETED_FULL, new LevelCompletedAnimation(this));
@@ -206,7 +210,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     public Optional<GameSoundEffects> optSoundEffects() {
-        return gameVariant.optSoundEffects();
+        return gameVariantConfig.optSoundEffects();
     }
 
     public GameLevel level() {
@@ -264,7 +268,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     public void activateBonus3D(Bonus bonus) {
         if (!bonus.hasComponent(BonusView3DComp.class)) {
-            add3DRepresentation(bonus);
+            createBonusView3D(bonus);
             getChildren().add(bonus.requireComponent(BonusView3DComp.class).root());
         }
         Bonus3DSystem.lookEdible(bonus);
@@ -273,12 +277,12 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     // Private area, no trespassing!
 
     private void createMaze3D() {
-        final WorldMapColorSchemeImpl colorScheme = gameVariant.renderConfig().colorScheme(level.worldMap(), gameVariant.worldSettings());
+        final WorldMapColorSchemeImpl colorScheme = gameVariantConfig.renderConfig().colorScheme(level.worldMap(), gameVariantConfig.worldSettings());
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
-        maze3D = gameVariant.factory3D().createMaze3D(
+        maze3D = gameVariantConfig.factory3D().createMaze3D(
             terrain,
-            gameVariant.worldSettings(),
+            gameVariantConfig.worldSettings(),
             colorScheme,
             animationRegistry);
 
@@ -289,15 +293,15 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private void createFood3D() {
-        final WorldMapColorSchemeImpl colorScheme = gameVariant.renderConfig().colorScheme(level.worldMap(), gameVariant.worldSettings());
+        final WorldMapColorSchemeImpl colorScheme = gameVariantConfig.renderConfig().colorScheme(level.worldMap(), gameVariantConfig.worldSettings());
         final FoodLayer foodLayer = level.worldMap().foodLayer();
 
         final PhongMaterial foodMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.pellet()));
 
-        final Pellet3DSettings pelletConfig3D = gameVariant.worldSettings().pellet();
+        final Pellet3DSettings pelletConfig3D = gameVariantConfig.worldSettings().pellet();
         final double pelletZ = maze3D.floorTop() - pelletConfig3D.floorElevation();
 
-        final Energizer3DSettings energizerConfig3D = gameVariant.worldSettings().energizer();
+        final Energizer3DSettings energizerConfig3D = gameVariantConfig.worldSettings().energizer();
         final double energizerZ = maze3D.floorTop() - energizerConfig3D.floorElevation();
 
         foodLayer.tiles()
@@ -312,40 +316,65 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private Pellet3D createPellet3D(Vector2i tile, double z, PhongMaterial foodMaterial) {
-        final Pellet3D pellet3D = gameVariant.factory3D().createPellet3D(gameVariant.worldSettings().pellet(), foodMaterial);
+        final Pellet3D pellet3D = gameVariantConfig.factory3D().createPellet3D(gameVariantConfig.worldSettings().pellet(), foodMaterial);
         pellet3D.setLocation(tile, z);
         return pellet3D;
     }
 
     private Energizer3D createEnergizer3D(Vector2i tile, double z, PhongMaterial foodMaterial) {
-        final Energizer3D energizer3D = gameVariant.factory3D().createEnergizer3D(
-            gameVariant.worldSettings().energizer(), foodMaterial, animationRegistry);
+        final Energizer3D energizer3D = gameVariantConfig.factory3D().createEnergizer3D(
+            gameVariantConfig.worldSettings().energizer(), foodMaterial, animationRegistry);
         energizer3D.setLocation(tile, z);
         return energizer3D;
     }
 
-    private void add3DRepresentation(Bonus bonus) {
-        final Bonus3DSettings config = gameVariant.worldSettings().bonus();
-        final GameVariantRenderConfig renderConfig = gameVariant.renderConfig();
-        final BonusView3DComp comp3D = new BonusView3DComp(
+    private void createBonusView3D(Bonus bonus) {
+        final Bonus3DSettings config = gameVariantConfig.worldSettings().bonus();
+        final GameVariantRenderConfig renderConfig = gameVariantConfig.renderConfig();
+        final BonusView3DComp view3D = new BonusView3DComp(
             renderConfig.bonusSymbolImage(bonus.symbolCode()),
             config.symbolWidth(),
             renderConfig.bonusValueImage(bonus.symbolCode()),
             config.pointsWidth()
         );
-        bonus.setComponent(BonusView3DComp.class, comp3D);
-        animationRegistry.register(Bonus3DAnimationID.BONUS_EATEN, comp3D.eatenAnimation());
+        bonus.setComponent(BonusView3DComp.class, view3D);
+        animationRegistry.register(Bonus3DAnimationID.BONUS_EATEN, view3D.eatenAnimation());
+    }
+
+    private void createLevelCounterView3D(LevelCounter levelCounter) {
+        if (!levelCounter.hasComponent(LevelCounterView3DComp.class)) {
+            final LevelCounterView3DComp view3D = new LevelCounterView3DComp();
+            levelCounter.setComponent(LevelCounterView3DComp.class, view3D);
+            animationRegistry.register(LevelCounter3DAnimationID.LEVEL_COUNTER_SPINNING, view3D.spinningAnimation());
+            Logger.info("Level counter now has a 3D view");
+        }
+        else {
+            Logger.info("Level counter already has a 3D view");
+        }
+
+        LevelCounter3DSystem.updateLevelCounter3D(gameVariantConfig, levelCounter);
+
+        final LevelCounterView3DComp view3D = levelCounter.requireComponent(LevelCounterView3DComp.class);
+
+        final TerrainLayer terrain = level.worldMap().terrainLayer();
+        view3D.root().setTranslateX(tilesPx(terrain.numCols() - 2));
+        view3D.root().setTranslateY(tilesPx(2));
+        view3D.root().setTranslateZ(-gameVariantConfig.worldSettings().levelCounter().elevation());
+        getChildren().add(view3D.root());
+
+        view3D.spinningAnimation().stop();
+        view3D.spinningAnimation().playFromStart();
     }
 
     private void createPac3D() {
-        final PacSettings config = gameVariant.worldSettings().pac();
-        entitySet3D.pac3D = gameVariant.factory3D().createPac3D(level.entities().pac(), config, animationRegistry);
+        final PacSettings config = gameVariantConfig.worldSettings().pac();
+        entitySet3D.pac3D = gameVariantConfig.factory3D().createPac3D(level.entities().pac(), config, animationRegistry);
         entitySet3D.pac3D.drawModeProperty().bind(viewModel.common3D.drawModeProperty);
         entitySet3D.add(entitySet3D.pac3D);
     }
 
     private void createGhosts3D(GameContext gameContext) {
-        final List<GhostSettings> ghostConfigs = gameVariant.worldSettings().ghosts();
+        final List<GhostSettings> ghostConfigs = gameVariantConfig.worldSettings().ghosts();
         entitySet3D.ghosts3D = Stream.of(
                 GhostPersonality.RED_GHOST_SHADOW,
                 GhostPersonality.PINK_GHOST_SPEEDY,
@@ -365,26 +394,17 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private Ghost3D createGhost3D(GhostSettings ghostConfig, Ghost ghost) {
-        final Ghost3D ghost3D = gameVariant.factory3D().createGhost3D(ghost, ghostConfig, animationRegistry);
+        final Ghost3D ghost3D = gameVariantConfig.factory3D().createGhost3D(ghost, ghostConfig, animationRegistry);
         ghost3D.setAppearanceController(new Ghost3DAppearanceController());
         ghost3D.setTransformController(new Ghost3DTransformController());
         return ghost3D;
     }
 
     private void createLivesCounter3D() {
-        entitySet3D.livesCounter3D = new LivesCounter3D(gameVariant.factory3D(), gameVariant.worldSettings());
+        entitySet3D.livesCounter3D = new LivesCounter3D(gameVariantConfig.factory3D(), gameVariantConfig.worldSettings());
         entitySet3D.livesCounter3D.root().setTranslateX(2 * WorldMap.TS);
         entitySet3D.livesCounter3D.root().setTranslateY(2 * WorldMap.TS);
         entitySet3D.add(entitySet3D.livesCounter3D);
-    }
-
-    private void createLevelCounter3D() {
-        final TerrainLayer terrain = level.worldMap().terrainLayer();
-        entitySet3D.levelCounter3D = new LevelCounter3D(animationRegistry, gameVariant);
-        entitySet3D.levelCounter3D.root().setTranslateX(tilesPx(terrain.numCols() - 2));
-        entitySet3D.levelCounter3D.root().setTranslateY(tilesPx(2));
-        entitySet3D.levelCounter3D.root().setTranslateZ(-gameVariant.worldSettings().levelCounter().elevation());
-        entitySet3D.add(entitySet3D.levelCounter3D);
     }
 
     private void createMessageManager() {
@@ -403,7 +423,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     // Order matters for correct transparency!
     private void buildHierarchy() {
-        getChildren().add(entitySet3D.levelCounter3D.root());
         getChildren().add(entitySet3D.livesCounter3D.root());
         getChildren().add(entitySet3D.pac3D.root());
         entitySet3D.pac3D.powerLight().ifPresent(getChildren()::add);

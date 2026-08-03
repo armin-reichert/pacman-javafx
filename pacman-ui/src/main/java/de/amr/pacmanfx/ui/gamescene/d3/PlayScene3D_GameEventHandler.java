@@ -166,10 +166,16 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
             level3D.energizers3D().forEach(Energizer3D::startPumping);
             level3D.messageManager().showMessage(MessageManager3D.MessageType.TEST, level.number());
         }
+
+        assertLevel3D().init(gameContext);
+
+        //TODO replace alls this
         assertLevel3D().entities3D().selectAll()
             .filter(UpdatableEntity.class::isInstance).map(UpdatableEntity.class::cast)
             .forEach(e -> e.init(gameContext));
+
         gameScene().replaceActionBindings(level);
+
         gameScene().fadeInAnimation().playFromStart();
     }
 

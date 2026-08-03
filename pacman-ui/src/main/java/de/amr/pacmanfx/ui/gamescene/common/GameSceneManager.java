@@ -152,6 +152,7 @@ public class GameSceneManager {
         playScene3D.initPac3D(pac3D, gameContext);
         playScene3D.updateHUD3D(level);
 
+        level3D.init(gameContext);
         level3D.startLivesCounterTrackingPac();
 
         final PacPowerSystem pacPowerSystem = gameContext.systems().pacPower();
