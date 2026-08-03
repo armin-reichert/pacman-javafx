@@ -187,7 +187,7 @@ public class PlayScene3D extends AbstractGameScene
         level3DEmbedder.getChildren().setAll(level3D);
 
         level3D.createAnimations(Game3DSettingsVM.DEFAULT_PARTICLE_ANIMATION_CONFIG);
-        level3D.entities().selectAll()
+        level3D.entities3D().selectAll()
             .filter(UpdatableEntity.class::isInstance).map(UpdatableEntity.class::cast)
             .forEach(entity -> entity.init(gameContext));
         level3D.startLivesCounterTrackingPac();
@@ -256,7 +256,7 @@ public class PlayScene3D extends AbstractGameScene
             return;
         }
 
-        level3D.entities().selectAll()
+        level3D.entities3D().selectAll()
             .filter(UpdatableEntity.class::isInstance).map(UpdatableEntity.class::cast)
             .forEach(entity -> entity.update(gameContext()));
 

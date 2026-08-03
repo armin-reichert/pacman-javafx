@@ -145,7 +145,7 @@ public class GameSceneManager {
         playScene3D.replaceGameLevel3D(gameContext);
 
         final GameLevel3D level3D = playScene3D.optGameLevel3D().orElseThrow();
-        final Pac3D pac3D = level3D.entities().pac3D();
+        final Pac3D pac3D = level3D.entities3D().pac3D();
 
         playScene3D.replaceActionBindings(level);
         playScene3D.initFood3D(level, true);
