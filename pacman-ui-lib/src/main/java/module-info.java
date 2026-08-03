@@ -26,4 +26,5 @@ open module de.amr.pacmanfx.uilib {
     exports de.amr.pacmanfx.uilib.controls.skin;
     exports de.amr.pacmanfx.uilib.widgets;
     exports de.amr.pacmanfx.uilib.widgets.optionmenu;
+    exports de.amr.pacmanfx.uilib.model3D.world.bonus;
 }

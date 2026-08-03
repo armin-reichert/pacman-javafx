@@ -27,12 +27,14 @@ public class Pac3DTransformController {
         pac3D.root().setTranslateX(center.x());
         pac3D.root().setTranslateY(center.y());
 
-        pac3D.facingRotate().setAngle(switch (pac.worldNavigation().moveDir()) {
-            case LEFT  -> 0;
-            case UP    -> 90;
-            case RIGHT -> 180;
-            case DOWN  -> 270;
-        });
+        if (pac.worldNavigation().moveDir() != null) {
+            pac3D.facingRotate().setAngle(switch (pac.worldNavigation().moveDir()) {
+                case LEFT -> 0;
+                case UP -> 90;
+                case RIGHT -> 180;
+                case DOWN -> 270;
+            });
+        }
 
         gameContext.optLevel().ifPresent(level -> {
             final boolean outside = center.x() < WorldMap.HTS

@@ -5,25 +5,22 @@
 package de.amr.pacmanfx.uilib.model3D.animation;
 
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.model3D.world.Bonus3D;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
+import javafx.scene.shape.Shape3D;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 public class BonusEatenAnimation3D extends ManagedAnimation {
 
-    private final Bonus3D bonus3D;
-
-    public BonusEatenAnimation3D(Bonus3D bonus3D) {
+    public BonusEatenAnimation3D(Shape3D bonusShape3D) {
         super("Bonus (Eaten, Points)");
-        this.bonus3D = bonus3D;
-        setFactory(this::createAnimationFX);
+        setFactory(() -> createAnimationFX(bonusShape3D));
     }
 
-    private Animation createAnimationFX() {
-        final var animation = new RotateTransition(Duration.seconds(1), bonus3D.shape3D());
+    private Animation createAnimationFX(Shape3D bonusShape3D) {
+        final var animation = new RotateTransition(Duration.seconds(1), bonusShape3D);
         animation.setAxis(Rotate.X_AXIS);
         animation.setByAngle(360);
         animation.setInterpolator(Interpolator.LINEAR);

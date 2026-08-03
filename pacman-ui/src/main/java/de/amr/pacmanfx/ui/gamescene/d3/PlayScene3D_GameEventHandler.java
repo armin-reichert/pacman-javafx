@@ -21,6 +21,7 @@ import de.amr.pacmanfx.core.event.pac.PacLostPowerEvent;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
+import de.amr.pacmanfx.core.model.entities.bonus.Bonus;
 import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.test.TestStateID;
@@ -39,10 +40,10 @@ import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.model3D.ghost.Ghost3D;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
-import de.amr.pacmanfx.uilib.model3D.world.Bonus3D;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.world.NumberBox3D;
 import de.amr.pacmanfx.uilib.model3D.world.Pellet3D;
+import de.amr.pacmanfx.uilib.model3D.world.bonus.Bonus3DSystem;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.geometry.Point3D;
@@ -107,19 +108,21 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 
     @Override
     default void onBonusActivated(BonusActivatedEvent e) {
-        assertLevel3D().addOrReplaceBonus3D(e.bonus());
+        assertLevel3D().activateBonus3D(e.bonus());
         optSoundEffects().ifPresent(GameSoundEffects::playBonusActiveSound);
     }
 
     @Override
-    default void onBonusEaten(BonusEatenEvent ignored) {
-        assertLevel3D().entities().optAnyOfType(Bonus3D.class).ifPresent(Bonus3D::lookEaten);
+    default void onBonusEaten(BonusEatenEvent e) {
+        final Bonus bonus = e.bonus();
+        Bonus3DSystem.makeBonusLookEaten(bonus, assertLevel3D().animationRegistry());
         optSoundEffects().ifPresent(GameSoundEffects::playBonusEatenSound);
     }
 
     @Override
-    default void onBonusExpired(BonusExpiredEvent ignoredEvent) {
-        assertLevel3D().entities().optAnyOfType(Bonus3D.class).ifPresent(Bonus3D::lookExpired);
+    default void onBonusExpired(BonusExpiredEvent e) {
+        final Bonus bonus = e.bonus();
+        Bonus3DSystem.makeBonusLookExpired(bonus, assertLevel3D().animationRegistry());
         optSoundEffects().ifPresent(GameSoundEffects::playBonusExpiredSound);
     }
 
@@ -264,7 +267,9 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.WALL_COLOR_FLASHING).ifPresent(ManagedAnimation::stop);
 
         level3D.entities().ghosts3D().forEach(Ghost3D::stopAllAnimations);
-        level3D.entities().selectAllOfType(Bonus3D.class).forEach(Bonus3D::lookExpired);
+        gameContext.assertLevel().entities().optBonus().ifPresent(bonus -> {
+            Bonus3DSystem.makeBonusLookExpired(bonus, level3D.animationRegistry());
+        });
 
         gameContext.state().waitForTimeout();
 
@@ -326,7 +331,9 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         optSoundEffects().ifPresent(GameSoundEffects::stopAll);
         level3D.animationRegistry().stopAllAnimations();
         level3D.cleanupFoodAndParticles();
-        level3D.entities().optAnyOfType(Bonus3D.class).ifPresent(Bonus3D::lookExpired);
+
+        level.optBonus().ifPresent(bonus -> Bonus3DSystem.makeBonusLookExpired(bonus, level3D.animationRegistry()));
+
         level3D.messageManager().hideMessage();
 
         playLevelEndAnimation(level3D.animationRegistry(),
@@ -378,13 +385,17 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     }
 
     private void onGameOver() {
-        GameLevel3D level3D = assertLevel3D();
-        if (!level3D.level().isDemoLevel() && RandomNumberSupport.chance(0.25)) {
+        final GameLevel3D level3D = assertLevel3D();
+        final GameLevel level = gameContext().model().assertLevel();
+
+        if (!level.isDemoLevel() && RandomNumberSupport.chance(0.25)) {
             appContext().ui().shortMessage(Duration.seconds(2.5), textPicker().selectNextText());
         }
         level3D.animationRegistry().animation(GameLevel3D.AnimationID.GHOST_LIGHT).stop();
         level3D.cleanupFoodAndParticles();
-        level3D.entities().optAnyOfType(Bonus3D.class).ifPresent(Bonus3D::lookExpired);
+
+        level.optBonus().ifPresent(bonus -> Bonus3DSystem.makeBonusLookExpired(bonus, level3D.animationRegistry()));
+
         level3D.optSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);
     }
 

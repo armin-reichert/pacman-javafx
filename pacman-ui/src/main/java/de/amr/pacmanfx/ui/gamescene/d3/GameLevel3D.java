@@ -47,9 +47,11 @@ import de.amr.pacmanfx.uilib.model3D.ghost.Ghost3DTransformController;
 import de.amr.pacmanfx.uilib.model3D.ghost.GhostSettings;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import de.amr.pacmanfx.uilib.model3D.pac.PacSettings;
-import de.amr.pacmanfx.uilib.model3D.world.Bonus3D;
 import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
 import de.amr.pacmanfx.uilib.model3D.world.Pellet3D;
+import de.amr.pacmanfx.uilib.model3D.world.bonus.Bonus3DAnimationID;
+import de.amr.pacmanfx.uilib.model3D.world.bonus.Bonus3DSystem;
+import de.amr.pacmanfx.uilib.model3D.world.bonus.BonusView3DComp;
 import javafx.scene.Group;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
@@ -260,16 +262,12 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         Ufx.setDrawMode(maze3D, drawMode);
     }
 
-    public void addOrReplaceBonus3D(Bonus bonus) {
-        // Make list copy to avoid exception when removing inside for-each
-        List.copyOf(entitySet.selectAllOfType(Bonus3D.class).toList()).forEach(bonus3D -> {
-            entitySet.remove(bonus3D);
-            getChildren().remove(bonus3D.root());
-            bonus3D.dispose();
-        });
-        final Bonus3D bonus3D = createBonus3D(bonus);
-        getChildren().add(bonus3D.root());
-        bonus3D.lookEdible();
+    public void activateBonus3D(Bonus bonus) {
+        if (!bonus.hasComponent(BonusView3DComp.class)) {
+            add3DRepresentation(bonus);
+            getChildren().add(bonus.requireComponent(BonusView3DComp.class).root());
+        }
+        Bonus3DSystem.lookEdible(bonus);
     }
 
     // Private area, no trespassing!
@@ -326,13 +324,17 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return energizer3D;
     }
 
-    private Bonus3D createBonus3D(Bonus bonus) {
+    private void add3DRepresentation(Bonus bonus) {
         final Bonus3DSettings config = gameVariant.worldSettings().bonus();
-        final Bonus3D bonus3D = new Bonus3D(animationRegistry, bonus,
-            gameVariant.renderConfig().bonusSymbolImage(bonus.symbolCode()), config.symbolWidth(),
-            gameVariant.renderConfig().bonusValueImage(bonus.symbolCode()),  config.pointsWidth());
-        entitySet.add(bonus3D);
-        return bonus3D;
+        final GameVariantRenderConfig renderConfig = gameVariant.renderConfig();
+        final BonusView3DComp comp3D = new BonusView3DComp(
+            renderConfig.bonusSymbolImage(bonus.symbolCode()),
+            config.symbolWidth(),
+            renderConfig.bonusValueImage(bonus.symbolCode()),
+            config.pointsWidth()
+        );
+        bonus.setComponent(BonusView3DComp.class, comp3D);
+        animationRegistry.register(Bonus3DAnimationID.BONUS_EATEN, comp3D.eatenAnimation());
     }
 
     private void createPac3D() {

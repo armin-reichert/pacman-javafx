@@ -28,6 +28,7 @@ import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
 import de.amr.pacmanfx.uilib.model3D.world.Scores3D;
+import de.amr.pacmanfx.uilib.model3D.world.bonus.Bonus3DSystem;
 import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -260,7 +261,10 @@ public class PlayScene3D extends AbstractGameScene
             .forEach(entity -> entity.update(gameContext()));
 
         //TODO change to this style for all entities
-        //gameContext.systems().bonusState().update(gameContext);
+        level.optBonus().ifPresent(bonus -> {
+            Bonus3DSystem.update(gameContext(), bonus);
+        });
+
 
         perspectiveManager.updatePerspective(level);
         updateHUD3D(level);
