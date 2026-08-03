@@ -30,7 +30,7 @@ import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import java.util.List;
 
-import static de.amr.basics.spriteanim.SpriteAnimationAccessor.singleSpriteAnimation;
+import static de.amr.basics.spriteanim.SpriteAnimationAccessor.singleSpriteAnimationMap;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig.NES_SCREEN_WIDTH;
@@ -142,7 +142,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
 
         heart = new GameEntity();
         final SpriteAnimComp heartAnimationComp = new SpriteAnimComp();
-        heartAnimationComp.setAnimations(singleSpriteAnimation(spriteSheet.findSprite(SpriteID.HEART)));
+        heartAnimationComp.setAnimations(singleSpriteAnimationMap(spriteSheet.findSprite(SpriteID.HEART)));
         heart.setComponent(SpriteAnimComp.class, heartAnimationComp);
 
         collided = false;

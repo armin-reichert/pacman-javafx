@@ -20,7 +20,7 @@ public interface SpriteAnimationAccessor {
         return EMPTY_SPRITE_ANIMATION_ACCESSOR;
     }
 
-    static SpriteAnimationAccessor singleSpriteAnimation(RectShort sprite) {
+    static SpriteAnimationAccessor singleSpriteAnimationMap(RectShort sprite) {
         return new SingletonSpriteAnimationMap(sprite);
     }
 

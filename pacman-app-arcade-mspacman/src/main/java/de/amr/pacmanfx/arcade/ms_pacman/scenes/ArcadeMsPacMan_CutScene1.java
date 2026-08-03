@@ -11,11 +11,9 @@ import de.amr.pacmanfx.arcade.ms_pacman.entities.clapperboard.Clapperboard;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.clapperboard.ClapperboardStateSystem;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.components.SpriteAnimComp;
 import de.amr.pacmanfx.core.ecs.systems.common.GameSystems;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
@@ -29,7 +27,6 @@ import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import java.util.List;
 
-import static de.amr.basics.spriteanim.SpriteAnimationAccessor.singleSpriteAnimation;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 
 /**
