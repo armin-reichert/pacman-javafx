@@ -73,7 +73,7 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene2D {
         msPacMan = factory.createMsPacMan();
         msPacMan.spriteAnimation().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
-        clapperboard = new Clapperboard(2, "THE CHASE");
+        clapperboard = new Clapperboard("2", "THE CHASE");
         clapperboard.pos().set(tilesPx(3), tilesPx(10));
         ClapperboardStateSystem.startFlapAnimation(clapperboard);
     }

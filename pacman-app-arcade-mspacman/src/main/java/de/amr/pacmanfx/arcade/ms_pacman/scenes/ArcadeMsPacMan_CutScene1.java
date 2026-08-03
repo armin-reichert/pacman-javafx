@@ -10,7 +10,6 @@ import de.amr.pacmanfx.arcade.ms_pacman.entities.Heart;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.clapperboard.Clapperboard;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.clapperboard.ClapperboardStateSystem;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.GameEntity;
@@ -82,8 +81,6 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
     private void initScene() {
         final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
         final SpriteAnimationContainer spriteAnimations = appContext().ui().sprites().animations();
-        final var spriteSheet = ArcadeMsPacMan_SpriteSheet.instance();
-
         final var factory = new ArcadeMsPacMan_ActorFactory();
 
         pacMan = factory.createPacMan();
@@ -98,7 +95,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
 
         heart = new Heart();
 
-        clapperboard = new Clapperboard(1, "THEY MEET");
+        clapperboard = new Clapperboard("1", "THEY MEET");
         clapperboard.pos().set(tilesPx(3), tilesPx(10));
         ClapperboardStateSystem.startFlapAnimation(clapperboard);
     }

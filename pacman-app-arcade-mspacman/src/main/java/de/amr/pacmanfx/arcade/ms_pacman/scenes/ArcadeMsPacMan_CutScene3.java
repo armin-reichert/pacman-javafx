@@ -90,7 +90,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
         bag.spriteAnim().setAnimations(new BagSAM(animationContainer));
         bag.setOpen(false);
 
-        clapperboard = new Clapperboard(3, "JUNIOR");
+        clapperboard = new Clapperboard("3", "JUNIOR");
         clapperboard.pos().set(tilesPx(3), tilesPx(10));
         ClapperboardStateSystem.startFlapAnimation(clapperboard);
     }

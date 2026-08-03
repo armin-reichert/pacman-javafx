@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.ecs.GameEntity;
  */
 public class Clapperboard extends GameEntity {
 
-    public Clapperboard(int number, String text) {
+    public Clapperboard(String number, String text) {
         setComponent(ClapperboardStateComp.class, new ClapperboardStateComp());
         setComponent(ClapperboardInscriptionComp.class, new ClapperboardInscriptionComp());
 
