@@ -4,8 +4,10 @@
 
 package de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter;
 
+import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.LevelCounter;
 import de.amr.pacmanfx.core.model.level.LevelCounterData;
+import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.settings.world.LevelCounter3DSettings;
 import javafx.scene.image.Image;
@@ -16,12 +18,13 @@ import javafx.scene.shape.Box;
 import java.util.List;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.HTS;
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 
 public class LevelCounter3DSystem {
 
     private static final int CUBE_SPACING = 6;
 
-    public static void updateLevelCounter3D(GameVariantConfig gameVariantConfig, LevelCounter levelCounter) {
+    public static void updateLevelCounter3D(GameVariantConfig gameVariantConfig, LevelCounter levelCounter, GameLevel level) {
         final LevelCounterData data = levelCounter.requireComponent(LevelCounterData.class);
         final LevelCounterView3DComp view3D = levelCounter.requireComponent(LevelCounterView3DComp.class);
 
@@ -40,6 +43,15 @@ public class LevelCounter3DSystem {
 
         // Let factory of managed animation create a new JavaFX animation
         view3D.spinningAnimation().invalidate();
+
+        final TerrainLayer terrain = level.worldMap().terrainLayer();
+        view3D.root().setTranslateX(tilesPx(terrain.numCols() - 2));
+        view3D.root().setTranslateY(tilesPx(2));
+        view3D.root().setTranslateZ(-gameVariantConfig.worldSettings().levelCounter().elevation());
+
+        view3D.spinningAnimation().stop();
+        view3D.spinningAnimation().playFromStart();
+
     }
 
     private static Box createCube(float cubeSize, Image symbolImage, double x) {

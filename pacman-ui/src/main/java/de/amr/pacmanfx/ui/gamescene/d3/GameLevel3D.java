@@ -68,7 +68,6 @@ import java.util.stream.Stream;
 import static de.amr.basics.math.RandomNumberSupport.RANDOM_GENERATOR;
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
 import static de.amr.basics.math.Vector2f.vec2_float;
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
 import static java.util.Objects.requireNonNull;
 
@@ -349,21 +348,15 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             Logger.info("Level counter now has a 3D view");
         }
         else {
-            Logger.info("Level counter already has a 3D view");
+            Logger.info("Level counter already has a 3D view!");
         }
 
-        LevelCounter3DSystem.updateLevelCounter3D(gameVariantConfig, levelCounter);
+        // Recreate all 3D entries in the level counter group
+        LevelCounter3DSystem.updateLevelCounter3D(gameVariantConfig, levelCounter, level);
 
+        // Add level counter 3D root into this group
         final LevelCounterView3DComp view3D = levelCounter.requireComponent(LevelCounterView3DComp.class);
-
-        final TerrainLayer terrain = level.worldMap().terrainLayer();
-        view3D.root().setTranslateX(tilesPx(terrain.numCols() - 2));
-        view3D.root().setTranslateY(tilesPx(2));
-        view3D.root().setTranslateZ(-gameVariantConfig.worldSettings().levelCounter().elevation());
         getChildren().add(view3D.root());
-
-        view3D.spinningAnimation().stop();
-        view3D.spinningAnimation().playFromStart();
     }
 
     private void createPac3D() {
