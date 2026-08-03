@@ -17,7 +17,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * A sprite animation container implementing the sprite animation accessor facade.
  */
-public abstract class LazySpriteAnimationSet implements SpriteAnimationAccess {
+public abstract class LazySpriteAnimationMap implements SpriteAnimationAccessor {
 
     protected final Map<Named, SpriteAnimation> animationsByID = new HashMap<>();
     protected Named selectedAnimationID;

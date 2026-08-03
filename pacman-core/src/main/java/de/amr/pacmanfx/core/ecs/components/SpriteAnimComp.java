@@ -1,17 +1,17 @@
 package de.amr.pacmanfx.core.ecs.components;
 
-import de.amr.basics.spriteanim.SpriteAnimationAccess;
+import de.amr.basics.spriteanim.SpriteAnimationAccessor;
 import de.amr.pacmanfx.core.ecs.GameEntityComponent;
 
 public class SpriteAnimComp implements GameEntityComponent {
 
-    private SpriteAnimationAccess animation = SpriteAnimationAccess.emptyAnimation();
+    private SpriteAnimationAccessor animation = SpriteAnimationAccessor.emptyAnimation();
 
-    public void setAnimations(SpriteAnimationAccess delegate) {
+    public void setAnimations(SpriteAnimationAccessor delegate) {
         this.animation = delegate;
     }
 
-    public SpriteAnimationAccess animation() {
+    public SpriteAnimationAccessor animation() {
         return animation;
     }
 

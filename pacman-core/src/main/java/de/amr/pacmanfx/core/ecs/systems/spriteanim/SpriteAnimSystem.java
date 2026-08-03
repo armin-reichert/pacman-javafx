@@ -7,7 +7,7 @@ package de.amr.pacmanfx.core.ecs.systems.spriteanim;
 
 import de.amr.basics.Named;
 import de.amr.basics.math.RectShort;
-import de.amr.basics.spriteanim.SpriteAnimationAccess;
+import de.amr.basics.spriteanim.SpriteAnimationAccessor;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.components.SpriteAnimComp;
 
@@ -15,11 +15,11 @@ import static java.util.Objects.requireNonNull;
 
 public class SpriteAnimSystem {
 
-    public void setAnimations(GameEntity actor, SpriteAnimationAccess animations) {
+    public void setAnimations(GameEntity actor, SpriteAnimationAccessor animations) {
         actor.requireComponent(SpriteAnimComp.class).setAnimations(animations);
     }
 
-    private SpriteAnimationAccess spriteAnim(GameEntity actor) {
+    private SpriteAnimationAccessor spriteAnim(GameEntity actor) {
         return actor.requireComponent(SpriteAnimComp.class).animation();
     }
 

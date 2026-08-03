@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman;
 
 import de.amr.basics.math.RectShort;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
-import de.amr.basics.spriteanim.LazySpriteAnimationSet;
+import de.amr.basics.spriteanim.LazySpriteAnimationMap;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.*;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.*;
@@ -113,12 +113,12 @@ public class XXL_MsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public LazySpriteAnimationSet createGhostAnimations(SpriteAnimationContainer container, GhostPersonality personality) {
+    public LazySpriteAnimationMap createGhostAnimations(SpriteAnimationContainer container, GhostPersonality personality) {
         return new ArcadeMsPacMan_GhostAnimations(container, personality);
     }
 
     @Override
-    public LazySpriteAnimationSet createPacAnimations(SpriteAnimationContainer container) {
+    public LazySpriteAnimationMap createPacAnimations(SpriteAnimationContainer container) {
         return new ArcadeMsPacMan_PacAnimations(container);
     }
 
