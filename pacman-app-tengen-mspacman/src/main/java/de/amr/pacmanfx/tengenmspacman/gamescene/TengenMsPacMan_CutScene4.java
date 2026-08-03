@@ -77,7 +77,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
         final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
         final SpriteAnimationContainer spriteAnimations = appContext().ui().sprites().animations();
 
-        clapperboard = new Clapperboard(4, "THE END");
+        clapperboard = new Clapperboard("4", "THE END");
         clapperboard.pos().set(tilesPx(3), tilesPx(10));
         clapperboard.show();
         ClapperboardStateSystem.startFlapAnimation(clapperboard);

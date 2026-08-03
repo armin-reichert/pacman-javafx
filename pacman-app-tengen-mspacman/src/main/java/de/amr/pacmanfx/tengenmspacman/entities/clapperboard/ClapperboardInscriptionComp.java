@@ -7,16 +7,18 @@ package de.amr.pacmanfx.tengenmspacman.entities.clapperboard;
 
 import de.amr.pacmanfx.core.ecs.GameEntityComponent;
 
+import static java.util.Objects.requireNonNull;
+
 public class ClapperboardInscriptionComp implements GameEntityComponent {
-    private int number;
+    private String number;
     private String text;
 
-    public int number() {
+    public String number() {
         return number;
     }
 
-    public void setNumber(int number) {
-        this.number = number;
+    public void setNumber(String number) {
+        this.number = requireNonNull(number);
     }
 
     public String text() {
@@ -24,10 +26,9 @@ public class ClapperboardInscriptionComp implements GameEntityComponent {
     }
 
     public void setText(String text) {
-        this.text = text;
+        this.text = requireNonNull(text);
     }
 
     @Override
-    public void reset() {
-    }
+    public void reset() {}
 }

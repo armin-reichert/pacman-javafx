@@ -92,7 +92,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
         actionBindings().bindActionToKeyCombination(appContext().commonActions().gameFlowActions().actionLetGameStateExpire(),
             joypad.keyForButton(JoypadButton.START));
 
-        clapperboard = new Clapperboard(3, "JUNIOR");
+        clapperboard = new Clapperboard("3", "JUNIOR");
         clapperboard.pos().set(3 * WorldMap.TS, 10 * WorldMap.TS);
         clapperboard.show();
         ClapperboardStateSystem.startFlapAnimation(clapperboard);
