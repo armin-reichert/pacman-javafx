@@ -20,8 +20,8 @@ import de.amr.pacmanfx.tengenmspacman.gamescene.*;
 import de.amr.pacmanfx.tengenmspacman.model.BonusSymbol;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
-import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_GhostAnimations;
-import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_PacAnimations;
+import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_GhostSAM;
+import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_PacSAM;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
@@ -148,13 +148,13 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public TengenMsPacMan_GhostAnimations createGhostAnimations(SpriteAnimationContainer container, GhostPersonality personality) {
-        return new TengenMsPacMan_GhostAnimations(container, personality);
+    public TengenMsPacMan_GhostSAM createGhostAnimations(SpriteAnimationContainer container, GhostPersonality personality) {
+        return new TengenMsPacMan_GhostSAM(container, personality);
     }
 
     @Override
-    public TengenMsPacMan_PacAnimations createPacAnimations(SpriteAnimationContainer container) {
-        return new TengenMsPacMan_PacAnimations(container);
+    public TengenMsPacMan_PacSAM createPacAnimations(SpriteAnimationContainer container) {
+        return new TengenMsPacMan_PacSAM(container);
     }
 
     @Override

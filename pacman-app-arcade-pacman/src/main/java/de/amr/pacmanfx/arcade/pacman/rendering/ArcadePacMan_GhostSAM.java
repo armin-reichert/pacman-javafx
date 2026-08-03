@@ -14,11 +14,11 @@ import de.amr.pacmanfx.uilib.rendering.SpritesheetAnimationMap;
 
 import java.util.Objects;
 
-public class ArcadePacMan_GhostAnimations extends SpritesheetAnimationMap<SpriteID> {
+public class ArcadePacMan_GhostSAM extends SpritesheetAnimationMap<SpriteID> {
 
     private final GhostPersonality personality;
 
-    public ArcadePacMan_GhostAnimations(SpriteAnimationContainer container, GhostPersonality personality) {
+    public ArcadePacMan_GhostSAM(SpriteAnimationContainer container, GhostPersonality personality) {
         super(ArcadePacMan_SpriteSheet.instance());
         this.personality = Objects.requireNonNull(personality);
         factory = id -> createAnimation(id, container);

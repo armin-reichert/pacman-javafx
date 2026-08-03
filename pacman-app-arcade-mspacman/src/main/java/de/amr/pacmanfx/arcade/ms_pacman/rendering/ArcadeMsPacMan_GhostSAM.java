@@ -1,7 +1,8 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.tengenmspacman.sprites;
+
+package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.basics.Named;
 import de.amr.basics.math.Direction;
@@ -12,25 +13,17 @@ import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
 import de.amr.pacmanfx.uilib.rendering.SpritesheetAnimationMap;
 
+import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.*;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_GhostAnimations extends SpritesheetAnimationMap<SpriteID> {
-
-    public static final int NORMAL_TICKS = 8;  // TODO check this in emulator
-    public static final int FRIGHTENED_TICKS = 8;  // TODO check this in emulator
-    public static final int FLASHING_TICKS = 7;  // TODO check this in emulator
+public class ArcadeMsPacMan_GhostSAM extends SpritesheetAnimationMap<SpriteID> {
 
     private final GhostPersonality personality;
 
-    public TengenMsPacMan_GhostAnimations(SpriteAnimationContainer container, GhostPersonality personality) {
-        super(TengenMsPacMan_SpriteSheet.instance());
+    public ArcadeMsPacMan_GhostSAM(SpriteAnimationContainer container, GhostPersonality personality) {
+        super(ArcadeMsPacMan_SpriteSheet.instance());
         this.personality = requireNonNull(personality);
         factory = id -> createAnimation(id, container);
-    }
-
-    @Override
-    public TengenMsPacMan_SpriteSheet spriteSheet() {
-        return (TengenMsPacMan_SpriteSheet) spriteSheet;
     }
 
     private SpriteAnimation createAnimation(Named animationID, SpriteAnimationContainer container) {
@@ -38,19 +31,19 @@ public class TengenMsPacMan_GhostAnimations extends SpritesheetAnimationMap<Spri
         return switch (animationID) {
             case ActorAnimationID.GHOST_NORMAL -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet().ghostNormalSprites(personality, Direction.LEFT))
-                .frameTicks(NORMAL_TICKS)
+                .frameTicks(8)
                 .repeated()
                 .build(container);
 
             case ActorAnimationID.GHOST_FRIGHTENED -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet.findSprites(SpriteID.GHOST_FRIGHTENED))
-                .frameTicks(FRIGHTENED_TICKS)
+                .sprites(spriteSheet().findSprites(GHOST_FRIGHTENED))
+                .frameTicks(8)
                 .repeated()
                 .build(container);
 
             case ActorAnimationID.GHOST_FLASHING -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet.findSprites(SpriteID.GHOST_FLASHING))
-                .frameTicks(FLASHING_TICKS)
+                .sprites(spriteSheet().findSprites(GHOST_FLASHING))
+                .frameTicks(7)
                 .repeated()
                 .build(container);
 
@@ -59,12 +52,17 @@ public class TengenMsPacMan_GhostAnimations extends SpritesheetAnimationMap<Spri
                 .build(container);
 
             case ActorAnimationID.GHOST_POINTS -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet.findSprites(SpriteID.GHOST_NUMBERS))
+                .sprites(spriteSheet().findSprites(GHOST_NUMBERS))
                 .initiallyStopped()
                 .build(container);
 
-            default -> throw new IllegalArgumentException("Illegal animation ID " + animationID);
+            default -> throw new IllegalArgumentException("Illegal animation ID: " + animationID);
         };
+    }
+
+    @Override
+    public ArcadeMsPacMan_SpriteSheet spriteSheet() {
+        return ArcadeMsPacMan_SpriteSheet.instance();
     }
 
     @Override

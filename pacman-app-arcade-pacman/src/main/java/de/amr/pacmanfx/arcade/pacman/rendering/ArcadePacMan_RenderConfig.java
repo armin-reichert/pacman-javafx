@@ -143,14 +143,14 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public ArcadePacMan_GhostAnimations createGhostAnimations(SpriteAnimationContainer container, GhostPersonality personality) {
+    public ArcadePacMan_GhostSAM createGhostAnimations(SpriteAnimationContainer container, GhostPersonality personality) {
         requireNonNull(personality);
-        return new ArcadePacMan_GhostAnimations(container, personality);
+        return new ArcadePacMan_GhostSAM(container, personality);
     }
 
     @Override
-    public ArcadePacMan_PacAnimations createPacAnimations(SpriteAnimationContainer container) {
-        return new ArcadePacMan_PacAnimations(container, spriteSheet());
+    public ArcadePacMan_PacSAM createPacAnimations(SpriteAnimationContainer container) {
+        return new ArcadePacMan_PacSAM(container, spriteSheet());
     }
 
     @Override

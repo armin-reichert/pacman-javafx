@@ -114,12 +114,12 @@ public class XXL_MsPacMan_RenderConfig implements GameVariantRenderConfig {
 
     @Override
     public LazySpriteAnimationMap createGhostAnimations(SpriteAnimationContainer container, GhostPersonality personality) {
-        return new ArcadeMsPacMan_GhostAnimations(container, personality);
+        return new ArcadeMsPacMan_GhostSAM(container, personality);
     }
 
     @Override
     public LazySpriteAnimationMap createPacAnimations(SpriteAnimationContainer container) {
-        return new ArcadeMsPacMan_PacAnimations(container);
+        return new ArcadeMsPacMan_PacSAM(container);
     }
 
     @Override

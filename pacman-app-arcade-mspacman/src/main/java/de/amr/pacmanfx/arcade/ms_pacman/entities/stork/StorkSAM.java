@@ -13,9 +13,9 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
 import de.amr.pacmanfx.uilib.rendering.SpritesheetAnimationMap;
 
-public class StorkSpriteAnimationMap extends SpritesheetAnimationMap<SpriteID> {
+public class StorkSAM extends SpritesheetAnimationMap<SpriteID> {
 
-    public StorkSpriteAnimationMap(SpriteAnimationContainer container) {
+    public StorkSAM(SpriteAnimationContainer container) {
         super(ArcadeMsPacMan_SpriteSheet.instance());
         factory = id -> createAnimation(id, container);
     }

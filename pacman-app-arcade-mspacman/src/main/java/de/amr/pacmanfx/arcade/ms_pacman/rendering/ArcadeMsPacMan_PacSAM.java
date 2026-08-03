@@ -1,7 +1,8 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.arcade.pacman.rendering;
+
+package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.basics.Named;
 import de.amr.basics.math.Direction;
@@ -11,14 +12,10 @@ import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
 import de.amr.pacmanfx.uilib.rendering.SpritesheetAnimationMap;
 
-public class ArcadePacMan_PacAnimations extends SpritesheetAnimationMap<SpriteID> {
+public class ArcadeMsPacMan_PacSAM extends SpritesheetAnimationMap<SpriteID> {
 
-    public enum AnimationID implements Named {
-        ANIM_BIG_PAC_MAN,
-    }
-
-    public ArcadePacMan_PacAnimations(SpriteAnimationContainer container, ArcadePacMan_SpriteSheet spriteSheet) {
-        super(spriteSheet);
+    public ArcadeMsPacMan_PacSAM(SpriteAnimationContainer container) {
+        super(ArcadeMsPacMan_SpriteSheet.instance());
         factory = id -> createAnimation(id, container);
     }
 
@@ -26,24 +23,22 @@ public class ArcadePacMan_PacAnimations extends SpritesheetAnimationMap<SpriteID
 
         return switch (animationID) {
             case ActorAnimationID.PAC_FULL -> new SpriteAnimationBuilder()
-                .singleSprite(spriteSheet.findSprite(SpriteID.PACMAN_FULL))
-                .initiallyStopped()
+                .singleSprite(spriteSheet.findSprite(SpriteID.MS_PACMAN_FULL))
                 .build(container);
 
-            // Renderer draws sprites depending on Pac-Man move direction!
             case ActorAnimationID.PAC_MUNCHING -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet().pacMunchingSprites(Direction.LEFT))
+                .sprites(spriteSheet().msPacManMunchingSprites(Direction.LEFT))
                 .repeated()
                 .build(container);
 
             case ActorAnimationID.PAC_DYING -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet.findSprites(SpriteID.PACMAN_DYING))
+                .sprites(spriteSheet().findSprites(SpriteID.MS_PACMAN_DYING))
                 .frameTicks(8)
                 .build(container);
 
-            case AnimationID.ANIM_BIG_PAC_MAN -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet.findSprites(SpriteID.PACMAN_BIG))
-                .frameTicks(3)
+            case ActorAnimationID.MR_PAC_MAN_MUNCHING -> new SpriteAnimationBuilder()
+                .sprites(spriteSheet.findSprites(SpriteID.MR_PACMAN_MUNCHING_LEFT))
+                .frameTicks(2)
                 .repeated()
                 .build(container);
 
@@ -52,7 +47,7 @@ public class ArcadePacMan_PacAnimations extends SpritesheetAnimationMap<SpriteID
     }
 
     @Override
-    public ArcadePacMan_SpriteSheet spriteSheet() {
-        return (ArcadePacMan_SpriteSheet) super.spriteSheet();
+    public ArcadeMsPacMan_SpriteSheet spriteSheet() {
+        return (ArcadeMsPacMan_SpriteSheet) super.spriteSheet();
     }
 }

@@ -16,9 +16,9 @@ import de.amr.pacmanfx.uilib.rendering.SpritesheetAnimationMap;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.BLUE_BAG;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.JUNIOR_PAC;
 
-public class BagSpriteAnimationMap extends SpritesheetAnimationMap<SpriteID> {
+public class BagSAM extends SpritesheetAnimationMap<SpriteID> {
 
-    public BagSpriteAnimationMap(SpriteAnimationContainer container) {
+    public BagSAM(SpriteAnimationContainer container) {
         super(ArcadeMsPacMan_SpriteSheet.instance());
         factory = id -> createAnimation(id, container);
     }

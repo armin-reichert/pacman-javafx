@@ -16,9 +16,9 @@ import java.util.Arrays;
 
 import static de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID.*;
 
-public class TengenMsPacMan_PacAnimations extends SpritesheetAnimationMap<SpriteID> {
+public class TengenMsPacMan_PacSAM extends SpritesheetAnimationMap<SpriteID> {
 
-    public TengenMsPacMan_PacAnimations(SpriteAnimationContainer container) {
+    public TengenMsPacMan_PacSAM(SpriteAnimationContainer container) {
         super(TengenMsPacMan_SpriteSheet.instance());
         factory = id -> createAnimation(id, container);
     }

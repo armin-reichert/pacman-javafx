@@ -7,11 +7,11 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.bag.Bag;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.bag.BagAnimationSystem;
-import de.amr.pacmanfx.arcade.ms_pacman.entities.bag.BagSpriteAnimationMap;
+import de.amr.pacmanfx.arcade.ms_pacman.entities.bag.BagSAM;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.clapperboard.Clapperboard;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.clapperboard.ClapperboardStateSystem;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.stork.Stork;
-import de.amr.pacmanfx.arcade.ms_pacman.entities.stork.StorkSpriteAnimationMap;
+import de.amr.pacmanfx.arcade.ms_pacman.entities.stork.StorkSAM;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.common.GameSystems;
@@ -84,10 +84,10 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
 
         stork = new Stork();
         stork.setBagReleasedFromBeak(false);
-        stork.spriteAnim().setAnimations(new StorkSpriteAnimationMap(animationContainer));
+        stork.spriteAnim().setAnimations(new StorkSAM(animationContainer));
 
         bag = new Bag();
-        bag.spriteAnim().setAnimations(new BagSpriteAnimationMap(animationContainer));
+        bag.spriteAnim().setAnimations(new BagSAM(animationContainer));
         bag.setOpen(false);
 
         clapperboard = new Clapperboard(3, "JUNIOR");
