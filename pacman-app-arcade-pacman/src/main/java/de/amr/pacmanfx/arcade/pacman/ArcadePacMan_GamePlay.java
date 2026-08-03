@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.pacman;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
+import de.amr.pacmanfx.core.model.level.LevelCounterSystem;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.arcade.pacman.rules.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.core.GameContext;
@@ -133,7 +134,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         level.setBonusSymbolCode(0, model.rules().selectBonusSymbolCode(level.number(), 0));
         level.setBonusSymbolCode(1, model.rules().selectBonusSymbolCode(level.number(), 1));
 
-        model.levelCounter().setEnabled(true);
+        LevelCounterSystem.enable(model.levelCounter(), true);
 
         return level;
     }
@@ -191,7 +192,6 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         ));
 
         model.gateKeeper().setLevelNumber(1);
-        model.levelCounter().setEnabled(true);
         model.score().setLevelNumber(1);
 
         return demoLevel;
@@ -212,8 +212,9 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         level.recordStartTime(System.currentTimeMillis());
         prepareLevelForPlaying(gameContext);
         showLevelMessage(level, GameLevelMessageType.READY);
-        model.levelCounter().update(level.number(), level.bonusSymbolCode(0));
         model.score().setEnabled(true);
+
+        LevelCounterSystem.update(model.levelCounter(), level.number(), level.bonusSymbolCode(0));
 
         gameContext.cheats().update(level);
     }

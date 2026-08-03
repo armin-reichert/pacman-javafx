@@ -60,7 +60,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     public TengenMsPacMan_GameModel() {
         mapSelector = new TengenMsPacMan_MapSelector();
-        levelCounter = new TengenMsPacMan_LevelCounter();
         rules = new TengenMsPacMan_GameRules();
         setDifficulty(Difficulty.NORMAL);
     }
@@ -169,11 +168,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
     @Override
     public TengenMsPacMan_MapSelector mapSelector() {
         return (TengenMsPacMan_MapSelector) mapSelector;
-    }
-
-    @Override
-    public TengenMsPacMan_LevelCounter levelCounter() {
-        return (TengenMsPacMan_LevelCounter) levelCounter;
     }
 
     @Override

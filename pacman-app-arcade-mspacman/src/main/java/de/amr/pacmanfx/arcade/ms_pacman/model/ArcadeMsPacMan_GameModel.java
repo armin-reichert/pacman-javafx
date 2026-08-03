@@ -34,18 +34,12 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
     public ArcadeMsPacMan_GameModel(WorldMapSelector mapSelector) {
         this.mapSelector = requireNonNull(mapSelector);
         rules = new ArcadeMsPacMan_GameRules();
-        levelCounter = new ArcadeMsPacMan_LevelCounter();
     }
 
     @Override
     public void init() {
         mapSelector().loadMapPrototypes();
         setInitialLifeCount(3);
-    }
-
-    @Override
-    public ArcadeMsPacMan_LevelCounter levelCounter() {
-        return (ArcadeMsPacMan_LevelCounter) levelCounter;
     }
 
     @Override

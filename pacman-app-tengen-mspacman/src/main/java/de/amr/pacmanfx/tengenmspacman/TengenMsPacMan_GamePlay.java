@@ -20,9 +20,7 @@ import de.amr.pacmanfx.core.model.entities.bonus.BonusState;
 import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.model.entities.ghost.GhostState;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
-import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.level.GameLevelMessage;
-import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
+import de.amr.pacmanfx.core.model.level.*;
 import de.amr.pacmanfx.core.model.rules.HuntingTimer;
 import de.amr.pacmanfx.core.model.world.HPortal;
 import de.amr.pacmanfx.core.model.world.house.ArcadeHouse;
@@ -118,8 +116,6 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         level.setBonusSymbolCode(0, model.rules().selectBonusSymbolCode(level.number(), 0));
         level.setBonusSymbolCode(1, model.rules().selectBonusSymbolCode(level.number(), 1));
 
-        model.levelCounter().setEnabled(levelNumber < 8);
-
         return level;
     }
 
@@ -154,7 +150,6 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         pac.autoSteering().setSteering(steering);
 
         model.gateKeeper().setLevelNumber(1);
-        model.levelCounter().setEnabled(true);
         model.score().setLevelNumber(1);
 
         return demoLevel;
@@ -187,7 +182,13 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         }
         showLevelMessage(level, GameLevelMessageType.READY);
 
-        tengenModel.levelCounter().update(level.number(), level.bonusSymbolCode(0));
+        final LevelCounter levelCounter = tengenModel.levelCounter();
+        LevelCounterSystem.update(levelCounter, level.number(), level.bonusSymbolCode(0));
+        if (LevelCounterSystem.isFull(levelCounter)) {
+            LevelCounterSystem.enable(levelCounter, false);
+            Logger.info("Level counter is full and gets disabled!");
+        }
+
         tengenModel.score().setEnabled(true);
 
         //TODO fixme

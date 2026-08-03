@@ -8,6 +8,7 @@ import de.amr.basics.Named;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
+import de.amr.pacmanfx.core.model.level.LevelCounterData;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.settings.world.LevelCounter3DSettings;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -55,7 +56,7 @@ public class LevelCounter3D extends GameEntity implements UpdatableEntity, Dispo
     public void init(GameContext gameContext) {
         final LevelCounter3DSettings config = gameVariant.worldSettings().levelCounter();
         final float cubeSize = config.symbolSize();
-        final List<Integer> symbolCodes = gameContext.model().levelCounter().symbolCodes();
+        final List<Integer> symbolCodes = gameContext.model().levelCounter().requireComponent(LevelCounterData.class).symbolCodes();
         root.getChildren().clear();
         for (int i = 0; i < symbolCodes.size(); ++i) {
             final Integer symbolCode = symbolCodes.get(i);

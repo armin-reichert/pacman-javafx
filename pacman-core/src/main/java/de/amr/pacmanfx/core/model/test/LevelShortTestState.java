@@ -14,6 +14,7 @@ import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
+import de.amr.pacmanfx.core.model.level.LevelCounterSystem;
 
 public class LevelShortTestState extends GameState {
 
@@ -102,6 +103,6 @@ public class LevelShortTestState extends GameState {
     public void onExit(GameContext gameContext) {
         final GameModel model = gameContext.model();
         gameContext.gamePlay().init(gameContext);
-        model.levelCounter().clear();
+        LevelCounterSystem.clear(model.levelCounter());
     }
 }

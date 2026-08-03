@@ -16,6 +16,7 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
+import de.amr.pacmanfx.core.model.level.LevelCounterSystem;
 import de.amr.pacmanfx.core.model.rules.GameRules;
 import org.tinylog.Logger;
 
@@ -51,6 +52,7 @@ public final class GameState_DemoLevelPlaying extends GameState {
             model.highScore().setEnabled(false);
             gamePlay.prepareLevelForPlaying(gameContext);
             gamePlay.showLevelMessage(level, GameLevelMessageType.GAME_OVER);
+            LevelCounterSystem.update(model.levelCounter(), level.number(), level.bonusSymbolCode(0));
             Logger.info("Demo level {} started", level.number());
             // Note: This event is very important because it triggers the creation of the actor animations!
             gameContext.eventManager().publishGameEvent(new LevelStartedEvent(level));

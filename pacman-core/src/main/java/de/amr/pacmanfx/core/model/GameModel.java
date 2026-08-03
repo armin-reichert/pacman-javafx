@@ -6,6 +6,7 @@ package de.amr.pacmanfx.core.model;
 
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.LevelCounter;
+import de.amr.pacmanfx.core.model.level.LevelCounterSystem;
 import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.core.model.score.PropertyFileScore;
 import de.amr.pacmanfx.core.model.score.Score;
@@ -35,7 +36,7 @@ public abstract class GameModel {
 
     protected GameLevel level;
 
-    protected LevelCounter levelCounter;
+    protected final LevelCounter levelCounter;
 
     protected WorldMapSelector mapSelector;
 
@@ -49,7 +50,11 @@ public abstract class GameModel {
 
     protected GameModel() {
         score = new Score();
+        levelCounter = new LevelCounter();
         gateKeeper = new ArcadeHouseGateKeeper();
+
+        LevelCounterSystem.enable(levelCounter, true);
+        LevelCounterSystem.setCapacity(levelCounter, 7);
     }
 
     /* -------------------------------------------------------------------------

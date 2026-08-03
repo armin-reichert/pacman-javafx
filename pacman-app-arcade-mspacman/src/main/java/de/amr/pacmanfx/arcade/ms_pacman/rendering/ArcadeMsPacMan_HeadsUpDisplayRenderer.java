@@ -7,6 +7,7 @@ import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.HUDState;
+import de.amr.pacmanfx.core.model.level.LevelCounterData;
 import de.amr.pacmanfx.core.model.score.Score;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
@@ -16,6 +17,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+
+import java.util.List;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
@@ -70,7 +73,9 @@ public class ArcadeMsPacMan_HeadsUpDisplayRenderer extends BaseRenderer implemen
             final RectShort[] bonusSymbols = spriteSheet().findSprites(SpriteID.BONUS_SYMBOLS);
             float x = scene.unscaledWidth() - tilesPx(4);
             final float y = scene.unscaledHeight() - tilesPx(2) + 2;
-            for (int symbolCode : gameContext.model().levelCounter().symbolCodes()) {
+            final List<Integer> symbolCodes = gameContext.model().levelCounter()
+                .requireComponent(LevelCounterData.class).symbolCodes();
+            for (int symbolCode : symbolCodes) {
                 drawSprite(bonusSymbols[symbolCode], x, y, true);
                 x -= tilesPx(2); // symbols are drawn from right to left
             }

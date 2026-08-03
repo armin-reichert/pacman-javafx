@@ -29,6 +29,7 @@ import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
+import de.amr.pacmanfx.core.model.level.LevelCounterSystem;
 import de.amr.pacmanfx.core.model.rules.CollisionStrategy;
 import de.amr.pacmanfx.core.model.score.PropertyFileScore;
 import de.amr.pacmanfx.core.model.score.Score;
@@ -73,7 +74,8 @@ public abstract class CommonGamePlay implements GamePlay {
         }
 
         model.gateKeeper().reset();
-        model.levelCounter().clear();
+
+        LevelCounterSystem.clear(model.levelCounter());
 
         model.setLevel(null);
         model.setPlaying(false);
@@ -126,7 +128,6 @@ public abstract class CommonGamePlay implements GamePlay {
 
         final GameLevel level = createLevel(gameContext, levelNumber, false);
 
-        model.levelCounter().setEnabled(true);
         model.score().setLevelNumber(levelNumber);
         model.gateKeeper().setLevelNumber(levelNumber);
         model.setLevel(level);

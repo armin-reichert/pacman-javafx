@@ -15,6 +15,7 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.level.LevelCounterSystem;
 
 import java.util.List;
 
@@ -90,7 +91,7 @@ public class LevelMediumTestState extends GameState {
     @Override
     public void onExit(GameContext gameContext) {
         final GameModel gameModel = gameContext.model();
-        gameModel.levelCounter().clear();
+        LevelCounterSystem.clear(gameModel.levelCounter());
     }
 
     private void configureLevelForTest(GameContext gameContext) {

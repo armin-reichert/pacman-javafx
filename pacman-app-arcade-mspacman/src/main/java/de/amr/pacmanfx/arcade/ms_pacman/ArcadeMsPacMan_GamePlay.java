@@ -21,6 +21,8 @@ import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.model.entities.ghost.GhostState;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.level.LevelCounter;
+import de.amr.pacmanfx.core.model.level.LevelCounterSystem;
 import de.amr.pacmanfx.core.model.rules.HuntingTimer;
 import de.amr.pacmanfx.core.model.world.HPortal;
 import de.amr.pacmanfx.core.model.world.house.ArcadeHouse;
@@ -89,9 +91,20 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
 
         /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
          * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
-        model.levelCounter().setEnabled(levelNumber < 8);
+        LevelCounterSystem.enable(model.levelCounter(), levelNumber < 8);
 
         return level;
+    }
+
+    @Override
+    public void startLevel(GameContext gameContext) {
+        super.startLevel(gameContext);
+
+        final LevelCounter levelCounter = gameContext.model().levelCounter();
+        if (LevelCounterSystem.isFull(levelCounter)) {
+            LevelCounterSystem.enable(levelCounter, false);
+            Logger.info("Level counter is full and gets disabled!");
+        }
     }
 
     protected void createAndSetMsPacMan(GameSystems sys, GameLevel level) {
@@ -145,8 +158,10 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         pac.autoSteering().setSteering(steering);
 
         model.gateKeeper().setLevelNumber(demoLevelNumber);
-        model.levelCounter().setEnabled(true);
         model.score().setLevelNumber(demoLevelNumber);
+
+        //TODO check this
+        LevelCounterSystem.enable(model.levelCounter(), true);
 
         return demoLevel;
     }

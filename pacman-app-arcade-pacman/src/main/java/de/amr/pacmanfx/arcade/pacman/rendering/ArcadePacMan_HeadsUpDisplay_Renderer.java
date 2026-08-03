@@ -7,6 +7,7 @@ import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.HUDState;
+import de.amr.pacmanfx.core.model.level.LevelCounterData;
 import de.amr.pacmanfx.core.model.score.Score;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
@@ -73,7 +74,7 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer
             final RectShort[] bonusSymbolSprites = spriteSheet().findSprites(SpriteID.BONUS_SYMBOLS);
             final float y = scene.unscaledHeight() - tilesPx(2) + 2;
             float x = scene.unscaledWidth() - tilesPx(4);
-            for (int symbolCode : gameContext.model().levelCounter().symbolCodes()) {
+            for (int symbolCode : gameContext.model().levelCounter().requireComponent(LevelCounterData.class).symbolCodes()) {
                 drawSprite(bonusSymbolSprites[symbolCode], x, y, true);
                 x -= tilesPx(2); // symbols are drawn from right to left
             }

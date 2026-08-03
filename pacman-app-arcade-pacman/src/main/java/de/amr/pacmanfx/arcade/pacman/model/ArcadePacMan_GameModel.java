@@ -37,7 +37,6 @@ public class ArcadePacMan_GameModel extends GameModel {
     public ArcadePacMan_GameModel(WorldMapSelector mapSelector) {
         this.mapSelector = requireNonNull(mapSelector);
         rules = new ArcadePacMan_GameRules();
-        levelCounter = new ArcadePacMan_LevelCounter();
         configureGateKeeper();
     }
 
@@ -45,11 +44,6 @@ public class ArcadePacMan_GameModel extends GameModel {
     public void init() {
         mapSelector().loadMapPrototypes();
         setInitialLifeCount(3);
-    }
-
-    @Override
-    public ArcadePacMan_LevelCounter levelCounter() {
-        return (ArcadePacMan_LevelCounter) levelCounter;
     }
 
     @Override
