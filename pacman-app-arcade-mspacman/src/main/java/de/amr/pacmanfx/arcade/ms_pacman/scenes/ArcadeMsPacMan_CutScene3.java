@@ -11,6 +11,8 @@ import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.common.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.common.MovementSystem;
+import de.amr.pacmanfx.core.ecs.systems.spriteanim.SpriteAnimSystem;
+import de.amr.pacmanfx.core.ecs.systems.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
 import de.amr.pacmanfx.core.model.entities.bag.Bag;
 import de.amr.pacmanfx.core.model.entities.clapperboard.Clapperboard;
@@ -149,31 +151,35 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
     // State DELIVER_JUNIOR
 
     private void enterDeliverJuniorState(GameSystems sys, SceneState newState) {
+        final MovementSystem motor = sys.motor();
+        final WorldNavigationSystem worldNavigator = sys.worldNavigator();
+        final SpriteAnimSystem animSystem = sys.spriteAnim();
+        
         pacMan.pos().set(TS * 3, GROUND_Y - 4);
         pacMan.show();
-        sys.worldNavigator().setMoveDir(pacMan, Direction.RIGHT);
+        worldNavigator.setMoveDir(pacMan, Direction.RIGHT);
 
-        sys.spriteAnim().select(pacMan, ActorAnimationID.MR_PAC_MAN_MUNCHING);
-        sys.spriteAnim().stopSelected(pacMan);
+        animSystem.select(pacMan, ActorAnimationID.MR_PAC_MAN_MUNCHING);
+        animSystem.stopSelected(pacMan);
 
         msPacMan.pos().set(TS * 5, GROUND_Y - 4);
         msPacMan.show();
-        sys.worldNavigator().setMoveDir(msPacMan, Direction.RIGHT);
+        worldNavigator.setMoveDir(msPacMan, Direction.RIGHT);
 
-        sys.spriteAnim().select(msPacMan, ActorAnimationID.PAC_MUNCHING);
-        sys.spriteAnim().stopSelected(msPacMan);
+        animSystem.select(msPacMan, ActorAnimationID.PAC_MUNCHING);
+        animSystem.stopSelected(msPacMan);
 
         stork.pos().set(TS * 30, TS * 12);
         stork.show();
-        sys.motor().setVelocity(stork, -0.8f, 0);
+        motor.setVelocity(stork, -0.8f, 0);
 
-        sys.spriteAnim().select(stork, ActorAnimationID.STORK_FLYING);
-        sys.spriteAnim().playSelected(stork);
+        animSystem.select(stork, ActorAnimationID.STORK_FLYING);
+        animSystem.playSelected(stork);
 
-        bag.pos().set(stork.pos().x() - 14, stork.pos().y() + 3);
         bag.show();
-        sys.motor().setVelocityX(bag, stork.movement().velocityX());
-        sys.motor().setAcceleration(bag, 0, 0);
+        bag.pos().set(stork.pos().x() - 14, stork.pos().y() + 3);
+        motor.setVelocityX(bag, stork.movement().velocityX());
+        motor.setAcceleration(bag, 0, 0);
         closeBag();
 
         stork.setBagReleasedFromBeak(false);
