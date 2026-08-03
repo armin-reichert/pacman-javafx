@@ -38,6 +38,7 @@ module de.amr.pacmanfx.core {
     exports de.amr.pacmanfx.core.model.entities.bonus;
     exports de.amr.pacmanfx.core.model.entities.ghost;
     exports de.amr.pacmanfx.core.model.entities.marquee;
+    exports de.amr.pacmanfx.core.model.entities.stork;
     exports de.amr.pacmanfx.core.model.world.map;
     exports de.amr.pacmanfx.core.model.world.house;
     exports de.amr.pacmanfx.core.model.world.obstacle;

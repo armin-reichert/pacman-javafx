@@ -16,9 +16,9 @@ import de.amr.pacmanfx.uilib.rendering.SpritesheetAnimationMap;
 
 import static de.amr.pacmanfx.tengenmspacman.sprites.SpriteID.STORK;
 
-public class StorkSAM extends SpritesheetAnimationMap<SpriteID> {
+public class TengenMsPacMan_StorkSAM extends SpritesheetAnimationMap<SpriteID> {
 
-    public StorkSAM(SpriteAnimationContainer container) {
+    public TengenMsPacMan_StorkSAM(SpriteAnimationContainer container) {
         super(TengenMsPacMan_SpriteSheet.instance());
         factory = id -> createAnimation(id, container);
     }

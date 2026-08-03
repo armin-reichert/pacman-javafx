@@ -12,14 +12,14 @@ import de.amr.pacmanfx.core.ecs.systems.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
 import de.amr.pacmanfx.core.model.entities.clapperboard.Clapperboard;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
+import de.amr.pacmanfx.core.model.entities.stork.Stork;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.entities.bag.Bag;
 import de.amr.pacmanfx.tengenmspacman.entities.bag.BagAnimationSystem;
 import de.amr.pacmanfx.tengenmspacman.entities.bag.BagSAM;
 import de.amr.pacmanfx.tengenmspacman.entities.clapperboard.TengenMsPacMan_ClapperboardStateSystem;
-import de.amr.pacmanfx.tengenmspacman.entities.stork.Stork;
-import de.amr.pacmanfx.tengenmspacman.entities.stork.StorkSAM;
+import de.amr.pacmanfx.tengenmspacman.entities.stork.TengenMsPacMan_StorkSAM;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.action.core.GameAction;
@@ -111,7 +111,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
         pacMan.spriteAnim().setAnimations(renderConfig.createPacAnimations(animationContainer));
 
         stork = new Stork();
-        stork.spriteAnim().setAnimations(new StorkSAM(animationContainer));
+        stork.spriteAnim().setAnimations(new TengenMsPacMan_StorkSAM(animationContainer));
 
         bag = new Bag();
         bag.spriteAnim().setAnimations(new BagSAM(animationContainer));
