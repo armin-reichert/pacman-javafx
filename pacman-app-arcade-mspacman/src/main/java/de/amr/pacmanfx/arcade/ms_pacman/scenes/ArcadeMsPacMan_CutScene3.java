@@ -5,7 +5,6 @@ package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.arcade.ms_pacman.entities.bag.BagAnimationSystem;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.bag.BagSAM;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.stork.StorkSAM;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
@@ -67,7 +66,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
     @Override
     public void onTick(GameContext gameContext) {
         updateSceneState();
-        BagAnimationSystem.update(bag);
+        bag.spriteAnim().animation().select(bag.isOpen() ? ActorAnimationID.JUNIOR : ActorAnimationID.BAG);
     }
 
     private void initScene() {
