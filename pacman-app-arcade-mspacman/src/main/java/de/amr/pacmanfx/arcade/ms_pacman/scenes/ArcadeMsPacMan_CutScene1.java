@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.timer.TickTimer;
+import de.amr.pacmanfx.arcade.ms_pacman.entities.Heart;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.clapperboard.Clapperboard;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.clapperboard.ClapperboardStateSystem;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
@@ -98,9 +99,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
 
         pinky = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GhostPersonality.PINK_GHOST_SPEEDY);
 
-        heart = new GameEntity();
-        heart.setComponent(SpriteAnimComp.class, new SpriteAnimComp());
-        heart.requireComponent(SpriteAnimComp.class).setAnimations(singleSpriteAnimation(spriteSheet.findSprite(SpriteID.HEART)));
+        heart = new Heart();
 
         clapperboard = new Clapperboard(1, "THEY MEET");
         clapperboard.pos().set(tilesPx(3), tilesPx(10));
