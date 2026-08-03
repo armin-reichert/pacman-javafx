@@ -8,7 +8,8 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.ecs.systems.common.GameSystems;
+import de.amr.pacmanfx.core.ecs.systems.common.MovementSystem;
+import de.amr.pacmanfx.core.ecs.systems.spriteanim.SpriteAnimSystem;
 import de.amr.pacmanfx.core.ecs.systems.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
@@ -19,8 +20,10 @@ import de.amr.pacmanfx.tengenmspacman.entities.clapperboard.ClapperboardStateSys
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
+import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
+import de.amr.pacmanfx.ui.input.JoypadButton;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -29,6 +32,7 @@ import org.tinylog.Logger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
@@ -37,7 +41,11 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig.*;
 
 public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
 
+    public static final int TICK_CLAP = 2;
     public static final int TICK_EXPIRES = 1512;
+    public static final Set<Integer> TICKS_JUNIOR_SPAWNED = Set.of(
+        904, 968, 1032, 1096, 1160, 1224, 1288, 1352
+    );
 
     private static final int LEFT_BORDER = TS;
     private static final int RIGHT_BORDER = TS * (NES_SCREEN_TILES.x() - 2);
@@ -47,11 +55,11 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
     private Pac pacMan;
     private Pac msPacMan;
     private List<Pac> juniors;
-    private List<Long> juniorCreationTimes;
+    private List<Long> juniorSpawnTicks;
     private Clapperboard clapperboard;
 
-    public TengenMsPacMan_CutScene4(GameAppContext appContext) {
-        super(appContext);
+    public TengenMsPacMan_CutScene4(GameAppContext app) {
+        super(app);
         unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
     }
@@ -74,162 +82,189 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
 
     @Override
     public void onActivate() {
+        // Quit cut scene when "START" button on "joypad" is pressed
+        final GameAction quitAction = appContext().commonActions().gameFlowActions().actionLetGameStateExpire();
+        actionBindings().bindActionToKeyCombination(quitAction, input().joypad().keyForButton(JoypadButton.START));
+
+        createActors();
+    }
+    
+    @Override
+    public void onDeactivate() {
+        stopMusic();
+    }
+
+    @Override
+    public void onTick(GameContext game) {
+        final long tick = gameState().timer().tickCount();
+        if (tick == TICK_CLAP) {
+            clapperboard.show();
+            ClapperboardStateSystem.startFlapAnimation(clapperboard);
+            playMusic();
+        }
+        else if (tick == TICK_EXPIRES) {
+            gameContext().flow().enterState(gameContext(), TengenMsPacMan_GameState.GAME_PREPARATION.state());
+
+        }
+        ClapperboardStateSystem.update(clapperboard);
+        playCutScene(game, tick);
+    }
+
+    private void playMusic() {
+        appContext().ui().sounds().play(PacManGameSoundID.INTERMISSION_4);
+    }
+
+    private void stopMusic() {
+        appContext().ui().sounds().stop(PacManGameSoundID.INTERMISSION_4);
+    }
+
+    private void createActors() {
+        final var actorFactory = TengenMsPacMan_ActorFactory.instance();
         final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
         final SpriteAnimationContainer spriteAnimations = appContext().ui().sprites().animations();
 
         clapperboard = new Clapperboard("4", "THE END");
         clapperboard.pos().set(tilesPx(3), tilesPx(10));
 
-        final var factory = TengenMsPacMan_ActorFactory.instance();
-
-        msPacMan = factory.createMsPacMan();
+        msPacMan = actorFactory.createMsPacMan();
         msPacMan.spriteAnim().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
-        pacMan = factory.createPacMan();
+        pacMan = actorFactory.createPacMan();
         pacMan.spriteAnim().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
         juniors = new ArrayList<>();
-        juniorCreationTimes = new ArrayList<>();
-
-        appContext().ui().sounds().play(PacManGameSoundID.INTERMISSION_4);
+        juniorSpawnTicks = new ArrayList<>();
     }
 
-    private void createActors(GameContext game) {
-
-    }
-
-    @Override
-    public void onDeactivate() {
-        appContext().ui().sounds().stop(PacManGameSoundID.INTERMISSION_4);
-    }
-
-    @Override
-    public void onTick(GameContext gameContext) {
-        final GameSystems sys = gameContext.systems();
-
-        final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
-        final long gameStateTick = gameState().timer().tickCount();
-
-        ClapperboardStateSystem.update(clapperboard);
-
-        sys.motor().move(pacMan);
-        sys.motor().move(msPacMan);
+    private void letActorsMove(GameContext game, long tick) {
+        final MovementSystem motor = game.systems().motor();
+        motor.move(pacMan);
+        motor.move(msPacMan);
         for (int i = 0; i < juniors.size(); ++i) {
-            updateJunior(sys, gameStateTick, i);
-        }
-
-        if (gameStateTick <= TICK_EXPIRES) {
-            final short eventTick = (short) gameStateTick;
-            switch (eventTick) {
-                case 0 -> {
-                    clapperboard.show();
-                    ClapperboardStateSystem.startFlapAnimation(clapperboard);
-                }
-                case 130 -> {
-                    pacMan.pos().set(LEFT_BORDER, LOWER_LANE);
-                    pacMan.show();
-
-                    sys.worldNavigator().setMoveDir(pacMan, Direction.RIGHT);
-                    sys.worldNavigator().setSpeed(pacMan, 1f);
-
-                    sys.spriteAnim().select(pacMan, TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
-                    sys.spriteAnim().playSelected(pacMan);
-
-                    msPacMan.pos().set(RIGHT_BORDER, LOWER_LANE);
-                    msPacMan.show();
-
-                    sys.worldNavigator().setMoveDir(msPacMan, Direction.LEFT);
-                    sys.worldNavigator().setSpeed(msPacMan, 1f);
-
-                    sys.spriteAnim().select(msPacMan, ActorAnimationID.PAC_MUNCHING);
-                    sys.spriteAnim().playSelected(msPacMan);
-                }
-                case 230 -> {
-                    sys.worldNavigator().setSpeed(pacMan, 0);
-                    sys.spriteAnim().stopSelected(pacMan);
-                    sys.spriteAnim().resetSelected(pacMan);
-
-                    sys.worldNavigator().setSpeed(msPacMan, 0);
-                    sys.spriteAnim().stopSelected(msPacMan);
-                    sys.spriteAnim().resetSelected(msPacMan);
-                }
-                case 400 -> {
-                    sys.spriteAnim().select(pacMan, TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
-                    sys.spriteAnim().playSelected(pacMan);
-
-                    sys.spriteAnim().select(msPacMan, ActorAnimationID.PAC_MUNCHING);
-                    sys.spriteAnim().playSelected(msPacMan);
-                }
-                case 520 -> {
-                    sys.spriteAnim().select(pacMan, TengenMsPacMan_AnimationID.MR_PAC_MAN_WAVING_HAND);
-                    sys.spriteAnim().select(msPacMan, TengenMsPacMan_AnimationID.MS_PAC_MAN_WAVING_HAND);
-                }
-                case 527 -> {
-                    sys.spriteAnim().playSelected(pacMan);
-                    sys.spriteAnim().playSelected(msPacMan);
-                }
-                case 648 -> {
-                    sys.spriteAnim().select(pacMan, TengenMsPacMan_AnimationID.MR_PAC_MAN_TURNING_AWAY);
-                    sys.spriteAnim().playSelected(pacMan);
-
-                    sys.spriteAnim().select(msPacMan, TengenMsPacMan_AnimationID.MS_PAC_MAN_TURNING_AWAY);
-                    sys.spriteAnim().playSelected(msPacMan);
-                }
-                case 650 -> {
-                    sys.worldNavigator().setSpeed(pacMan, 1.5f); // TODO not sure
-                    sys.worldNavigator().setMoveDir(pacMan, Direction.UP);
-                    sys.worldNavigator().setSpeed(msPacMan, 1.5f); // TODO not sure
-                    sys.worldNavigator().setMoveDir(msPacMan, Direction.UP);
-                }
-                case 720 -> {
-                    pacMan.hide();
-                    msPacMan.hide();
-                }
-                case 904, 968, 1032, 1096, 1160, 1224, 1288, 1352 -> spawnJunior(sys, renderConfig, gameStateTick);
-                case 1500 -> optSoundEffects().ifPresent(GameSoundEffects::stopAll);
-                case TICK_EXPIRES -> gameContext().flow().enterState(gameContext(), TengenMsPacMan_GameState.GAME_PREPARATION.state());
-            }
+            updateJunior(game, tick, i);
         }
     }
 
-    private void spawnJunior(GameSystems sys, GameVariantRenderConfig renderConfig, long tick) {
+    private void playCutScene(GameContext game, long tick) {
+        final WorldNavigationSystem navigator = game.systems().worldNavigator();
+        final SpriteAnimSystem animSystem = game.systems().spriteAnim();
+
+        letActorsMove(game, tick);
+
+        if (tick == 130) {
+            pacMan.pos().set(LEFT_BORDER, LOWER_LANE);
+            pacMan.show();
+
+            navigator.setMoveDir(pacMan, Direction.RIGHT);
+            navigator.setSpeed(pacMan, 1f);
+
+            animSystem.select(pacMan, TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
+            animSystem.playSelected(pacMan);
+
+            msPacMan.pos().set(RIGHT_BORDER, LOWER_LANE);
+            msPacMan.show();
+
+            navigator.setMoveDir(msPacMan, Direction.LEFT);
+            navigator.setSpeed(msPacMan, 1f);
+
+            animSystem.select(msPacMan, ActorAnimationID.PAC_MUNCHING);
+            animSystem.playSelected(msPacMan);
+        }
+        else if (tick == 230) {
+            navigator.setSpeed(pacMan, 0);
+            animSystem.stopSelected(pacMan);
+            animSystem.resetSelected(pacMan);
+
+            navigator.setSpeed(msPacMan, 0);
+            animSystem.stopSelected(msPacMan);
+            animSystem.resetSelected(msPacMan);
+        }
+        else if (tick == 400) {
+            animSystem.select(pacMan, TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
+            animSystem.playSelected(pacMan);
+
+            animSystem.select(msPacMan, ActorAnimationID.PAC_MUNCHING);
+            animSystem.playSelected(msPacMan);
+        }
+        else if (tick == 520) {
+            animSystem.select(pacMan, TengenMsPacMan_AnimationID.MR_PAC_MAN_WAVING_HAND);
+            animSystem.select(msPacMan, TengenMsPacMan_AnimationID.MS_PAC_MAN_WAVING_HAND);
+        }
+        else if (tick == 527) {
+            animSystem.playSelected(pacMan);
+            animSystem.playSelected(msPacMan);
+        }
+        else if (tick == 648) {
+            animSystem.select(pacMan, TengenMsPacMan_AnimationID.MR_PAC_MAN_TURNING_AWAY);
+            animSystem.playSelected(pacMan);
+
+            animSystem.select(msPacMan, TengenMsPacMan_AnimationID.MS_PAC_MAN_TURNING_AWAY);
+            animSystem.playSelected(msPacMan);
+        }
+        else if (tick == 650) {
+            navigator.setSpeed(pacMan, 1.5f); // TODO not sure
+            navigator.setMoveDir(pacMan, Direction.UP);
+            navigator.setSpeed(msPacMan, 1.5f); // TODO not sure
+            navigator.setMoveDir(msPacMan, Direction.UP);
+        }
+        else if (tick == 720) {
+            pacMan.hide();
+            msPacMan.hide();
+        }
+        else if (TICKS_JUNIOR_SPAWNED.contains((int) tick)) {
+            spawnJunior(game, tick);
+        }
+        else if (tick == 1500) {
+            optSoundEffects().ifPresent(GameSoundEffects::stopAll);
+        }
+    }
+
+    private void spawnJunior(GameContext game, long tick) {
+        final var factory = TengenMsPacMan_ActorFactory.instance();
+        final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
+        final WorldNavigationSystem navigator = game.systems().worldNavigator();
+        final SpriteAnimSystem animSystem = game.systems().spriteAnim();
         final SpriteAnimationContainer spriteAnimations = appContext().ui().sprites().animations();
 
-        double randomX = 8 * TS + (8 * TS) * Math.random();
-
-        final var factory = TengenMsPacMan_ActorFactory.instance();
-
         final Pac junior = factory.createPacMan();
+        double randomX = 8 * TS + (8 * TS) * Math.random();
         junior.pos().set((float) randomX, unscaledHeight() - 4 * TS);
         junior.show();
 
-        sys.worldNavigator().setMoveDir(junior, Direction.UP);
-        sys.worldNavigator().setSpeed(junior, 2);
+        navigator.setMoveDir(junior, Direction.UP);
+        navigator.setSpeed(junior, 2);
 
-        sys.spriteAnim().setAnimations(junior, renderConfig.createPacAnimations(spriteAnimations));
-        sys.spriteAnim().select(junior, TengenMsPacMan_AnimationID.ANIM_JUNIOR);
+        animSystem.setAnimations(junior, renderConfig.createPacAnimations(spriteAnimations));
+        animSystem.select(junior, TengenMsPacMan_AnimationID.ANIM_JUNIOR);
 
         juniors.add(junior);
-        juniorCreationTimes.add(tick);
+        juniorSpawnTicks.add(tick);
 
+        playRandomJuniorSound();
+
+        Logger.info("Junior spawned at tick {}", tick);
+    }
+
+    private void playRandomJuniorSound() {
         final SoundID soundID = switch (randomInt(1, 3)) {
             case 1 -> TengenMsPacManSoundID.INTERMISSION_4_JUNIOR_1;
             case 2 -> TengenMsPacManSoundID.INTERMISSION_4_JUNIOR_2;
             default -> throw new IllegalArgumentException();
         };
         appContext().ui().sounds().playLoop(soundID);
-
-        Logger.info("Junior spawned at tick {}", tick);
     }
 
-    private void updateJunior(GameSystems sys, long tick, int index) {
+    private void updateJunior(GameContext game, long tick, int index) {
+        final MovementSystem motor = game.systems().motor();
+        final WorldNavigationSystem navigator = game.systems().worldNavigator();
+
         Pac junior = juniors.get(index);
-        long creationTime = juniorCreationTimes.get(index);
+        long creationTime = juniorSpawnTicks.get(index);
         long lifeTime = tick - creationTime;
         if (lifeTime> 0 && lifeTime % 10 == 0) {
-            computeNewMoveDir(sys.worldNavigator(), junior);
+            computeNewMoveDir(navigator, junior);
         }
-        sys.motor().move(junior);
+        motor.move(junior);
         if (junior.pos().x() > unscaledWidth()) {
             junior.pos().setX(0);
         }
