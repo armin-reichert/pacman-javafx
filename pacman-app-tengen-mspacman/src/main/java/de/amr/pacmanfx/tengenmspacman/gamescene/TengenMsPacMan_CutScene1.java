@@ -120,8 +120,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
         }
 
         ClapperboardStateSystem.update(clapperboard);
-
-        animate(game, 0, tick);
+        playCutScene(game, tick);
     }
 
     private void createActors(GameContext game) {
@@ -185,13 +184,13 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
         }
     }
 
-    private void animate(GameContext game, int startTick, int tick) {
+    private void playCutScene(GameContext game, int tick) {
         final WorldNavigationSystem navigator = game.systems().worldNavigator();
         final SpriteAnimSystem animSystem = game.systems().spriteAnim();
 
         letActorsMove(game);
 
-        if (tick == startTick + 130) {
+        if (tick == 130) {
             pacMan.show();
             navigator.setSpeed(pacMan, SPEED_CHASING);
             animSystem.select(pacMan, TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
@@ -202,7 +201,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
             animSystem.select(msPacMan, ActorAnimationID.PAC_MUNCHING);
             animSystem.playSelected(msPacMan);
         }
-        else if (tick == startTick + 160) {
+        else if (tick == 160) {
             inky.show();
             navigator.setSpeed(inky, SPEED_CHASING);
             animSystem.select(inky, ActorAnimationID.GHOST_NORMAL);
@@ -213,7 +212,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
             animSystem.select(pinky, ActorAnimationID.GHOST_NORMAL);
             animSystem.playSelected(pinky);
         }
-        else if (tick == startTick + 400) {
+        else if (tick == 400) {
             msPacMan.pos().set(LEFT_BORDER, MIDDLE_LANE);
             navigator.setMoveDir(msPacMan, Direction.RIGHT);
 
@@ -228,13 +227,13 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
             navigator.setMoveDir(inky, Direction.LEFT);
             navigator.setWishDir(inky, Direction.LEFT);
         }
-        else if (tick == startTick + 454) {
+        else if (tick == 454) {
             List.of(pacMan, msPacMan).forEach(pac -> {
                 navigator.setMoveDir(pac, Direction.UP);
                 navigator.setSpeed(pac, SPEED_RISING);
             });
         }
-        else if (tick == startTick + 498) {
+        else if (tick == 498) {
             collided = true;
 
             navigator.setMoveDir(inky, Direction.RIGHT);
@@ -251,7 +250,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
             pinky.movement().setVelocityY(pinky.movement().velocityY() - 2.0f);
             pinky.movement().setAcceleration(0, 0.4f);
         }
-        else if (tick == startTick + 530) {
+        else if (tick == 530) {
             inky.hide();
             pinky.hide();
 
@@ -260,15 +259,15 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
             navigator.setSpeed(msPacMan, 0);
             navigator.setMoveDir(msPacMan, Direction.RIGHT);
         }
-        else if (tick == startTick + 545) {
+        else if (tick == 545) {
             animSystem.resetSelected(pacMan);
             animSystem.resetSelected(msPacMan);
         }
-        else if (tick == startTick + 560) {
+        else if (tick == 560) {
             heart.pos().set(0.5f * (pacMan.pos().x() + msPacMan.pos().x()), pacMan.pos().y() - tilesPx(2));
             heart.show();
         }
-        else if (tick == startTick + 760) {
+        else if (tick == 760) {
             pacMan.hide();
             msPacMan.hide();
             heart.hide();

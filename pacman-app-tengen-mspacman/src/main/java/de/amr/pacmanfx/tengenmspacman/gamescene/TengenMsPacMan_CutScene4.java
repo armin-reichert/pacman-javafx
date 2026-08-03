@@ -94,6 +94,10 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
         appContext().ui().sounds().play(PacManGameSoundID.INTERMISSION_4);
     }
 
+    private void createActors(GameContext game) {
+
+    }
+
     @Override
     public void onDeactivate() {
         appContext().ui().sounds().stop(PacManGameSoundID.INTERMISSION_4);
