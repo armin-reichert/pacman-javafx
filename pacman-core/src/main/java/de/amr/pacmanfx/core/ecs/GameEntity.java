@@ -102,6 +102,10 @@ public class GameEntity {
         visibility().set(false);
     }
 
+    public final boolean isVisible() {
+        return visibility().isVisible();
+    }
+
     @Override
     public String toString() {
         StringBuilder b = new StringBuilder();

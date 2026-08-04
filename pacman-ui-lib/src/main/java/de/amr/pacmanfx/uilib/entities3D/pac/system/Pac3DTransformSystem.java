@@ -52,7 +52,7 @@ public class Pac3DTransformSystem {
             }
 
             final boolean outside = center.x() < WorldMap.HTS || center.x() > WorldMap.TS * level.worldMap().numCols() - WorldMap.HTS;
-            view3D.root().setVisible(pac.visibility().isVisible() && !outside);
+            view3D.root().setVisible(pac.isVisible() && !outside);
         }
     }
 }

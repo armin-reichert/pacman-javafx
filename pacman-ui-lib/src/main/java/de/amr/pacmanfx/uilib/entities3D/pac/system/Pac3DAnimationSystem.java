@@ -5,10 +5,10 @@
 package de.amr.pacmanfx.uilib.entities3D.pac.system;
 
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
-import de.amr.pacmanfx.core.model.entities.pac.system.PacPowerSystem;
-import de.amr.pacmanfx.core.model.entities.pac.system.PacStateSystem;
 import de.amr.pacmanfx.core.model.entities.pac.PacState;
 import de.amr.pacmanfx.core.model.entities.pac.comp.PacStateComp;
+import de.amr.pacmanfx.core.model.entities.pac.system.PacPowerSystem;
+import de.amr.pacmanfx.core.model.entities.pac.system.PacStateSystem;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3D.pac.anim.Pac3DAnimationID;
 import de.amr.pacmanfx.uilib.entities3D.pac.anim.Pac3DMovementAnimation;
@@ -69,8 +69,7 @@ public class Pac3DAnimationSystem {
             final boolean powerActive      = pacPowerSystem.isPowerActive(pac);
             final long powerTicksRemaining = pacPowerSystem.powerTicksRemaining(pac);
             final long powerTicksTotal     = pacPowerSystem.powerTicksTotal(pac);
-
-            if (powerActive && pac.visibility().isVisible() && state.pacState() != PacState.DEAD) {
+            if (powerActive && pac.isVisible()) {
                 view3D.powerLight().setLightOn(true);
                 final float maxRange = (powerTicksRemaining / (float) powerTicksTotal) * 60 + 30;
                 view3D.powerLight().setMaxRange(maxRange);

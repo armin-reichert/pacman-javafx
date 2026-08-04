@@ -48,7 +48,7 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
     }
 
     public void drawMovingActorInfo(SpriteAnimSystem animSystem, GameEntity actor) {
-        if (!actor.visibility().isVisible()) {
+        if (!actor.isVisible()) {
             return;
         }
 

@@ -52,7 +52,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     @Override
     public void drawActor(GameEntity actor) {
         requireNonNull(actor);
-        if (!actor.visibility().isVisible()) return;
+        if (!actor.isVisible()) return;
 
         final Vector2f center = WorldNavigationSystem.computeCenter(actor);
         switch (actor) {

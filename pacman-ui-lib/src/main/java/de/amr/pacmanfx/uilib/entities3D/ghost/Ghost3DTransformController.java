@@ -36,7 +36,7 @@ public class Ghost3DTransformController {
         gameContext.optLevel().ifPresent(level -> {
             final boolean outside = center.x() < WorldMap.HTS
                 || center.x() > WorldMap.TS * level.worldMap().numCols() - WorldMap.HTS;
-            ghost3D.root().setVisible(ghost.visibility().isVisible() && !outside);
+            ghost3D.root().setVisible(ghost.isVisible() && !outside);
         });
     }
 }

@@ -42,7 +42,7 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
     @Override
     public void drawActor(GameEntity actor) {
         requireNonNull(actor);
-        if (!actor.visibility().isVisible()) return;
+        if (!actor.isVisible()) return;
         drawSpriteCentered(computeSprite(animSystem, actor), WorldNavigationSystem.computeCenter(actor));
     }
 

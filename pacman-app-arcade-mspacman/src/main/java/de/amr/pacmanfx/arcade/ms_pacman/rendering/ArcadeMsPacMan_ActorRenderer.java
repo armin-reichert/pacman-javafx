@@ -48,7 +48,7 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     @Override
     public void drawActor(GameEntity actor) {
         requireNonNull(actor);
-        if (!actor.visibility().isVisible()) return;
+        if (!actor.isVisible()) return;
         final Vector2f center = WorldNavigationSystem.computeCenter(actor);
         switch (actor) {
             case Pac pac                   -> drawSpriteCentered(computePacSprite(pac),     center);
@@ -97,7 +97,7 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     }
 
     private void drawClapperBoard(Clapperboard clapperboard) {
-        if (!clapperboard.visibility().isVisible()) return;
+        if (!clapperboard.isVisible()) return;
         ClapperboardAnimationSystem.sprite(clapperboard).ifPresent(sprite -> {
             drawSpriteCentered(sprite, WorldNavigationSystem.computeCenter(clapperboard));
 
