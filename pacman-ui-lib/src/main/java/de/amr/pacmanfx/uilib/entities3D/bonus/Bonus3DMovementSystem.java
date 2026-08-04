@@ -24,9 +24,8 @@ public class Bonus3DMovementSystem {
 
         if (stateComp.state() == BonusState.EDIBLE) {
             boolean outsideWorld = center.x() < WorldMap.HTS || center.x() > worldMap.numCols() * WorldMap.TS - WorldMap.HTS;
-            view3D.root().setVisible(stateComp.state() == BonusState.EDIBLE && !outsideWorld);
+            view3D.root().setVisible(!outsideWorld);
             view3D.rollingTransform().update(bonus);
         }
-
     }
 }

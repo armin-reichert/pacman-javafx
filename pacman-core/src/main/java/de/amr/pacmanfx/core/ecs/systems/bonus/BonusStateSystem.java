@@ -4,7 +4,9 @@
 
 package de.amr.pacmanfx.core.ecs.systems.bonus;
 
+import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.ecs.components.VisibilityComp;
 import de.amr.pacmanfx.core.ecs.systems.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.event.bonus.BonusExpiredEvent;
@@ -14,6 +16,7 @@ import de.amr.pacmanfx.core.model.entities.bonus.BonusState;
 import de.amr.pacmanfx.core.model.entities.bonus.BonusStateComp;
 import de.amr.pacmanfx.core.model.entities.bonus.MoveAndJumpComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
@@ -36,6 +39,7 @@ public class BonusStateSystem {
     }
 
     private void update(GameEventManager eventManager, GameLevel level, Bonus bonus, FrameContext frame) {
+        final VisibilityComp visibility = bonus.visibility();
         final BonusStateComp stateComp = bonus.bonusState();
         final MoveAndJumpComp moveAndJumpComp = bonus.optMoveAndJump().orElse(null);
 
