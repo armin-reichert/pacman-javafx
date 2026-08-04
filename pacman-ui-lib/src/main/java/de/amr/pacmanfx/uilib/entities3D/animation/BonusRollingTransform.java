@@ -7,7 +7,7 @@ package de.amr.pacmanfx.uilib.entities3D.animation;
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.components.WorldNavigationComp;
-import de.amr.pacmanfx.uilib.entities3D.bonus.BonusView3DComp;
+import de.amr.pacmanfx.uilib.entities3D.bonus.Bonus3DViewComp;
 
 public class BonusRollingTransform {
 
@@ -17,7 +17,7 @@ public class BonusRollingTransform {
 
     public void update(GameEntity bonus) {
         bonus.optComponent(WorldNavigationComp.class).ifPresent(worldNavigation -> {
-            final BonusView3DComp comp3D = bonus.requireComponent(BonusView3DComp.class);
+            final Bonus3DViewComp comp3D = bonus.requireComponent(Bonus3DViewComp.class);
             final Direction moveDir = worldNavigation.moveDir();
 
             switch (moveDir) {
@@ -41,11 +41,11 @@ public class BonusRollingTransform {
         });
     }
 
-    private void addRotX(BonusView3DComp view3D, double delta) {
+    private void addRotX(Bonus3DViewComp view3D, double delta) {
         view3D.rotateX().setAngle(normalize(view3D.rotateX().getAngle() + delta));
     }
 
-    private void addRotY(BonusView3DComp view3D, double delta) {
+    private void addRotY(Bonus3DViewComp view3D, double delta) {
         view3D.rotateY().setAngle(normalize(view3D.rotateY().getAngle() + delta));
     }
 

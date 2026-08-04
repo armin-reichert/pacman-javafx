@@ -12,7 +12,7 @@ import javafx.scene.shape.Box;
 public class Bonus3DViewSystem {
 
     public static void lookEdible(GameEntity bonus) {
-        final BonusView3DComp view3D = bonus.requireComponent(BonusView3DComp.class);
+        final Bonus3DViewComp view3D = bonus.requireComponent(Bonus3DViewComp.class);
         final Box shape3D = view3D.box3D();
 
         shape3D.setVisible(true);
@@ -21,7 +21,7 @@ public class Bonus3DViewSystem {
     }
 
     public static void lookEaten(GameEntity bonus, AnimationRegistry animations) {
-        final BonusView3DComp view3D = bonus.requireComponent(BonusView3DComp.class);
+        final Bonus3DViewComp view3D = bonus.requireComponent(Bonus3DViewComp.class);
         final Box shape3D = view3D.box3D();
 
         shape3D.setVisible(true);
@@ -37,7 +37,7 @@ public class Bonus3DViewSystem {
     }
 
     public static void lookExpired(GameEntity bonus, AnimationRegistry animations) {
-        final BonusView3DComp view3D = bonus.requireComponent(BonusView3DComp.class);
+        final Bonus3DViewComp view3D = bonus.requireComponent(Bonus3DViewComp.class);
         final Box shape3D = view3D.box3D();
 
         shape3D.setVisible(false);

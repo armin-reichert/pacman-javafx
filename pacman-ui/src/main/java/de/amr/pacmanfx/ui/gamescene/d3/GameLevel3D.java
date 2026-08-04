@@ -54,7 +54,7 @@ import de.amr.pacmanfx.uilib.entities3D.world.Energizer3D;
 import de.amr.pacmanfx.uilib.entities3D.world.Pellet3D;
 import de.amr.pacmanfx.uilib.entities3D.bonus.Bonus3DAnimationID;
 import de.amr.pacmanfx.uilib.entities3D.bonus.Bonus3DViewSystem;
-import de.amr.pacmanfx.uilib.entities3D.bonus.BonusView3DComp;
+import de.amr.pacmanfx.uilib.entities3D.bonus.Bonus3DViewComp;
 import javafx.scene.Group;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
@@ -266,9 +266,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     public void activateBonus3D(Bonus bonus) {
-        if (!bonus.hasComponent(BonusView3DComp.class)) {
+        if (!bonus.hasComponent(Bonus3DViewComp.class)) {
             createBonusView3D(bonus);
-            getChildren().add(bonus.requireComponent(BonusView3DComp.class).root());
+            getChildren().add(bonus.requireComponent(Bonus3DViewComp.class).root());
         }
         Bonus3DViewSystem.lookEdible(bonus);
     }
@@ -330,13 +330,13 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private void createBonusView3D(Bonus bonus) {
         final Bonus3DSettings config = gameVariantConfig.worldSettings().bonus();
         final GameVariantRenderConfig renderConfig = gameVariantConfig.renderConfig();
-        final BonusView3DComp view3D = new BonusView3DComp(
+        final Bonus3DViewComp view3D = new Bonus3DViewComp(
             renderConfig.bonusSymbolImage(bonus.data().symbolCode()),
             config.symbolWidth(),
             renderConfig.bonusValueImage(bonus.data().symbolCode()),
             config.pointsWidth()
         );
-        bonus.setComponent(BonusView3DComp.class, view3D);
+        bonus.setComponent(Bonus3DViewComp.class, view3D);
         animationRegistry.register(Bonus3DAnimationID.BONUS_EATEN, view3D.eatenAnimation());
     }
 
