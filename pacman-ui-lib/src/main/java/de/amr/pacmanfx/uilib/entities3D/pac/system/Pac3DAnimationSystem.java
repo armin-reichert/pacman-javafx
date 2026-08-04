@@ -7,9 +7,9 @@ import de.amr.pacmanfx.core.model.entities.pac.PacState;
 import de.amr.pacmanfx.core.model.entities.pac.PacStateComp;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DAnimationComp;
 import de.amr.pacmanfx.uilib.entities3D.pac.anim.Pac3DAnimationID;
 import de.amr.pacmanfx.uilib.entities3D.pac.anim.Pac3DMovementAnimation;
+import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DAnimationComp;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DViewComp;
 
 public class Pac3DAnimationSystem {
@@ -23,29 +23,37 @@ public class Pac3DAnimationSystem {
 
     public static void update(GameEntity pac, PacStateSystem pacStateSystem) {
         final PacStateComp state = pac.requireComponent(PacStateComp.class);
-        final Pac3DAnimationComp animationComp = pac.requireComponent(Pac3DAnimationComp.class);
-        final AnimationRegistry animationRegistry = animationComp.animationRegistry();
+        final Pac3DAnimationComp animation = pac.requireComponent(Pac3DAnimationComp.class);
 
         final boolean walking = state.pacState() == PacState.ACTIVE && pacStateSystem.notBlocked(pac);
-        if (walking) {
-            animationRegistry.optAnimation(Pac3DAnimationID.MOVING, Pac3DMovementAnimation.class).ifPresent(walkingAnimation -> {
-                walkingAnimation.playOrContinue();
-                walkingAnimation.update(pac, pacStateSystem);
-            });
-            animationRegistry.optAnimation(Pac3DAnimationID.CHEWING).ifPresent(ManagedAnimation::playOrContinue);
+
+        final Pac3DMovementAnimation movement = animation.movementAnimation();
+        if (movement != null) {
+            if (walking) {
+                movement.managedAnimation().playOrContinue();
+                movement.update(pac, pacStateSystem);
+            }
+            else {
+                movement.managedAnimation().stop();
+            }
         }
-        else {
-            animationRegistry.optAnimation(Pac3DAnimationID.MOVING).ifPresent(ManagedAnimation::stop);
-            animationRegistry.optAnimation(Pac3DAnimationID.CHEWING).ifPresent(ManagedAnimation::stop);
+
+        final ManagedAnimation chewing = animation.animationRegistry().optAnimation(Pac3DAnimationID.CHEWING).orElse(null);
+        if (chewing != null) {
+            if (walking) {
+                chewing.playOrContinue();
+            } else {
+                chewing.stop();
+            }
         }
     }
 
     public static void setPowerMode(GameEntity pac3D, boolean power) {
-        final Pac3DAnimationComp animationComp = pac3D.requireComponent(Pac3DAnimationComp.class);
-        final AnimationRegistry animationRegistry = animationComp.animationRegistry();
-
-        animationRegistry.optAnimation(Pac3DAnimationID.MOVING, Pac3DMovementAnimation.class)
-            .ifPresent(movement -> movement.setPowerMode(power));
+        final Pac3DAnimationComp animation = pac3D.requireComponent(Pac3DAnimationComp.class);
+        final Pac3DMovementAnimation movementAnimation = animation.movementAnimation();
+        if (movementAnimation != null) {
+            movementAnimation.setPowerMode(power);
+        }
     }
 
     /**

@@ -9,6 +9,7 @@ import de.amr.pacmanfx.core.ecs.components.WorldNavigationComp;
 import de.amr.pacmanfx.core.ecs.systems.pac.PacStateSystem;
 import de.amr.pacmanfx.core.model.entities.pac.PacState;
 import de.amr.pacmanfx.core.model.entities.pac.PacStateComp;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -19,7 +20,7 @@ import javafx.util.Duration;
 
 import static java.util.Objects.requireNonNull;
 
-public class HeadBangingAnimation3D extends Pac3DMovementAnimation {
+public class HeadBangingAnimation3D extends ManagedAnimation implements Pac3DMovementAnimation {
 
     private static final short BANG_ANGLE_FROM = -10;
     private static final short BANG_ANGLE_TO = 15;
@@ -42,6 +43,11 @@ public class HeadBangingAnimation3D extends Pac3DMovementAnimation {
         rotateTransition.setAutoReverse(true);
         rotateTransition.setInterpolator(Interpolator.EASE_BOTH);
         return rotateTransition;
+    }
+
+    @Override
+    public ManagedAnimation managedAnimation() {
+        return this;
     }
 
     @Override
