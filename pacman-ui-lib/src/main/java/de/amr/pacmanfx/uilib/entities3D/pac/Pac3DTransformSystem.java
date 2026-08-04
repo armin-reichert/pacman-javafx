@@ -4,15 +4,16 @@
 
 package de.amr.pacmanfx.uilib.entities3D.pac;
 
+
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 
-public class Pac3DTransformController {
+public class Pac3DTransformSystem {
 
-    public void init(Pac3D pac3D, GameContext gameContext) {
+    public static void init(Pac3D pac3D, GameContext gameContext) {
         update(gameContext, pac3D);
         pac3D.root().setTranslateZ(-8); //TODO
         pac3D.root().setScaleX(1.0);
@@ -20,7 +21,7 @@ public class Pac3DTransformController {
         pac3D.root().setScaleZ(1.0);
     }
 
-    public void update(GameContext gameContext, Pac3D pac3D) {
+    public static void update(GameContext gameContext, Pac3D pac3D) {
         final Pac pac = pac3D.pac();
         final Vector2f center = WorldNavigationSystem.computeCenter(pac);
 

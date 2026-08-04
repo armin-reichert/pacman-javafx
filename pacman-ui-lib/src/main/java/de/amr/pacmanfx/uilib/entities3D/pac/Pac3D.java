@@ -4,11 +4,11 @@
 
 package de.amr.pacmanfx.uilib.entities3D.pac;
 
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
-import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3D.DisposableGraphicsObject;
@@ -41,9 +41,6 @@ public class Pac3D extends GameEntity implements UpdatableEntity, DisposableGrap
 
     private final Rotate facingRotate = new Rotate(0, Rotate.Z_AXIS);
 
-    private final Pac3DTransformController transformController;
-    private final Pac3DAnimationController animationController;
-
     public Pac3D(
         AnimationRegistry animations,
         Pac pac,
@@ -52,12 +49,11 @@ public class Pac3D extends GameEntity implements UpdatableEntity, DisposableGrap
     {
         this.animations = requireNonNull(animations);
         this.pac = requireNonNull(pac);
-
-        this.transformController = new Pac3DTransformController();
-        this.animationController = new Pac3DAnimationController(animations);
-
         requireNonNull(body);
         this.jaw = requireNonNull(jaw);
+
+        setComponent(Pac3DTransformComp.class, new Pac3DTransformComp());
+        setComponent(Pac3DAnimationComp.class, new Pac3DAnimationComp(animations));
 
         bodyGroup = new Group(body, jaw);
 
@@ -103,7 +99,7 @@ public class Pac3D extends GameEntity implements UpdatableEntity, DisposableGrap
     }
 
     public void setPowerMode(boolean power) {
-        animationController.setPowerMode(power);
+        Pac3DAnimationSystem.setPowerMode(this, power);
     }
 
     @Override
@@ -118,15 +114,16 @@ public class Pac3D extends GameEntity implements UpdatableEntity, DisposableGrap
     @Override
     public void init(GameContext gameContext) {
         requireNonNull(gameContext);
-        transformController.init(this, gameContext);
-        animationController.init();
+        Pac3DTransformSystem.init(this, gameContext);
+        Pac3DAnimationSystem.init(this);
         setPowerMode(false);
     }
 
     @Override
     public void update(GameContext gameContext) {
         requireNonNull(gameContext);
-        transformController.update(gameContext, this);
-        animationController.update(gameContext, this);
+        Pac3DTransformSystem.update(gameContext, this);
+        Pac3DAnimationSystem.update(gameContext, this);
+        Pac3DAnimationSystem.updatePowerLight(gameContext.systems().pacPower(), this);
     }
 }
