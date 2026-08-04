@@ -15,12 +15,12 @@ import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Pellet3DSettings;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.model3D.ghost.Ghost3D;
-import de.amr.pacmanfx.uilib.model3D.ghost.GhostSettings;
-import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
-import de.amr.pacmanfx.uilib.model3D.pac.PacSettings;
-import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
-import de.amr.pacmanfx.uilib.model3D.world.Pellet3D;
+import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3D;
+import de.amr.pacmanfx.uilib.entities3D.ghost.GhostSettings;
+import de.amr.pacmanfx.uilib.entities3D.pac.Pac3D;
+import de.amr.pacmanfx.uilib.entities3D.pac.PacSettings;
+import de.amr.pacmanfx.uilib.entities3D.world.Energizer3D;
+import de.amr.pacmanfx.uilib.entities3D.world.Pellet3D;
 import javafx.scene.Node;
 import javafx.scene.paint.PhongMaterial;
 

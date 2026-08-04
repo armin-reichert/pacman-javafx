@@ -12,13 +12,13 @@ import de.amr.pacmanfx.core.model.world.obstacle.Obstacle;
 import de.amr.pacmanfx.core.model.world.obstacle.ObstacleBuilder;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUtils;
 import de.amr.pacmanfx.uilib.Ufx;
-import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
-import de.amr.pacmanfx.uilib.model3D.pac.FemaleBodyPartsColors;
-import de.amr.pacmanfx.uilib.model3D.pac.Pac3DFactory;
-import de.amr.pacmanfx.uilib.model3D.pac.PacColors;
-import de.amr.pacmanfx.uilib.model3D.pac.PacSettings;
-import de.amr.pacmanfx.uilib.model3D.world.TerrainRenderer3D;
-import de.amr.pacmanfx.uilib.model3D.world.Wall3D;
+import de.amr.pacmanfx.uilib.entities3D.PacMan3DModel;
+import de.amr.pacmanfx.uilib.entities3D.pac.FemaleBodyPartsColors;
+import de.amr.pacmanfx.uilib.entities3D.pac.Pac3DFactory;
+import de.amr.pacmanfx.uilib.entities3D.pac.PacColors;
+import de.amr.pacmanfx.uilib.entities3D.pac.PacSettings;
+import de.amr.pacmanfx.uilib.entities3D.world.TerrainRenderer3D;
+import de.amr.pacmanfx.uilib.entities3D.world.Wall3D;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -208,13 +208,13 @@ public class EditorMaze3D extends Group {
     private Group createGhostBody(Color dressColor, double rotateY) {
         final Group body = new Group();
 
-        final MeshView dressMeshView = new MeshView(PacManWorld3D.instance().ghostDressMesh());
+        final MeshView dressMeshView = new MeshView(PacMan3DModel.instance().ghostDressMesh());
         dressMeshView.setMaterial(coloredPhongMaterial(dressColor));
 
-        final MeshView pupilsMeshView = new MeshView(PacManWorld3D.instance().ghostPupilsMesh());
+        final MeshView pupilsMeshView = new MeshView(PacMan3DModel.instance().ghostPupilsMesh());
         pupilsMeshView.setMaterial(coloredPhongMaterial(Color.BLUE));
 
-        final MeshView eyeballsMeshView = new MeshView(PacManWorld3D.instance().ghostEyeballsMesh());
+        final MeshView eyeballsMeshView = new MeshView(PacMan3DModel.instance().ghostEyeballsMesh());
         eyeballsMeshView.setMaterial(coloredPhongMaterial(Color.WHITE));
 
         final var dressGroup = new Group(dressMeshView);

@@ -14,14 +14,14 @@ import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Pellet3DSettings;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
-import de.amr.pacmanfx.uilib.model3D.ghost.*;
-import de.amr.pacmanfx.uilib.model3D.pac.Pac3D;
-import de.amr.pacmanfx.uilib.model3D.pac.Pac3DFactory;
-import de.amr.pacmanfx.uilib.model3D.pac.PacSettings;
-import de.amr.pacmanfx.uilib.model3D.world.Energizer3D;
-import de.amr.pacmanfx.uilib.model3D.world.NumberBox3D;
-import de.amr.pacmanfx.uilib.model3D.world.Pellet3D;
+import de.amr.pacmanfx.uilib.entities3D.PacMan3DModel;
+import de.amr.pacmanfx.uilib.entities3D.ghost.*;
+import de.amr.pacmanfx.uilib.entities3D.pac.Pac3D;
+import de.amr.pacmanfx.uilib.entities3D.pac.Pac3DFactory;
+import de.amr.pacmanfx.uilib.entities3D.pac.PacSettings;
+import de.amr.pacmanfx.uilib.entities3D.world.Energizer3D;
+import de.amr.pacmanfx.uilib.entities3D.world.NumberBox3D;
+import de.amr.pacmanfx.uilib.entities3D.world.Pellet3D;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.image.Image;
@@ -72,9 +72,9 @@ public class DefaultFactory3D implements Factory3D {
             ghost,
             settings,
             new GhostMeshSet(
-                PacManWorld3D.instance().ghostDressMesh(),
-                PacManWorld3D.instance().ghostPupilsMesh(),
-                PacManWorld3D.instance().ghostEyeballsMesh()
+                PacMan3DModel.instance().ghostDressMesh(),
+                PacMan3DModel.instance().ghostPupilsMesh(),
+                PacMan3DModel.instance().ghostEyeballsMesh()
             ),
             ghostMaterialsCache.computeIfAbsent(settings.colors(), this::createGhostMaterial));
     }

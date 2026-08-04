@@ -19,7 +19,7 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.input.Input;
-import de.amr.pacmanfx.uilib.model3D.PacManWorld3D;
+import de.amr.pacmanfx.uilib.entities3D.PacMan3DModel;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -194,7 +194,7 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
         ui.sprites().startAnimationTimer();
 
         //noinspection ResultOfMethodCallIgnored
-        PacManWorld3D.instance(); // loads 3D assets as side effect of accessing the singleton
+        PacMan3DModel.instance(); // loads 3D assets as side effect of accessing the singleton
     }
 
     /**

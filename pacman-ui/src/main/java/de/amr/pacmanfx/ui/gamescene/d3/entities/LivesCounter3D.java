@@ -12,7 +12,7 @@ import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.NodePositionTracker;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.Ufx;
-import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
+import de.amr.pacmanfx.uilib.entities3D.DisposableGraphicsObject;
 import javafx.beans.property.*;
 import javafx.scene.Group;
 import javafx.scene.Node;

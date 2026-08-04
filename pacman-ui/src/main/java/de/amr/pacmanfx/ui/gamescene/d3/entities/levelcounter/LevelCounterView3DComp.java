@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter;
 
 import de.amr.pacmanfx.core.ecs.GameEntityComponent;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.model3D.DisposableGraphicsObject;
+import de.amr.pacmanfx.uilib.entities3D.DisposableGraphicsObject;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;

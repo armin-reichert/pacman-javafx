@@ -16,15 +16,16 @@ open module de.amr.pacmanfx.uilib {
     exports de.amr.pacmanfx.uilib;
     exports de.amr.pacmanfx.uilib.animation;
     exports de.amr.pacmanfx.uilib.assets;
-    exports de.amr.pacmanfx.uilib.model3D;
-    exports de.amr.pacmanfx.uilib.model3D.animation;
-    exports de.amr.pacmanfx.uilib.model3D.ghost;
-    exports de.amr.pacmanfx.uilib.model3D.pac;
-    exports de.amr.pacmanfx.uilib.model3D.world;
+    exports de.amr.pacmanfx.uilib.entities3D;
+    exports de.amr.pacmanfx.uilib.entities3D.animation;
+    exports de.amr.pacmanfx.uilib.entities3D.ghost;
+    exports de.amr.pacmanfx.uilib.entities3D.pac;
+    exports de.amr.pacmanfx.uilib.entities3D.world;
     exports de.amr.pacmanfx.uilib.rendering;
     exports de.amr.pacmanfx.uilib.controls;
     exports de.amr.pacmanfx.uilib.controls.skin;
     exports de.amr.pacmanfx.uilib.widgets;
     exports de.amr.pacmanfx.uilib.widgets.optionmenu;
-    exports de.amr.pacmanfx.uilib.model3D.world.bonus;
+    exports de.amr.pacmanfx.uilib.entities3D.bonus;
+    exports de.amr.pacmanfx.uilib.entities3D.house;
 }

@@ -1,0 +1,87 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+package de.amr.pacmanfx.uilib.entities3D.animation;
+
+import de.amr.pacmanfx.core.ecs.systems.pac.PacStateSystem;
+import de.amr.pacmanfx.core.model.entities.pac.Pac;
+import de.amr.pacmanfx.core.model.entities.pac.PacState;
+import de.amr.pacmanfx.uilib.entities3D.pac.Pac3DMovementAnimation;
+import javafx.animation.Animation;
+import javafx.animation.Interpolator;
+import javafx.animation.RotateTransition;
+import javafx.scene.Node;
+import javafx.scene.transform.Rotate;
+import javafx.util.Duration;
+
+import static java.util.Objects.requireNonNull;
+
+public class HipSwayingAnimation3D extends Pac3DMovementAnimation {
+
+    private static final short HIP_ANGLE_FROM = -20;
+    private static final short HIP_ANGLE_TO = 20;
+    private static final Duration SWING_TIME = Duration.seconds(0.4);
+    private static final float POWER_ANGLE_AMPLIFICATION = 1.5f;
+    private static final float POWER_RATE = 2;
+
+    private final Node node;
+
+    public HipSwayingAnimation3D(Node node) {
+        super("Ms. Pac-Man Hip Swaying");
+        this.node = requireNonNull(node);
+        setFactory(this::createWrappedAnimation);
+    }
+
+    private RotateTransition createWrappedAnimation() {
+        var rotateTransition = new RotateTransition(SWING_TIME, node);
+        rotateTransition.setAxis(Rotate.Z_AXIS);
+        rotateTransition.setCycleCount(Animation.INDEFINITE);
+        rotateTransition.setAutoReverse(true);
+        rotateTransition.setInterpolator(Interpolator.EASE_BOTH);
+        return rotateTransition;
+    }
+
+    @Override
+    public void stop() {
+        if (animationFX != null) {
+            animationFX.stop();
+            var rotateTransition = (RotateTransition) animationFX;
+            node.setRotationAxis(rotateTransition.getAxis());
+            node.setRotate(0);
+        }
+    }
+
+    @Override
+    public void pause() {
+        if (animationFX != null) {
+            animationFX.pause();
+            var rotateTransition = (RotateTransition) animationFX;
+            node.setRotationAxis(rotateTransition.getAxis());
+            node.setRotate(0);
+        }
+    }
+
+    public void setPowerMode(boolean power) {
+        if (animationFX != null) {
+            boolean wasRunning = animationFX.getStatus() == Animation.Status.RUNNING;
+            animationFX.stop();
+            animationFX.setRate(power ? POWER_RATE : 1);
+            var rotateTransition = (RotateTransition) animationFX;
+            double amplification = power ? POWER_ANGLE_AMPLIFICATION : 1;
+            rotateTransition.setFromAngle(HIP_ANGLE_FROM * amplification);
+            rotateTransition.setToAngle(HIP_ANGLE_TO * amplification);
+            if (wasRunning) {
+                animationFX.play();
+            }
+        }
+    }
+
+    public void update(PacStateSystem pacStateSystem, Pac pac) {
+        final boolean animate = pac.state() == PacState.ACTIVE && pacStateSystem.notBlocked(pac);
+        if (animate) {
+            playOrContinue();
+        } else {
+            pause();
+        }
+    }
+}

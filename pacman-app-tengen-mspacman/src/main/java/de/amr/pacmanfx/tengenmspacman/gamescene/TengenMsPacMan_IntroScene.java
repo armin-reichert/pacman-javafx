@@ -32,7 +32,7 @@ import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
-import de.amr.pacmanfx.uilib.model3D.ghost.GhostSettings;
+import de.amr.pacmanfx.uilib.entities3D.ghost.GhostSettings;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 

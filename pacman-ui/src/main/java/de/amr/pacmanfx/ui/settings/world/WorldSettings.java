@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.ui.settings.world;
 
 import de.amr.pacmanfx.uilib.JsonLoader;
-import de.amr.pacmanfx.uilib.model3D.ghost.GhostSettings;
-import de.amr.pacmanfx.uilib.model3D.pac.PacSettings;
+import de.amr.pacmanfx.uilib.entities3D.ghost.GhostSettings;
+import de.amr.pacmanfx.uilib.entities3D.pac.PacSettings;
 
 import java.util.List;
 

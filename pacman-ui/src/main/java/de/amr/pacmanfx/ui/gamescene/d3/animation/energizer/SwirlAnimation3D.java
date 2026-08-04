@@ -2,7 +2,7 @@ package de.amr.pacmanfx.ui.gamescene.d3.animation.energizer;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.math.Vector3f;
-import de.amr.pacmanfx.uilib.model3D.animation.EnergizerParticle3D;
+import de.amr.pacmanfx.uilib.entities3D.animation.EnergizerParticle3D;
 
 import java.util.HashSet;
 import java.util.Set;

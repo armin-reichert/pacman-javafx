@@ -1,0 +1,20 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
+package de.amr.pacmanfx.uilib.entities3D.pac;
+
+import de.amr.pacmanfx.core.ecs.systems.pac.PacStateSystem;
+import de.amr.pacmanfx.core.model.entities.pac.Pac;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
+
+public abstract class Pac3DMovementAnimation extends ManagedAnimation {
+
+    public Pac3DMovementAnimation(String label) {
+        super(label);
+    }
+
+    public abstract void update(PacStateSystem pacStateSystem, Pac pac);
+
+    public abstract void setPowerMode(boolean power);
+}
