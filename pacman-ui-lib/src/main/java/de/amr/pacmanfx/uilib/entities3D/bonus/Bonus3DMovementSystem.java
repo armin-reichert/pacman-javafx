@@ -7,7 +7,6 @@ package de.amr.pacmanfx.uilib.entities3D.bonus;
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.world.WorldNavigationSystem;
-import de.amr.pacmanfx.core.model.entities.bonus.BonusState;
 import de.amr.pacmanfx.core.model.entities.bonus.BonusStateComp;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 
@@ -22,10 +21,6 @@ public class Bonus3DMovementSystem {
         view3D.translate().setY(center.y());
         view3D.translate().setZ(-WorldMap.HTS);
 
-        if (stateComp.state() == BonusState.EDIBLE) {
-            boolean outsideWorld = center.x() < WorldMap.HTS || center.x() > worldMap.numCols() * WorldMap.TS - WorldMap.HTS;
-            view3D.root().setVisible(!outsideWorld);
-            view3D.rollingTransform().update(bonus);
-        }
+        view3D.rollingTransform().update(bonus);
     }
 }
