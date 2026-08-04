@@ -5,17 +5,16 @@
 package de.amr.pacmanfx.uilib.entities3D.bonus;
 
 import de.amr.basics.math.Vector2f;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.world.WorldNavigationSystem;
-import de.amr.pacmanfx.core.model.entities.bonus.Bonus;
 import de.amr.pacmanfx.core.model.entities.bonus.BonusState;
+import de.amr.pacmanfx.core.model.entities.bonus.BonusStateComp;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.scene.shape.Box;
 
-public class Bonus3DSystem {
+public class Bonus3DViewSystem {
 
     public static void lookEdible(GameEntity bonus) {
         final BonusView3DComp view3D = bonus.requireComponent(BonusView3DComp.class);
@@ -52,32 +51,19 @@ public class Bonus3DSystem {
         animations.optAnimation(Bonus3DAnimationID.BONUS_EATEN).ifPresent(ManagedAnimation::stop);
     }
 
-    public static void update(GameContext gameContext, Bonus bonus) {
-        switch (bonus.state()) {
+    public static void update(GameEntity bonus, WorldMap worldMap) {
+        final BonusStateComp stateComp = bonus.requireComponent(BonusStateComp.class);
+        final BonusView3DComp view3D = bonus.requireComponent(BonusView3DComp.class);
+
+        switch (stateComp.state()) {
             case INACTIVE, EATEN -> {}
 
             case EDIBLE -> {
-                Bonus3DSystem.update3DTransform(bonus);
-
-                //TODO move into some system
                 final Vector2f center = WorldNavigationSystem.computeCenter(bonus);
-                final WorldMap worldMap = gameContext.assertLevel().worldMap();
                 boolean outsideWorld = center.x() < WorldMap.HTS || center.x() > worldMap.numCols() * WorldMap.TS - WorldMap.HTS;
-
-                final BonusView3DComp view3D = bonus.requireComponent(BonusView3DComp.class);
-                view3D.root().setVisible(bonus.state() == BonusState.EDIBLE && !outsideWorld);
+                view3D.root().setVisible(stateComp.state() == BonusState.EDIBLE && !outsideWorld);
                 view3D.rollingTransform().update(bonus);
             }
         }
-    }
-
-    //TODO move elsewhere
-    public static void update3DTransform(GameEntity bonus) {
-        final BonusView3DComp view3D = bonus.requireComponent(BonusView3DComp.class);
-        final Vector2f center = WorldNavigationSystem.computeCenter(bonus);
-
-        view3D.translate().setX(center.x());
-        view3D.translate().setY(center.y());
-        view3D.translate().setZ(-WorldMap.HTS);
     }
 }

@@ -53,7 +53,7 @@ import de.amr.pacmanfx.uilib.entities3D.pac.PacSettings;
 import de.amr.pacmanfx.uilib.entities3D.world.Energizer3D;
 import de.amr.pacmanfx.uilib.entities3D.world.Pellet3D;
 import de.amr.pacmanfx.uilib.entities3D.bonus.Bonus3DAnimationID;
-import de.amr.pacmanfx.uilib.entities3D.bonus.Bonus3DSystem;
+import de.amr.pacmanfx.uilib.entities3D.bonus.Bonus3DViewSystem;
 import de.amr.pacmanfx.uilib.entities3D.bonus.BonusView3DComp;
 import javafx.scene.Group;
 import javafx.scene.PointLight;
@@ -270,7 +270,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             createBonusView3D(bonus);
             getChildren().add(bonus.requireComponent(BonusView3DComp.class).root());
         }
-        Bonus3DSystem.lookEdible(bonus);
+        Bonus3DViewSystem.lookEdible(bonus);
     }
 
     // Private area, no trespassing!
