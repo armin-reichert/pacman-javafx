@@ -271,8 +271,10 @@ public class PlayScene3D extends AbstractGameScene
         Pac3DSupportSystem.update(level.entities().pac(), gameContext);
 
         //TODO change to this style for all entities
-        level.optBonus().ifPresent(Bonus3DMovementSystem::update);
-
+        level.optBonus().ifPresent(bonus -> {
+            level3D.ensureBonus3DViewExists(bonus); //TODO this is a workaround
+            Bonus3DMovementSystem.update(bonus);
+        });
 
         perspectiveManager.updatePerspective(level);
         updateHUD3D(level);

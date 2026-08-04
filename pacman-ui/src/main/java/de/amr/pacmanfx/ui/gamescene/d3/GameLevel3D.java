@@ -261,11 +261,16 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     public void activateBonus3D(Bonus bonus) {
-        if (!bonus.hasComponent(Bonus3DViewComp.class)) {
-            createBonusView3D(bonus);
-            getChildren().add(bonus.requireComponent(Bonus3DViewComp.class).root());
-        }
+        ensureBonus3DViewExists(bonus);
         Bonus3DViewSystem.lookEdible(bonus);
+    }
+
+    public void ensureBonus3DViewExists(Bonus bonus) {
+        if (!bonus.hasComponent(Bonus3DViewComp.class)) {
+            final var view3D = createBonusView3D(bonus);
+            getChildren().add(view3D.root());
+            Bonus3DViewSystem.update(bonus, animationRegistry);
+        }
     }
 
     // Private area, no trespassing!
@@ -322,7 +327,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return energizer3D;
     }
 
-    private void createBonusView3D(Bonus bonus) {
+    private Bonus3DViewComp createBonusView3D(Bonus bonus) {
         final Bonus3DSettings config = gameVariantConfig.worldSettings().bonus();
         final GameVariantRenderConfig renderConfig = gameVariantConfig.renderConfig();
         final Bonus3DViewComp view3D = new Bonus3DViewComp(
@@ -333,6 +338,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         );
         bonus.setComponent(Bonus3DViewComp.class, view3D);
         animationRegistry.register(Bonus3DAnimationID.BONUS_EATEN, view3D.eatenAnimation());
+        return  view3D;
     }
 
     private void createLevelCounterView3D(LevelCounter levelCounter) {
