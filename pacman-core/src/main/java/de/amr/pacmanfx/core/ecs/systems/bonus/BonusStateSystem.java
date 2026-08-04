@@ -36,30 +36,30 @@ public class BonusStateSystem {
     }
 
     private void update(GameEventManager eventManager, GameLevel level, Bonus bonus, FrameContext frame) {
-        final BonusStateComp stateComp = bonus.bonusState();
+        final BonusStateComp state = bonus.state();
         final MoveAndJumpComp moveAndJumpComp = bonus.optMoveAndJump().orElse(null);
 
-        stateComp.timer().doTick();
+        state.timer().doTick();
 
-        switch (stateComp.state()) {
+        switch (state.bonusState()) {
 
             case EDIBLE -> {
                 if (moveAndJumpComp != null) {
                     moveAndJumpSystem.update(level, bonus);
-                    stateComp.setEdibleStateExpired(moveAndJumpComp.targetReached() || stateComp.timer().hasExpired());
+                    state.setEdibleStateExpired(moveAndJumpComp.targetReached() || state.timer().hasExpired());
                 }
                 else {
                     // Fixed position bonus expires using timer. Animated bonus expires when entering portal.
-                    stateComp.setEdibleStateExpired(stateComp.timer().hasExpired());
+                    state.setEdibleStateExpired(state.timer().hasExpired());
                 }
-                if (stateComp.edibleStateExpired()) {
+                if (state.edibleStateExpired()) {
                     setInactive(bonus);
                     eventManager.publishGameEvent(new BonusExpiredEvent(bonus));
                 }
             }
 
             case EATEN -> {
-                if (stateComp.timer().hasExpired()) {
+                if (state.timer().hasExpired()) {
                     setInactive(bonus);
                     eventManager.publishGameEvent(new BonusExpiredEvent(bonus));
                 }
@@ -74,9 +74,9 @@ public class BonusStateSystem {
     public void setInactive(Bonus bonus) {
         bonus.hide();
 
-        final BonusStateComp stateComp = bonus.bonusState();
-        stateComp.setState(BonusState.INACTIVE);
-        stateComp.timer().restartIndefinitely();
+        final BonusStateComp state = bonus.state();
+        state.setBonusState(BonusState.INACTIVE);
+        state.timer().restartIndefinitely();
 
         if (bonus.optMovement().isPresent()) {
             navigator.setSpeed(bonus, 0);
@@ -90,19 +90,19 @@ public class BonusStateSystem {
 
         bonus.show();
 
-        final BonusStateComp stateComp = bonus.bonusState();
-        stateComp.setState(BonusState.EDIBLE);
-        stateComp.timer().restartSeconds(seconds);
+        final BonusStateComp state = bonus.state();
+        state.setBonusState(BonusState.EDIBLE);
+        state.timer().restartSeconds(seconds);
     }
 
     public void showEdibleAndStartWandering(Bonus bonus, float speed) {
         requireNonNull(bonus);
 
-        final BonusStateComp stateComp = bonus.bonusState();
-        stateComp.setState(BonusState.EDIBLE);
-        stateComp.timer().restartIndefinitely();
-
         bonus.show();
+
+        final BonusStateComp state = bonus.state();
+        state.setBonusState(BonusState.EDIBLE);
+        state.timer().restartIndefinitely();
 
         if (bonus.optMoveAndJump().isPresent()) {
             navigator.setSpeed(bonus, speed);
@@ -119,9 +119,9 @@ public class BonusStateSystem {
 
         bonus.show();
 
-        final BonusStateComp stateComp = bonus.bonusState();
-        stateComp.setState(BonusState.EATEN);
-        stateComp.timer().restartSeconds(seconds);
+        final BonusStateComp state = bonus.state();
+        state.setBonusState(BonusState.EATEN);
+        state.timer().restartSeconds(seconds);
 
         if (bonus.optMovement().isPresent()) {
             navigator.setSpeed(bonus, 0);

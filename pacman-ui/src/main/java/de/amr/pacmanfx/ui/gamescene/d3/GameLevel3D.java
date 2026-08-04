@@ -331,9 +331,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final Bonus3DSettings config = gameVariantConfig.worldSettings().bonus();
         final GameVariantRenderConfig renderConfig = gameVariantConfig.renderConfig();
         final BonusView3DComp view3D = new BonusView3DComp(
-            renderConfig.bonusSymbolImage(bonus.symbolCode()),
+            renderConfig.bonusSymbolImage(bonus.data().symbolCode()),
             config.symbolWidth(),
-            renderConfig.bonusValueImage(bonus.symbolCode()),
+            renderConfig.bonusValueImage(bonus.data().symbolCode()),
             config.pointsWidth()
         );
         bonus.setComponent(BonusView3DComp.class, view3D);

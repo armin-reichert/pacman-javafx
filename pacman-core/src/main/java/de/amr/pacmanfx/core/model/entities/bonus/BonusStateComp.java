@@ -13,19 +13,19 @@ public class BonusStateComp implements GameEntityComponent {
 
     private boolean edibleStateExpired;
 
-    private BonusState state;
+    private BonusState bonusState;
 
     private final TickTimer timer;
 
     public BonusStateComp() {
         this.timer = new TickTimer("Bonus-Timer");    }
 
-    public void setState(BonusState state) {
-        this.state = Objects.requireNonNull(state);
+    public void setBonusState(BonusState bonusState) {
+        this.bonusState = Objects.requireNonNull(bonusState);
     }
 
-    public BonusState state() {
-        return state;
+    public BonusState bonusState() {
+        return bonusState;
     }
 
     public TickTimer timer() {
@@ -43,6 +43,6 @@ public class BonusStateComp implements GameEntityComponent {
     @Override
     public void reset() {
         edibleStateExpired = false;
-        state = BonusState.INACTIVE;
+        bonusState = BonusState.INACTIVE;
     }
 }

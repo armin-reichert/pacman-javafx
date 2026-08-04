@@ -4,12 +4,13 @@
 
 package de.amr.pacmanfx.core.model.entities.bonus;
 
-import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.components.MovementComp;
 import de.amr.pacmanfx.core.ecs.components.WorldNavigationComp;
 
 import java.util.Optional;
+
+import static de.amr.pacmanfx.core.Validations.requireNonNegativeInt;
 
 /**
  * A bonus that either stays at a fixed position or jumps through the world, starting at some portal,
@@ -27,14 +28,12 @@ public final class Bonus extends GameEntity {
         return new Bonus(true, symbolCode, points);
     }
 
-    private final int symbolCode;
-    private final int points;
-
     private Bonus(boolean moving, int symbolCode, int points) {
-        this.symbolCode = Validations.requireNonNegativeInt(symbolCode);
-        this.points = Validations.requireNonNegativeInt(points);
         this.name = "Bonus-symbol:%d-points:%d".formatted(symbolCode, points);
-
+        setComponent(BonusDataComp.class, new BonusDataComp(
+            requireNonNegativeInt(symbolCode),
+            requireNonNegativeInt(points)
+        ));
         setComponent(BonusStateComp.class, new BonusStateComp());
 
         if (moving) {
@@ -48,8 +47,16 @@ public final class Bonus extends GameEntity {
 
     // Component access
 
-    public BonusStateComp bonusState() {
+    public BonusDataComp data() {
+        return requireComponent(BonusDataComp.class);
+    }
+
+    public BonusStateComp state() {
         return requireComponent(BonusStateComp.class);
+    }
+
+    public BonusState bonusState() {
+        return state().bonusState();
     }
 
     public Optional<WorldNavigationComp> optWorldNavigation() {
@@ -60,17 +67,4 @@ public final class Bonus extends GameEntity {
         return optComponent(MoveAndJumpComp.class);
     }
 
-    // API
-
-    public BonusState state() {
-        return bonusState().state();
-    }
-
-    public int symbolCode() {
-        return symbolCode;
-    }
-
-    public int points() {
-        return points;
-    }
 }

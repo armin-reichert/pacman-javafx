@@ -325,8 +325,8 @@ public abstract class CommonGamePlay implements GamePlay {
 
         sys.bonusState().showEatenForSeconds(bonus, model.rules().eatenBonusDisplaySeconds());
 
-        scorePoints(gameContext, bonus.points(), level.number());
-        Logger.info("Scored {} points for eating bonus {}", bonus.points(), bonus);
+        scorePoints(gameContext, bonus.data().points(), level.number());
+        Logger.info("Scored {} points for eating bonus {}", bonus.data().points(), bonus);
 
         gameContext.eventManager().publishGameEvent(new BonusEatenEvent(bonus));
     }
@@ -475,7 +475,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final Pac pac = level.entities().pac();
         final Bonus bonus = level.entities().optBonus().orElse(null);
         gameContext.thisFrame().huntingStep().setEdibleBonus(null);
-        if (bonus != null && bonus.state() == BonusState.EDIBLE && strategy.collide(pac, bonus)) {
+        if (bonus != null && bonus.bonusState() == BonusState.EDIBLE && strategy.collide(pac, bonus)) {
             gameContext.thisFrame().huntingStep().setEdibleBonus(bonus);
         }
     }
