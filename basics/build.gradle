@@ -9,4 +9,5 @@ javafx {
 
 dependencies {
     implementation(libs.bundles.tinylog)
+    implementation(libs.gson)
 }

@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui;
 
+import de.amr.basics.json.JsonLoader;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.GameEvent;
 import de.amr.pacmanfx.core.event.GenericChangeEvent;
@@ -30,7 +31,6 @@ import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
 import de.amr.pacmanfx.ui.vm.GameUISettingsVM;
 import de.amr.pacmanfx.ui.window.GameWindow;
-import de.amr.pacmanfx.uilib.JsonLoader;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.stage.Stage;
 import javafx.util.Duration;

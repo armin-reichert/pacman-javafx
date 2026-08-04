@@ -5,6 +5,7 @@ module de.amr.basics {
 
     requires org.tinylog.api;
     requires javafx.graphics;
+    requires com.google.gson;
 
     exports de.amr.basics;
     exports de.amr.basics.filesystem;
@@ -13,4 +14,5 @@ module de.amr.basics {
     exports de.amr.basics.math;
     exports de.amr.basics.spriteanim;
     exports de.amr.basics.timer;
+    exports de.amr.basics.json;
 }

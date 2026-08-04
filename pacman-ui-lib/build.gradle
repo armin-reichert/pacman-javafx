@@ -9,11 +9,11 @@ plugins {
 dependencies {
     implementation(project(":basics"))
     implementation(project(":pacman-core"))
-//    implementation(libs.bundles.obj)
     implementation(project(":objparser"))
     implementation(project(":meshbuilder"))
     implementation(libs.bundles.tinylog)
     implementation(libs.gson)
+//    implementation(libs.bundles.obj)
 }
 
 javafx {

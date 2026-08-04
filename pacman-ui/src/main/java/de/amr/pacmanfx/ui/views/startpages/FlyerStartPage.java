@@ -4,11 +4,11 @@
 
 package de.amr.pacmanfx.ui.views.startpages;
 
+import de.amr.basics.json.JsonLoader;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.Keyboard;
-import de.amr.pacmanfx.uilib.JsonLoader;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.controls.GameStartButton;
 import de.amr.pacmanfx.uilib.widgets.Flyer;

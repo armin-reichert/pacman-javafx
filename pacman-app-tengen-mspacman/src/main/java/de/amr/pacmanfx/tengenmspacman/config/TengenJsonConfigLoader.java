@@ -9,8 +9,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import de.amr.basics.json.JsonLoader;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
-import de.amr.pacmanfx.uilib.JsonLoader;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
