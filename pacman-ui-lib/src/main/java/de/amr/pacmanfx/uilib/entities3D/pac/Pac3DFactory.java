@@ -4,15 +4,10 @@
 
 package de.amr.pacmanfx.uilib.entities3D.pac;
 
-import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.entities3D.PacMan3DModel;
-import de.amr.pacmanfx.uilib.entities3D.pac.anim.HeadBangingAnimation3D;
-import de.amr.pacmanfx.uilib.entities3D.pac.anim.HipSwayingAnimation3D;
-import de.amr.pacmanfx.uilib.entities3D.pac.anim.PacChewingAnimation3D;
-import de.amr.pacmanfx.uilib.entities3D.pac.anim.PacManDyingAnimation3D;
-import de.amr.pacmanfx.uilib.entities3D.pac.anim.MsPacManDyingAnimation3D;
-import de.amr.pacmanfx.uilib.entities3D.pac.anim.Pac3DAnimationID;
+import de.amr.pacmanfx.uilib.entities3D.pac.anim.*;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DAnimationComp;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DViewComp;
 import de.amr.pacmanfx.uilib.entities3D.pac.system.Pac3DSupportSystem;
@@ -34,7 +29,7 @@ import static java.util.Objects.requireNonNull;
 
 public class Pac3DFactory {
 
-    public static void createPacManView3D(AnimationRegistry animationRegistry, GameEntity pac, PacSettings config) {
+    public static void createPacManView3D(AnimationRegistry animationRegistry, Pac pac, PacSettings config) {
         Pac3DSupportSystem.makePac3D(pac, animationRegistry, createPacBody(config, true), createPacBody(config, false));
 
         final Pac3DViewComp view3D = pac.requireComponent(Pac3DViewComp.class);
@@ -54,7 +49,7 @@ public class Pac3DFactory {
         animationRegistry.register(Pac3DAnimationID.DYING,   dying);
     }
 
-    public static void createMsPacManView3D(AnimationRegistry animationRegistry, GameEntity msPacMan, PacSettings config) {
+    public static void createMsPacManView3D(AnimationRegistry animationRegistry, Pac msPacMan, PacSettings config) {
         Pac3DSupportSystem.makePac3D(msPacMan, animationRegistry, createPacBody(config, true), createPacBody(config, false));
 
         final Pac3DViewComp view3D = msPacMan.requireComponent(Pac3DViewComp.class);

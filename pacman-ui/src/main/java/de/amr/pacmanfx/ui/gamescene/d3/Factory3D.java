@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.ui.gamescene.d3;
 
 import de.amr.basics.Disposable;
-import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
+import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorSchemeImpl;
 import de.amr.pacmanfx.game.GameVariantConfig;
@@ -44,7 +44,7 @@ public interface Factory3D extends Disposable {
      * @param pacConfig         the actor 3D configuration object
      * @param animations the registry where animations are stored
      */
-    void createPac3D(GameEntity pac, PacSettings pacConfig, AnimationRegistry animations);
+    void createPac3D(Pac pac, PacSettings pacConfig, AnimationRegistry animations);
 
     /**
      * Creates the 3D representation of a ghost for this game variant, including

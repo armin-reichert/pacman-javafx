@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.uilib.entities3D.pac.system;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DAnimationComp;
@@ -17,7 +17,7 @@ import static java.util.Objects.requireNonNull;
 
 public class Pac3DSupportSystem {
 
-    public static void makePac3D(GameEntity pac, AnimationRegistry animationRegistry, Group body, Group jaw) {
+    public static void makePac3D(Pac pac, AnimationRegistry animationRegistry, Group body, Group jaw) {
         requireNonNull(pac);
         requireNonNull(animationRegistry);
         requireNonNull(body);
@@ -31,7 +31,7 @@ public class Pac3DSupportSystem {
         pac.requireComponent(Pac3DViewComp.class).setBodyAndJaw(body, jaw);
     }
 
-    public static void init(GameEntity pac, GameContext gameContext) {
+    public static void init(Pac pac, GameContext gameContext) {
         requireNonNull(gameContext);
         final GameLevel level = gameContext.assertLevel();
 
@@ -40,7 +40,7 @@ public class Pac3DSupportSystem {
         Pac3DAnimationSystem.setPowerMode(pac, false);
     }
 
-    public static void update(GameEntity pac, GameContext gameContext) {
+    public static void update(Pac pac, GameContext gameContext) {
         requireNonNull(gameContext);
         final GameLevel level = gameContext.assertLevel();
 

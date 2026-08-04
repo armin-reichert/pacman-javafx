@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.uilib.entities3D.pac.system;
 
-import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.entities.pac.system.PacPowerSystem;
 import de.amr.pacmanfx.core.model.entities.pac.system.PacStateSystem;
 import de.amr.pacmanfx.core.model.entities.pac.PacState;
@@ -17,15 +17,15 @@ import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DViewComp;
 
 public class Pac3DAnimationSystem {
 
-    public static void init(GameEntity pac) {
+    public static void init(Pac pac) {
         final Pac3DAnimationComp animationComp = pac.requireComponent(Pac3DAnimationComp.class);
         for (Pac3DAnimationID animationID : Pac3DAnimationID.values()) {
             animationComp.animationRegistry().optAnimation(animationID).ifPresent(ManagedAnimation::stop);
         }
     }
 
-    public static void update(GameEntity pac, PacStateSystem pacStateSystem) {
-        final PacStateComp state = pac.requireComponent(PacStateComp.class);
+    public static void update(Pac pac, PacStateSystem pacStateSystem) {
+        final PacStateComp state = pac.stateComp();
         final Pac3DAnimationComp animation = pac.requireComponent(Pac3DAnimationComp.class);
 
         final Pac3DMovementAnimation movement = animation.movementAnimation();
@@ -49,7 +49,7 @@ public class Pac3DAnimationSystem {
         }
     }
 
-    public static void setPowerMode(GameEntity pac, boolean power) {
+    public static void setPowerMode(Pac pac, boolean power) {
         final Pac3DAnimationComp animation = pac.requireComponent(Pac3DAnimationComp.class);
         final Pac3DMovementAnimation movementAnimation = animation.movementAnimation();
         if (movementAnimation != null) {
@@ -57,16 +57,13 @@ public class Pac3DAnimationSystem {
         }
     }
 
-    public static void playDyingAnimation(GameEntity pac) {
-        //TODO
-    }
-
     /**
      * When empowered, Pac-Man is lighted, light range shrinks with ceasing power.
      */
-    public static void updatePowerLight(GameEntity pac, PacPowerSystem pacPowerSystem) {
-        final PacStateComp state = pac.requireComponent(PacStateComp.class);
+    public static void updatePowerLight(Pac pac, PacPowerSystem pacPowerSystem) {
+        final PacStateComp state = pac.stateComp();
         final Pac3DViewComp view3D = pac.requireComponent(Pac3DViewComp.class);
+
         final boolean lighted = state.pacState() != PacState.DEAD;
         if (lighted) {
             final boolean powerActive      = pacPowerSystem.isPowerActive(pac);

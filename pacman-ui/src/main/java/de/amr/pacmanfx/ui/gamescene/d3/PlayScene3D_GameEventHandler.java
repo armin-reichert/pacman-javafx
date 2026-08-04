@@ -9,7 +9,6 @@ import de.amr.basics.math.RandomNumberSupport;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventListener;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
@@ -25,6 +24,7 @@ import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.entities.bonus.Bonus;
 import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
+import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -291,7 +291,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         seq.play();
     }
 
-    private Animation createPacDyingAnimationSeq(GameEntity pac, GameContext gameContext) {
+    private Animation createPacDyingAnimationSeq(Pac pac, GameContext gameContext) {
         final Pac3DAnimationComp animation = pac.requireComponent(Pac3DAnimationComp.class);
 
         final Animation pacStopping = Ufx.doNow(() -> {

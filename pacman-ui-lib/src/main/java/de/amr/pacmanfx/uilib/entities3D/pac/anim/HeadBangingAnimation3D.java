@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.uilib.entities3D.pac.anim;
 
-import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
+import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.entities.pac.system.PacStateSystem;
 import de.amr.pacmanfx.core.model.entities.pac.PacState;
 import de.amr.pacmanfx.core.model.entities.pac.comp.PacStateComp;
@@ -71,9 +71,9 @@ public class HeadBangingAnimation3D extends ManagedAnimation implements Pac3DMov
     }
 
     @Override
-    public void update(GameEntity pac, PacStateSystem pacStateSystem) {
-        final PacStateComp state = pac.requireComponent(PacStateComp.class);
-        final WorldNavigationComp worldNavigation = pac.requireComponent(WorldNavigationComp.class);
+    public void update(Pac pac, PacStateSystem pacStateSystem) {
+        final PacStateComp state = pac.stateComp();
+        final WorldNavigationComp worldNavigation = pac.worldNavigation();
 
         final var rotateTransition = (RotateTransition) animationFX();
         final boolean animate = state.pacState() == PacState.ACTIVE && pacStateSystem.notBlocked(pac);

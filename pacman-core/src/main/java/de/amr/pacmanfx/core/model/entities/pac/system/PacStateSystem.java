@@ -4,16 +4,13 @@
 
 package de.amr.pacmanfx.core.model.entities.pac.system;
 
-import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.MovementComp;
 import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.ecs.systems.WorldMovementPolicy;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
-import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
-import de.amr.pacmanfx.core.model.entities.pac.comp.PacDigestionComp;
 import de.amr.pacmanfx.core.model.entities.pac.PacState;
+import de.amr.pacmanfx.core.model.entities.pac.comp.PacDigestionComp;
 import de.amr.pacmanfx.core.model.entities.pac.comp.PacStateComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.rules.ActorSpeedRules;
@@ -45,15 +42,9 @@ public class PacStateSystem {
         pac.stateComp().setState(pacState);
     }
 
-    public void update(GameContext gameContext) {
-        requireNonNull(gameContext);
-        final GameLevel level = gameContext.assertLevel();
-        update(level.entities().pac(), level);
-    }
-
-    private void update(GameEntity pac, GameLevel level) {
-        final PacStateComp state = pac.requireComponent(PacStateComp.class);
-        final PacDigestionComp digestion = pac.requireComponent(PacDigestionComp.class);
+    public void update(Pac pac, GameLevel level) {
+        final PacStateComp state = pac.stateComp();
+        final PacDigestionComp digestion = pac.digestion();
 
         final ActorSpeedRules speedRules = level.gameModel().rules().actorSpeedRules();
 
@@ -77,13 +68,13 @@ public class PacStateSystem {
         navigator.tryMovingOrTeleporting(pac, level, movementPolicy);
     }
 
-    public boolean notBlocked(GameEntity pac) {
-        final MovementComp movement = pac.requireComponent(MovementComp.class);
+    public boolean notBlocked(Pac pac) {
+        final MovementComp movement = pac.movement();
         return !(movement.hasZeroVelocity() ||didNotMoveThroughWorld(pac));
     }
 
-    private boolean didNotMoveThroughWorld(GameEntity pac) {
-        final WorldNavigationComp worldNavigation = pac.requireComponent(WorldNavigationComp.class);
+    private boolean didNotMoveThroughWorld(Pac pac) {
+        final WorldNavigationComp worldNavigation = pac.worldNavigation();
         return !worldNavigation.info.moved;
     }
 }

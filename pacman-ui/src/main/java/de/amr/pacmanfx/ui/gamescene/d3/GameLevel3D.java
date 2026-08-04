@@ -13,6 +13,7 @@ import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.entities.bonus.Bonus;
 import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
+import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelEntitySet;
 import de.amr.pacmanfx.core.model.level.LevelCounter;
@@ -353,7 +354,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         getChildren().add(view3D.root());
     }
 
-    private void createPac3D(GameEntity pac) {
+    private void createPac3D(Pac pac) {
         final PacSettings config = gameVariantConfig.worldSettings().pac();
         final Factory3D factory3D = gameVariantConfig.factory3D();
         factory3D.createPac3D(pac, config, animationRegistry);

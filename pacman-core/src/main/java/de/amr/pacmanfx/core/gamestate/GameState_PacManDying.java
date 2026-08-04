@@ -91,7 +91,7 @@ public final class GameState_PacManDying extends GameState {
         }
         else {
             level.heartbeat().triggerPulse();
-            gameContext.systems().pacState().update(gameContext);
+            gameContext.systems().pacState().update(pac, level);
         }
     }
 }

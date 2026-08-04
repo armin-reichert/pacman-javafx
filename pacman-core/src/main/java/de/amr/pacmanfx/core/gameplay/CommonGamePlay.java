@@ -182,7 +182,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
         gameContext.systems().pacAutoSteering().update(level, pac);
         gameContext.systems().pacPower().update(gameContext, pac);
-        gameContext.systems().pacState().update(gameContext);
+        gameContext.systems().pacState().update(pac, level);
         gameContext.systems().pacAnimation().update(pac);
 
         gameContext.systems().ghostState().update(gameContext);
