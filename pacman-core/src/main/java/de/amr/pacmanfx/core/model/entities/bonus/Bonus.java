@@ -29,7 +29,8 @@ public final class Bonus extends GameEntity {
     }
 
     private Bonus(boolean moving, int symbolCode, int points) {
-        this.name = "Bonus-symbol:%d-points:%d".formatted(symbolCode, points);
+        name = "Bonus-symbol:%d-points:%d".formatted(symbolCode, points);
+
         setComponent(BonusDataComp.class, new BonusDataComp(
             requireNonNegativeInt(symbolCode),
             requireNonNegativeInt(points)
@@ -40,8 +41,7 @@ public final class Bonus extends GameEntity {
             setComponent(MovementComp.class, new MovementComp());
             setComponent(WorldNavigationComp.class, new WorldNavigationComp());
             setComponent(MoveAndJumpComp.class, new MoveAndJumpComp());
-
-            optWorldNavigation().ifPresent(worldNavigation -> worldNavigation.setCanTeleport(false));
+            requireComponent(WorldNavigationComp.class).setCanTeleport(false);
         }
     }
 
@@ -57,10 +57,6 @@ public final class Bonus extends GameEntity {
 
     public BonusState bonusState() {
         return state().bonusState();
-    }
-
-    public Optional<WorldNavigationComp> optWorldNavigation() {
-        return optComponent(WorldNavigationComp.class);
     }
 
     public Optional<MoveAndJumpComp> optMoveAndJump() {
