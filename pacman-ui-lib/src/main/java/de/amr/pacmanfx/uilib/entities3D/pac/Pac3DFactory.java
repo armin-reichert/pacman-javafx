@@ -34,9 +34,9 @@ public class Pac3DFactory {
 
         addPowerLight(pacMan3D, config.colors().headColor().desaturate());
 
-        animations.register(Pac3D.AnimationID.CHEWING, new PacChewingAnimation3D(pacMan3D));
-        animations.register(Pac3D.AnimationID.DYING,   new PacManDyingAnimation3D(pacMan3D));
-        animations.register(Pac3D.AnimationID.MOVING,  new HeadBangingAnimation3D(pacMan3D.root()));
+        animations.register(Pac3DAnimationID.CHEWING, new PacChewingAnimation3D(pacMan3D));
+        animations.register(Pac3DAnimationID.DYING,   new PacManDyingAnimation3D(pacMan3D));
+        animations.register(Pac3DAnimationID.MOVING,  new HeadBangingAnimation3D(pacMan3D.root()));
 
         return pacMan3D;
     }
@@ -47,9 +47,9 @@ public class Pac3DFactory {
 
         addPowerLight(msPacMan3D, config.colors().headColor().desaturate());
 
-        animations.register(Pac3D.AnimationID.CHEWING, new PacChewingAnimation3D(msPacMan3D));
-        animations.register(Pac3D.AnimationID.DYING,   new MsPacManDyingAnimation3D(msPacMan3D));
-        animations.register(Pac3D.AnimationID.MOVING,  new HipSwayingAnimation3D(msPacMan3D.root()));
+        animations.register(Pac3DAnimationID.CHEWING, new PacChewingAnimation3D(msPacMan3D));
+        animations.register(Pac3DAnimationID.DYING,   new MsPacManDyingAnimation3D(msPacMan3D));
+        animations.register(Pac3DAnimationID.MOVING,  new HipSwayingAnimation3D(msPacMan3D.root()));
 
         return msPacMan3D;
     }

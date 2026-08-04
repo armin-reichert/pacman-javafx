@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.uilib.entities3D.pac;
 
-import de.amr.basics.Named;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
@@ -28,12 +27,6 @@ import static java.util.Objects.requireNonNull;
  * (Ms.) Pac-Man 3D representations.
  */
 public class Pac3D extends GameEntity implements UpdatableEntity, DisposableGraphicsObject {
-
-    public enum AnimationID implements Named {
-        CHEWING,
-        DYING,
-        MOVING
-    }
 
     private final Group root = new Group();
     private final ObjectProperty<DrawMode> drawMode = new SimpleObjectProperty<>(DrawMode.FILL);
@@ -115,7 +108,7 @@ public class Pac3D extends GameEntity implements UpdatableEntity, DisposableGrap
 
     @Override
     public void dispose() {
-        for (var animID : AnimationID.values()) {
+        for (var animID : Pac3DAnimationID.values()) {
             animations.optAnimation(animID).ifPresent(ManagedAnimation::dispose);
         }
         cleanupLight(powerLight);

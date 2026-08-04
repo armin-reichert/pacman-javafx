@@ -40,6 +40,7 @@ import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3D;
 import de.amr.pacmanfx.uilib.entities3D.pac.Pac3D;
+import de.amr.pacmanfx.uilib.entities3D.pac.Pac3DAnimationID;
 import de.amr.pacmanfx.uilib.entities3D.world.Energizer3D;
 import de.amr.pacmanfx.uilib.entities3D.world.NumberBox3D;
 import de.amr.pacmanfx.uilib.entities3D.world.Pellet3D;
@@ -290,11 +291,11 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     private Animation createPacDyingAnimationSeq(AnimationRegistry animationRegistry, Pac3D pac3D, GameContext gameContext) {
         final Animation pacStopping = Ufx.doNow(() -> {
             pac3D.update(gameContext);
-            animationRegistry.animation(Pac3D.AnimationID.CHEWING).stop();
-            animationRegistry.animation(Pac3D.AnimationID.MOVING).stop();
+            animationRegistry.animation(Pac3DAnimationID.CHEWING).stop();
+            animationRegistry.animation(Pac3DAnimationID.MOVING).stop();
         });
 
-        final Animation pacDying = animationRegistry.animation(Pac3D.AnimationID.DYING).animationFX();
+        final Animation pacDying = animationRegistry.animation(Pac3DAnimationID.DYING).animationFX();
 
         return new SequentialTransition(
             pacStopping,

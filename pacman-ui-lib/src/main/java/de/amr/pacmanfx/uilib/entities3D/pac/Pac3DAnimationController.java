@@ -36,20 +36,20 @@ public class Pac3DAnimationController {
 
         final boolean walking = pac.state() == PacState.ACTIVE && pacStateSystem.notBlocked(pac);
         if (walking) {
-            animations.optAnimation(Pac3D.AnimationID.MOVING, Pac3DMovementAnimation.class).ifPresent(walkingAnimation -> {
+            animations.optAnimation(Pac3DAnimationID.MOVING, Pac3DMovementAnimation.class).ifPresent(walkingAnimation -> {
                 walkingAnimation.playOrContinue();
                 walkingAnimation.update(pacStateSystem, pac);
             });
-            animations.optAnimation(Pac3D.AnimationID.CHEWING).ifPresent(ManagedAnimation::playOrContinue);
+            animations.optAnimation(Pac3DAnimationID.CHEWING).ifPresent(ManagedAnimation::playOrContinue);
         }
         else {
-            animations.optAnimation(Pac3D.AnimationID.MOVING).ifPresent(ManagedAnimation::stop);
-            animations.optAnimation(Pac3D.AnimationID.CHEWING).ifPresent(ManagedAnimation::stop);
+            animations.optAnimation(Pac3DAnimationID.MOVING).ifPresent(ManagedAnimation::stop);
+            animations.optAnimation(Pac3DAnimationID.CHEWING).ifPresent(ManagedAnimation::stop);
         }
     }
 
     public void setPowerMode(boolean power) {
-        animations.optAnimation(Pac3D.AnimationID.MOVING, Pac3DMovementAnimation.class)
+        animations.optAnimation(Pac3DAnimationID.MOVING, Pac3DMovementAnimation.class)
             .ifPresent(movement -> movement.setPowerMode(power));
     }
 
@@ -74,7 +74,7 @@ public class Pac3DAnimationController {
     }
 
     private void stopAllAnimations() {
-        for (Pac3D.AnimationID animationID : Pac3D.AnimationID.values()) {
+        for (Pac3DAnimationID animationID : Pac3DAnimationID.values()) {
             animations.optAnimation(animationID).ifPresent(ManagedAnimation::stop);
         }
     }
