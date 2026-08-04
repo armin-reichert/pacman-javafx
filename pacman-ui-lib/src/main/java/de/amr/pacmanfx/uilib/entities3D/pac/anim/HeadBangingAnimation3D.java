@@ -2,14 +2,13 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.uilib.entities3D.animation;
+package de.amr.pacmanfx.uilib.entities3D.pac.anim;
 
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.components.WorldNavigationComp;
 import de.amr.pacmanfx.core.ecs.systems.pac.PacStateSystem;
 import de.amr.pacmanfx.core.model.entities.pac.PacState;
 import de.amr.pacmanfx.core.model.entities.pac.PacStateComp;
-import de.amr.pacmanfx.uilib.entities3D.pac.anim.Pac3DMovementAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -65,6 +64,7 @@ public class HeadBangingAnimation3D extends Pac3DMovementAnimation {
         }
     }
 
+    @Override
     public void update(GameEntity pac, PacStateSystem pacStateSystem) {
         final PacStateComp state = pac.requireComponent(PacStateComp.class);
         final WorldNavigationComp worldNavigation = pac.requireComponent(WorldNavigationComp.class);
@@ -83,6 +83,7 @@ public class HeadBangingAnimation3D extends Pac3DMovementAnimation {
         }
     }
 
+    @Override
     public void setPowerMode(boolean power) {
         var rotateTransition = (RotateTransition) animationFX();
         boolean running = rotateTransition.getStatus() == Animation.Status.RUNNING;

@@ -2,9 +2,10 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.uilib.entities3D.animation;
+package de.amr.pacmanfx.uilib.entities3D.bonus.anim;
 
 import de.amr.basics.util.Ufx;
+import de.amr.pacmanfx.uilib.entities3D.animation.MaterialColorAnimation3D;
 import de.amr.pacmanfx.uilib.entities3D.world.NumberBox3D;
 import javafx.animation.*;
 import javafx.scene.paint.PhongMaterial;
