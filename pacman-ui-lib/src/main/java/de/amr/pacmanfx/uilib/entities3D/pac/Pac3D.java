@@ -123,7 +123,7 @@ public class Pac3D extends GameEntity implements UpdatableEntity, DisposableGrap
     public void update(GameContext gameContext) {
         requireNonNull(gameContext);
         Pac3DTransformSystem.update(gameContext, this);
-        Pac3DAnimationSystem.update(gameContext, this);
+        Pac3DAnimationSystem.update(this, gameContext.assertLevel(), gameContext.systems().pacState());
         Pac3DAnimationSystem.updatePowerLight(gameContext.systems().pacPower(), this);
     }
 }
