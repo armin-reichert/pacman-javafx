@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.uilib.entities3D.animation;
 
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.entities3D.pac.Pac3D;
 import de.amr.pacmanfx.uilib.entities3D.pac.Pac3DViewComp;
 import javafx.animation.*;
 import javafx.scene.Group;

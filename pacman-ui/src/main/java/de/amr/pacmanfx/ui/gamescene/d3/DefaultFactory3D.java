@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.ui.gamescene.d3;
 
+import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
-import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorSchemeImpl;
 import de.amr.pacmanfx.game.GameVariantConfig;
@@ -16,7 +16,6 @@ import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.entities3D.PacMan3DModel;
 import de.amr.pacmanfx.uilib.entities3D.ghost.*;
-import de.amr.pacmanfx.uilib.entities3D.pac.Pac3D;
 import de.amr.pacmanfx.uilib.entities3D.pac.Pac3DFactory;
 import de.amr.pacmanfx.uilib.entities3D.pac.PacSettings;
 import de.amr.pacmanfx.uilib.entities3D.world.Energizer3D;
@@ -61,8 +60,8 @@ public class DefaultFactory3D implements Factory3D {
 
 
     @Override
-    public Pac3D createPac3D(Pac pac, PacSettings settings, AnimationRegistry animationRegistry) {
-        return Pac3DFactory.createPacMan3D(animationRegistry, pac, settings);
+    public void createPac3D(GameEntity pac, PacSettings settings, AnimationRegistry animationRegistry) {
+        Pac3DFactory.createPacManView3D(animationRegistry, pac, settings);
     }
 
     @Override

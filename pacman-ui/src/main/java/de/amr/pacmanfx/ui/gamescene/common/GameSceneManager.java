@@ -16,7 +16,6 @@ import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.gamescene.d3.PlayScene3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
-import de.amr.pacmanfx.uilib.entities3D.pac.Pac3D;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.tinylog.Logger;
@@ -145,15 +144,14 @@ public class GameSceneManager {
         playScene3D.replaceGameLevel3D(gameContext);
 
         final GameLevel3D level3D = playScene3D.optGameLevel3D().orElseThrow();
-        final Pac3D pac3D = level3D.entities3D().pac3D();
 
         playScene3D.replaceActionBindings(level);
         playScene3D.initFood3D(level, true);
-        playScene3D.initPac3D(pac3D, gameContext);
+        playScene3D.initPac3D(pac, gameContext);
         playScene3D.updateHUD3D(level);
 
         level3D.init(gameContext);
-        level3D.startLivesCounterTrackingPac();
+        level3D.startLivesCounterTrackingPac(pac);
 
         final PacPowerSystem pacPowerSystem = gameContext.systems().pacPower();
         if (pacPowerSystem.isPowerActive(pac)) {

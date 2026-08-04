@@ -7,7 +7,9 @@ package de.amr.pacmanfx.ui.gamescene.d3;
 import de.amr.basics.Named;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.math.Vector3f;
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.entities.bonus.Bonus;
 import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
@@ -38,24 +40,22 @@ import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Pellet3DSettings;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.vm.GameUISettingsVM;
-import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.entities3D.animation.EnergizerParticle3D;
 import de.amr.pacmanfx.uilib.entities3D.animation.Pool;
+import de.amr.pacmanfx.uilib.entities3D.bonus.Bonus3DAnimationID;
+import de.amr.pacmanfx.uilib.entities3D.bonus.Bonus3DViewComp;
+import de.amr.pacmanfx.uilib.entities3D.bonus.Bonus3DViewSystem;
 import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3D;
 import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3DAppearanceController;
 import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3DTransformController;
 import de.amr.pacmanfx.uilib.entities3D.ghost.GhostSettings;
-import de.amr.pacmanfx.uilib.entities3D.pac.Pac3D;
 import de.amr.pacmanfx.uilib.entities3D.pac.Pac3DViewComp;
 import de.amr.pacmanfx.uilib.entities3D.pac.PacSettings;
 import de.amr.pacmanfx.uilib.entities3D.world.Energizer3D;
 import de.amr.pacmanfx.uilib.entities3D.world.Pellet3D;
-import de.amr.pacmanfx.uilib.entities3D.bonus.Bonus3DAnimationID;
-import de.amr.pacmanfx.uilib.entities3D.bonus.Bonus3DViewSystem;
-import de.amr.pacmanfx.uilib.entities3D.bonus.Bonus3DViewComp;
 import javafx.scene.Group;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
@@ -87,7 +87,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     public static class EntitySet3D extends GameLevelEntitySet {
         // Cached for faster access
-        private Pac3D pac3D;
         private List<Ghost3D> ghosts3D = new ArrayList<>(4); // order: RED, PINK, CYAN, ORANGE
         private LivesCounter3D livesCounter3D;
         private final Map<Vector2i, Energizer3D> energizer3DByTile = new HashMap<>();
@@ -96,7 +95,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         @Override
         public void clear() {
             super.clear();
-            pac3D = null;
             if (ghosts3D != null) {
                 ghosts3D = null;
             }
@@ -105,14 +103,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             pellet3DByTile.clear();
         }
 
-        public Pac3D pac3D() {
-            return pac3D;
-        }
-
         public List<Ghost3D> ghosts3D() {
             return ghosts3D;
         }
-
     }
 
     // Access to game model
@@ -139,16 +132,16 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         GameUISettingsVM viewModel,
         GameContext gameContext,
         GameLevel level,
-        GameVariantConfig gameVariantConfig
-    ) {
-        this.viewModel = requireNonNull(viewModel);
+        GameVariantConfig gameVariantConfig)
+    {
         requireNonNull(gameContext);
+        this.viewModel = requireNonNull(viewModel);
         this.level = requireNonNull(level);
         this.gameVariantConfig = requireNonNull(gameVariantConfig);
 
         createMaze3D();
         createFood3D();
-        createPac3D();
+        createPac3D(level.entities().pac());
         createGhosts3D(gameContext);
         createLivesCounter3D();
         createMessageManager();
@@ -176,8 +169,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     /**
      * Starts the lives counter symbols following Pac-Man with their eyes.
      */
-    public void startLivesCounterTrackingPac() {
-        entitySet3D.livesCounter3D.startTracking(entitySet3D.pac3D.requireComponent(Pac3DViewComp.class).root());
+    public void startLivesCounterTrackingPac(GameEntity pac) {
+        entitySet3D.livesCounter3D.startTracking(pac.requireComponent(Pac3DViewComp.class).root());
     }
 
     @Override
@@ -360,11 +353,11 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         getChildren().add(view3D.root());
     }
 
-    private void createPac3D() {
+    private void createPac3D(GameEntity pac) {
         final PacSettings config = gameVariantConfig.worldSettings().pac();
-        entitySet3D.pac3D = gameVariantConfig.factory3D().createPac3D(level.entities().pac(), config, animationRegistry);
+        final Factory3D factory3D = gameVariantConfig.factory3D();
+        factory3D.createPac3D(pac, config, animationRegistry);
         //entitySet3D.pac3D.drawModeProperty().bind(viewModel.common3D.drawModeProperty);
-        entitySet3D.add(entitySet3D.pac3D);
     }
 
     private void createGhosts3D(GameContext gameContext) {
@@ -418,8 +411,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     // Order matters for correct transparency!
     private void buildHierarchy() {
         getChildren().add(entitySet3D.livesCounter3D.root());
-        getChildren().add(entitySet3D.pac3D.requireComponent(Pac3DViewComp.class).root());
-        getChildren().add(entitySet3D.pac3D.requireComponent(Pac3DViewComp.class).powerLight());
+        getChildren().add(level.entities().pac().requireComponent(Pac3DViewComp.class).root());
+        getChildren().add(level.entities().pac().requireComponent(Pac3DViewComp.class).powerLight());
         for (var ghost3D : entitySet3D.ghosts3D) { getChildren().add(ghost3D.root()); }
         entitySet3D.energizer3DByTile.values().stream().map(Energizer3D::shape).forEach(getChildren()::add);
         entitySet3D.pellet3DByTile.values().stream().map(Pellet3D::shape).forEach(getChildren()::add);

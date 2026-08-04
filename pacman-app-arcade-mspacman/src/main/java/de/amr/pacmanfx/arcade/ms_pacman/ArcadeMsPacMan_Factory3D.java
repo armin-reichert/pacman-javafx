@@ -3,11 +3,10 @@
  */
 package de.amr.pacmanfx.arcade.ms_pacman;
 
-import de.amr.pacmanfx.core.model.entities.pac.Pac;
+import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.ui.gamescene.d3.DefaultFactory3D;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.entities3D.pac.Pac3D;
 import de.amr.pacmanfx.uilib.entities3D.pac.Pac3DFactory;
 import de.amr.pacmanfx.uilib.entities3D.pac.PacSettings;
 import javafx.scene.Group;
@@ -17,8 +16,8 @@ import static java.util.Objects.requireNonNull;
 public class ArcadeMsPacMan_Factory3D extends DefaultFactory3D {
 
     @Override
-    public Pac3D createPac3D(Pac pac, PacSettings settings, AnimationRegistry animationRegistry) {
-        return Pac3DFactory.createMsPacMan3D(animationRegistry, pac, settings);
+    public void createPac3D(GameEntity pac, PacSettings settings, AnimationRegistry animationRegistry) {
+        Pac3DFactory.createMsPacManView3D(animationRegistry, pac, settings);
     }
 
     @Override

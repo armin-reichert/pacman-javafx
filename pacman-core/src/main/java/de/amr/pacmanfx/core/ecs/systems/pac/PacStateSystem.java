@@ -5,6 +5,9 @@
 package de.amr.pacmanfx.core.ecs.systems.pac;
 
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.ecs.components.MovementComp;
+import de.amr.pacmanfx.core.ecs.components.WorldNavigationComp;
 import de.amr.pacmanfx.core.ecs.systems.world.WorldMovementPolicy;
 import de.amr.pacmanfx.core.ecs.systems.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.GameCheats;
@@ -74,11 +77,13 @@ public class PacStateSystem {
         navigator.tryMovingOrTeleporting(pac, level, movementPolicy);
     }
 
-    public boolean notBlocked(Pac pac) {
-        return !(pac.movement().hasZeroVelocity() ||didNotMoveThroughWorld(pac));
+    public boolean notBlocked(GameEntity pac) {
+        final MovementComp movement = pac.requireComponent(MovementComp.class);
+        return !(movement.hasZeroVelocity() ||didNotMoveThroughWorld(pac));
     }
 
-    private boolean didNotMoveThroughWorld(Pac pac) {
-        return !pac.worldNavigation().info.moved;
+    private boolean didNotMoveThroughWorld(GameEntity pac) {
+        final WorldNavigationComp worldNavigation = pac.requireComponent(WorldNavigationComp.class);
+        return !worldNavigation.info.moved;
     }
 }

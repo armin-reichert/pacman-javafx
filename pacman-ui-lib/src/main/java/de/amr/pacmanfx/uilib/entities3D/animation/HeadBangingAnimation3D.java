@@ -4,9 +4,11 @@
 
 package de.amr.pacmanfx.uilib.entities3D.animation;
 
+import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.ecs.components.WorldNavigationComp;
 import de.amr.pacmanfx.core.ecs.systems.pac.PacStateSystem;
-import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.entities.pac.PacState;
+import de.amr.pacmanfx.core.model.entities.pac.PacStateComp;
 import de.amr.pacmanfx.uilib.entities3D.pac.Pac3DMovementAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -63,11 +65,14 @@ public class HeadBangingAnimation3D extends Pac3DMovementAnimation {
         }
     }
 
-    public void update(PacStateSystem pacStateSystem, Pac pac) {
+    public void update(GameEntity pac, PacStateSystem pacStateSystem) {
+        final PacStateComp state = pac.requireComponent(PacStateComp.class);
+        final WorldNavigationComp worldNavigation = pac.requireComponent(WorldNavigationComp.class);
+
         final var rotateTransition = (RotateTransition) animationFX();
-        final boolean animate = pac.state() == PacState.ACTIVE && pacStateSystem.notBlocked(pac);
+        final boolean animate = state.pacState() == PacState.ACTIVE && pacStateSystem.notBlocked(pac);
         if (animate) {
-            final Point3D axis = pac.worldNavigation().moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
+            final Point3D axis = worldNavigation.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
             if (!axis.equals(rotateTransition.getAxis())) {
                 stop();
                 rotateTransition.setAxis(axis);

@@ -23,6 +23,7 @@ import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.entities.bonus.Bonus;
 import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
+import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -39,7 +40,7 @@ import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3D;
-import de.amr.pacmanfx.uilib.entities3D.pac.Pac3D;
+import de.amr.pacmanfx.uilib.entities3D.pac.Pac3DSupportSystem;
 import de.amr.pacmanfx.uilib.entities3D.pac.Pac3DAnimationID;
 import de.amr.pacmanfx.uilib.entities3D.pac.Pac3DAnimationSystem;
 import de.amr.pacmanfx.uilib.entities3D.world.Energizer3D;
@@ -216,11 +217,12 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 
     @Override
     default void onPacGetsPower(PacGetsPowerEvent event) {
+        final GameLevel level = gameContext().assertLevel();
         final GameLevel3D level3D = assertLevel3D();
         final GameContext gameContext = gameContext();
         optSoundEffects().ifPresent(GameSoundEffects::stopSiren);
         if (!gameContext.model().rules().isLevelCompleted(level3D.level())) {
-            Pac3DAnimationSystem.setPowerMode(level3D.entities3D().pac3D(), true);
+            Pac3DAnimationSystem.setPowerMode(level.entities().pac(), true);
             level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.WALL_COLOR_FLASHING)
                 .ifPresent(ManagedAnimation::playFromStart);
             optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
@@ -229,8 +231,9 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 
     @Override
     default void onPacLostPower(PacLostPowerEvent ignoredEvent) {
+        final GameLevel level = gameContext().assertLevel();
         final GameLevel3D level3D = assertLevel3D();
-        Pac3DAnimationSystem.setPowerMode(level3D.entities3D().pac3D(), true);
+        Pac3DAnimationSystem.setPowerMode(level.entities().pac(), true);
         optSoundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
         level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.WALL_COLOR_FLASHING)
             .ifPresent(ManagedAnimation::stop);
@@ -251,9 +254,11 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     }
 
     private void onHuntingStart(GameContext gameContext) {
+        final GameLevel level = gameContext().assertLevel();
         final GameLevel3D level3D = assertLevel3D();
 
-        level3D.entities3D().pac3D().init(gameContext);
+        Pac3DSupportSystem.init(level.entities().pac(), gameContext);
+
         level3D.entities3D().ghosts3D().forEach(ghost3D -> ghost3D.init(gameContext));
         level3D.energizers3D().forEach(Energizer3D::startPumping);
 
@@ -268,9 +273,6 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         final GameLevel level = gameContext.assertLevel();
         final GameLevel3D level3D = assertLevel3D();
 
-        //TODO convert to CMS component
-        final Pac3D pac3D = level3D.entities3D().pac3D();
-
         optSoundEffects().ifPresent(GameSoundEffects::stopAll);
 
         // Do not stop all animations!
@@ -284,14 +286,14 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 
         gameContext.state().waitForTimeout();
 
-        final Animation seq = createPacDyingAnimationSeq(level3D.animationRegistry(), pac3D, gameContext);
+        final Animation seq = createPacDyingAnimationSeq(level3D.animationRegistry(), level.entities().pac(), gameContext);
         seq.setOnFinished(_ -> gameContext.state().triggerTimeout());
         seq.play();
     }
 
-    private Animation createPacDyingAnimationSeq(AnimationRegistry animationRegistry, Pac3D pac3D, GameContext gameContext) {
+    private Animation createPacDyingAnimationSeq(AnimationRegistry animationRegistry, Pac pac, GameContext gameContext) {
         final Animation pacStopping = Ufx.doNow(() -> {
-            pac3D.update(gameContext);
+            Pac3DSupportSystem.update(pac, gameContext); //TODO check if this is needed
             animationRegistry.animation(Pac3DAnimationID.CHEWING).stop();
             animationRegistry.animation(Pac3DAnimationID.MOVING).stop();
         });

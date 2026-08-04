@@ -12,7 +12,7 @@ public class PacStateComp implements GameEntityComponent {
 
     private PacState state;
 
-    public PacState state() {
+    public PacState pacState() {
         return state;
     }
 

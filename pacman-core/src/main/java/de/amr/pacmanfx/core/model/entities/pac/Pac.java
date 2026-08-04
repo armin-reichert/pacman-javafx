@@ -89,7 +89,7 @@ public final class Pac extends GameEntity {
     }
 
     public PacState state() {
-        return stateComp().state();
+        return stateComp().pacState();
     }
 
 }

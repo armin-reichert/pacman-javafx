@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.ui.gamescene.d3;
 
 import de.amr.basics.Disposable;
+import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
-import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorSchemeImpl;
 import de.amr.pacmanfx.game.GameVariantConfig;
@@ -17,7 +17,6 @@ import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3D;
 import de.amr.pacmanfx.uilib.entities3D.ghost.GhostSettings;
-import de.amr.pacmanfx.uilib.entities3D.pac.Pac3D;
 import de.amr.pacmanfx.uilib.entities3D.pac.PacSettings;
 import de.amr.pacmanfx.uilib.entities3D.world.Energizer3D;
 import de.amr.pacmanfx.uilib.entities3D.world.Pellet3D;
@@ -44,9 +43,8 @@ public interface Factory3D extends Disposable {
      * @param pac               the Pac actor whose animations and state drive the model
      * @param pacConfig         the actor 3D configuration object
      * @param animations the registry where animations are stored
-     * @return the 3D representation of Pac
      */
-    Pac3D createPac3D(Pac pac, PacSettings pacConfig, AnimationRegistry animations);
+    void createPac3D(GameEntity pac, PacSettings pacConfig, AnimationRegistry animations);
 
     /**
      * Creates the 3D representation of a ghost for this game variant, including

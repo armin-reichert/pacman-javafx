@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui.gamescene.d3;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
+import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.score.Score;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
@@ -28,7 +29,7 @@ import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.entities3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.entities3D.Scores3D;
 import de.amr.pacmanfx.uilib.entities3D.bonus.Bonus3DMovementSystem;
-import de.amr.pacmanfx.uilib.entities3D.pac.Pac3D;
+import de.amr.pacmanfx.uilib.entities3D.pac.Pac3DSupportSystem;
 import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -152,12 +153,12 @@ public class PlayScene3D extends AbstractGameScene
         scores3D.showHighScore(highScore.points(), highScore.levelNumber());
     }
 
-    public void initPac3D(Pac3D pac3D, GameContext gameContext) {
-        requireNonNull(pac3D);
+    public void initPac3D(Pac pac, GameContext gameContext) {
+        requireNonNull(pac);
         requireNonNull(gameScene());
 
-        pac3D.init(gameContext);
-        pac3D.update(gameContext);
+        Pac3DSupportSystem.init(pac, gameContext);
+        Pac3DSupportSystem.update(pac, gameContext);
     }
 
     public void initFood3D(GameLevel level, boolean startEnergizerPumping) {
@@ -175,6 +176,7 @@ public class PlayScene3D extends AbstractGameScene
 
     public void replaceGameLevel3D(GameContext gameContext) {
         requireNonNull(gameContext);
+        final GameLevel level = gameContext.assertLevel();
 
         if (level3D != null) {
             Logger.info("Old 3D game level is disposed...");
@@ -182,7 +184,8 @@ public class PlayScene3D extends AbstractGameScene
         }
         final GameUISettingsVM viewModel = appContext().ui().viewModel();
 
-        level3D = new GameLevel3D(viewModel, gameContext, gameContext.assertLevel(), appContext().variants().currentVariant().config());
+        level3D = new GameLevel3D(viewModel, gameContext, level, appContext().variants().currentVariant().config());
+
         decorate(level3D);
         level3DEmbedder.getChildren().setAll(level3D);
 
@@ -192,7 +195,9 @@ public class PlayScene3D extends AbstractGameScene
             .filter(UpdatableEntity.class::isInstance).map(UpdatableEntity.class::cast)
             .forEach(entity -> entity.init(gameContext));
 
-        level3D.startLivesCounterTrackingPac();
+        Pac3DSupportSystem.init(level.entities().pac(), gameContext);
+
+        level3D.startLivesCounterTrackingPac(level.entities().pac());
 
         Logger.info("New 3D game level created");
     }
@@ -258,9 +263,12 @@ public class PlayScene3D extends AbstractGameScene
             return;
         }
 
+        //TODO get rid of all this!
         level3D.entities3D().selectAll()
             .filter(UpdatableEntity.class::isInstance).map(UpdatableEntity.class::cast)
             .forEach(entity -> entity.update(gameContext()));
+
+        Pac3DSupportSystem.update(level.entities().pac(), gameContext);
 
         //TODO change to this style for all entities
         level.optBonus().ifPresent(Bonus3DMovementSystem::update);
