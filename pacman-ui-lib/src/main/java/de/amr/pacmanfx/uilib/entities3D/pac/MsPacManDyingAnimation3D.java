@@ -14,10 +14,8 @@ import javafx.util.Duration;
 
 public class MsPacManDyingAnimation3D extends ManagedAnimation {
 
-    public MsPacManDyingAnimation3D(Pac3D msPacMan3D) {
+    public MsPacManDyingAnimation3D(Pac3DViewComp view3D) {
         super("Ms. Pac-Man Dying");
-
-        final Pac3DViewComp view3D = msPacMan3D.requireComponent(Pac3DViewComp.class);
         setFactory(() -> createAnimation(view3D.root()));
     }
 

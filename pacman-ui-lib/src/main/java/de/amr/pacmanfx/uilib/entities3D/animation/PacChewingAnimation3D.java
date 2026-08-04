@@ -13,9 +13,8 @@ import javafx.util.Duration;
 
 public class PacChewingAnimation3D extends ManagedAnimation {
 
-    public PacChewingAnimation3D(Pac3D pac3D) {
+    public PacChewingAnimation3D(Pac3DViewComp view3D) {
         super("Pac-Man Chewing");
-        final Pac3DViewComp view3D = pac3D.requireComponent(Pac3DViewComp.class);
         setFactory(() -> createChewingAnimation(view3D.jaw()));
     }
 
