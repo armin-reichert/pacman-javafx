@@ -4,9 +4,9 @@
 
 package de.amr.pacmanfx.core.model.entities.pac.system;
 
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.model.entities.pac.comp.PacDigestionComp;
+import de.amr.pacmanfx.core.model.rules.GameRules;
 
 public class PacDigestionSystem {
 
@@ -33,13 +33,13 @@ public class PacDigestionSystem {
         digestion.setStarvingTicks(0);
     }
 
-    public void onPacEatsEnergizer(GameContext gameContext, GameEntity pac) {
+    public void onPacEatsEnergizer(GameEntity pac, GameRules rules) {
         final PacDigestionComp digestion = pac.requireComponent(PacDigestionComp.class);
-        digestion.setRestingTicks(gameContext.model().rules().restingTicksForEnergizer());
+        digestion.setRestingTicks(rules.restingTicksForEnergizer());
     }
 
-    public void onPacEatsPellet(GameContext gameContext, GameEntity pac) {
+    public void onPacEatsPellet(GameEntity pac, GameRules rules) {
         final PacDigestionComp digestion = pac.requireComponent(PacDigestionComp.class);
-        digestion.setRestingTicks(gameContext.model().rules().restingTicksForPellet());
+        digestion.setRestingTicks(rules.restingTicksForPellet());
     }
 }

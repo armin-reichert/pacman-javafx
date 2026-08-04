@@ -31,6 +31,7 @@ import de.amr.pacmanfx.core.model.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.model.level.LevelCounterSystem;
 import de.amr.pacmanfx.core.model.rules.CollisionStrategy;
+import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.core.model.score.PropertyFileScore;
 import de.amr.pacmanfx.core.model.score.Score;
 import de.amr.pacmanfx.core.model.world.house.ArcadeHouseGateKeeper;
@@ -286,14 +287,14 @@ public abstract class CommonGamePlay implements GamePlay {
         requireNonNull(gameContext);
         requireNonNull(tile);
 
-        final PacDigestionSystem pacDigestionSystem = gameContext.systems().pacDigestion();
         final GameModel model = gameContext.model();
+        final GameRules rules = model.rules();
         final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
 
-        scorePoints(gameContext, model.rules().scoringRules().pointsForPellet(), level.number());
+        scorePoints(gameContext, rules.scoringRules().pointsForPellet(), level.number());
         model.gateKeeper().registerFoodEaten(level);
-        pacDigestionSystem.onPacEatsPellet(gameContext, pac);
+        gameContext.systems().pacDigestion().onPacEatsPellet(pac, rules);
     }
 
     @Override
@@ -302,15 +303,14 @@ public abstract class CommonGamePlay implements GamePlay {
         requireNonNull(tile);
 
         final GameModel model = gameContext.model();
+        final GameRules rules = model.rules();
         final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
-        final PacDigestionSystem pacDigestionSystem = gameContext.systems().pacDigestion();
 
-        scorePoints(gameContext, model.rules().scoringRules().pointsForEnergizer(), level.number());
+        scorePoints(gameContext, rules.scoringRules().pointsForEnergizer(), level.number());
         model.gateKeeper().registerFoodEaten(level);
-        pacDigestionSystem.onPacEatsEnergizer(gameContext, pac);
         level.clearGhostKillChain();
-
+        gameContext.systems().pacDigestion().onPacEatsEnergizer(pac, rules);
         gameContext.systems().pacPower().start(gameContext, pac);
     }
 
