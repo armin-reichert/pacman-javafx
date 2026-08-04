@@ -43,6 +43,6 @@ public class Pac3DSupportSystem {
 
         Pac3DTransformSystem.update(pac, level);
         Pac3DAnimationSystem.update(pac, gameContext.systems().pacState());
-        Pac3DAnimationSystem.updatePowerLight(gameContext.systems().pacPower(), pac);
+        Pac3DAnimationSystem.updatePowerLight(pac, gameContext.systems().pacPower());
     }
 }

@@ -8,6 +8,8 @@ import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.components.WorldNavigationComp;
 import de.amr.pacmanfx.core.ecs.systems.world.WorldNavigationSystem;
+import de.amr.pacmanfx.core.model.entities.pac.PacState;
+import de.amr.pacmanfx.core.model.entities.pac.PacStateComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 
@@ -28,25 +30,28 @@ public class Pac3DTransformSystem {
         requireNonNull(pac);
         requireNonNull(level);
 
+        final PacStateComp state = pac.requireComponent(PacStateComp.class);
         final Pac3DViewComp view3D = pac.requireComponent(Pac3DViewComp.class);
         final WorldNavigationComp worldNavigation = pac.requireComponent(WorldNavigationComp.class);
 
-        final Vector2f center = WorldNavigationSystem.computeCenter(pac);
+        if (state.pacState() == PacState.ACTIVE) {
+            final Vector2f center = WorldNavigationSystem.computeCenter(pac);
 
-        view3D.root().setTranslateX(center.x());
-        view3D.root().setTranslateY(center.y());
-        view3D.root().setTranslateZ(-8); //TODO should depend on size
+            view3D.root().setTranslateX(center.x());
+            view3D.root().setTranslateY(center.y());
+            view3D.root().setTranslateZ(-8); //TODO should depend on size
 
-        if (worldNavigation.moveDir() != null) {
-            view3D.facingRotate().setAngle(switch (worldNavigation.moveDir()) {
-                case LEFT -> 0;
-                case UP -> 90;
-                case RIGHT -> 180;
-                case DOWN -> 270;
-            });
+            if (worldNavigation.moveDir() != null) {
+                view3D.facingRotate().setAngle(switch (worldNavigation.moveDir()) {
+                    case LEFT -> 0;
+                    case UP -> 90;
+                    case RIGHT -> 180;
+                    case DOWN -> 270;
+                });
+            }
+
+            final boolean outside = center.x() < WorldMap.HTS || center.x() > WorldMap.TS * level.worldMap().numCols() - WorldMap.HTS;
+            view3D.root().setVisible(pac.visibility().isVisible() && !outside);
         }
-
-        final boolean outside = center.x() < WorldMap.HTS || center.x() > WorldMap.TS * level.worldMap().numCols() - WorldMap.HTS;
-        view3D.root().setVisible(pac.visibility().isVisible() && !outside);
     }
 }
