@@ -1,4 +1,4 @@
-package de.amr.pacmanfx.uilib.entities3D.pac;
+package de.amr.pacmanfx.uilib.entities3D.pac.system;
 
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.pac.PacPowerSystem;
@@ -7,6 +7,10 @@ import de.amr.pacmanfx.core.model.entities.pac.PacState;
 import de.amr.pacmanfx.core.model.entities.pac.PacStateComp;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
+import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DAnimationComp;
+import de.amr.pacmanfx.uilib.entities3D.pac.anim.Pac3DAnimationID;
+import de.amr.pacmanfx.uilib.entities3D.pac.anim.Pac3DMovementAnimation;
+import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DViewComp;
 
 public class Pac3DAnimationSystem {
 

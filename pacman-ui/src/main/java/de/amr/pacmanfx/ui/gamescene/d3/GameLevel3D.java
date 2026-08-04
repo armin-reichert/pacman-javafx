@@ -52,7 +52,7 @@ import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3D;
 import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3DAppearanceController;
 import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3DTransformController;
 import de.amr.pacmanfx.uilib.entities3D.ghost.GhostSettings;
-import de.amr.pacmanfx.uilib.entities3D.pac.Pac3DViewComp;
+import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DViewComp;
 import de.amr.pacmanfx.uilib.entities3D.pac.PacSettings;
 import de.amr.pacmanfx.uilib.entities3D.world.Energizer3D;
 import de.amr.pacmanfx.uilib.entities3D.world.Pellet3D;

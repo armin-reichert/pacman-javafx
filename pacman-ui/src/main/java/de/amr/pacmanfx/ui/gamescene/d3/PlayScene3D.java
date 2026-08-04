@@ -29,7 +29,7 @@ import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.entities3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.entities3D.Scores3D;
 import de.amr.pacmanfx.uilib.entities3D.bonus.Bonus3DMovementSystem;
-import de.amr.pacmanfx.uilib.entities3D.pac.Pac3DSupportSystem;
+import de.amr.pacmanfx.uilib.entities3D.pac.system.Pac3DSupportSystem;
 import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;

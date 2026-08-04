@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.ecs.components.WorldNavigationComp;
 import de.amr.pacmanfx.core.ecs.systems.pac.PacStateSystem;
 import de.amr.pacmanfx.core.model.entities.pac.PacState;
 import de.amr.pacmanfx.core.model.entities.pac.PacStateComp;
-import de.amr.pacmanfx.uilib.entities3D.pac.Pac3DMovementAnimation;
+import de.amr.pacmanfx.uilib.entities3D.pac.anim.Pac3DMovementAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;

@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.uilib.entities3D.animation;
 
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.entities3D.pac.Pac3DViewComp;
+import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DViewComp;
 import javafx.animation.*;
 import javafx.scene.Node;
 import javafx.scene.PointLight;

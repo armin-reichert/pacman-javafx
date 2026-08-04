@@ -2,12 +2,15 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.uilib.entities3D.pac;
+package de.amr.pacmanfx.uilib.entities3D.pac.system;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DAnimationComp;
+import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DTransformComp;
+import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DViewComp;
 import javafx.scene.Group;
 
 import static java.util.Objects.requireNonNull;

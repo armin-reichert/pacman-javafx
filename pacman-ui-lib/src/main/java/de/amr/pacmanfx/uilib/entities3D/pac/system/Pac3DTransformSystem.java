@@ -2,9 +2,8 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.uilib.entities3D.pac;
+package de.amr.pacmanfx.uilib.entities3D.pac.system;
 
-import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector3f;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.components.WorldNavigationComp;
@@ -13,6 +12,7 @@ import de.amr.pacmanfx.core.model.entities.pac.PacState;
 import de.amr.pacmanfx.core.model.entities.pac.PacStateComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DViewComp;
 
 import static java.util.Objects.requireNonNull;
 
