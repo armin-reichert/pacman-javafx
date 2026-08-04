@@ -14,6 +14,7 @@ import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.entities.pac.comp.PacDigestionComp;
 import de.amr.pacmanfx.core.model.entities.pac.PacState;
+import de.amr.pacmanfx.core.model.entities.pac.comp.PacStateComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.rules.ActorSpeedRules;
 
@@ -47,21 +48,20 @@ public class PacStateSystem {
     public void update(GameContext gameContext) {
         requireNonNull(gameContext);
         final GameLevel level = gameContext.assertLevel();
-        update(gameContext.cheats(), level, level.entities().pac());
+        update(level.entities().pac(), level);
     }
 
-    private void update(
-        GameCheats cheats,
-        GameLevel level,
-        Pac pac)
-    {
-        final PacState state = pac.state(); //TODO entity component
-        final PacDigestionComp digestion = pac.digestion();
+    private void update(GameEntity pac, GameLevel level) {
+        final PacStateComp state = pac.requireComponent(PacStateComp.class);
+        final PacDigestionComp digestion = pac.requireComponent(PacDigestionComp.class);
+
         final ActorSpeedRules speedRules = level.gameModel().rules().actorSpeedRules();
 
-        if (state == PacState.DEAD || digestion.restingTicks() == PacDigestionComp.REST_FOREVER) {
+        if (state.pacState() == PacState.DEAD || digestion.restingTicks() == PacDigestionComp.REST_FOREVER) {
             return;
         }
+
+        state.setMoving(state.pacState() == PacState.ACTIVE && notBlocked(pac));
 
         digestionSystem.update(pac);
 

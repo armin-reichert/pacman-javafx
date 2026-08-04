@@ -28,11 +28,9 @@ public class Pac3DAnimationSystem {
         final PacStateComp state = pac.requireComponent(PacStateComp.class);
         final Pac3DAnimationComp animation = pac.requireComponent(Pac3DAnimationComp.class);
 
-        final boolean walking = state.pacState() == PacState.ACTIVE && pacStateSystem.notBlocked(pac);
-
         final Pac3DMovementAnimation movement = animation.movementAnimation();
         if (movement != null) {
-            if (walking) {
+            if (state.isMoving()) {
                 movement.managedAnimation().playOrContinue();
                 movement.update(pac, pacStateSystem);
             }
@@ -43,7 +41,7 @@ public class Pac3DAnimationSystem {
 
         final ManagedAnimation chewing = animation.chewingAnimation();
         if (chewing != null) {
-            if (walking) {
+            if (state.isMoving()) {
                 chewing.playOrContinue();
             } else {
                 chewing.stop();

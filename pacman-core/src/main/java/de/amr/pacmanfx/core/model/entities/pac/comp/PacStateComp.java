@@ -13,7 +13,7 @@ public class PacStateComp implements GameEntityComponent {
 
     private PacState state;
 
-    private boolean blocked;
+    private boolean moving;
 
     public PacState pacState() {
         return state;
@@ -23,12 +23,12 @@ public class PacStateComp implements GameEntityComponent {
         this.state = Objects.requireNonNull(state);
     }
 
-    public boolean blocked() {
-        return blocked;
+    public boolean isMoving() {
+        return moving;
     }
 
-    public void setBlocked(boolean blocked) {
-        this.blocked = blocked;
+    public void setMoving(boolean moving) {
+        this.moving = moving;
     }
 
     @Override

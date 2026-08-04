@@ -5,34 +5,41 @@
 package de.amr.pacmanfx.core.model.entities.pac.system;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.entities.pac.Pac;
+import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.model.entities.pac.comp.PacDigestionComp;
 
 public class PacDigestionSystem {
 
-    public void update(Pac pac) {
-        final long restingTicks = pac.digestion().restingTicks();
+    public void update(GameEntity pac) {
+        final PacDigestionComp digestion = pac.requireComponent(PacDigestionComp.class);
+        final long restingTicks = digestion.restingTicks();
         if (restingTicks > 0) {
-            pac.digestion().setRestingTicks(restingTicks - 1);
+            digestion.setRestingTicks(restingTicks - 1);
         }
     }
 
-    public boolean mustRest(Pac pac) {
-        return pac.digestion().restingTicks() > 0;
+    public boolean mustRest(GameEntity pac) {
+        final PacDigestionComp digestion = pac.requireComponent(PacDigestionComp.class);
+        return digestion.restingTicks() > 0;
     }
 
-    public void starve(Pac pac) {
-        pac.digestion().setStarvingTicks(pac.digestion().starvingTicks() + 1);
+    public void starve(GameEntity pac) {
+        final PacDigestionComp digestion = pac.requireComponent(PacDigestionComp.class);
+        digestion.setStarvingTicks(digestion.starvingTicks() + 1);
     }
 
-    public void endStarving(Pac pac) {
-        pac.digestion().setStarvingTicks(0);
+    public void endStarving(GameEntity pac) {
+        final PacDigestionComp digestion = pac.requireComponent(PacDigestionComp.class);
+        digestion.setStarvingTicks(0);
     }
 
-    public void onPacEatsEnergizer(GameContext gameContext, Pac pac) {
-        pac.digestion().setRestingTicks(gameContext.model().rules().restingTicksForEnergizer());
+    public void onPacEatsEnergizer(GameContext gameContext, GameEntity pac) {
+        final PacDigestionComp digestion = pac.requireComponent(PacDigestionComp.class);
+        digestion.setRestingTicks(gameContext.model().rules().restingTicksForEnergizer());
     }
 
-    public void onPacEatsPellet(GameContext gameContext, Pac pac) {
-        pac.digestion().setRestingTicks(gameContext.model().rules().restingTicksForPellet());
+    public void onPacEatsPellet(GameContext gameContext, GameEntity pac) {
+        final PacDigestionComp digestion = pac.requireComponent(PacDigestionComp.class);
+        digestion.setRestingTicks(gameContext.model().rules().restingTicksForPellet());
     }
 }
