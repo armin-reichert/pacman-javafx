@@ -18,9 +18,9 @@ import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DViewComp;
 public class Pac3DAnimationSystem {
 
     public static void init(Pac pac) {
-        final Pac3DAnimationComp animationComp = pac.requireComponent(Pac3DAnimationComp.class);
-        for (Pac3DAnimationID animationID : Pac3DAnimationID.values()) {
-            animationComp.animationRegistry().optAnimation(animationID).ifPresent(ManagedAnimation::stop);
+        final Pac3DAnimationComp animation = pac.requireComponent(Pac3DAnimationComp.class);
+        for (Pac3DAnimationID id : Pac3DAnimationID.values()) {
+            animation.registry().optAnimation(id).ifPresent(ManagedAnimation::stop);
         }
     }
 
@@ -28,7 +28,7 @@ public class Pac3DAnimationSystem {
         final PacStateComp state = pac.stateComp();
         final Pac3DAnimationComp animation = pac.requireComponent(Pac3DAnimationComp.class);
 
-        final Pac3DMovementAnimation movement = animation.movementAnimation();
+        final Pac3DMovementAnimation movement = animation.movement();
         if (movement != null) {
             if (state.isMoving()) {
                 movement.managedAnimation().playOrContinue();
@@ -39,7 +39,7 @@ public class Pac3DAnimationSystem {
             }
         }
 
-        final ManagedAnimation chewing = animation.chewingAnimation();
+        final ManagedAnimation chewing = animation.chewing();
         if (chewing != null) {
             if (state.isMoving()) {
                 chewing.playOrContinue();
@@ -51,7 +51,7 @@ public class Pac3DAnimationSystem {
 
     public static void setPowerMode(Pac pac, boolean power) {
         final Pac3DAnimationComp animation = pac.requireComponent(Pac3DAnimationComp.class);
-        final Pac3DMovementAnimation movementAnimation = animation.movementAnimation();
+        final Pac3DMovementAnimation movementAnimation = animation.movement();
         if (movementAnimation != null) {
             movementAnimation.setPowerMode(power);
         }

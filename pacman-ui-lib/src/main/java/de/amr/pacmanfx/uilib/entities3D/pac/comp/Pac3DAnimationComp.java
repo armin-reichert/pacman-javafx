@@ -11,44 +11,44 @@ import de.amr.pacmanfx.uilib.entities3D.pac.anim.Pac3DMovementAnimation;
 
 public class Pac3DAnimationComp implements GameEntityComponent {
 
-    private final AnimationRegistry animationRegistry;
+    private final AnimationRegistry registry;
 
-    private Pac3DMovementAnimation movementAnimation;
+    private Pac3DMovementAnimation movement;
 
-    private ManagedAnimation chewingAnimation;
+    private ManagedAnimation chewing;
 
-    private ManagedAnimation dyingAnimation;
+    private ManagedAnimation dying;
 
-    public Pac3DAnimationComp(AnimationRegistry animationRegistry) {
-        this.animationRegistry = animationRegistry;
+    public Pac3DAnimationComp(AnimationRegistry registry) {
+        this.registry = registry;
     }
 
-    public AnimationRegistry animationRegistry() {
-        return animationRegistry;
+    public AnimationRegistry registry() {
+        return registry;
     }
 
-    public Pac3DMovementAnimation movementAnimation() {
-        return movementAnimation;
+    public Pac3DMovementAnimation movement() {
+        return movement;
     }
 
-    public void setMovementAnimation(Pac3DMovementAnimation movementAnimation) {
-        this.movementAnimation = movementAnimation;
+    public void setMovement(Pac3DMovementAnimation movement) {
+        this.movement = movement;
     }
 
-    public ManagedAnimation chewingAnimation() {
-        return chewingAnimation;
+    public ManagedAnimation chewing() {
+        return chewing;
     }
 
-    public void setChewingAnimation(ManagedAnimation chewingAnimation) {
-        this.chewingAnimation = chewingAnimation;
+    public void setChewing(ManagedAnimation chewing) {
+        this.chewing = chewing;
     }
 
-    public ManagedAnimation dyingAnimation() {
-        return dyingAnimation;
+    public ManagedAnimation dying() {
+        return dying;
     }
 
-    public void setDyingAnimation(ManagedAnimation dyingAnimation) {
-        this.dyingAnimation = dyingAnimation;
+    public void setDying(ManagedAnimation dying) {
+        this.dying = dying;
     }
 
     @Override

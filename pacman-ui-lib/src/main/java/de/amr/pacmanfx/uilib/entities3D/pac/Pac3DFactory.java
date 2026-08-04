@@ -40,9 +40,9 @@ public class Pac3DFactory {
         final var hipSwaying = new HeadBangingAnimation3D(view3D.root()); //TODO change parameter
         final var dying = new PacManDyingAnimation3D(view3D);
 
-        animation.setChewingAnimation(chewing);
-        animation.setMovementAnimation(hipSwaying);
-        animation.setDyingAnimation(dying);
+        animation.setChewing(chewing);
+        animation.setMovement(hipSwaying);
+        animation.setDying(dying);
 
         animationRegistry.register(Pac3DAnimationID.CHEWING, chewing);
         animationRegistry.register(Pac3DAnimationID.MOVING,  hipSwaying);
@@ -61,9 +61,9 @@ public class Pac3DFactory {
         final var hipSwaying = new HipSwayingAnimation3D(view3D.root()); //TODO change parameter
         final var dying = new MsPacManDyingAnimation3D(view3D);
 
-        animation.setChewingAnimation(chewing);
-        animation.setMovementAnimation(hipSwaying);
-        animation.setDyingAnimation(dying);
+        animation.setChewing(chewing);
+        animation.setMovement(hipSwaying);
+        animation.setDying(dying);
 
         animationRegistry.register(Pac3DAnimationID.CHEWING, chewing);
         animationRegistry.register(Pac3DAnimationID.MOVING,  hipSwaying);

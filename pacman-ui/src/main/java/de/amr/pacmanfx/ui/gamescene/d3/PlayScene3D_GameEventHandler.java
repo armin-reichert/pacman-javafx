@@ -296,14 +296,14 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 
         final Animation pacStopping = Ufx.doNow(() -> {
             Pac3DSupportSystem.update(pac, gameContext); //TODO check if this is needed
-            animation.chewingAnimation().stop();
-            animation.movementAnimation().managedAnimation().stop();
+            animation.chewing().stop();
+            animation.movement().managedAnimation().stop();
         });
 
         return new SequentialTransition(
             pacStopping,
             Ufx.pauseSecThen(1.5, () -> optSoundEffects().ifPresent(GameSoundEffects::playPacDeadSound)),
-            animation.dyingAnimation().animationFX(),
+            animation.dying().animationFX(),
             Ufx.pauseSec(0.5)
         );
     }
