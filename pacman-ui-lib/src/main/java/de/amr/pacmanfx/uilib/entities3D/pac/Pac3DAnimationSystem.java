@@ -7,7 +7,6 @@ import de.amr.pacmanfx.core.model.entities.pac.PacState;
 import de.amr.pacmanfx.core.model.entities.pac.PacStateComp;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import org.tinylog.Logger;
 
 public class Pac3DAnimationSystem {
 
@@ -61,7 +60,6 @@ public class Pac3DAnimationSystem {
                 view3D.powerLight().setLightOn(true);
                 final float maxRange = (powerTicksRemaining / (float) powerTicksTotal) * 60 + 30;
                 view3D.powerLight().setMaxRange(maxRange);
-                Logger.debug("Power remaining: {}, light max range: {0.00}", powerTicksRemaining, maxRange);
             } else {
                 view3D.powerLight().setLightOn(false);
             }

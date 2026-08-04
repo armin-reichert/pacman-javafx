@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.uilib.entities3D.pac;
 
+import de.amr.basics.math.Vector3f;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.ecs.GameEntityComponent;
 import javafx.beans.property.ObjectProperty;
@@ -21,6 +22,7 @@ public class Pac3DViewComp implements GameEntityComponent {
     private final Group bodyGroup = new Group();
     private final PointLight powerLight = new PointLight();
     private final Rotate facingRotate = new Rotate(0, Rotate.Z_AXIS);
+    private Vector3f center;
 
     public Pac3DViewComp() {
         final Group facingGroup = new Group(bodyGroup);
@@ -56,6 +58,14 @@ public class Pac3DViewComp implements GameEntityComponent {
 
     public PointLight powerLight() {
         return powerLight;
+    }
+
+    public Vector3f center() {
+        return center;
+    }
+
+    public void setCenter(Vector3f center) {
+        this.center = center;
     }
 
     @Override

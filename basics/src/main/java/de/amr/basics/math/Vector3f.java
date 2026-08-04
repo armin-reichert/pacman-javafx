@@ -20,6 +20,10 @@ public record Vector3f(float x, float y, float z) {
         this(v.x, v.y, v.z);
     }
 
+    public Vector3f(Vector2f v, float z) {
+        this(v.x(), v.y(), z);
+    }
+
     public Vector3f plus(Vector3f v) {
         return v == ZERO ? this : new Vector3f(x + v.x, y + v.y, z + v.z);
     }

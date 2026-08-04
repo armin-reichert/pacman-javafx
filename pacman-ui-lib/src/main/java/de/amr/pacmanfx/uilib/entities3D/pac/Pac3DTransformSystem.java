@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.uilib.entities3D.pac;
 
 import de.amr.basics.math.Vector2f;
+import de.amr.basics.math.Vector3f;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.components.WorldNavigationComp;
 import de.amr.pacmanfx.core.ecs.systems.world.WorldNavigationSystem;
@@ -23,6 +24,7 @@ public class Pac3DTransformSystem {
         view3D.root().setScaleX(1.0);
         view3D.root().setScaleY(1.0);
         view3D.root().setScaleZ(1.0);
+
         update(pac, level);
     }
 
@@ -35,11 +37,10 @@ public class Pac3DTransformSystem {
         final WorldNavigationComp worldNavigation = pac.requireComponent(WorldNavigationComp.class);
 
         if (state.pacState() == PacState.ACTIVE) {
-            final Vector2f center = WorldNavigationSystem.computeCenter(pac);
-
+            final Vector3f center = new Vector3f(WorldNavigationSystem.computeCenter(pac), -8);
             view3D.root().setTranslateX(center.x());
             view3D.root().setTranslateY(center.y());
-            view3D.root().setTranslateZ(-8); //TODO should depend on size
+            view3D.root().setTranslateZ(center.z()); //TODO should depend on size
 
             if (worldNavigation.moveDir() != null) {
                 view3D.facingRotate().setAngle(switch (worldNavigation.moveDir()) {
