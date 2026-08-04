@@ -5,6 +5,7 @@ package de.amr.pacmanfx.uilib.entities3D.animation;
 
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3D.pac.Pac3D;
+import de.amr.pacmanfx.uilib.entities3D.pac.Pac3DViewComp;
 import javafx.animation.*;
 import javafx.scene.Group;
 import javafx.scene.transform.Rotate;
@@ -14,7 +15,8 @@ public class PacChewingAnimation3D extends ManagedAnimation {
 
     public PacChewingAnimation3D(Pac3D pac3D) {
         super("Pac-Man Chewing");
-        setFactory(() -> createChewingAnimation(pac3D.jaw()));
+        final Pac3DViewComp view3D = pac3D.requireComponent(Pac3DViewComp.class);
+        setFactory(() -> createChewingAnimation(view3D.jaw()));
     }
 
     private Animation createChewingAnimation(Group jaw) {

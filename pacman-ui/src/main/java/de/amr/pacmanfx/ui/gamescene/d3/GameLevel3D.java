@@ -49,6 +49,7 @@ import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3DAppearanceController;
 import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3DTransformController;
 import de.amr.pacmanfx.uilib.entities3D.ghost.GhostSettings;
 import de.amr.pacmanfx.uilib.entities3D.pac.Pac3D;
+import de.amr.pacmanfx.uilib.entities3D.pac.Pac3DViewComp;
 import de.amr.pacmanfx.uilib.entities3D.pac.PacSettings;
 import de.amr.pacmanfx.uilib.entities3D.world.Energizer3D;
 import de.amr.pacmanfx.uilib.entities3D.world.Pellet3D;
@@ -176,7 +177,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Starts the lives counter symbols following Pac-Man with their eyes.
      */
     public void startLivesCounterTrackingPac() {
-        entitySet3D.livesCounter3D.startTracking(entitySet3D.pac3D.root());
+        entitySet3D.livesCounter3D.startTracking(entitySet3D.pac3D.requireComponent(Pac3DViewComp.class).root());
     }
 
     @Override
@@ -258,7 +259,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     public void setDrawMode(DrawMode drawMode) {
         requireNonNull(drawMode);
-        Ufx.setDrawMode(entitySet3D.pac3D.root(), drawMode);
+//        Ufx.setDrawMode(entitySet3D.pac3D.root(), drawMode);
         for (Ghost3D ghost3D : entitySet3D.ghosts3D) {
             Ufx.setDrawMode(ghost3D.root(), drawMode);
         }
@@ -362,7 +363,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private void createPac3D() {
         final PacSettings config = gameVariantConfig.worldSettings().pac();
         entitySet3D.pac3D = gameVariantConfig.factory3D().createPac3D(level.entities().pac(), config, animationRegistry);
-        entitySet3D.pac3D.drawModeProperty().bind(viewModel.common3D.drawModeProperty);
+        //entitySet3D.pac3D.drawModeProperty().bind(viewModel.common3D.drawModeProperty);
         entitySet3D.add(entitySet3D.pac3D);
     }
 
@@ -417,8 +418,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     // Order matters for correct transparency!
     private void buildHierarchy() {
         getChildren().add(entitySet3D.livesCounter3D.root());
-        getChildren().add(entitySet3D.pac3D.root());
-        entitySet3D.pac3D.powerLight().ifPresent(getChildren()::add);
+        getChildren().add(entitySet3D.pac3D.requireComponent(Pac3DViewComp.class).root());
+        getChildren().add(entitySet3D.pac3D.requireComponent(Pac3DViewComp.class).powerLight());
         for (var ghost3D : entitySet3D.ghosts3D) { getChildren().add(ghost3D.root()); }
         entitySet3D.energizer3DByTile.values().stream().map(Energizer3D::shape).forEach(getChildren()::add);
         entitySet3D.pellet3DByTile.values().stream().map(Pellet3D::shape).forEach(getChildren()::add);

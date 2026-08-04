@@ -52,16 +52,16 @@ public class Pac3DAnimationSystem {
      * When empowered, Pac-Man is lighted, light range shrinks with ceasing power.
      */
     public static void updatePowerLight(PacPowerSystem pacPowerSystem, Pac3D pac3D) {
+        final Pac3DViewComp view3D = pac3D.requireComponent(Pac3DViewComp.class);
+
         final Pac pac = pac3D.pac();
         final boolean lighted = pac3D.pac().state() != PacState.DEAD;
         if (lighted) {
-            pac3D.powerLight().ifPresent(light -> updatePowerLight(pacPowerSystem, pac, light));
+            updatePowerLight(pacPowerSystem, pac, view3D.powerLight());
         }
     }
 
     private static void updatePowerLight(PacPowerSystem pacPowerSystem, Pac pac, PointLight powerLight) {
-        if (powerLight == null) return;
-
         final boolean powerActive = pacPowerSystem.isPowerActive(pac);
         final long powerTicksRemaining = pacPowerSystem.powerTicksRemaining(pac);
         final long powerTicksTotal = pacPowerSystem.powerTicksTotal(pac);

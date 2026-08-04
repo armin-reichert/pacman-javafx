@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.uilib.entities3D.pac;
 
-
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.ecs.systems.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
@@ -16,26 +15,30 @@ import static java.util.Objects.requireNonNull;
 public class Pac3DTransformSystem {
 
     public static void init(Pac3D pac3D, GameLevel level) {
+        final Pac3DViewComp view3D = pac3D.requireComponent(Pac3DViewComp.class);
+
         update(pac3D, level);
 
-        pac3D.root().setScaleX(1.0);
-        pac3D.root().setScaleY(1.0);
-        pac3D.root().setScaleZ(1.0);
+        view3D.root().setScaleX(1.0);
+        view3D.root().setScaleY(1.0);
+        view3D.root().setScaleZ(1.0);
     }
 
     public static void update(Pac3D pac3D, GameLevel level) {
         requireNonNull(pac3D);
         requireNonNull(level);
 
+        final Pac3DViewComp view3D = pac3D.requireComponent(Pac3DViewComp.class);
+
         final Pac pac = pac3D.pac();
         final Vector2f center = WorldNavigationSystem.computeCenter(pac);
 
-        pac3D.root().setTranslateX(center.x());
-        pac3D.root().setTranslateY(center.y());
-        pac3D.root().setTranslateZ(-8); //TODO should depend on size
+        view3D.root().setTranslateX(center.x());
+        view3D.root().setTranslateY(center.y());
+        view3D.root().setTranslateZ(-8); //TODO should depend on size
 
         if (pac.worldNavigation().moveDir() != null) {
-            pac3D.facingRotate().setAngle(switch (pac.worldNavigation().moveDir()) {
+            view3D.facingRotate().setAngle(switch (pac.worldNavigation().moveDir()) {
                 case LEFT -> 0;
                 case UP -> 90;
                 case RIGHT -> 180;
@@ -44,6 +47,6 @@ public class Pac3DTransformSystem {
         }
 
         final boolean outside = center.x() < WorldMap.HTS || center.x() > WorldMap.TS * level.worldMap().numCols() - WorldMap.HTS;
-        pac3D.root().setVisible(pac.visibility().isVisible() && !outside);
+        view3D.root().setVisible(pac.visibility().isVisible() && !outside);
     }
 }

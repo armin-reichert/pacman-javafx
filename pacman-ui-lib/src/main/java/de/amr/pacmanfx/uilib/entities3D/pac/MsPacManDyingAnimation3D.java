@@ -8,23 +8,21 @@ import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
+import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-import static java.util.Objects.requireNonNull;
-
 public class MsPacManDyingAnimation3D extends ManagedAnimation {
-
-    private final Pac3D msPacMan3D;
 
     public MsPacManDyingAnimation3D(Pac3D msPacMan3D) {
         super("Ms. Pac-Man Dying");
-        this.msPacMan3D = requireNonNull(msPacMan3D);
-        setFactory(this::createAnimation);
+
+        final Pac3DViewComp view3D = msPacMan3D.requireComponent(Pac3DViewComp.class);
+        setFactory(() -> createAnimation(view3D.root()));
     }
 
-    private Animation createAnimation() {
-        var spinning = new RotateTransition(Duration.seconds(0.25), msPacMan3D.root());
+    private Animation createAnimation(Node node) {
+        var spinning = new RotateTransition(Duration.seconds(0.25), node);
         spinning.setAxis(Rotate.Z_AXIS);
         spinning.setFromAngle(0);
         spinning.setToAngle(360);
