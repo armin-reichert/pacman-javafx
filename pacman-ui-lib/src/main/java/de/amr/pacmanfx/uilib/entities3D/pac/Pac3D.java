@@ -9,6 +9,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
+import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3D.DisposableGraphicsObject;
@@ -110,7 +111,9 @@ public class Pac3D extends GameEntity implements UpdatableEntity, DisposableGrap
     @Override
     public void init(GameContext gameContext) {
         requireNonNull(gameContext);
-        Pac3DTransformSystem.init(this, gameContext);
+        final GameLevel level = gameContext.assertLevel();
+
+        Pac3DTransformSystem.init(this, level);
         Pac3DAnimationSystem.init(this);
         Pac3DAnimationSystem.setPowerMode(this, false);
     }
@@ -118,7 +121,9 @@ public class Pac3D extends GameEntity implements UpdatableEntity, DisposableGrap
     @Override
     public void update(GameContext gameContext) {
         requireNonNull(gameContext);
-        Pac3DTransformSystem.update(gameContext, this);
+        final GameLevel level = gameContext.assertLevel();
+
+        Pac3DTransformSystem.update(this, level);
         Pac3DAnimationSystem.update(this, gameContext.assertLevel(), gameContext.systems().pacState());
         Pac3DAnimationSystem.updatePowerLight(gameContext.systems().pacPower(), this);
     }
