@@ -5,6 +5,8 @@
 package de.amr.pacmanfx.core.model.entities.clapperboard;
 
 import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.model.entities.clapperboard.comp.ClapperboardInscriptionComp;
+import de.amr.pacmanfx.core.model.entities.clapperboard.comp.ClapperboardStateComp;
 
 /**
  * Animated movie clapperboard.

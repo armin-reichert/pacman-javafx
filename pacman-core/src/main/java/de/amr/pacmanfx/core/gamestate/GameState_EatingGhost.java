@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.core.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.ecs.systems.ghost.GhostStateSystem;
-import de.amr.pacmanfx.core.ecs.systems.spriteanim.SpriteAnimSystem;
+import de.amr.pacmanfx.core.model.entities.ghost.system.GhostStateSystem;
+import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.entities.ghost.GhostState;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 

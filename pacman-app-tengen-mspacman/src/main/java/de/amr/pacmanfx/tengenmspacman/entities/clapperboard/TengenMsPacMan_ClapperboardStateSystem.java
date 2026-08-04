@@ -7,7 +7,7 @@ package de.amr.pacmanfx.tengenmspacman.entities.clapperboard;
 
 import de.amr.pacmanfx.core.model.entities.clapperboard.Clapperboard;
 import de.amr.pacmanfx.core.model.entities.clapperboard.ClapperboardState;
-import de.amr.pacmanfx.core.model.entities.clapperboard.ClapperboardStateComp;
+import de.amr.pacmanfx.core.model.entities.clapperboard.comp.ClapperboardStateComp;
 
 public class TengenMsPacMan_ClapperboardStateSystem {
 

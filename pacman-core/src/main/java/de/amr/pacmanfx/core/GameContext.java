@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.core;
 
-import de.amr.pacmanfx.core.ecs.systems.common.GameSystems;
+import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.gameplay.FrameContext;
 import de.amr.pacmanfx.core.gameplay.GameFlowController;

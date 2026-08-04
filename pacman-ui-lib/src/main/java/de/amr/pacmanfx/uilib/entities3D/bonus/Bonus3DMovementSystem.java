@@ -6,7 +6,7 @@ package de.amr.pacmanfx.uilib.entities3D.bonus;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.systems.world.WorldNavigationSystem;
+import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 
 public class Bonus3DMovementSystem {

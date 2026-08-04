@@ -22,13 +22,6 @@ module de.amr.pacmanfx.core {
     exports de.amr.pacmanfx.core.gameplay;
     exports de.amr.pacmanfx.core.gamestate;
     exports de.amr.pacmanfx.core.model.rules;
-    exports de.amr.pacmanfx.core.ecs.systems.ghost;
-    exports de.amr.pacmanfx.core.ecs.systems.marquee;
-    exports de.amr.pacmanfx.core.ecs.systems.pac;
-    exports de.amr.pacmanfx.core.ecs.systems.common;
-    exports de.amr.pacmanfx.core.ecs.systems.spriteanim;
-    exports de.amr.pacmanfx.core.ecs.systems.world;
-    exports de.amr.pacmanfx.core.ecs.systems.bonus;
     exports de.amr.pacmanfx.core.event.base;
     exports de.amr.pacmanfx.core.event.pac;
     exports de.amr.pacmanfx.core.event.ghost;
@@ -43,8 +36,18 @@ module de.amr.pacmanfx.core {
     exports de.amr.pacmanfx.core.model.world.house;
     exports de.amr.pacmanfx.core.model.world.obstacle;
     exports de.amr.pacmanfx.core.ecs;
-    exports de.amr.pacmanfx.core.ecs.components;
+    exports de.amr.pacmanfx.core.ecs.comp;
     exports de.amr.pacmanfx.core.ecs.systems;
     exports de.amr.pacmanfx.core.model.entities.clapperboard;
     exports de.amr.pacmanfx.core.model.entities.bag;
+    exports de.amr.pacmanfx.core.model.entities.pac.system;
+    exports de.amr.pacmanfx.core.model.entities.bonus.system;
+    exports de.amr.pacmanfx.core.model.entities.ghost.system;
+    exports de.amr.pacmanfx.core.model.entities.marquee.system;
+    exports de.amr.pacmanfx.core.model.entities.bonus.comp;
+    exports de.amr.pacmanfx.core.model.entities.clapperboard.comp;
+    exports de.amr.pacmanfx.core.model.entities.clapperboard.system;
+    exports de.amr.pacmanfx.core.model.entities.ghost.comp;
+    exports de.amr.pacmanfx.core.model.entities.marquee.comp;
+    exports de.amr.pacmanfx.core.model.entities.pac.comp;
 }

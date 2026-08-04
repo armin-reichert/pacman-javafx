@@ -4,8 +4,8 @@
 package de.amr.pacmanfx.core.model.entities.bag;
 
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.components.MovementComp;
-import de.amr.pacmanfx.core.ecs.components.SpriteAnimComp;
+import de.amr.pacmanfx.core.ecs.comp.MovementComp;
+import de.amr.pacmanfx.core.ecs.comp.SpriteAnimComp;
 
 public class Bag extends GameEntity {
 

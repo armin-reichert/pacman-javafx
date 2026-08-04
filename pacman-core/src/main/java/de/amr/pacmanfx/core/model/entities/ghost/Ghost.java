@@ -5,10 +5,12 @@
 package de.amr.pacmanfx.core.model.entities.ghost;
 
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.components.MovementComp;
-import de.amr.pacmanfx.core.ecs.components.SpriteAnimComp;
-import de.amr.pacmanfx.core.ecs.components.WorldNavigationComp;
+import de.amr.pacmanfx.core.ecs.comp.MovementComp;
+import de.amr.pacmanfx.core.ecs.comp.SpriteAnimComp;
+import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.model.GhostPersonality;
+import de.amr.pacmanfx.core.model.entities.ghost.comp.GhostStateComp;
+import de.amr.pacmanfx.core.model.entities.ghost.comp.GhostWorldPlacementComp;
 
 import static java.util.Objects.requireNonNull;
 

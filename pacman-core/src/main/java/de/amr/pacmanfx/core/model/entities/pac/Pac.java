@@ -5,11 +5,15 @@
 package de.amr.pacmanfx.core.model.entities.pac;
 
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.components.AutoSteeringComp;
-import de.amr.pacmanfx.core.ecs.components.MovementComp;
-import de.amr.pacmanfx.core.ecs.components.SpriteAnimComp;
-import de.amr.pacmanfx.core.ecs.components.WorldNavigationComp;
+import de.amr.pacmanfx.core.ecs.comp.AutoSteeringComp;
+import de.amr.pacmanfx.core.ecs.comp.MovementComp;
+import de.amr.pacmanfx.core.ecs.comp.SpriteAnimComp;
+import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
+import de.amr.pacmanfx.core.model.entities.pac.comp.PacCheatsComp;
+import de.amr.pacmanfx.core.model.entities.pac.comp.PacDigestionComp;
+import de.amr.pacmanfx.core.model.entities.pac.comp.PacPowerComp;
+import de.amr.pacmanfx.core.model.entities.pac.comp.PacStateComp;
 
 import static java.util.Objects.requireNonNull;
 

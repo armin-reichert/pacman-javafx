@@ -5,6 +5,9 @@
 package de.amr.pacmanfx.core.model.entities.marquee;
 
 import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.model.entities.marquee.comp.MarqueeLayoutComp;
+import de.amr.pacmanfx.core.model.entities.marquee.comp.MarqueeRunnerComp;
+import de.amr.pacmanfx.core.model.entities.marquee.comp.MarqueeVisualComp;
 
 public final class Marquee extends GameEntity {
 

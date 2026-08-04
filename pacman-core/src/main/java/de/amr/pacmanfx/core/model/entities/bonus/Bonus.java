@@ -5,8 +5,11 @@
 package de.amr.pacmanfx.core.model.entities.bonus;
 
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.components.MovementComp;
-import de.amr.pacmanfx.core.ecs.components.WorldNavigationComp;
+import de.amr.pacmanfx.core.ecs.comp.MovementComp;
+import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
+import de.amr.pacmanfx.core.model.entities.bonus.comp.BonusDataComp;
+import de.amr.pacmanfx.core.model.entities.bonus.comp.BonusStateComp;
+import de.amr.pacmanfx.core.model.entities.bonus.comp.BonusMoveAndJumpComp;
 
 import java.util.Optional;
 
@@ -40,7 +43,7 @@ public final class Bonus extends GameEntity {
         if (moving) {
             setComponent(MovementComp.class, new MovementComp());
             setComponent(WorldNavigationComp.class, new WorldNavigationComp());
-            setComponent(MoveAndJumpComp.class, new MoveAndJumpComp());
+            setComponent(BonusMoveAndJumpComp.class, new BonusMoveAndJumpComp());
             requireComponent(WorldNavigationComp.class).setCanTeleport(false);
         }
     }
@@ -59,8 +62,8 @@ public final class Bonus extends GameEntity {
         return state().bonusState();
     }
 
-    public Optional<MoveAndJumpComp> optMoveAndJump() {
-        return optComponent(MoveAndJumpComp.class);
+    public Optional<BonusMoveAndJumpComp> optMoveAndJump() {
+        return optComponent(BonusMoveAndJumpComp.class);
     }
 
 }

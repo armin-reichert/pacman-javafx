@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.entities;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.components.SpriteAnimComp;
+import de.amr.pacmanfx.core.ecs.comp.SpriteAnimComp;
 
 import static de.amr.basics.spriteanim.SpriteAnimationAccessor.singleSpriteAnimationMap;
 

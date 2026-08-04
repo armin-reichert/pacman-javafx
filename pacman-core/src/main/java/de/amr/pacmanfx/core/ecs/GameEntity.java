@@ -4,9 +4,9 @@
 
 package de.amr.pacmanfx.core.ecs;
 
-import de.amr.pacmanfx.core.ecs.components.MovementComp;
-import de.amr.pacmanfx.core.ecs.components.PositionComp;
-import de.amr.pacmanfx.core.ecs.components.VisibilityComp;
+import de.amr.pacmanfx.core.ecs.comp.MovementComp;
+import de.amr.pacmanfx.core.ecs.comp.PositionComp;
+import de.amr.pacmanfx.core.ecs.comp.VisibilityComp;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
