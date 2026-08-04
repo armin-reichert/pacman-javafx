@@ -9,9 +9,6 @@ import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
-import de.amr.pacmanfx.core.ecs.systems.WorldMovementPolicy;
-import de.amr.pacmanfx.core.model.entities.pac.comp.PacPowerComp;
-import de.amr.pacmanfx.core.model.entities.pac.system.PacDigestionSystem;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.event.bonus.BonusEatenEvent;
@@ -28,6 +25,8 @@ import de.amr.pacmanfx.core.model.entities.bonus.BonusState;
 import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.model.entities.ghost.GhostState;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
+import de.amr.pacmanfx.core.model.entities.pac.comp.PacPowerComp;
+import de.amr.pacmanfx.core.model.entities.pac.system.PacDigestionSystem;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
@@ -173,16 +172,13 @@ public abstract class CommonGamePlay implements GamePlay {
         final ArcadeHouseGateKeeper gateKeeper = model.gateKeeper();
 
         //TODO enable this later again
-        final boolean doubleChecked = model.rules().actorCollisionRules().isCollisionDoubleChecked();
+        //final boolean doubleChecked = model.rules().actorCollisionRules().isCollisionDoubleChecked();
 
         level.heartbeat().triggerPulse();
-
         level.huntingRules().update(model.rules(), level.number());
-
         if (gateKeeper != null) {
             gateKeeper.unlockGhostIfPossible(gameContext);
         }
-
         updatePac(gameContext, level, pac);
         gameContext.systems().ghostState().update(gameContext);
         gameContext.systems().bonusState().update(gameContext);

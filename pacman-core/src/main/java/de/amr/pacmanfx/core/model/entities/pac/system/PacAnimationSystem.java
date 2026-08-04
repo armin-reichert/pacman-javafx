@@ -15,7 +15,8 @@ public class PacAnimationSystem {
     public void update(Pac pac) {
         switch (pac.getPacState()) {
             case ACTIVE -> {
-                if (pac.worldNavigation().info.moved) {
+                if (pac.state().isMoving()) {
+                    spriteAnimSystem.select(pac, ActorAnimationID.PAC_MUNCHING);
                     spriteAnimSystem.playSelected(pac);
                 } else {
                     spriteAnimSystem.stopSelected(pac);
@@ -23,11 +24,12 @@ public class PacAnimationSystem {
             }
             case DEAD -> {
                 if (pac.animation().readyForDying()) {
-                    selectDyingAnimation(pac);
+                    spriteAnimSystem.select(pac, ActorAnimationID.PAC_DYING);
+                    spriteAnimSystem.resetSelected(pac);
                     pac.animation().setReadyForDying(false);
                 }
                 else if (pac.animation().startDying()) {
-                    playDyingAnimation(pac);
+                    spriteAnimSystem.playSelected(pac);
                     pac.animation().setStartDying(false);
                 }
             }
@@ -36,14 +38,5 @@ public class PacAnimationSystem {
 
     public void stop(Pac pac) {
         spriteAnimSystem.stopSelected(pac);
-    }
-
-    public void selectDyingAnimation(Pac pac) {
-        spriteAnimSystem.select(pac, ActorAnimationID.PAC_DYING);
-        spriteAnimSystem.resetSelected(pac);
-    }
-
-    public void playDyingAnimation(Pac pac) {
-        spriteAnimSystem.playSelected(pac);
     }
 }
