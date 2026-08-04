@@ -10,10 +10,7 @@ import de.amr.pacmanfx.core.ecs.comp.MovementComp;
 import de.amr.pacmanfx.core.ecs.comp.SpriteAnimComp;
 import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
-import de.amr.pacmanfx.core.model.entities.pac.comp.PacCheatsComp;
-import de.amr.pacmanfx.core.model.entities.pac.comp.PacDigestionComp;
-import de.amr.pacmanfx.core.model.entities.pac.comp.PacPowerComp;
-import de.amr.pacmanfx.core.model.entities.pac.comp.PacStateComp;
+import de.amr.pacmanfx.core.model.entities.pac.comp.*;
 
 import static java.util.Objects.requireNonNull;
 
@@ -36,6 +33,7 @@ public final class Pac extends GameEntity {
         setComponent(PacCheatsComp.class, new PacCheatsComp());
         setComponent(PacStateComp.class, new PacStateComp());
         setComponent(SpriteAnimComp.class, new SpriteAnimComp());
+        setComponent(PacAnimationComp.class, new PacAnimationComp());
     }
 
     public MovementComp movement() {
@@ -62,10 +60,15 @@ public final class Pac extends GameEntity {
         return requireComponent(PacCheatsComp.class);
     }
 
-    public PacStateComp stateComp() {
+    public PacStateComp state() {
         return requireComponent(PacStateComp.class);
     }
 
+    public PacAnimationComp animation() {
+        return requireComponent(PacAnimationComp.class);
+    }
+
+    //TODO integrate with Pac animation comp
     public SpriteAnimComp spriteAnim() {
         return requireComponent(SpriteAnimComp.class);
     }
@@ -74,7 +77,7 @@ public final class Pac extends GameEntity {
     public String toString() {
         return "Pac{" +
             "name=" + name +
-            ", state=" + state() +
+            ", state=" + getPacState() +
             ", visible=" + visibility() +
             ", position=" + pos() +
             ", movement=" + movement() +
@@ -92,8 +95,8 @@ public final class Pac extends GameEntity {
         spriteAnim().animation().select(ActorAnimationID.PAC_MUNCHING);
     }
 
-    public PacState state() {
-        return stateComp().pacState();
+    public PacState getPacState() {
+        return state().pacState();
     }
 
 }

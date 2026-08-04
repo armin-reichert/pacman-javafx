@@ -37,15 +37,12 @@ public class PacStateSystem {
     public void setState(Pac pac, PacState pacState) {
         requireNonNull(pac);
         requireNonNull(pacState);
-        pac.stateComp().setState(pacState);
+        pac.state().setState(pacState);
     }
 
     public void update(Pac pac, GameLevel level) {
-        final PacStateComp state = pac.stateComp();
+        final PacStateComp state = pac.state();
         final PacDigestionComp digestion = pac.digestion();
-        final PacPowerComp power = pac.power();
-
-        final ActorSpeedRules speedRules = level.gameModel().rules().actorSpeedRules();
 
         digestionSystem.update(pac);
 
@@ -62,10 +59,6 @@ public class PacStateSystem {
             return;
         }
 
-        final float speed = power.isPowerActive() ? speedRules.pacSpeedWhenHasPower(level) : speedRules.pacSpeed(level);
-
-        navigator.setSpeed(pac, speed);
-        navigator.tryMovingOrTeleporting(pac, level, movementPolicy);
     }
 
     public boolean notBlocked(Pac pac) {

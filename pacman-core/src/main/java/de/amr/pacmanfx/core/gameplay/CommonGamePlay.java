@@ -9,6 +9,8 @@ import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
+import de.amr.pacmanfx.core.ecs.systems.WorldMovementPolicy;
+import de.amr.pacmanfx.core.model.entities.pac.comp.PacPowerComp;
 import de.amr.pacmanfx.core.model.entities.pac.system.PacDigestionSystem;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
@@ -30,6 +32,7 @@ import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.model.level.LevelCounterSystem;
+import de.amr.pacmanfx.core.model.rules.ActorSpeedRules;
 import de.amr.pacmanfx.core.model.rules.CollisionStrategy;
 import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.core.model.score.PropertyFileScore;
@@ -180,13 +183,8 @@ public abstract class CommonGamePlay implements GamePlay {
             gateKeeper.unlockGhostIfPossible(gameContext);
         }
 
-        gameContext.systems().pacAutoSteering().update(level, pac);
-        gameContext.systems().pacPower().update(gameContext, pac);
-        gameContext.systems().pacState().update(pac, level);
-        gameContext.systems().pacAnimation().update(pac);
-
+        updatePac(gameContext, level, pac);
         gameContext.systems().ghostState().update(gameContext);
-
         gameContext.systems().bonusState().update(gameContext);
 
         //TODO remove this kind of updates and call entity systems update-methods instead
@@ -198,6 +196,21 @@ public abstract class CommonGamePlay implements GamePlay {
 
         detectCollisions(gameContext);
         evalCollisions(gameContext);
+    }
+
+    private void updatePac(GameContext gameContext, GameLevel level, Pac pac) {
+        gameContext.systems().pacAutoSteering().update(level, pac);
+        gameContext.systems().pacPower().update(gameContext, pac);
+        gameContext.systems().pacState().update(pac, level);
+
+        //TODO move into system
+        final PacPowerComp power = pac.power();
+        final ActorSpeedRules speedRules = level.gameModel().rules().actorSpeedRules();
+        final float speed = power.isPowerActive() ? speedRules.pacSpeedWhenHasPower(level) : speedRules.pacSpeed(level);
+        gameContext.systems().worldNavigator().setSpeed(pac, speed);
+        gameContext.systems().worldNavigator().tryMovingOrTeleporting(pac, level, gameContext.systems().pacWorldMovementPolicy());
+
+        gameContext.systems().pacAnimation().update(pac);
     }
 
     private void evalCollisions(GameContext gameContext) {

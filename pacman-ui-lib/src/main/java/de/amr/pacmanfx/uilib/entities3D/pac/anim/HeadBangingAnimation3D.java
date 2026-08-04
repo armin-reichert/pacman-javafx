@@ -72,7 +72,7 @@ public class HeadBangingAnimation3D extends ManagedAnimation implements Pac3DMov
 
     @Override
     public void update(Pac pac, PacStateSystem pacStateSystem) {
-        final PacStateComp state = pac.stateComp();
+        final PacStateComp state = pac.state();
         final WorldNavigationComp worldNavigation = pac.worldNavigation();
 
         final var rotateTransition = (RotateTransition) animationFX();

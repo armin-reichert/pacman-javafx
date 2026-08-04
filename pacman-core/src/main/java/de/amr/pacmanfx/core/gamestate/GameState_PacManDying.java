@@ -13,6 +13,8 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.entities.ghost.comp.ElroyComp;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.entities.pac.PacState;
+import de.amr.pacmanfx.core.model.entities.pac.comp.PacAnimationComp;
+import de.amr.pacmanfx.core.model.entities.pac.system.PacAnimationSystem;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 
 import static java.util.Objects.requireNonNull;
@@ -27,8 +29,7 @@ public final class GameState_PacManDying extends GameState {
 
     private final Timing timing;
 
-    public GameState_PacManDying(Timing timing)
-    {
+    public GameState_PacManDying(Timing timing) {
         super(CommonGameStateID.GAME_LEVEL_PACMAN_DYING);
         this.timing = requireNonNull(timing);
     }
@@ -76,10 +77,10 @@ public final class GameState_PacManDying extends GameState {
 
         if (tick == timing.hideGhostsTick()) {
             level.entities().ghosts().forEach(GameEntity::hide);
-            gameContext.systems().pacAnimation().selectDyingAnimation(pac);
+            pac.animation().setReadyForDying(true);
         }
         else if (tick == timing.animationStartTick()) {
-            gameContext.systems().pacAnimation().playDyingAnimation(pac);
+            pac.animation().setStartDying(true);
             gameContext.eventManager().publishGameEvent(new PacDyingEvent(pac));
         }
         else if (tick == timing.hidePacTick()) {
@@ -93,5 +94,7 @@ public final class GameState_PacManDying extends GameState {
             level.heartbeat().triggerPulse();
             gameContext.systems().pacState().update(pac, level);
         }
+
+        gameContext.systems().pacAnimation().update(pac);
     }
 }

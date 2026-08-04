@@ -5,6 +5,7 @@ import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
 
 public class PacAnimationSystem {
+
     private final SpriteAnimSystem spriteAnimSystem;
 
     public PacAnimationSystem(SpriteAnimSystem spriteAnimSystem) {
@@ -12,7 +13,7 @@ public class PacAnimationSystem {
     }
 
     public void update(Pac pac) {
-        switch (pac.state()) {
+        switch (pac.getPacState()) {
             case ACTIVE -> {
                 if (pac.worldNavigation().info.moved) {
                     spriteAnimSystem.playSelected(pac);
@@ -21,7 +22,14 @@ public class PacAnimationSystem {
                 }
             }
             case DEAD -> {
-
+                if (pac.animation().readyForDying()) {
+                    selectDyingAnimation(pac);
+                    pac.animation().setReadyForDying(false);
+                }
+                else if (pac.animation().startDying()) {
+                    playDyingAnimation(pac);
+                    pac.animation().setStartDying(false);
+                }
             }
         }
     }

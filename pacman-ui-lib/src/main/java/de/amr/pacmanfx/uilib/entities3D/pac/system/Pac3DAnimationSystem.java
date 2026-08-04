@@ -29,7 +29,7 @@ public class Pac3DAnimationSystem {
     }
 
     public static void update(Pac pac, PacStateSystem pacStateSystem) {
-        final PacStateComp state = pac.stateComp();
+        final PacStateComp state = pac.state();
         final Pac3DAnimationComp animation = pac.requireComponent(Pac3DAnimationComp.class);
 
         final Pac3DMovementAnimation movement = animation.movement();
@@ -65,7 +65,7 @@ public class Pac3DAnimationSystem {
      * When empowered, Pac-Man is lighted, light range shrinks with ceasing power.
      */
     public static void updatePowerLight(Pac pac) {
-        final PacStateComp state = pac.stateComp();
+        final PacStateComp state = pac.state();
         final Pac3DViewComp view3D = pac.requireComponent(Pac3DViewComp.class);
 
         final boolean lighted = state.pacState() != PacState.DEAD;
