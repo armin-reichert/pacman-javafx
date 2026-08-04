@@ -115,14 +115,14 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     @Override
     default void onBonusEaten(BonusEatenEvent e) {
         final Bonus bonus = e.bonus();
-        Bonus3DViewSystem.makeBonusLookEaten(bonus, assertLevel3D().animationRegistry());
+        Bonus3DViewSystem.lookEaten(bonus, assertLevel3D().animationRegistry());
         optSoundEffects().ifPresent(GameSoundEffects::playBonusEatenSound);
     }
 
     @Override
     default void onBonusExpired(BonusExpiredEvent e) {
         final Bonus bonus = e.bonus();
-        Bonus3DViewSystem.makeBonusLookExpired(bonus, assertLevel3D().animationRegistry());
+        Bonus3DViewSystem.lookExpired(bonus, assertLevel3D().animationRegistry());
         optSoundEffects().ifPresent(GameSoundEffects::playBonusExpiredSound);
     }
 
@@ -278,7 +278,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         //TODO get rid of 3D wrappers for ghosts
         level3D.entities3D().ghosts3D().forEach(Ghost3D::stopAllAnimations);
 
-        level.entities().optBonus().ifPresent(bonus -> Bonus3DViewSystem.makeBonusLookExpired(bonus, level3D.animationRegistry()));
+        level.entities().optBonus().ifPresent(bonus -> Bonus3DViewSystem.lookExpired(bonus, level3D.animationRegistry()));
 
         gameContext.state().waitForTimeout();
 
@@ -341,7 +341,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         level3D.animationRegistry().stopAllAnimations();
         level3D.cleanupFoodAndParticles();
 
-        level.optBonus().ifPresent(bonus -> Bonus3DViewSystem.makeBonusLookExpired(bonus, level3D.animationRegistry()));
+        level.optBonus().ifPresent(bonus -> Bonus3DViewSystem.lookExpired(bonus, level3D.animationRegistry()));
 
         level3D.messageManager().hideMessage();
 
@@ -403,7 +403,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         level3D.animationRegistry().animation(GameLevel3D.AnimationID.GHOST_LIGHT).stop();
         level3D.cleanupFoodAndParticles();
 
-        level.optBonus().ifPresent(bonus -> Bonus3DViewSystem.makeBonusLookExpired(bonus, level3D.animationRegistry()));
+        level.optBonus().ifPresent(bonus -> Bonus3DViewSystem.lookExpired(bonus, level3D.animationRegistry()));
 
         level3D.optSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);
     }

@@ -26,10 +26,9 @@ import de.amr.pacmanfx.ui.vm.GameUISettingsVM;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.entities3D.DisposableGraphicsObject;
+import de.amr.pacmanfx.uilib.entities3D.Scores3D;
 import de.amr.pacmanfx.uilib.entities3D.bonus.Bonus3DMovementSystem;
 import de.amr.pacmanfx.uilib.entities3D.pac.Pac3D;
-import de.amr.pacmanfx.uilib.entities3D.Scores3D;
-import de.amr.pacmanfx.uilib.entities3D.bonus.Bonus3DViewSystem;
 import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -265,8 +264,7 @@ public class PlayScene3D extends AbstractGameScene
 
         //TODO change to this style for all entities
         level.optBonus().ifPresent(bonus -> {
-            Bonus3DMovementSystem.update(bonus);
-            Bonus3DViewSystem.update(bonus, level.worldMap());
+            Bonus3DMovementSystem.update(bonus, level.worldMap());
         });
 
 
