@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.uilib.entities3D.animation;
 
 import de.amr.basics.math.Vector3f;
-import de.amr.pacmanfx.uilib.Ufx;
+import de.amr.basics.util.Ufx;
 import javafx.geometry.Point3D;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;

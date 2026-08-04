@@ -6,7 +6,7 @@ package de.amr.pacmanfx.uilib.rendering;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.uilib.Ufx;
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;

@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.uilib.assets;
 
 import de.amr.basics.Disposable;
-import de.amr.pacmanfx.uilib.Ufx;
+import de.amr.basics.util.Ufx;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.paint.Color;

@@ -14,7 +14,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
-import static de.amr.pacmanfx.uilib.Ufx.colorWithOpacity;
+import static de.amr.basics.util.Ufx.colorWithOpacity;
 
 public class HelpView extends Pane {
 

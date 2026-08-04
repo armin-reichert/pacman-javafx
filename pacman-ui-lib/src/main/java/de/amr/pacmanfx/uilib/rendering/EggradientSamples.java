@@ -4,7 +4,8 @@
 
 package de.amr.pacmanfx.uilib.rendering;
 
-import de.amr.pacmanfx.uilib.Ufx;
+import de.amr.basics.GradientAxis;
+import de.amr.basics.util.Ufx;
 import javafx.scene.layout.Background;
 import javafx.scene.paint.LinearGradient;
 

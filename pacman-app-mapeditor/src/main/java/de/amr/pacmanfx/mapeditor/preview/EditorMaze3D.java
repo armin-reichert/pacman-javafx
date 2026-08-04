@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
 import de.amr.pacmanfx.core.model.world.obstacle.Obstacle;
 import de.amr.pacmanfx.core.model.world.obstacle.ObstacleBuilder;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUtils;
-import de.amr.pacmanfx.uilib.Ufx;
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.uilib.entities3D.PacMan3DModel;
 import de.amr.pacmanfx.uilib.entities3D.pac.FemaleBodyPartsColors;
 import de.amr.pacmanfx.uilib.entities3D.pac.Pac3DFactory;
@@ -39,8 +39,8 @@ import javafx.scene.transform.Translate;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites.*;
-import static de.amr.pacmanfx.uilib.Ufx.colorWithOpacity;
-import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
+import static de.amr.basics.util.Ufx.colorWithOpacity;
+import static de.amr.basics.util.Ufx.coloredPhongMaterial;
 
 public class EditorMaze3D extends Group {
 

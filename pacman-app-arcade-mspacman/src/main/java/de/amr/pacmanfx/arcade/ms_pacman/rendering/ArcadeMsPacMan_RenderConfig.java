@@ -26,7 +26,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
-import de.amr.pacmanfx.uilib.UfxImages;
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import javafx.geometry.Rectangle2D;
@@ -75,7 +75,7 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
             Color.valueOf(colorScheme.wallStroke()), ARCADE_WHITE,
             Color.valueOf(colorScheme.door()), Color.TRANSPARENT
         );
-        return UfxImages.recolorImage(mazeImage, colorChanges);
+        return Ufx.recolorImage(mazeImage, colorChanges);
     }
 
     @Override

@@ -34,7 +34,7 @@ import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.vm.Game3DSettingsVM;
 import de.amr.pacmanfx.ui.vm.GameUISettingsVM;
 import de.amr.pacmanfx.ui.vm.Maze3DSettingsVM;
-import de.amr.pacmanfx.uilib.Ufx;
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
@@ -54,7 +54,7 @@ import org.tinylog.Logger;
 import java.util.List;
 import java.util.Optional;
 
-import static de.amr.pacmanfx.uilib.Ufx.pauseSecThen;
+import static de.amr.basics.util.Ufx.pauseSecThen;
 
 public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 

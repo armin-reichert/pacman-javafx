@@ -28,7 +28,7 @@ import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
 import static de.amr.basics.timer.TickTimer.secToTicks;
-import static de.amr.pacmanfx.uilib.Ufx.formatColorHex;
+import static de.amr.basics.util.Ufx.formatColorHex;
 
 public class DS_GameInfo extends GameDashboardSection {
 

@@ -13,8 +13,8 @@ import javafx.util.Duration;
 
 import java.util.Optional;
 
-import static de.amr.pacmanfx.uilib.Ufx.pauseSec;
-import static de.amr.pacmanfx.uilib.Ufx.pauseSecThen;
+import static de.amr.basics.util.Ufx.pauseSec;
+import static de.amr.basics.util.Ufx.pauseSecThen;
 import static java.util.Objects.requireNonNull;
 
 /**

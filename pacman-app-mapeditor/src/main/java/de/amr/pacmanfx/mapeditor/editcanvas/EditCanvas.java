@@ -17,7 +17,7 @@ import de.amr.pacmanfx.mapeditor.palette.PaletteID;
 import de.amr.pacmanfx.mapeditor.rendering.ActorSpriteRenderer;
 import de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites;
 import de.amr.pacmanfx.mapeditor.rendering.TerrainMapTileRenderer;
-import de.amr.pacmanfx.uilib.UfxImages;
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.rendering.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapColoring;
@@ -120,7 +120,7 @@ public class EditCanvas extends Canvas {
         segmentNumbersVisibleProperty()     .bind(ui.segmentNumbersVisibleProperty());
         scalingProperty()                   .bind(gridSize.divide(WorldMap.TS));
         symmetricEditModeProperty()         .bind(ui.editor().symmetricEditModeProperty());
-        templateImageGrayProperty()         .bind(ui.editor().templateImageProperty().map(UfxImages::imageToGreyscale));
+        templateImageGrayProperty()         .bind(ui.editor().templateImageProperty().map(Ufx::imageToGreyscale));
         terrainVisibleProperty()            .bind(ui.terrainVisibleProperty());
         worldMapProperty()                  .bind(ui.editor().currentWorldMapProperty());
 

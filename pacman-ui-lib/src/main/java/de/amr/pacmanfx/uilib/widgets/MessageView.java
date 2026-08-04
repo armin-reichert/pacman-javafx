@@ -5,7 +5,7 @@ package de.amr.pacmanfx.uilib.widgets;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.Named;
-import de.amr.pacmanfx.uilib.Ufx;
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;

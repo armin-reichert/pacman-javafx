@@ -24,7 +24,7 @@ import javafx.scene.transform.Translate;
 
 import java.util.List;
 
-import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
+import static de.amr.basics.util.Ufx.coloredPhongMaterial;
 import static java.util.Objects.requireNonNull;
 
 public class Pac3DFactory {

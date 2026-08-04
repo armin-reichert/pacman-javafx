@@ -32,7 +32,7 @@ import javafx.scene.shape.TriangleMesh;
 import java.util.HashMap;
 import java.util.Map;
 
-import static de.amr.pacmanfx.uilib.Ufx.coloredPhongMaterial;
+import static de.amr.basics.util.Ufx.coloredPhongMaterial;
 import static java.util.Objects.requireNonNull;
 
 public class DefaultFactory3D implements Factory3D {

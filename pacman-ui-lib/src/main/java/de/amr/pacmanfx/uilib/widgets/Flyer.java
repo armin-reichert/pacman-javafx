@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.uilib.widgets;
 
-import de.amr.pacmanfx.uilib.Ufx;
+import de.amr.basics.util.Ufx;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 

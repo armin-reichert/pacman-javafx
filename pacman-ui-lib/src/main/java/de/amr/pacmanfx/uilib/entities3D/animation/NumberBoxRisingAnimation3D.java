@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.uilib.entities3D.animation;
 
-import de.amr.pacmanfx.uilib.Ufx;
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.uilib.entities3D.world.NumberBox3D;
 import javafx.animation.*;
 import javafx.scene.paint.PhongMaterial;

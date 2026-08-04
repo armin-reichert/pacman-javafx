@@ -17,8 +17,8 @@ import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 import static de.amr.basics.math.RandomNumberSupport.chance;
-import static de.amr.pacmanfx.uilib.Ufx.pauseSec;
-import static de.amr.pacmanfx.uilib.Ufx.pauseSecThen;
+import static de.amr.basics.util.Ufx.pauseSec;
+import static de.amr.basics.util.Ufx.pauseSecThen;
 import static java.util.Objects.requireNonNull;
 
 /**
