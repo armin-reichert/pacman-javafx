@@ -13,6 +13,7 @@ import de.amr.pacmanfx.uilib.entities3D.pac.anim.PacChewingAnimation3D;
 import de.amr.pacmanfx.uilib.entities3D.pac.anim.PacManDyingAnimation3D;
 import de.amr.pacmanfx.uilib.entities3D.pac.anim.MsPacManDyingAnimation3D;
 import de.amr.pacmanfx.uilib.entities3D.pac.anim.Pac3DAnimationID;
+import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DAnimationComp;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DViewComp;
 import de.amr.pacmanfx.uilib.entities3D.pac.system.Pac3DSupportSystem;
 import javafx.geometry.Bounds;
@@ -38,9 +39,19 @@ public class Pac3DFactory {
 
         final Pac3DViewComp view3D = pac.requireComponent(Pac3DViewComp.class);
         configurePowerLight(view3D, config.colors().headColor().desaturate());
-        animationRegistry.register(Pac3DAnimationID.CHEWING, new PacChewingAnimation3D(view3D));
-        animationRegistry.register(Pac3DAnimationID.DYING,   new PacManDyingAnimation3D(view3D));
-        animationRegistry.register(Pac3DAnimationID.MOVING,  new HeadBangingAnimation3D(view3D.root()));
+
+        final Pac3DAnimationComp animation = pac.requireComponent(Pac3DAnimationComp.class);
+        final var chewing = new PacChewingAnimation3D(view3D);
+        final var hipSwaying = new HeadBangingAnimation3D(view3D.root()); //TODO change parameter
+        final var dying = new PacManDyingAnimation3D(view3D);
+
+        animation.setChewingAnimation(chewing);
+        animation.setMovementAnimation(hipSwaying);
+        animation.setDyingAnimation(dying);
+
+        animationRegistry.register(Pac3DAnimationID.CHEWING, chewing);
+        animationRegistry.register(Pac3DAnimationID.MOVING,  hipSwaying);
+        animationRegistry.register(Pac3DAnimationID.DYING,   dying);
     }
 
     public static void createMsPacManView3D(AnimationRegistry animationRegistry, GameEntity msPacMan, PacSettings config) {
@@ -49,9 +60,19 @@ public class Pac3DFactory {
         final Pac3DViewComp view3D = msPacMan.requireComponent(Pac3DViewComp.class);
         view3D.bodyGroup().getChildren().add(createFemalePacBodyParts(config));
         configurePowerLight(view3D, config.colors().headColor().desaturate());
-        animationRegistry.register(Pac3DAnimationID.CHEWING, new PacChewingAnimation3D(view3D));
-        animationRegistry.register(Pac3DAnimationID.DYING,   new MsPacManDyingAnimation3D(view3D));
-        animationRegistry.register(Pac3DAnimationID.MOVING,  new HipSwayingAnimation3D(view3D.root()));
+
+        final Pac3DAnimationComp animation = msPacMan.requireComponent(Pac3DAnimationComp.class);
+        final var chewing = new PacChewingAnimation3D(view3D);
+        final var hipSwaying = new HipSwayingAnimation3D(view3D.root()); //TODO change parameter
+        final var dying = new MsPacManDyingAnimation3D(view3D);
+
+        animation.setChewingAnimation(chewing);
+        animation.setMovementAnimation(hipSwaying);
+        animation.setDyingAnimation(dying);
+
+        animationRegistry.register(Pac3DAnimationID.CHEWING, chewing);
+        animationRegistry.register(Pac3DAnimationID.MOVING,  hipSwaying);
+        animationRegistry.register(Pac3DAnimationID.DYING,   dying);
     }
 
     private static void configurePowerLight(Pac3DViewComp view3D, Color color) {

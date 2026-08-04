@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
 package de.amr.pacmanfx.uilib.entities3D.pac.system;
 
 import de.amr.pacmanfx.core.ecs.GameEntity;
@@ -5,7 +9,6 @@ import de.amr.pacmanfx.core.ecs.systems.pac.PacPowerSystem;
 import de.amr.pacmanfx.core.ecs.systems.pac.PacStateSystem;
 import de.amr.pacmanfx.core.model.entities.pac.PacState;
 import de.amr.pacmanfx.core.model.entities.pac.PacStateComp;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3D.pac.anim.Pac3DAnimationID;
 import de.amr.pacmanfx.uilib.entities3D.pac.anim.Pac3DMovementAnimation;
@@ -38,7 +41,7 @@ public class Pac3DAnimationSystem {
             }
         }
 
-        final ManagedAnimation chewing = animation.animationRegistry().optAnimation(Pac3DAnimationID.CHEWING).orElse(null);
+        final ManagedAnimation chewing = animation.chewingAnimation();
         if (chewing != null) {
             if (walking) {
                 chewing.playOrContinue();
@@ -48,12 +51,16 @@ public class Pac3DAnimationSystem {
         }
     }
 
-    public static void setPowerMode(GameEntity pac3D, boolean power) {
-        final Pac3DAnimationComp animation = pac3D.requireComponent(Pac3DAnimationComp.class);
+    public static void setPowerMode(GameEntity pac, boolean power) {
+        final Pac3DAnimationComp animation = pac.requireComponent(Pac3DAnimationComp.class);
         final Pac3DMovementAnimation movementAnimation = animation.movementAnimation();
         if (movementAnimation != null) {
             movementAnimation.setPowerMode(power);
         }
+    }
+
+    public static void playDyingAnimation(GameEntity pac) {
+        //TODO
     }
 
     /**

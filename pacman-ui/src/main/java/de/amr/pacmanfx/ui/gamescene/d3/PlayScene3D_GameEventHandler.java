@@ -7,7 +7,9 @@ package de.amr.pacmanfx.ui.gamescene.d3;
 import de.amr.basics.fsm.State;
 import de.amr.basics.math.RandomNumberSupport;
 import de.amr.basics.math.Vector2i;
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventListener;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
@@ -23,7 +25,6 @@ import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.entities.bonus.Bonus;
 import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
-import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -35,18 +36,17 @@ import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.vm.Game3DSettingsVM;
 import de.amr.pacmanfx.ui.vm.GameUISettingsVM;
 import de.amr.pacmanfx.ui.vm.Maze3DSettingsVM;
-import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
+import de.amr.pacmanfx.uilib.entities3D.bonus.Bonus3DViewSystem;
 import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3D;
-import de.amr.pacmanfx.uilib.entities3D.pac.system.Pac3DSupportSystem;
-import de.amr.pacmanfx.uilib.entities3D.pac.anim.Pac3DAnimationID;
+import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DAnimationComp;
 import de.amr.pacmanfx.uilib.entities3D.pac.system.Pac3DAnimationSystem;
+import de.amr.pacmanfx.uilib.entities3D.pac.system.Pac3DSupportSystem;
 import de.amr.pacmanfx.uilib.entities3D.world.Energizer3D;
 import de.amr.pacmanfx.uilib.entities3D.world.NumberBox3D;
 import de.amr.pacmanfx.uilib.entities3D.world.Pellet3D;
-import de.amr.pacmanfx.uilib.entities3D.bonus.Bonus3DViewSystem;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.geometry.Point3D;
@@ -286,24 +286,24 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 
         gameContext.state().waitForTimeout();
 
-        final Animation seq = createPacDyingAnimationSeq(level3D.animationRegistry(), level.entities().pac(), gameContext);
+        final Animation seq = createPacDyingAnimationSeq(level.entities().pac(), gameContext);
         seq.setOnFinished(_ -> gameContext.state().triggerTimeout());
         seq.play();
     }
 
-    private Animation createPacDyingAnimationSeq(AnimationRegistry animationRegistry, Pac pac, GameContext gameContext) {
+    private Animation createPacDyingAnimationSeq(GameEntity pac, GameContext gameContext) {
+        final Pac3DAnimationComp animation = pac.requireComponent(Pac3DAnimationComp.class);
+
         final Animation pacStopping = Ufx.doNow(() -> {
             Pac3DSupportSystem.update(pac, gameContext); //TODO check if this is needed
-            animationRegistry.animation(Pac3DAnimationID.CHEWING).stop();
-            animationRegistry.animation(Pac3DAnimationID.MOVING).stop();
+            animation.chewingAnimation().stop();
+            animation.movementAnimation().managedAnimation().stop();
         });
-
-        final Animation pacDying = animationRegistry.animation(Pac3DAnimationID.DYING).animationFX();
 
         return new SequentialTransition(
             pacStopping,
             Ufx.pauseSecThen(1.5, () -> optSoundEffects().ifPresent(GameSoundEffects::playPacDeadSound)),
-            pacDying,
+            animation.dyingAnimation().animationFX(),
             Ufx.pauseSec(0.5)
         );
     }

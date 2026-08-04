@@ -6,12 +6,18 @@ package de.amr.pacmanfx.uilib.entities3D.pac.comp;
 
 import de.amr.pacmanfx.core.ecs.GameEntityComponent;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3D.pac.anim.Pac3DMovementAnimation;
 
 public class Pac3DAnimationComp implements GameEntityComponent {
 
     private final AnimationRegistry animationRegistry;
+
     private Pac3DMovementAnimation movementAnimation;
+
+    private ManagedAnimation chewingAnimation;
+
+    private ManagedAnimation dyingAnimation;
 
     public Pac3DAnimationComp(AnimationRegistry animationRegistry) {
         this.animationRegistry = animationRegistry;
@@ -27,6 +33,22 @@ public class Pac3DAnimationComp implements GameEntityComponent {
 
     public void setMovementAnimation(Pac3DMovementAnimation movementAnimation) {
         this.movementAnimation = movementAnimation;
+    }
+
+    public ManagedAnimation chewingAnimation() {
+        return chewingAnimation;
+    }
+
+    public void setChewingAnimation(ManagedAnimation chewingAnimation) {
+        this.chewingAnimation = chewingAnimation;
+    }
+
+    public ManagedAnimation dyingAnimation() {
+        return dyingAnimation;
+    }
+
+    public void setDyingAnimation(ManagedAnimation dyingAnimation) {
+        this.dyingAnimation = dyingAnimation;
     }
 
     @Override
