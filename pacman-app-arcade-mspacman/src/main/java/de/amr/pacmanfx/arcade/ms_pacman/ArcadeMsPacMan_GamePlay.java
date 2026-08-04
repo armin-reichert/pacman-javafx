@@ -112,7 +112,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         final Pac msPacMan = factory.createMsPacMan();
 
         msPacMan.autoSteering().setSteering(new RuleGuidedPacSteering(
-            sys.worldNavigator(), sys.pacWorldMovementPolicy(), sys.pacPower()
+            sys.worldNavigator(), sys.pacWorldMovementPolicy()
         ));
 
         level.setPac(msPacMan);
@@ -152,8 +152,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
 
         final var steering = new RuleGuidedPacSteering(
             sys.worldNavigator(),
-            sys.pacWorldMovementPolicy(),
-            sys.pacPower()
+            sys.pacWorldMovementPolicy()
         );
         pac.autoSteering().setSteering(steering);
 

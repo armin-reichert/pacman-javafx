@@ -18,11 +18,6 @@ public class PacDigestionSystem {
         }
     }
 
-    public boolean mustRest(GameEntity pac) {
-        final PacDigestionComp digestion = pac.requireComponent(PacDigestionComp.class);
-        return digestion.restingTicks() > 0;
-    }
-
     public void starve(GameEntity pac) {
         final PacDigestionComp digestion = pac.requireComponent(PacDigestionComp.class);
         digestion.setStarvingTicks(digestion.starvingTicks() + 1);

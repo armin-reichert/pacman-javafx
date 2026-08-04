@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.uilib.entities3D.ghost;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.entities.pac.system.PacPowerSystem;
 import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
@@ -25,9 +24,8 @@ public class Ghost3DAppearanceController {
         final Pac pac = level.entities().pac();
         final Ghost ghost = ghost3D.ghost();
 
-        final PacPowerSystem pacPowerSystem = gameContext.systems().pacPower();
-        final boolean powerActive = pacPowerSystem.isPowerActive(pac);
-        final boolean powerFading = pacPowerSystem.isPowerFading(level, pac);
+        final boolean powerActive = pac.power().isPowerActive();
+        final boolean powerFading = pac.power().isPowerFading(level);
 
         final GhostAppearance appearance = switch (ghost.state()) {
             case LOCKED, LEAVING_HOUSE -> {

@@ -7,7 +7,6 @@ import de.amr.basics.Disposable;
 import de.amr.basics.math.RandomNumberSupport;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Validations;
-import de.amr.pacmanfx.core.model.entities.pac.system.PacPowerSystem;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.model.entities.ghost.GhostState;
@@ -297,10 +296,9 @@ public class GameSoundEffects implements Disposable {
 
     // siren numbers are 1..4, hunting phase index = 0..7
     private int computeSirenNumber(GameContext gameContext) {
-        final PacPowerSystem pacPowerSystem = gameContext.systems().pacPower();
         final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
-        if (pacPowerSystem.isPowerActive(pac)) {
+        if (pac.power().isPowerActive()) {
             return NO_SIREN;
         }
         return 1 + level.huntingRules().phaseIndex() / 2;

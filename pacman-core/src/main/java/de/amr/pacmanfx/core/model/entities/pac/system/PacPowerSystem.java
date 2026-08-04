@@ -27,6 +27,7 @@ public final class PacPowerSystem {
         GhostState.FRIGHTENED, GhostState.HUNTING_PAC
     );
 
+    //TODO This is not a "system" method but game flow
     public void update(GameContext gameContext, GameEntity pac) {
         requireNonNull(gameContext);
         requireNonNull(pac);
@@ -36,12 +37,12 @@ public final class PacPowerSystem {
         final PacPowerComp power = pac.requireComponent(PacPowerComp.class);
         final GameLevel level = gameContext.assertLevel();
 
-        if (isPowerActive(pac)) {
+        if (power.isPowerActive()) {
             power.timer().doTick();
-            if (isPowerStartingFading(level, pac)) {
+            if (power.isPowerStartingFading(level)) {
                 gameContext.eventManager().publishGameEvent(new PacPowerFadesEvent(pac));
             }
-            else if (isPowerOver(pac)) {
+            else if (power.isPowerOver()) {
                 power.reset();
                 level.clearGhostKillChain();
 
@@ -55,6 +56,7 @@ public final class PacPowerSystem {
         }
     }
 
+    //TODO This is not a "system" method but game flow
     public void start(GameContext gameContext, GameEntity pac) {
         final PacPowerComp power = pac.requireComponent(PacPowerComp.class);
 
@@ -78,41 +80,5 @@ public final class PacPowerSystem {
     public void reset(GameEntity pac) {
         final PacPowerComp power = pac.requireComponent(PacPowerComp.class);
         power.reset();
-    }
-
-    public boolean isPowerActive(GameEntity pac) {
-        final PacPowerComp power = pac.requireComponent(PacPowerComp.class);
-        return power.timer().isRunning();
-    }
-
-    public boolean isPowerOver(GameEntity pac) {
-        final PacPowerComp power = pac.requireComponent(PacPowerComp.class);
-        return power.timer().hasExpired();
-    }
-
-    public boolean isPowerFading(GameLevel level, GameEntity pac) {
-        final PacPowerComp power = pac.requireComponent(PacPowerComp.class);
-        final TickTimer timer = power.timer();
-        long fadingTicks = TickTimer.secToTicks(level.pacPowerFadingSeconds());
-        return timer.isRunning() && timer.remainingTicks() <= fadingTicks;
-    }
-
-    public boolean isPowerStartingFading(GameLevel level, GameEntity pac) {
-        final PacPowerComp power = pac.requireComponent(PacPowerComp.class);
-        final TickTimer timer = power.timer();
-        long fadingTicks = TickTimer.secToTicks(level.pacPowerFadingSeconds());
-        return timer.isRunning() && timer.remainingTicks() == fadingTicks
-            || timer.durationTicks() < fadingTicks && timer.tickCount() == 1;
-    }
-
-    public long powerTicksRemaining(GameEntity pac) {
-        final PacPowerComp power = pac.requireComponent(PacPowerComp.class);
-        final TickTimer timer = power.timer();
-        return timer.isRunning() ? timer.remainingTicks() : 0;
-    }
-
-    public long powerTicksTotal(GameEntity pac) {
-        final PacPowerComp power = pac.requireComponent(PacPowerComp.class);
-        return power.timer().durationTicks();
     }
 }

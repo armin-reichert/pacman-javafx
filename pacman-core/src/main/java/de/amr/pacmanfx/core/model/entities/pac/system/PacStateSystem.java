@@ -11,6 +11,7 @@ import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.entities.pac.PacState;
 import de.amr.pacmanfx.core.model.entities.pac.comp.PacDigestionComp;
+import de.amr.pacmanfx.core.model.entities.pac.comp.PacPowerComp;
 import de.amr.pacmanfx.core.model.entities.pac.comp.PacStateComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.rules.ActorSpeedRules;
@@ -22,18 +23,15 @@ public class PacStateSystem {
     private final WorldNavigationSystem navigator;
     private final WorldMovementPolicy movementPolicy;
     private final PacDigestionSystem digestionSystem;
-    private final PacPowerSystem powerSystem;
 
     public PacStateSystem(
         WorldNavigationSystem navigator,
         WorldMovementPolicy movementPolicy,
-        PacDigestionSystem digestionSystem,
-        PacPowerSystem powerSystem)
+        PacDigestionSystem digestionSystem)
     {
         this.navigator = navigator;
         this.movementPolicy = movementPolicy;
         this.digestionSystem = digestionSystem;
-        this.powerSystem = powerSystem;
     }
 
     public void setState(Pac pac, PacState pacState) {
@@ -45,24 +43,26 @@ public class PacStateSystem {
     public void update(Pac pac, GameLevel level) {
         final PacStateComp state = pac.stateComp();
         final PacDigestionComp digestion = pac.digestion();
+        final PacPowerComp power = pac.power();
 
         final ActorSpeedRules speedRules = level.gameModel().rules().actorSpeedRules();
 
-        if (state.pacState() == PacState.DEAD || digestion.restingTicks() == PacDigestionComp.REST_FOREVER) {
-            return;
-        }
-
-        state.setMoving(state.pacState() == PacState.ACTIVE && notBlocked(pac));
-
         digestionSystem.update(pac);
 
-        if (digestionSystem.mustRest(pac)) {
+        switch (state.pacState()) {
+            case ACTIVE -> {
+                state.setMoving(notBlocked(pac));
+            }
+            case DEAD -> {
+                state.setMoving(false);
+            }
+        }
+
+        if (digestion.restingTicks() == PacDigestionComp.REST_FOREVER || digestion.restingTicks() > 0) {
             return;
         }
 
-        final float speed = powerSystem.isPowerActive(pac)
-            ? speedRules.pacSpeedWhenHasPower(level)
-            : speedRules.pacSpeed(level);
+        final float speed = power.isPowerActive() ? speedRules.pacSpeedWhenHasPower(level) : speedRules.pacSpeed(level);
 
         navigator.setSpeed(pac, speed);
         navigator.tryMovingOrTeleporting(pac, level, movementPolicy);

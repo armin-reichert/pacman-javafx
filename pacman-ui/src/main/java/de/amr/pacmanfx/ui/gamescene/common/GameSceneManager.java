@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui.gamescene.common;
 
 import de.amr.basics.Named;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.entities.pac.system.PacPowerSystem;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
@@ -153,8 +152,7 @@ public class GameSceneManager {
         level3D.init(gameContext);
         level3D.startLivesCounterTrackingPac(pac);
 
-        final PacPowerSystem pacPowerSystem = gameContext.systems().pacPower();
-        if (pacPowerSystem.isPowerActive(pac)) {
+        if (pac.power().isPowerActive()) {
             variantConfig.optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
         }
         playScene3D.fadeInAnimation().playFromStart();

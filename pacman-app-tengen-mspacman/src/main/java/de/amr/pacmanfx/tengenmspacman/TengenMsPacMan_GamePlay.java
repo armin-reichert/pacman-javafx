@@ -144,8 +144,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
         final var steering = new RuleGuidedPacSteering(
             sys.worldNavigator(),
-            sys.pacWorldMovementPolicy(),
-            sys.pacPower()
+            sys.pacWorldMovementPolicy()
         );
         pac.autoSteering().setSteering(steering);
 
@@ -259,7 +258,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final Pac msPacMan = factory.createMsPacMan();
 
         msPacMan.autoSteering().setSteering(new RuleGuidedPacSteering(
-            sys.worldNavigator(), sys.pacWorldMovementPolicy(), sys.pacPower()
+            sys.worldNavigator(), sys.pacWorldMovementPolicy()
         ));
 
         model.activatePacBooster(gameContext, msPacMan, model.pacBoosterMode() == PacBooster.ALWAYS_ON);

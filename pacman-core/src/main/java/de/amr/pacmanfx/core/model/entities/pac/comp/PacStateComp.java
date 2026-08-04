@@ -34,5 +34,6 @@ public class PacStateComp implements GameEntityComponent {
     @Override
     public void reset() {
         state = PacState.ACTIVE;
+        moving = false;
     }
 }

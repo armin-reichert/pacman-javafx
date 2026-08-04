@@ -8,7 +8,6 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
-import de.amr.pacmanfx.core.model.entities.pac.system.PacPowerSystem;
 import de.amr.pacmanfx.core.ecs.systems.WorldMovementPolicy;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.entities.bonus.Bonus;
@@ -16,6 +15,7 @@ import de.amr.pacmanfx.core.model.entities.bonus.BonusState;
 import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.model.entities.ghost.GhostState;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
+import de.amr.pacmanfx.core.model.entities.pac.system.PacPowerSystem;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -75,16 +75,10 @@ public class RuleGuidedPacSteering implements Steering {
 
     private final WorldNavigationSystem navigator;
     private final WorldMovementPolicy worldMovementPolicy;
-    private final PacPowerSystem pacPowerSystem;
 
-    public RuleGuidedPacSteering(
-        WorldNavigationSystem navigator,
-        WorldMovementPolicy worldMovementPolicy,
-        PacPowerSystem pacPowerSystem)
-    {
+    public RuleGuidedPacSteering(WorldNavigationSystem navigator, WorldMovementPolicy worldMovementPolicy) {
         this.navigator = requireNonNull(navigator);
         this.worldMovementPolicy = requireNonNull(worldMovementPolicy);
-        this.pacPowerSystem = requireNonNull(pacPowerSystem);
     }
 
     @Override
@@ -133,9 +127,8 @@ public class RuleGuidedPacSteering implements Steering {
 
     private void takeAction(GameLevel level, CollectedData data) {
         final Pac pac = level.entities().pac();
-        final Vector2i pacTile = WorldNavigationSystem.computeTile(pac);
         final WorldNavigationComp worldNavigation = pac.worldNavigation();
-        
+
         if (data.hunterAhead != null) {
             Direction escapeDir;
             if (data.hunterBehind != null) {
@@ -151,12 +144,14 @@ public class RuleGuidedPacSteering implements Steering {
             return;
         }
 
+        final Vector2i pacTile = WorldNavigationSystem.computeTile(pac);
+
         // when not escaping ghost, keep move direction at least until next intersection
         if (worldNavigation.info.moved && !level.worldMap().terrainLayer().isIntersection(pacTile))
             return;
 
         if (!data.frightenedGhosts.isEmpty()
-            && pacPowerSystem.powerTicksRemaining(pac) >= GameConstants.SIMULATION_FPS) {
+            && pac.power().powerTicksRemaining() >= GameConstants.SIMULATION_FPS) {
             final Ghost prey = data.frightenedGhosts.getFirst();
             final Vector2i preyTile = WorldNavigationSystem.computeTile(prey);
             Logger.trace("Detected frightened ghost {} {} tiles away", prey.name(), preyTile.manhattanDist(pacTile));
@@ -268,7 +263,7 @@ public class RuleGuidedPacSteering implements Steering {
         final FoodLayer foodLayer = worldMap.foodLayer();
         final Pac pac = level.entities().pac();
         final Vector2i pacManTile = WorldNavigationSystem.computeTile(pac);
-        final long powerTicksRemaining = pacPowerSystem.powerTicksRemaining(pac);
+        final long powerTicksRemaining = pac.power().powerTicksRemaining();
         final boolean enoughTimeLeft = powerTicksRemaining > 2L * GameConstants.SIMULATION_FPS;
         final List<Vector2i> foodTiles = new ArrayList<>();
 

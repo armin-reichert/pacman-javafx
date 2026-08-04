@@ -144,7 +144,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         final Pac pacMan = factory.createPacMan();
 
         pacMan.autoSteering().setSteering(new RuleGuidedPacSteering(
-            sys.worldNavigator(), sys.pacWorldMovementPolicy(), sys.pacPower()
+            sys.worldNavigator(), sys.pacWorldMovementPolicy()
         ));
 
         level.setPac(pacMan);

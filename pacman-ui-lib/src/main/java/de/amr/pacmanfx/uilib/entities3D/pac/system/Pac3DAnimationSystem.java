@@ -7,20 +7,24 @@ package de.amr.pacmanfx.uilib.entities3D.pac.system;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.entities.pac.PacState;
 import de.amr.pacmanfx.core.model.entities.pac.comp.PacStateComp;
-import de.amr.pacmanfx.core.model.entities.pac.system.PacPowerSystem;
 import de.amr.pacmanfx.core.model.entities.pac.system.PacStateSystem;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.entities3D.pac.anim.Pac3DAnimationID;
 import de.amr.pacmanfx.uilib.entities3D.pac.anim.Pac3DMovementAnimation;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DAnimationComp;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DViewComp;
 
 public class Pac3DAnimationSystem {
 
-    public static void init(Pac pac) {
+    public static void stopAll(Pac pac) {
         final Pac3DAnimationComp animation = pac.requireComponent(Pac3DAnimationComp.class);
-        for (Pac3DAnimationID id : Pac3DAnimationID.values()) {
-            animation.registry().optAnimation(id).ifPresent(ManagedAnimation::stop);
+        if (animation.chewing() != null) {
+            animation.chewing().stop();
+        }
+        if (animation.dying() != null) {
+            animation.dying().stop();
+        }
+        if (animation.movement() != null) {
+            animation.movement().managedAnimation().stop();
         }
     }
 
@@ -60,15 +64,15 @@ public class Pac3DAnimationSystem {
     /**
      * When empowered, Pac-Man is lighted, light range shrinks with ceasing power.
      */
-    public static void updatePowerLight(Pac pac, PacPowerSystem pacPowerSystem) {
+    public static void updatePowerLight(Pac pac) {
         final PacStateComp state = pac.stateComp();
         final Pac3DViewComp view3D = pac.requireComponent(Pac3DViewComp.class);
 
         final boolean lighted = state.pacState() != PacState.DEAD;
         if (lighted) {
-            final boolean powerActive      = pacPowerSystem.isPowerActive(pac);
-            final long powerTicksRemaining = pacPowerSystem.powerTicksRemaining(pac);
-            final long powerTicksTotal     = pacPowerSystem.powerTicksTotal(pac);
+            final boolean powerActive      = pac.power().isPowerActive();
+            final long powerTicksRemaining = pac.power().powerTicksRemaining();
+            final long powerTicksTotal     = pac.power().powerTicksTotal();
             if (powerActive && pac.isVisible()) {
                 view3D.powerLight().setLightOn(true);
                 final float maxRange = (powerTicksRemaining / (float) powerTicksTotal) * 60 + 30;

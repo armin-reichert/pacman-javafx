@@ -6,7 +6,6 @@ package de.amr.pacmanfx.core.model.entities.ghost.system;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
-import de.amr.pacmanfx.core.model.entities.pac.system.PacPowerSystem;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
@@ -31,13 +30,10 @@ public class GhostStateSystem {
         requireNonNull(gameContext);
 
         final GameLevel level = gameContext.assertLevel();
-        switch (gameContext.state().id()) {
-            case CommonGameStateID.GAME_LEVEL_EATING_GHOST -> {
-                level.ghostsInAnyOfStates(UPDATED_GHOST_STATES_WHILE_EATEN).forEach(ghost -> update(gameContext, ghost));
-            }
-            default -> {
-                level.entities().ghosts().forEach(ghost -> update(gameContext, ghost));
-            }
+        if (gameContext.state().id().equals(CommonGameStateID.GAME_LEVEL_EATING_GHOST)) {
+            level.ghostsInAnyOfStates(UPDATED_GHOST_STATES_WHILE_EATEN).forEach(ghost -> update(gameContext, ghost));
+        } else {
+            level.entities().ghosts().forEach(ghost -> update(gameContext, ghost));
         }
     }
 
@@ -75,14 +71,17 @@ public class GhostStateSystem {
     // --- LOCKED ---
 
     private void updateStateLocked(GameContext gameContext, Ghost ghost, float speed) {
-        final GameSystems sys = gameContext.systems();
+        final GameLevel level = gameContext.assertLevel();
+        final Pac pac = level.entities().pac();
 
-        sys.ghostHouseAccess().stayInHouse(gameContext, ghost, speed);
+        gameContext.systems().ghostHouseAccess().stayInHouse(gameContext, ghost, speed);
 
-        if (isThreatenedByPac(gameContext, ghost)) {
-            playFrightenedAnimation(gameContext, ghost);
+        //TODO move to animation system (tbd)
+        final SpriteAnimSystem animSystem = gameContext.systems().spriteAnim();
+        if (isGhostThreatenedByPac(level, ghost, pac)) {
+            playFrightenedAnimation(animSystem, level, ghost, pac);
         } else {
-            sys.spriteAnim().select(ghost, ActorAnimationID.GHOST_NORMAL);
+            animSystem.select(ghost, ActorAnimationID.GHOST_NORMAL);
         }
     }
 
@@ -118,8 +117,13 @@ public class GhostStateSystem {
      * @see <a href="https://www.youtube.com/watch?v=eFP0_rkjwlY">YouTube: How Frightened Ghosts Decide Where to Go</a>
      */
     private void updateStateFrightened(GameContext gameContext, Ghost ghost, float speed) {
+        final GameLevel level = gameContext.assertLevel();
+        final Pac pac = level.entities().pac();
+
         gameContext.systems().roamingNavigator().roam(gameContext, ghost, speed);
-        playFrightenedAnimation(gameContext, ghost);
+
+        //TODO move to animation system (tbd)
+        playFrightenedAnimation(gameContext.systems().spriteAnim(), level, ghost, pac);
     }
 
     // --- EATEN ---
@@ -134,22 +138,24 @@ public class GhostStateSystem {
     // --- LEAVING_HOUSE ---
 
     private void updateStateLeavingHouse(GameContext gameContext, Ghost ghost, float speed) {
-        final GameSystems sys = gameContext.systems();
+        final GameLevel level = gameContext.assertLevel();
+        final Pac pac = level.entities().pac();
 
-        boolean leftHouse = sys.ghostHouseAccess().leaveHouse(gameContext, ghost, speed);
-        boolean threatened =  isThreatenedByPac(gameContext, ghost);
+        boolean leftHouse = gameContext.systems().ghostHouseAccess().leaveHouse(gameContext, ghost, speed);
+        boolean threatened = isGhostThreatenedByPac(level, ghost, pac);
 
         if (leftHouse) {
-            changeState(gameContext, ghost,
-                threatened ? GhostState.FRIGHTENED : GhostState.HUNTING_PAC);
+            changeState(gameContext, ghost, threatened ? GhostState.FRIGHTENED : GhostState.HUNTING_PAC);
         }
-        else {
-            if (threatened) {
-                playFrightenedAnimation(gameContext, ghost);
-            } else {
-                sys.spriteAnim().select(ghost, ActorAnimationID.GHOST_NORMAL);
-            }
-        }
+
+        //TODO move to animation system (tbd)
+        final SpriteAnimSystem animSystem = gameContext.systems().spriteAnim();
+         if (!leftHouse && threatened) {
+             playFrightenedAnimation(animSystem, level, ghost, pac);
+         }
+         else {
+             animSystem.select(ghost, ActorAnimationID.GHOST_NORMAL);
+         }
     }
 
     // --- RETURNING_TO_HOUSE ---
@@ -170,11 +176,8 @@ public class GhostStateSystem {
 
     // helper
 
-    private boolean isThreatenedByPac(GameContext gameContext, Ghost ghost) {
-        final PacPowerSystem pacPowerSystem = gameContext.systems().pacPower();
-        final GameLevel level = gameContext.assertLevel();
-        final Pac pac = level.entities().pac();
-        return pacPowerSystem.isPowerActive(pac) && !level.isInGhostKilledChain(ghost);
+    private boolean isGhostThreatenedByPac(GameLevel level, Ghost ghost, Pac pac) {
+        return pac.power().isPowerActive() && !level.isInGhostKilledChain(ghost);
     }
 
     //TODO move into animation system class
@@ -197,19 +200,15 @@ public class GhostStateSystem {
         }
     }
 
-    private void playFrightenedAnimation(GameContext gameContext, Ghost ghost) {
-        final GameSystems sys = gameContext.systems();
-        final GameLevel level = gameContext.assertLevel();
-        final Pac pac = level.entities().pac();
-
-        if (sys.pacPower().isPowerStartingFading(level, pac)) {
-            sys.spriteAnim().select(ghost, ActorAnimationID.GHOST_FLASHING);
-            sys.spriteAnim().playSelected(ghost);
+    //TODO move into yet missing ghost animation system
+    private void playFrightenedAnimation(SpriteAnimSystem animSystem, GameLevel level, Ghost ghost, Pac pac) {
+        if (pac.power().isPowerStartingFading(level)) {
+            animSystem.select(ghost, ActorAnimationID.GHOST_FLASHING);
+            animSystem.playSelected(ghost);
         }
-        else if (!sys.pacPower().isPowerFading(level, pac)) {
-            sys.spriteAnim().select(ghost, ActorAnimationID.GHOST_FRIGHTENED);
-            sys.spriteAnim().playSelected(ghost);
+        else if (!pac.power().isPowerFading(level)) {
+            animSystem.select(ghost, ActorAnimationID.GHOST_FRIGHTENED);
+            animSystem.playSelected(ghost);
         }
     }
-
 }

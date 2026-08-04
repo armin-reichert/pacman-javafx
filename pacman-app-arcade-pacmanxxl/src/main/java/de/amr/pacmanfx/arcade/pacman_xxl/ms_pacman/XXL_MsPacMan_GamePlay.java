@@ -38,8 +38,7 @@ public class XXL_MsPacMan_GamePlay extends ArcadeMsPacMan_GamePlay {
 
         final var steering = new RuleGuidedPacSteering(
             sys.worldNavigator(),
-            sys.pacWorldMovementPolicy(),
-            sys.pacPower()
+            sys.pacWorldMovementPolicy()
         );
         pac.autoSteering().setSteering(steering);
 

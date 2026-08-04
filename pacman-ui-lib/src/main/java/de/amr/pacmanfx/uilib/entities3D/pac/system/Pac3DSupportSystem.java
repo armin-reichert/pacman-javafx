@@ -36,7 +36,7 @@ public class Pac3DSupportSystem {
         final GameLevel level = gameContext.assertLevel();
 
         Pac3DTransformSystem.init(pac, level);
-        Pac3DAnimationSystem.init(pac);
+        Pac3DAnimationSystem.stopAll(pac);
         Pac3DAnimationSystem.setPowerMode(pac, false);
     }
 
@@ -46,6 +46,6 @@ public class Pac3DSupportSystem {
 
         Pac3DTransformSystem.update(pac, level);
         Pac3DAnimationSystem.update(pac, gameContext.systems().pacState());
-        Pac3DAnimationSystem.updatePowerLight(pac, gameContext.systems().pacPower());
+        Pac3DAnimationSystem.updatePowerLight(pac);
     }
 }

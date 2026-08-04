@@ -53,8 +53,7 @@ public class DefaultGameSystems implements GameSystems {
         pacState = new PacStateSystem(
             navigator,
             pacWorldMovementPolicy,
-            pacDigestion,
-            pacPower
+            pacDigestion
         );
         pacAnimation = new PacAnimationSystem(spriteAnim);
     }

@@ -10,7 +10,6 @@ import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.MovementComp;
 import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
-import de.amr.pacmanfx.core.model.entities.pac.system.PacPowerSystem;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
@@ -102,15 +101,13 @@ public class DS_ActorInfo extends GameDashboardSection {
     private Supplier<String> supplyPacPowerText(GameAppContext appContext) {
         return () -> appContext.currentGameContext().model().optLevel()
             .map(level -> level.entities().pac())
-            .map(pac -> pacPowerText(
-                appContext.currentGameContext().systems().pacPower(), pac
-            ))
+            .map(this::pacPowerText)
             .orElse(NO_INFO);
     }
 
-    private String pacPowerText(PacPowerSystem pacPowerSystem, Pac pac) {
-        return pacPowerSystem.isPowerActive(pac)
-            ? "Remaining: %s".formatted(ticksToString(pacPowerSystem.powerTicksRemaining(pac)))
+    private String pacPowerText(Pac pac) {
+        return pac.power().isPowerActive()
+            ? "Remaining: %s".formatted(ticksToString(pac.power().powerTicksRemaining()))
             : "No Power";
     }
 
