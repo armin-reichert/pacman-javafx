@@ -98,10 +98,6 @@ public class Pac3D extends GameEntity implements UpdatableEntity, DisposableGrap
         return Optional.ofNullable(powerLight);
     }
 
-    public void setPowerMode(boolean power) {
-        Pac3DAnimationSystem.setPowerMode(this, power);
-    }
-
     @Override
     public void dispose() {
         for (var animID : Pac3DAnimationID.values()) {
@@ -116,7 +112,7 @@ public class Pac3D extends GameEntity implements UpdatableEntity, DisposableGrap
         requireNonNull(gameContext);
         Pac3DTransformSystem.init(this, gameContext);
         Pac3DAnimationSystem.init(this);
-        setPowerMode(false);
+        Pac3DAnimationSystem.setPowerMode(this, false);
     }
 
     @Override

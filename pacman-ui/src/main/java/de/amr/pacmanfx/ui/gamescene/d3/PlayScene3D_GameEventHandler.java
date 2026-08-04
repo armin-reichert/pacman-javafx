@@ -41,6 +41,7 @@ import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3D;
 import de.amr.pacmanfx.uilib.entities3D.pac.Pac3D;
 import de.amr.pacmanfx.uilib.entities3D.pac.Pac3DAnimationID;
+import de.amr.pacmanfx.uilib.entities3D.pac.Pac3DAnimationSystem;
 import de.amr.pacmanfx.uilib.entities3D.world.Energizer3D;
 import de.amr.pacmanfx.uilib.entities3D.world.NumberBox3D;
 import de.amr.pacmanfx.uilib.entities3D.world.Pellet3D;
@@ -219,7 +220,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         final GameContext gameContext = gameContext();
         optSoundEffects().ifPresent(GameSoundEffects::stopSiren);
         if (!gameContext.model().rules().isLevelCompleted(level3D.level())) {
-            level3D.entities3D().pac3D().setPowerMode(true);
+            Pac3DAnimationSystem.setPowerMode(level3D.entities3D().pac3D(), true);
             level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.WALL_COLOR_FLASHING)
                 .ifPresent(ManagedAnimation::playFromStart);
             optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
@@ -229,7 +230,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     @Override
     default void onPacLostPower(PacLostPowerEvent ignoredEvent) {
         final GameLevel3D level3D = assertLevel3D();
-        level3D.entities3D().pac3D().setPowerMode(false);
+        Pac3DAnimationSystem.setPowerMode(level3D.entities3D().pac3D(), true);
         optSoundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
         level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.WALL_COLOR_FLASHING)
             .ifPresent(ManagedAnimation::stop);
