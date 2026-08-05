@@ -4,10 +4,12 @@
 
 package de.amr.pacmanfx.uilib.entities3D.pac.system;
 
+import de.amr.basics.math.Direction;
+import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector3f;
-import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
+import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.entities.pac.PacState;
 import de.amr.pacmanfx.core.model.entities.pac.comp.PacStateComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;
@@ -18,8 +20,9 @@ import static java.util.Objects.requireNonNull;
 
 public class Pac3DTransformSystem {
 
-    public static void init(GameEntity pac, GameLevel level) {
+    public static void init(Pac pac, GameLevel level) {
         final Pac3DViewComp view3D = pac.requireComponent(Pac3DViewComp.class);
+
         view3D.root().setScaleX(1.0);
         view3D.root().setScaleY(1.0);
         view3D.root().setScaleZ(1.0);
@@ -27,32 +30,43 @@ public class Pac3DTransformSystem {
         update(pac, level);
     }
 
-    public static void update(GameEntity pac, GameLevel level) {
+    public static void update(Pac pac, GameLevel level) {
         requireNonNull(pac);
         requireNonNull(level);
 
-        final PacStateComp state = pac.requireComponent(PacStateComp.class);
         final Pac3DViewComp view3D = pac.requireComponent(Pac3DViewComp.class);
-        final WorldNavigationComp worldNavigation = pac.requireComponent(WorldNavigationComp.class);
+        final Vector2f center = WorldNavigationSystem.computeCenter(pac);
 
-        final Vector3f center = new Vector3f(WorldNavigationSystem.computeCenter(pac), -8);
-
-        final boolean outside = center.x() < WorldMap.HTS || center.x() > WorldMap.TS * level.worldMap().numCols() - WorldMap.HTS;
-        view3D.root().setVisible(pac.isVisible() && !outside);
-
-        if (state.pacState() == PacState.ACTIVE) {
-            view3D.root().setTranslateX(center.x());
-            view3D.root().setTranslateY(center.y());
-            view3D.root().setTranslateZ(center.z()); //TODO should depend on size
-
-            if (worldNavigation.moveDir() != null) {
-                view3D.facingRotate().setAngle(switch (worldNavigation.moveDir()) {
-                    case LEFT -> 0;
-                    case UP -> 90;
-                    case RIGHT -> 180;
-                    case DOWN -> 270;
-                });
+        if (pac.state().pacState() == PacState.ACTIVE) {
+            updateVisibility(pac, center, level.worldMap());
+            updatePosition(view3D, center);
+            final Direction moveDir = pac.worldNavigation().moveDir();
+            if (moveDir != null) {
+                updateFacing(view3D, moveDir);
             }
         }
+    }
+
+    private static void updateVisibility(Pac pac, Vector2f center, WorldMap worldMap) {
+        final Pac3DViewComp view3D = pac.requireComponent(Pac3DViewComp.class);
+        final boolean outside = center.x() < WorldMap.HTS
+            || center.x() > WorldMap.TS * worldMap.numCols() - WorldMap.HTS;
+        view3D.root().setVisible(pac.isVisible() && !outside);
+    }
+
+    private static void updatePosition(Pac3DViewComp view3D, Vector2f center) {
+        view3D.root().setTranslateX(center.x());
+        view3D.root().setTranslateY(center.y());
+        view3D.root().setTranslateZ(-8); //TODO should depend on size
+    }
+    
+    private static void updateFacing(Pac3DViewComp view3D, Direction dir) {
+        final int angle = switch (dir) {
+            case LEFT -> 0;
+            case UP -> 90;
+            case RIGHT -> 180;
+            case DOWN -> 270;
+        };
+        view3D.facingRotate().setAngle(angle);
     }
 }
