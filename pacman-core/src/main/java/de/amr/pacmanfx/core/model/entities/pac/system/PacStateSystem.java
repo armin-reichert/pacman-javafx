@@ -11,10 +11,8 @@ import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.entities.pac.PacState;
 import de.amr.pacmanfx.core.model.entities.pac.comp.PacDigestionComp;
-import de.amr.pacmanfx.core.model.entities.pac.comp.PacPowerComp;
 import de.amr.pacmanfx.core.model.entities.pac.comp.PacStateComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.rules.ActorSpeedRules;
 
 import static java.util.Objects.requireNonNull;
 
@@ -47,12 +45,8 @@ public class PacStateSystem {
         digestionSystem.update(pac);
 
         switch (state.pacState()) {
-            case ACTIVE -> {
-                state.setMoving(notBlocked(pac));
-            }
-            case DEAD -> {
-                state.setMoving(false);
-            }
+            case ACTIVE -> state.setMoving(!isStandingStill(pac));
+            case DEAD -> state.setMoving(false);
         }
 
         if (digestion.restingTicks() == PacDigestionComp.REST_FOREVER || digestion.restingTicks() > 0) {
@@ -61,9 +55,8 @@ public class PacStateSystem {
 
     }
 
-    public boolean notBlocked(Pac pac) {
-        final MovementComp movement = pac.movement();
-        return !(movement.hasZeroVelocity() ||didNotMoveThroughWorld(pac));
+    public boolean isStandingStill(Pac pac) {
+        return pac.movement().hasZeroVelocity() ||didNotMoveThroughWorld(pac);
     }
 
     private boolean didNotMoveThroughWorld(Pac pac) {

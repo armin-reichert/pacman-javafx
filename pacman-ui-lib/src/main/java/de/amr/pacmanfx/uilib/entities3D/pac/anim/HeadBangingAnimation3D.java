@@ -78,7 +78,7 @@ public class HeadBangingAnimation3D extends ManagedAnimation implements Pac3DMov
         final WorldNavigationComp worldNavigation = pac.worldNavigation();
 
         final var rotateTransition = (RotateTransition) animationFX();
-        final boolean animate = state.pacState() == PacState.ACTIVE && pacStateSystem.notBlocked(pac);
+        final boolean animate = state.pacState() == PacState.ACTIVE && state.isMoving();
         if (animate) {
             final Point3D axis = worldNavigation.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
             if (!axis.equals(rotateTransition.getAxis())) {
