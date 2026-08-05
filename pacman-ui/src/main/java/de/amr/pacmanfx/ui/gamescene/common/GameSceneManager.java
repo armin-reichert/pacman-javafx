@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.gamescene.common;
 
 import de.amr.basics.Named;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.entities.livescounter.LivesCounter;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.entities.pac.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -14,6 +15,7 @@ import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.gamescene.d3.PlayScene3D;
+import de.amr.pacmanfx.ui.gamescene.d3.entities.livescounter.LivesCounterView3DSystem;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -137,10 +139,10 @@ public class GameSceneManager {
         }
 
         final GameLevel level = gameContext.assertLevel();
+        final LivesCounter livesCounter = level.entities().entitySet().uniqueOfType(LivesCounter.class);
         final Pac pac = level.entities().pac();
 
         playScene3D.replaceGameLevel3D(gameContext);
-
         final GameLevel3D level3D = playScene3D.optGameLevel3D().orElseThrow();
 
         playScene3D.replaceActionBindings(level);
@@ -148,7 +150,8 @@ public class GameSceneManager {
         playScene3D.updateHUD3D(level);
 
         level3D.createLevelCounterView3D(gameContext.model().levelCounter());
-        level3D.startLivesCounterTrackingPac(pac);
+
+        LivesCounterView3DSystem.startTracking(livesCounter, pac);
 
         if (pac.power().isPowerActive()) {
             variantConfig.optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);

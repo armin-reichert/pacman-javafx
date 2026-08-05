@@ -273,9 +273,6 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 
         gameContext.state().waitForTimeout();
 
-        //TODO check if this is needed:
-        assertLevel3D().updatePac();
-
         stopAnimationsBeforePacManDying();
         optSoundEffects().ifPresent(GameSoundEffects::stopAll);
         level.entities().optBonus().ifPresent(

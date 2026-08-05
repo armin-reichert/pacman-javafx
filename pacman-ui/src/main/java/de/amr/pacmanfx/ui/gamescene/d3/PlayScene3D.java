@@ -5,11 +5,12 @@
 package de.amr.pacmanfx.ui.gamescene.d3;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
-import de.amr.pacmanfx.core.model.UpdatableEntity;
+import de.amr.pacmanfx.core.entities.livescounter.LivesCounter;
 import de.amr.pacmanfx.core.entities.pac.Pac;
-import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.entities.score.Score;
+import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
+import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.ui.GlobalAssets;
@@ -21,6 +22,7 @@ import de.amr.pacmanfx.ui.gamescene.d3.animation.PlaySceneFadeInAnimation;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.DronePerspective;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveManager;
+import de.amr.pacmanfx.ui.gamescene.d3.entities.livescounter.LivesCounterView3DSystem;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.vm.Game3DSettingsVM;
 import de.amr.pacmanfx.ui.vm.GameUISettingsVM;
@@ -186,11 +188,8 @@ public class PlayScene3D extends AbstractGameScene
         final GameUISettingsVM viewModel = appContext().ui().viewModel();
 
         level3D = new GameLevel3D(viewModel, gameContext, appContext().variants().currentVariant().config());
-
         decorate(level3D);
         level3DEmbedder.getChildren().setAll(level3D);
-
-        level3D.createAnimations(Game3DSettingsVM.DEFAULT_PARTICLE_ANIMATION_CONFIG);
 
         //TODO remove all this
         level3D.entities3D().selectAll()
@@ -199,7 +198,9 @@ public class PlayScene3D extends AbstractGameScene
 
         initPac(level, level.entities().pac());
 
-        level3D.startLivesCounterTrackingPac(level.entities().pac());
+        final LivesCounter livesCounter = level.entities().entitySet().uniqueOfType(LivesCounter.class);
+        final Pac pac = level.entities().pac();
+        LivesCounterView3DSystem.startTracking(livesCounter, pac);
 
         Logger.info("New 3D game level created");
     }

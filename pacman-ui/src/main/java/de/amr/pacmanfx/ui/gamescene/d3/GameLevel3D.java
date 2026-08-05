@@ -42,6 +42,7 @@ import de.amr.pacmanfx.ui.gamescene.d3.entities.livescounter.LivesCounterView3DS
 import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Pellet3DSettings;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
+import de.amr.pacmanfx.ui.vm.Game3DSettingsVM;
 import de.amr.pacmanfx.ui.vm.GameUISettingsVM;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
@@ -152,6 +153,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
         buildHierarchy();
 
+        createAnimations(Game3DSettingsVM.DEFAULT_PARTICLE_ANIMATION_CONFIG);
+
         setMouseTransparent(true); // this increases performance they say...
     }
 
@@ -164,55 +167,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         animationRegistry.register(AnimationID.LEVEL_COMPLETED_SHORT, new LevelCompletedAnimationShort(this));
         createEnergizerParticlesAnimation(particlesConfig);
         createGhostLightAnimation();
-    }
-
-    /**
-     * Starts the lives counter symbols following Pac-Man with their eyes.
-     */
-    public void startLivesCounterTrackingPac(GameEntity pac) {
-        final LivesCounter livesCounter = level.entities().entitySet().uniqueOfType(LivesCounter.class);
-        final Pac3DViewComp pac3D = pac.requireComponent(Pac3DViewComp.class);
-        LivesCounterView3DSystem.startTracking(livesCounter, pac3D.root());
-    }
-
-    public void updateLivesCounter() {
-        final LivesCounter livesCounter = level.entities().entitySet().uniqueOfType(LivesCounter.class);
-        LivesCounterView3DSystem.update(livesCounter);
-    }
-
-    public void updatePac() {
-        final Pac pac = level.entities().pac();
-        Pac3DTransformSystem.update(pac, level);
-        Pac3DAnimationSystem.update(pac, gameContext.systems().pacState());
-        Pac3DAnimationSystem.updatePowerLight(pac);
-    }
-
-    public void updateGhosts() {
-        //TODO
-    }
-
-    public void updateHouse() {
-        final House house = level.entities().entitySet().uniqueOfType(House.class);
-        final House3DViewComp view3D = house.requireComponent(House3DViewComp.class);
-
-        boolean accessRequested = level
-            .ghostsInAnyOfStates(Set.of(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE))
-            .anyMatch(GameEntity::isVisible);
-
-        boolean ghostNearHouseEntry = level
-            .ghostsInAnyOfStates(Set.of(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE))
-            .filter(ghost -> ghost.pos().asVector2f().euclideanDist(house.floorplan().entryPosition())
-                <= view3D.doorSensitivity())
-            .anyMatch(GameEntity::isVisible);
-
-        House3DSystem.update(house, accessRequested, ghostNearHouseEntry);
-    }
-
-    public void updateBonus() {
-        level.optBonus().ifPresent(bonus -> {
-            ensureBonus3DViewExists(bonus);
-            Bonus3DMovementSystem.update(bonus);
-        });
     }
 
     public void updateEntities() {
@@ -328,6 +282,46 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     // Private area, no trespassing!
+
+    private void updateLivesCounter() {
+        final LivesCounter livesCounter = level.entities().entitySet().uniqueOfType(LivesCounter.class);
+        LivesCounterView3DSystem.update(livesCounter);
+    }
+
+    private void updatePac() {
+        final Pac pac = level.entities().pac();
+        Pac3DTransformSystem.update(pac, level);
+        Pac3DAnimationSystem.update(pac, gameContext.systems().pacState());
+        Pac3DAnimationSystem.updatePowerLight(pac);
+    }
+
+    private void updateGhosts() {
+        //TODO
+    }
+
+    private void updateHouse() {
+        final House house = level.entities().entitySet().uniqueOfType(House.class);
+        final House3DViewComp view3D = house.requireComponent(House3DViewComp.class);
+
+        boolean accessRequested = level
+            .ghostsInAnyOfStates(Set.of(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE))
+            .anyMatch(GameEntity::isVisible);
+
+        boolean ghostNearHouseEntry = level
+            .ghostsInAnyOfStates(Set.of(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE))
+            .filter(ghost -> ghost.pos().asVector2f().euclideanDist(house.floorplan().entryPosition())
+                <= view3D.doorSensitivity())
+            .anyMatch(GameEntity::isVisible);
+
+        House3DSystem.update(house, accessRequested, ghostNearHouseEntry);
+    }
+
+    private void updateBonus() {
+        level.optBonus().ifPresent(bonus -> {
+            ensureBonus3DViewExists(bonus);
+            Bonus3DMovementSystem.update(bonus);
+        });
+    }
 
     private void createMaze3D() {
         final WorldMapColorSchemeImpl colorScheme = gameVariantConfig.renderConfig().colorScheme(level.worldMap(), gameVariantConfig.worldSettings());
