@@ -188,6 +188,18 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         Pac3DAnimationSystem.updatePowerLight(pac);
     }
 
+    public void updateGhosts() {
+        //TODO
+    }
+
+    public void updateBonus() {
+        level.optBonus().ifPresent(bonus -> {
+            ensureBonus3DViewExists(bonus);
+            Bonus3DMovementSystem.update(bonus);
+        });
+
+    }
+
     public void updateEntities() {
         //TODO get rid of this crap!
         entities3D().selectAll()
@@ -196,11 +208,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
         updateLivesCounter();
         updatePac();
-        //TODO ghosts
-        level.optBonus().ifPresent(bonus -> {
-            ensureBonus3DViewExists(bonus); //TODO this is a workaround
-            Bonus3DMovementSystem.update(bonus);
-        });
+        updateGhosts();
+        updateBonus();
     }
 
     @Override
