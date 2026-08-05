@@ -114,7 +114,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
         final GameLevel level = new GameLevel(model, levelNumber, worldMap, huntingTimer, levelData.numFlashes());
 
-        final House house = HouseFactory.createArcadeHouse(ArcadePacMan_GameModel.ARCADE_MAP_HOUSE_MIN_TILE);
+        final House house = HouseFactory.createArcadeHouse(houseMinTile);
         level.entities().add(house);
 
         // On each phase start (except the initial phase), the ghosts reverse their move direction

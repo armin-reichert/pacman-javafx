@@ -72,7 +72,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         level.setDemoLevel(demoLevel);
         level.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
 
-        final House house = HouseFactory.createArcadeHouse(ArcadePacMan_GameModel.ARCADE_MAP_HOUSE_MIN_TILE);
+        final House house = HouseFactory.createArcadeHouse(houseMinTile);
         level.entities().add(house);
 
         huntingTimer.setPhaseChangeCallback(newPhaseIndex -> {
