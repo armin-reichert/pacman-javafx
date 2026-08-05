@@ -11,6 +11,7 @@ import de.amr.pacmanfx.core.event.pac.PacDeadEvent;
 import de.amr.pacmanfx.core.event.pac.PacDyingEvent;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.entities.ghost.comp.ElroyComp;
+import de.amr.pacmanfx.core.model.entities.livescounter.system.LivesCounterSystem;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.entities.pac.PacState;
 import de.amr.pacmanfx.core.model.level.GameLevel;
@@ -66,9 +67,10 @@ public final class GameState_PacManDying extends GameState {
             if (level.isDemoLevel()) {
                 gameContext.flow().enterState(gameContext, CommonGameStateID.GAME_OVER);
             } else {
-                model.addLives(-1);
-                gameContext.flow().enterState(gameContext, model.lifeCount() == 0
-                    ? CommonGameStateID.GAME_OVER : CommonGameStateID.GAME_OR_LEVEL_STARTING);
+                LivesCounterSystem.subtractLife(model.livesCounter());
+                final boolean gameOver = model.livesCounter().data().numLives() == 0;
+                gameContext.flow().enterState(gameContext,
+                    gameOver ? CommonGameStateID.GAME_OVER : CommonGameStateID.GAME_OR_LEVEL_STARTING);
             }
             return;
         }

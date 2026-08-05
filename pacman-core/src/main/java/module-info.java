@@ -30,6 +30,7 @@ module de.amr.pacmanfx.core {
     exports de.amr.pacmanfx.core.model.entities.pac;
     exports de.amr.pacmanfx.core.model.entities.bonus;
     exports de.amr.pacmanfx.core.model.entities.ghost;
+    exports de.amr.pacmanfx.core.model.entities.livescounter;
     exports de.amr.pacmanfx.core.model.entities.marquee;
     exports de.amr.pacmanfx.core.model.entities.stork;
     exports de.amr.pacmanfx.core.model.world.map;
@@ -48,9 +49,11 @@ module de.amr.pacmanfx.core {
     exports de.amr.pacmanfx.core.model.entities.clapperboard.comp;
     exports de.amr.pacmanfx.core.model.entities.clapperboard.system;
     exports de.amr.pacmanfx.core.model.entities.ghost.comp;
+    exports de.amr.pacmanfx.core.model.entities.livescounter.comp;
     exports de.amr.pacmanfx.core.model.entities.marquee.comp;
     exports de.amr.pacmanfx.core.model.entities.pac.comp;
     exports de.amr.pacmanfx.core.model.entities.levelCounter;
     exports de.amr.pacmanfx.core.model.entities.levelCounter.comp;
     exports de.amr.pacmanfx.core.model.entities.levelCounter.system;
+    exports de.amr.pacmanfx.core.model.entities.livescounter.system;
 }

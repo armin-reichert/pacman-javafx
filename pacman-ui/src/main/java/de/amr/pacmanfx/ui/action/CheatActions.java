@@ -12,6 +12,7 @@ import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.model.entities.ghost.GhostState;
+import de.amr.pacmanfx.core.model.entities.livescounter.system.LivesCounterSystem;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GlobalAssets;
@@ -48,10 +49,10 @@ public final class CheatActions {
             @Override
             public void doAction() {
                 final GameModel model = gameContext().model();
-                model.addLives(3);
+                LivesCounterSystem.addLives(model.livesCounter(), 3);
                 gameContext().cheats().notifyCheatUsed();
 
-                final String msg = appContext.ui().translations().translate("flash.cheat_add_lives", model.lifeCount());
+                final String msg = appContext.ui().translations().translate("flash.cheat_add_lives", model.livesCounter().data().numLives());
                 appContext.ui().shortMessage(msg);
             }
 

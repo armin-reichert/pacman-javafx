@@ -49,7 +49,7 @@ public class DS_ActorInfo extends GameDashboardSection {
     }
 
     private Supplier<String> supplyLivesCount(GameAppContext appContext) {
-        return fnGameLevelInfo(appContext, level -> "%d".formatted(level.gameModel().lifeCount()));
+        return fnGameLevelInfo(appContext, level -> "%d".formatted(level.gameModel().livesCounter().data().numLives()));
     }
 
     private void addGhostInfo(GameAppContext appContext, GhostPersonality personality) {

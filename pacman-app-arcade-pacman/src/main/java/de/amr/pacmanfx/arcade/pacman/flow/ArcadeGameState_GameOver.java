@@ -8,6 +8,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.entities.livescounter.system.LivesCounterSystem;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
 
@@ -26,7 +27,7 @@ public class ArcadeGameState_GameOver extends GameState {
         gameContext.gamePlay().showLevelMessage(level, GameLevelMessageType.GAME_OVER);
 
         // In case, entering game over state was forced by user:
-        model.setLifeCount(0);
+        LivesCounterSystem.setNumLives(model.livesCounter(), 0);
         model.setPlaying(false);
 
         gameContext.cheats().clear();

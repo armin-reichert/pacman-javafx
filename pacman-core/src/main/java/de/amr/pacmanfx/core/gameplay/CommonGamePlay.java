@@ -29,6 +29,7 @@ import de.amr.pacmanfx.core.model.entities.bonus.BonusState;
 import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.model.entities.ghost.GhostState;
 import de.amr.pacmanfx.core.model.entities.levelCounter.system.LevelCounterSystem;
+import de.amr.pacmanfx.core.model.entities.livescounter.system.LivesCounterSystem;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.entities.pac.comp.PacPowerComp;
 import de.amr.pacmanfx.core.model.entities.pac.system.PacDigestionSystem;
@@ -65,10 +66,10 @@ public abstract class CommonGamePlay implements GamePlay {
     @Override
     public void resetForNewGame(GameContext gameContext) {
         requireNonNull(gameContext);
-
         final GameModel model = gameContext.model();
 
-        model.setLifeCount(model.initialLifeCount());
+        LivesCounterSystem.setNumLives(model.livesCounter(), model.initialLifeCount());
+
         model.score().reset();
 
         final PropertyFileScore highScore = model.highScore();
@@ -456,7 +457,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final int newScore = oldScore + points;
 
         if (model.rules().scoringRules().isExtraLifeAwarded(oldScore, newScore)) {
-            model.addLives(1);
+            LivesCounterSystem.addLife(model.livesCounter());
             eventManager.publishGameEvent(new SpecialScoreEvent(newScore));
         }
 

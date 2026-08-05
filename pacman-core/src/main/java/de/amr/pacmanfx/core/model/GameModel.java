@@ -4,9 +4,10 @@
 
 package de.amr.pacmanfx.core.model;
 
-import de.amr.pacmanfx.core.model.entities.levelCounter.system.LevelCounterSystem;
-import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.entities.levelCounter.LevelCounter;
+import de.amr.pacmanfx.core.model.entities.levelCounter.system.LevelCounterSystem;
+import de.amr.pacmanfx.core.model.entities.livescounter.LivesCounter;
+import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.core.model.score.PropertyFileScore;
 import de.amr.pacmanfx.core.model.score.Score;
@@ -36,7 +37,11 @@ public abstract class GameModel {
 
     protected GameLevel level;
 
+    //TODO do not store entity in model!
     protected final LevelCounter levelCounter;
+
+    //TODO do not store entity in model!
+    protected final LivesCounter livesCounter;
 
     protected WorldMapSelector mapSelector;
 
@@ -44,13 +49,12 @@ public abstract class GameModel {
 
     protected final IntegerProperty initialLifeCount = new SimpleIntegerProperty();
 
-    protected final IntegerProperty lifeCount = new SimpleIntegerProperty();
-
     // Constructor
 
     protected GameModel() {
         score = new Score();
         levelCounter = new LevelCounter();
+        livesCounter = new LivesCounter();
         gateKeeper = new ArcadeHouseGateKeeper();
 
         LevelCounterSystem.enable(levelCounter, true);
@@ -71,22 +75,6 @@ public abstract class GameModel {
         initialLifeCount.set(count);
     }
 
-    public void setLifeCount(int numLives) {
-        lifeCountProperty().set(numLives);
-    }
-
-    public int lifeCount() {
-        return lifeCountProperty().get();
-    }
-
-    public void addLives(int n) {
-        lifeCountProperty().set(lifeCount() + n);
-    }
-
-    public IntegerProperty lifeCountProperty() {
-        return lifeCount;
-    }
-
     public ArcadeHouseGateKeeper gateKeeper() {
         return gateKeeper;
     }
@@ -97,6 +85,10 @@ public abstract class GameModel {
 
     public LevelCounter levelCounter() {
         return levelCounter;
+    }
+
+    public LivesCounter livesCounter() {
+        return livesCounter;
     }
 
     public Score score() {

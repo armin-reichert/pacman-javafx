@@ -163,7 +163,7 @@ public class LivesCounter3D extends GameEntity implements UpdatableEntity, Dispo
         final Pac pac = gameContext.assertLevel().entities().pac();
 
         // Show remaining lives in counter
-        int lifeCount = model.lifeCount() - 1;
+        int lifeCount = model.livesCounter().data().numLives() - 1;
 
         // While the game starts and Pac-Man is not yet visible in maze, show one more:
         if (!model.isPlaying() && !pac.isVisible()) {
