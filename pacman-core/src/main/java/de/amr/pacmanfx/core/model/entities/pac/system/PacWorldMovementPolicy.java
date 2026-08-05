@@ -24,7 +24,7 @@ public class PacWorldMovementPolicy implements WorldMovementPolicy {
     @Override
     public boolean canAccessTile(GameLevel level, GameEntity actor, Vector2i tile) {
         requireNonNull(level);
-        requireNonNull(tile);
+        requireNonNull(actor);
         requireNonNull(tile);
 
         final TerrainLayer terrain = level.worldMap().terrainLayer();

@@ -6,13 +6,12 @@ package de.amr.pacmanfx.core.model.entities.pac.system;
 
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
-import de.amr.pacmanfx.core.model.entities.ghost.system.GhostStateSystem;
 import de.amr.pacmanfx.core.event.pac.PacGetsPowerEvent;
 import de.amr.pacmanfx.core.event.pac.PacLostPowerEvent;
 import de.amr.pacmanfx.core.event.pac.PacPowerFadesEvent;
 import de.amr.pacmanfx.core.model.entities.ghost.GhostState;
+import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.entities.pac.comp.PacPowerComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import org.tinylog.Logger;
@@ -28,13 +27,11 @@ public final class PacPowerSystem {
     );
 
     //TODO This is not a "system" method but game flow
-    public void update(GameContext gameContext, GameEntity pac) {
+    public void update(GameContext gameContext, Pac pac) {
         requireNonNull(gameContext);
         requireNonNull(pac);
 
-        final GhostStateSystem ghostStateSystem = gameContext.systems().ghostState();
-
-        final PacPowerComp power = pac.requireComponent(PacPowerComp.class);
+        final PacPowerComp power = pac.power();
         final GameLevel level = gameContext.assertLevel();
 
         if (power.isPowerActive()) {
@@ -49,7 +46,7 @@ public final class PacPowerSystem {
                 // Resume hunting
                 level.huntingRules().start();
                 level.ghostsInState(GhostState.FRIGHTENED)
-                    .forEach(ghost -> ghostStateSystem.changeState(gameContext, ghost, GhostState.HUNTING_PAC));
+                    .forEach(ghost -> gameContext.systems().ghostState().changeState(gameContext, ghost, GhostState.HUNTING_PAC));
 
                 gameContext.eventManager().publishGameEvent(new PacLostPowerEvent(pac));
             }
@@ -57,7 +54,7 @@ public final class PacPowerSystem {
     }
 
     //TODO This is not a "system" method but game flow
-    public void start(GameContext gameContext, GameEntity pac) {
+    public void start(GameContext gameContext, Pac pac) {
         final PacPowerComp power = pac.requireComponent(PacPowerComp.class);
 
         final GameSystems sys = gameContext.systems();
@@ -77,8 +74,7 @@ public final class PacPowerSystem {
         }
     }
 
-    public void reset(GameEntity pac) {
-        final PacPowerComp power = pac.requireComponent(PacPowerComp.class);
-        power.reset();
+    public void reset(Pac pac) {
+        pac.power().reset();
     }
 }
