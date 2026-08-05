@@ -22,6 +22,7 @@ import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.HUDState;
 import de.amr.pacmanfx.core.model.entities.ghost.comp.ElroyComp;
 import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
+import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.game.GameBox;
@@ -128,16 +129,16 @@ public class TestEatingFood {
         }
     }
 
-    private static TestContext context;
+    private static TestContext test;
 
     @BeforeAll
     static void setup() {
-        context = new TestContext();
+        test = new TestContext();
     }
 
     @BeforeEach
     public void createGameLevel() {
-        context.gamePlay().buildNormalLevel(context, 1);
+        test.gamePlay().buildNormalLevel(test, 1);
     }
 
     private void eatNextPellet(GameLevel level) {
@@ -147,7 +148,7 @@ public class TestEatingFood {
             .filter(not(foodLayer::isEnergizerTile))
             .findFirst().ifPresent(pelletTile -> {
                 foodLayer.markFoodEatenAt(pelletTile);
-                context.gamePlay().onEatPellet(context, pelletTile);
+                test.gamePlay().onEatPellet(test, level, pelletTile);
             });
     }
 
@@ -157,14 +158,14 @@ public class TestEatingFood {
             .filter(foodLayer::hasFoodAtTile)
             .findFirst().ifPresent(tile -> {
                 foodLayer.markFoodEatenAt(tile);
-                context.gamePlay().onEatEnergizer(context, tile);
+                test.gamePlay().onEatEnergizer(test, level, tile);
             });
     }
 
     @Test
     @DisplayName("Test Food Counting")
     public void testFoodCounting() {
-        context.model().optLevel().ifPresent(level -> {
+        test.model().optLevel().ifPresent(level -> {
             final FoodLayer foodLayer = level.worldMap().foodLayer();
 
             int eaten = foodLayer.eatenFoodCount();
@@ -185,24 +186,25 @@ public class TestEatingFood {
     @Test
     @DisplayName("Test Level Completion")
     public void testLevelCompletion() {
-        context.model().optLevel().ifPresent(level -> {
+        test.model().optLevel().ifPresent(level -> {
             while (level.worldMap().foodLayer().remainingFoodCount() > 0) {
-                assertFalse(context.model().rules().isLevelCompleted(level));
+                assertFalse(test.model().rules().isLevelCompleted(level));
                 eatNextPellet(level);
                 eatNextEnergizer(level);
             }
-            assertTrue(context.model().rules().isLevelCompleted(level));
+            assertTrue(test.model().rules().isLevelCompleted(level));
         });
     }
 
     @Test
     @DisplayName("Test Cruise Elroy Mode")
     public void testCruiseElroyMode() {
-        context.model().optLevel().ifPresent(level -> {
+        test.model().optLevel().ifPresent(level -> {
             final Ghost blinky = level.ghost(GhostPersonality.RED_GHOST_SHADOW);
             final ElroyComp elroy = blinky.requireComponent(ElroyComp.class);
             final FoodLayer foodLayer = level.worldMap().foodLayer();
             final LevelData data = ArcadePacMan_GameRules.levelData(level.number());
+
             while (foodLayer.remainingFoodCount() > data.numDotsLeftElroy1()) {
                 assertEquals(ElroyComp.Boost.NONE, elroy.boost());
                 eatNextPellet(level);
@@ -229,11 +231,12 @@ public class TestEatingFood {
     @Test
     @DisplayName("Test Resting")
     public void testResting() {
-        context.model().optLevel().ifPresent(level -> {
+        test.model().optLevel().ifPresent(level -> {
+            final Pac pac = level.entities().pac();
             eatNextPellet(level);
-            assertEquals(1, level.entities().pac().digestion().restingTicks());
+            assertEquals(1, pac.digestion().restingTicks());
             eatNextEnergizer(level);
-            assertEquals(3, level.entities().pac().digestion().restingTicks());
+            assertEquals(3, pac.digestion().restingTicks());
         });
     }
 }
