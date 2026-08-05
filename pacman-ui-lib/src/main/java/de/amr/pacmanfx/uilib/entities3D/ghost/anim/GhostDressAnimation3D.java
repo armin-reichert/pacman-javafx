@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.uilib.entities3D.ghost.anim;
 
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3D;
+import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3DWrapperToBeRemoved;
 import javafx.animation.Animation;
 import javafx.animation.RotateTransition;
 import javafx.scene.transform.Rotate;
@@ -18,7 +18,7 @@ public class GhostDressAnimation3D extends ManagedAnimation {
 
     private static final float FULL_CYCLE_SEC = 0.8f;
 
-    public GhostDressAnimation3D(Ghost3D ghost3D, int angle) {
+    public GhostDressAnimation3D(Ghost3DWrapperToBeRemoved ghost3D, int angle) {
         super("Ghost Dress Animation (%s)".formatted(ghost3D.ghost().name()));
         setFactory(() -> {
             final var dressRotation = new RotateTransition(Duration.seconds(FULL_CYCLE_SEC / 2), ghost3D.dressGroup());

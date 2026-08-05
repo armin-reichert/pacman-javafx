@@ -14,12 +14,12 @@ public class Ghost3DAppearanceController {
 
     public Ghost3DAppearanceController() {}
 
-    public void init(Ghost3D ghost3D) {
+    public void init(Ghost3DWrapperToBeRemoved ghost3D) {
         ghost3D.stopAllAnimations();
         lookNormal(ghost3D);
     }
 
-    public void update(Ghost3D ghost3D, GameContext gameContext) {
+    public void update(Ghost3DWrapperToBeRemoved ghost3D, GameContext gameContext) {
         final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
         final Ghost ghost = ghost3D.ghost();
@@ -50,14 +50,14 @@ public class Ghost3DAppearanceController {
         }
     }
 
-    private void brakeIfTunnelEntered(Ghost3D ghost3D) {
+    private void brakeIfTunnelEntered(Ghost3DWrapperToBeRemoved ghost3D) {
         final Ghost ghost = ghost3D.ghost();
         if (ghost.worldNavigation().info.tunnelEntered) {
-            ghost3D.animations().animation(Ghost3D.AnimationID.BRAKING.key(ghost)).playFromStart();
+            ghost3D.animations().animation(Ghost3DWrapperToBeRemoved.AnimationID.BRAKING.key(ghost)).playFromStart();
         }
     }
 
-    private void lookNormal(Ghost3D ghost3D) {
+    private void lookNormal(Ghost3DWrapperToBeRemoved ghost3D) {
         ghost3D.dressMeshView().setVisible(true);
         selectMaterialSet(ghost3D, ghost3D.materials().normalMaterial());
 
@@ -66,7 +66,7 @@ public class Ghost3DAppearanceController {
         brakeIfTunnelEntered(ghost3D);
     }
 
-    private void lookFlashing(Ghost3D ghost3D, int numFlashes) {
+    private void lookFlashing(Ghost3DWrapperToBeRemoved ghost3D, int numFlashes) {
         if (numFlashes == 0) {
             lookFrightened(ghost3D);
             return;
@@ -81,7 +81,7 @@ public class Ghost3DAppearanceController {
         });
     }
 
-    private void lookFrightened(Ghost3D ghost3D) {
+    private void lookFrightened(Ghost3DWrapperToBeRemoved ghost3D) {
         ghost3D.dressMeshView().setVisible(true);
         selectMaterialSet(ghost3D, ghost3D.materials().frightenedMaterial());
 
@@ -89,18 +89,18 @@ public class Ghost3DAppearanceController {
         ghost3D.dressAnimation().ifPresent(ManagedAnimation::playOrContinue);
     }
 
-    private void lookEyesOnly(Ghost3D ghost3D) {
+    private void lookEyesOnly(Ghost3DWrapperToBeRemoved ghost3D) {
         ghost3D.dressMeshView().setVisible(false);
         selectMaterialSet(ghost3D, ghost3D.materials().normalMaterial());
 
         ghost3D.stopAllAnimations();
     }
 
-    private void lookEaten(Ghost3D ghost3D) {
+    private void lookEaten(Ghost3DWrapperToBeRemoved ghost3D) {
         ghost3D.root().setVisible(false);
     }
 
-    private void selectMaterialSet(Ghost3D ghost3D, GhostComponentMaterialSet materialSet) {
+    private void selectMaterialSet(Ghost3DWrapperToBeRemoved ghost3D, GhostComponentMaterialSet materialSet) {
         ghost3D.dressMeshView().setMaterial(materialSet.dressMaterial());
         ghost3D.pupilsMeshView().setMaterial(materialSet.pupilsMaterial());
         ghost3D.eyeballsMeshView().setMaterial(materialSet.eyeballsMaterial());

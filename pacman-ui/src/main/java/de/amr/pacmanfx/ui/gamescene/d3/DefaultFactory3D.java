@@ -68,8 +68,8 @@ public class DefaultFactory3D implements Factory3D {
     }
 
     @Override
-    public Ghost3D createGhost3D(Ghost ghost, GhostSettings settings, AnimationRegistry animationRegistry) {
-        return new Ghost3D(
+    public Ghost3DWrapperToBeRemoved createGhost3D(Ghost ghost, GhostSettings settings, AnimationRegistry animationRegistry) {
+        return new Ghost3DWrapperToBeRemoved(
             animationRegistry,
             ghost,
             settings,

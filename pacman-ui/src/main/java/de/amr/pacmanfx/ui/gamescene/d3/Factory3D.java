@@ -15,7 +15,7 @@ import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Pellet3DSettings;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3D;
+import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3DWrapperToBeRemoved;
 import de.amr.pacmanfx.uilib.entities3D.ghost.GhostSettings;
 import de.amr.pacmanfx.uilib.entities3D.pac.PacSettings;
 import de.amr.pacmanfx.uilib.entities3D.world.Energizer3D;
@@ -55,7 +55,7 @@ public interface Factory3D extends Disposable {
      * @param animations the registry where animations are stored
      * @return the 3D representation of a ghost
      */
-    Ghost3D createGhost3D(Ghost ghost, GhostSettings ghostConfig, AnimationRegistry animations);
+    Ghost3DWrapperToBeRemoved createGhost3D(Ghost ghost, GhostSettings ghostConfig, AnimationRegistry animations);
 
     /**
      * Creates the 3D representation of the lives counter for this variant.

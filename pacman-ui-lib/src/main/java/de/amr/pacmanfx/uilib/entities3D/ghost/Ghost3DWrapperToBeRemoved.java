@@ -34,7 +34,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Represents the 3D appearance of a ghost.
  */
-public class Ghost3D extends GameEntity implements UpdatableEntity, DisposableGraphicsObject {
+public class Ghost3DWrapperToBeRemoved extends GameEntity implements UpdatableEntity, DisposableGraphicsObject {
 
     public enum AnimationID implements Named {
         BRAKING, DRESS, FLASHING;
@@ -49,10 +49,11 @@ public class Ghost3D extends GameEntity implements UpdatableEntity, DisposableGr
 
     private final ObjectProperty<DrawMode> drawMode = new SimpleObjectProperty<>(DrawMode.FILL);
 
+    private final Ghost ghost;
+
     private final Group root = new Group();
 
     private final AnimationRegistry animations;
-    private final Ghost ghost;
     private final GhostSettings settings;
 
     private GhostMaterialSet materialSet;
@@ -68,7 +69,7 @@ public class Ghost3D extends GameEntity implements UpdatableEntity, DisposableGr
     private Ghost3DTransformController transformController;
     private Ghost3DAppearanceController appearanceController;
 
-    public Ghost3D(
+    public Ghost3DWrapperToBeRemoved(
         AnimationRegistry animations,
         Ghost ghost,
         GhostSettings settings,

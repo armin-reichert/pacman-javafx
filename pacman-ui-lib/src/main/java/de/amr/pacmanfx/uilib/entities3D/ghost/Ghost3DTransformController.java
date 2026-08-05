@@ -14,11 +14,11 @@ public class Ghost3DTransformController {
 
     public Ghost3DTransformController() {}
 
-    public void init(Ghost3D ghost3D, GameContext gameContext) {
+    public void init(Ghost3DWrapperToBeRemoved ghost3D, GameContext gameContext) {
         update(ghost3D, gameContext);
     }
 
-    public void update(Ghost3D ghost3D, GameContext gameContext) {
+    public void update(Ghost3DWrapperToBeRemoved ghost3D, GameContext gameContext) {
         final Ghost ghost = ghost3D.ghost();
         final Vector2f center = WorldNavigationSystem.computeCenter(ghost);
 

@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.gamescene.d3.animation;
 
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3D.bonus.anim.NumberBoxRisingAnimation3D;
-import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3D;
+import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3DWrapperToBeRemoved;
 import de.amr.pacmanfx.uilib.entities3D.world.NumberBox3D;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -16,7 +16,7 @@ import javafx.util.Duration;
 
 public class HideGhostShowPointsAnimation3D extends ManagedAnimation {
 
-    public HideGhostShowPointsAnimation3D(Ghost3D ghost3D, NumberBox3D numberBox3D, double risingHeight) {
+    public HideGhostShowPointsAnimation3D(Ghost3DWrapperToBeRemoved ghost3D, NumberBox3D numberBox3D, double risingHeight) {
         super("Hide ghost and show points");
 
         setFactory(() -> {

@@ -39,7 +39,7 @@ import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.entities3D.bonus.Bonus3DViewSystem;
-import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3D;
+import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3DWrapperToBeRemoved;
 import de.amr.pacmanfx.uilib.entities3D.house.system.House3DSystem;
 import de.amr.pacmanfx.uilib.entities3D.pac.system.Pac3DAnimationSystem;
 import de.amr.pacmanfx.uilib.entities3D.world.Energizer3D;
@@ -291,14 +291,14 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.GHOST_LIGHT).ifPresent(ManagedAnimation::stop);
         level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.WALL_COLOR_FLASHING).ifPresent(ManagedAnimation::stop);
         //TODO get rid of 3D wrappers for ghosts!
-        level3D.entities3D().ghosts3D().forEach(Ghost3D::stopAllAnimations);
+        level3D.entities3D().ghosts3D().forEach(Ghost3DWrapperToBeRemoved::stopAllAnimations);
     }
 
 
     private void onGhostsKilled(List<Ghost> ghostsKilled) {
         final GameLevel3D level3D = assertLevel3D();
         ghostsKilled.forEach(ghost -> {
-            final Ghost3D ghost3D = level3D.ghost3D(ghost.personality());
+            final Ghost3DWrapperToBeRemoved ghost3D = level3D.ghost3D(ghost.personality());
             final int killIndex = level3D.level().indexInGhostKilledChain(ghost);
 
             final Factory3D factory3D = appContext().variants().currentVariant().config().factory3D();

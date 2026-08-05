@@ -51,7 +51,7 @@ import de.amr.pacmanfx.uilib.entities3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.entities3D.animation.EnergizerParticle3D;
 import de.amr.pacmanfx.uilib.entities3D.animation.Pool;
 import de.amr.pacmanfx.uilib.entities3D.bonus.*;
-import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3D;
+import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3DWrapperToBeRemoved;
 import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3DAppearanceController;
 import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3DTransformController;
 import de.amr.pacmanfx.uilib.entities3D.ghost.GhostSettings;
@@ -95,7 +95,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     public static class EntitySet3D extends GameLevelEntitySet {
         // Cached for faster access
-        private List<Ghost3D> ghosts3D = new ArrayList<>(4); // order: RED, PINK, CYAN, ORANGE
+        private List<Ghost3DWrapperToBeRemoved> ghosts3D = new ArrayList<>(4); // order: RED, PINK, CYAN, ORANGE
         private final Map<Vector2i, Energizer3D> energizer3DByTile = new HashMap<>();
         private final Map<Vector2i, Pellet3D> pellet3DByTile = new HashMap<>();
 
@@ -109,7 +109,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             pellet3DByTile.clear();
         }
 
-        public List<Ghost3D> ghosts3D() {
+        public List<Ghost3DWrapperToBeRemoved> ghosts3D() {
             return ghosts3D;
         }
     }
@@ -229,7 +229,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return entitySet3D;
     }
 
-    public Ghost3D ghost3D(GhostPersonality personality) {
+    public Ghost3DWrapperToBeRemoved ghost3D(GhostPersonality personality) {
         requireNonNull(personality);
         return entitySet3D.ghosts3D.get(personality.ordinal());
     }
@@ -264,7 +264,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     public void setDrawMode(DrawMode drawMode) {
         requireNonNull(drawMode);
 //        Ufx.setDrawMode(entitySet3D.pac3D.root(), drawMode);
-        for (Ghost3D ghost3D : entitySet3D.ghosts3D) {
+        for (Ghost3DWrapperToBeRemoved ghost3D : entitySet3D.ghosts3D) {
             Ufx.setDrawMode(ghost3D.root(), drawMode);
         }
         Ufx.setDrawMode(maze3D, drawMode);
@@ -430,7 +430,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
                 GhostPersonality.ORANGE_GHOST_POKEY)
             .map(level::ghost)
             .map(ghost -> {
-                final Ghost3D ghost3D = createGhost3D(ghostConfigs.get(ghost.personality().ordinal()), ghost);
+                final Ghost3DWrapperToBeRemoved ghost3D = createGhost3D(ghostConfigs.get(ghost.personality().ordinal()), ghost);
                 ghost3D.drawModeProperty().bind(viewModel.common3D.drawModeProperty);
                 ghost3D.init(gameContext);
                 return ghost3D;
@@ -441,8 +441,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         }
     }
 
-    private Ghost3D createGhost3D(GhostSettings ghostConfig, Ghost ghost) {
-        final Ghost3D ghost3D = gameVariantConfig.factory3D().createGhost3D(ghost, ghostConfig, animationRegistry);
+    private Ghost3DWrapperToBeRemoved createGhost3D(GhostSettings ghostConfig, Ghost ghost) {
+        final Ghost3DWrapperToBeRemoved ghost3D = gameVariantConfig.factory3D().createGhost3D(ghost, ghostConfig, animationRegistry);
         ghost3D.setAppearanceController(new Ghost3DAppearanceController());
         ghost3D.setTransformController(new Ghost3DTransformController());
         return ghost3D;

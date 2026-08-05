@@ -6,7 +6,7 @@ package de.amr.pacmanfx.uilib.entities3D.ghost.anim;
 
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3D;
+import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3DWrapperToBeRemoved;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -17,9 +17,9 @@ import static java.util.Objects.requireNonNull;
 
 public class GhostBrakeAnimation3D extends ManagedAnimation {
 
-    private final Ghost3D ghost3D;
+    private final Ghost3DWrapperToBeRemoved ghost3D;
 
-    public GhostBrakeAnimation3D(Ghost3D ghost3D) {
+    public GhostBrakeAnimation3D(Ghost3DWrapperToBeRemoved ghost3D) {
         super("Ghost Braking (%s)".formatted(ghost3D.ghost().name()));
         this.ghost3D = requireNonNull(ghost3D);
         setFactory(this::createAnimationFX);

@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.gamescene.d3.animation;
 import de.amr.pacmanfx.core.entities.ghost.GhostState;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3D;
+import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3DWrapperToBeRemoved;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -35,10 +35,10 @@ public class GhostLightRelayAnimation extends ManagedAnimation {
     public static final Duration LIGHT_CHANGE_INTERVAL = Duration.millis(3000);
 
     private final PointLight light;
-    private final List<Ghost3D> ghosts3D;
+    private final List<Ghost3DWrapperToBeRemoved> ghosts3D;
     private GhostPersonality currentGhostID = GhostPersonality.RED_GHOST_SHADOW;
 
-    public GhostLightRelayAnimation(PointLight light, List<Ghost3D> ghosts3DInOrder) {
+    public GhostLightRelayAnimation(PointLight light, List<Ghost3DWrapperToBeRemoved> ghosts3DInOrder) {
         super("Ghost Light Animation");
 
         this.light = requireNonNull(light);
@@ -63,7 +63,7 @@ public class GhostLightRelayAnimation extends ManagedAnimation {
     }
 
     private void illuminateGhost(GhostPersonality personality) {
-        final Ghost3D ghost3D = ghosts3D.get(personality.ordinal());
+        final Ghost3DWrapperToBeRemoved ghost3D = ghosts3D.get(personality.ordinal());
         final Color lightColor = ghosts3D.get(personality.ordinal()).settings().colors().normal().dressColor();
         light.setColor(lightColor);
         light.translateXProperty().bind(ghost3D.root().translateXProperty());
