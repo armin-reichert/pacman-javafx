@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.model.entities.bonus.Bonus;
 import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.model.entities.ghost.GhostState;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
-import de.amr.pacmanfx.core.model.rules.HuntingRules;
+import de.amr.pacmanfx.core.model.rules.HuntingTimerStrategy;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 
 import java.util.*;
@@ -89,7 +89,7 @@ public class GameLevel {
     private final int[] bonusSymbolCodes = new int[2];
     private final int numFlashes;
 
-    private final HuntingRules huntingRules;
+    private final HuntingTimerStrategy huntingTimerStrategy;
 
     private byte currentBonusIndex; // -1=no bonus, 0=first, 1=second
     private GameLevelMessage message;
@@ -100,17 +100,17 @@ public class GameLevel {
     private float pacPowerSeconds;
     private float pacPowerFadingSeconds;
 
-    public GameLevel(GameModel gameModel, int number, WorldMap worldMap, HuntingRules huntingRules, int numFlashes) {
+    public GameLevel(GameModel gameModel, int number, WorldMap worldMap, HuntingTimerStrategy huntingTimerStrategy, int numFlashes) {
         this.gameModel = requireNonNull(gameModel);
         this.number = requireValidLevelNumber(number);
         this.worldMap = requireNonNull(worldMap);
-        this.huntingRules = requireNonNull(huntingRules);
+        this.huntingTimerStrategy = requireNonNull(huntingTimerStrategy);
         this.numFlashes = requireNonNegativeInt(numFlashes);
 
         heartbeat = new Pulse(10, Pulse.State.OFF);
         currentBonusIndex = -1;
 
-        huntingRules.reset();
+        huntingTimerStrategy.reset();
     }
 
     /**
@@ -181,8 +181,8 @@ public class GameLevel {
     /**
      * @return the timer controlling the hunting phases (scattering and chasing).
      */
-    public HuntingRules huntingRules() {
-        return huntingRules;
+    public HuntingTimerStrategy huntingTimerStrategy() {
+        return huntingTimerStrategy;
     }
 
     /**

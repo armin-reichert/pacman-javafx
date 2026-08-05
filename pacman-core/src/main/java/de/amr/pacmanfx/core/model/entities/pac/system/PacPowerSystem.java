@@ -5,11 +5,17 @@
 package de.amr.pacmanfx.core.model.entities.pac.system;
 
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
+import org.tinylog.Logger;
 
 public final class PacPowerSystem {
 
     public void update(Pac pac) {
 
+    }
+
+    public void start(Pac pac, long ticks) {
+        pac.power().timer().restartTicks(ticks);
+        Logger.debug("Power timer activated, {} ticks ({0.00} sec)", ticks, ticks / 60f);
     }
 
     public void reset(Pac pac) {

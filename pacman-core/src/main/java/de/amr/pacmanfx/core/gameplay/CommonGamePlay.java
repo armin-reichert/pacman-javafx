@@ -104,7 +104,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final Pac pac = level.entities().pac();
         pac.reset(); // initially invisible!
         pac.pos().set(terrain.pacStartPosition());
-        pac.power().timer().resetToIndefiniteDuration();
+        sys.pacPower().reset(pac);
 
         sys.worldNavigator().setMoveDir(pac, Direction.LEFT);
         sys.worldNavigator().setWishDir(pac, Direction.LEFT);
@@ -184,7 +184,7 @@ public abstract class CommonGamePlay implements GamePlay {
         //final boolean doubleChecked = model.rules().actorCollisionRules().isCollisionDoubleChecked();
 
         level.heartbeat().triggerPulse();
-        level.huntingRules().update(model.rules(), level.number());
+        level.huntingTimerStrategy().update(model.rules(), level.number());
         if (gateKeeper != null) {
             gateKeeper.unlockGhostIfPossible(gameContext);
         }
@@ -212,12 +212,9 @@ public abstract class CommonGamePlay implements GamePlay {
         final GameLevel level = gameContext.assertLevel();
         level.ghostsInAnyOfStates(TURNBACK_STATES).forEach(sys.worldNavigator()::requestTurnBack);
 
-        final float seconds = level.pacPowerSeconds();
-        if (seconds > 0) {
-            level.huntingRules().stop();
-            final long ticks = TickTimer.secToTicks(seconds);
-            power.timer().restartTicks(ticks);
-            Logger.debug("Power timer activated, {} ticks ({0.00} sec)", ticks, seconds);
+        if (level.pacPowerSeconds() > 0) {
+            level.huntingTimerStrategy().stop();
+            gameContext.systems().pacPower().start(pac, TickTimer.secToTicks(level.pacPowerSeconds()));
             level.ghostsInState(GhostState.HUNTING_PAC)
                 .forEach(ghost -> sys.ghostState().changeState(gameContext, ghost, GhostState.FRIGHTENED));
             gameContext.eventManager().publishGameEvent(new PacGetsPowerEvent(pac));
@@ -242,7 +239,7 @@ public abstract class CommonGamePlay implements GamePlay {
                 level.clearGhostKillChain();
 
                 // Resume hunting
-                level.huntingRules().start();
+                level.huntingTimerStrategy().start();
                 level.ghostsInState(GhostState.FRIGHTENED)
                     .forEach(ghost -> gameContext.systems().ghostState().changeState(gameContext, ghost, GhostState.HUNTING_PAC));
 
@@ -433,7 +430,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final GameSystems sys = gameContext.systems();
 
         final GameLevel level = gameContext.assertLevel();
-        level.huntingRules().stop();
+        level.huntingTimerStrategy().stop();
 
         level.heartbeat().setStartState(Pulse.State.OFF);
         level.heartbeat().reset();

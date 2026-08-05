@@ -22,7 +22,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Controls the timing of the hunting phases (alternating scattering and chasing).
  */
-public class HuntingTimer extends TickTimer implements HuntingRules {
+public class HuntingTimer extends TickTimer implements HuntingTimerStrategy {
 
     private enum HuntingPhaseEvent {PHASE_START, PHASE_END}
 

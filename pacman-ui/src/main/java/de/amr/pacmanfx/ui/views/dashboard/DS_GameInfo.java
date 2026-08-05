@@ -13,7 +13,7 @@ import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.rules.ActorSpeedRules;
 import de.amr.pacmanfx.core.model.rules.CollisionStrategy;
 import de.amr.pacmanfx.core.model.rules.HuntingPhase;
-import de.amr.pacmanfx.core.model.rules.HuntingRules;
+import de.amr.pacmanfx.core.model.rules.HuntingTimerStrategy;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorScheme;
@@ -82,8 +82,8 @@ public class DS_GameInfo extends GameDashboardSection {
         );
 
         addDynamicInfo("Hunting Phase",  fnGameLevelInfo(appContext, this::fmtHuntingPhase));
-        addDynamicInfo("-Running",       fnGameLevelInfo(appContext, level -> fmtHuntingTicksRunning(level.huntingRules())));
-        addDynamicInfo("-Remaining",     fnGameLevelInfo(appContext, level -> fmtHuntingTicksRemaining(level.huntingRules())));
+        addDynamicInfo("-Running",       fnGameLevelInfo(appContext, level -> fmtHuntingTicksRunning(level.huntingTimerStrategy())));
+        addDynamicInfo("-Remaining",     fnGameLevelInfo(appContext, level -> fmtHuntingTicksRemaining(level.huntingTimerStrategy())));
         addDynamicInfo("Collision mode", fnGameRulesInfo(appContext, rules -> fmtCollisionMode(rules.actorCollisionRules().getCollisionStrategy())));
         addDynamicInfo("Pac-Man speed",  supplyGameLevelSpeedInfo(appContext, this::fmtPacNormalSpeed));
         addDynamicInfo("- empowered",    supplyGameLevelSpeedInfo(appContext, this::fmtPacSpeedPowered));
@@ -125,7 +125,7 @@ public class DS_GameInfo extends GameDashboardSection {
     }
 
     private String fmtHuntingPhase(GameLevel level) {
-        final HuntingRules huntingRules = level.huntingRules();
+        final HuntingTimerStrategy huntingRules = level.huntingTimerStrategy();
         return "%s #%d%s (%s)".formatted(
             huntingRules.currentHuntingPhase().name(),
             huntingRules.currentHuntingPhase() == HuntingPhase.CHASING
@@ -143,11 +143,11 @@ public class DS_GameInfo extends GameDashboardSection {
         return "%.2f sec".formatted(duration / (float) GameConstants.SIMULATION_FPS);
     }
 
-    private String fmtHuntingTicksRunning(HuntingRules huntingRules) {
+    private String fmtHuntingTicksRunning(HuntingTimerStrategy huntingRules) {
         return "%d".formatted(huntingRules.tickCount());
     }
 
-    private String fmtHuntingTicksRemaining(HuntingRules huntingRules) {
+    private String fmtHuntingTicksRemaining(HuntingTimerStrategy huntingRules) {
         return "%d".formatted(huntingRules.remainingTicksOfCurrentPhase());
     }
 

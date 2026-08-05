@@ -75,7 +75,7 @@ public final class GameState_DemoLevelPlaying extends GameState {
             level.entities().ghosts().forEach(sys.spriteAnim()::playSelected);
 
             // This call fires a game event!
-            level.huntingRules().startFirstPhase(gameContext, level.number());
+            level.huntingTimerStrategy().startFirstPhase(gameContext, level.number());
         }
         else if (tick > huntingStartTick) {
             gamePlay.hunt(gameContext);

@@ -37,7 +37,7 @@ public abstract class ArcadeMsPacMan_RandomizedHuntingStrategy implements GhostH
         requireNonNull(level);
         requireNonNull(ghost);
 
-        if (level.huntingRules().phaseIndex() == 0) { // first scatter phase
+        if (level.huntingTimerStrategy().phaseIndex() == 0) { // first scatter phase
             moveRandomlyThroughWorld(level, ghost, speed, worldMovementPolicy);
         }
         else {
@@ -47,7 +47,7 @@ public abstract class ArcadeMsPacMan_RandomizedHuntingStrategy implements GhostH
 
     protected void normalHunt(GameLevel level, Ghost ghost, float speed, WorldMovementPolicy worldMovementPolicy) {
         final boolean chaseOverride = ghost.hasComponent(ElroyComp.class) && ghost.requireComponent(ElroyComp.class).enabled();
-        final boolean chase = level.huntingRules().isChasing() || chaseOverride;
+        final boolean chase = level.huntingTimerStrategy().isChasing() || chaseOverride;
         final Vector2i targetTile = chase
             ? computeChasingTargetTile(level)
             : computeScatterTile(level.worldMap(), ghost);

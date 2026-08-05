@@ -25,7 +25,7 @@ public class PokeyHuntingStrategy implements GhostHuntingStrategy {
         requireNonNull(level);
         requireNonNull(ghost);
 
-        final Vector2i targetTile = level.huntingRules().isChasing()
+        final Vector2i targetTile = level.huntingTimerStrategy().isChasing()
             ? computeChasingTargetTile(level, ghost)
             : level.worldMap().terrainLayer().ghostScatterTile(ghost.personality());
 

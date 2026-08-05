@@ -29,7 +29,7 @@ public class BashfulHuntingStrategy implements GhostHuntingStrategy {
         requireNonNull(level);
         requireNonNull(ghost);
 
-        final Vector2i targetTile = level.huntingRules().isChasing()
+        final Vector2i targetTile = level.huntingTimerStrategy().isChasing()
             ? computeChasingTargetTile(level)
             : computeScatterTile(level.worldMap(), ghost);
 

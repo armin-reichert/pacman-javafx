@@ -8,7 +8,7 @@ import de.amr.pacmanfx.core.GameContext;
 
 import java.util.Optional;
 
-public interface HuntingRules {
+public interface HuntingTimerStrategy {
 
     void reset();
 
