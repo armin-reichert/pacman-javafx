@@ -7,23 +7,6 @@ public class House3DSystem {
 
     public static void hideDoors(House house) {
         final House3DViewComp view3D = house.requireComponent(House3DViewComp.class);
-
         view3D.setDoorsVisible(false);
     }
-
-    /**
-     * Updates the house state based on the current game level.
-     * <p>
-     * This method:
-     * <ul>
-     *   <li>Activates the interior light when ghost access is required</li>
-     *   <li>Opens the doors when a ghost approaches the entry</li>
-     * </ul>
-     */
-    public static void update(House house, boolean accessRequested, boolean ghostNearHouseEntry) {
-        final House3DViewComp view3D = house.requireComponent(House3DViewComp.class);
-        view3D.light().lightOnProperty().set(accessRequested);
-        view3D.doorsOpenProperty().set(ghostNearHouseEntry);
-    }
-
 }

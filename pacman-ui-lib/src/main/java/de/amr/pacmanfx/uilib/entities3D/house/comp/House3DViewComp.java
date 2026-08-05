@@ -11,12 +11,7 @@ import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.entities3D.house.House3DAnimationID;
 import de.amr.pacmanfx.uilib.entities3D.world.TerrainRenderer3D;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Group;
 import javafx.scene.PointLight;
@@ -24,7 +19,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Cylinder;
 import javafx.scene.transform.Rotate;
-import javafx.util.Duration;
 
 import static de.amr.basics.math.Vector2f.vec2_float;
 import static de.amr.basics.util.Ufx.colorWithOpacity;
@@ -33,13 +27,10 @@ import static java.util.Objects.requireNonNull;
 
 public class House3DViewComp implements GameEntityComponent, DisposableGraphicsObject {
 
-    private static final int DOOR_VERTICAL_BAR_COUNT = 4;
+    public static final int DOOR_VERTICAL_BAR_COUNT = 4;
 
     /** Thickness of the vertical door bars. Animated during the melting effect. */
-    private final DoubleProperty barThicknessProperty = new SimpleDoubleProperty(0.25);
-
-    /** Whether the doors should appear open (bars shrink). */
-    private final BooleanProperty doorsOpenProperty = new SimpleBooleanProperty(false);
+    public final DoubleProperty barThicknessProperty = new SimpleDoubleProperty(0.25);
 
     /** Height of the lower wall segment. */
     private final DoubleProperty wallBaseHeightProperty = new SimpleDoubleProperty();
@@ -141,13 +132,6 @@ public class House3DViewComp implements GameEntityComponent, DisposableGraphicsO
         light.setTranslateY(houseCenter.y());
         light.translateZProperty().bind(wallBaseHeightProperty.multiply(-1));
 
-        // Door melting animation
-        final var doorsMeltingAnimation = new ManagedAnimation("House Doors Melting");
-        doorsMeltingAnimation.setFactory(() -> new Timeline(
-            new KeyFrame(Duration.seconds(0.75), new KeyValue(barThicknessProperty, 0)),
-            new KeyFrame(Duration.seconds(1.5),  new KeyValue(barThicknessProperty, barThickness)))
-        );
-        animations.register(House3DAnimationID.HOUSE_DOORS_MELTING, doorsMeltingAnimation);
     }
 
     @Override
@@ -236,9 +220,8 @@ public class House3DViewComp implements GameEntityComponent, DisposableGraphicsO
         this.doorSensitivity = value;
     }
 
-    /** Property controlling whether the doors appear open. */
-    public BooleanProperty doorsOpenProperty() {
-        return doorsOpenProperty;
+    public DoubleProperty barThicknessProperty() {
+        return barThicknessProperty;
     }
 
     /** Height property of the lower wall segment. */
@@ -256,14 +239,9 @@ public class House3DViewComp implements GameEntityComponent, DisposableGraphicsO
         doors.setVisible(visible);
     }
 
-    public void playDoorsMeltingAnimation() {
-        animations.optAnimation(House3DAnimationID.HOUSE_DOORS_MELTING).ifPresent(ManagedAnimation::playFromStart);
-    }
-
     @Override
     public void dispose() {
         r3D.setOnWallCreated(null);
-        doorsOpenProperty().unbind();
         wallBaseHeightProperty().unbind();
         barMaterial = wallBaseMaterial = wallTopMaterial = null;
         animations.optAnimation(House3DAnimationID.HOUSE_DOORS_MELTING).ifPresent(ManagedAnimation::dispose);

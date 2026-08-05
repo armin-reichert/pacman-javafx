@@ -7,6 +7,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMapColorSchemeImpl;
 import de.amr.pacmanfx.ui.settings.world.House3DSettings;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.entities3D.house.comp.House3DAnimationComp;
 import de.amr.pacmanfx.uilib.entities3D.house.comp.House3DViewComp;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -60,6 +61,7 @@ public class MazeFactory3D {
                 config3D.opacity()
             );
             house.setComponent(House3DViewComp.class, view3D);
+            house.setComponent(House3DAnimationComp.class, new House3DAnimationComp(animationRegistry));
         }
 
         // apply color scheme

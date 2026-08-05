@@ -49,6 +49,14 @@ public final class Ufx {
 
     private Ufx() {}
 
+    public static byte[][] copyOf(byte[][] bytes) {
+        byte[][] copy = new byte[bytes.length][];
+        for (int i = 0; i < bytes.length; i++) {
+            copy[i] = bytes[i].clone();
+        }
+        return copy;
+    }
+
     /**
      * Computes the size of a screen section that occupies a given fraction of the available
      * screen height while maintaining a fixed aspect ratio.

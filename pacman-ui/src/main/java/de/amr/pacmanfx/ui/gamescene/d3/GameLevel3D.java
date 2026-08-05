@@ -10,6 +10,7 @@ import de.amr.basics.math.Vector3f;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.ghost.GhostState;
@@ -55,6 +56,7 @@ import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3DAppearanceController;
 import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3DTransformController;
 import de.amr.pacmanfx.uilib.entities3D.ghost.GhostSettings;
 import de.amr.pacmanfx.uilib.entities3D.house.comp.House3DViewComp;
+import de.amr.pacmanfx.uilib.entities3D.house.system.House3DAnimationSystem;
 import de.amr.pacmanfx.uilib.entities3D.house.system.House3DSystem;
 import de.amr.pacmanfx.uilib.entities3D.pac.PacSettings;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DViewComp;
@@ -305,6 +307,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
         boolean accessRequested = level
             .ghostsInAnyOfStates(Set.of(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE))
+            .filter(ghost -> house.isDoorAt(WorldNavigationSystem.computeTile(ghost)))
             .anyMatch(GameEntity::isVisible);
 
         boolean ghostNearHouseEntry = level
@@ -313,7 +316,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
                 <= view3D.doorSensitivity())
             .anyMatch(GameEntity::isVisible);
 
-        House3DSystem.update(house, accessRequested, ghostNearHouseEntry);
+        House3DAnimationSystem.update(house, accessRequested, ghostNearHouseEntry);
     }
 
     private void updateBonus() {
