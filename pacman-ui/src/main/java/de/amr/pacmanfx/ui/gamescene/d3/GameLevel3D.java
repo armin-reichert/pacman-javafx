@@ -33,10 +33,10 @@ import de.amr.pacmanfx.ui.gamescene.d3.animation.WallColorFlashingAnimation;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ExplosionConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimationConfig;
-import de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter.LevelCounter3DAnimationID;
-import de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter.LevelCounter3DSystem;
+import de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter.LevelCounterView3DAnimationID;
+import de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter.LevelCounterView3DSystem;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter.LevelCounterView3DComp;
-import de.amr.pacmanfx.ui.gamescene.d3.entities.livescounter.LivesCounter3DSystem;
+import de.amr.pacmanfx.ui.gamescene.d3.entities.livescounter.LivesCounterView3DSystem;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.livescounter.LivesCounterView3DComp;
 import de.amr.pacmanfx.ui.settings.world.Bonus3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
@@ -173,12 +173,12 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     public void startLivesCounterTrackingPac(GameEntity pac) {
         final LivesCounter livesCounter = level.entities().entitySet().uniqueOfType(LivesCounter.class);
         final Pac3DViewComp pac3D = pac.requireComponent(Pac3DViewComp.class);
-        LivesCounter3DSystem.startTracking(livesCounter, pac3D.root());
+        LivesCounterView3DSystem.startTracking(livesCounter, pac3D.root());
     }
 
     public void updateLivesCounter() {
         final LivesCounter livesCounter = level.entities().entitySet().uniqueOfType(LivesCounter.class);
-        LivesCounter3DSystem.update(livesCounter);
+        LivesCounterView3DSystem.update(livesCounter);
     }
 
     public void updatePac() {
@@ -382,7 +382,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         if (!levelCounter.hasComponent(LevelCounterView3DComp.class)) {
             final LevelCounterView3DComp view3D = new LevelCounterView3DComp();
             levelCounter.setComponent(LevelCounterView3DComp.class, view3D);
-            animationRegistry.register(LevelCounter3DAnimationID.LEVEL_COUNTER_SPINNING, view3D.spinningAnimation());
+            animationRegistry.register(LevelCounterView3DAnimationID.LEVEL_COUNTER_SPINNING, view3D.spinningAnimation());
             Logger.info("Level counter now has a 3D view");
         }
         else {
@@ -390,7 +390,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         }
 
         // Recreate all 3D entries in the level counter group
-        LevelCounter3DSystem.updateLevelCounter3D(gameVariantConfig, levelCounter, level);
+        LevelCounterView3DSystem.updateLevelCounter3D(gameVariantConfig, levelCounter, level);
 
         // Add level counter 3D root into this group
         final LevelCounterView3DComp view3D = levelCounter.requireComponent(LevelCounterView3DComp.class);

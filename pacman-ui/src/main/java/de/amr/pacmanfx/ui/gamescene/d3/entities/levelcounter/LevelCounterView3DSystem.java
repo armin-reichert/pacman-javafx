@@ -20,7 +20,7 @@ import java.util.List;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.HTS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 
-public class LevelCounter3DSystem {
+public class LevelCounterView3DSystem {
 
     private static final int CUBE_SPACING = 6;
 

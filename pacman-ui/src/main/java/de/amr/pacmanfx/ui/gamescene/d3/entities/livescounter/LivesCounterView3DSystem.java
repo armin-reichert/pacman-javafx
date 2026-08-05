@@ -7,7 +7,7 @@ import de.amr.pacmanfx.core.model.entities.livescounter.LivesCounter;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.NodePositionTracker;
 import javafx.scene.Node;
 
-public class LivesCounter3DSystem {
+public class LivesCounterView3DSystem {
 
     public static void startTracking(LivesCounter livesCounter, Node target) {
         final LivesCounterView3DComp view3D = livesCounter.requireComponent(LivesCounterView3DComp.class);
