@@ -15,6 +15,7 @@ import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.model.entities.ghost.GhostState;
+import de.amr.pacmanfx.core.model.entities.livescounter.LivesCounter;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -49,7 +50,10 @@ public class DS_ActorInfo extends GameDashboardSection {
     }
 
     private Supplier<String> supplyLivesCount(GameAppContext appContext) {
-        return fnGameLevelInfo(appContext, level -> "%d".formatted(level.gameModel().livesCounter().data().numLives()));
+        return fnGameLevelInfo(appContext, level -> {
+            final LivesCounter livesCounter = level.entities().entitySet().uniqueOfType(LivesCounter.class);
+            return String.valueOf(livesCounter.data().numLives());
+        });
     }
 
     private void addGhostInfo(GameAppContext appContext, GhostPersonality personality) {

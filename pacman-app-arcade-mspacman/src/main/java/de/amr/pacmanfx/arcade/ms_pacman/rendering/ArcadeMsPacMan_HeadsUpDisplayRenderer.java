@@ -8,6 +8,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.HUDState;
 import de.amr.pacmanfx.core.model.entities.levelCounter.comp.LevelCounterData;
+import de.amr.pacmanfx.core.model.entities.livescounter.LivesCounter;
 import de.amr.pacmanfx.core.model.score.Score;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
@@ -88,7 +89,8 @@ public class ArcadeMsPacMan_HeadsUpDisplayRenderer extends BaseRenderer implemen
             for (int i = 0; i < hud.visibleLifeCount(); ++i) {
                 drawSprite(sprite, x + i * tilesPx(2), y, true);
             }
-            final int lifeCount = gameContext.model().livesCounter().data().numLives();
+            final LivesCounter livesCounter = gameContext.assertLevel().entities().entitySet().uniqueOfType(LivesCounter.class);
+            final int lifeCount = livesCounter.data().numLives();
             if (lifeCount > hud.maxLivesShown()) {
                 // show text indicating that more lives are available than symbols displayed (cheating may cause this)
                 Font hintFont = Font.font("Serif", FontWeight.BOLD, scaled(8));

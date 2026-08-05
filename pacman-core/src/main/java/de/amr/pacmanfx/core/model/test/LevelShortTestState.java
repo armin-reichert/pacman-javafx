@@ -32,7 +32,7 @@ public class LevelShortTestState extends GameState {
             ? 25
             : model.rules().lastLevelNumber();
         gameContext.gamePlay().resetForNewGame(gameContext);
-        gameContext.gamePlay().buildNormalLevel(gameContext, 1);
+        gameContext.gamePlay().buildNormalLevel(gameContext, 1, model.initialLifeCount());
         gameContext.gamePlay().startLevel(gameContext);
         final GameLevel level = model.optLevel().orElseThrow();
         level.entities().pac().show();

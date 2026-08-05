@@ -9,9 +9,9 @@ import de.amr.pacmanfx.core.event.pac.PacEatsFoodEvent;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.model.GameCheats;
-import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.model.entities.ghost.GhostState;
+import de.amr.pacmanfx.core.model.entities.livescounter.LivesCounter;
 import de.amr.pacmanfx.core.model.entities.livescounter.system.LivesCounterSystem;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.ui.GameUI;
@@ -48,11 +48,12 @@ public final class CheatActions {
         actionAddLives = new GameAction(appContext, "cheat_add_lives") {
             @Override
             public void doAction() {
-                final GameModel model = gameContext().model();
-                LivesCounterSystem.addLives(model.livesCounter(), 3);
+                final GameLevel level = gameContext().assertLevel();
+                final LivesCounter livesCounter = level.entities().entitySet().uniqueOfType(LivesCounter.class);
+                LivesCounterSystem.addLives(livesCounter, 3);
                 gameContext().cheats().notifyCheatUsed();
 
-                final String msg = appContext.ui().translations().translate("flash.cheat_add_lives", model.livesCounter().data().numLives());
+                final String msg = appContext.ui().translations().translate("flash.cheat_add_lives", livesCounter.data().numLives());
                 appContext.ui().shortMessage(msg);
             }
 

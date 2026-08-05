@@ -28,7 +28,7 @@ public class GameStartingState extends GameState {
     public void onEnter(GameContext gameContext) {
         final var model = (TengenMsPacMan_GameModel) gameContext.model();
         gameContext.gamePlay().resetForNewGame(gameContext);
-        gameContext.gamePlay().buildNormalLevel(gameContext, model.startLevelNumber());
+        gameContext.gamePlay().buildNormalLevel(gameContext, model.startLevelNumber(), model.initialLifeCount());
         gameContext.eventManager().publishGameEvent(new GameStartedEvent(gameContext));
     }
 

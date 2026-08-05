@@ -7,7 +7,9 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
+import de.amr.pacmanfx.core.model.entities.livescounter.LivesCounter;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
+import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.NodePositionTracker;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
@@ -30,6 +32,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Displays for each remaining live a Pac-Man sitting on a pillar tracking the Pac-Man in the maze.
  */
+//TODO make a component for the LivesCounter game entity from this class
 public class LivesCounter3D extends GameEntity implements UpdatableEntity, DisposableGraphicsObject {
 
     private final ObjectProperty<Color> pillarColor = new SimpleObjectProperty<>(Color.grayRgb(200));
@@ -159,11 +162,13 @@ public class LivesCounter3D extends GameEntity implements UpdatableEntity, Dispo
 
     @Override
     public void update(GameContext gameContext) {
+        final GameLevel level = gameContext.assertLevel();
+        final LivesCounter livesCounter = level.entities().entitySet().uniqueOfType(LivesCounter.class);
         final GameModel model = gameContext.model();
         final Pac pac = gameContext.assertLevel().entities().pac();
 
         // Show remaining lives in counter
-        int lifeCount = model.livesCounter().data().numLives() - 1;
+        int lifeCount = livesCounter.data().numLives() - 1;
 
         // While the game starts and Pac-Man is not yet visible in maze, show one more:
         if (!model.isPlaying() && !pac.isVisible()) {

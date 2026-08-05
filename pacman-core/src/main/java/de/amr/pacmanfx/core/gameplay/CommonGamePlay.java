@@ -29,6 +29,7 @@ import de.amr.pacmanfx.core.model.entities.bonus.BonusState;
 import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.model.entities.ghost.GhostState;
 import de.amr.pacmanfx.core.model.entities.levelCounter.system.LevelCounterSystem;
+import de.amr.pacmanfx.core.model.entities.livescounter.LivesCounter;
 import de.amr.pacmanfx.core.model.entities.livescounter.system.LivesCounterSystem;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.entities.pac.comp.PacPowerComp;
@@ -67,8 +68,6 @@ public abstract class CommonGamePlay implements GamePlay {
     public void resetForNewGame(GameContext gameContext) {
         requireNonNull(gameContext);
         final GameModel model = gameContext.model();
-
-        LivesCounterSystem.setNumLives(model.livesCounter(), model.initialLifeCount());
 
         model.score().reset();
 
@@ -130,7 +129,7 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     @Override
-    public void buildNormalLevel(GameContext gameContext, int levelNumber) {
+    public void buildNormalLevel(GameContext gameContext, int levelNumber, int numLives) {
         requireNonNull(gameContext);
         requireValidLevelNumber(levelNumber);
 
@@ -138,6 +137,9 @@ public abstract class CommonGamePlay implements GamePlay {
         final GameEventManager eventManager = gameContext.eventManager();
 
         final GameLevel level = createLevel(gameContext, levelNumber, false);
+
+        final LivesCounter livesCounter = level.entities().entitySet().uniqueOfType(LivesCounter.class);
+        livesCounter.data().setNumLives(numLives);
 
         model.score().setLevelNumber(levelNumber);
         model.gateKeeper().setLevelNumber(levelNumber);
@@ -151,15 +153,16 @@ public abstract class CommonGamePlay implements GamePlay {
         requireNonNull(gameContext);
 
         final GameModel model = gameContext.model();
-        final GameLevel level = gameContext.assertLevel();
+        final GameLevel oldLevel = gameContext.assertLevel();
         final GameEventManager eventManager = gameContext.eventManager();
 
         final int lastLevelNumber = model.rules().lastLevelNumber();
-        if (level.number() < lastLevelNumber) {
-            buildNormalLevel(gameContext, level.number() + 1);
+        if (oldLevel.number() < lastLevelNumber) {
+            final LivesCounter counter = oldLevel.entities().entitySet().uniqueOfType(LivesCounter.class);
+            buildNormalLevel(gameContext, oldLevel.number() + 1, counter.data().numLives());
             startLevel(gameContext);
             // Note: This event is very important because it triggers the creation of the actor animations!
-            eventManager.publishGameEvent(new LevelStartedEvent(level));
+            eventManager.publishGameEvent(new LevelStartedEvent(oldLevel));
         } else {
             Logger.warn("Last level ({}) reached, cannot start next level", lastLevelNumber);
         }
@@ -447,6 +450,7 @@ public abstract class CommonGamePlay implements GamePlay {
         requireNonNull(gameContext);
         requireValidLevelNumber(levelNumber);
 
+        final GameLevel level = gameContext.assertLevel();
         final GameModel model = gameContext.model();
         final GameEventManager eventManager = gameContext.eventManager();
 
@@ -457,7 +461,8 @@ public abstract class CommonGamePlay implements GamePlay {
         final int newScore = oldScore + points;
 
         if (model.rules().scoringRules().isExtraLifeAwarded(oldScore, newScore)) {
-            LivesCounterSystem.addLife(model.livesCounter());
+            final LivesCounter livesCounter = level.entities().entitySet().uniqueOfType(LivesCounter.class);
+            LivesCounterSystem.addLife(livesCounter);
             eventManager.publishGameEvent(new SpecialScoreEvent(newScore));
         }
 

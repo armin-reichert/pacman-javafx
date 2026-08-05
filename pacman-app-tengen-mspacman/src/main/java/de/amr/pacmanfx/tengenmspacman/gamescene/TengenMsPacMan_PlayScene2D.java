@@ -13,6 +13,7 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.model.HUDState;
 import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
 import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
+import de.amr.pacmanfx.core.model.entities.livescounter.LivesCounter;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessage;
@@ -285,7 +286,8 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
         // As long as Pac-Man is still invisible on start, he is shown as an additional entry in the lives counter
         final boolean oneExtra = CommonGameStateID.GAME_OR_LEVEL_STARTING.hasSameNameAs(gameState())
             && !level.entities().pac().isVisible();
-        final int numLives = gameModel().livesCounter().data().numLives();
+        final LivesCounter livesCounter = level.entities().entitySet().uniqueOfType(LivesCounter.class);
+        final int numLives = livesCounter.data().numLives();
         final int displayed = oneExtra ? numLives : numLives - 1;
 
         final int visibleLives = Math.clamp(displayed, 0, hud.maxLivesShown());

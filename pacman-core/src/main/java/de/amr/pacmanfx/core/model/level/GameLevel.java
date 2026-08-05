@@ -42,6 +42,11 @@ public class GameLevel {
             if (entity instanceof Bonus) cachedBonus = null;
         }
 
+        //TODO inherit?
+        public GameLevelEntitySet entitySet() {
+            return entitySet;
+        }
+
         public void add(GameEntity entity) {
             entitySet.add(entity);
             maybeInvalidateCache(entity);
@@ -82,6 +87,7 @@ public class GameLevel {
 
     private final GameModel gameModel;
     private final int number; // 1=first level
+
     private final WorldMap worldMap;
     private final EntitySetWithCache entities = new EntitySetWithCache();
     private final Pulse heartbeat;

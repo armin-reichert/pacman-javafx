@@ -22,6 +22,7 @@ import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.model.entities.ghost.GhostState;
 import de.amr.pacmanfx.core.model.entities.ghost.comp.ElroyComp;
 import de.amr.pacmanfx.core.model.entities.levelCounter.system.LevelCounterSystem;
+import de.amr.pacmanfx.core.model.entities.livescounter.LivesCounter;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
@@ -133,6 +134,10 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
         level.setBonusSymbolCode(0, model.rules().selectBonusSymbolCode(level.number(), 0));
         level.setBonusSymbolCode(1, model.rules().selectBonusSymbolCode(level.number(), 1));
+
+        final LivesCounter livesCounter = new LivesCounter();
+        level.entities().add(livesCounter);
+        // Value is set later
 
         LevelCounterSystem.enable(model.levelCounter(), true);
 

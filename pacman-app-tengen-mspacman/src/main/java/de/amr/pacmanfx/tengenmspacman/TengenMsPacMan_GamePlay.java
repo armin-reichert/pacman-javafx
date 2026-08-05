@@ -21,6 +21,7 @@ import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.model.entities.ghost.GhostState;
 import de.amr.pacmanfx.core.model.entities.levelCounter.LevelCounter;
 import de.amr.pacmanfx.core.model.entities.levelCounter.system.LevelCounterSystem;
+import de.amr.pacmanfx.core.model.entities.livescounter.LivesCounter;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.level.*;
 import de.amr.pacmanfx.core.model.rules.HuntingTimer;
@@ -117,6 +118,10 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         //TODO not sure about this:
         level.setBonusSymbolCode(0, model.rules().selectBonusSymbolCode(level.number(), 0));
         level.setBonusSymbolCode(1, model.rules().selectBonusSymbolCode(level.number(), 1));
+
+        final LivesCounter livesCounter = new LivesCounter();
+        level.entities().add(livesCounter);
+        // Value is set later
 
         return level;
     }

@@ -20,6 +20,7 @@ import de.amr.pacmanfx.core.model.entities.bonus.BonusState;
 import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.model.entities.ghost.GhostState;
 import de.amr.pacmanfx.core.model.entities.levelCounter.system.LevelCounterSystem;
+import de.amr.pacmanfx.core.model.entities.livescounter.LivesCounter;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.entities.levelCounter.LevelCounter;
@@ -88,6 +89,10 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
 
         level.setBonusSymbolCode(0, model.rules().selectBonusSymbolCode(level.number(), 0));
         level.setBonusSymbolCode(1, model.rules().selectBonusSymbolCode(level.number(), 1));
+
+        final LivesCounter livesCounter = new LivesCounter();
+        level.entities().add(livesCounter);
+        // Value is set later
 
         /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
          * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */

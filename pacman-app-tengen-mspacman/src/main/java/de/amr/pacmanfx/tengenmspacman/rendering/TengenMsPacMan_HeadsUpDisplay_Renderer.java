@@ -7,6 +7,7 @@ import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.HUDState;
+import de.amr.pacmanfx.core.model.entities.livescounter.LivesCounter;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.entities.levelCounter.comp.LevelCounterData;
 import de.amr.pacmanfx.core.model.score.Score;
@@ -138,7 +139,8 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
         for (int i = 0; i < gameContext.hudState().visibleLifeCount(); ++i) {
             drawSprite(symbolSprite, tilesPx(4 + i * 2), y, true);
         }
-        final int numLives = gameContext.model().livesCounter().data().numLives();
+        final LivesCounter livesCounter = gameContext.assertLevel().entities().entitySet().uniqueOfType(LivesCounter.class);
+        final int numLives = livesCounter.data().numLives();
         if (numLives > gameContext.hudState().maxLivesShown()) {
             fillText(
                 "(%d)".formatted(numLives),

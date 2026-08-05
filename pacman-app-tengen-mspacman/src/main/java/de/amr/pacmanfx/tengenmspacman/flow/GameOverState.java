@@ -9,6 +9,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.entities.livescounter.LivesCounter;
 import de.amr.pacmanfx.core.model.entities.livescounter.system.LivesCounterSystem;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
@@ -27,7 +28,8 @@ public class GameOverState extends GameState {
         final GameLevel level = gameContext.assertLevel();
         final TengenMsPacMan_GamePlay game = (TengenMsPacMan_GamePlay) gameContext.gamePlay();
 
-        LivesCounterSystem.setNumLives(model.livesCounter(), 0); // Needed if state entry was triggered by user interaction
+        final LivesCounter livesCounter = level.entities().entitySet().uniqueOfType(LivesCounter.class);
+        LivesCounterSystem.setNumLives(livesCounter, 0); // Needed if state entry was triggered by user interaction
         model.setPlaying(false);
 
         game.updateHighScore(gameContext);

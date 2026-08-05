@@ -20,8 +20,8 @@ import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.HUDState;
-import de.amr.pacmanfx.core.model.entities.ghost.comp.ElroyComp;
 import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
+import de.amr.pacmanfx.core.model.entities.ghost.comp.ElroyComp;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
@@ -138,7 +138,7 @@ public class TestEatingFood {
 
     @BeforeEach
     public void createGameLevel() {
-        test.gamePlay().buildNormalLevel(test, 1);
+        test.gamePlay().buildNormalLevel(test, 1, 3);
     }
 
     private void eatNextPellet(GameLevel level) {
