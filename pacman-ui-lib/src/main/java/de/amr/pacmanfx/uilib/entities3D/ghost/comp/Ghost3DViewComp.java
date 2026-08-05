@@ -1,6 +1,7 @@
 package de.amr.pacmanfx.uilib.entities3D.ghost.comp;
 
 import de.amr.pacmanfx.core.ecs.GameEntityComponent;
+import de.amr.pacmanfx.uilib.entities3D.ghost.GhostAppearance;
 import javafx.scene.Group;
 import javafx.scene.Node;
 
@@ -15,6 +16,9 @@ public class Ghost3DViewComp implements GameEntityComponent {
     // Flashing ghost mesh/material
     private Node flashingGhost;
 
+    // Eyes-only ghost
+    private Node eyesGhost;
+
     // Number ghost (points)
     private Node numberGhost;
 
@@ -22,8 +26,7 @@ public class Ghost3DViewComp implements GameEntityComponent {
     private Group root;
 
     // Currently active variant
-    private Ghost3DVariant activeVariant;
-
+    private GhostAppearance activeVariant;
 
     public Node coloredGhost() {
         return coloredGhost;
@@ -49,6 +52,14 @@ public class Ghost3DViewComp implements GameEntityComponent {
         this.flashingGhost = flashingGhost;
     }
 
+    public Node eyesGhost() {
+        return eyesGhost;
+    }
+
+    public void setEyesGhost(Node eyesGhost) {
+        this.eyesGhost = eyesGhost;
+    }
+
     public Node numberGhost() {
         return numberGhost;
     }
@@ -65,11 +76,11 @@ public class Ghost3DViewComp implements GameEntityComponent {
         this.root = root;
     }
 
-    public Ghost3DVariant activeVariant() {
+    public GhostAppearance activeVariant() {
         return activeVariant;
     }
 
-    public void setActiveVariant(Ghost3DVariant activeVariant) {
+    public void setActiveVariant(GhostAppearance activeVariant) {
         this.activeVariant = activeVariant;
     }
 

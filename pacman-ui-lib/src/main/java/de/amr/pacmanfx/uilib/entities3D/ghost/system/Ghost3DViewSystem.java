@@ -2,7 +2,7 @@ package de.amr.pacmanfx.uilib.entities3D.ghost.system;
 
 import de.amr.pacmanfx.core.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.ghost.GhostState;
-import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DVariant;
+import de.amr.pacmanfx.uilib.entities3D.ghost.GhostAppearance;
 import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DViewComp;
 
 public class Ghost3DViewSystem {
@@ -11,27 +11,28 @@ public class Ghost3DViewSystem {
         GhostState state = ghost.state();
         Ghost3DViewComp view3D = ghost.requireComponent(Ghost3DViewComp.class);
 
-        Ghost3DVariant variant = selectVariant(ghost, state);
+        GhostAppearance variant = selectVariant(ghost, state);
         view3D.setActiveVariant(variant);
         updateVisibility(view3D);
     }
 
-    private static Ghost3DVariant selectVariant(Ghost ghost, GhostState state) {
+    private static GhostAppearance selectVariant(Ghost ghost, GhostState state) {
         boolean flashing = false; //TODO
         if (state == GhostState.FRIGHTENED) {
-            return flashing ? Ghost3DVariant.FLASHING : Ghost3DVariant.BLUE;
+            return flashing ? GhostAppearance.FLASHING : GhostAppearance.FRIGHTENED;
         }
         if (state == GhostState.EATEN) {
-            return Ghost3DVariant.NUMBER;
+            return GhostAppearance.NUMBER;
         }
-        return Ghost3DVariant.COLORED;
+        return GhostAppearance.NORMAL;
     }
 
     private static void updateVisibility(Ghost3DViewComp view) {
-        view.coloredGhost().setVisible(view.activeVariant() == Ghost3DVariant.COLORED);
-        view.blueGhost().setVisible(view.activeVariant() == Ghost3DVariant.BLUE);
-        view.flashingGhost().setVisible(view.activeVariant() == Ghost3DVariant.FLASHING);
-        view.numberGhost().setVisible(view.activeVariant() == Ghost3DVariant.NUMBER);
+        view.coloredGhost().setVisible(view.activeVariant() == GhostAppearance.NORMAL);
+        view.blueGhost().setVisible(view.activeVariant() == GhostAppearance.FRIGHTENED);
+        view.flashingGhost().setVisible(view.activeVariant() == GhostAppearance.FLASHING);
+        view.eyesGhost().setVisible(view.activeVariant() == GhostAppearance.EYES);
+        view.numberGhost().setVisible(view.activeVariant() == GhostAppearance.NUMBER);
     }
 }
 
