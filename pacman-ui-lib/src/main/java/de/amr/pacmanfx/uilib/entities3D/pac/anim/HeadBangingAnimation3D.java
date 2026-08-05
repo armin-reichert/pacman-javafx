@@ -5,10 +5,10 @@
 package de.amr.pacmanfx.uilib.entities3D.pac.anim;
 
 import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
-import de.amr.pacmanfx.core.model.entities.pac.Pac;
-import de.amr.pacmanfx.core.model.entities.pac.system.PacStateSystem;
-import de.amr.pacmanfx.core.model.entities.pac.PacState;
-import de.amr.pacmanfx.core.model.entities.pac.comp.PacStateComp;
+import de.amr.pacmanfx.core.entities.pac.Pac;
+import de.amr.pacmanfx.core.entities.pac.system.PacStateSystem;
+import de.amr.pacmanfx.core.entities.pac.PacState;
+import de.amr.pacmanfx.core.entities.pac.comp.PacStateComp;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DViewComp;
 import javafx.animation.Animation;

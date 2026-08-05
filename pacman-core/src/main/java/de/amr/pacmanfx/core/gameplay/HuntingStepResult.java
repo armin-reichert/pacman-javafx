@@ -6,8 +6,8 @@ package de.amr.pacmanfx.core.gameplay;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.ecs.comp.PositionComp;
-import de.amr.pacmanfx.core.model.entities.bonus.Bonus;
-import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
+import de.amr.pacmanfx.core.entities.bonus.Bonus;
+import de.amr.pacmanfx.core.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 
 import java.util.ArrayList;

@@ -5,9 +5,9 @@
 package de.amr.pacmanfx.uilib.entities3D.ghost;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
-import de.amr.pacmanfx.core.model.entities.pac.Pac;
-import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.entities.ghost.Ghost;
+import de.amr.pacmanfx.core.entities.pac.Pac;
+import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 
 public class Ghost3DAppearanceController {

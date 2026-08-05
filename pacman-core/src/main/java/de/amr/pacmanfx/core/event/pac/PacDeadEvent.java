@@ -5,6 +5,6 @@
 package de.amr.pacmanfx.core.event.pac;
 
 import de.amr.pacmanfx.core.event.GameEvent;
-import de.amr.pacmanfx.core.model.entities.pac.Pac;
+import de.amr.pacmanfx.core.entities.pac.Pac;
 
 public record PacDeadEvent(Pac pac) implements GameEvent {}

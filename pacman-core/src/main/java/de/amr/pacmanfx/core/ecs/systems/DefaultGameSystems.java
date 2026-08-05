@@ -4,12 +4,12 @@
 
 package de.amr.pacmanfx.core.ecs.systems;
 
+import de.amr.pacmanfx.core.entities.ghost.system.*;
+import de.amr.pacmanfx.core.entities.pac.system.*;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.entities.bonus.system.BonusMoveAndJumpSystem;
-import de.amr.pacmanfx.core.model.entities.bonus.system.BonusStateSystem;
-import de.amr.pacmanfx.core.model.entities.bonus.system.BonusWorldMovementPolicy;
-import de.amr.pacmanfx.core.model.entities.ghost.system.*;
-import de.amr.pacmanfx.core.model.entities.pac.system.*;
+import de.amr.pacmanfx.core.entities.bonus.system.BonusMoveAndJumpSystem;
+import de.amr.pacmanfx.core.entities.bonus.system.BonusStateSystem;
+import de.amr.pacmanfx.core.entities.bonus.system.BonusWorldMovementPolicy;
 
 public class DefaultGameSystems implements GameSystems {
 

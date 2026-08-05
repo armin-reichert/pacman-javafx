@@ -10,7 +10,7 @@ import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
-import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
+import de.amr.pacmanfx.core.entities.ActorAnimationID;
 import de.amr.pacmanfx.uilib.rendering.SpritesheetAnimationMap;
 
 public class StorkSAM extends SpritesheetAnimationMap<SpriteID> {

@@ -1,0 +1,42 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
+package de.amr.pacmanfx.core.entities.ghost.system;
+
+import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.core.ecs.systems.WorldMovementPolicy;
+import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
+import de.amr.pacmanfx.core.entities.ghost.Ghost;
+import de.amr.pacmanfx.core.entities.pac.Pac;
+import de.amr.pacmanfx.core.level.GameLevel;
+
+import static java.util.Objects.requireNonNull;
+
+public class SpeedyHuntingStrategy implements GhostHuntingStrategy {
+
+    private final WorldNavigationSystem navigator;
+
+    public SpeedyHuntingStrategy(WorldNavigationSystem navigator) {
+        this.navigator = requireNonNull(navigator);
+    }
+
+    @Override
+    public void hunt(GameLevel level, Ghost ghost, float speed, WorldMovementPolicy worldMovementPolicy) {
+        requireNonNull(level);
+        requireNonNull(ghost);
+
+        final boolean chase = level.huntingTimerStrategy().isChasing();
+        final Vector2i targetTile = chase
+            ? computeChasingTargetTile(level)
+            : computeScatterTile(level.worldMap(), ghost);
+
+        navigator.setSpeed(ghost, speed);
+        navigator.tryMovingTowardsTargetTile(ghost, level, targetTile, worldMovementPolicy);
+    }
+
+    private Vector2i computeChasingTargetTile(GameLevel level) {
+        final Pac pac = level.entities().pac();
+        return WorldNavigationSystem.tilesAheadWithOverflowBug(pac, 4);
+    }
+}

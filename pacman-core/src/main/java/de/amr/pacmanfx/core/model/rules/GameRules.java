@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.core.model.rules;
 
-import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.level.GameLevel;
 
 import java.util.OptionalInt;
 

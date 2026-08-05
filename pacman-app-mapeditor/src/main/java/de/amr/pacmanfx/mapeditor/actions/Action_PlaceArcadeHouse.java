@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.model.world.house.ArcadeHouse;
+import de.amr.pacmanfx.core.entities.house.ArcadeHouse;
 import de.amr.pacmanfx.core.model.world.map.*;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import org.tinylog.Logger;

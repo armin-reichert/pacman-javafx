@@ -14,7 +14,7 @@ import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.event.gameplay.GameStateChangeEvent;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.score.PropertyFileScore;
+import de.amr.pacmanfx.core.entities.score.PropertyFileScore;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;

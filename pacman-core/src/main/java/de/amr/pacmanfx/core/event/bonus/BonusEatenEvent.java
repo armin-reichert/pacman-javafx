@@ -5,6 +5,6 @@
 package de.amr.pacmanfx.core.event.bonus;
 
 import de.amr.pacmanfx.core.event.GameEvent;
-import de.amr.pacmanfx.core.model.entities.bonus.Bonus;
+import de.amr.pacmanfx.core.entities.bonus.Bonus;
 
 public record BonusEatenEvent(Bonus bonus) implements GameEvent {}

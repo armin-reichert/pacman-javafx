@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.gamescene.d3.entities.livescounter;
 
-import de.amr.pacmanfx.core.model.entities.livescounter.LivesCounter;
+import de.amr.pacmanfx.core.entities.livescounter.LivesCounter;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.NodePositionTracker;
 import javafx.scene.Node;
 

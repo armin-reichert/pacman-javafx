@@ -9,7 +9,7 @@ import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
+import de.amr.pacmanfx.core.entities.ActorAnimationID;
 import de.amr.pacmanfx.uilib.rendering.SpritesheetAnimationMap;
 
 import static java.util.Objects.requireNonNull;

@@ -12,9 +12,9 @@ import de.amr.pacmanfx.core.event.gameplay.LevelStartedEvent;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.entities.levelCounter.system.LevelCounterSystem;
-import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
+import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
+import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.level.GameLevelMessageType;
 
 public class LevelShortTestState extends GameState {
 

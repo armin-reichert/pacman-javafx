@@ -3,7 +3,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.model;
 import de.amr.pacmanfx.arcade.ms_pacman.model.systems.ghost.ArcadeMsPacMan_ShadowHuntingStrategy;
 import de.amr.pacmanfx.arcade.ms_pacman.model.systems.ghost.ArcadeMsPacMan_SpeedyHuntingStrategy;
 import de.amr.pacmanfx.core.ecs.systems.DefaultGameSystems;
-import de.amr.pacmanfx.core.model.entities.ghost.system.GhostHuntingStrategy;
+import de.amr.pacmanfx.core.entities.ghost.system.GhostHuntingStrategy;
 
 public class ArcadeMsPacMan_GameSystems extends DefaultGameSystems  {
 

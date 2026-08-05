@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.tengenmspacman.rules;
 
-import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.rules.ScoringRules;
 import de.amr.pacmanfx.tengenmspacman.model.BonusSymbol;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;

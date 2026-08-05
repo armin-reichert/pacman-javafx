@@ -13,11 +13,11 @@ import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
-import de.amr.pacmanfx.core.model.entities.ghost.GhostState;
-import de.amr.pacmanfx.core.model.entities.livescounter.LivesCounter;
-import de.amr.pacmanfx.core.model.entities.pac.Pac;
-import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.entities.ghost.Ghost;
+import de.amr.pacmanfx.core.entities.ghost.GhostState;
+import de.amr.pacmanfx.core.entities.livescounter.LivesCounter;
+import de.amr.pacmanfx.core.entities.pac.Pac;
+import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 
 import java.util.function.BiFunction;

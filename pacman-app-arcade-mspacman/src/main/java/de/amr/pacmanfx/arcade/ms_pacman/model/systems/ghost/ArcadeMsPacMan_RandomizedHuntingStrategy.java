@@ -6,12 +6,12 @@ package de.amr.pacmanfx.arcade.ms_pacman.model.systems.ghost;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.model.entities.ghost.system.GhostHuntingStrategy;
+import de.amr.pacmanfx.core.entities.ghost.system.GhostHuntingStrategy;
 import de.amr.pacmanfx.core.ecs.systems.WorldMovementPolicy;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
-import de.amr.pacmanfx.core.model.entities.ghost.comp.ElroyComp;
-import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
-import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.entities.ghost.comp.ElroyComp;
+import de.amr.pacmanfx.core.entities.ghost.Ghost;
+import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import org.tinylog.Logger;
 

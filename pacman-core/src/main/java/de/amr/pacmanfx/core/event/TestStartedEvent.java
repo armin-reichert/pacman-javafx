@@ -4,6 +4,6 @@
 
 package de.amr.pacmanfx.core.event;
 
-import de.amr.pacmanfx.core.model.level.GameLevel;
+import de.amr.pacmanfx.core.level.GameLevel;
 
 public record TestStartedEvent(GameLevel level) implements GameEvent {}

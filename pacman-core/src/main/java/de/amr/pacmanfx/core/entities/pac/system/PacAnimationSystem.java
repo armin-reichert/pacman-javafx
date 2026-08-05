@@ -1,0 +1,42 @@
+package de.amr.pacmanfx.core.entities.pac.system;
+
+import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
+import de.amr.pacmanfx.core.entities.ActorAnimationID;
+import de.amr.pacmanfx.core.entities.pac.Pac;
+
+public class PacAnimationSystem {
+
+    private final SpriteAnimSystem spriteAnimSystem;
+
+    public PacAnimationSystem(SpriteAnimSystem spriteAnimSystem) {
+        this.spriteAnimSystem = spriteAnimSystem;
+    }
+
+    public void update(Pac pac) {
+        switch (pac.getPacState()) {
+            case ACTIVE -> {
+                if (pac.state().isMoving()) {
+                    spriteAnimSystem.select(pac, ActorAnimationID.PAC_MUNCHING);
+                    spriteAnimSystem.playSelected(pac);
+                } else {
+                    spriteAnimSystem.stopSelected(pac);
+                }
+            }
+            case DEAD -> {
+                if (pac.animation().readyForDying()) {
+                    spriteAnimSystem.select(pac, ActorAnimationID.PAC_DYING);
+                    spriteAnimSystem.resetSelected(pac);
+                    pac.animation().setReadyForDying(false);
+                }
+                else if (pac.animation().startDying()) {
+                    spriteAnimSystem.playSelected(pac);
+                    pac.animation().setStartDying(false);
+                }
+            }
+        }
+    }
+
+    public void stop(Pac pac) {
+        spriteAnimSystem.stopSelected(pac);
+    }
+}

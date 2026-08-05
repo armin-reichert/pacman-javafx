@@ -4,13 +4,13 @@
 
 package de.amr.pacmanfx.core.ecs.systems;
 
-import de.amr.pacmanfx.core.model.entities.bonus.system.BonusMoveAndJumpSystem;
-import de.amr.pacmanfx.core.model.entities.bonus.system.BonusStateSystem;
-import de.amr.pacmanfx.core.model.entities.ghost.system.GhostHouseAccessSystem;
-import de.amr.pacmanfx.core.model.entities.ghost.system.GhostHuntingStrategy;
-import de.amr.pacmanfx.core.model.entities.ghost.system.GhostStateSystem;
+import de.amr.pacmanfx.core.entities.bonus.system.BonusMoveAndJumpSystem;
+import de.amr.pacmanfx.core.entities.bonus.system.BonusStateSystem;
+import de.amr.pacmanfx.core.entities.ghost.system.GhostHouseAccessSystem;
+import de.amr.pacmanfx.core.entities.ghost.system.GhostHuntingStrategy;
+import de.amr.pacmanfx.core.entities.ghost.system.GhostStateSystem;
+import de.amr.pacmanfx.core.entities.pac.system.*;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.entities.pac.system.*;
 
 public interface GameSystems {
 

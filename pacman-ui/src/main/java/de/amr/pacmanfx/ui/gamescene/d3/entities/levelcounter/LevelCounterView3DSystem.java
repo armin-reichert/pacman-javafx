@@ -4,9 +4,9 @@
 
 package de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter;
 
-import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.entities.levelCounter.LevelCounter;
-import de.amr.pacmanfx.core.model.entities.levelCounter.comp.LevelCounterData;
+import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.entities.levelCounter.LevelCounter;
+import de.amr.pacmanfx.core.entities.levelCounter.comp.LevelCounterData;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import javafx.scene.image.Image;
