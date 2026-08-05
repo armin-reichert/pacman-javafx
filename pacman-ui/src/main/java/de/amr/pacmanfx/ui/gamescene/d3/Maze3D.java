@@ -10,7 +10,6 @@ import de.amr.pacmanfx.core.entities.house.House;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.obstacle.Obstacle;
-import de.amr.pacmanfx.ui.gamescene.d3.entities.house.MazeHouse3D;
 import de.amr.pacmanfx.ui.settings.world.Floor3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Maze3DSettings;
 import de.amr.pacmanfx.uilib.entities3D.DisposableGraphicsObject;
@@ -48,7 +47,6 @@ public class Maze3D extends Group implements DisposableGraphicsObject {
     private final TerrainLayer terrain;
     private final Group particlesGroup = new Group();
     private Box floor3D;
-    private MazeHouse3D house3D;
     private Map<String, PhongMaterial> materials;
 
     public Maze3D(TerrainLayer terrain) {
@@ -59,12 +57,6 @@ public class Maze3D extends Group implements DisposableGraphicsObject {
     public void dispose() {
         wallBaseHeight.unbind();
         wallOpacity.unbind();
-
-        if (house3D != null) {
-            house3D.dispose();
-            house3D = null;
-        }
-
         cleanupGroup(particlesGroup, true);
         cleanupGroup(this, true);
     }
@@ -82,10 +74,6 @@ public class Maze3D extends Group implements DisposableGraphicsObject {
 
     public Map<String, PhongMaterial> materials() {
         return materials;
-    }
-
-    public void setHouse3D(MazeHouse3D house3D) {
-        this.house3D = requireNonNull(house3D);
     }
 
     public ObjectProperty<DrawMode> drawModeProperty() {
@@ -110,10 +98,6 @@ public class Maze3D extends Group implements DisposableGraphicsObject {
 
     public double floorTop() {
         return floor().getTranslateZ() - 0.5 * floor().getDepth();
-    }
-
-    public MazeHouse3D house() {
-        return house3D;
     }
 
     public Group particlesGroup() {

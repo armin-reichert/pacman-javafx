@@ -12,6 +12,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.entities.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.ghost.Ghost;
+import de.amr.pacmanfx.core.entities.ghost.GhostState;
 import de.amr.pacmanfx.core.entities.house.House;
 import de.amr.pacmanfx.core.entities.levelCounter.LevelCounter;
 import de.amr.pacmanfx.core.entities.livescounter.LivesCounter;
@@ -52,6 +53,8 @@ import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3D;
 import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3DAppearanceController;
 import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3DTransformController;
 import de.amr.pacmanfx.uilib.entities3D.ghost.GhostSettings;
+import de.amr.pacmanfx.uilib.entities3D.house.comp.House3DViewComp;
+import de.amr.pacmanfx.uilib.entities3D.house.system.House3DSystem;
 import de.amr.pacmanfx.uilib.entities3D.pac.PacSettings;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DViewComp;
 import de.amr.pacmanfx.uilib.entities3D.pac.system.Pac3DAnimationSystem;
@@ -188,6 +191,23 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         //TODO
     }
 
+    public void updateHouse() {
+        final House house = level.entities().entitySet().uniqueOfType(House.class);
+        final House3DViewComp view3D = house.requireComponent(House3DViewComp.class);
+
+        boolean accessRequested = level
+            .ghostsInAnyOfStates(Set.of(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE))
+            .anyMatch(GameEntity::isVisible);
+
+        boolean ghostNearHouseEntry = level
+            .ghostsInAnyOfStates(Set.of(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE))
+            .filter(ghost -> ghost.pos().asVector2f().euclideanDist(house.floorplan().entryPosition())
+                <= view3D.doorSensitivity())
+            .anyMatch(GameEntity::isVisible);
+
+        House3DSystem.update(house, accessRequested, ghostNearHouseEntry);
+    }
+
     public void updateBonus() {
         level.optBonus().ifPresent(bonus -> {
             ensureBonus3DViewExists(bonus);
@@ -202,6 +222,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             .forEach(entity -> entity.update(gameContext));
 
         updateLivesCounter();
+        updateHouse();
         updatePac();
         updateGhosts();
         updateBonus();
@@ -459,6 +480,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private void buildHierarchy() {
         final LivesCounter livesCounter = level.entities().entitySet().uniqueOfType(LivesCounter.class);
         final Pac pac = level.entities().pac();
+        final House house = level.entities().entitySet().uniqueOfType(House.class);
 
         getChildren().add(livesCounter.requireComponent(LivesCounterView3DComp.class).root());
 
@@ -472,8 +494,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
         getChildren().add(maze3D.particlesGroup());
         getChildren().add(maze3D);
-        getChildren().add(maze3D.house().root());
-        getChildren().add(maze3D.house().doors());
+
+        getChildren().add(house.requireComponent(House3DViewComp.class).root());
+        getChildren().add(house.requireComponent(House3DViewComp.class).doors());
 
         getChildren().add(ghostHunterLight);
     }

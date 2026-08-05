@@ -42,5 +42,4 @@ open module de.amr.pacmanfx.ui {
     exports de.amr.pacmanfx.ui.vm;
     exports de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter;
     exports de.amr.pacmanfx.ui.gamescene.d3.entities.livescounter;
-    exports de.amr.pacmanfx.ui.gamescene.d3.entities.house;
 }

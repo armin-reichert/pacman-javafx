@@ -1,20 +1,15 @@
-/*
- * Copyright (c) 2021-2026 Armin Reichert (MIT License)
- */
-package de.amr.pacmanfx.uilib.entities3D.house;
+package de.amr.pacmanfx.uilib.entities3D.house.comp;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.entities.ghost.GhostState;
-import de.amr.pacmanfx.core.entities.house.House;
-import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.ecs.GameEntityComponent;
+import de.amr.pacmanfx.core.entities.house.comp.HouseFloorplanComp;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3D.DisposableGraphicsObject;
+import de.amr.pacmanfx.uilib.entities3D.house.House3DAnimationID;
 import de.amr.pacmanfx.uilib.entities3D.world.TerrainRenderer3D;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -31,29 +26,12 @@ import javafx.scene.shape.Cylinder;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-import java.util.Set;
-
 import static de.amr.basics.math.Vector2f.vec2_float;
 import static de.amr.basics.util.Ufx.colorWithOpacity;
 import static de.amr.basics.util.Ufx.coloredPhongMaterial;
 import static java.util.Objects.requireNonNull;
 
-/**
- * 3D representation of the classic Pac‑Man ghost house.
- * <p>
- * This class constructs the house walls, doors, and interior lighting using JavaFX 3D primitives.
- * The geometry is derived from the {@link ArcadeHouse} model and scaled to world coordinates.
- * <p>
- * The house reacts dynamically to game state:
- * <ul>
- *   <li>Doors open when ghosts approach the entry</li>
- *   <li>A point light activates when ghost access is required</li>
- *   <li>A “melting” animation can shrink and regrow the door bars</li>
- * </ul>
- * <p>
- * All created 3D nodes are owned by this group and cleaned up via {@link #dispose()}.
- */
-public class ArcadeHouse3D extends Group implements DisposableGraphicsObject {
+public class House3DViewComp implements GameEntityComponent, DisposableGraphicsObject {
 
     private static final int DOOR_VERTICAL_BAR_COUNT = 4;
 
@@ -77,6 +55,7 @@ public class ArcadeHouse3D extends Group implements DisposableGraphicsObject {
     private PhongMaterial wallBaseMaterial;
     private PhongMaterial wallTopMaterial;
 
+    private final Group root = new Group();
     private PointLight light;
     private Group doors;
     private Group leftDoor;
@@ -88,21 +67,21 @@ public class ArcadeHouse3D extends Group implements DisposableGraphicsObject {
     /**
      * Creates a 3D ghost house representation.
      *
-     * @param animations registry used to register the door animation
-     * @param house             logical house model defining geometry and door positions
+     * @param animations        registry used to register the door animation
+     * @param floorplan         floorplan (geometry, door positions)
      * @param baseHeight        height of the lower wall segment
      * @param wallThickness     thickness of the wall cylinders
      * @param opacity           opacity of the wall base material
      */
-    public ArcadeHouse3D(
+    public House3DViewComp(
         AnimationRegistry animations,
-        House house,
+        HouseFloorplanComp floorplan,
         double baseHeight,
         double wallThickness,
         double opacity)
     {
         this.animations = requireNonNull(animations);
-        requireNonNull(house);
+        requireNonNull(floorplan);
 
         r3D = new TerrainRenderer3D();
 
@@ -116,15 +95,15 @@ public class ArcadeHouse3D extends Group implements DisposableGraphicsObject {
         barThicknessProperty.set(barThickness);
 
         // Compute house corner coordinates in world space
-        float xMin = house.floorplan().minTile().x() * WorldMap.TS + WorldMap.HTS;
-        float yMin = house.floorplan().minTile().y() * WorldMap.TS + WorldMap.HTS;
-        float xMax = house.floorplan().maxTile().x() * WorldMap.TS + WorldMap.HTS;
-        float yMax = house.floorplan().maxTile().y() * WorldMap.TS + WorldMap.HTS;
+        float xMin = floorplan.minTile().x() * WorldMap.TS + WorldMap.HTS;
+        float yMin = floorplan.minTile().y() * WorldMap.TS + WorldMap.HTS;
+        float xMax = floorplan.maxTile().x() * WorldMap.TS + WorldMap.HTS;
+        float yMax = floorplan.maxTile().y() * WorldMap.TS + WorldMap.HTS;
 
         // Define wall corner points
         Vector2f p0 = vec2_float(xMin, yMin);
-        Vector2f p1 = house.floorplan().leftDoorTile().scaled((float) WorldMap.TS).plus(0, WorldMap.HTS);
-        Vector2f p2 = house.floorplan().rightDoorTile().scaled((float) WorldMap.TS).plus(WorldMap.TS, WorldMap.HTS);
+        Vector2f p1 = floorplan.leftDoorTile().scaled((float) WorldMap.TS).plus(0, WorldMap.HTS);
+        Vector2f p2 = floorplan.rightDoorTile().scaled((float) WorldMap.TS).plus(WorldMap.TS, WorldMap.HTS);
         Vector2f p3 = vec2_float(xMax, yMin);
         Vector2f p4 = vec2_float(xMin, yMax);
         Vector2f p5 = vec2_float(xMax, yMax);
@@ -134,7 +113,7 @@ public class ArcadeHouse3D extends Group implements DisposableGraphicsObject {
             wall3D.bindBaseHeight(wallBaseHeightProperty);
             wall3D.setBaseMaterial(wallBaseMaterial);
             wall3D.setTopMaterial(wallTopMaterial);
-            getChildren().addAll(wall3D.top(), wall3D.base());
+            root.getChildren().addAll(wall3D.top(), wall3D.base());
             return wall3D;
         });
 
@@ -150,8 +129,8 @@ public class ArcadeHouse3D extends Group implements DisposableGraphicsObject {
         r3D.createWallBetween(p4, p5, wallThickness);
 
         // Create doors
-        leftDoor  = createDoor(house.floorplan().leftDoorTile(), wallBaseHeightProperty.get());
-        rightDoor = createDoor(house.floorplan().rightDoorTile(), wallBaseHeightProperty.get());
+        leftDoor  = createDoor(floorplan.leftDoorTile(), wallBaseHeightProperty.get());
+        rightDoor = createDoor(floorplan.rightDoorTile(), wallBaseHeightProperty.get());
         doors = new Group(leftDoor, rightDoor);
 
         // Interior light
@@ -169,6 +148,18 @@ public class ArcadeHouse3D extends Group implements DisposableGraphicsObject {
             new KeyFrame(Duration.seconds(1.5),  new KeyValue(barThicknessProperty, barThickness)))
         );
         animations.register(House3DAnimationID.HOUSE_DOORS_MELTING, doorsMeltingAnimation);
+    }
+
+    @Override
+    public void reset() {
+    }
+
+    public Group root() {
+        return root;
+    }
+
+    public PointLight light() {
+        return light;
     }
 
     /**
@@ -234,6 +225,10 @@ public class ArcadeHouse3D extends Group implements DisposableGraphicsObject {
         return door;
     }
 
+    public float doorSensitivity() {
+        return doorSensitivity;
+    }
+
     /**
      * Sets the distance threshold used to detect ghosts near the house entry.
      */
@@ -241,34 +236,8 @@ public class ArcadeHouse3D extends Group implements DisposableGraphicsObject {
         this.doorSensitivity = value;
     }
 
-    /**
-     * Updates the house state based on the current game level.
-     * <p>
-     * This method:
-     * <ul>
-     *   <li>Activates the interior light when ghost access is required</li>
-     *   <li>Opens the doors when a ghost approaches the entry</li>
-     * </ul>
-     */
-    public void update(GameContext gameContext) {
-        final GameLevel level = gameContext.assertLevel();
-        boolean accessRequested = level
-            .ghostsInAnyOfStates(Set.of(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE))
-            .anyMatch(GameEntity::isVisible);
-        light.lightOnProperty().set(accessRequested);
-
-        final House house = level.entities().entitySet().uniqueOfType(House.class);
-        if (house != null) {
-            boolean ghostNearHouseEntry = level
-                .ghostsInAnyOfStates(Set.of(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE))
-                .filter(ghost -> ghost.pos().asVector2f().euclideanDist(house.floorplan().entryPosition()) <= doorSensitivity)
-                .anyMatch(GameEntity::isVisible);
-            doorsOpenProperty.set(ghostNearHouseEntry);
-        }
-    }
-
     /** Property controlling whether the doors appear open. */
-    public BooleanProperty openProperty() {
+    public BooleanProperty doorsOpenProperty() {
         return doorsOpenProperty;
     }
 
@@ -294,7 +263,7 @@ public class ArcadeHouse3D extends Group implements DisposableGraphicsObject {
     @Override
     public void dispose() {
         r3D.setOnWallCreated(null);
-        openProperty().unbind();
+        doorsOpenProperty().unbind();
         wallBaseHeightProperty().unbind();
         barMaterial = wallBaseMaterial = wallTopMaterial = null;
         animations.optAnimation(House3DAnimationID.HOUSE_DOORS_MELTING).ifPresent(ManagedAnimation::dispose);
@@ -302,6 +271,6 @@ public class ArcadeHouse3D extends Group implements DisposableGraphicsObject {
         leftDoor = rightDoor = doors = null;
         cleanupLight(light);
         light = null;
-        cleanupGroup(this, true);
+        cleanupGroup(root, true);
     }
 }

@@ -10,6 +10,9 @@ import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
+import de.amr.pacmanfx.core.entities.bonus.Bonus;
+import de.amr.pacmanfx.core.entities.ghost.Ghost;
+import de.amr.pacmanfx.core.entities.house.House;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventListener;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
 import de.amr.pacmanfx.core.event.bonus.BonusEatenEvent;
@@ -21,10 +24,8 @@ import de.amr.pacmanfx.core.event.pac.PacGetsPowerEvent;
 import de.amr.pacmanfx.core.event.pac.PacLostPowerEvent;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
-import de.amr.pacmanfx.core.model.UpdatableEntity;
-import de.amr.pacmanfx.core.entities.bonus.Bonus;
-import de.amr.pacmanfx.core.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.HideGhostShowPointsAnimation3D;
@@ -39,6 +40,7 @@ import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.entities3D.bonus.Bonus3DViewSystem;
 import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3D;
+import de.amr.pacmanfx.uilib.entities3D.house.system.House3DSystem;
 import de.amr.pacmanfx.uilib.entities3D.pac.system.Pac3DAnimationSystem;
 import de.amr.pacmanfx.uilib.entities3D.world.Energizer3D;
 import de.amr.pacmanfx.uilib.entities3D.world.NumberBox3D;
@@ -321,13 +323,15 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     private void onLevelComplete() {
         final GameLevel3D level3D = assertLevel3D();
         final GameLevel level = gameContext().model().assertLevel();
+        final House house = level.entities().entitySet().uniqueOfType(House.class);
+
         final boolean cutSceneFollows = !level.isDemoLevel()
             && gameContext().model().rules().cutSceneAfterLevel(level.number()).isPresent();
         final GameUISettingsVM viewModel = appContext().ui().viewModel();
 
         gameScene().scoreOpacity.set(0);
 
-        level3D.maze3D().house().hideDoors();
+        House3DSystem.hideDoors(house);
 
         optSoundEffects().ifPresent(GameSoundEffects::stopAll);
         level3D.animationRegistry().stopAllAnimations();

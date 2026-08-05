@@ -5,11 +5,13 @@
 package de.amr.pacmanfx.ui.gamescene.d3.animation;
 
 import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.entities.house.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.ui.gamescene.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.gamescene.d3.Maze3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
+import de.amr.pacmanfx.uilib.entities3D.house.comp.House3DViewComp;
 import javafx.animation.*;
 import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Point3D;
@@ -68,6 +70,7 @@ public class LevelCompletedAnimation extends ManagedAnimation {
     private Animation createAnimationFX() {
         final GameLevel level = level3D.level();
         final Maze3D maze3D = level3D.maze3D();
+        final House house = level.entities().entitySet().uniqueOfType(House.class);
         final Point3D rotationAxis = chance(0.5) ? Rotate.X_AXIS : Rotate.Z_AXIS;
         return new SequentialTransition(
             pauseSecThen(0.5, () -> level.entities().ghosts().forEach(GameEntity::hide)),
@@ -76,7 +79,7 @@ public class LevelCompletedAnimation extends ManagedAnimation {
             pauseSec(0.5),
             levelRotation(rotationAxis),
             pauseSecThen(0.5, () -> level3D.optSoundEffects().ifPresent(GameSoundEffects::playLevelCompleteSound)),
-            mazeWallsAndHouseDisappearAnimation(level3D, maze3D.house().wallBaseHeightProperty(), maze3D.wallBaseHeightProperty()),
+            mazeWallsAndHouseDisappearAnimation(level3D, house.requireComponent(House3DViewComp.class).wallBaseHeightProperty(), maze3D.wallBaseHeightProperty()),
             pauseSecThen(1.0, () -> level3D.optSoundEffects().ifPresent(GameSoundEffects::playLevelChangedSound))
         );
     }
