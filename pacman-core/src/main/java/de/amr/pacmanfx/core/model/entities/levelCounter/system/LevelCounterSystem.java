@@ -2,7 +2,11 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core.model.level;
+package de.amr.pacmanfx.core.model.entities.levelCounter.system;
+
+
+import de.amr.pacmanfx.core.model.entities.levelCounter.LevelCounter;
+import de.amr.pacmanfx.core.model.entities.levelCounter.comp.LevelCounterData;
 
 public class LevelCounterSystem {
 

@@ -7,7 +7,7 @@ import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.HUDState;
-import de.amr.pacmanfx.core.model.level.LevelCounterData;
+import de.amr.pacmanfx.core.model.entities.levelCounter.comp.LevelCounterData;
 import de.amr.pacmanfx.core.model.score.Score;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;

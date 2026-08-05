@@ -16,7 +16,7 @@ import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelEntitySet;
-import de.amr.pacmanfx.core.model.level.LevelCounter;
+import de.amr.pacmanfx.core.model.entities.levelCounter.LevelCounter;
 import de.amr.pacmanfx.core.model.world.house.House;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;

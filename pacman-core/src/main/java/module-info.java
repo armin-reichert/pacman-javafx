@@ -50,4 +50,7 @@ module de.amr.pacmanfx.core {
     exports de.amr.pacmanfx.core.model.entities.ghost.comp;
     exports de.amr.pacmanfx.core.model.entities.marquee.comp;
     exports de.amr.pacmanfx.core.model.entities.pac.comp;
+    exports de.amr.pacmanfx.core.model.entities.levelCounter;
+    exports de.amr.pacmanfx.core.model.entities.levelCounter.comp;
+    exports de.amr.pacmanfx.core.model.entities.levelCounter.system;
 }

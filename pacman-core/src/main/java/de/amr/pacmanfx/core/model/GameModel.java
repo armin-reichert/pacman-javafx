@@ -4,9 +4,9 @@
 
 package de.amr.pacmanfx.core.model;
 
+import de.amr.pacmanfx.core.model.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.model.level.GameLevel;
-import de.amr.pacmanfx.core.model.level.LevelCounter;
-import de.amr.pacmanfx.core.model.level.LevelCounterSystem;
+import de.amr.pacmanfx.core.model.entities.levelCounter.LevelCounter;
 import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.core.model.score.PropertyFileScore;
 import de.amr.pacmanfx.core.model.score.Score;
