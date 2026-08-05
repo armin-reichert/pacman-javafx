@@ -28,7 +28,6 @@ import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.entities3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.entities3D.Scores3D;
-import de.amr.pacmanfx.uilib.entities3D.bonus.Bonus3DMovementSystem;
 import de.amr.pacmanfx.uilib.entities3D.pac.system.Pac3DAnimationSystem;
 import de.amr.pacmanfx.uilib.entities3D.pac.system.Pac3DTransformSystem;
 import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
