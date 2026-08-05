@@ -38,7 +38,7 @@ import de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter.LevelCounterView3DS
 import de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter.LevelCounterView3DComp;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.livescounter.LivesCounterView3DSystem;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.livescounter.LivesCounterView3DComp;
-import de.amr.pacmanfx.ui.settings.world.Bonus3DSettings;
+import de.amr.pacmanfx.uilib.entities3D.bonus.Bonus3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Pellet3DSettings;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;

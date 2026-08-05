@@ -5,6 +5,9 @@
 package de.amr.pacmanfx.ui.settings.world;
 
 import de.amr.basics.json.JsonLoader;
+import de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter.LevelCounter3DSettings;
+import de.amr.pacmanfx.ui.gamescene.d3.entities.livescounter.LivesCounter3DSettings;
+import de.amr.pacmanfx.uilib.entities3D.bonus.Bonus3DSettings;
 import de.amr.pacmanfx.uilib.entities3D.ghost.GhostSettings;
 import de.amr.pacmanfx.uilib.entities3D.pac.PacSettings;
 

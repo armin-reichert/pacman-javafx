@@ -9,7 +9,6 @@ import de.amr.pacmanfx.core.model.entities.levelCounter.LevelCounter;
 import de.amr.pacmanfx.core.model.entities.levelCounter.comp.LevelCounterData;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.game.GameVariantConfig;
-import de.amr.pacmanfx.ui.settings.world.LevelCounter3DSettings;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
