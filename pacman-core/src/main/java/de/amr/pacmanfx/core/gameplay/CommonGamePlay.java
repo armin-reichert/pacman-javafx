@@ -17,8 +17,7 @@ import de.amr.pacmanfx.core.entities.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.bonus.BonusState;
 import de.amr.pacmanfx.core.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.ghost.GhostState;
-import de.amr.pacmanfx.core.entities.house.ArcadeHouseGateKeeper;
-import de.amr.pacmanfx.core.entities.house.HouseEntity;
+import de.amr.pacmanfx.core.entities.house.House;
 import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.entities.livescounter.LivesCounter;
 import de.amr.pacmanfx.core.entities.livescounter.system.LivesCounterSystem;
@@ -99,7 +98,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final GameSystems sys = gameContext.systems();
 
         final GameLevel level = gameContext.assertLevel();
-        final HouseEntity house = level.entities().entitySet().uniqueOfType(HouseEntity.class);
+        final House house = level.entities().entitySet().uniqueOfType(House.class);
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
         final Pac pac = level.entities().pac();
@@ -508,7 +507,7 @@ public abstract class CommonGamePlay implements GamePlay {
      * @return position where level messages ("READY!", "GAME OVER") are displayed.
      */
     public Vector2f messageCenterPosition(GameLevel level) {
-        final HouseEntity house = level.entities().entitySet().uniqueOfType(HouseEntity.class);
+        final House house = level.entities().entitySet().uniqueOfType(House.class);
         Vector2i houseSize = house.sizeInTiles();
         float cx = tilesPx(house.floorplan().minTile().x() + houseSize.x() * 0.5f);
         float cy = tilesPx(house.floorplan().minTile().y() + houseSize.y() + 1);

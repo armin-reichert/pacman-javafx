@@ -7,7 +7,7 @@ import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
-import de.amr.pacmanfx.core.entities.house.HouseEntity;
+import de.amr.pacmanfx.core.entities.house.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
@@ -168,7 +168,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
             message.pos().x(), message.pos().y());
     }
 
-    public void drawDoor(HouseEntity house, WorldMap worldMap) {
+    public void drawDoor(House house, WorldMap worldMap) {
         final MapImageSet recoloredImageSet = worldMap.getConfigValue(MapConfigKey.MAP_IMAGE_SET);
         final Color strokeColor = Color.valueOf(recoloredImageSet.mapImage().colorScheme().wallStroke());
         final double scaledTileSize = scaled(WorldMap.TS);
@@ -179,7 +179,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
     }
 
     private void overPaintActorSprites(GameLevel level) {
-        final HouseEntity house = level.entities().entitySet().uniqueOfType(HouseEntity.class);
+        final House house = level.entities().entitySet().uniqueOfType(House.class);
 
         // Over-paint area at house bottom where the ghost sprites are shown in map
         final double margin = scaling();

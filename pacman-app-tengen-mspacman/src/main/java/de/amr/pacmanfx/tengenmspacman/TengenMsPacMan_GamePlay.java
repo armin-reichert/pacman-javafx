@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
-import de.amr.pacmanfx.core.entities.house.HouseEntity;
+import de.amr.pacmanfx.core.entities.house.House;
 import de.amr.pacmanfx.core.entities.house.HouseFactory;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
@@ -94,7 +94,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final GameLevel level = new GameLevel(model, levelNumber, worldMap, huntingTimer, 3);
         level.setDemoLevel(demoLevel);
 
-        final HouseEntity house = HouseFactory.createArcadeHouse(TengenMsPacMan_GameModel.HOUSE_MIN_TILE);
+        final House house = HouseFactory.createArcadeHouse(TengenMsPacMan_GameModel.HOUSE_MIN_TILE);
         level.entities().add(house);
 
         huntingTimer.setPhaseChangeCallback(newPhaseIndex -> {
@@ -222,7 +222,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
             return;
         }
 
-        final HouseEntity house = level.entities().entitySet().uniqueOfType(HouseEntity.class);
+        final House house = level.entities().entitySet().uniqueOfType(House.class);
         final Vector2i houseEntry = WorldMap.computeTileAt(house.floorplan().entryPosition());
         final Vector2i houseEntryOpposite = houseEntry.plus(0, house.sizeInTiles().y() + 1);
 
@@ -268,7 +268,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         level.setPac(msPacMan);
     }
 
-    private void createAndSetGhosts(GameLevel level, HouseEntity house) {
+    private void createAndSetGhosts(GameLevel level, House house) {
         final var factory = TengenMsPacMan_ActorFactory.instance();
 
         final Ghost redGhost    = factory.createRedGhost();

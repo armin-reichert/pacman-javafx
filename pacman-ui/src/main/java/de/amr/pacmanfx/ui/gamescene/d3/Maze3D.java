@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.gamescene.d3;
 import de.amr.basics.StopWatch;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.entities.house.HouseEntity;
+import de.amr.pacmanfx.core.entities.house.House;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.obstacle.Obstacle;
@@ -70,7 +70,7 @@ public class Maze3D extends Group implements DisposableGraphicsObject {
     }
 
     public void build(
-        HouseEntity house,
+        House house,
         Map<String, PhongMaterial> materials,
         Maze3DSettings maze3DSettings,
         Floor3DSettings floor3DSettings)
@@ -120,7 +120,7 @@ public class Maze3D extends Group implements DisposableGraphicsObject {
         return particlesGroup;
     }
 
-    private void addObstacles(HouseEntity house, ObjectProperty<DrawMode> drawMode, Maze3DSettings maze3DSettings) {
+    private void addObstacles(House house, ObjectProperty<DrawMode> drawMode, Maze3DSettings maze3DSettings) {
         final float wallThickness = maze3DSettings.obstacleWallThickness();
         final TerrainRenderer3D renderer3D = new TerrainRenderer3D();
         final AtomicInteger wallCount = new AtomicInteger(0);

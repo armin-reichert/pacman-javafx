@@ -1,11 +1,12 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.core.entities.house;
+package de.amr.pacmanfx.core.gameplay;
 
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
+import de.amr.pacmanfx.core.entities.house.House;
 import de.amr.pacmanfx.core.entities.pac.system.PacDigestionSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.entities.ghost.Ghost;
@@ -192,7 +193,7 @@ public final class ArcadeHouseGateKeeper {
     public void registerFoodEaten(GameLevel level) {
         requireNonNull(level);
 
-        final HouseEntity house = level.entities().entitySet().uniqueOfType(HouseEntity.class);
+        final House house = level.entities().entitySet().uniqueOfType(House.class);
 
         if (globalCounterEnabled) {
             if (level.ghost(GhostPersonality.ORANGE_GHOST_POKEY).state() == GhostState.LOCKED && globalCounterValue == 32) {
@@ -217,7 +218,7 @@ public final class ArcadeHouseGateKeeper {
         final GameSystems sys = gameContext.systems();
 
         final GameLevel level = gameContext.assertLevel();
-        final HouseEntity house = level.entities().entitySet().uniqueOfType(HouseEntity.class);
+        final House house = level.entities().entitySet().uniqueOfType(House.class);
         final Ghost blinky = level.ghost(GhostPersonality.RED_GHOST_SHADOW);
 
         if (blinky.state() == GhostState.LOCKED) {

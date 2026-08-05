@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.WorldMovementPolicy;
 import de.amr.pacmanfx.core.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.ghost.GhostState;
-import de.amr.pacmanfx.core.entities.house.HouseEntity;
+import de.amr.pacmanfx.core.entities.house.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 
@@ -27,7 +27,7 @@ public class GhostHouseAccessSystem {
     public void stayInHouse(GameContext gameContext, Ghost ghost, float speed) {
         final GameSystems sys = gameContext.systems();
 
-        final HouseEntity house = ghost.worldPlacement().house();
+        final House house = ghost.worldPlacement().house();
         final PositionComp position = ghost.pos();
 
         if (house.isVisitedBy(ghost)) {
@@ -63,7 +63,7 @@ public class GhostHouseAccessSystem {
         final GameSystems sys = gameContext.systems();
 
         final PositionComp position = ghost.pos();
-        final HouseEntity house = ghost.worldPlacement().house();
+        final House house = ghost.worldPlacement().house();
         final Vector2f houseEntryPosition = house.floorplan().entryPosition();
 
         if (position.y() <= houseEntryPosition.y()) {
@@ -106,7 +106,7 @@ public class GhostHouseAccessSystem {
         final GameSystems sys = gameContext.systems();
 
         final PositionComp position = ghost.pos();
-        final HouseEntity house = ghost.worldPlacement().house();
+        final House house = ghost.worldPlacement().house();
         final Vector2f revivalPosition = WorldMap.halfTileRightOf(
             house.floorplan().ghostRevivalTile(ghost.personality()));
         final Vector2f positionVec = position.asVector2f();
@@ -142,7 +142,7 @@ public class GhostHouseAccessSystem {
         final GameLevel level = gameContext.assertLevel();
 
         final PositionComp position = ghost.pos();
-        final HouseEntity house = ghost.worldPlacement().house();
+        final House house = ghost.worldPlacement().house();
         final Vector2f houseEntry = house.floorplan().entryPosition();
         final Vector2f positionVec =  position.asVector2f();
         if (positionVec.roughlyEquals(houseEntry, speed, 0)) {

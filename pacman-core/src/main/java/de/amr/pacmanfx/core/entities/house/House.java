@@ -15,9 +15,9 @@ import static de.amr.basics.math.Vector2f.vec2_float;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.HTS;
 import static java.util.Objects.requireNonNull;
 
-public class HouseEntity extends GameEntity {
+public class House extends GameEntity {
 
-    public HouseEntity() {
+    public House() {
         setComponent(HouseFloorplanComp.class, new HouseFloorplanComp());
     }
 

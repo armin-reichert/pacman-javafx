@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.gamescene.d2;
 
-import de.amr.pacmanfx.core.entities.house.HouseEntity;
+import de.amr.pacmanfx.core.entities.house.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -69,7 +69,7 @@ public class GenericMapRenderer extends BaseRenderer {
             terrainRenderer.setMapColoring(mapColoring);
             terrainRenderer.draw(worldMap);
 
-            final HouseEntity house = level.entities().entitySet().uniqueOfType(HouseEntity.class);
+            final House house = level.entities().entitySet().uniqueOfType(House.class);
             if (house != null) {
                 houseRenderer.setMapColoring(mapColoring);
                 houseRenderer.drawHouse(house.floorplan().minTile(), house.sizeInTiles(),

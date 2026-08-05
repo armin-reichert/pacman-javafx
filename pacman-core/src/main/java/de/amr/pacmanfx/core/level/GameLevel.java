@@ -7,7 +7,7 @@ package de.amr.pacmanfx.core.level;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.entities.house.HouseEntity;
+import de.amr.pacmanfx.core.entities.house.House;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.entities.bonus.Bonus;
@@ -386,7 +386,7 @@ public class GameLevel {
     // Others
 
     public boolean isIntersection(Vector2i tile) {
-        final HouseEntity house = entities().entitySet().uniqueOfType(HouseEntity.class);
+        final House house = entities().entitySet().uniqueOfType(House.class);
         final TerrainLayer terrain = worldMap.terrainLayer();
         if (terrain.outOfBounds(tile) || terrain.isTileBlocked(tile)) {
             return false;

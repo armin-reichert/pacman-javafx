@@ -10,7 +10,7 @@ import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.entities.ghost.GhostState;
-import de.amr.pacmanfx.core.entities.house.HouseEntity;
+import de.amr.pacmanfx.core.entities.house.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -101,7 +101,7 @@ public class ArcadeHouse3D extends Group implements DisposableGraphicsObject {
      */
     public ArcadeHouse3D(
         AnimationRegistry animations,
-        HouseEntity house,
+        House house,
         double baseHeight,
         double wallThickness,
         double opacity)
@@ -262,7 +262,7 @@ public class ArcadeHouse3D extends Group implements DisposableGraphicsObject {
             .anyMatch(GameEntity::isVisible);
         light.lightOnProperty().set(accessRequested);
 
-        final HouseEntity house = level.entities().entitySet().uniqueOfType(HouseEntity.class);
+        final House house = level.entities().entitySet().uniqueOfType(House.class);
         if (house != null) {
             boolean ghostNearHouseEntry = level
                 .ghostsInAnyOfStates(Set.of(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE))

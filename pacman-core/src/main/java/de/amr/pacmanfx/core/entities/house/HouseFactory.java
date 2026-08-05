@@ -36,8 +36,8 @@ public class HouseFactory {
         { ARC_SW.$, WALL_H.$, WALL_H.$, WALL_H.$, WALL_H.$, WALL_H.$, WALL_H.$, ARC_SE.$ }
     };
 
-    public static HouseEntity createArcadeHouse(Vector2i minTile) {
-        final HouseEntity house = new HouseEntity();
+    public static House createArcadeHouse(Vector2i minTile) {
+        final House house = new House();
         final HouseFloorplanComp floorplan = house.floorplan();
 
         floorplan.setContent(copyOf(ARCADE_HOUSE_TILES));

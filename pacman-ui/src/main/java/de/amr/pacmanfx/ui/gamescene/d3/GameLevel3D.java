@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.entities.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.ghost.Ghost;
-import de.amr.pacmanfx.core.entities.house.HouseEntity;
+import de.amr.pacmanfx.core.entities.house.House;
 import de.amr.pacmanfx.core.entities.levelCounter.LevelCounter;
 import de.amr.pacmanfx.core.entities.livescounter.LivesCounter;
 import de.amr.pacmanfx.core.entities.pac.Pac;
@@ -311,7 +311,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private void createMaze3D() {
         final WorldMapColorSchemeImpl colorScheme = gameVariantConfig.renderConfig().colorScheme(level.worldMap(), gameVariantConfig.worldSettings());
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        final HouseEntity house = level.entities().entitySet().uniqueOfType(HouseEntity.class);
+        final House house = level.entities().entitySet().uniqueOfType(House.class);
         maze3D = gameVariantConfig.factory3D().createMaze3D(
             house,
             terrain,
@@ -443,7 +443,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         messageManager = new MessageManager3D(animationRegistry, this);
 
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        final HouseEntity house = level.entities().entitySet().uniqueOfType(HouseEntity.class);
+        final House house = level.entities().entitySet().uniqueOfType(House.class);
         if (house != null) {
             messageManager.setMessageCenter(MessageManager3D.MessageType.READY, house.centerPositionUnderHouse());
         } else {
@@ -500,7 +500,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             }
         );
 
-        final HouseEntity house = level.entities().entitySet().uniqueOfType(HouseEntity.class);
+        final House house = level.entities().entitySet().uniqueOfType(House.class);
 
         animationRegistry.register(AnimationID.PARTICLES, new ParticlesAnimation3D(
             house,

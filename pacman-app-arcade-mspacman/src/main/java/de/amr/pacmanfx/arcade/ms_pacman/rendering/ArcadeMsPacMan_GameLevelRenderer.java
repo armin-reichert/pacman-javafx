@@ -5,7 +5,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
-import de.amr.pacmanfx.core.entities.house.HouseEntity;
+import de.amr.pacmanfx.core.entities.house.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessage;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
@@ -55,7 +55,7 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
     }
 
     protected void drawMap(GameLevel level, RenderInfo info) {
-        final HouseEntity house = level.entities().entitySet().uniqueOfType(HouseEntity.class);
+        final House house = level.entities().entitySet().uniqueOfType(House.class);
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final float emptySpaceOverMazePixels = tilesPx(terrain.emptyRowsOverMaze());
         final int colorMapIndex = level.worldMap().getConfigValue(WorldMapConfigKey.COLOR_MAP_INDEX);
@@ -96,7 +96,7 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         ctx.restore();
     }
 
-    private void hideGhostHouseDoors(HouseEntity house) {
+    private void hideGhostHouseDoors(House house) {
         ctx.setFill(backgroundColor());
         if (house.floorplan().leftDoorTile() != null) {
             fillSquareAtTileCenter(house.floorplan().leftDoorTile(), TS + 0.5);

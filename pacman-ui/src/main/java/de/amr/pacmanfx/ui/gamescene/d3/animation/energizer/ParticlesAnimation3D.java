@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.gamescene.d3.animation.energizer;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.math.Vector3f;
-import de.amr.pacmanfx.core.entities.house.HouseEntity;
+import de.amr.pacmanfx.core.entities.house.House;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
@@ -57,7 +57,7 @@ public class ParticlesAnimation3D extends ManagedAnimation implements Disposable
     private final Predicate<EnergizerParticle3D> outOfWorldTest;
 
     public ParticlesAnimation3D(
-        HouseEntity house,
+        House house,
         List<PhongMaterial> ghostDressMaterials,
         Pool<EnergizerParticle3D> particlePool,
         ParticlesAnimationConfig config,

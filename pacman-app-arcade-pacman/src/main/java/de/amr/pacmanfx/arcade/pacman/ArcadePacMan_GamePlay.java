@@ -16,7 +16,7 @@ import de.amr.pacmanfx.core.entities.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.ghost.GhostState;
 import de.amr.pacmanfx.core.entities.ghost.comp.ElroyComp;
-import de.amr.pacmanfx.core.entities.house.HouseEntity;
+import de.amr.pacmanfx.core.entities.house.House;
 import de.amr.pacmanfx.core.entities.house.HouseFactory;
 import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.entities.livescounter.LivesCounter;
@@ -114,7 +114,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
         final GameLevel level = new GameLevel(model, levelNumber, worldMap, huntingTimer, levelData.numFlashes());
 
-        final HouseEntity house = HouseFactory.createArcadeHouse(ArcadePacMan_GameModel.ARCADE_MAP_HOUSE_MIN_TILE);
+        final House house = HouseFactory.createArcadeHouse(ArcadePacMan_GameModel.ARCADE_MAP_HOUSE_MIN_TILE);
         level.entities().add(house);
 
         // On each phase start (except the initial phase), the ghosts reverse their move direction
@@ -164,7 +164,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         final Ghost orangeGhost = factory.createOrangeGhost();
 
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        final HouseEntity house = level.entities().entitySet().uniqueOfType(HouseEntity.class);
+        final House house = level.entities().entitySet().uniqueOfType(House.class);
 
         // Special tiles where attacking ghosts cannot move up
         final Set<Vector2i> oneWayTiles = terrain.tiles()

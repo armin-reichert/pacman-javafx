@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.gamescene.d3;
 
 import de.amr.pacmanfx.core.entities.ghost.Ghost;
-import de.amr.pacmanfx.core.entities.house.HouseEntity;
+import de.amr.pacmanfx.core.entities.house.House;
 import de.amr.pacmanfx.core.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorSchemeImpl;
@@ -52,7 +52,7 @@ public class DefaultFactory3D implements Factory3D {
 
     @Override
     public Maze3D createMaze3D(
-        HouseEntity house,
+        House house,
         TerrainLayer terrain,
         WorldSettings settings,
         WorldMapColorSchemeImpl colorScheme,
