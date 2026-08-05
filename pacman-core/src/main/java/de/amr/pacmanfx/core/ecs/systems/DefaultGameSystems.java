@@ -4,10 +4,10 @@
 
 package de.amr.pacmanfx.core.ecs.systems;
 
+import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.entities.bonus.system.BonusMoveAndJumpSystem;
 import de.amr.pacmanfx.core.model.entities.bonus.system.BonusStateSystem;
 import de.amr.pacmanfx.core.model.entities.bonus.system.BonusWorldMovementPolicy;
-import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.entities.ghost.system.*;
 import de.amr.pacmanfx.core.model.entities.pac.system.*;
 
@@ -50,11 +50,7 @@ public class DefaultGameSystems implements GameSystems {
         pacDigestion = new PacDigestionSystem();
         pacWorldMovementPolicy = new PacWorldMovementPolicy();
         pacAutoSteering = new PacAutoSteeringSystem();
-        pacState = new PacStateSystem(
-            navigator,
-            pacWorldMovementPolicy,
-            pacDigestion
-        );
+        pacState = new PacStateSystem();
         pacAnimation = new PacAnimationSystem(spriteAnim);
     }
 

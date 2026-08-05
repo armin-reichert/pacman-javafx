@@ -197,7 +197,8 @@ public abstract class CommonGamePlay implements GamePlay {
     private void updatePac(GameContext gameContext, GameLevel level, Pac pac) {
         gameContext.systems().pacAutoSteering().update(level, pac);
         gameContext.systems().pacPower().update(gameContext, pac);
-        gameContext.systems().pacState().update(pac, level);
+        gameContext.systems().pacDigestion().update(pac);
+        gameContext.systems().pacState().update(pac);
 
         //TODO move into system
         final PacPowerComp power = pac.power();
@@ -303,7 +304,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
         scorePoints(gameContext, rules.scoringRules().pointsForPellet(), level.number());
         model.gateKeeper().registerFoodEaten(level);
-        gameContext.systems().pacDigestion().onPacEatsPellet(pac, rules);
+        gameContext.systems().pacDigestion().digestPellet(pac, rules);
     }
 
     @Override
@@ -319,7 +320,7 @@ public abstract class CommonGamePlay implements GamePlay {
         scorePoints(gameContext, rules.scoringRules().pointsForEnergizer(), level.number());
         model.gateKeeper().registerFoodEaten(level);
         level.clearGhostKillChain();
-        gameContext.systems().pacDigestion().onPacEatsEnergizer(pac, rules);
+        gameContext.systems().pacDigestion().digestEnergizer(pac, rules);
         gameContext.systems().pacPower().start(gameContext, pac);
     }
 

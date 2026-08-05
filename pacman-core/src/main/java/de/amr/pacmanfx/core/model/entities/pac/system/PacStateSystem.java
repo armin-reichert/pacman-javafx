@@ -4,33 +4,14 @@
 
 package de.amr.pacmanfx.core.model.entities.pac.system;
 
-import de.amr.pacmanfx.core.ecs.comp.MovementComp;
 import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
-import de.amr.pacmanfx.core.ecs.systems.WorldMovementPolicy;
-import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.entities.pac.PacState;
-import de.amr.pacmanfx.core.model.entities.pac.comp.PacDigestionComp;
 import de.amr.pacmanfx.core.model.entities.pac.comp.PacStateComp;
-import de.amr.pacmanfx.core.model.level.GameLevel;
 
 import static java.util.Objects.requireNonNull;
 
 public class PacStateSystem {
-
-    private final WorldNavigationSystem navigator;
-    private final WorldMovementPolicy movementPolicy;
-    private final PacDigestionSystem digestionSystem;
-
-    public PacStateSystem(
-        WorldNavigationSystem navigator,
-        WorldMovementPolicy movementPolicy,
-        PacDigestionSystem digestionSystem)
-    {
-        this.navigator = navigator;
-        this.movementPolicy = movementPolicy;
-        this.digestionSystem = digestionSystem;
-    }
 
     public void setState(Pac pac, PacState pacState) {
         requireNonNull(pac);
@@ -38,21 +19,12 @@ public class PacStateSystem {
         pac.state().setState(pacState);
     }
 
-    public void update(Pac pac, GameLevel level) {
+    public void update(Pac pac) {
         final PacStateComp state = pac.state();
-        final PacDigestionComp digestion = pac.digestion();
-
-        digestionSystem.update(pac);
-
         switch (state.pacState()) {
             case ACTIVE -> state.setMoving(!isStandingStill(pac));
             case DEAD -> state.setMoving(false);
         }
-
-        if (digestion.restingTicks() == PacDigestionComp.REST_FOREVER || digestion.restingTicks() > 0) {
-            return;
-        }
-
     }
 
     public boolean isStandingStill(Pac pac) {

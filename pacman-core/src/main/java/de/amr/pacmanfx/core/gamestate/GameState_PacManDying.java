@@ -13,8 +13,6 @@ import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.entities.ghost.comp.ElroyComp;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.entities.pac.PacState;
-import de.amr.pacmanfx.core.model.entities.pac.comp.PacAnimationComp;
-import de.amr.pacmanfx.core.model.entities.pac.system.PacAnimationSystem;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 
 import static java.util.Objects.requireNonNull;
@@ -92,7 +90,7 @@ public final class GameState_PacManDying extends GameState {
         }
         else {
             level.heartbeat().triggerPulse();
-            gameContext.systems().pacState().update(pac, level);
+            gameContext.systems().pacState().update(pac);
         }
 
         gameContext.systems().pacAnimation().update(pac);
