@@ -10,7 +10,7 @@ import org.tinylog.Logger;
 public final class PacPowerSystem {
 
     public void update(Pac pac) {
-
+        pac.power().timer().doTick();
     }
 
     public void start(Pac pac, long ticks) {

@@ -188,7 +188,6 @@ public abstract class CommonGamePlay implements GamePlay {
         if (gateKeeper != null) {
             gateKeeper.unlockGhostIfPossible(gameContext);
         }
-        updatePacPower(gameContext, pac);
         updatePac(gameContext, level, pac);
         gameContext.systems().ghostState().update(gameContext);
         gameContext.systems().bonusState().update(gameContext);
@@ -200,6 +199,7 @@ public abstract class CommonGamePlay implements GamePlay {
             }
         });
 
+        checkPacPower(gameContext, pac);
         detectCollisions(gameContext);
         evalCollisions(gameContext);
     }
@@ -221,16 +221,10 @@ public abstract class CommonGamePlay implements GamePlay {
         }
     }
 
-
-    private void updatePacPower(GameContext gameContext, Pac pac) {
-        requireNonNull(gameContext);
-        requireNonNull(pac);
-
+    private void checkPacPower(GameContext gameContext, Pac pac) {
         final PacPowerComp power = pac.power();
-        final GameLevel level = gameContext.assertLevel();
-
         if (power.isPowerActive()) {
-            power.timer().doTick();
+            final GameLevel level = gameContext.assertLevel();
             if (power.isPowerStartingFading(level)) {
                 gameContext.eventManager().publishGameEvent(new PacPowerFadesEvent(pac));
             }
