@@ -7,6 +7,7 @@ package de.amr.pacmanfx.core.gameplay;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
+import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
@@ -17,6 +18,9 @@ import de.amr.pacmanfx.core.event.gameplay.LevelStartedEvent;
 import de.amr.pacmanfx.core.event.gameplay.SpecialScoreEvent;
 import de.amr.pacmanfx.core.event.ghost.GhostEatenEvent;
 import de.amr.pacmanfx.core.event.pac.PacEatsFoodEvent;
+import de.amr.pacmanfx.core.event.pac.PacGetsPowerEvent;
+import de.amr.pacmanfx.core.event.pac.PacLostPowerEvent;
+import de.amr.pacmanfx.core.event.pac.PacPowerFadesEvent;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.entities.ActorAnimationID;
@@ -46,6 +50,7 @@ import org.tinylog.Logger;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
 import static java.util.Objects.requireNonNull;
@@ -54,6 +59,10 @@ import static java.util.Objects.requireNonNull;
  * Common game play functionality. Can be modified by game-variant specific subclasses.
  */
 public abstract class CommonGamePlay implements GamePlay {
+
+    private static final Set<GhostState> TURNBACK_STATES = Set.of(
+        GhostState.FRIGHTENED, GhostState.HUNTING_PAC
+    );
 
     @Override
     public void resetForNewGame(GameContext gameContext) {
@@ -179,6 +188,7 @@ public abstract class CommonGamePlay implements GamePlay {
         if (gateKeeper != null) {
             gateKeeper.unlockGhostIfPossible(gameContext);
         }
+        updatePacPower(gameContext, pac);
         updatePac(gameContext, level, pac);
         gameContext.systems().ghostState().update(gameContext);
         gameContext.systems().bonusState().update(gameContext);
@@ -194,10 +204,58 @@ public abstract class CommonGamePlay implements GamePlay {
         evalCollisions(gameContext);
     }
 
+    private void startPacPower(GameContext gameContext, Pac pac) {
+        final PacPowerComp power = pac.requireComponent(PacPowerComp.class);
+
+        final GameSystems sys = gameContext.systems();
+
+        final GameLevel level = gameContext.assertLevel();
+        level.ghostsInAnyOfStates(TURNBACK_STATES).forEach(sys.worldNavigator()::requestTurnBack);
+
+        final float seconds = level.pacPowerSeconds();
+        if (seconds > 0) {
+            level.huntingRules().stop();
+            final long ticks = TickTimer.secToTicks(seconds);
+            power.timer().restartTicks(ticks);
+            Logger.debug("Power timer activated, {} ticks ({0.00} sec)", ticks, seconds);
+            level.ghostsInState(GhostState.HUNTING_PAC)
+                .forEach(ghost -> sys.ghostState().changeState(gameContext, ghost, GhostState.FRIGHTENED));
+            gameContext.eventManager().publishGameEvent(new PacGetsPowerEvent(pac));
+        }
+    }
+
+
+    private void updatePacPower(GameContext gameContext, Pac pac) {
+        requireNonNull(gameContext);
+        requireNonNull(pac);
+
+        final PacPowerComp power = pac.power();
+        final GameLevel level = gameContext.assertLevel();
+
+        if (power.isPowerActive()) {
+            power.timer().doTick();
+            if (power.isPowerStartingFading(level)) {
+                gameContext.eventManager().publishGameEvent(new PacPowerFadesEvent(pac));
+            }
+            else if (power.isPowerOver()) {
+                power.reset();
+                level.clearGhostKillChain();
+
+                // Resume hunting
+                level.huntingRules().start();
+                level.ghostsInState(GhostState.FRIGHTENED)
+                    .forEach(ghost -> gameContext.systems().ghostState().changeState(gameContext, ghost, GhostState.HUNTING_PAC));
+
+                gameContext.eventManager().publishGameEvent(new PacLostPowerEvent(pac));
+            }
+        }
+    }
+
+
     private void updatePac(GameContext gameContext, GameLevel level, Pac pac) {
         gameContext.systems().pacAutoSteering().update(level, pac);
-        gameContext.systems().pacPower().update(gameContext, pac);
         gameContext.systems().pacDigestion().update(pac);
+        gameContext.systems().pacPower().update(pac);
         gameContext.systems().pacState().update(pac);
 
         //TODO move into system
@@ -321,7 +379,7 @@ public abstract class CommonGamePlay implements GamePlay {
         model.gateKeeper().registerFoodEaten(level);
         level.clearGhostKillChain();
         gameContext.systems().pacDigestion().digestEnergizer(pac, rules);
-        gameContext.systems().pacPower().start(gameContext, pac);
+        startPacPower(gameContext, pac);
     }
 
     @Override
