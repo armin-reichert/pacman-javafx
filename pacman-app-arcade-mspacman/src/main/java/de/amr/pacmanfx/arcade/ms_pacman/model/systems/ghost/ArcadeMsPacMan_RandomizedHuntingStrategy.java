@@ -68,7 +68,7 @@ public abstract class ArcadeMsPacMan_RandomizedHuntingStrategy implements GhostH
         }
 
         final boolean changeWishDirection = !ghost.worldNavigation().info.moved
-          || (ghost.worldNavigation().isNewTileEntered() && terrain.isIntersection(tile));
+          || (ghost.worldNavigation().isNewTileEntered() && level.isIntersection(tile));
         if (changeWishDirection) {
             selectRandomWishDir(ghost, level, worldMovementPolicy);
         }

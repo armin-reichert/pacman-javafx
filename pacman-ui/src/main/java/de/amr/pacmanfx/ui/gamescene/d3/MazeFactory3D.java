@@ -1,11 +1,11 @@
 package de.amr.pacmanfx.ui.gamescene.d3;
 
-import de.amr.pacmanfx.core.entities.house.ArcadeHouse;
+import de.amr.basics.util.Ufx;
+import de.amr.pacmanfx.core.entities.house.HouseEntity;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorSchemeImpl;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.house.MazeHouse3D;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
-import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -22,7 +22,10 @@ public class MazeFactory3D {
     public static final int WALL_TOP_SPECULAR_POWER = 128;
 
     public Maze3D createMaze3D(
-        TerrainLayer terrain, WorldSettings config, WorldMapColorSchemeImpl colorScheme,
+        HouseEntity house,
+        TerrainLayer terrain,
+        WorldSettings config,
+        WorldMapColorSchemeImpl colorScheme,
         AnimationRegistry animationRegistry)
     {
         requireNonNull(terrain);
@@ -33,17 +36,13 @@ public class MazeFactory3D {
         final Map<String, PhongMaterial> materials = createMazeMaterialMap(colorScheme);
 
         final var maze3D = new Maze3D(terrain);
-        maze3D.build(materials, config.maze(), config.floor());
+        maze3D.build(house, materials, config.maze(), config.floor());
 
         bindFloorMaterialColor(maze3D, materials.get("floorMaterial"));
         bindWallBaseMaterialColor(maze3D, materials.get("wallBaseMaterial"), Color.valueOf(colorScheme.wallStroke()));
 
-        // Currently, only Arcade house is supported
-        terrain.optHouse()
-            .filter(ArcadeHouse.class::isInstance)
-            .map(ArcadeHouse.class::cast)
-            .map(house -> new MazeHouse3D(colorScheme, config.house(), animationRegistry, house))
-            .ifPresent(maze3D::setHouse3D);
+        final var house3D = new MazeHouse3D(colorScheme, config.house(), animationRegistry, house);
+        maze3D.setHouse3D(house3D);
 
         return maze3D;
     }

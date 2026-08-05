@@ -192,7 +192,7 @@ public final class ArcadeHouseGateKeeper {
     public void registerFoodEaten(GameLevel level) {
         requireNonNull(level);
 
-        final House house = level.worldMap().terrainLayer().assertHouse();
+        final HouseEntity house = level.entities().entitySet().uniqueOfType(HouseEntity.class);
 
         if (globalCounterEnabled) {
             if (level.ghost(GhostPersonality.ORANGE_GHOST_POKEY).state() == GhostState.LOCKED && globalCounterValue == 32) {
@@ -217,7 +217,7 @@ public final class ArcadeHouseGateKeeper {
         final GameSystems sys = gameContext.systems();
 
         final GameLevel level = gameContext.assertLevel();
-        final House house = level.worldMap().terrainLayer().assertHouse();
+        final HouseEntity house = level.entities().entitySet().uniqueOfType(HouseEntity.class);
         final Ghost blinky = level.ghost(GhostPersonality.RED_GHOST_SHADOW);
 
         if (blinky.state() == GhostState.LOCKED) {

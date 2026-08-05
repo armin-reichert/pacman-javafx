@@ -11,8 +11,8 @@ import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.WorldMovementPolicy;
 import de.amr.pacmanfx.core.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.ghost.GhostState;
+import de.amr.pacmanfx.core.entities.house.HouseEntity;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.entities.house.House;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 
 import static de.amr.basics.math.Direction.*;
@@ -27,13 +27,13 @@ public class GhostHouseAccessSystem {
     public void stayInHouse(GameContext gameContext, Ghost ghost, float speed) {
         final GameSystems sys = gameContext.systems();
 
-        final House house = ghost.worldPlacement().house();
+        final HouseEntity house = ghost.worldPlacement().house();
         final PositionComp position = ghost.pos();
 
         if (house.isVisitedBy(ghost)) {
             // locked inside house: jumping
-            final float minY = (house.minTile().y() + 1) * WorldMap.TS + WorldMap.HTS;
-            final float maxY = (house.maxTile().y() - 1) * WorldMap.TS - WorldMap.HTS;
+            final float minY = (house.floorplan().minTile().y() + 1) * WorldMap.TS + WorldMap.HTS;
+            final float maxY = (house.floorplan().maxTile().y() - 1) * WorldMap.TS - WorldMap.HTS;
             if (position.y() <= minY) {
                 sys.worldNavigator().setMoveDir(ghost, DOWN);
                 sys.worldNavigator().setWishDir(ghost, DOWN);
@@ -63,8 +63,8 @@ public class GhostHouseAccessSystem {
         final GameSystems sys = gameContext.systems();
 
         final PositionComp position = ghost.pos();
-        final House house = ghost.worldPlacement().house();
-        final Vector2f houseEntryPosition = house.entryPosition();
+        final HouseEntity house = ghost.worldPlacement().house();
+        final Vector2f houseEntryPosition = house.floorplan().entryPosition();
 
         if (position.y() <= houseEntryPosition.y()) {
             position.setY(houseEntryPosition.y());
@@ -106,8 +106,9 @@ public class GhostHouseAccessSystem {
         final GameSystems sys = gameContext.systems();
 
         final PositionComp position = ghost.pos();
-        final House house = ghost.worldPlacement().house();
-        final Vector2f revivalPosition = WorldMap.halfTileRightOf(house.ghostRevivalTile(ghost.personality()));
+        final HouseEntity house = ghost.worldPlacement().house();
+        final Vector2f revivalPosition = WorldMap.halfTileRightOf(
+            house.floorplan().ghostRevivalTile(ghost.personality()));
         final Vector2f positionVec = position.asVector2f();
         if (positionVec.roughlyEquals(revivalPosition, 0.5f * speed, 0.5f * speed)) {
             position.set(revivalPosition.x(), revivalPosition.y());
@@ -141,8 +142,8 @@ public class GhostHouseAccessSystem {
         final GameLevel level = gameContext.assertLevel();
 
         final PositionComp position = ghost.pos();
-        final House house = ghost.worldPlacement().house();
-        final Vector2f houseEntry = house.entryPosition();
+        final HouseEntity house = ghost.worldPlacement().house();
+        final Vector2f houseEntry = house.floorplan().entryPosition();
         final Vector2f positionVec =  position.asVector2f();
         if (positionVec.roughlyEquals(houseEntry, speed, 0)) {
             position.set(houseEntry.x(), houseEntry.y());
@@ -155,7 +156,7 @@ public class GhostHouseAccessSystem {
         }
         else {
             //TODO use system method
-            ghost.worldNavigation().setTargetTile(house.leftDoorTile());
+            ghost.worldNavigation().setTargetTile(house.floorplan().leftDoorTile());
             sys.worldNavigator().setSpeed(ghost, speed);
             sys.worldNavigator().navigateTowardsTarget(ghost, level, policy);
             sys.worldNavigator().tryMovingOrTeleporting(ghost, level, policy);

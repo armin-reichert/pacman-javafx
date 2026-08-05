@@ -5,12 +5,28 @@
 package de.amr.pacmanfx.core.gameplay;
 
 import de.amr.basics.math.Direction;
+import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
+import de.amr.pacmanfx.core.entities.ActorAnimationID;
+import de.amr.pacmanfx.core.entities.bonus.Bonus;
+import de.amr.pacmanfx.core.entities.bonus.BonusState;
+import de.amr.pacmanfx.core.entities.ghost.Ghost;
+import de.amr.pacmanfx.core.entities.ghost.GhostState;
+import de.amr.pacmanfx.core.entities.house.ArcadeHouseGateKeeper;
+import de.amr.pacmanfx.core.entities.house.HouseEntity;
+import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
+import de.amr.pacmanfx.core.entities.livescounter.LivesCounter;
+import de.amr.pacmanfx.core.entities.livescounter.system.LivesCounterSystem;
+import de.amr.pacmanfx.core.entities.pac.Pac;
+import de.amr.pacmanfx.core.entities.pac.comp.PacPowerComp;
+import de.amr.pacmanfx.core.entities.pac.system.PacDigestionSystem;
+import de.amr.pacmanfx.core.entities.score.PropertyFileScore;
+import de.amr.pacmanfx.core.entities.score.Score;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.event.bonus.BonusEatenEvent;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
@@ -21,29 +37,14 @@ import de.amr.pacmanfx.core.event.pac.PacEatsFoodEvent;
 import de.amr.pacmanfx.core.event.pac.PacGetsPowerEvent;
 import de.amr.pacmanfx.core.event.pac.PacLostPowerEvent;
 import de.amr.pacmanfx.core.event.pac.PacPowerFadesEvent;
-import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.UpdatableEntity;
-import de.amr.pacmanfx.core.entities.ActorAnimationID;
-import de.amr.pacmanfx.core.entities.bonus.Bonus;
-import de.amr.pacmanfx.core.entities.bonus.BonusState;
-import de.amr.pacmanfx.core.entities.ghost.Ghost;
-import de.amr.pacmanfx.core.entities.ghost.GhostState;
-import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
-import de.amr.pacmanfx.core.entities.livescounter.LivesCounter;
-import de.amr.pacmanfx.core.entities.livescounter.system.LivesCounterSystem;
-import de.amr.pacmanfx.core.entities.pac.Pac;
-import de.amr.pacmanfx.core.entities.pac.comp.PacPowerComp;
-import de.amr.pacmanfx.core.entities.pac.system.PacDigestionSystem;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessage;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
+import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.rules.ActorSpeedRules;
 import de.amr.pacmanfx.core.model.rules.CollisionStrategy;
 import de.amr.pacmanfx.core.model.rules.GameRules;
-import de.amr.pacmanfx.core.entities.score.PropertyFileScore;
-import de.amr.pacmanfx.core.entities.score.Score;
-import de.amr.pacmanfx.core.entities.house.ArcadeHouseGateKeeper;
-import de.amr.pacmanfx.core.entities.house.House;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -54,7 +55,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
+import static de.amr.basics.math.Vector2f.vec2_float;
 import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -96,8 +99,8 @@ public abstract class CommonGamePlay implements GamePlay {
         final GameSystems sys = gameContext.systems();
 
         final GameLevel level = gameContext.assertLevel();
+        final HouseEntity house = level.entities().entitySet().uniqueOfType(HouseEntity.class);
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        final House house = terrain.optHouse().orElseThrow();
 
         final Pac pac = level.entities().pac();
         pac.reset(); // initially invisible!
@@ -112,7 +115,7 @@ public abstract class CommonGamePlay implements GamePlay {
         level.entities().ghosts().forEach(ghost -> {
             ghost.reset(); // initially invisible!
             ghost.pos().set(ghost.worldPlacement().startPosition());
-            final Direction direction = house.ghostStartDirection(ghost.personality());
+            final Direction direction = house.floorplan().ghostStartDirection(ghost.personality());
             sys.worldNavigator().setMoveDir(ghost, direction);
             sys.worldNavigator().setWishDir(ghost, direction);
             sys.ghostState().changeState(gameContext, ghost, GhostState.LOCKED);
@@ -171,7 +174,7 @@ public abstract class CommonGamePlay implements GamePlay {
     @Override
     public void showLevelMessage(GameLevel level, GameLevelMessageType type) {
         final var message = new GameLevelMessage(type);
-        message.pos().set(level.worldMap().terrainLayer().messageCenterPosition());
+        message.pos().set(messageCenterPosition(level));
         level.setMessage(message);
     }
 
@@ -499,6 +502,17 @@ public abstract class CommonGamePlay implements GamePlay {
         } catch (IOException x) {
             Logger.error(x, "Could not update high-score");
         }
+    }
+
+    /**
+     * @return position where level messages ("READY!", "GAME OVER") are displayed.
+     */
+    public Vector2f messageCenterPosition(GameLevel level) {
+        final HouseEntity house = level.entities().entitySet().uniqueOfType(HouseEntity.class);
+        Vector2i houseSize = house.sizeInTiles();
+        float cx = tilesPx(house.floorplan().minTile().x() + houseSize.x() * 0.5f);
+        float cy = tilesPx(house.floorplan().minTile().y() + houseSize.y() + 1);
+        return vec2_float(cx, cy);
     }
 
     // private

@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.ui.gamescene.d2;
 
+import de.amr.pacmanfx.core.entities.house.HouseEntity;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -57,8 +58,8 @@ public class GenericMapRenderer extends BaseRenderer {
         terrainRenderer.setMapColoring(newColoring);
     }
 
-    public void drawMap(GameLevel gameLevel, RenderInfo info) {
-        final WorldMap worldMap = gameLevel.worldMap();
+    public void drawMap(GameLevel level, RenderInfo info) {
+        final WorldMap worldMap = level.worldMap();
         if (info.getBoolean(CommonRenderInfoKey.MAP_BRIGHT)) {
             terrainRenderer.setMapColoring(info.getBoolean(CommonRenderInfoKey.ENERGIZER_VISIBLE) ? blinkingOnMapColoring : blinkingOffMapColoring);
             terrainRenderer.draw(worldMap);
@@ -68,11 +69,12 @@ public class GenericMapRenderer extends BaseRenderer {
             terrainRenderer.setMapColoring(mapColoring);
             terrainRenderer.draw(worldMap);
 
-            worldMap.terrainLayer().optHouse().ifPresent(house -> {
+            final HouseEntity house = level.entities().entitySet().uniqueOfType(HouseEntity.class);
+            if (house != null) {
                 houseRenderer.setMapColoring(mapColoring);
-                houseRenderer.drawHouse(house.minTile(), house.sizeInTiles(),
+                houseRenderer.drawHouse(house.floorplan().minTile(), house.sizeInTiles(),
                     terrainRenderer.borderWallFullWidth(),terrainRenderer.borderWallInnerWidth());
-            });
+            }
 
             // Color scheme is set by the map selector
             final FoodLayer foodLayer = worldMap.foodLayer();

@@ -6,9 +6,8 @@ package de.amr.pacmanfx.core.model.world.map;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.entities.HPortal;
-import de.amr.pacmanfx.core.entities.house.House;
+import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.obstacle.Obstacle;
 import de.amr.pacmanfx.core.model.world.obstacle.ObstacleBuilder;
 import org.tinylog.Logger;
@@ -20,7 +19,6 @@ import static de.amr.basics.math.Vector2f.vec2_float;
 import static de.amr.pacmanfx.core.model.world.map.TerrainTile.TUNNEL;
 import static de.amr.pacmanfx.core.model.world.map.TerrainTile.isBlocked;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tile;
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName.*;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
@@ -34,7 +32,6 @@ public final class TerrainLayer extends WorldMapLayer {
     private final Vector2i[] scatterTiles = new Vector2i[4];
     private Vector2f pacStartPosition;
     private HPortal[] hPortals;
-    private House house;
     private Set<Obstacle> obstacleSet; // uninitialized!
 
     public TerrainLayer(int numRows, int numCols) {
@@ -56,7 +53,6 @@ public final class TerrainLayer extends WorldMapLayer {
         scatterTiles[2] = getTilePropertyOrDefault(POS_SCATTER_CYAN_GHOST,   tile(numRows() - emptyRowsBelowMaze(), numCols() - 1));
         scatterTiles[3] = getTilePropertyOrDefault(POS_SCATTER_ORANGE_GHOST, tile(numRows() - emptyRowsBelowMaze(), 0));
 
-        this.house = layer.house; // TODO make copy
         if (layer.obstacleSet != null) {
             this.obstacleSet = Set.copyOf(layer.obstacleSet);
         }
@@ -68,34 +64,6 @@ public final class TerrainLayer extends WorldMapLayer {
 
     public Vector2i ghostScatterTile(GhostPersonality personality) {
         return scatterTiles[requireNonNull(personality).ordinal()];
-    }
-
-    public void setHouse(House house) {
-        this.house = house;
-    }
-
-    public House assertHouse() {
-        return optHouse().orElseThrow();
-    }
-
-    public Optional<House> optHouse() {
-        return Optional.ofNullable(house);
-    }
-
-    /**
-     * @return position where level messages ("READY!", "GAME OVER") are displayed.
-     */
-    public Vector2f messageCenterPosition() {
-        if (house != null) {
-            Vector2i houseSize = house.sizeInTiles();
-            float cx = tilesPx(house.minTile().x() + houseSize.x() * 0.5f);
-            float cy = tilesPx(house.minTile().y() + houseSize.y() + 1);
-            return vec2_float(cx, cy);
-        }
-        else {
-            Vector2i worldSize = sizeInPixel();
-            return vec2_float(worldSize.x() * 0.5f, worldSize.y() * 0.5f); // should not happen
-        }
     }
 
     public List<HPortal> horizontalPortals() { return Arrays.asList(hPortals); }
@@ -166,22 +134,6 @@ public final class TerrainLayer extends WorldMapLayer {
 
     public boolean isTunnel(Vector2i tile) {
         return !outOfBounds(tile) && content(tile) == TUNNEL.$;
-    }
-
-    public boolean isIntersection(Vector2i tile) {
-        if (outOfBounds(tile) || isTileBlocked(tile)) {
-            return false;
-        }
-        if (house != null && house.contains(tile)) {
-            return false;
-        }
-        long inaccessible = 0;
-        inaccessible += neighborTilesOutsideWorld(tile).count();
-        inaccessible += neighborTilesInsideWorld(tile).filter(this::isTileBlocked).count();
-        if (house != null) {
-            inaccessible += neighborTilesInsideWorld(tile).filter(house::isDoorAt).count();
-        }
-        return inaccessible <= 1;
     }
 
     /**

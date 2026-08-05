@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.entities.house.ArcadeHouse;
+import de.amr.pacmanfx.core.entities.house.HouseFactory;
 import de.amr.pacmanfx.core.model.world.map.*;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import org.tinylog.Logger;
@@ -30,7 +30,7 @@ public class Action_PlaceArcadeHouse extends EditorAction<Void> {
 
     @Override
     public Void execute() {
-        final Vector2i houseSize = ArcadeHouse.SIZE_IN_TILES;
+        final Vector2i houseSize = HouseFactory.ARCADE_HOUSE_SIZE_IN_TILES;
         final TerrainLayer terrain = worldMap.terrainLayer();
         final Map<String, String> terrainProperties = terrain.propertyMap();
         final Vector2i maxTile = minTile.plus(houseSize).minus(1, 1);
@@ -48,7 +48,7 @@ public class Action_PlaceArcadeHouse extends EditorAction<Void> {
         // place house tile content
         for (int y = 0; y < houseSize.y(); ++y) {
             for (int x = 0; x < houseSize.x(); ++x) {
-                terrain.setContent(minTile.y() + y, minTile.x() + x, ArcadeHouse.CONTENT[y][x]);
+                terrain.setContent(minTile.y() + y, minTile.x() + x, HouseFactory.ARCADE_HOUSE_TILES[y][x]);
             }
         }
         editor.setTerrainMapChanged();

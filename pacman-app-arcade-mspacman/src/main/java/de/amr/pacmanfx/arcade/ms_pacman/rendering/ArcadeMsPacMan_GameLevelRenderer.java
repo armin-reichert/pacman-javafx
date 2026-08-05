@@ -5,6 +5,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
+import de.amr.pacmanfx.core.entities.house.HouseEntity;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessage;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
@@ -54,6 +55,7 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
     }
 
     protected void drawMap(GameLevel level, RenderInfo info) {
+        final HouseEntity house = level.entities().entitySet().uniqueOfType(HouseEntity.class);
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final float emptySpaceOverMazePixels = tilesPx(terrain.emptyRowsOverMaze());
         final int colorMapIndex = level.worldMap().getConfigValue(WorldMapConfigKey.COLOR_MAP_INDEX);
@@ -65,7 +67,7 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
             if (info.getBoolean(CommonRenderInfoKey.MAP_BRIGHT)) {
                 final Image brightMazeImage = assets.image("maze.bright.%d".formatted(colorMapIndex));
                 ctx.drawImage(brightMazeImage, 0, emptySpaceOverMazePixels);
-                hideGhostHouseDoors(terrain);
+                hideGhostHouseDoors(house);
             }
             else {
                 final RectShort emptyMazeSprite = spriteSheet().findSprites(SpriteID.EMPTY_MAPS)[colorMapIndex];
@@ -94,16 +96,14 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         ctx.restore();
     }
 
-    private void hideGhostHouseDoors(TerrainLayer terrain) {
-        terrain.optHouse().ifPresent(house -> {
-            ctx.setFill(backgroundColor());
-            if (house.leftDoorTile() != null) {
-                fillSquareAtTileCenter(house.leftDoorTile(), TS + 0.5);
-            }
-            if (house.rightDoorTile() != null) {
-                fillSquareAtTileCenter(house.rightDoorTile(), TS + 0.5);
-            }
-        });
+    private void hideGhostHouseDoors(HouseEntity house) {
+        ctx.setFill(backgroundColor());
+        if (house.floorplan().leftDoorTile() != null) {
+            fillSquareAtTileCenter(house.floorplan().leftDoorTile(), TS + 0.5);
+        }
+        if (house.floorplan().rightDoorTile() != null) {
+            fillSquareAtTileCenter(house.floorplan().rightDoorTile(), TS + 0.5);
+        }
     }
 
     protected void drawGameLevelMessage(GameLevelMessage msg) {

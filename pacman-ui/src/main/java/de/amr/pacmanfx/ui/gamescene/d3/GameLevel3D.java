@@ -10,16 +10,16 @@ import de.amr.basics.math.Vector3f;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.entities.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.ghost.Ghost;
+import de.amr.pacmanfx.core.entities.house.HouseEntity;
 import de.amr.pacmanfx.core.entities.levelCounter.LevelCounter;
 import de.amr.pacmanfx.core.entities.livescounter.LivesCounter;
 import de.amr.pacmanfx.core.entities.pac.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelEntitySet;
-import de.amr.pacmanfx.core.entities.house.House;
+import de.amr.pacmanfx.core.model.GhostPersonality;
+import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -34,11 +34,10 @@ import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ExplosionConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimationConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter.LevelCounterView3DAnimationID;
-import de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter.LevelCounterView3DSystem;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter.LevelCounterView3DComp;
-import de.amr.pacmanfx.ui.gamescene.d3.entities.livescounter.LivesCounterView3DSystem;
+import de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter.LevelCounterView3DSystem;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.livescounter.LivesCounterView3DComp;
-import de.amr.pacmanfx.uilib.entities3D.bonus.Bonus3DSettings;
+import de.amr.pacmanfx.ui.gamescene.d3.entities.livescounter.LivesCounterView3DSystem;
 import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Pellet3DSettings;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -48,10 +47,7 @@ import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.entities3D.animation.EnergizerParticle3D;
 import de.amr.pacmanfx.uilib.entities3D.animation.Pool;
-import de.amr.pacmanfx.uilib.entities3D.bonus.Bonus3DAnimationID;
-import de.amr.pacmanfx.uilib.entities3D.bonus.Bonus3DMovementSystem;
-import de.amr.pacmanfx.uilib.entities3D.bonus.Bonus3DViewComp;
-import de.amr.pacmanfx.uilib.entities3D.bonus.Bonus3DViewSystem;
+import de.amr.pacmanfx.uilib.entities3D.bonus.*;
 import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3D;
 import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3DAppearanceController;
 import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3DTransformController;
@@ -315,8 +311,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private void createMaze3D() {
         final WorldMapColorSchemeImpl colorScheme = gameVariantConfig.renderConfig().colorScheme(level.worldMap(), gameVariantConfig.worldSettings());
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-
+        final HouseEntity house = level.entities().entitySet().uniqueOfType(HouseEntity.class);
         maze3D = gameVariantConfig.factory3D().createMaze3D(
+            house,
             terrain,
             gameVariantConfig.worldSettings(),
             colorScheme,
@@ -444,14 +441,16 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private void createMessageManager() {
         messageManager = new MessageManager3D(animationRegistry, this);
+
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        terrain.optHouse().ifPresentOrElse(
-            house -> messageManager.setMessageCenter(MessageManager3D.MessageType.READY, house.centerPositionUnderHouse()),
-            () -> {
-                Logger.error("No house in this game level! WTF?");
-                final double x = terrain.numCols() * WorldMap.HTS, y = terrain.numRows() * WorldMap.HTS;
-                messageManager.setMessageCenter(MessageManager3D.MessageType.READY, vec2_float(x, y));
-            });
+        final HouseEntity house = level.entities().entitySet().uniqueOfType(HouseEntity.class);
+        if (house != null) {
+            messageManager.setMessageCenter(MessageManager3D.MessageType.READY, house.centerPositionUnderHouse());
+        } else {
+            Logger.error("No house in this game level! WTF?");
+            final double x = terrain.numCols() * WorldMap.HTS, y = terrain.numRows() * WorldMap.HTS;
+            messageManager.setMessageCenter(MessageManager3D.MessageType.READY, vec2_float(x, y));
+        }
         messageManager.setMessageCenter(MessageManager3D.MessageType.TEST,
             vec2_float(terrain.numCols() * WorldMap.HTS, (terrain.numRows() - 2) * WorldMap.TS));
     }
@@ -501,7 +500,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             }
         );
 
-        final House house = level.worldMap().terrainLayer().assertHouse();
+        final HouseEntity house = level.entities().entitySet().uniqueOfType(HouseEntity.class);
 
         animationRegistry.register(AnimationID.PARTICLES, new ParticlesAnimation3D(
             house,

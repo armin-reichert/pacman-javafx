@@ -146,7 +146,7 @@ public class RuleGuidedPacSteering implements Steering {
         final Vector2i pacTile = WorldNavigationSystem.computeTile(pac);
 
         // when not escaping ghost, keep move direction at least until next intersection
-        if (worldNavigation.info.moved && !level.worldMap().terrainLayer().isIntersection(pacTile))
+        if (worldNavigation.info.moved && !level.isIntersection(pacTile))
             return;
 
         if (!data.frightenedGhosts.isEmpty()

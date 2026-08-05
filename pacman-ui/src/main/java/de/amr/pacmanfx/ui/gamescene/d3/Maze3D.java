@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.gamescene.d3;
 import de.amr.basics.StopWatch;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.entities.house.House;
+import de.amr.pacmanfx.core.entities.house.HouseEntity;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.obstacle.Obstacle;
@@ -70,13 +70,14 @@ public class Maze3D extends Group implements DisposableGraphicsObject {
     }
 
     public void build(
+        HouseEntity house,
         Map<String, PhongMaterial> materials,
         Maze3DSettings maze3DSettings,
         Floor3DSettings floor3DSettings)
     {
         this.materials = materials;
         buildFloor(drawMode, floor3DSettings);
-        addObstacles(drawMode, maze3DSettings);
+        addObstacles(house, drawMode, maze3DSettings);
     }
 
     public Map<String, PhongMaterial> materials() {
@@ -119,10 +120,9 @@ public class Maze3D extends Group implements DisposableGraphicsObject {
         return particlesGroup;
     }
 
-    private void addObstacles(ObjectProperty<DrawMode> drawMode, Maze3DSettings maze3DSettings) {
+    private void addObstacles(HouseEntity house, ObjectProperty<DrawMode> drawMode, Maze3DSettings maze3DSettings) {
         final float wallThickness = maze3DSettings.obstacleWallThickness();
         final TerrainRenderer3D renderer3D = new TerrainRenderer3D();
-        final House house = terrain.optHouse().orElse(null);
         final AtomicInteger wallCount = new AtomicInteger(0);
         renderer3D.setOnWallCreated(wall3D -> {
             wallCount.incrementAndGet();

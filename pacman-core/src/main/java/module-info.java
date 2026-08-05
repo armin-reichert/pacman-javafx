@@ -29,11 +29,11 @@ module de.amr.pacmanfx.core {
     exports de.amr.pacmanfx.core.entities.pac;
     exports de.amr.pacmanfx.core.entities.bonus;
     exports de.amr.pacmanfx.core.entities.ghost;
+    exports de.amr.pacmanfx.core.entities.house;
     exports de.amr.pacmanfx.core.entities.livescounter;
     exports de.amr.pacmanfx.core.entities.marquee;
     exports de.amr.pacmanfx.core.entities.stork;
     exports de.amr.pacmanfx.core.model.world.map;
-    exports de.amr.pacmanfx.core.entities.house;
     exports de.amr.pacmanfx.core.model.world.obstacle;
     exports de.amr.pacmanfx.core.ecs;
     exports de.amr.pacmanfx.core.ecs.comp;
@@ -48,6 +48,7 @@ module de.amr.pacmanfx.core {
     exports de.amr.pacmanfx.core.entities.clapperboard.comp;
     exports de.amr.pacmanfx.core.entities.clapperboard.system;
     exports de.amr.pacmanfx.core.entities.ghost.comp;
+    exports de.amr.pacmanfx.core.entities.house.comp;
     exports de.amr.pacmanfx.core.entities.livescounter.comp;
     exports de.amr.pacmanfx.core.entities.marquee.comp;
     exports de.amr.pacmanfx.core.entities.pac.comp;

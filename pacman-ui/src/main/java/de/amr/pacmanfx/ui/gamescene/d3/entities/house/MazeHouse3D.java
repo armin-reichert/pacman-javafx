@@ -6,8 +6,8 @@ package de.amr.pacmanfx.ui.gamescene.d3.entities.house;
 
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.entities.house.HouseEntity;
 import de.amr.pacmanfx.core.model.UpdatableEntity;
-import de.amr.pacmanfx.core.entities.house.ArcadeHouse;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorSchemeImpl;
 import de.amr.pacmanfx.ui.settings.world.House3DSettings;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -39,7 +39,7 @@ public class MazeHouse3D implements UpdatableEntity, Disposable {
         WorldMapColorSchemeImpl colorScheme,
         House3DSettings config3D,
         AnimationRegistry animations,
-        ArcadeHouse house)
+        HouseEntity house)
     {
         arcadeHouse3D = new ArcadeHouse3D(
             animations,

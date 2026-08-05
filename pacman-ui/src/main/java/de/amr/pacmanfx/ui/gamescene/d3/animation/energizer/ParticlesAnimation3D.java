@@ -6,8 +6,8 @@ package de.amr.pacmanfx.ui.gamescene.d3.animation.energizer;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.math.Vector3f;
+import de.amr.pacmanfx.core.entities.house.HouseEntity;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.entities.house.House;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3D.animation.EnergizerParticle3D;
@@ -57,7 +57,7 @@ public class ParticlesAnimation3D extends ManagedAnimation implements Disposable
     private final Predicate<EnergizerParticle3D> outOfWorldTest;
 
     public ParticlesAnimation3D(
-        House house,
+        HouseEntity house,
         List<PhongMaterial> ghostDressMaterials,
         Pool<EnergizerParticle3D> particlePool,
         ParticlesAnimationConfig config,
@@ -76,7 +76,7 @@ public class ParticlesAnimation3D extends ManagedAnimation implements Disposable
 
         // The 3 ghost revival positions inside the house from left to right
         swirlBases = Stream.of(GhostPersonality.CYAN_GHOST_BASHFUL, GhostPersonality.PINK_GHOST_SPEEDY, GhostPersonality.ORANGE_GHOST_POKEY)
-            .map(house::ghostRevivalTile)
+            .map(house.floorplan()::ghostRevivalTile)
             .map(tile -> tile.scaled(WorldMap.TS).plus(WorldMap.TS, WorldMap.HTS))
             .map(pos -> new Vector3f(pos.x(), pos.y(), 0))
             .toList();

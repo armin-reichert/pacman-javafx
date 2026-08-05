@@ -7,6 +7,7 @@ package de.amr.pacmanfx.tengenmspacman.rules;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
+import de.amr.pacmanfx.core.entities.house.HouseEntity;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.ghost.GhostState;
@@ -63,11 +64,12 @@ public class TengenMsPacMan_ActorSpeedRules implements ActorSpeedRules {
     @Override
     public float ghostSpeed(GameContext gameContext, Ghost ghost) {
         final GameLevel level = gameContext.assertLevel();
+        final HouseEntity house = level.entities().entitySet().uniqueOfType(HouseEntity.class);
         final int levelNumber = level.number();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final Vector2i ghostTile = WorldNavigationSystem.computeTile(ghost);
         final GhostState state = ghost.state();
-        final boolean insideHouse = terrain.assertHouse().isVisitedBy(ghost);
+        final boolean insideHouse = house.isVisitedBy(ghost);
         final boolean tunnelSlowdown = terrain.isTunnel(ghostTile);
         return switch (state) {
             case LOCKED -> insideHouse ? 0.5f : 0;

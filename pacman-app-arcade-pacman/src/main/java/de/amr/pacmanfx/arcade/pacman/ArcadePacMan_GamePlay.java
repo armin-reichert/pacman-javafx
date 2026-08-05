@@ -12,23 +12,23 @@ import de.amr.pacmanfx.arcade.pacman.rules.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
-import de.amr.pacmanfx.core.event.base.GameEventManager;
-import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
-import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
-import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.entities.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.ghost.GhostState;
 import de.amr.pacmanfx.core.entities.ghost.comp.ElroyComp;
+import de.amr.pacmanfx.core.entities.house.HouseEntity;
+import de.amr.pacmanfx.core.entities.house.HouseFactory;
 import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.entities.livescounter.LivesCounter;
 import de.amr.pacmanfx.core.entities.pac.Pac;
+import de.amr.pacmanfx.core.event.base.GameEventManager;
+import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
+import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
+import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.rules.HuntingTimer;
-import de.amr.pacmanfx.core.entities.house.ArcadeHouse;
-import de.amr.pacmanfx.core.entities.house.House;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.TerrainTile;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -109,13 +109,13 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
             WorldMapPropertyName.POS_HOUSE_MIN_TILE, ArcadePacMan_GameModel.ARCADE_MAP_HOUSE_MIN_TILE);
         terrain.propertyMap().put(WorldMapPropertyName.POS_HOUSE_MIN_TILE,  String.valueOf(houseMinTile));
 
-        final ArcadeHouse house = new ArcadeHouse(houseMinTile);
-        terrain.setHouse(house);
-
         final LevelData levelData = ArcadePacMan_GameRules.levelData(levelNumber);
         final HuntingTimer huntingTimer = new HuntingTimer("Arcade Pac-Man Hunting Timer", model.rules().numHuntingPhases());
 
         final GameLevel level = new GameLevel(model, levelNumber, worldMap, huntingTimer, levelData.numFlashes());
+
+        final HouseEntity house = HouseFactory.createArcadeHouse(ArcadePacMan_GameModel.ARCADE_MAP_HOUSE_MIN_TILE);
+        level.entities().add(house);
 
         // On each phase start (except the initial phase), the ghosts reverse their move direction
         huntingTimer.setPhaseChangeCallback(newPhaseIndex -> {
@@ -130,7 +130,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         level.setPacPowerFadingSeconds(0.5f * levelData.numFlashes()); //TODO correct?
 
         createAndSetPacMan(gameContext.systems(), level);
-        createAndSetGhosts(level, house);
+        createAndSetGhosts(level);
 
         level.setBonusSymbolCode(0, model.rules().selectBonusSymbolCode(level.number(), 0));
         level.setBonusSymbolCode(1, model.rules().selectBonusSymbolCode(level.number(), 1));
@@ -155,7 +155,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         level.setPac(pacMan);
     }
 
-    protected void createAndSetGhosts(GameLevel level, House house) {
+    protected void createAndSetGhosts(GameLevel level) {
         final var factory = ArcadePacMan_ActorFactory.instance();
 
         final Ghost redGhost    = factory.createRedGhost();
@@ -164,6 +164,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         final Ghost orangeGhost = factory.createOrangeGhost();
 
         final TerrainLayer terrain = level.worldMap().terrainLayer();
+        final HouseEntity house = level.entities().entitySet().uniqueOfType(HouseEntity.class);
 
         // Special tiles where attacking ghosts cannot move up
         final Set<Vector2i> oneWayTiles = terrain.tiles()

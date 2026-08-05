@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
+import de.amr.pacmanfx.core.entities.house.HouseEntity;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
@@ -53,6 +54,7 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
     }
 
     protected void drawMap(GameLevel level, RenderInfo info) {
+        final HouseEntity house = level.entities().entitySet().uniqueOfType(HouseEntity.class);
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final int emptySpaceOverMazePixels = terrain.emptyRowsOverMaze() * WorldMap.TS;
         ctx.save();
@@ -69,15 +71,15 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
             }
             if (info.getBoolean(CommonRenderInfoKey.MAP_FLASHING)) {
                 // Hide ghost house doors while flashing
-                terrain.optHouse().ifPresent(house -> {
+                if (house != null) {
                     ctx.setFill(backgroundColor());
-                    if (house.leftDoorTile() != null) {
-                        fillSquareAtTileCenter(house.leftDoorTile(), WorldMap.TS + 0.5);
+                    if (house.floorplan().leftDoorTile() != null) {
+                        fillSquareAtTileCenter(house.floorplan().leftDoorTile(), WorldMap.TS + 0.5);
                     }
-                    if (house.rightDoorTile() != null) {
-                        fillSquareAtTileCenter(house.rightDoorTile(), WorldMap.TS + 0.5);
+                    if (house.floorplan().rightDoorTile() != null) {
+                        fillSquareAtTileCenter(house.floorplan().rightDoorTile(), WorldMap.TS + 0.5);
                     }
-                });
+                }
             }
         }
         else {

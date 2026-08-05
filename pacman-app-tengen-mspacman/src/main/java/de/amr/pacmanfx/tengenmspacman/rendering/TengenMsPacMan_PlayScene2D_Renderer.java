@@ -5,6 +5,7 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
+import de.amr.pacmanfx.core.entities.house.HouseEntity;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
@@ -113,6 +114,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
 
         gameModel.optLevel().ifPresent(level -> {
             final WorldMap worldMap = level.worldMap();
+            final HouseEntity house = level.entities().entitySet().uniqueOfType(HouseEntity.class);
             final double scaledIndent = scaled(CONTENT_INDENT);
 
             configureRenderInfo(playScene2D, worldMap, tick);
@@ -121,7 +123,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
             ctx.save();
             ctx.translate(scaledIndent, 0);
             levelRenderer.drawLevel(level, renderInfo);
-            levelRenderer.drawDoor(worldMap); // ghosts appear under door, so draw door over again
+            levelRenderer.drawDoor(house, worldMap); // ghosts appear under door, so draw door over again
             actorsInZOrder.forEach(actorRenderer::drawActor);
             ctx.restore();
 

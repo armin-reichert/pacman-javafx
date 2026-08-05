@@ -11,6 +11,8 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
+import de.amr.pacmanfx.core.entities.house.HouseEntity;
+import de.amr.pacmanfx.core.entities.house.HouseFactory;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
 import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
@@ -28,8 +30,6 @@ import de.amr.pacmanfx.core.entities.livescounter.LivesCounter;
 import de.amr.pacmanfx.core.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.rules.HuntingTimer;
 import de.amr.pacmanfx.core.entities.HPortal;
-import de.amr.pacmanfx.core.entities.house.ArcadeHouse;
-import de.amr.pacmanfx.core.entities.house.House;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
@@ -88,15 +88,14 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) gameContext.model();
 
         final WorldMap worldMap = model.mapSelector().supplyWorldMap(levelNumber, model.mapCategory());
-        final TerrainLayer terrain = worldMap.terrainLayer();
-
-        final ArcadeHouse house = new ArcadeHouse(TengenMsPacMan_GameModel.HOUSE_MIN_TILE);
-        terrain.setHouse(house);
 
         final var huntingTimer = new HuntingTimer("Tengen Ms. Pac-Man Hunting Timer", model.rules().numHuntingPhases());
 
         final GameLevel level = new GameLevel(model, levelNumber, worldMap, huntingTimer, 3);
         level.setDemoLevel(demoLevel);
+
+        final HouseEntity house = HouseFactory.createArcadeHouse(TengenMsPacMan_GameModel.HOUSE_MIN_TILE);
+        level.entities().add(house);
 
         huntingTimer.setPhaseChangeCallback(newPhaseIndex -> {
             if (newPhaseIndex > 0) {
@@ -131,7 +130,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     @Override
     public void showLevelMessage(GameLevel level, GameLevelMessageType type) {
         final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) level.gameModel();
-        final Vector2f messagePosition = level.worldMap().terrainLayer().messageCenterPosition();
+        final Vector2f messagePosition = messageCenterPosition(level);
         // For map categories "mini", "big" or "strange", the "game over" message is animated
         final GameLevelMessage message = type == GameLevelMessageType.GAME_OVER && model.mapCategory() != MapCategory.ARCADE
             ? new MovingGameLevelMessage(type, messagePosition, GAME_OVER_MESSAGE_DELAY_SEC * GameConstants.SIMULATION_FPS)
@@ -218,18 +217,13 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
             return;
         }
 
-        final House house = terrain.optHouse().orElse(null);
-        if (house == null) {
-            Logger.error("\"Cannot activate next bonus: No house exists in game level!");
-            return;
-        }
-
         if (terrain.horizontalPortals().isEmpty()) {
             Logger.error("Cannot activate next bonus: No portal exists in game level");
             return;
         }
 
-        final Vector2i houseEntry = WorldMap.computeTileAt(house.entryPosition());
+        final HouseEntity house = level.entities().entitySet().uniqueOfType(HouseEntity.class);
+        final Vector2i houseEntry = WorldMap.computeTileAt(house.floorplan().entryPosition());
         final Vector2i houseEntryOpposite = houseEntry.plus(0, house.sizeInTiles().y() + 1);
 
         final List<HPortal> portals = terrain.horizontalPortals();
@@ -274,7 +268,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         level.setPac(msPacMan);
     }
 
-    private void createAndSetGhosts(GameLevel level, House house) {
+    private void createAndSetGhosts(GameLevel level, HouseEntity house) {
         final var factory = TengenMsPacMan_ActorFactory.instance();
 
         final Ghost redGhost    = factory.createRedGhost();

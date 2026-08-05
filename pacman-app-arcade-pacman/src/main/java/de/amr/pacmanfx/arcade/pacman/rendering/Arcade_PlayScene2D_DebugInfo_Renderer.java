@@ -59,7 +59,7 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
             terrain.tiles()
                 .filter(tile -> tile.y() >= terrain.emptyRowsOverMaze())
                 .filter(tile -> tile.y() < terrain.numRows() - terrain.emptyRowsBelowMaze())
-                .filter(terrain::isIntersection)
+                .filter(level::isIntersection)
                 .forEach(tile -> {
                     final double cx = tile.x() * WorldMap.TS + WorldMap.HTS;
                     final double cy = tile.y() * WorldMap.TS + WorldMap.HTS;

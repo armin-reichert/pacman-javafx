@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.gamescene.d3;
 
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.core.entities.ghost.Ghost;
+import de.amr.pacmanfx.core.entities.house.HouseEntity;
 import de.amr.pacmanfx.core.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorSchemeImpl;
@@ -33,7 +34,7 @@ public interface Factory3D extends Disposable {
      * @param animationRegistry the animation registry
      * @return a 3D maze representing the given terrain
      */
-    Maze3D createMaze3D(TerrainLayer terrain, WorldSettings config, WorldMapColorSchemeImpl colorScheme, AnimationRegistry animationRegistry);
+    Maze3D createMaze3D(HouseEntity house, TerrainLayer terrain, WorldSettings config, WorldMapColorSchemeImpl colorScheme, AnimationRegistry animationRegistry);
 
     /**
      * Creates the 3D representation of Pac for this game variant, including model,

@@ -13,6 +13,8 @@ import de.amr.pacmanfx.arcade.pacman.rules.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
+import de.amr.pacmanfx.core.entities.house.HouseEntity;
+import de.amr.pacmanfx.core.entities.house.HouseFactory;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.entities.bonus.Bonus;
@@ -26,8 +28,6 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.entities.levelCounter.LevelCounter;
 import de.amr.pacmanfx.core.model.rules.HuntingTimer;
 import de.amr.pacmanfx.core.entities.HPortal;
-import de.amr.pacmanfx.core.entities.house.ArcadeHouse;
-import de.amr.pacmanfx.core.entities.house.House;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
@@ -64,8 +64,6 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
             WorldMapPropertyName.POS_HOUSE_MIN_TILE, ArcadePacMan_GameModel.ARCADE_MAP_HOUSE_MIN_TILE);
         terrain.propertyMap().put(WorldMapPropertyName.POS_HOUSE_MIN_TILE, houseMinTile.toString());
 
-        terrain.setHouse(new ArcadeHouse(houseMinTile));
-
         final int numFlashes = ArcadePacMan_GameRules.levelData(levelNumber).numFlashes();
 
         final HuntingTimer huntingTimer = new HuntingTimer("Arcade Ms. Pac-Man Hunting Timer", model.rules().numHuntingPhases());
@@ -73,6 +71,9 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         final GameLevel level = new GameLevel(model, levelNumber, worldMap, huntingTimer, numFlashes);
         level.setDemoLevel(demoLevel);
         level.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
+
+        final HouseEntity house = HouseFactory.createArcadeHouse(ArcadePacMan_GameModel.ARCADE_MAP_HOUSE_MIN_TILE);
+        level.entities().add(house);
 
         huntingTimer.setPhaseChangeCallback(newPhaseIndex -> {
             if (newPhaseIndex > 0) {
@@ -85,7 +86,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         level.setPacPowerFadingSeconds(0.5f * numFlashes); //TODO correct?
 
         createAndSetMsPacMan(gameContext.systems(), level);
-        createAndSetGhosts(level, terrain.assertHouse());
+        createAndSetGhosts(level);
 
         level.setBonusSymbolCode(0, model.rules().selectBonusSymbolCode(level.number(), 0));
         level.setBonusSymbolCode(1, model.rules().selectBonusSymbolCode(level.number(), 1));
@@ -123,7 +124,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         level.setPac(msPacMan);
     }
 
-    protected void createAndSetGhosts(GameLevel level, House house) {
+    protected void createAndSetGhosts(GameLevel level) {
         final var factory = new ArcadeMsPacMan_ActorFactory();
 
         final Ghost redGhost = factory.createRedGhost();
@@ -132,6 +133,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         final Ghost orangeGhost = factory.createOrangeGhost();
 
         final TerrainLayer terrain = level.worldMap().terrainLayer();
+        final HouseEntity house = level.entities().entitySet().uniqueOfType(HouseEntity.class);
 
         redGhost.worldPlacement()   .init(terrain, house, WorldMapPropertyName.POS_GHOST_1_RED);
         pinkGhost.worldPlacement()  .init(terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK);
@@ -196,7 +198,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
             return;
         }
 
-        final House house = terrain.optHouse().orElse(null);
+        final HouseEntity house = level.entities().entitySet().uniqueOfType(HouseEntity.class);
         if (house == null) {
             Logger.error("Moving bonus cannot be activated, no house exists in this level!");
             return;
@@ -231,7 +233,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
 
     // ------------------------------------------------
 
-    private void computeBonusRoute(GameContext gameContext, Bonus bonus, TerrainLayer terrain, House house) {
+    private void computeBonusRoute(GameContext gameContext, Bonus bonus, TerrainLayer terrain, HouseEntity house) {
         final List<HPortal> portals = terrain.horizontalPortals();
         if (portals.isEmpty()) {
             Logger.error("Moving bonus cannot be activated, game level does not contain any portals");
@@ -265,7 +267,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
             }
         }
 
-        final Vector2i houseEntry = WorldMap.computeTileAt(house.entryPosition());
+        final Vector2i houseEntry = WorldMap.computeTileAt(house.floorplan().entryPosition());
         final Vector2i backyard = houseEntry.plus(0, house.sizeInTiles().y() + 1);
         final List<Vector2i> route = Stream.of(entryTile, houseEntry, backyard, houseEntry, exitTile).toList();
 

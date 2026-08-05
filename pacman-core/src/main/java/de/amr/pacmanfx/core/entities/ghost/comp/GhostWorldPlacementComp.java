@@ -7,7 +7,7 @@ package de.amr.pacmanfx.core.entities.ghost.comp;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.ecs.GameEntityComponent;
-import de.amr.pacmanfx.core.entities.house.House;
+import de.amr.pacmanfx.core.entities.house.HouseEntity;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 
 import java.util.Set;
@@ -17,7 +17,7 @@ import static java.util.Objects.requireNonNull;
 
 public class GhostWorldPlacementComp implements GameEntityComponent {
 
-    private House house;
+    private HouseEntity house;
 
     private Set<Vector2i> specialTerrainTiles = Set.of();
 
@@ -35,11 +35,11 @@ public class GhostWorldPlacementComp implements GameEntityComponent {
             '}';
     }
 
-    public void init(TerrainLayer terrain, House house, String startTileProperty) {
+    public void init(TerrainLayer terrain, HouseEntity house, String startTileProperty) {
         init(terrain, house, startTileProperty, Set.of());
     }
 
-    public void init(TerrainLayer terrain, House house, String startTileProperty, Set<Vector2i> specialTerrainTiles) {
+    public void init(TerrainLayer terrain, HouseEntity house, String startTileProperty, Set<Vector2i> specialTerrainTiles) {
         requireNonNull(terrain);
         requireNonNull(house);
         requireNonNull(startTileProperty);
@@ -52,11 +52,11 @@ public class GhostWorldPlacementComp implements GameEntityComponent {
         setSpecialTerrainTiles(specialTerrainTiles);
     }
 
-    public House house() {
+    public HouseEntity house() {
         return house;
     }
 
-    public void setHouse(House house) {
+    public void setHouse(HouseEntity house) {
         requireNonNull(house);
         this.house = house;
     }

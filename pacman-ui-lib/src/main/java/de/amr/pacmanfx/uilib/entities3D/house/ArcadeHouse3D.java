@@ -6,13 +6,13 @@ package de.amr.pacmanfx.uilib.entities3D.house;
 import de.amr.basics.Named;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.entities.ghost.GhostState;
+import de.amr.pacmanfx.core.entities.house.HouseEntity;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.entities.house.ArcadeHouse;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3D.DisposableGraphicsObject;
@@ -101,7 +101,7 @@ public class ArcadeHouse3D extends Group implements DisposableGraphicsObject {
      */
     public ArcadeHouse3D(
         AnimationRegistry animations,
-        ArcadeHouse house,
+        HouseEntity house,
         double baseHeight,
         double wallThickness,
         double opacity)
@@ -121,13 +121,15 @@ public class ArcadeHouse3D extends Group implements DisposableGraphicsObject {
         barThicknessProperty.set(barThickness);
 
         // Compute house corner coordinates in world space
-        float xMin = house.minTile().x() * WorldMap.TS + WorldMap.HTS, yMin = house.minTile().y() * WorldMap.TS + WorldMap.HTS;
-        float xMax = house.maxTile().x() * WorldMap.TS + WorldMap.HTS, yMax = house.maxTile().y() * WorldMap.TS + WorldMap.HTS;
+        float xMin = house.floorplan().minTile().x() * WorldMap.TS + WorldMap.HTS;
+        float yMin = house.floorplan().minTile().y() * WorldMap.TS + WorldMap.HTS;
+        float xMax = house.floorplan().maxTile().x() * WorldMap.TS + WorldMap.HTS;
+        float yMax = house.floorplan().maxTile().y() * WorldMap.TS + WorldMap.HTS;
 
         // Define wall corner points
         Vector2f p0 = vec2_float(xMin, yMin);
-        Vector2f p1 = house.leftDoorTile().scaled((float) WorldMap.TS).plus(0, WorldMap.HTS);
-        Vector2f p2 = house.rightDoorTile().scaled((float) WorldMap.TS).plus(WorldMap.TS, WorldMap.HTS);
+        Vector2f p1 = house.floorplan().leftDoorTile().scaled((float) WorldMap.TS).plus(0, WorldMap.HTS);
+        Vector2f p2 = house.floorplan().rightDoorTile().scaled((float) WorldMap.TS).plus(WorldMap.TS, WorldMap.HTS);
         Vector2f p3 = vec2_float(xMax, yMin);
         Vector2f p4 = vec2_float(xMin, yMax);
         Vector2f p5 = vec2_float(xMax, yMax);
@@ -153,8 +155,8 @@ public class ArcadeHouse3D extends Group implements DisposableGraphicsObject {
         r3D.createWallBetween(p4, p5, wallThickness);
 
         // Create doors
-        leftDoor  = createDoor(house.leftDoorTile(), wallBaseHeightProperty.get());
-        rightDoor = createDoor(house.rightDoorTile(), wallBaseHeightProperty.get());
+        leftDoor  = createDoor(house.floorplan().leftDoorTile(), wallBaseHeightProperty.get());
+        rightDoor = createDoor(house.floorplan().rightDoorTile(), wallBaseHeightProperty.get());
         doors = new Group(leftDoor, rightDoor);
 
         // Interior light
@@ -260,13 +262,14 @@ public class ArcadeHouse3D extends Group implements DisposableGraphicsObject {
             .anyMatch(GameEntity::isVisible);
         light.lightOnProperty().set(accessRequested);
 
-        level.worldMap().terrainLayer().optHouse().ifPresent(house -> {
+        final HouseEntity house = level.entities().entitySet().uniqueOfType(HouseEntity.class);
+        if (house != null) {
             boolean ghostNearHouseEntry = level
                 .ghostsInAnyOfStates(Set.of(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE))
-                .filter(ghost -> ghost.pos().asVector2f().euclideanDist(house.entryPosition()) <= doorSensitivity)
+                .filter(ghost -> ghost.pos().asVector2f().euclideanDist(house.floorplan().entryPosition()) <= doorSensitivity)
                 .anyMatch(GameEntity::isVisible);
             doorsOpenProperty.set(ghostNearHouseEntry);
-        });
+        }
     }
 
     /** Property controlling whether the doors appear open. */

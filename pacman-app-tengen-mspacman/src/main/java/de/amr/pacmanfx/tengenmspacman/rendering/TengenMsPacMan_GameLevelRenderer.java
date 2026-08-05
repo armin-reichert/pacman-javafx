@@ -7,9 +7,9 @@ import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
+import de.amr.pacmanfx.core.entities.house.HouseEntity;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessage;
-import de.amr.pacmanfx.core.entities.house.House;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
@@ -168,32 +168,25 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
             message.pos().x(), message.pos().y());
     }
 
-    public void drawDoor(WorldMap worldMap) {
-        final House house = worldMap.terrainLayer().optHouse().orElse(null);
-        if (house == null) {
-            return;
-        }
+    public void drawDoor(HouseEntity house, WorldMap worldMap) {
         final MapImageSet recoloredImageSet = worldMap.getConfigValue(MapConfigKey.MAP_IMAGE_SET);
         final Color strokeColor = Color.valueOf(recoloredImageSet.mapImage().colorScheme().wallStroke());
         final double scaledTileSize = scaled(WorldMap.TS);
-        final double xMin = house.leftDoorTile().x() * scaledTileSize;
-        final double yMin = house.leftDoorTile().y() * scaledTileSize + scaled(5); // 5 pixels down
+        final double xMin = house.floorplan().leftDoorTile().x() * scaledTileSize;
+        final double yMin = house.floorplan().leftDoorTile().y() * scaledTileSize + scaled(5); // 5 pixels down
         ctx.setFill(strokeColor);
         ctx.fillRect(xMin, yMin, 2 * scaledTileSize, scaled(2));
     }
 
-    private void overPaintActorSprites(GameLevel gameLevel) {
-        final House house = gameLevel.worldMap().terrainLayer().optHouse().orElse(null);
-        if (house == null) {
-            return;
-        }
+    private void overPaintActorSprites(GameLevel level) {
+        final HouseEntity house = level.entities().entitySet().uniqueOfType(HouseEntity.class);
 
         // Over-paint area at house bottom where the ghost sprites are shown in map
         final double margin = scaling();
         final double scaledTileSize = scaled(WorldMap.TS);
         final var inHouseArea = new Rectangle2D(
-            0.5 * margin + scaledTileSize * (house.minTile().x() + 1),
-            0.5 * margin + scaledTileSize * (house.minTile().y() + 2),
+            0.5 * margin + scaledTileSize * (house.floorplan().minTile().x() + 1),
+            0.5 * margin + scaledTileSize * (house.floorplan().minTile().y() + 2),
             scaledTileSize * (house.sizeInTiles().x() - 2) - margin,
             scaledTileSize * 2 - margin
         );
@@ -202,11 +195,11 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         ctx.fillRect(inHouseArea.getMinX(), inHouseArea.getMinY(), inHouseArea.getWidth(), inHouseArea.getHeight());
 
         // Now the actor sprites outside the house. Be careful not to over-paint nearby obstacle edges!
-        final Vector2i pacTile = gameLevel.worldMap().terrainLayer()
+        final Vector2i pacTile = level.worldMap().terrainLayer()
             .getTilePropertyOrDefault(WorldMapPropertyName.POS_PAC, WorldMap.tile(14, 26));
         overPaintActorSprite(pacTile, margin);
 
-        final Vector2i redGhostTile = gameLevel.worldMap().terrainLayer()
+        final Vector2i redGhostTile = level.worldMap().terrainLayer()
             .getTilePropertyOrDefault(WorldMapPropertyName.POS_GHOST_1_RED, WorldMap.tile(13, 14));
         overPaintActorSprite(redGhostTile, margin);
     }

@@ -7,6 +7,7 @@ package de.amr.pacmanfx.core.entities.bonus.system;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.WorldMovementPolicy;
+import de.amr.pacmanfx.core.entities.house.HouseEntity;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 
@@ -28,7 +29,8 @@ public class BonusWorldMovementPolicy implements WorldMovementPolicy {
         if (terrain.outOfBounds(tile)) {
             return terrain.isTileInPortalSpace(tile);
         }
-        if (terrain.optHouse().isPresent() && terrain.optHouse().get().contains(tile)) {
+        final HouseEntity house = level.entities().entitySet().uniqueOfType(HouseEntity.class);
+        if (house != null && house.contains(tile)) {
             return false;
         }
         return !terrain.isTileBlocked(tile);
