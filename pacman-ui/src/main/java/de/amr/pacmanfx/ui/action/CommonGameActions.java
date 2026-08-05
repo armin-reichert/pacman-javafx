@@ -4,12 +4,12 @@
 
 package de.amr.pacmanfx.ui.action;
 
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.model.rules.ActorCollisionRules;
 import de.amr.pacmanfx.core.model.rules.CollisionStrategy;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.basics.util.Ufx;
 import javafx.scene.input.KeyCode;
 
 import java.util.Collections;

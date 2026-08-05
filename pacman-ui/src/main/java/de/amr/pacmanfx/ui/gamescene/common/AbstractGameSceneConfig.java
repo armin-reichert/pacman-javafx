@@ -6,8 +6,8 @@ package de.amr.pacmanfx.ui.gamescene.common;
 
 import de.amr.basics.Named;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.vm.GameUISettingsVM;
 import org.tinylog.Logger;

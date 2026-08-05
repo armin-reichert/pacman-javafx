@@ -1,9 +1,9 @@
 package de.amr.pacmanfx.arcade.ms_pacman.model;
 
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
-import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.pac.Pac;
+import de.amr.pacmanfx.core.model.GhostPersonality;
 
 public class ArcadeMsPacMan_ActorFactory extends ArcadePacMan_ActorFactory {
 

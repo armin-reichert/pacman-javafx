@@ -5,6 +5,7 @@ package de.amr.pacmanfx.game;
 
 import de.amr.basics.json.JsonLoader;
 import de.amr.basics.math.Vector2i;
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.settings.ui.GameUISettings;
@@ -13,7 +14,6 @@ import de.amr.pacmanfx.ui.views.dashboard.CommonDashboardFactory;
 import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
 import de.amr.pacmanfx.ui.views.startpages.StartPage;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
-import de.amr.basics.util.Ufx;
 import javafx.geometry.Rectangle2D;
 import javafx.stage.Screen;
 import javafx.stage.Stage;

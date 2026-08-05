@@ -3,8 +3,8 @@
  */
 package de.amr.pacmanfx.ui.views.dashboard;
 
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.basics.util.Ufx;
+import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;

@@ -7,12 +7,12 @@ package de.amr.pacmanfx.core.entities.ghost.system;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
-import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.entities.ActorAnimationID;
 import de.amr.pacmanfx.core.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.ghost.GhostState;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostStateComp;
 import de.amr.pacmanfx.core.entities.pac.Pac;
+import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import org.tinylog.Logger;
 

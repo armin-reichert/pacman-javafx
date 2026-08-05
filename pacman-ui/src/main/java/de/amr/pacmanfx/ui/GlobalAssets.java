@@ -4,9 +4,9 @@
 
 package de.amr.pacmanfx.ui;
 
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorSchemeImpl;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
-import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.rendering.EggradientSamples;
 import javafx.scene.layout.Background;

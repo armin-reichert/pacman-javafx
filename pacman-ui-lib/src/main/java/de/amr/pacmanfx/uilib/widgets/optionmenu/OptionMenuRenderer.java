@@ -10,8 +10,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.*;
 import static de.amr.basics.util.Ufx.scaleFontBy;
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.*;
 
 /**
  * Base renderer for {@link OptionMenu}.

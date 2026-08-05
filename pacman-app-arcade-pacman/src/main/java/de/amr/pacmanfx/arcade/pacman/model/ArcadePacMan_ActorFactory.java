@@ -4,10 +4,10 @@
 
 package de.amr.pacmanfx.arcade.pacman.model;
 
-import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.entities.ghost.comp.ElroyComp;
 import de.amr.pacmanfx.core.entities.ghost.Ghost;
+import de.amr.pacmanfx.core.entities.ghost.comp.ElroyComp;
 import de.amr.pacmanfx.core.entities.pac.Pac;
+import de.amr.pacmanfx.core.model.GhostPersonality;
 
 public class ArcadePacMan_ActorFactory {
 

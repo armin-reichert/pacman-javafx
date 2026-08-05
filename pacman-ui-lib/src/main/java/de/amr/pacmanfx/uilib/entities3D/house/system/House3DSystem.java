@@ -1,12 +1,7 @@
 package de.amr.pacmanfx.uilib.entities3D.house.system;
 
-import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.entities.ghost.GhostState;
 import de.amr.pacmanfx.core.entities.house.House;
-import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.uilib.entities3D.house.comp.House3DViewComp;
-
-import java.util.Set;
 
 public class House3DSystem {
 

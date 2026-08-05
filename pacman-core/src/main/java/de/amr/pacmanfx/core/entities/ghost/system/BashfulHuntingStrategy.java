@@ -7,10 +7,10 @@ package de.amr.pacmanfx.core.entities.ghost.system;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.ecs.systems.WorldMovementPolicy;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
-import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.pac.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.model.GhostPersonality;
 
 import static de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem.computeTile;
 import static de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem.tilesAheadWithOverflowBug;

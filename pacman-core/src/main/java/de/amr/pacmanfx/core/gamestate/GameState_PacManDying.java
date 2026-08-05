@@ -6,14 +6,14 @@ package de.amr.pacmanfx.core.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
-import de.amr.pacmanfx.core.event.pac.PacDeadEvent;
-import de.amr.pacmanfx.core.event.pac.PacDyingEvent;
 import de.amr.pacmanfx.core.entities.ghost.comp.ElroyComp;
 import de.amr.pacmanfx.core.entities.livescounter.LivesCounter;
 import de.amr.pacmanfx.core.entities.livescounter.system.LivesCounterSystem;
 import de.amr.pacmanfx.core.entities.pac.Pac;
 import de.amr.pacmanfx.core.entities.pac.PacState;
+import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
+import de.amr.pacmanfx.core.event.pac.PacDeadEvent;
+import de.amr.pacmanfx.core.event.pac.PacDyingEvent;
 import de.amr.pacmanfx.core.level.GameLevel;
 
 import static java.util.Objects.requireNonNull;

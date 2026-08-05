@@ -8,9 +8,9 @@ import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.MovementComp;
 import de.amr.pacmanfx.core.ecs.comp.SpriteAnimComp;
 import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
-import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostStateComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostWorldPlacementComp;
+import de.amr.pacmanfx.core.model.GhostPersonality;
 
 import static java.util.Objects.requireNonNull;
 

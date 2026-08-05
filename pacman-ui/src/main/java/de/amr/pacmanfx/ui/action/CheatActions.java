@@ -5,15 +5,15 @@
 package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.event.pac.PacEatsFoodEvent;
-import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
-import de.amr.pacmanfx.core.gamestate.GameState;
-import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.ghost.GhostState;
 import de.amr.pacmanfx.core.entities.livescounter.LivesCounter;
 import de.amr.pacmanfx.core.entities.livescounter.system.LivesCounterSystem;
+import de.amr.pacmanfx.core.event.pac.PacEatsFoodEvent;
+import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
+import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;

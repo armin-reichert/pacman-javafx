@@ -5,13 +5,13 @@
 package de.amr.pacmanfx.arcade.pacman.flow;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
-import de.amr.pacmanfx.core.gamestate.GameState;
-import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.entities.livescounter.LivesCounter;
 import de.amr.pacmanfx.core.entities.livescounter.system.LivesCounterSystem;
+import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
+import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
+import de.amr.pacmanfx.core.model.GameModel;
 
 public class ArcadeGameState_GameOver extends GameState {
 

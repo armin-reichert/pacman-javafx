@@ -6,15 +6,15 @@ package de.amr.pacmanfx.core.model.test;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
+import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.event.TestStartedEvent;
 import de.amr.pacmanfx.core.event.bonus.BonusEatenEvent;
 import de.amr.pacmanfx.core.event.gameplay.LevelStartedEvent;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
-import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
+import de.amr.pacmanfx.core.model.GameModel;
 
 public class LevelShortTestState extends GameState {
 

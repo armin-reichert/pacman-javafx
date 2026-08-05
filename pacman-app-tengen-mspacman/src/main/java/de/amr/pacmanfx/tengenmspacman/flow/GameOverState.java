@@ -6,13 +6,13 @@ package de.amr.pacmanfx.tengenmspacman.flow;
 
 import de.amr.basics.Named;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
-import de.amr.pacmanfx.core.gamestate.GameState;
-import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.entities.livescounter.LivesCounter;
 import de.amr.pacmanfx.core.entities.livescounter.system.LivesCounterSystem;
+import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
+import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
+import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 

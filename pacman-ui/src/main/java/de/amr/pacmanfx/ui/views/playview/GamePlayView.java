@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.views.playview;
 
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -29,7 +30,6 @@ import de.amr.pacmanfx.ui.views.dashboard.GameDashboardSection;
 import de.amr.pacmanfx.ui.views.help.HelpView;
 import de.amr.pacmanfx.ui.vm.GameUISettingsVM;
 import de.amr.pacmanfx.ui.window.GameMainScene;
-import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.controls.FontAwesomeIcon;
 import de.amr.pacmanfx.uilib.controls.FontAwesomeSymbol;

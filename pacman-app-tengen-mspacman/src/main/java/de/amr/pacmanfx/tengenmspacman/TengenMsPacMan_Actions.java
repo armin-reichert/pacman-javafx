@@ -22,9 +22,9 @@ import javafx.scene.input.KeyCodeCombination;
 
 import java.util.Set;
 
+import static de.amr.basics.util.Ufx.toggleBooleanProperty;
 import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.bareKey;
 import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
-import static de.amr.basics.util.Ufx.toggleBooleanProperty;
 
 public final class TengenMsPacMan_Actions {
 

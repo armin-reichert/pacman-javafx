@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
 import de.amr.basics.json.JsonLoader;
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.pacman_xxl.pacman.XXL_PacMan_GameVariantConfig;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
@@ -14,7 +15,6 @@ import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.startpages.StartPage;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
-import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenuSettings;
 import javafx.application.Platform;

@@ -4,10 +4,10 @@
 
 package de.amr.pacmanfx.uilib.entities3D;
 
+import de.amr.basics.util.Ufx;
 import de.amr.meshbuilder.MeshBuilder;
 import de.amr.objparser.ObjFileParser;
 import de.amr.objparser.ObjModel;
-import de.amr.basics.util.Ufx;
 import javafx.scene.shape.Mesh;
 import javafx.scene.transform.Rotate;
 import org.tinylog.Logger;
