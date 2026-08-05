@@ -94,7 +94,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
             onHuntingStart(gameContext());
         }
         else if (CommonGameStateID.GAME_LEVEL_PACMAN_DYING.hasSameNameAs(newState)) {
-            onPacManDying(gameContext());
+            onPacManDying(gameContext(), assertLevel3D().animationRegistry());
         }
         else if (CommonGameStateID.GAME_LEVEL_EATING_GHOST.hasSameNameAs(newState)) {
             onGhostsKilled(gameContext().thisFrame().huntingStep().ghostsKilled());
@@ -268,46 +268,35 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
             .ifPresent(ManagedAnimation::playFromStart);
     }
 
-    private void onPacManDying(GameContext gameContext) {
+    private void onPacManDying(GameContext gameContext, AnimationRegistry animationRegistry) {
         final GameLevel level = gameContext.assertLevel();
-        final GameLevel3D level3D = assertLevel3D();
-
-        optSoundEffects().ifPresent(GameSoundEffects::stopAll);
-
-        // Do not stop all animations!
-        level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.GHOST_LIGHT).ifPresent(ManagedAnimation::stop);
-        level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.WALL_COLOR_FLASHING).ifPresent(ManagedAnimation::stop);
-
-        //TODO get rid of 3D wrappers for ghosts
-        level3D.entities3D().ghosts3D().forEach(Ghost3D::stopAllAnimations);
-
-        level.entities().optBonus().ifPresent(bonus -> Bonus3DViewSystem.lookExpired(bonus, level3D.animationRegistry()));
 
         gameContext.state().waitForTimeout();
 
-        final Animation seq = createPacDyingAnimationSeq(level.entities().pac());
-        seq.setOnFinished(_ -> gameContext.state().triggerTimeout());
-        seq.play();
-    }
+        //TODO check if this is needed:
+        assertLevel3D().updatePac();
 
-    //TODO move to animation system
-    private Animation createPacDyingAnimationSeq(Pac pac) {
-        final Pac3DAnimationComp animation = pac.requireComponent(Pac3DAnimationComp.class);
+        stopAnimationsBeforePacManDying();
+        optSoundEffects().ifPresent(GameSoundEffects::stopAll);
+        level.entities().optBonus().ifPresent(
+            bonus -> Bonus3DViewSystem.lookExpired(bonus, animationRegistry));
 
-        final Animation pacStopping = Ufx.doNow(() -> {
-            //TODO check if this is needed:
-            gameScene().optGameLevel3D().ifPresent(GameLevel3D::updatePac);
-            animation.chewing().stop();
-            animation.movement().managedAnimation().stop();
-        });
-
-        return new SequentialTransition(
-            pacStopping,
-            Ufx.pauseSecThen(1.5, () -> optSoundEffects().ifPresent(GameSoundEffects::playPacDeadSound)),
-            animation.dying().animationFX(),
-            Ufx.pauseSec(0.5)
+        Pac3DAnimationSystem.playDyingAnimation(
+            level.entities().pac(),
+            () -> optSoundEffects().ifPresent(GameSoundEffects::playPacDeadSound),
+            gameContext.state()::triggerTimeout
         );
     }
+
+    private void stopAnimationsBeforePacManDying() {
+        final GameLevel3D level3D = assertLevel3D();
+        // Do not stop all animations!
+        level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.GHOST_LIGHT).ifPresent(ManagedAnimation::stop);
+        level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.WALL_COLOR_FLASHING).ifPresent(ManagedAnimation::stop);
+        //TODO get rid of 3D wrappers for ghosts!
+        level3D.entities3D().ghosts3D().forEach(Ghost3D::stopAllAnimations);
+    }
+
 
     private void onGhostsKilled(List<Ghost> ghostsKilled) {
         final GameLevel3D level3D = assertLevel3D();

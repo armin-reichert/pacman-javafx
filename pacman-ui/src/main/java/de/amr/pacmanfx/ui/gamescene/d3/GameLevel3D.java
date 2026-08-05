@@ -197,7 +197,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             ensureBonus3DViewExists(bonus);
             Bonus3DMovementSystem.update(bonus);
         });
-
     }
 
     public void updateEntities() {

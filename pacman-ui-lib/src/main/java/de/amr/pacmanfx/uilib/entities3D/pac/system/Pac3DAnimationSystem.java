@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.uilib.entities3D.pac.system;
 
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.entities.pac.PacState;
 import de.amr.pacmanfx.core.model.entities.pac.comp.PacStateComp;
@@ -12,6 +13,8 @@ import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3D.pac.anim.Pac3DMovementAnimation;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DAnimationComp;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DViewComp;
+import javafx.animation.Animation;
+import javafx.animation.SequentialTransition;
 
 public class Pac3DAnimationSystem {
 
@@ -81,5 +84,24 @@ public class Pac3DAnimationSystem {
                 view3D.powerLight().setLightOn(false);
             }
         }
+    }
+
+    public static void playDyingAnimation(
+        Pac pac,
+        Runnable pacDeadSoundEffect,
+        Runnable onFinishedCallback) {
+        final Pac3DAnimationComp pacAnimation = pac.requireComponent(Pac3DAnimationComp.class);
+
+        final Animation animation = new SequentialTransition(
+            Ufx.pauseSecThen(1.5, pacDeadSoundEffect),
+            pacAnimation.dying().animationFX(),
+            Ufx.pauseSec(0.5)
+        );
+        animation.setOnFinished(_ -> onFinishedCallback.run());
+
+        pacAnimation.chewing().stop();
+        pacAnimation.movement().managedAnimation().stop();
+
+        animation.play();
     }
 }
