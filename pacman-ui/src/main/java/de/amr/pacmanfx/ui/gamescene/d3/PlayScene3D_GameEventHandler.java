@@ -31,7 +31,6 @@ import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.HideGhostShowPointsAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
-import de.amr.pacmanfx.ui.gamescene.d3.entities.Maze3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.vm.Game3DSettingsVM;
 import de.amr.pacmanfx.ui.vm.GameUISettingsVM;
@@ -286,17 +285,18 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 
         gameContext.state().waitForTimeout();
 
-        final Animation seq = createPacDyingAnimationSeq(level.entities().pac(), gameContext);
+        final Animation seq = createPacDyingAnimationSeq(level.entities().pac());
         seq.setOnFinished(_ -> gameContext.state().triggerTimeout());
         seq.play();
     }
 
     //TODO move to animation system
-    private Animation createPacDyingAnimationSeq(Pac pac, GameContext gameContext) {
+    private Animation createPacDyingAnimationSeq(Pac pac) {
         final Pac3DAnimationComp animation = pac.requireComponent(Pac3DAnimationComp.class);
 
         final Animation pacStopping = Ufx.doNow(() -> {
-            gameScene().updatePac(pac, gameContext.assertLevel()); //TODO check if this is needed
+            //TODO check if this is needed:
+            gameScene().optGameLevel3D().ifPresent(GameLevel3D::updatePac);
             animation.chewing().stop();
             animation.movement().managedAnimation().stop();
         });

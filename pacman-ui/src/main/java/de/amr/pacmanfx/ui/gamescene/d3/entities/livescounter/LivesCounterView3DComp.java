@@ -1,19 +1,15 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.ui.gamescene.d3.entities;
 
-import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.UpdatableEntity;
-import de.amr.pacmanfx.core.model.entities.livescounter.LivesCounter;
-import de.amr.pacmanfx.core.model.entities.pac.Pac;
-import de.amr.pacmanfx.core.model.level.GameLevel;
+package de.amr.pacmanfx.ui.gamescene.d3.entities.livescounter;
+
+
+import de.amr.basics.util.Ufx;
+import de.amr.pacmanfx.core.ecs.GameEntityComponent;
 import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.NodePositionTracker;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
-import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.uilib.entities3D.DisposableGraphicsObject;
 import javafx.beans.property.*;
 import javafx.scene.Group;
@@ -29,15 +25,13 @@ import java.util.List;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static java.util.Objects.requireNonNull;
 
-/**
- * Displays for each remaining live a Pac-Man sitting on a pillar tracking the Pac-Man in the maze.
- */
-//TODO make a component for the LivesCounter game entity from this class
-public class LivesCounter3D extends GameEntity implements UpdatableEntity, DisposableGraphicsObject {
+public class LivesCounterView3DComp implements GameEntityComponent, DisposableGraphicsObject {
 
     private final ObjectProperty<Color> pillarColor = new SimpleObjectProperty<>(Color.grayRgb(200));
     private final ObjectProperty<PhongMaterial> pillarMaterial = new SimpleObjectProperty<>(new PhongMaterial());
     private final DoubleProperty pillarHeight = new SimpleDoubleProperty(8);
+
+    private final Group root = new Group();
 
     private final DoubleProperty plateThickness = new SimpleDoubleProperty(1);
     private final DoubleProperty plateRadius = new SimpleDoubleProperty(6);
@@ -47,7 +41,7 @@ public class LivesCounter3D extends GameEntity implements UpdatableEntity, Dispo
     private final IntegerProperty livesCount = new SimpleIntegerProperty(0);
     private final List<NodePositionTracker> trackers = new ArrayList<>();
 
-    private class Stand extends Group implements DisposableGraphicsObject{
+    private class Stand extends Group implements DisposableGraphicsObject {
         Cylinder pillar;
         Cylinder podium;
 
@@ -75,9 +69,7 @@ public class LivesCounter3D extends GameEntity implements UpdatableEntity, Dispo
         }
     }
 
-    private final Group root = new Group();
-
-    public LivesCounter3D(Factory3D factory3D, WorldSettings worldConfig) {
+    public LivesCounterView3DComp(Factory3D factory3D, WorldSettings worldConfig) {
         requireNonNull(factory3D);
         requireNonNull(worldConfig);
 
@@ -108,7 +100,9 @@ public class LivesCounter3D extends GameEntity implements UpdatableEntity, Dispo
             // let Pac shape sit on top of plate
             final double shapeRadius = 0.5 * shape.getBoundsInParent().getHeight(); // take scale transform into account!
             shape.translateZProperty().bind(stand.pillar.heightProperty().add(plateThickness).add(shapeRadius).negate());
+
             shape.visibleProperty().bind(livesCount.map(count -> count.intValue() > (int) shape.getUserData()));
+
             root.getChildren().add(shape);
         }
 
@@ -119,33 +113,6 @@ public class LivesCounter3D extends GameEntity implements UpdatableEntity, Dispo
 
     public Group root() {
         return root;
-    }
-
-    @Override
-    public void dispose() {
-        stopTracking();
-        livesCount.unbind();
-        pillarHeight.unbind();
-        pillarMaterial.unbind();
-        pillarColor.unbind();
-        plateColor.unbind();
-        plateThickness.unbind();
-        plateRadius.unbind();
-        plateMaterial.unbind();
-
-        cleanupGroup(root, true);
-    }
-
-    public void startTracking(Node target) {
-        for (NodePositionTracker tracker : trackers) {
-            tracker.startTrackingTarget(target);
-        }
-    }
-
-    public void stopTracking() {
-        for (NodePositionTracker tracker : trackers) {
-            tracker.stopTracking();
-        }
     }
 
     public IntegerProperty livesCountProperty() {
@@ -160,22 +127,26 @@ public class LivesCounter3D extends GameEntity implements UpdatableEntity, Dispo
         return plateColor;
     }
 
+    public List<NodePositionTracker> trackers() {
+        return trackers;
+    }
+
     @Override
-    public void update(GameContext gameContext) {
-        final GameLevel level = gameContext.assertLevel();
-        final LivesCounter livesCounter = level.entities().entitySet().uniqueOfType(LivesCounter.class);
-        final GameModel model = gameContext.model();
-        final Pac pac = gameContext.assertLevel().entities().pac();
+    public void dispose() {
+//        stopTracking();
+        livesCount.unbind();
+        pillarHeight.unbind();
+        pillarMaterial.unbind();
+        pillarColor.unbind();
+        plateColor.unbind();
+        plateThickness.unbind();
+        plateRadius.unbind();
+        plateMaterial.unbind();
 
-        // Show remaining lives in counter
-        int lifeCount = livesCounter.data().numLives() - 1;
+        cleanupGroup(root, true);
+    }
 
-        // While the game starts and Pac-Man is not yet visible in maze, show one more:
-        if (!model.isPlaying() && !pac.isVisible()) {
-            lifeCount += 1;
-        }
-
-        livesCountProperty().set(lifeCount);
-        root.setVisible(true);
+    @Override
+    public void reset() {
     }
 }

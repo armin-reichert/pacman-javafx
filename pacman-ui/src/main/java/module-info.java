@@ -26,7 +26,6 @@ open module de.amr.pacmanfx.ui {
     exports de.amr.pacmanfx.ui.gamescene.d3.animation;
     exports de.amr.pacmanfx.ui.gamescene.d3.animation.energizer;
     exports de.amr.pacmanfx.ui.gamescene.d3.camera;
-    exports de.amr.pacmanfx.ui.gamescene.d3.entities;
     exports de.amr.pacmanfx.ui.input;
     exports de.amr.pacmanfx.ui.views;
     exports de.amr.pacmanfx.ui.sound;
@@ -42,4 +41,5 @@ open module de.amr.pacmanfx.ui {
     exports de.amr.pacmanfx.game;
     exports de.amr.pacmanfx.ui.vm;
     exports de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter;
+    exports de.amr.pacmanfx.ui.gamescene.d3.entities.livescounter;
 }

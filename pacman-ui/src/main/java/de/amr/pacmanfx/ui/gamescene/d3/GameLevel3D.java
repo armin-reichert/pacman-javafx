@@ -11,12 +11,14 @@ import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.model.GhostPersonality;
+import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.entities.bonus.Bonus;
 import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
+import de.amr.pacmanfx.core.model.entities.levelCounter.LevelCounter;
+import de.amr.pacmanfx.core.model.entities.livescounter.LivesCounter;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelEntitySet;
-import de.amr.pacmanfx.core.model.entities.levelCounter.LevelCounter;
 import de.amr.pacmanfx.core.model.world.house.House;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
@@ -31,11 +33,11 @@ import de.amr.pacmanfx.ui.gamescene.d3.animation.WallColorFlashingAnimation;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ExplosionConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimationConfig;
-import de.amr.pacmanfx.ui.gamescene.d3.entities.LivesCounter3D;
-import de.amr.pacmanfx.ui.gamescene.d3.entities.Maze3D;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter.LevelCounter3DAnimationID;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter.LevelCounter3DSystem;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter.LevelCounterView3DComp;
+import de.amr.pacmanfx.ui.gamescene.d3.entities.livescounter.LivesCounter3DSystem;
+import de.amr.pacmanfx.ui.gamescene.d3.entities.livescounter.LivesCounterView3DComp;
 import de.amr.pacmanfx.ui.settings.world.Bonus3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Pellet3DSettings;
@@ -47,14 +49,17 @@ import de.amr.pacmanfx.uilib.entities3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.entities3D.animation.EnergizerParticle3D;
 import de.amr.pacmanfx.uilib.entities3D.animation.Pool;
 import de.amr.pacmanfx.uilib.entities3D.bonus.Bonus3DAnimationID;
+import de.amr.pacmanfx.uilib.entities3D.bonus.Bonus3DMovementSystem;
 import de.amr.pacmanfx.uilib.entities3D.bonus.Bonus3DViewComp;
 import de.amr.pacmanfx.uilib.entities3D.bonus.Bonus3DViewSystem;
 import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3D;
 import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3DAppearanceController;
 import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3DTransformController;
 import de.amr.pacmanfx.uilib.entities3D.ghost.GhostSettings;
-import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DViewComp;
 import de.amr.pacmanfx.uilib.entities3D.pac.PacSettings;
+import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DViewComp;
+import de.amr.pacmanfx.uilib.entities3D.pac.system.Pac3DAnimationSystem;
+import de.amr.pacmanfx.uilib.entities3D.pac.system.Pac3DTransformSystem;
 import de.amr.pacmanfx.uilib.entities3D.world.Energizer3D;
 import de.amr.pacmanfx.uilib.entities3D.world.Pellet3D;
 import javafx.scene.Group;
@@ -89,7 +94,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     public static class EntitySet3D extends GameLevelEntitySet {
         // Cached for faster access
         private List<Ghost3D> ghosts3D = new ArrayList<>(4); // order: RED, PINK, CYAN, ORANGE
-        private LivesCounter3D livesCounter3D;
         private final Map<Vector2i, Energizer3D> energizer3DByTile = new HashMap<>();
         private final Map<Vector2i, Pellet3D> pellet3DByTile = new HashMap<>();
 
@@ -99,7 +103,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             if (ghosts3D != null) {
                 ghosts3D = null;
             }
-            livesCounter3D = null;
             energizer3DByTile.clear();
             pellet3DByTile.clear();
         }
@@ -109,7 +112,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         }
     }
 
-    // Access to game model
+    private final GameContext gameContext;
+
     private final GameLevel level;
 
     private final GameVariantConfig gameVariantConfig;
@@ -132,17 +136,17 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     public GameLevel3D(
         GameUISettingsVM viewModel,
         GameContext gameContext,
-        GameLevel level,
         GameVariantConfig gameVariantConfig)
     {
         requireNonNull(gameContext);
         this.viewModel = requireNonNull(viewModel);
-        this.level = requireNonNull(level);
+        this.gameContext = requireNonNull(gameContext);
         this.gameVariantConfig = requireNonNull(gameVariantConfig);
+        this.level = gameContext.assertLevel();
 
         createMaze3D();
         createFood3D();
-        createPac3D(level.entities().pac());
+        createPac3D();
         createGhosts3D(gameContext);
         createLivesCounter3D();
         createMessageManager();
@@ -167,7 +171,36 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
      * Starts the lives counter symbols following Pac-Man with their eyes.
      */
     public void startLivesCounterTrackingPac(GameEntity pac) {
-        entitySet3D.livesCounter3D.startTracking(pac.requireComponent(Pac3DViewComp.class).root());
+        final LivesCounter livesCounter = level.entities().entitySet().uniqueOfType(LivesCounter.class);
+        final Pac3DViewComp pac3D = pac.requireComponent(Pac3DViewComp.class);
+        LivesCounter3DSystem.startTracking(livesCounter, pac3D.root());
+    }
+
+    public void updateLivesCounter() {
+        final LivesCounter livesCounter = level.entities().entitySet().uniqueOfType(LivesCounter.class);
+        LivesCounter3DSystem.update(livesCounter);
+    }
+
+    public void updatePac() {
+        final Pac pac = level.entities().pac();
+        Pac3DTransformSystem.update(pac, level);
+        Pac3DAnimationSystem.update(pac, gameContext.systems().pacState());
+        Pac3DAnimationSystem.updatePowerLight(pac);
+    }
+
+    public void updateEntities() {
+        //TODO get rid of this crap!
+        entities3D().selectAll()
+            .filter(UpdatableEntity.class::isInstance).map(UpdatableEntity.class::cast)
+            .forEach(entity -> entity.update(gameContext));
+
+        updateLivesCounter();
+        updatePac();
+        //TODO ghosts
+        level.optBonus().ifPresent(bonus -> {
+            ensureBonus3DViewExists(bonus); //TODO this is a workaround
+            Bonus3DMovementSystem.update(bonus);
+        });
     }
 
     @Override
@@ -356,7 +389,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         getChildren().add(view3D.root());
     }
 
-    private void createPac3D(Pac pac) {
+    private void createPac3D() {
+        final Pac pac = gameContext.assertLevel().entities().pac();
         final PacSettings config = gameVariantConfig.worldSettings().pac();
         final Factory3D factory3D = gameVariantConfig.factory3D();
         factory3D.createPac3D(pac, config, animationRegistry);
@@ -391,10 +425,13 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private void createLivesCounter3D() {
-        entitySet3D.livesCounter3D = new LivesCounter3D(gameVariantConfig.factory3D(), gameVariantConfig.worldSettings());
-        entitySet3D.livesCounter3D.root().setTranslateX(2 * WorldMap.TS);
-        entitySet3D.livesCounter3D.root().setTranslateY(2 * WorldMap.TS);
-        entitySet3D.add(entitySet3D.livesCounter3D);
+        final LivesCounter livesCounter = level.entities().entitySet().uniqueOfType(LivesCounter.class);
+        if (!livesCounter.hasComponent(LivesCounterView3DComp.class)) {
+            final LivesCounterView3DComp view3D = new LivesCounterView3DComp(gameVariantConfig.factory3D(), gameVariantConfig.worldSettings());
+            livesCounter.setComponent(LivesCounterView3DComp.class, view3D);
+            view3D.root().setTranslateX(2 * WorldMap.TS);
+            view3D.root().setTranslateY(2 * WorldMap.TS);
+        }
     }
 
     private void createMessageManager() {
@@ -413,16 +450,24 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     // Order matters for correct transparency!
     private void buildHierarchy() {
-        getChildren().add(entitySet3D.livesCounter3D.root());
-        getChildren().add(level.entities().pac().requireComponent(Pac3DViewComp.class).root());
-        getChildren().add(level.entities().pac().requireComponent(Pac3DViewComp.class).powerLight());
+        final LivesCounter livesCounter = level.entities().entitySet().uniqueOfType(LivesCounter.class);
+        final Pac pac = level.entities().pac();
+
+        getChildren().add(livesCounter.requireComponent(LivesCounterView3DComp.class).root());
+
+        getChildren().add(pac.requireComponent(Pac3DViewComp.class).root());
+        getChildren().add(pac.requireComponent(Pac3DViewComp.class).powerLight());
+
         for (var ghost3D : entitySet3D.ghosts3D) { getChildren().add(ghost3D.root()); }
+
         entitySet3D.energizer3DByTile.values().stream().map(Energizer3D::shape).forEach(getChildren()::add);
         entitySet3D.pellet3DByTile.values().stream().map(Pellet3D::shape).forEach(getChildren()::add);
+
         getChildren().add(maze3D.particlesGroup());
         getChildren().add(maze3D);
         getChildren().add(maze3D.house().root());
         getChildren().add(maze3D.house().doors());
+
         getChildren().add(ghostHunterLight);
     }
 

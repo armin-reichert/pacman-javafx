@@ -163,15 +163,6 @@ public class PlayScene3D extends AbstractGameScene
         Pac3DAnimationSystem.setPowerMode(pac, false);
     }
 
-    public void updatePac(Pac pac, GameLevel level) {
-        requireNonNull(pac);
-        requireNonNull(level);
-
-        Pac3DTransformSystem.update(pac, level);
-        Pac3DAnimationSystem.update(pac, gameContext().systems().pacState());
-        Pac3DAnimationSystem.updatePowerLight(pac);
-    }
-
     public void initFood3D(GameLevel level, boolean startEnergizerPumping) {
         final FoodLayer foodLayer = level.worldMap().foodLayer();
 
@@ -195,7 +186,7 @@ public class PlayScene3D extends AbstractGameScene
         }
         final GameUISettingsVM viewModel = appContext().ui().viewModel();
 
-        level3D = new GameLevel3D(viewModel, gameContext, level, appContext().variants().currentVariant().config());
+        level3D = new GameLevel3D(viewModel, gameContext, appContext().variants().currentVariant().config());
 
         decorate(level3D);
         level3DEmbedder.getChildren().setAll(level3D);
@@ -275,18 +266,7 @@ public class PlayScene3D extends AbstractGameScene
             return;
         }
 
-        //TODO get rid of all this!
-        level3D.entities3D().selectAll()
-            .filter(UpdatableEntity.class::isInstance).map(UpdatableEntity.class::cast)
-            .forEach(entity -> entity.update(gameContext()));
-
-        updatePac(level.entities().pac(), level);
-
-        //TODO change to this style for all entities
-        level.optBonus().ifPresent(bonus -> {
-            level3D.ensureBonus3DViewExists(bonus); //TODO this is a workaround
-            Bonus3DMovementSystem.update(bonus);
-        });
+        level3D.updateEntities();
 
         perspectiveManager.updatePerspective(level);
         updateHUD3D(level);
