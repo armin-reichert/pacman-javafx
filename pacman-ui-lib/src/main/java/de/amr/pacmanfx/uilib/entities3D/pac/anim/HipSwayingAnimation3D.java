@@ -5,10 +5,11 @@
 package de.amr.pacmanfx.uilib.entities3D.pac.anim;
 
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
-import de.amr.pacmanfx.core.model.entities.pac.system.PacStateSystem;
 import de.amr.pacmanfx.core.model.entities.pac.PacState;
 import de.amr.pacmanfx.core.model.entities.pac.comp.PacStateComp;
+import de.amr.pacmanfx.core.model.entities.pac.system.PacStateSystem;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
+import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DViewComp;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -28,9 +29,9 @@ public class HipSwayingAnimation3D extends ManagedAnimation implements Pac3DMove
 
     private final Node node;
 
-    public HipSwayingAnimation3D(Node node) {
+    public HipSwayingAnimation3D(Pac3DViewComp view3D) {
         super("Ms. Pac-Man Hip Swaying");
-        this.node = requireNonNull(node);
+        this.node = requireNonNull(view3D.root());
         setFactory(this::createWrappedAnimation);
     }
 

@@ -31,11 +31,10 @@ public class Pac3DFactory {
 
     public static void createPacManView3D(AnimationRegistry animationRegistry, Pac pac, PacSettings config) {
         ensurePacHasView3D(pac, animationRegistry);
-        pac.requireComponent(Pac3DViewComp.class).setBodyAndJaw(
-            createPacBody(config, true), createPacBody(config, false)
-        );
 
         final Pac3DViewComp view3D = pac.requireComponent(Pac3DViewComp.class);
+        view3D.setBodyAndJaw(createPacBody(config, true), createPacBody(config, false));
+
         configurePowerLight(view3D, config.colors().headColor().desaturate());
 
         final Pac3DAnimationComp animation = pac.requireComponent(Pac3DAnimationComp.class);
@@ -54,19 +53,17 @@ public class Pac3DFactory {
 
     public static void createMsPacManView3D(AnimationRegistry animationRegistry, Pac msPacMan, PacSettings config) {
         ensurePacHasView3D(msPacMan, animationRegistry);
-        msPacMan.requireComponent(Pac3DViewComp.class).setBodyAndJaw(
-            createPacBody(config, true), createPacBody(config, false)
-        );
-
         final Pac3DViewComp view3D = msPacMan.requireComponent(Pac3DViewComp.class);
+
+        view3D.setBodyAndJaw(createPacBody(config, true), createPacBody(config, false));
         view3D.bodyGroup().getChildren().add(createFemalePacBodyParts(config));
+
         configurePowerLight(view3D, config.colors().headColor().desaturate());
 
         final Pac3DAnimationComp animation = msPacMan.requireComponent(Pac3DAnimationComp.class);
         final var chewing = new PacChewingAnimation3D(view3D);
-        final var hipSwaying = new HipSwayingAnimation3D(view3D.root()); //TODO change parameter
+        final var hipSwaying = new HipSwayingAnimation3D(view3D);
         final var dying = new MsPacManDyingAnimation3D(view3D);
-
         animation.setChewing(chewing);
         animation.setMovement(hipSwaying);
         animation.setDying(dying);
