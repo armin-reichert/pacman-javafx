@@ -197,10 +197,9 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     // Playing level
 
     @Override
-    public void activateNextBonus(GameContext gameContext) {
+    public void activateNextBonus(GameContext gameContext, GameLevel level) {
         final GameSystems sys = gameContext.systems();
         final GameModel model = gameContext.model();
-        final GameLevel level = gameContext.assertLevel();
         final GameEventManager eventManager = gameContext.eventManager();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 

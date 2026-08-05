@@ -78,7 +78,7 @@ public final class GameState_DemoLevelPlaying extends GameState {
             level.huntingTimerStrategy().startFirstPhase(gameContext, level.number());
         }
         else if (tick > huntingStartTick) {
-            gamePlay.hunt(gameContext);
+            gamePlay.hunt(gameContext, level);
             gameContext.flow().enterState(gameContext, computeNextState(gameContext));
         }
     }

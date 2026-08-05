@@ -49,7 +49,7 @@ public final class GameState_PlayingLevel extends GameState {
         final GameModel model = gameContext.model();
         final GameLevel level = model.assertLevel();
 
-        gameContext.gamePlay().hunt(gameContext);
+        gameContext.gamePlay().hunt(gameContext, level);
         logHuntingStepResult(gameContext.thisFrame().huntingStep());
 
         gameContext.cheats().update(level);

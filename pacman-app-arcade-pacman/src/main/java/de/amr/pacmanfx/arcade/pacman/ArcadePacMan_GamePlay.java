@@ -7,7 +7,6 @@ package de.amr.pacmanfx.arcade.pacman;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
-import de.amr.pacmanfx.core.model.level.LevelCounterSystem;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.arcade.pacman.rules.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.core.GameContext;
@@ -19,12 +18,13 @@ import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.entities.bonus.Bonus;
-import de.amr.pacmanfx.core.model.entities.ghost.comp.ElroyComp;
 import de.amr.pacmanfx.core.model.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.model.entities.ghost.GhostState;
+import de.amr.pacmanfx.core.model.entities.ghost.comp.ElroyComp;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.level.GameLevelMessageType;
+import de.amr.pacmanfx.core.model.level.LevelCounterSystem;
 import de.amr.pacmanfx.core.model.rules.HuntingTimer;
 import de.amr.pacmanfx.core.model.world.house.ArcadeHouse;
 import de.amr.pacmanfx.core.model.world.house.House;
@@ -222,26 +222,24 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     // Playing level
 
     @Override
-    public void onEatPellet(GameContext gameContext, Vector2i tile) {
-        super.onEatPellet(gameContext, tile);
-
-        checkCruiseElroyActivation(gameContext.assertLevel());
+    public void onEatPellet(GameContext gameContext, GameLevel level, Vector2i tile) {
+        super.onEatPellet(gameContext, level, tile);
+        checkCruiseElroyActivation(level);
     }
 
     @Override
-    public void onEatEnergizer(GameContext gameContext, Vector2i tile) {
-        super.onEatEnergizer(gameContext, tile);
-
-        checkCruiseElroyActivation(gameContext.assertLevel());
+    public void onEatEnergizer(GameContext gameContext, GameLevel level, Vector2i tile) {
+        super.onEatEnergizer(gameContext, level, tile);
+        checkCruiseElroyActivation(level);
     }
 
     @Override
-    public void activateNextBonus(GameContext gameContext) {
+    public void activateNextBonus(GameContext gameContext, GameLevel level) {
         requireNonNull(gameContext);
+        requireNonNull(level);
 
         final GameSystems sys = gameContext.systems();
         final GameModel model = gameContext.model();
-        final GameLevel level = gameContext.assertLevel();
         final GameEventManager eventManager = gameContext.eventManager();
 
         level.selectNextBonus();

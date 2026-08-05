@@ -65,7 +65,7 @@ public class LevelShortTestState extends GameState {
             level.clearMessage();
         }
         else if (timer().atSecond(START + 3)) {
-            gameContext.gamePlay().activateNextBonus(gameContext);
+            gameContext.gamePlay().activateNextBonus(gameContext, level);
         }
         else if (timer().atSecond(START + 5)) {
             level.optBonus().ifPresent(bonus -> {
@@ -74,7 +74,7 @@ public class LevelShortTestState extends GameState {
             });
         }
         else if (timer().atSecond(START + 6)) {
-            gameContext.gamePlay().activateNextBonus(gameContext);
+            gameContext.gamePlay().activateNextBonus(gameContext, level);
         }
         else if (timer().atSecond(START + 8)) {
             level.optBonus().ifPresent(bonus -> {
@@ -85,7 +85,7 @@ public class LevelShortTestState extends GameState {
         else if (timer().atSecond(START + 9)) {
             level.hidePacAndGhosts();
             level.heartbeat().stop();
-            gameContext.gamePlay().onLevelCompleted(gameContext);
+            gameContext.gamePlay().onLevelCompleted(gameContext, level);
         }
         else if (timer().atSecond(START + 10)) {
             if (level.number() == lastTestedLevelNumber) {

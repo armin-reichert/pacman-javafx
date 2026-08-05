@@ -41,19 +41,19 @@ public interface GamePlay {
 
     // Playing level
 
-    void hunt(GameContext gameContext);
+    void hunt(GameContext gameContext, GameLevel level);
 
-    void onEatPellet(GameContext gameContext, Vector2i tile);
+    void onEatPellet(GameContext gameContext, GameLevel level, Vector2i tile);
 
-    void onEatEnergizer(GameContext gameContext, Vector2i tile);
+    void onEatEnergizer(GameContext gameContext, GameLevel level, Vector2i tile);
 
-    void onEatBonus(GameContext gameContext, Bonus bonus);
+    void onEatBonus(GameContext gameContext, GameLevel level, Bonus bonus);
 
-    void onEatGhost(GameContext gameContext, Ghost eatenGhost);
+    void onEatGhost(GameContext gameContext, GameLevel level, Ghost eatenGhost);
 
-    void activateNextBonus(GameContext gameContext);
+    void activateNextBonus(GameContext gameContext, GameLevel level);
 
-    void onLevelCompleted(GameContext gameContext);
+    void onLevelCompleted(GameContext gameContext, GameLevel level);
 
     // Scoring
 

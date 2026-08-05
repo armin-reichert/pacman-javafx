@@ -75,7 +75,7 @@ public class LevelMediumTestState extends GameState {
             }
         }
         else {
-            gameContext.gamePlay().hunt(gameContext);
+            gameContext.gamePlay().hunt(gameContext, level);
             if (model.rules().isLevelCompleted(level)) {
                 gameContext.flow().enterState(gameContext, CommonGameStateID.GAME_INTRO);
             }
