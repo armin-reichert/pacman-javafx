@@ -40,7 +40,7 @@ public class Pac3DFactory {
 
         final Pac3DAnimationComp animation = pac.requireComponent(Pac3DAnimationComp.class);
         final var chewing = new PacChewingAnimation3D(view3D);
-        final var hipSwaying = new HeadBangingAnimation3D(view3D.root()); //TODO change parameter
+        final var hipSwaying = new HeadBangingAnimation3D(view3D);
         final var dying = new PacManDyingAnimation3D(view3D);
 
         animation.setChewing(chewing);

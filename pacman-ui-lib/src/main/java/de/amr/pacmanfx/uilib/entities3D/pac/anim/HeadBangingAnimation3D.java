@@ -10,6 +10,7 @@ import de.amr.pacmanfx.core.model.entities.pac.system.PacStateSystem;
 import de.amr.pacmanfx.core.model.entities.pac.PacState;
 import de.amr.pacmanfx.core.model.entities.pac.comp.PacStateComp;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
+import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DViewComp;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -28,16 +29,17 @@ public class HeadBangingAnimation3D extends ManagedAnimation implements Pac3DMov
     private static final float POWER_ANGLE_AMPLIFICATION = 2;
     private static final float POWER_RATE = 2;
 
-    private final Node targetGroup;
+    private final Node node;
 
-    public HeadBangingAnimation3D(Node targetGroup) {
+    public HeadBangingAnimation3D(Pac3DViewComp view3D) {
         super("Pac-Man Head Banging");
-        this.targetGroup = requireNonNull(targetGroup);
-        setFactory(this::createAnimationFX);
+        requireNonNull(view3D);
+        node = view3D.root();
+        setFactory(() -> createAnimationFX(node));
     }
 
-    private Animation createAnimationFX() {
-        var rotateTransition = new RotateTransition(BANG_TIME, targetGroup);
+    private Animation createAnimationFX(Node node) {
+        var rotateTransition = new RotateTransition(BANG_TIME, node);
         rotateTransition.setAxis(Rotate.X_AXIS);
         rotateTransition.setCycleCount(Animation.INDEFINITE);
         rotateTransition.setAutoReverse(true);
@@ -55,8 +57,8 @@ public class HeadBangingAnimation3D extends ManagedAnimation implements Pac3DMov
         super.stop();
         if (animationFX != null) {
             var rotateTransition = (RotateTransition) animationFX;
-            targetGroup.setRotationAxis(rotateTransition.getAxis());
-            targetGroup.setRotate(0);
+            node.setRotationAxis(rotateTransition.getAxis());
+            node.setRotate(0);
         }
     }
 
@@ -65,8 +67,8 @@ public class HeadBangingAnimation3D extends ManagedAnimation implements Pac3DMov
         super.pause();
         if (animationFX != null) {
             var rotateTransition = (RotateTransition) animationFX;
-            targetGroup.setRotationAxis(rotateTransition.getAxis());
-            targetGroup.setRotate(0);
+            node.setRotationAxis(rotateTransition.getAxis());
+            node.setRotate(0);
         }
     }
 
