@@ -6,12 +6,9 @@ package de.amr.pacmanfx.uilib.entities3D.pac.system;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
-import de.amr.basics.math.Vector3f;
-import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.entities.pac.PacState;
-import de.amr.pacmanfx.core.model.entities.pac.comp.PacStateComp;
 import de.amr.pacmanfx.core.model.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DViewComp;
