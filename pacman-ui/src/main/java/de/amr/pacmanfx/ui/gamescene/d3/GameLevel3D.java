@@ -316,7 +316,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
                 <= view3D.doorSensitivity())
             .anyMatch(GameEntity::isVisible);
 
-        House3DAnimationSystem.update(house, accessRequested, ghostNearHouseEntry);
+        House3DSystem.showLight(house, ghostNearHouseEntry);
+        House3DAnimationSystem.update(house, accessRequested);
     }
 
     private void updateBonus() {

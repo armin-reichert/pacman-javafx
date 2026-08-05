@@ -9,4 +9,9 @@ public class House3DSystem {
         final House3DViewComp view3D = house.requireComponent(House3DViewComp.class);
         view3D.setDoorsVisible(false);
     }
+
+    public static void showLight(House house, boolean lightOn) {
+        final House3DViewComp view3D = house.requireComponent(House3DViewComp.class);
+        view3D.light().lightOnProperty().set(lightOn);
+    }
 }

@@ -61,7 +61,9 @@ public class MazeFactory3D {
                 config3D.opacity()
             );
             house.setComponent(House3DViewComp.class, view3D);
-            house.setComponent(House3DAnimationComp.class, new House3DAnimationComp(animationRegistry));
+            final var animation =  new House3DAnimationComp(animationRegistry);
+            animation.createDoorsMeltingAnimationFactory(view3D.barThicknessProperty);
+            house.setComponent(House3DAnimationComp.class, animation);
         }
 
         // apply color scheme
