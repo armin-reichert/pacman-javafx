@@ -9,8 +9,8 @@ import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.entities3D.PacMan3DModel;
 import de.amr.pacmanfx.uilib.entities3D.pac.anim.*;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DAnimationComp;
+import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DTransformComp;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DViewComp;
-import de.amr.pacmanfx.uilib.entities3D.pac.system.Pac3DSupportSystem;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -30,7 +30,10 @@ import static java.util.Objects.requireNonNull;
 public class Pac3DFactory {
 
     public static void createPacManView3D(AnimationRegistry animationRegistry, Pac pac, PacSettings config) {
-        Pac3DSupportSystem.makePac3D(pac, animationRegistry, createPacBody(config, true), createPacBody(config, false));
+        ensurePacHasView3D(pac, animationRegistry);
+        pac.requireComponent(Pac3DViewComp.class).setBodyAndJaw(
+            createPacBody(config, true), createPacBody(config, false)
+        );
 
         final Pac3DViewComp view3D = pac.requireComponent(Pac3DViewComp.class);
         configurePowerLight(view3D, config.colors().headColor().desaturate());
@@ -50,7 +53,10 @@ public class Pac3DFactory {
     }
 
     public static void createMsPacManView3D(AnimationRegistry animationRegistry, Pac msPacMan, PacSettings config) {
-        Pac3DSupportSystem.makePac3D(msPacMan, animationRegistry, createPacBody(config, true), createPacBody(config, false));
+        ensurePacHasView3D(msPacMan, animationRegistry);
+        msPacMan.requireComponent(Pac3DViewComp.class).setBodyAndJaw(
+            createPacBody(config, true), createPacBody(config, false)
+        );
 
         final Pac3DViewComp view3D = msPacMan.requireComponent(Pac3DViewComp.class);
         view3D.bodyGroup().getChildren().add(createFemalePacBodyParts(config));
@@ -68,6 +74,14 @@ public class Pac3DFactory {
         animationRegistry.register(Pac3DAnimationID.CHEWING, chewing);
         animationRegistry.register(Pac3DAnimationID.MOVING,  hipSwaying);
         animationRegistry.register(Pac3DAnimationID.DYING,   dying);
+    }
+
+    private static void ensurePacHasView3D(Pac pac, AnimationRegistry animationRegistry) {
+        if (!pac.hasComponent(Pac3DViewComp.class)) {
+            pac.setComponent(Pac3DViewComp.class, new Pac3DViewComp());
+            pac.setComponent(Pac3DTransformComp.class, new Pac3DTransformComp());
+            pac.setComponent(Pac3DAnimationComp.class, new Pac3DAnimationComp(animationRegistry));
+        }
     }
 
     private static void configurePowerLight(Pac3DViewComp view3D, Color color) {

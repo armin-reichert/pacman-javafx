@@ -139,17 +139,15 @@ public class GameSceneManager {
         final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
 
-
         playScene3D.replaceGameLevel3D(gameContext);
 
         final GameLevel3D level3D = playScene3D.optGameLevel3D().orElseThrow();
 
         playScene3D.replaceActionBindings(level);
         playScene3D.initFood3D(level, true);
-        playScene3D.initPac3D(pac, gameContext);
         playScene3D.updateHUD3D(level);
 
-        level3D.init(gameContext);
+        level3D.createLevelCounterView3D(gameContext.model().levelCounter());
         level3D.startLivesCounterTrackingPac(pac);
 
         if (pac.power().isPowerActive()) {

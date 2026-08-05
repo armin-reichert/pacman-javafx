@@ -152,10 +152,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         setMouseTransparent(true); // this increases performance they say...
     }
 
-    public void init(GameContext gameContext) {
-        createLevelCounterView3D(gameContext.model().levelCounter());
-    }
-
     public void createAnimations(ParticlesAnimationConfig particlesConfig) {
         final GameVariantRenderConfig renderConfig = gameVariantConfig.renderConfig();
         final WorldMapColorSchemeImpl mapColorScheme = renderConfig.colorScheme(level.worldMap(), gameVariantConfig.worldSettings());
@@ -341,7 +337,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return  view3D;
     }
 
-    private void createLevelCounterView3D(LevelCounter levelCounter) {
+    public void createLevelCounterView3D(LevelCounter levelCounter) {
         if (!levelCounter.hasComponent(LevelCounterView3DComp.class)) {
             final LevelCounterView3DComp view3D = new LevelCounterView3DComp();
             levelCounter.setComponent(LevelCounterView3DComp.class, view3D);

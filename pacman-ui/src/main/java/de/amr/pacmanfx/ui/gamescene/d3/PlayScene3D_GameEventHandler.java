@@ -43,7 +43,6 @@ import de.amr.pacmanfx.uilib.entities3D.bonus.Bonus3DViewSystem;
 import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3D;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DAnimationComp;
 import de.amr.pacmanfx.uilib.entities3D.pac.system.Pac3DAnimationSystem;
-import de.amr.pacmanfx.uilib.entities3D.pac.system.Pac3DSupportSystem;
 import de.amr.pacmanfx.uilib.entities3D.world.Energizer3D;
 import de.amr.pacmanfx.uilib.entities3D.world.NumberBox3D;
 import de.amr.pacmanfx.uilib.entities3D.world.Pellet3D;
@@ -171,7 +170,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         }
 
         final GameLevel3D level3D = assertLevel3D();
-        level3D.init(gameContext);
+        level3D.createLevelCounterView3D(gameContext.model().levelCounter());
 
         //TODO replace all this 3D wrapper crap and use the game entities from the model!
         level3D.entities3D().selectAll()
@@ -257,9 +256,10 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         final GameLevel level = gameContext().assertLevel();
         final GameLevel3D level3D = assertLevel3D();
 
-        Pac3DSupportSystem.init(level.entities().pac(), gameContext);
+        gameScene().initPac(level, level.entities().pac());
 
         level3D.entities3D().ghosts3D().forEach(ghost3D -> ghost3D.init(gameContext));
+
         level3D.energizers3D().forEach(Energizer3D::startPumping);
 
         level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.PARTICLES)
@@ -291,11 +291,12 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         seq.play();
     }
 
+    //TODO move to animation system
     private Animation createPacDyingAnimationSeq(Pac pac, GameContext gameContext) {
         final Pac3DAnimationComp animation = pac.requireComponent(Pac3DAnimationComp.class);
 
         final Animation pacStopping = Ufx.doNow(() -> {
-            Pac3DSupportSystem.update(pac, gameContext); //TODO check if this is needed
+            gameScene().updatePac(pac, gameContext.assertLevel()); //TODO check if this is needed
             animation.chewing().stop();
             animation.movement().managedAnimation().stop();
         });

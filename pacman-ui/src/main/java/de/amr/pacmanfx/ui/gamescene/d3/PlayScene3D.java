@@ -29,7 +29,8 @@ import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.entities3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.entities3D.Scores3D;
 import de.amr.pacmanfx.uilib.entities3D.bonus.Bonus3DMovementSystem;
-import de.amr.pacmanfx.uilib.entities3D.pac.system.Pac3DSupportSystem;
+import de.amr.pacmanfx.uilib.entities3D.pac.system.Pac3DAnimationSystem;
+import de.amr.pacmanfx.uilib.entities3D.pac.system.Pac3DTransformSystem;
 import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -153,12 +154,22 @@ public class PlayScene3D extends AbstractGameScene
         scores3D.showHighScore(highScore.points(), highScore.levelNumber());
     }
 
-    public void initPac3D(Pac pac, GameContext gameContext) {
+    public void initPac(GameLevel level, Pac pac) {
         requireNonNull(pac);
-        requireNonNull(gameScene());
+        requireNonNull(level);
 
-        Pac3DSupportSystem.init(pac, gameContext);
-        Pac3DSupportSystem.update(pac, gameContext);
+        Pac3DTransformSystem.init(pac, level);
+        Pac3DAnimationSystem.stopAll(pac);
+        Pac3DAnimationSystem.setPowerMode(pac, false);
+    }
+
+    public void updatePac(Pac pac, GameLevel level) {
+        requireNonNull(pac);
+        requireNonNull(level);
+
+        Pac3DTransformSystem.update(pac, level);
+        Pac3DAnimationSystem.update(pac, gameContext().systems().pacState());
+        Pac3DAnimationSystem.updatePowerLight(pac);
     }
 
     public void initFood3D(GameLevel level, boolean startEnergizerPumping) {
@@ -191,11 +202,12 @@ public class PlayScene3D extends AbstractGameScene
 
         level3D.createAnimations(Game3DSettingsVM.DEFAULT_PARTICLE_ANIMATION_CONFIG);
 
+        //TODO remove all this
         level3D.entities3D().selectAll()
             .filter(UpdatableEntity.class::isInstance).map(UpdatableEntity.class::cast)
             .forEach(entity -> entity.init(gameContext));
 
-        Pac3DSupportSystem.init(level.entities().pac(), gameContext);
+        initPac(level, level.entities().pac());
 
         level3D.startLivesCounterTrackingPac(level.entities().pac());
 
@@ -268,7 +280,7 @@ public class PlayScene3D extends AbstractGameScene
             .filter(UpdatableEntity.class::isInstance).map(UpdatableEntity.class::cast)
             .forEach(entity -> entity.update(gameContext()));
 
-        Pac3DSupportSystem.update(level.entities().pac(), gameContext);
+        updatePac(level.entities().pac(), level);
 
         //TODO change to this style for all entities
         level.optBonus().ifPresent(bonus -> {
