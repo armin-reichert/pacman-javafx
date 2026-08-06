@@ -15,6 +15,8 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 
+import static java.util.Objects.requireNonNull;
+
 public class Ghost3DViewComp implements GameEntityComponent {
 
     // Root node containing all variants
@@ -23,8 +25,6 @@ public class Ghost3DViewComp implements GameEntityComponent {
     private AnimationRegistry animations;
 
     private GhostMaterialSet materialSet;
-
-    private Group dressGroup;
 
     private MeshView dressMeshView;
     
@@ -53,14 +53,16 @@ public class Ghost3DViewComp implements GameEntityComponent {
         return activeVariant;
     }
 
-    public void setActiveVariant(GhostAppearance activeVariant) {
-        this.activeVariant = activeVariant;
-        switch (activeVariant) {
-            case EATEN -> lookEaten();
-            case EYES -> lookEyesOnly();
-            case FLASHING -> lookFlashing();
-            case NORMAL -> lookNormal();
-            case NUMBER -> lookNumber();
+    public void setActiveVariant(GhostAppearance variant) {
+        requireNonNull(variant);
+        if (activeVariant != variant) {
+            switch (activeVariant) {
+                case EATEN    -> lookEaten();
+                case EYES     -> lookEyesOnly();
+                case FLASHING -> lookFlashing();
+                case NORMAL   -> lookNormal();
+                case NUMBER   -> lookNumber();
+            }
         }
     }
 
@@ -70,10 +72,6 @@ public class Ghost3DViewComp implements GameEntityComponent {
 
     public void setAnimations(AnimationRegistry animations) {
         this.animations = animations;
-    }
-
-    public GhostMaterialSet materialSet() {
-        return materialSet;
     }
 
     public void setMaterialSet(GhostMaterialSet materialSet) {
@@ -99,7 +97,7 @@ public class Ghost3DViewComp implements GameEntityComponent {
         eyeballsMeshView = new MeshView(eyeballsMesh);
 
         // 2. Create groups
-        dressGroup = new Group(dressMeshView);
+        final var dressGroup = new Group(dressMeshView);
 
         final Group eyesGroup = new Group(pupilsMeshView, eyeballsMeshView);
         final Group facingGroup = new Group(dressGroup, eyesGroup);
