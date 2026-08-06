@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.uilib.entities3D.ghost;
 
-import de.amr.basics.Named;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.entities.ghost.Ghost;
@@ -36,16 +35,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class Ghost3DWrapperToBeRemoved extends GameEntity implements UpdatableEntity, DisposableGraphicsObject {
 
-    public enum AnimationID implements Named {
-        BRAKING, DRESS, FLASHING;
-
-        public AnimationKey key(Ghost ghost) {
-            requireNonNull(ghost);
-            return new AnimationKey(this, ghost.personality());
-        }
-    }
-
-    public record AnimationKey(AnimationID animationID, GhostPersonality ghostID) {}
+    public record AnimationKey(Ghost3DAnimationID animationID, GhostPersonality ghostID) {}
 
     private final ObjectProperty<DrawMode> drawMode = new SimpleObjectProperty<>(DrawMode.FILL);
 
@@ -105,7 +95,7 @@ public class Ghost3DWrapperToBeRemoved extends GameEntity implements UpdatableEn
 
     @Override
     public void dispose() {
-        for (AnimationID animationID : AnimationID.values()) {
+        for (Ghost3DAnimationID animationID : Ghost3DAnimationID.values()) {
             animations.optAnimation(animationID.key(ghost)).ifPresent(ManagedAnimation::dispose);
         }
         cleanupGroup(root, true);
@@ -159,7 +149,7 @@ public class Ghost3DWrapperToBeRemoved extends GameEntity implements UpdatableEn
     }
 
     public void stopAllAnimations() {
-        for (AnimationID animationID : AnimationID.values()) {
+        for (Ghost3DAnimationID animationID : Ghost3DAnimationID.values()) {
             animations.optAnimation(animationID.key(ghost)).ifPresent(ManagedAnimation::stop);
         }
     }
@@ -173,11 +163,11 @@ public class Ghost3DWrapperToBeRemoved extends GameEntity implements UpdatableEn
     }
 
     public Optional<GhostDressAnimation3D> dressAnimation() {
-        return animations.optAnimation(AnimationID.DRESS.key(ghost), GhostDressAnimation3D.class);
+        return animations.optAnimation(Ghost3DAnimationID.DRESS.key(ghost), GhostDressAnimation3D.class);
     }
 
     public Optional<GhostFlashingAnimation3D> dressColorFlashingAnimation() {
-        return animations.optAnimation(AnimationID.FLASHING.key(ghost), GhostFlashingAnimation3D.class);
+        return animations.optAnimation(Ghost3DAnimationID.FLASHING.key(ghost), GhostFlashingAnimation3D.class);
     }
 
     // Private Area, no trespassing!
@@ -237,9 +227,9 @@ public class Ghost3DWrapperToBeRemoved extends GameEntity implements UpdatableEn
     }
 
     private void registerAnimations() {
-        animations.register(AnimationID.DRESS.key(ghost), new GhostDressAnimation3D(this, 30));
-        animations.register(AnimationID.FLASHING.key(ghost), new GhostFlashingAnimation3D(this));
-        animations.register(AnimationID.BRAKING.key(ghost), new GhostBrakeAnimation3D(this));
+        animations.register(Ghost3DAnimationID.DRESS.key(ghost), new GhostDressAnimation3D(this, 30));
+        animations.register(Ghost3DAnimationID.FLASHING.key(ghost), new GhostFlashingAnimation3D(this));
+        animations.register(Ghost3DAnimationID.BRAKING.key(ghost), new GhostBrakeAnimation3D(this));
     }
 
     private void assertControllersAssigned() {

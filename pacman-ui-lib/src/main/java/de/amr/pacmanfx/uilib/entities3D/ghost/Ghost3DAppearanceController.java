@@ -53,7 +53,7 @@ public class Ghost3DAppearanceController {
     private void brakeIfTunnelEntered(Ghost3DWrapperToBeRemoved ghost3D) {
         final Ghost ghost = ghost3D.ghost();
         if (ghost.worldNavigation().info.tunnelEntered) {
-            ghost3D.animations().animation(Ghost3DWrapperToBeRemoved.AnimationID.BRAKING.key(ghost)).playFromStart();
+            ghost3D.animations().animation(Ghost3DAnimationID.BRAKING.key(ghost)).playFromStart();
         }
     }
 
