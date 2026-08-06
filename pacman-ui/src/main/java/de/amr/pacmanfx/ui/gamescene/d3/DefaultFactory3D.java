@@ -16,6 +16,7 @@ import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.entities3D.PacMan3DModel;
 import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3DFactory;
+import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DViewComp;
 import de.amr.pacmanfx.uilib.entities3D.ghost_old.*;
 import de.amr.pacmanfx.uilib.entities3D.pac.Pac3DFactory;
 import de.amr.pacmanfx.uilib.entities3D.pac.PacSettings;
@@ -77,6 +78,9 @@ public class DefaultFactory3D implements Factory3D {
             PacMan3DModel.instance().ghostPupilsMesh(),
             PacMan3DModel.instance().ghostEyeballsMesh()
         );
+        final GhostMaterialSet materialSet = ghostMaterialsCache
+            .computeIfAbsent(settings.colors(), this::createGhostMaterial);
+        ghost.requireComponent(Ghost3DViewComp.class).setMaterialSet(materialSet);
     }
 
     @Override

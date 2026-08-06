@@ -3,7 +3,10 @@ package de.amr.pacmanfx.uilib.entities3D.ghost.comp;
 import de.amr.pacmanfx.core.ecs.GameEntityComponent;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.entities3D.PacMan3DModel;
-import de.amr.pacmanfx.uilib.entities3D.ghost_old.*;
+import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostAppearance;
+import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostComponentMaterialSet;
+import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostMaterialSet;
+import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostSettings;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.shape.Mesh;
@@ -33,8 +36,7 @@ public class Ghost3DViewComp implements GameEntityComponent {
 
     private GhostAppearance activeVariant;
 
-    public Ghost3DViewComp() {
-    }
+    public Ghost3DViewComp() {}
 
     public void build(GhostSettings settings, Mesh dressMesh, Mesh pupilsMesh, Mesh eyeballsMesh) {
         buildTree(settings, dressMesh, pupilsMesh, eyeballsMesh);
@@ -53,6 +55,13 @@ public class Ghost3DViewComp implements GameEntityComponent {
 
     public void setActiveVariant(GhostAppearance activeVariant) {
         this.activeVariant = activeVariant;
+        switch (activeVariant) {
+            case EATEN -> lookEaten();
+            case EYES -> lookEyesOnly();
+            case FLASHING -> lookFlashing();
+            case NORMAL -> lookNormal();
+            case NUMBER -> lookNumber();
+        }
     }
 
     public AnimationRegistry animations() {
@@ -69,10 +78,6 @@ public class Ghost3DViewComp implements GameEntityComponent {
 
     public void setMaterialSet(GhostMaterialSet materialSet) {
         this.materialSet = materialSet;
-    }
-
-    public Group dressGroup() {
-        return dressGroup;
     }
 
     // Private Area, no trespassing!
@@ -133,7 +138,7 @@ public class Ghost3DViewComp implements GameEntityComponent {
 
     // Look management
 
-    private void lookNormal() {
+    public void lookNormal() {
         dressMeshView.setVisible(true);
         selectMaterialSet(materialSet.normalMaterial());
 
@@ -143,13 +148,8 @@ public class Ghost3DViewComp implements GameEntityComponent {
 //        brakeIfTunnelEntered(ghost3D);
     }
 
-    private void lookFlashing(int numFlashes) {
-        if (numFlashes == 0) {
-            lookFrightened();
-            return;
-        }
-        dressMeshView.setVisible(true);
-        selectMaterialSet(materialSet.flashingMaterial());
+    public void lookFlashing() {
+        lookFrightened();
 
         //TODO move into animation component
 //        dressAnimation().ifPresent(ManagedAnimation::playOrContinue);
@@ -159,7 +159,7 @@ public class Ghost3DViewComp implements GameEntityComponent {
 //        });
     }
 
-    private void lookFrightened() {
+    public void lookFrightened() {
         dressMeshView.setVisible(true);
         selectMaterialSet(materialSet.frightenedMaterial());
 
@@ -168,7 +168,7 @@ public class Ghost3DViewComp implements GameEntityComponent {
 //        dressAnimation().ifPresent(ManagedAnimation::playOrContinue);
     }
 
-    private void lookEyesOnly() {
+    public void lookEyesOnly() {
         dressMeshView.setVisible(false);
         selectMaterialSet(materialSet.normalMaterial());
 
@@ -176,8 +176,12 @@ public class Ghost3DViewComp implements GameEntityComponent {
 //        stopAllAnimations();
     }
 
-    private void lookEaten(Ghost3DWrapperToBeRemoved ghost3D) {
+    public void lookEaten() {
         root().setVisible(false);
+    }
+
+    public void lookNumber() {
+        //TODO
     }
 
     private void selectMaterialSet(GhostComponentMaterialSet materialSet) {
@@ -185,5 +189,4 @@ public class Ghost3DViewComp implements GameEntityComponent {
         pupilsMeshView.setMaterial(materialSet.pupilsMaterial());
         eyeballsMeshView.setMaterial(materialSet.eyeballsMaterial());
     }
-
 }
