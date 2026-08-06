@@ -1,4 +1,4 @@
-package de.amr.pacmanfx.uilib.entities3D.bonus;
+package de.amr.pacmanfx.uilib.entities3D.bonus.comp;
 
 import de.amr.pacmanfx.core.ecs.GameEntityComponent;
 import de.amr.pacmanfx.uilib.entities3D.DisposableGraphicsObject;

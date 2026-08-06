@@ -7,7 +7,7 @@ package de.amr.pacmanfx.uilib.entities3D.bonus.anim;
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
-import de.amr.pacmanfx.uilib.entities3D.bonus.Bonus3DViewComp;
+import de.amr.pacmanfx.uilib.entities3D.bonus.comp.Bonus3DViewComp;
 
 public class BonusRollingTransform {
 
