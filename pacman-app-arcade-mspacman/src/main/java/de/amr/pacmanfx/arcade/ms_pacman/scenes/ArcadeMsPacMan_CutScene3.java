@@ -5,8 +5,8 @@ package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.arcade.ms_pacman.entities.bag.BagSAM;
-import de.amr.pacmanfx.arcade.ms_pacman.entities.stork.StorkSAM;
+import de.amr.pacmanfx.arcade.ms_pacman.entities.bag.BagSpriteAniMap;
+import de.amr.pacmanfx.arcade.ms_pacman.entities.stork.StorkSpriteAniMap;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
@@ -84,10 +84,10 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
 
         stork = new Stork();
         stork.setBagReleasedFromBeak(false);
-        stork.spriteAnim().setAnimations(new StorkSAM(animationContainer));
+        stork.spriteAnim().setAnimations(new StorkSpriteAniMap(animationContainer));
 
         bag = new Bag();
-        bag.spriteAnim().setAnimations(new BagSAM(animationContainer));
+        bag.spriteAnim().setAnimations(new BagSpriteAniMap(animationContainer));
         closeBag();
 
         clapperboard = new Clapperboard("3", "JUNIOR");

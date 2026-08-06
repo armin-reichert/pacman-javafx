@@ -12,6 +12,7 @@ import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostStateComp;
+import de.amr.pacmanfx.core.gameplay.GhostHuntingStrategy;
 import de.amr.pacmanfx.core.level.GameLevel;
 
 import java.util.Set;

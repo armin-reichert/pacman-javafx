@@ -9,6 +9,7 @@ import de.amr.pacmanfx.core.entities.bonus.system.BonusStateSystem;
 import de.amr.pacmanfx.core.entities.bonus.system.BonusWorldMovementPolicy;
 import de.amr.pacmanfx.core.entities.ghost.system.*;
 import de.amr.pacmanfx.core.entities.pac.system.*;
+import de.amr.pacmanfx.core.gameplay.*;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 
 public class DefaultGameSystems implements GameSystems {
