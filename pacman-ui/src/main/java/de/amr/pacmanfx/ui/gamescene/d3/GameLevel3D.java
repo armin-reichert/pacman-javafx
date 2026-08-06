@@ -271,7 +271,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         //TODO move into animation system
         if (numberBoxNode instanceof NumberBox3D numberBox3D) {
             final double risingHeight = (killIndex + 1) * 12;
-            final var animation = new HideGhost3DThenRiseNumberBoxAnimation(ghost3DView, numberBox3D, risingHeight);
+            final var animation = new HideGhost3DRiseNumberBoxAnimation(ghost3DView, numberBox3D, risingHeight);
             animation.animationFX().setOnFinished(_ -> getChildren().remove(numberBoxNode));
             animation.playFromStart();
         }

@@ -14,18 +14,17 @@ import javafx.animation.ParallelTransition;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 
-public class HideGhost3DThenRiseNumberBoxAnimation extends ManagedAnimation {
+public class HideGhost3DRiseNumberBoxAnimation extends ManagedAnimation {
 
-    public HideGhost3DThenRiseNumberBoxAnimation(Ghost3DViewComp ghost3DView, NumberBox3D numberBox3D, double risingHeight) {
+    public HideGhost3DRiseNumberBoxAnimation(Ghost3DViewComp ghost3DView, NumberBox3D numberBox3D, double risingHeight) {
         super("Hide ghost and show points");
 
         setFactory(() -> {
-            final var numberBoxRising = new NumberBoxRisingAnimation3D(numberBox3D, risingHeight).createAnimation();
-
             final var hideGhostAfterShortTime = new Timeline(
                 new KeyFrame(Duration.ZERO,       new KeyValue(ghost3DView.root().visibleProperty(), false)),
                 new KeyFrame(Duration.seconds(1), new KeyValue(ghost3DView.root().visibleProperty(), true))
             );
+            final var numberBoxRising = new NumberBoxRisingAnimation3D(numberBox3D, risingHeight).createAnimation();
 
             return new ParallelTransition(hideGhostAfterShortTime, numberBoxRising);
         });
