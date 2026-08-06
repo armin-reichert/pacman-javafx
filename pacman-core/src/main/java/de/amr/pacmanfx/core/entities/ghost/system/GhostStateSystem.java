@@ -40,7 +40,7 @@ public class GhostStateSystem {
 
         final float speed = gameContext.model().rules().actorSpeedRules().ghostSpeed(gameContext, ghost);
 
-        switch (ghost.stateValue()) {
+        switch (ghost.ghostStateEnum()) {
             case LOCKED         -> houseAccessSystem.stayInHouse(gameContext, ghost, speed);
 
             case LEAVING_HOUSE  -> {
@@ -75,7 +75,7 @@ public class GhostStateSystem {
     public void changeState(Ghost ghost, GhostState newState) {
         requireNonNull(ghost);
         requireNonNull(newState);
-        ghost.requireComponent(GhostStateComp.class).setStateValue(newState);
+        ghost.requireComponent(GhostStateComp.class).setGhostStateEnum(newState);
     }
     
     private boolean isGhostThreatenedByPac(GameLevel level, Ghost ghost, Pac pac) {

@@ -68,7 +68,7 @@ public class TengenMsPacMan_ActorSpeedRules implements ActorSpeedRules {
         final int levelNumber = level.number();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final Vector2i ghostTile = WorldNavigationSystem.computeTile(ghost);
-        final GhostState state = ghost.stateValue();
+        final GhostState state = ghost.ghostStateEnum();
         final boolean insideHouse = house.isVisitedBy(ghost);
         final boolean tunnelSlowdown = terrain.isTunnel(ghostTile);
         return switch (state) {

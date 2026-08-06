@@ -312,12 +312,12 @@ public class GameLevel {
 
     public Stream<Ghost> ghostsInAnyOfStates(Collection<GhostState> states) {
         requireNonNull(states);
-        return entities.ghosts().stream().filter(ghost -> states.contains(ghost.stateValue()));
+        return entities.ghosts().stream().filter(ghost -> states.contains(ghost.ghostStateEnum()));
     }
 
     public Stream<Ghost> ghostsInState(GhostState state) {
         requireNonNull(state);
-        return entities.ghosts().stream().filter(ghost -> state.equals(ghost.stateValue()));
+        return entities.ghosts().stream().filter(ghost -> state.equals(ghost.ghostStateEnum()));
     }
 
     // Bonus

@@ -8,7 +8,7 @@ import de.amr.pacmanfx.core.entities.ghost.comp.GhostStateComp;
 public class GhostAnimationSystem {
 
     public static void update(Ghost ghost, Pac pac) {
-        final ActorAnimationID animationID = switch (ghost.stateValue()) {
+        final ActorAnimationID animationID = switch (ghost.ghostStateEnum()) {
             case LOCKED, LEAVING_HOUSE -> threatenedOrNormalAnimation(ghost, pac);
             case HUNTING_PAC    -> ActorAnimationID.GHOST_NORMAL;
             case FRIGHTENED     -> frightenedOrFlashingAnimation(pac);

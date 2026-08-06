@@ -42,8 +42,8 @@ public final class Ghost extends GameEntity {
         return personality;
     }
 
-    public GhostState stateValue() {
-        return state().stateValue();
+    public GhostState ghostStateEnum() {
+        return state().ghostStateEnum();
     }
 
     // Typed component accessors
@@ -76,7 +76,7 @@ public final class Ghost extends GameEntity {
     public String toString() {
         return "Ghost{" +
             "personality=" + personality +
-            ", state=" + stateValue() +
+            ", state=" + ghostStateEnum() +
             ", " + super.toString() +
             '}';
     }

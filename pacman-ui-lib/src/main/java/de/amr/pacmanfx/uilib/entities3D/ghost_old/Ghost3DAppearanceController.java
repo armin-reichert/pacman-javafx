@@ -26,7 +26,7 @@ public class Ghost3DAppearanceController {
         final Pac pac = level.entities().pac();
         final Ghost ghost = ghost3D.ghost();
 
-        final GhostAppearance appearance = switch (ghost.stateValue()) {
+        final GhostAppearance appearance = switch (ghost.ghostStateEnum()) {
             case LOCKED, LEAVING_HOUSE -> {
                 //TODO maybe the (model) ghost should store the "frightened no more" state?
                 final boolean killedDuringCurrentPhase = level.isInGhostKilledChain(ghost);

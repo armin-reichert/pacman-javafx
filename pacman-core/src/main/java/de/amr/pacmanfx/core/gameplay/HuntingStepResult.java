@@ -86,7 +86,7 @@ public final class HuntingStepResult {
         var lines = new ArrayList<String>();
         for (Ghost ghost : ghostsCollidingWithPac()) {
             final Vector2i ghostTile = computeTile(ghost.pos());
-            lines.add("%s collided with Pac at tile %s, state after collision: %s".formatted(ghost.name(), ghostTile, ghost.stateValue()));
+            lines.add("%s collided with Pac at tile %s, state after collision: %s".formatted(ghost.name(), ghostTile, ghost.ghostStateEnum()));
         }
         if (energizerFound()) {
             lines.add("Energizer found at " + foodFoundTile());
