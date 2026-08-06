@@ -60,7 +60,6 @@ public class Ghost3DViewComp implements GameEntityComponent {
                 case FLASHING -> lookFlashing();
                 case FRIGHTENED -> lookFrightened();
                 case NORMAL   -> lookNormal();
-                case NUMBER   -> lookNumber();
             }
         }
     }
@@ -181,11 +180,6 @@ public class Ghost3DViewComp implements GameEntityComponent {
         root().setVisible(false);
 
         applyMaterials(materialSet.normalMaterial());
-    }
-
-    public void lookNumber() {
-        root().setVisible(true);
-        //TODO
     }
 
     private void applyMaterials(GhostComponentMaterialSet materialSet) {

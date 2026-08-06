@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.gamescene.d3.animation;
 
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3D.bonus.anim.NumberBoxRisingAnimation3D;
-import de.amr.pacmanfx.uilib.entities3D.ghost_old.Ghost3DWrapperToBeRemoved;
+import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DViewComp;
 import de.amr.pacmanfx.uilib.entities3D.world.NumberBox3D;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -14,22 +14,20 @@ import javafx.animation.ParallelTransition;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 
-public class HideGhostShowPointsAnimation3D extends ManagedAnimation {
+public class HideGhost3DThenRiseNumberBoxAnimation extends ManagedAnimation {
 
-    public HideGhostShowPointsAnimation3D(Ghost3DWrapperToBeRemoved ghost3D, NumberBox3D numberBox3D, double risingHeight) {
+    public HideGhost3DThenRiseNumberBoxAnimation(Ghost3DViewComp ghost3DView, NumberBox3D numberBox3D, double risingHeight) {
         super("Hide ghost and show points");
 
         setFactory(() -> {
             final var numberBoxRising = new NumberBoxRisingAnimation3D(numberBox3D, risingHeight).createAnimation();
 
-            final var hideGhostShortly = new Timeline(
-                new KeyFrame(Duration.ZERO,       new KeyValue(ghost3D.root().visibleProperty(), false)),
-                new KeyFrame(Duration.seconds(1), new KeyValue(ghost3D.root().visibleProperty(), true))
+            final var hideGhostAfterShortTime = new Timeline(
+                new KeyFrame(Duration.ZERO,       new KeyValue(ghost3DView.root().visibleProperty(), false)),
+                new KeyFrame(Duration.seconds(1), new KeyValue(ghost3DView.root().visibleProperty(), true))
             );
 
-            return new ParallelTransition(
-                hideGhostShortly,
-                numberBoxRising);
+            return new ParallelTransition(hideGhostAfterShortTime, numberBoxRising);
         });
     }
 }

@@ -27,7 +27,6 @@ import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.d3.animation.HideGhostShowPointsAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -42,12 +41,10 @@ import de.amr.pacmanfx.uilib.entities3D.ghost_old.Ghost3DWrapperToBeRemoved;
 import de.amr.pacmanfx.uilib.entities3D.house.system.House3DSystem;
 import de.amr.pacmanfx.uilib.entities3D.pac.system.Pac3DAnimationSystem;
 import de.amr.pacmanfx.uilib.entities3D.world.Energizer3D;
-import de.amr.pacmanfx.uilib.entities3D.world.NumberBox3D;
 import de.amr.pacmanfx.uilib.entities3D.world.Pellet3D;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.geometry.Point3D;
-import javafx.scene.Node;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
@@ -293,26 +290,9 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     }
 
     private void onGhostsKilled() {
-        final List<Ghost> ghostsKilled = gameContext().thisFrame().huntingStep().ghostsKilled();
         final GameLevel3D level3D = assertLevel3D();
-        ghostsKilled.forEach(ghost -> {
-            final Ghost3DWrapperToBeRemoved ghost3D = level3D.ghost3D(ghost.personality());
-            final int killIndex = level3D.level().indexInGhostKilledChain(ghost);
-
-            final Factory3D factory3D = appContext().variants().currentVariant().config().factory3D();
-            final Node numberBox3D = factory3D.createNumberBox3D(appContext().variants().currentVariant().config(), killIndex);
-            numberBox3D.setTranslateX(ghost3D.root().getTranslateX());
-            numberBox3D.setTranslateY(ghost3D.root().getTranslateY());
-            numberBox3D.setTranslateZ(ghost3D.root().getTranslateZ());
-            level3D.getChildren().add(numberBox3D);
-
-            if (numberBox3D instanceof NumberBox3D box3D) {
-                final double risingHeight = (killIndex + 1) * 12;
-                final var animation = new HideGhostShowPointsAnimation3D(ghost3D, box3D, risingHeight);
-                animation.animationFX().setOnFinished(_ -> level3D.getChildren().remove(numberBox3D));
-                animation.playFromStart();
-            }
-        });
+        final List<Ghost> ghostsKilled = gameContext().thisFrame().huntingStep().ghostsKilled();
+        ghostsKilled.forEach(level3D::addKilledGhostNumberBox);
     }
 
     private void onLevelComplete() {

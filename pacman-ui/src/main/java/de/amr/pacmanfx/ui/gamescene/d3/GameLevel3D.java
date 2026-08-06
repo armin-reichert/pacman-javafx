@@ -26,10 +26,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorSchemeImpl;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
-import de.amr.pacmanfx.ui.gamescene.d3.animation.GhostLightRelayAnimation;
-import de.amr.pacmanfx.ui.gamescene.d3.animation.LevelCompletedAnimation;
-import de.amr.pacmanfx.ui.gamescene.d3.animation.LevelCompletedAnimationShort;
-import de.amr.pacmanfx.ui.gamescene.d3.animation.WallColorFlashingAnimation;
+import de.amr.pacmanfx.ui.gamescene.d3.animation.*;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ExplosionConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimationConfig;
@@ -64,8 +61,10 @@ import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DViewComp;
 import de.amr.pacmanfx.uilib.entities3D.pac.system.Pac3DAnimationSystem;
 import de.amr.pacmanfx.uilib.entities3D.pac.system.Pac3DTransformSystem;
 import de.amr.pacmanfx.uilib.entities3D.world.Energizer3D;
+import de.amr.pacmanfx.uilib.entities3D.world.NumberBox3D;
 import de.amr.pacmanfx.uilib.entities3D.world.Pellet3D;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.PointLight;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -254,6 +253,27 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             final var view3D = createBonusView3D(bonus);
             getChildren().add(view3D.root());
             Bonus3DViewSystem.update(bonus, animationRegistry);
+        }
+    }
+
+    public void addKilledGhostNumberBox(Ghost ghost) {
+        final Factory3D factory3D = gameVariantConfig.factory3D();
+
+        final int killIndex = level.indexInGhostKilledChain(ghost);
+        final Node numberBoxNode = factory3D.createNumberBox3D(gameVariantConfig, killIndex);
+
+        final Ghost3DViewComp ghost3DView = ghost.requireComponent(Ghost3DViewComp.class);
+        numberBoxNode.setTranslateX(ghost3DView.root().getTranslateX());
+        numberBoxNode.setTranslateY(ghost3DView.root().getTranslateY());
+        numberBoxNode.setTranslateZ(ghost3DView.root().getTranslateZ());
+        getChildren().add(numberBoxNode);
+
+        //TODO move into animation system
+        if (numberBoxNode instanceof NumberBox3D numberBox3D) {
+            final double risingHeight = (killIndex + 1) * 12;
+            final var animation = new HideGhost3DThenRiseNumberBoxAnimation(ghost3DView, numberBox3D, risingHeight);
+            animation.animationFX().setOnFinished(_ -> getChildren().remove(numberBoxNode));
+            animation.playFromStart();
         }
     }
 
