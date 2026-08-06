@@ -8,7 +8,7 @@ import de.amr.pacmanfx.uilib.entities3D.ghost.GhostAppearance;
 public class Ghost3DViewSystem {
 
     public static void update(Ghost ghost) {
-        GhostState state = ghost.ghostState();
+        GhostState state = ghost.stateValue();
         GhostAppearance variant = selectVariant(state);
         Ghost3DViewComp view3D = ghost.requireComponent(Ghost3DViewComp.class);
         view3D.setActiveVariant(variant);

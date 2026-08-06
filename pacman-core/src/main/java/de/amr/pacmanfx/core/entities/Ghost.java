@@ -6,7 +6,7 @@ package de.amr.pacmanfx.core.entities;
 
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.MovementComp;
-import de.amr.pacmanfx.core.ecs.comp.SpriteAnimComp;
+import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
 import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostAnimationComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
@@ -25,14 +25,14 @@ public final class Ghost extends GameEntity {
 
     public Ghost(GhostPersonality personality, String name) {
         this.personality = requireNonNull(personality);
-        this.name = requireNonNull(name);
+        setName(name);
 
         setComponent(MovementComp.class, new MovementComp());
         setComponent(WorldNavigationComp.class, new WorldNavigationComp());
         setComponent(GhostWorldPlacementComp.class, new GhostWorldPlacementComp());
         setComponent(GhostStateComp.class, new GhostStateComp());
         setComponent(GhostAnimationComp.class, new GhostAnimationComp());
-        setComponent(SpriteAnimComp.class, new SpriteAnimComp());
+        setComponent(SpriteAnimationComp.class, new SpriteAnimationComp());
 
         //TODO where does this belong?
         worldNavigation().corneringSpeedDelta = -1.25f;
@@ -42,8 +42,8 @@ public final class Ghost extends GameEntity {
         return personality;
     }
 
-    public GhostState ghostState() {
-        return state().state();
+    public GhostState stateValue() {
+        return state().stateValue();
     }
 
     // Typed component accessors
@@ -68,15 +68,15 @@ public final class Ghost extends GameEntity {
         return requireComponent(GhostAnimationComp.class);
     }
 
-    public SpriteAnimComp spriteAnimation() {
-        return requireComponent(SpriteAnimComp.class);
+    public SpriteAnimationComp spriteAnimation() {
+        return requireComponent(SpriteAnimationComp.class);
     }
 
     @Override
     public String toString() {
         return "Ghost{" +
             "personality=" + personality +
-            ", state=" + ghostState() +
+            ", state=" + stateValue() +
             ", " + super.toString() +
             '}';
     }

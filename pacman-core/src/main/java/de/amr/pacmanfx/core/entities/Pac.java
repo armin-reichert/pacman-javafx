@@ -7,7 +7,7 @@ package de.amr.pacmanfx.core.entities;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.AutoSteeringComp;
 import de.amr.pacmanfx.core.ecs.comp.MovementComp;
-import de.amr.pacmanfx.core.ecs.comp.SpriteAnimComp;
+import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
 import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.entities.pac.comp.PacState;
 import de.amr.pacmanfx.core.entities.pac.comp.*;
@@ -32,7 +32,7 @@ public final class Pac extends GameEntity {
         setComponent(PacPowerComp.class, new PacPowerComp());
         setComponent(PacCheatsComp.class, new PacCheatsComp());
         setComponent(PacStateComp.class, new PacStateComp());
-        setComponent(SpriteAnimComp.class, new SpriteAnimComp());
+        setComponent(SpriteAnimationComp.class, new SpriteAnimationComp());
         setComponent(PacAnimationComp.class, new PacAnimationComp());
     }
 
@@ -69,8 +69,8 @@ public final class Pac extends GameEntity {
     }
 
     //TODO integrate with Pac animation comp
-    public SpriteAnimComp spriteAnim() {
-        return requireComponent(SpriteAnimComp.class);
+    public SpriteAnimationComp spriteAnim() {
+        return requireComponent(SpriteAnimationComp.class);
     }
 
     @Override

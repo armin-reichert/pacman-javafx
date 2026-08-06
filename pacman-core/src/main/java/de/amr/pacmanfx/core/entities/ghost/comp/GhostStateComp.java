@@ -12,22 +12,22 @@ public class GhostStateComp implements GameEntityComponent {
 
     public static final GhostState DEFAULT_STATE = GhostState.LOCKED;
 
-    private GhostState state;
+    private GhostState stateValue;
 
     private boolean flashing;
 
     private boolean threatenedByPac;
 
     public GhostStateComp() {
-        state = DEFAULT_STATE;
+        reset();
     }
 
-    public GhostState state() {
-        return state;
+    public GhostState stateValue() {
+        return stateValue;
     }
 
-    public void setState(GhostState state) {
-        this.state = requireNonNull(state);
+    public void setStateValue(GhostState stateValue) {
+        this.stateValue = requireNonNull(stateValue);
     }
 
     public boolean flashing() {
@@ -48,7 +48,8 @@ public class GhostStateComp implements GameEntityComponent {
 
     @Override
     public void reset() {
-        state = DEFAULT_STATE;
+        stateValue = DEFAULT_STATE;
         flashing = false;
+        threatenedByPac = false;
     }
 }

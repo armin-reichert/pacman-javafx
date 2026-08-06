@@ -32,7 +32,7 @@ public class GhostStateSystem {
         state.setThreatenedByPac(isGhostThreatenedByPac(level, ghost, level.entities().pac()));
 
         final float speed = gameContext.model().rules().actorSpeedRules().ghostSpeed(gameContext, ghost);
-        switch (ghost.ghostState()) {
+        switch (ghost.stateValue()) {
             case LOCKED         -> updateStateLocked(gameContext, ghost, speed);
             case LEAVING_HOUSE  -> updateStateLeavingHouse(gameContext, ghost, speed);
             case HUNTING_PAC    -> updateStateHuntingPac(gameContext, ghost, speed);
@@ -48,12 +48,12 @@ public class GhostStateSystem {
         requireNonNull(ghost);
         requireNonNull(newState);
 
-        if (ghost.ghostState() == newState) {
+        if (ghost.stateValue() == newState) {
             Logger.debug("{} is already in state {}", ghost.name(), newState);
             //TODO return from function?
         }
         
-        ghost.requireComponent(GhostStateComp.class).setState(newState);
+        ghost.requireComponent(GhostStateComp.class).setStateValue(newState);
 
         //initAnimation(ghost, gameContext.systems().spriteAnim());
     }

@@ -89,7 +89,7 @@ public class GhostLightRelayAnimation extends ManagedAnimation {
     private Optional<GhostPersonality> findNextHunter() {
         GhostPersonality next = nextGhostPersonality(currentGhostPersonality);
         while (next != currentGhostPersonality) {
-            if (ghosts.get(next.ordinal()).ghostState() == GhostState.HUNTING_PAC) {
+            if (ghosts.get(next.ordinal()).stateValue() == GhostState.HUNTING_PAC) {
                 return Optional.of(next);
             }
             next = nextGhostPersonality(next);

@@ -9,18 +9,18 @@ import de.amr.basics.Named;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.spriteanim.SpriteAnimationAccessor;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.comp.SpriteAnimComp;
+import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
 
 import static java.util.Objects.requireNonNull;
 
 public class SpriteAnimSystem {
 
     public void setAnimations(GameEntity actor, SpriteAnimationAccessor animations) {
-        actor.requireComponent(SpriteAnimComp.class).setAnimations(animations);
+        actor.requireComponent(SpriteAnimationComp.class).setAnimations(animations);
     }
 
     private SpriteAnimationAccessor spriteAnim(GameEntity actor) {
-        return actor.requireComponent(SpriteAnimComp.class).animation();
+        return actor.requireComponent(SpriteAnimationComp.class).animation();
     }
 
     public boolean hasNoAnimations(GameEntity actor) {

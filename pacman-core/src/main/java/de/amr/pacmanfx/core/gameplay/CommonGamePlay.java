@@ -313,7 +313,7 @@ public abstract class CommonGamePlay implements GamePlay {
             return;
         }
         result.setPacKilled(
-            result.ghostsCollidingWithPac().stream().anyMatch(ghost -> ghost.ghostState() == GhostState.HUNTING_PAC)
+            result.ghostsCollidingWithPac().stream().anyMatch(ghost -> ghost.stateValue() == GhostState.HUNTING_PAC)
         );
     }
 
@@ -321,7 +321,7 @@ public abstract class CommonGamePlay implements GamePlay {
         if (result.detectedPacGhostCollision()) {
             // Frightened ghosts get killed when colliding with Pac
             result.ghostsCollidingWithPac().stream()
-                .filter(ghost -> ghost.ghostState() == GhostState.FRIGHTENED)
+                .filter(ghost -> ghost.stateValue() == GhostState.FRIGHTENED)
                 .forEach(result.ghostsKilled()::add);
             // More than one ghost might have been killed in this step
             result.ghostsKilled().forEach(ghost -> onEatGhost(gameContext, level, ghost));

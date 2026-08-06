@@ -18,7 +18,7 @@ public class ArcadeMsPacMan_ActorSpeedRules extends Arcade_ActorSpeedRules {
         if (level.number() <= 2) {
             return super.ghostSpeed(gameContext, ghost);
         }
-        return switch (ghost.ghostState()) {
+        return switch (ghost.stateValue()) {
             case HUNTING_PAC   -> ghostSpeedAttacking(level, ghost); // no tunnel slowdown
             case FRIGHTENED    -> ghostSpeedFrightened(level); // no tunnel slowdown
             default            -> super.ghostSpeed(gameContext, ghost);

@@ -3,7 +3,7 @@ package de.amr.pacmanfx.core.ecs.comp;
 import de.amr.basics.spriteanim.SpriteAnimationAccessor;
 import de.amr.pacmanfx.core.ecs.GameEntityComponent;
 
-public class SpriteAnimComp implements GameEntityComponent {
+public class SpriteAnimationComp implements GameEntityComponent {
 
     private SpriteAnimationAccessor animation = SpriteAnimationAccessor.emptyAnimation();
 
