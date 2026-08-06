@@ -90,7 +90,7 @@ public final class CheatActions {
                 gameContext.cheats().notifyCheatUsed();
 
                 final List<Ghost> killableGhosts = level.entities().ghosts().stream()
-                    .filter(ghost -> GhostState.FRIGHTENED == ghost.state() || GhostState.HUNTING_PAC == ghost.state())
+                    .filter(ghost -> GhostState.FRIGHTENED == ghost.ghostState() || GhostState.HUNTING_PAC == ghost.ghostState())
                     .toList();
 
                 if (!killableGhosts.isEmpty()) {

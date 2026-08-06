@@ -235,7 +235,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
 
     private Optional<Ghost> edibleGhost() {
         return Stream.of(ghosts)
-            .filter(ghost -> ghost.state() == FRIGHTENED)
+            .filter(ghost -> ghost.ghostState() == FRIGHTENED)
             .filter(ghost -> CollisionStrategy.SAME_TILE.collide(ghost, pacMan))
             .findFirst();
     }
@@ -262,7 +262,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
         sys.worldNavigator().setSpeed(pacMan, CHASING_SPEED);
 
         for (Ghost ghost : ghosts) {
-            if (ghost.state() == EATEN) {
+            if (ghost.ghostState() == EATEN) {
                 ghost.hide();
             } else {
                 ghost.show();

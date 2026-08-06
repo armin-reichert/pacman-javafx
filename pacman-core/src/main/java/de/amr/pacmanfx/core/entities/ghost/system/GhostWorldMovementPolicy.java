@@ -49,7 +49,7 @@ public class GhostWorldMovementPolicy implements WorldMovementPolicy {
         // Hunting ghosts cannot enter some tiles in Pac-Man game from below
         // TODO: this is game-specific and does not belong here
         if (worldPlacement.specialTerrainTiles().contains(tile)
-            && ghost.state() == GhostState.HUNTING_PAC
+            && ghost.ghostState() == GhostState.HUNTING_PAC
             && terrainLayer.content(tile) == TerrainTile.ONE_WAY_DOWN.$
             && tile.equals(myTile.plus(UP.vector()))
         ) {
@@ -57,7 +57,7 @@ public class GhostWorldMovementPolicy implements WorldMovementPolicy {
             return false;
         }
         if (worldPlacement.house() != null && worldPlacement.house().isDoorAt(tile)) {
-            return isOneOf(ghost.state(), DOOR_PASSING_STATES);
+            return isOneOf(ghost.ghostState(), DOOR_PASSING_STATES);
         }
         return !terrainLayer.isTileBlocked(tile);
     }
@@ -65,7 +65,7 @@ public class GhostWorldMovementPolicy implements WorldMovementPolicy {
     @Override
     public boolean canTurnBack(GameEntity actor) {
         if (actor instanceof Ghost ghost) {
-            return ghost.worldNavigation().isNewTileEntered() && isOneOf(ghost.state(), TURN_BACK_STATES);
+            return ghost.worldNavigation().isNewTileEntered() && isOneOf(ghost.ghostState(), TURN_BACK_STATES);
         }
         return false;
     }

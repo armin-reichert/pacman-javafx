@@ -8,11 +8,11 @@ import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.MovementComp;
 import de.amr.pacmanfx.core.ecs.comp.SpriteAnimComp;
 import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
+import de.amr.pacmanfx.core.entities.ghost.comp.GhostAnimationComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostStateComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostWorldPlacementComp;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import org.ietf.jgss.GSSContext;
 
 import static java.util.Objects.requireNonNull;
 
@@ -31,6 +31,7 @@ public final class Ghost extends GameEntity {
         setComponent(WorldNavigationComp.class, new WorldNavigationComp());
         setComponent(GhostWorldPlacementComp.class, new GhostWorldPlacementComp());
         setComponent(GhostStateComp.class, new GhostStateComp());
+        setComponent(GhostAnimationComp.class, new GhostAnimationComp());
         setComponent(SpriteAnimComp.class, new SpriteAnimComp());
 
         //TODO where does this belong?
@@ -41,31 +42,41 @@ public final class Ghost extends GameEntity {
         return personality;
     }
 
-    public MovementComp movement() {
-        return requireComponent(MovementComp.class);
+    public GhostState ghostState() {
+        return state().state();
     }
 
-    public GhostWorldPlacementComp worldPlacement() {
-        return requireComponent(GhostWorldPlacementComp.class);
+    // Typed component accessors
+
+    public MovementComp movement() {
+        return requireComponent(MovementComp.class);
     }
 
     public WorldNavigationComp worldNavigation() {
         return requireComponent(WorldNavigationComp.class);
     }
 
-    public GhostStateComp stateComp() {
+    public GhostWorldPlacementComp worldPlacement() {
+        return requireComponent(GhostWorldPlacementComp.class);
+    }
+
+    public GhostStateComp state() {
         return requireComponent(GhostStateComp.class);
     }
 
-    public GhostState state() {
-        return stateComp().state();
+    public GhostAnimationComp ghostAnimation() {
+        return requireComponent(GhostAnimationComp.class);
+    }
+
+    public SpriteAnimComp spriteAnimation() {
+        return requireComponent(SpriteAnimComp.class);
     }
 
     @Override
     public String toString() {
         return "Ghost{" +
             "personality=" + personality +
-            ", state=" + state() +
+            ", state=" + ghostState() +
             ", " + super.toString() +
             '}';
     }

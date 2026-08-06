@@ -14,6 +14,7 @@ import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusState;
+import de.amr.pacmanfx.core.entities.ghost.comp.GhostAnimationComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostAnimationSystem;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostStateSystem;
@@ -210,7 +211,14 @@ public abstract class CommonGamePlay implements GamePlay {
     private void updateGhost(GameContext gameContext, GameLevel level, Ghost ghost) {
         gameContext.systems().ghostState().update(gameContext, level, ghost);
         //TODO Add into global game systems interface
-        GhostAnimationSystem.update(ghost, level.entities().pac(), gameContext.systems().spriteAnim());
+        GhostAnimationSystem.update(ghost, level.entities().pac());
+
+        //TODO should this be here?
+        final GhostAnimationComp ghostAnimation = ghost.ghostAnimation();
+        if (ghostAnimation.ghostAnimationID() != null) {
+            gameContext.systems().spriteAnim().select(ghost, ghostAnimation.ghostAnimationID());
+            gameContext.systems().spriteAnim().playSelected(ghost);
+        }
     }
 
     private void startPacPower(GameContext gameContext, GameLevel level, Pac pac) {
@@ -305,7 +313,7 @@ public abstract class CommonGamePlay implements GamePlay {
             return;
         }
         result.setPacKilled(
-            result.ghostsCollidingWithPac().stream().anyMatch(ghost -> ghost.state() == GhostState.HUNTING_PAC)
+            result.ghostsCollidingWithPac().stream().anyMatch(ghost -> ghost.ghostState() == GhostState.HUNTING_PAC)
         );
     }
 
@@ -313,7 +321,7 @@ public abstract class CommonGamePlay implements GamePlay {
         if (result.detectedPacGhostCollision()) {
             // Frightened ghosts get killed when colliding with Pac
             result.ghostsCollidingWithPac().stream()
-                .filter(ghost -> ghost.state() == GhostState.FRIGHTENED)
+                .filter(ghost -> ghost.ghostState() == GhostState.FRIGHTENED)
                 .forEach(result.ghostsKilled()::add);
             // More than one ghost might have been killed in this step
             result.ghostsKilled().forEach(ghost -> onEatGhost(gameContext, level, ghost));

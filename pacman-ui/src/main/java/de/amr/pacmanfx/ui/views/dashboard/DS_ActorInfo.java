@@ -153,8 +153,8 @@ public class DS_ActorInfo extends GameDashboardSection {
     }
 
     private String ghostStateText(GameLevel level, Ghost ghost) {
-        var stateText = ghost.state() != null ? ghost.state().name() : "undefined";
-        if (ghost.state() == GhostState.HUNTING_PAC) {
+        var stateText = ghost.ghostState() != null ? ghost.ghostState().name() : "undefined";
+        if (ghost.ghostState() == GhostState.HUNTING_PAC) {
             stateText = level.huntingTimerStrategy().currentHuntingPhase().name();
         }
         return stateText;
