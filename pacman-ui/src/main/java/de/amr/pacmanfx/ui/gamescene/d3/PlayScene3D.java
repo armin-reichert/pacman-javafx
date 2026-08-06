@@ -10,7 +10,6 @@ import de.amr.pacmanfx.core.entities.pac.Pac;
 import de.amr.pacmanfx.core.entities.score.Score;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.ui.GlobalAssets;
@@ -164,6 +163,13 @@ public class PlayScene3D extends AbstractGameScene
         Pac3DAnimationSystem.setPowerMode(pac, false);
     }
 
+    //TODO remove this
+    public void initGhosts(GameLevel level) {
+        for (var ghost3D : level3D.ghosts3D) {
+            ghost3D.init(gameContext());
+        }
+    }
+
     public void initFood3D(GameLevel level, boolean startEnergizerPumping) {
         final FoodLayer foodLayer = level.worldMap().foodLayer();
 
@@ -191,12 +197,8 @@ public class PlayScene3D extends AbstractGameScene
         decorate(level3D);
         level3DEmbedder.getChildren().setAll(level3D);
 
-        //TODO remove all this
-        level3D.entities3D().selectAll()
-            .filter(UpdatableEntity.class::isInstance).map(UpdatableEntity.class::cast)
-            .forEach(entity -> entity.init(gameContext));
-
         initPac(level, level.entities().pac());
+        initGhosts(level);
 
         final LivesCounter livesCounter = level.entities().entitySet().uniqueOfType(LivesCounter.class);
         final Pac pac = level.entities().pac();

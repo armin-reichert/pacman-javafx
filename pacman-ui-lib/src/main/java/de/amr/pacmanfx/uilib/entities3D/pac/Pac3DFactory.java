@@ -30,7 +30,7 @@ import static java.util.Objects.requireNonNull;
 public class Pac3DFactory {
 
     public static void createPacManView3D(AnimationRegistry animationRegistry, Pac pac, PacSettings config) {
-        ensurePacHasView3D(pac, animationRegistry);
+        ensurePacHas3DView(pac, animationRegistry);
 
         final Pac3DViewComp view3D = pac.requireComponent(Pac3DViewComp.class);
         view3D.setBodyAndJaw(createPacBody(config, true), createPacBody(config, false));
@@ -52,7 +52,7 @@ public class Pac3DFactory {
     }
 
     public static void createMsPacManView3D(AnimationRegistry animationRegistry, Pac msPacMan, PacSettings config) {
-        ensurePacHasView3D(msPacMan, animationRegistry);
+        ensurePacHas3DView(msPacMan, animationRegistry);
         final Pac3DViewComp view3D = msPacMan.requireComponent(Pac3DViewComp.class);
 
         view3D.setBodyAndJaw(createPacBody(config, true), createPacBody(config, false));
@@ -73,7 +73,7 @@ public class Pac3DFactory {
         animationRegistry.register(Pac3DAnimationID.DYING,   dying);
     }
 
-    private static void ensurePacHasView3D(Pac pac, AnimationRegistry animationRegistry) {
+    private static void ensurePacHas3DView(Pac pac, AnimationRegistry animationRegistry) {
         if (!pac.hasComponent(Pac3DViewComp.class)) {
             pac.setComponent(Pac3DViewComp.class, new Pac3DViewComp());
             pac.setComponent(Pac3DTransformComp.class, new Pac3DTransformComp());

@@ -15,6 +15,7 @@ import de.amr.pacmanfx.ui.settings.world.Pellet3DSettings;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.entities3D.PacMan3DModel;
+import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3DFactory;
 import de.amr.pacmanfx.uilib.entities3D.ghost_old.*;
 import de.amr.pacmanfx.uilib.entities3D.pac.Pac3DFactory;
 import de.amr.pacmanfx.uilib.entities3D.pac.PacSettings;
@@ -68,7 +69,12 @@ public class DefaultFactory3D implements Factory3D {
     }
 
     @Override
-    public Ghost3DWrapperToBeRemoved createGhost3D(Ghost ghost, GhostSettings settings, AnimationRegistry animationRegistry) {
+    public void createGhost3D(Ghost ghost, GhostSettings ghostConfig, AnimationRegistry animations) {
+        Ghost3DFactory.createGhostView3D(ghost);
+    }
+
+    @Override
+    public Ghost3DWrapperToBeRemoved createGhost3D_obsolete(Ghost ghost, GhostSettings settings, AnimationRegistry animationRegistry) {
         return new Ghost3DWrapperToBeRemoved(
             animationRegistry,
             ghost,

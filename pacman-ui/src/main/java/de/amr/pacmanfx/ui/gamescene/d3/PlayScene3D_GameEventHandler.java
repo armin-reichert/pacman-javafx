@@ -25,7 +25,6 @@ import de.amr.pacmanfx.core.event.pac.PacLostPowerEvent;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.HideGhostShowPointsAnimation3D;
@@ -88,16 +87,17 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
             handleTestState(appContext().ui().viewModel().common3D, gameContext());
         }
         else if (CommonGameStateID.GAME_OR_LEVEL_STARTING.hasSameNameAs(newState)) {
-            onStartingGameOrLevel();
+            //TODO change
+            initGhosts();
         }
         else if (CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(newState)) {
-            onHuntingStart(gameContext());
+            onHuntingStart();
         }
         else if (CommonGameStateID.GAME_LEVEL_PACMAN_DYING.hasSameNameAs(newState)) {
-            onPacManDying(gameContext(), assertLevel3D().animationRegistry());
+            onPacManDying(assertLevel3D().animationRegistry());
         }
         else if (CommonGameStateID.GAME_LEVEL_EATING_GHOST.hasSameNameAs(newState)) {
-            onGhostsKilled(gameContext().thisFrame().huntingStep().ghostsKilled());
+            onGhostsKilled();
         }
         else if (CommonGameStateID.GAME_LEVEL_COMPLETE.hasSameNameAs(newState)) {
             onLevelComplete();
@@ -171,10 +171,8 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         final GameLevel3D level3D = assertLevel3D();
         level3D.createLevelCounterView3D(gameContext.model().levelCounter());
 
-        //TODO replace all this 3D wrapper crap and use the game entities from the model!
-        level3D.entities3D().selectAll()
-            .filter(UpdatableEntity.class::isInstance).map(UpdatableEntity.class::cast)
-            .forEach(e -> e.init(gameContext));
+        //TODO change
+        initGhosts();
 
         gameScene().replaceActionBindings(level);
         gameScene().fadeInAnimation().playFromStart();
@@ -244,20 +242,20 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 
     // Private state-specific handlers
 
-    private void onStartingGameOrLevel() {
+    private void initGhosts() {
         gameScene().optGameLevel3D().ifPresent(level3D ->
-            level3D.entities3D().selectAll()
-                .filter(UpdatableEntity.class::isInstance).map(UpdatableEntity.class::cast)
-                .forEach(entity -> entity.init(gameContext())));
+            level3D.ghosts3D.forEach(ghost3D -> ghost3D.init(gameContext()))
+        );
     }
 
-    private void onHuntingStart(GameContext gameContext) {
+    private void onHuntingStart() {
         final GameLevel level = gameContext().assertLevel();
         final GameLevel3D level3D = assertLevel3D();
 
         gameScene().initPac(level, level.entities().pac());
 
-        level3D.entities3D().ghosts3D().forEach(ghost3D -> ghost3D.init(gameContext));
+        //TODO change
+        initGhosts();
 
         level3D.energizers3D().forEach(Energizer3D::startPumping);
 
@@ -268,10 +266,10 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
             .ifPresent(ManagedAnimation::playFromStart);
     }
 
-    private void onPacManDying(GameContext gameContext, AnimationRegistry animationRegistry) {
-        final GameLevel level = gameContext.assertLevel();
+    private void onPacManDying(AnimationRegistry animationRegistry) {
+        final GameLevel level = gameContext().assertLevel();
 
-        gameContext.state().waitForTimeout();
+        gameContext().state().waitForTimeout();
 
         stopAnimationsBeforePacManDying();
         optSoundEffects().ifPresent(GameSoundEffects::stopAll);
@@ -281,7 +279,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         Pac3DAnimationSystem.playDyingAnimation(
             level.entities().pac(),
             () -> optSoundEffects().ifPresent(GameSoundEffects::playPacDeadSound),
-            gameContext.state()::triggerTimeout
+            gameContext().state()::triggerTimeout
         );
     }
 
@@ -291,11 +289,11 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.GHOST_LIGHT).ifPresent(ManagedAnimation::stop);
         level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.WALL_COLOR_FLASHING).ifPresent(ManagedAnimation::stop);
         //TODO get rid of 3D wrappers for ghosts!
-        level3D.entities3D().ghosts3D().forEach(Ghost3DWrapperToBeRemoved::stopAllAnimations);
+        level3D.ghosts3D.forEach(Ghost3DWrapperToBeRemoved::stopAllAnimations);
     }
 
-
-    private void onGhostsKilled(List<Ghost> ghostsKilled) {
+    private void onGhostsKilled() {
+        final List<Ghost> ghostsKilled = gameContext().thisFrame().huntingStep().ghostsKilled();
         final GameLevel3D level3D = assertLevel3D();
         ghostsKilled.forEach(ghost -> {
             final Ghost3DWrapperToBeRemoved ghost3D = level3D.ghost3D(ghost.personality());

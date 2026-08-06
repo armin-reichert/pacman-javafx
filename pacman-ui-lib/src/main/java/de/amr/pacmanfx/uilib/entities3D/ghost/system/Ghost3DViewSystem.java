@@ -13,7 +13,6 @@ public class Ghost3DViewSystem {
 
         GhostAppearance variant = selectVariant(ghost, state);
         view3D.setActiveVariant(variant);
-        updateVisibility(view3D);
     }
 
     private static GhostAppearance selectVariant(Ghost ghost, GhostState state) {
@@ -27,12 +26,5 @@ public class Ghost3DViewSystem {
         return GhostAppearance.NORMAL;
     }
 
-    private static void updateVisibility(Ghost3DViewComp view) {
-        view.coloredGhost().setVisible(view.activeVariant() == GhostAppearance.NORMAL);
-        view.blueGhost().setVisible(view.activeVariant() == GhostAppearance.FRIGHTENED);
-        view.flashingGhost().setVisible(view.activeVariant() == GhostAppearance.FLASHING);
-        view.eyesGhost().setVisible(view.activeVariant() == GhostAppearance.EYES);
-        view.numberGhost().setVisible(view.activeVariant() == GhostAppearance.NUMBER);
-    }
 }
 

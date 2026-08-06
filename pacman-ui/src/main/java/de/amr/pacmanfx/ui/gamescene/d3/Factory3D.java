@@ -53,9 +53,11 @@ public interface Factory3D extends Disposable {
      * @param ghost             the ghost actor whose animations and state drive the model
      * @param ghostConfig      the actor 3D configuration object
      * @param animations the registry where animations are stored
-     * @return the 3D representation of a ghost
      */
-    Ghost3DWrapperToBeRemoved createGhost3D(Ghost ghost, GhostSettings ghostConfig, AnimationRegistry animations);
+    void createGhost3D(Ghost ghost, GhostSettings ghostConfig, AnimationRegistry animations);
+
+    //TODO remove
+    Ghost3DWrapperToBeRemoved createGhost3D_obsolete(Ghost ghost, GhostSettings ghostConfig, AnimationRegistry animations);
 
     /**
      * Creates the 3D representation of the lives counter for this variant.

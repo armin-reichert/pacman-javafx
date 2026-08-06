@@ -1,0 +1,23 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
+package de.amr.pacmanfx.uilib.entities3D.ghost;
+
+
+import de.amr.pacmanfx.core.entities.ghost.Ghost;
+import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DViewComp;
+
+public class Ghost3DFactory {
+
+    public static void createGhostView3D(Ghost ghost) {
+        ensureGhostHas3DView(ghost);
+    }
+
+    private static void ensureGhostHas3DView(Ghost ghost) {
+        if (!ghost.hasComponent(Ghost3DViewComp.class)) {
+            ghost.setComponent(Ghost3DViewComp.class, new Ghost3DViewComp());
+            //TODO other 3D related components
+        }
+    }
+}
