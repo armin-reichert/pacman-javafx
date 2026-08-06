@@ -88,7 +88,7 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer
             for (int i = 0; i < hud.visibleLifeCount(); ++i) {
                 drawSprite(livesCounterSprite, x + i * tilesPx(2), y, true);
             }
-            final LivesCounter livesCounter = gameContext.assertLevel().entities().entitySet().uniqueOfType(LivesCounter.class);
+            final LivesCounter livesCounter = gameContext.assertLevel().entities().theOne(LivesCounter.class);
             final int lifeCount = livesCounter.data().numLives();
             if (lifeCount > hud.maxLivesShown()) {
                 // Show text indicating that more lives are available than symbols displayed (cheating may cause this)

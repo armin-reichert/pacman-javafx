@@ -287,7 +287,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     private void onLevelComplete() {
         final GameLevel3D level3D = assertLevel3D();
         final GameLevel level = gameContext().model().assertLevel();
-        final House house = level.entities().entitySet().uniqueOfType(House.class);
+        final House house = level.entities().theOne(House.class);
 
         final boolean cutSceneFollows = !level.isDemoLevel()
             && gameContext().model().rules().cutSceneAfterLevel(level.number()).isPresent();

@@ -43,7 +43,7 @@ public class Arcade_ActorSpeedRules implements ActorSpeedRules {
     @Override
     public float ghostSpeed(GameContext gameContext, Ghost ghost) {
         final GameLevel level = gameContext.assertLevel();
-        final House house = level.entities().entitySet().uniqueOfType(House.class);
+        final House house = level.entities().theOne(House.class);
 
         final int levelNumber = level.number();
         final TerrainLayer terrain = level.worldMap().terrainLayer();

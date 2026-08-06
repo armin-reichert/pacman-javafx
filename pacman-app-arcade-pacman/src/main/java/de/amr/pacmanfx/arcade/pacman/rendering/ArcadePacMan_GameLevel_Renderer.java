@@ -54,7 +54,7 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
     }
 
     protected void drawMap(GameLevel level, RenderInfo info) {
-        final House house = level.entities().entitySet().uniqueOfType(House.class);
+        final House house = level.entities().theOne(House.class);
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final int emptySpaceOverMazePixels = terrain.emptyRowsOverMaze() * WorldMap.TS;
         ctx.save();

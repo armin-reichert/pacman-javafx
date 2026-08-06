@@ -28,7 +28,7 @@ public class GameOverState extends GameState {
         final GameLevel level = gameContext.assertLevel();
         final TengenMsPacMan_GamePlay game = (TengenMsPacMan_GamePlay) gameContext.gamePlay();
 
-        final LivesCounter livesCounter = level.entities().entitySet().uniqueOfType(LivesCounter.class);
+        final LivesCounter livesCounter = level.entities().theOne(LivesCounter.class);
         LivesCounterSystem.setNumLives(livesCounter, 0); // Needed if state entry was triggered by user interaction
         model.setPlaying(false);
 

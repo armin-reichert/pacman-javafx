@@ -29,7 +29,7 @@ public class BonusWorldMovementPolicy implements WorldMovementPolicy {
         if (terrain.outOfBounds(tile)) {
             return terrain.isTileInPortalSpace(tile);
         }
-        final House house = level.entities().entitySet().uniqueOfType(House.class);
+        final House house = level.entities().theOne(House.class);
         if (house != null && house.contains(tile)) {
             return false;
         }

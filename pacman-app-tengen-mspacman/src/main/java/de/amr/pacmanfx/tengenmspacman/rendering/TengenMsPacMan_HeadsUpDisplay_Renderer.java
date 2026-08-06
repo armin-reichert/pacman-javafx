@@ -139,7 +139,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
         for (int i = 0; i < gameContext.hudState().visibleLifeCount(); ++i) {
             drawSprite(symbolSprite, tilesPx(4 + i * 2), y, true);
         }
-        final LivesCounter livesCounter = gameContext.assertLevel().entities().entitySet().uniqueOfType(LivesCounter.class);
+        final LivesCounter livesCounter = gameContext.assertLevel().entities().theOne(LivesCounter.class);
         final int numLives = livesCounter.data().numLives();
         if (numLives > gameContext.hudState().maxLivesShown()) {
             fillText(

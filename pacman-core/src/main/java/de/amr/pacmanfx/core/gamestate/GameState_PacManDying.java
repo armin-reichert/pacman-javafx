@@ -58,7 +58,7 @@ public final class GameState_PacManDying extends GameState {
     @Override
     public void onUpdate(GameContext gameContext) {
         final GameLevel level = gameContext.assertLevel();
-        final LivesCounter livesCounter = level.entities().entitySet().uniqueOfType(LivesCounter.class);
+        final LivesCounter livesCounter = level.entities().theOne(LivesCounter.class);
         final Pac pac = level.entities().pac();
 
         final long tick = timer().tickCount();

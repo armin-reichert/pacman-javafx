@@ -179,7 +179,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
     }
 
     private void overPaintActorSprites(GameLevel level) {
-        final House house = level.entities().entitySet().uniqueOfType(House.class);
+        final House house = level.entities().theOne(House.class);
 
         // Over-paint area at house bottom where the ghost sprites are shown in map
         final double margin = scaling();

@@ -8,7 +8,6 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.DisposableGraphicsObject;
@@ -33,7 +32,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Represents the 3D appearance of a ghost.
  */
-public class Ghost3DWrapperToBeRemoved extends GameEntity implements UpdatableEntity, DisposableGraphicsObject {
+public class Ghost3DWrapperToBeRemoved extends GameEntity implements DisposableGraphicsObject {
 
     public record AnimationKey(Ghost3DAnimationID animationID, GhostPersonality ghostID) {}
 
@@ -80,14 +79,12 @@ public class Ghost3DWrapperToBeRemoved extends GameEntity implements UpdatableEn
         return root;
     }
 
-    @Override
     public void init(GameContext gameContext) {
         assertControllersAssigned();
         transformController.init(this, gameContext);
         appearanceController.init(this);
     }
 
-    @Override
     public void update(GameContext gameContext) {
         assertControllersAssigned();
         transformController.update(this, gameContext);

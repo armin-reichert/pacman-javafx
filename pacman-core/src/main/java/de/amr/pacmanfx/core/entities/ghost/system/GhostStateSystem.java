@@ -12,7 +12,6 @@ import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostStateComp;
 import de.amr.pacmanfx.core.entities.Pac;
-import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import org.tinylog.Logger;
 
@@ -26,16 +25,6 @@ public class GhostStateSystem {
     public static final Set<GhostState> UPDATED_GHOST_STATES_WHILE_EATEN = Set.of(
         GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE);
 
-    public void update(GameContext gameContext) {
-        requireNonNull(gameContext);
-
-        final GameLevel level = gameContext.assertLevel();
-        if (gameContext.state().id().equals(CommonGameStateID.GAME_LEVEL_EATING_GHOST)) {
-            level.ghostsInAnyOfStates(UPDATED_GHOST_STATES_WHILE_EATEN).forEach(ghost -> update(gameContext, ghost));
-        } else {
-            level.entities().ghosts().forEach(ghost -> update(gameContext, ghost));
-        }
-    }
 
     public void update(GameContext gameContext, Ghost ghost) {
         requireNonNull(gameContext);

@@ -164,7 +164,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         final Ghost orangeGhost = factory.createOrangeGhost();
 
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        final House house = level.entities().entitySet().uniqueOfType(House.class);
+        final House house = level.entities().theOne(House.class);
 
         // Special tiles where attacking ghosts cannot move up
         final Set<Vector2i> oneWayTiles = terrain.tiles()

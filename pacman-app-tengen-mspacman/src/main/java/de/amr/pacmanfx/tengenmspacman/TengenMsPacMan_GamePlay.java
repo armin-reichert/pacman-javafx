@@ -222,7 +222,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
             return;
         }
 
-        final House house = level.entities().entitySet().uniqueOfType(House.class);
+        final House house = level.entities().theOne(House.class);
         final Vector2i houseEntry = WorldMap.computeTileAt(house.floorplan().entryPosition());
         final Vector2i houseEntryOpposite = houseEntry.plus(0, house.sizeInTiles().y() + 1);
 

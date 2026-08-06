@@ -133,7 +133,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         final Ghost orangeGhost = factory.createOrangeGhost();
 
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        final House house = level.entities().entitySet().uniqueOfType(House.class);
+        final House house = level.entities().theOne(House.class);
 
         redGhost.worldPlacement()   .init(terrain, house, WorldMapPropertyName.POS_GHOST_1_RED);
         pinkGhost.worldPlacement()  .init(terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK);
@@ -198,7 +198,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
             return;
         }
 
-        final House house = level.entities().entitySet().uniqueOfType(House.class);
+        final House house = level.entities().theOne(House.class);
         if (house == null) {
             Logger.error("Moving bonus cannot be activated, no house exists in this level!");
             return;

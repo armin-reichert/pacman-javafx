@@ -49,7 +49,7 @@ public final class CheatActions {
             @Override
             public void doAction() {
                 final GameLevel level = gameContext().assertLevel();
-                final LivesCounter livesCounter = level.entities().entitySet().uniqueOfType(LivesCounter.class);
+                final LivesCounter livesCounter = level.entities().theOne(LivesCounter.class);
                 LivesCounterSystem.addLives(livesCounter, 3);
                 gameContext().cheats().notifyCheatUsed();
 

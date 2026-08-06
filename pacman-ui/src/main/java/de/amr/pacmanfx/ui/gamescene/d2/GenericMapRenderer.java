@@ -69,7 +69,7 @@ public class GenericMapRenderer extends BaseRenderer {
             terrainRenderer.setMapColoring(mapColoring);
             terrainRenderer.draw(worldMap);
 
-            final House house = level.entities().entitySet().uniqueOfType(House.class);
+            final House house = level.entities().theOne(House.class);
             if (house != null) {
                 houseRenderer.setMapColoring(mapColoring);
                 houseRenderer.drawHouse(house.floorplan().minTile(), house.sizeInTiles(),

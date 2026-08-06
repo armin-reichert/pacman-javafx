@@ -78,7 +78,7 @@ public class QuerySet<E> implements Iterable<E>, Disposable {
      *         a {@link java.util.NoSuchElementException} exception is thrown.
      * @param <T> type of entity
      */
-    public <T> T uniqueOfType(Class<T> type) {
+    public <T> T theOne(Class<T> type) {
         requireNonNull(type);
         T found = null;
         for (E e : entries) {

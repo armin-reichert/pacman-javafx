@@ -114,7 +114,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
 
         gameModel.optLevel().ifPresent(level -> {
             final WorldMap worldMap = level.worldMap();
-            final House house = level.entities().entitySet().uniqueOfType(House.class);
+            final House house = level.entities().theOne(House.class);
             final double scaledIndent = scaled(CONTENT_INDENT);
 
             configureRenderInfo(playScene2D, worldMap, tick);

@@ -18,6 +18,7 @@ import de.amr.pacmanfx.core.entities.bonus.comp.BonusState;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.House;
+import de.amr.pacmanfx.core.entities.ghost.system.GhostStateSystem;
 import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.livescounter.system.LivesCounterSystem;
@@ -36,11 +37,11 @@ import de.amr.pacmanfx.core.event.pac.PacEatsFoodEvent;
 import de.amr.pacmanfx.core.event.pac.PacGetsPowerEvent;
 import de.amr.pacmanfx.core.event.pac.PacLostPowerEvent;
 import de.amr.pacmanfx.core.event.pac.PacPowerFadesEvent;
+import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessage;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.UpdatableEntity;
 import de.amr.pacmanfx.core.model.rules.ActorSpeedRules;
 import de.amr.pacmanfx.core.model.rules.CollisionStrategy;
 import de.amr.pacmanfx.core.model.rules.GameRules;
@@ -98,7 +99,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final GameSystems sys = gameContext.systems();
 
         final GameLevel level = gameContext.assertLevel();
-        final House house = level.entities().entitySet().uniqueOfType(House.class);
+        final House house = level.entities().theOne(House.class);
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
         final Pac pac = level.entities().pac();
@@ -140,7 +141,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
         final GameLevel level = createLevel(gameContext, levelNumber, false);
 
-        final LivesCounter livesCounter = level.entities().entitySet().uniqueOfType(LivesCounter.class);
+        final LivesCounter livesCounter = level.entities().theOne(LivesCounter.class);
         livesCounter.data().setNumLives(numLives);
 
         model.score().setLevelNumber(levelNumber);
@@ -160,7 +161,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
         final int lastLevelNumber = model.rules().lastLevelNumber();
         if (oldLevel.number() < lastLevelNumber) {
-            final LivesCounter counter = oldLevel.entities().entitySet().uniqueOfType(LivesCounter.class);
+            final LivesCounter counter = oldLevel.entities().theOne(LivesCounter.class);
             buildNormalLevel(gameContext, oldLevel.number() + 1, counter.data().numLives());
             startLevel(gameContext);
             // Note: This event is very important because it triggers the creation of the actor animations!
@@ -195,19 +196,22 @@ public abstract class CommonGamePlay implements GamePlay {
             gateKeeper.unlockGhostIfPossible(gameContext);
         }
         updatePac(gameContext, level, pac);
-        gameContext.systems().ghostState().update(gameContext);
+        updateGhosts(gameContext, level);
         gameContext.systems().bonusState().update(gameContext);
-
-        //TODO remove this kind of updates and call entity systems update-methods instead
-        level.entities().forEach(entity -> {
-            if (entity instanceof UpdatableEntity updatableEntity) {
-                updatableEntity.update(gameContext);
-            }
-        });
 
         checkPacPower(gameContext, level, pac);
         detectCollisions(gameContext);
         evalCollisions(gameContext);
+    }
+
+    private void updateGhosts(GameContext gameContext, GameLevel level) {
+            final GhostStateSystem ghostStateSystem = gameContext.systems().ghostState();
+            if (gameContext.state().id().equals(CommonGameStateID.GAME_LEVEL_EATING_GHOST)) {
+                level.ghostsInAnyOfStates(GhostStateSystem.UPDATED_GHOST_STATES_WHILE_EATEN)
+                    .forEach(ghost -> ghostStateSystem.update(gameContext, ghost));
+            } else {
+                level.entities().ghosts().forEach(ghost -> ghostStateSystem.update(gameContext, ghost));
+            }
     }
 
     private void startPacPower(GameContext gameContext, GameLevel level, Pac pac) {
@@ -463,7 +467,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final int newScore = oldScore + points;
 
         if (model.rules().scoringRules().isExtraLifeAwarded(oldScore, newScore)) {
-            final LivesCounter livesCounter = level.entities().entitySet().uniqueOfType(LivesCounter.class);
+            final LivesCounter livesCounter = level.entities().theOne(LivesCounter.class);
             LivesCounterSystem.addLife(livesCounter);
             eventManager.publishGameEvent(new SpecialScoreEvent(newScore));
         }
@@ -507,7 +511,7 @@ public abstract class CommonGamePlay implements GamePlay {
      * @return position where level messages ("READY!", "GAME OVER") are displayed.
      */
     public Vector2f messageCenterPosition(GameLevel level) {
-        final House house = level.entities().entitySet().uniqueOfType(House.class);
+        final House house = level.entities().theOne(House.class);
         Vector2i houseSize = house.sizeInTiles();
         float cx = tilesPx(house.floorplan().minTile().x() + houseSize.x() * 0.5f);
         float cy = tilesPx(house.floorplan().minTile().y() + houseSize.y() + 1);

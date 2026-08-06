@@ -192,7 +192,7 @@ public class PlayScene3D extends AbstractGameScene
 
         initPac(level, level.entities().pac());
 
-        final LivesCounter livesCounter = level.entities().entitySet().uniqueOfType(LivesCounter.class);
+        final LivesCounter livesCounter = level.entities().theOne(LivesCounter.class);
         final Pac pac = level.entities().pac();
         LivesCounterView3DSystem.startTracking(livesCounter, pac);
 

@@ -70,7 +70,7 @@ public class LevelCompletedAnimation extends ManagedAnimation {
     private Animation createAnimationFX() {
         final GameLevel level = level3D.level();
         final Maze3D maze3D = level3D.maze3D();
-        final House house = level.entities().entitySet().uniqueOfType(House.class);
+        final House house = level.entities().theOne(House.class);
         final Point3D rotationAxis = chance(0.5) ? Rotate.X_AXIS : Rotate.Z_AXIS;
         return new SequentialTransition(
             pauseSecThen(0.5, () -> level.entities().ghosts().forEach(GameEntity::hide)),

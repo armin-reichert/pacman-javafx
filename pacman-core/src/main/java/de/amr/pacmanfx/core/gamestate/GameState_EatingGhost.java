@@ -29,24 +29,21 @@ public final class GameState_EatingGhost extends GameState {
 
     @Override
     public void onUpdate(GameContext gameContext) {
+        final GhostStateSystem ghostStateSystem = gameContext.systems().ghostState();
+        final SpriteAnimSystem spriteAnimSystem = gameContext.systems().spriteAnim();
         final GameLevel level = gameContext.assertLevel();
 
         level.heartbeat().triggerPulse();
 
-        // Ensure ghosts that are returning home or accessing the house are being updated
-        gameContext.systems().ghostState().update(gameContext);
+        level.entities().ghosts().stream()
+            .filter(ghost -> GhostStateSystem.UPDATED_GHOST_STATES_WHILE_EATEN.contains(ghost.state()))
+            .forEach(ghost -> ghostStateSystem.update(gameContext, ghost));
 
         if (timer().hasExpired()) {
             level.entities().pac().show();
-
-            final GhostStateSystem ghostStateSystem = gameContext.systems().ghostState();
-            final SpriteAnimSystem spriteAnimSystem = gameContext.systems().spriteAnim();
-
             level.ghostsInState(GhostState.EATEN).forEach(
                 ghost -> ghostStateSystem.changeState(gameContext, ghost, GhostState.RETURNING_HOME));
-
             level.entities().ghosts().forEach(spriteAnimSystem::playSelected);
-
             gameContext.flow().resumePreviousState(gameContext);
         }
     }

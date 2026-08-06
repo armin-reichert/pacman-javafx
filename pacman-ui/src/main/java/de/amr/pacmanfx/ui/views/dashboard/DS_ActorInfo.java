@@ -51,7 +51,7 @@ public class DS_ActorInfo extends GameDashboardSection {
 
     private Supplier<String> supplyLivesCount(GameAppContext appContext) {
         return fnGameLevelInfo(appContext, level -> {
-            final LivesCounter livesCounter = level.entities().entitySet().uniqueOfType(LivesCounter.class);
+            final LivesCounter livesCounter = level.entities().theOne(LivesCounter.class);
             return String.valueOf(livesCounter.data().numLives());
         });
     }

@@ -14,6 +14,8 @@ public class GhostStateComp implements GameEntityComponent {
 
     private GhostState state;
 
+    private boolean flashing;
+
     public GhostStateComp() {
         state = DEFAULT_STATE;
     }
@@ -26,8 +28,17 @@ public class GhostStateComp implements GameEntityComponent {
         this.state = requireNonNull(state);
     }
 
+    public boolean flashing() {
+        return flashing;
+    }
+
+    public void setFlashing(boolean flashing) {
+        this.flashing = flashing;
+    }
+
     @Override
     public void reset() {
         state = DEFAULT_STATE;
+        flashing = false;
     }
 }
