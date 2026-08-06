@@ -49,7 +49,6 @@ import de.amr.pacmanfx.uilib.entities3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.entities3D.animation.EnergizerParticle3D;
 import de.amr.pacmanfx.uilib.entities3D.animation.Pool;
 import de.amr.pacmanfx.uilib.entities3D.bonus.*;
-import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3DFactory;
 import de.amr.pacmanfx.uilib.entities3D.ghost.system.Ghost3DViewSystem;
 import de.amr.pacmanfx.uilib.entities3D.ghost_old.Ghost3DAppearanceController;
 import de.amr.pacmanfx.uilib.entities3D.ghost_old.Ghost3DTransformController;
@@ -413,8 +412,10 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             ghosts3D.add(ghost3D);
         }
 
-        //TODO create 3D view components for ghosts
-        level.entities().ghosts().forEach(Ghost3DFactory::createGhostView3D);
+        level.entities().ghosts().forEach(ghost -> {
+            final var ghostSettings = settings.get(ghost.personality().ordinal());
+            gameVariantConfig.factory3D().createGhost3D(ghost, ghostSettings, animationRegistry);
+        });
     }
 
     private Ghost3DWrapperToBeRemoved createGhost3D(GhostSettings ghostConfig, Ghost ghost) {

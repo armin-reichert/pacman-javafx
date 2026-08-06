@@ -69,8 +69,14 @@ public class DefaultFactory3D implements Factory3D {
     }
 
     @Override
-    public void createGhost3D(Ghost ghost, GhostSettings ghostConfig, AnimationRegistry animations) {
-        Ghost3DFactory.createGhostView3D(ghost);
+    public void createGhost3D(Ghost ghost, GhostSettings settings, AnimationRegistry animations) {
+        Ghost3DFactory.createGhostView3D(
+            ghost,
+            settings,
+            PacMan3DModel.instance().ghostDressMesh(),
+            PacMan3DModel.instance().ghostPupilsMesh(),
+            PacMan3DModel.instance().ghostEyeballsMesh()
+        );
     }
 
     @Override

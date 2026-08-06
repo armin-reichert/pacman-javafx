@@ -44,6 +44,7 @@ public class Ghost3DWrapperToBeRemoved extends GameEntity implements UpdatableEn
     private final Group root = new Group();
 
     private final AnimationRegistry animations;
+
     private final GhostSettings settings;
 
     private GhostMaterialSet materialSet;
