@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.gamescene.d3.camera;
 
-import de.amr.pacmanfx.core.entities.pac.Pac;
+import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import javafx.scene.PerspectiveCamera;

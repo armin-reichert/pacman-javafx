@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.core.entities.ghost.comp;
 
 import de.amr.pacmanfx.core.ecs.GameEntityComponent;
-import de.amr.pacmanfx.core.entities.ghost.GhostState;
 
 import static java.util.Objects.requireNonNull;
 

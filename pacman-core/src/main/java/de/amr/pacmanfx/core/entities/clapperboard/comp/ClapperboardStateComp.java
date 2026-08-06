@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.core.entities.clapperboard.comp;
 
 import de.amr.pacmanfx.core.ecs.GameEntityComponent;
-import de.amr.pacmanfx.core.entities.clapperboard.ClapperboardState;
 
 public class ClapperboardStateComp implements GameEntityComponent {
 

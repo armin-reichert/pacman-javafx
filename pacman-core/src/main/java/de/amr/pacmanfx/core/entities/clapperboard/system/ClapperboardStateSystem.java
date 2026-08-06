@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.core.entities.clapperboard.system;
 
-import de.amr.pacmanfx.core.entities.clapperboard.Clapperboard;
-import de.amr.pacmanfx.core.entities.clapperboard.ClapperboardState;
+import de.amr.pacmanfx.core.entities.Clapperboard;
+import de.amr.pacmanfx.core.entities.clapperboard.comp.ClapperboardState;
 import de.amr.pacmanfx.core.entities.clapperboard.comp.ClapperboardStateComp;
 
 public class ClapperboardStateSystem {

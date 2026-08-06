@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.core.entities.pac.system;
 
 import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
-import de.amr.pacmanfx.core.entities.pac.Pac;
-import de.amr.pacmanfx.core.entities.pac.PacState;
+import de.amr.pacmanfx.core.entities.Pac;
+import de.amr.pacmanfx.core.entities.pac.comp.PacState;
 import de.amr.pacmanfx.core.entities.pac.comp.PacStateComp;
 
 import static java.util.Objects.requireNonNull;

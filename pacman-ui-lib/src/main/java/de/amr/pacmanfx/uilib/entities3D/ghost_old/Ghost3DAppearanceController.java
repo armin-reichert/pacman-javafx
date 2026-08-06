@@ -5,10 +5,11 @@
 package de.amr.pacmanfx.uilib.entities3D.ghost_old;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.entities.ghost.Ghost;
-import de.amr.pacmanfx.core.entities.pac.Pac;
+import de.amr.pacmanfx.core.entities.Ghost;
+import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
+import de.amr.pacmanfx.uilib.entities3D.ghost.GhostAppearance;
 
 public class Ghost3DAppearanceController {
 

@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
-import de.amr.pacmanfx.core.entities.marquee.Marquee;
+import de.amr.pacmanfx.core.entities.Marquee;
 import de.amr.pacmanfx.core.entities.marquee.comp.*;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;

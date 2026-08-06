@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.core.entities.livescounter.system;
 
 
-import de.amr.pacmanfx.core.entities.livescounter.LivesCounter;
+import de.amr.pacmanfx.core.entities.LivesCounter;
 
 public class LivesCounterSystem {
 

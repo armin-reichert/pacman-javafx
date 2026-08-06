@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.uilib.entities3D.ghost;
 
-import de.amr.pacmanfx.core.entities.ghost.Ghost;
+import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DViewComp;
 import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostSettings;
 import javafx.scene.shape.Mesh;

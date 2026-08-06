@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.entities.bag;
 
 
 import de.amr.pacmanfx.core.entities.ActorAnimationID;
-import de.amr.pacmanfx.core.entities.bag.Bag;
+import de.amr.pacmanfx.core.entities.Bag;
 
 public final class BagAnimationSystem {
 

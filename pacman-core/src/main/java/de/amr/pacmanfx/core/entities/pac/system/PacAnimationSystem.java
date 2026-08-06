@@ -2,7 +2,7 @@ package de.amr.pacmanfx.core.entities.pac.system;
 
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
 import de.amr.pacmanfx.core.entities.ActorAnimationID;
-import de.amr.pacmanfx.core.entities.pac.Pac;
+import de.amr.pacmanfx.core.entities.Pac;
 
 public class PacAnimationSystem {
 
