@@ -3,9 +3,7 @@ package de.amr.pacmanfx.uilib.entities3D.ghost.comp;
 import de.amr.pacmanfx.core.ecs.GameEntityComponent;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.entities3D.PacMan3DModel;
-import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostAppearance;
-import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostMaterialSet;
-import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostSettings;
+import de.amr.pacmanfx.uilib.entities3D.ghost_old.*;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.shape.Mesh;
@@ -26,11 +24,11 @@ public class Ghost3DViewComp implements GameEntityComponent {
     private Group dressGroup;
 
     private MeshView dressMeshView;
-
+    
     private MeshView pupilsMeshView;
-
+    
     private MeshView eyeballsMeshView;
-
+    
     private final Rotate facingRotate = new Rotate(0, Rotate.Z_AXIS);
 
     private GhostAppearance activeVariant;
@@ -39,7 +37,7 @@ public class Ghost3DViewComp implements GameEntityComponent {
     }
 
     public void build(GhostSettings settings, Mesh dressMesh, Mesh pupilsMesh, Mesh eyeballsMesh) {
-        buildHierarchy(settings, dressMesh, pupilsMesh, eyeballsMesh);
+        buildTree(settings, dressMesh, pupilsMesh, eyeballsMesh);
     }
 
     @Override
@@ -77,18 +75,6 @@ public class Ghost3DViewComp implements GameEntityComponent {
         return dressGroup;
     }
 
-    public MeshView dressMeshView() {
-        return dressMeshView;
-    }
-
-    public MeshView pupilsMeshView() {
-        return pupilsMeshView;
-    }
-
-    public MeshView eyeballsMeshView() {
-        return eyeballsMeshView;
-    }
-
     // Private Area, no trespassing!
 
     /*
@@ -100,7 +86,7 @@ public class Ghost3DViewComp implements GameEntityComponent {
                  pupilsMeshView
                  eyeballsMeshView
      */
-    private void buildHierarchy(GhostSettings settings, Mesh dressMesh, Mesh pupilsMesh, Mesh eyeballsMesh) {
+    private void buildTree(GhostSettings settings, Mesh dressMesh, Mesh pupilsMesh, Mesh eyeballsMesh) {
 
         // 1. Create meshes
         dressMeshView    = new MeshView(dressMesh);
@@ -143,6 +129,61 @@ public class Ghost3DViewComp implements GameEntityComponent {
 //        dressMeshView.drawModeProperty().bind(drawMode);
 //        pupilsMeshView.drawModeProperty().bind(drawMode);
 //        eyeballsMeshView.drawModeProperty().bind(drawMode);
+    }
+
+    // Look management
+
+    private void lookNormal() {
+        dressMeshView.setVisible(true);
+        selectMaterialSet(materialSet.normalMaterial());
+
+        //TODO move into animation component
+//        dressColorFlashingAnimation().ifPresent(ManagedAnimation::stop);
+//        dressAnimation().ifPresent(ManagedAnimation::playOrContinue);
+//        brakeIfTunnelEntered(ghost3D);
+    }
+
+    private void lookFlashing(int numFlashes) {
+        if (numFlashes == 0) {
+            lookFrightened();
+            return;
+        }
+        dressMeshView.setVisible(true);
+        selectMaterialSet(materialSet.flashingMaterial());
+
+        //TODO move into animation component
+//        dressAnimation().ifPresent(ManagedAnimation::playOrContinue);
+//        dressColorFlashingAnimation().ifPresent(flashing -> {
+//            flashing.setNumFlashes(numFlashes);
+//            flashing.playOrContinue();
+//        });
+    }
+
+    private void lookFrightened() {
+        dressMeshView.setVisible(true);
+        selectMaterialSet(materialSet.frightenedMaterial());
+
+        //TODO move into animation component
+//        dressColorFlashingAnimation().ifPresent(ManagedAnimation::stop);
+//        dressAnimation().ifPresent(ManagedAnimation::playOrContinue);
+    }
+
+    private void lookEyesOnly() {
+        dressMeshView.setVisible(false);
+        selectMaterialSet(materialSet.normalMaterial());
+
+        //TODO move into animation component
+//        stopAllAnimations();
+    }
+
+    private void lookEaten(Ghost3DWrapperToBeRemoved ghost3D) {
+        root().setVisible(false);
+    }
+
+    private void selectMaterialSet(GhostComponentMaterialSet materialSet) {
+        dressMeshView.setMaterial(materialSet.dressMaterial());
+        pupilsMeshView.setMaterial(materialSet.pupilsMaterial());
+        eyeballsMeshView.setMaterial(materialSet.eyeballsMaterial());
     }
 
 }
