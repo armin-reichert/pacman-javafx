@@ -1,7 +1,6 @@
 package de.amr.pacmanfx.uilib.entities3D.ghost.comp;
 
 import de.amr.pacmanfx.core.ecs.GameEntityComponent;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.entities3D.PacMan3DModel;
 import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostAppearance;
 import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostComponentMaterialSet;
@@ -21,8 +20,6 @@ public class Ghost3DViewComp implements GameEntityComponent {
 
     // Root node containing all variants
     private final Group root = new Group();
-
-    private AnimationRegistry animations;
 
     private GhostMaterialSet materialSet;
 
@@ -56,6 +53,7 @@ public class Ghost3DViewComp implements GameEntityComponent {
     public void setActiveVariant(GhostAppearance variant) {
         requireNonNull(variant);
         if (activeVariant != variant) {
+            this.activeVariant = variant;
             switch (activeVariant) {
                 case EATEN    -> lookEaten();
                 case EYES     -> lookEyesOnly();
@@ -66,12 +64,8 @@ public class Ghost3DViewComp implements GameEntityComponent {
         }
     }
 
-    public AnimationRegistry animations() {
-        return animations;
-    }
-
-    public void setAnimations(AnimationRegistry animations) {
-        this.animations = animations;
+    public Rotate facingRotate() {
+        return facingRotate;
     }
 
     public void setMaterialSet(GhostMaterialSet materialSet) {

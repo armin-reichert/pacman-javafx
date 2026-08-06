@@ -54,6 +54,11 @@ public final class PositionComp implements GameEntityComponent {
         y -= dy;
     }
 
+    public Vector2f center(int tileSize) {
+        final float halfTileSize = 0.5f * tileSize;
+        return new Vector2f(x + halfTileSize, y + halfTileSize);
+    }
+
     public Vector2f asVector2f() {
         return new Vector2f(x, y);
     }
