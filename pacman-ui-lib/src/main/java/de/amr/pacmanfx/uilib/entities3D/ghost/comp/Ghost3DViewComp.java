@@ -72,6 +72,10 @@ public class Ghost3DViewComp implements GameEntityComponent {
         this.materialSet = materialSet;
     }
 
+    public GhostMaterialSet materialSet() {
+        return materialSet;
+    }
+
     // Private Area, no trespassing!
 
     /*

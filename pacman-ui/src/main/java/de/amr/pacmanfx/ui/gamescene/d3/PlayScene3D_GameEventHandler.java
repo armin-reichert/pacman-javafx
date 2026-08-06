@@ -37,7 +37,6 @@ import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.entities3D.bonus.Bonus3DViewSystem;
-import de.amr.pacmanfx.uilib.entities3D.ghost_old.Ghost3DWrapperToBeRemoved;
 import de.amr.pacmanfx.uilib.entities3D.house.system.House3DSystem;
 import de.amr.pacmanfx.uilib.entities3D.pac.system.Pac3DAnimationSystem;
 import de.amr.pacmanfx.uilib.entities3D.world.Energizer3D;
@@ -84,8 +83,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
             handleTestState(appContext().ui().viewModel().common3D, gameContext());
         }
         else if (CommonGameStateID.GAME_OR_LEVEL_STARTING.hasSameNameAs(newState)) {
-            //TODO change
-            initGhosts();
+            //TODO anything?
         }
         else if (CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(newState)) {
             onHuntingStart();
@@ -168,9 +166,6 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         final GameLevel3D level3D = assertLevel3D();
         level3D.createLevelCounterView3D(gameContext.model().levelCounter());
 
-        //TODO change
-        initGhosts();
-
         gameScene().replaceActionBindings(level);
         gameScene().fadeInAnimation().playFromStart();
     }
@@ -239,20 +234,11 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 
     // Private state-specific handlers
 
-    private void initGhosts() {
-        gameScene().optGameLevel3D().ifPresent(level3D ->
-            level3D.ghosts3D.forEach(ghost3D -> ghost3D.init(gameContext()))
-        );
-    }
-
     private void onHuntingStart() {
         final GameLevel level = gameContext().assertLevel();
         final GameLevel3D level3D = assertLevel3D();
 
         gameScene().initPac(level, level.entities().pac());
-
-        //TODO change
-        initGhosts();
 
         level3D.energizers3D().forEach(Energizer3D::startPumping);
 
@@ -282,11 +268,14 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 
     private void stopAnimationsBeforePacManDying() {
         final GameLevel3D level3D = assertLevel3D();
+
+        //TODO call ghost 3D animation system methods
+
         // Do not stop all animations!
         level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.GHOST_LIGHT).ifPresent(ManagedAnimation::stop);
         level3D.animationRegistry().optAnimation(GameLevel3D.AnimationID.WALL_COLOR_FLASHING).ifPresent(ManagedAnimation::stop);
-        //TODO get rid of 3D wrappers for ghosts!
-        level3D.ghosts3D.forEach(Ghost3DWrapperToBeRemoved::stopAllAnimations);
+
+        //level3D.ghosts3D.forEach(Ghost3DWrapperToBeRemoved::stopAllAnimations);
     }
 
     private void onGhostsKilled() {

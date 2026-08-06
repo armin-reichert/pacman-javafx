@@ -163,13 +163,6 @@ public class PlayScene3D extends AbstractGameScene
         Pac3DAnimationSystem.setPowerMode(pac, false);
     }
 
-    //TODO remove this
-    public void initGhosts(GameLevel level) {
-        for (var ghost3D : level3D.ghosts3D) {
-            ghost3D.init(gameContext());
-        }
-    }
-
     public void initFood3D(GameLevel level, boolean startEnergizerPumping) {
         final FoodLayer foodLayer = level.worldMap().foodLayer();
 
@@ -198,7 +191,6 @@ public class PlayScene3D extends AbstractGameScene
         level3DEmbedder.getChildren().setAll(level3D);
 
         initPac(level, level.entities().pac());
-        initGhosts(level);
 
         final LivesCounter livesCounter = level.entities().entitySet().uniqueOfType(LivesCounter.class);
         final Pac pac = level.entities().pac();

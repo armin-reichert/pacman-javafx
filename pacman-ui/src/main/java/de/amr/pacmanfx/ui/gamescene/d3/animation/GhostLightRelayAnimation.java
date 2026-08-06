@@ -1,17 +1,19 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.ui.gamescene.d3.animation;
 
+import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.entities3D.ghost_old.Ghost3DWrapperToBeRemoved;
+import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DViewComp;
+import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostSettings;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.PointLight;
-import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
@@ -35,14 +37,17 @@ public class GhostLightRelayAnimation extends ManagedAnimation {
     public static final Duration LIGHT_CHANGE_INTERVAL = Duration.millis(3000);
 
     private final PointLight light;
-    private final List<Ghost3DWrapperToBeRemoved> ghosts3D;
-    private GhostPersonality currentGhostID = GhostPersonality.RED_GHOST_SHADOW;
+    private final List<Ghost> ghosts;
+    private final List<GhostSettings> ghostSettings;
 
-    public GhostLightRelayAnimation(PointLight light, List<Ghost3DWrapperToBeRemoved> ghosts3DInOrder) {
+    private GhostPersonality currentGhostPersonality = GhostPersonality.RED_GHOST_SHADOW;
+
+    public GhostLightRelayAnimation(PointLight light, List<Ghost> ghostsInOrder, List<GhostSettings> ghostSettings) {
         super("Ghost Light Animation");
 
         this.light = requireNonNull(light);
-        this.ghosts3D = requireNonNull(ghosts3DInOrder);
+        this.ghosts = requireNonNull(ghostsInOrder);
+        this.ghostSettings = requireNonNull(ghostSettings);
 
         setFactory(() -> {
             final var timeline = new Timeline(new KeyFrame(LIGHT_CHANGE_INTERVAL, _ -> passGhostLightToNextHunter()));
@@ -51,10 +56,10 @@ public class GhostLightRelayAnimation extends ManagedAnimation {
                 switch (status) {
                     case STOPPED -> {
                         light.setLightOn(false);
-                        currentGhostID = GhostPersonality.RED_GHOST_SHADOW;
+                        currentGhostPersonality = GhostPersonality.RED_GHOST_SHADOW;
                     }
                     case PAUSED -> {}
-                    case RUNNING -> illuminateGhost(currentGhostID);
+                    case RUNNING -> illuminateGhost(currentGhostPersonality);
                 }
             });
             return timeline;
@@ -63,15 +68,18 @@ public class GhostLightRelayAnimation extends ManagedAnimation {
     }
 
     private void illuminateGhost(GhostPersonality personality) {
-        final Ghost3DWrapperToBeRemoved ghost3D = ghosts3D.get(personality.ordinal());
-        final Color lightColor = ghosts3D.get(personality.ordinal()).settings().colors().normal().dressColor();
-        light.setColor(lightColor);
-        light.translateXProperty().bind(ghost3D.root().translateXProperty());
-        light.translateYProperty().bind(ghost3D.root().translateYProperty());
+        final int p = personality.ordinal();
+        final Ghost ghost = ghosts.get(p);
+        final Ghost3DViewComp ghost3DView = ghost.requireComponent(Ghost3DViewComp.class);
+
+        light.setColor(ghostSettings.get(p).colors().normal().dressColor());
+        light.translateXProperty().bind(ghost3DView.root().translateXProperty());
+        light.translateYProperty().bind(ghost3DView.root().translateYProperty());
         light.setTranslateZ(-LIGHT_HEIGHT_OVER_FLOOR);
         light.setLightOn(true);
-        currentGhostID = personality;
-        Logger.trace("Ghost light passed to ghost {}", currentGhostID);
+
+        currentGhostPersonality = personality;
+        Logger.trace("Ghost light passed to ghost {}", currentGhostPersonality);
     }
 
     private void passGhostLightToNextHunter() {
@@ -79,9 +87,9 @@ public class GhostLightRelayAnimation extends ManagedAnimation {
     }
 
     private Optional<GhostPersonality> findNextHunter() {
-        GhostPersonality next = nextGhostPersonality(currentGhostID);
-        while (next != currentGhostID) {
-            if (ghosts3D.get(next.ordinal()).ghost().state() == GhostState.HUNTING_PAC) {
+        GhostPersonality next = nextGhostPersonality(currentGhostPersonality);
+        while (next != currentGhostPersonality) {
+            if (ghosts.get(next.ordinal()).state() == GhostState.HUNTING_PAC) {
                 return Optional.of(next);
             }
             next = nextGhostPersonality(next);
