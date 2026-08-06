@@ -26,5 +26,7 @@ public class Ghost3DMovementSystem {
             case RIGHT -> 180;
             case DOWN  -> 270;
         });
+
+        //TODO hide if outside world (teleporting)
     }
 }

@@ -15,14 +15,15 @@ public class Ghost3DViewSystem {
     }
 
     private static GhostAppearance selectVariant(GhostState state) {
-        boolean flashing = false; //TODO
-        if (state == GhostState.FRIGHTENED) {
-            return flashing ? GhostAppearance.FLASHING : GhostAppearance.FRIGHTENED;
-        }
-        if (state == GhostState.EATEN) {
-            return GhostAppearance.NUMBER;
-        }
-        return GhostAppearance.NORMAL;
+        return switch (state) {
+            case EATEN -> GhostAppearance.EATEN;
+            case ENTERING_HOUSE -> GhostAppearance.EYES;
+            case FRIGHTENED -> GhostAppearance.FRIGHTENED; // TODO: flashing
+            case HUNTING_PAC -> GhostAppearance.NORMAL;
+            case LEAVING_HOUSE -> GhostAppearance.NORMAL;
+            case LOCKED -> GhostAppearance.NORMAL; //TODO can also be FRIGHTENED
+            case RETURNING_HOME -> GhostAppearance.EYES;
+        };
     }
 
 }

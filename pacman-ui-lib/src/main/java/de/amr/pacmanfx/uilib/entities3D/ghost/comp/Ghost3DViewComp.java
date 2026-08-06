@@ -58,6 +58,7 @@ public class Ghost3DViewComp implements GameEntityComponent {
                 case EATEN    -> lookEaten();
                 case EYES     -> lookEyesOnly();
                 case FLASHING -> lookFlashing();
+                case FRIGHTENED -> lookFrightened();
                 case NORMAL   -> lookNormal();
                 case NUMBER   -> lookNumber();
             }
@@ -131,8 +132,9 @@ public class Ghost3DViewComp implements GameEntityComponent {
     // Look management
 
     public void lookNormal() {
+        root().setVisible(true);
         dressMeshView.setVisible(true);
-        selectMaterialSet(materialSet.normalMaterial());
+        applyMaterials(materialSet.normalMaterial());
 
         //TODO move into animation component
 //        dressColorFlashingAnimation().ifPresent(ManagedAnimation::stop);
@@ -141,6 +143,7 @@ public class Ghost3DViewComp implements GameEntityComponent {
     }
 
     public void lookFlashing() {
+        root().setVisible(true);
         lookFrightened();
 
         //TODO move into animation component
@@ -152,8 +155,10 @@ public class Ghost3DViewComp implements GameEntityComponent {
     }
 
     public void lookFrightened() {
+        root().setVisible(true);
         dressMeshView.setVisible(true);
-        selectMaterialSet(materialSet.frightenedMaterial());
+
+        applyMaterials(materialSet.frightenedMaterial());
 
         //TODO move into animation component
 //        dressColorFlashingAnimation().ifPresent(ManagedAnimation::stop);
@@ -161,8 +166,12 @@ public class Ghost3DViewComp implements GameEntityComponent {
     }
 
     public void lookEyesOnly() {
+        root().setVisible(true);
+        pupilsMeshView.setVisible(true);
+        eyeballsMeshView.setVisible(true);
         dressMeshView.setVisible(false);
-        selectMaterialSet(materialSet.normalMaterial());
+
+        applyMaterials(materialSet.normalMaterial());
 
         //TODO move into animation component
 //        stopAllAnimations();
@@ -170,13 +179,16 @@ public class Ghost3DViewComp implements GameEntityComponent {
 
     public void lookEaten() {
         root().setVisible(false);
+
+        applyMaterials(materialSet.normalMaterial());
     }
 
     public void lookNumber() {
+        root().setVisible(true);
         //TODO
     }
 
-    private void selectMaterialSet(GhostComponentMaterialSet materialSet) {
+    private void applyMaterials(GhostComponentMaterialSet materialSet) {
         dressMeshView.setMaterial(materialSet.dressMaterial());
         pupilsMeshView.setMaterial(materialSet.pupilsMaterial());
         eyeballsMeshView.setMaterial(materialSet.eyeballsMaterial());

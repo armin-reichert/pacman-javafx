@@ -273,7 +273,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private void updateGhosts() {
         //TODO remove
-        ghosts3D.forEach(ghost3D -> ghost3D.update(gameContext));
+//        ghosts3D.forEach(ghost3D -> ghost3D.update(gameContext));
 
         // In the new implementation, use:
         level.entities().ghosts().forEach(ghost -> {
