@@ -169,7 +169,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
             sys.spriteAnim().select(pacMan, ActorAnimationID.PAC_MUNCHING);
             sys.spriteAnim().playSelected(pacMan);
 
-            sys.ghostState().changeState(gameContext, ghost, GhostState.HUNTING_PAC);
+            sys.ghostState().changeState(ghost, GhostState.HUNTING_PAC);
         }
     }
 
@@ -206,7 +206,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
             sys.worldNavigator().setWishDir(ghost, Direction.RIGHT);
             sys.worldNavigator().setSpeed(ghost, GHOST_FRIGHTENED_SPEED);
 
-            sys.ghostState().changeState(gameContext, ghost, FRIGHTENED);
+            sys.ghostState().changeState(ghost, FRIGHTENED);
         }
     }
 
@@ -243,7 +243,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
     private void eatGhostAndStopChasing(GameContext gameContext, Ghost victim, long tick) {
         final GameSystems sys = gameContext.systems();
 
-        sys.ghostState().changeState(gameContext, victim, EATEN);
+        sys.ghostState().changeState(victim, EATEN);
         sys.spriteAnim().selectAndSetFrame(victim, ActorAnimationID.GHOST_POINTS, numGhostsEaten++);
 
         pacMan.hide();

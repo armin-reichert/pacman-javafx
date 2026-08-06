@@ -5,13 +5,14 @@
 package de.amr.pacmanfx.core.entities.ghost.system;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.ecs.systems.GameSystems;
+import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
+import de.amr.pacmanfx.core.ecs.systems.RandomWorldMovementSystem;
+import de.amr.pacmanfx.core.ecs.systems.WorldMovementPolicy;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostStateComp;
 import de.amr.pacmanfx.core.level.GameLevel;
-import org.tinylog.Logger;
 
 import java.util.Set;
 
@@ -23,10 +24,10 @@ public class GhostStateSystem {
     public static final Set<GhostState> UPDATED_GHOST_STATES_WHILE_EATEN = Set.of(
         GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE);
 
-    private final GhostHouseAccessSystem ghostHouseAccessSystem;
+    private final GhostHouseAccessSystem houseAccessSystem;
 
-    public GhostStateSystem(GhostHouseAccessSystem ghostHouseAccessSystem) {
-        this.ghostHouseAccessSystem = requireNonNull(ghostHouseAccessSystem);
+    public GhostStateSystem(GhostHouseAccessSystem houseAccessSystem) {
+        this.houseAccessSystem = requireNonNull(houseAccessSystem);
     }
 
     public void update(GameContext gameContext, GameLevel level, Ghost ghost) {
@@ -34,111 +35,49 @@ public class GhostStateSystem {
         requireNonNull(ghost);
 
         final GhostStateComp state = ghost.requireComponent(GhostStateComp.class);
+
         state.setThreatenedByPac(isGhostThreatenedByPac(level, ghost, level.entities().pac()));
 
         final float speed = gameContext.model().rules().actorSpeedRules().ghostSpeed(gameContext, ghost);
+
         switch (ghost.stateValue()) {
-            case LOCKED         -> updateStateLocked(gameContext, ghost, speed);
-            case LEAVING_HOUSE  -> updateStateLeavingHouse(gameContext, ghost, speed);
-            case HUNTING_PAC    -> updateStateHuntingPac(gameContext, ghost, speed);
-            case FRIGHTENED     -> updateStateFrightened(gameContext, ghost, speed);
-            case EATEN          -> updateStateEaten();
-            case RETURNING_HOME -> updateStateReturningToHouse(gameContext, ghost, speed);
-            case ENTERING_HOUSE -> updateStateEnteringHouse(gameContext, ghost, speed);
+            case LOCKED         -> houseAccessSystem.stayInHouse(gameContext, ghost, speed);
+
+            case LEAVING_HOUSE  -> {
+                boolean leftHouse = houseAccessSystem.leaveHouse(gameContext, ghost, speed);
+                if (leftHouse) {
+                    final GhostState newState = ghost.state().isThreatenedByPac() ? GhostState.FRIGHTENED : GhostState.HUNTING_PAC;
+                    changeState(ghost, newState);
+                }
+            }
+
+            case HUNTING_PAC    -> {
+                final GhostHuntingStrategy huntingStrategy = gameContext.systems().ghostHuntingStrategy(ghost.personality());
+                final WorldMovementPolicy worldMovementPolicy = gameContext.systems().ghostWorldMovementPolicy();
+                huntingStrategy.hunt(level, ghost, speed, worldMovementPolicy);
+            }
+
+            case FRIGHTENED     -> {
+                final RandomWorldMovementSystem roamingSystem = gameContext.systems().roamingNavigator();
+                WorldMovementPolicy worldMovementPolicy =  gameContext.systems().ghostWorldMovementPolicy();
+                WorldNavigationComp navigation = ghost.worldNavigation();
+                roamingSystem.roam(navigation, worldMovementPolicy, level, ghost, speed);
+            }
+
+            case RETURNING_HOME -> houseAccessSystem.reachHouse(gameContext, ghost, speed);
+
+            case ENTERING_HOUSE -> houseAccessSystem.enterHouse(gameContext, ghost, speed);
+
+            case EATEN -> {}
         }
     }
 
-    public void changeState(GameContext gameContext, Ghost ghost, GhostState newState) {
-        requireNonNull(gameContext);
+    public void changeState(Ghost ghost, GhostState newState) {
         requireNonNull(ghost);
         requireNonNull(newState);
-
-        if (ghost.stateValue() == newState) {
-            Logger.debug("{} is already in state {}", ghost.name(), newState);
-            //TODO return from function?
-        }
-        
         ghost.requireComponent(GhostStateComp.class).setStateValue(newState);
     }
     
-    // --- LOCKED ---
-
-    private void updateStateLocked(GameContext gameContext, Ghost ghost, float speed) {
-        ghostHouseAccessSystem.stayInHouse(gameContext, ghost, speed);
-    }
-
-    // --- HUNTING_PAC ---
-
-    /**
-     * In each game level there are 8 alternating (scattering vs. chasing) hunting phases of different duration. The first
-     * hunting phase is always a "scatter" phase where the ghosts retreat to their maze corners. After some time they
-     * start chasing Pac-Man according to their character ("Shadow", "Speedy", "Bashful", "Pokey"). The last hunting phase
-     * is an "infinite" chasing phase.
-     * <p>
-     */
-    private void updateStateHuntingPac(GameContext gameContext, Ghost ghost, float speed) {
-        final GameSystems sys = gameContext.systems();
-        final GameLevel level = gameContext.assertLevel();
-        // The specific hunting behavior is defined by the game variant. For example, in Ms. Pac-Man,
-        // the red and pink ghosts are not chasing Pac-Man during the first scatter phase, but roam the maze randomly.
-        gameContext.systems().ghostHuntingStrategy(ghost.personality()).hunt(level, ghost, speed, sys.ghostWorldMovementPolicy());
-    }
-
-    // --- FRIGHTENED ---
-
-    /**
-     * <p>
-     * A frightened ghost has a blue color and starts flashing blue/white shortly (how long exactly?) before Pac-Man loses
-     * his power. Speed is about half of the normal speed. Reversing the move direction is not allowed in ghost state either.
-     * </p><p>
-     * Frightened ghosts choose a "random" direction when they enter a new tile. If the chosen direction
-     * can be taken, it is stored and taken as soon as possible. Otherwise, the remaining directions are checked in
-     * clockwise order.
-     * </p>
-     *
-     * @see <a href="https://www.youtube.com/watch?v=eFP0_rkjwlY">YouTube: How Frightened Ghosts Decide Where to Go</a>
-     */
-    private void updateStateFrightened(GameContext gameContext, Ghost ghost, float speed) {
-        gameContext.systems().roamingNavigator().roam(gameContext, ghost, speed);
-    }
-
-    // --- EATEN ---
-
-    /**
-     * After a ghost is eaten by Pac-Man, he is displayed for a short time as the number of points earned for eating him.
-     * The value doubles for each ghost eaten using the power of the same energizer.
-     */
-    private void updateStateEaten() {
-    }
-
-    // --- LEAVING_HOUSE ---
-
-    private void updateStateLeavingHouse(GameContext gameContext, Ghost ghost, float speed) {
-        boolean leftHouse = ghostHouseAccessSystem.leaveHouse(gameContext, ghost, speed);
-        if (leftHouse) {
-            final GhostState newState = ghost.state().isThreatenedByPac() ? GhostState.FRIGHTENED : GhostState.HUNTING_PAC;
-            changeState(gameContext, ghost, newState);
-        }
-    }
-
-    // --- RETURNING_TO_HOUSE ---
-
-    /**
-     * After the short time being displayed by his value, the eaten ghost is displayed by his eyes only and returns
-     * to the ghost house to be revived. Hallelujah!
-     */
-    private void updateStateReturningToHouse(GameContext gameContext, Ghost ghost, float speed) {
-        ghostHouseAccessSystem.reachHouse(gameContext, ghost, speed);
-    }
-
-    // --- ENTERING_HOUSE ---
-
-    private void updateStateEnteringHouse(GameContext gameContext, Ghost ghost, float speed) {
-        ghostHouseAccessSystem.enterHouse(gameContext, ghost, speed);
-    }
-
-    // helper
-
     private boolean isGhostThreatenedByPac(GameLevel level, Ghost ghost, Pac pac) {
         return pac.power().isActive() && !level.isInGhostKilledChain(ghost);
     }

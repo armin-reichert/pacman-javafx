@@ -189,7 +189,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
 
                     sys.spriteAnim().playSelected(ghost);
 
-                    sys.ghostState().changeState(scene.gameContext(), ghost, GhostState.HUNTING_PAC);
+                    sys.ghostState().changeState(ghost, GhostState.HUNTING_PAC);
                 }
                 scene.ghostIndex = 0;
             }

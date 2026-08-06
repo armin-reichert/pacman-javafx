@@ -227,14 +227,14 @@ public final class ArcadeHouseGateKeeper {
                 sys.worldNavigator().setMoveDir(blinky, Direction.UP);
                 sys.worldNavigator().setWishDir(blinky, Direction.UP);
 
-                sys.ghostState().changeState(gameContext, blinky, GhostState.LEAVING_HOUSE);
+                sys.ghostState().changeState(blinky, GhostState.LEAVING_HOUSE);
             }
             else {
                 // Start hunting towards west direction
                 sys.worldNavigator().setMoveDir(blinky, Direction.LEFT);
                 sys.worldNavigator().setWishDir(blinky, Direction.LEFT);
 
-                sys.ghostState().changeState(gameContext, blinky, GhostState.HUNTING_PAC);
+                sys.ghostState().changeState(blinky, GhostState.HUNTING_PAC);
             }
         }
         Stream.of(GhostPersonality.PINK_GHOST_SPEEDY, GhostPersonality.CYAN_GHOST_BASHFUL, GhostPersonality.ORANGE_GHOST_POKEY)
@@ -244,7 +244,7 @@ public final class ArcadeHouseGateKeeper {
             .ifPresent(prisoner -> checkReleaseOfGhost(gameContext, prisoner).ifPresent(_ -> {
                 sys.worldNavigator().setMoveDir(prisoner, Direction.UP);
                 sys.worldNavigator().setWishDir(prisoner, Direction.UP);
-                sys.ghostState().changeState(gameContext, prisoner, GhostState.LEAVING_HOUSE);
+                sys.ghostState().changeState(prisoner, GhostState.LEAVING_HOUSE);
                 ghostReleasedCallback.accept(level, prisoner);
             }));
     }

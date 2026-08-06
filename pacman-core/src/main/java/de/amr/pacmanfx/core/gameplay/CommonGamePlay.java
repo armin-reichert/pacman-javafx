@@ -113,7 +113,7 @@ public abstract class CommonGamePlay implements GamePlay {
             final Direction direction = house.floorplan().ghostStartDirection(ghost.personality());
             sys.worldNavigator().setMoveDir(ghost, direction);
             sys.worldNavigator().setWishDir(ghost, direction);
-            sys.ghostState().changeState(gameContext, ghost, GhostState.LOCKED);
+            sys.ghostState().changeState(ghost, GhostState.LOCKED);
             sys.spriteAnim().resetSelected(ghost);
         });
 
@@ -227,7 +227,7 @@ public abstract class CommonGamePlay implements GamePlay {
         if (level.pacPowerSeconds() > 0) {
             level.huntingTimerStrategy().stop();
             level.ghostsInState(GhostState.HUNTING_PAC)
-                .forEach(ghost -> gameContext.systems().ghostState().changeState(gameContext, ghost, GhostState.FRIGHTENED));
+                .forEach(ghost -> gameContext.systems().ghostState().changeState(ghost, GhostState.FRIGHTENED));
             gameContext.systems().pacPower().start(pac, TickTimer.secToTicks(level.pacPowerSeconds()));
             gameContext.eventManager().publishGameEvent(new PacGetsPowerEvent(pac));
         }
@@ -241,7 +241,7 @@ public abstract class CommonGamePlay implements GamePlay {
         else if (power.isOver()) {
             power.reset();
             level.ghostsInState(GhostState.FRIGHTENED).forEach(ghost ->
-                gameContext.systems().ghostState().changeState(gameContext, ghost, GhostState.HUNTING_PAC));
+                gameContext.systems().ghostState().changeState(ghost, GhostState.HUNTING_PAC));
             level.clearGhostKillChain();
             level.huntingTimerStrategy().start();
             gameContext.eventManager().publishGameEvent(new PacLostPowerEvent(pac));
@@ -410,7 +410,7 @@ public abstract class CommonGamePlay implements GamePlay {
         scorePoints(gameContext, points, level.number());
         Logger.info("Scored {} points for killing {}", points, eatenGhost.name());
 
-        sys.ghostState().changeState(gameContext, eatenGhost, GhostState.EATEN);
+        sys.ghostState().changeState(eatenGhost, GhostState.EATEN);
 
         // Animation index is 0-based, animation frame 0 shows points for *first* killed ghost...
         sys.spriteAnim().selectAndSetFrame(eatenGhost, ActorAnimationID.GHOST_POINTS, killedBefore);

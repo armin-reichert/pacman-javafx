@@ -115,7 +115,7 @@ public class GhostHouseAccessSystem {
             sys.worldNavigator().setMoveDir(ghost, UP);
             sys.worldNavigator().setWishDir(ghost, UP);
 
-            sys.ghostState().changeState(gameContext, ghost, GhostState.LOCKED);
+            sys.ghostState().changeState(ghost, GhostState.LOCKED);
             return;
         }
         if (position.y() < revivalPosition.y()) {
@@ -151,7 +151,7 @@ public class GhostHouseAccessSystem {
             sys.worldNavigator().setWishDir(ghost, DOWN);
 
             //TODO check if this should be done here
-            sys.ghostState().changeState(gameContext, ghost, GhostState.ENTERING_HOUSE);
+            sys.ghostState().changeState(ghost, GhostState.ENTERING_HOUSE);
 
         }
         else {
