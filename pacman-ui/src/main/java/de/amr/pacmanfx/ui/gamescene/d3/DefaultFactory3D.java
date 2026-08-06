@@ -72,15 +72,18 @@ public class DefaultFactory3D implements Factory3D {
 
     @Override
     public void createGhost3D(Ghost ghost, GhostSettings settings, AnimationRegistry animations) {
+        final GhostMaterialSet materialSet = ghostMaterialsCache
+            .computeIfAbsent(settings.colors(), this::createGhostMaterial);
+
         Ghost3DFactory.createGhostView3D(
             ghost,
             settings,
+            materialSet.flashingMaterial(),
             PacMan3DModel.instance().ghostDressMesh(),
             PacMan3DModel.instance().ghostPupilsMesh(),
             PacMan3DModel.instance().ghostEyeballsMesh()
         );
-        final GhostMaterialSet materialSet = ghostMaterialsCache
-            .computeIfAbsent(settings.colors(), this::createGhostMaterial);
+
         ghost.requireComponent(Ghost3DViewComp.class).setMaterialSet(materialSet);
     }
 

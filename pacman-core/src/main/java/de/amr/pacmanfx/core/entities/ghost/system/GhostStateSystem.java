@@ -35,16 +35,18 @@ public class GhostStateSystem {
         requireNonNull(gameContext);
         requireNonNull(ghost);
 
+        final Pac pac = level.entities().pac();
         final GhostStateComp state = ghost.requireComponent(GhostStateComp.class);
 
-        state.setThreatenedByPac(isGhostThreatenedByPac(level, ghost, level.entities().pac()));
+        state.setFlashing(pac.power().isFading());
+        state.setThreatenedByPac(isGhostThreatenedByPac(level, ghost, pac));
 
         final float speed = gameContext.model().rules().actorSpeedRules().ghostSpeed(gameContext, ghost);
 
         switch (ghost.ghostStateEnum()) {
-            case LOCKED         -> houseAccessSystem.stayInHouse(gameContext, ghost, speed);
+            case LOCKED -> houseAccessSystem.stayInHouse(gameContext, ghost, speed);
 
-            case LEAVING_HOUSE  -> {
+            case LEAVING_HOUSE -> {
                 boolean leftHouse = houseAccessSystem.leaveHouse(gameContext, ghost, speed);
                 if (leftHouse) {
                     final GhostState newState = ghost.state().isThreatenedByPac() ? GhostState.FRIGHTENED : GhostState.HUNTING_PAC;
@@ -52,13 +54,13 @@ public class GhostStateSystem {
                 }
             }
 
-            case HUNTING_PAC    -> {
+            case HUNTING_PAC -> {
                 final GhostHuntingStrategy huntingStrategy = gameContext.systems().ghostHuntingStrategy(ghost.personality());
                 final WorldMovementPolicy worldMovementPolicy = gameContext.systems().ghostWorldMovementPolicy();
                 huntingStrategy.hunt(level, ghost, speed, worldMovementPolicy);
             }
 
-            case FRIGHTENED     -> {
+            case FRIGHTENED -> {
                 final RandomWorldMovementSystem roamingSystem = gameContext.systems().roamingNavigator();
                 WorldMovementPolicy worldMovementPolicy =  gameContext.systems().ghostWorldMovementPolicy();
                 WorldNavigationComp navigation = ghost.worldNavigation();

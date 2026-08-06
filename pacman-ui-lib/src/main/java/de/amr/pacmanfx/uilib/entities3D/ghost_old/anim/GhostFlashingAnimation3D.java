@@ -4,10 +4,12 @@
 
 package de.amr.pacmanfx.uilib.entities3D.ghost_old.anim;
 
+import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3D.ghost_old.Ghost3DWrapperToBeRemoved;
 import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostComponentColors;
 import de.amr.pacmanfx.uilib.entities3D.ghost.comp.GhostComponentMaterialSet;
+import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostSettings;
 import javafx.animation.*;
 import javafx.util.Duration;
 
@@ -19,9 +21,9 @@ public class GhostFlashingAnimation3D extends ManagedAnimation {
 
     private int numFlashes;
 
-    public GhostFlashingAnimation3D(Ghost3DWrapperToBeRemoved ghost3D) {
-        super("Ghost Flashing (%s)".formatted(ghost3D.ghost().name()));
-        setFactory(() -> createAnimationFX(ghost3D));
+    public GhostFlashingAnimation3D(GhostPersonality gp, GhostSettings settings, GhostComponentMaterialSet flashingMaterialSet) {
+        super("Ghost Flashing (%s)".formatted(gp));
+        setFactory(() -> createAnimationFX(settings, flashingMaterialSet));
     }
 
     public int numFlashes() {
@@ -38,7 +40,7 @@ public class GhostFlashingAnimation3D extends ManagedAnimation {
 
     // Animates the colors of a material set.
     // Repeats cycle (frightenedColor, brightColor, frightenedColor) num flashes times
-    private Animation createAnimationFX(Ghost3DWrapperToBeRemoved ghost3D) {
+    private Animation createAnimationFX(GhostSettings settings, GhostComponentMaterialSet flashingMaterialSet) {
 
         if (numFlashes == 0) {
             return new PauseTransition(Duration.seconds(0.5));
@@ -47,44 +49,44 @@ public class GhostFlashingAnimation3D extends ManagedAnimation {
         final Duration cycleDuration = Duration.seconds(TOTAL_DURATION_SEC).divide(numFlashes);
         final Duration brightStart = cycleDuration.divide(3);
 
-        final GhostComponentColors brightColors     = ghost3D.settings().colors().flashing();
-        final GhostComponentColors frightenedColors = ghost3D.settings().colors().frightened();
+        final GhostComponentColors brightColors     = settings.colors().flashing();
+        final GhostComponentColors frightenedColors = settings.colors().frightened();
 
         // The set of Phong materials that is used by the ghost 3D during the flashing animation
-        final GhostComponentMaterialSet materialSet = ghost3D.materials().flashingMaterial();
+        //final GhostComponentMaterialSet materialSet = ghost3D.materials().flashingMaterial();
 
         final var flashing = new Timeline(
 
             new KeyFrame(Duration.ZERO,
-                new KeyValue(materialSet.dressMaterial().diffuseColorProperty(),
+                new KeyValue(flashingMaterialSet.dressMaterial().diffuseColorProperty(),
                     frightenedColors.dressColor(), Interpolator.DISCRETE),
-                new KeyValue(materialSet.dressMaterial().specularColorProperty(),
+                new KeyValue(flashingMaterialSet.dressMaterial().specularColorProperty(),
                     frightenedColors.dressColor().brighter(), Interpolator.DISCRETE),
-                new KeyValue(materialSet.pupilsMaterial().diffuseColorProperty(),
+                new KeyValue(flashingMaterialSet.pupilsMaterial().diffuseColorProperty(),
                     frightenedColors.pupilsColor(), Interpolator.DISCRETE),
-                new KeyValue(materialSet.pupilsMaterial().specularColorProperty(),
+                new KeyValue(flashingMaterialSet.pupilsMaterial().specularColorProperty(),
                     frightenedColors.pupilsColor().brighter(), Interpolator.DISCRETE)
             ),
 
             new KeyFrame(brightStart,
-                new KeyValue(materialSet.dressMaterial().diffuseColorProperty(),
+                new KeyValue(flashingMaterialSet.dressMaterial().diffuseColorProperty(),
                     brightColors.dressColor(), Interpolator.DISCRETE),
-                new KeyValue(materialSet.dressMaterial().specularColorProperty(),
+                new KeyValue(flashingMaterialSet.dressMaterial().specularColorProperty(),
                     brightColors.dressColor().brighter(), Interpolator.DISCRETE),
-                new KeyValue(materialSet.pupilsMaterial().diffuseColorProperty(),
+                new KeyValue(flashingMaterialSet.pupilsMaterial().diffuseColorProperty(),
                     brightColors.pupilsColor(), Interpolator.DISCRETE),
-                new KeyValue(materialSet.pupilsMaterial().specularColorProperty(),
+                new KeyValue(flashingMaterialSet.pupilsMaterial().specularColorProperty(),
                     brightColors.pupilsColor(), Interpolator.DISCRETE)
             ),
 
             new KeyFrame(cycleDuration,
-                new KeyValue(materialSet.dressMaterial().diffuseColorProperty(),
+                new KeyValue(flashingMaterialSet.dressMaterial().diffuseColorProperty(),
                     frightenedColors.dressColor(), Interpolator.DISCRETE),
-                new KeyValue(materialSet.dressMaterial().specularColorProperty(),
+                new KeyValue(flashingMaterialSet.dressMaterial().specularColorProperty(),
                     frightenedColors.dressColor().brighter(), Interpolator.DISCRETE),
-                new KeyValue(materialSet.pupilsMaterial().diffuseColorProperty(),
+                new KeyValue(flashingMaterialSet.pupilsMaterial().diffuseColorProperty(),
                     frightenedColors.pupilsColor(), Interpolator.DISCRETE),
-                new KeyValue(materialSet.pupilsMaterial().specularColorProperty(),
+                new KeyValue(flashingMaterialSet.pupilsMaterial().specularColorProperty(),
                     frightenedColors.pupilsColor().brighter(), Interpolator.DISCRETE)
             )
         );

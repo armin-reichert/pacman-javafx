@@ -13,8 +13,6 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 
-import static java.util.Objects.requireNonNull;
-
 public class Ghost3DViewComp implements GameEntityComponent {
 
     // Root node containing all variants
@@ -49,18 +47,8 @@ public class Ghost3DViewComp implements GameEntityComponent {
         return activeVariant;
     }
 
-    public void setActiveVariant(GhostAppearance variant) {
-        requireNonNull(variant);
-        if (activeVariant != variant) {
-            this.activeVariant = variant;
-            switch (activeVariant) {
-                case EATEN    -> lookEaten();
-                case EYES     -> lookEyesOnly();
-                case FLASHING -> lookFlashing();
-                case FRIGHTENED -> lookFrightened();
-                case NORMAL   -> lookNormal();
-            }
-        }
+    public void setActiveVariant(GhostAppearance activeVariant) {
+        this.activeVariant = activeVariant;
     }
 
     public Rotate facingRotate() {
@@ -147,13 +135,6 @@ public class Ghost3DViewComp implements GameEntityComponent {
     public void lookFlashing() {
         root().setVisible(true);
         lookFrightened();
-
-        //TODO move into animation component
-//        dressAnimation().ifPresent(ManagedAnimation::playOrContinue);
-//        dressColorFlashingAnimation().ifPresent(flashing -> {
-//            flashing.setNumFlashes(numFlashes);
-//            flashing.playOrContinue();
-//        });
     }
 
     public void lookFrightened() {
@@ -172,17 +153,13 @@ public class Ghost3DViewComp implements GameEntityComponent {
         pupilsMeshView.setVisible(true);
         eyeballsMeshView.setVisible(true);
         dressMeshView.setVisible(false);
-
-        applyMaterials(materialSet.normalMaterial());
-
         //TODO move into animation component
 //        stopAllAnimations();
     }
 
     public void lookEaten() {
+        lookEyesOnly();
         root().setVisible(false);
-
-        applyMaterials(materialSet.normalMaterial());
     }
 
     private void applyMaterials(GhostComponentMaterialSet materialSet) {
