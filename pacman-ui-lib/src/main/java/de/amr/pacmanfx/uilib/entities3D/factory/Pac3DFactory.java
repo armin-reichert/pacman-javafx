@@ -2,11 +2,12 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.uilib.entities3D.pac;
+package de.amr.pacmanfx.uilib.entities3D.factory;
 
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.entities3D.PacMan3DModel;
+import de.amr.pacmanfx.uilib.PacMan3DModel;
+import de.amr.pacmanfx.uilib.entities3D.pac.comp.PacSettings;
 import de.amr.pacmanfx.uilib.entities3D.pac.anim.*;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DAnimationComp;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DTransformComp;

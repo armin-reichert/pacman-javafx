@@ -10,6 +10,7 @@ import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3D.ghost.GhostAppearance;
+import de.amr.pacmanfx.uilib.entities3D.ghost.comp.GhostComponentMaterialSet;
 
 public class Ghost3DAppearanceController {
 

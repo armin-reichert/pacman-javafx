@@ -19,7 +19,7 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.input.Input;
-import de.amr.pacmanfx.uilib.entities3D.PacMan3DModel;
+import de.amr.pacmanfx.uilib.PacMan3DModel;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;

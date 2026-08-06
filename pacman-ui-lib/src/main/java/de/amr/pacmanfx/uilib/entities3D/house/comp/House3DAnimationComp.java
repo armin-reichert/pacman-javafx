@@ -4,7 +4,6 @@ import de.amr.basics.Disposable;
 import de.amr.pacmanfx.core.ecs.GameEntityComponent;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.entities3D.house.House3DAnimationID;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;

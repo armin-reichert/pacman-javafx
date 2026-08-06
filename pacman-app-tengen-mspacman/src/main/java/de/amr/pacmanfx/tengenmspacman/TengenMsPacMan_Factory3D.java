@@ -7,8 +7,8 @@ import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.ui.gamescene.d3.DefaultFactory3D;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.entities3D.pac.Pac3DFactory;
-import de.amr.pacmanfx.uilib.entities3D.pac.PacSettings;
+import de.amr.pacmanfx.uilib.entities3D.factory.Pac3DFactory;
+import de.amr.pacmanfx.uilib.entities3D.pac.comp.PacSettings;
 import javafx.scene.Group;
 
 import static java.util.Objects.requireNonNull;

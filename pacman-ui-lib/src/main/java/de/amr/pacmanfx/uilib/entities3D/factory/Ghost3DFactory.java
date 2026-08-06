@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.uilib.entities3D.ghost;
+package de.amr.pacmanfx.uilib.entities3D.factory;
 
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DViewComp;

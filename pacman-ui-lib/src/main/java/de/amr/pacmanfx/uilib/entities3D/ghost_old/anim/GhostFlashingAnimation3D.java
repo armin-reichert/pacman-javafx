@@ -7,7 +7,7 @@ package de.amr.pacmanfx.uilib.entities3D.ghost_old.anim;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3D.ghost_old.Ghost3DWrapperToBeRemoved;
 import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostComponentColors;
-import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostComponentMaterialSet;
+import de.amr.pacmanfx.uilib.entities3D.ghost.comp.GhostComponentMaterialSet;
 import javafx.animation.*;
 import javafx.util.Duration;
 

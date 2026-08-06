@@ -1,9 +1,8 @@
 package de.amr.pacmanfx.uilib.entities3D.ghost.comp;
 
 import de.amr.pacmanfx.core.ecs.GameEntityComponent;
-import de.amr.pacmanfx.uilib.entities3D.PacMan3DModel;
+import de.amr.pacmanfx.uilib.PacMan3DModel;
 import de.amr.pacmanfx.uilib.entities3D.ghost.GhostAppearance;
-import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostComponentMaterialSet;
 import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostMaterialSet;
 import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostSettings;
 import javafx.geometry.Bounds;

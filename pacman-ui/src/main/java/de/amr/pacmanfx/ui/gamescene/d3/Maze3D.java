@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.obstacle.Obstacle;
 import de.amr.pacmanfx.ui.settings.world.Floor3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Maze3DSettings;
-import de.amr.pacmanfx.uilib.entities3D.DisposableGraphicsObject;
+import de.amr.pacmanfx.uilib.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.entities3D.world.TerrainRenderer3D;
 import de.amr.pacmanfx.uilib.entities3D.world.Wall3D;
 import javafx.beans.property.DoubleProperty;

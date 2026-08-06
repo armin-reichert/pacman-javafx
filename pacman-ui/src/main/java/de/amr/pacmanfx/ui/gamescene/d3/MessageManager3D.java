@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.gamescene.d3;
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.entities3D.DisposableGraphicsObject;
+import de.amr.pacmanfx.uilib.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.widgets.MessageView;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;

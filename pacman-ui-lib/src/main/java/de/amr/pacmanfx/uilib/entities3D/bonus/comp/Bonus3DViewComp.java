@@ -1,7 +1,7 @@
 package de.amr.pacmanfx.uilib.entities3D.bonus.comp;
 
 import de.amr.pacmanfx.core.ecs.GameEntityComponent;
-import de.amr.pacmanfx.uilib.entities3D.DisposableGraphicsObject;
+import de.amr.pacmanfx.uilib.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.entities3D.bonus.anim.BonusEatenAnimation3D;
 import de.amr.pacmanfx.uilib.entities3D.bonus.anim.BonusRollingTransform;
 import javafx.scene.Group;
