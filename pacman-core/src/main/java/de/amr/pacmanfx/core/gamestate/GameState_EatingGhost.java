@@ -37,7 +37,7 @@ public final class GameState_EatingGhost extends GameState {
 
         level.entities().ghosts().stream()
             .filter(ghost -> GhostStateSystem.UPDATED_GHOST_STATES_WHILE_EATEN.contains(ghost.state()))
-            .forEach(ghost -> ghostStateSystem.update(gameContext, ghost));
+            .forEach(ghost -> ghostStateSystem.update(gameContext, level, ghost));
 
         if (timer().hasExpired()) {
             level.entities().pac().show();

@@ -6,12 +6,10 @@ package de.amr.pacmanfx.core.entities.ghost.system;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
-import de.amr.pacmanfx.core.entities.ActorAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
+import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostStateComp;
-import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
 import org.tinylog.Logger;
 
@@ -26,9 +24,12 @@ public class GhostStateSystem {
         GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE);
 
 
-    public void update(GameContext gameContext, Ghost ghost) {
+    public void update(GameContext gameContext, GameLevel level, Ghost ghost) {
         requireNonNull(gameContext);
         requireNonNull(ghost);
+
+        final GhostStateComp state = ghost.requireComponent(GhostStateComp.class);
+        state.setThreatenedByPac(isGhostThreatenedByPac(level, ghost, level.entities().pac()));
 
         final float speed = gameContext.model().rules().actorSpeedRules().ghostSpeed(gameContext, ghost);
         switch (ghost.state()) {
@@ -54,24 +55,13 @@ public class GhostStateSystem {
         
         ghost.requireComponent(GhostStateComp.class).setState(newState);
 
-        initAnimation(ghost, gameContext.systems().spriteAnim());
+        //initAnimation(ghost, gameContext.systems().spriteAnim());
     }
     
     // --- LOCKED ---
 
     private void updateStateLocked(GameContext gameContext, Ghost ghost, float speed) {
-        final GameLevel level = gameContext.assertLevel();
-        final Pac pac = level.entities().pac();
-
         gameContext.systems().ghostHouseAccess().stayInHouse(gameContext, ghost, speed);
-
-        //TODO move to animation system (tbd)
-        final SpriteAnimSystem animSystem = gameContext.systems().spriteAnim();
-        if (isGhostThreatenedByPac(level, ghost, pac)) {
-            playFrightenedAnimation(animSystem, level, ghost, pac);
-        } else {
-            animSystem.select(ghost, ActorAnimationID.GHOST_NORMAL);
-        }
     }
 
     // --- HUNTING_PAC ---
@@ -106,13 +96,7 @@ public class GhostStateSystem {
      * @see <a href="https://www.youtube.com/watch?v=eFP0_rkjwlY">YouTube: How Frightened Ghosts Decide Where to Go</a>
      */
     private void updateStateFrightened(GameContext gameContext, Ghost ghost, float speed) {
-        final GameLevel level = gameContext.assertLevel();
-        final Pac pac = level.entities().pac();
-
         gameContext.systems().roamingNavigator().roam(gameContext, ghost, speed);
-
-        //TODO move to animation system (tbd)
-        playFrightenedAnimation(gameContext.systems().spriteAnim(), level, ghost, pac);
     }
 
     // --- EATEN ---
@@ -136,15 +120,6 @@ public class GhostStateSystem {
         if (leftHouse) {
             changeState(gameContext, ghost, threatened ? GhostState.FRIGHTENED : GhostState.HUNTING_PAC);
         }
-
-        //TODO move to animation system (tbd)
-        final SpriteAnimSystem animSystem = gameContext.systems().spriteAnim();
-         if (!leftHouse && threatened) {
-             playFrightenedAnimation(animSystem, level, ghost, pac);
-         }
-         else {
-             animSystem.select(ghost, ActorAnimationID.GHOST_NORMAL);
-         }
     }
 
     // --- RETURNING_TO_HOUSE ---
@@ -166,38 +141,6 @@ public class GhostStateSystem {
     // helper
 
     private boolean isGhostThreatenedByPac(GameLevel level, Ghost ghost, Pac pac) {
-        return pac.power().isPowerActive() && !level.isInGhostKilledChain(ghost);
-    }
-
-    //TODO move into animation system class
-
-    private void initAnimation(Ghost ghost, SpriteAnimSystem animSystem) {
-        switch (ghost.state()) {
-            case LOCKED, HUNTING_PAC -> {
-                animSystem.select(ghost, ActorAnimationID.GHOST_NORMAL);
-                animSystem.playSelected(ghost);
-            }
-            case ENTERING_HOUSE, RETURNING_HOME -> {
-                animSystem.select(ghost, ActorAnimationID.GHOST_EYES);
-                animSystem.playSelected(ghost);
-            }
-            case FRIGHTENED -> {
-                animSystem.select(ghost, ActorAnimationID.GHOST_FRIGHTENED);
-                animSystem.playSelected(ghost);
-            }
-            case EATEN -> {}
-        }
-    }
-
-    //TODO move into yet missing ghost animation system
-    private void playFrightenedAnimation(SpriteAnimSystem animSystem, GameLevel level, Ghost ghost, Pac pac) {
-        if (pac.power().isPowerStartingFading(level)) {
-            animSystem.select(ghost, ActorAnimationID.GHOST_FLASHING);
-            animSystem.playSelected(ghost);
-        }
-        else if (!pac.power().isPowerFading(level)) {
-            animSystem.select(ghost, ActorAnimationID.GHOST_FRIGHTENED);
-            animSystem.playSelected(ghost);
-        }
+        return pac.power().isActive() && !level.isInGhostKilledChain(ghost);
     }
 }

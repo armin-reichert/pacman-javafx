@@ -6,9 +6,14 @@ package de.amr.pacmanfx.core.entities.pac.comp;
 
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.ecs.GameEntityComponent;
-import de.amr.pacmanfx.core.level.GameLevel;
 
 public class PacPowerComp implements GameEntityComponent {
+
+    private boolean active;
+
+    private boolean fading;
+
+    private boolean fadingStart;
 
     private final TickTimer timer = new TickTimer("PacPower-Timer");
 
@@ -22,30 +27,39 @@ public class PacPowerComp implements GameEntityComponent {
         return timer;
     }
 
-    public boolean isPowerActive() {
-        return timer.isRunning();
+    public boolean isActive() {
+        return active;
     }
 
-    public boolean isPowerOver() {
-        return timer.hasExpired();
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
-    public boolean isPowerFading(GameLevel level) {
-        long fadingTicks = TickTimer.secToTicks(level.pacPowerFadingSeconds());
-        return timer.isRunning() && timer.remainingTicks() <= fadingTicks;
+    public boolean isFading() {
+        return fading;
     }
 
-    public boolean isPowerStartingFading(GameLevel level) {
-        long fadingTicks = TickTimer.secToTicks(level.pacPowerFadingSeconds());
-        return timer.isRunning() && timer.remainingTicks() == fadingTicks
-            || timer.durationTicks() < fadingTicks && timer.tickCount() == 1;
+    public void setFading(boolean fading) {
+        this.fading = fading;
     }
 
-    public long powerTicksRemaining() {
+    public boolean isFadingStart() {
+        return fadingStart;
+    }
+
+    public void setFadingStart(boolean fadingStart) {
+        this.fadingStart = fadingStart;
+    }
+
+    public boolean isOver() {
+        return !active;
+    }
+
+    public long ticksRemaining() {
         return timer.isRunning() ? timer.remainingTicks() : 0;
     }
 
-    public long powerTicksTotal() {
+    public long ticksTotal() {
         return timer.durationTicks();
     }
 

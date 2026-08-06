@@ -110,8 +110,8 @@ public class DS_ActorInfo extends GameDashboardSection {
     }
 
     private String pacPowerText(Pac pac) {
-        return pac.power().isPowerActive()
-            ? "Remaining: %s".formatted(ticksToString(pac.power().powerTicksRemaining()))
+        return pac.power().isActive()
+            ? "Remaining: %s".formatted(ticksToString(pac.power().ticksRemaining()))
             : "No Power";
     }
 

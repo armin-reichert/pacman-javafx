@@ -150,7 +150,7 @@ public class RuleGuidedPacSteering implements Steering {
             return;
 
         if (!data.frightenedGhosts.isEmpty()
-            && pac.power().powerTicksRemaining() >= GameConstants.SIMULATION_FPS) {
+            && pac.power().ticksRemaining() >= GameConstants.SIMULATION_FPS) {
             final Ghost prey = data.frightenedGhosts.getFirst();
             final Vector2i preyTile = WorldNavigationSystem.computeTile(prey);
             Logger.trace("Detected frightened ghost {} {} tiles away", prey.name(), preyTile.manhattanDist(pacTile));
@@ -262,7 +262,7 @@ public class RuleGuidedPacSteering implements Steering {
         final FoodLayer foodLayer = worldMap.foodLayer();
         final Pac pac = level.entities().pac();
         final Vector2i pacManTile = WorldNavigationSystem.computeTile(pac);
-        final long powerTicksRemaining = pac.power().powerTicksRemaining();
+        final long powerTicksRemaining = pac.power().ticksRemaining();
         final boolean enoughTimeLeft = powerTicksRemaining > 2L * GameConstants.SIMULATION_FPS;
         final List<Vector2i> foodTiles = new ArrayList<>();
 

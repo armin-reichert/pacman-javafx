@@ -298,7 +298,7 @@ public class GameSoundEffects implements Disposable {
     private int computeSirenNumber(GameContext gameContext) {
         final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
-        if (pac.power().isPowerActive()) {
+        if (pac.power().isActive()) {
             return NO_SIREN;
         }
         return 1 + level.huntingTimerStrategy().phaseIndex() / 2;

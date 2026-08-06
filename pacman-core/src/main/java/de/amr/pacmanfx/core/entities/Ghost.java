@@ -12,6 +12,7 @@ import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostStateComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostWorldPlacementComp;
 import de.amr.pacmanfx.core.model.GhostPersonality;
+import org.ietf.jgss.GSSContext;
 
 import static java.util.Objects.requireNonNull;
 
@@ -52,8 +53,12 @@ public final class Ghost extends GameEntity {
         return requireComponent(WorldNavigationComp.class);
     }
 
+    public GhostStateComp stateComp() {
+        return requireComponent(GhostStateComp.class);
+    }
+
     public GhostState state() {
-        return requireComponent(GhostStateComp.class).state();
+        return stateComp().state();
     }
 
     @Override

@@ -73,9 +73,9 @@ public class Pac3DAnimationSystem {
 
         final boolean lighted = state.pacState() != PacState.DEAD;
         if (lighted) {
-            final boolean powerActive      = pac.power().isPowerActive();
-            final long powerTicksRemaining = pac.power().powerTicksRemaining();
-            final long powerTicksTotal     = pac.power().powerTicksTotal();
+            final boolean powerActive      = pac.power().isActive();
+            final long powerTicksRemaining = pac.power().ticksRemaining();
+            final long powerTicksTotal     = pac.power().ticksTotal();
             if (powerActive && pac.isVisible()) {
                 view3D.powerLight().setLightOn(true);
                 final float maxRange = (powerTicksRemaining / (float) powerTicksTotal) * 60 + 30;

@@ -12,21 +12,15 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
-import de.amr.pacmanfx.core.entities.ActorAnimationID;
-import de.amr.pacmanfx.core.entities.Bonus;
+import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusState;
-import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
-import de.amr.pacmanfx.core.entities.House;
+import de.amr.pacmanfx.core.entities.ghost.system.GhostAnimationSystem;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostStateSystem;
 import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
-import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.livescounter.system.LivesCounterSystem;
-import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.pac.comp.PacPowerComp;
 import de.amr.pacmanfx.core.entities.pac.system.PacDigestionSystem;
-import de.amr.pacmanfx.core.entities.PropertyFileScore;
-import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.event.bonus.BonusEatenEvent;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
@@ -205,13 +199,18 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     private void updateGhosts(GameContext gameContext, GameLevel level) {
-            final GhostStateSystem ghostStateSystem = gameContext.systems().ghostState();
             if (gameContext.state().id().equals(CommonGameStateID.GAME_LEVEL_EATING_GHOST)) {
                 level.ghostsInAnyOfStates(GhostStateSystem.UPDATED_GHOST_STATES_WHILE_EATEN)
-                    .forEach(ghost -> ghostStateSystem.update(gameContext, ghost));
+                    .forEach(ghost -> updateGhost(gameContext, level, ghost));
             } else {
-                level.entities().ghosts().forEach(ghost -> ghostStateSystem.update(gameContext, ghost));
+                level.entities().ghosts().forEach(ghost -> updateGhost(gameContext, level, ghost));
             }
+    }
+
+    private void updateGhost(GameContext gameContext, GameLevel level, Ghost ghost) {
+        gameContext.systems().ghostState().update(gameContext, level, ghost);
+        //TODO Add into global game systems interface
+        GhostAnimationSystem.update(ghost, level.entities().pac(), gameContext.systems().spriteAnim());
     }
 
     private void startPacPower(GameContext gameContext, GameLevel level, Pac pac) {
@@ -228,10 +227,10 @@ public abstract class CommonGamePlay implements GamePlay {
 
     private void checkPacPower(GameContext gameContext, GameLevel level, Pac pac) {
         final PacPowerComp power = pac.power();
-        if (power.isPowerStartingFading(level)) {
+        if (power.isFading()) {
             gameContext.eventManager().publishGameEvent(new PacPowerFadesEvent(pac));
         }
-        else if (power.isPowerOver()) {
+        else if (power.isOver()) {
             power.reset();
             level.ghostsInState(GhostState.FRIGHTENED).forEach(ghost ->
                 gameContext.systems().ghostState().changeState(gameContext, ghost, GhostState.HUNTING_PAC));
@@ -243,7 +242,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
     private void updatePac(GameContext gameContext, GameLevel level, Pac pac) {
         gameContext.systems().pacDigestion().update(pac);
-        gameContext.systems().pacPower().update(pac);
+        gameContext.systems().pacPower().update(level, pac);
         gameContext.systems().pacState().update(pac);
         navigatePac(gameContext, level, pac);
         gameContext.systems().pacAnimation().update(pac);
@@ -251,7 +250,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
     private void navigatePac(GameContext gameContext, GameLevel level, Pac pac) {
         final ActorSpeedRules speedRules = level.gameModel().rules().actorSpeedRules();
-        final float speed = pac.power().isPowerActive() ? speedRules.pacSpeedWhenHasPower(level) : speedRules.pacSpeed(level);
+        final float speed = pac.power().isActive() ? speedRules.pacSpeedWhenHasPower(level) : speedRules.pacSpeed(level);
         gameContext.systems().pacAutoSteering().update(level, pac);
         gameContext.systems().worldNavigator().setSpeed(pac, speed);
         gameContext.systems().worldNavigator().tryMovingOrTeleporting(pac, level, gameContext.systems().pacWorldMovementPolicy());

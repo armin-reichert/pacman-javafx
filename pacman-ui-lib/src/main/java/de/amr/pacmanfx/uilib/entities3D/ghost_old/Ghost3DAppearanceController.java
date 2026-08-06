@@ -26,18 +26,15 @@ public class Ghost3DAppearanceController {
         final Pac pac = level.entities().pac();
         final Ghost ghost = ghost3D.ghost();
 
-        final boolean powerActive = pac.power().isPowerActive();
-        final boolean powerFading = pac.power().isPowerFading(level);
-
         final GhostAppearance appearance = switch (ghost.state()) {
             case LOCKED, LEAVING_HOUSE -> {
                 //TODO maybe the (model) ghost should store the "frightened no more" state?
                 final boolean killedDuringCurrentPhase = level.isInGhostKilledChain(ghost);
-                yield powerActive && !killedDuringCurrentPhase
-                    ? powerFading ? GhostAppearance.FLASHING : GhostAppearance.FRIGHTENED
+                yield pac.power().isActive() && !killedDuringCurrentPhase
+                    ? pac.power().isFading() ? GhostAppearance.FLASHING : GhostAppearance.FRIGHTENED
                     : GhostAppearance.NORMAL;
             }
-            case FRIGHTENED -> powerFading ? GhostAppearance.FLASHING : GhostAppearance.FRIGHTENED;
+            case FRIGHTENED -> pac.power().isFading() ? GhostAppearance.FLASHING : GhostAppearance.FRIGHTENED;
             case ENTERING_HOUSE, RETURNING_HOME -> GhostAppearance.EYES;
             case EATEN -> GhostAppearance.EATEN;
             default -> GhostAppearance.NORMAL;

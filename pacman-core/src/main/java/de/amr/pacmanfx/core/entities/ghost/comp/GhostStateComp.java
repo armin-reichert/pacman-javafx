@@ -16,6 +16,8 @@ public class GhostStateComp implements GameEntityComponent {
 
     private boolean flashing;
 
+    private boolean threatenedByPac;
+
     public GhostStateComp() {
         state = DEFAULT_STATE;
     }
@@ -34,6 +36,14 @@ public class GhostStateComp implements GameEntityComponent {
 
     public void setFlashing(boolean flashing) {
         this.flashing = flashing;
+    }
+
+    public boolean isThreatenedByPac() {
+        return threatenedByPac;
+    }
+
+    public void setThreatenedByPac(boolean threatenedByPac) {
+        this.threatenedByPac = threatenedByPac;
     }
 
     @Override

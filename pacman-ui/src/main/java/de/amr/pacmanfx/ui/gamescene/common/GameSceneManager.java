@@ -153,7 +153,7 @@ public class GameSceneManager {
 
         LivesCounterView3DSystem.startTracking(livesCounter, pac);
 
-        if (pac.power().isPowerActive()) {
+        if (pac.power().isActive()) {
             variantConfig.optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
         }
         playScene3D.fadeInAnimation().playFromStart();
