@@ -23,6 +23,11 @@ public class GhostStateSystem {
     public static final Set<GhostState> UPDATED_GHOST_STATES_WHILE_EATEN = Set.of(
         GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE);
 
+    private final GhostHouseAccessSystem ghostHouseAccessSystem;
+
+    public GhostStateSystem(GhostHouseAccessSystem ghostHouseAccessSystem) {
+        this.ghostHouseAccessSystem = requireNonNull(ghostHouseAccessSystem);
+    }
 
     public void update(GameContext gameContext, GameLevel level, Ghost ghost) {
         requireNonNull(gameContext);
@@ -54,14 +59,12 @@ public class GhostStateSystem {
         }
         
         ghost.requireComponent(GhostStateComp.class).setStateValue(newState);
-
-        //initAnimation(ghost, gameContext.systems().spriteAnim());
     }
     
     // --- LOCKED ---
 
     private void updateStateLocked(GameContext gameContext, Ghost ghost, float speed) {
-        gameContext.systems().ghostHouseAccess().stayInHouse(gameContext, ghost, speed);
+        ghostHouseAccessSystem.stayInHouse(gameContext, ghost, speed);
     }
 
     // --- HUNTING_PAC ---
@@ -111,14 +114,10 @@ public class GhostStateSystem {
     // --- LEAVING_HOUSE ---
 
     private void updateStateLeavingHouse(GameContext gameContext, Ghost ghost, float speed) {
-        final GameLevel level = gameContext.assertLevel();
-        final Pac pac = level.entities().pac();
-
-        boolean leftHouse = gameContext.systems().ghostHouseAccess().leaveHouse(gameContext, ghost, speed);
-        boolean threatened = isGhostThreatenedByPac(level, ghost, pac);
-
+        boolean leftHouse = ghostHouseAccessSystem.leaveHouse(gameContext, ghost, speed);
         if (leftHouse) {
-            changeState(gameContext, ghost, threatened ? GhostState.FRIGHTENED : GhostState.HUNTING_PAC);
+            final GhostState newState = ghost.state().isThreatenedByPac() ? GhostState.FRIGHTENED : GhostState.HUNTING_PAC;
+            changeState(gameContext, ghost, newState);
         }
     }
 
@@ -129,13 +128,13 @@ public class GhostStateSystem {
      * to the ghost house to be revived. Hallelujah!
      */
     private void updateStateReturningToHouse(GameContext gameContext, Ghost ghost, float speed) {
-        gameContext.systems().ghostHouseAccess().reachHouse(gameContext, ghost, speed);
+        ghostHouseAccessSystem.reachHouse(gameContext, ghost, speed);
     }
 
     // --- ENTERING_HOUSE ---
 
     private void updateStateEnteringHouse(GameContext gameContext, Ghost ghost, float speed) {
-        gameContext.systems().ghostHouseAccess().enterHouse(gameContext, ghost, speed);
+        ghostHouseAccessSystem.enterHouse(gameContext, ghost, speed);
     }
 
     // helper

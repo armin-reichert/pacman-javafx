@@ -55,9 +55,9 @@ public class DefaultGameSystems implements GameSystems {
     }
 
     protected void createGhostSystems() {
-        ghostState = new GhostStateSystem();
         ghostHouseAccess = new GhostHouseAccessSystem();
         ghostWorldMovementPolicy = new GhostWorldMovementPolicy();
+        ghostState = new GhostStateSystem(ghostHouseAccess);
 
         redGhostShadowHuntingStrategy = createShadowHuntingStrategy();
         pinkGhostSpeedyHuntingStrategy = createSpeedyHuntingStrategy();
