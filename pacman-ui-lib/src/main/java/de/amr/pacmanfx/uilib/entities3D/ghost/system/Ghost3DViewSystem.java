@@ -12,6 +12,8 @@ public class Ghost3DViewSystem {
         GhostAppearance variant = selectVariant(state);
         Ghost3DViewComp view3D = ghost.requireComponent(Ghost3DViewComp.class);
         view3D.setActiveVariant(variant);
+
+        view3D.root().setVisible(ghost.isVisible());
     }
 
     private static GhostAppearance selectVariant(GhostState state) {
@@ -25,6 +27,5 @@ public class Ghost3DViewSystem {
             case RETURNING_HOME -> GhostAppearance.EYES;
         };
     }
-
 }
 
