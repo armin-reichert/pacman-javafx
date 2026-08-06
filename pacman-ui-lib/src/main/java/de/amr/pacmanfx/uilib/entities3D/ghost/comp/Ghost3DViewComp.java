@@ -1,7 +1,7 @@
 package de.amr.pacmanfx.uilib.entities3D.ghost.comp;
 
 import de.amr.pacmanfx.core.ecs.GameEntityComponent;
-import de.amr.pacmanfx.uilib.entities3D.ghost.GhostAppearance;
+import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostAppearance;
 import javafx.scene.Group;
 import javafx.scene.Node;
 

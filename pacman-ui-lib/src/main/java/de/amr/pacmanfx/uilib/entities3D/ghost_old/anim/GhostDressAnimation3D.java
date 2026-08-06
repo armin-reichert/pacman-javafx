@@ -2,10 +2,10 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.uilib.entities3D.ghost.anim;
+package de.amr.pacmanfx.uilib.entities3D.ghost_old.anim;
 
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3DWrapperToBeRemoved;
+import de.amr.pacmanfx.uilib.entities3D.ghost_old.Ghost3DWrapperToBeRemoved;
 import javafx.animation.Animation;
 import javafx.animation.RotateTransition;
 import javafx.scene.transform.Rotate;

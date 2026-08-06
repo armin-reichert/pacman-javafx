@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.gamescene.d3.animation;
 
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3D.bonus.anim.NumberBoxRisingAnimation3D;
-import de.amr.pacmanfx.uilib.entities3D.ghost.Ghost3DWrapperToBeRemoved;
+import de.amr.pacmanfx.uilib.entities3D.ghost_old.Ghost3DWrapperToBeRemoved;
 import de.amr.pacmanfx.uilib.entities3D.world.NumberBox3D;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;

@@ -2,7 +2,7 @@ package de.amr.pacmanfx.uilib.entities3D.ghost.system;
 
 import de.amr.pacmanfx.core.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.ghost.GhostState;
-import de.amr.pacmanfx.uilib.entities3D.ghost.GhostAppearance;
+import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostAppearance;
 import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DViewComp;
 
 public class Ghost3DViewSystem {

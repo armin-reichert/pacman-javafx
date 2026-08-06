@@ -18,7 +18,6 @@ open module de.amr.pacmanfx.uilib {
     exports de.amr.pacmanfx.uilib.assets;
     exports de.amr.pacmanfx.uilib.entities3D;
     exports de.amr.pacmanfx.uilib.entities3D.animation;
-    exports de.amr.pacmanfx.uilib.entities3D.ghost;
     exports de.amr.pacmanfx.uilib.entities3D.pac;
     exports de.amr.pacmanfx.uilib.entities3D.world;
     exports de.amr.pacmanfx.uilib.rendering;
@@ -32,6 +31,7 @@ open module de.amr.pacmanfx.uilib {
     exports de.amr.pacmanfx.uilib.entities3D.pac.system;
     exports de.amr.pacmanfx.uilib.entities3D.pac.comp;
     exports de.amr.pacmanfx.uilib.entities3D.pac.anim;
-    exports de.amr.pacmanfx.uilib.entities3D.ghost.anim;
+    exports de.amr.pacmanfx.uilib.entities3D.ghost_old.anim;
     exports de.amr.pacmanfx.uilib.entities3D.bonus.anim;
+    exports de.amr.pacmanfx.uilib.entities3D.ghost_old;
 }

@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.uilib.entities3D.ghost;
+package de.amr.pacmanfx.uilib.entities3D.ghost_old;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.GameEntity;
@@ -13,9 +13,9 @@ import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3D.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.entities3D.PacMan3DModel;
-import de.amr.pacmanfx.uilib.entities3D.ghost.anim.GhostBrakeAnimation3D;
-import de.amr.pacmanfx.uilib.entities3D.ghost.anim.GhostDressAnimation3D;
-import de.amr.pacmanfx.uilib.entities3D.ghost.anim.GhostFlashingAnimation3D;
+import de.amr.pacmanfx.uilib.entities3D.ghost_old.anim.GhostBrakeAnimation3D;
+import de.amr.pacmanfx.uilib.entities3D.ghost_old.anim.GhostDressAnimation3D;
+import de.amr.pacmanfx.uilib.entities3D.ghost_old.anim.GhostFlashingAnimation3D;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Bounds;
