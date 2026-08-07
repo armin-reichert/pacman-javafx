@@ -13,12 +13,17 @@ public class Ghost3DAppearanceSystem {
         final GhostStateComp state = ghost.state();
 
         final GhostAppearance appearance = switch (state.ghostStateEnum()) {
+            case LOCKED -> state.isThreatenedByPac() ? appearFrightenedOrFlashing(state) : GhostAppearance.NORMAL;
             case EATEN -> GhostAppearance.EATEN;
             case ENTERING_HOUSE, RETURNING_HOME -> GhostAppearance.EYES;
-            case FRIGHTENED -> state.flashing()? GhostAppearance.FLASHING : GhostAppearance.FRIGHTENED;
-            case HUNTING_PAC, LEAVING_HOUSE, LOCKED -> GhostAppearance.NORMAL;
+            case FRIGHTENED -> appearFrightenedOrFlashing(state);
+            case HUNTING_PAC, LEAVING_HOUSE -> GhostAppearance.NORMAL;
         };
         setAppearance(ghost, appearance);
+    }
+
+    private static GhostAppearance appearFrightenedOrFlashing(GhostStateComp state) {
+        return state.flashing() ? GhostAppearance.FLASHING : GhostAppearance.FRIGHTENED;
     }
 
     private static void setAppearance(Ghost ghost, GhostAppearance appearance) {

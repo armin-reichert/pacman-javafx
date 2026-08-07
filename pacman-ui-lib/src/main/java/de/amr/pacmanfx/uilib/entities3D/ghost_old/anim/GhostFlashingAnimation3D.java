@@ -6,11 +6,11 @@ package de.amr.pacmanfx.uilib.entities3D.ghost_old.anim;
 
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DMaterialSet;
 import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DViewComp;
 import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostComponentColors;
 import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostSettings;
 import javafx.animation.*;
+import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
 public class GhostFlashingAnimation3D extends ManagedAnimation {
@@ -20,16 +20,15 @@ public class GhostFlashingAnimation3D extends ManagedAnimation {
     public GhostFlashingAnimation3D(
         Ghost ghost,
         GhostSettings settings,
-        Ghost3DMaterialSet flashingMaterialSet,
-        int numFlashes) {
-
+        int numFlashes
+    ) {
         super("Ghost Flashing (%s)".formatted(ghost.name()));
-        setFactory(() -> createAnimationFX(ghost, settings, flashingMaterialSet, numFlashes));
+        setFactory(() -> createAnimationFX(ghost, settings, numFlashes));
     }
 
     // Animates the colors of a material set.
     // Repeats cycle (frightenedColor, brightColor, frightenedColor) num flashes times
-    private Animation createAnimationFX(Ghost ghost, GhostSettings settings, Ghost3DMaterialSet flashingMaterialSet, int numFlashes) {
+    private Animation createAnimationFX(Ghost ghost, GhostSettings settings, int numFlashes) {
 
         if (numFlashes == 0) {
             return new PauseTransition(Duration.seconds(0.5));
@@ -49,27 +48,42 @@ public class GhostFlashingAnimation3D extends ManagedAnimation {
         final var pupilsDiffuseColorProperty  = view3D.pupilsMaterial().diffuseColorProperty();
         final var pupilsSpecularColorProperty = view3D.pupilsMaterial().specularColorProperty();
 
+        final Color dressDiffuseColor = frightenedColors.dressColor();
+        final Color dressSpecularColor = dressDiffuseColor.brighter();
+
+        final Color pupilsDiffuseColor = frightenedColors.pupilsColor();
+        final Color pupilsSpecularColor = pupilsDiffuseColor.brighter();
+
+        final Color dressFlashingDiffuseColor  = brightColors.dressColor();
+        final Color dressFlashingSpecularColor = brightColors.dressColor();
+
+        final Color pupilsFlashingDiffuseColor  = brightColors.pupilsColor();
+        final Color pupilsFlashingSpecularColor = brightColors.pupilsColor();
+
         final var flashing = new Timeline(
 
+            // Set normal colors
             new KeyFrame(Duration.ZERO,
-                new KeyValue(dressDiffuseColorProperty,   frightenedColors.dressColor(), Interpolator.DISCRETE),
-                new KeyValue(dressSpecularColorProperty,  frightenedColors.dressColor().brighter(), Interpolator.DISCRETE),
-                new KeyValue(pupilsDiffuseColorProperty,  frightenedColors.pupilsColor(), Interpolator.DISCRETE),
-                new KeyValue(pupilsSpecularColorProperty, frightenedColors.pupilsColor().brighter(), Interpolator.DISCRETE)
+                new KeyValue(dressDiffuseColorProperty,   dressDiffuseColor,     Interpolator.DISCRETE),
+                new KeyValue(dressSpecularColorProperty,  dressSpecularColor,    Interpolator.DISCRETE),
+                new KeyValue(pupilsDiffuseColorProperty,  pupilsDiffuseColor,    Interpolator.DISCRETE),
+                new KeyValue(pupilsSpecularColorProperty, pupilsSpecularColor,   Interpolator.DISCRETE)
             ),
 
+            // Start setting flashing colors
             new KeyFrame(brightStart,
-                new KeyValue(dressDiffuseColorProperty,   brightColors.dressColor(), Interpolator.DISCRETE),
-                new KeyValue(dressSpecularColorProperty,  brightColors.dressColor().brighter(), Interpolator.DISCRETE),
-                new KeyValue(pupilsDiffuseColorProperty,  brightColors.pupilsColor(), Interpolator.DISCRETE),
-                new KeyValue(pupilsSpecularColorProperty, brightColors.pupilsColor(), Interpolator.DISCRETE)
+                new KeyValue(dressDiffuseColorProperty,   dressFlashingDiffuseColor,   Interpolator.DISCRETE),
+                new KeyValue(dressSpecularColorProperty,  dressFlashingSpecularColor,  Interpolator.DISCRETE),
+                new KeyValue(pupilsDiffuseColorProperty,  pupilsFlashingDiffuseColor,  Interpolator.DISCRETE),
+                new KeyValue(pupilsSpecularColorProperty, pupilsFlashingSpecularColor, Interpolator.DISCRETE)
             ),
 
+            // Set normal colors
             new KeyFrame(cycleDuration,
-                new KeyValue(dressDiffuseColorProperty,   frightenedColors.dressColor(), Interpolator.DISCRETE),
-                new KeyValue(dressSpecularColorProperty,  frightenedColors.dressColor().brighter(), Interpolator.DISCRETE),
-                new KeyValue(pupilsDiffuseColorProperty,  frightenedColors.pupilsColor(), Interpolator.DISCRETE),
-                new KeyValue(pupilsSpecularColorProperty, frightenedColors.pupilsColor().brighter(), Interpolator.DISCRETE)
+                new KeyValue(dressDiffuseColorProperty,   dressDiffuseColor,   Interpolator.DISCRETE),
+                new KeyValue(dressSpecularColorProperty,  dressSpecularColor,  Interpolator.DISCRETE),
+                new KeyValue(pupilsDiffuseColorProperty,  pupilsDiffuseColor,  Interpolator.DISCRETE),
+                new KeyValue(pupilsSpecularColorProperty, pupilsSpecularColor, Interpolator.DISCRETE)
             )
         );
 

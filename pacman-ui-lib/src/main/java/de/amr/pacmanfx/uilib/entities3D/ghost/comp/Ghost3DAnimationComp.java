@@ -21,10 +21,9 @@ public class Ghost3DAnimationComp implements GameEntityComponent {
         AnimationRegistry animationRegistry,
         Ghost ghost,
         GhostSettings settings,
-        Ghost3DMaterialSet flashingMaterialSet,
         int numFlashes)
     {
-        flashing = new GhostFlashingAnimation3D(ghost, settings, flashingMaterialSet, numFlashes);
+        flashing = new GhostFlashingAnimation3D(ghost, settings, numFlashes);
         animationRegistry.register(this, flashing); //TODO needed?
     }
 
