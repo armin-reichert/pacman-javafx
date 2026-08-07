@@ -74,9 +74,7 @@ public class Ghost3DAppearanceController {
         selectMaterialSet(ghost3D, ghost3D.materials().flashing());
 
         ghost3D.dressAnimation().ifPresent(ManagedAnimation::playOrContinue);
-        ghost3D.dressColorFlashingAnimation().ifPresent(flashing -> {
-            flashing.playOrContinue();
-        });
+        ghost3D.dressColorFlashingAnimation().ifPresent(ManagedAnimation::playOrContinue);
     }
 
     private void lookFrightened(Ghost3DWrapperToBeRemoved ghost3D) {
