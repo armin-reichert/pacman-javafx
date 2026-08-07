@@ -4,10 +4,9 @@ import de.amr.pacmanfx.core.ecs.GameEntityComponent;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostSettings;
-import de.amr.pacmanfx.uilib.entities3D.ghost_old.anim.GhostBrakeAnimation3D;
-import de.amr.pacmanfx.uilib.entities3D.ghost_old.anim.GhostDressAnimation3D;
-import de.amr.pacmanfx.uilib.entities3D.ghost_old.anim.GhostFlashingAnimation3D;
+import de.amr.pacmanfx.uilib.entities3D.ghost.anim.GhostBrakeAnimation3D;
+import de.amr.pacmanfx.uilib.entities3D.ghost.anim.GhostDressAnimation3D;
+import de.amr.pacmanfx.uilib.entities3D.ghost.anim.GhostFlashingAnimation3D;
 
 public class Ghost3DAnimationComp implements GameEntityComponent {
 

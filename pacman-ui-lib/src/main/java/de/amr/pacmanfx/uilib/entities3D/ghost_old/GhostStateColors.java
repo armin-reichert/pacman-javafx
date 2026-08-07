@@ -3,6 +3,8 @@
  */
 package de.amr.pacmanfx.uilib.entities3D.ghost_old;
 
+import de.amr.pacmanfx.uilib.entities3D.ghost.comp.GhostComponentColors;
+
 public record GhostStateColors(
     GhostComponentColors normal,
     GhostComponentColors frightened,

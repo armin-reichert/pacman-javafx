@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DViewComp;
-import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostSettings;
+import de.amr.pacmanfx.uilib.entities3D.ghost.comp.GhostSettings;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;

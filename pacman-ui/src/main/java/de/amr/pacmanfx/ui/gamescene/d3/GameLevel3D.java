@@ -48,7 +48,7 @@ import de.amr.pacmanfx.uilib.entities3D.bonus.system.Bonus3DViewSystem;
 import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DViewComp;
 import de.amr.pacmanfx.uilib.entities3D.ghost.system.Ghost3DAppearanceSystem;
 import de.amr.pacmanfx.uilib.entities3D.ghost.system.Ghost3DMovementSystem;
-import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostSettings;
+import de.amr.pacmanfx.uilib.entities3D.ghost.comp.GhostSettings;
 import de.amr.pacmanfx.uilib.entities3D.house.comp.House3DViewComp;
 import de.amr.pacmanfx.uilib.entities3D.house.system.House3DAnimationSystem;
 import de.amr.pacmanfx.uilib.entities3D.house.system.House3DSystem;
