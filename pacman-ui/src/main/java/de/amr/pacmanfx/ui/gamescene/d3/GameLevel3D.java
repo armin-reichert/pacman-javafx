@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.ui.gamescene.d3;
 
 import de.amr.basics.Named;
+import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.math.Vector3f;
 import de.amr.basics.util.Ufx;
@@ -79,6 +80,12 @@ import static java.util.Objects.requireNonNull;
  * Represents the 3D visualization of a Pac-Man game level.
  */
 public class GameLevel3D extends Group implements DisposableGraphicsObject {
+
+    private static final Set<GhostState> GHOST_STATES_WITH_ACCESS_TO_HOUSE = Set.of(
+        GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE);
+
+    private static final Set<GhostState> GHOST_STATES_REQUIRING_HOUSE_LIGHTING = Set.of(
+        GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE);
 
     public enum AnimationID implements Named {
         GHOST_LIGHT,
@@ -286,21 +293,23 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private void updateHouse() {
         final House house = level.entities().theOne(House.class);
-        final House3DViewComp view3D = house.requireComponent(House3DViewComp.class);
 
-        boolean accessRequested = level
-            .ghostsInAnyOfStates(Set.of(GhostState.LOCKED, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE))
+        boolean accessRequested = level.ghostsInAnyOfStates(GHOST_STATES_WITH_ACCESS_TO_HOUSE)
             .filter(ghost -> house.isDoorAt(WorldNavigationSystem.computeTile(ghost)))
             .anyMatch(GameEntity::isVisible);
 
-        boolean ghostNearHouseEntry = level
-            .ghostsInAnyOfStates(Set.of(GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE))
-            .filter(ghost -> ghost.pos().asVector2f().euclideanDist(house.floorplan().entryPosition())
-                <= view3D.doorSensitivity())
+        boolean ghostNearHouseDoor = level.ghostsInAnyOfStates(GHOST_STATES_REQUIRING_HOUSE_LIGHTING)
+            .filter(ghost -> ghostIsNearHouseDoor(house, ghost))
             .anyMatch(GameEntity::isVisible);
 
-        House3DSystem.showLight(house, ghostNearHouseEntry);
+        House3DSystem.showLight(house, ghostNearHouseDoor);
         House3DAnimationSystem.update(house, accessRequested);
+    }
+
+    private boolean ghostIsNearHouseDoor(House house, Ghost ghost) {
+        final House3DViewComp view3D = house.requireComponent(House3DViewComp.class);
+        final Vector2f houseEntryPos = house.floorplan().entryPosition();
+        return ghost.pos().asVector2f().euclideanDist(houseEntryPos) <= view3D.doorSensitivity();
     }
 
     private void updateBonus() {
