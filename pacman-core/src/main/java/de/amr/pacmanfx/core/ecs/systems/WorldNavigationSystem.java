@@ -233,12 +233,20 @@ public class WorldNavigationSystem {
         final WorldNavigationComp navigation = actor.requireComponent(WorldNavigationComp.class);
 
         navigation.info.clear();
+
         if (navigation.canTeleport()) {
-            navigation.info.teleported = tryTeleporting(actor, level.worldMap().terrainLayer());
-            if (navigation.info.teleported) {
+            navigation.info.teleportStarted = tryTeleporting(actor, level.worldMap().terrainLayer());
+            if (navigation.info.teleportStarted) {
+                navigation.setInTeleportingSpace(true);
                 return;
             }
         }
+
+        final Vector2f center = WorldNavigationSystem.computeCenter(actor);
+        final int leftBorder = 0;
+        final int rightBorder = level.worldMap().numCols() * WorldMap.TS;
+        navigation.setInTeleportingSpace(center.x() < leftBorder || center.x() > rightBorder);
+
         if (navigation.isTurnBackRequested() && movementPolicy.canTurnBack(actor)) {
             setWishDir(actor, navigation.moveDir().opposite());
             navigation.setTurnBackRequested(false);

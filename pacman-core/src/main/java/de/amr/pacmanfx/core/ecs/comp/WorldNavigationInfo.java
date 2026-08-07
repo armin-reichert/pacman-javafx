@@ -4,17 +4,18 @@
 
 package de.amr.pacmanfx.core.ecs.comp;
 
+//TODO integrate into WorldNavigationComp
 public class WorldNavigationInfo {
     public boolean moved;
     public boolean tunnelEntered;
     public boolean tunnelLeft;
-    public boolean teleported;
+    public boolean teleportStarted;
 
     public void clear() {
         moved = false;
         tunnelEntered = false;
         tunnelLeft = false;
-        teleported = false;
+        teleportStarted = false;
     }
 
     @Override
@@ -23,7 +24,7 @@ public class WorldNavigationInfo {
         s.append(tunnelEntered ? " entered tunnel" : "");
         s.append(tunnelLeft    ? " left tunnel" : "");
         s.append(moved         ? " moved" : "");
-        s.append(teleported    ? " teleported" : "");
+        s.append(teleportStarted ? " teleport started" : "");
         return s.isEmpty() ? "" : "[" + s.toString().trim() + "]";
     }
 }

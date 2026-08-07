@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.uilib.entities3D.ghost.system;
 
 import de.amr.basics.math.Vector2f;
+import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DViewComp;
@@ -23,8 +24,9 @@ public class Ghost3DMovementSystem {
             case RIGHT -> 180;
             case DOWN  -> 270;
         };
-        //TODO hide if outside world (teleporting)
-        final boolean visible = ghost.isVisible();
+
+        final boolean inTeleportingSpace = ghost.requireComponent(WorldNavigationComp.class).inTeleportingSpace();
+        final boolean visible = ghost.isVisible() && !inTeleportingSpace;
 
         view3D.root().setVisible(visible);
         view3D.root().setTranslateX(center.x());

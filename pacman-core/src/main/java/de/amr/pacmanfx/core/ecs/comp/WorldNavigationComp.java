@@ -32,6 +32,7 @@ public class WorldNavigationComp implements GameEntityComponent {
     private boolean newTileEntered;
     private boolean turnBackRequested;
     private boolean canTeleport = DEFAULT_CAN_TELEPORT;
+    private boolean inTeleportingSpace;
 
     //TODO this is just a primitive way to provide cornering speed differences
     public float corneringSpeedDelta;
@@ -49,6 +50,7 @@ public class WorldNavigationComp implements GameEntityComponent {
         newTileEntered = false;
         turnBackRequested = false;
         canTeleport = DEFAULT_CAN_TELEPORT;
+        inTeleportingSpace = false;
         info.clear();
     }
 
@@ -125,6 +127,14 @@ public class WorldNavigationComp implements GameEntityComponent {
 
     public boolean canTeleport() {
         return canTeleport;
+    }
+
+    public void setInTeleportingSpace(boolean inTeleportingSpace) {
+        this.inTeleportingSpace = inTeleportingSpace;
+    }
+
+    public boolean inTeleportingSpace() {
+        return inTeleportingSpace;
     }
 
     public boolean isTurnBackRequested() {
