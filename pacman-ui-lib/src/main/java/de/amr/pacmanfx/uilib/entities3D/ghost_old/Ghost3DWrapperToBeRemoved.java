@@ -227,7 +227,7 @@ public class Ghost3DWrapperToBeRemoved extends GameEntity implements DisposableG
     private void registerAnimations() {
         //animations.register(Ghost3DAnimationID.DRESS.key(ghost), new GhostDressAnimation3D(this, 30));
         //animations.register(Ghost3DAnimationID.FLASHING.key(ghost), new GhostFlashingAnimation3D(this));
-        animations.register(Ghost3DAnimationID.BRAKING.key(ghost), new GhostBrakeAnimation3D(this));
+        //animations.register(Ghost3DAnimationID.BRAKING.key(ghost), new GhostBrakeAnimation3D(this));
     }
 
     private void assertControllersAssigned() {

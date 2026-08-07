@@ -5,11 +5,10 @@
 package de.amr.pacmanfx.uilib.entities3D.ghost.system;
 
 import de.amr.basics.math.Vector2f;
-import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DAnimationComp;
 import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DViewComp;
-import javafx.scene.Node;
 
 public class Ghost3DMovementSystem {
 
@@ -25,7 +24,7 @@ public class Ghost3DMovementSystem {
             case DOWN  -> 270;
         };
 
-        final boolean inTeleportingSpace = ghost.requireComponent(WorldNavigationComp.class).inTeleportingSpace();
+        final boolean inTeleportingSpace = ghost.worldNavigation().inTeleportingSpace();
         final boolean visible = ghost.isVisible() && !inTeleportingSpace;
 
         view3D.root().setVisible(visible);
@@ -34,5 +33,9 @@ public class Ghost3DMovementSystem {
         view3D.root().setTranslateZ(-0.5 * height);
 
         view3D.facingRotate().setAngle(angle);
+
+        if (ghost.worldNavigation().info.tunnelEntered) {
+            ghost.requireComponent(Ghost3DAnimationComp.class).braking().playFromStart();
+        }
     }
 }

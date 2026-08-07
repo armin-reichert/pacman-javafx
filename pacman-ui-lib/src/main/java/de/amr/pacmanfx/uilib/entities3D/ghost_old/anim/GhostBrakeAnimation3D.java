@@ -5,55 +5,65 @@
 package de.amr.pacmanfx.uilib.entities3D.ghost_old.anim;
 
 import de.amr.basics.math.Direction;
+import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.entities3D.ghost_old.Ghost3DWrapperToBeRemoved;
+import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DViewComp;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
+import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-import static java.util.Objects.requireNonNull;
-
 public class GhostBrakeAnimation3D extends ManagedAnimation {
 
-    private final Ghost3DWrapperToBeRemoved ghost3D;
+    private final Ghost ghost;
 
-    public GhostBrakeAnimation3D(Ghost3DWrapperToBeRemoved ghost3D) {
-        super("Ghost Braking (%s)".formatted(ghost3D.ghost().name()));
-        this.ghost3D = requireNonNull(ghost3D);
+    public GhostBrakeAnimation3D(Ghost ghost) {
+        super("Ghost Braking (%s)".formatted(ghost.name()));
+        this.ghost = ghost;
         setFactory(this::createAnimationFX);
     }
 
     private Animation createAnimationFX() {
-        var rotateTransition = new RotateTransition(Duration.seconds(0.5), ghost3D.root());
+        final Ghost3DViewComp view3D = ghost.requireComponent(Ghost3DViewComp.class);
+
+        var rotateTransition = new RotateTransition(Duration.seconds(0.5), view3D.root());
         rotateTransition.setAxis(Rotate.Y_AXIS);
         rotateTransition.setAutoReverse(true);
         rotateTransition.setCycleCount(2);
         rotateTransition.setInterpolator(Interpolator.EASE_OUT);
+
         return rotateTransition;
     }
 
     @Override
     public void playFromStart() {
-        var rotateTransition = (RotateTransition) animationFX();
+        var rotateTransition = animationFX();
         rotateTransition.stop();
-        rotateTransition.setByAngle(ghost3D.ghost().worldNavigation().moveDir() == Direction.LEFT ? -35 : 35);
+        adjustAngle(rotateTransition);
         rotateTransition.playFromStart();
     }
 
     @Override
     public void playOrContinue() {
-        var rotateTransition = (RotateTransition) animationFX();
+        var rotateTransition = animationFX();
         rotateTransition.stop();
-        rotateTransition.setByAngle(ghost3D.ghost().worldNavigation().moveDir() == Direction.LEFT ? -35 : 35);
         rotateTransition.play();
+    }
+
+    private void adjustAngle(Animation animation) {
+        if (animation instanceof RotateTransition rotateTransition) {
+            rotateTransition.setByAngle(
+                ghost.worldNavigation().moveDir() == Direction.LEFT ? -35 : 35);
+        }
     }
 
     @Override
     public void stop() {
         super.stop();
-        ghost3D.root().setRotationAxis(Rotate.Y_AXIS);
-        ghost3D.root().setRotate(0);
+        final Node root = ghost.requireComponent(Ghost3DViewComp.class).root();
+        root.setRotationAxis(Rotate.Y_AXIS);
+        root.setRotate(0);
     }
 }

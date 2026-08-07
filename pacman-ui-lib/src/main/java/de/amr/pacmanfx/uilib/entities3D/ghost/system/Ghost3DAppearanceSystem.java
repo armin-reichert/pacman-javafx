@@ -57,4 +57,3 @@ public class Ghost3DAppearanceSystem {
         }
     }
 }
-

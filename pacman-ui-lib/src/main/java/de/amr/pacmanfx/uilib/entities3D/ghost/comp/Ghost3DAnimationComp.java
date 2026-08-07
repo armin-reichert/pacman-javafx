@@ -5,6 +5,7 @@ import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostSettings;
+import de.amr.pacmanfx.uilib.entities3D.ghost_old.anim.GhostBrakeAnimation3D;
 import de.amr.pacmanfx.uilib.entities3D.ghost_old.anim.GhostDressAnimation3D;
 import de.amr.pacmanfx.uilib.entities3D.ghost_old.anim.GhostFlashingAnimation3D;
 
@@ -12,6 +13,7 @@ public class Ghost3DAnimationComp implements GameEntityComponent {
 
     private ManagedAnimation flashing;
     private ManagedAnimation dressMovement;
+    private ManagedAnimation braking;
 
     public Ghost3DAnimationComp() {
     }
@@ -27,10 +29,13 @@ public class Ghost3DAnimationComp implements GameEntityComponent {
         int numFlashes)
     {
         flashing = new GhostFlashingAnimation3D(ghost, settings, numFlashes);
-        animationRegistry.register(this, flashing); //TODO needed?
+        animationRegistry.register(flashing, flashing);
 
         dressMovement = new GhostDressAnimation3D(ghost);
-        animationRegistry.register(this, dressMovement);
+        animationRegistry.register(dressMovement, dressMovement);
+
+        braking = new GhostBrakeAnimation3D(ghost);
+        animationRegistry.register(braking, braking);
     }
 
     @Override
@@ -41,6 +46,10 @@ public class Ghost3DAnimationComp implements GameEntityComponent {
         if (dressMovement != null) {
             dressMovement.stop();
         }
+    }
+
+    public ManagedAnimation braking() {
+        return braking;
     }
 
     public void lookNormal() {
