@@ -2,20 +2,25 @@ package de.amr.pacmanfx.uilib.entities3D.ghost.comp;
 
 import de.amr.pacmanfx.core.ecs.GameEntityComponent;
 import de.amr.pacmanfx.uilib.PacMan3DModel;
-import de.amr.pacmanfx.uilib.entities3D.ghost.GhostAppearance;
 import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostMaterialSet;
 import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostSettings;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
+import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Translate;
 
+import static java.util.Objects.requireNonNull;
+
 public class Ghost3DViewComp implements GameEntityComponent {
 
-    // Root node containing all variants
+    private final ObjectProperty<DrawMode> drawMode = new SimpleObjectProperty<>(DrawMode.FILL);
+
     private final Group root = new Group();
 
     private GhostMaterialSet materialSet;
@@ -28,7 +33,7 @@ public class Ghost3DViewComp implements GameEntityComponent {
     
     private final Rotate facingRotate = new Rotate(0, Rotate.Z_AXIS);
 
-    private GhostAppearance activeVariant;
+    private GhostAppearance appearance;
 
     public Ghost3DViewComp() {}
 
@@ -43,12 +48,12 @@ public class Ghost3DViewComp implements GameEntityComponent {
         return root;
     }
 
-    public GhostAppearance activeVariant() {
-        return activeVariant;
+    public GhostAppearance appearance() {
+        return appearance;
     }
 
-    public void setActiveVariant(GhostAppearance activeVariant) {
-        this.activeVariant = activeVariant;
+    public void setAppearance(GhostAppearance appearance) {
+        this.appearance = requireNonNull(appearance);
     }
 
     public Rotate facingRotate() {
@@ -56,7 +61,7 @@ public class Ghost3DViewComp implements GameEntityComponent {
     }
 
     public void setMaterialSet(GhostMaterialSet materialSet) {
-        this.materialSet = materialSet;
+        this.materialSet = requireNonNull(materialSet);
     }
 
     public GhostMaterialSet materialSet() {
@@ -66,105 +71,73 @@ public class Ghost3DViewComp implements GameEntityComponent {
     // Private Area, no trespassing!
 
     /*
-        this (Group)
-           facingGroup (facing rotation, model orientation adaption)
-              dressGroup (dress rotation animation)
-                 dressMeshView
-              eyesGroup
+        root (tf: scaling)
+           facingGroup (tf: facing-rotate, model-orientation-adjustment)
+              dressGroup (tf: dress-rotation-animation)
+                 dressMeshView (tf: centering)
+              eyesGroup (tf: centering)
                  pupilsMeshView
                  eyeballsMeshView
      */
     private void buildTree(GhostSettings settings, Mesh dressMesh, Mesh pupilsMesh, Mesh eyeballsMesh) {
-
-        // 1. Create meshes
         dressMeshView    = new MeshView(dressMesh);
         pupilsMeshView   = new MeshView(pupilsMesh);
         eyeballsMeshView = new MeshView(eyeballsMesh);
 
-        // 2. Create groups
-        final var dressGroup = new Group(dressMeshView);
+        final var dressGroup  = new Group(dressMeshView);
+        final var eyesGroup   = new Group(pupilsMeshView, eyeballsMeshView);
+        final var facingGroup = new Group(dressGroup, eyesGroup);
 
-        final Group eyesGroup = new Group(pupilsMeshView, eyeballsMeshView);
-        final Group facingGroup = new Group(dressGroup, eyesGroup);
+        root.getChildren().add(facingGroup);
 
-        // 3. Apply transforms to the correct groups
-        facingGroup.getTransforms().addAll(
-            facingRotate,
-            PacMan3DModel.ORIENTATION_ADJUSTMENT
-        );
+        facingGroup.getTransforms().addAll(facingRotate, PacMan3DModel.ORIENTATION_ADJUSTMENT);
 
-        // 4. Center meshes
-        final Bounds dressBounds = dressMeshView.getBoundsInLocal();
-        final Translate center = new Translate(
-            -dressBounds.getCenterX(),
-            -dressBounds.getCenterY(),
-            -dressBounds.getCenterZ()
-        );
-        dressMeshView.getTransforms().add(center);
-        eyesGroup.getTransforms().add(center);
+        // Center meshes
+        final Bounds db = dressMeshView.getBoundsInLocal();
+        final var centering = new Translate(-db.getCenterX(), -db.getCenterY(), -db.getCenterZ());
+        dressMeshView.getTransforms().add(centering);
+        eyesGroup.getTransforms().add(centering);
 
-        // 5. Add scaling to the root node
-        final Scale scaling = new Scale(
-            settings.size3D() / dressBounds.getWidth(),
-            settings.size3D() / dressBounds.getHeight(),
-            settings.size3D() / dressBounds.getDepth());
-        root.getTransforms().add(scaling);
+        // Scaling of root node
+        final float size = settings.size3D();
+        root.getTransforms().add(new Scale(size / db.getWidth(), size / db.getHeight(), size / db.getDepth()));
 
-        // 6. Add the facing group as the only child
-        root.getChildren().setAll(facingGroup);
-
-        // 7. Bind draw mode
-//        dressMeshView.drawModeProperty().bind(drawMode);
-//        pupilsMeshView.drawModeProperty().bind(drawMode);
-//        eyeballsMeshView.drawModeProperty().bind(drawMode);
+        dressMeshView   .drawModeProperty().bind(drawMode);
+        pupilsMeshView  .drawModeProperty().bind(drawMode);
+        eyeballsMeshView.drawModeProperty().bind(drawMode);
     }
 
-    // Look management
-
     public void lookNormal() {
-        root().setVisible(true);
+        root         .setVisible(true);
         dressMeshView.setVisible(true);
         applyMaterials(materialSet.normalMaterial());
-
-        //TODO move into animation component
-//        dressColorFlashingAnimation().ifPresent(ManagedAnimation::stop);
-//        dressAnimation().ifPresent(ManagedAnimation::playOrContinue);
-//        brakeIfTunnelEntered(ghost3D);
     }
 
     public void lookFlashing() {
-        root().setVisible(true);
+        root.setVisible(true);
         lookFrightened();
     }
 
     public void lookFrightened() {
-        root().setVisible(true);
+        root         .setVisible(true);
         dressMeshView.setVisible(true);
-
         applyMaterials(materialSet.frightenedMaterial());
-
-        //TODO move into animation component
-//        dressColorFlashingAnimation().ifPresent(ManagedAnimation::stop);
-//        dressAnimation().ifPresent(ManagedAnimation::playOrContinue);
     }
 
     public void lookEyesOnly() {
-        root().setVisible(true);
-        pupilsMeshView.setVisible(true);
+        root            .setVisible(true);
+        pupilsMeshView  .setVisible(true);
         eyeballsMeshView.setVisible(true);
-        dressMeshView.setVisible(false);
-        //TODO move into animation component
-//        stopAllAnimations();
+        dressMeshView   .setVisible(false);
     }
 
     public void lookEaten() {
-        lookEyesOnly();
         root().setVisible(false);
     }
 
-    private void applyMaterials(GhostComponentMaterialSet materialSet) {
-        dressMeshView.setMaterial(materialSet.dressMaterial());
-        pupilsMeshView.setMaterial(materialSet.pupilsMaterial());
-        eyeballsMeshView.setMaterial(materialSet.eyeballsMaterial());
+    private void applyMaterials(Ghost3DMaterials materials) {
+        dressMeshView   .setMaterial(materials.dressMaterial());
+        pupilsMeshView  .setMaterial(materials.pupilsMaterial());
+        eyeballsMeshView.setMaterial(materials.eyeballsMaterial());
     }
 }

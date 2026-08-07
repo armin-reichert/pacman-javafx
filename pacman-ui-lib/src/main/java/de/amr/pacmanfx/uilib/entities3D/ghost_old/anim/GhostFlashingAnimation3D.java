@@ -6,9 +6,8 @@ package de.amr.pacmanfx.uilib.entities3D.ghost_old.anim;
 
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.entities3D.ghost_old.Ghost3DWrapperToBeRemoved;
 import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostComponentColors;
-import de.amr.pacmanfx.uilib.entities3D.ghost.comp.GhostComponentMaterialSet;
+import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DMaterials;
 import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostSettings;
 import javafx.animation.*;
 import javafx.util.Duration;
@@ -21,7 +20,7 @@ public class GhostFlashingAnimation3D extends ManagedAnimation {
 
     private int numFlashes;
 
-    public GhostFlashingAnimation3D(GhostPersonality gp, GhostSettings settings, GhostComponentMaterialSet flashingMaterialSet) {
+    public GhostFlashingAnimation3D(GhostPersonality gp, GhostSettings settings, Ghost3DMaterials flashingMaterialSet) {
         super("Ghost Flashing (%s)".formatted(gp));
         setFactory(() -> createAnimationFX(settings, flashingMaterialSet));
     }
@@ -40,7 +39,7 @@ public class GhostFlashingAnimation3D extends ManagedAnimation {
 
     // Animates the colors of a material set.
     // Repeats cycle (frightenedColor, brightColor, frightenedColor) num flashes times
-    private Animation createAnimationFX(GhostSettings settings, GhostComponentMaterialSet flashingMaterialSet) {
+    private Animation createAnimationFX(GhostSettings settings, Ghost3DMaterials flashingMaterialSet) {
 
         if (numFlashes == 0) {
             return new PauseTransition(Duration.seconds(0.5));

@@ -14,19 +14,23 @@ public class Ghost3DMovementSystem {
 
     public static void update(Ghost ghost) {
         final Ghost3DViewComp view3D = ghost.requireComponent(Ghost3DViewComp.class);
-        final Vector2f center = ghost.pos().center(WorldMap.TS);
-        final Node root = view3D.root();
-        root.setTranslateX(center.x());
-        root.setTranslateY(center.y());
-        root.setTranslateZ(-0.5 * root.getBoundsInParent().getDepth());
 
-        view3D.facingRotate().setAngle(switch (ghost.worldNavigation().wishDir()) {
+        final Vector2f center = ghost.pos().center(WorldMap.TS);
+        final double height = view3D.root().getBoundsInParent().getDepth();
+        final int angle = switch (ghost.worldNavigation().wishDir()) {
             case LEFT  -> 0;
             case UP    -> 90;
             case RIGHT -> 180;
             case DOWN  -> 270;
-        });
-
+        };
         //TODO hide if outside world (teleporting)
+        final boolean visible = ghost.isVisible();
+
+        view3D.root().setVisible(visible);
+        view3D.root().setTranslateX(center.x());
+        view3D.root().setTranslateY(center.y());
+        view3D.root().setTranslateZ(-0.5 * height);
+
+        view3D.facingRotate().setAngle(angle);
     }
 }

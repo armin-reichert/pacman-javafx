@@ -4,9 +4,9 @@
 
 package de.amr.pacmanfx.uilib.entities3D.ghost_old;
 
-import de.amr.pacmanfx.uilib.entities3D.ghost.comp.GhostComponentMaterialSet;
+import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DMaterials;
 
 public record GhostMaterialSet(
-    GhostComponentMaterialSet normalMaterial,
-    GhostComponentMaterialSet frightenedMaterial,
-    GhostComponentMaterialSet flashingMaterial) {}
+    Ghost3DMaterials normalMaterial,
+    Ghost3DMaterials frightenedMaterial,
+    Ghost3DMaterials flashingMaterial) {}

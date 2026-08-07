@@ -12,7 +12,7 @@ public class Ghost3DAnimationComp implements GameEntityComponent {
 
     private final Map<GhostPersonality, GhostFlashingAnimation3D> flashingAnimations = new EnumMap<>(GhostPersonality.class);
 
-    public Ghost3DAnimationComp(GhostSettings settings, GhostComponentMaterialSet flashingMaterialSet) {
+    public Ghost3DAnimationComp(GhostSettings settings, Ghost3DMaterials flashingMaterialSet) {
         for (GhostPersonality gp : GhostPersonality.values()) {
             final var flashingAnimation = new GhostFlashingAnimation3D(gp, settings, flashingMaterialSet);
             flashingAnimations.put(gp, flashingAnimation);
@@ -24,6 +24,22 @@ public class Ghost3DAnimationComp implements GameEntityComponent {
     }
 
     @Override
-    public void reset() {
+    public void reset() {}
+
+    public void lookNormal() {
+//        dressColorFlashingAnimation().ifPresent(ManagedAnimation::stop);
+//        dressAnimation().ifPresent(ManagedAnimation::playOrContinue);
+//        brakeIfTunnelEntered(ghost3D);
+    }
+
+    public void lookFrightened() {
+        //TODO move into animation component
+//        dressColorFlashingAnimation().ifPresent(ManagedAnimation::stop);
+//        dressAnimation().ifPresent(ManagedAnimation::playOrContinue);
+    }
+
+    public void lookEyesOnly() {
+        //TODO move into animation component
+//        stopAllAnimations();
     }
 }

@@ -9,8 +9,8 @@ import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.entities3D.ghost.GhostAppearance;
-import de.amr.pacmanfx.uilib.entities3D.ghost.comp.GhostComponentMaterialSet;
+import de.amr.pacmanfx.uilib.entities3D.ghost.comp.GhostAppearance;
+import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DMaterials;
 
 public class Ghost3DAppearanceController {
 
@@ -99,7 +99,7 @@ public class Ghost3DAppearanceController {
         ghost3D.root().setVisible(false);
     }
 
-    private void selectMaterialSet(Ghost3DWrapperToBeRemoved ghost3D, GhostComponentMaterialSet materialSet) {
+    private void selectMaterialSet(Ghost3DWrapperToBeRemoved ghost3D, Ghost3DMaterials materialSet) {
         ghost3D.dressMeshView().setMaterial(materialSet.dressMaterial());
         ghost3D.pupilsMeshView().setMaterial(materialSet.pupilsMaterial());
         ghost3D.eyeballsMeshView().setMaterial(materialSet.eyeballsMaterial());
