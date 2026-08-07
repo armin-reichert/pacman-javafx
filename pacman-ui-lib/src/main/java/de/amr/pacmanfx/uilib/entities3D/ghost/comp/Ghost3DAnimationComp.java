@@ -3,17 +3,20 @@ package de.amr.pacmanfx.uilib.entities3D.ghost.comp;
 import de.amr.pacmanfx.core.ecs.GameEntityComponent;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostSettings;
+import de.amr.pacmanfx.uilib.entities3D.ghost_old.anim.GhostDressAnimation3D;
 import de.amr.pacmanfx.uilib.entities3D.ghost_old.anim.GhostFlashingAnimation3D;
 
 public class Ghost3DAnimationComp implements GameEntityComponent {
 
-    private GhostFlashingAnimation3D flashing;
+    private ManagedAnimation flashing;
+    private ManagedAnimation dressMovement;
 
     public Ghost3DAnimationComp() {
     }
 
-    public GhostFlashingAnimation3D flashing() {
+    public ManagedAnimation flashing() {
         return flashing;
     }
 
@@ -25,6 +28,9 @@ public class Ghost3DAnimationComp implements GameEntityComponent {
     {
         flashing = new GhostFlashingAnimation3D(ghost, settings, numFlashes);
         animationRegistry.register(this, flashing); //TODO needed?
+
+        dressMovement = new GhostDressAnimation3D(ghost);
+        animationRegistry.register(this, dressMovement);
     }
 
     @Override
@@ -32,13 +38,18 @@ public class Ghost3DAnimationComp implements GameEntityComponent {
         if (flashing != null) {
             flashing.stop();
         }
+        if (dressMovement != null) {
+            dressMovement.stop();
+        }
     }
 
     public void lookNormal() {
         if (flashing != null) {
             flashing.stop();
         }
-//        dressAnimation().ifPresent(ManagedAnimation::playOrContinue);
+        if (dressMovement != null) {
+            dressMovement.playOrContinue();
+        }
 //        brakeIfTunnelEntered(ghost3D);
     }
 
@@ -46,13 +57,17 @@ public class Ghost3DAnimationComp implements GameEntityComponent {
         if (flashing != null) {
             flashing.stop();
         }
-//        dressAnimation().ifPresent(ManagedAnimation::playOrContinue);
+        if (dressMovement != null) {
+            dressMovement.playOrContinue();
+        }
     }
 
     public void lookEyesOnly() {
         if (flashing != null) {
             flashing.stop();
         }
+        if (dressMovement != null) {
+            dressMovement.stop();
+        }
     }
-
 }

@@ -2,10 +2,10 @@ package de.amr.pacmanfx.uilib.entities3D.ghost.system;
 
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostStateComp;
+import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DAnimationComp;
 import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DViewComp;
 import de.amr.pacmanfx.uilib.entities3D.ghost.comp.GhostAppearance;
-import de.amr.pacmanfx.uilib.entities3D.ghost_old.anim.GhostFlashingAnimation3D;
 
 public class Ghost3DAppearanceSystem {
 
@@ -51,7 +51,7 @@ public class Ghost3DAppearanceSystem {
         }
     }
 
-    private static void ensureFlashingPlays(GhostFlashingAnimation3D flashing) {
+    private static void ensureFlashingPlays(ManagedAnimation flashing) {
         if (!flashing.isRunning()) {
             flashing.playOrContinue();
         }

@@ -24,6 +24,8 @@ public class Ghost3DViewComp implements GameEntityComponent {
 
     private final Group root = new Group();
 
+    private final Group dressGroup = new Group();
+
     private GhostAppearanceMaterialSet appearanceMaterialSet;
 
     private MeshView dressMeshView;
@@ -47,6 +49,10 @@ public class Ghost3DViewComp implements GameEntityComponent {
 
     public Group root() {
         return root;
+    }
+
+    public Group dressGroup() {
+        return dressGroup;
     }
 
     public GhostAppearance appearance() {
@@ -113,7 +119,7 @@ public class Ghost3DViewComp implements GameEntityComponent {
         pupilsMeshView   = new MeshView(pupilsMesh);
         eyeballsMeshView = new MeshView(eyeballsMesh);
 
-        final var dressGroup  = new Group(dressMeshView);
+        dressGroup.getChildren().add(dressMeshView);
         final var eyesGroup   = new Group(pupilsMeshView, eyeballsMeshView);
         final var facingGroup = new Group(dressGroup, eyesGroup);
 
