@@ -11,7 +11,7 @@ import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
-import de.amr.pacmanfx.core.entities.ActorAnimationID;
+import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Bonus;
 import de.amr.pacmanfx.core.entities.Clapperboard;
 import de.amr.pacmanfx.core.entities.Ghost;
@@ -66,11 +66,11 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     }
 
     private RectShort computeGhostSprite(Ghost ghost) {
-        if (animSystem.isSelected(ghost, ActorAnimationID.GHOST_NORMAL)) {
+        if (animSystem.isSelected(ghost, CommonSpriteAnimationID.GHOST_NORMAL)) {
             final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.worldNavigation().wishDir());
             return spriteOrDefault(sprites, animSystem.currentFrame(ghost));
         }
-        if (animSystem.isSelected(ghost, ActorAnimationID.GHOST_EYES)) {
+        if (animSystem.isSelected(ghost, CommonSpriteAnimationID.GHOST_EYES)) {
             return spriteSheet().ghostEyesSprite(ghost.worldNavigation().wishDir());
         }
         else {
@@ -83,8 +83,8 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         final Direction dir = pac.worldNavigation().moveDir();
         return switch (animSystem.selectedAnimationID(pac)) {
             case null -> throw new IllegalStateException("Could not determine Pac-sprite, no animation selected");
-            case ActorAnimationID.PAC_DYING    -> computePacDyingSprite(pac);
-            case ActorAnimationID.PAC_MUNCHING -> facingSprite(SpriteID.MS_PAC_MUNCHING, frame, dir);
+            case CommonSpriteAnimationID.PAC_DYING    -> computePacDyingSprite(pac);
+            case CommonSpriteAnimationID.PAC_MUNCHING -> facingSprite(SpriteID.MS_PAC_MUNCHING, frame, dir);
             case TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER -> facingSprite(SpriteID.MS_PAC_MUNCHING_BOOSTER, frame, dir);
             case TengenMsPacMan_AnimationID.MS_PAC_MAN_TURNING_AWAY -> facingSprite(SpriteID.MS_PAC_TURNING_AWAY, frame, dir);
             case TengenMsPacMan_AnimationID.MS_PAC_MAN_WAVING_HAND -> facingSprite(SpriteID.MS_PAC_WAVING_HAND, frame, dir);
@@ -101,7 +101,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
 
     // Dying animation is realized by providing a sprite facing to the corresponding direction for each animation frame
     private FacingSprite computePacDyingSprite(Pac pac) {
-        final var dyingAnimation = animSystem.animation(pac, ActorAnimationID.PAC_DYING);
+        final var dyingAnimation = animSystem.animation(pac, CommonSpriteAnimationID.PAC_DYING);
         if (dyingAnimation instanceof SpriteAnimation spriteAnimation) {
             final Direction facingDir = switch (spriteAnimation.frame()) {
                 case 0, 4, 8  -> Direction.DOWN;

@@ -9,7 +9,7 @@ import de.amr.basics.Named;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.core.entities.ActorAnimationID;
+import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.SpritesheetAnimationMap;
@@ -24,7 +24,7 @@ public class TengenMsPacMan_StorkSAM extends SpritesheetAnimationMap<SpriteID> {
     }
 
     private SpriteAnimation createAnimation(Named animationID, SpriteAnimationContainer container) {
-        if (animationID.equals(ActorAnimationID.STORK_FLYING)) {
+        if (animationID.equals(CommonSpriteAnimationID.STORK_FLYING)) {
             return new SpriteAnimationBuilder()
                 .sprites(spriteSheet.findSprites(STORK))
                 .frameTicks(8)

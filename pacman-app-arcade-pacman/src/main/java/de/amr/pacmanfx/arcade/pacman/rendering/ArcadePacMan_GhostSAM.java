@@ -8,7 +8,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.core.entities.ActorAnimationID;
+import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.uilib.rendering.SpritesheetAnimationMap;
 
@@ -27,46 +27,46 @@ public class ArcadePacMan_GhostSAM extends SpritesheetAnimationMap<SpriteID> {
     private SpriteAnimation createAnimation(Named animationID, SpriteAnimationContainer container) {
 
         return switch (animationID) {
-            case ActorAnimationID.GHOST_NORMAL -> new SpriteAnimationBuilder()
+            case CommonSpriteAnimationID.GHOST_NORMAL -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet().ghostNormalSprites(personality, Direction.LEFT))
                 .frameTicks(8)
                 .repeated()
                 .build(container);
 
-            case ActorAnimationID.GHOST_FRIGHTENED -> new SpriteAnimationBuilder()
+            case CommonSpriteAnimationID.GHOST_FRIGHTENED -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet().findSprites(SpriteID.GHOST_FRIGHTENED))
                 .frameTicks(8)
                 .repeated()
                 .build(container);
 
-            case ActorAnimationID.GHOST_FLASHING -> new SpriteAnimationBuilder()
+            case CommonSpriteAnimationID.GHOST_FLASHING -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet().findSprites(SpriteID.GHOST_FLASHING))
                 .frameTicks(7)
                 .repeated()
                 .build(container);
 
-            case ActorAnimationID.GHOST_EYES -> new SpriteAnimationBuilder()
+            case CommonSpriteAnimationID.GHOST_EYES -> new SpriteAnimationBuilder()
                 .singleSprite(spriteSheet().ghostEyesSprite(Direction.LEFT))
                 .build(container);
 
-            case ActorAnimationID.GHOST_POINTS -> new SpriteAnimationBuilder()
+            case CommonSpriteAnimationID.GHOST_POINTS -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet().findSprites(SpriteID.GHOST_NUMBERS))
                 .initiallyStopped()
                 .build(container);
 
-            case ActorAnimationID.BLINKY_DAMAGED -> new SpriteAnimationBuilder()
+            case CommonSpriteAnimationID.BLINKY_DAMAGED -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet().findSprites(SpriteID.RED_GHOST_DAMAGED))
                 .initiallyStopped()
                 .build(container);
 
-            case ActorAnimationID.BLINKY_PATCHED -> new SpriteAnimationBuilder()
+            case CommonSpriteAnimationID.BLINKY_PATCHED -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet().findSprites(SpriteID.RED_GHOST_PATCHED))
                 .frameTicks(4)
                 .repeated()
                 .initiallyStopped()
                 .build(container);
 
-            case ActorAnimationID.BLINKY_NAKED -> new SpriteAnimationBuilder()
+            case CommonSpriteAnimationID.BLINKY_NAKED -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet().findSprites(SpriteID.RED_GHOST_NAKED))
                 .frameTicks(4)
                 .repeated()
@@ -84,8 +84,8 @@ public class ArcadePacMan_GhostSAM extends SpritesheetAnimationMap<SpriteID> {
     @Override
     public void setAnimationFrame(Named animationID, int frameIndex) {
         super.setAnimationFrame(animationID, frameIndex);
-        if (ActorAnimationID.GHOST_POINTS.equals(animationID)) {
-            animation(ActorAnimationID.GHOST_POINTS).setFrame(frameIndex);
+        if (CommonSpriteAnimationID.GHOST_POINTS.equals(animationID)) {
+            animation(CommonSpriteAnimationID.GHOST_POINTS).setFrame(frameIndex);
         }
     }
 }

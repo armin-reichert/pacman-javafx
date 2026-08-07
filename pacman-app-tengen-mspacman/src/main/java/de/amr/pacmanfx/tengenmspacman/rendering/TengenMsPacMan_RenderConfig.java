@@ -8,7 +8,7 @@ import de.amr.basics.math.RectShort;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
-import de.amr.pacmanfx.core.entities.ActorAnimationID;
+import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -142,7 +142,7 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
 
         final SpriteAnimSystem animSystem = gameContext.systems().spriteAnim();
         animSystem.setAnimations(ghost, createGhostAnimations(container, personality));
-        animSystem.select(ghost, ActorAnimationID.GHOST_NORMAL);
+        animSystem.select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);
 
         return ghost;
     }

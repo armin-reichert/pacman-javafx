@@ -9,7 +9,7 @@ import de.amr.basics.Named;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.core.entities.ActorAnimationID;
+import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.SpritesheetAnimationMap;
@@ -24,12 +24,12 @@ public class BagSAM extends SpritesheetAnimationMap<SpriteID> {
     private SpriteAnimation createAnimation(Named animationID, SpriteAnimationContainer container) {
 
         return switch (animationID) {
-            case ActorAnimationID.BAG -> new SpriteAnimationBuilder()
+            case CommonSpriteAnimationID.BAG -> new SpriteAnimationBuilder()
                 .singleSprite(spriteSheet.findSprite(SpriteID.BLUE_BAG))
                 .initiallyStopped()
                 .build(container);
 
-            case ActorAnimationID.JUNIOR -> new SpriteAnimationBuilder()
+            case CommonSpriteAnimationID.JUNIOR -> new SpriteAnimationBuilder()
                 .singleSprite(spriteSheet.findSprite(SpriteID.JUNIOR_PAC))
                 .initiallyStopped()
                 .build(container);

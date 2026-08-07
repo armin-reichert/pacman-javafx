@@ -10,7 +10,7 @@ import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
-import de.amr.pacmanfx.core.entities.ActorAnimationID;
+import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.uilib.rendering.SpritesheetAnimationMap;
 
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.BLUE_BAG;
@@ -25,11 +25,11 @@ public class BagSpriteAniMap extends SpritesheetAnimationMap<SpriteID> {
 
     private SpriteAnimation createAnimation(Named animationID, SpriteAnimationContainer container) {
         return switch (animationID) {
-            case ActorAnimationID.JUNIOR -> new SpriteAnimationBuilder()
+            case CommonSpriteAnimationID.JUNIOR -> new SpriteAnimationBuilder()
                 .singleSprite(spriteSheet.findSprite(JUNIOR_PAC))
                 .build(container);
 
-            case ActorAnimationID.BAG -> new SpriteAnimationBuilder()
+            case CommonSpriteAnimationID.BAG -> new SpriteAnimationBuilder()
                 .singleSprite(spriteSheet.findSprite(BLUE_BAG))
                 .build(container);
 

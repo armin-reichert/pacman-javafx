@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
-import de.amr.pacmanfx.core.entities.ActorAnimationID;
+import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Clapperboard;
 import de.amr.pacmanfx.core.entities.clapperboard.system.ClapperboardStateSystem;
 import de.amr.pacmanfx.core.entities.Ghost;
@@ -129,7 +129,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         sys.worldNavigator().setMoveDir(pacMan, Direction.RIGHT);
         sys.worldNavigator().setSpeed(pacMan, SPEED_PAC_CHASING);
 
-        sys.spriteAnim().select(pacMan, ActorAnimationID.MR_PAC_MAN_MUNCHING);
+        sys.spriteAnim().select(pacMan, CommonSpriteAnimationID.MR_PAC_MAN_MUNCHING);
         sys.spriteAnim().playSelected(pacMan);
 
         inky.pos().set(pacMan.pos().x() - 6 * WorldMap.TS, pacMan.pos().y());
@@ -139,7 +139,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         sys.worldNavigator().setMoveDir(inky, Direction.RIGHT);
         sys.worldNavigator().setWishDir(inky, Direction.RIGHT);
 
-        sys.spriteAnim().select(inky, ActorAnimationID.GHOST_NORMAL);
+        sys.spriteAnim().select(inky, CommonSpriteAnimationID.GHOST_NORMAL);
         sys.spriteAnim().playSelected(inky);
 
         msPacMan.pos().set(WorldMap.TS * 30, LOWER_Y);
@@ -148,7 +148,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         sys.worldNavigator().setMoveDir(msPacMan, Direction.LEFT);
         sys.worldNavigator().setSpeed(msPacMan, SPEED_PAC_CHASING);
 
-        sys.spriteAnim().select(msPacMan, ActorAnimationID.PAC_MUNCHING);
+        sys.spriteAnim().select(msPacMan, CommonSpriteAnimationID.PAC_MUNCHING);
         sys.spriteAnim().playSelected(msPacMan);
 
         pinky.pos().set(msPacMan.pos().x() + 6 * WorldMap.TS, msPacMan.pos().y());
@@ -158,7 +158,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         sys.worldNavigator().setWishDir(pinky, Direction.LEFT);
         sys.worldNavigator().setSpeed(pinky, SPEED_GHOST_CHASING);
 
-        sys.spriteAnim().select(pinky, ActorAnimationID.GHOST_NORMAL);
+        sys.spriteAnim().select(pinky, CommonSpriteAnimationID.GHOST_NORMAL);
         sys.spriteAnim().playSelected(pinky);
 
         setState(SceneState.CHASED_BY_GHOSTS, TickTimer.INDEFINITE);

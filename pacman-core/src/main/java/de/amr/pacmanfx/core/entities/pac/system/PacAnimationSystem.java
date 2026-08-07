@@ -1,7 +1,7 @@
 package de.amr.pacmanfx.core.entities.pac.system;
 
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
-import de.amr.pacmanfx.core.entities.ActorAnimationID;
+import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Pac;
 
 public class PacAnimationSystem {
@@ -16,7 +16,7 @@ public class PacAnimationSystem {
         switch (pac.getPacState()) {
             case ACTIVE -> {
                 if (pac.state().isMoving()) {
-                    spriteAnimSystem.select(pac, ActorAnimationID.PAC_MUNCHING);
+                    spriteAnimSystem.select(pac, CommonSpriteAnimationID.PAC_MUNCHING);
                     spriteAnimSystem.playSelected(pac);
                 } else {
                     spriteAnimSystem.stopSelected(pac);
@@ -24,7 +24,7 @@ public class PacAnimationSystem {
             }
             case DEAD -> {
                 if (pac.animation().readyForDying()) {
-                    spriteAnimSystem.select(pac, ActorAnimationID.PAC_DYING);
+                    spriteAnimSystem.select(pac, CommonSpriteAnimationID.PAC_DYING);
                     spriteAnimSystem.resetSelected(pac);
                     pac.animation().setReadyForDying(false);
                 }

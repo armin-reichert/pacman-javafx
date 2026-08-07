@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
-import de.amr.pacmanfx.core.entities.ActorAnimationID;
+import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Clapperboard;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -167,7 +167,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
             navigator.setMoveDir(msPacMan, Direction.LEFT);
             navigator.setSpeed(msPacMan, 1f);
 
-            animSystem.select(msPacMan, ActorAnimationID.PAC_MUNCHING);
+            animSystem.select(msPacMan, CommonSpriteAnimationID.PAC_MUNCHING);
             animSystem.playSelected(msPacMan);
         }
         else if (tick == 230) {
@@ -183,7 +183,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
             animSystem.select(pacMan, TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
             animSystem.playSelected(pacMan);
 
-            animSystem.select(msPacMan, ActorAnimationID.PAC_MUNCHING);
+            animSystem.select(msPacMan, CommonSpriteAnimationID.PAC_MUNCHING);
             animSystem.playSelected(msPacMan);
         }
         else if (tick == 520) {

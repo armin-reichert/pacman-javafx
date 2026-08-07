@@ -14,7 +14,7 @@ import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
-import de.amr.pacmanfx.core.entities.ActorAnimationID;
+import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.model.GhostPersonality;
@@ -122,7 +122,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
 
     private void dressRaptures(GameSystems sys) {
         blinky.pos().subtract(4, 0);
-        sys.spriteAnim().select(blinky, ActorAnimationID.BLINKY_DAMAGED);
+        sys.spriteAnim().select(blinky, CommonSpriteAnimationID.BLINKY_DAMAGED);
         setDressState(NailDressState.RAPTURED);
     }
 
@@ -145,7 +145,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
         sys.worldNavigator().setWishDir(blinky, Direction.LEFT);
         sys.worldNavigator().setSpeed(blinky, 1.25f);
 
-        sys.spriteAnim().select(blinky, ActorAnimationID.GHOST_NORMAL);
+        sys.spriteAnim().select(blinky, CommonSpriteAnimationID.GHOST_NORMAL);
         sys.spriteAnim().playSelected(blinky);
     }
 
@@ -156,7 +156,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
         sys.worldNavigator().setMoveDir(pacMan, Direction.LEFT);
         sys.worldNavigator().setSpeed(pacMan, 1.15f);
 
-        sys.spriteAnim().select(pacMan, ActorAnimationID.PAC_MUNCHING);
+        sys.spriteAnim().select(pacMan, CommonSpriteAnimationID.PAC_MUNCHING);
         sys.spriteAnim().playSelected(pacMan);
     }
 

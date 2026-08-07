@@ -9,7 +9,7 @@ import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
-import de.amr.pacmanfx.core.entities.ActorAnimationID;
+import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Clapperboard;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
@@ -201,18 +201,18 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
 
             msPacMan.show();
             navigator.setSpeed(msPacMan, SPEED_CHASING);
-            animSystem.select(msPacMan, ActorAnimationID.PAC_MUNCHING);
+            animSystem.select(msPacMan, CommonSpriteAnimationID.PAC_MUNCHING);
             animSystem.playSelected(msPacMan);
         }
         else if (tick == 160) {
             inky.show();
             navigator.setSpeed(inky, SPEED_CHASING);
-            animSystem.select(inky, ActorAnimationID.GHOST_NORMAL);
+            animSystem.select(inky, CommonSpriteAnimationID.GHOST_NORMAL);
             animSystem.playSelected(inky);
 
             pinky.show();
             navigator.setSpeed(pinky, SPEED_CHASING);
-            animSystem.select(pinky, ActorAnimationID.GHOST_NORMAL);
+            animSystem.select(pinky, CommonSpriteAnimationID.GHOST_NORMAL);
             animSystem.playSelected(pinky);
         }
         else if (tick == 400) {

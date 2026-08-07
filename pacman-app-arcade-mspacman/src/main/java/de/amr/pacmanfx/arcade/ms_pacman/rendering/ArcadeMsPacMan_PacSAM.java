@@ -9,7 +9,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.core.entities.ActorAnimationID;
+import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.uilib.rendering.SpritesheetAnimationMap;
 
 public class ArcadeMsPacMan_PacSAM extends SpritesheetAnimationMap<SpriteID> {
@@ -22,21 +22,21 @@ public class ArcadeMsPacMan_PacSAM extends SpritesheetAnimationMap<SpriteID> {
     private SpriteAnimation createAnimation(Named animationID, SpriteAnimationContainer container) {
 
         return switch (animationID) {
-            case ActorAnimationID.PAC_FULL -> new SpriteAnimationBuilder()
+            case CommonSpriteAnimationID.PAC_FULL -> new SpriteAnimationBuilder()
                 .singleSprite(spriteSheet.findSprite(SpriteID.MS_PACMAN_FULL))
                 .build(container);
 
-            case ActorAnimationID.PAC_MUNCHING -> new SpriteAnimationBuilder()
+            case CommonSpriteAnimationID.PAC_MUNCHING -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet().msPacManMunchingSprites(Direction.LEFT))
                 .repeated()
                 .build(container);
 
-            case ActorAnimationID.PAC_DYING -> new SpriteAnimationBuilder()
+            case CommonSpriteAnimationID.PAC_DYING -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet().findSprites(SpriteID.MS_PACMAN_DYING))
                 .frameTicks(8)
                 .build(container);
 
-            case ActorAnimationID.MR_PAC_MAN_MUNCHING -> new SpriteAnimationBuilder()
+            case CommonSpriteAnimationID.MR_PAC_MAN_MUNCHING -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.findSprites(SpriteID.MR_PACMAN_MUNCHING_LEFT))
                 .frameTicks(2)
                 .repeated()

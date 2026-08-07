@@ -6,7 +6,7 @@ package de.amr.pacmanfx.core.entities;
 
 import de.amr.basics.Named;
 
-public enum ActorAnimationID implements Named {
+public enum CommonSpriteAnimationID implements Named {
     PAC_MUNCHING,
     PAC_DYING,
     PAC_FULL,

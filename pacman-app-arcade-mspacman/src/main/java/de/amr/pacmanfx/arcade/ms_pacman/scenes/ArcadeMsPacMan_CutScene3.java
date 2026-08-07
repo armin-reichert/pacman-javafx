@@ -13,7 +13,7 @@ import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
-import de.amr.pacmanfx.core.entities.ActorAnimationID;
+import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Bag;
 import de.amr.pacmanfx.core.entities.Clapperboard;
 import de.amr.pacmanfx.core.entities.clapperboard.system.ClapperboardStateSystem;
@@ -159,21 +159,21 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
         pacMan.show();
         worldNavigator.setMoveDir(pacMan, Direction.RIGHT);
 
-        animSystem.select(pacMan, ActorAnimationID.MR_PAC_MAN_MUNCHING);
+        animSystem.select(pacMan, CommonSpriteAnimationID.MR_PAC_MAN_MUNCHING);
         animSystem.stopSelected(pacMan);
 
         msPacMan.pos().set(TS * 5, GROUND_Y - 4);
         msPacMan.show();
         worldNavigator.setMoveDir(msPacMan, Direction.RIGHT);
 
-        animSystem.select(msPacMan, ActorAnimationID.PAC_MUNCHING);
+        animSystem.select(msPacMan, CommonSpriteAnimationID.PAC_MUNCHING);
         animSystem.stopSelected(msPacMan);
 
         stork.pos().set(TS * 30, TS * 12);
         stork.show();
         motor.setVelocity(stork, -0.8f, 0);
 
-        animSystem.select(stork, ActorAnimationID.STORK_FLYING);
+        animSystem.select(stork, CommonSpriteAnimationID.STORK_FLYING);
         animSystem.playSelected(stork);
 
         bag.show();
@@ -219,11 +219,11 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
 
     private void closeBag() {
         bag.setOpen(false);
-        bag.spriteAnim().animation().select(ActorAnimationID.BAG);
+        bag.spriteAnim().animation().select(CommonSpriteAnimationID.BAG);
     }
 
     private void openBag() {
         bag.setOpen(true);
-        bag.spriteAnim().animation().select(ActorAnimationID.JUNIOR);
+        bag.spriteAnim().animation().select(CommonSpriteAnimationID.JUNIOR);
     }
 }

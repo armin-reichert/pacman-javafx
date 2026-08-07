@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
-import de.amr.pacmanfx.core.entities.ActorAnimationID;
+import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Bag;
 import de.amr.pacmanfx.core.entities.Clapperboard;
 import de.amr.pacmanfx.core.entities.Pac;
@@ -186,14 +186,14 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
             navigator.setMoveDir(msPacMan, Direction.RIGHT);
             navigator.setSpeed(msPacMan, 0);
 
-            animSystem.select(msPacMan, ActorAnimationID.PAC_MUNCHING);
+            animSystem.select(msPacMan, CommonSpriteAnimationID.PAC_MUNCHING);
             animSystem.stopSelected(msPacMan);
 
             stork.show();
             stork.pos().set(RIGHT_BORDER, WorldMap.TS * 7);
             motor.setVelocity(stork, -0.8f, 0);
 
-            animSystem.select(stork, ActorAnimationID.STORK_FLYING);
+            animSystem.select(stork, CommonSpriteAnimationID.STORK_FLYING);
             animSystem.playSelected(stork);
 
             bag.setOpen(false);

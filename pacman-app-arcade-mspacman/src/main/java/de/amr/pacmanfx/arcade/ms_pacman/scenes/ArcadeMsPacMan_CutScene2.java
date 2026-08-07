@@ -9,7 +9,7 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
-import de.amr.pacmanfx.core.entities.ActorAnimationID;
+import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Clapperboard;
 import de.amr.pacmanfx.core.entities.clapperboard.system.ClapperboardStateSystem;
 import de.amr.pacmanfx.core.entities.Pac;
@@ -102,12 +102,12 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene2D {
     private void enterStateChasing(GameSystems sys) {
         sys.worldNavigator().setMoveDir(pacMan, Direction.RIGHT);
 
-        sys.spriteAnim().select(pacMan, ActorAnimationID.MR_PAC_MAN_MUNCHING);
+        sys.spriteAnim().select(pacMan, CommonSpriteAnimationID.MR_PAC_MAN_MUNCHING);
         sys.spriteAnim().playSelected(pacMan);
 
         sys.worldNavigator().setMoveDir(msPacMan, Direction.RIGHT);
 
-        sys.spriteAnim().select(msPacMan, ActorAnimationID.PAC_MUNCHING);
+        sys.spriteAnim().select(msPacMan, CommonSpriteAnimationID.PAC_MUNCHING);
         sys.spriteAnim().playSelected(msPacMan);
 
         setSceneState(SceneState.CHASING, TickTimer.INDEFINITE);

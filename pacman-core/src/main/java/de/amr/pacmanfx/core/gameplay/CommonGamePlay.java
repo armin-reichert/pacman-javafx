@@ -14,9 +14,9 @@ import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusState;
-import de.amr.pacmanfx.core.entities.ghost.comp.GhostAnimationComp;
+import de.amr.pacmanfx.core.entities.ghost.comp.GhostSpriteAnimationComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
-import de.amr.pacmanfx.core.entities.ghost.system.GhostAnimationSystem;
+import de.amr.pacmanfx.core.entities.ghost.system.GhostSpriteAnimationSystem;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostStateSystem;
 import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.entities.livescounter.system.LivesCounterSystem;
@@ -211,10 +211,10 @@ public abstract class CommonGamePlay implements GamePlay {
     private void updateGhost(GameContext gameContext, GameLevel level, Ghost ghost) {
         gameContext.systems().ghostState().update(gameContext, level, ghost);
         //TODO Add into global game systems interface
-        GhostAnimationSystem.update(ghost, level.entities().pac());
+        GhostSpriteAnimationSystem.update(ghost, level.entities().pac());
 
         //TODO should this be here?
-        final GhostAnimationComp ghostAnimation = ghost.ghostAnimation();
+        final GhostSpriteAnimationComp ghostAnimation = ghost.ghostAnimation();
         if (ghostAnimation.ghostAnimationID() != null) {
             gameContext.systems().spriteAnim().select(ghost, ghostAnimation.ghostAnimationID());
             gameContext.systems().spriteAnim().playSelected(ghost);
@@ -413,7 +413,7 @@ public abstract class CommonGamePlay implements GamePlay {
         sys.ghostState().changeState(eatenGhost, GhostState.EATEN);
 
         // Animation index is 0-based, animation frame 0 shows points for *first* killed ghost...
-        sys.spriteAnim().selectAndSetFrame(eatenGhost, ActorAnimationID.GHOST_POINTS, killedBefore);
+        sys.spriteAnim().selectAndSetFrame(eatenGhost, CommonSpriteAnimationID.GHOST_POINTS, killedBefore);
         level.entities().ghosts().forEach(sys.spriteAnim()::stopSelected);
 
         level.addToGhostKillChain(eatenGhost);
@@ -443,14 +443,14 @@ public abstract class CommonGamePlay implements GamePlay {
         sys.worldNavigator().setSpeed(pac, 0);
 
         sys.spriteAnim().stopSelected(pac);
-        sys.spriteAnim().select(pac, ActorAnimationID.PAC_FULL);
+        sys.spriteAnim().select(pac, CommonSpriteAnimationID.PAC_FULL);
 
         level.entities().ghosts().forEach(ghost -> {
             sys.worldNavigator().setSpeed(ghost, 0);
 
             //TODO check in emulator if ghost animation is reset to normal
             sys.spriteAnim().stopSelected(ghost);
-            sys.spriteAnim().select(ghost, ActorAnimationID.GHOST_NORMAL);
+            sys.spriteAnim().select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);
         });
 
         level.optBonus().ifPresent(bonus -> sys.bonusState().setInactive(bonus));
