@@ -13,13 +13,15 @@ import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Pellet3DSettings;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.PacMan3DModel;
-import de.amr.pacmanfx.uilib.entities3D.factory.Ghost3DFactory;
-import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DViewComp;
-import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DMaterials;
-import de.amr.pacmanfx.uilib.entities3D.ghost_old.*;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.entities3D.factory.Pac3DFactory;
+import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DAnimationComp;
+import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DMaterialSet;
+import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DViewComp;
+import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostAppearanceMaterialSet;
+import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostSettings;
+import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostStateColors;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.PacSettings;
 import de.amr.pacmanfx.uilib.entities3D.world.Energizer3D;
 import de.amr.pacmanfx.uilib.entities3D.world.NumberBox3D;
@@ -39,7 +41,7 @@ import static java.util.Objects.requireNonNull;
 
 public class DefaultFactory3D implements Factory3D {
 
-    protected final Map<GhostStateColors, GhostMaterialSet> ghostMaterialsCache = new HashMap<>();
+    protected final Map<GhostStateColors, GhostAppearanceMaterialSet> ghostMaterialsCache = new HashMap<>();
     protected final Map<Float, TriangleMesh> pelletMeshesCache = new HashMap<>();
     protected final MazeFactory3D mazeFactory3D;
 
@@ -71,34 +73,16 @@ public class DefaultFactory3D implements Factory3D {
     }
 
     @Override
-    public void createGhost3D(Ghost ghost, GhostSettings settings, AnimationRegistry animations) {
-        final GhostMaterialSet materialSet = ghostMaterialsCache
-            .computeIfAbsent(settings.colors(), this::createGhostMaterial);
+    public void createGhost3D(Ghost ghost, GhostSettings settings, AnimationRegistry animationRegistry) {
+        final PacMan3DModel model = PacMan3DModel.instance();
+        final Ghost3DViewComp view3D = ensureGhostHas3DView(ghost);
+        final var materialSet = ghostMaterialsCache.computeIfAbsent(settings.colors(), this::createGhostMaterial);
 
-        Ghost3DFactory.createGhostView3D(
-            ghost,
-            settings,
-            materialSet.flashingMaterial(),
-            PacMan3DModel.instance().ghostDressMesh(),
-            PacMan3DModel.instance().ghostPupilsMesh(),
-            PacMan3DModel.instance().ghostEyeballsMesh()
-        );
+        view3D.build(settings, model.ghostDressMesh(), model.ghostPupilsMesh(), model.ghostEyeballsMesh());
+        view3D.setAppearanceMaterialSet(materialSet);
 
-        ghost.requireComponent(Ghost3DViewComp.class).setMaterialSet(materialSet);
-    }
-
-    @Override
-    public Ghost3DWrapperToBeRemoved createGhost3D_obsolete(Ghost ghost, GhostSettings settings, AnimationRegistry animationRegistry) {
-        return new Ghost3DWrapperToBeRemoved(
-            animationRegistry,
-            ghost,
-            settings,
-            new GhostMeshSet(
-                PacMan3DModel.instance().ghostDressMesh(),
-                PacMan3DModel.instance().ghostPupilsMesh(),
-                PacMan3DModel.instance().ghostEyeballsMesh()
-            ),
-            ghostMaterialsCache.computeIfAbsent(settings.colors(), this::createGhostMaterial));
+        final Ghost3DAnimationComp animation3D = ghost.requireComponent(Ghost3DAnimationComp.class);
+        animation3D.build(animationRegistry, ghost.personality(), settings, materialSet.flashing(), 5);  //TODO num flashes
     }
 
     @Override
@@ -138,28 +122,28 @@ public class DefaultFactory3D implements Factory3D {
         return energizer3D;
     }
 
-    public GhostMaterialSet createGhostMaterial(GhostStateColors colors) {
+    public GhostAppearanceMaterialSet createGhostMaterial(GhostStateColors colors) {
         requireNonNull(colors);
 
-        final var normalMaterials = new Ghost3DMaterials(
+        final var normalMaterials = new Ghost3DMaterialSet(
             coloredPhongMaterial(colors.normal().dressColor()),
             coloredPhongMaterial(colors.normal().eyeballsColor()),
             coloredPhongMaterial(colors.normal().pupilsColor())
         );
 
-        final var frightenedMaterials = new Ghost3DMaterials(
+        final var frightenedMaterials = new Ghost3DMaterialSet(
             coloredPhongMaterial(colors.frightened().dressColor()),
             coloredPhongMaterial(colors.frightened().eyeballsColor()),
             coloredPhongMaterial(colors.frightened().pupilsColor())
         );
 
-        final var flashingMaterials = new Ghost3DMaterials(
+        final var flashingMaterials = new Ghost3DMaterialSet(
             coloredPhongMaterial(colors.flashing().dressColor()),
             coloredPhongMaterial(colors.flashing().eyeballsColor()),
             coloredPhongMaterial(colors.flashing().pupilsColor())
         );
 
-        return new GhostMaterialSet(normalMaterials, frightenedMaterials, flashingMaterials);
+        return new GhostAppearanceMaterialSet(normalMaterials, frightenedMaterials, flashingMaterials);
     }
 
     @Override
@@ -171,4 +155,13 @@ public class DefaultFactory3D implements Factory3D {
     protected Image createNumberImage(GameVariantConfig gameVariant, int index) {
         return gameVariant.renderConfig().killedGhostPointsImage(index);
     }
+
+    private static Ghost3DViewComp ensureGhostHas3DView(Ghost ghost) {
+        if (!ghost.hasComponent(Ghost3DViewComp.class)) {
+            ghost.setComponent(Ghost3DViewComp.class, new Ghost3DViewComp());
+            ghost.setComponent(Ghost3DAnimationComp.class, new Ghost3DAnimationComp());
+        }
+        return ghost.requireComponent(Ghost3DViewComp.class);
+    }
+
 }

@@ -6,40 +6,29 @@ package de.amr.pacmanfx.uilib.entities3D.ghost_old.anim;
 
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
+import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DMaterialSet;
 import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostComponentColors;
-import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DMaterials;
 import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostSettings;
 import javafx.animation.*;
 import javafx.util.Duration;
-
-import static de.amr.pacmanfx.core.Validations.requireNonNegativeInt;
 
 public class GhostFlashingAnimation3D extends ManagedAnimation {
 
     private static final float TOTAL_DURATION_SEC = 2;
 
-    private int numFlashes;
-
-    public GhostFlashingAnimation3D(GhostPersonality gp, GhostSettings settings, Ghost3DMaterials flashingMaterialSet) {
+    public GhostFlashingAnimation3D(
+        GhostPersonality gp,
+        GhostSettings settings,
+        Ghost3DMaterialSet flashingMaterialSet,
+        int numFlashes
+    ) {
         super("Ghost Flashing (%s)".formatted(gp));
-        setFactory(() -> createAnimationFX(settings, flashingMaterialSet));
-    }
-
-    public int numFlashes() {
-        return numFlashes;
-    }
-
-    public void setNumFlashes(int numFlashes) {
-        requireNonNegativeInt(numFlashes);
-        if (this.numFlashes != numFlashes) {
-            stop();
-            this.numFlashes = numFlashes;
-        }
+        setFactory(() -> createAnimationFX(settings, flashingMaterialSet, numFlashes));
     }
 
     // Animates the colors of a material set.
     // Repeats cycle (frightenedColor, brightColor, frightenedColor) num flashes times
-    private Animation createAnimationFX(GhostSettings settings, Ghost3DMaterials flashingMaterialSet) {
+    private Animation createAnimationFX(GhostSettings settings, Ghost3DMaterialSet flashingMaterialSet, int numFlashes) {
 
         if (numFlashes == 0) {
             return new PauseTransition(Duration.seconds(0.5));
@@ -57,35 +46,35 @@ public class GhostFlashingAnimation3D extends ManagedAnimation {
         final var flashing = new Timeline(
 
             new KeyFrame(Duration.ZERO,
-                new KeyValue(flashingMaterialSet.dressMaterial().diffuseColorProperty(),
+                new KeyValue(flashingMaterialSet.dress().diffuseColorProperty(),
                     frightenedColors.dressColor(), Interpolator.DISCRETE),
-                new KeyValue(flashingMaterialSet.dressMaterial().specularColorProperty(),
+                new KeyValue(flashingMaterialSet.dress().specularColorProperty(),
                     frightenedColors.dressColor().brighter(), Interpolator.DISCRETE),
-                new KeyValue(flashingMaterialSet.pupilsMaterial().diffuseColorProperty(),
+                new KeyValue(flashingMaterialSet.pupils().diffuseColorProperty(),
                     frightenedColors.pupilsColor(), Interpolator.DISCRETE),
-                new KeyValue(flashingMaterialSet.pupilsMaterial().specularColorProperty(),
+                new KeyValue(flashingMaterialSet.pupils().specularColorProperty(),
                     frightenedColors.pupilsColor().brighter(), Interpolator.DISCRETE)
             ),
 
             new KeyFrame(brightStart,
-                new KeyValue(flashingMaterialSet.dressMaterial().diffuseColorProperty(),
+                new KeyValue(flashingMaterialSet.dress().diffuseColorProperty(),
                     brightColors.dressColor(), Interpolator.DISCRETE),
-                new KeyValue(flashingMaterialSet.dressMaterial().specularColorProperty(),
+                new KeyValue(flashingMaterialSet.dress().specularColorProperty(),
                     brightColors.dressColor().brighter(), Interpolator.DISCRETE),
-                new KeyValue(flashingMaterialSet.pupilsMaterial().diffuseColorProperty(),
+                new KeyValue(flashingMaterialSet.pupils().diffuseColorProperty(),
                     brightColors.pupilsColor(), Interpolator.DISCRETE),
-                new KeyValue(flashingMaterialSet.pupilsMaterial().specularColorProperty(),
+                new KeyValue(flashingMaterialSet.pupils().specularColorProperty(),
                     brightColors.pupilsColor(), Interpolator.DISCRETE)
             ),
 
             new KeyFrame(cycleDuration,
-                new KeyValue(flashingMaterialSet.dressMaterial().diffuseColorProperty(),
+                new KeyValue(flashingMaterialSet.dress().diffuseColorProperty(),
                     frightenedColors.dressColor(), Interpolator.DISCRETE),
-                new KeyValue(flashingMaterialSet.dressMaterial().specularColorProperty(),
+                new KeyValue(flashingMaterialSet.dress().specularColorProperty(),
                     frightenedColors.dressColor().brighter(), Interpolator.DISCRETE),
-                new KeyValue(flashingMaterialSet.pupilsMaterial().diffuseColorProperty(),
+                new KeyValue(flashingMaterialSet.pupils().diffuseColorProperty(),
                     frightenedColors.pupilsColor(), Interpolator.DISCRETE),
-                new KeyValue(flashingMaterialSet.pupilsMaterial().specularColorProperty(),
+                new KeyValue(flashingMaterialSet.pupils().specularColorProperty(),
                     frightenedColors.pupilsColor().brighter(), Interpolator.DISCRETE)
             )
         );

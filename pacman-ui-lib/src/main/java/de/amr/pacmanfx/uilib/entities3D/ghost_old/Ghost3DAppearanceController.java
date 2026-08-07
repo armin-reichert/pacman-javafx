@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3D.ghost.comp.GhostAppearance;
-import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DMaterials;
+import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DMaterialSet;
 
 public class Ghost3DAppearanceController {
 
@@ -58,7 +58,7 @@ public class Ghost3DAppearanceController {
 
     private void lookNormal(Ghost3DWrapperToBeRemoved ghost3D) {
         ghost3D.dressMeshView().setVisible(true);
-        selectMaterialSet(ghost3D, ghost3D.materials().normalMaterial());
+        selectMaterialSet(ghost3D, ghost3D.materials().normal());
 
         ghost3D.dressColorFlashingAnimation().ifPresent(ManagedAnimation::stop);
         ghost3D.dressAnimation().ifPresent(ManagedAnimation::playOrContinue);
@@ -71,18 +71,17 @@ public class Ghost3DAppearanceController {
             return;
         }
         ghost3D.dressMeshView().setVisible(true);
-        selectMaterialSet(ghost3D, ghost3D.materials().flashingMaterial());
+        selectMaterialSet(ghost3D, ghost3D.materials().flashing());
 
         ghost3D.dressAnimation().ifPresent(ManagedAnimation::playOrContinue);
         ghost3D.dressColorFlashingAnimation().ifPresent(flashing -> {
-            flashing.setNumFlashes(numFlashes);
             flashing.playOrContinue();
         });
     }
 
     private void lookFrightened(Ghost3DWrapperToBeRemoved ghost3D) {
         ghost3D.dressMeshView().setVisible(true);
-        selectMaterialSet(ghost3D, ghost3D.materials().frightenedMaterial());
+        selectMaterialSet(ghost3D, ghost3D.materials().frightened());
 
         ghost3D.dressColorFlashingAnimation().ifPresent(ManagedAnimation::stop);
         ghost3D.dressAnimation().ifPresent(ManagedAnimation::playOrContinue);
@@ -90,7 +89,7 @@ public class Ghost3DAppearanceController {
 
     private void lookEyesOnly(Ghost3DWrapperToBeRemoved ghost3D) {
         ghost3D.dressMeshView().setVisible(false);
-        selectMaterialSet(ghost3D, ghost3D.materials().normalMaterial());
+        selectMaterialSet(ghost3D, ghost3D.materials().normal());
 
         ghost3D.stopAllAnimations();
     }
@@ -99,9 +98,9 @@ public class Ghost3DAppearanceController {
         ghost3D.root().setVisible(false);
     }
 
-    private void selectMaterialSet(Ghost3DWrapperToBeRemoved ghost3D, Ghost3DMaterials materialSet) {
-        ghost3D.dressMeshView().setMaterial(materialSet.dressMaterial());
-        ghost3D.pupilsMeshView().setMaterial(materialSet.pupilsMaterial());
-        ghost3D.eyeballsMeshView().setMaterial(materialSet.eyeballsMaterial());
+    private void selectMaterialSet(Ghost3DWrapperToBeRemoved ghost3D, Ghost3DMaterialSet materialSet) {
+        ghost3D.dressMeshView().setMaterial(materialSet.dress());
+        ghost3D.pupilsMeshView().setMaterial(materialSet.pupils());
+        ghost3D.eyeballsMeshView().setMaterial(materialSet.eyeballs());
     }
 }

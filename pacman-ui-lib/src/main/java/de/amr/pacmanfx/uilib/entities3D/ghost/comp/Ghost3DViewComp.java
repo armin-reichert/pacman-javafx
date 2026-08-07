@@ -2,7 +2,7 @@ package de.amr.pacmanfx.uilib.entities3D.ghost.comp;
 
 import de.amr.pacmanfx.core.ecs.GameEntityComponent;
 import de.amr.pacmanfx.uilib.PacMan3DModel;
-import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostMaterialSet;
+import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostAppearanceMaterialSet;
 import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostSettings;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -23,7 +23,7 @@ public class Ghost3DViewComp implements GameEntityComponent {
 
     private final Group root = new Group();
 
-    private GhostMaterialSet materialSet;
+    private GhostAppearanceMaterialSet appearanceMaterialSet;
 
     private MeshView dressMeshView;
     
@@ -60,12 +60,12 @@ public class Ghost3DViewComp implements GameEntityComponent {
         return facingRotate;
     }
 
-    public void setMaterialSet(GhostMaterialSet materialSet) {
-        this.materialSet = requireNonNull(materialSet);
+    public void setAppearanceMaterialSet(GhostAppearanceMaterialSet appearanceMaterialSet) {
+        this.appearanceMaterialSet = requireNonNull(appearanceMaterialSet);
     }
 
-    public GhostMaterialSet materialSet() {
-        return materialSet;
+    public GhostAppearanceMaterialSet appearanceMaterialSet() {
+        return appearanceMaterialSet;
     }
 
     // Private Area, no trespassing!
@@ -108,36 +108,32 @@ public class Ghost3DViewComp implements GameEntityComponent {
     }
 
     public void lookNormal() {
-        root         .setVisible(true);
-        dressMeshView.setVisible(true);
-        applyMaterials(materialSet.normalMaterial());
-    }
+        dressMeshView   .setVisible(true);
+        eyeballsMeshView.setVisible(true);
+        pupilsMeshView  .setVisible(true);
 
-    public void lookFlashing() {
-        root.setVisible(true);
-        lookFrightened();
+        applyMaterials(appearanceMaterialSet.normal());
     }
 
     public void lookFrightened() {
-        root         .setVisible(true);
-        dressMeshView.setVisible(true);
-        applyMaterials(materialSet.frightenedMaterial());
+        dressMeshView   .setVisible(true);
+        eyeballsMeshView.setVisible(true);
+        pupilsMeshView  .setVisible(true);
+
+        applyMaterials(appearanceMaterialSet.frightened());
     }
 
     public void lookEyesOnly() {
-        root            .setVisible(true);
-        pupilsMeshView  .setVisible(true);
-        eyeballsMeshView.setVisible(true);
         dressMeshView   .setVisible(false);
+        eyeballsMeshView.setVisible(true);
+        pupilsMeshView  .setVisible(true);
+
+        applyMaterials(appearanceMaterialSet.normal());
     }
 
-    public void lookEaten() {
-        root().setVisible(false);
-    }
-
-    private void applyMaterials(Ghost3DMaterials materials) {
-        dressMeshView   .setMaterial(materials.dressMaterial());
-        pupilsMeshView  .setMaterial(materials.pupilsMaterial());
-        eyeballsMeshView.setMaterial(materials.eyeballsMaterial());
+    private void applyMaterials(Ghost3DMaterialSet materials) {
+        dressMeshView   .setMaterial(materials.dress());
+        pupilsMeshView  .setMaterial(materials.pupils());
+        eyeballsMeshView.setMaterial(materials.eyeballs());
     }
 }

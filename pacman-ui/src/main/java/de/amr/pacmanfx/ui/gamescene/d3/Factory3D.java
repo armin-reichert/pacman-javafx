@@ -56,9 +56,6 @@ public interface Factory3D extends Disposable {
      */
     void createGhost3D(Ghost ghost, GhostSettings ghostConfig, AnimationRegistry animations);
 
-    //TODO remove
-    Ghost3DWrapperToBeRemoved createGhost3D_obsolete(Ghost ghost, GhostSettings ghostConfig, AnimationRegistry animations);
-
     /**
      * Creates the 3D representation of the lives counter for this variant.
      *

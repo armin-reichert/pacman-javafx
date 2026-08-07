@@ -45,9 +45,8 @@ import de.amr.pacmanfx.uilib.entities3D.bonus.comp.Bonus3DViewComp;
 import de.amr.pacmanfx.uilib.entities3D.bonus.system.Bonus3DMovementSystem;
 import de.amr.pacmanfx.uilib.entities3D.bonus.system.Bonus3DViewSystem;
 import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DViewComp;
-import de.amr.pacmanfx.uilib.entities3D.ghost.system.Ghost3DAnimationSystem;
 import de.amr.pacmanfx.uilib.entities3D.ghost.system.Ghost3DMovementSystem;
-import de.amr.pacmanfx.uilib.entities3D.ghost.system.Ghost3DViewSystem;
+import de.amr.pacmanfx.uilib.entities3D.ghost.system.Ghost3DAppearanceSystem;
 import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostSettings;
 import de.amr.pacmanfx.uilib.entities3D.house.comp.House3DViewComp;
 import de.amr.pacmanfx.uilib.entities3D.house.system.House3DAnimationSystem;
@@ -281,8 +280,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private void updateGhosts() {
         level.entities().ghosts().forEach(ghost -> {
             Ghost3DMovementSystem.update(ghost);
-            Ghost3DViewSystem.update(ghost);
-            Ghost3DAnimationSystem.update(ghost);
+            Ghost3DAppearanceSystem.update(level, ghost);
         });
     }
 
@@ -473,7 +471,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private void createEnergizerParticlesAnimation(ParticlesAnimationConfig particlesAnimationConfig) {
         final List<PhongMaterial> ghostDressMaterials = level.entities().ghosts().stream()
             .map(ghost -> ghost.requireComponent(Ghost3DViewComp.class))
-            .map(ghostView3D -> ghostView3D.materialSet().normalMaterial().dressMaterial())
+            .map(ghostView3D -> ghostView3D.appearanceMaterialSet().normal().dress())
             .toList();
 
         final ExplosionConfig config = particlesAnimationConfig.explosion();

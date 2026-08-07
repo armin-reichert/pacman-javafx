@@ -1,45 +1,61 @@
 package de.amr.pacmanfx.uilib.entities3D.ghost.comp;
 
 import de.amr.pacmanfx.core.ecs.GameEntityComponent;
+import de.amr.pacmanfx.core.entities.Ghost;
+import de.amr.pacmanfx.core.entities.ghost.comp.GhostStateComp;
 import de.amr.pacmanfx.core.model.GhostPersonality;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostSettings;
 import de.amr.pacmanfx.uilib.entities3D.ghost_old.anim.GhostFlashingAnimation3D;
 
-import java.util.EnumMap;
-import java.util.Map;
-
 public class Ghost3DAnimationComp implements GameEntityComponent {
 
-    private final Map<GhostPersonality, GhostFlashingAnimation3D> flashingAnimations = new EnumMap<>(GhostPersonality.class);
+    private GhostFlashingAnimation3D flashing;
 
-    public Ghost3DAnimationComp(GhostSettings settings, Ghost3DMaterials flashingMaterialSet) {
-        for (GhostPersonality gp : GhostPersonality.values()) {
-            final var flashingAnimation = new GhostFlashingAnimation3D(gp, settings, flashingMaterialSet);
-            flashingAnimations.put(gp, flashingAnimation);
-        }
+    public Ghost3DAnimationComp() {
     }
 
-    public GhostFlashingAnimation3D flashingAnimation(GhostPersonality gp) {
-        return flashingAnimations.get(gp);
+    public GhostFlashingAnimation3D flashing() {
+        return flashing;
+    }
+
+    public void build(
+        AnimationRegistry animationRegistry,
+        GhostPersonality gp,
+        GhostSettings settings,
+        Ghost3DMaterialSet flashingMaterialSet,
+        int numFlashes)
+    {
+        flashing = new GhostFlashingAnimation3D(gp, settings, flashingMaterialSet, numFlashes);
+        animationRegistry.register(this, flashing); //TODO needed?
     }
 
     @Override
-    public void reset() {}
+    public void reset() {
+        if (flashing != null) {
+            flashing.stop();
+        }
+    }
 
     public void lookNormal() {
-//        dressColorFlashingAnimation().ifPresent(ManagedAnimation::stop);
+        if (flashing != null) {
+            flashing.stop();
+        }
 //        dressAnimation().ifPresent(ManagedAnimation::playOrContinue);
 //        brakeIfTunnelEntered(ghost3D);
     }
 
     public void lookFrightened() {
-        //TODO move into animation component
-//        dressColorFlashingAnimation().ifPresent(ManagedAnimation::stop);
+        if (flashing != null) {
+            flashing.stop();
+        }
 //        dressAnimation().ifPresent(ManagedAnimation::playOrContinue);
     }
 
     public void lookEyesOnly() {
-        //TODO move into animation component
-//        stopAllAnimations();
+        if (flashing != null) {
+            flashing.stop();
+        }
     }
+
 }

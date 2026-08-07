@@ -46,7 +46,7 @@ public class Ghost3DWrapperToBeRemoved extends GameEntity implements DisposableG
 
     private final GhostSettings settings;
 
-    private GhostMaterialSet materialSet;
+    private GhostAppearanceMaterialSet materialSet;
 
     private Group dressGroup;
 
@@ -64,7 +64,7 @@ public class Ghost3DWrapperToBeRemoved extends GameEntity implements DisposableG
         Ghost ghost,
         GhostSettings settings,
         GhostMeshSet meshSet,
-        GhostMaterialSet materialSet)
+        GhostAppearanceMaterialSet materialSet)
     {
         this.animations = requireNonNull(animations);
         this.ghost = requireNonNull(ghost);
@@ -118,7 +118,7 @@ public class Ghost3DWrapperToBeRemoved extends GameEntity implements DisposableG
         return settings;
     }
 
-    public GhostMaterialSet materials() {
+    public GhostAppearanceMaterialSet materials() {
         return materialSet;
     }
 
