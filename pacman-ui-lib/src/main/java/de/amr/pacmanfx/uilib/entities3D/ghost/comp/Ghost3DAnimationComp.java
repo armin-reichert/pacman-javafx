@@ -2,8 +2,6 @@ package de.amr.pacmanfx.uilib.entities3D.ghost.comp;
 
 import de.amr.pacmanfx.core.ecs.GameEntityComponent;
 import de.amr.pacmanfx.core.entities.Ghost;
-import de.amr.pacmanfx.core.entities.ghost.comp.GhostStateComp;
-import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostSettings;
 import de.amr.pacmanfx.uilib.entities3D.ghost_old.anim.GhostFlashingAnimation3D;
@@ -21,12 +19,12 @@ public class Ghost3DAnimationComp implements GameEntityComponent {
 
     public void build(
         AnimationRegistry animationRegistry,
-        GhostPersonality gp,
+        Ghost ghost,
         GhostSettings settings,
         Ghost3DMaterialSet flashingMaterialSet,
         int numFlashes)
     {
-        flashing = new GhostFlashingAnimation3D(gp, settings, flashingMaterialSet, numFlashes);
+        flashing = new GhostFlashingAnimation3D(ghost, settings, flashingMaterialSet, numFlashes);
         animationRegistry.register(this, flashing); //TODO needed?
     }
 

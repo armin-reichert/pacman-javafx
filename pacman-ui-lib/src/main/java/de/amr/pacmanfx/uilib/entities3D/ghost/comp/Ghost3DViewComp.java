@@ -8,6 +8,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
+import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Mesh;
 import javafx.scene.shape.MeshView;
@@ -54,6 +55,34 @@ public class Ghost3DViewComp implements GameEntityComponent {
 
     public void setAppearance(GhostAppearance appearance) {
         this.appearance = requireNonNull(appearance);
+    }
+
+    public MeshView dressMeshView() {
+        return dressMeshView;
+    }
+
+    public PhongMaterial dressMaterial() {
+        return requirePhongMaterial(dressMeshView);
+    }
+
+    public MeshView eyeballsMeshView() {
+        return eyeballsMeshView;
+    }
+
+    public PhongMaterial eyeballsMaterial() {
+        return requirePhongMaterial(eyeballsMeshView);
+    }
+
+    public MeshView pupilsMeshView() {
+        return pupilsMeshView;
+    }
+
+    public PhongMaterial pupilsMaterial() {
+        return requirePhongMaterial(pupilsMeshView);
+    }
+
+    private PhongMaterial requirePhongMaterial(MeshView meshView) {
+        return (PhongMaterial) meshView.getMaterial();
     }
 
     public Rotate facingRotate() {

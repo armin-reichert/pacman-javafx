@@ -15,7 +15,6 @@ import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Pellet3DSettings;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.entities3D.ghost_old.Ghost3DWrapperToBeRemoved;
 import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostSettings;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.PacSettings;
 import de.amr.pacmanfx.uilib.entities3D.world.Energizer3D;

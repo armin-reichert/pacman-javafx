@@ -82,7 +82,7 @@ public class DefaultFactory3D implements Factory3D {
         view3D.setAppearanceMaterialSet(materialSet);
 
         final Ghost3DAnimationComp animation3D = ghost.requireComponent(Ghost3DAnimationComp.class);
-        animation3D.build(animationRegistry, ghost.personality(), settings, materialSet.flashing(), 5);  //TODO num flashes
+        animation3D.build(animationRegistry, ghost, settings, materialSet.flashing(), 5);  //TODO num flashes
     }
 
     @Override
