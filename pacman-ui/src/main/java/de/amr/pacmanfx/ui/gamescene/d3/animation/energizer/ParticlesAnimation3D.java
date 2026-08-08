@@ -83,7 +83,7 @@ public class ParticlesAnimation3D extends ManagedAnimation implements Disposable
 
         swirlBases.forEach(base -> swirlAnimations.add(new SwirlAnimation3D(config.swirl(), base)));
 
-        setFactory(() -> {
+        setAnimationFactory(() -> {
             final var timeline = new Timeline(new KeyFrame(Duration.millis(16.666), _ -> {
                 updateParticles();
                 for (SwirlAnimation3D swirlAnimation : swirlAnimations) {

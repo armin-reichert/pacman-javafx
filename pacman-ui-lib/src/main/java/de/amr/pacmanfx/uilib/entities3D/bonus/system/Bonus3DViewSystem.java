@@ -43,7 +43,7 @@ public class Bonus3DViewSystem {
         view3D.rotateY().setAngle(0);
 
         // Rotate around x-axis
-        animations.animation(Bonus3DAnimationID.BONUS_EATEN).playFromStart();
+        animations.requireAnimation(Bonus3DAnimationID.BONUS_EATEN).playFromStart();
     }
 
     public static void lookExpired(Bonus bonus, AnimationRegistry animations) {

@@ -102,7 +102,7 @@ public class MessageView extends Group implements Disposable {
 
         public MoveInOutAnimation() {
             super("Level Message Movement");
-            setFactory(this::createAnimationFX);
+            setAnimationFactory(this::createAnimationFX);
         }
 
         private Animation createAnimationFX() {

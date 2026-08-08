@@ -23,7 +23,7 @@ public class GhostFlashingAnimation3D extends ManagedAnimation {
         int numFlashes
     ) {
         super("Ghost Flashing (%s)".formatted(ghost.name()));
-        setFactory(() -> createAnimationFX(ghost, settings, numFlashes));
+        setAnimationFactory(() -> createAnimationFX(ghost, settings, numFlashes));
     }
 
     // Animates the colors of a material set.

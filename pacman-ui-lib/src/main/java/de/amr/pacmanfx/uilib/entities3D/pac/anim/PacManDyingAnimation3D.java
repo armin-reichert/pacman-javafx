@@ -18,7 +18,7 @@ public class PacManDyingAnimation3D extends ManagedAnimation {
 
     public PacManDyingAnimation3D(Pac3DViewComp view3D) {
         super("PacMan_Dying");
-        setFactory(() -> createAnimation(view3D.root(), view3D.powerLight()));
+        setAnimationFactory(() -> createAnimation(view3D.root(), view3D.powerLight()));
     }
 
     private Animation createAnimation(Node node, PointLight powerLight) {

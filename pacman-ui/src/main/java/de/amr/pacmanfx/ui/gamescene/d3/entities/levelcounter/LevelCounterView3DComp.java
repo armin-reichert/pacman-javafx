@@ -49,7 +49,7 @@ public class LevelCounterView3DComp implements GameEntityComponent, DisposableGr
     private ManagedAnimation createSpinningAnimation() {
         spinningAnimation = new ManagedAnimation("Level Counter Spinning");
 
-        spinningAnimation.setFactory(() -> {
+        spinningAnimation.setAnimationFactory(() -> {
             final var cubesAnimation = new ParallelTransition();
             for (int i = 0; i < root.getChildren().size(); ++i) {
                 final Node cube = root.getChildren().get(i);

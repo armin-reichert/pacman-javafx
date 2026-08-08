@@ -32,7 +32,7 @@ public class HipSwayingAnimation3D extends ManagedAnimation implements Pac3DMove
     public HipSwayingAnimation3D(Pac3DViewComp view3D) {
         super("Ms. Pac-Man Hip Swaying");
         this.node = requireNonNull(view3D.root());
-        setFactory(this::createWrappedAnimation);
+        setAnimationFactory(this::createWrappedAnimation);
     }
 
     private RotateTransition createWrappedAnimation() {
@@ -51,9 +51,9 @@ public class HipSwayingAnimation3D extends ManagedAnimation implements Pac3DMove
 
     @Override
     public void stop() {
-        if (animationFX != null) {
-            animationFX.stop();
-            var rotateTransition = (RotateTransition) animationFX;
+        if (delegate != null) {
+            delegate.stop();
+            var rotateTransition = (RotateTransition) delegate;
             node.setRotationAxis(rotateTransition.getAxis());
             node.setRotate(0);
         }
@@ -61,9 +61,9 @@ public class HipSwayingAnimation3D extends ManagedAnimation implements Pac3DMove
 
     @Override
     public void pause() {
-        if (animationFX != null) {
-            animationFX.pause();
-            var rotateTransition = (RotateTransition) animationFX;
+        if (delegate != null) {
+            delegate.pause();
+            var rotateTransition = (RotateTransition) delegate;
             node.setRotationAxis(rotateTransition.getAxis());
             node.setRotate(0);
         }
@@ -82,16 +82,16 @@ public class HipSwayingAnimation3D extends ManagedAnimation implements Pac3DMove
 
     @Override
     public void setPowerMode(boolean power) {
-        if (animationFX != null) {
-            boolean wasRunning = animationFX.getStatus() == Animation.Status.RUNNING;
-            animationFX.stop();
-            animationFX.setRate(power ? POWER_RATE : 1);
-            var rotateTransition = (RotateTransition) animationFX;
+        if (delegate != null) {
+            boolean wasRunning = delegate.getStatus() == Animation.Status.RUNNING;
+            delegate.stop();
+            delegate.setRate(power ? POWER_RATE : 1);
+            var rotateTransition = (RotateTransition) delegate;
             double amplification = power ? POWER_ANGLE_AMPLIFICATION : 1;
             rotateTransition.setFromAngle(HIP_ANGLE_FROM * amplification);
             rotateTransition.setToAngle(HIP_ANGLE_TO * amplification);
             if (wasRunning) {
-                animationFX.play();
+                delegate.play();
             }
         }
     }

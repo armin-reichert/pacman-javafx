@@ -50,7 +50,7 @@ public class Energizer3D implements DisposableGraphicsObject {
         double expandedSize)
     {
         final var animation = new ManagedAnimation(label);
-        animation.setFactory(() -> {
+        animation.setAnimationFactory(() -> {
             final Duration duration = Duration.seconds(1).divide(2 * pumpingFrequency);
             final var pumping = new ScaleTransition(duration, shape3D);
             pumping.setAutoReverse(true);

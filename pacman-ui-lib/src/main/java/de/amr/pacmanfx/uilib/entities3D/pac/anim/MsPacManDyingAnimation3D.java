@@ -17,7 +17,7 @@ public class MsPacManDyingAnimation3D extends ManagedAnimation {
 
     public MsPacManDyingAnimation3D(Pac3DViewComp view3D) {
         super("Ms. Pac-Man Dying");
-        setFactory(() -> createAnimation(view3D.root()));
+        setAnimationFactory(() -> createAnimation(view3D.root()));
     }
 
     private Animation createAnimation(Node node) {

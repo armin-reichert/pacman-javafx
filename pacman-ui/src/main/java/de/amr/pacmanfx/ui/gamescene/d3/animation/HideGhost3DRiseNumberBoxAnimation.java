@@ -19,7 +19,7 @@ public class HideGhost3DRiseNumberBoxAnimation extends ManagedAnimation {
     public HideGhost3DRiseNumberBoxAnimation(Ghost3DViewComp ghost3DView, NumberBox3D numberBox3D, double risingHeight) {
         super("Hide ghost and show points");
 
-        setFactory(() -> {
+        setAnimationFactory(() -> {
             final var hideGhostAfterShortTime = new Timeline(
                 new KeyFrame(Duration.ZERO,       new KeyValue(ghost3DView.root().visibleProperty(), false)),
                 new KeyFrame(Duration.seconds(1), new KeyValue(ghost3DView.root().visibleProperty(), true))

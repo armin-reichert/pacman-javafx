@@ -33,7 +33,7 @@ public class PlaySceneFadeInAnimation extends ManagedAnimation {
         requireNonNull(fadeInDuration);
         requireNonNull(playScene3D);
 
-        setFactory(() -> new Timeline(
+        setAnimationFactory(() -> new Timeline(
             new KeyFrame(Duration.ZERO, _ -> {
                 // TODO: required?
                 playScene3D.perspectiveManager().currentPerspective().ifPresent(Perspective::startControlling);

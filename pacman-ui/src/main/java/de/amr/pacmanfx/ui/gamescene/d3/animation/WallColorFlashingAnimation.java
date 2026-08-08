@@ -28,7 +28,7 @@ public class WallColorFlashingAnimation extends ManagedAnimation {
         super("Wall Color Flashing");
         this.fromColor = Color.valueOf(colorScheme.wallFill());
         this.toColor = Color.valueOf(colorScheme.wallStroke());
-        setFactory(() -> new Transition() {
+        setAnimationFactory(() -> new Transition() {
             {
                 setAutoReverse(true);
                 setCycleCount(Animation.INDEFINITE);

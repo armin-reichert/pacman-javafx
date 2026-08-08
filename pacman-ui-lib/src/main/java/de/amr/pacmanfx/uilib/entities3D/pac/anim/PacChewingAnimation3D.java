@@ -14,7 +14,7 @@ public class PacChewingAnimation3D extends ManagedAnimation {
 
     public PacChewingAnimation3D(Pac3DViewComp view3D) {
         super("Pac-Man Chewing");
-        setFactory(() -> createChewingAnimation(view3D.jaw()));
+        setAnimationFactory(() -> createChewingAnimation(view3D.jaw()));
     }
 
     private Animation createChewingAnimation(Group jaw) {

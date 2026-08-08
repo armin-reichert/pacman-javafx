@@ -16,7 +16,7 @@ public class BonusEatenAnimation3D extends ManagedAnimation {
 
     public BonusEatenAnimation3D(Shape3D bonusShape3D) {
         super("Bonus (Eaten, Points)");
-        setFactory(() -> createAnimationFX(bonusShape3D));
+        setAnimationFactory(() -> createAnimationFX(bonusShape3D));
     }
 
     private Animation createAnimationFX(Shape3D bonusShape3D) {

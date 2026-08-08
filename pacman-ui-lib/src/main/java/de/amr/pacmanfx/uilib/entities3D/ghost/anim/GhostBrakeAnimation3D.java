@@ -22,7 +22,7 @@ public class GhostBrakeAnimation3D extends ManagedAnimation {
     public GhostBrakeAnimation3D(Ghost ghost) {
         super("Ghost Braking (%s)".formatted(ghost.name()));
         this.ghost = ghost;
-        setFactory(this::createAnimationFX);
+        setAnimationFactory(this::createAnimationFX);
     }
 
     private Animation createAnimationFX() {
@@ -39,7 +39,7 @@ public class GhostBrakeAnimation3D extends ManagedAnimation {
 
     @Override
     public void playFromStart() {
-        var rotateTransition = animationFX();
+        var rotateTransition = delegate();
         rotateTransition.stop();
         adjustAngle(rotateTransition);
         rotateTransition.playFromStart();
@@ -47,7 +47,7 @@ public class GhostBrakeAnimation3D extends ManagedAnimation {
 
     @Override
     public void playOrContinue() {
-        var rotateTransition = animationFX();
+        var rotateTransition = delegate();
         rotateTransition.stop();
         rotateTransition.play();
     }

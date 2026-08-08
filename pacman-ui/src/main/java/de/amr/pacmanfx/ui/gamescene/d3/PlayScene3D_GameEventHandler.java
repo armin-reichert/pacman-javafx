@@ -345,7 +345,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 
         final var seq = new SequentialTransition(
             resetCameraPerspective,
-            levelEndAnimation.get().animationFX(),
+            levelEndAnimation.get().delegate(),
             restoreCameraPerspective
         );
         seq.setOnFinished(_ -> gameContext().state().triggerTimeout());
@@ -360,7 +360,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         if (!level.isDemoLevel() && RandomNumberSupport.chance(0.25)) {
             appContext().ui().shortMessage(Duration.seconds(2.5), textPicker().selectNextText());
         }
-        level3D.animationRegistry().animation(GameLevel3D.AnimationID.GHOST_LIGHT).stop();
+        level3D.animationRegistry().requireAnimation(GameLevel3D.AnimationID.GHOST_LIGHT).stop();
         level3D.cleanupFoodAndParticles();
 
         level.optBonus().ifPresent(bonus -> Bonus3DViewSystem.lookExpired(bonus, level3D.animationRegistry()));

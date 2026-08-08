@@ -35,7 +35,7 @@ public class HeadBangingAnimation3D extends ManagedAnimation implements Pac3DMov
         super("Pac-Man Head Banging");
         requireNonNull(view3D);
         node = view3D.root();
-        setFactory(() -> createAnimationFX(node));
+        setAnimationFactory(() -> createAnimationFX(node));
     }
 
     private Animation createAnimationFX(Node node) {
@@ -55,8 +55,8 @@ public class HeadBangingAnimation3D extends ManagedAnimation implements Pac3DMov
     @Override
     public void stop() {
         super.stop();
-        if (animationFX != null) {
-            var rotateTransition = (RotateTransition) animationFX;
+        if (delegate != null) {
+            var rotateTransition = (RotateTransition) delegate;
             node.setRotationAxis(rotateTransition.getAxis());
             node.setRotate(0);
         }
@@ -65,8 +65,8 @@ public class HeadBangingAnimation3D extends ManagedAnimation implements Pac3DMov
     @Override
     public void pause() {
         super.pause();
-        if (animationFX != null) {
-            var rotateTransition = (RotateTransition) animationFX;
+        if (delegate != null) {
+            var rotateTransition = (RotateTransition) delegate;
             node.setRotationAxis(rotateTransition.getAxis());
             node.setRotate(0);
         }
@@ -77,7 +77,7 @@ public class HeadBangingAnimation3D extends ManagedAnimation implements Pac3DMov
         final PacStateComp state = pac.state();
         final WorldNavigationComp worldNavigation = pac.worldNavigation();
 
-        final var rotateTransition = (RotateTransition) animationFX();
+        final var rotateTransition = (RotateTransition) delegate();
         final boolean animate = state.pacState() == PacState.ACTIVE && state.isMoving();
         if (animate) {
             final Point3D axis = worldNavigation.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
@@ -93,7 +93,7 @@ public class HeadBangingAnimation3D extends ManagedAnimation implements Pac3DMov
 
     @Override
     public void setPowerMode(boolean power) {
-        var rotateTransition = (RotateTransition) animationFX();
+        var rotateTransition = (RotateTransition) delegate();
         boolean running = rotateTransition.getStatus() == Animation.Status.RUNNING;
         rotateTransition.stop();
         rotateTransition.setFromAngle(BANG_ANGLE_FROM * POWER_ANGLE_AMPLIFICATION);

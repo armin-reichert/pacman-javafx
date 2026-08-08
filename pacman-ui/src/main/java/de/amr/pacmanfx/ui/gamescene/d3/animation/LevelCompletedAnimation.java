@@ -64,7 +64,7 @@ public class LevelCompletedAnimation extends ManagedAnimation {
     public LevelCompletedAnimation(GameLevel3D level3D) {
         super("Level Completed");
         this.level3D = requireNonNull(level3D);
-        setFactory(this::createAnimationFX);
+        setAnimationFactory(this::createAnimationFX);
     }
 
     private Animation createAnimationFX() {

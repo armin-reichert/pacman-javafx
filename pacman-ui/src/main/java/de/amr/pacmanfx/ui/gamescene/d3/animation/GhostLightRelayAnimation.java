@@ -49,7 +49,7 @@ public class GhostLightRelayAnimation extends ManagedAnimation {
         this.ghosts = requireNonNull(ghostsInOrder);
         this.ghostSettings = requireNonNull(ghostSettings);
 
-        setFactory(() -> {
+        setAnimationFactory(() -> {
             final var timeline = new Timeline(new KeyFrame(LIGHT_CHANGE_INTERVAL, _ -> passGhostLightToNextHunter()));
             timeline.setCycleCount(Animation.INDEFINITE);
             timeline.statusProperty().addListener((_, _, status) -> {

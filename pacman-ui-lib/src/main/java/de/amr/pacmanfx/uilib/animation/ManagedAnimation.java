@@ -22,62 +22,57 @@ import static java.util.Objects.requireNonNull;
  *   <li>lifecycle management (play, pause, stop, dispose)</li>
  * </ul>
  * <p>
- * The embedded JavaFX animation is created on demand via {@link #animationFX()}.
+ * The embedded JavaFX animation is created on demand via {@link #delegate()}.
  * This allows animations to be registered early without incurring construction cost until needed.
  */
 public class ManagedAnimation implements Disposable {
 
-    /** Human‑readable identifier for logging and debugging. */
-    private final String label;
+    private final String name;
 
-    /** Factory for creating the JavaFX animation lazily. */
-    private Supplier<Animation> factory;
+    private Supplier<Animation> animationFactory;
 
-    /** The lazily created JavaFX animation instance. */
-    protected Animation animationFX;
-
-    private boolean disposed;
+    protected Animation delegate;
 
     /**
      * Creates a registered animation without an initial factory.
-     * A factory must be provided later via {@link #setFactory(Supplier)}.
+     * A factory must be provided later via {@link #setAnimationFactory(Supplier)}.
      *
-     * @param label    unique label for this animation
+     * @param name    unique label for this animation
      */
-    public ManagedAnimation(String label) {
-        this.label = requireNonNull(label);
+    public ManagedAnimation(String name) {
+        this.name = requireNonNull(name);
     }
 
     /**
      * Creates a registered animation with a factory for lazy instantiation.
      *
-     * @param label    unique label for this animation
-     * @param factory  factory that creates the JavaFX animation
+     * @param name    unique label for this animation
+     * @param animationFactory  factory that creates the JavaFX animation
      */
-    public ManagedAnimation(String label, Supplier<Animation> factory) {
-        this.label = requireNonNull(label);
-        this.factory = requireNonNull(factory);
+    public ManagedAnimation(String name, Supplier<Animation> animationFactory) {
+        this.name = requireNonNull(name);
+        this.animationFactory = requireNonNull(animationFactory);
     }
 
     /**
      * Sets or replaces the factory used to create the JavaFX animation.
      *
-     * @param factory the animation factory
+     * @param animationFactory the animation factory
      */
-    public void setFactory(Supplier<Animation> factory) {
-        this.factory = requireNonNull(factory);
+    public void setAnimationFactory(Supplier<Animation> animationFactory) {
+        this.animationFactory = requireNonNull(animationFactory);
     }
 
-    /** @return the label identifying this animation */
-    public String label() {
-        return label;
+    /** @return the name of this animation */
+    public String name() {
+        return name;
     }
 
     /**
-     * @return the underlying JavaFX animation, if already created
+     * @return the wrapped JavaFX animation, if already created
      */
-    public Optional<Animation> optAnimationFX() {
-        return Optional.ofNullable(animationFX);
+    public Optional<Animation> optDelegate() {
+        return Optional.ofNullable(delegate);
     }
 
     /**
@@ -87,26 +82,25 @@ public class ManagedAnimation implements Disposable {
      *
      * @return the wrapped JavaFX animation instance
      */
-    public final Animation animationFX() {
-        if (animationFX == null) {
-            createAnimationFX();
+    public final Animation delegate() {
+        if (delegate == null) {
+            createJavaFXAnimation();
         }
-        return animationFX;
+        return delegate;
     }
 
-    private void createAnimationFX() {
-        if (factory == null) {
-            throw new IllegalStateException("Animation factory is null");
+    private void createJavaFXAnimation() {
+        if (animationFactory == null) {
+            throw new IllegalStateException("Animation factory for animation '%s' is null".formatted(name));
         }
         try {
-            animationFX = factory.get();
-        } catch (Exception x) {
-            Logger.error(x, "Creating JavaFX animation '{}' failed", label);
-            throw new IllegalStateException("Animation creation failed", x);
+            delegate = animationFactory.get();
+            if (delegate == null) {
+                throw new IllegalStateException("Creating JavaFX animation '%s' returned null".formatted(name));
+            }
         }
-        if (animationFX == null) {
-            Logger.error("Creating JavaFX animation '{}' returned null", label);
-            throw new IllegalStateException("Animation factory returned null");
+        catch (Exception x) {
+            throw new IllegalStateException("Creating JavaFX animation '%s' failed".formatted(name), x);
         }
     }
 
@@ -126,24 +120,22 @@ public class ManagedAnimation implements Disposable {
      */
     @Override
     public final void dispose() {
-        if (animationFX != null) {
+        if (delegate != null) {
             stop(); // handles case when FX animation is embedded inside sequential or parallel transition!
-            animationFX.setOnFinished(null);
-            animationFX = null;
+            delegate.setOnFinished(null);
+            delegate = null;
             freeResources();
         }
-        disposed = true;
-    }
-
-    public boolean disposed() {
-        return disposed;
     }
 
     /**
      * Invalidates the cached JavaFX animation so it will be recreated on next use.
      */
     public void invalidate() {
-        animationFX = null;
+        if (delegate != null) {
+            delegate.stop();
+        }
+        delegate = null;
     }
 
     /**
@@ -151,7 +143,7 @@ public class ManagedAnimation implements Disposable {
      * Does nothing if the animation is already running.
      */
     public void playFromStart() {
-        final Animation animationFX = animationFX();
+        final Animation animationFX = delegate();
         if (animationFX.getStatus() != Animation.Status.RUNNING) {
             animationFX.playFromStart();
         }
@@ -160,9 +152,10 @@ public class ManagedAnimation implements Disposable {
     /**
      * Plays the animation if it is not already running.
      * If the animation has been paused, it continues from the paused position.
+     * Does nothing if the animation is already running.
      */
     public void playOrContinue() {
-        final Animation animation = animationFX();
+        final Animation animation = delegate();
         if (animation.getStatus() != Animation.Status.RUNNING) {
             animation.play();
         }
@@ -173,17 +166,17 @@ public class ManagedAnimation implements Disposable {
      * Logs a warning if the animation cannot be paused (e.g., embedded animations).
      */
     public void pause() {
-        if (animationFX == null) {
+        if (delegate == null) {
             return;
         }
         try {
-            if (animationFX.getStatus() != Animation.Status.PAUSED) {
-                animationFX.pause();
-                Logger.debug("Paused animation '{}'", label);
+            if (delegate.getStatus() != Animation.Status.PAUSED) {
+                delegate.pause();
+                Logger.debug("Paused animation '{}'", name);
             }
         } catch (IllegalStateException x) {
             // This may happen if attempt is made to pause animation embedded inside other animation
-            Logger.warn("Could not pause (embedded?) animation '{}'", label);
+            Logger.warn("Could not pause (embedded?) animation '{}'", name);
         }
     }
 
@@ -192,15 +185,15 @@ public class ManagedAnimation implements Disposable {
      * Logs a warning if the animation cannot be stopped.
      */
     public void stop() {
-        if (animationFX == null) {
+        if (delegate == null) {
             return;
         }
         try {
-            if (animationFX.getStatus() != Animation.Status.STOPPED) {
-                animationFX.stop();
+            if (delegate.getStatus() != Animation.Status.STOPPED) {
+                delegate.stop();
             }
         } catch (IllegalStateException x) {
-            Logger.warn("Could not stop (embedded?) animation '{}'", label);
+            Logger.warn("Could not stop (embedded?) animation '{}'", name);
         }
     }
 
@@ -208,6 +201,6 @@ public class ManagedAnimation implements Disposable {
      * @return {@code true} if the animation exists and is currently running
      */
     public boolean isRunning() {
-        return animationFX != null && animationFX.getStatus() == Animation.Status.RUNNING;
+        return delegate != null && delegate.getStatus() == Animation.Status.RUNNING;
     }
 }

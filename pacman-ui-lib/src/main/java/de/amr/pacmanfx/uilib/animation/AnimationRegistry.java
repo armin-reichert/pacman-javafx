@@ -19,49 +19,64 @@ public class AnimationRegistry {
     public void register(Object key, ManagedAnimation animation) {
         requireNonNull(key);
         requireNonNull(animation);
-        final ManagedAnimation managedAnimation = animationMap.get(key);
-        if (managedAnimation != null) {
-            Logger.warn("Animation '{}' is already registered, will be disposed and overwritten", animation.label());
-            managedAnimation.dispose();
+
+        final ManagedAnimation ma = animationMap.get(key);
+        if (ma != null) {
+            Logger.warn("Animation '{}' was already registered, old one gets disposed and overwritten", animation.name());
+            ma.dispose();
         }
         animationMap.put(key, animation);
-        Logger.info("Animation '{}' registered, key='{}'", animation.label(), key);
+        Logger.info("Animation '{}' registered, key='{}'", animation.name(), key);
     }
 
-    @SuppressWarnings("unchecked")
-    public <T extends ManagedAnimation> T animation(Object key, Class<T> type) {
+    public <T extends ManagedAnimation> T requireAnimation(Object key, Class<T> expectedClass) {
         requireNonNull(key);
-        requireNonNull(type);
+        requireNonNull(expectedClass);
+
         final ManagedAnimation ma = animationMap.get(key);
         if (ma == null) {
-            Logger.error("No animation with key='{}' exists", key);
-            return null;
+            throw new IllegalArgumentException("No animation with key='%s' exists".formatted(key));
         }
-        if (type.isInstance(ma)) {
-            return (T) ma;
+        if (expectedClass.isInstance(ma)) {
+            return expectedClass.cast(ma);
         }
-        Logger.error("Animation key='{}' has wrong type: {}, expected: {}", key, ma.getClass().getSimpleName(), type.getSimpleName());
-        return null;
+        throw new IllegalArgumentException("Animation with key='%s' has wrong type: %s (expected: %s)".formatted(
+            key, ma.getClass().getSimpleName(), expectedClass.getSimpleName()));
     }
 
-    public ManagedAnimation animation(Object key) {
-        return animationMap.get(key);
+    public ManagedAnimation requireAnimation(Object key) {
+        final ManagedAnimation ma = animationMap.get(key);
+        if (ma == null) {
+            throw new IllegalArgumentException("No animation with key='%s' exists".formatted(key));
+        }
+        return ma;
     }
 
     public Optional<ManagedAnimation> optAnimation(Object key) {
-        return Optional.ofNullable(animation(key));
+        return Optional.ofNullable(animationMap.get(key));
     }
 
-    public <T extends ManagedAnimation> Optional<T> optAnimation(Object key, Class<T> type) {
-        return Optional.ofNullable(animation(key, type));
+    public <T extends ManagedAnimation> Optional<T> optAnimation(Object key, Class<T> expectedClass) {
+        requireNonNull(key);
+        requireNonNull(expectedClass);
+
+        final ManagedAnimation ma = animationMap.get(key);
+        if (ma == null) {
+            return Optional.empty();
+        }
+        if (expectedClass.isInstance(ma)) {
+            return Optional.of(expectedClass.cast(ma));
+        }
+        throw new IllegalArgumentException("Animation with key='%s' has wrong type: %s (expected: %s)".formatted(
+            key, ma.getClass().getSimpleName(), expectedClass.getSimpleName()));
     }
 
     public void dispose() {
-        final int count = animationMap.size();
         stopAllAnimations();
+        final int count = animationMap.size();
         animationMap.values().forEach(ManagedAnimation::dispose);
         animationMap.clear();
-        Logger.info("Disposed {} animations", count);
+        Logger.info("Disposed {} managed animations", count);
     }
 
     public void stopAllAnimations() {

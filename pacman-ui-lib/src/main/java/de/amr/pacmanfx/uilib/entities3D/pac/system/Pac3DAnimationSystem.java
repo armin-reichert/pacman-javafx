@@ -94,7 +94,7 @@ public class Pac3DAnimationSystem {
 
         final Animation animation = new SequentialTransition(
             Ufx.pauseSecThen(1.5, pacDeadSoundEffect),
-            pacAnimation.dying().animationFX(),
+            pacAnimation.dying().delegate(),
             Ufx.pauseSec(0.5)
         );
         animation.setOnFinished(_ -> onFinishedCallback.run());

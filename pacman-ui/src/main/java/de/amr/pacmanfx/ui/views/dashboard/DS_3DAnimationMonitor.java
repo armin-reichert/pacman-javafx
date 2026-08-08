@@ -43,8 +43,8 @@ public class DS_3DAnimationMonitor extends GameDashboardSection {
         private final ObjectProperty<Animation> animationProperty;
 
         public TableRow(ManagedAnimation managedAnimation) {
-            labelProperty = new SimpleStringProperty(managedAnimation.label());
-            animationProperty = new SimpleObjectProperty<>(managedAnimation.optAnimationFX().orElse(null));
+            labelProperty = new SimpleStringProperty(managedAnimation.name());
+            animationProperty = new SimpleObjectProperty<>(managedAnimation.optDelegate().orElse(null));
         }
 
         public StringProperty labelProperty() { return labelProperty; }
@@ -133,12 +133,12 @@ public class DS_3DAnimationMonitor extends GameDashboardSection {
     private List<TableRow> sortedByLabelWithStatus(Collection<ManagedAnimation> animations, Animation.Status status) {
         return animations.stream()
             .filter(animation -> hasStatus(animation, status))
-            .sorted(Comparator.comparing(ManagedAnimation::label))
+            .sorted(Comparator.comparing(ManagedAnimation::name))
             .map(TableRow::new)
             .toList();
     }
 
     private boolean hasStatus(ManagedAnimation managedAnimation, Animation.Status status) {
-        return managedAnimation.optAnimationFX().map(animation -> animation.getStatus() == status).orElse(false);
+        return managedAnimation.optDelegate().map(animation -> animation.getStatus() == status).orElse(false);
     }
 }
