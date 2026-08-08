@@ -7,7 +7,6 @@ package de.amr.pacmanfx.uilib.entities3D.pac.anim;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.pac.comp.PacState;
 import de.amr.pacmanfx.core.entities.pac.comp.PacStateComp;
-import de.amr.pacmanfx.core.entities.pac.system.PacStateSystem;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DViewComp;
 import javafx.animation.Animation;
@@ -27,21 +26,49 @@ public class HipSwayingAnimation3D extends ManagedAnimation implements Pac3DMove
     private static final float POWER_ANGLE_AMPLIFICATION = 1.5f;
     private static final float POWER_RATE = 2;
 
-    private final Node node;
+    private final Pac pac;
 
-    public HipSwayingAnimation3D(Pac3DViewComp view3D) {
+    public HipSwayingAnimation3D(Pac pac) {
         super("Ms. Pac-Man Hip Swaying");
-        this.node = requireNonNull(view3D.root());
-        setAnimationFactory(this::createWrappedAnimation);
+        this.pac = requireNonNull(pac);
+        setAnimationFactory(() -> {
+            final Pac3DViewComp view3D = pac.requireComponent(Pac3DViewComp.class);
+            var rt = new RotateTransition(SWING_TIME, view3D.root());
+            rt.setAxis(Rotate.Z_AXIS);
+            rt.setCycleCount(Animation.INDEFINITE);
+            rt.setAutoReverse(true);
+            rt.setInterpolator(Interpolator.EASE_BOTH);
+            return rt;
+        });
     }
 
-    private RotateTransition createWrappedAnimation() {
-        var rotateTransition = new RotateTransition(SWING_TIME, node);
-        rotateTransition.setAxis(Rotate.Z_AXIS);
-        rotateTransition.setCycleCount(Animation.INDEFINITE);
-        rotateTransition.setAutoReverse(true);
-        rotateTransition.setInterpolator(Interpolator.EASE_BOTH);
-        return rotateTransition;
+    @Override
+    public void setPowerMode(boolean power) {
+        if (delegate == null) {
+            return;
+        }
+
+        final var rt = (RotateTransition) delegate;
+        boolean wasRunning = rt.getStatus() == Animation.Status.RUNNING;
+
+        if (wasRunning) {
+            rt.stop();
+        }
+
+        if (power) {
+            rt.setFromAngle(HIP_ANGLE_FROM * POWER_ANGLE_AMPLIFICATION);
+            rt.setToAngle(HIP_ANGLE_TO * POWER_ANGLE_AMPLIFICATION);
+            rt.setRate(POWER_RATE);
+        }
+        else {
+            rt.setFromAngle(HIP_ANGLE_FROM);
+            rt.setToAngle(HIP_ANGLE_TO);
+            rt.setRate(1);
+        }
+
+        if (wasRunning) {
+            delegate.play();
+        }
     }
 
     @Override
@@ -51,28 +78,22 @@ public class HipSwayingAnimation3D extends ManagedAnimation implements Pac3DMove
 
     @Override
     public void stop() {
-        if (delegate != null) {
-            delegate.stop();
-            var rotateTransition = (RotateTransition) delegate;
-            node.setRotationAxis(rotateTransition.getAxis());
-            node.setRotate(0);
-        }
+        super.stop();
+        resetPacRotation();
     }
 
     @Override
     public void pause() {
         if (delegate != null) {
             delegate.pause();
-            var rotateTransition = (RotateTransition) delegate;
-            node.setRotationAxis(rotateTransition.getAxis());
-            node.setRotate(0);
+            resetPacRotation();
         }
     }
 
     @Override
-    public void update(Pac pac, PacStateSystem pacStateSystem) {
+    public void update() {
         final PacStateComp state = pac.state();
-        final boolean animate = state.pacState() == PacState.ACTIVE && state.isMoving();
+        final boolean animate = state.enumValue() == PacState.ACTIVE && state.isMoving();
         if (animate) {
             playOrContinue();
         } else {
@@ -80,19 +101,9 @@ public class HipSwayingAnimation3D extends ManagedAnimation implements Pac3DMove
         }
     }
 
-    @Override
-    public void setPowerMode(boolean power) {
-        if (delegate != null) {
-            boolean wasRunning = delegate.getStatus() == Animation.Status.RUNNING;
-            delegate.stop();
-            delegate.setRate(power ? POWER_RATE : 1);
-            var rotateTransition = (RotateTransition) delegate;
-            double amplification = power ? POWER_ANGLE_AMPLIFICATION : 1;
-            rotateTransition.setFromAngle(HIP_ANGLE_FROM * amplification);
-            rotateTransition.setToAngle(HIP_ANGLE_TO * amplification);
-            if (wasRunning) {
-                delegate.play();
-            }
-        }
+    private void resetPacRotation() {
+        final Node root = pac.requireComponent(Pac3DViewComp.class).root();
+        root.setRotationAxis(Rotate.Z_AXIS);
+        root.setRotate(0);
     }
 }

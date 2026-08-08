@@ -14,7 +14,7 @@ public class PacStateComp implements GameEntityComponent {
 
     private boolean moving;
 
-    public PacState pacState() {
+    public PacState enumValue() {
         return state;
     }
 

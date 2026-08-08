@@ -4,11 +4,9 @@
 
 package de.amr.pacmanfx.uilib.entities3D.pac.anim;
 
-import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.pac.comp.PacState;
 import de.amr.pacmanfx.core.entities.pac.comp.PacStateComp;
-import de.amr.pacmanfx.core.entities.pac.system.PacStateSystem;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DViewComp;
 import javafx.animation.Animation;
@@ -23,28 +21,58 @@ import static java.util.Objects.requireNonNull;
 
 public class HeadBangingAnimation3D extends ManagedAnimation implements Pac3DMovementAnimation {
 
-    private static final short BANG_ANGLE_FROM = -10;
-    private static final short BANG_ANGLE_TO = 15;
+    private static final short    BANG_ANGLE_FROM = -10;
+    private static final short    BANG_ANGLE_TO = 15;
     private static final Duration BANG_TIME = Duration.seconds(0.3);
-    private static final float POWER_ANGLE_AMPLIFICATION = 2;
-    private static final float POWER_RATE = 2;
+    private static final float    POWER_ANGLE_AMPLIFICATION = 2.0f;
+    private static final float    POWER_RATE = 2.0f;
 
-    private final Node node;
+    private final Pac pac;
 
-    public HeadBangingAnimation3D(Pac3DViewComp view3D) {
+    public HeadBangingAnimation3D(Pac pac) {
         super("Pac-Man Head Banging");
-        requireNonNull(view3D);
-        node = view3D.root();
-        setAnimationFactory(() -> createAnimationFX(node));
+        this.pac = requireNonNull(pac);
+        setAnimationFactory(() -> {
+            final Pac3DViewComp view3D = pac.requireComponent(Pac3DViewComp.class);
+            // Warning: RT is banned in fascist EU!
+            var rt = new RotateTransition(BANG_TIME, view3D.root());
+            rt.setAxis(computeAxis());
+            rt.setFromAngle(BANG_ANGLE_FROM);
+            rt.setToAngle(BANG_ANGLE_TO);
+            rt.setCycleCount(Animation.INDEFINITE);
+            rt.setAutoReverse(true);
+            rt.setInterpolator(Interpolator.EASE_BOTH);
+            return rt;
+        });
     }
 
-    private Animation createAnimationFX(Node node) {
-        var rotateTransition = new RotateTransition(BANG_TIME, node);
-        rotateTransition.setAxis(Rotate.X_AXIS);
-        rotateTransition.setCycleCount(Animation.INDEFINITE);
-        rotateTransition.setAutoReverse(true);
-        rotateTransition.setInterpolator(Interpolator.EASE_BOTH);
-        return rotateTransition;
+    @Override
+    public void setPowerMode(boolean power) {
+        if (delegate == null) {
+            return;
+        }
+
+        final var rt = (RotateTransition) delegate();
+        final boolean wasRunning = rt.getStatus() == Animation.Status.RUNNING;
+
+        if (wasRunning) {
+            rt.stop();
+        }
+
+        rt.setAxis(computeAxis());
+        if (power) {
+            rt.setFromAngle(BANG_ANGLE_FROM * POWER_ANGLE_AMPLIFICATION);
+            rt.setToAngle(BANG_ANGLE_TO * POWER_ANGLE_AMPLIFICATION);
+            rt.setRate(POWER_RATE);
+        } else {
+            rt.setFromAngle(BANG_ANGLE_FROM);
+            rt.setToAngle(BANG_ANGLE_TO);
+            rt.setRate(1);
+        }
+
+        if (wasRunning) {
+            rt.play();
+        }
     }
 
     @Override
@@ -55,35 +83,25 @@ public class HeadBangingAnimation3D extends ManagedAnimation implements Pac3DMov
     @Override
     public void stop() {
         super.stop();
-        if (delegate != null) {
-            var rotateTransition = (RotateTransition) delegate;
-            node.setRotationAxis(rotateTransition.getAxis());
-            node.setRotate(0);
-        }
+        resetPacRotation();
     }
 
     @Override
     public void pause() {
         super.pause();
-        if (delegate != null) {
-            var rotateTransition = (RotateTransition) delegate;
-            node.setRotationAxis(rotateTransition.getAxis());
-            node.setRotate(0);
-        }
+        resetPacRotation();
     }
 
     @Override
-    public void update(Pac pac, PacStateSystem pacStateSystem) {
+    public void update() {
         final PacStateComp state = pac.state();
-        final WorldNavigationComp worldNavigation = pac.worldNavigation();
-
-        final var rotateTransition = (RotateTransition) delegate();
-        final boolean animate = state.pacState() == PacState.ACTIVE && state.isMoving();
+        final boolean animate = state.enumValue() == PacState.ACTIVE && state.isMoving();
         if (animate) {
-            final Point3D axis = worldNavigation.moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
-            if (!axis.equals(rotateTransition.getAxis())) {
+            final Point3D axis = computeAxis();
+            final var rt = (RotateTransition) delegate();
+            if (!axis.equals(rt.getAxis())) {
                 stop();
-                rotateTransition.setAxis(axis);
+                rt.setAxis(axis);
             }
             playOrContinue();
         } else {
@@ -91,16 +109,13 @@ public class HeadBangingAnimation3D extends ManagedAnimation implements Pac3DMov
         }
     }
 
-    @Override
-    public void setPowerMode(boolean power) {
-        var rotateTransition = (RotateTransition) delegate();
-        boolean running = rotateTransition.getStatus() == Animation.Status.RUNNING;
-        rotateTransition.stop();
-        rotateTransition.setFromAngle(BANG_ANGLE_FROM * POWER_ANGLE_AMPLIFICATION);
-        rotateTransition.setToAngle(BANG_ANGLE_TO * POWER_ANGLE_AMPLIFICATION);
-        rotateTransition.setRate(power ? POWER_RATE : 1);
-        if (running) {
-            rotateTransition.play();
-        }
+    private void resetPacRotation() {
+        final Node root = pac.requireComponent(Pac3DViewComp.class).root();
+        root.setRotationAxis(computeAxis());
+        root.setRotate(0);
+    }
+
+    private Point3D computeAxis() {
+        return pac.worldNavigation().moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
     }
 }

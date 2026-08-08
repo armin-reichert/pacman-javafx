@@ -8,7 +8,6 @@ import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.pac.comp.PacState;
 import de.amr.pacmanfx.core.entities.pac.comp.PacStateComp;
-import de.amr.pacmanfx.core.entities.pac.system.PacStateSystem;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3D.pac.anim.Pac3DMovementAnimation;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DAnimationComp;
@@ -31,18 +30,18 @@ public class Pac3DAnimationSystem {
         }
     }
 
-    public static void update(Pac pac, PacStateSystem pacStateSystem) {
+    public static void update(Pac pac) {
         final PacStateComp state = pac.state();
         final Pac3DAnimationComp animation = pac.requireComponent(Pac3DAnimationComp.class);
 
-        final Pac3DMovementAnimation movement = animation.movement();
-        if (movement != null) {
+        final Pac3DMovementAnimation movementAnimation = animation.movement();
+        if (movementAnimation != null) {
             if (state.isMoving()) {
-                movement.managedAnimation().playOrContinue();
-                movement.update(pac, pacStateSystem);
+                movementAnimation.managedAnimation().playOrContinue();
+                movementAnimation.update();
             }
             else {
-                movement.managedAnimation().stop();
+                movementAnimation.managedAnimation().stop();
             }
         }
 
@@ -71,7 +70,7 @@ public class Pac3DAnimationSystem {
         final PacStateComp state = pac.state();
         final Pac3DViewComp view3D = pac.requireComponent(Pac3DViewComp.class);
 
-        final boolean lighted = state.pacState() != PacState.DEAD;
+        final boolean lighted = state.enumValue() != PacState.DEAD;
         if (lighted) {
             final boolean powerActive      = pac.power().isActive();
             final long powerTicksRemaining = pac.power().ticksRemaining();

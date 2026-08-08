@@ -96,7 +96,7 @@ public final class Pac extends GameEntity {
     }
 
     public PacState getPacState() {
-        return state().pacState();
+        return state().enumValue();
     }
 
 }

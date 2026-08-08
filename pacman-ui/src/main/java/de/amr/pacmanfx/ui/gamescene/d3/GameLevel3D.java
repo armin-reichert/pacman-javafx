@@ -46,9 +46,9 @@ import de.amr.pacmanfx.uilib.entities3D.bonus.comp.Bonus3DViewComp;
 import de.amr.pacmanfx.uilib.entities3D.bonus.system.Bonus3DMovementSystem;
 import de.amr.pacmanfx.uilib.entities3D.bonus.system.Bonus3DViewSystem;
 import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DViewComp;
+import de.amr.pacmanfx.uilib.entities3D.ghost.comp.GhostSettings;
 import de.amr.pacmanfx.uilib.entities3D.ghost.system.Ghost3DAppearanceSystem;
 import de.amr.pacmanfx.uilib.entities3D.ghost.system.Ghost3DMovementSystem;
-import de.amr.pacmanfx.uilib.entities3D.ghost.comp.GhostSettings;
 import de.amr.pacmanfx.uilib.entities3D.house.comp.House3DViewComp;
 import de.amr.pacmanfx.uilib.entities3D.house.system.House3DAnimationSystem;
 import de.amr.pacmanfx.uilib.entities3D.house.system.House3DSystem;
@@ -99,8 +99,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private final Map<Vector2i, Pellet3D> pellet3DByTile = new HashMap<>();
 
-    private final GameContext gameContext;
-
     private final GameLevel level;
 
     private final GameVariantConfig gameVariantConfig;
@@ -124,7 +122,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         GameVariantConfig gameVariantConfig)
     {
         this.viewModel = requireNonNull(viewModel);
-        this.gameContext = requireNonNull(gameContext);
         this.gameVariantConfig = requireNonNull(gameVariantConfig);
 
         this.level = gameContext.assertLevel();
@@ -280,7 +277,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private void updatePac() {
         final Pac pac = level.entities().pac();
         Pac3DTransformSystem.update(pac, level);
-        Pac3DAnimationSystem.update(pac, gameContext.systems().pacState());
+        Pac3DAnimationSystem.update(pac);
         Pac3DAnimationSystem.updatePowerLight(pac);
     }
 
