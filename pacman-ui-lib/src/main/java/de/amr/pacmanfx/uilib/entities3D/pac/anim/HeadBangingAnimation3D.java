@@ -12,6 +12,10 @@ import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DViewComp;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Point3D;
 import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
@@ -29,16 +33,23 @@ public class HeadBangingAnimation3D extends ManagedAnimation implements Pac3DMov
 
     private final Pac pac;
 
+    private final DoubleProperty fromAngle = new SimpleDoubleProperty(BANG_ANGLE_FROM);
+    private final DoubleProperty toAngle   = new SimpleDoubleProperty(BANG_ANGLE_TO);
+    private final DoubleProperty rate      = new SimpleDoubleProperty(1);
+    private final ObjectProperty<Point3D> axis = new SimpleObjectProperty<>(Rotate.X_AXIS);
+
     public HeadBangingAnimation3D(Pac pac) {
         super("Pac-Man Head Banging");
         this.pac = requireNonNull(pac);
+
         setAnimationFactory(() -> {
             final Pac3DViewComp view3D = pac.requireComponent(Pac3DViewComp.class);
             // Warning: RT is banned in fascist EU!
             var rt = new RotateTransition(BANG_TIME, view3D.root());
-            rt.setAxis(computeAxis());
-            rt.setFromAngle(BANG_ANGLE_FROM);
-            rt.setToAngle(BANG_ANGLE_TO);
+            rt.axisProperty().bind(axis);
+            rt.fromAngleProperty().bind(fromAngle);
+            rt.toAngleProperty().bind(toAngle);
+            rt.rateProperty().bind(rate);
             rt.setCycleCount(Animation.INDEFINITE);
             rt.setAutoReverse(true);
             rt.setInterpolator(Interpolator.EASE_BOTH);
@@ -59,15 +70,14 @@ public class HeadBangingAnimation3D extends ManagedAnimation implements Pac3DMov
             rt.stop();
         }
 
-        rt.setAxis(computeAxis());
         if (power) {
-            rt.setFromAngle(BANG_ANGLE_FROM * POWER_ANGLE_AMPLIFICATION);
-            rt.setToAngle(BANG_ANGLE_TO * POWER_ANGLE_AMPLIFICATION);
-            rt.setRate(POWER_RATE);
+            fromAngle.set(BANG_ANGLE_FROM * POWER_ANGLE_AMPLIFICATION);
+            toAngle.set(BANG_ANGLE_TO * POWER_ANGLE_AMPLIFICATION);
+            rate.set(POWER_RATE);
         } else {
-            rt.setFromAngle(BANG_ANGLE_FROM);
-            rt.setToAngle(BANG_ANGLE_TO);
-            rt.setRate(1);
+            fromAngle.set(BANG_ANGLE_FROM);
+            toAngle.set(BANG_ANGLE_TO);
+            rate.set(1);
         }
 
         if (wasRunning) {
@@ -96,13 +106,8 @@ public class HeadBangingAnimation3D extends ManagedAnimation implements Pac3DMov
     public void update() {
         final PacStateComp state = pac.state();
         final boolean animate = state.enumValue() == PacState.ACTIVE && state.isMoving();
+        axis.set(computeAxis());
         if (animate) {
-            final Point3D axis = computeAxis();
-            final var rt = (RotateTransition) delegate();
-            if (!axis.equals(rt.getAxis())) {
-                stop();
-                rt.setAxis(axis);
-            }
             playOrContinue();
         } else {
             pause();

@@ -36,13 +36,7 @@ public class Pac3DAnimationSystem {
 
         final Pac3DMovementAnimation movementAnimation = animation.movement();
         if (movementAnimation != null) {
-            if (state.isMoving()) {
-                movementAnimation.managedAnimation().playOrContinue();
-                movementAnimation.update();
-            }
-            else {
-                movementAnimation.managedAnimation().stop();
-            }
+            movementAnimation.update();
         }
 
         final ManagedAnimation chewing = animation.chewing();
