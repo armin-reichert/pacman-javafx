@@ -28,9 +28,10 @@ import de.amr.pacmanfx.ui.vm.GameUISettingsVM;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.DisposableGraphicsObject;
-import de.amr.pacmanfx.uilib.entities3D.score.comp.Scores3D;
+import de.amr.pacmanfx.uilib.entities3D.score.comp.ScoreViewComp;
 import de.amr.pacmanfx.uilib.entities3D.pac.system.Pac3DAnimationSystem;
 import de.amr.pacmanfx.uilib.entities3D.pac.system.Pac3DTransformSystem;
+import de.amr.pacmanfx.uilib.widgets.ScoresView;
 import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -61,7 +62,7 @@ public class PlayScene3D extends AbstractGameScene
     private final PerspectiveCamera camera = new PerspectiveCamera(true);
     private final Group level3DEmbedder = new Group();
     private GameLevel3D level3D;
-    private Scores3D scores3D;
+    private ScoresView scoresView;
     private PlaySceneContextMenu contextMenu;
     private AmbientLight ambientLight;
 
@@ -124,8 +125,8 @@ public class PlayScene3D extends AbstractGameScene
         return Optional.ofNullable(level3D);
     }
 
-    public Optional<Scores3D> optScores3D() {
-        return Optional.ofNullable(scores3D);
+    public Optional<ScoresView> optScoresView() {
+        return Optional.ofNullable(scoresView);
     }
 
     public ManagedAnimation fadeInAnimation() {
@@ -142,16 +143,16 @@ public class PlayScene3D extends AbstractGameScene
         // If score is disabled, show "GAME OVER" text instead
         final Score score = level.gameModel().score();
         if (score.data().isEnabled()) {
-            scores3D.showScore(score.data().points(), score.data().levelNumber());
+            scoresView.showScore(score.data().points(), score.data().levelNumber());
         } else {
-            scores3D.showTextForScore(
+            scoresView.showTextForScore(
                 appContext().ui().translations().translate("score.game_over"),
                 appContext().variants().currentVariant().config().assets().color("color.game_over_message"));
         }
 
         // High score is always visible
         final Score highScore = level.gameModel().highScore();
-        scores3D.showHighScore(highScore.data().points(), highScore.data().levelNumber());
+        scoresView.showHighScore(highScore.data().points(), highScore.data().levelNumber());
     }
 
     public void initPac(GameLevel level, Pac pac) {
@@ -212,7 +213,7 @@ public class PlayScene3D extends AbstractGameScene
     @Override
     public void onBeforeEmbedded() {
         // TODO: reconsider whether scores need recreation here (variant/font change?)
-        replaceScores3D();
+        replaceScoresView();
     }
 
     @Override
@@ -311,28 +312,44 @@ public class PlayScene3D extends AbstractGameScene
         actionBindings().registerAllBindings(actionBindings);
     }
 
-    private void replaceScores3D() {
-        final Scores3D oldScores3D = scores3D;
+    private void replaceScoresView() {
+        final ScoresView oldScoresView = scoresView;
 
-        scores3D = new Scores3D(
-            appContext().ui().translations().translate("score.score"),
-            appContext().ui().translations().translate("score.high_score"),
-            GlobalAssets.PredefinedFont.ARCADE8.font());
+        final Score leftScore = gameModel().score();
+        if (!leftScore.hasComp(ScoreViewComp.class)) {
+            leftScore.setComp(ScoreViewComp.class, new ScoreViewComp());
+        }
 
-        scores3D.textOpacity.bind(scoreOpacity);
+        final Score rightScore = gameModel().highScore();
+        if (!rightScore.hasComp(ScoreViewComp.class)) {
+            rightScore.setComp(ScoreViewComp.class, new ScoreViewComp());
+        }
+
+        scoresView = new ScoresView(leftScore, rightScore);
+        scoresView.setFont(GlobalAssets.PredefinedFont.ARCADE8.font());
+
+        leftScore.requireComp(ScoreViewComp.class).titleDisplay().setText(
+            appContext().ui().translations().translate("score.score")
+        );
+
+        rightScore.requireComp(ScoreViewComp.class).titleDisplay().setText(
+            appContext().ui().translations().translate("score.high_score")
+        );
+
+        //scoresView.textOpacity.bind(scoreOpacity);
 
         // Scores are always displayed towards viewer, independent of camera perspective
-        scores3D.rotationAxisProperty().bind(camera.rotationAxisProperty());
-        scores3D.rotateProperty().bind(camera.rotateProperty());
+        scoresView.root().rotationAxisProperty().bind(camera.rotationAxisProperty());
+        scoresView.root().rotateProperty().bind(camera.rotateProperty());
 
-        scores3D.translateXProperty().bind(level3DEmbedder.translateXProperty().add(WorldMap.TS));
-        scores3D.translateYProperty().bind(level3DEmbedder.translateYProperty().subtract(4.5 * WorldMap.TS));
-        scores3D.translateZProperty().bind(level3DEmbedder.translateZProperty().subtract(4.5 * WorldMap.TS));
+        scoresView.root().translateXProperty().bind(level3DEmbedder.translateXProperty().add(WorldMap.TS));
+        scoresView.root().translateYProperty().bind(level3DEmbedder.translateYProperty().subtract(4.5 * WorldMap.TS));
+        scoresView.root().translateZProperty().bind(level3DEmbedder.translateZProperty().subtract(4.5 * WorldMap.TS));
 
-        if (oldScores3D != null) {
-            subSceneRoot.getChildren().remove(oldScores3D);
+        if (oldScoresView != null) {
+            subSceneRoot.getChildren().remove(oldScoresView.root());
         }
-        subSceneRoot.getChildren().add(scores3D);
+        subSceneRoot.getChildren().add(scoresView.root());
     }
 
     private void removeAndDisposeGameLevel3D() {
