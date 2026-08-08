@@ -17,6 +17,18 @@ import java.util.Properties;
 
 public class ScoreSystem {
 
+    public static void setPoints(Score score, int points) {
+        score.data().setPoints(points);
+    }
+
+    public static void setLevelNumber(Score score, int levelNumber) {
+        score.data().setLevelNumber(levelNumber);
+    }
+
+    public static void setDate(Score score, LocalDate date) {
+        score.data().setDate(date);
+    }
+
     public static void load(Score score) throws IOException {
         final ScorePersistencyComp persistency = score.requireComp(ScorePersistencyComp.class);
 

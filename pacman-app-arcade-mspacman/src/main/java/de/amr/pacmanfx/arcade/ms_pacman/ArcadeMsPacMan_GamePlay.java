@@ -24,6 +24,7 @@ import de.amr.pacmanfx.core.entities.LevelCounter;
 import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Pac;
+import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GameModel;
@@ -164,7 +165,8 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         pac.autoSteering().setSteering(steering);
 
         model.gateKeeper().setLevelNumber(demoLevelNumber);
-        model.score().data().setLevelNumber(demoLevelNumber);
+
+        ScoreSystem.setLevelNumber(model.score(), demoLevelNumber);
 
         //TODO check this
         LevelCounterSystem.enable(model.levelCounter(), true);

@@ -9,6 +9,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.entities.Pac;
+import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
@@ -43,8 +44,8 @@ public class XXL_MsPacMan_GamePlay extends ArcadeMsPacMan_GamePlay {
         pac.autoSteering().setSteering(steering);
 
         xxlModel.gateKeeper().setLevelNumber(levelNumber);
-        xxlModel.score().data().setLevelNumber(levelNumber);
 
+        ScoreSystem.setLevelNumber(xxlModel.score(), levelNumber);
         LevelCounterSystem.enable(xxlModel.levelCounter(), false);
 
         return level;

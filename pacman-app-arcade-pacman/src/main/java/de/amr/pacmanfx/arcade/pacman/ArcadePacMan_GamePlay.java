@@ -21,6 +21,7 @@ import de.amr.pacmanfx.core.entities.HouseFactory;
 import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Pac;
+import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
 import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
@@ -198,7 +199,8 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         ));
 
         model.gateKeeper().setLevelNumber(1);
-        model.score().data().setLevelNumber(1);
+
+        ScoreSystem.setLevelNumber(model.score(), 1);
 
         return demoLevel;
     }

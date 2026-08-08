@@ -142,7 +142,8 @@ public abstract class CommonGamePlay implements GamePlay {
         final LivesCounter livesCounter = level.entities().theOne(LivesCounter.class);
         livesCounter.data().setNumLives(numLives);
 
-        model.score().data().setLevelNumber(levelNumber);
+        ScoreSystem.setLevelNumber(model.score(), levelNumber);
+
         model.gateKeeper().setLevelNumber(levelNumber);
         model.setLevel(level);
 
@@ -483,12 +484,11 @@ public abstract class CommonGamePlay implements GamePlay {
 
         final Score highScore = model.highScore();
         if (highScore != null && highScore.data().isEnabled() && newScore > highScore.data().points()) {
-            highScore.data().setPoints(newScore);
-            highScore.data().setLevelNumber(levelNumber);
-            highScore.data().setDate(LocalDate.now());
+            ScoreSystem.setPoints(highScore, newScore);
+            ScoreSystem.setLevelNumber(highScore, levelNumber);
+            ScoreSystem.setDate(highScore, LocalDate.now());
         }
-
-        model.score().data().setPoints(newScore);
+        ScoreSystem.setPoints(model.score(), newScore);
     }
 
     /**
