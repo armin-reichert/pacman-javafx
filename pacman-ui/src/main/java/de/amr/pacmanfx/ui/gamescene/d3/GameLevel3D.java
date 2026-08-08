@@ -453,9 +453,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         getChildren().add(pac.requireComponent(Pac3DViewComp.class).root());
         getChildren().add(pac.requireComponent(Pac3DViewComp.class).powerLight());
 
-        //TODO change
-//        for (var ghost3D : ghosts3D) { getChildren().add(ghost3D.root()); }
-
         for (var ghost: level.entities().ghosts()) {
             getChildren().add(ghost.requireComponent(Ghost3DViewComp.class).root());
         }
