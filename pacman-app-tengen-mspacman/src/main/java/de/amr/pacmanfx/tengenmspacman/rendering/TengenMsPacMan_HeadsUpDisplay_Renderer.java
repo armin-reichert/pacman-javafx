@@ -87,7 +87,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
 
             final Score highScore = gameContext.model().highScore();
             Color color = SCORE_TEXT_COLOR;
-            if (!highScore.isEnabled() && !gameContext.gamePlay().isDemoLevelRunning(gameContext)) {
+            if (!highScore.data().isEnabled() && !gameContext.gamePlay().isDemoLevelRunning(gameContext)) {
                 color = SCORE_TEXT_COLOR_DISABLED;
             }
             drawHighScore(highScore, arcadeFont8(), color);
@@ -126,12 +126,12 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
         if (on) {
             fillText("1UP", SCORE_TEXT_COLOR, font, tilesPx(4), tilesPx(1));
         }
-        fillText("%6d".formatted(score.points()), SCORE_TEXT_COLOR, font, tilesPx(2), tilesPx(2));
+        fillText("%6d".formatted(score.data().points()), SCORE_TEXT_COLOR, font, tilesPx(2), tilesPx(2));
     }
 
     private void drawHighScore(Score score, Font font, Color color) {
         fillText("HIGH SCORE", color, font, tilesPx(11), tilesPx(1));
-        fillText("%6d".formatted(score.points()), color, font, tilesPx(13), tilesPx(2));
+        fillText("%6d".formatted(score.data().points()), color, font, tilesPx(13), tilesPx(2));
     }
 
     private void drawLivesCounter(GameContext gameContext, float y) {

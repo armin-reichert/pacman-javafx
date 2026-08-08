@@ -43,7 +43,7 @@ public class XXL_MsPacMan_GamePlay extends ArcadeMsPacMan_GamePlay {
         pac.autoSteering().setSteering(steering);
 
         xxlModel.gateKeeper().setLevelNumber(levelNumber);
-        xxlModel.score().setLevelNumber(levelNumber);
+        xxlModel.score().data().setLevelNumber(levelNumber);
 
         LevelCounterSystem.enable(xxlModel.levelCounter(), false);
 

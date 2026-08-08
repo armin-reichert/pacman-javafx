@@ -164,7 +164,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         pac.autoSteering().setSteering(steering);
 
         model.gateKeeper().setLevelNumber(demoLevelNumber);
-        model.score().setLevelNumber(demoLevelNumber);
+        model.score().data().setLevelNumber(demoLevelNumber);
 
         //TODO check this
         LevelCounterSystem.enable(model.levelCounter(), true);

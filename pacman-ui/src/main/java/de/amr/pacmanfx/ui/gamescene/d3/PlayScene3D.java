@@ -141,8 +141,8 @@ public class PlayScene3D extends AbstractGameScene
 
         // If score is disabled, show "GAME OVER" text instead
         final Score score = level.gameModel().score();
-        if (score.isEnabled()) {
-            scores3D.showScore(score.points(), score.levelNumber());
+        if (score.data().isEnabled()) {
+            scores3D.showScore(score.data().points(), score.data().levelNumber());
         } else {
             scores3D.showTextForScore(
                 appContext().ui().translations().translate("score.game_over"),
@@ -151,7 +151,7 @@ public class PlayScene3D extends AbstractGameScene
 
         // High score is always visible
         final Score highScore = level.gameModel().highScore();
-        scores3D.showHighScore(highScore.points(), highScore.levelNumber());
+        scores3D.showHighScore(highScore.data().points(), highScore.data().levelNumber());
     }
 
     public void initPac(GameLevel level, Pac pac) {

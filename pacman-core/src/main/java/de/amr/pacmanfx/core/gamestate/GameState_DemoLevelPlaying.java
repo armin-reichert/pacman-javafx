@@ -48,8 +48,8 @@ public final class GameState_DemoLevelPlaying extends GameState {
 
         final long tick = timer().tickCount();
         if (tick == 1) {
-            model.score().setEnabled(false);
-            model.highScore().setEnabled(false);
+            model.score().data().setEnabled(false);
+            model.highScore().data().setEnabled(false);
             gamePlay.prepareLevelForPlaying(gameContext);
             gamePlay.showLevelMessage(level, GameLevelMessageType.GAME_OVER);
             LevelCounterSystem.update(model.levelCounter(), level.number(), level.bonusSymbolCode(0));

@@ -46,4 +46,6 @@ module de.amr.pacmanfx.core {
     exports de.amr.pacmanfx.core.entities.levelCounter.comp;
     exports de.amr.pacmanfx.core.entities.levelCounter.system;
     exports de.amr.pacmanfx.core.entities.livescounter.system;
+    exports de.amr.pacmanfx.core.entities.score.comp;
+    exports de.amr.pacmanfx.core.entities.score.system;
 }

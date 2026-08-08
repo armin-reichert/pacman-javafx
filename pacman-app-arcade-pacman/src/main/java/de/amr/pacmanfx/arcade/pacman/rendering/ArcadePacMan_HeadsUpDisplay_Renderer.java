@@ -65,7 +65,7 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer
 
             final Score highScore = gameContext.model().highScore();
             Color color = SCORE_TEXT_COLOR;
-            if (!gameContext.gamePlay().isDemoLevelRunning(gameContext) && !highScore.isEnabled()) {
+            if (!gameContext.gamePlay().isDemoLevelRunning(gameContext) && !highScore.data().isEnabled()) {
                 color = SCORE_TEXT_COLOR_DISABLED;
             }
             drawScore(highScore, HIGH_SCORE_TEXT, arcadeFont8(), color, tilesPx(14), tilesPx(1));
@@ -104,9 +104,9 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer
 
     private void drawScore(Score score, String title, Font font, Color color, double x, double y) {
         fillText(title, color, font, x, y);
-        fillText("%7s".formatted("%02d".formatted(score.points())), color, font, x, y + TS + 1);
-        if (score.points() != 0) {
-            fillText("L" + score.levelNumber(), color, font, x + tilesPx(8), y + TS + 1);
+        fillText("%7s".formatted("%02d".formatted(score.data().points())), color, font, x, y + TS + 1);
+        if (score.data().points() != 0) {
+            fillText("L" + score.data().levelNumber(), color, font, x + tilesPx(8), y + TS + 1);
         }
     }
 }

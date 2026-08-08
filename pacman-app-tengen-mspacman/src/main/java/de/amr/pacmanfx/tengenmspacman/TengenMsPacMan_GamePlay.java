@@ -157,7 +157,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         pac.autoSteering().setSteering(steering);
 
         model.gateKeeper().setLevelNumber(1);
-        model.score().setLevelNumber(1);
+        model.score().data().setLevelNumber(1);
 
         return demoLevel;
     }
@@ -196,7 +196,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
             Logger.info("Level counter is full and gets disabled!");
         }
 
-        tengenModel.score().setEnabled(true);
+        tengenModel.score().data().setEnabled(true);
 
         //TODO fixme
         //context.cheats().update(level);

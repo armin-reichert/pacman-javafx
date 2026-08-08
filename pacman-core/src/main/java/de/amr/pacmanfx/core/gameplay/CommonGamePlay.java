@@ -73,7 +73,7 @@ public abstract class CommonGamePlay implements GamePlay {
         if (highScore != null) {
             try {
                 highScore.load();
-                highScore.setEnabled(true);
+                highScore.data().setEnabled(true);
             } catch (IOException x) {
                 Logger.error(x, "Error loading high-score file {}", highScore.file().getAbsolutePath());
             }
@@ -139,7 +139,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final LivesCounter livesCounter = level.entities().theOne(LivesCounter.class);
         livesCounter.data().setNumLives(numLives);
 
-        model.score().setLevelNumber(levelNumber);
+        model.score().data().setLevelNumber(levelNumber);
         model.gateKeeper().setLevelNumber(levelNumber);
         model.setLevel(level);
 
@@ -466,10 +466,10 @@ public abstract class CommonGamePlay implements GamePlay {
         final GameModel model = gameContext.model();
         final GameEventManager eventManager = gameContext.eventManager();
 
-        if (!model.score().isEnabled()) {
+        if (!model.score().data().isEnabled()) {
             return;
         }
-        final int oldScore = model.score().points();
+        final int oldScore = model.score().data().points();
         final int newScore = oldScore + points;
 
         if (model.rules().scoringRules().isExtraLifeAwarded(oldScore, newScore)) {
@@ -479,13 +479,13 @@ public abstract class CommonGamePlay implements GamePlay {
         }
 
         final Score highScore = model.highScore();
-        if (highScore != null && highScore.isEnabled() && newScore > highScore.points()) {
-            highScore.setPoints(newScore);
-            highScore.setLevelNumber(levelNumber);
-            highScore.setDate(LocalDate.now());
+        if (highScore != null && highScore.data().isEnabled() && newScore > highScore.data().points()) {
+            highScore.data().setPoints(newScore);
+            highScore.data().setLevelNumber(levelNumber);
+            highScore.data().setDate(LocalDate.now());
         }
 
-        model.score().setPoints(newScore);
+        model.score().data().setPoints(newScore);
     }
 
     @Override
@@ -505,7 +505,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final PropertyFileScore savedHighScore = new PropertyFileScore(highScore.file());
         try {
             savedHighScore.load();
-            if (highScore.points() > savedHighScore.points()) {
+            if (highScore.data().points() > savedHighScore.data().points()) {
                 highScore.save();
             }
         } catch (IOException x) {

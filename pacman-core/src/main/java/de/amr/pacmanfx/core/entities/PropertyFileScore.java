@@ -32,6 +32,14 @@ import static java.util.Objects.requireNonNull;
  */
 public class PropertyFileScore extends Score {
 
+    public static final String GITHUB_PACMAN_JAVAFX = "https://github.com/armin-reichert/pacman-javafx";
+
+    public static final String ATTR_DATE = "date";
+    public static final String ATTR_LEVEL = "level";
+    public static final String ATTR_POINTS = "points";
+    public static final String ATTR_URL = "url";
+
+
     /** Timestamp format used in the XML comment header. */
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
@@ -74,14 +82,14 @@ public class PropertyFileScore extends Score {
         }
 
         try {
-            setPoints(Integer.parseInt(properties.getProperty(ATTR_POINTS)));
-            setLevelNumber(Integer.parseInt(properties.getProperty(ATTR_LEVEL)));
-            setDate(LocalDate.parse(properties.getProperty(ATTR_DATE), DateTimeFormatter.ISO_LOCAL_DATE));
+            data().setPoints(Integer.parseInt(properties.getProperty(ATTR_POINTS)));
+            data().setLevelNumber(Integer.parseInt(properties.getProperty(ATTR_LEVEL)));
+            data().setDate(LocalDate.parse(properties.getProperty(ATTR_DATE), DateTimeFormatter.ISO_LOCAL_DATE));
         } catch (Exception e) {
             throw new IOException("High score file is corrupted: " + file, e);
         }
 
-        Logger.info("Score loaded from file '{}': points={}, level={}", file, points(), levelNumber());
+        Logger.info("Score loaded from file '{}': points={}, level={}", file, data().points(), data().levelNumber());
     }
 
     /**
@@ -110,9 +118,9 @@ public class PropertyFileScore extends Score {
         final String dateTime = DATE_TIME_FORMATTER.format(LocalDateTime.now());
         final var properties = new Properties();
 
-        properties.setProperty(ATTR_POINTS, String.valueOf(points()));
-        properties.setProperty(ATTR_LEVEL,  String.valueOf(levelNumber()));
-        properties.setProperty(ATTR_DATE,   date().format(DateTimeFormatter.ISO_LOCAL_DATE));
+        properties.setProperty(ATTR_POINTS, String.valueOf(data().points()));
+        properties.setProperty(ATTR_LEVEL,  String.valueOf(data().levelNumber()));
+        properties.setProperty(ATTR_DATE,   data().date().format(DateTimeFormatter.ISO_LOCAL_DATE));
         properties.setProperty(ATTR_URL,    GITHUB_PACMAN_JAVAFX);
 
         // --- Atomic save logic ---
@@ -126,6 +134,6 @@ public class PropertyFileScore extends Score {
         // Atomic move (best effort depending on filesystem)
         Files.move(temp, target, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
 
-        Logger.info("High score saved in file '{}', points: {}, level: {}", file, points(), levelNumber());
+        Logger.info("High score saved in file '{}', points: {}, level: {}", file, data().points(), data().levelNumber());
     }
 }

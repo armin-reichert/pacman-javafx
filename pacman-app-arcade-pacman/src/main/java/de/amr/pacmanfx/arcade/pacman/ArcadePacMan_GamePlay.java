@@ -198,7 +198,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         ));
 
         model.gateKeeper().setLevelNumber(1);
-        model.score().setLevelNumber(1);
+        model.score().data().setLevelNumber(1);
 
         return demoLevel;
     }
@@ -218,7 +218,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         level.recordStartTime(System.currentTimeMillis());
         prepareLevelForPlaying(gameContext);
         showLevelMessage(level, GameLevelMessageType.READY);
-        model.score().setEnabled(true);
+        model.score().data().setEnabled(true);
 
         LevelCounterSystem.update(model.levelCounter(), level.number(), level.bonusSymbolCode(0));
 

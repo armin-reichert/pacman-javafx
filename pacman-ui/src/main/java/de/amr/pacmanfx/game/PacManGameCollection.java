@@ -285,7 +285,7 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
             model.setHighScore(highScore);
             gameVariant.cheats().cheatUsedProperty().addListener((_, _, cheated) -> {
                 if (cheated) {
-                    highScore.setEnabled(false);
+                    highScore.data().setEnabled(false);
                 }
             });
             return gameVariant;
