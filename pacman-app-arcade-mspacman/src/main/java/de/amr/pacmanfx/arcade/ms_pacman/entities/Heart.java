@@ -14,8 +14,8 @@ import static de.amr.basics.spriteanim.SpriteAnimationAccessor.singleSpriteAnima
 public class Heart extends GameEntity {
 
     public Heart() {
-        setComponent(SpriteAnimationComp.class, new SpriteAnimationComp());
-        requireComponent(SpriteAnimationComp.class).setAnimations(
+        setComp(SpriteAnimationComp.class, new SpriteAnimationComp());
+        requireComp(SpriteAnimationComp.class).setAnimations(
             singleSpriteAnimationMap(ArcadeMsPacMan_SpriteSheet.instance().findSprite(SpriteID.HEART)));
     }
 }

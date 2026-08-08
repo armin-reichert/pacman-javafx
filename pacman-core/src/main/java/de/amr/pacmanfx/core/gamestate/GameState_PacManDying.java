@@ -43,7 +43,7 @@ public final class GameState_PacManDying extends GameState {
         game.model().gateKeeper().resetCounterAndSetEnabled(true);
         level.huntingTimerStrategy().stop();
 
-        level.entities().ghosts().forEach(ghost -> ghost.optComponent(ElroyComp.class).ifPresent(elroy -> elroy.setEnabled(false)));
+        level.entities().ghosts().forEach(ghost -> ghost.optComp(ElroyComp.class).ifPresent(elroy -> elroy.setEnabled(false)));
         level.entities().optBonus().ifPresent(bonus -> game.systems().bonusState().setInactive(bonus));
 
         game.systems().worldNavigator().setSpeed(pac, 0);

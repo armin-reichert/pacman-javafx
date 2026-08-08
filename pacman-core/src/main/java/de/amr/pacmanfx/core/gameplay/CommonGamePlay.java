@@ -22,6 +22,8 @@ import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.entities.livescounter.system.LivesCounterSystem;
 import de.amr.pacmanfx.core.entities.pac.comp.PacPowerComp;
 import de.amr.pacmanfx.core.entities.pac.system.PacDigestionSystem;
+import de.amr.pacmanfx.core.entities.score.comp.ScorePersistencyComp;
+import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.event.bonus.BonusEatenEvent;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
@@ -69,13 +71,14 @@ public abstract class CommonGamePlay implements GamePlay {
 
         model.score().reset();
 
-        final PropertyFileScore highScore = model.highScore();
+        final Score highScore = model.highScore();
         if (highScore != null) {
             try {
-                highScore.load();
-                highScore.data().setEnabled(true);
+                ScoreSystem.load(highScore);
+                ScoreSystem.enableScore(highScore, true);
             } catch (IOException x) {
-                Logger.error(x, "Error loading high-score file {}", highScore.file().getAbsolutePath());
+                Logger.error(x, "Error loading high-score file {}",
+                    highScore.requireComp(ScorePersistencyComp.class).file().getAbsolutePath());
             }
         } else {
             Logger.error("No high-score file has been assigned");
@@ -486,31 +489,6 @@ public abstract class CommonGamePlay implements GamePlay {
         }
 
         model.score().data().setPoints(newScore);
-    }
-
-    @Override
-    public void updateHighScore(GameContext gameContext) {
-        final GameModel model = gameContext.model();
-
-        final PropertyFileScore highScore;
-        try {
-            highScore = model.highScore();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        if (highScore == null) {
-            Logger.error("Cannot update high-score, no high-score file has been assigned");
-            return;
-        }
-        final PropertyFileScore savedHighScore = new PropertyFileScore(highScore.file());
-        try {
-            savedHighScore.load();
-            if (highScore.data().points() > savedHighScore.data().points()) {
-                highScore.save();
-            }
-        } catch (IOException x) {
-            Logger.error(x, "Could not update high-score");
-        }
     }
 
     /**

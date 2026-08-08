@@ -27,12 +27,12 @@ public final class Ghost extends GameEntity {
         this.personality = requireNonNull(personality);
         setName(name);
 
-        setComponent(MovementComp.class, new MovementComp());
-        setComponent(WorldNavigationComp.class, new WorldNavigationComp());
-        setComponent(GhostWorldPlacementComp.class, new GhostWorldPlacementComp());
-        setComponent(GhostStateComp.class, new GhostStateComp());
-        setComponent(GhostSpriteAnimationComp.class, new GhostSpriteAnimationComp());
-        setComponent(SpriteAnimationComp.class, new SpriteAnimationComp());
+        setComp(MovementComp.class, new MovementComp());
+        setComp(WorldNavigationComp.class, new WorldNavigationComp());
+        setComp(GhostWorldPlacementComp.class, new GhostWorldPlacementComp());
+        setComp(GhostStateComp.class, new GhostStateComp());
+        setComp(GhostSpriteAnimationComp.class, new GhostSpriteAnimationComp());
+        setComp(SpriteAnimationComp.class, new SpriteAnimationComp());
 
         //TODO where does this belong?
         worldNavigation().corneringSpeedDelta = -1.25f;
@@ -49,27 +49,27 @@ public final class Ghost extends GameEntity {
     // Typed component accessors
 
     public MovementComp movement() {
-        return requireComponent(MovementComp.class);
+        return requireComp(MovementComp.class);
     }
 
     public WorldNavigationComp worldNavigation() {
-        return requireComponent(WorldNavigationComp.class);
+        return requireComp(WorldNavigationComp.class);
     }
 
     public GhostWorldPlacementComp worldPlacement() {
-        return requireComponent(GhostWorldPlacementComp.class);
+        return requireComp(GhostWorldPlacementComp.class);
     }
 
     public GhostStateComp state() {
-        return requireComponent(GhostStateComp.class);
+        return requireComp(GhostStateComp.class);
     }
 
     public GhostSpriteAnimationComp ghostAnimation() {
-        return requireComponent(GhostSpriteAnimationComp.class);
+        return requireComp(GhostSpriteAnimationComp.class);
     }
 
     public SpriteAnimationComp spriteAnimation() {
-        return requireComponent(SpriteAnimationComp.class);
+        return requireComp(SpriteAnimationComp.class);
     }
 
     @Override

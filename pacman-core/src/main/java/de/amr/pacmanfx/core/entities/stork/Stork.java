@@ -14,16 +14,16 @@ public class Stork extends GameEntity {
 
     public Stork() {
         setName("Beatrix von");
-        setComponent(MovementComp.class, new MovementComp());
-        setComponent(SpriteAnimationComp.class, new SpriteAnimationComp());
+        setComp(MovementComp.class, new MovementComp());
+        setComp(SpriteAnimationComp.class, new SpriteAnimationComp());
     }
 
     public MovementComp movement() {
-        return requireComponent(MovementComp.class);
+        return requireComp(MovementComp.class);
     }
 
     public SpriteAnimationComp spriteAnim() {
-        return requireComponent(SpriteAnimationComp.class);
+        return requireComp(SpriteAnimationComp.class);
     }
 
     public void setBagReleasedFromBeak(boolean released) {

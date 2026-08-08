@@ -6,8 +6,8 @@ package de.amr.pacmanfx.core.model;
 
 import de.amr.pacmanfx.core.entities.LevelCounter;
 import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
-import de.amr.pacmanfx.core.entities.PropertyFileScore;
 import de.amr.pacmanfx.core.entities.Score;
+import de.amr.pacmanfx.core.entities.score.comp.ScorePersistencyComp;
 import de.amr.pacmanfx.core.gameplay.ArcadeHouseGateKeeper;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.rules.GameRules;
@@ -32,7 +32,7 @@ public abstract class GameModel {
 
     protected final Score score;
 
-    protected PropertyFileScore highScore;
+    protected Score highScore;
 
     protected GameLevel level;
 
@@ -74,7 +74,7 @@ public abstract class GameModel {
         return gateKeeper;
     }
 
-    public PropertyFileScore highScore() {
+    public Score highScore() {
         return highScore;
     }
 
@@ -86,8 +86,9 @@ public abstract class GameModel {
         return score;
     }
 
-    public void setHighScore(PropertyFileScore score) {
+    public void setHighScore(Score score) {
         highScore = requireNonNull(score);
+        score.requireComp(ScorePersistencyComp.class);
     }
 
     public WorldMapSelector mapSelector() {

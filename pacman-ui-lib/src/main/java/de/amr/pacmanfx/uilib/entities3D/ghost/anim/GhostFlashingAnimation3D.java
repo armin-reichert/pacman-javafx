@@ -40,7 +40,7 @@ public class GhostFlashingAnimation3D extends ManagedAnimation {
         final GhostComponentColors brightColors     = settings.colors().flashing();
         final GhostComponentColors frightenedColors = settings.colors().frightened();
 
-        final Ghost3DViewComp view3D = ghost.requireComponent(Ghost3DViewComp.class);
+        final Ghost3DViewComp view3D = ghost.requireComp(Ghost3DViewComp.class);
 
         final var dressDiffuseColorProperty  = view3D.dressMaterial().diffuseColorProperty();
         final var dressSpecularColorProperty = view3D.dressMaterial().specularColorProperty();

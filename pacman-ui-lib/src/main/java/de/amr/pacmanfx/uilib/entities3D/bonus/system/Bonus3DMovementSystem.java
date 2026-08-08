@@ -13,7 +13,7 @@ import de.amr.pacmanfx.uilib.entities3D.bonus.comp.Bonus3DViewComp;
 public class Bonus3DMovementSystem {
 
     public static void update(GameEntity bonus) {
-        final Bonus3DViewComp view3D = bonus.requireComponent(Bonus3DViewComp.class);
+        final Bonus3DViewComp view3D = bonus.requireComp(Bonus3DViewComp.class);
 
         final Vector2f center = WorldNavigationSystem.computeCenter(bonus);
 

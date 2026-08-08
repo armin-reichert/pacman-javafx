@@ -60,6 +60,4 @@ public interface GamePlay {
     // Scoring
 
     void scorePoints(GameContext gameContext, int points, int levelNumber);
-
-    void updateHighScore(GameContext gameContext);
 }

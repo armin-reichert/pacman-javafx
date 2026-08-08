@@ -52,7 +52,7 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
             return;
         }
 
-        final WorldNavigationComp worldNavigation = actor.requireComponent(WorldNavigationComp.class);
+        final WorldNavigationComp worldNavigation = actor.requireComp(WorldNavigationComp.class);
 
         ctx.setFill(Color.FORESTGREEN);
         if (actor instanceof Pac pac) {
@@ -82,7 +82,7 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
     }
 
     private void drawDirectionIndicator(GameEntity actor) {
-        final WorldNavigationComp worldNavigation = actor.requireComponent(WorldNavigationComp.class);
+        final WorldNavigationComp worldNavigation = actor.requireComp(WorldNavigationComp.class);
 
         ctx.save();
         Vector2f center = WorldNavigationSystem.computeCenter(actor);

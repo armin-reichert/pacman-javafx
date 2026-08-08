@@ -18,7 +18,7 @@ import javafx.animation.SequentialTransition;
 public class Pac3DAnimationSystem {
 
     public static void stopAll(Pac pac) {
-        final Pac3DAnimationComp animation = pac.requireComponent(Pac3DAnimationComp.class);
+        final Pac3DAnimationComp animation = pac.requireComp(Pac3DAnimationComp.class);
         if (animation.chewing() != null) {
             animation.chewing().stop();
         }
@@ -32,7 +32,7 @@ public class Pac3DAnimationSystem {
 
     public static void update(Pac pac) {
         final PacStateComp state = pac.state();
-        final Pac3DAnimationComp animation = pac.requireComponent(Pac3DAnimationComp.class);
+        final Pac3DAnimationComp animation = pac.requireComp(Pac3DAnimationComp.class);
 
         final Pac3DMovementAnimation movementAnimation = animation.movement();
         if (movementAnimation != null) {
@@ -50,7 +50,7 @@ public class Pac3DAnimationSystem {
     }
 
     public static void setPowerMode(Pac pac, boolean power) {
-        final Pac3DAnimationComp animation = pac.requireComponent(Pac3DAnimationComp.class);
+        final Pac3DAnimationComp animation = pac.requireComp(Pac3DAnimationComp.class);
         final Pac3DMovementAnimation movementAnimation = animation.movement();
         if (movementAnimation != null) {
             movementAnimation.setPowerMode(power);
@@ -62,7 +62,7 @@ public class Pac3DAnimationSystem {
      */
     public static void updatePowerLight(Pac pac) {
         final PacStateComp state = pac.state();
-        final Pac3DViewComp view3D = pac.requireComponent(Pac3DViewComp.class);
+        final Pac3DViewComp view3D = pac.requireComp(Pac3DViewComp.class);
 
         final boolean lighted = state.enumValue() != PacState.DEAD;
         if (lighted) {
@@ -83,7 +83,7 @@ public class Pac3DAnimationSystem {
         Pac pac,
         Runnable pacDeadSoundEffect,
         Runnable onFinishedCallback) {
-        final Pac3DAnimationComp pacAnimation = pac.requireComponent(Pac3DAnimationComp.class);
+        final Pac3DAnimationComp pacAnimation = pac.requireComp(Pac3DAnimationComp.class);
 
         final Animation animation = new SequentialTransition(
             Ufx.pauseSecThen(1.5, pacDeadSoundEffect),

@@ -8,7 +8,6 @@ import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DViewComp;
 import javafx.animation.*;
 import javafx.geometry.Point3D;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
@@ -22,7 +21,7 @@ public class PacChewingAnimation3D extends ManagedAnimation {
         super("Pac-Man Chewing");
         this.pac = pac;
 
-        final Pac3DViewComp view3D = pac.requireComponent(Pac3DViewComp.class);
+        final Pac3DViewComp view3D = pac.requireComp(Pac3DViewComp.class);
         final Node jaw = view3D.jaw();
         setAnimationFactory(() -> {
             final var mouthClosed = new KeyValue[]{

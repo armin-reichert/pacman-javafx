@@ -28,11 +28,11 @@ public class GameEntity {
 
     public GameEntity() {
         name = getClass().getSimpleName() + "#" + Integer.toHexString(hashCode()); // default name
-        setComponent(PositionComp.class, new PositionComp());
-        setComponent(VisibilityComp.class, new VisibilityComp(false));
+        setComp(PositionComp.class, new PositionComp());
+        setComp(VisibilityComp.class, new VisibilityComp(false));
     }
 
-    public final <T extends GameEntityComponent> void setComponent(Class<T> type, T component) {
+    public final <T extends GameEntityComponent> void setComp(Class<T> type, T component) {
         requireNonNull(type);
         requireNonNull(component);
         if (components.containsKey(type)) {
@@ -41,7 +41,7 @@ public class GameEntity {
         components.put(type, component);
     }
 
-    public final <T extends GameEntityComponent> T requireComponent(Class<T> componentClass) {
+    public final <T extends GameEntityComponent> T requireComp(Class<T> componentClass) {
         requireNonNull(componentClass);
         final GameEntityComponent component = components.get(componentClass);
         if (component == null) {
@@ -50,12 +50,12 @@ public class GameEntity {
         return componentClass.cast(component);
     }
 
-    public final <T extends GameEntityComponent> boolean hasComponent(Class<T> componentClass) {
+    public final <T extends GameEntityComponent> boolean hasComp(Class<T> componentClass) {
         requireNonNull(componentClass);
         return components.get(componentClass) != null;
     }
 
-    public final <T extends GameEntityComponent> Optional<T> optComponent(Class<T> componentClass) {
+    public final <T extends GameEntityComponent> Optional<T> optComp(Class<T> componentClass) {
         requireNonNull(componentClass);
         final GameEntityComponent component = components.get(componentClass);
         return Optional.ofNullable(component).map(componentClass::cast);
@@ -64,15 +64,15 @@ public class GameEntity {
     // Component API
 
     public final PositionComp pos() {
-        return requireComponent(PositionComp.class);
+        return requireComp(PositionComp.class);
     }
 
     public final VisibilityComp visibility() {
-        return requireComponent(VisibilityComp.class);
+        return requireComp(VisibilityComp.class);
     }
 
     public final Optional<MovementComp> optMovement() {
-        return optComponent(MovementComp.class);
+        return optComp(MovementComp.class);
     }
 
     public final void setName(String name) {

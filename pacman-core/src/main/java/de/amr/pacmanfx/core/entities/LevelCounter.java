@@ -10,6 +10,6 @@ import de.amr.pacmanfx.core.entities.levelCounter.comp.LevelCounterData;
 public class LevelCounter extends GameEntity {
 
     public LevelCounter() {
-        setComponent(LevelCounterData.class, new LevelCounterData());
+        setComp(LevelCounterData.class, new LevelCounterData());
     }
 }

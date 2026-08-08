@@ -26,7 +26,7 @@ public class GhostBrakeAnimation3D extends ManagedAnimation {
     }
 
     private Animation createAnimationFX() {
-        final Ghost3DViewComp view3D = ghost.requireComponent(Ghost3DViewComp.class);
+        final Ghost3DViewComp view3D = ghost.requireComp(Ghost3DViewComp.class);
 
         var rotateTransition = new RotateTransition(Duration.seconds(0.5), view3D.root());
         rotateTransition.setAxis(Rotate.Y_AXIS);
@@ -62,7 +62,7 @@ public class GhostBrakeAnimation3D extends ManagedAnimation {
     @Override
     public void stop() {
         super.stop();
-        final Node root = ghost.requireComponent(Ghost3DViewComp.class).root();
+        final Node root = ghost.requireComp(Ghost3DViewComp.class).root();
         root.setRotationAxis(Rotate.Y_AXIS);
         root.setRotate(0);
     }

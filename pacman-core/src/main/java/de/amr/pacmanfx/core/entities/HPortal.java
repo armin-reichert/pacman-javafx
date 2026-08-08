@@ -47,7 +47,7 @@ public record HPortal(Vector2i leftBorderEntryTile, Vector2i rightBorderEntryTil
         requireNonNull(navigator);
         requireNonNull(actor);
 
-        final WorldNavigationComp worldNavigation = actor.requireComponent(WorldNavigationComp.class);
+        final WorldNavigationComp worldNavigation = actor.requireComp(WorldNavigationComp.class);
 
         final Vector2i actorTile = WorldNavigationSystem.computeTile(actor);
         final float offsetX = WorldNavigationSystem.computeTileOffset(actor).x();

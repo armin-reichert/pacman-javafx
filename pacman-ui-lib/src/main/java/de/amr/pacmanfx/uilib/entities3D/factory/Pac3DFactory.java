@@ -33,12 +33,12 @@ public class Pac3DFactory {
     public static void createPacManView3D(AnimationRegistry animationRegistry, Pac pac, PacSettings config) {
         ensurePacHas3DView(pac, animationRegistry);
 
-        final Pac3DViewComp view3D = pac.requireComponent(Pac3DViewComp.class);
+        final Pac3DViewComp view3D = pac.requireComp(Pac3DViewComp.class);
         view3D.setBodyAndJaw(createPacBody(config, true), createPacBody(config, false));
 
         configurePowerLight(view3D, config.colors().headColor().desaturate());
 
-        final Pac3DAnimationComp animation = pac.requireComponent(Pac3DAnimationComp.class);
+        final Pac3DAnimationComp animation = pac.requireComp(Pac3DAnimationComp.class);
         final var chewing = new PacChewingAnimation3D(pac);
         final var movement = new HeadBangingAnimation3D(pac);
         final var dying = new PacManDyingAnimation3D(view3D);
@@ -50,14 +50,14 @@ public class Pac3DFactory {
 
     public static void createMsPacManView3D(AnimationRegistry animationRegistry, Pac msPacMan, PacSettings config) {
         ensurePacHas3DView(msPacMan, animationRegistry);
-        final Pac3DViewComp view3D = msPacMan.requireComponent(Pac3DViewComp.class);
+        final Pac3DViewComp view3D = msPacMan.requireComp(Pac3DViewComp.class);
 
         view3D.setBodyAndJaw(createPacBody(config, true), createPacBody(config, false));
         view3D.bodyGroup().getChildren().add(createFemalePacBodyParts(config));
 
         configurePowerLight(view3D, config.colors().headColor().desaturate());
 
-        final Pac3DAnimationComp animation = msPacMan.requireComponent(Pac3DAnimationComp.class);
+        final Pac3DAnimationComp animation = msPacMan.requireComp(Pac3DAnimationComp.class);
         final var chewing = new PacChewingAnimation3D(msPacMan);
         final var hipSwaying = new HipSwayingAnimation3D(msPacMan);
         final var dying = new MsPacManDyingAnimation3D(view3D);
@@ -67,10 +67,10 @@ public class Pac3DFactory {
     }
 
     private static void ensurePacHas3DView(Pac pac, AnimationRegistry animationRegistry) {
-        if (!pac.hasComponent(Pac3DViewComp.class)) {
-            pac.setComponent(Pac3DViewComp.class, new Pac3DViewComp());
-            pac.setComponent(Pac3DTransformComp.class, new Pac3DTransformComp());
-            pac.setComponent(Pac3DAnimationComp.class, new Pac3DAnimationComp(animationRegistry));
+        if (!pac.hasComp(Pac3DViewComp.class)) {
+            pac.setComp(Pac3DViewComp.class, new Pac3DViewComp());
+            pac.setComp(Pac3DTransformComp.class, new Pac3DTransformComp());
+            pac.setComp(Pac3DAnimationComp.class, new Pac3DAnimationComp(animationRegistry));
         }
     }
 

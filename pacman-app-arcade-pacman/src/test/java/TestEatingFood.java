@@ -201,7 +201,7 @@ public class TestEatingFood {
     public void testCruiseElroyMode() {
         test.model().optLevel().ifPresent(level -> {
             final Ghost blinky = level.ghost(GhostPersonality.RED_GHOST_SHADOW);
-            final ElroyComp elroy = blinky.requireComponent(ElroyComp.class);
+            final ElroyComp elroy = blinky.requireComp(ElroyComp.class);
             final FoodLayer foodLayer = level.worldMap().foodLayer();
             final LevelData data = ArcadePacMan_GameRules.levelData(level.number());
 

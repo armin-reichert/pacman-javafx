@@ -39,7 +39,7 @@ public class HeadBangingAnimation3D extends ManagedAnimation implements Pac3DMov
         this.pac = requireNonNull(pac);
 
         setAnimationFactory(() -> {
-            final Pac3DViewComp view3D = pac.requireComponent(Pac3DViewComp.class);
+            final Pac3DViewComp view3D = pac.requireComp(Pac3DViewComp.class);
             // Warning: RT is banned in fascist EU!
             var rt = new RotateTransition(BANG_TIME, view3D.root());
             rt.fromAngleProperty().bind(fromAngle);

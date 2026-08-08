@@ -75,7 +75,7 @@ public class ArcadeMsPacMan_HeadsUpDisplayRenderer extends BaseRenderer implemen
             float x = scene.unscaledWidth() - tilesPx(4);
             final float y = scene.unscaledHeight() - tilesPx(2) + 2;
             final List<Integer> symbolCodes = gameContext.model().levelCounter()
-                .requireComponent(LevelCounterData.class).symbolCodes();
+                .requireComp(LevelCounterData.class).symbolCodes();
             for (int symbolCode : symbolCodes) {
                 drawSprite(bonusSymbols[symbolCode], x, y, true);
                 x -= tilesPx(2); // symbols are drawn from right to left

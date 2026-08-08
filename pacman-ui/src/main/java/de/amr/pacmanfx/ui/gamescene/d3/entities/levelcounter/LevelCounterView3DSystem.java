@@ -24,8 +24,8 @@ public class LevelCounterView3DSystem {
     private static final int CUBE_SPACING = 6;
 
     public static void updateLevelCounter3D(GameVariantConfig gameVariantConfig, LevelCounter levelCounter, GameLevel level) {
-        final LevelCounterData data = levelCounter.requireComponent(LevelCounterData.class);
-        final LevelCounterView3DComp view3D = levelCounter.requireComponent(LevelCounterView3DComp.class);
+        final LevelCounterData data = levelCounter.requireComp(LevelCounterData.class);
+        final LevelCounterView3DComp view3D = levelCounter.requireComp(LevelCounterView3DComp.class);
 
         final LevelCounter3DSettings config = gameVariantConfig.worldSettings().levelCounter();
         final float cubeSize = config.symbolSize();

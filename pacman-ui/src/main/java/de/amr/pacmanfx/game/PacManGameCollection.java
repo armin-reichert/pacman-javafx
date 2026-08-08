@@ -11,7 +11,8 @@ import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.core.entities.PropertyFileScore;
+import de.amr.pacmanfx.core.entities.Score;
+import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.event.gameplay.GameStateChangeEvent;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.model.GameModel;
@@ -281,8 +282,10 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
                 gameVariant.gameFlow().addTestStates();
             }
             final GameModel model = gameVariant.gameModel();
-            final PropertyFileScore highScore = new PropertyFileScore(PacManGameCollection.highScoreFile(variantName));
-            model.setHighScore(highScore);
+
+            final Score highScore = ScoreSystem.createPersistentScore(PacManGameCollection.highScoreFile(variantName));
+            model.setHighScore(highScore); //TODO remove from model
+
             gameVariant.cheats().cheatUsedProperty().addListener((_, _, cheated) -> {
                 if (cheated) {
                     highScore.data().setEnabled(false);

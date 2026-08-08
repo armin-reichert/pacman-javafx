@@ -7,7 +7,6 @@ package de.amr.pacmanfx.core.ecs.systems;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.RandomNumberSupport;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.entities.Ghost;
@@ -50,7 +49,7 @@ public class RandomWorldMovementSystem {
 
     // try a random direction towards an accessible tile, do not turn back unless there is no other way
     private Direction computeRoamingDirection(GameLevel level, GameEntity actor, WorldMovementPolicy policy, Vector2i currentTile) {
-        final WorldNavigationComp navigation = actor.requireComponent(WorldNavigationComp.class);
+        final WorldNavigationComp navigation = actor.requireComp(WorldNavigationComp.class);
 
         final Direction oppositeDir = navigation.moveDir().opposite();
         Direction selectedDir = choosePseudoRandomDirection();

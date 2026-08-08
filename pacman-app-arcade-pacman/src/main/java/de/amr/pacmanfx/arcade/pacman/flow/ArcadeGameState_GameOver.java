@@ -7,11 +7,14 @@ package de.amr.pacmanfx.arcade.pacman.flow;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.livescounter.system.LivesCounterSystem;
+import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.model.GameModel;
+
+import java.io.IOException;
 
 public class ArcadeGameState_GameOver extends GameState {
 
@@ -24,7 +27,12 @@ public class ArcadeGameState_GameOver extends GameState {
         final GameModel model = gameContext.model();
         final GameLevel level = gameContext.assertLevel();
 
-        gameContext.gamePlay().updateHighScore(gameContext);
+        try {
+            ScoreSystem.saveHighScoreIfNeeded(model.highScore());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         gameContext.gamePlay().showLevelMessage(level, GameLevelMessageType.GAME_OVER);
 
         // In case, entering game over state was forced by user:

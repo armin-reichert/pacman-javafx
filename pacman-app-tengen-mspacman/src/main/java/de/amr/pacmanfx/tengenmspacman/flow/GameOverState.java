@@ -8,6 +8,7 @@ import de.amr.basics.Named;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.livescounter.system.LivesCounterSystem;
+import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -15,6 +16,8 @@ import de.amr.pacmanfx.core.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
+
+import java.io.IOException;
 
 public class GameOverState extends GameState {
 
@@ -26,14 +29,19 @@ public class GameOverState extends GameState {
     public void onEnter(GameContext gameContext) {
         final GameModel model = gameContext.model();
         final GameLevel level = gameContext.assertLevel();
-        final TengenMsPacMan_GamePlay game = (TengenMsPacMan_GamePlay) gameContext.gamePlay();
+        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) gameContext.gamePlay();
 
         final LivesCounter livesCounter = level.entities().theOne(LivesCounter.class);
         LivesCounterSystem.setNumLives(livesCounter, 0); // Needed if state entry was triggered by user interaction
         model.setPlaying(false);
 
-        game.updateHighScore(gameContext);
-        game.showLevelMessage(level, GameLevelMessageType.GAME_OVER);
+        try {
+            ScoreSystem.saveHighScoreIfNeeded(model.highScore());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        gamePlay.showLevelMessage(level, GameLevelMessageType.GAME_OVER);
 
         gameContext.cheats().clear();
 

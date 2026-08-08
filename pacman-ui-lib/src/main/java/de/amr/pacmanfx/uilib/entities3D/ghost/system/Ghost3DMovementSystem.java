@@ -13,7 +13,7 @@ import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DViewComp;
 public class Ghost3DMovementSystem {
 
     public static void update(Ghost ghost) {
-        final Ghost3DViewComp view3D = ghost.requireComponent(Ghost3DViewComp.class);
+        final Ghost3DViewComp view3D = ghost.requireComp(Ghost3DViewComp.class);
 
         final Vector2f center = ghost.pos().center(WorldMap.TS);
         final double height = view3D.root().getBoundsInParent().getDepth();
@@ -35,7 +35,7 @@ public class Ghost3DMovementSystem {
         view3D.facingRotate().setAngle(angle);
 
         if (ghost.worldNavigation().info.tunnelEntered) {
-            ghost.requireComponent(Ghost3DAnimationComp.class).braking().playFromStart();
+            ghost.requireComp(Ghost3DAnimationComp.class).braking().playFromStart();
         }
     }
 }

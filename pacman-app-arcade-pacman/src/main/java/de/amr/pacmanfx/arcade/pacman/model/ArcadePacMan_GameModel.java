@@ -57,7 +57,7 @@ public class ArcadePacMan_GameModel extends GameModel {
         gateKeeper.setGhostReleasedCallback((level, prisoner) -> {
             if (prisoner.personality() == GhostPersonality.ORANGE_GHOST_POKEY) {
                 final Ghost redGhost = level.ghost(GhostPersonality.RED_GHOST_SHADOW);
-                final ElroyComp elroy = redGhost.requireComponent(ElroyComp.class);
+                final ElroyComp elroy = redGhost.requireComp(ElroyComp.class);
                 if (elroy.boost() != ElroyComp.Boost.NONE && !elroy.enabled()) {
                     elroy.setEnabled(true);
                     Logger.debug("Re-enabled {}'s Cruise Elroy mode because {} is released:", redGhost.name(), prisoner.name());

@@ -70,7 +70,7 @@ public class GhostLightRelayAnimation extends ManagedAnimation {
     private void illuminateGhost(GhostPersonality personality) {
         final int p = personality.ordinal();
         final Ghost ghost = ghosts.get(p);
-        final Ghost3DViewComp ghost3DView = ghost.requireComponent(Ghost3DViewComp.class);
+        final Ghost3DViewComp ghost3DView = ghost.requireComp(Ghost3DViewComp.class);
 
         light.setColor(ghostSettings.get(p).colors().normal().dressColor());
         light.translateXProperty().bind(ghost3DView.root().translateXProperty());

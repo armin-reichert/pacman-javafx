@@ -25,52 +25,52 @@ public final class Pac extends GameEntity {
     public Pac(String name) {
         this.name = requireNonNull(name);
 
-        setComponent(MovementComp.class, new MovementComp());
-        setComponent(WorldNavigationComp.class, new WorldNavigationComp());
-        setComponent(AutoSteeringComp.class, new AutoSteeringComp());
-        setComponent(PacDigestionComp.class, new PacDigestionComp());
-        setComponent(PacPowerComp.class, new PacPowerComp());
-        setComponent(PacCheatsComp.class, new PacCheatsComp());
-        setComponent(PacStateComp.class, new PacStateComp());
-        setComponent(SpriteAnimationComp.class, new SpriteAnimationComp());
-        setComponent(PacAnimationComp.class, new PacAnimationComp());
+        setComp(MovementComp.class, new MovementComp());
+        setComp(WorldNavigationComp.class, new WorldNavigationComp());
+        setComp(AutoSteeringComp.class, new AutoSteeringComp());
+        setComp(PacDigestionComp.class, new PacDigestionComp());
+        setComp(PacPowerComp.class, new PacPowerComp());
+        setComp(PacCheatsComp.class, new PacCheatsComp());
+        setComp(PacStateComp.class, new PacStateComp());
+        setComp(SpriteAnimationComp.class, new SpriteAnimationComp());
+        setComp(PacAnimationComp.class, new PacAnimationComp());
     }
 
     public MovementComp movement() {
-        return requireComponent(MovementComp.class);
+        return requireComp(MovementComp.class);
     }
 
     public WorldNavigationComp worldNavigation() {
-        return requireComponent(WorldNavigationComp.class);
+        return requireComp(WorldNavigationComp.class);
     }
 
     public AutoSteeringComp autoSteering() {
-        return requireComponent(AutoSteeringComp.class);
+        return requireComp(AutoSteeringComp.class);
     }
 
     public PacDigestionComp digestion() {
-        return requireComponent(PacDigestionComp.class);
+        return requireComp(PacDigestionComp.class);
     }
 
     public PacPowerComp power() {
-        return requireComponent(PacPowerComp.class);
+        return requireComp(PacPowerComp.class);
     }
 
     public PacCheatsComp cheats() {
-        return requireComponent(PacCheatsComp.class);
+        return requireComp(PacCheatsComp.class);
     }
 
     public PacStateComp state() {
-        return requireComponent(PacStateComp.class);
+        return requireComp(PacStateComp.class);
     }
 
     public PacAnimationComp animation() {
-        return requireComponent(PacAnimationComp.class);
+        return requireComp(PacAnimationComp.class);
     }
 
     //TODO integrate with Pac animation comp
     public SpriteAnimationComp spriteAnim() {
-        return requireComponent(SpriteAnimationComp.class);
+        return requireComp(SpriteAnimationComp.class);
     }
 
     @Override

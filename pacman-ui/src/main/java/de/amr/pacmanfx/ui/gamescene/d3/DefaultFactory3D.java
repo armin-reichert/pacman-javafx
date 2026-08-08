@@ -81,7 +81,7 @@ public class DefaultFactory3D implements Factory3D {
         view3D.build(settings, model.ghostDressMesh(), model.ghostPupilsMesh(), model.ghostEyeballsMesh());
         view3D.setAppearanceMaterialSet(materialSet);
 
-        final Ghost3DAnimationComp animation3D = ghost.requireComponent(Ghost3DAnimationComp.class);
+        final Ghost3DAnimationComp animation3D = ghost.requireComp(Ghost3DAnimationComp.class);
         animation3D.build(animationRegistry, ghost, settings, 5);  //TODO num flashes
     }
 
@@ -157,11 +157,11 @@ public class DefaultFactory3D implements Factory3D {
     }
 
     private static Ghost3DViewComp ensureGhostHas3DView(Ghost ghost) {
-        if (!ghost.hasComponent(Ghost3DViewComp.class)) {
-            ghost.setComponent(Ghost3DViewComp.class, new Ghost3DViewComp());
-            ghost.setComponent(Ghost3DAnimationComp.class, new Ghost3DAnimationComp());
+        if (!ghost.hasComp(Ghost3DViewComp.class)) {
+            ghost.setComp(Ghost3DViewComp.class, new Ghost3DViewComp());
+            ghost.setComp(Ghost3DAnimationComp.class, new Ghost3DAnimationComp());
         }
-        return ghost.requireComponent(Ghost3DViewComp.class);
+        return ghost.requireComp(Ghost3DViewComp.class);
     }
 
 }

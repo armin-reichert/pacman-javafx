@@ -10,10 +10,10 @@ import de.amr.pacmanfx.core.entities.livescounter.comp.LivesCounterData;
 public class LivesCounter extends GameEntity {
 
     public LivesCounter() {
-        setComponent(LivesCounterData.class, new LivesCounterData());
+        setComp(LivesCounterData.class, new LivesCounterData());
     }
 
     public LivesCounterData data() {
-        return requireComponent(LivesCounterData.class);
+        return requireComp(LivesCounterData.class);
     }
 }

@@ -52,7 +52,7 @@ public class MazeFactory3D {
     }
 
     private void createHouse3D(House house, House3DSettings config3D, WorldMapColorSchemeImpl colorScheme, AnimationRegistry animationRegistry) {
-        if (!house.hasComponent(House3DViewComp.class)) {
+        if (!house.hasComp(House3DViewComp.class)) {
             final var view3D = new House3DViewComp(
                 animationRegistry,
                 house.floorplan(),
@@ -60,14 +60,14 @@ public class MazeFactory3D {
                 config3D.wallThickness(),
                 config3D.opacity()
             );
-            house.setComponent(House3DViewComp.class, view3D);
+            house.setComp(House3DViewComp.class, view3D);
             final var animation =  new House3DAnimationComp(animationRegistry);
             animation.createDoorsMeltingAnimationFactory(view3D.barThicknessProperty);
-            house.setComponent(House3DAnimationComp.class, animation);
+            house.setComp(House3DAnimationComp.class, animation);
         }
 
         // apply color scheme
-        final var view3D = house.requireComponent(House3DViewComp.class);
+        final var view3D = house.requireComp(House3DViewComp.class);
         view3D.setWallBaseColor(Color.valueOf(colorScheme.wallFill()));
         view3D.wallBaseHeightProperty().set(config3D.baseHeight());
         view3D.setWallTopColor(Color.valueOf(colorScheme.wallStroke()));

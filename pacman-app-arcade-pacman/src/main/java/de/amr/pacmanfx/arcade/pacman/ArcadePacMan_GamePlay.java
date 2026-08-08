@@ -266,10 +266,10 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
     private void checkCruiseElroyActivation(GameLevel level) {
         final Ghost redGhost = level.ghost(GhostPersonality.RED_GHOST_SHADOW);
-        if (!redGhost.hasComponent(ElroyComp.class)) {
+        if (!redGhost.hasComp(ElroyComp.class)) {
             return;
         }
-        final ElroyComp elroy = redGhost.requireComponent(ElroyComp.class);
+        final ElroyComp elroy = redGhost.requireComp(ElroyComp.class);
         final LevelData data = ArcadePacMan_GameRules.levelData(level.number());
         final int remainingFoodCount = level.worldMap().foodLayer().remainingFoodCount();
         if (remainingFoodCount == data.numDotsLeftElroy1()) {

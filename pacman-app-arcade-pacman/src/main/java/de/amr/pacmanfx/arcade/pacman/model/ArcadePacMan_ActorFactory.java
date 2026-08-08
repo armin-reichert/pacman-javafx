@@ -29,7 +29,7 @@ public class ArcadePacMan_ActorFactory {
 
     public Ghost createRedGhost() {
         final Ghost ghost = new Ghost(GhostPersonality.RED_GHOST_SHADOW, "Blinky");
-        ghost.setComponent(ElroyComp.class, new ElroyComp());
+        ghost.setComp(ElroyComp.class, new ElroyComp());
         ghost.reset();
         return ghost;
     }

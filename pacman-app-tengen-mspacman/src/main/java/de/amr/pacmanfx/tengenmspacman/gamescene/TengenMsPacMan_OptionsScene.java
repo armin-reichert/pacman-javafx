@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.tengenmspacman.gamescene;
 
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
@@ -210,7 +211,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene2D {
 
     private void saveHighScore() {
         try {
-            tengenGameModel().highScore().save();
+            ScoreSystem.save(tengenGameModel().highScore());
         } catch (IOException x) {
             Logger.error(x, "Could not save Tengen Ms. Pac-Man high score");
             //TODO Show message in UI

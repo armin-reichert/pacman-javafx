@@ -45,6 +45,10 @@ public class ScoreDataComp implements GameEntityComponent {
         return dateProperty().get();
     }
 
+    public ScoreDataComp() {
+        reset();
+    }
+
     @Override
     public void reset() {
         setEnabled(true);

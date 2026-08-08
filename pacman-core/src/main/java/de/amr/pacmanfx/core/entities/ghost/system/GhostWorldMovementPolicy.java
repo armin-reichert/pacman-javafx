@@ -43,7 +43,7 @@ public class GhostWorldMovementPolicy implements WorldMovementPolicy {
             return terrainLayer.isTileInPortalSpace(tile);
         }
 
-        final GhostWorldPlacementComp worldPlacement = actor.requireComponent(GhostWorldPlacementComp.class);
+        final GhostWorldPlacementComp worldPlacement = actor.requireComp(GhostWorldPlacementComp.class);
         final Vector2i myTile = WorldNavigationSystem.computeTile(actor);
 
         // Hunting ghosts cannot enter some tiles in Pac-Man game from below

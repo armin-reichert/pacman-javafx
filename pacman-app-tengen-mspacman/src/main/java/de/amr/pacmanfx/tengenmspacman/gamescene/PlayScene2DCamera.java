@@ -109,7 +109,7 @@ public class PlayScene2DCamera extends ParallelCamera {
     }
 
     private void updateTrackingMode(double mapHeightPixels, GameEntity movingActor) {
-        final WorldNavigationComp worldNavigation = movingActor.requireComponent(WorldNavigationComp.class);
+        final WorldNavigationComp worldNavigation = movingActor.requireComp(WorldNavigationComp.class);
 
         double relY = movingActor.pos().y() / mapHeightPixels;
         if (relY < 0.5 || relY < 0.6 && worldNavigation.moveDir() == Direction.UP) {
