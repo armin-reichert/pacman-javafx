@@ -174,12 +174,19 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     @Override
+    public void updateEntities(GameContext gameContext, GameLevel level) {
+        final Pac pac = level.entities().pac();
+        updatePac(gameContext, level, pac);
+        updateGhosts(gameContext, level);
+        gameContext.systems().bonusState().update(gameContext);
+    }
+
+    @Override
     public void hunt(GameContext gameContext, GameLevel level) {
         requireNonNull(gameContext);
         requireNonNull(level);
 
         final GameModel model = gameContext.model();
-        final Pac pac = level.entities().pac();
         final ArcadeHouseGateKeeper gateKeeper = model.gateKeeper();
 
         //TODO enable this later again
@@ -190,11 +197,9 @@ public abstract class CommonGamePlay implements GamePlay {
         if (gateKeeper != null) {
             gateKeeper.unlockGhostIfPossible(gameContext);
         }
-        updatePac(gameContext, level, pac);
-        updateGhosts(gameContext, level);
-        gameContext.systems().bonusState().update(gameContext);
 
-        checkPacPower(gameContext, level, pac);
+        updateEntities(gameContext, level);
+
         detectCollisions(gameContext);
         evalCollisions(gameContext);
     }
@@ -254,6 +259,7 @@ public abstract class CommonGamePlay implements GamePlay {
         gameContext.systems().pacState().update(pac);
         navigatePac(gameContext, level, pac);
         gameContext.systems().pacAnimation().update(pac);
+        checkPacPower(gameContext, level, pac);
     }
 
     private void navigatePac(GameContext gameContext, GameLevel level, Pac pac) {

@@ -151,12 +151,12 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         createGhostLightAnimation();
     }
 
-    public void updateEntities() {
-        updateLivesCounter();
-        updateHouse();
-        updatePac();
-        updateGhosts();
-        updateBonus();
+    public void updateEntities3D() {
+        updateLivesCounter3D();
+        updateHouse3D();
+        updatePac3D();
+        updateGhosts3D();
+        updateBonus3D();
     }
 
     @Override
@@ -269,26 +269,26 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     // Private area, no trespassing!
 
-    private void updateLivesCounter() {
+    private void updateLivesCounter3D() {
         final LivesCounter livesCounter = level.entities().theOne(LivesCounter.class);
         LivesCounterView3DSystem.update(livesCounter);
     }
 
-    private void updatePac() {
+    private void updatePac3D() {
         final Pac pac = level.entities().pac();
         Pac3DTransformSystem.update(pac, level);
         Pac3DAnimationSystem.update(pac);
         Pac3DAnimationSystem.updatePowerLight(pac);
     }
 
-    private void updateGhosts() {
+    private void updateGhosts3D() {
         level.entities().ghosts().forEach(ghost -> {
             Ghost3DMovementSystem.update(ghost);
             Ghost3DAppearanceSystem.update(ghost);
         });
     }
 
-    private void updateHouse() {
+    private void updateHouse3D() {
         final House house = level.entities().theOne(House.class);
 
         boolean accessRequested = level.ghostsInAnyOfStates(GHOST_STATES_WITH_ACCESS_TO_HOUSE)
@@ -309,7 +309,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return ghost.pos().asVector2f().euclideanDist(houseEntryPos) <= view3D.doorSensitivity();
     }
 
-    private void updateBonus() {
+    private void updateBonus3D() {
         level.optBonus().ifPresent(bonus -> {
             ensureBonus3DViewExists(bonus);
             Bonus3DMovementSystem.update(bonus);

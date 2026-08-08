@@ -7,13 +7,11 @@ package de.amr.pacmanfx.uilib.entities3D.pac.comp;
 import de.amr.basics.math.Vector3f;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.ecs.GameEntityComponent;
-import javafx.animation.RotateTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
 import javafx.scene.PointLight;
 import javafx.scene.shape.DrawMode;
-import javafx.scene.transform.Rotate;
 
 public class Pac3DViewComp implements GameEntityComponent {
 

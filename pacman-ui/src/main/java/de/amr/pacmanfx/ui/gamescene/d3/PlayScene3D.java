@@ -260,9 +260,9 @@ public class PlayScene3D extends AbstractGameScene
             return;
         }
 
-        level3D.updateEntities();
-
+        level3D.updateEntities3D();
         perspectiveManager.updatePerspective(level);
+
         updateHUD3D(level);
 
         optSoundEffects().ifPresent(soundEffects -> {

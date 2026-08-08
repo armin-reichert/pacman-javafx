@@ -43,6 +43,8 @@ public interface GamePlay {
 
     void hunt(GameContext gameContext, GameLevel level);
 
+    void updateEntities(GameContext gameContext, GameLevel level);
+
     void onEatPellet(GameContext gameContext, GameLevel level, Vector2i tile);
 
     void onEatEnergizer(GameContext gameContext, GameLevel level, Vector2i tile);
