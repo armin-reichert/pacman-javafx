@@ -199,18 +199,17 @@ public abstract class CommonGamePlay implements GamePlay {
         }
 
         updateEntities(gameContext, level);
-
-        detectCollisions(gameContext);
-        evalCollisions(gameContext);
+        detectCollisions(gameContext, level);
+        evalCollisions(gameContext, level);
     }
 
     private void updateGhosts(GameContext gameContext, GameLevel level) {
-            if (gameContext.state().id().equals(CommonGameStateID.GAME_LEVEL_EATING_GHOST)) {
-                level.ghostsInAnyOfStates(GhostStateSystem.UPDATED_GHOST_STATES_WHILE_EATEN)
-                    .forEach(ghost -> updateGhost(gameContext, level, ghost));
-            } else {
-                level.entities().ghosts().forEach(ghost -> updateGhost(gameContext, level, ghost));
-            }
+        if (gameContext.state().id().equals(CommonGameStateID.GAME_LEVEL_EATING_GHOST)) {
+            level.ghostsInAnyOfStates(GhostStateSystem.UPDATED_GHOST_STATES_WHILE_EATEN)
+                .forEach(ghost -> updateGhost(gameContext, level, ghost));
+        } else {
+            level.entities().ghosts().forEach(ghost -> updateGhost(gameContext, level, ghost));
+        }
     }
 
     private void updateGhost(GameContext gameContext, GameLevel level, Ghost ghost) {
@@ -270,28 +269,23 @@ public abstract class CommonGamePlay implements GamePlay {
         gameContext.systems().worldNavigator().tryMovingOrTeleporting(pac, level, gameContext.systems().pacWorldMovementPolicy());
     }
 
-    private void evalCollisions(GameContext gameContext) {
-        final GameLevel level = gameContext.assertLevel();
+    private void evalCollisions(GameContext gameContext, GameLevel level) {
         final HuntingStepResult result = gameContext.thisFrame().huntingStep();
-
-        checkFoodFound(gameContext);
-
+        checkFoodFound(gameContext, level);
         if (result.foundEdibleBonus()) {
             onEatBonus(gameContext, level, result.edibleBonus());
         }
-
         evalPacKilled(result, level);
         if (result.pacKilled()) {
-            fixPacPositionIfKilledInsidePortal(gameContext);
+            fixPacPositionIfKilledInsidePortal(level);
         }
         else {
             evalGhostsKilled(gameContext, level, result);
         }
     }
 
-    private void checkFoodFound(GameContext gameContext) {
+    private void checkFoodFound(GameContext gameContext, GameLevel level) {
         final HuntingStepResult huntingResult = gameContext.thisFrame().huntingStep();
-        final GameLevel level = gameContext.assertLevel();
         final Pac pac = level.entities().pac();
         final PacDigestionSystem pacDigestionSystem = gameContext.systems().pacDigestion();
 
@@ -335,8 +329,7 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     // If collision happened while teleporting (horizontally), move collided actors into visible world
-    private void fixPacPositionIfKilledInsidePortal(GameContext gameContext) {
-        final GameLevel level = gameContext.assertLevel();
+    private void fixPacPositionIfKilledInsidePortal(GameLevel level) {
         final Pac pac = level.entities().pac();
         final Vector2i pacTile = WorldNavigationSystem.computeTile(pac);
         final TerrainLayer terrain = level.worldMap().terrainLayer();
@@ -533,14 +526,13 @@ public abstract class CommonGamePlay implements GamePlay {
 
     // private
 
-    private void detectCollisions(GameContext gameContext) {
-        detectFoodCollision(gameContext);
-        detectEdibleBonusCollision(gameContext);
-        detectPacGhostCollision(gameContext);
+    private void detectCollisions(GameContext gameContext, GameLevel level) {
+        detectFoodCollision(gameContext, level);
+        detectEdibleBonusCollision(gameContext, level);
+        detectPacGhostCollision(gameContext, level);
     }
 
-    private void detectPacGhostCollision(GameContext gameContext) {
-        final GameLevel level = gameContext.assertLevel();
+    private void detectPacGhostCollision(GameContext gameContext, GameLevel level) {
         final GameModel model = gameContext.model();
         final CollisionStrategy strategy = model.rules().actorCollisionRules().getCollisionStrategy();
         final Pac pac = level.entities().pac();
@@ -551,8 +543,7 @@ public abstract class CommonGamePlay implements GamePlay {
             .forEach(gameContext.thisFrame().huntingStep().ghostsCollidingWithPac()::add);
     }
 
-    private void detectEdibleBonusCollision(GameContext gameContext) {
-        final GameLevel level = gameContext.assertLevel();
+    private void detectEdibleBonusCollision(GameContext gameContext, GameLevel level) {
         final GameModel model = gameContext.model();
         final CollisionStrategy strategy = model.rules().actorCollisionRules().getCollisionStrategy();
         final Pac pac = level.entities().pac();
@@ -563,8 +554,7 @@ public abstract class CommonGamePlay implements GamePlay {
         }
     }
 
-    private void detectFoodCollision(GameContext gameContext) {
-        final GameLevel level = gameContext.assertLevel();
+    private void detectFoodCollision(GameContext gameContext, GameLevel level) {
         final Pac pac = level.entities().pac();
         final FoodLayer foodLayer = level.worldMap().foodLayer();
         final Vector2i pacTile = WorldNavigationSystem.computeTile(pac);
