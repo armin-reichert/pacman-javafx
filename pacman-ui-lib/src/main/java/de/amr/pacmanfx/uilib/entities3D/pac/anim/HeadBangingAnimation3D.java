@@ -20,6 +20,7 @@ import javafx.geometry.Point3D;
 import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
+import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
@@ -27,7 +28,9 @@ public class HeadBangingAnimation3D extends ManagedAnimation implements Pac3DMov
 
     private static final short    BANG_ANGLE_FROM = -10;
     private static final short    BANG_ANGLE_TO = 15;
+
     private static final Duration BANG_TIME = Duration.seconds(0.3);
+
     private static final float    POWER_ANGLE_AMPLIFICATION = 2.0f;
     private static final float    POWER_RATE = 2.0f;
 

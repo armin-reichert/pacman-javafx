@@ -19,14 +19,17 @@ public class Pac3DViewComp implements GameEntityComponent {
     private final ObjectProperty<DrawMode> drawMode = new SimpleObjectProperty<>(DrawMode.FILL);
 
     private final Group root = new Group();
+
     private final Group bodyGroup = new Group();
+
+    private final Group facingGroup = new Group();
+
     private final PointLight powerLight = new PointLight();
-    private final Rotate facingRotate = new Rotate(0, Rotate.Z_AXIS);
+
     private Vector3f center;
 
     public Pac3DViewComp() {
-        final Group facingGroup = new Group(bodyGroup);
-        facingGroup.getTransforms().addAll(facingRotate);
+        facingGroup.getChildren().add(bodyGroup);
         root.getChildren().setAll(facingGroup);
         Ufx.bindDrawMode(bodyGroup, drawMode);
         //Ufx.bindDrawMode(jaw, drawMode);
@@ -52,8 +55,8 @@ public class Pac3DViewComp implements GameEntityComponent {
         return bodyGroup;
     }
 
-    public Rotate facingRotate() {
-        return facingRotate;
+    public Group facingGroup() {
+        return facingGroup;
     }
 
     public PointLight powerLight() {

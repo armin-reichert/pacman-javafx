@@ -64,6 +64,6 @@ public class Pac3DTransformSystem {
             case RIGHT -> 180;
             case DOWN -> 270;
         };
-        view3D.facingRotate().setAngle(angle);
+        view3D.facingGroup().setRotate(angle);
     }
 }
