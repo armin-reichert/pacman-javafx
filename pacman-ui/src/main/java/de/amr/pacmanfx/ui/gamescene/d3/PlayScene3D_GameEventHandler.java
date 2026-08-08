@@ -80,7 +80,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
             return;
         }
         if (gameState.id() instanceof TestStateID) {
-            handleTestState(appContext().ui().viewModel().common3D, gameContext());
+            handleTestState(appContext().ui().viewModel().common3D, gameContext().assertLevel());
         }
         else if (CommonGameStateID.GAME_OR_LEVEL_STARTING.hasSameNameAs(newState)) {
             //TODO anything?
@@ -146,7 +146,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 
     @Override
     default void onLevelCreated(LevelCreatedEvent event) {
-        gameScene().replaceGameLevel3D(gameContext());
+        gameScene().replaceGameLevel3D(event.level());
     }
 
     @Override
@@ -157,7 +157,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 
         //TODO rethink this
         if (newState instanceof GameState gameState && gameState.id() instanceof TestStateID) {
-            gameScene().replaceGameLevel3D(gameContext);
+            gameScene().replaceGameLevel3D(level);
             final GameLevel3D level3D = assertLevel3D();
             level3D.energizers3D().forEach(Energizer3D::startPumping);
             level3D.messageManager().showMessage(MessageManager3D.MessageType.TEST, level.number());
@@ -368,10 +368,10 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         level3D.optSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);
     }
 
-    private void handleTestState(Game3DSettingsVM globals3D, GameContext gameContext) {
+    private void handleTestState(Game3DSettingsVM globals3D, GameLevel level) {
         gameScene().optGameLevel3D().ifPresent(level3D -> {
-            gameScene().replaceGameLevel3D(gameContext);
-            level3D.messageManager().showMessage(MessageManager3D.MessageType.TEST, gameContext.assertLevel().number());
+            gameScene().replaceGameLevel3D(level);
+            level3D.messageManager().showMessage(MessageManager3D.MessageType.TEST, level.number());
             globals3D.cameraPerspectiveIdProperty.set(PerspectiveID.TOTAL);
         });
     }

@@ -25,14 +25,14 @@ import de.amr.pacmanfx.ui.gamescene.d3.entities.livescounter.LivesCounterView3DS
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.vm.Game3DSettingsVM;
 import de.amr.pacmanfx.ui.vm.GameUISettingsVM;
+import de.amr.pacmanfx.uilib.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
-import de.amr.pacmanfx.uilib.DisposableGraphicsObject;
-import de.amr.pacmanfx.uilib.entities3D.score.comp.ScoreViewComp;
 import de.amr.pacmanfx.uilib.entities3D.pac.system.Pac3DAnimationSystem;
 import de.amr.pacmanfx.uilib.entities3D.pac.system.Pac3DTransformSystem;
-import de.amr.pacmanfx.uilib.widgets.ScoresView;
+import de.amr.pacmanfx.uilib.entities3D.score.comp.ScoreViewComp;
 import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
+import de.amr.pacmanfx.uilib.widgets.ScoresView;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
@@ -177,9 +177,8 @@ public class PlayScene3D extends AbstractGameScene
         });
     }
 
-    public void replaceGameLevel3D(GameContext gameContext) {
-        requireNonNull(gameContext);
-        final GameLevel level = gameContext.assertLevel();
+    public void replaceGameLevel3D(GameLevel level) {
+        requireNonNull(level);
 
         if (level3D != null) {
             Logger.info("Old 3D game level is disposed...");
@@ -187,7 +186,7 @@ public class PlayScene3D extends AbstractGameScene
         }
         final GameUISettingsVM viewModel = appContext().ui().viewModel();
 
-        level3D = new GameLevel3D(viewModel, gameContext, appContext().variants().currentVariant().config());
+        level3D = new GameLevel3D(viewModel, level, appContext().variants().currentVariant().config());
         decorate(level3D);
         level3DEmbedder.getChildren().setAll(level3D);
 

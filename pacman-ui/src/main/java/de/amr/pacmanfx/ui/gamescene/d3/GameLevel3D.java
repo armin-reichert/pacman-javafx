@@ -9,7 +9,6 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.math.Vector3f;
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.*;
@@ -116,15 +115,10 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private MessageManager3D messageManager;
 
-    public GameLevel3D(
-        GameUISettingsVM viewModel,
-        GameContext gameContext,
-        GameVariantConfig gameVariantConfig)
-    {
+    public GameLevel3D(GameUISettingsVM viewModel, GameLevel level, GameVariantConfig gameVariantConfig) {
         this.viewModel = requireNonNull(viewModel);
+        this.level = requireNonNull(level);
         this.gameVariantConfig = requireNonNull(gameVariantConfig);
-
-        this.level = gameContext.assertLevel();
 
         createMaze3D();
         createFood3D();

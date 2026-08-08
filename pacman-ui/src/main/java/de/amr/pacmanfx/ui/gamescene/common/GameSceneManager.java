@@ -142,7 +142,7 @@ public class GameSceneManager {
         final LivesCounter livesCounter = level.entities().theOne(LivesCounter.class);
         final Pac pac = level.entities().pac();
 
-        playScene3D.replaceGameLevel3D(gameContext);
+        playScene3D.replaceGameLevel3D(level);
         final GameLevel3D level3D = playScene3D.optGameLevel3D().orElseThrow();
 
         playScene3D.replaceActionBindings(level);
