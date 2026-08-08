@@ -7,6 +7,7 @@ package de.amr.pacmanfx.uilib.entities3D.pac.comp;
 import de.amr.basics.math.Vector3f;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.ecs.GameEntityComponent;
+import javafx.animation.RotateTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Group;
@@ -18,19 +19,20 @@ public class Pac3DViewComp implements GameEntityComponent {
 
     private final ObjectProperty<DrawMode> drawMode = new SimpleObjectProperty<>(DrawMode.FILL);
 
-    private final Group root = new Group();
+    private final Group root;
 
-    private final Group bodyGroup = new Group();
-
-    private final Group facingGroup = new Group();
+    private final Group bodyGroup;
 
     private final PointLight powerLight = new PointLight();
 
     private Vector3f center;
 
     public Pac3DViewComp() {
-        facingGroup.getChildren().add(bodyGroup);
-        root.getChildren().setAll(facingGroup);
+        root = new Group();
+        bodyGroup = new Group();
+
+        root.getChildren().setAll(bodyGroup);
+
         Ufx.bindDrawMode(bodyGroup, drawMode);
         //Ufx.bindDrawMode(jaw, drawMode);
     }
@@ -53,10 +55,6 @@ public class Pac3DViewComp implements GameEntityComponent {
 
     public Group bodyGroup() {
         return bodyGroup;
-    }
-
-    public Group facingGroup() {
-        return facingGroup;
     }
 
     public PointLight powerLight() {

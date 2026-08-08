@@ -3,43 +3,45 @@
  */
 package de.amr.pacmanfx.uilib.entities3D.pac.anim;
 
+import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DViewComp;
 import javafx.animation.*;
+import javafx.geometry.Point3D;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
 public class PacChewingAnimation3D extends ManagedAnimation {
 
-    public PacChewingAnimation3D(Pac3DViewComp view3D) {
-        super("Pac-Man Chewing");
-        setAnimationFactory(() -> createChewingAnimation(view3D.jaw()));
-    }
+    private static final Point3D AXIS = Rotate.Y_AXIS;
+    private final Pac pac;
 
-    private Animation createChewingAnimation(Group jaw) {
-        final var mouthClosed = new KeyValue[]{
-            new KeyValue(jaw.rotationAxisProperty(), Rotate.Y_AXIS),
-            new KeyValue(jaw.rotateProperty(), -54, Interpolator.LINEAR)
-        };
-        final var mouthOpen = new KeyValue[]{
-            new KeyValue(jaw.rotationAxisProperty(), Rotate.Y_AXIS),
-            new KeyValue(jaw.rotateProperty(), 0, Interpolator.LINEAR)
-        };
-        final var chewing = new Timeline(
-            new KeyFrame(Duration.ZERO, "Open on Start", mouthOpen),
-            new KeyFrame(Duration.millis(100), "Start Closing", mouthOpen),
-            new KeyFrame(Duration.millis(130), "Closed", mouthClosed),
-            new KeyFrame(Duration.millis(200), "Start Opening", mouthClosed),
-            new KeyFrame(Duration.millis(280), "Open", mouthOpen)
-        );
-        chewing.setCycleCount(Animation.INDEFINITE);
-        chewing.statusProperty().addListener((_, _, newStatus) -> {
-            if (newStatus == Animation.Status.STOPPED) {
-                jaw.setRotationAxis(Rotate.Y_AXIS);
-                jaw.setRotate(0);
-            }
+    public PacChewingAnimation3D(Pac pac) {
+        super("Pac-Man Chewing");
+        this.pac = pac;
+
+        final Pac3DViewComp view3D = pac.requireComponent(Pac3DViewComp.class);
+        final Node jaw = view3D.jaw();
+        setAnimationFactory(() -> {
+            final var mouthClosed = new KeyValue[]{
+                new KeyValue(jaw.rotationAxisProperty(), AXIS),
+                new KeyValue(jaw.rotateProperty(), -54, Interpolator.LINEAR)
+            };
+            final var mouthOpen = new KeyValue[]{
+                new KeyValue(jaw.rotationAxisProperty(), AXIS),
+                new KeyValue(jaw.rotateProperty(), 0, Interpolator.LINEAR)
+            };
+            final var chewing = new Timeline(
+                new KeyFrame(Duration.ZERO, "Open on Start", mouthOpen),
+                new KeyFrame(Duration.millis(100), "Start Closing", mouthOpen),
+                new KeyFrame(Duration.millis(130), "Closed", mouthClosed),
+                new KeyFrame(Duration.millis(200), "Start Opening", mouthClosed),
+                new KeyFrame(Duration.millis(280), "Open", mouthOpen)
+            );
+            chewing.setCycleCount(Animation.INDEFINITE);
+            return chewing;
         });
-        return chewing;
     }
 }

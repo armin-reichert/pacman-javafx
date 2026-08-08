@@ -92,9 +92,12 @@ public class Pac3DAnimationSystem {
         );
         animation.setOnFinished(_ -> onFinishedCallback.run());
 
-        pacAnimation.chewing().stop();
-        pacAnimation.movement().managedAnimation().stop();
-
+        if (pacAnimation.chewing() != null) {
+            pacAnimation.chewing().stop();
+        }
+        if (pacAnimation.movement() != null) {
+            pacAnimation.movement().managedAnimation().stop();
+        }
         animation.play();
     }
 }

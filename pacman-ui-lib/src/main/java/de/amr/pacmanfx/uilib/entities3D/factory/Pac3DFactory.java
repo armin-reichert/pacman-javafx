@@ -39,17 +39,13 @@ public class Pac3DFactory {
         configurePowerLight(view3D, config.colors().headColor().desaturate());
 
         final Pac3DAnimationComp animation = pac.requireComponent(Pac3DAnimationComp.class);
-        final var chewing = new PacChewingAnimation3D(view3D);
-        final var hipSwaying = new HeadBangingAnimation3D(pac);
+        final var chewing = new PacChewingAnimation3D(pac);
+        final var movement = new HeadBangingAnimation3D(pac);
         final var dying = new PacManDyingAnimation3D(view3D);
 
         animation.setChewing(chewing);
-        animation.setMovement(hipSwaying);
+//        animation.setMovement(movement);
         animation.setDying(dying);
-
-        animationRegistry.register(Pac3DAnimationID.CHEWING, chewing);
-        animationRegistry.register(Pac3DAnimationID.MOVING,  hipSwaying);
-        animationRegistry.register(Pac3DAnimationID.DYING,   dying);
     }
 
     public static void createMsPacManView3D(AnimationRegistry animationRegistry, Pac msPacMan, PacSettings config) {
@@ -62,16 +58,12 @@ public class Pac3DFactory {
         configurePowerLight(view3D, config.colors().headColor().desaturate());
 
         final Pac3DAnimationComp animation = msPacMan.requireComponent(Pac3DAnimationComp.class);
-        final var chewing = new PacChewingAnimation3D(view3D);
+        final var chewing = new PacChewingAnimation3D(msPacMan);
         final var hipSwaying = new HipSwayingAnimation3D(msPacMan);
         final var dying = new MsPacManDyingAnimation3D(view3D);
         animation.setChewing(chewing);
-        animation.setMovement(hipSwaying);
+//        animation.setMovement(hipSwaying);
         animation.setDying(dying);
-
-        animationRegistry.register(Pac3DAnimationID.CHEWING, chewing);
-        animationRegistry.register(Pac3DAnimationID.MOVING,  hipSwaying);
-        animationRegistry.register(Pac3DAnimationID.DYING,   dying);
     }
 
     private static void ensurePacHas3DView(Pac pac, AnimationRegistry animationRegistry) {

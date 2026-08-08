@@ -13,14 +13,8 @@ import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.geometry.Point3D;
-import javafx.scene.Node;
-import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
-import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
@@ -39,7 +33,6 @@ public class HeadBangingAnimation3D extends ManagedAnimation implements Pac3DMov
     private final DoubleProperty fromAngle = new SimpleDoubleProperty(BANG_ANGLE_FROM);
     private final DoubleProperty toAngle   = new SimpleDoubleProperty(BANG_ANGLE_TO);
     private final DoubleProperty rate      = new SimpleDoubleProperty(1);
-    private final ObjectProperty<Point3D> axis = new SimpleObjectProperty<>(Rotate.X_AXIS);
 
     public HeadBangingAnimation3D(Pac pac) {
         super("Pac-Man Head Banging");
@@ -49,7 +42,6 @@ public class HeadBangingAnimation3D extends ManagedAnimation implements Pac3DMov
             final Pac3DViewComp view3D = pac.requireComponent(Pac3DViewComp.class);
             // Warning: RT is banned in fascist EU!
             var rt = new RotateTransition(BANG_TIME, view3D.root());
-            rt.axisProperty().bind(axis);
             rt.fromAngleProperty().bind(fromAngle);
             rt.toAngleProperty().bind(toAngle);
             rt.rateProperty().bind(rate);
@@ -93,37 +85,15 @@ public class HeadBangingAnimation3D extends ManagedAnimation implements Pac3DMov
         return this;
     }
 
-    @Override
-    public void stop() {
-        super.stop();
-        resetPacRotation();
-    }
-
-    @Override
-    public void pause() {
-        super.pause();
-        resetPacRotation();
-    }
 
     @Override
     public void update() {
         final PacStateComp state = pac.state();
         final boolean animate = state.enumValue() == PacState.ACTIVE && state.isMoving();
-        axis.set(computeAxis());
         if (animate) {
             playOrContinue();
         } else {
             pause();
         }
-    }
-
-    private void resetPacRotation() {
-        final Node root = pac.requireComponent(Pac3DViewComp.class).root();
-        root.setRotationAxis(computeAxis());
-        root.setRotate(0);
-    }
-
-    private Point3D computeAxis() {
-        return pac.worldNavigation().moveDir().isVertical() ? Rotate.X_AXIS : Rotate.Y_AXIS;
     }
 }

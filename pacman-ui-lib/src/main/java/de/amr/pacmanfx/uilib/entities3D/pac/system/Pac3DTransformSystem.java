@@ -12,6 +12,7 @@ import de.amr.pacmanfx.core.entities.pac.comp.PacState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DViewComp;
+import javafx.scene.transform.Rotate;
 
 import static java.util.Objects.requireNonNull;
 
@@ -64,6 +65,7 @@ public class Pac3DTransformSystem {
             case RIGHT -> 180;
             case DOWN -> 270;
         };
-        view3D.facingGroup().setRotate(angle);
+        view3D.root().setRotationAxis(Rotate.Z_AXIS);
+        view3D.root().setRotate(angle);
     }
 }
