@@ -62,6 +62,48 @@ public class GameLevel3DAnimations implements Disposable {
         WALL_COLOR_FLASHING
     }
 
+    public void startEnergizerPumping() {
+        level3D.energizers3D().forEach(this::startPumping);
+    }
+
+    public void stopEnergizerPumping() {
+        level3D.energizers3D().forEach(this::stopPumping);
+    }
+
+    public void stopWallFlashing() {
+        registry
+            .optAnimation(GameLevel3DAnimations.AnimationID.WALL_COLOR_FLASHING)
+            .ifPresent(ManagedAnimation::stop);
+    }
+
+    public void startWallFlashing() {
+        registry
+            .optAnimation(GameLevel3DAnimations.AnimationID.WALL_COLOR_FLASHING)
+            .ifPresent(ManagedAnimation::playFromStart);
+    }
+
+    public void startParticlesAnimation() {
+        registry.optAnimation(GameLevel3DAnimations.AnimationID.PARTICLES)
+            .ifPresent(ManagedAnimation::playFromStart);
+    }
+
+    public void stopParticlesAnimation() {
+        registry.optAnimation(GameLevel3DAnimations.AnimationID.PARTICLES)
+            .ifPresent(ManagedAnimation::stop);
+    }
+
+    public void startGhostLightAnimation() {
+        registry.optAnimation(GameLevel3DAnimations.AnimationID.GHOST_LIGHT)
+            .ifPresent(ManagedAnimation::playFromStart);
+    }
+
+    public void stopAnimationsBeforePacManDies() {
+        registry.optAnimation(GameLevel3DAnimations.AnimationID.GHOST_LIGHT).ifPresent(ManagedAnimation::stop);
+        registry.optAnimation(GameLevel3DAnimations.AnimationID.WALL_COLOR_FLASHING).ifPresent(ManagedAnimation::stop);
+    }
+
+    // -----------------------
+
     private final AnimationRegistry registry = new AnimationRegistry();
 
     final ParticlesAnimationConfig particlesAnimationConfig = Game3DSettingsVM.DEFAULT_PARTICLE_ANIMATION_CONFIG;

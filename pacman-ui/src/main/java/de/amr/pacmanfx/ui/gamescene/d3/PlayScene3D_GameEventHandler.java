@@ -10,10 +10,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
-import de.amr.pacmanfx.core.entities.Bonus;
-import de.amr.pacmanfx.core.entities.Ghost;
-import de.amr.pacmanfx.core.entities.House;
-import de.amr.pacmanfx.core.entities.MessageView;
+import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventListener;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
 import de.amr.pacmanfx.core.event.bonus.BonusEatenEvent;
@@ -26,6 +23,7 @@ import de.amr.pacmanfx.core.event.pac.PacLostPowerEvent;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
@@ -83,9 +81,6 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         }
         if (gameState.id() instanceof TestStateID) {
             handleTestState(appContext().ui().viewModel().common3D, gameContext().assertLevel());
-        }
-        else if (CommonGameStateID.GAME_OR_LEVEL_STARTING.hasSameNameAs(newState)) {
-            //TODO anything?
         }
         else if (CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(newState)) {
             onHuntingStart();
@@ -159,21 +154,18 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     @Override
     default void onLevelStarted(LevelStartedEvent event) {
         final GameLevel level = event.level();
+        final GameLevel3D level3D = assertLevel3D();
         final GameContext gameContext = gameContext();
         final State<GameContext> newState = gameContext.state();
 
         //TODO rethink this
         if (newState instanceof GameState gameState && gameState.id() instanceof TestStateID) {
             gameScene().replaceGameLevel3D(level);
-            final GameLevel3D level3D = assertLevel3D();
-            level3D.energizers3D().forEach(energizer3D ->
-                GameLevel3DAnimationSystem.startEnergizerPumping(level3D.animations(), energizer3D));
+            level3D.animations().startEnergizerPumping();
             level3D.showMessage(MessageView3DDisplaySystem.MessageType.TEST, level.number());
         }
 
-        final GameLevel3D level3D = assertLevel3D();
         level3D.createLevelCounterView3D(gameContext.model().levelCounter());
-
         gameScene().replaceActionBindings(level);
         gameScene().fadeInAnimation().playFromStart();
     }
@@ -181,13 +173,16 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     @Override
     default void onPacEatsFood(PacEatsFoodEvent event) {
         final GameLevel3D level3D = assertLevel3D();
+        final long tick = appContext().clock().currentTick();
+
         if (event.allPellets()) {
             level3D.pellets3D().map(Pellet3D::shape).forEach(shape -> level3D.getChildren().remove(shape));
-        } else {
+        }
+        else {
             final Vector2i tile = WorldNavigationSystem.computeTile(event.pac());
             if (event.energizer()) {
                 level3D.energizer3DAt(tile).ifPresent(energizer3D -> {
-                    GameLevel3DAnimationSystem.stopEnergizerPumping(level3D.animations(), energizer3D);
+                    level3D.animations().stopPumping(energizer3D);
                     energizer3D.hide();
                     triggerEnergizerExplosion(level3D, energizer3D.shape().localToScene(Point3D.ZERO));
                 });
@@ -195,7 +190,6 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
             }
             else {
                 level3D.pellet3DAtTile(tile).ifPresent(pellet3D -> removePelletAfterDelay(level3D, pellet3D));
-                final long tick = appContext().clock().currentTick();
                 optSoundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
             }
         }
@@ -212,27 +206,28 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 
 
     @Override
-    default void onPacGetsPower(PacGetsPowerEvent event) {
+    default void onPacGetsPower(PacGetsPowerEvent e) {
+        final Pac pac = e.pac();
         final GameLevel level = gameContext().assertLevel();
         final GameLevel3D level3D = assertLevel3D();
-        final GameContext gameContext = gameContext();
+        final GameRules rules = gameContext().model().rules();
+
         optSoundEffects().ifPresent(GameSoundEffects::stopSiren);
-        if (!gameContext.model().rules().isLevelCompleted(level3D.level())) {
-            Pac3DAnimationSystem.setPowerMode(level.entities().pac(), true);
-            level3D.animations().registry().optAnimation(GameLevel3DAnimations.AnimationID.WALL_COLOR_FLASHING)
-                .ifPresent(ManagedAnimation::playFromStart);
+        if (!rules.isLevelCompleted(level)) {
             optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
+            Pac3DAnimationSystem.setPowerMode(pac, true);
+            level3D.animations().startWallFlashing();
         }
     }
 
     @Override
-    default void onPacLostPower(PacLostPowerEvent ignoredEvent) {
-        final GameLevel level = gameContext().assertLevel();
+    default void onPacLostPower(PacLostPowerEvent e) {
+        final Pac pac = e.pac();
         final GameLevel3D level3D = assertLevel3D();
-        Pac3DAnimationSystem.setPowerMode(level.entities().pac(), true);
+
         optSoundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
-        level3D.animations().registry().optAnimation(GameLevel3DAnimations.AnimationID.WALL_COLOR_FLASHING)
-            .ifPresent(ManagedAnimation::stop);
+        level3D.animations().stopWallFlashing();
+        Pac3DAnimationSystem.setPowerMode(pac, true);
     }
 
     @Override
@@ -248,44 +243,29 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 
         gameScene().initPac(level, level.entities().pac());
 
-        level3D.energizers3D().forEach(energizer3D ->
-            GameLevel3DAnimationSystem.startEnergizerPumping(level3D.animations(), energizer3D));
-
-        level3D.animations().registry().optAnimation(GameLevel3DAnimations.AnimationID.PARTICLES)
-            .ifPresent(ManagedAnimation::playFromStart);
-
-        level3D.animations().registry().optAnimation(GameLevel3DAnimations.AnimationID.GHOST_LIGHT)
-            .ifPresent(ManagedAnimation::playFromStart);
+        level3D.animations().startEnergizerPumping();
+        level3D.animations().startParticlesAnimation();
+        level3D.animations().startGhostLightAnimation();
     }
 
     private void onPacManDying(AnimationRegistry animationRegistry) {
         final GameLevel level = gameContext().assertLevel();
+        final GameLevel3D level3D = assertLevel3D();
 
         gameContext().state().waitForTimeout();
 
-        stopAnimationsBeforePacManDying();
         optSoundEffects().ifPresent(GameSoundEffects::stopAll);
+
         level.entities().optBonus().ifPresent(
             bonus -> Bonus3DViewSystem.lookExpired(bonus, animationRegistry)
         );
 
+        level3D.animations().stopAnimationsBeforePacManDies();
         Pac3DAnimationSystem.playDyingAnimation(
             level.entities().pac(),
             () -> optSoundEffects().ifPresent(GameSoundEffects::playPacDeadSound),
             gameContext().state()::triggerTimeout
         );
-    }
-
-    private void stopAnimationsBeforePacManDying() {
-        final GameLevel3D level3D = assertLevel3D();
-
-        //TODO call ghost 3D animation system methods
-
-        // Do not stop all animations!
-        level3D.animations().registry().optAnimation(GameLevel3DAnimations.AnimationID.GHOST_LIGHT).ifPresent(ManagedAnimation::stop);
-        level3D.animations().registry().optAnimation(GameLevel3DAnimations.AnimationID.WALL_COLOR_FLASHING).ifPresent(ManagedAnimation::stop);
-
-        //level3D.ghosts3D.forEach(Ghost3DWrapperToBeRemoved::stopAllAnimations);
     }
 
     private void onGhostsKilled() {

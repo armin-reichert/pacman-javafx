@@ -168,11 +168,10 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     public void cleanupFoodAndParticles() {
-//        animationRegistry.optAnimation(AnimationID.PARTICLES).ifPresent(ManagedAnimation::stop);
-        energizer3DByTile.values().forEach(energizer3D -> {
-            GameLevel3DAnimationSystem.stopEnergizerPumping(animations, energizer3D);
-            energizer3D.hide();
-        });
+        animations.stopParticlesAnimation();
+        animations.stopEnergizerPumping();
+
+        energizer3DByTile.values().forEach(Energizer3D::hide);
         // Hide 3D food explicitly (handles cheat-eat-all case)
         pellet3DByTile.values().forEach(pellet3D -> pellet3D.shape().setVisible(false));
         maze3D.particlesGroup().getChildren().clear();
@@ -401,24 +400,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             case TEST -> vec2_float(terrain.numCols() * WorldMap.HTS, (terrain.numRows() - 2) * WorldMap.TS);
         };
     }
-
-    /*
-
-    private void createMessageView3D() {
-        final TerrainLayer terrain = level.worldMap().terrainLayer();
-        final House house = level.entities().theOne(House.class);
-        if (house != null) {
-            messageManager.setMessageCenter(MessageView3DDisplaySystem.MessageType.READY, house.centerPositionUnderHouse());
-        } else {
-            Logger.error("No house in this game level! WTF?");
-            final double x = terrain.numCols() * WorldMap.HTS, y = terrain.numRows() * WorldMap.HTS;
-            messageManager.setMessageCenter(MessageView3DDisplaySystem.MessageType.READY, vec2_float(x, y));
-        }
-        messageManager.setMessageCenter(MessageView3DDisplaySystem.MessageType.TEST,
-            vec2_float(terrain.numCols() * WorldMap.HTS, (terrain.numRows() - 2) * WorldMap.TS));
-    }
-
-     */
 
     private void createMessageView3D() {
         MessageView3DBuilder.ensureAnim3DExists(level.entities().theOne(MessageView.class));
