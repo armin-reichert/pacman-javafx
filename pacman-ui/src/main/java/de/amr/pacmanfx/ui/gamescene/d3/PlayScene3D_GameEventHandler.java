@@ -196,7 +196,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     }
 
     private void triggerEnergizerExplosion(GameLevel3D level3D, Point3D center) {
-        level3D.animations().registry().optAnimation(GameLevel3DAnimations.AnimationID.PARTICLES, ParticlesAnimation3D.class)
+        level3D.animations().registry().optAnimation(GameLevel3DAnimationManager.AnimationID.PARTICLES, ParticlesAnimation3D.class)
             .ifPresent(animation -> animation.triggerExplosion(center));
     }
 
@@ -308,9 +308,9 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         Maze3D maze3D,
         boolean cutSceneFollows)
     {
-        final GameLevel3DAnimations.AnimationID animationID = cutSceneFollows
-            ? GameLevel3DAnimations.AnimationID.LEVEL_COMPLETED_SHORT
-            : GameLevel3DAnimations.AnimationID.LEVEL_COMPLETED_FULL;
+        final GameLevel3DAnimationManager.AnimationID animationID = cutSceneFollows
+            ? GameLevel3DAnimationManager.AnimationID.LEVEL_COMPLETED_SHORT
+            : GameLevel3DAnimationManager.AnimationID.LEVEL_COMPLETED_FULL;
 
         final Optional<ManagedAnimation> levelEndAnimation = animationRegistry.optAnimation(animationID);
 
@@ -350,7 +350,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         if (!level.isDemoLevel() && RandomNumberSupport.chance(0.25)) {
             appContext().ui().shortMessage(Duration.seconds(2.5), textPicker().selectNextText());
         }
-        level3D.animations().registry().requireAnimation(GameLevel3DAnimations.AnimationID.GHOST_LIGHT).stop();
+        level3D.animations().registry().requireAnimation(GameLevel3DAnimationManager.AnimationID.GHOST_LIGHT).stop();
         level3D.cleanupFoodAndParticles();
 
         level.optBonus().ifPresent(bonus -> Bonus3DViewSystem.lookExpired(bonus, level3D.animations().registry()));

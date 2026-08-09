@@ -52,7 +52,7 @@ import java.util.List;
 import static de.amr.basics.math.RandomNumberSupport.RANDOM_GENERATOR;
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
 
-public class GameLevel3DAnimations implements Disposable {
+public class GameLevel3DAnimationManager implements Disposable {
 
     public enum AnimationID implements Named {
         GHOST_LIGHT,
@@ -72,34 +72,34 @@ public class GameLevel3DAnimations implements Disposable {
 
     public void stopWallFlashing() {
         registry
-            .optAnimation(GameLevel3DAnimations.AnimationID.WALL_COLOR_FLASHING)
+            .optAnimation(GameLevel3DAnimationManager.AnimationID.WALL_COLOR_FLASHING)
             .ifPresent(ManagedAnimation::stop);
     }
 
     public void startWallFlashing() {
         registry
-            .optAnimation(GameLevel3DAnimations.AnimationID.WALL_COLOR_FLASHING)
+            .optAnimation(GameLevel3DAnimationManager.AnimationID.WALL_COLOR_FLASHING)
             .ifPresent(ManagedAnimation::playFromStart);
     }
 
     public void startParticlesAnimation() {
-        registry.optAnimation(GameLevel3DAnimations.AnimationID.PARTICLES)
+        registry.optAnimation(GameLevel3DAnimationManager.AnimationID.PARTICLES)
             .ifPresent(ManagedAnimation::playFromStart);
     }
 
     public void stopParticlesAnimation() {
-        registry.optAnimation(GameLevel3DAnimations.AnimationID.PARTICLES)
+        registry.optAnimation(GameLevel3DAnimationManager.AnimationID.PARTICLES)
             .ifPresent(ManagedAnimation::stop);
     }
 
     public void startGhostLightAnimation() {
-        registry.optAnimation(GameLevel3DAnimations.AnimationID.GHOST_LIGHT)
+        registry.optAnimation(GameLevel3DAnimationManager.AnimationID.GHOST_LIGHT)
             .ifPresent(ManagedAnimation::playFromStart);
     }
 
     public void stopAnimationsBeforePacManDies() {
-        registry.optAnimation(GameLevel3DAnimations.AnimationID.GHOST_LIGHT).ifPresent(ManagedAnimation::stop);
-        registry.optAnimation(GameLevel3DAnimations.AnimationID.WALL_COLOR_FLASHING).ifPresent(ManagedAnimation::stop);
+        registry.optAnimation(GameLevel3DAnimationManager.AnimationID.GHOST_LIGHT).ifPresent(ManagedAnimation::stop);
+        registry.optAnimation(GameLevel3DAnimationManager.AnimationID.WALL_COLOR_FLASHING).ifPresent(ManagedAnimation::stop);
     }
 
     // -----------------------
@@ -113,7 +113,7 @@ public class GameLevel3DAnimations implements Disposable {
 
     private final GameLevel3D level3D;
 
-    public GameLevel3DAnimations(GameLevel3D level3D, GameVariantConfig gameVariantConfig) {
+    public GameLevel3DAnimationManager(GameLevel3D level3D, GameVariantConfig gameVariantConfig) {
         this.level3D = level3D;
         final GameLevel level = level3D.level();
         final GameVariantRenderConfig renderConfig = gameVariantConfig.renderConfig();

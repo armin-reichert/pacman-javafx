@@ -91,7 +91,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private Maze3D maze3D;
 
-    private final GameLevel3DAnimations animations;
+    private final GameLevel3DAnimationManager animations;
 
     public GameLevel3D(GameUISettingsVM viewModel, GameLevel level, GameVariantConfig gameVariantConfig) {
         this.viewModel = requireNonNull(viewModel);
@@ -107,7 +107,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         arrangeLayout();
 
         // Animations expect scene graph to be created
-        animations = new GameLevel3DAnimations(this, gameVariantConfig);
+        animations = new GameLevel3DAnimationManager(this, gameVariantConfig);
 
         setMouseTransparent(true); // this increases performance they say...
     }
@@ -131,7 +131,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     // Public accessors
 
 
-    public GameLevel3DAnimations animations() {
+    public GameLevel3DAnimationManager animations() {
         return animations;
     }
 

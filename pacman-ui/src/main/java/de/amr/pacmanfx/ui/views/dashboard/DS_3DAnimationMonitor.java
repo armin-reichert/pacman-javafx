@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d3.GameLevel3D;
-import de.amr.pacmanfx.ui.gamescene.d3.GameLevel3DAnimations;
+import de.amr.pacmanfx.ui.gamescene.d3.GameLevel3DAnimationManager;
 import de.amr.pacmanfx.ui.gamescene.d3.PlayScene3D;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
@@ -116,7 +116,7 @@ public class DS_3DAnimationMonitor extends GameDashboardSection {
                 .map(PlayScene3D.class::cast)
                 .flatMap(PlayScene3D::optGameLevel3D)
                 .map(GameLevel3D::animations)
-                .map(GameLevel3DAnimations::registry)
+                .map(GameLevel3DAnimationManager::registry)
                 .orElse(null);
 
         currentAnimationSet.set(animationSet);
