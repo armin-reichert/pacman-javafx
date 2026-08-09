@@ -45,6 +45,10 @@ public class Ghost3DViewComp implements GameEntityComponent {
     @Override
     public void reset() {}
 
+    public ObjectProperty<DrawMode> drawModeProperty() {
+        return drawMode;
+    }
+
     public Group root() {
         return root;
     }

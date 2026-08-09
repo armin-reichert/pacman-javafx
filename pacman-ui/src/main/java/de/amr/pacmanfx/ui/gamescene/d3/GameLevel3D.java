@@ -68,8 +68,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private final GameVariantConfig gameVariantConfig;
 
-    private final GameUISettingsVM viewModel;
-
     private final PointLight ghostHunterLight = new PointLight();
 
     private final Map<Vector2i, Energizer3D> energizer3DByTile = new HashMap<>();
@@ -81,14 +79,13 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private GameLevel3DAnimationManager animationManager;
 
     public GameLevel3D(GameUISettingsVM viewModel, GameLevel level, GameVariantConfig gameVariantConfig) {
-        this.viewModel = requireNonNull(viewModel);
         this.level = requireNonNull(level);
         this.gameVariantConfig = requireNonNull(gameVariantConfig);
 
-        createMaze3D();
+        createMaze3D(viewModel);
         createFood3D();
-        createPac3D();
-        createGhosts3D();
+        createPac3D(viewModel);
+        createGhosts3D(viewModel);
         createLivesCounter3D();
         createMessageView3D();
         arrangeLayout();
@@ -207,7 +204,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     // Private area, no trespassing!
 
-    private void createMaze3D() {
+    private void createMaze3D(GameUISettingsVM viewModel) {
         final WorldMapColorSchemeImpl colorScheme = gameVariantConfig.renderConfig().colorScheme(level.worldMap(), gameVariantConfig.worldSettings());
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final House house = level.entities().theOne(House.class);
@@ -274,18 +271,20 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return view3D;
     }
 
-    private void createPac3D() {
+    private void createPac3D(GameUISettingsVM viewModel) {
         final Pac pac = level.entities().pac();
         final PacSettings settings = gameVariantConfig.worldSettings().pac();
         gameVariantConfig.factory3D().createPac3D(pac, settings);
+
         pac.requireComp(Pac3DViewComp.class).drawModeProperty().bind(viewModel.common3D.drawModeProperty);
     }
 
-    private void createGhosts3D() {
+    private void createGhosts3D(GameUISettingsVM viewModel) {
         final List<GhostSettings> settings = gameVariantConfig.worldSettings().ghosts();
         level.entities().ghosts().forEach(ghost -> {
             final var ghostSettings = settings.get(ghost.personality().ordinal());
             gameVariantConfig.factory3D().createGhost3D(ghost, ghostSettings);
+            ghost.requireComp(Ghost3DViewComp.class).drawModeProperty().bind(viewModel.common3D.drawModeProperty);
         });
     }
 
