@@ -76,14 +76,15 @@ public class PlayScene3D extends AbstractGameScene
     /**
      * Creates a new 3D play scene with default camera, sub-scene, axes, and perspective manager.
      */
-    public PlayScene3D(GameAppContext appContext) {
-        super(appContext);
+    public PlayScene3D(GameAppContext app) {
+        super(app);
 
-        textPicker = new RandomTextPicker(appContext.ui().translations().textBundle(), "game.over");
+        textPicker = new RandomTextPicker(app.ui().translations().textBundle(), "game.over");
 
-        final GameUISettingsVM viewModel = appContext.ui().viewModel();
+        final GameUISettingsVM viewModel = app.ui().viewModel();
 
         perspectiveManager = new PerspectiveManager(camera);
+
         final var coordinateSystem = new CoordinateSystem();
         coordinateSystem.visibleProperty().bind(viewModel.common3D.axesVisibleProperty);
 
@@ -95,7 +96,7 @@ public class PlayScene3D extends AbstractGameScene
         subScene = new SubScene(subSceneRoot, 888, 666, true, SceneAntialiasing.BALANCED);
         subScene.setCamera(camera);
 
-        actionBindings = appContext.commonActions().camera3DActions().bindings();
+        actionBindings = app.commonActions().camera3DActions().bindings();
 
         drawModeChangeListener = (_, _, drawMode) -> {
             if (level3D != null) {
@@ -257,26 +258,28 @@ public class PlayScene3D extends AbstractGameScene
     }
 
     @Override
-    public void onTick(GameContext gameContext) {
-        final GameLevel level = gameContext().assertLevel();
+    public void onTick(GameContext game) {
+        final GameLevel level = game.assertLevel();
+        final long tick = game.thisFrame().tick();
 
         if (level == null) {
-            Logger.info("Tick {}: Game level not yet created, update ignored", gameContext.thisFrame().tick());
+            Logger.info("Tick {}: Game level not yet created, update ignored", tick);
             return;
         }
 
         if (level3D == null) {
-            Logger.info("Tick {}: Game level 3D not yet created, update ignored", gameContext.thisFrame().tick());
+            Logger.info("Tick {}: Game level 3D not yet created, update ignored", tick);
             return;
         }
 
         GameLevel3DUpdateController.update3DSceneEntities(level3D);
         updateHUD3D(level);
+
         perspectiveManager.updatePerspective(level);
 
         optSoundEffects().ifPresent(soundEffects -> {
             soundEffects.setEnabled(!level.isDemoLevel());
-            soundEffects.playAmbientGameLevelSound(gameContext(), level);
+            soundEffects.playAmbientGameLevelSound(game, level);
         });
     }
 
