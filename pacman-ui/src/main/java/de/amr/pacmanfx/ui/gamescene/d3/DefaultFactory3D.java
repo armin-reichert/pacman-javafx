@@ -16,11 +16,7 @@ import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.PacMan3DModel;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.entities3D.factory.Pac3DFactory;
-import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DAnimationComp;
-import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DMaterialSet;
-import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DViewComp;
-import de.amr.pacmanfx.uilib.entities3D.ghost.comp.GhostAppearanceMaterialSet;
-import de.amr.pacmanfx.uilib.entities3D.ghost.comp.GhostSettings;
+import de.amr.pacmanfx.uilib.entities3D.ghost.comp.*;
 import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostStateColors;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.PacSettings;
 import de.amr.pacmanfx.uilib.entities3D.world.Energizer3D;
@@ -60,20 +56,18 @@ public class DefaultFactory3D implements Factory3D {
         House house,
         TerrainLayer terrain,
         WorldSettings settings,
-        WorldMapColorSchemeImpl colorScheme,
-        AnimationRegistry animationRegistry
-    ) {
-        return mazeFactory3D.createMaze3D(house, terrain, settings, colorScheme, animationRegistry);
+        WorldMapColorSchemeImpl colorScheme) {
+        return mazeFactory3D.createMaze3D(house, terrain, settings, colorScheme);
     }
 
 
     @Override
-    public void createPac3D(Pac pac, PacSettings settings, AnimationRegistry animationRegistry) {
-        Pac3DFactory.createPacManView3D(animationRegistry, pac, settings);
+    public void createPac3D(Pac pac, PacSettings settings) {
+        Pac3DFactory.createPacManView3D(pac, settings);
     }
 
     @Override
-    public void createGhost3D(Ghost ghost, GhostSettings settings, AnimationRegistry animationRegistry) {
+    public void createGhost3D(Ghost ghost, GhostSettings settings) {
         final PacMan3DModel model = PacMan3DModel.instance();
         final Ghost3DViewComp view3D = ensureGhostHas3DView(ghost);
         final var materialSet = ghostMaterialsCache.computeIfAbsent(settings.colors(), this::createGhostMaterial);
@@ -81,8 +75,6 @@ public class DefaultFactory3D implements Factory3D {
         view3D.build(settings, model.ghostDressMesh(), model.ghostPupilsMesh(), model.ghostEyeballsMesh());
         view3D.setAppearanceMaterialSet(materialSet);
 
-        final Ghost3DAnimationComp animation3D = ghost.requireComp(Ghost3DAnimationComp.class);
-        animation3D.build(animationRegistry, ghost, settings, 5);  //TODO num flashes
     }
 
     @Override
@@ -104,21 +96,16 @@ public class DefaultFactory3D implements Factory3D {
     }
 
     @Override
-    public Energizer3D createEnergizer3D(Energizer3DSettings settings, PhongMaterial material, AnimationRegistry animationRegistry) {
+    public Energizer3D createEnergizer3D(Energizer3DSettings settings, PhongMaterial material) {
         requireNonNull(settings);
         requireNonNull(material);
-        requireNonNull(animationRegistry);
 
-        final var energizer3D = new Energizer3D(animationRegistry);
+        final var energizer3D = new Energizer3D();
         energizer3D.setShapeFactory(() -> {
             final var shape = new Sphere(settings.radius(), 48);
             shape.setMaterial(material);
             return shape;
         });
-        energizer3D.setPumpingFrequency(settings.pumpingFrequency());
-        energizer3D.setInflatedSize(settings.scalingInflated());
-        energizer3D.setExpandedSize(settings.scalingExpanded());
-
         return energizer3D;
     }
 

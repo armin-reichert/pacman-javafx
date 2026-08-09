@@ -5,9 +5,12 @@ package de.amr.pacmanfx.ui.gamescene.d3;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.ui.GlobalAssets;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.DisposableGraphicsObject;
-import de.amr.pacmanfx.uilib.widgets.MessageView;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
+import de.amr.pacmanfx.uilib.widgets.messageview.MessageView;
+import de.amr.pacmanfx.uilib.widgets.messageview.MessageViewAnimationSystem;
+import de.amr.pacmanfx.uilib.widgets.messageview.MessageViewAnimations;
+import de.amr.pacmanfx.uilib.widgets.messageview.MessageViewBuilder;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;
 
@@ -42,8 +45,8 @@ public class MessageManager3D implements DisposableGraphicsObject {
     /** Default display duration for READY! message */
     public static final float READY_MESSAGE_DISPLAY_SECONDS = 2.5f;
 
-    private final AnimationRegistry animations;
     private final Group messageParent;
+
     private MessageView messageView;
 
     private final Map<MessageType, Vector2f> messageCenters = new EnumMap<>(MessageType.class);
@@ -51,11 +54,9 @@ public class MessageManager3D implements DisposableGraphicsObject {
     /**
      * Creates a new message manager for the given animation registry and container group.
      *
-     * @param animations registry for message animations
      * @param messageParent  the group to which messages are added/removed
      */
-    public MessageManager3D(AnimationRegistry animations, Group messageParent) {
-        this.animations = requireNonNull(animations);
+    public MessageManager3D(Group messageParent) {
         this.messageParent = requireNonNull(messageParent);
     }
 
@@ -84,13 +85,23 @@ public class MessageManager3D implements DisposableGraphicsObject {
         }
     }
 
-    //TODO this is ugly
-    public void showMessage(MessageType messageType, Object... args) {
+    public void showMessage(AnimationRegistry registry, MessageType messageType, Object... args) {
         switch (messageType) {
-            case READY ->  showAnimatedMessage(messageCenters.get(MessageType.READY), READY_MESSAGE_TEXT, READY_MESSAGE_DISPLAY_SECONDS);
+
+            case READY -> showAnimatedMessage(
+                registry,
+                messageCenters.get(MessageType.READY),
+                READY_MESSAGE_TEXT,
+                READY_MESSAGE_DISPLAY_SECONDS);
+
             case TEST -> {
+                //TODO this is ugly
                 final int levelNumber = (args.length == 0 || args[0] == null) ?  0 : Integer.parseInt(args[0].toString());
-                showAnimatedMessage(messageCenters.get(MessageType.TEST), TEST_MESSAGE_TEXT.formatted(levelNumber), 5);
+                showAnimatedMessage(
+                    registry,
+                    messageCenters.get(MessageType.TEST),
+                    TEST_MESSAGE_TEXT.formatted(levelNumber),
+                    5);
             }
         }
     }
@@ -111,21 +122,26 @@ public class MessageManager3D implements DisposableGraphicsObject {
      * @param messageText      message content
      * @param displaySeconds   duration before fade-out
      */
-    public void showAnimatedMessage(Vector2f centerPos, String messageText, float displaySeconds) {
+    public void showAnimatedMessage(AnimationRegistry registry, Vector2f centerPos, String messageText, float displaySeconds) {
         if (messageView != null) {
             messageView.dispose();
             messageParent.getChildren().remove(messageView);
         }
-        messageView = MessageView.builder()
+
+        messageView = new MessageViewBuilder()
             .backgroundColor(Color.BLACK)
             .borderColor(Color.WHITE)
             .displaySeconds(displaySeconds)
             .font(GlobalAssets.PredefinedFont.ARCADE6.font())
             .text(messageText)
             .textColor(Color.YELLOW)
-            .build(animations);
+            .build();
 
-        messageView.showCenteredAt(centerPos.x(), centerPos.y());
         messageParent.getChildren().add(messageView);
+
+        final var animations = new MessageViewAnimations(registry, messageView);
+        MessageViewAnimationSystem.showMessageViewCenteredAt(
+            animations, messageView, centerPos.x(), centerPos.y()
+        );
     }
 }

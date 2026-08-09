@@ -24,6 +24,7 @@ public class ArcadePacMan_ActorFactory {
     public Pac createPacMan() {
         final var pacMan = new Pac("Pac-Man");
         pacMan.reset();
+        pacMan.state().setMale(true);
         return pacMan;
     }
 

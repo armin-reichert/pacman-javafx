@@ -14,6 +14,8 @@ public class PacStateComp implements GameEntityComponent {
 
     private boolean moving;
 
+    private boolean male;
+
     public PacState enumValue() {
         return state;
     }
@@ -28,6 +30,14 @@ public class PacStateComp implements GameEntityComponent {
 
     public void setMoving(boolean moving) {
         this.moving = moving;
+    }
+
+    public boolean isMale() {
+        return male;
+    }
+
+    public void setMale(boolean male) {
+        this.male = male;
     }
 
     @Override

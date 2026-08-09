@@ -6,8 +6,6 @@ import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorSchemeImpl;
 import de.amr.pacmanfx.ui.settings.world.House3DSettings;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.entities3D.house.comp.House3DAnimationComp;
 import de.amr.pacmanfx.uilib.entities3D.house.comp.House3DViewComp;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -27,17 +25,15 @@ public class MazeFactory3D {
         House house,
         TerrainLayer terrain,
         WorldSettings config,
-        WorldMapColorSchemeImpl colorScheme,
-        AnimationRegistry animationRegistry)
+        WorldMapColorSchemeImpl colorScheme)
     {
         requireNonNull(terrain);
         requireNonNull(config);
         requireNonNull(colorScheme);
-        requireNonNull(animationRegistry);
 
         final Map<String, PhongMaterial> materials = createMazeMaterialMap(colorScheme);
 
-        createHouse3D(house, config.house(), colorScheme, animationRegistry);
+        createHouse3D(house, config.house(), colorScheme);
 
         final var maze3D = new Maze3D(terrain);
         maze3D.build(house, materials, config.maze(), config.floor());
@@ -45,25 +41,18 @@ public class MazeFactory3D {
         bindFloorMaterialColor(maze3D, materials.get("floorMaterial"));
         bindWallBaseMaterialColor(maze3D, materials.get("wallBaseMaterial"), Color.valueOf(colorScheme.wallStroke()));
 
-        //final var house3D = new MazeHouse3D(colorScheme, config.house(), animationRegistry, house);
-        //maze3D.setHouse3D(house3D);
-
         return maze3D;
     }
 
-    private void createHouse3D(House house, House3DSettings config3D, WorldMapColorSchemeImpl colorScheme, AnimationRegistry animationRegistry) {
+    private void createHouse3D(House house, House3DSettings config3D, WorldMapColorSchemeImpl colorScheme) {
         if (!house.hasComp(House3DViewComp.class)) {
             final var view3D = new House3DViewComp(
-                animationRegistry,
                 house.floorplan(),
                 config3D.baseHeight(),
                 config3D.wallThickness(),
                 config3D.opacity()
             );
             house.setComp(House3DViewComp.class, view3D);
-            final var animation =  new House3DAnimationComp(animationRegistry);
-            animation.createDoorsMeltingAnimationFactory(view3D.barThicknessProperty);
-            house.setComp(House3DAnimationComp.class, animation);
         }
 
         // apply color scheme
@@ -73,7 +62,6 @@ public class MazeFactory3D {
         view3D.setWallTopColor(Color.valueOf(colorScheme.wallStroke()));
         view3D.setDoorColor(Color.valueOf(colorScheme.door()));
         view3D.setDoorSensitivity(config3D.sensitivity());
-
     }
 
     private Map<String, PhongMaterial> createMazeMaterialMap(WorldMapColorSchemeImpl colorScheme) {

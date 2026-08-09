@@ -172,7 +172,7 @@ public class PlayScene3D extends AbstractGameScene
         level3D.energizers3D().forEach(energizer3D -> {
             energizer3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(energizer3D.tile()));
             if (startEnergizerPumping && energizer3D.shape().isVisible()) {
-                energizer3D.startPumping();
+                GameLevel3DAnimationSystem.startEnergizerPumping(level3D.animations(), energizer3D);
             }
         });
     }

@@ -14,7 +14,6 @@ import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Pellet3DSettings;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.entities3D.ghost.comp.GhostSettings;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.PacSettings;
 import de.amr.pacmanfx.uilib.entities3D.world.Energizer3D;
@@ -30,10 +29,9 @@ public interface Factory3D extends Disposable {
      * @param terrain the terrain layer
      * @param config world configuration
      * @param colorScheme the map color scheme
-     * @param animationRegistry the animation registry
      * @return a 3D maze representing the given terrain
      */
-    Maze3D createMaze3D(House house, TerrainLayer terrain, WorldSettings config, WorldMapColorSchemeImpl colorScheme, AnimationRegistry animationRegistry);
+    Maze3D createMaze3D(House house, TerrainLayer terrain, WorldSettings config, WorldMapColorSchemeImpl colorScheme);
 
     /**
      * Creates the 3D representation of Pac for this game variant, including model,
@@ -41,9 +39,8 @@ public interface Factory3D extends Disposable {
      *
      * @param pac               the Pac actor whose animations and state drive the model
      * @param pacConfig         the actor 3D configuration object
-     * @param animations the registry where animations are stored
      */
-    void createPac3D(Pac pac, PacSettings pacConfig, AnimationRegistry animations);
+    void createPac3D(Pac pac, PacSettings pacConfig);
 
     /**
      * Creates the 3D representation of a ghost for this game variant, including
@@ -51,9 +48,8 @@ public interface Factory3D extends Disposable {
      *
      * @param ghost             the ghost actor whose animations and state drive the model
      * @param ghostConfig      the actor 3D configuration object
-     * @param animations the registry where animations are stored
      */
-    void createGhost3D(Ghost ghost, GhostSettings ghostConfig, AnimationRegistry animations);
+    void createGhost3D(Ghost ghost, GhostSettings ghostConfig);
 
     /**
      * Creates the 3D representation of the lives counter for this variant.
@@ -73,10 +69,9 @@ public interface Factory3D extends Disposable {
     /**
      * @param config energizer configuration
      * @param material energizer material
-     * @param animationRegistry the animation registry
      * @return 3D energizer representation
      */
-    Energizer3D createEnergizer3D(Energizer3DSettings config, PhongMaterial material, AnimationRegistry animationRegistry);
+    Energizer3D createEnergizer3D(Energizer3DSettings config, PhongMaterial material);
 
     Node createNumberBox3D(GameVariantConfig gameVariant, int index);
 }

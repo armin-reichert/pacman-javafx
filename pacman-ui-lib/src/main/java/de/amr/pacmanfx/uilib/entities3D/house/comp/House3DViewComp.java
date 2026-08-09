@@ -6,8 +6,6 @@ import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.ecs.GameEntityComponent;
 import de.amr.pacmanfx.core.entities.house.comp.HouseFloorplanComp;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.entities3D.world.TerrainRenderer3D;
 import javafx.beans.property.DoubleProperty;
@@ -34,8 +32,6 @@ public class House3DViewComp implements GameEntityComponent, DisposableGraphicsO
     /** Height of the lower wall segment. */
     private final DoubleProperty wallBaseHeightProperty = new SimpleDoubleProperty();
 
-    private final AnimationRegistry animations;
-
     private final float barThickness;
     private final double wallBaseOpacity;
 
@@ -57,20 +53,17 @@ public class House3DViewComp implements GameEntityComponent, DisposableGraphicsO
     /**
      * Creates a 3D ghost house representation.
      *
-     * @param animations        registry used to register the door animation
-     * @param floorplan         floorplan (geometry, door positions)
+     * @param floorplan         floor plan (geometry, door positions)
      * @param baseHeight        height of the lower wall segment
      * @param wallThickness     thickness of the wall cylinders
      * @param opacity           opacity of the wall base material
      */
     public House3DViewComp(
-        AnimationRegistry animations,
         HouseFloorplanComp floorplan,
         double baseHeight,
         double wallThickness,
         double opacity)
     {
-        this.animations = requireNonNull(animations);
         requireNonNull(floorplan);
 
         r3D = new TerrainRenderer3D();
@@ -243,11 +236,12 @@ public class House3DViewComp implements GameEntityComponent, DisposableGraphicsO
         r3D.setOnWallCreated(null);
         wallBaseHeightProperty().unbind();
         barMaterial = wallBaseMaterial = wallTopMaterial = null;
-        animations.optAnimation(House3DAnimationID.HOUSE_DOORS_MELTING).ifPresent(ManagedAnimation::dispose);
         cleanupGroup(doors, true);
         leftDoor = rightDoor = doors = null;
         cleanupLight(light);
         light = null;
         cleanupGroup(root, true);
+
+        //animations.optAnimation(House3DAnimationID.HOUSE_DOORS_MELTING).ifPresent(ManagedAnimation::dispose);
     }
 }
