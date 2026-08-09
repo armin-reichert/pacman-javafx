@@ -122,12 +122,12 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
         createMaze3D();
         createFood3D();
-        createPac3D(level.entities().pac());
+        createPac3D();
         createGhosts3D();
         createLivesCounter3D();
         createMessageManager();
 
-        buildHierarchy();
+        createLayout();
 
         createAnimations(Game3DSettingsVM.DEFAULT_PARTICLE_ANIMATION_CONFIG);
 
@@ -377,26 +377,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return  view3D;
     }
 
-    public void createLevelCounterView3D(LevelCounter levelCounter) {
-        if (!levelCounter.hasComp(LevelCounterView3DComp.class)) {
-            final LevelCounterView3DComp view3D = new LevelCounterView3DComp();
-            levelCounter.setComp(LevelCounterView3DComp.class, view3D);
-            animationRegistry.register(LevelCounterView3DAnimationID.LEVEL_COUNTER_SPINNING, view3D.spinningAnimation());
-            Logger.info("Level counter now has a 3D view");
-        }
-        else {
-            Logger.info("Level counter already has a 3D view!");
-        }
-
-        // Recreate all 3D entries in the level counter group
-        LevelCounterView3DSystem.updateLevelCounter3D(gameVariantConfig, levelCounter, level);
-
-        // Add level counter 3D root into this group
-        final LevelCounterView3DComp view3D = levelCounter.requireComp(LevelCounterView3DComp.class);
-        getChildren().add(view3D.root());
-    }
-
-    private void createPac3D(Pac pac) {
+    private void createPac3D() {
+        final Pac pac = level.entities().pac();
         final PacSettings settings = gameVariantConfig.worldSettings().pac();
         gameVariantConfig.factory3D().createPac3D(pac, settings, animationRegistry);
         pac.requireComp(Pac3DViewComp.class).drawModeProperty().bind(viewModel.common3D.drawModeProperty);
@@ -420,6 +402,25 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         }
     }
 
+    public void createLevelCounterView3D(LevelCounter levelCounter) {
+        if (!levelCounter.hasComp(LevelCounterView3DComp.class)) {
+            final LevelCounterView3DComp view3D = new LevelCounterView3DComp();
+            levelCounter.setComp(LevelCounterView3DComp.class, view3D);
+            animationRegistry.register(LevelCounterView3DAnimationID.LEVEL_COUNTER_SPINNING, view3D.spinningAnimation());
+            Logger.info("Level counter now has a 3D view");
+        }
+        else {
+            Logger.info("Level counter already has a 3D view!");
+        }
+
+        // Recreate all 3D entries in the level counter group
+        LevelCounterView3DSystem.updateLevelCounter3D(gameVariantConfig, levelCounter, level);
+
+        // Add level counter 3D root into this group
+        final LevelCounterView3DComp view3D = levelCounter.requireComp(LevelCounterView3DComp.class);
+        getChildren().add(view3D.root());
+    }
+
     private void createMessageManager() {
         messageManager = new MessageManager3D(animationRegistry, this);
 
@@ -437,28 +438,40 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     // Order matters for correct transparency!
-    private void buildHierarchy() {
+    private void createLayout() {
+
         final LivesCounter livesCounter = level.entities().theOne(LivesCounter.class);
+        final LivesCounterView3DComp livesCounter3D = livesCounter.requireComp(LivesCounterView3DComp.class);
+
         final Pac pac = level.entities().pac();
+        final Pac3DViewComp pac3D = pac.requireComp(Pac3DViewComp.class);
+
         final House house = level.entities().theOne(House.class);
+        final House3DViewComp house3D = house.requireComp(House3DViewComp.class);
 
-        getChildren().add(livesCounter.requireComp(LivesCounterView3DComp.class).root());
+        getChildren().add(livesCounter3D.root());
 
-        getChildren().add(pac.requireComp(Pac3DViewComp.class).root());
-        getChildren().add(pac.requireComp(Pac3DViewComp.class).powerLight());
+        getChildren().add(pac3D.root());
+        getChildren().add(pac3D.powerLight());
 
-        for (var ghost: level.entities().ghosts()) {
-            getChildren().add(ghost.requireComp(Ghost3DViewComp.class).root());
+        for (Ghost ghost: level.entities().ghosts()) {
+            final Ghost3DViewComp ghost3D = ghost.requireComp(Ghost3DViewComp.class);
+            getChildren().add(ghost3D.root());
         }
 
-        energizer3DByTile.values().stream().map(Energizer3D::shape).forEach(getChildren()::add);
-        pellet3DByTile.values().stream().map(Pellet3D::shape).forEach(getChildren()::add);
+        for (Energizer3D energizer3D : energizer3DByTile.values()) {
+            getChildren().add(energizer3D.shape());
+        }
+
+        for (Pellet3D pellet3D : pellet3DByTile.values()) {
+            getChildren().add(pellet3D.shape());
+        }
 
         getChildren().add(maze3D.particlesGroup());
         getChildren().add(maze3D);
 
-        getChildren().add(house.requireComp(House3DViewComp.class).root());
-        getChildren().add(house.requireComp(House3DViewComp.class).doors());
+        getChildren().add(house3D.root());
+        getChildren().add(house3D.doors());
 
         getChildren().add(ghostHunterLight);
     }
