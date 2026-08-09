@@ -12,6 +12,7 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
@@ -60,7 +61,7 @@ public class PlayScene3D extends AbstractGameScene
     private final SubScene subScene;
     private final Group subSceneRoot;
     private final PerspectiveCamera camera = new PerspectiveCamera(true);
-    private final Group level3DEmbedder = new Group();
+    private final Group level3DParent = new Group();
     private GameLevel3D level3D;
     private ScoresView scoresView;
     private PlaySceneContextMenu contextMenu;
@@ -89,7 +90,7 @@ public class PlayScene3D extends AbstractGameScene
         ambientLight = new AmbientLight();
         ambientLight.colorProperty().bind(viewModel.maze3D.lightColorProperty);
 
-        subSceneRoot = new Group(level3DEmbedder, coordinateSystem, ambientLight);
+        subSceneRoot = new Group(level3DParent, coordinateSystem, ambientLight);
 
         subScene = new SubScene(subSceneRoot, 888, 666, true, SceneAntialiasing.BALANCED);
         subScene.setCamera(camera);
@@ -183,19 +184,23 @@ public class PlayScene3D extends AbstractGameScene
             Logger.info("Old 3D game level is disposed...");
             level3D.dispose();
         }
+        final GameVariantConfig gameVariantConfig = appContext().variants().currentVariant().config();
         final GameUISettingsVM viewModel = appContext().ui().viewModel();
 
-        level3D = new GameLevel3D(viewModel, level, appContext().variants().currentVariant().config());
-        decorate(level3D);
-        level3DEmbedder.getChildren().setAll(level3D);
+        // Create a new 3D game level representation
+        level3D = new GameLevel3D(viewModel, level, gameVariantConfig);
 
-        initPac(level, level.entities().pac());
+        level3DParent.getChildren().setAll(level3D);
+
+        addAdditional3DLevelElements(level3D);
+
+        level3D.setAnimationManager(new GameLevel3DAnimationManager(level3D, gameVariantConfig));
+
+        final Pac pac = level.entities().pac();
+        initPac(level, pac);
 
         final LivesCounter livesCounter = level.entities().theOne(LivesCounter.class);
-        final Pac pac = level.entities().pac();
         LivesCounterView3DSystem.startTracking(livesCounter, pac);
-
-        Logger.info("New 3D game level created");
     }
 
     @Override
@@ -304,7 +309,7 @@ public class PlayScene3D extends AbstractGameScene
      * Can be overridden by 3D scenes that e.g. decorate the 3D level with additional stuff as done by the
      * Tengen Ms. Pac-Man game that displays the level number, game difficulty, map category, booster mode etc.
      */
-    protected void decorate(GameLevel3D level3D) {}
+    protected void addAdditional3DLevelElements(GameLevel3D level3D) {}
 
     protected void bindActions() {
         actionBindings().registerAllBindings(actionBindings);
@@ -340,9 +345,9 @@ public class PlayScene3D extends AbstractGameScene
         scoresView.root().rotationAxisProperty().bind(camera.rotationAxisProperty());
         scoresView.root().rotateProperty().bind(camera.rotateProperty());
 
-        scoresView.root().translateXProperty().bind(level3DEmbedder.translateXProperty().add(WorldMap.TS));
-        scoresView.root().translateYProperty().bind(level3DEmbedder.translateYProperty().subtract(4.5 * WorldMap.TS));
-        scoresView.root().translateZProperty().bind(level3DEmbedder.translateZProperty().subtract(4.5 * WorldMap.TS));
+        scoresView.root().translateXProperty().bind(level3DParent.translateXProperty().add(WorldMap.TS));
+        scoresView.root().translateYProperty().bind(level3DParent.translateYProperty().subtract(4.5 * WorldMap.TS));
+        scoresView.root().translateZProperty().bind(level3DParent.translateZProperty().subtract(4.5 * WorldMap.TS));
 
         if (oldScoresView != null) {
             subSceneRoot.getChildren().remove(oldScoresView.root());
@@ -352,7 +357,7 @@ public class PlayScene3D extends AbstractGameScene
 
     private void removeAndDisposeGameLevel3D() {
         if (level3D != null) {
-            level3DEmbedder.getChildren().clear();
+            level3DParent.getChildren().clear();
             level3D.dispose();
             level3D = null;
         }

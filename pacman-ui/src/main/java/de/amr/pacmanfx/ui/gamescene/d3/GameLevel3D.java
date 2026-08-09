@@ -34,6 +34,7 @@ import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DViewComp;
 import de.amr.pacmanfx.uilib.entities3D.ghost.comp.GhostSettings;
 import de.amr.pacmanfx.uilib.entities3D.house.comp.House3DViewComp;
 import de.amr.pacmanfx.uilib.entities3D.messageview.MessageView3DBuilder;
+import de.amr.pacmanfx.uilib.entities3D.messageview.system.LevelMessageType;
 import de.amr.pacmanfx.uilib.entities3D.messageview.system.MessageView3DDisplaySystem;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DViewComp;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.PacSettings;
@@ -63,10 +64,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
-    private final Map<Vector2i, Energizer3D> energizer3DByTile = new HashMap<>();
-
-    private final Map<Vector2i, Pellet3D> pellet3DByTile = new HashMap<>();
-
     private final GameLevel level;
 
     private final GameVariantConfig gameVariantConfig;
@@ -75,9 +72,13 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private final PointLight ghostHunterLight = new PointLight();
 
+    private final Map<Vector2i, Energizer3D> energizer3DByTile = new HashMap<>();
+
+    private final Map<Vector2i, Pellet3D> pellet3DByTile = new HashMap<>();
+
     private Maze3D maze3D;
 
-    private final GameLevel3DAnimationManager animations;
+    private GameLevel3DAnimationManager animationManager;
 
     public GameLevel3D(GameUISettingsVM viewModel, GameLevel level, GameVariantConfig gameVariantConfig) {
         this.viewModel = requireNonNull(viewModel);
@@ -92,10 +93,11 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         createMessageView3D();
         arrangeLayout();
 
-        // Animations expect scene graph to be created
-        animations = new GameLevel3DAnimationManager(this, gameVariantConfig);
-
         setMouseTransparent(true); // this increases performance they say...
+    }
+
+    public void setAnimationManager(GameLevel3DAnimationManager animationManager) {
+        this.animationManager = requireNonNull(animationManager);
     }
 
     @Override
@@ -109,7 +111,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     // Public accessors
 
     public GameLevel3DAnimationManager animations() {
-        return animations;
+        return animationManager;
     }
 
     public Maze3D maze3D() {
@@ -145,8 +147,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     public void cleanupFoodAndParticles() {
-        animations.stopParticlesAnimation();
-        animations.stopEnergizerPumping();
+        animationManager.stopParticlesAnimation();
+        animationManager.stopEnergizerPumping();
 
         energizer3DByTile.values().forEach(Energizer3D::hide);
         // Hide 3D food explicitly (handles cheat-eat-all case)
@@ -165,7 +167,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     public void activateBonus3D(Bonus bonus) {
         ensureBonus3DViewExists(bonus);
-        Bonus3DViewSystem.update(bonus, animations.registry());
+        Bonus3DViewSystem.update(bonus, animationManager.registry());
         Bonus3DViewSystem.lookEdible(bonus);
     }
 
@@ -197,16 +199,10 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         }
     }
 
-    public void showMessage(MessageView3DDisplaySystem.MessageType type, Object... args) {
-        MessageView3DDisplaySystem.showMessage(
-            level.entities().theOne(MessageView.class),
-            this,
-            computeMessageCenter(type),
-            GlobalAssets.PredefinedFont.ARCADE6.font(),
-            animations().registry(),
-            type,
-            args
-        );
+    public void showMessage(LevelMessageType type, Object... args) {
+        final MessageView messageView = level.entities().theOne(MessageView.class);
+        MessageView3DDisplaySystem.showMessage(messageView, this, computeMessageCenter(type),
+            GlobalAssets.PredefinedFont.ARCADE6.font(), animations().registry(), type, args);
     }
 
     // Private area, no trespassing!
@@ -274,7 +270,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             config.pointsWidth()
         );
         bonus.setComp(Bonus3DViewComp.class, view3D);
-        animations.registry().register(Bonus3DAnimationID.BONUS_EATEN, view3D.eatenAnimation());
+        animationManager.registry().register(Bonus3DAnimationID.BONUS_EATEN, view3D.eatenAnimation());
         return view3D;
     }
 
@@ -307,7 +303,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         if (!levelCounter.hasComp(LevelCounterView3DComp.class)) {
             final LevelCounterView3DComp view3D = new LevelCounterView3DComp();
             levelCounter.setComp(LevelCounterView3DComp.class, view3D);
-            animations.registry().register(LevelCounterView3DAnimationID.LEVEL_COUNTER_SPINNING, view3D.spinningAnimation());
+            animationManager.registry().register(LevelCounterView3DAnimationID.LEVEL_COUNTER_SPINNING, view3D.spinningAnimation());
             Logger.info("Level counter now has a 3D view");
         }
         else {
@@ -322,7 +318,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         getChildren().add(view3D.root());
     }
 
-    public Vector2f computeMessageCenter(MessageView3DDisplaySystem.MessageType messageType) {
+    public Vector2f computeMessageCenter(LevelMessageType messageType) {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         return switch (messageType) {
             case READY -> level.entities().theOne(House.class).centerPositionUnderHouse();

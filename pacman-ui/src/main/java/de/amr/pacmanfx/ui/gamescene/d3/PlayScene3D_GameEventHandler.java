@@ -37,8 +37,8 @@ import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.entities3D.bonus.system.Bonus3DViewSystem;
 import de.amr.pacmanfx.uilib.entities3D.house.system.House3DSystem;
+import de.amr.pacmanfx.uilib.entities3D.messageview.system.LevelMessageType;
 import de.amr.pacmanfx.uilib.entities3D.messageview.system.MessageView3DAnimationSystem;
-import de.amr.pacmanfx.uilib.entities3D.messageview.system.MessageView3DDisplaySystem;
 import de.amr.pacmanfx.uilib.entities3D.pac.system.Pac3DAnimationSystem;
 import de.amr.pacmanfx.uilib.entities3D.world.Pellet3D;
 import javafx.animation.Animation;
@@ -123,7 +123,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     @Override
     default void onGameContinued(GameContinuedEvent ignoredEvent) {
         final GameLevel3D level3D = assertLevel3D();
-        level3D.showMessage(MessageView3DDisplaySystem.MessageType.READY);
+        level3D.showMessage(LevelMessageType.READY);
     }
 
     @Override
@@ -138,7 +138,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         }
 
         final GameLevel3D level3D = assertLevel3D();
-        level3D.showMessage(MessageView3DDisplaySystem.MessageType.READY);
+        level3D.showMessage(LevelMessageType.READY);
     }
 
     @Override
@@ -162,7 +162,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         if (newState instanceof GameState gameState && gameState.id() instanceof TestStateID) {
             gameScene().replaceGameLevel3D(level);
             level3D.animations().startEnergizerPumping();
-            level3D.showMessage(MessageView3DDisplaySystem.MessageType.TEST, level.number());
+            level3D.showMessage(LevelMessageType.TEST, level.number());
         }
 
         level3D.createLevelCounterView3D(gameContext.model().levelCounter());
@@ -361,7 +361,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     private void handleTestState(Game3DSettingsVM globals3D, GameLevel level) {
         gameScene().optGameLevel3D().ifPresent(level3D -> {
             gameScene().replaceGameLevel3D(level);
-            level3D.showMessage(MessageView3DDisplaySystem.MessageType.TEST, level.number());
+            level3D.showMessage(LevelMessageType.TEST, level.number());
             globals3D.cameraPerspectiveIdProperty.set(PerspectiveID.TOTAL);
         });
     }

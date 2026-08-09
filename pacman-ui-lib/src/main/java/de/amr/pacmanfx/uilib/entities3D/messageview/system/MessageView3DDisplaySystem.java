@@ -17,8 +17,6 @@ import static java.util.Objects.requireNonNull;
 
 public class MessageView3DDisplaySystem {
 
-    public enum MessageType { READY, TEST }
-
     /** Standard "READY!" message shown at level start */
     public static final String READY_MESSAGE_TEXT = "READY!";
 
@@ -34,11 +32,13 @@ public class MessageView3DDisplaySystem {
         Vector2f center,
         Font font,
         AnimationRegistry registry,
-        MessageType messageType,
+        LevelMessageType messageType,
         Object... args) {
 
         requireNonNull(messageView);
+        requireNonNull(parent);
         requireNonNull(center);
+        requireNonNull(font);
         requireNonNull(registry);
         requireNonNull(messageType);
 
@@ -48,33 +48,24 @@ public class MessageView3DDisplaySystem {
         }
 
         messageView.requireComp(MessageView3DAnimationComp.class).setRegistry(registry);
-
         switch (messageType) {
-
-            case READY -> showAnimatedMessage(
-                messageView,
-                center,
-                READY_MESSAGE_TEXT,
-                font,
-                READY_MESSAGE_DISPLAY_SECONDS);
+            case READY -> {
+                configureMessageView(messageView, READY_MESSAGE_TEXT, font, READY_MESSAGE_DISPLAY_SECONDS);
+                showAnimatedMessage(messageView, center);
+            }
 
             case TEST -> {
                 //TODO this is ugly
                 final int levelNumber = (args.length == 0 || args[0] == null) ?  0 : Integer.parseInt(args[0].toString());
-                showAnimatedMessage(
-                    messageView,
-                    center,
-                    TEST_MESSAGE_TEXT.formatted(levelNumber),
-                    font,
-                    5);
+                configureMessageView(messageView, TEST_MESSAGE_TEXT.formatted(levelNumber), font, 5);
+                showAnimatedMessage(messageView, center);
             }
         }
     }
 
-    private static void showAnimatedMessage(MessageView messageView, Vector2f centerPos, String messageText, Font font, float displaySeconds) {
+    private static void configureMessageView(MessageView messageView, String messageText, Font font, float displaySeconds) {
         messageView.data().setText(messageText);
-
-        // view3D must be updated after text change!
+        // 3D view must be updated after text change!
         new MessageView3DBuilder()
             .backgroundColor(Color.BLACK)
             .borderColor(Color.WHITE)
@@ -83,7 +74,9 @@ public class MessageView3DDisplaySystem {
             .text(messageText)
             .textColor(Color.YELLOW)
             .build(messageView);
+    }
 
+    private static void showAnimatedMessage(MessageView messageView, Vector2f centerPos) {
         final var anim3D = MessageView3DBuilder.ensureAnim3DExists(messageView);
         MessageView3DAnimationSystem.showMessageViewCenteredAt(anim3D, messageView, centerPos.x(), centerPos.y());
     }

@@ -45,7 +45,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     }
 
     @Override
-    protected void decorate(GameLevel3D level3D) {
+    protected void addAdditional3DLevelElements(GameLevel3D level3D) {
         // If any of the default level settings has been changed, display the level info
         gameModel().optLevel().ifPresent(_ -> {
             if (!gameModel().allOptionsHaveDefaultValue()) {
