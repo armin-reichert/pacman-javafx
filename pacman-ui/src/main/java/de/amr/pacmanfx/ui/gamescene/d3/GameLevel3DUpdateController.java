@@ -31,7 +31,7 @@ public class GameLevel3DUpdateController {
         GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE);
 
 
-    public static void updateEntities(GameLevel3D level3D) {
+    public static void update3DSceneEntities(GameLevel3D level3D) {
         updateLivesCounter3D(level3D);
         updateHouse3D(level3D);
         updatePac3D(level3D);

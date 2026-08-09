@@ -208,7 +208,11 @@ public class PlayScene3D extends AbstractGameScene
         actionBindings().dispose();
         perspectiveManager.dispose();
         disposeContextMenu();
-        removeAndDisposeGameLevel3D();
+        if (level3D != null) {
+            level3DParent.getChildren().clear();
+            level3D.dispose();
+            level3D = null;
+        }
         cleanupLight(ambientLight);
         ambientLight = null;
     }
@@ -216,7 +220,9 @@ public class PlayScene3D extends AbstractGameScene
     @Override
     public void onBeforeEmbedded() {
         // TODO: reconsider whether scores need recreation here (variant/font change?)
-        replaceScoresView();
+        final String scoreTitle = appContext().ui().translations().translate("score.score");
+        final String highScoreTitle = appContext().ui().translations().translate("score.high_score");
+        replaceScoresView(scoreTitle, highScoreTitle);
     }
 
     @Override
@@ -264,10 +270,9 @@ public class PlayScene3D extends AbstractGameScene
             return;
         }
 
-        GameLevel3DUpdateController.updateEntities(level3D);
-        perspectiveManager.updatePerspective(level);
-
+        GameLevel3DUpdateController.update3DSceneEntities(level3D);
         updateHUD3D(level);
+        perspectiveManager.updatePerspective(level);
 
         optSoundEffects().ifPresent(soundEffects -> {
             soundEffects.setEnabled(!level.isDemoLevel());
@@ -315,52 +320,40 @@ public class PlayScene3D extends AbstractGameScene
         actionBindings().registerAllBindings(actionBindings);
     }
 
-    private void replaceScoresView() {
+    private void replaceScoresView(String leftTitle, String rightTitle) {
         final ScoresView oldScoresView = scoresView;
+        if (oldScoresView != null) {
+            subSceneRoot.getChildren().remove(oldScoresView.root());
+        }
 
         final Score leftScore = gameModel().score();
         if (!leftScore.hasComp(ScoreViewComp.class)) {
             leftScore.setComp(ScoreViewComp.class, new ScoreViewComp());
         }
+        leftScore.requireComp(ScoreViewComp.class).titleDisplay().setText(leftTitle);
 
         final Score rightScore = gameModel().highScore();
         if (!rightScore.hasComp(ScoreViewComp.class)) {
             rightScore.setComp(ScoreViewComp.class, new ScoreViewComp());
         }
+        rightScore.requireComp(ScoreViewComp.class).titleDisplay().setText(rightTitle);
 
         scoresView = new ScoresView(leftScore, rightScore);
         scoresView.setFont(GlobalAssets.PredefinedFont.ARCADE8.font());
 
-        leftScore.requireComp(ScoreViewComp.class).titleDisplay().setText(
-            appContext().ui().translations().translate("score.score")
-        );
-
-        rightScore.requireComp(ScoreViewComp.class).titleDisplay().setText(
-            appContext().ui().translations().translate("score.high_score")
-        );
+        subSceneRoot.getChildren().add(scoresView.root());
 
         //scoresView.textOpacity.bind(scoreOpacity);
 
-        // Scores are always displayed towards viewer, independent of camera perspective
-        scoresView.root().rotationAxisProperty().bind(camera.rotationAxisProperty());
-        scoresView.root().rotateProperty().bind(camera.rotateProperty());
+        // Scores must always face towards viewer, independent of current perspective:
+        final Node root = scoresView.root();
+        root.rotationAxisProperty().bind(camera.rotationAxisProperty());
+        root.rotateProperty().bind(camera.rotateProperty());
 
-        scoresView.root().translateXProperty().bind(level3DParent.translateXProperty().add(WorldMap.TS));
-        scoresView.root().translateYProperty().bind(level3DParent.translateYProperty().subtract(4.5 * WorldMap.TS));
-        scoresView.root().translateZProperty().bind(level3DParent.translateZProperty().subtract(4.5 * WorldMap.TS));
-
-        if (oldScoresView != null) {
-            subSceneRoot.getChildren().remove(oldScoresView.root());
-        }
-        subSceneRoot.getChildren().add(scoresView.root());
-    }
-
-    private void removeAndDisposeGameLevel3D() {
-        if (level3D != null) {
-            level3DParent.getChildren().clear();
-            level3D.dispose();
-            level3D = null;
-        }
+        // Scores are shown slightly "behind" and over game level from viewer's perspective
+        root.translateXProperty().bind(level3DParent.translateXProperty().add(WorldMap.TS));
+        root.translateYProperty().bind(level3DParent.translateYProperty().subtract(4.5 * WorldMap.TS));
+        root.translateZProperty().bind(level3DParent.translateZProperty().subtract(4.5 * WorldMap.TS));
     }
 
     private void disposeContextMenu() {
