@@ -23,7 +23,7 @@ public class MessageViewAnimationSystem {
         // Place message view at hidden position
         view3D.root().setTranslateX(centerX - 0.5 * view3D.imageView().getFitWidth());
         view3D.root().setTranslateY(centerY);
-        view3D.root().setTranslateZ(MessageView3DAnimationComp.hiddenZPosition(messageView));
+        view3D.root().setTranslateZ(MessageView3DAnimationComp.hiddenZPosition(view3D));
 
         // Play move in/out animation
         view3D.root().setVisible(true); //TODO check this

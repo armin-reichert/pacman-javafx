@@ -5,9 +5,7 @@
 package de.amr.pacmanfx.uilib.entities3D.messageview.comp;
 
 
-import de.amr.pacmanfx.core.entities.MessageView;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.entities3D.messageview.system.MessageViewAnimationSystem;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;
 import javafx.animation.SequentialTransition;
@@ -18,18 +16,16 @@ import static java.util.Objects.requireNonNull;
 
 public class MoveInOutAnimation extends ManagedAnimation {
 
-    private final MessageView messageView;
+    private final MessageView3DComp view3D;
 
-    public MoveInOutAnimation(MessageView messageView) {
+    public MoveInOutAnimation(MessageView3DComp view3D) {
         super("Level Message Movement");
-        this.messageView = requireNonNull(messageView);
+        this.view3D = requireNonNull(view3D);
         setAnimationFactory(this::createAnimationFX);
     }
 
     private Animation createAnimationFX() {
-        final MessageView3DComp view3D = messageView.requireComp(MessageView3DComp.class);
-
-        double hiddenZ = MessageView3DAnimationComp.hiddenZPosition(messageView);
+        double hiddenZ = MessageView3DAnimationComp.hiddenZPosition(view3D);
         double visibleZ = -(hiddenZ + 2);
 
         var moveUp = new TranslateTransition(Duration.seconds(1), view3D.root());
@@ -43,7 +39,7 @@ public class MoveInOutAnimation extends ManagedAnimation {
             new PauseTransition(Duration.seconds(view3D.displaySeconds())),
             moveDown
         );
-        movement.setOnFinished(_ -> MessageViewAnimationSystem.hideMessageView(messageView));
+        movement.setOnFinished(_ -> view3D.root().setVisible(false));
 
         return movement;
     }

@@ -140,11 +140,13 @@ public class MessageManager3D implements DisposableGraphicsObject {
         if (!messageView.hasComp(MessageView3DComp.class)) {
             messageView.setComp(MessageView3DComp.class, new MessageView3DComp());
         }
-        messageParent.getChildren().add(messageView.requireComp(MessageView3DComp.class).root());
+        final MessageView3DComp view3D = messageView.requireComp(MessageView3DComp.class);
+        messageParent.getChildren().add(view3D.root());
 
-        final var animations = new MessageView3DAnimationComp(registry, messageView);
-        MessageViewAnimationSystem.showMessageViewCenteredAt(
-            animations, messageView, centerPos.x(), centerPos.y()
-        );
+        if (!messageView.hasComp(MessageView3DAnimationComp.class)) {
+            messageView.setComp(MessageView3DAnimationComp.class, new MessageView3DAnimationComp(registry, view3D));
+        }
+        final var anim3D = messageView.requireComp(MessageView3DAnimationComp.class);
+        MessageViewAnimationSystem.showMessageViewCenteredAt(anim3D, messageView, centerPos.x(), centerPos.y());
     }
 }
