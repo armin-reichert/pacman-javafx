@@ -40,7 +40,7 @@ import de.amr.pacmanfx.uilib.entities3D.bonus.system.Bonus3DViewSystem;
 import de.amr.pacmanfx.uilib.entities3D.house.system.House3DSystem;
 import de.amr.pacmanfx.uilib.entities3D.pac.system.Pac3DAnimationSystem;
 import de.amr.pacmanfx.uilib.entities3D.world.Pellet3D;
-import de.amr.pacmanfx.uilib.widgets.messageview.MessageViewAnimationSystem;
+import de.amr.pacmanfx.uilib.entities3D.messageview.system.MessageViewAnimationSystem;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.geometry.Point3D;
