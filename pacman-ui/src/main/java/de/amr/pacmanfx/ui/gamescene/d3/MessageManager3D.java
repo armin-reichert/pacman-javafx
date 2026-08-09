@@ -10,7 +10,7 @@ import de.amr.pacmanfx.uilib.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.entities3D.messageview.comp.MessageView3DComp;
 import de.amr.pacmanfx.uilib.entities3D.messageview.system.MessageViewAnimationSystem;
-import de.amr.pacmanfx.uilib.entities3D.messageview.comp.MessageViewAnimations;
+import de.amr.pacmanfx.uilib.entities3D.messageview.comp.MessageView3DAnimationComp;
 import de.amr.pacmanfx.uilib.entities3D.messageview.MessageViewBuilder;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -142,7 +142,7 @@ public class MessageManager3D implements DisposableGraphicsObject {
         }
         messageParent.getChildren().add(messageView.requireComp(MessageView3DComp.class).root());
 
-        final var animations = new MessageViewAnimations(registry, messageView);
+        final var animations = new MessageView3DAnimationComp(registry, messageView);
         MessageViewAnimationSystem.showMessageViewCenteredAt(
             animations, messageView, centerPos.x(), centerPos.y()
         );

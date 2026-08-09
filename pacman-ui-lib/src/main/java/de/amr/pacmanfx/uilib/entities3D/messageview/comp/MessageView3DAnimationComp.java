@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.uilib.entities3D.messageview.comp;
 
 import de.amr.basics.Disposable;
-import de.amr.basics.Named;
+import de.amr.pacmanfx.core.ecs.GameEntityComponent;
 import de.amr.pacmanfx.core.entities.MessageView;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
@@ -18,11 +18,7 @@ import javafx.util.Duration;
 
 import static java.util.Objects.requireNonNull;
 
-public class MessageViewAnimations implements Disposable {
-
-    public enum AnimationID implements Named {
-        MESSAGE_MOVING
-    }
+public class MessageView3DAnimationComp implements GameEntityComponent, Disposable {
 
     private final AnimationRegistry registry;
 
@@ -64,11 +60,11 @@ public class MessageViewAnimations implements Disposable {
         }
     }
 
-    public MessageViewAnimations(AnimationRegistry registry, MessageView messageView) {
+    public MessageView3DAnimationComp(AnimationRegistry registry, MessageView messageView) {
         this.registry = registry;
 
         final var moveInOutAnimation = new MoveInOutAnimation(messageView);
-        registry.register(AnimationID.MESSAGE_MOVING, moveInOutAnimation);
+        registry.register(MessageView3DAnimationID.MESSAGE_MOVING, moveInOutAnimation);
     }
 
     public AnimationRegistry registry() {
@@ -77,6 +73,11 @@ public class MessageViewAnimations implements Disposable {
 
     @Override
     public void dispose() {
-        registry.optAnimation(AnimationID.MESSAGE_MOVING).ifPresent(ManagedAnimation::dispose);
+        registry.optAnimation(MessageView3DAnimationID.MESSAGE_MOVING).ifPresent(ManagedAnimation::dispose);
+    }
+
+    @Override
+    public void reset() {
+
     }
 }

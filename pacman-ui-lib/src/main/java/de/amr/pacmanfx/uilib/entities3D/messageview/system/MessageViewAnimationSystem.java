@@ -6,14 +6,15 @@ package de.amr.pacmanfx.uilib.entities3D.messageview.system;
 
 import de.amr.pacmanfx.core.entities.MessageView;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
+import de.amr.pacmanfx.uilib.entities3D.messageview.comp.MessageView3DAnimationID;
 import de.amr.pacmanfx.uilib.entities3D.messageview.comp.MessageView3DComp;
-import de.amr.pacmanfx.uilib.entities3D.messageview.comp.MessageViewAnimations;
+import de.amr.pacmanfx.uilib.entities3D.messageview.comp.MessageView3DAnimationComp;
 
 import static java.util.Objects.requireNonNull;
 
 public class MessageViewAnimationSystem {
 
-    public static void showMessageViewCenteredAt(MessageViewAnimations animations, MessageView messageView, double centerX, double centerY) {
+    public static void showMessageViewCenteredAt(MessageView3DAnimationComp animations, MessageView messageView, double centerX, double centerY) {
         requireNonNull(messageView);
         requireNonNull(animations);
 
@@ -22,11 +23,11 @@ public class MessageViewAnimationSystem {
         // Place message view at hidden position
         view3D.root().setTranslateX(centerX - 0.5 * view3D.imageView().getFitWidth());
         view3D.root().setTranslateY(centerY);
-        view3D.root().setTranslateZ(MessageViewAnimations.hiddenZPosition(messageView));
+        view3D.root().setTranslateZ(MessageView3DAnimationComp.hiddenZPosition(messageView));
 
         // Play move in/out animation
         view3D.root().setVisible(true); //TODO check this
-        animations.registry().optAnimation(MessageViewAnimations.AnimationID.MESSAGE_MOVING)
+        animations.registry().optAnimation(MessageView3DAnimationID.MESSAGE_MOVING)
             .ifPresent(ManagedAnimation::playFromStart);
     }
 
