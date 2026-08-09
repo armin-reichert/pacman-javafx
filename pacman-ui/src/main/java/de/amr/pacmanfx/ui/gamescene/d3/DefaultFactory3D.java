@@ -14,7 +14,6 @@ import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Pellet3DSettings;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.PacMan3DModel;
-import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.entities3D.factory.Pac3DFactory;
 import de.amr.pacmanfx.uilib.entities3D.ghost.comp.*;
 import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostStateColors;

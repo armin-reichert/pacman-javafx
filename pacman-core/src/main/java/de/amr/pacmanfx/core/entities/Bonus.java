@@ -7,9 +7,9 @@ package de.amr.pacmanfx.core.entities;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.MovementComp;
 import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
-import de.amr.pacmanfx.core.entities.bonus.comp.BonusState;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusDataComp;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusMoveAndJumpComp;
+import de.amr.pacmanfx.core.entities.bonus.comp.BonusState;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusStateComp;
 
 import java.util.Optional;

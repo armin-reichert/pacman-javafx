@@ -7,9 +7,9 @@ package de.amr.pacmanfx.uilib.entities3D.messageview.system;
 import de.amr.pacmanfx.core.entities.MessageView;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
+import de.amr.pacmanfx.uilib.entities3D.messageview.comp.MessageView3DAnimationComp;
 import de.amr.pacmanfx.uilib.entities3D.messageview.comp.MessageView3DAnimationID;
 import de.amr.pacmanfx.uilib.entities3D.messageview.comp.MessageView3DComp;
-import de.amr.pacmanfx.uilib.entities3D.messageview.comp.MessageView3DAnimationComp;
 import de.amr.pacmanfx.uilib.entities3D.messageview.comp.MoveInOutAnimation;
 
 import static java.util.Objects.requireNonNull;

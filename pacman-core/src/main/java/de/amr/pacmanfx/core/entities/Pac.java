@@ -9,7 +9,6 @@ import de.amr.pacmanfx.core.ecs.comp.AutoSteeringComp;
 import de.amr.pacmanfx.core.ecs.comp.MovementComp;
 import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
 import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
-import de.amr.pacmanfx.core.entities.pac.comp.PacState;
 import de.amr.pacmanfx.core.entities.pac.comp.*;
 
 import static java.util.Objects.requireNonNull;

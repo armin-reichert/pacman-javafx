@@ -8,16 +8,11 @@ import de.amr.basics.Named;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.uilib.DisposableGraphicsObject;
-import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import javafx.animation.Animation;
-import javafx.animation.Interpolator;
-import javafx.animation.ScaleTransition;
 import javafx.geometry.Point3D;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.Sphere;
-import javafx.util.Duration;
 
 import java.util.function.Supplier;
 
