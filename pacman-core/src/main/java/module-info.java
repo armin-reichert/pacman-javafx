@@ -42,6 +42,7 @@ module de.amr.pacmanfx.core {
     exports de.amr.pacmanfx.core.entities.house.comp;
     exports de.amr.pacmanfx.core.entities.livescounter.comp;
     exports de.amr.pacmanfx.core.entities.marquee.comp;
+    exports de.amr.pacmanfx.core.entities.messageview.comp;
     exports de.amr.pacmanfx.core.entities.pac.comp;
     exports de.amr.pacmanfx.core.entities.levelCounter.comp;
     exports de.amr.pacmanfx.core.entities.levelCounter.system;

@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.uilib.widgets.messageview;
 
-
+import de.amr.pacmanfx.core.entities.MessageView;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 
 import static java.util.Objects.requireNonNull;
@@ -15,13 +15,23 @@ public class MessageViewAnimationSystem {
         requireNonNull(messageView);
         requireNonNull(animations);
 
+        final MessageView3DComp view3D = messageView.requireComp(MessageView3DComp.class);
+
         // Place message view at hidden position
-        messageView.setTranslateX(centerX - 0.5 * messageView.imageView().getFitWidth());
-        messageView.setTranslateY(centerY);
-        messageView.setTranslateZ(MessageViewAnimations.hiddenZPosition(messageView));
+        view3D.root().setTranslateX(centerX - 0.5 * view3D.imageView().getFitWidth());
+        view3D.root().setTranslateY(centerY);
+        view3D.root().setTranslateZ(MessageViewAnimations.hiddenZPosition(messageView));
 
         // Play move in/out animation
+        view3D.root().setVisible(true); //TODO check this
         animations.registry().optAnimation(MessageViewAnimations.AnimationID.MESSAGE_MOVING)
             .ifPresent(ManagedAnimation::playFromStart);
+    }
+
+    public static void hideMessageView(MessageView messageView) {
+        if (messageView != null) {
+            messageView.hide();
+            messageView.requireComp(MessageView3DComp.class).root().setVisible(false);
+        }
     }
 }

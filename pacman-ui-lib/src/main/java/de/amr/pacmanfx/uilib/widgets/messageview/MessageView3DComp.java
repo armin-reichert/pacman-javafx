@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.uilib.widgets.messageview;
 
+import de.amr.pacmanfx.core.ecs.GameEntityComponent;
 import de.amr.pacmanfx.uilib.DisposableGraphicsObject;
 import javafx.scene.Group;
 import javafx.scene.image.ImageView;
@@ -11,14 +12,23 @@ import javafx.scene.transform.Rotate;
 
 import static java.util.Objects.requireNonNull;
 
-public class MessageView extends Group implements DisposableGraphicsObject {
+public class MessageView3DComp implements GameEntityComponent, DisposableGraphicsObject {
 
+    private final Group root = new Group();
     private ImageView imageView;
     private float displaySeconds;
 
-    public MessageView() {
-        setRotationAxis(Rotate.X_AXIS);
-        setRotate(90);
+    public MessageView3DComp() {
+        root.setRotationAxis(Rotate.X_AXIS);
+        root.setRotate(90);
+    }
+
+    @Override
+    public void reset() {
+    }
+
+    public Group root() {
+        return root;
     }
 
     public ImageView imageView() {
@@ -27,7 +37,7 @@ public class MessageView extends Group implements DisposableGraphicsObject {
 
     public void setImageView(ImageView imageView) {
         this.imageView = requireNonNull(imageView);
-        getChildren().setAll(imageView);
+        root.getChildren().setAll(imageView);
     }
 
     public void setDisplaySeconds(float displaySeconds) {
@@ -40,7 +50,7 @@ public class MessageView extends Group implements DisposableGraphicsObject {
 
     @Override
     public void dispose() {
-        cleanupGroup(this, true);
+        cleanupGroup(root, true);
         imageView = null;
     }
 }

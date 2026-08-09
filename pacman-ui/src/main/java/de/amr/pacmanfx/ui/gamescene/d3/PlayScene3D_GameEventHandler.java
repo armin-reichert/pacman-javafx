@@ -40,6 +40,7 @@ import de.amr.pacmanfx.uilib.entities3D.bonus.system.Bonus3DViewSystem;
 import de.amr.pacmanfx.uilib.entities3D.house.system.House3DSystem;
 import de.amr.pacmanfx.uilib.entities3D.pac.system.Pac3DAnimationSystem;
 import de.amr.pacmanfx.uilib.entities3D.world.Pellet3D;
+import de.amr.pacmanfx.uilib.widgets.messageview.MessageViewAnimationSystem;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.geometry.Point3D;
@@ -309,7 +310,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 
         level.optBonus().ifPresent(bonus -> Bonus3DViewSystem.lookExpired(bonus, level3D.animations().registry()));
 
-        level3D.messageManager().hideMessage();
+        MessageViewAnimationSystem.hideMessageView(level3D.messageManager().messageView());
 
         playLevelEndAnimation(level3D.animations().registry(),
             viewModel.common3D, viewModel.maze3D,

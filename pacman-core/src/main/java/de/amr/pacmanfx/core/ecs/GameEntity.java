@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.core.ecs;
 
+import de.amr.basics.Disposable;
 import de.amr.pacmanfx.core.ecs.comp.MovementComp;
 import de.amr.pacmanfx.core.ecs.comp.PositionComp;
 import de.amr.pacmanfx.core.ecs.comp.VisibilityComp;
@@ -20,7 +21,7 @@ import static java.util.Objects.requireNonNull;
  * Each game entity by default contains the components "position" and "visibility".
  * </p>
  */
-public class GameEntity {
+public class GameEntity implements Disposable {
 
     private final Map<Class<? extends GameEntityComponent>, GameEntityComponent> components = new LinkedHashMap<>(7);
 
@@ -104,6 +105,15 @@ public class GameEntity {
 
     public final boolean isVisible() {
         return visibility().isVisible();
+    }
+
+    @Override
+    public void dispose() {
+        for (GameEntityComponent comp : components.values()) {
+            if (comp instanceof Disposable disposable) {
+                disposable.dispose();
+            }
+        }
     }
 
     @Override

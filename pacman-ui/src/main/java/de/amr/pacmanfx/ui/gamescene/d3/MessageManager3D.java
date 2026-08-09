@@ -4,14 +4,16 @@
 package de.amr.pacmanfx.ui.gamescene.d3;
 
 import de.amr.basics.math.Vector2f;
+import de.amr.pacmanfx.core.entities.MessageView;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.uilib.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
-import de.amr.pacmanfx.uilib.widgets.messageview.MessageView;
+import de.amr.pacmanfx.uilib.widgets.messageview.MessageView3DComp;
 import de.amr.pacmanfx.uilib.widgets.messageview.MessageViewAnimationSystem;
 import de.amr.pacmanfx.uilib.widgets.messageview.MessageViewAnimations;
 import de.amr.pacmanfx.uilib.widgets.messageview.MessageViewBuilder;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.paint.Color;
 
 import java.util.EnumMap;
@@ -29,7 +31,7 @@ import static java.util.Objects.requireNonNull;
  * The container group is provided at construction time.
  *
  * @see GameLevel3D
- * @see MessageView
+ * @see MessageView3DComp
  * @see DisposableGraphicsObject
  */
 public class MessageManager3D implements DisposableGraphicsObject {
@@ -60,6 +62,10 @@ public class MessageManager3D implements DisposableGraphicsObject {
         this.messageParent = requireNonNull(messageParent);
     }
 
+    public MessageView messageView() {
+        return messageView;
+    }
+
     /**
      * Sets the world position where the "READY!" message should appear (centered).
      *
@@ -80,7 +86,9 @@ public class MessageManager3D implements DisposableGraphicsObject {
     @Override
     public void dispose() {
         if (messageView != null) {
-            messageView.dispose();
+            if (messageView.hasComp(MessageView3DComp.class)) {
+                messageView.requireComp(MessageView3DComp.class).dispose();
+            }
             messageView = null;
         }
     }
@@ -107,15 +115,6 @@ public class MessageManager3D implements DisposableGraphicsObject {
     }
 
     /**
-     * Hides the currently visible message without disposing it.
-     */
-    public void hideMessage() {
-        if (messageView != null) {
-            messageView.setVisible(false);
-        }
-    }
-
-    /**
      * Shows a temporary animated message at the specified world coordinates.
      *
      * @param centerPos        center position in world coordinates
@@ -125,7 +124,8 @@ public class MessageManager3D implements DisposableGraphicsObject {
     public void showAnimatedMessage(AnimationRegistry registry, Vector2f centerPos, String messageText, float displaySeconds) {
         if (messageView != null) {
             messageView.dispose();
-            messageParent.getChildren().remove(messageView);
+            final Node root = messageView.requireComp(MessageView3DComp.class).root();
+            messageParent.getChildren().remove(root);
         }
 
         messageView = new MessageViewBuilder()
@@ -137,7 +137,10 @@ public class MessageManager3D implements DisposableGraphicsObject {
             .textColor(Color.YELLOW)
             .build();
 
-        messageParent.getChildren().add(messageView);
+        if (!messageView.hasComp(MessageView3DComp.class)) {
+            messageView.setComp(MessageView3DComp.class, new MessageView3DComp());
+        }
+        messageParent.getChildren().add(messageView.requireComp(MessageView3DComp.class).root());
 
         final var animations = new MessageViewAnimations(registry, messageView);
         MessageViewAnimationSystem.showMessageViewCenteredAt(
