@@ -22,7 +22,6 @@ import de.amr.pacmanfx.ui.gamescene.d3.animation.WallColorFlashingAnimation;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ExplosionConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimationConfig;
-import de.amr.pacmanfx.uilib.entities3D.messageview.system.MessageView3DDisplaySystem;
 import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.vm.Game3DSettingsVM;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -277,9 +276,5 @@ public class GameLevel3DAnimations implements Disposable {
         final Vector2i tile = energizer3D.tile();
         registry.optAnimation(Energizer3D.AnimationID.ENERGIZER_PUMPING.atTile(tile))
             .ifPresent(ManagedAnimation::stop);
-    }
-
-    private void createMessageManagerAnimation(MessageView3DDisplaySystem messageManager3D) {
-
     }
 }
