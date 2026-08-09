@@ -259,7 +259,7 @@ public class PlayScene3D extends AbstractGameScene
             return;
         }
 
-        level3D.updateEntities3D();
+        GameLevel3DUpdateController.updateEntities(level3D);
         perspectiveManager.updatePerspective(level);
 
         updateHUD3D(level);
