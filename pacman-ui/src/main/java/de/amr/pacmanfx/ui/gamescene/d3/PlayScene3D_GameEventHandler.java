@@ -13,6 +13,7 @@ import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.Bonus;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.House;
+import de.amr.pacmanfx.core.entities.MessageView;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventListener;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
 import de.amr.pacmanfx.core.event.bonus.BonusEatenEvent;
@@ -38,9 +39,10 @@ import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.entities3D.bonus.system.Bonus3DViewSystem;
 import de.amr.pacmanfx.uilib.entities3D.house.system.House3DSystem;
+import de.amr.pacmanfx.uilib.entities3D.messageview.system.MessageView3DAnimationSystem;
+import de.amr.pacmanfx.uilib.entities3D.messageview.system.MessageView3DDisplaySystem;
 import de.amr.pacmanfx.uilib.entities3D.pac.system.Pac3DAnimationSystem;
 import de.amr.pacmanfx.uilib.entities3D.world.Pellet3D;
-import de.amr.pacmanfx.uilib.entities3D.messageview.system.MessageViewAnimationSystem;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import javafx.geometry.Point3D;
@@ -126,12 +128,13 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     @Override
     default void onGameContinued(GameContinuedEvent ignoredEvent) {
         final GameLevel3D level3D = assertLevel3D();
-        level3D.messageManager().showMessage(level3D.animations().registry(), MessageManager3D.MessageType.READY);
+        level3D.showMessage(MessageView3DDisplaySystem.MessageType.READY);
     }
 
     @Override
     default void onGameStarted(GameStartedEvent event) {
         final State<GameContext> state = gameContext().state();
+
         final boolean silent = gameContext().gamePlay().isDemoLevelRunning(gameContext())
             || (state instanceof GameState gameState && gameState.id() instanceof TestStateID);
 
@@ -140,7 +143,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         }
 
         final GameLevel3D level3D = assertLevel3D();
-        level3D.messageManager().showMessage(level3D.animations().registry(), MessageManager3D.MessageType.READY);
+        level3D.showMessage(MessageView3DDisplaySystem.MessageType.READY);
     }
 
     @Override
@@ -165,7 +168,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
             final GameLevel3D level3D = assertLevel3D();
             level3D.energizers3D().forEach(energizer3D ->
                 GameLevel3DAnimationSystem.startEnergizerPumping(level3D.animations(), energizer3D));
-            level3D.messageManager().showMessage(level3D.animations().registry(), MessageManager3D.MessageType.TEST, level.number());
+            level3D.showMessage(MessageView3DDisplaySystem.MessageType.TEST, level.number());
         }
 
         final GameLevel3D level3D = assertLevel3D();
@@ -310,7 +313,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 
         level.optBonus().ifPresent(bonus -> Bonus3DViewSystem.lookExpired(bonus, level3D.animations().registry()));
 
-        MessageViewAnimationSystem.hideMessageView(level3D.messageManager().messageView());
+        MessageView3DAnimationSystem.hideMessageView(level.entities().theOne(MessageView.class));
 
         playLevelEndAnimation(level3D.animations().registry(),
             viewModel.common3D, viewModel.maze3D,
@@ -378,7 +381,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     private void handleTestState(Game3DSettingsVM globals3D, GameLevel level) {
         gameScene().optGameLevel3D().ifPresent(level3D -> {
             gameScene().replaceGameLevel3D(level);
-            level3D.messageManager().showMessage(level3D.animations().registry(), MessageManager3D.MessageType.TEST, level.number());
+            level3D.showMessage(MessageView3DDisplaySystem.MessageType.TEST, level.number());
             globals3D.cameraPerspectiveIdProperty.set(PerspectiveID.TOTAL);
         });
     }

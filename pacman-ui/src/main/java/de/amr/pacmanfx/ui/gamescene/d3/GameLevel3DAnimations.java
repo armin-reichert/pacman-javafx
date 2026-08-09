@@ -22,6 +22,7 @@ import de.amr.pacmanfx.ui.gamescene.d3.animation.WallColorFlashingAnimation;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ExplosionConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimationConfig;
+import de.amr.pacmanfx.uilib.entities3D.messageview.system.MessageView3DDisplaySystem;
 import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.vm.Game3DSettingsVM;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
@@ -209,7 +210,9 @@ public class GameLevel3DAnimations implements Disposable {
         final House3DViewComp house3D = house.requireComp(House3DViewComp.class);
         final var animation =  new House3DAnimationComp(registry);
         animation.createDoorsMeltingAnimationFactory(house3D.barThicknessProperty);
-        house.setComp(House3DAnimationComp.class, animation);
+        if (!house.hasComp(House3DAnimationComp.class)) {
+            house.setComp(House3DAnimationComp.class, animation);
+        }
     }
 
     private void createEnergizerAnimations(Energizer3DSettings settings) {
@@ -276,7 +279,7 @@ public class GameLevel3DAnimations implements Disposable {
             .ifPresent(ManagedAnimation::stop);
     }
 
-    private void createMessageManagerAnimation(MessageManager3D messageManager3D) {
+    private void createMessageManagerAnimation(MessageView3DDisplaySystem messageManager3D) {
 
     }
 }

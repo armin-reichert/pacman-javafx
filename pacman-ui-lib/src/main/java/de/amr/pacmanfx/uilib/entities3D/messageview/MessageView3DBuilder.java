@@ -6,6 +6,7 @@ package de.amr.pacmanfx.uilib.entities3D.messageview;
 
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.entities.MessageView;
+import de.amr.pacmanfx.uilib.entities3D.messageview.comp.MessageView3DAnimationComp;
 import de.amr.pacmanfx.uilib.entities3D.messageview.comp.MessageView3DComp;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -18,10 +19,24 @@ import javafx.scene.text.Text;
 
 import static java.util.Objects.requireNonNull;
 
-public class MessageViewBuilder {
+public class MessageView3DBuilder {
 
     private static final int MARGIN = 3;
     private static final int QUALITY = 3;
+
+    public static MessageView3DComp ensureView3DExists(MessageView messageView) {
+        if (!messageView.hasComp(MessageView3DComp.class)) {
+            messageView.setComp(MessageView3DComp.class, new MessageView3DComp());
+        }
+        return messageView.requireComp(MessageView3DComp.class);
+    }
+
+    public static MessageView3DAnimationComp ensureAnim3DExists(MessageView messageView) {
+        if (!messageView.hasComp(MessageView3DAnimationComp.class)) {
+            messageView.setComp(MessageView3DAnimationComp.class, new MessageView3DAnimationComp());
+        }
+        return messageView.requireComp(MessageView3DAnimationComp.class);
+    }
 
     private Color borderColor = Color.BLUE;
     private Color backgroundColor = Color.grayRgb(88);
@@ -30,48 +45,39 @@ public class MessageViewBuilder {
     private Color textColor = Color.WHITE;
     private String text = "Hello, World!";
 
-    public MessageViewBuilder backgroundColor(Color color) {
+    public MessageView3DBuilder backgroundColor(Color color) {
         backgroundColor = requireNonNull(color);
         return this;
     }
 
-    public MessageViewBuilder borderColor(Color color) {
+    public MessageView3DBuilder borderColor(Color color) {
         borderColor = requireNonNull(color);
         return this;
     }
 
-    public MessageViewBuilder displaySeconds(float sec) {
+    public MessageView3DBuilder displaySeconds(float sec) {
         displaySeconds = sec;
         return this;
     }
 
-    public MessageViewBuilder font(Font font) {
+    public MessageView3DBuilder font(Font font) {
         this.font = requireNonNull(font);
         return this;
     }
 
-    public MessageViewBuilder textColor(Color color) {
+    public MessageView3DBuilder textColor(Color color) {
         this.textColor = requireNonNull(color);
         return this;
     }
 
-    public MessageViewBuilder text(String text) {
+    public MessageView3DBuilder text(String text) {
         this.text = requireNonNull(text);
         return this;
     }
 
-    public MessageView build() {
-        final var messageView = new MessageView();
+    public void build(MessageView messageView) {
         messageView.data().setText(text);
         build3DView(messageView);
-        return messageView;
-    }
-
-    public MessageView3DComp ensureView3DExists(MessageView messageView) {
-        if (!messageView.hasComp(MessageView3DComp.class)) {
-            messageView.setComp(MessageView3DComp.class, new MessageView3DComp());
-        }
-        return messageView.requireComp(MessageView3DComp.class);
     }
 
     private void build3DView(MessageView messageView) {

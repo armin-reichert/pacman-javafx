@@ -18,6 +18,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorSchemeImpl;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
+import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.HideGhost3DRiseNumberBoxAnimation;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter.LevelCounterView3DAnimationID;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter.LevelCounterView3DComp;
@@ -41,6 +42,8 @@ import de.amr.pacmanfx.uilib.entities3D.ghost.system.Ghost3DMovementSystem;
 import de.amr.pacmanfx.uilib.entities3D.house.comp.House3DViewComp;
 import de.amr.pacmanfx.uilib.entities3D.house.system.House3DAnimationSystem;
 import de.amr.pacmanfx.uilib.entities3D.house.system.House3DSystem;
+import de.amr.pacmanfx.uilib.entities3D.messageview.MessageView3DBuilder;
+import de.amr.pacmanfx.uilib.entities3D.messageview.system.MessageView3DDisplaySystem;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DViewComp;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.PacSettings;
 import de.amr.pacmanfx.uilib.entities3D.pac.system.Pac3DAnimationSystem;
@@ -88,8 +91,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private Maze3D maze3D;
 
-    private MessageManager3D messageManager;
-
     private final GameLevel3DAnimations animations;
 
     public GameLevel3D(GameUISettingsVM viewModel, GameLevel level, GameVariantConfig gameVariantConfig) {
@@ -102,7 +103,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         createPac3D();
         createGhosts3D();
         createLivesCounter3D();
-        createMessageManager();
+        createMessageView3D();
         arrangeLayout();
 
         // Animations expect scene graph to be created
@@ -123,10 +124,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     public void dispose() {
         if (maze3D != null) {
             maze3D.dispose();
-        }
-        if (messageManager != null) {
-            messageManager.dispose();
-            messageManager = null;
         }
         cleanupGroup(this, true);
     }
@@ -152,10 +149,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     public PointLight ghostHunterLight() {
         return ghostHunterLight;
-    }
-
-    public MessageManager3D messageManager() {
-        return messageManager;
     }
 
     public Stream<Energizer3D> energizers3D() {
@@ -226,6 +219,18 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             animation.delegate().setOnFinished(_ -> getChildren().remove(numberBoxNode));
             animation.playFromStart();
         }
+    }
+
+    public void showMessage(MessageView3DDisplaySystem.MessageType type, Object... args) {
+        MessageView3DDisplaySystem.showMessage(
+            level.entities().theOne(MessageView.class),
+            this,
+            computeMessageCenter(type),
+            GlobalAssets.PredefinedFont.ARCADE6.font(),
+            animations().registry(),
+            type,
+            args
+        );
     }
 
     // Private area, no trespassing!
@@ -389,20 +394,34 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         getChildren().add(view3D.root());
     }
 
-    private void createMessageManager() {
-        messageManager = new MessageManager3D(this);
+    public Vector2f computeMessageCenter(MessageView3DDisplaySystem.MessageType messageType) {
+        final TerrainLayer terrain = level.worldMap().terrainLayer();
+        return switch (messageType) {
+            case READY -> level.entities().theOne(House.class).centerPositionUnderHouse();
+            case TEST -> vec2_float(terrain.numCols() * WorldMap.HTS, (terrain.numRows() - 2) * WorldMap.TS);
+        };
+    }
 
+    /*
+
+    private void createMessageView3D() {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final House house = level.entities().theOne(House.class);
         if (house != null) {
-            messageManager.setMessageCenter(MessageManager3D.MessageType.READY, house.centerPositionUnderHouse());
+            messageManager.setMessageCenter(MessageView3DDisplaySystem.MessageType.READY, house.centerPositionUnderHouse());
         } else {
             Logger.error("No house in this game level! WTF?");
             final double x = terrain.numCols() * WorldMap.HTS, y = terrain.numRows() * WorldMap.HTS;
-            messageManager.setMessageCenter(MessageManager3D.MessageType.READY, vec2_float(x, y));
+            messageManager.setMessageCenter(MessageView3DDisplaySystem.MessageType.READY, vec2_float(x, y));
         }
-        messageManager.setMessageCenter(MessageManager3D.MessageType.TEST,
+        messageManager.setMessageCenter(MessageView3DDisplaySystem.MessageType.TEST,
             vec2_float(terrain.numCols() * WorldMap.HTS, (terrain.numRows() - 2) * WorldMap.TS));
+    }
+
+     */
+
+    private void createMessageView3D() {
+        MessageView3DBuilder.ensureAnim3DExists(level.entities().theOne(MessageView.class));
     }
 
     // Order matters for correct transparency!
