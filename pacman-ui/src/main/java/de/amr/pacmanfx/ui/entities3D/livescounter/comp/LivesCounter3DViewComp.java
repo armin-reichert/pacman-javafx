@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.gamescene.d3.entities.livescounter.comp;
+package de.amr.pacmanfx.ui.entities3D.livescounter.comp;
 
 
 import de.amr.basics.util.Ufx;

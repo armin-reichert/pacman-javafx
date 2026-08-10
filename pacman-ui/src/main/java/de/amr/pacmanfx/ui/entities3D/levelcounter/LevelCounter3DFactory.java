@@ -2,12 +2,12 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter;
+package de.amr.pacmanfx.ui.entities3D.levelcounter;
 
 import de.amr.pacmanfx.core.entities.LevelCounter;
 import de.amr.pacmanfx.core.entities.levelCounter.comp.LevelCounterData;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
-import de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter.comp.LevelCounter3DSettings;
+import de.amr.pacmanfx.uilib.entities3D.levelcounter.comp.LevelCounter3DSettings;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;

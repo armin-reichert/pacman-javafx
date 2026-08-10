@@ -6,7 +6,7 @@ import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.ui.gamescene.d3.entities.livescounter.system.LivesCounter3DViewSystem;
+import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounter3DViewSystem;
 import de.amr.pacmanfx.uilib.entities3D.bonus.system.Bonus3DMovementSystem;
 import de.amr.pacmanfx.uilib.entities3D.bonus.system.Bonus3DViewSystem;
 import de.amr.pacmanfx.uilib.entities3D.ghost.system.Ghost3DAppearanceSystem;

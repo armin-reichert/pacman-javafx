@@ -31,13 +31,13 @@ open module de.amr.pacmanfx.uilib {
     exports de.amr.pacmanfx.uilib.entities3D.pac.anim;
     exports de.amr.pacmanfx.uilib.entities3D.pac.comp;
     exports de.amr.pacmanfx.uilib.entities3D.pac.system;
-    //TODO remove
     exports de.amr.pacmanfx.uilib.entities3D.ghost.anim;
     exports de.amr.pacmanfx.uilib.entities3D.ghost_old;
     exports de.amr.pacmanfx.uilib.entities3D.bonus.system;
     exports de.amr.pacmanfx.uilib.entities3D.bonus.comp;
     exports de.amr.pacmanfx.uilib.entities3D.factory;
     exports de.amr.pacmanfx.uilib.entities3D.score.comp;
+    exports de.amr.pacmanfx.uilib.entities3D.levelcounter.comp;
     exports de.amr.pacmanfx.uilib.entities3D.messageview.comp;
     exports de.amr.pacmanfx.uilib.entities3D.messageview.system;
     exports de.amr.pacmanfx.uilib.entities3D.messageview;

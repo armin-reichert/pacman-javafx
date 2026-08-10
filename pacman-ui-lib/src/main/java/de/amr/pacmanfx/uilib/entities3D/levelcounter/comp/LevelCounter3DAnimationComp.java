@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter.comp;
+package de.amr.pacmanfx.uilib.entities3D.levelcounter.comp;
 
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.core.ecs.GameEntityComponent;
