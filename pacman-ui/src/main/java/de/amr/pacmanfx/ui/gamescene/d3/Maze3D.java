@@ -34,7 +34,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Renders the complete 3D representation of a Pac-Man maze for a single level.
  */
-public class Maze3D extends Group implements DisposableGraphicsObject {
+public class Maze3D implements DisposableGraphicsObject {
 
     private final ObjectProperty<DrawMode> drawMode = new SimpleObjectProperty<>(DrawMode.FILL);
 
@@ -45,12 +45,19 @@ public class Maze3D extends Group implements DisposableGraphicsObject {
     private final ObjectProperty<Color> floorColor = new SimpleObjectProperty<>(Color.valueOf("#1a1a1a"));
 
     private final TerrainLayer terrain;
-    private final Group particlesGroup = new Group();
+
+    private final Group root;
+
+    private final Group particlesGroup;
+
     private Box floor3D;
+
     private Map<String, PhongMaterial> materials;
 
     public Maze3D(TerrainLayer terrain) {
         this.terrain = requireNonNull(terrain);
+        root = new Group();
+        particlesGroup = new Group();
     }
 
     @Override
@@ -58,7 +65,11 @@ public class Maze3D extends Group implements DisposableGraphicsObject {
         wallBaseHeight.unbind();
         wallOpacity.unbind();
         cleanupGroup(particlesGroup, true);
-        cleanupGroup(this, true);
+        cleanupGroup(root, true);
+    }
+
+    public Group root() {
+        return root;
     }
 
     public void build(
@@ -115,7 +126,7 @@ public class Maze3D extends Group implements DisposableGraphicsObject {
             wall3D.bindBaseHeight(wallBaseHeight);
             wall3D.base().drawModeProperty().bindBidirectional(drawMode);
             wall3D.top() .drawModeProperty().bindBidirectional(drawMode);
-            getChildren().addAll(wall3D.base(), wall3D.top());
+            root.getChildren().addAll(wall3D.base(), wall3D.top());
             return wall3D;
         });
 
@@ -154,6 +165,6 @@ public class Maze3D extends Group implements DisposableGraphicsObject {
         floor3D.setTranslateY(0.5 * height);
         floor3D.setTranslateZ(0.5 * thickness);
 
-        getChildren().add(floor3D);
+        root.getChildren().add(floor3D);
     }
 }

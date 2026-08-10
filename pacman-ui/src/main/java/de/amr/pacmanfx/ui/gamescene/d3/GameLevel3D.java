@@ -157,7 +157,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         for (var ghost : level.entities().ghosts()) {
             Ufx.setDrawMode(ghost.requireComp(Ghost3DViewComp.class).root(), drawMode);
         }
-        Ufx.setDrawMode(maze3D, drawMode);
+        Ufx.setDrawMode(maze3D.root(), drawMode);
     }
 
     public void ensureBonus3DViewAddedToSceneGraph(Bonus bonus) {
@@ -365,7 +365,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         }
 
         getChildren().add(maze3D.particlesGroup());
-        getChildren().add(maze3D);
+        getChildren().add(maze3D.root());
 
         getChildren().add(house3D.root());
         getChildren().add(house3D.doors());
