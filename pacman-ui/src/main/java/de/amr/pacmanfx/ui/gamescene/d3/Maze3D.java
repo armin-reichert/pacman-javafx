@@ -16,14 +16,18 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.DrawMode;
 
-import java.util.Map;
-
 import static java.util.Objects.requireNonNull;
 
 /**
  * Renders the complete 3D representation of a Pac-Man maze for a single level.
  */
 public class Maze3D implements DisposableGraphicsObject {
+
+    public record Materials(
+        PhongMaterial floorMaterial,
+        PhongMaterial wallBaseMaterial,
+        PhongMaterial wallTopMaterial
+    ) {}
 
     private final ObjectProperty<DrawMode> drawMode = new SimpleObjectProperty<>(DrawMode.FILL);
 
@@ -41,9 +45,9 @@ public class Maze3D implements DisposableGraphicsObject {
 
     private Box floor3D;
 
-    private final Map<String, PhongMaterial> materials;
+    private final Materials materials;
 
-    public Maze3D(TerrainLayer terrain, Map<String, PhongMaterial> materials) {
+    public Maze3D(TerrainLayer terrain, Materials materials) {
         this.terrain = requireNonNull(terrain);
         this.materials = requireNonNull(materials);
     }
@@ -60,7 +64,7 @@ public class Maze3D implements DisposableGraphicsObject {
         return terrain;
     }
 
-    public Map<String, PhongMaterial> materials() {
+    public Materials materials() {
         return materials;
     }
 

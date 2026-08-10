@@ -20,7 +20,6 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import org.tinylog.Logger;
 
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static de.amr.basics.util.Ufx.coloredPhongMaterial;
@@ -43,11 +42,11 @@ public class MazeFactory3D {
         requireNonNull(worldSettings);
         requireNonNull(colorScheme);
 
-        final var maze3D = new Maze3D(terrain, createMazeMaterialMap(colorScheme));
+        final var maze3D = new Maze3D(terrain, createMazeMaterials(colorScheme));
         createHouse3D(house, worldSettings.house(), colorScheme);
         buildFloor(maze3D, terrain, worldSettings.floor());
         addObstacles(maze3D, house, terrain, worldSettings.maze());
-        bindWallBaseMaterialColor(maze3D, maze3D.materials().get("wallBaseMaterial"), Color.valueOf(colorScheme.wallStroke()));
+        bindWallBaseMaterialColor(maze3D, maze3D.materials().wallBaseMaterial(), Color.valueOf(colorScheme.wallStroke()));
 
         return maze3D;
     }
@@ -60,7 +59,7 @@ public class MazeFactory3D {
 
         final Box floor3D = new Box(width, height, thickness);
         floor3D.drawModeProperty().bindBidirectional(maze3D.drawModeProperty());
-        floor3D.setMaterial(maze3D.materials().get("floorMaterial"));
+        floor3D.setMaterial(maze3D.materials().floorMaterial());
 
         floor3D.setTranslateX(0.5 * width - floorConfig.padding());
         floor3D.setTranslateY(0.5 * height);
@@ -68,7 +67,7 @@ public class MazeFactory3D {
 
         maze3D.setFloor3D(floor3D);
 
-        final PhongMaterial floorMaterial = maze3D.materials().get("floorMaterial");
+        final PhongMaterial floorMaterial = maze3D.materials().floorMaterial();
         floorMaterial.diffuseColorProperty().bind(maze3D.floorColorProperty());
         floorMaterial.specularColorProperty().bind(maze3D.floorColorProperty().map(Color::brighter));
     }
@@ -79,8 +78,8 @@ public class MazeFactory3D {
         final AtomicInteger wallCount = new AtomicInteger(0);
         renderer3D.setOnWallCreated(wall3D -> {
             wallCount.incrementAndGet();
-            wall3D.setBaseMaterial(maze3D.materials().get("wallBaseMaterial"));
-            wall3D.setTopMaterial(maze3D.materials().get("wallTopMaterial"));
+            wall3D.setBaseMaterial(maze3D.materials().wallBaseMaterial());
+            wall3D.setTopMaterial(maze3D.materials().wallTopMaterial());
             wall3D.bindBaseHeight(maze3D.wallBaseHeightProperty());
             wall3D.base().drawModeProperty().bindBidirectional(maze3D.drawModeProperty());
             wall3D.top() .drawModeProperty().bindBidirectional(maze3D.drawModeProperty());
@@ -130,7 +129,7 @@ public class MazeFactory3D {
         view3D.setDoorSensitivity(config3D.sensitivity());
     }
 
-    private Map<String, PhongMaterial> createMazeMaterialMap(WorldMapColorSchemeImpl colorScheme) {
+    private Maze3D.Materials createMazeMaterials(WorldMapColorSchemeImpl colorScheme) {
         final PhongMaterial floorMaterial = new PhongMaterial();
         floorMaterial.setSpecularPower(FLOOR_SPECULAR_POWER);
 
@@ -140,10 +139,10 @@ public class MazeFactory3D {
         final PhongMaterial wallTopMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.wallFill()));
         wallTopMaterial.setSpecularPower(WALL_TOP_SPECULAR_POWER);
 
-        return Map.of(
-            "floorMaterial", floorMaterial,
-            "wallBaseMaterial", wallBaseMaterial,
-            "wallTopMaterial", wallTopMaterial
+        return new Maze3D.Materials(
+            floorMaterial,
+            wallBaseMaterial,
+            wallTopMaterial
         );
     }
 

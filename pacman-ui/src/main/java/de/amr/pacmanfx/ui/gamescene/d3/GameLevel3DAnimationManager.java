@@ -82,7 +82,7 @@ public class GameLevel3DAnimationManager implements Disposable {
         final WorldMapColorSchemeImpl mapColorScheme = renderConfig.colorScheme(level.worldMap(), gameVariantConfig.worldSettings());
 
         registry.register(AnimationID.WALL_COLOR_FLASHING,
-            new WallColorFlashingAnimation(mapColorScheme, level3D.maze3D().materials().get("wallTopMaterial")));
+            new WallColorFlashingAnimation(mapColorScheme, level3D.maze3D().materials().wallTopMaterial()));
 
         registry.register(AnimationID.LEVEL_COMPLETED_FULL, new LevelCompletedAnimation(level3D));
 
