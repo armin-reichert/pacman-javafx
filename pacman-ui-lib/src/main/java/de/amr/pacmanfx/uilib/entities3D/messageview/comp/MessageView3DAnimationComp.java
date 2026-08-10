@@ -11,25 +11,29 @@ import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 
 public class MessageView3DAnimationComp implements GameEntityComponent, Disposable {
 
-    private AnimationRegistry registry;
+    private final AnimationRegistry registry;
+    private final ManagedAnimation moveInOut;
 
     public static double hiddenZPosition(MessageView3DComp view3D) {
         return 0.5 * view3D.root().getBoundsInLocal().getHeight();
     }
 
-    public MessageView3DAnimationComp() {}
-
-    public void setRegistry(AnimationRegistry registry) {
+    public MessageView3DAnimationComp(AnimationRegistry registry, MessageView3DComp view3D) {
         this.registry = registry;
+        moveInOut = new MoveInOutAnimation(view3D);
+        registry.register(MessageView3DAnimationID.MESSAGE_MOVING, moveInOut);
     }
 
-    public AnimationRegistry registry() {
-        return registry;
+    public ManagedAnimation moveInOut() {
+        return moveInOut;
     }
 
     @Override
     public void dispose() {
-        registry.optAnimation(MessageView3DAnimationID.MESSAGE_MOVING).ifPresent(ManagedAnimation::dispose);
+        if (moveInOut != null) {
+            moveInOut.dispose();
+            registry.unregister(MessageView3DAnimationID.MESSAGE_MOVING);
+        }
     }
 
     @Override

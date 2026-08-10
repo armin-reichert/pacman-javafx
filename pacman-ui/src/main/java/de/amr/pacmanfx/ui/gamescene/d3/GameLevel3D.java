@@ -26,6 +26,7 @@ import de.amr.pacmanfx.ui.settings.world.Pellet3DSettings;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.vm.GameUISettingsVM;
 import de.amr.pacmanfx.uilib.DisposableGraphicsObject;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.entities3D.bonus.anim.Bonus3DAnimationID;
 import de.amr.pacmanfx.uilib.entities3D.bonus.comp.Bonus3DSettings;
 import de.amr.pacmanfx.uilib.entities3D.bonus.comp.Bonus3DViewComp;
@@ -78,7 +79,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private GameLevel3DAnimationManager animationManager;
 
-    public GameLevel3D(GameUISettingsVM viewModel, GameLevel level, GameVariantConfig gameVariantConfig) {
+    public GameLevel3D(AnimationRegistry registry, GameUISettingsVM viewModel, GameLevel level, GameVariantConfig gameVariantConfig) {
         this.level = requireNonNull(level);
         this.gameVariantConfig = requireNonNull(gameVariantConfig);
 
@@ -87,7 +88,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         createPac3D(viewModel);
         createGhosts3D(viewModel);
         createLivesCounter3D();
-        createMessageView3D();
+        createMessageView3D(registry);
         arrangeLayout();
 
         setMouseTransparent(true); // this increases performance they say...
@@ -325,8 +326,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         };
     }
 
-    private void createMessageView3D() {
-        MessageView3DBuilder.ensureAnim3DExists(level.entities().theOne(MessageView.class));
+    private void createMessageView3D(AnimationRegistry registry) {
+        MessageView3DBuilder.ensureAnim3DExists(level.entities().theOne(MessageView.class), registry);
     }
 
     // Order matters for correct transparency!

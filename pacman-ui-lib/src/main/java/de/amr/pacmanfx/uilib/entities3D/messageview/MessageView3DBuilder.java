@@ -6,6 +6,7 @@ package de.amr.pacmanfx.uilib.entities3D.messageview;
 
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.entities.MessageView;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.entities3D.messageview.comp.MessageView3DAnimationComp;
 import de.amr.pacmanfx.uilib.entities3D.messageview.comp.MessageView3DComp;
 import javafx.scene.canvas.Canvas;
@@ -31,9 +32,10 @@ public class MessageView3DBuilder {
         return messageView.requireComp(MessageView3DComp.class);
     }
 
-    public static MessageView3DAnimationComp ensureAnim3DExists(MessageView messageView) {
+    public static MessageView3DAnimationComp ensureAnim3DExists(MessageView messageView, AnimationRegistry registry) {
         if (!messageView.hasComp(MessageView3DAnimationComp.class)) {
-            messageView.setComp(MessageView3DAnimationComp.class, new MessageView3DAnimationComp());
+            final MessageView3DComp view3D = ensureView3DExists(messageView);
+            messageView.setComp(MessageView3DAnimationComp.class, new MessageView3DAnimationComp(registry, view3D));
         }
         return messageView.requireComp(MessageView3DAnimationComp.class);
     }

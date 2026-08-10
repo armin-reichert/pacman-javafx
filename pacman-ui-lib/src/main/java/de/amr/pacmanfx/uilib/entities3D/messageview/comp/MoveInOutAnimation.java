@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.uilib.entities3D.messageview.comp;
 
-
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.PauseTransition;

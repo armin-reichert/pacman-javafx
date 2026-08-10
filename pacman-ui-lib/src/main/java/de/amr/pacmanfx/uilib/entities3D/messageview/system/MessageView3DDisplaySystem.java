@@ -47,7 +47,8 @@ public class MessageView3DDisplaySystem {
             parent.getChildren().add(view3D.root());
         }
 
-        messageView.requireComp(MessageView3DAnimationComp.class).setRegistry(registry);
+        MessageView3DBuilder.ensureAnim3DExists(messageView, registry);
+
         switch (messageType) {
             case READY -> {
                 configureMessageView(messageView, READY_MESSAGE_TEXT, font, READY_MESSAGE_DISPLAY_SECONDS);
@@ -77,7 +78,6 @@ public class MessageView3DDisplaySystem {
     }
 
     private static void showAnimatedMessage(MessageView messageView, Vector2f centerPos) {
-        final var anim3D = MessageView3DBuilder.ensureAnim3DExists(messageView);
-        MessageView3DAnimationSystem.showMessageViewCenteredAt(anim3D, messageView, centerPos.x(), centerPos.y());
+        MessageView3DAnimationSystem.showMessageViewCenteredAt(messageView, centerPos.x(), centerPos.y());
     }
 }

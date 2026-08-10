@@ -27,6 +27,7 @@ import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.vm.Game3DSettingsVM;
 import de.amr.pacmanfx.ui.vm.GameUISettingsVM;
 import de.amr.pacmanfx.uilib.DisposableGraphicsObject;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.entities3D.pac.system.Pac3DAnimationSystem;
@@ -57,6 +58,8 @@ public class PlayScene3D extends AbstractGameScene
 
     private final PerspectiveManager perspectiveManager;
     private final Set<ActionKeyBinding> actionBindings;
+
+    private final AnimationRegistry registry = new AnimationRegistry();
 
     private final SubScene subScene;
     private final Group subSceneRoot;
@@ -189,13 +192,14 @@ public class PlayScene3D extends AbstractGameScene
         final GameUISettingsVM viewModel = appContext().ui().viewModel();
 
         // Create a new 3D game level representation
-        level3D = new GameLevel3D(viewModel, level, gameVariantConfig);
+        level3D = new GameLevel3D(registry, viewModel, level, gameVariantConfig);
 
         level3DParent.getChildren().setAll(level3D);
 
         addAdditional3DLevelElements(level3D);
 
-        level3D.setAnimationManager(new GameLevel3DAnimationManager(level3D, gameVariantConfig));
+        level3D.setAnimationManager(
+            new GameLevel3DAnimationManager(registry, level3D, gameVariantConfig));
 
         final Pac pac = level.entities().pac();
         initPac(level, pac);

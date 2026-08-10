@@ -48,9 +48,11 @@ import javafx.scene.shape.Shape3D;
 import javafx.util.Duration;
 
 import java.util.List;
+import java.util.Objects;
 
 import static de.amr.basics.math.RandomNumberSupport.RANDOM_GENERATOR;
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
+import static java.util.Objects.requireNonNull;
 
 public class GameLevel3DAnimationManager implements Disposable {
 
@@ -60,6 +62,53 @@ public class GameLevel3DAnimationManager implements Disposable {
         LEVEL_COMPLETED_SHORT,
         PARTICLES,
         WALL_COLOR_FLASHING
+    }
+
+    private final AnimationRegistry registry;
+
+    final ParticlesAnimationConfig particlesAnimationConfig = Game3DSettingsVM.DEFAULT_PARTICLE_ANIMATION_CONFIG;
+
+    // The particle pool is only created when the animations are created
+    private Pool<EnergizerParticle3D> particlePool;
+
+    private final GameLevel3D level3D;
+
+    public GameLevel3DAnimationManager(AnimationRegistry registry, GameLevel3D level3D, GameVariantConfig gameVariantConfig) {
+        this.registry = requireNonNull(registry);
+        this.level3D = requireNonNull(level3D);
+        requireNonNull(gameVariantConfig);
+
+        final GameLevel level = level3D.level();
+        final GameVariantRenderConfig renderConfig = gameVariantConfig.renderConfig();
+        final WorldMapColorSchemeImpl mapColorScheme = renderConfig.colorScheme(level.worldMap(), gameVariantConfig.worldSettings());
+
+        registry.register(AnimationID.WALL_COLOR_FLASHING,
+            new WallColorFlashingAnimation(mapColorScheme, level3D.maze3D().materials().get("wallTopMaterial")));
+
+        registry.register(AnimationID.LEVEL_COMPLETED_FULL, new LevelCompletedAnimation(level3D));
+
+        registry.register(AnimationID.LEVEL_COMPLETED_SHORT, new LevelCompletedAnimationShort(level3D));
+
+        createHouseAnimations(level.entities().theOne(House.class));
+
+        createEnergizerAnimations(gameVariantConfig.worldSettings().energizer());
+
+        createEnergizerParticlesAnimation(level3D.maze3D(), level);
+
+        createGhostLightAnimation(gameVariantConfig, level, level3D.ghostHunterLight());
+
+        final Pac pac = level.entities().pac();
+        if (pac.state().isMale()) {
+            createPacManAnimations(pac);
+        }
+        else {
+            createMsPacManAnimations(pac);
+        }
+        //else {
+        // See! Only TWO genders exist! Compiler knows it too!
+        //}
+
+        createGhostAnimations(level, gameVariantConfig.worldSettings().ghosts());
     }
 
     public void startEnergizerPumping() {
@@ -100,52 +149,6 @@ public class GameLevel3DAnimationManager implements Disposable {
     public void stopAnimationsBeforePacManDies() {
         registry.optAnimation(GameLevel3DAnimationManager.AnimationID.GHOST_LIGHT).ifPresent(ManagedAnimation::stop);
         registry.optAnimation(GameLevel3DAnimationManager.AnimationID.WALL_COLOR_FLASHING).ifPresent(ManagedAnimation::stop);
-    }
-
-    // -----------------------
-
-    private final AnimationRegistry registry = new AnimationRegistry();
-
-    final ParticlesAnimationConfig particlesAnimationConfig = Game3DSettingsVM.DEFAULT_PARTICLE_ANIMATION_CONFIG;
-
-    // The particle pool is only created when the animations are created
-    private Pool<EnergizerParticle3D> particlePool;
-
-    private final GameLevel3D level3D;
-
-    public GameLevel3DAnimationManager(GameLevel3D level3D, GameVariantConfig gameVariantConfig) {
-        this.level3D = level3D;
-        final GameLevel level = level3D.level();
-        final GameVariantRenderConfig renderConfig = gameVariantConfig.renderConfig();
-        final WorldMapColorSchemeImpl mapColorScheme = renderConfig.colorScheme(level.worldMap(), gameVariantConfig.worldSettings());
-
-        registry.register(AnimationID.WALL_COLOR_FLASHING,
-            new WallColorFlashingAnimation(mapColorScheme, level3D.maze3D().materials().get("wallTopMaterial")));
-
-        registry.register(AnimationID.LEVEL_COMPLETED_FULL, new LevelCompletedAnimation(level3D));
-
-        registry.register(AnimationID.LEVEL_COMPLETED_SHORT, new LevelCompletedAnimationShort(level3D));
-
-        createHouseAnimations(level.entities().theOne(House.class));
-
-        createEnergizerAnimations(gameVariantConfig.worldSettings().energizer());
-
-        createEnergizerParticlesAnimation(level3D.maze3D(), level);
-
-        createGhostLightAnimation(gameVariantConfig, level, level3D.ghostHunterLight());
-
-        final Pac pac = level.entities().pac();
-        if (pac.state().isMale()) {
-            createPacManAnimations(pac);
-        }
-        else {
-            createMsPacManAnimations(pac);
-        }
-        //else {
-            // See! Only TWO genders exist! Compiler knows it too!
-        //}
-
-        createGhostAnimations(level, gameVariantConfig.worldSettings().ghosts());
     }
 
     @Override

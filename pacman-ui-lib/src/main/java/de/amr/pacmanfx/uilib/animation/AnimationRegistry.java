@@ -29,6 +29,17 @@ public class AnimationRegistry {
         Logger.info("Animation '{}' registered, key='{}'", animation.name(), key);
     }
 
+    public void unregister(Object key) {
+        requireNonNull(key);
+        final ManagedAnimation removedAnimation = animationMap.remove(key);
+        if (removedAnimation != null) {
+            Logger.info("Animation '{}' unregistered, key='{}'", removedAnimation.name(), key);
+        }
+        else {
+            Logger.warn("Cannot unregister: No animation with key='{}' exist in registry", key);
+        }
+    }
+
     public <T extends ManagedAnimation> T requireAnimation(Object key, Class<T> expectedClass) {
         requireNonNull(key);
         requireNonNull(expectedClass);
