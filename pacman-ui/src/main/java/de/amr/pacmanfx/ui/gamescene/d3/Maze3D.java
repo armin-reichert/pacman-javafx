@@ -3,17 +3,8 @@
  */
 package de.amr.pacmanfx.ui.gamescene.d3;
 
-import de.amr.basics.StopWatch;
-import de.amr.basics.math.Vector2f;
-import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.core.model.world.obstacle.Obstacle;
-import de.amr.pacmanfx.ui.settings.world.Floor3DSettings;
-import de.amr.pacmanfx.ui.settings.world.Maze3DSettings;
 import de.amr.pacmanfx.uilib.DisposableGraphicsObject;
-import de.amr.pacmanfx.uilib.entities3D.world.TerrainRenderer3D;
 import de.amr.pacmanfx.uilib.entities3D.world.Wall3D;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -24,10 +15,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Box;
 import javafx.scene.shape.DrawMode;
-import org.tinylog.Logger;
 
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.util.Objects.requireNonNull;
 
@@ -46,31 +35,17 @@ public class Maze3D implements DisposableGraphicsObject {
 
     private final TerrainLayer terrain;
 
-    private final Group root;
+    private final Group root = new Group();
 
-    private final Group particlesGroup;
+    private final Group particlesGroup = new Group();
 
     private Box floor3D;
 
     private final Map<String, PhongMaterial> materials;
 
-    public Maze3D(
-        TerrainLayer terrain,
-        House house,
-        Map<String, PhongMaterial> materials,
-        Maze3DSettings maze3DSettings,
-        Floor3DSettings floor3DSettings)
-    {
+    public Maze3D(TerrainLayer terrain, Map<String, PhongMaterial> materials) {
         this.terrain = requireNonNull(terrain);
-        requireNonNull(house);
         this.materials = requireNonNull(materials);
-        requireNonNull(maze3DSettings);
-        requireNonNull(floor3DSettings);
-
-        root = new Group();
-        particlesGroup = new Group();
-        buildFloor(drawMode, floor3DSettings);
-        addObstacles(house, drawMode, maze3DSettings);
     }
 
     @Override
@@ -81,12 +56,36 @@ public class Maze3D implements DisposableGraphicsObject {
         cleanupGroup(root, true);
     }
 
-    public Group root() {
-        return root;
+    public TerrainLayer terrain() {
+        return terrain;
     }
 
     public Map<String, PhongMaterial> materials() {
         return materials;
+    }
+
+    public Group root() {
+        return root;
+    }
+
+    public Group particlesGroup() {
+        return particlesGroup;
+    }
+
+    public double floorTop() {
+        return floor3D().getTranslateZ() - 0.5 * floor3D().getDepth();
+    }
+
+    public void setFloor3D(Box newFloor3D) {
+        if (floor3D != null) {
+            root.getChildren().remove(floor3D);
+        }
+        floor3D = requireNonNull(newFloor3D);
+        root.getChildren().add(newFloor3D);
+    }
+
+    public Box floor3D() {
+        return floor3D;
     }
 
     public ObjectProperty<DrawMode> drawModeProperty() {
@@ -105,68 +104,4 @@ public class Maze3D implements DisposableGraphicsObject {
         return floorColor;
     }
 
-    public Box floor() {
-        return floor3D;
-    }
-
-    public double floorTop() {
-        return floor().getTranslateZ() - 0.5 * floor().getDepth();
-    }
-
-    public Group particlesGroup() {
-        return particlesGroup;
-    }
-
-    private void addObstacles(House house, ObjectProperty<DrawMode> drawMode, Maze3DSettings maze3DSettings) {
-        final float wallThickness = maze3DSettings.obstacleWallThickness();
-        final TerrainRenderer3D renderer3D = new TerrainRenderer3D();
-        final AtomicInteger wallCount = new AtomicInteger(0);
-        renderer3D.setOnWallCreated(wall3D -> {
-            wallCount.incrementAndGet();
-            wall3D.setBaseMaterial(materials.get("wallBaseMaterial"));
-            wall3D.setTopMaterial(materials.get("wallTopMaterial"));
-            wall3D.bindBaseHeight(wallBaseHeight);
-            wall3D.base().drawModeProperty().bindBidirectional(drawMode);
-            wall3D.top() .drawModeProperty().bindBidirectional(drawMode);
-            root.getChildren().addAll(wall3D.base(), wall3D.top());
-            return wall3D;
-        });
-
-        final var stopWatch = new StopWatch();
-        // render all obstacles found in map except the house placeholder obstacle
-        for (Obstacle obstacle : terrain.obstacles()) {
-            final Vector2f startPoint = obstacle.startPoint().toVector2f();
-            if (house == null || !house.contains(WorldMap.computeTileAt(startPoint))) {
-                renderer3D.renderObstacle3D(obstacle, isWorldBorder(obstacle), wallThickness, 4);
-            }
-        }
-        final var passedTimeMillis = stopWatch.passedTime().toMillis();
-        Logger.info("Building {} composite walls took {} milliseconds", wallCount, passedTimeMillis);
-    }
-
-    private boolean isWorldBorder(Obstacle obstacle) {
-        final Vector2i start = obstacle.startPoint();
-        if (obstacle.isClosed()) {
-            return start.x() == WorldMap.TS || start.y() == terrain.emptyRowsOverMaze() * WorldMap.TS + WorldMap.HTS;
-        } else {
-            return start.x() == 0 || start.x() == terrain.numCols() * WorldMap.TS;
-        }
-    }
-
-    private void buildFloor(ObjectProperty<DrawMode> drawMode, Floor3DSettings floorConfig) {
-        final Vector2i terrainSize = terrain.sizeInPixel();
-        final float width = terrainSize.x() + 2 * floorConfig.padding();
-        final float height = terrainSize.y();
-        final float thickness = floorConfig.thickness();
-
-        floor3D = new Box(width, height, thickness);
-        floor3D.drawModeProperty().bindBidirectional(drawMode);
-        floor3D.setMaterial(materials.get("floorMaterial"));
-
-        floor3D.setTranslateX(0.5 * width - floorConfig.padding());
-        floor3D.setTranslateY(0.5 * height);
-        floor3D.setTranslateZ(0.5 * thickness);
-
-        root.getChildren().add(floor3D);
-    }
 }

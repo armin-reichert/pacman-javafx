@@ -242,7 +242,7 @@ public class GameLevel3DAnimationManager implements Disposable {
             particlePool,
             particlesAnimationConfig,
             maze3D.particlesGroup(),
-            particle -> particle.collidesWith(maze3D.floor()),
+            particle -> particle.collidesWith(maze3D.floor3D()),
             particle -> particle.pos().z() > 50 // positive z is below maze floor
         ));
     }
