@@ -28,7 +28,7 @@ public abstract class GameModel {
 
     // Data
 
-    private final BooleanProperty playing = new SimpleBooleanProperty(false);
+    private boolean playing;
 
     protected final Score score;
 
@@ -98,11 +98,11 @@ public abstract class GameModel {
     public abstract GameRules rules();
 
     public boolean isPlaying() {
-        return playing.get();
+        return playing;
     }
 
     public void setPlaying(boolean playing) {
-        this.playing.set(playing);
+        this.playing = playing;
     }
 
     public void setLevel(GameLevel level) {
