@@ -149,8 +149,6 @@ public class GameSceneManager {
         playScene3D.initFood3D(level, true);
         playScene3D.updateHUD3D(level);
 
-        level3D.createLevelCounterView3D(gameContext.model().levelCounter());
-
         LivesCounter3DViewSystem.startTracking(livesCounter, pac);
 
         if (pac.power().isActive()) {

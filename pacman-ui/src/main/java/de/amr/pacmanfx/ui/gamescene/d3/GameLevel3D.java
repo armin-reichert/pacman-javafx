@@ -17,7 +17,7 @@ import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.HideGhost3DRiseNumberBoxAnimation;
-import de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter.comp.LevelCounter3DAnimationID;
+import de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter.comp.LevelCounter3DAnimationComp;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter.comp.LevelCounter3DViewComp;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter.system.LevelCounter3DViewSystem;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.livescounter.comp.LivesCounter3DViewComp;
@@ -86,6 +86,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         createFood3D();
         createPac3D(viewModel);
         createGhosts3D(viewModel);
+        createLevelCounter3D(registry);
         createLivesCounter3D();
         createMessageView3D(registry);
         arrangeLayout();
@@ -292,25 +293,32 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         }
     }
 
-    public void createLevelCounterView3D(LevelCounter levelCounter) {
+    private void createLevelCounter3D(AnimationRegistry registry) {
+        final LevelCounter levelCounter = level.gameModel().levelCounter(); //TODO change this!
         if (!levelCounter.hasComp(LevelCounter3DViewComp.class)) {
             final LevelCounter3DViewComp view3D = new LevelCounter3DViewComp();
             levelCounter.setComp(LevelCounter3DViewComp.class, view3D);
-
-            //TODO move elsewhere
-            animationManager.registry().register(LevelCounter3DAnimationID.LEVEL_COUNTER_SPINNING, view3D.spinningAnimation());
-
-            Logger.info("Level counter now has a 3D view");
+            levelCounter.setComp(LevelCounter3DAnimationComp.class,
+                new LevelCounter3DAnimationComp(view3D, registry));
+            Logger.info("Level counter now has a 3D view and animation component");
         }
         else {
-            Logger.info("Level counter already has a 3D view!");
+            Logger.info("Level counter already had a 3D view!");
         }
 
-        // Recreate all 3D entries in the level counter group
-        LevelCounter3DViewSystem.updateLevelCounter3D(gameVariantConfig, levelCounter, level);
+        replaceLevelCounter3D();
+    }
 
-        // Add level counter 3D root into this group
+    public void replaceLevelCounter3D() {
+        final LevelCounter levelCounter = level.gameModel().levelCounter(); // TODO change this
         final LevelCounter3DViewComp view3D = levelCounter.requireComp(LevelCounter3DViewComp.class);
+
+        final Group oldRoot = view3D.root();
+        if (oldRoot != null) {
+            getChildren().remove(oldRoot);
+        }
+
+        LevelCounter3DViewSystem.updateLevelCounter3D(gameVariantConfig, levelCounter, level);
         getChildren().add(view3D.root());
     }
 

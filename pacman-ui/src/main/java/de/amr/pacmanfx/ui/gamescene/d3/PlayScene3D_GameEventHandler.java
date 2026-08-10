@@ -163,6 +163,8 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         final GameContext gameContext = gameContext();
         final State<GameContext> newState = gameContext.state();
 
+        level3D.replaceLevelCounter3D();
+
         //TODO rethink this
         if (newState instanceof GameState gameState && gameState.id() instanceof TestStateID) {
             gameScene().replaceGameLevel3D(level);
@@ -170,7 +172,6 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
             level3D.showMessage(LevelMessageType.TEST, level.number());
         }
 
-        level3D.createLevelCounterView3D(gameContext.model().levelCounter());
         gameScene().replaceActionBindings(level);
         gameScene().fadeInAnimation().playFromStart();
     }
