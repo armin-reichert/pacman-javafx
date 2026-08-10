@@ -30,7 +30,6 @@ import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.entities3D.bonus.anim.Bonus3DAnimationID;
 import de.amr.pacmanfx.uilib.entities3D.bonus.comp.Bonus3DSettings;
 import de.amr.pacmanfx.uilib.entities3D.bonus.comp.Bonus3DViewComp;
-import de.amr.pacmanfx.uilib.entities3D.bonus.system.Bonus3DViewSystem;
 import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DViewComp;
 import de.amr.pacmanfx.uilib.entities3D.ghost.comp.GhostSettings;
 import de.amr.pacmanfx.uilib.entities3D.house.comp.House3DViewComp;
@@ -160,13 +159,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         Ufx.setDrawMode(maze3D, drawMode);
     }
 
-    public void activateBonus3D(Bonus bonus) {
-        ensureBonus3DViewExists(bonus);
-        Bonus3DViewSystem.update(bonus, animationManager.registry());
-        Bonus3DViewSystem.lookEdible(bonus);
-    }
-
-    public void ensureBonus3DViewExists(Bonus bonus) {
+    public void ensureBonus3DViewAddedToSceneGraph(Bonus bonus) {
         if (!bonus.hasComp(Bonus3DViewComp.class)) {
             final var view3D = createBonusView3D(bonus);
             getChildren().add(view3D.root());

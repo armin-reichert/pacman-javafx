@@ -122,6 +122,10 @@ public class PlayScene3D extends AbstractGameScene
         return subScene;
     }
 
+    public AnimationRegistry registry() {
+        return registry;
+    }
+
     public PerspectiveManager perspectiveManager() {
         return perspectiveManager;
     }

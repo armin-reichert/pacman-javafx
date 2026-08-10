@@ -3,13 +3,11 @@ package de.amr.pacmanfx.ui.gamescene.d3;
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
-import de.amr.pacmanfx.core.entities.Ghost;
-import de.amr.pacmanfx.core.entities.House;
-import de.amr.pacmanfx.core.entities.LivesCounter;
-import de.amr.pacmanfx.core.entities.Pac;
+import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.livescounter.LivesCounterView3DSystem;
+import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.entities3D.bonus.system.Bonus3DMovementSystem;
 import de.amr.pacmanfx.uilib.entities3D.bonus.system.Bonus3DViewSystem;
 import de.amr.pacmanfx.uilib.entities3D.ghost.system.Ghost3DAppearanceSystem;
@@ -29,7 +27,6 @@ public class GameLevel3DUpdateController {
 
     private static final Set<GhostState> GHOST_STATES_REQUIRING_HOUSE_LIGHTING = Set.of(
         GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE);
-
 
     public static void update3DSceneEntities(GameLevel3D level3D) {
         updateLivesCounter3D(level3D);
@@ -86,9 +83,13 @@ public class GameLevel3DUpdateController {
     private static void updateBonus3D(GameLevel3D level3D) {
         final GameLevel level = level3D.level();
         level.optBonus().ifPresent(bonus -> {
-            level3D.ensureBonus3DViewExists(bonus);
+            level3D.ensureBonus3DViewAddedToSceneGraph(bonus);
+            switch (bonus.bonusState()) {
+                case EDIBLE -> Bonus3DViewSystem.lookEdible(bonus);
+                case EATEN -> Bonus3DViewSystem.lookEaten(bonus, level3D.animationManager().registry());
+                case INACTIVE -> {}
+            }
             Bonus3DMovementSystem.update(bonus);
-            Bonus3DViewSystem.update(bonus, level3D.animationManager().registry());
         });
     }
 }

@@ -13,14 +13,6 @@ import javafx.scene.shape.Box;
 
 public class Bonus3DViewSystem {
 
-    public static void update(Bonus bonus, AnimationRegistry animationRegistry) {
-        switch (bonus.bonusState()) {
-            case EDIBLE -> lookEdible(bonus);
-            case EATEN -> lookEaten(bonus, animationRegistry);
-            case INACTIVE -> {}
-        }
-    }
-
     public static void lookEdible(Bonus bonus) {
         final Bonus3DViewComp view3D = bonus.requireComp(Bonus3DViewComp.class);
         final Box shape3D = view3D.box3D();

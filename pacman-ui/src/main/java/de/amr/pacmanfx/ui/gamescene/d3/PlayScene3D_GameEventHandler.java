@@ -102,9 +102,14 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 
     @Override
     default void onBonusActivated(BonusActivatedEvent e) {
-        assertLevel3D().activateBonus3D(e.bonus());
+        final GameLevel3D level3D = assertLevel3D();
+        final Bonus bonus = e.bonus();
+
+        level3D.ensureBonus3DViewAddedToSceneGraph(bonus);
+        Bonus3DViewSystem.lookEdible(bonus);
         optSoundEffects().ifPresent(GameSoundEffects::playBonusActiveSound);
     }
+
 
     @Override
     default void onBonusEaten(BonusEatenEvent e) {
