@@ -48,7 +48,6 @@ import javafx.scene.shape.Shape3D;
 import javafx.util.Duration;
 
 import java.util.List;
-import java.util.Objects;
 
 import static de.amr.basics.math.RandomNumberSupport.RANDOM_GENERATOR;
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
@@ -273,7 +272,7 @@ public class GameLevel3DAnimationManager implements Disposable {
             registry.optAnimation(animationID).ifPresent(ManagedAnimation::dispose);
             final var pumping = createEnergizerPumpingAnimation(
                 "Energizer Pumping, Tile %s".formatted(tile),
-                energizer3D.shape(),
+                energizer3D.root(),
                 pumpingFrequency,
                 inflatedSize,
                 expandedSize

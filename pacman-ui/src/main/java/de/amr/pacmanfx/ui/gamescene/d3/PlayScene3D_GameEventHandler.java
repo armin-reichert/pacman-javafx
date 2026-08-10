@@ -182,7 +182,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         final long tick = appContext().clock().currentTick();
 
         if (event.allPellets()) {
-            level3D.pellets3D().map(Pellet3D::shape).forEach(shape -> level3D.getChildren().remove(shape));
+            level3D.pellets3D().map(Pellet3D::root).forEach(shape -> level3D.getChildren().remove(shape));
         }
         else {
             final Vector2i tile = WorldNavigationSystem.computeTile(event.pac());
@@ -190,7 +190,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
                 level3D.energizer3DAt(tile).ifPresent(energizer3D -> {
                     level3D.animationManager().stopPumping(energizer3D);
                     energizer3D.hide();
-                    triggerEnergizerExplosion(level3D, energizer3D.shape().localToScene(Point3D.ZERO));
+                    triggerEnergizerExplosion(level3D, energizer3D.root().localToScene(Point3D.ZERO));
                 });
                 optSoundEffects().ifPresent(GameSoundEffects::playEnergizerExplosion);
             }
@@ -207,7 +207,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     }
 
     private void removePelletAfterDelay(GameLevel3D level3D, Pellet3D pellet3D) {
-        pauseSecThen(PELLET_EATING_DELAY_SEC, () -> level3D.getChildren().remove(pellet3D.shape())).play();
+        pauseSecThen(PELLET_EATING_DELAY_SEC, () -> level3D.getChildren().remove(pellet3D.root())).play();
     }
 
 

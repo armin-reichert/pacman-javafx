@@ -147,7 +147,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     public void cleanupFoodAndParticles() {
         energizer3DByTile.values().forEach(Energizer3D::hide);
         // Hide 3D food explicitly (handles cheat-eat-all case)
-        pellet3DByTile.values().forEach(pellet3D -> pellet3D.shape().setVisible(false));
+        pellet3DByTile.values().forEach(pellet3D -> pellet3D.root().setVisible(false));
         maze3D.particlesGroup().getChildren().clear();
     }
 
@@ -357,11 +357,11 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         }
 
         for (Energizer3D energizer3D : energizer3DByTile.values()) {
-            getChildren().add(energizer3D.shape());
+            getChildren().add(energizer3D.root());
         }
 
         for (Pellet3D pellet3D : pellet3DByTile.values()) {
-            getChildren().add(pellet3D.shape());
+            getChildren().add(pellet3D.root());
         }
 
         getChildren().add(maze3D.particlesGroup());

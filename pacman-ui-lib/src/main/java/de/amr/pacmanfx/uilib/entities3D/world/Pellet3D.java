@@ -29,7 +29,7 @@ public class Pellet3D implements DisposableGraphicsObject {
         }
     }
 
-    public Shape3D shape() {
+    public Shape3D root() {
         return shape;
     }
 

@@ -62,7 +62,7 @@ public class Energizer3D implements DisposableGraphicsObject {
         shape = null;
     }
 
-    public Shape3D shape() {
+    public Shape3D root() {
         if (shape == null) {
             shape = shapeFactory.get();
             updateShapeLocation();

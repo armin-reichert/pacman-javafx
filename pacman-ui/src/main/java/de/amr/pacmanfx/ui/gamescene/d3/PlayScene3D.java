@@ -176,13 +176,13 @@ public class PlayScene3D extends AbstractGameScene
     public void initFood3D(GameLevel level, boolean startEnergizerPumping) {
         final FoodLayer foodLayer = level.worldMap().foodLayer();
 
-        level3D.pellets3D().forEach(pellet3D -> pellet3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(pellet3D.tile())));
+        level3D.pellets3D().forEach(pellet3D -> pellet3D.root().setVisible(!foodLayer.hasEatenFoodAtTile(pellet3D.tile())));
 
         if (startEnergizerPumping) {
             level3D.animationManager().startEnergizerPumping();
         }
         level3D.energizers3D()
-            .forEach(energizer3D -> energizer3D.shape().setVisible(!foodLayer.hasEatenFoodAtTile(energizer3D.tile())));
+            .forEach(energizer3D -> energizer3D.root().setVisible(!foodLayer.hasEatenFoodAtTile(energizer3D.tile())));
     }
 
     public void replaceGameLevel3D(GameLevel level) {
