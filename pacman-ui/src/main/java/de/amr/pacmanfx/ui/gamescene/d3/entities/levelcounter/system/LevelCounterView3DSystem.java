@@ -2,13 +2,15 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter;
+package de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter.system;
 
 import de.amr.pacmanfx.core.entities.LevelCounter;
 import de.amr.pacmanfx.core.entities.levelCounter.comp.LevelCounterData;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter.comp.LevelCounter3DSettings;
+import de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter.comp.LevelCounterView3DComp;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
