@@ -52,12 +52,25 @@ public class Maze3D implements DisposableGraphicsObject {
 
     private Box floor3D;
 
-    private Map<String, PhongMaterial> materials;
+    private final Map<String, PhongMaterial> materials;
 
-    public Maze3D(TerrainLayer terrain) {
+    public Maze3D(
+        TerrainLayer terrain,
+        House house,
+        Map<String, PhongMaterial> materials,
+        Maze3DSettings maze3DSettings,
+        Floor3DSettings floor3DSettings)
+    {
         this.terrain = requireNonNull(terrain);
+        requireNonNull(house);
+        this.materials = requireNonNull(materials);
+        requireNonNull(maze3DSettings);
+        requireNonNull(floor3DSettings);
+
         root = new Group();
         particlesGroup = new Group();
+        buildFloor(drawMode, floor3DSettings);
+        addObstacles(house, drawMode, maze3DSettings);
     }
 
     @Override
@@ -70,17 +83,6 @@ public class Maze3D implements DisposableGraphicsObject {
 
     public Group root() {
         return root;
-    }
-
-    public void build(
-        House house,
-        Map<String, PhongMaterial> materials,
-        Maze3DSettings maze3DSettings,
-        Floor3DSettings floor3DSettings)
-    {
-        this.materials = materials;
-        buildFloor(drawMode, floor3DSettings);
-        addObstacles(house, drawMode, maze3DSettings);
     }
 
     public Map<String, PhongMaterial> materials() {

@@ -35,8 +35,7 @@ public class MazeFactory3D {
 
         createHouse3D(house, config.house(), colorScheme);
 
-        final var maze3D = new Maze3D(terrain);
-        maze3D.build(house, materials, config.maze(), config.floor());
+        final var maze3D = new Maze3D(terrain, house, materials, config.maze(), config.floor());
 
         bindFloorMaterialColor(maze3D, materials.get("floorMaterial"));
         bindWallBaseMaterialColor(maze3D, materials.get("wallBaseMaterial"), Color.valueOf(colorScheme.wallStroke()));
