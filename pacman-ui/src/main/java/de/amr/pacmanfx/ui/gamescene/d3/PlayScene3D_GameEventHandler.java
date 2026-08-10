@@ -288,7 +288,8 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         House3DSystem.hideDoors(house);
 
         optSoundEffects().ifPresent(GameSoundEffects::stopAll);
-        level3D.animations().registry().stopAllAnimations();
+        level3D.animations().stopAll();
+
         level3D.cleanupFoodAndParticles();
 
         level.optBonus().ifPresent(bonus -> Bonus3DViewSystem.lookExpired(bonus, level3D.animations().registry()));
@@ -350,11 +351,10 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         if (!level.isDemoLevel() && RandomNumberSupport.chance(0.25)) {
             appContext().ui().shortMessage(Duration.seconds(2.5), textPicker().selectNextText());
         }
-        level3D.animations().registry().requireAnimation(GameLevel3DAnimationManager.AnimationID.GHOST_LIGHT).stop();
+
+        level3D.animations().stopAll();
         level3D.cleanupFoodAndParticles();
-
         level.optBonus().ifPresent(bonus -> Bonus3DViewSystem.lookExpired(bonus, level3D.animations().registry()));
-
         level3D.optSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);
     }
 

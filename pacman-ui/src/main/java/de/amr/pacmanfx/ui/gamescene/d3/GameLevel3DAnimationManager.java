@@ -111,6 +111,10 @@ public class GameLevel3DAnimationManager implements Disposable {
         createGhostAnimations(level, gameVariantConfig.worldSettings().ghosts());
     }
 
+    public void stopAll() {
+        registry.stopAllAnimations(); //TODO check this
+    }
+
     public void startEnergizerPumping() {
         level3D.energizers3D().forEach(this::startPumping);
     }
