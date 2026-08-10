@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui.gamescene.d3;
 
-import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.entities.*;
@@ -15,7 +14,6 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorSchemeImpl;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
-import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.HideGhost3DRiseNumberBoxAnimation;
 import de.amr.pacmanfx.uilib.entities3D.levelcounter.comp.LevelCounter3DAnimationComp;
 import de.amr.pacmanfx.uilib.entities3D.levelcounter.comp.LevelCounter3DViewComp;
@@ -34,8 +32,6 @@ import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DViewComp;
 import de.amr.pacmanfx.uilib.entities3D.ghost.comp.GhostSettings;
 import de.amr.pacmanfx.uilib.entities3D.house.comp.House3DViewComp;
 import de.amr.pacmanfx.uilib.entities3D.messageview.MessageView3DBuilder;
-import de.amr.pacmanfx.uilib.entities3D.messageview.system.LevelMessageType;
-import de.amr.pacmanfx.uilib.entities3D.messageview.system.MessageView3DDisplaySystem;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DViewComp;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.PacSettings;
 import de.amr.pacmanfx.uilib.entities3D.world.Energizer3D;
@@ -55,7 +51,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static de.amr.basics.math.Vector2f.vec2_float;
 import static de.amr.basics.util.Ufx.coloredPhongMaterial;
 import static java.util.Objects.requireNonNull;
 
