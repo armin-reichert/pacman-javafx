@@ -88,7 +88,7 @@ public class GameLevel3DUpdateController {
         level.optBonus().ifPresent(bonus -> {
             level3D.ensureBonus3DViewExists(bonus);
             Bonus3DMovementSystem.update(bonus);
-            Bonus3DViewSystem.update(bonus, level3D.animations().registry());
+            Bonus3DViewSystem.update(bonus, level3D.animationManager().registry());
         });
     }
 }

@@ -115,7 +115,7 @@ public class DS_3DAnimationMonitor extends GameDashboardSection {
                 .filter(PlayScene3D.class::isInstance)
                 .map(PlayScene3D.class::cast)
                 .flatMap(PlayScene3D::optGameLevel3D)
-                .map(GameLevel3D::animations)
+                .map(GameLevel3D::animationManager)
                 .map(GameLevel3DAnimationManager::registry)
                 .orElse(null);
 

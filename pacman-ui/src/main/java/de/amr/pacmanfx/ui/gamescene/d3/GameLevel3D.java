@@ -108,7 +108,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     // Public accessors
 
-    public GameLevel3DAnimationManager animations() {
+    public GameLevel3DAnimationManager animationManager() {
         return animationManager;
     }
 
@@ -145,9 +145,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     public void cleanupFoodAndParticles() {
-        animationManager.stopParticlesAnimation();
-        animationManager.stopEnergizerPumping();
-
         energizer3DByTile.values().forEach(Energizer3D::hide);
         // Hide 3D food explicitly (handles cheat-eat-all case)
         pellet3DByTile.values().forEach(pellet3D -> pellet3D.shape().setVisible(false));
@@ -200,7 +197,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     public void showMessage(LevelMessageType type, Object... args) {
         final MessageView messageView = level.entities().theOne(MessageView.class);
         MessageView3DDisplaySystem.showMessage(messageView, this, computeMessageCenter(type),
-            GlobalAssets.PredefinedFont.ARCADE6.font(), animations().registry(), type, args);
+            GlobalAssets.PredefinedFont.ARCADE6.font(), animationManager().registry(), type, args);
     }
 
     // Private area, no trespassing!

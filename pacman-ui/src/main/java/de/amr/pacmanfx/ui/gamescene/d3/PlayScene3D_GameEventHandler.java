@@ -87,7 +87,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         }
         else if (CommonGameStateID.GAME_LEVEL_PACMAN_DYING.hasSameNameAs(newState)) {
             final GameLevel3D level3D = assertLevel3D();
-            onPacManDying(level3D.animations().registry());
+            onPacManDying(level3D.animationManager().registry());
         }
         else if (CommonGameStateID.GAME_LEVEL_EATING_GHOST.hasSameNameAs(newState)) {
             onGhostsKilled();
@@ -109,14 +109,14 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     @Override
     default void onBonusEaten(BonusEatenEvent e) {
         final Bonus bonus = e.bonus();
-        Bonus3DViewSystem.lookEaten(bonus, assertLevel3D().animations().registry());
+        Bonus3DViewSystem.lookEaten(bonus, assertLevel3D().animationManager().registry());
         optSoundEffects().ifPresent(GameSoundEffects::playBonusEatenSound);
     }
 
     @Override
     default void onBonusExpired(BonusExpiredEvent e) {
         final Bonus bonus = e.bonus();
-        Bonus3DViewSystem.lookExpired(bonus, assertLevel3D().animations().registry());
+        Bonus3DViewSystem.lookExpired(bonus, assertLevel3D().animationManager().registry());
         optSoundEffects().ifPresent(GameSoundEffects::playBonusExpiredSound);
     }
 
@@ -161,7 +161,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         //TODO rethink this
         if (newState instanceof GameState gameState && gameState.id() instanceof TestStateID) {
             gameScene().replaceGameLevel3D(level);
-            level3D.animations().startEnergizerPumping();
+            level3D.animationManager().startEnergizerPumping();
             level3D.showMessage(LevelMessageType.TEST, level.number());
         }
 
@@ -182,7 +182,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
             final Vector2i tile = WorldNavigationSystem.computeTile(event.pac());
             if (event.energizer()) {
                 level3D.energizer3DAt(tile).ifPresent(energizer3D -> {
-                    level3D.animations().stopPumping(energizer3D);
+                    level3D.animationManager().stopPumping(energizer3D);
                     energizer3D.hide();
                     triggerEnergizerExplosion(level3D, energizer3D.shape().localToScene(Point3D.ZERO));
                 });
@@ -196,7 +196,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     }
 
     private void triggerEnergizerExplosion(GameLevel3D level3D, Point3D center) {
-        level3D.animations().registry().optAnimation(GameLevel3DAnimationManager.AnimationID.PARTICLES, ParticlesAnimation3D.class)
+        level3D.animationManager().registry().optAnimation(GameLevel3DAnimationManager.AnimationID.PARTICLES, ParticlesAnimation3D.class)
             .ifPresent(animation -> animation.triggerExplosion(center));
     }
 
@@ -216,7 +216,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         if (!rules.isLevelCompleted(level)) {
             optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
             Pac3DAnimationSystem.setPowerMode(pac, true);
-            level3D.animations().startWallFlashing();
+            level3D.animationManager().startWallFlashing();
         }
     }
 
@@ -226,7 +226,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         final GameLevel3D level3D = assertLevel3D();
 
         optSoundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
-        level3D.animations().stopWallFlashing();
+        level3D.animationManager().stopWallFlashing();
         Pac3DAnimationSystem.setPowerMode(pac, true);
     }
 
@@ -243,9 +243,9 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 
         gameScene().initPac(level, level.entities().pac());
 
-        level3D.animations().startEnergizerPumping();
-        level3D.animations().startParticlesAnimation();
-        level3D.animations().startGhostLightAnimation();
+        level3D.animationManager().startEnergizerPumping();
+        level3D.animationManager().startParticlesAnimation();
+        level3D.animationManager().startGhostLightAnimation();
     }
 
     private void onPacManDying(AnimationRegistry animationRegistry) {
@@ -260,7 +260,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
             bonus -> Bonus3DViewSystem.lookExpired(bonus, animationRegistry)
         );
 
-        level3D.animations().stopAnimationsBeforePacManDies();
+        level3D.animationManager().stopAnimationsBeforePacManDies();
         Pac3DAnimationSystem.playDyingAnimation(
             level.entities().pac(),
             () -> optSoundEffects().ifPresent(GameSoundEffects::playPacDeadSound),
@@ -288,15 +288,15 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         House3DSystem.hideDoors(house);
 
         optSoundEffects().ifPresent(GameSoundEffects::stopAll);
-        level3D.animations().stopAll();
+        level3D.animationManager().stopAll();
 
         level3D.cleanupFoodAndParticles();
 
-        level.optBonus().ifPresent(bonus -> Bonus3DViewSystem.lookExpired(bonus, level3D.animations().registry()));
+        level.optBonus().ifPresent(bonus -> Bonus3DViewSystem.lookExpired(bonus, level3D.animationManager().registry()));
 
         MessageView3DAnimationSystem.hideMessageView(level.entities().theOne(MessageView.class));
 
-        playLevelEndAnimation(level3D.animations().registry(),
+        playLevelEndAnimation(level3D.animationManager().registry(),
             viewModel.common3D, viewModel.maze3D,
             level3D.maze3D(),
             cutSceneFollows);
@@ -352,9 +352,9 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
             appContext().ui().shortMessage(Duration.seconds(2.5), textPicker().selectNextText());
         }
 
-        level3D.animations().stopAll();
+        level3D.animationManager().stopAll();
         level3D.cleanupFoodAndParticles();
-        level.optBonus().ifPresent(bonus -> Bonus3DViewSystem.lookExpired(bonus, level3D.animations().registry()));
+        level.optBonus().ifPresent(bonus -> Bonus3DViewSystem.lookExpired(bonus, level3D.animationManager().registry()));
         level3D.optSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);
     }
 
