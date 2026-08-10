@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.pacmanfx.core.entities.Pac;
@@ -22,10 +23,7 @@ public class ArcadeMsPacMan_Factory3D extends DefaultFactory3D {
     @Override
     public Group createLivesCounterShape3D(WorldSettings settings) {
         requireNonNull(settings);
-
-        final PacSettings config = settings.pac()
-            .resized(settings.livesCounter().shapeSize());
-
+        final PacSettings config = settings.pac().resized(settings.livesCounter().shapeSize());
         return new Group(
             Pac3DFactory.createPacBody(config, true),
             Pac3DFactory.createFemalePacBodyParts(config)

@@ -25,7 +25,7 @@ import java.util.List;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static java.util.Objects.requireNonNull;
 
-public class LivesCounterView3DComp implements GameEntityComponent, DisposableGraphicsObject {
+public class LivesCounter3DViewComp implements GameEntityComponent, DisposableGraphicsObject {
 
     private final ObjectProperty<Color> pillarColor = new SimpleObjectProperty<>(Color.grayRgb(200));
     private final ObjectProperty<PhongMaterial> pillarMaterial = new SimpleObjectProperty<>(new PhongMaterial());
@@ -69,7 +69,7 @@ public class LivesCounterView3DComp implements GameEntityComponent, DisposableGr
         }
     }
 
-    public LivesCounterView3DComp(Factory3D factory3D, WorldSettings worldConfig) {
+    public LivesCounter3DViewComp(Factory3D factory3D, WorldSettings worldConfig) {
         requireNonNull(factory3D);
         requireNonNull(worldConfig);
 

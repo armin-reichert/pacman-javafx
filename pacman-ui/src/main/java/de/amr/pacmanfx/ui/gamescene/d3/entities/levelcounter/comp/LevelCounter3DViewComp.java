@@ -16,12 +16,12 @@ import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-public class LevelCounterView3DComp implements GameEntityComponent, DisposableGraphicsObject {
+public class LevelCounter3DViewComp implements GameEntityComponent, DisposableGraphicsObject {
 
     private final Group root = new Group();
     private ManagedAnimation spinningAnimation;
 
-    public LevelCounterView3DComp() {
+    public LevelCounter3DViewComp() {
         spinningAnimation = createSpinningAnimation();
     }
 

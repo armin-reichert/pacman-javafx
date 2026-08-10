@@ -15,7 +15,7 @@ import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.gamescene.d3.PlayScene3D;
-import de.amr.pacmanfx.ui.gamescene.d3.entities.livescounter.system.LivesCounterView3DSystem;
+import de.amr.pacmanfx.ui.gamescene.d3.entities.livescounter.system.LivesCounter3DViewSystem;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -151,7 +151,7 @@ public class GameSceneManager {
 
         level3D.createLevelCounterView3D(gameContext.model().levelCounter());
 
-        LivesCounterView3DSystem.startTracking(livesCounter, pac);
+        LivesCounter3DViewSystem.startTracking(livesCounter, pac);
 
         if (pac.power().isActive()) {
             variantConfig.optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);

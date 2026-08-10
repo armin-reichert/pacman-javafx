@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter.comp.LevelCounter3DSettings;
-import de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter.comp.LevelCounterView3DComp;
+import de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter.comp.LevelCounter3DViewComp;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -21,13 +21,13 @@ import java.util.List;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.HTS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 
-public class LevelCounterView3DSystem {
+public class LevelCounter3DViewSystem {
 
     private static final int CUBE_SPACING = 6;
 
     public static void updateLevelCounter3D(GameVariantConfig gameVariantConfig, LevelCounter levelCounter, GameLevel level) {
         final LevelCounterData data = levelCounter.requireComp(LevelCounterData.class);
-        final LevelCounterView3DComp view3D = levelCounter.requireComp(LevelCounterView3DComp.class);
+        final LevelCounter3DViewComp view3D = levelCounter.requireComp(LevelCounter3DViewComp.class);
 
         final LevelCounter3DSettings config = gameVariantConfig.worldSettings().levelCounter();
         final float cubeSize = config.symbolSize();

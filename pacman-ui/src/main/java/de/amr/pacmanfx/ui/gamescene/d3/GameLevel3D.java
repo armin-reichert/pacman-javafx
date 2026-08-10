@@ -17,10 +17,10 @@ import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.HideGhost3DRiseNumberBoxAnimation;
-import de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter.comp.LevelCounterView3DAnimationID;
-import de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter.comp.LevelCounterView3DComp;
-import de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter.system.LevelCounterView3DSystem;
-import de.amr.pacmanfx.ui.gamescene.d3.entities.livescounter.comp.LivesCounterView3DComp;
+import de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter.comp.LevelCounter3DAnimationID;
+import de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter.comp.LevelCounter3DViewComp;
+import de.amr.pacmanfx.ui.gamescene.d3.entities.levelcounter.system.LevelCounter3DViewSystem;
+import de.amr.pacmanfx.ui.gamescene.d3.entities.livescounter.comp.LivesCounter3DViewComp;
 import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Pellet3DSettings;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -284,21 +284,21 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private void createLivesCounter3D() {
         final LivesCounter livesCounter = level.entities().theOne(LivesCounter.class);
-        if (!livesCounter.hasComp(LivesCounterView3DComp.class)) {
-            final LivesCounterView3DComp view3D = new LivesCounterView3DComp(gameVariantConfig.factory3D(), gameVariantConfig.worldSettings());
-            livesCounter.setComp(LivesCounterView3DComp.class, view3D);
+        if (!livesCounter.hasComp(LivesCounter3DViewComp.class)) {
+            final LivesCounter3DViewComp view3D = new LivesCounter3DViewComp(gameVariantConfig.factory3D(), gameVariantConfig.worldSettings());
+            livesCounter.setComp(LivesCounter3DViewComp.class, view3D);
             view3D.root().setTranslateX(2 * WorldMap.TS);
             view3D.root().setTranslateY(2 * WorldMap.TS);
         }
     }
 
     public void createLevelCounterView3D(LevelCounter levelCounter) {
-        if (!levelCounter.hasComp(LevelCounterView3DComp.class)) {
-            final LevelCounterView3DComp view3D = new LevelCounterView3DComp();
-            levelCounter.setComp(LevelCounterView3DComp.class, view3D);
+        if (!levelCounter.hasComp(LevelCounter3DViewComp.class)) {
+            final LevelCounter3DViewComp view3D = new LevelCounter3DViewComp();
+            levelCounter.setComp(LevelCounter3DViewComp.class, view3D);
 
             //TODO move elsewhere
-            animationManager.registry().register(LevelCounterView3DAnimationID.LEVEL_COUNTER_SPINNING, view3D.spinningAnimation());
+            animationManager.registry().register(LevelCounter3DAnimationID.LEVEL_COUNTER_SPINNING, view3D.spinningAnimation());
 
             Logger.info("Level counter now has a 3D view");
         }
@@ -307,10 +307,10 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         }
 
         // Recreate all 3D entries in the level counter group
-        LevelCounterView3DSystem.updateLevelCounter3D(gameVariantConfig, levelCounter, level);
+        LevelCounter3DViewSystem.updateLevelCounter3D(gameVariantConfig, levelCounter, level);
 
         // Add level counter 3D root into this group
-        final LevelCounterView3DComp view3D = levelCounter.requireComp(LevelCounterView3DComp.class);
+        final LevelCounter3DViewComp view3D = levelCounter.requireComp(LevelCounter3DViewComp.class);
         getChildren().add(view3D.root());
     }
 
@@ -330,7 +330,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private void arrangeLayout() {
 
         final LivesCounter livesCounter = level.entities().theOne(LivesCounter.class);
-        final LivesCounterView3DComp livesCounter3D = livesCounter.requireComp(LivesCounterView3DComp.class);
+        final LivesCounter3DViewComp livesCounter3D = livesCounter.requireComp(LivesCounter3DViewComp.class);
 
         final Pac pac = level.entities().pac();
         final Pac3DViewComp pac3D = pac.requireComp(Pac3DViewComp.class);

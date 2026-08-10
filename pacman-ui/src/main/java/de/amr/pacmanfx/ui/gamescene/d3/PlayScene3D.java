@@ -22,7 +22,7 @@ import de.amr.pacmanfx.ui.gamescene.d3.animation.PlaySceneFadeInAnimation;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.DronePerspective;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveManager;
-import de.amr.pacmanfx.ui.gamescene.d3.entities.livescounter.system.LivesCounterView3DSystem;
+import de.amr.pacmanfx.ui.gamescene.d3.entities.livescounter.system.LivesCounter3DViewSystem;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.vm.Game3DSettingsVM;
 import de.amr.pacmanfx.ui.vm.GameUISettingsVM;
@@ -209,7 +209,7 @@ public class PlayScene3D extends AbstractGameScene
         initPac(level, pac);
 
         final LivesCounter livesCounter = level.entities().theOne(LivesCounter.class);
-        LivesCounterView3DSystem.startTracking(livesCounter, pac);
+        LivesCounter3DViewSystem.startTracking(livesCounter, pac);
     }
 
     @Override
