@@ -188,12 +188,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         }
     }
 
-    public void showMessage(LevelMessageType type, Object... args) {
-        final MessageView messageView = level.entities().theOne(MessageView.class);
-        MessageView3DDisplaySystem.showMessage(messageView, this, computeMessageCenter(type),
-            GlobalAssets.PredefinedFont.ARCADE6.font(), animationManager().registry(), type, args);
-    }
-
     // Private area, no trespassing!
 
     private void createMaze3D(GameUISettingsVM viewModel) {
@@ -320,14 +314,6 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
         LevelCounter3DViewSystem.updateLevelCounter3D(gameVariantConfig, levelCounter, level);
         getChildren().add(view3D.root());
-    }
-
-    public Vector2f computeMessageCenter(LevelMessageType messageType) {
-        final TerrainLayer terrain = level.worldMap().terrainLayer();
-        return switch (messageType) {
-            case READY -> level.entities().theOne(House.class).centerPositionUnderHouse();
-            case TEST -> vec2_float(terrain.numCols() * WorldMap.HTS, (terrain.numRows() - 2) * WorldMap.TS);
-        };
     }
 
     private void createMessageView3D(AnimationRegistry registry) {

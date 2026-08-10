@@ -25,6 +25,9 @@ import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.core.model.test.TestStateID;
+import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
+import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
@@ -39,6 +42,7 @@ import de.amr.pacmanfx.uilib.entities3D.bonus.system.Bonus3DViewSystem;
 import de.amr.pacmanfx.uilib.entities3D.house.system.House3DSystem;
 import de.amr.pacmanfx.uilib.entities3D.messageview.system.LevelMessageType;
 import de.amr.pacmanfx.uilib.entities3D.messageview.system.MessageView3DAnimationSystem;
+import de.amr.pacmanfx.uilib.entities3D.messageview.system.MessageView3DDisplaySystem;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DViewComp;
 import de.amr.pacmanfx.uilib.entities3D.pac.system.Pac3DAnimationSystem;
 import de.amr.pacmanfx.uilib.entities3D.world.Pellet3D;
@@ -51,6 +55,7 @@ import org.tinylog.Logger;
 import java.util.List;
 import java.util.Optional;
 
+import static de.amr.basics.math.Vector2f.vec2_float;
 import static de.amr.basics.util.Ufx.pauseSecThen;
 
 public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
@@ -84,7 +89,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
             handleTestState(appContext().ui().viewModel().common3D, gameContext().assertLevel());
         }
         else if (CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(newState)) {
-            onHuntingStart();
+            onHuntingStart(assertLevel3D());
         }
         else if (CommonGameStateID.GAME_LEVEL_PACMAN_DYING.hasSameNameAs(newState)) {
             final GameLevel3D level3D = assertLevel3D();
@@ -129,7 +134,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     @Override
     default void onGameContinued(GameContinuedEvent ignoredEvent) {
         final GameLevel3D level3D = assertLevel3D();
-        level3D.showMessage(LevelMessageType.READY);
+        showMessage(level3D, LevelMessageType.READY);
     }
 
     @Override
@@ -144,7 +149,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         }
 
         final GameLevel3D level3D = assertLevel3D();
-        level3D.showMessage(LevelMessageType.READY);
+        showMessage(level3D, LevelMessageType.READY);
     }
 
     @Override
@@ -170,7 +175,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         if (newState instanceof GameState gameState && gameState.id() instanceof TestStateID) {
             gameScene().replaceGameLevel3D(level);
             level3D.animationManager().startEnergizerPumping();
-            level3D.showMessage(LevelMessageType.TEST, level.number());
+            showMessage(level3D, LevelMessageType.TEST, level.number());
         }
 
         //TODO: workaround, check cause for invisible Pac-Man 3D after cut scene
@@ -247,10 +252,25 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 
     // Private state-specific handlers
 
-    private void onHuntingStart() {
-        final GameLevel level = gameContext().assertLevel();
-        final GameLevel3D level3D = assertLevel3D();
+    private void showMessage(GameLevel3D level3D, LevelMessageType type, Object... args) {
+        final GameLevel level = level3D.level();
+        final TerrainLayer terrain = level.worldMap().terrainLayer();
+        final var center = switch (type) {
+            case READY -> level.entities().theOne(House.class).centerPositionUnderHouse();
+            case TEST -> vec2_float(terrain.numCols() * WorldMap.HTS, (terrain.numRows() - 2) * WorldMap.TS);
+        };
+        MessageView3DDisplaySystem.showMessage(
+            level.entities().theOne(MessageView.class),
+            level3D,
+            center,
+            GlobalAssets.PredefinedFont.ARCADE6.font(),
+            level3D.animationManager().registry(),
+            type,
+            args);
+    }
 
+    private void onHuntingStart(GameLevel3D level3D) {
+        final GameLevel level = level3D.level();
         gameScene().initPac(level, level.entities().pac());
 
         level3D.animationManager().startEnergizerPumping();
@@ -371,7 +391,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     private void handleTestState(Game3DSettingsVM globals3D, GameLevel level) {
         gameScene().optGameLevel3D().ifPresent(level3D -> {
             gameScene().replaceGameLevel3D(level);
-            level3D.showMessage(LevelMessageType.TEST, level.number());
+            showMessage(level3D, LevelMessageType.TEST, level.number());
             globals3D.cameraPerspectiveIdProperty.set(PerspectiveID.TOTAL);
         });
     }
