@@ -39,6 +39,7 @@ import de.amr.pacmanfx.uilib.entities3D.bonus.system.Bonus3DViewSystem;
 import de.amr.pacmanfx.uilib.entities3D.house.system.House3DSystem;
 import de.amr.pacmanfx.uilib.entities3D.messageview.system.LevelMessageType;
 import de.amr.pacmanfx.uilib.entities3D.messageview.system.MessageView3DAnimationSystem;
+import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DViewComp;
 import de.amr.pacmanfx.uilib.entities3D.pac.system.Pac3DAnimationSystem;
 import de.amr.pacmanfx.uilib.entities3D.world.Pellet3D;
 import javafx.animation.Animation;
@@ -171,6 +172,9 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
             level3D.animationManager().startEnergizerPumping();
             level3D.showMessage(LevelMessageType.TEST, level.number());
         }
+
+        //TODO: workaround, check cause for invisible Pac-Man 3D after cut scene
+        level.entities().pac().requireComp(Pac3DViewComp.class).root().setVisible(true);
 
         gameScene().replaceActionBindings(level);
         gameScene().fadeInAnimation().playFromStart();
