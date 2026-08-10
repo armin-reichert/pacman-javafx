@@ -258,7 +258,10 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             config.pointsWidth()
         );
         bonus.setComp(Bonus3DViewComp.class, view3D);
+
+        //TODO move elsewhere
         animationManager.registry().register(Bonus3DAnimationID.BONUS_EATEN, view3D.eatenAnimation());
+
         return view3D;
     }
 
@@ -293,7 +296,10 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         if (!levelCounter.hasComp(LevelCounterView3DComp.class)) {
             final LevelCounterView3DComp view3D = new LevelCounterView3DComp();
             levelCounter.setComp(LevelCounterView3DComp.class, view3D);
+
+            //TODO move elsewhere
             animationManager.registry().register(LevelCounterView3DAnimationID.LEVEL_COUNTER_SPINNING, view3D.spinningAnimation());
+
             Logger.info("Level counter now has a 3D view");
         }
         else {
