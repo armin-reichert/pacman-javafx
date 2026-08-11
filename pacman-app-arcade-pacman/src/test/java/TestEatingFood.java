@@ -8,6 +8,7 @@ import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.arcade.pacman.rules.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.ecs.systems.DefaultGameSystems;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
@@ -15,7 +16,6 @@ import de.amr.pacmanfx.core.entities.ghost.comp.ElroyComp;
 import de.amr.pacmanfx.core.event.GameEvent;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
-import de.amr.pacmanfx.core.gameplay.FrameContext;
 import de.amr.pacmanfx.core.gameplay.GameFlowController;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.gamestate.GameState;
@@ -23,15 +23,13 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.HUDState;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
+import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.game.GameBox;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-
-import java.util.Optional;
 
 import static java.util.function.Predicate.not;
 import static org.junit.jupiter.api.Assertions.*;
@@ -62,7 +60,20 @@ public class TestEatingFood {
             }
         };
 
-        public TestContext() {}
+        private final GameSession testSession;
+
+        public TestContext() {
+            testSession = new GameSession(GameVariantID.ARCADE_MS_PACMAN.name());
+        }
+
+        @Override
+        public void setSession(GameSession session) {
+        }
+
+        @Override
+        public GameSession session() {
+            return testSession;
+        }
 
         @Override
         public DefaultGameSystems systems() {
@@ -90,11 +101,6 @@ public class TestEatingFood {
         }
 
         @Override
-        public HUDState hudState() {
-            return null;
-        }
-
-        @Override
         public GameCheats cheats() {
             throw new UnsupportedOperationException();
         }
@@ -105,27 +111,8 @@ public class TestEatingFood {
         }
 
         @Override
-        public Optional<GameLevel> optLevel() {
-            return gameModel.optLevel();
-        }
-
-        @Override
-        public GameLevel assertLevel() {
-            return gameModel.assertLevel();
-        }
-
-        @Override
         public GameEventManager eventManager() {
             return eventManager;
-        }
-
-        @Override
-        public void newFrameContext(long tick) {
-        }
-
-        @Override
-        public FrameContext thisFrame() {
-            return null;
         }
     }
 
@@ -165,7 +152,7 @@ public class TestEatingFood {
     @Test
     @DisplayName("Test Food Counting")
     public void testFoodCounting() {
-        test.model().optLevel().ifPresent(level -> {
+        test.session().optLevel().ifPresent(level -> {
             final FoodLayer foodLayer = level.worldMap().foodLayer();
 
             int eaten = foodLayer.eatenFoodCount();
@@ -186,7 +173,7 @@ public class TestEatingFood {
     @Test
     @DisplayName("Test Level Completion")
     public void testLevelCompletion() {
-        test.model().optLevel().ifPresent(level -> {
+        test.session().optLevel().ifPresent(level -> {
             while (level.worldMap().foodLayer().remainingFoodCount() > 0) {
                 assertFalse(test.model().rules().isLevelCompleted(level));
                 eatNextPellet(level);
@@ -199,7 +186,7 @@ public class TestEatingFood {
     @Test
     @DisplayName("Test Cruise Elroy Mode")
     public void testCruiseElroyMode() {
-        test.model().optLevel().ifPresent(level -> {
+        test.session().optLevel().ifPresent(level -> {
             final Ghost blinky = level.ghost(GhostPersonality.RED_GHOST_SHADOW);
             final ElroyComp elroy = blinky.requireComp(ElroyComp.class);
             final FoodLayer foodLayer = level.worldMap().foodLayer();
@@ -231,7 +218,7 @@ public class TestEatingFood {
     @Test
     @DisplayName("Test Resting")
     public void testResting() {
-        test.model().optLevel().ifPresent(level -> {
+        test.session().optLevel().ifPresent(level -> {
             final Pac pac = level.entities().pac();
             eatNextPellet(level);
             assertEquals(1, pac.digestion().restingTicks());
