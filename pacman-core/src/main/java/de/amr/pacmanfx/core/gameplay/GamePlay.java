@@ -11,8 +11,6 @@ import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
 
-import java.io.File;
-
 public interface GamePlay {
 
     // Game start
@@ -23,7 +21,7 @@ public interface GamePlay {
 
     // Level building and level start
 
-    GameLevel createLevel(GameContext game, int levelNumber, boolean demoLevel);
+    GameLevel createLevel(GameContext game, int levelNumber);
 
     GameLevel buildDemoLevel(GameContext game);
 

@@ -33,18 +33,16 @@ public class GameOrLevelStartingState extends GameState {
     }
 
     @Override
-    public void onUpdate(GameContext gameContext) {
-        if (!(gameContext.model() instanceof TengenMsPacMan_GameModel model)) {
-            throw new IllegalStateException("Illegal game model: " + gameContext.model());
-        }
-        gameContext.flow().enterState(gameContext, computeNextState(model, gameContext.session()));
+    public void onUpdate(GameContext game) {
+        game.flow().enterState(game, computeNextState(game));
     }
 
-    private CommonGameStateID computeNextState(TengenMsPacMan_GameModel model, GameSession session) {
-        if (session.isPlaying()) {
+    private CommonGameStateID computeNextState(GameContext game) {
+        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game.gamePlay();
+        if (game.session().isPlaying()) {
             return CommonGameStateID.GAME_LEVEL_CONTINUE;
         }
-        if (model.canStartNewGame()) {
+        if (gamePlay.canStartNewGame(game.session())) {
             return CommonGameStateID.GAME_STARTING;
         }
         return CommonGameStateID.DEMO_LEVEL_PLAYING;

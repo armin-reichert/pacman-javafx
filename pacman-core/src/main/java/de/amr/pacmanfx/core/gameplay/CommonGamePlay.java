@@ -73,9 +73,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final GameSession session = gameContext.session();
         final GameModel model = gameContext.model();
 
-//        model.init();
-        model.mapSelector().loadMapPrototypes(); // TODO move into session?
-
+        model.mapSelector().loadMapPrototypes();
         initScores(session);
 
         final LevelCounter levelCounter = gameContext.session().levelCounter();
@@ -96,7 +94,7 @@ public abstract class CommonGamePlay implements GamePlay {
             ScoreSystem.load(session.highScore());
             ScoreSystem.enableScore(session.highScore(), true);
         } catch (IOException x) {
-            //TODO throw exception=
+            //TODO throw exception?
             Logger.error(x, "Error loading high-score file {}", highScoreFile.getAbsolutePath());
         }
     }
@@ -146,10 +144,11 @@ public abstract class CommonGamePlay implements GamePlay {
 
         final GameSession session = gameContext.session();
 
-        final GameLevel level = createLevel(gameContext, levelNumber, false);
+        final GameLevel level = createLevel(gameContext, levelNumber);
 
         session.setLevel(level);
         session.setAttractMode(false);
+
         session.livesCounter().data().setNumLives(numLives);
         ScoreSystem.setLevelNumber(session.score(), levelNumber);
         session.gateKeeper().setLevelNumber(levelNumber);

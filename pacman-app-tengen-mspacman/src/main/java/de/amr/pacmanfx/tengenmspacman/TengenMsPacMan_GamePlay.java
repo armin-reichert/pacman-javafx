@@ -169,6 +169,10 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         return session.value(GamePlayOptions.BOOSTER_ON, Boolean.class);
     }
 
+    public boolean canStartNewGame(GameSession session) {
+        return session.value(GamePlayOptions.CAN_START_GAME, Boolean.class);
+
+    }
     public void setCanStartNewGame(GameSession session, boolean canStartNewGame) {
         requireNonNull(session);
         session.setValue(GamePlayOptions.CAN_START_GAME, canStartNewGame);
@@ -197,7 +201,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     // Level building and level start
 
     @Override
-    public GameLevel createLevel(GameContext gameContext, int levelNumber, boolean demoLevel) {
+    public GameLevel createLevel(GameContext gameContext, int levelNumber) {
         final GameSession session = gameContext.session();
         final WorldNavigationSystem navigator = gameContext.systems().worldNavigator();
         final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) gameContext.model();
@@ -207,7 +211,6 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final GameLevel level = new GameLevel(levelNumber, worldMap, huntingTimer, 3);
 
         session.setLevel(level);
-        session.setAttractMode(demoLevel);
 
         final House house = HouseFactory.createArcadeHouse(TengenMsPacMan_GameModel.HOUSE_MIN_TILE);
         level.entities().add(house);
@@ -258,7 +261,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final GameSession session = gameContext.session();
         final GameSystems sys = gameContext.systems();
 
-        final GameLevel demoLevel = createLevel(gameContext, 1, true);
+        final GameLevel demoLevel = createLevel(gameContext, 1);
         demoLevel.setGameOverStateTicks(120);
 
         final Pac pac = demoLevel.entities().pac();

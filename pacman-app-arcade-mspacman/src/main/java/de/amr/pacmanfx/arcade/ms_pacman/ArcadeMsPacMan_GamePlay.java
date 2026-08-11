@@ -45,7 +45,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
     private static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
 
     @Override
-    public GameLevel createLevel(GameContext gameContext, int levelNumber, boolean demoLevel) {
+    public GameLevel createLevel(GameContext gameContext, int levelNumber) {
         requireNonNull(gameContext);
         requireValidLevelNumber(levelNumber);
 
@@ -69,7 +69,6 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         level.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
 
         session.setLevel(level);
-        session.setAttractMode(demoLevel);
 
         final House house = HouseFactory.createArcadeHouse(houseMinTile);
         level.entities().add(house);
@@ -151,7 +150,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         final GameSession session = gameContext.session();
         final GameSystems systems = gameContext.systems();
 
-        final GameLevel level = createLevel(gameContext, 1, true);
+        final GameLevel level = createLevel(gameContext, 1);
 
         session.setLevel(level);
         session.setAttractMode(true);

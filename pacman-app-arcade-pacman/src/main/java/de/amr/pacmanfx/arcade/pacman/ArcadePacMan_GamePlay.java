@@ -101,7 +101,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     // Level building and level start
 
     @Override
-    public GameLevel createLevel(GameContext gameContext, int levelNumber, boolean demoLevel) {
+    public GameLevel createLevel(GameContext gameContext, int levelNumber) {
         requireNonNull(gameContext);
         requireValidLevelNumber(levelNumber);
 
@@ -122,7 +122,6 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         final GameLevel level = new GameLevel(levelNumber, worldMap, huntingTimer, levelData.numFlashes());
 
         session.setLevel(level);
-        session.setAttractMode(demoLevel);
 
         final House house = HouseFactory.createArcadeHouse(houseMinTile);
         level.entities().add(house);
@@ -195,7 +194,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
         final GameSession session = gameContext.session();
 
-        final GameLevel level = createLevel(gameContext, 1, true);
+        final GameLevel level = createLevel(gameContext, 1);
 
         final Pac pac = level.entities().pac();
         pac.cheats().setImmune(false);
@@ -210,6 +209,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
         session.setLevel(level);
         session.setAttractMode(true);
+
         session.gateKeeper().setLevelNumber(1);
 
         ScoreSystem.setLevelNumber(session.score(), 1);
