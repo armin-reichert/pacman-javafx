@@ -8,10 +8,12 @@ import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.entities.Pac;
+import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.gameplay.HuntingStepResult;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.model.rules.GameRules;
+import de.amr.pacmanfx.core.session.GameSession;
 import org.tinylog.Logger;
 
 import java.util.List;
@@ -44,7 +46,8 @@ public final class GameState_PlayingLevel extends GameState {
 
     @Override
     public void onUpdate(GameContext game) {
-        final GameLevel level = game.session().assertLevel();
+        final GameSession session = game.session();
+        final GameLevel level = session.assertLevel();
 
         game.gamePlay().hunt(game, level);
         logHuntingStepResult(game.thisFrame().huntingStep());

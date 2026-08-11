@@ -18,6 +18,7 @@ import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
+import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 
 import java.util.function.BiFunction;
@@ -50,8 +51,9 @@ public class DS_ActorInfo extends GameDashboardSection {
     }
 
     private Supplier<String> supplyLivesCount(GameAppContext appContext) {
-        return fnGameLevelInfo(appContext, level -> {
-            final LivesCounter livesCounter = level.entities().theOne(LivesCounter.class);
+        return fnGameLevelInfo(appContext, _ -> {
+            final GameSession session = appContext.currentGameContext().session();
+            final LivesCounter livesCounter = session.livesCounter();
             return String.valueOf(livesCounter.data().numLives());
         });
     }

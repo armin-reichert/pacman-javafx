@@ -11,16 +11,16 @@ import de.amr.pacmanfx.core.entities.levelCounter.comp.LevelCounterData;
 public class LevelCounterSystem {
 
     public static void clear(LevelCounter levelCounter) {
-        levelCounter.requireComp(LevelCounterData.class).symbolCodes().clear();
+        levelCounter.data().symbolCodes().clear();
     }
 
     public static boolean isFull(LevelCounter levelCounter) {
-        final var data = levelCounter.requireComp(LevelCounterData.class);
+        final var data = levelCounter.data();
         return data.symbolCodes().size() == data.capacity();
     }
 
     public static void update(LevelCounter levelCounter, int levelNumber, int symbolCode) {
-        final var data = levelCounter.requireComp(LevelCounterData.class);
+        final var data = levelCounter.data();
         if (levelNumber == 1) {
             data.symbolCodes().clear();
             data.setEnabled(true);
@@ -34,10 +34,10 @@ public class LevelCounterSystem {
     }
 
     public static void enable(LevelCounter levelCounter, boolean enabled) {
-        levelCounter.requireComp(LevelCounterData.class).setEnabled(enabled);
+        levelCounter.data().setEnabled(enabled);
     }
 
     public static void setCapacity(LevelCounter levelCounter, int capacity) {
-        levelCounter.requireComp(LevelCounterData.class).setCapacity(capacity);
+        levelCounter.data().setCapacity(capacity);
     }
 }

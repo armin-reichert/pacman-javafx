@@ -104,8 +104,10 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         super.startLevel(game);
 
         final GameSession session = game.session();
+        final GameLevel level = session.assertLevel();
 
         final LevelCounter levelCounter = session.levelCounter();
+        LevelCounterSystem.update(session.levelCounter(), level.number(), level.bonusSymbolCode(0));
         if (LevelCounterSystem.isFull(levelCounter)) {
             LevelCounterSystem.enable(levelCounter, false);
             Logger.info("Level counter is full and gets disabled!");

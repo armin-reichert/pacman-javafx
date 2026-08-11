@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.core.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.session.GameSession;
 
 public final class GameState_PreparingGamePlay extends GameState {
 
@@ -14,7 +15,8 @@ public final class GameState_PreparingGamePlay extends GameState {
 
     @Override
     public void onEnter(GameContext gameContext) {
-        gameContext.session().hud()
+        final GameSession session = gameContext.session();
+        session.hud()
             .showCredit().showScore().showLevelCounter().hideLivesCounter().show();
     }
 

@@ -86,7 +86,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         createPac3D(viewModel);
         createGhosts3D(viewModel);
         createLevelCounter3D(game.session().levelCounter(), registry);
-        createLivesCounter3D();
+        createLivesCounter3D(game.session());
         createMessageView3D(registry);
         arrangeLayout(game.session());
 
@@ -276,11 +276,10 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         });
     }
 
-    private void createLivesCounter3D() {
-        final LivesCounter livesCounter = level.entities().theOne(LivesCounter.class);
-        if (!livesCounter.hasComp(LivesCounter3DViewComp.class)) {
+    private void createLivesCounter3D(GameSession session) {
+        if (!session.livesCounter().hasComp(LivesCounter3DViewComp.class)) {
             final LivesCounter3DViewComp view3D = new LivesCounter3DViewComp(gameVariantConfig.factory3D(), gameVariantConfig.worldSettings());
-            livesCounter.setComp(LivesCounter3DViewComp.class, view3D);
+            session.livesCounter().setComp(LivesCounter3DViewComp.class, view3D);
             view3D.root().setTranslateX(2 * WorldMap.TS);
             view3D.root().setTranslateY(2 * WorldMap.TS);
         }

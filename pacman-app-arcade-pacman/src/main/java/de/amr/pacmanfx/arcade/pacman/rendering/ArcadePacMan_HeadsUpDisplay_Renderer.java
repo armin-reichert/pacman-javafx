@@ -77,7 +77,7 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer
             final RectShort[] bonusSymbolSprites = spriteSheet().findSprites(SpriteID.BONUS_SYMBOLS);
             final float y = scene.unscaledHeight() - tilesPx(2) + 2;
             float x = scene.unscaledWidth() - tilesPx(4);
-            for (int symbolCode : session.levelCounter().requireComp(LevelCounterData.class).symbolCodes()) {
+            for (int symbolCode : session.levelCounter().data().symbolCodes()) {
                 drawSprite(bonusSymbolSprites[symbolCode], x, y, true);
                 x -= tilesPx(2); // symbols are drawn from right to left
             }

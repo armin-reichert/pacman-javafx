@@ -43,7 +43,7 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
 
     private GameUI ui;
 
-    private GameContext gameContext;
+    private GameContext game;
 
     public PacManGameCollection() {
         variantManager = new GameVariantManagerImpl();
@@ -78,23 +78,23 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
         config.init(this);
         ui.viewModel().maze3D.init(config.worldSettings().maze());
 
-        gameContext = new GameContextImpl(gameVariant, gameBox().coinMechanism());
-        gameContext.eventManager().addGameEventSubscriber(ui);
+        game = new GameContextImpl(gameVariant, gameBox().coinMechanism());
+        game.eventManager().addGameEventSubscriber(ui);
 
-        gameContext.flow().addStateChangeListener(changeEventConverter);
+        game.flow().addStateChangeListener(changeEventConverter);
     }
 
     public void exitGameVariant(GameVariant gameVariant) {
         requireNonNull(gameVariant);
         gameVariant.config().dispose();
         ui.sounds().dispose();
-        gameContext.eventManager().removeGameEventSubscriber(ui);
-        gameContext.flow().removeStateChangeListener(changeEventConverter);
-        gameContext = null;
+        game.eventManager().removeGameEventSubscriber(ui);
+        game.flow().removeStateChangeListener(changeEventConverter);
+        game = null;
     }
 
-    public void setGameContext(GameContext gameContext) {
-        this.gameContext = gameContext;
+    public void setGame(GameContext game) {
+        this.game = game;
     }
 
     // GameAppContext
@@ -111,7 +111,7 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
 
     @Override
     public GameContext currentGameContext() {
-        return gameContext;
+        return game;
     }
 
     @Override
@@ -147,10 +147,10 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
         final GameSession session = new GameSession(variants().currentVariantName());
         //TODO check where this should be done
         session.hud().creditProperty().bind(GameBox.instance().coinMechanism().numCoinsProperty());
-        gameContext.setSession(session);
+        game.setSession(session);
 
-        gameContext.flow().restartState(gameContext, CommonGameStateID.BOOT);
-
+        game.gamePlay().onSessionStart(game);
+        game.flow().restartState(game, CommonGameStateID.BOOT);
         ui.views().selectGamePlayView();
         GameSimulation.start(this);
     }
@@ -197,7 +197,7 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
 
         @Override
         public void onStateChange(State<GameContext> oldState, State<GameContext> newState) {
-            gameContext.eventManager().publishGameEvent(new GameStateChangeEvent(oldState, newState));
+            game.eventManager().publishGameEvent(new GameStateChangeEvent(oldState, newState));
         }
     }
 

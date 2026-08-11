@@ -155,7 +155,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
         float x = LEVEL_COUNTER_POS_RIGHT - tilesPx(2);
         // symbols are drawn from right to left!
         final List<Integer> symbolCodes = session.levelCounter()
-            .requireComp(LevelCounterData.class).symbolCodes();
+            .data().symbolCodes();
         for (int symbolCode : symbolCodes) {
             if (0 <= symbolCode && symbolCode < symbolSprites.length) {
                 drawSprite(symbolSprites[symbolCode], x, y, true);

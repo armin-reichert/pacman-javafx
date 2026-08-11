@@ -15,6 +15,7 @@ import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.ghost.comp.ElroyComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
+import de.amr.pacmanfx.core.entities.levelCounter.comp.LevelCounterData;
 import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
@@ -92,6 +93,8 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         final HUDState hudState = session.hud();
         hudState.creditProperty().bind(game.coinMechanism().numCoinsProperty());
         hudState.hide();
+
+        session.levelCounter().data().setCapacity(7);
 
         configureGateKeeper(session.gateKeeper());
     }

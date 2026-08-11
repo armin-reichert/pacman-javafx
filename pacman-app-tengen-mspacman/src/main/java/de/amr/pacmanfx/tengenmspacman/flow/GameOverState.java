@@ -6,7 +6,6 @@ package de.amr.pacmanfx.tengenmspacman.flow;
 
 import de.amr.basics.Named;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.livescounter.system.LivesCounterSystem;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
@@ -30,9 +29,7 @@ public class GameOverState extends GameState {
         final GameLevel level = session.assertLevel();
         final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game.gamePlay();
 
-        final LivesCounter livesCounter = level.entities().theOne(LivesCounter.class);
-        LivesCounterSystem.setNumLives(livesCounter, 0); // Needed if state entry was triggered by user interaction
-
+        LivesCounterSystem.setNumLives(session.livesCounter(), 0); // Needed if state entry was triggered by user interaction
         session.setPlaying(false);
 
         try {

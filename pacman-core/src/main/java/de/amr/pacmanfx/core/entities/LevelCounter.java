@@ -12,4 +12,8 @@ public class LevelCounter extends GameEntity {
     public LevelCounter() {
         setComp(LevelCounterData.class, new LevelCounterData());
     }
+
+    public LevelCounterData data() {
+        return requireComp(LevelCounterData.class);
+    }
 }

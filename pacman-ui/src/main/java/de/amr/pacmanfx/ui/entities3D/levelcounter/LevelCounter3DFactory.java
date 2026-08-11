@@ -27,7 +27,7 @@ public class LevelCounter3DFactory {
         LevelCounter3DSettings config,
         GameVariantRenderConfig renderConfig)
     {
-        final LevelCounterData data = levelCounter.requireComp(LevelCounterData.class);
+        final LevelCounterData data = levelCounter.data();
         final List<Integer> symbolCodes = data.symbolCodes();
 
         final Group root = new Group();
