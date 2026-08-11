@@ -191,10 +191,6 @@ public class PlayScene3D extends AbstractGameScene
         final GameUISettingsVM viewModel = appContext().ui().viewModel();
         final GameSession session = game.session();
 
-        //TODO check this
-        final Pac pac = level.entities().pac();
-        initPac(level, pac);
-
         if (level3D != null) {
             Logger.info("Old 3D game level is disposed...");
             level3D.dispose();
@@ -207,6 +203,10 @@ public class PlayScene3D extends AbstractGameScene
         level3D.setAnimationManager(new GameLevel3DAnimationManager(registry, level3D, gameVariantConfig));
 
         level3DParent.getChildren().setAll(level3D);
+
+        //TODO check this
+        final Pac pac = level.entities().pac();
+        initPac(level, pac);
 
         LivesCounter3DViewSystem.startTracking(session.livesCounter(), pac);
     }
@@ -280,7 +280,7 @@ public class PlayScene3D extends AbstractGameScene
             return;
         }
 
-        GameLevel3DUpdateController.update3DSceneEntities(level3D);
+        GameLevel3DUpdateController.update3DSceneEntities(game, level3D);
         updateHUD3D(game);
 
         perspectiveManager.updatePerspective(level);
