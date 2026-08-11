@@ -89,10 +89,10 @@ public final class GameState_DemoLevelPlaying extends GameState {
         if (rules.isLevelCompleted(level)) {
             return CommonGameStateID.GAME_INTRO;
         }
-        else if (gameContext.thisFrame().huntingStep().pacKilled()) {
+        else if (gameContext.session().thisFrame().huntingStep().pacKilled()) {
             return CommonGameStateID.GAME_LEVEL_PACMAN_DYING;
         }
-        else if (gameContext.thisFrame().huntingStep().hasGhostBeenKilled()) {
+        else if (gameContext.session().thisFrame().huntingStep().hasGhostBeenKilled()) {
             return CommonGameStateID.GAME_LEVEL_EATING_GHOST;
         }
         return CommonGameStateID.DEMO_LEVEL_PLAYING;

@@ -268,7 +268,7 @@ public class PlayScene3D extends AbstractGameScene
     public void onTick(GameContext game) {
         final GameSession session = game.session();
         final GameLevel level = session.assertLevel();
-        final long tick = game.thisFrame().tick();
+        final long tick = session.thisFrame().tick();
 
         if (level == null) {
             Logger.info("Tick {}: Game level not yet created, update ignored", tick);

@@ -33,8 +33,6 @@ public class GameContextImpl implements GameContext {
 
     private GameSession session;
 
-    private FrameContext thisFrame;
-
     public GameContextImpl(GameVariant gameVariant, CoinMechanism coinMechanism) {
         this.gameVariant = requireNonNull(gameVariant);
         this.coinMechanism = requireNonNull(coinMechanism);
@@ -89,15 +87,5 @@ public class GameContextImpl implements GameContext {
     @Override
     public GameSystems systems() {
         return gameVariant.systems();
-    }
-
-    @Override
-    public FrameContext thisFrame() {
-        return thisFrame;
-    }
-
-    @Override
-    public void newFrameContext(long tick) {
-        thisFrame = new FrameContext(tick, new HuntingStepResult());
     }
 }

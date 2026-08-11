@@ -9,6 +9,8 @@ import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.gameplay.ArcadeHouseGateKeeper;
+import de.amr.pacmanfx.core.gameplay.FrameContext;
+import de.amr.pacmanfx.core.gameplay.HuntingStepResult;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.HUDState;
@@ -21,6 +23,8 @@ import java.util.Optional;
 import static java.util.Objects.requireNonNull;
 
 public class GameSession {
+
+    private FrameContext frame;
 
     private GameLevel level;
 
@@ -137,4 +141,13 @@ public class GameSession {
         requireNonNull(key);
         values.put(key, value);
     }
+
+    public FrameContext thisFrame() {
+        return frame;
+    }
+
+    public void newFrameContext(long tick) {
+        frame = new FrameContext(tick, new HuntingStepResult());
+    }
+
 }

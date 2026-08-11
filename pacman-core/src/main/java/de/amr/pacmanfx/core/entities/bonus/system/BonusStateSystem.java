@@ -14,6 +14,7 @@ import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.event.bonus.BonusExpiredEvent;
 import de.amr.pacmanfx.core.gameplay.FrameContext;
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.session.GameSession;
 import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
@@ -31,8 +32,10 @@ public class BonusStateSystem {
     public void update(GameContext gameContext) {
         requireNonNull(gameContext);
 
-        final GameLevel level = gameContext.session().assertLevel();
-        level.entities().optBonus().ifPresent(bonus -> update(gameContext.eventManager(), level, bonus, gameContext.thisFrame()));
+        final GameSession session = gameContext.session();
+        final GameLevel level = session.assertLevel();
+
+        level.entities().optBonus().ifPresent(bonus -> update(gameContext.eventManager(), level, bonus, session.thisFrame()));
     }
 
     private void update(GameEventManager eventManager, GameLevel level, Bonus bonus, FrameContext frame) {

@@ -80,10 +80,10 @@ public class LevelMediumTestState extends GameState {
             if (model.rules().isLevelCompleted(level)) {
                 game.flow().enterState(game, CommonGameStateID.GAME_INTRO);
             }
-            else if (game.thisFrame().huntingStep().pacKilled()) {
+            else if (game.session().thisFrame().huntingStep().pacKilled()) {
                 triggerTimeout();
             }
-            else if (game.thisFrame().huntingStep().hasGhostBeenKilled()) {
+            else if (game.session().thisFrame().huntingStep().hasGhostBeenKilled()) {
                 game.flow().enterState(game, CommonGameStateID.GAME_LEVEL_EATING_GHOST);
             }
         }

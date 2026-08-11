@@ -8,7 +8,6 @@ import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.entities.Pac;
-import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.gameplay.HuntingStepResult;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
@@ -50,7 +49,7 @@ public final class GameState_PlayingLevel extends GameState {
         final GameLevel level = session.assertLevel();
 
         game.gamePlay().hunt(game, level);
-        logHuntingStepResult(game.thisFrame().huntingStep());
+        logHuntingStepResult(game.session().thisFrame().huntingStep());
 
         game.cheats().update(game);
         game.flow().enterState(game, computeNextState(game));
@@ -63,10 +62,10 @@ public final class GameState_PlayingLevel extends GameState {
         if (rules.isLevelCompleted(level)) {
             return CommonGameStateID.GAME_LEVEL_COMPLETE;
         }
-        else if (game.thisFrame().huntingStep().pacKilled()) {
+        else if (game.session().thisFrame().huntingStep().pacKilled()) {
             return CommonGameStateID.GAME_LEVEL_PACMAN_DYING;
         }
-        else if (game.thisFrame().huntingStep().hasGhostBeenKilled()) {
+        else if (game.session().thisFrame().huntingStep().hasGhostBeenKilled()) {
             return CommonGameStateID.GAME_LEVEL_EATING_GHOST;
         }
         return CommonGameStateID.GAME_LEVEL_PLAYING;

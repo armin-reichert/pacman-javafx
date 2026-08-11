@@ -38,8 +38,4 @@ public interface GameContext {
     void setSession(GameSession session);
 
     GameSession session();
-
-    FrameContext thisFrame();
-
-    void newFrameContext(long tick);
 }
