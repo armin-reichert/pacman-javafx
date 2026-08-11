@@ -221,20 +221,20 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     }
 
     @Override
-    public void startLevel(GameContext gameContext) {
-        requireNonNull(gameContext);
+    public void startLevel(GameContext game) {
+        requireNonNull(game);
 
-        final GameSession session = gameContext.session();
+        final GameSession session = game.session();
         final GameLevel level = session.assertLevel();
 
         level.recordStartTime(System.currentTimeMillis());
-        prepareLevelForPlaying(gameContext);
-        showLevelMessage(level, GameLevelMessageType.READY);
+        prepareLevelForPlaying(game);
+        showLevelMessage(game, level, GameLevelMessageType.READY);
         session.score().data().setEnabled(true);
 
         LevelCounterSystem.update(session.levelCounter(), level.number(), level.bonusSymbolCode(0));
 
-        gameContext.cheats().update(gameContext);
+        game.cheats().update(game);
     }
 
     // Playing level

@@ -10,6 +10,7 @@ import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.HUDState;
 import de.amr.pacmanfx.core.session.GameSession;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 
@@ -54,9 +55,10 @@ public class GameLevelIntermissionState extends GameState {
 
     @Override
     public void onExit(GameContext game) {
-        final HUDState hudState = game.session().hud();
-        final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) game.model();
-        if (model.mapCategory() == MapCategory.ARCADE) {
+        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game.gamePlay();
+        final GameSession session = game.session();
+        final HUDState hudState = session.hud();
+        if (gamePlay.mapCategory(session) == MapCategory.ARCADE) {
             hudState.hide();
         } else {
             hudState

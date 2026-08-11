@@ -46,9 +46,11 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
         movingText.setComp(MovementComp.class, new MovementComp());
         movingText.pos().set(tilesPx(9), unscaledHeight()); // lower border of screen
         ghost = appContext().variants().currentVariant().config().renderConfig().createAnimatedGhost(
-            gameContext(),
+            game(),
             appContext().ui().sprites().animations(),
             GhostPersonality.RED_GHOST_SHADOW);
+
+        game().session().hud().hide();
     }
 
     @Override

@@ -89,9 +89,9 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
         msPacMan = factory.createMsPacMan();
         msPacMan.spriteAnim().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
-        inky = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GhostPersonality.CYAN_GHOST_BASHFUL);
+        inky = renderConfig.createAnimatedGhost(game(), spriteAnimations, GhostPersonality.CYAN_GHOST_BASHFUL);
 
-        pinky = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GhostPersonality.PINK_GHOST_SPEEDY);
+        pinky = renderConfig.createAnimatedGhost(game(), spriteAnimations, GhostPersonality.PINK_GHOST_SPEEDY);
 
         heart = new Heart();
 

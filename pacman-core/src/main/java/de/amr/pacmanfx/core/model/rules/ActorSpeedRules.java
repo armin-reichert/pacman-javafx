@@ -13,10 +13,11 @@ public interface ActorSpeedRules {
     /**
      * Returns Pac‑Man's bonus speed for the given level.
      *
+     * @param game the current game context
      * @param level the current level
      * @return the bonus speed multiplier
      */
-    float bonusSpeed(GameLevel level);
+    float bonusSpeed(GameContext game, GameLevel level);
 
     /**
      * Returns the speed of the given ghost for the given level.
@@ -56,16 +57,18 @@ public interface ActorSpeedRules {
     /**
      * Returns Pac‑Man's normal speed for the given level.
      *
+     * @param game the current game context
      * @param level the current level
      * @return Pac‑Man's speed multiplier
      */
-    float pacSpeed(GameLevel level);
+    float pacSpeed(GameContext game, GameLevel level);
 
     /**
      * Returns Pac‑Man's speed while he has power (after eating a power pellet).
      *
+     * @param game the current game context
      * @param level the current level
      * @return Pac‑Man's powered‑up speed multiplier
      */
-    float pacSpeedWhenHasPower(GameLevel level);
+    float pacSpeedWhenHasPower(GameContext game, GameLevel level);
 }

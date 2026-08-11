@@ -51,59 +51,58 @@ public class LevelShortTestState extends GameState {
     }
 
     @Override
-    public void onUpdate(GameContext gameContext) {
-        final GameSystems sys = gameContext.systems();
-        final GameSession session = gameContext.session();
+    public void onUpdate(GameContext game) {
+        final GameSystems systems = game.systems();
+        final GameSession session = game.session();
+        final GamePlay gamePlay = game.gamePlay();
         final GameLevel level = session.assertLevel();
 
         final float START = 1.0f;
 
         if (timer().atSecond(START)) {
-            gameContext.gamePlay().prepareLevelForPlaying(gameContext);
+            gamePlay.prepareLevelForPlaying(game);
             level.entities().pac().show();
             level.entities().ghosts().forEach(GameEntity::show);
-            gameContext.gamePlay().showLevelMessage(level, GameLevelMessageType.READY);
+            gamePlay.showLevelMessage(game, level, GameLevelMessageType.READY);
             session.hud().hideCredit().showLivesCounter();
-
             level.heartbeat().restart();
-
-            gameContext.eventManager().publishGameEvent(new TestStartedEvent(level));
+            game.eventManager().publishGameEvent(new TestStartedEvent(level));
         }
         else if (timer().atSecond(START + 1)) {
             level.clearMessage();
         }
         else if (timer().atSecond(START + 3)) {
-            gameContext.gamePlay().activateNextBonus(gameContext, level);
+            gamePlay.activateNextBonus(game, level);
         }
         else if (timer().atSecond(START + 5)) {
             level.optBonus().ifPresent(bonus -> {
-                sys.bonusState().showEatenForSeconds(bonus, 2);
-                gameContext.eventManager().publishGameEvent(new BonusEatenEvent(bonus));
+                systems.bonusState().showEatenForSeconds(bonus, 2);
+                game.eventManager().publishGameEvent(new BonusEatenEvent(bonus));
             });
         }
         else if (timer().atSecond(START + 6)) {
-            gameContext.gamePlay().activateNextBonus(gameContext, level);
+            gamePlay.activateNextBonus(game, level);
         }
         else if (timer().atSecond(START + 8)) {
             level.optBonus().ifPresent(bonus -> {
-                sys.bonusState().showEatenForSeconds(bonus, 2);
-                gameContext.eventManager().publishGameEvent(new BonusEatenEvent(bonus));
+                systems.bonusState().showEatenForSeconds(bonus, 2);
+                game.eventManager().publishGameEvent(new BonusEatenEvent(bonus));
             });
         }
         else if (timer().atSecond(START + 9)) {
             level.hidePacAndGhosts();
             level.heartbeat().stop();
-            gameContext.gamePlay().onLevelCompleted(gameContext, level);
+            gamePlay.onLevelCompleted(game, level);
         }
         else if (timer().atSecond(START + 10)) {
             if (level.number() == lastTestedLevelNumber) {
-                gameContext.flow().restartState(gameContext, CommonGameStateID.BOOT);
+                game.flow().restartState(game, CommonGameStateID.BOOT);
             } else {
                 waitForTimeout();
-                gameContext.gamePlay().startNextLevel(gameContext);
+                gamePlay.startNextLevel(game);
             }
         } else {
-            sys.bonusState().update(gameContext);
+            systems.bonusState().update(game);
         }
     }
 

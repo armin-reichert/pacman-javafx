@@ -72,14 +72,14 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
             return;
         }
 
-        final GameSession session = scene.gameContext().session();
+        final GameSession session = scene.game().session();
 
         // Level creation happens by handling a game event after the play scene has been activated. Therefore,
         // the game level is not yet existing for the first two ticks after this scene got active.
         session.optLevel().ifPresent(level -> {
             final RenderInfo info = createRenderInfo(level, playScene);
             levelRenderer.applyLevelSettings(level, info);
-            levelRenderer.drawLevel(scene.gameContext().session(), level, info);
+            levelRenderer.drawLevel(scene.game().session(), level, info);
             updateActorZOrder(level);
             actorsInZOrder.forEach(actorRenderer::drawActor);
             if (scene.appContext().ui().viewModel().debugModeOnProperty.get()) {

@@ -14,9 +14,10 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.rules.ActorSpeedRules;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
+import de.amr.pacmanfx.core.session.GameSession;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
+import de.amr.pacmanfx.tengenmspacman.model.BoosterMode;
 import de.amr.pacmanfx.tengenmspacman.model.Difficulty;
-import de.amr.pacmanfx.tengenmspacman.model.PacBooster;
-import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.core.Validations.inClosedRange;
@@ -35,30 +36,33 @@ public class TengenMsPacMan_ActorSpeedRules implements ActorSpeedRules {
     }
 
     @Override
-    public float bonusSpeed(GameLevel level) {
+    public float bonusSpeed(GameContext game, GameLevel level) {
         //TODO clarify exact speed
-        return 0.5f * pacSpeed(level);
+        return 0.5f * pacSpeed(game, level);
     }
 
     @Override
-    public float pacSpeed(GameLevel level) {
+    public float pacSpeed(GameContext game, GameLevel level) {
         if (level == null) {
             return 0;
         }
-        final TengenMsPacMan_GameModel gameModel = (TengenMsPacMan_GameModel) level.gameModel();
+        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game.gamePlay();
+        final GameSession session = game.session();
+        final BoosterMode boosterMode = gamePlay.boosterMode(session);
+
         float speed = pacBaseSpeedInLevel(level.number());
         speed += pacDifficultySpeedDelta(difficulty);
-        if (gameModel.pacBoosterMode() == PacBooster.ALWAYS_ON
-            || gameModel.pacBoosterMode() == PacBooster.USE_A_OR_B && gameModel.isBoosterActive()) {
+        if (boosterMode == BoosterMode.BOOSTER_ALWAYS_ON
+            || boosterMode == BoosterMode.ACTIVATE_WITH_A_OR_B && gamePlay.isBoosterOn(session)) {
             speed += pacBoosterSpeedDelta();
         }
         return speed;
     }
 
     @Override
-    public float pacSpeedWhenHasPower(GameLevel level) {
+    public float pacSpeedWhenHasPower(GameContext game, GameLevel level) {
         //TODO correct?
-        return level.entities().pac() != null ? 1.1f * pacSpeed(level) : 0;
+        return level.entities().pac() != null ? 1.1f * pacSpeed(game, level) : 0;
     }
 
     @Override

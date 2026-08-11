@@ -52,7 +52,7 @@ public final class CommonGameActions {
         actionToggleCollisionStrategy = new GameAction(appContext, "toggle_collision_strategy") {
             @Override
             protected void doAction() {
-                final ActorCollisionRules rules = gameContext().model().rules().actorCollisionRules();
+                final ActorCollisionRules rules = game().model().rules().actorCollisionRules();
                 Ufx.toggleProperty(rules.collisionStrategyProperty(), CollisionStrategy.SAME_TILE, CollisionStrategy.CENTER_DISTANCE);
                 final CollisionStrategy strategy = rules.getCollisionStrategy();
                 if (strategy == CollisionStrategy.SAME_TILE) {

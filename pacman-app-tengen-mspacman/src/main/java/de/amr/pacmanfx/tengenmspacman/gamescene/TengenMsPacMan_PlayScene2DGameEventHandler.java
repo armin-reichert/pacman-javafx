@@ -15,6 +15,7 @@ import de.amr.pacmanfx.core.event.pac.*;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.model.test.TestStateID;
+import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -31,7 +32,7 @@ public interface TengenMsPacMan_PlayScene2DGameEventHandler extends DefaultGameE
         return appContext().variants().currentVariant().config().optSoundEffects();
     }
 
-    default GameContext gameContext() {
+    default GameContext game() {
         return appContext().currentGameContext();
     }
 
@@ -54,11 +55,12 @@ public interface TengenMsPacMan_PlayScene2DGameEventHandler extends DefaultGameE
 
     @Override
     default void onGameContinued(GameContinuedEvent e) {
-        gameContext().session().optLevel().ifPresent(level -> {
-            gameScene().resetActorAnimations(gameContext().systems().spriteAnim(), level);
+        final GameSession session = game().session();
+        session.optLevel().ifPresent(level -> {
+            gameScene().resetActorAnimations(game().systems().spriteAnim(), session, level);
             gameScene().dynamicCamera().playIntroSequence();
-            if (gameContext().gamePlay() instanceof TengenMsPacMan_GamePlay tengenGame) {
-                tengenGame.showLevelMessage(level, GameLevelMessageType.READY);
+            if (game().gamePlay() instanceof TengenMsPacMan_GamePlay tengenGame) {
+                tengenGame.showLevelMessage(game(), level, GameLevelMessageType.READY);
             }
         });
     }
@@ -77,14 +79,14 @@ public interface TengenMsPacMan_PlayScene2DGameEventHandler extends DefaultGameE
     default void onGameStateChange(GameStateChangeEvent e) {
         Logger.info("Enter game state '{}'", e.newState().name());
         if (e.newState() == TengenMsPacMan_GameState.GAME_LEVEL_COMPLETE.state()) {
-            final GameLevel level = gameContext().session().assertLevel();
+            final GameLevel level = game().session().assertLevel();
             optSoundEffects().ifPresent(GameSoundEffects::stopAll);
             gameScene().playLevelCompleteAnimation(level);
         }
         else if (e.newState() == TengenMsPacMan_GameState.GAME_OVER.state()) {
             final TengenMsPacMan_PlayScene2D playScene2D = gameScene();
             final PlayScene2DCamera camera = playScene2D.dynamicCamera();
-            final GameLevel level = gameContext().session().assertLevel();
+            final GameLevel level = game().session().assertLevel();
             optSoundEffects().ifPresent(GameSoundEffects::stopAll);
             camera.enterManualMode();
             camera.setToTopPosition();
@@ -99,19 +101,20 @@ public interface TengenMsPacMan_PlayScene2DGameEventHandler extends DefaultGameE
 
     @Override
     default void onLevelCreated(LevelCreatedEvent e) {
-        gameScene().acceptGameLevel(gameContext().session(), e.level());
+        gameScene().acceptGameLevel(game().session(), e.level());
     }
 
     @Override
     default void onLevelStarted(LevelStartedEvent e) {
-        gameContext().session().optLevel().ifPresent(
-            level -> gameScene().resetActorAnimations(gameContext().systems().spriteAnim(), level));
+        final GameSession session = game().session();
+        session.optLevel().ifPresent(
+            level -> gameScene().resetActorAnimations(game().systems().spriteAnim(), session, level));
         gameScene().dynamicCamera().playIntroSequence();
     }
 
     @Override
     default void onPacDead(PacDeadEvent e) {
-        gameContext().state().triggerTimeout();
+        game().state().triggerTimeout();
     }
 
     @Override

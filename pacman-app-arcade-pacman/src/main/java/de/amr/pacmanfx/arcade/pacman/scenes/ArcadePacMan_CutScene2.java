@@ -70,7 +70,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
         pacMan = factory.createPacMan();
         pacMan.spriteAnim().setAnimations(renderConfig.createPacAnimations(spriteAnimationContainer));
 
-        blinky = renderConfig.createAnimatedGhost(gameContext(), spriteAnimationContainer, GhostPersonality.RED_GHOST_SHADOW);
+        blinky = renderConfig.createAnimatedGhost(game(), spriteAnimationContainer, GhostPersonality.RED_GHOST_SHADOW);
 
         nailDressAnimation = new SpriteAnimationBuilder()
             .sprites(spriteSheet.findSprites(SpriteID.RED_GHOST_STRETCHED))

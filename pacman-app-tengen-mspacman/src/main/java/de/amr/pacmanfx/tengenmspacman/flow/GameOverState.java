@@ -15,7 +15,6 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
-import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 
 import java.io.IOException;
 
@@ -26,10 +25,10 @@ public class GameOverState extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext gameContext) {
-        final GameSession session = gameContext.session();
+    public void onEnter(GameContext game) {
+        final GameSession session = game.session();
         final GameLevel level = session.assertLevel();
-        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) gameContext.gamePlay();
+        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game.gamePlay();
 
         final LivesCounter livesCounter = level.entities().theOne(LivesCounter.class);
         LivesCounterSystem.setNumLives(livesCounter, 0); // Needed if state entry was triggered by user interaction
@@ -42,9 +41,9 @@ public class GameOverState extends GameState {
             throw new RuntimeException(e);
         }
 
-        gamePlay.showLevelMessage(level, GameLevelMessageType.GAME_OVER);
+        gamePlay.showLevelMessage(game, level, GameLevelMessageType.GAME_OVER);
 
-        gameContext.cheats().clear();
+        game.cheats().clear();
 
         //TODO rethink this
         timer().restartTicks(level.gameOverStateTicks());
@@ -52,16 +51,15 @@ public class GameOverState extends GameState {
 
     @Override
     public void onUpdate(GameContext game) {
+        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game.gamePlay();
         final GameSession session = game.session();
-        final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) game.model();
         final GameLevel level = session.assertLevel();
 
         if (timer().hasExpired()) {
             level.clearMessage();
-
             final Named nextStateID = session.isAttractMode()
                 ? TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME
-                : model.canContinueOnGameOver() ? CommonGameStateID.GAME_PREPARATION : CommonGameStateID.GAME_INTRO;
+                : gamePlay.canContinueOnGameOver(session) ? CommonGameStateID.GAME_PREPARATION : CommonGameStateID.GAME_INTRO;
 
             game.flow().enterState(game, nextStateID);
         }

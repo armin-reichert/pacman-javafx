@@ -25,7 +25,7 @@ public interface GameScene extends QuitHandler, Disposable {
 
     GameAppContext appContext();
 
-    GameContext gameContext();
+    GameContext game();
 
     GameModel gameModel();
 

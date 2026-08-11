@@ -5,15 +5,9 @@
 package de.amr.pacmanfx.tengenmspacman.model;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameException;
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
-import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
-import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.tengenmspacman.rules.TengenMsPacMan_GameRules;
-import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
 
 import static java.util.Objects.requireNonNull;
 
@@ -28,7 +22,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     public static final int DEFAULT_NUM_CONTINUES = 4;
 
-    public static final PacBooster DEFAULT_PAC_BOOSTER = PacBooster.OFF;
+    public static final BoosterMode DEFAULT_PAC_BOOSTER = BoosterMode.BOOSTER_OFF;
 
     public static final Difficulty DEFAULT_DIFFICULTY = Difficulty.NORMAL;
 
@@ -40,117 +34,19 @@ public class TengenMsPacMan_GameModel extends GameModel {
 
     public static final Vector2i HOUSE_MIN_TILE = WorldMap.tile(10, 15);
 
-    // --- End static
-
     private final TengenMsPacMan_GameRules rules;
-
-    private MapCategory mapCategory;
-
-    private Difficulty difficulty;
-
-    private PacBooster pacBoosterMode;
-
-    private boolean boosterActive;
-
-    private int startLevelNumber; // 1-7
-
-    private boolean canStartNewGame;
-
-    private int numContinues;
 
     public TengenMsPacMan_GameModel() {
         mapSelector = new TengenMsPacMan_MapSelector();
         rules = new TengenMsPacMan_GameRules();
-        setDifficulty(Difficulty.NORMAL);
         setInitialLifeCount(3);
     }
 
-    public boolean allOptionsHaveDefaultValue() {
-        return pacBoosterMode == DEFAULT_PAC_BOOSTER
-            && difficulty == DEFAULT_DIFFICULTY
-            && mapCategory == DEFAULT_MAP_CATEGORY
-            && startLevelNumber == DEFAULT_START_LEVEL
-            && numContinues == DEFAULT_NUM_CONTINUES;
-    }
+    //TODO move into session
+    private boolean canStartNewGame;
 
     public boolean canStartNewGame() {
         return canStartNewGame;
-    }
-
-    public void setPacBoosterMode(PacBooster mode) {
-        pacBoosterMode = requireNonNull(mode);
-    }
-
-    public PacBooster pacBoosterMode() {
-        return pacBoosterMode;
-    }
-
-    //TODO this does not belong here or this whole method does not belong here
-    public void activatePacBooster(GameContext gameContext, Pac pac, boolean active) {
-        requireNonNull(pac);
-        boosterActive = active;
-
-        final SpriteAnimSystem animSystem = gameContext.systems().spriteAnim();
-        animSystem.select(pac, active ? TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER : CommonSpriteAnimationID.PAC_MUNCHING);
-    }
-
-    public void setMapCategory(MapCategory mapCategory) {
-        this.mapCategory = requireNonNull(mapCategory);
-    }
-
-    public MapCategory mapCategory() {
-        return mapCategory;
-    }
-
-    public void setDifficulty(Difficulty difficulty) {
-        this.difficulty = requireNonNull(difficulty);
-        rules().actorSpeedRules().setDifficulty(difficulty);
-    }
-
-    public Difficulty difficulty() {
-        return difficulty;
-    }
-
-    public void setStartLevelNumber(int number) {
-        if (number < TengenMsPacMan_GameRules.FIRST_LEVEL || number > TengenMsPacMan_GameRules.LAST_LEVEL_NUMBER) {
-            throw GameException.invalidLevelNumber(number);
-        }
-        startLevelNumber = number;
-    }
-
-    public int startLevelNumber() {
-        return startLevelNumber;
-    }
-
-    public void setNumContinues(int numContinues) {
-        this.numContinues = numContinues;
-    }
-
-    public int numContinues() {
-        return numContinues;
-    }
-
-    public boolean canContinueOnGameOver() {
-        //TODO don't change values inside this method
-        if (startLevelNumber >= 10 && numContinues > 0) {
-            numContinues -= 1;
-            return true;
-        } else {
-            numContinues = 4;
-            return false;
-        }
-    }
-
-    public void setBoosterActive(boolean boosterActive) {
-        this.boosterActive = boosterActive;
-    }
-
-    public boolean isBoosterActive() {
-        return boosterActive;
-    }
-
-    public void setCanStartNewGame(boolean canStartNewGame) {
-        this.canStartNewGame = canStartNewGame;
     }
 
     // GameModel interface

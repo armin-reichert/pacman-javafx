@@ -4,4 +4,4 @@
 
 package de.amr.pacmanfx.tengenmspacman.model;
 
-public enum PacBooster {OFF, USE_A_OR_B, ALWAYS_ON}
+public enum BoosterMode { BOOSTER_OFF, ACTIVATE_WITH_A_OR_B, BOOSTER_ALWAYS_ON }

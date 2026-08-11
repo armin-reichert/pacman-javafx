@@ -23,8 +23,8 @@ public class ArcadeGameState_GameOver extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext gameContext) {
-        final GameSession session = gameContext.session();
+    public void onEnter(GameContext game) {
+        final GameSession session = game.session();
         final GameLevel level = session.assertLevel();
 
         try {
@@ -33,14 +33,14 @@ public class ArcadeGameState_GameOver extends GameState {
             throw new RuntimeException(e);
         }
 
-        gameContext.gamePlay().showLevelMessage(level, GameLevelMessageType.GAME_OVER);
+        game.gamePlay().showLevelMessage(game, level, GameLevelMessageType.GAME_OVER);
 
         // In case, entering game over state was forced by user:
         final LivesCounter livesCounter = level.entities().theOne(LivesCounter.class);
         LivesCounterSystem.setNumLives(livesCounter, 0);
         session.setPlaying(false);
 
-        gameContext.cheats().clear();
+        game.cheats().clear();
 
         timer().restartTicks(level.gameOverStateTicks());
     }

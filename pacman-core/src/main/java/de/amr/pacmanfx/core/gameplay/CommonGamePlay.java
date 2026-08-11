@@ -161,14 +161,14 @@ public abstract class CommonGamePlay implements GamePlay {
     public void startNextLevel(GameContext gameContext) {
         requireNonNull(gameContext);
 
+        final GameSession session = gameContext.session();
         final GameModel model = gameContext.model();
         final GameLevel oldLevel = gameContext.session().assertLevel();
         final GameEventManager eventManager = gameContext.eventManager();
 
         final int lastLevelNumber = model.rules().lastLevelNumber();
         if (oldLevel.number() < lastLevelNumber) {
-            final LivesCounter counter = oldLevel.entities().theOne(LivesCounter.class);
-            buildNormalLevel(gameContext, oldLevel.number() + 1, counter.data().numLives());
+            buildNormalLevel(gameContext, oldLevel.number() + 1, session.livesCounter().data().numLives());
             startLevel(gameContext);
             // Note: This event is very important because it triggers the creation of the actor animations!
             eventManager.publishGameEvent(new LevelStartedEvent(oldLevel));
@@ -178,7 +178,7 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     @Override
-    public void showLevelMessage(GameLevel level, GameLevelMessageType type) {
+    public void showLevelMessage(GameContext game, GameLevel level, GameLevelMessageType type) {
         final var message = new GameLevelMessage(type);
         message.pos().set(messageCenterPosition(level));
         level.setMessage(message);
@@ -273,12 +273,12 @@ public abstract class CommonGamePlay implements GamePlay {
         checkPacPower(gameContext, level, pac);
     }
 
-    private void navigatePac(GameContext gameContext, GameLevel level, Pac pac) {
-        final GameSystems systems = gameContext.systems();
-        final GameSession session = gameContext.session();
+    private void navigatePac(GameContext game, GameLevel level, Pac pac) {
+        final GameSystems systems = game.systems();
+        final GameSession session = game.session();
         final ActorSpeedRules speedRules = level.gameModel().rules().actorSpeedRules();
         final float speed = pac.power().isActive()
-            ? speedRules.pacSpeedWhenHasPower(level) : speedRules.pacSpeed(level);
+            ? speedRules.pacSpeedWhenHasPower(game, level) : speedRules.pacSpeed(game, level);
 
         systems.pacAutoSteering().update(session, pac);
         systems.worldNavigator().setSpeed(pac, speed);
@@ -484,7 +484,6 @@ public abstract class CommonGamePlay implements GamePlay {
         requireValidLevelNumber(levelNumber);
 
         final GameSession session = gameContext.session();
-        final GameLevel level = session.assertLevel();
         final GameModel model = gameContext.model();
         final GameEventManager eventManager = gameContext.eventManager();
 
@@ -495,8 +494,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final int newScore = oldScore + points;
 
         if (model.rules().scoringRules().isExtraLifeAwarded(oldScore, newScore)) {
-            final LivesCounter livesCounter = level.entities().theOne(LivesCounter.class);
-            LivesCounterSystem.addLife(livesCounter);
+            LivesCounterSystem.addLife(session.livesCounter());
             eventManager.publishGameEvent(new SpecialScoreEvent(newScore));
         }
 

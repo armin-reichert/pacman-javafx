@@ -52,7 +52,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
 
         @Override
         public void draw(AbstractGameScene2D scene, long tick) {
-            final GameSession session = scene.gameContext().session();
+            final GameSession session = scene.game().session();
             final GameState gameState = scene.gameState();
             final TengenMsPacMan_PlayScene2D playScene = (TengenMsPacMan_PlayScene2D) scene;
 
@@ -111,7 +111,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
             return;
         }
 
-        final GameSession session = scene.gameContext().session();
+        final GameSession session = scene.game().session();
         session.optLevel().ifPresent(level -> {
             final WorldMap worldMap = level.worldMap();
             final House house = level.entities().theOne(House.class);

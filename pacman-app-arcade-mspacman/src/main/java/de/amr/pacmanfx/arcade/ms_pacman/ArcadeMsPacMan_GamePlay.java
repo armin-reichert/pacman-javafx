@@ -100,10 +100,10 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
     }
 
     @Override
-    public void startLevel(GameContext gameContext) {
-        super.startLevel(gameContext);
+    public void startLevel(GameContext game) {
+        super.startLevel(game);
 
-        final GameSession session = gameContext.session();
+        final GameSession session = game.session();
 
         final LevelCounter levelCounter = session.levelCounter();
         if (LevelCounterSystem.isFull(levelCounter)) {
@@ -183,12 +183,12 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
      *
      **/
     @Override
-    public void activateNextBonus(GameContext gameContext, GameLevel level) {
-        requireNonNull(gameContext);
+    public void activateNextBonus(GameContext game, GameLevel level) {
+        requireNonNull(game);
         requireNonNull(level);
 
-        final GameSystems sys = gameContext.systems();
-        final GameModel model = gameContext.model();
+        final GameSystems sys = game.systems();
+        final GameModel model = game.model();
 
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
@@ -215,13 +215,13 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
             sys.bonusState().showEdibleForSeconds(bonus, randomFloat(9, 10));
         } else {
             bonus = Bonus.createMovingBonus(symbolCode, value);
-            computeBonusRoute(gameContext, bonus, terrain, house);
-            final float speed = model.rules().actorSpeedRules().bonusSpeed(level);
+            computeBonusRoute(game, bonus, terrain, house);
+            final float speed = model.rules().actorSpeedRules().bonusSpeed(game, level);
             sys.bonusState().showEdibleAndStartWandering(bonus, speed);
         }
 
         level.setBonus(bonus);
-        gameContext.eventManager().publishGameEvent(new BonusActivatedEvent(bonus));
+        game.eventManager().publishGameEvent(new BonusActivatedEvent(bonus));
     }
 
     @Override

@@ -32,7 +32,7 @@ public class ArcadeGameState_LevelContinue extends GameState {
         level.entities().pac().show();
         level.entities().ghosts().forEach(GameEntity::show);
 
-        game.gamePlay().showLevelMessage(level, GameLevelMessageType.READY);
+        game.gamePlay().showLevelMessage(game, level, GameLevelMessageType.READY);
         session.hud().hideCredit().showLivesCounter();
     }
 

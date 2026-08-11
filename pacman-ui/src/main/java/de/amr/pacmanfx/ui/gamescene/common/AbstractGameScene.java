@@ -50,11 +50,11 @@ public abstract class AbstractGameScene
     protected void onDeactivate() {}
 
     public GameEventManager eventManager() {
-        return gameContext().eventManager();
+        return game().eventManager();
     }
 
     public GameFlowController gameFlow() {
-        return gameContext().flow();
+        return game().flow();
     }
 
     // --- Interface "GameScene"
@@ -85,18 +85,18 @@ public abstract class AbstractGameScene
     }
 
     @Override
-    public GameContext gameContext() {
+    public GameContext game() {
         return appContext.currentGameContext();
     }
 
     @Override
     public GameModel gameModel() {
-        return gameContext().model();
+        return game().model();
     }
 
     @Override
     public GameState gameState() {
-        return gameContext().state();
+        return game().state();
     }
 
     @Override

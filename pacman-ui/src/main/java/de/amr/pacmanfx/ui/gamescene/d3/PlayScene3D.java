@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.ui.gamescene.d3;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
@@ -188,30 +187,28 @@ public class PlayScene3D extends AbstractGameScene
         requireNonNull(game);
         requireNonNull(level);
 
+        final GameVariantConfig gameVariantConfig = appContext().variants().currentVariant().config();
+        final GameUISettingsVM viewModel = appContext().ui().viewModel();
+        final GameSession session = game.session();
+
+        //TODO check this
+        final Pac pac = level.entities().pac();
+        initPac(level, pac);
+
         if (level3D != null) {
             Logger.info("Old 3D game level is disposed...");
             level3D.dispose();
         }
-        final GameVariantConfig gameVariantConfig = appContext().variants().currentVariant().config();
-        final GameUISettingsVM viewModel = appContext().ui().viewModel();
 
         // Create a new 3D game level representation
-        level3D = new GameLevel3D(gameContext(), level, registry, viewModel, gameVariantConfig);
+        level3D = new GameLevel3D(game(), level, registry, viewModel, gameVariantConfig);
+        addAdditional3DLevelElements(level3D);
+        level3D.replaceLevelCounter3D(session.levelCounter());
+        level3D.setAnimationManager(new GameLevel3DAnimationManager(registry, level3D, gameVariantConfig));
 
         level3DParent.getChildren().setAll(level3D);
 
-        addAdditional3DLevelElements(level3D);
-
-        level3D.setAnimationManager(
-            new GameLevel3DAnimationManager(registry, level3D, gameVariantConfig));
-
-        final Pac pac = level.entities().pac();
-        initPac(level, pac);
-
-        final LivesCounter livesCounter = level.entities().theOne(LivesCounter.class);
-        LivesCounter3DViewSystem.startTracking(livesCounter, pac);
-
-        level3D.replaceLevelCounter3D(game.session().levelCounter());
+        LivesCounter3DViewSystem.startTracking(session.livesCounter(), pac);
     }
 
     @Override
@@ -316,7 +313,7 @@ public class PlayScene3D extends AbstractGameScene
 
     @Override
     public void handleQuit(GameAppContext appContext) {
-        final GameContext gameContext = gameContext();
+        final GameContext gameContext = game();
         onDeactivate();
         appContext.ui().sounds().setEnabled(false);
         gameFlow().enterState(gameContext, CommonGameStateID.GAME_OVER);
@@ -335,7 +332,7 @@ public class PlayScene3D extends AbstractGameScene
     }
 
     private void replaceScoresView(String leftTitle, String rightTitle) {
-        final GameSession session = gameContext().session();
+        final GameSession session = game().session();
 
         final ScoresView oldScoresView = scoresView;
         if (oldScoresView != null) {

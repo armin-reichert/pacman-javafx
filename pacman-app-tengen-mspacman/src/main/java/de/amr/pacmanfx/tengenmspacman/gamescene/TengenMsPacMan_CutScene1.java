@@ -98,7 +98,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
         // Quit cut scene when "START" button on "joypad" is pressed
         final GameAction quitAction = appContext().commonActions().gameFlowActions().actionLetGameStateExpire();
         actionBindings().bindActionToKeyCombination(quitAction, input().joypad().keyForButton(JoypadButton.START));
-        createActors(gameContext());
+        createActors(game());
     }
 
     @Override
@@ -111,7 +111,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
         final int tick = (int) gameState().timer().tickCount();
         switch (tick) {
             case TICK_CLAP -> {
-                getReady(gameContext());
+                getReady(game());
                 clapperboard.show();
                 TengenMsPacMan_ClapperboardStateSystem.startFlapAnimation(clapperboard);
                 playMusic();

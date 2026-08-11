@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui.views.dashboard;
 import de.amr.basics.fsm.State;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameConstants;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
@@ -38,21 +39,21 @@ public class DS_GameInfo extends GameDashboardSection {
     }
 
     @Override
-    public void setGameAppContext(GameAppContext appContext) {
+    public void setGameAppContext(GameAppContext app) {
 
-        addDynamicInfo("Game State",  () -> appContext.currentGameContext().state().name());
+        addDynamicInfo("Game State",  () -> app.currentGameContext().state().name());
 
-        addDynamicInfo("State Timer", () -> stateTimerInfo(appContext.currentGameContext().state()));
+        addDynamicInfo("State Timer", () -> stateTimerInfo(app.currentGameContext().state()));
 
-        addDynamicInfo("Game Scene", fnGameSceneInfo(appContext,
+        addDynamicInfo("Game Scene", fnGameSceneInfo(app,
             gameScene -> gameScene.getClass().getSimpleName())
         );
 
-        addDynamicInfo("Level Number", fnGameLevelInfo(appContext,
-            level -> (appContext.currentGameContext().session().isAttractMode() ? "%d (Demo Level)" : "%d").formatted(level.number()))
+        addDynamicInfo("Level Number", fnGameLevelInfo(app,
+            level -> (app.currentGameContext().session().isAttractMode() ? "%d (Demo Level)" : "%d").formatted(level.number()))
         );
 
-        addDynamicInfo("World Map", fnGameLevelInfo(appContext,
+        addDynamicInfo("World Map", fnGameLevelInfo(app,
             level -> {
                 final String url = level.worldMap().url();
                 return url == null
@@ -61,7 +62,7 @@ public class DS_GameInfo extends GameDashboardSection {
             })
         );
 
-        addDynamicInfo("Fill/Stroke/Pellet", fnGameLevelInfo(appContext,
+        addDynamicInfo("Fill/Stroke/Pellet", fnGameLevelInfo(app,
             level -> {
                 final WorldMap worldMap = level.worldMap();
                 WorldMapColorScheme colorScheme = null;
@@ -69,7 +70,7 @@ public class DS_GameInfo extends GameDashboardSection {
                     colorScheme = worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
                 }
                 else if (worldMap.hasConfigValue(WorldMapConfigKey.COLOR_MAP_INDEX)) {
-                    final GameVariantConfig variantConfig = appContext.variants().currentVariant().config();
+                    final GameVariantConfig variantConfig = app.variants().currentVariant().config();
                     colorScheme = variantConfig.renderConfig().colorScheme(worldMap, variantConfig.worldSettings());
                 }
                 if (colorScheme != null) {
@@ -82,18 +83,18 @@ public class DS_GameInfo extends GameDashboardSection {
             })
         );
 
-        addDynamicInfo("Hunting Phase",  fnGameLevelInfo(appContext, this::fmtHuntingPhase));
-        addDynamicInfo("-Running",       fnGameLevelInfo(appContext, level -> fmtHuntingTicksRunning(level.huntingTimerStrategy())));
-        addDynamicInfo("-Remaining",     fnGameLevelInfo(appContext, level -> fmtHuntingTicksRemaining(level.huntingTimerStrategy())));
-        addDynamicInfo("Collision mode", fnGameRulesInfo(appContext, rules -> fmtCollisionMode(rules.actorCollisionRules().getCollisionStrategy())));
-        addDynamicInfo("Pac-Man speed",  supplyGameLevelSpeedInfo(appContext, this::fmtPacNormalSpeed));
-        addDynamicInfo("- empowered",    supplyGameLevelSpeedInfo(appContext, this::fmtPacSpeedPowered));
-        addDynamicInfo("Power Duration", fnGameLevelInfo(appContext, this::fmtPacPowerTime));
-        addDynamicInfo("Pellets",        fnGameLevelInfo(appContext, this::fmtPelletCount));
-        addDynamicInfo("Ghost speed",    supplyGameLevelSpeedInfo(appContext, this::fmtGhostAttackSpeed));
-        addDynamicInfo("- frightened",   supplyGameLevelSpeedInfo(appContext, this::fmtGhostSpeedFrightened));
-        addDynamicInfo("- in tunnel",    supplyGameLevelSpeedInfo(appContext, this::fmtGhostSpeedTunnel));
-        addDynamicInfo("Maze flashes",   fnGameLevelInfo(appContext, this::fmtNumFlashes));
+        addDynamicInfo("Hunting Phase",  fnGameLevelInfo(app, this::fmtHuntingPhase));
+        addDynamicInfo("-Running",       fnGameLevelInfo(app, level -> fmtHuntingTicksRunning(level.huntingTimerStrategy())));
+        addDynamicInfo("-Remaining",     fnGameLevelInfo(app, level -> fmtHuntingTicksRemaining(level.huntingTimerStrategy())));
+        addDynamicInfo("Collision mode", fnGameRulesInfo(app, rules -> fmtCollisionMode(rules.actorCollisionRules().getCollisionStrategy())));
+        addDynamicInfo("Pac-Man speed",  supplyGameLevelSpeedInfo(app, (level, rules) -> fmtPacNormalSpeed(app.currentGameContext(), level, rules)));
+        addDynamicInfo("- empowered",    supplyGameLevelSpeedInfo(app, (level, rules) -> fmtPacSpeedPowered(app.currentGameContext(), level, rules)));
+        addDynamicInfo("Power Duration", fnGameLevelInfo(app, this::fmtPacPowerTime));
+        addDynamicInfo("Pellets",        fnGameLevelInfo(app, this::fmtPelletCount));
+        addDynamicInfo("Ghost speed",    supplyGameLevelSpeedInfo(app, this::fmtGhostAttackSpeed));
+        addDynamicInfo("- frightened",   supplyGameLevelSpeedInfo(app, this::fmtGhostSpeedFrightened));
+        addDynamicInfo("- in tunnel",    supplyGameLevelSpeedInfo(app, this::fmtGhostSpeedTunnel));
+        addDynamicInfo("Maze flashes",   fnGameLevelInfo(app, this::fmtNumFlashes));
     }
 
     private Supplier<String> supplyGameLevelSpeedInfo(
@@ -178,13 +179,13 @@ public class DS_GameInfo extends GameDashboardSection {
         return "%.4f px/s".formatted(speed * GameConstants.SIMULATION_FPS);
     }
 
-    private String fmtPacNormalSpeed(GameLevel level, ActorSpeedRules speedControl) {
-        final float speed = speedControl.pacSpeed(level);
+    private String fmtPacNormalSpeed(GameContext game, GameLevel level, ActorSpeedRules speedControl) {
+        final float speed = speedControl.pacSpeed(game, level);
         return "%.4f px/s".formatted(speed * GameConstants.SIMULATION_FPS);
     }
 
-    private String fmtPacSpeedPowered(GameLevel level, ActorSpeedRules speedControl) {
-        final float speed = speedControl.pacSpeedWhenHasPower(level);
+    private String fmtPacSpeedPowered(GameContext game, GameLevel level, ActorSpeedRules speedControl) {
+        final float speed = speedControl.pacSpeedWhenHasPower(game, level);
         return "%.4f px/s".formatted(speed * GameConstants.SIMULATION_FPS);
     }
 

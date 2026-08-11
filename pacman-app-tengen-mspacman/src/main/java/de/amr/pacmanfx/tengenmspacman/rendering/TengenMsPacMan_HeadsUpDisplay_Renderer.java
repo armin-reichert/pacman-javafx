@@ -16,7 +16,7 @@ import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene3;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene4;
 import de.amr.pacmanfx.tengenmspacman.model.Difficulty;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
-import de.amr.pacmanfx.tengenmspacman.model.PacBooster;
+import de.amr.pacmanfx.tengenmspacman.model.BoosterMode;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
@@ -180,7 +180,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
         drawSprite(spriteSheet().findDigitSprite(ones), x + 10, y + 2, true);
     }
 
-    public void drawGameOptions(MapCategory category, Difficulty difficulty, PacBooster booster, double centerX, double y) {
+    public void drawGameOptions(MapCategory category, Difficulty difficulty, BoosterMode booster, double centerX, double y) {
         final RectShort categorySprite = switch (category) {
             case BIG     -> spriteSheet().findSprite(SpriteID.INFO_CATEGORY_BIG);
             case MINI    -> spriteSheet().findSprite(SpriteID.INFO_CATEGORY_MINI);
@@ -194,7 +194,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
             case NORMAL -> RectShort.NULL_RECTANGLE;
         };
         drawSpriteCentered(spriteSheet().findSprite(SpriteID.INFO_FRAME), centerX, y);
-        if (booster != PacBooster.OFF) {
+        if (booster != BoosterMode.BOOSTER_OFF) {
             drawSpriteCentered(spriteSheet().findSprite(SpriteID.INFO_BOOSTER), centerX - tilesPx(5.5f), y);
         }
         drawSpriteCentered(difficultySprite, centerX, y);

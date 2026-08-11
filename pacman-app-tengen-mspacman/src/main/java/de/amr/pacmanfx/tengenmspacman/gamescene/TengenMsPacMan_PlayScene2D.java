@@ -14,6 +14,7 @@ import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Pac;
+import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessage;
@@ -23,6 +24,7 @@ import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.model.MovingGameLevelMessage;
@@ -90,7 +92,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
         subScene.cameraProperty().bind(uiSettings.playSceneDisplay.map(mode -> mode == SCROLLING ? dynamicCamera : fixedCamera));
         subScene.cameraProperty().addListener((_, _, _) -> updateScaling());
 
-        scalingProperty().addListener((_, _, _) -> gameContext().session().optLevel()
+        scalingProperty().addListener((_, _, _) -> game().session().optLevel()
             .ifPresent(level -> dynamicCamera.updateRange(level.worldMap().terrainLayer()))
         );
 
@@ -123,7 +125,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
 
     @Override
     public void onEnteredFrom3DScene() {
-        final GameSession session = gameContext().session();
+        final GameSession session = game().session();
         session.hud().showLevelCounter().showLivesCounter().show();
         session.optLevel().ifPresent(level -> acceptGameLevel(session, level));
     }
@@ -138,9 +140,11 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
 
     @Override
     public void onActivate() {
-        final HUDState hud = gameContext().session().hud();
+        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().gamePlay();
+        final GameSession session = game().session();
+        final HUDState hud = session.hud();
         hud.showScore().showLevelCounter().showLivesCounter().show();
-        if (gameModel().allOptionsHaveDefaultValue()) {
+        if (gamePlay.allOptionsHaveDefaultValue(session)) {
             hud.hideGameOptions();
         } else {
             hud.showGameOptions();
@@ -158,8 +162,8 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
     }
 
     @Override
-    public void onTick(GameContext gameContext) {
-        final GameSession session = gameContext.session();
+    public void onTick(GameContext game) {
+        final GameSession session = game.session();
         session.optLevel().ifPresent(level -> {
             final TerrainLayer terrain = level.worldMap().terrainLayer();
             final int numRows = terrain.numRows();
@@ -170,18 +174,18 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
             if (!session.isAttractMode()) {
                 updateLevelMessage(level);
             }
-            ensureActorAnimationsCreated(level);
+            ensureActorAnimationsCreated(session, level);
             updateHUD(session, level);
             optSoundEffects().ifPresent(soundEffects -> {
                 soundEffects.setEnabled(!session.isAttractMode());
-                soundEffects.playAmbientGameLevelSound(gameContext(), level);
+                soundEffects.playAmbientGameLevelSound(game(), level);
             });
         });
     }
 
     @Override
-    public void handleQuit(GameAppContext appContext) {
-        final GameContext gameContext = gameContext();
+    public void handleQuit(GameAppContext app) {
+        final GameContext gameContext = game();
         onDeactivate();
         gameFlow().enterState(gameContext, CommonGameStateID.GAME_OVER);
     }
@@ -207,8 +211,8 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
         miScrolling.setToggleGroup(toggleGroup);
 
         addLocalizedTitleItem(contextMenu, translations, "context_menu.pacman");
-        addLocalizedCheckBox(contextMenu, translations, gameContext().cheats().pacUsingAutopilotProperty(), "context_menu.autopilot");
-        addLocalizedCheckBox(contextMenu, translations, gameContext().cheats().pacImmuneProperty(), "context_menu.immunity");
+        addLocalizedCheckBox(contextMenu, translations, game().cheats().pacUsingAutopilotProperty(), "context_menu.autopilot");
+        addLocalizedCheckBox(contextMenu, translations, game().cheats().pacImmuneProperty(), "context_menu.immunity");
         addSeparator(contextMenu);
         addLocalizedCheckBox(contextMenu, translations, appContext().ui().viewModel().mutedProperty, "context_menu.muted");
         addLocalizedActionItem(contextMenu, translations, appContext().commonActions().gameFlowActions().actionQuit(), "context_menu.quit");
@@ -285,6 +289,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
     }
 
     private void updateHUD(GameSession session, GameLevel level) {
+        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().gamePlay();
         final HUDState hud = session.hud();
         final LivesCounter livesCounter = session.livesCounter();
 
@@ -296,7 +301,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
 
         final int visibleLives = Math.clamp(displayed, 0, hud.maxLivesShown());
         hud.setLivesCount(visibleLives);
-        if (gameModel().mapCategory() == MapCategory.ARCADE) {
+        if (gamePlay.mapCategory(session) == MapCategory.ARCADE) {
             hud.hideLevelNumber();
         } else {
             hud.showLevelNumber();
@@ -305,7 +310,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
 
     private void updateLevelMessage(GameLevel level) {
         if (level.optMessage().isPresent() && level.optMessage().get() instanceof MovingGameLevelMessage message) {
-            message.updateMovement(gameContext());
+            message.updateMovement(game());
         }
     }
 
@@ -318,12 +323,12 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
         if (message instanceof MovingGameLevelMessage movingMessage) {
             final Font font = Font.font(BaseRenderer.ARCADE_FONT.getFamily(), TS);
             final double width = Ufx.textWidth(GAME_OVER_MESSAGE_TEXT, font);
-            final MovementSystem motor = gameContext().systems().motor();
+            final MovementSystem motor = game().systems().motor();
             movingMessage.startMovement(motor, unscaledWidth(), width);
         }
     }
 
-    private void ensureActorAnimationsCreated(GameLevel level) {
+    private void ensureActorAnimationsCreated(GameSession session, GameLevel level) {
         final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
         final SpriteAnimationContainer animationContainer = appContext().ui().sprites().animations();
 
@@ -332,7 +337,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
         final Pac pac = level.entities().pac();
         if (animSystem.hasNoAnimations(pac)) {
             animSystem.setAnimations(pac, renderConfig.createPacAnimations(animationContainer));
-            resetPacAnimation(animSystem, pac);
+            resetPacAnimation(animSystem, session, pac);
         }
 
         level.entities().ghosts().forEach(ghost -> {
@@ -343,13 +348,15 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
         });
     }
 
-    void resetActorAnimations(SpriteAnimSystem animSystem, GameLevel level) {
-        resetPacAnimation(animSystem, level.entities().pac());
+    void resetActorAnimations(SpriteAnimSystem animSystem, GameSession session, GameLevel level) {
+        resetPacAnimation(animSystem, session, level.entities().pac());
         level.entities().ghosts().forEach(ghost -> resetGhostAnimation(animSystem, ghost));
     }
 
-    private void resetPacAnimation(SpriteAnimSystem animSystem, Pac pac) {
-        animSystem.select(pac, gameModel().isBoosterActive()
+    private void resetPacAnimation(SpriteAnimSystem animSystem, GameSession session, Pac pac) {
+        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().gamePlay();
+
+        animSystem.select(pac, gamePlay.isBoosterOn(session)
             ? TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER
             : CommonSpriteAnimationID.PAC_MUNCHING);
         animSystem.resetSelected(pac);

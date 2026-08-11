@@ -127,10 +127,10 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
         pacMan = factory.createPacMan();
         pacMan.spriteAnim().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
 
-        ghosts[0] = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GhostPersonality.RED_GHOST_SHADOW);
-        ghosts[1] = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GhostPersonality.PINK_GHOST_SPEEDY);
-        ghosts[2] = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GhostPersonality.CYAN_GHOST_BASHFUL);
-        ghosts[3] = renderConfig.createAnimatedGhost(gameContext(), spriteAnimations, GhostPersonality.ORANGE_GHOST_POKEY);
+        ghosts[0] = renderConfig.createAnimatedGhost(game(), spriteAnimations, GhostPersonality.RED_GHOST_SHADOW);
+        ghosts[1] = renderConfig.createAnimatedGhost(game(), spriteAnimations, GhostPersonality.PINK_GHOST_SPEEDY);
+        ghosts[2] = renderConfig.createAnimatedGhost(game(), spriteAnimations, GhostPersonality.CYAN_GHOST_BASHFUL);
+        ghosts[3] = renderConfig.createAnimatedGhost(game(), spriteAnimations, GhostPersonality.ORANGE_GHOST_POKEY);
 
         Arrays.fill(ghostImageVisible, false);
         Arrays.fill(ghostNicknameVisible, false);
@@ -174,7 +174,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
     }
 
     private void chasePacMan(long tick) {
-        final MovementSystem motor = gameContext().systems().motor();
+        final MovementSystem motor = game().systems().motor();
         blinking.triggerPulse();
         motor.move(pacMan);
         for (Ghost ghost : ghosts) {
@@ -339,14 +339,14 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
 
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
-                final GameSystems sys = scene.gameContext().systems();
+                final GameSystems sys = scene.game().systems();
 
                 final long tick = timer.tickCount();
                 if (tick == TICK_PAC_MAN_APPEARS) {
-                    scene.startChasingPacMan(scene.gameContext());
+                    scene.startChasingPacMan(scene.game());
                 }
                 else if (tick == TICK_PAC_MAN_REACHES_ENERGIZER) {
-                    scene.turnCardsStopPacMan(scene.gameContext());
+                    scene.turnCardsStopPacMan(scene.game());
                 }
                 else if (tick == TICK_PAC_MAN_MOVES_AGAIN) {
                     scene.turnCardsRestartPacMan(sys);
@@ -362,7 +362,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
         CHASING_GHOSTS {
             @Override
             public void onEnter(ArcadePacMan_IntroScene scene) {
-                final GameSystems sys = scene.gameContext().systems();
+                final GameSystems sys = scene.game().systems();
 
                 timer.restartTicks(TICK_CHASING_GHOSTS_END);
 
@@ -380,7 +380,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
                     scene.pacMan.hide();
                     scene.flow.enterState(scene, WAIT_FOR_DEMO_LEVEL);
                 } else {
-                    scene.chaseGhosts(scene.gameContext(), tick);
+                    scene.chaseGhosts(scene.game(), tick);
                 }
             }
         },
@@ -393,7 +393,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
 
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
-                final GameContext gameContext = scene.gameContext();
+                final GameContext gameContext = scene.game();
 
                 if (timer.tickCount() == TICK_START_DEMO_LEVEL) {
                     scene.ghosts[GhostPersonality.ORANGE_GHOST_POKEY.ordinal()].hide();

@@ -14,6 +14,8 @@ import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.HUDState;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
@@ -39,6 +41,8 @@ public class GameSession {
     private final LivesCounter livesCounter;
 
     private GameCheats cheats;
+
+    private final Map<Object, Object> values = new HashMap<>();
 
     public GameSession(String variantName) {
         requireNonNull(variantName);
@@ -118,5 +122,19 @@ public class GameSession {
 
     public LivesCounter livesCounter() {
         return livesCounter;
+    }
+
+    public <T> T value(Object key, Class<T> type) {
+        requireNonNull(key);
+        final Object value = values.get(key);
+        if (value != null) {
+            return type.cast(value);
+        }
+        return null;
+    }
+
+    public void setValue(Object key, Object value) {
+        requireNonNull(key);
+        values.put(key, value);
     }
 }

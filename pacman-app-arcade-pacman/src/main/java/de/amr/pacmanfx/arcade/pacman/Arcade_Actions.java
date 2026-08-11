@@ -31,7 +31,7 @@ public final class Arcade_Actions {
         actionInsertCoin = new GameAction(appContext, "insert_coin") {
             @Override
             public void doAction() {
-                final GameContext gameContext = gameContext();
+                final GameContext gameContext = game();
                 final CoinMechanism coinMechanism = appContext.currentGameContext().coinMechanism();
                 appContext.ui().sounds().voice().stop();
                 appContext.ui().sounds().setEnabled(true);
@@ -42,14 +42,14 @@ public final class Arcade_Actions {
 
             @Override
             public boolean isEnabled() {
-                if (gameContext().coinMechanism().isFull()) {
+                if (game().coinMechanism().isFull()) {
                     return false;
                 }
                 // In demo level, coin can always be inserted
-                if (gameContext().gamePlay().isDemoLevelRunning(gameContext())) {
+                if (game().gamePlay().isDemoLevelRunning(game())) {
                     return true;
                 }
-                final GameState gameState = gameContext().state();
+                final GameState gameState = game().state();
                 return CommonGameStateID.GAME_INTRO.hasSameNameAs(gameState)
                     || CommonGameStateID.GAME_PREPARATION.hasSameNameAs(gameState);
             }
@@ -59,15 +59,15 @@ public final class Arcade_Actions {
             @Override
             public void doAction() {
                 appContext.ui().sounds().voice().stop();
-                gameFlow().enterState(gameContext(), Arcade_GameState.GAME_OR_LEVEL_STARTING.state());
+                gameFlow().enterState(game(), Arcade_GameState.GAME_OR_LEVEL_STARTING.state());
             }
 
             @Override
             public boolean isEnabled() {
-                if (gameContext().coinMechanism().isEmpty()) {
+                if (game().coinMechanism().isEmpty()) {
                     return false;
                 }
-                final GameState state = gameContext().state();
+                final GameState state = game().state();
                 return (CommonGameStateID.GAME_INTRO.hasSameNameAs(state)
                     || CommonGameStateID.GAME_PREPARATION.hasSameNameAs(state));
             }

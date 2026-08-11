@@ -38,10 +38,10 @@ public final class GameState_DemoLevelPlaying extends GameState {
     }
 
     @Override
-    public void onUpdate(GameContext gameContext) {
-        final GameSystems sys = gameContext.systems();
-        final GamePlay gamePlay = gameContext.gamePlay();
-        final GameSession session = gameContext.session();
+    public void onUpdate(GameContext game) {
+        final GameSystems systems = game.systems();
+        final GamePlay gamePlay = game.gamePlay();
+        final GameSession session = game.session();
         final GameLevel level = session.assertLevel();
         final Pac pac = level.entities().pac();
         final long tick = timer().tickCount();
@@ -49,12 +49,12 @@ public final class GameState_DemoLevelPlaying extends GameState {
         if (tick == 1) {
             session.score().data().setEnabled(false);
             session.highScore().data().setEnabled(false);
-            gamePlay.prepareLevelForPlaying(gameContext);
-            gamePlay.showLevelMessage(level, GameLevelMessageType.GAME_OVER);
+            gamePlay.prepareLevelForPlaying(game);
+            gamePlay.showLevelMessage(game, level, GameLevelMessageType.GAME_OVER);
             LevelCounterSystem.update(session.levelCounter(), level.number(), level.bonusSymbolCode(0));
             Logger.info("Demo level {} started", level.number());
             // Note: This event is very important because it triggers the creation of the actor animations!
-            gameContext.eventManager().publishGameEvent(new LevelStartedEvent(level));
+            game.eventManager().publishGameEvent(new LevelStartedEvent(level));
         }
         else if (tick == 2) {
             // Now, actor animations are available, show them
@@ -70,15 +70,15 @@ public final class GameState_DemoLevelPlaying extends GameState {
             level.heartbeat().setStartState(Pulse.State.ON);
             level.heartbeat().restart();
 
-            sys.spriteAnim().playSelected(pac);
-            level.entities().ghosts().forEach(sys.spriteAnim()::playSelected);
+            systems.spriteAnim().playSelected(pac);
+            level.entities().ghosts().forEach(systems.spriteAnim()::playSelected);
 
             // This call fires a game event!
-            level.huntingTimerStrategy().startFirstPhase(gameContext, level.number());
+            level.huntingTimerStrategy().startFirstPhase(game, level.number());
         }
         else if (tick > huntingStartTick) {
-            gamePlay.hunt(gameContext, level);
-            gameContext.flow().enterState(gameContext, computeNextState(gameContext));
+            gamePlay.hunt(game, level);
+            game.flow().enterState(game, computeNextState(game));
         }
     }
 

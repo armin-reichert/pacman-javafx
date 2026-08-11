@@ -23,21 +23,21 @@ public class Arcade_ActorSpeedRules implements ActorSpeedRules {
     public static final float BASE_SPEED_ONE_PERCENT = 0.01f * BASE_SPEED;
 
     @Override
-    public float bonusSpeed(GameLevel level) {
+    public float bonusSpeed(GameContext game, GameLevel level) {
         //TODO clarify exact speed in emulator
-        return 0.5f * pacSpeed(level);
+        return 0.5f * pacSpeed(game, level);
     }
 
     @Override
-    public float pacSpeed(GameLevel level) {
+    public float pacSpeed(GameContext game, GameLevel level) {
         final byte pct = ArcadePacMan_GameRules.levelData(level.number()).pctPacSpeed();
         return pct > 0 ? pct * BASE_SPEED_ONE_PERCENT : BASE_SPEED;
     }
 
     @Override
-    public float pacSpeedWhenHasPower(GameLevel level) {
+    public float pacSpeedWhenHasPower(GameContext game, GameLevel level) {
         final byte pct = ArcadePacMan_GameRules.levelData(level.number()).pctPacSpeedPowered();
-        return pct > 0 ? pct * BASE_SPEED_ONE_PERCENT : pacSpeed(level);
+        return pct > 0 ? pct * BASE_SPEED_ONE_PERCENT : pacSpeed(game, level);
     }
 
     @Override

@@ -88,7 +88,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
         final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
         final SpriteAnimationContainer container = appContext().ui().sprites().animations();
 
-        final GameSystems sys = gameContext().systems();
+        final GameSystems sys = game().systems();
 
         createMarquee();
         MarqueeSystem.instance().start(marquee);
@@ -107,10 +107,10 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
         sys.spriteAnim().playSelected(msPacMan);
 
         ghosts = List.of(
-            renderConfig.createAnimatedGhost(gameContext(), container, GhostPersonality.RED_GHOST_SHADOW),
-            renderConfig.createAnimatedGhost(gameContext(), container, GhostPersonality.PINK_GHOST_SPEEDY),
-            renderConfig.createAnimatedGhost(gameContext(), container, GhostPersonality.CYAN_GHOST_BASHFUL),
-            renderConfig.createAnimatedGhost(gameContext(), container, GhostPersonality.ORANGE_GHOST_POKEY)
+            renderConfig.createAnimatedGhost(game(), container, GhostPersonality.RED_GHOST_SHADOW),
+            renderConfig.createAnimatedGhost(game(), container, GhostPersonality.PINK_GHOST_SPEEDY),
+            renderConfig.createAnimatedGhost(game(), container, GhostPersonality.CYAN_GHOST_BASHFUL),
+            renderConfig.createAnimatedGhost(game(), container, GhostPersonality.ORANGE_GHOST_POKEY)
         );
 
         for (Ghost ghost : ghosts) {
@@ -186,7 +186,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
             }
 
             boolean letGhostWalkIn(ArcadeMsPacMan_IntroScene scene) {
-                final GameSystems sys = scene.gameContext().systems();
+                final GameSystems sys = scene.game().systems();
 
                 final Ghost ghost = scene.ghosts.get(scene.ghostPresented.ordinal());
                 if (ghost.worldNavigation().moveDir() == Direction.LEFT) {
@@ -221,7 +221,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
         MS_PACMAN_MARCHING_IN {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                final GameSystems sys = scene.gameContext().systems();
+                final GameSystems sys = scene.game().systems();
                 final Pac msPacMan = scene.msPacMan;
 
                 MarqueeSystem.instance().update(scene.marquee);

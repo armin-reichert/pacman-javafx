@@ -49,13 +49,13 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D
         session.optLevel().ifPresent(level -> {
             ActorAnimationManager.ensureActorAnimationsCreated(appContext(), level);
             updateLivesCounter(session, level.entities().pac());
-            optSoundEffects().ifPresent(sfx -> sfx.playAmbientGameLevelSound(gameContext(), level));
+            optSoundEffects().ifPresent(sfx -> sfx.playAmbientGameLevelSound(game(), level));
         });
     }
 
     @Override
     public void handleQuit(GameAppContext appContext) {
-        final GameContext gameContext = gameContext();
+        final GameContext gameContext = game();
         onDeactivate();
         // Avoid game over sound being played
         appContext.ui().sounds().setEnabled(false);
@@ -69,7 +69,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D
 
         final var contextMenu = new ContextMenu();
         addLocalizedTitleItem(contextMenu, translations, "context_menu.pacman");
-        addLocalizedCheckBox(contextMenu, translations, gameContext().cheats().pacUsingAutopilotProperty(), "context_menu.autopilot").setOnAction(e -> {
+        addLocalizedCheckBox(contextMenu, translations, game().cheats().pacUsingAutopilotProperty(), "context_menu.autopilot").setOnAction(e -> {
             final var checkBox = (CheckMenuItem) e.getSource();
             if (checkBox.isSelected()) {
                 cheatActions.actionActivateAutopilot().execute();
@@ -77,7 +77,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D
                 cheatActions.actionDeactivateAutopilot().execute();
             }
         });
-        addLocalizedCheckBox(contextMenu, translations, gameContext().cheats().pacImmuneProperty(), "context_menu.immunity").setOnAction(e -> {
+        addLocalizedCheckBox(contextMenu, translations, game().cheats().pacImmuneProperty(), "context_menu.immunity").setOnAction(e -> {
             final var checkBox = (CheckMenuItem) e.getSource();
             if (checkBox.isSelected()) {
                 cheatActions.actionActivateImmunity().execute();
@@ -94,7 +94,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D
 
     @Override
     public void onEnteredFrom3DScene() {
-        final GameSession session = gameContext().session();
+        final GameSession session = game().session();
         session.optLevel().ifPresent(level -> acceptGameLevel(session, level));
     }
 
@@ -138,7 +138,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D
 
     // While Pac-Man is not yet visible on game/level start, an additional lives symbol more is shown in the counter
     private void updateLivesCounter(GameSession session, Pac pac) {
-        final boolean oneMore = CommonGameStateID.GAME_OR_LEVEL_STARTING.hasSameNameAs(gameContext().state()) && !pac.isVisible();
+        final boolean oneMore = CommonGameStateID.GAME_OR_LEVEL_STARTING.hasSameNameAs(game().state()) && !pac.isVisible();
         final int livesToDisplay = session.livesCounter().data().numLives() - 1 + (oneMore ? 1 : 0);
         final int livesDisplayed = Math.clamp(livesToDisplay, 0, session.hud().maxLivesShown());
         session.hud().setLivesCount(livesDisplayed);

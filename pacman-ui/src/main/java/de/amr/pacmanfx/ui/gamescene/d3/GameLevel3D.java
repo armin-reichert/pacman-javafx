@@ -13,6 +13,7 @@ import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorSchemeImpl;
+import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.entities3D.levelcounter.system.LevelCounter3DViewSystem;
@@ -74,8 +75,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private GameLevel3DAnimationManager animationManager;
 
-    public GameLevel3D(GameContext gameContext, GameLevel level, AnimationRegistry registry, GameUISettingsVM viewModel, GameVariantConfig gameVariantConfig) {
-        requireNonNull(gameContext);
+    public GameLevel3D(GameContext game, GameLevel level, AnimationRegistry registry, GameUISettingsVM viewModel, GameVariantConfig gameVariantConfig) {
+        requireNonNull(game);
+
         this.level = requireNonNull(level);
         this.gameVariantConfig = requireNonNull(gameVariantConfig);
 
@@ -83,10 +85,10 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         createFood3D();
         createPac3D(viewModel);
         createGhosts3D(viewModel);
-        createLevelCounter3D(gameContext.session().levelCounter(), registry);
+        createLevelCounter3D(game.session().levelCounter(), registry);
         createLivesCounter3D();
         createMessageView3D(registry);
-        arrangeLayout();
+        arrangeLayout(game.session());
 
         setMouseTransparent(true); // this increases performance they say...
     }
@@ -316,9 +318,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     // Order matters for correct transparency!
-    private void arrangeLayout() {
+    private void arrangeLayout(GameSession session) {
 
-        final LivesCounter livesCounter = level.entities().theOne(LivesCounter.class);
+        final LivesCounter livesCounter = session.livesCounter();
         final LivesCounter3DViewComp livesCounter3D = livesCounter.requireComp(LivesCounter3DViewComp.class);
 
         final Pac pac = level.entities().pac();

@@ -22,12 +22,12 @@ public abstract class GameAction {
         this.id = Validations.requireValidIdentifier(id);
     }
 
-    public GameContext gameContext() {
+    public GameContext game() {
         return appContext.currentGameContext();
     }
 
     public GameFlowController gameFlow() {
-        return gameContext().flow();
+        return game().flow();
     }
 
     @Override

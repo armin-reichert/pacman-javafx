@@ -36,13 +36,13 @@ public class SteeringActions {
 
         @Override
         public void doAction() {
-            final WorldNavigationSystem navigator = gameContext().systems().worldNavigator();
-            gameContext().session().optLevel().ifPresent(level -> navigator.setWishDir(level.entities().pac(), dir));
+            final WorldNavigationSystem navigator = game().systems().worldNavigator();
+            game().session().optLevel().ifPresent(level -> navigator.setWishDir(level.entities().pac(), dir));
         }
 
         @Override
         public boolean isEnabled() {
-            final GameSession session = gameContext().session();
+            final GameSession session = game().session();
             return session.optLevel().isPresent()
                 && !session.isAttractMode()
                 && !session.assertLevel().entities().pac().cheats().isUsingAutopilot();
