@@ -33,7 +33,7 @@ public class TengenMsPacMan_GameModel implements GameModel {
 
     public static final Vector2i HOUSE_MIN_TILE = WorldMap.tile(10, 15);
 
-    private WorldMapSelector mapSelector;
+    private final WorldMapSelector mapSelector;
 
     private int initialLifeCount;
 
@@ -43,13 +43,6 @@ public class TengenMsPacMan_GameModel implements GameModel {
         mapSelector = new TengenMsPacMan_MapSelector();
         rules = new TengenMsPacMan_GameRules();
         setInitialLifeCount(3);
-    }
-
-    //TODO move into session
-    private boolean canStartNewGame;
-
-    public boolean canStartNewGame() {
-        return canStartNewGame;
     }
 
     // GameModel interface
