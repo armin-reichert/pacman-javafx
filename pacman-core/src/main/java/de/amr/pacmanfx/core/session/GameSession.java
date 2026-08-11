@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.core.session;
 
-
 import de.amr.pacmanfx.core.entities.LevelCounter;
 import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Score;

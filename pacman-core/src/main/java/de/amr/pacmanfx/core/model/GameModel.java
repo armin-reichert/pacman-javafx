@@ -7,8 +7,6 @@ package de.amr.pacmanfx.core.model;
 import de.amr.pacmanfx.core.gameplay.ArcadeHouseGateKeeper;
 import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelector;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 
 /**
  * Base class of all Pac-Man game model classes.
@@ -19,26 +17,20 @@ public abstract class GameModel {
 
     protected final ArcadeHouseGateKeeper gateKeeper;
 
-    protected final IntegerProperty initialLifeCount = new SimpleIntegerProperty();
-
-    // Constructor
+    protected int initialLifeCount;
 
     protected GameModel() {
         gateKeeper = new ArcadeHouseGateKeeper();
     }
 
-    /* -------------------------------------------------------------------------
-     * API
-     * ---------------------------------------------------------------------- */
-
     public abstract void init();
 
     public int initialLifeCount() {
-        return initialLifeCount.get();
+        return initialLifeCount;
     }
 
     public void setInitialLifeCount(int count) {
-        initialLifeCount.set(count);
+        initialLifeCount = count;
     }
 
     public ArcadeHouseGateKeeper gateKeeper() {
