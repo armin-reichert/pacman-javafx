@@ -13,7 +13,6 @@ import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
-import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.rules.HuntingTimerStrategy;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
@@ -77,7 +76,6 @@ public class GameLevel {
         }
     }
 
-    private final GameModel gameModel;
     private final int number; // 1=first level
 
     private final WorldMap worldMap;
@@ -97,8 +95,7 @@ public class GameLevel {
     private float pacPowerSeconds;
     private float pacPowerFadingSeconds;
 
-    public GameLevel(GameModel gameModel, int number, WorldMap worldMap, HuntingTimerStrategy huntingTimerStrategy, int numFlashes) {
-        this.gameModel = requireNonNull(gameModel);
+    public GameLevel(int number, WorldMap worldMap, HuntingTimerStrategy huntingTimerStrategy, int numFlashes) {
         this.number = requireValidLevelNumber(number);
         this.worldMap = requireNonNull(worldMap);
         this.huntingTimerStrategy = requireNonNull(huntingTimerStrategy);
@@ -108,13 +105,6 @@ public class GameLevel {
         currentBonusIndex = -1;
 
         huntingTimerStrategy.reset();
-    }
-
-    /**
-     * @return the game (model) this level belongs to.
-     */
-    public GameModel gameModel() {
-        return gameModel;
     }
 
     /**

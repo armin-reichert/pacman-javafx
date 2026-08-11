@@ -276,7 +276,7 @@ public abstract class CommonGamePlay implements GamePlay {
     private void navigatePac(GameContext game, GameLevel level, Pac pac) {
         final GameSystems systems = game.systems();
         final GameSession session = game.session();
-        final ActorSpeedRules speedRules = level.gameModel().rules().actorSpeedRules();
+        final ActorSpeedRules speedRules = game.model().rules().actorSpeedRules();
         final float speed = pac.power().isActive()
             ? speedRules.pacSpeedWhenHasPower(game, level) : speedRules.pacSpeed(game, level);
 

@@ -119,7 +119,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         final LevelData levelData = ArcadePacMan_GameRules.levelData(levelNumber);
         final HuntingTimer huntingTimer = new HuntingTimer("Arcade Pac-Man Hunting Timer", model.rules().numHuntingPhases());
 
-        final GameLevel level = new GameLevel(model, levelNumber, worldMap, huntingTimer, levelData.numFlashes());
+        final GameLevel level = new GameLevel(levelNumber, worldMap, huntingTimer, levelData.numFlashes());
 
         session.setLevel(level);
         session.setAttractMode(demoLevel);

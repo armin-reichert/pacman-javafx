@@ -204,7 +204,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final WorldMap worldMap = model.mapSelector().supplyWorldMap(levelNumber, mapCategory(session));
         final var huntingTimer = new HuntingTimer("Tengen Ms. Pac-Man Hunting Timer", model.rules().numHuntingPhases());
 
-        final GameLevel level = new GameLevel(model, levelNumber, worldMap, huntingTimer, 3);
+        final GameLevel level = new GameLevel(levelNumber, worldMap, huntingTimer, 3);
 
         session.setLevel(level);
         session.setAttractMode(demoLevel);
