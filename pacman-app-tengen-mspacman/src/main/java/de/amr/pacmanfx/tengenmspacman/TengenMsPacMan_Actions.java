@@ -6,6 +6,7 @@ package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
+import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.gamescene.SceneDisplay;
 import de.amr.pacmanfx.tengenmspacman.model.PacBooster;
@@ -99,7 +100,7 @@ public final class TengenMsPacMan_Actions {
         actionTogglePacBooster = new GameAction(appContext, "toggle_pac_booster") {
             @Override
             public void doAction() {
-                gameContext().model().optLevel().ifPresent(gameLevel -> {
+                gameContext().session().optLevel().ifPresent(gameLevel -> {
                     final TengenMsPacMan_GameModel tengenGame = (TengenMsPacMan_GameModel) gameContext().model();
                     tengenGame.activatePacBooster(gameContext(), gameLevel.entities().pac(), !tengenGame.isBoosterActive());
                     if (tengenGame.isBoosterActive()) {
@@ -110,8 +111,9 @@ public final class TengenMsPacMan_Actions {
 
             @Override
             public boolean isEnabled() {
+                final GameSession session = gameContext().session();
                 final TengenMsPacMan_GameModel tengenGame = (TengenMsPacMan_GameModel) gameContext().model();
-                return tengenGame.pacBoosterMode() == PacBooster.USE_A_OR_B && tengenGame.optLevel().isPresent();
+                return tengenGame.pacBoosterMode() == PacBooster.USE_A_OR_B && session.optLevel().isPresent();
             }
         };
 

@@ -24,11 +24,13 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
+import de.amr.pacmanfx.core.model.HUDState;
 import de.amr.pacmanfx.core.model.rules.HuntingTimer;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.TerrainTile;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
+import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.core.steering.RouteGuidedSteering;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
 
@@ -80,12 +82,12 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     // Game start
 
     @Override
-    public void init(GameContext gameContext) {
-        requireNonNull(gameContext);
-        gameContext.model().init();
-        resetForNewGame(gameContext);
-        gameContext.hudState().hide();
-        gameContext.hudState().creditProperty().bind(gameContext.coinMechanism().numCoinsProperty());
+    public void onSessionStart(GameContext gameContext) {
+        super.onSessionStart(gameContext);
+
+        final HUDState hudState = gameContext.session().hud();
+        hudState.creditProperty().bind(gameContext.coinMechanism().numCoinsProperty());
+        hudState.hide();
     }
 
     // Level building and level start
@@ -97,6 +99,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
         final WorldNavigationSystem navigator = gameContext.systems().worldNavigator();
 
+        final GameSession session = gameContext.session();
         final GameModel model = gameContext.model();
         final WorldMap worldMap = model.mapSelector().supplyWorldMap(levelNumber);
         final TerrainLayer terrain = worldMap.terrainLayer();
@@ -110,6 +113,9 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
         final GameLevel level = new GameLevel(model, levelNumber, worldMap, huntingTimer, levelData.numFlashes());
 
+        session.setLevel(level);
+        session.setDemoLevel(demoLevel);
+
         final House house = HouseFactory.createArcadeHouse(houseMinTile);
         level.entities().add(house);
 
@@ -120,7 +126,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
                     .forEach(navigator::requestTurnBack);
             }
         });
-        level.setDemoLevel(demoLevel);
+
         level.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
         level.setPacPowerSeconds(levelData.secPacPower());
         level.setPacPowerFadingSeconds(0.5f * levelData.numFlashes()); //TODO correct?
@@ -134,8 +140,6 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         final LivesCounter livesCounter = new LivesCounter();
         level.entities().add(livesCounter);
         // Value is set later
-
-        LevelCounterSystem.enable(model.levelCounter(), true);
 
         level.entities().add(new MessageView());
 
@@ -181,6 +185,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     public GameLevel buildDemoLevel(GameContext gameContext) {
         requireNonNull(gameContext);
 
+        final GameSession session = gameContext.session();
         final GameModel model = gameContext.model();
         final GameLevel demoLevel = createLevel(gameContext, 1, true);
 
@@ -197,7 +202,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
         model.gateKeeper().setLevelNumber(1);
 
-        ScoreSystem.setLevelNumber(model.score(), 1);
+        ScoreSystem.setLevelNumber(session.score(), 1);
 
         return demoLevel;
     }
@@ -211,17 +216,17 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     public void startLevel(GameContext gameContext) {
         requireNonNull(gameContext);
 
-        final GameModel model = gameContext.model();
-        final GameLevel level = gameContext.assertLevel();
+        final GameSession session = gameContext.session();
+        final GameLevel level = session.assertLevel();
 
         level.recordStartTime(System.currentTimeMillis());
         prepareLevelForPlaying(gameContext);
         showLevelMessage(level, GameLevelMessageType.READY);
-        model.score().data().setEnabled(true);
+        session.score().data().setEnabled(true);
 
-        LevelCounterSystem.update(model.levelCounter(), level.number(), level.bonusSymbolCode(0));
+        LevelCounterSystem.update(session.levelCounter(), level.number(), level.bonusSymbolCode(0));
 
-        gameContext.cheats().update(level);
+        gameContext.cheats().update(gameContext);
     }
 
     // Playing level

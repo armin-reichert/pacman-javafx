@@ -45,8 +45,10 @@ import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.core.session.GameSession;
 import org.tinylog.Logger;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
@@ -65,38 +67,45 @@ public abstract class CommonGamePlay implements GamePlay {
     private static final Set<GhostState> TURNBACK_STATES = Set.of(GhostState.FRIGHTENED, GhostState.HUNTING_PAC);
 
     @Override
-    public void resetForNewGame(GameContext gameContext) {
+    public void onSessionStart(GameContext gameContext) {
         requireNonNull(gameContext);
+
+        final GameSession session = gameContext.session();
         final GameModel model = gameContext.model();
 
-        model.score().reset();
+        model.init();
 
-        final Score highScore = model.highScore();
-        if (highScore != null) {
-            try {
-                ScoreSystem.load(highScore);
-                ScoreSystem.enableScore(highScore, true);
-            } catch (IOException x) {
-                Logger.error(x, "Error loading high-score file {}",
-                    highScore.requireComp(ScorePersistencyComp.class).file().getAbsolutePath());
-            }
-        } else {
-            Logger.error("No high-score file has been assigned");
-        }
+        initScores(session);
 
+        final LevelCounter levelCounter = gameContext.session().levelCounter();
+        LevelCounterSystem.setCapacity(levelCounter, 7);
+        LevelCounterSystem.clear(levelCounter);
+        LevelCounterSystem.enable(levelCounter, true);
+
+        //TODO move these objects into session too!
         model.gateKeeper().reset();
 
-        LevelCounterSystem.clear(model.levelCounter());
+        session.setLevel(null);
+        session.setPlaying(false);
+    }
 
-        model.setLevel(null);
-        model.setPlaying(false);
+    private void initScores(GameSession session) {
+        session.score().reset();
+        final File highScoreFile = session.highScore().requireComp(ScorePersistencyComp.class).file();
+        try {
+            ScoreSystem.load(session.highScore());
+            ScoreSystem.enableScore(session.highScore(), true);
+        } catch (IOException x) {
+            //TODO throw exception=
+            Logger.error(x, "Error loading high-score file {}", highScoreFile.getAbsolutePath());
+        }
     }
 
     @Override
     public void prepareLevelForPlaying(GameContext gameContext) {
         final GameSystems sys = gameContext.systems();
 
-        final GameLevel level = gameContext.assertLevel();
+        final GameLevel level = gameContext.session().assertLevel();
         final House house = level.entities().theOne(House.class);
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
@@ -126,7 +135,8 @@ public abstract class CommonGamePlay implements GamePlay {
 
     @Override
     public boolean isDemoLevelRunning(GameContext gameContext) {
-        return gameContext.optLevel().isPresent() && gameContext.assertLevel().isDemoLevel();
+        final GameSession session = gameContext.session();
+        return session.isDemoLevel();
     }
 
     @Override
@@ -134,6 +144,7 @@ public abstract class CommonGamePlay implements GamePlay {
         requireNonNull(gameContext);
         requireValidLevelNumber(levelNumber);
 
+        final GameSession session = gameContext.session();
         final GameModel model = gameContext.model();
         final GameEventManager eventManager = gameContext.eventManager();
 
@@ -142,10 +153,12 @@ public abstract class CommonGamePlay implements GamePlay {
         final LivesCounter livesCounter = level.entities().theOne(LivesCounter.class);
         livesCounter.data().setNumLives(numLives);
 
-        ScoreSystem.setLevelNumber(model.score(), levelNumber);
-
+        ScoreSystem.setLevelNumber(session.score(), levelNumber);
+        //TODO store in session
         model.gateKeeper().setLevelNumber(levelNumber);
-        model.setLevel(level);
+
+        session.setLevel(level);
+        session.setDemoLevel(false);
 
         eventManager.publishGameEvent(new LevelCreatedEvent(level));
     }
@@ -155,7 +168,7 @@ public abstract class CommonGamePlay implements GamePlay {
         requireNonNull(gameContext);
 
         final GameModel model = gameContext.model();
-        final GameLevel oldLevel = gameContext.assertLevel();
+        final GameLevel oldLevel = gameContext.session().assertLevel();
         final GameEventManager eventManager = gameContext.eventManager();
 
         final int lastLevelNumber = model.rules().lastLevelNumber();
@@ -266,11 +279,15 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     private void navigatePac(GameContext gameContext, GameLevel level, Pac pac) {
+        final GameSystems systems = gameContext.systems();
+        final GameSession session = gameContext.session();
         final ActorSpeedRules speedRules = level.gameModel().rules().actorSpeedRules();
-        final float speed = pac.power().isActive() ? speedRules.pacSpeedWhenHasPower(level) : speedRules.pacSpeed(level);
-        gameContext.systems().pacAutoSteering().update(level, pac);
-        gameContext.systems().worldNavigator().setSpeed(pac, speed);
-        gameContext.systems().worldNavigator().tryMovingOrTeleporting(pac, level, gameContext.systems().pacWorldMovementPolicy());
+        final float speed = pac.power().isActive()
+            ? speedRules.pacSpeedWhenHasPower(level) : speedRules.pacSpeed(level);
+
+        systems.pacAutoSteering().update(session, pac);
+        systems.worldNavigator().setSpeed(pac, speed);
+        systems.worldNavigator().tryMovingOrTeleporting(pac, level, systems.pacWorldMovementPolicy());
     }
 
     private void evalCollisions(GameContext gameContext, GameLevel level) {
@@ -279,7 +296,7 @@ public abstract class CommonGamePlay implements GamePlay {
         if (result.foundEdibleBonus()) {
             onEatBonus(gameContext, level, result.edibleBonus());
         }
-        evalPacKilled(result, level);
+        evalPacKilled(gameContext.session(), result);
         if (result.pacKilled()) {
             fixPacPositionIfKilledInsidePortal(level);
         }
@@ -312,12 +329,15 @@ public abstract class CommonGamePlay implements GamePlay {
         }
     }
 
-    private void evalPacKilled(HuntingStepResult result, GameLevel level) {
-        if (level.isDemoLevel() && isPacSafeInDemoLevel(level) || level.entities().pac().cheats().isImmune()) {
+    private void evalPacKilled(GameSession session, HuntingStepResult result) {
+        final GameLevel level = session.assertLevel();
+        if (session.isDemoLevel() && isPacSafeInDemoLevel(level)
+            || level.entities().pac().cheats().isImmune()) {
             return;
         }
         result.setPacKilled(
-            result.ghostsCollidingWithPac().stream().anyMatch(ghost -> ghost.ghostStateEnum() == GhostState.HUNTING_PAC)
+            result.ghostsCollidingWithPac().stream()
+                .anyMatch(ghost -> ghost.ghostStateEnum() == GhostState.HUNTING_PAC)
         );
     }
 
@@ -466,14 +486,15 @@ public abstract class CommonGamePlay implements GamePlay {
         requireNonNull(gameContext);
         requireValidLevelNumber(levelNumber);
 
-        final GameLevel level = gameContext.assertLevel();
+        final GameSession session = gameContext.session();
+        final GameLevel level = session.assertLevel();
         final GameModel model = gameContext.model();
         final GameEventManager eventManager = gameContext.eventManager();
 
-        if (!model.score().data().isEnabled()) {
+        if (!session.score().data().isEnabled()) {
             return;
         }
-        final int oldScore = model.score().data().points();
+        final int oldScore = session.score().data().points();
         final int newScore = oldScore + points;
 
         if (model.rules().scoringRules().isExtraLifeAwarded(oldScore, newScore)) {
@@ -482,13 +503,13 @@ public abstract class CommonGamePlay implements GamePlay {
             eventManager.publishGameEvent(new SpecialScoreEvent(newScore));
         }
 
-        final Score highScore = model.highScore();
+        final Score highScore = session.highScore();
         if (highScore != null && highScore.data().isEnabled() && newScore > highScore.data().points()) {
             ScoreSystem.setPoints(highScore, newScore);
             ScoreSystem.setLevelNumber(highScore, levelNumber);
             ScoreSystem.setDate(highScore, LocalDate.now());
         }
-        ScoreSystem.setPoints(model.score(), newScore);
+        ScoreSystem.setPoints(session.score(), newScore);
     }
 
     /**

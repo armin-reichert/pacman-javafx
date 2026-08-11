@@ -103,7 +103,7 @@ public class DS_ActorInfo extends GameDashboardSection {
     }
 
     private Supplier<String> supplyPacPowerText(GameAppContext appContext) {
-        return () -> appContext.currentGameContext().model().optLevel()
+        return () -> appContext.currentGameContext().session().optLevel()
             .map(level -> level.entities().pac())
             .map(this::pacPowerText)
             .orElse(NO_INFO);
@@ -120,7 +120,7 @@ public class DS_ActorInfo extends GameDashboardSection {
     }
 
     private Supplier<String> supplyPacAnimationText(GameAppContext appContext) {
-        return () -> appContext.currentGameContext().model().optLevel().map(level -> {
+        return () -> appContext.currentGameContext().session().optLevel().map(level -> {
             final SpriteAnimSystem animSystem = appContext.currentGameContext().systems().spriteAnim();
             final Pac pac = level.entities().pac();
             if (animSystem.selectedAnimationID(pac) != null) {

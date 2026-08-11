@@ -14,7 +14,7 @@ public class ArcadeMsPacMan_ActorSpeedRules extends Arcade_ActorSpeedRules {
 
     @Override
     public float ghostSpeed(GameContext gameContext, Ghost ghost) {
-        final GameLevel level = gameContext.assertLevel();
+        final GameLevel level = gameContext.session().assertLevel();
         if (level.number() <= 2) {
             return super.ghostSpeed(gameContext, ghost);
         }

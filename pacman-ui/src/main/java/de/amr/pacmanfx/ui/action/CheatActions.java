@@ -14,6 +14,7 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GameCheats;
+import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
@@ -48,7 +49,7 @@ public final class CheatActions {
         actionAddLives = new GameAction(appContext, "cheat_add_lives") {
             @Override
             public void doAction() {
-                final GameLevel level = gameContext().assertLevel();
+                final GameLevel level = gameContext().session().assertLevel();
                 final LivesCounter livesCounter = level.entities().theOne(LivesCounter.class);
                 LivesCounterSystem.addLives(livesCounter, 3);
                 gameContext().cheats().notifyCheatUsed();
@@ -66,7 +67,7 @@ public final class CheatActions {
         actionEatAllPellets = new GameAction(appContext, "cheat_eat_all_pellets") {
             @Override
             public void doAction() {
-                final GameLevel level = gameContext().model().assertLevel();
+                final GameLevel level = gameContext().session().assertLevel();
 
                 level.worldMap().foodLayer().eatPellets();
                 gameContext().cheats().notifyCheatUsed();
@@ -85,7 +86,7 @@ public final class CheatActions {
             @Override
             public void doAction() {
                 final GameContext gameContext = gameContext();
-                final GameLevel level = gameContext.assertLevel();
+                final GameLevel level = gameContext.session().assertLevel();
 
                 gameContext.cheats().notifyCheatUsed();
 
@@ -282,6 +283,7 @@ public final class CheatActions {
     }
 
     private Optional<GameLevel> normalLevel(GameAppContext appContext) {
-        return appContext.currentGameContext().model().optLevel().filter(level -> !level.isDemoLevel());
+        final GameSession session = appContext.currentGameContext().session();
+        return session.optLevel().filter(_ -> !session.isDemoLevel());
     }
 }

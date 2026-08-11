@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.gamescene.d3;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
@@ -14,11 +15,9 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorSchemeImpl;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
-import de.amr.pacmanfx.ui.gamescene.d3.animation.HideGhost3DRiseNumberBoxAnimation;
-import de.amr.pacmanfx.uilib.entities3D.levelcounter.comp.LevelCounter3DAnimationComp;
-import de.amr.pacmanfx.uilib.entities3D.levelcounter.comp.LevelCounter3DViewComp;
 import de.amr.pacmanfx.ui.entities3D.levelcounter.system.LevelCounter3DViewSystem;
 import de.amr.pacmanfx.ui.entities3D.livescounter.comp.LivesCounter3DViewComp;
+import de.amr.pacmanfx.ui.gamescene.d3.animation.HideGhost3DRiseNumberBoxAnimation;
 import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Pellet3DSettings;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -31,6 +30,8 @@ import de.amr.pacmanfx.uilib.entities3D.bonus.comp.Bonus3DViewComp;
 import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DViewComp;
 import de.amr.pacmanfx.uilib.entities3D.ghost.comp.GhostSettings;
 import de.amr.pacmanfx.uilib.entities3D.house.comp.House3DViewComp;
+import de.amr.pacmanfx.uilib.entities3D.levelcounter.comp.LevelCounter3DAnimationComp;
+import de.amr.pacmanfx.uilib.entities3D.levelcounter.comp.LevelCounter3DViewComp;
 import de.amr.pacmanfx.uilib.entities3D.messageview.MessageView3DBuilder;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DViewComp;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.PacSettings;
@@ -73,7 +74,8 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private GameLevel3DAnimationManager animationManager;
 
-    public GameLevel3D(AnimationRegistry registry, GameUISettingsVM viewModel, GameLevel level, GameVariantConfig gameVariantConfig) {
+    public GameLevel3D(GameContext gameContext, GameLevel level, AnimationRegistry registry, GameUISettingsVM viewModel, GameVariantConfig gameVariantConfig) {
+        requireNonNull(gameContext);
         this.level = requireNonNull(level);
         this.gameVariantConfig = requireNonNull(gameVariantConfig);
 
@@ -81,7 +83,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         createFood3D();
         createPac3D(viewModel);
         createGhosts3D(viewModel);
-        createLevelCounter3D(registry);
+        createLevelCounter3D(gameContext.session().levelCounter(), registry);
         createLivesCounter3D();
         createMessageView3D(registry);
         arrangeLayout();
@@ -282,8 +284,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         }
     }
 
-    private void createLevelCounter3D(AnimationRegistry registry) {
-        final LevelCounter levelCounter = level.gameModel().levelCounter(); //TODO change this!
+    private void createLevelCounter3D(LevelCounter levelCounter, AnimationRegistry registry) {
         if (!levelCounter.hasComp(LevelCounter3DViewComp.class)) {
             final LevelCounter3DViewComp view3D = new LevelCounter3DViewComp();
             levelCounter.setComp(LevelCounter3DViewComp.class, view3D);
@@ -295,11 +296,10 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
             Logger.info("Level counter already had a 3D view!");
         }
 
-        replaceLevelCounter3D();
+        replaceLevelCounter3D(levelCounter);
     }
 
-    public void replaceLevelCounter3D() {
-        final LevelCounter levelCounter = level.gameModel().levelCounter(); // TODO change this
+    public void replaceLevelCounter3D(LevelCounter levelCounter) {
         final LevelCounter3DViewComp view3D = levelCounter.requireComp(LevelCounter3DViewComp.class);
 
         final Group oldRoot = view3D.root();

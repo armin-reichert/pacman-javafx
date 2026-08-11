@@ -10,11 +10,13 @@ import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.event.TestStartedEvent;
 import de.amr.pacmanfx.core.event.bonus.BonusEatenEvent;
 import de.amr.pacmanfx.core.event.gameplay.LevelStartedEvent;
+import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.session.GameSession;
 
 public class LevelShortTestState extends GameState {
 
@@ -25,29 +27,35 @@ public class LevelShortTestState extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext gameContext) {
-        final GameModel model = gameContext.model();
+    public void onEnter(GameContext game) {
+        final GamePlay gamePlay = game.gamePlay();
+        final GameModel model = game.model();
+        final GameSession session = game.session();
+
         //coinMechanism.setNumCoins(1);
+
         lastTestedLevelNumber = model.rules().lastLevelNumber() == Integer.MAX_VALUE
             ? 25
             : model.rules().lastLevelNumber();
-        gameContext.gamePlay().resetForNewGame(gameContext);
-        gameContext.gamePlay().buildNormalLevel(gameContext, 1, model.initialLifeCount());
-        gameContext.gamePlay().startLevel(gameContext);
-        final GameLevel level = model.optLevel().orElseThrow();
+
+        gamePlay.buildNormalLevel(game, 1, model.initialLifeCount());
+        gamePlay.startLevel(game);
+
+        final GameLevel level = session.assertLevel();
         level.entities().pac().show();
         level.entities().ghosts().forEach(GameEntity::show);
 
         waitForTimeout();
         // Note: This event is very important because it triggers the creation of the actor animations!
-        gameContext.eventManager().publishGameEvent(new LevelStartedEvent(level));
+        game.eventManager().publishGameEvent(new LevelStartedEvent(level));
     }
 
     @Override
     public void onUpdate(GameContext gameContext) {
         final GameSystems sys = gameContext.systems();
-        final GameModel model = gameContext.model();
-        final GameLevel level = model.optLevel().orElseThrow();
+        final GameSession session = gameContext.session();
+        final GameLevel level = session.assertLevel();
+
         final float START = 1.0f;
 
         if (timer().atSecond(START)) {
@@ -55,7 +63,7 @@ public class LevelShortTestState extends GameState {
             level.entities().pac().show();
             level.entities().ghosts().forEach(GameEntity::show);
             gameContext.gamePlay().showLevelMessage(level, GameLevelMessageType.READY);
-            gameContext.hudState().hideCredit().showLivesCounter();
+            session.hud().hideCredit().showLivesCounter();
 
             level.heartbeat().restart();
 
@@ -100,9 +108,7 @@ public class LevelShortTestState extends GameState {
     }
 
     @Override
-    public void onExit(GameContext gameContext) {
-        final GameModel model = gameContext.model();
-        gameContext.gamePlay().init(gameContext);
-        LevelCounterSystem.clear(model.levelCounter());
+    public void onExit(GameContext game) {
+        LevelCounterSystem.clear(game.session().levelCounter());
     }
 }

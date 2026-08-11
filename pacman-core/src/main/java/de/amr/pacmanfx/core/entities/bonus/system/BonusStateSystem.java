@@ -31,7 +31,7 @@ public class BonusStateSystem {
     public void update(GameContext gameContext) {
         requireNonNull(gameContext);
 
-        final GameLevel level = gameContext.assertLevel();
+        final GameLevel level = gameContext.session().assertLevel();
         level.entities().optBonus().ifPresent(bonus -> update(gameContext.eventManager(), level, bonus, gameContext.thisFrame()));
     }
 

@@ -14,6 +14,7 @@ import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.core.session.GameSession;
 
 import static de.amr.basics.math.Direction.*;
 import static de.amr.pacmanfx.core.Validations.differsAtMost;
@@ -137,9 +138,10 @@ public class GhostHouseAccessSystem {
 
     //TODO extract state change
     public void reachHouse(GameContext gameContext, Ghost ghost, float speed) {
+        final GameSession session = gameContext.session();
         final GameSystems sys = gameContext.systems();
         final WorldMovementPolicy policy = sys.ghostWorldMovementPolicy();
-        final GameLevel level = gameContext.assertLevel();
+        final GameLevel level = session.assertLevel();
 
         final PositionComp position = ghost.pos();
         final House house = ghost.worldPlacement().house();

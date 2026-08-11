@@ -16,8 +16,8 @@ import de.amr.pacmanfx.core.event.gameplay.LevelStartedEvent;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
-import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.rules.GameRules;
+import de.amr.pacmanfx.core.session.GameSession;
 import org.tinylog.Logger;
 
 public final class GameState_DemoLevelPlaying extends GameState {
@@ -31,28 +31,27 @@ public final class GameState_DemoLevelPlaying extends GameState {
 
     @Override
     public void onEnter(GameContext gameContext) {
-        final GameModel model = gameContext.model();
-        model.setLevel(gameContext.gamePlay().buildDemoLevel(gameContext));
-        gameContext.hudState().showCredit().hideLivesCounter();
-        gameContext.eventManager().publishGameEvent(new LevelCreatedEvent(model.assertLevel()));
+        final GameSession session = gameContext.session();
+        session.setLevel(gameContext.gamePlay().buildDemoLevel(gameContext));
+        session.hud().showCredit().hideLivesCounter();
+        gameContext.eventManager().publishGameEvent(new LevelCreatedEvent(session.assertLevel()));
     }
 
     @Override
     public void onUpdate(GameContext gameContext) {
         final GameSystems sys = gameContext.systems();
-
         final GamePlay gamePlay = gameContext.gamePlay();
-        final GameModel model = gameContext.model();
-        final GameLevel level = gameContext.assertLevel();
+        final GameSession session = gameContext.session();
+        final GameLevel level = session.assertLevel();
         final Pac pac = level.entities().pac();
-
         final long tick = timer().tickCount();
+
         if (tick == 1) {
-            model.score().data().setEnabled(false);
-            model.highScore().data().setEnabled(false);
+            session.score().data().setEnabled(false);
+            session.highScore().data().setEnabled(false);
             gamePlay.prepareLevelForPlaying(gameContext);
             gamePlay.showLevelMessage(level, GameLevelMessageType.GAME_OVER);
-            LevelCounterSystem.update(model.levelCounter(), level.number(), level.bonusSymbolCode(0));
+            LevelCounterSystem.update(session.levelCounter(), level.number(), level.bonusSymbolCode(0));
             Logger.info("Demo level {} started", level.number());
             // Note: This event is very important because it triggers the creation of the actor animations!
             gameContext.eventManager().publishGameEvent(new LevelStartedEvent(level));
@@ -84,7 +83,7 @@ public final class GameState_DemoLevelPlaying extends GameState {
     }
 
     private CommonGameStateID computeNextState(GameContext gameContext) {
-        final GameLevel level = gameContext.assertLevel();
+        final GameLevel level = gameContext.session().assertLevel();
         final GameRules rules = gameContext.model().rules();
 
         if (rules.isLevelCompleted(level)) {

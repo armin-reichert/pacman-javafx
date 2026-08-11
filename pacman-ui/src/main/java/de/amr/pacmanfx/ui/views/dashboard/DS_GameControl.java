@@ -10,6 +10,7 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.test.CutScenesTestState;
+import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import javafx.scene.control.Button;
@@ -70,6 +71,7 @@ public class DS_GameControl extends GameDashboardSection {
         super.update(appContext);
 
         final GameContext gameContext = appContext.currentGameContext();
+        final GameSession session = gameContext.session();
         final GameModel model = gameContext.model();
         final GameState state = gameContext.state();
 
@@ -81,8 +83,8 @@ public class DS_GameControl extends GameDashboardSection {
 
         final boolean booting = CommonGameStateID.BOOT.hasSameNameAs(state);
         buttonGroupLevelActions[GAME_LEVEL_START].setDisable(booting || !canStartLevel(appContext, state));
-        buttonGroupLevelActions[GAME_LEVEL_NEXT] .setDisable(booting || !canEnterNextLevel(model, state));
-        buttonGroupLevelActions[GAME_LEVEL_QUIT] .setDisable(booting || model.optLevel().isEmpty());
+        buttonGroupLevelActions[GAME_LEVEL_NEXT] .setDisable(booting || !canEnterNextLevel(gameContext.session(), state));
+        buttonGroupLevelActions[GAME_LEVEL_QUIT] .setDisable(booting || session.optLevel().isEmpty());
 
         buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(booting || !CommonGameStateID.GAME_INTRO.hasSameNameAs(state));
         buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT].setDisable(booting || !(state instanceof CutScenesTestState));
@@ -97,7 +99,7 @@ public class DS_GameControl extends GameDashboardSection {
             && gameState.nameIsOneOf(CommonGameStateID.GAME_INTRO, CommonGameStateID.GAME_PREPARATION);
     }
 
-    private boolean canEnterNextLevel(GameModel game, GameState gameState) {
-        return game.isPlaying() && CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(gameState);
+    private boolean canEnterNextLevel(GameSession session, GameState gameState) {
+        return session.isPlaying() && CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(gameState);
     }
 }

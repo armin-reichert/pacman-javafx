@@ -4,13 +4,12 @@
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.math.RectShort;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
 import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.core.entities.levelCounter.comp.LevelCounterData;
-import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.HUDState;
+import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene1;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene2;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene3;
@@ -18,7 +17,6 @@ import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene4;
 import de.amr.pacmanfx.tengenmspacman.model.Difficulty;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.model.PacBooster;
-import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
@@ -68,14 +66,13 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
     }
 
     @Override
-    public void draw(HUDState hud, GameContext gameContext, AbstractGameScene2D scene, long tick) {
-        requireNonNull(hud);
-        requireNonNull(gameContext);
+    public void draw(GameSession session, AbstractGameScene2D scene, long tick) {
+        requireNonNull(session);
         requireNonNull(scene);
 
-        if (!hud.isVisible()) return;
+        final HUDState hud = session.hud();
 
-        final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) gameContext.model();
+        if (!hud.isVisible()) return;
 
         ctx.save();
         ctx.translate(0, scaled(computeOffsetY(scene)));
@@ -83,11 +80,11 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
         if (hud.isScoreShown()) {
             // blink frequency = 1Hz (30 ticks on, 30 ticks off)
             final boolean on = tick % 60 < 30;
-            drawScore(gameContext.model().score(), on, arcadeFont8());
+            drawScore(session.score(), on, arcadeFont8());
 
-            final Score highScore = gameContext.model().highScore();
+            final Score highScore = session.highScore();
             Color color = SCORE_TEXT_COLOR;
-            if (!highScore.data().isEnabled() && !gameContext.gamePlay().isDemoLevelRunning(gameContext)) {
+            if (!highScore.data().isEnabled() && !session.isDemoLevel()) {
                 color = SCORE_TEXT_COLOR_DISABLED;
             }
             drawHighScore(highScore, arcadeFont8(), color);
@@ -96,18 +93,20 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
         final int counterY = scene.unscaledHeight() - TS;
 
         if (hud.isLivesCounterShown()) {
-            drawLivesCounter(gameContext, counterY);
+            drawLivesCounter(session, counterY);
         }
 
-        gameContext.model().optLevel().ifPresent(level -> {
-            if (hud.isLevelCounterShown()) {
-                drawLevelCounter(level, hud, counterY);
-            }
-        });
+        if (hud.isLevelCounterShown()) {
+            drawLevelCounter(session, counterY);
+        }
 
+        //TODO add these to session too, but then a game-variant-specific session is needed!
+
+/*
         if (hud.gameOptionsVisible()) {
             drawGameOptions(model.mapCategory(), model.difficulty(), model.pacBoosterMode(), tilesPx(16), tilesPx(2.5f));
         }
+*/
 
         ctx.restore();
     }
@@ -134,14 +133,14 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
         fillText("%6d".formatted(score.data().points()), color, font, tilesPx(13), tilesPx(2));
     }
 
-    private void drawLivesCounter(GameContext gameContext, float y) {
+    private void drawLivesCounter(GameSession session, float y) {
         final RectShort symbolSprite = spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL);
-        for (int i = 0; i < gameContext.hudState().visibleLifeCount(); ++i) {
+        for (int i = 0; i < session.hud().visibleLifeCount(); ++i) {
             drawSprite(symbolSprite, tilesPx(4 + i * 2), y, true);
         }
-        final LivesCounter livesCounter = gameContext.assertLevel().entities().theOne(LivesCounter.class);
+        final LivesCounter livesCounter = session.livesCounter();
         final int numLives = livesCounter.data().numLives();
-        if (numLives > gameContext.hudState().maxLivesShown()) {
+        if (numLives > session.hud().maxLivesShown()) {
             fillText(
                 "(%d)".formatted(numLives),
                 NES_Palette.color(0x28),
@@ -151,11 +150,11 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
         }
     }
 
-    private void drawLevelCounter(GameLevel level, HUDState hud, float y) {
+    private void drawLevelCounter(GameSession session, float y) {
         final RectShort[] symbolSprites = spriteSheet().findSprites(SpriteID.BONUS_SYMBOLS);
         float x = LEVEL_COUNTER_POS_RIGHT - tilesPx(2);
         // symbols are drawn from right to left!
-        final List<Integer> symbolCodes = level.gameModel().levelCounter()
+        final List<Integer> symbolCodes = session.levelCounter()
             .requireComp(LevelCounterData.class).symbolCodes();
         for (int symbolCode : symbolCodes) {
             if (0 <= symbolCode && symbolCode < symbolSprites.length) {
@@ -163,9 +162,10 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
             }
             x -= tilesPx(2);
         }
-        if (hud.isLevelNumberVisible()) {
-            drawLevelNumberBox(level.number(), LEVEL_COUNTER_POS_LEFT, y); // left box
-            drawLevelNumberBox(level.number(), LEVEL_COUNTER_POS_RIGHT, y); // right box
+        if (session.hud().isLevelNumberVisible()) {
+            final int levelNumber = session.assertLevel().number();
+            drawLevelNumberBox(levelNumber, LEVEL_COUNTER_POS_LEFT, y); // left box
+            drawLevelNumberBox(levelNumber, LEVEL_COUNTER_POS_RIGHT, y); // right box
         }
     }
 

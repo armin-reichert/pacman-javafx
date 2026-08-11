@@ -7,6 +7,8 @@ package de.amr.pacmanfx.tengenmspacman.flow;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
+import de.amr.pacmanfx.core.model.HUDState;
+import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import org.tinylog.Logger;
 
@@ -17,10 +19,11 @@ public class GameOrLevelStartingState extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext gameContext) {
-        final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) gameContext.model();
+    public void onEnter(GameContext game) {
+        final HUDState hudState = game.session().hud();
+        final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) game.model();
 
-        gameContext.hudState().hideCredit().showScore().showLevelCounter().showLivesCounter().show();
+        hudState.hideCredit().showScore().showLevelCounter().showLivesCounter().show();
         // The rules vary between map categories so update the rules here:
         model.rules().setMapCategory(model.mapCategory());
         Logger.info("Using game rules for map category {}", model.rules().mapCategory());
@@ -31,11 +34,11 @@ public class GameOrLevelStartingState extends GameState {
         if (!(gameContext.model() instanceof TengenMsPacMan_GameModel model)) {
             throw new IllegalStateException("Illegal game model: " + gameContext.model());
         }
-        gameContext.flow().enterState(gameContext, computeNextState(model));
+        gameContext.flow().enterState(gameContext, computeNextState(model, gameContext.session()));
     }
 
-    private CommonGameStateID computeNextState(TengenMsPacMan_GameModel model) {
-        if (model.isPlaying()) {
+    private CommonGameStateID computeNextState(TengenMsPacMan_GameModel model, GameSession session) {
+        if (session.isPlaying()) {
             return CommonGameStateID.GAME_LEVEL_CONTINUE;
         }
         if (model.canStartNewGame()) {

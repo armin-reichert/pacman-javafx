@@ -14,8 +14,8 @@ public final class GameState_PreparingGamePlay extends GameState {
 
     @Override
     public void onEnter(GameContext gameContext) {
-        gameContext.hudState().showCredit().showScore().showLevelCounter().hideLivesCounter().show();
-        gameContext.gamePlay().resetForNewGame(gameContext);
+        gameContext.session().hud()
+            .showCredit().showScore().showLevelCounter().hideLivesCounter().show();
     }
 
     @Override

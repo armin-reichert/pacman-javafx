@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.action;
 
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
+import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -36,14 +37,15 @@ public class SteeringActions {
         @Override
         public void doAction() {
             final WorldNavigationSystem navigator = gameContext().systems().worldNavigator();
-            gameContext().model().optLevel().ifPresent(level -> navigator.setWishDir(level.entities().pac(), dir));
+            gameContext().session().optLevel().ifPresent(level -> navigator.setWishDir(level.entities().pac(), dir));
         }
 
         @Override
         public boolean isEnabled() {
-            return gameContext().optLevel().isPresent()
-                && !gameContext().assertLevel().isDemoLevel()
-                && !gameContext().assertLevel().entities().pac().cheats().isUsingAutopilot();
+            final GameSession session = gameContext().session();
+            return session.optLevel().isPresent()
+                && !session.isDemoLevel()
+                && !session.assertLevel().entities().pac().cheats().isUsingAutopilot();
         }
     }
 

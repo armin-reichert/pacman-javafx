@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.uilib.rendering;
 
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.session.GameSession;
 
 public interface GameLevelRenderer extends Renderer {
 
@@ -20,5 +21,5 @@ public interface GameLevelRenderer extends Renderer {
      * @param level the game level to draw
      * @param info additional rendering info
      */
-    void drawLevel(GameLevel level, RenderInfo info);
+    void drawLevel(GameSession session, GameLevel level, RenderInfo info);
 }

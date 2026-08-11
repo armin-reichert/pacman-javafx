@@ -8,9 +8,9 @@ import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig.MapConfigKey;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_PlayScene2D;
@@ -52,7 +52,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
 
         @Override
         public void draw(AbstractGameScene2D scene, long tick) {
-            final GameModel gameModel = scene.gameModel();
+            final GameSession session = scene.gameContext().session();
             final GameState gameState = scene.gameState();
             final TengenMsPacMan_PlayScene2D playScene = (TengenMsPacMan_PlayScene2D) scene;
 
@@ -63,7 +63,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
             ctx.setFill(debugTextFill);
             ctx.setFont(debugTextFont);
             ctx.fillText("%s %d".formatted(gameState, gameState.timer().tickCount()), 0, scaled(3 * WorldMap.TS));
-            gameModel.optLevel().ifPresent(level -> {
+            session.optLevel().ifPresent(level -> {
                 drawMovingActorInfo(animSystem, level.entities().pac());
                 level.entities().ghosts().forEach(ghost -> drawMovingActorInfo(animSystem, ghost));
             });
@@ -110,9 +110,9 @@ public class TengenMsPacMan_PlayScene2D_Renderer
         if (!(scene instanceof TengenMsPacMan_PlayScene2D playScene2D)) {
             return;
         }
-        final GameModel gameModel = playScene2D.gameModel();
 
-        gameModel.optLevel().ifPresent(level -> {
+        final GameSession session = scene.gameContext().session();
+        session.optLevel().ifPresent(level -> {
             final WorldMap worldMap = level.worldMap();
             final House house = level.entities().theOne(House.class);
             final double scaledIndent = scaled(CONTENT_INDENT);
@@ -122,7 +122,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
 
             ctx.save();
             ctx.translate(scaledIndent, 0);
-            levelRenderer.drawLevel(level, renderInfo);
+            levelRenderer.drawLevel(session, level, renderInfo);
             levelRenderer.drawDoor(house, worldMap); // ghosts appear under door, so draw door over again
             actorsInZOrder.forEach(actorRenderer::drawActor);
             ctx.restore();

@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.event.gameplay.LevelStartedEvent;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 
 public class GameStartingState extends GameState {
@@ -27,15 +27,14 @@ public class GameStartingState extends GameState {
     @Override
     public void onEnter(GameContext gameContext) {
         final var model = (TengenMsPacMan_GameModel) gameContext.model();
-        gameContext.gamePlay().resetForNewGame(gameContext);
         gameContext.gamePlay().buildNormalLevel(gameContext, model.startLevelNumber(), model.initialLifeCount());
         gameContext.eventManager().publishGameEvent(new GameStartedEvent(gameContext));
     }
 
     @Override
     public void onUpdate(GameContext gameContext) {
-        final GameModel model = gameContext.model();
-        final GameLevel level = gameContext.assertLevel();
+        final GameSession session = gameContext.session();
+        final GameLevel level = session.assertLevel();
         final long tick = timer().tickCount();
 
         if (tick == TICK_SHOW_READY) {
@@ -48,7 +47,7 @@ public class GameStartingState extends GameState {
             level.entities().ghosts().forEach(GameEntity::show);
         }
         else if (tick == TICK_START_PLAYING) {
-            model.setPlaying(true);
+            session.setPlaying(true);
             gameContext.flow().enterState(gameContext, CommonGameStateID.GAME_LEVEL_PLAYING);
         }
     }

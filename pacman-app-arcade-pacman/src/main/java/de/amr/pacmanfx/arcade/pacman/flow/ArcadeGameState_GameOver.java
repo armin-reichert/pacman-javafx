@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
-import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.session.GameSession;
 
 import java.io.IOException;
 
@@ -24,11 +24,11 @@ public class ArcadeGameState_GameOver extends GameState {
 
     @Override
     public void onEnter(GameContext gameContext) {
-        final GameModel model = gameContext.model();
-        final GameLevel level = gameContext.assertLevel();
+        final GameSession session = gameContext.session();
+        final GameLevel level = session.assertLevel();
 
         try {
-            ScoreSystem.saveHighScoreIfNeeded(model.highScore());
+            ScoreSystem.saveHighScoreIfNeeded(session.highScore());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -38,7 +38,7 @@ public class ArcadeGameState_GameOver extends GameState {
         // In case, entering game over state was forced by user:
         final LivesCounter livesCounter = level.entities().theOne(LivesCounter.class);
         LivesCounterSystem.setNumLives(livesCounter, 0);
-        model.setPlaying(false);
+        session.setPlaying(false);
 
         gameContext.cheats().clear();
 
@@ -48,7 +48,7 @@ public class ArcadeGameState_GameOver extends GameState {
     @Override
     public void onUpdate(GameContext gameContext) {
         if (timer().hasExpired()) {
-            final GameLevel level = gameContext.assertLevel();
+            final GameLevel level = gameContext.session().assertLevel();
             level.clearMessage();
             gameContext.cheats().clear();
             gameContext.flow().enterState(gameContext, gameContext.coinMechanism().isEmpty()

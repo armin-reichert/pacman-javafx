@@ -63,7 +63,7 @@ public class TengenMsPacMan_ActorSpeedRules implements ActorSpeedRules {
 
     @Override
     public float ghostSpeed(GameContext gameContext, Ghost ghost) {
-        final GameLevel level = gameContext.assertLevel();
+        final GameLevel level = gameContext.session().assertLevel();
         final House house = level.entities().theOne(House.class);
         final int levelNumber = level.number();
         final TerrainLayer terrain = level.worldMap().terrainLayer();

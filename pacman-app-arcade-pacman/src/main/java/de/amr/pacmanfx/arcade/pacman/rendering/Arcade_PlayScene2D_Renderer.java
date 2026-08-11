@@ -9,6 +9,7 @@ import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
+import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
@@ -70,12 +71,15 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
         if (!(scene instanceof Arcade_PlayScene2D playScene)) {
             return;
         }
+
+        final GameSession session = scene.gameContext().session();
+
         // Level creation happens by handling a game event after the play scene has been activated. Therefore,
         // the game level is not yet existing for the first two ticks after this scene got active.
-        scene.gameContext().model().optLevel().ifPresent(level -> {
+        session.optLevel().ifPresent(level -> {
             final RenderInfo info = createRenderInfo(level, playScene);
             levelRenderer.applyLevelSettings(level, info);
-            levelRenderer.drawLevel(level, info);
+            levelRenderer.drawLevel(scene.gameContext().session(), level, info);
             updateActorZOrder(level);
             actorsInZOrder.forEach(actorRenderer::drawActor);
             if (scene.appContext().ui().viewModel().debugModeOnProperty.get()) {

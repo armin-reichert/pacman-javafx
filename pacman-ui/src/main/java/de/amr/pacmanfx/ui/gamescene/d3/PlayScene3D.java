@@ -12,17 +12,18 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounter3DViewSystem;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.PlaySceneFadeInAnimation;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.DronePerspective;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveManager;
-import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounter3DViewSystem;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.vm.Game3DSettingsVM;
 import de.amr.pacmanfx.ui.vm.GameUISettingsVM;
@@ -122,10 +123,6 @@ public class PlayScene3D extends AbstractGameScene
         return subScene;
     }
 
-    public AnimationRegistry registry() {
-        return registry;
-    }
-
     public PerspectiveManager perspectiveManager() {
         return perspectiveManager;
     }
@@ -142,15 +139,17 @@ public class PlayScene3D extends AbstractGameScene
         return fadeInAnimation;
     }
 
-    public void replaceActionBindings(GameLevel level) {
+    public void replaceActionBindings(GameSession session, GameLevel level) {
         // No-op — override in subclasses if variant needs different bindings
     }
 
-    public void updateHUD3D(GameLevel level) {
-        requireNonNull(level);
+    public void updateHUD3D(GameContext game) {
+        requireNonNull(game);
+
+        final GameSession session = game.session();
 
         // If score is disabled, show "GAME OVER" text instead
-        final Score score = level.gameModel().score();
+        final Score score = session.score();
         if (score.data().isEnabled()) {
             scoresView.showScore(score.data().points(), score.data().levelNumber());
         } else {
@@ -160,7 +159,7 @@ public class PlayScene3D extends AbstractGameScene
         }
 
         // High score is always visible
-        final Score highScore = level.gameModel().highScore();
+        final Score highScore = session.highScore();
         scoresView.showHighScore(highScore.data().points(), highScore.data().levelNumber());
     }
 
@@ -185,7 +184,8 @@ public class PlayScene3D extends AbstractGameScene
             .forEach(energizer3D -> energizer3D.root().setVisible(!foodLayer.hasEatenFoodAtTile(energizer3D.tile())));
     }
 
-    public void replaceGameLevel3D(GameLevel level) {
+    public void replaceGameLevel3D(GameContext game, GameLevel level) {
+        requireNonNull(game);
         requireNonNull(level);
 
         if (level3D != null) {
@@ -196,7 +196,7 @@ public class PlayScene3D extends AbstractGameScene
         final GameUISettingsVM viewModel = appContext().ui().viewModel();
 
         // Create a new 3D game level representation
-        level3D = new GameLevel3D(registry, viewModel, level, gameVariantConfig);
+        level3D = new GameLevel3D(gameContext(), level, registry, viewModel, gameVariantConfig);
 
         level3DParent.getChildren().setAll(level3D);
 
@@ -211,7 +211,7 @@ public class PlayScene3D extends AbstractGameScene
         final LivesCounter livesCounter = level.entities().theOne(LivesCounter.class);
         LivesCounter3DViewSystem.startTracking(livesCounter, pac);
 
-        level3D.replaceLevelCounter3D();
+        level3D.replaceLevelCounter3D(game.session().levelCounter());
     }
 
     @Override
@@ -269,7 +269,8 @@ public class PlayScene3D extends AbstractGameScene
 
     @Override
     public void onTick(GameContext game) {
-        final GameLevel level = game.assertLevel();
+        final GameSession session = game.session();
+        final GameLevel level = session.assertLevel();
         final long tick = game.thisFrame().tick();
 
         if (level == null) {
@@ -283,12 +284,12 @@ public class PlayScene3D extends AbstractGameScene
         }
 
         GameLevel3DUpdateController.update3DSceneEntities(level3D);
-        updateHUD3D(level);
+        updateHUD3D(game);
 
         perspectiveManager.updatePerspective(level);
 
         optSoundEffects().ifPresent(soundEffects -> {
-            soundEffects.setEnabled(!level.isDemoLevel());
+            soundEffects.setEnabled(!session.isDemoLevel());
             soundEffects.playAmbientGameLevelSound(game, level);
         });
     }
@@ -334,18 +335,20 @@ public class PlayScene3D extends AbstractGameScene
     }
 
     private void replaceScoresView(String leftTitle, String rightTitle) {
+        final GameSession session = gameContext().session();
+
         final ScoresView oldScoresView = scoresView;
         if (oldScoresView != null) {
             subSceneRoot.getChildren().remove(oldScoresView.root());
         }
 
-        final Score leftScore = gameModel().score();
+        final Score leftScore = session.score();
         if (!leftScore.hasComp(ScoreViewComp.class)) {
             leftScore.setComp(ScoreViewComp.class, new ScoreViewComp());
         }
         leftScore.requireComp(ScoreViewComp.class).titleDisplay().setText(leftTitle);
 
-        final Score rightScore = gameModel().highScore();
+        final Score rightScore = session.highScore();
         if (!rightScore.hasComp(ScoreViewComp.class)) {
             rightScore.setComp(ScoreViewComp.class, new ScoreViewComp());
         }

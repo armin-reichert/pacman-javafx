@@ -10,6 +10,7 @@ import de.amr.pacmanfx.core.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -48,7 +49,7 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
     public void applyLevelSettings(GameLevel level, RenderInfo info) {}
 
     @Override
-    public void drawLevel(GameLevel level, RenderInfo info) {
+    public void drawLevel(GameSession session, GameLevel level, RenderInfo info) {
         drawMap(level, info);
         level.optMessage().ifPresent(this::drawLevelMessage);
     }

@@ -4,12 +4,12 @@
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.math.RectShort;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
 import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.core.entities.levelCounter.comp.LevelCounterData;
 import de.amr.pacmanfx.core.model.HUDState;
+import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
@@ -54,18 +54,20 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer
     }
 
     @Override
-    public void draw(HUDState hud, GameContext gameContext, AbstractGameScene2D scene, long tick) {
-        requireNonNull(gameContext);
+    public void draw(GameSession session, AbstractGameScene2D scene, long tick) {
+        requireNonNull(session);
         requireNonNull(scene);
+
+        final HUDState hud = session.hud();
 
         if (!hud.isVisible()) return;
 
         if (hud.isScoreShown()) {
-            drawScore(gameContext.model().score(), SCORE_TEXT, arcadeFont8(), SCORE_TEXT_COLOR, tilesPx(1), tilesPx(1));
+            drawScore(session.score(), SCORE_TEXT, arcadeFont8(), SCORE_TEXT_COLOR, tilesPx(1), tilesPx(1));
 
-            final Score highScore = gameContext.model().highScore();
+            final Score highScore = session.highScore();
             Color color = SCORE_TEXT_COLOR;
-            if (!gameContext.gamePlay().isDemoLevelRunning(gameContext) && !highScore.data().isEnabled()) {
+            if (!session.isDemoLevel() && !highScore.data().isEnabled()) {
                 color = SCORE_TEXT_COLOR_DISABLED;
             }
             drawScore(highScore, HIGH_SCORE_TEXT, arcadeFont8(), color, tilesPx(14), tilesPx(1));
@@ -75,7 +77,7 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer
             final RectShort[] bonusSymbolSprites = spriteSheet().findSprites(SpriteID.BONUS_SYMBOLS);
             final float y = scene.unscaledHeight() - tilesPx(2) + 2;
             float x = scene.unscaledWidth() - tilesPx(4);
-            for (int symbolCode : gameContext.model().levelCounter().requireComp(LevelCounterData.class).symbolCodes()) {
+            for (int symbolCode : session.levelCounter().requireComp(LevelCounterData.class).symbolCodes()) {
                 drawSprite(bonusSymbolSprites[symbolCode], x, y, true);
                 x -= tilesPx(2); // symbols are drawn from right to left
             }
@@ -88,7 +90,7 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer
             for (int i = 0; i < hud.visibleLifeCount(); ++i) {
                 drawSprite(livesCounterSprite, x + i * tilesPx(2), y, true);
             }
-            final LivesCounter livesCounter = gameContext.assertLevel().entities().theOne(LivesCounter.class);
+            final LivesCounter livesCounter = session.livesCounter();
             final int lifeCount = livesCounter.data().numLives();
             if (lifeCount > hud.maxLivesShown()) {
                 // Show text indicating that more lives are available than symbols displayed (cheating may cause this)

@@ -16,7 +16,7 @@ public class ArcadeGameState_GameOrLevelStarting extends GameState {
 
     @Override
     public void onEnter(GameContext gameContext) {
-        gameContext.hudState().showScore().showLevelCounter().show();
+        gameContext.session().hud().showScore().showLevelCounter().show();
     }
 
     @Override
@@ -25,7 +25,7 @@ public class ArcadeGameState_GameOrLevelStarting extends GameState {
     }
 
     private CommonGameStateID computeNextState(GameContext gameContext) {
-        if (gameContext.model().isPlaying()) {
+        if (gameContext.session().isPlaying()) {
             return CommonGameStateID.GAME_LEVEL_CONTINUE;
         }
         if (!gameContext.coinMechanism().isEmpty()) {

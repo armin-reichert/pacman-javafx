@@ -9,6 +9,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
@@ -248,7 +249,9 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     @Override
     public void render() {
         final GameContext gameContext = appContext.currentGameContext();
+        final GameSession session = gameContext.session();
         final long tick = appContext.clock().currentTick();
+
         // Render current 2D game scene
         final GameScene gameScene = appContext.ui().gameScenes().optCurrentGameScene().orElse(null);
         if (gameScene instanceof AbstractGameScene2D gameScene2D) {
@@ -256,7 +259,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
                 sceneRenderer.draw(gameScene2D, tick);
             }
             if (hudRenderer != null) {
-                hudRenderer.draw(gameContext.hudState(), gameContext, gameScene2D, tick);
+                hudRenderer.draw(session, gameScene2D, tick);
             }
         }
 

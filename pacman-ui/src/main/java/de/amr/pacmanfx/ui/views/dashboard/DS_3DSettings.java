@@ -55,7 +55,7 @@ public class DS_3DSettings extends GameDashboardSection {
 
         addDynamicInfo("Scene Size", () -> sceneSizeInfo(
             app.ui().gameScenes().optCurrentGameScene().orElse(null),
-            app.currentGameContext().optLevel().orElse(null)
+            app.currentGameContext().session().optLevel().orElse(null)
         ));
 
         cbMiniViewVisible = checkBox("Mini View", vm.miniView.activeProperty);

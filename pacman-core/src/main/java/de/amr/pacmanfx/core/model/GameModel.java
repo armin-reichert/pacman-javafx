@@ -4,40 +4,16 @@
 
 package de.amr.pacmanfx.core.model;
 
-import de.amr.pacmanfx.core.entities.LevelCounter;
-import de.amr.pacmanfx.core.entities.Score;
-import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
-import de.amr.pacmanfx.core.entities.score.comp.ScorePersistencyComp;
 import de.amr.pacmanfx.core.gameplay.ArcadeHouseGateKeeper;
-import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelector;
-import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-
-import java.util.Optional;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * Base class of all Pac-Man game model classes.
  */
 public abstract class GameModel {
-
-    // Data
-
-    private boolean playing;
-
-    protected final Score score;
-
-    protected Score highScore;
-
-    protected GameLevel level;
-
-    //TODO do not store entity in model!
-    protected final LevelCounter levelCounter;
 
     protected WorldMapSelector mapSelector;
 
@@ -48,12 +24,7 @@ public abstract class GameModel {
     // Constructor
 
     protected GameModel() {
-        score = new Score();
-        levelCounter = new LevelCounter();
         gateKeeper = new ArcadeHouseGateKeeper();
-
-        LevelCounterSystem.enable(levelCounter, true);
-        LevelCounterSystem.setCapacity(levelCounter, 7);
     }
 
     /* -------------------------------------------------------------------------
@@ -74,46 +45,9 @@ public abstract class GameModel {
         return gateKeeper;
     }
 
-    public Score highScore() {
-        return highScore;
-    }
-
-    public LevelCounter levelCounter() {
-        return levelCounter;
-    }
-
-    public Score score() {
-        return score;
-    }
-
-    public void setHighScore(Score score) {
-        highScore = requireNonNull(score);
-        score.requireComp(ScorePersistencyComp.class);
-    }
-
     public WorldMapSelector mapSelector() {
         return mapSelector;
     }
 
     public abstract GameRules rules();
-
-    public boolean isPlaying() {
-        return playing;
-    }
-
-    public void setPlaying(boolean playing) {
-        this.playing = playing;
-    }
-
-    public void setLevel(GameLevel level) {
-        this.level = level;
-    }
-
-    public Optional<GameLevel> optLevel() {
-        return Optional.ofNullable(level);
-    }
-
-    public GameLevel assertLevel() {
-        return optLevel().orElseThrow();
-    }
 }

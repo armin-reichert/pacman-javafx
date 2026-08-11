@@ -31,7 +31,7 @@ public final class GameState_EatingGhost extends GameState {
     public void onUpdate(GameContext gameContext) {
         final GhostStateSystem ghostStateSystem = gameContext.systems().ghostState();
         final SpriteAnimSystem spriteAnimSystem = gameContext.systems().spriteAnim();
-        final GameLevel level = gameContext.assertLevel();
+        final GameLevel level = gameContext.session().assertLevel();
 
         level.heartbeat().triggerPulse();
 

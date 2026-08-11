@@ -16,6 +16,7 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.session.GameSession;
 
 import java.util.List;
 
@@ -35,10 +36,11 @@ public class LevelMediumTestState extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext gameContext) {
-        final GamePlay gamePlay = gameContext.gamePlay();
-        final GameModel model = gameContext.model();
-        final GameEventManager eventManager = gameContext.eventManager();
+    public void onEnter(GameContext game) {
+        final GamePlay gamePlay = game.gamePlay();
+        final GameModel model = game.model();
+        final GameEventManager eventManager = game.eventManager();
+        final GameSession session = game.session();
 
         lastTestedLevelNumber = model.rules().lastLevelNumber() == Integer.MAX_VALUE
             ? 25
@@ -46,57 +48,56 @@ public class LevelMediumTestState extends GameState {
 
         timer().restartSeconds(TEST_DURATION_SEC);
 
-        gamePlay.resetForNewGame(gameContext);
-        gamePlay.buildNormalLevel(gameContext, 1, model.initialLifeCount());
-        gamePlay.startLevel(gameContext);
-        configureLevelForTest(gameContext);
+        gamePlay.buildNormalLevel(game, 1, model.initialLifeCount());
+        gamePlay.startLevel(game);
+        configureLevelForTest(game);
 
         // Note: This event is very important because it triggers the creation of the actor animations!
-        eventManager.publishGameEvent(new LevelStartedEvent(model.assertLevel()));
+        eventManager.publishGameEvent(new LevelStartedEvent(session.assertLevel()));
     }
 
     @Override
-    public void onUpdate(GameContext gameContext) {
-        final GameModel model = gameContext.model();
-        final GameLevel level = gameContext.assertLevel();
-        final GameEventManager eventManager = gameContext.eventManager();
+    public void onUpdate(GameContext game) {
+        final GameModel model = game.model();
+        final GameLevel level = game.session().assertLevel();
+        final GameEventManager eventManager = game.eventManager();
 
         if (timer().hasExpired()) {
             if (level.number() == lastTestedLevelNumber) {
                 // All levels tested, return to intro page
                 eventManager.publishGameEvent(new StopAllSoundsEvent());
-                gameContext.flow().enterState(gameContext, CommonGameStateID.GAME_INTRO);
+                game.flow().enterState(game, CommonGameStateID.GAME_INTRO);
             }
             else {
                 // Test next level
-                gameContext.gamePlay().startNextLevel(gameContext);
-                configureLevelForTest(gameContext);
+                game.gamePlay().startNextLevel(game);
+                configureLevelForTest(game);
                 timer().restartSeconds(TEST_DURATION_SEC);
             }
         }
         else {
-            gameContext.gamePlay().hunt(gameContext, level);
+            game.gamePlay().hunt(game, level);
             if (model.rules().isLevelCompleted(level)) {
-                gameContext.flow().enterState(gameContext, CommonGameStateID.GAME_INTRO);
+                game.flow().enterState(game, CommonGameStateID.GAME_INTRO);
             }
-            else if (gameContext.thisFrame().huntingStep().pacKilled()) {
+            else if (game.thisFrame().huntingStep().pacKilled()) {
                 triggerTimeout();
             }
-            else if (gameContext.thisFrame().huntingStep().hasGhostBeenKilled()) {
-                gameContext.flow().enterState(gameContext, CommonGameStateID.GAME_LEVEL_EATING_GHOST);
+            else if (game.thisFrame().huntingStep().hasGhostBeenKilled()) {
+                game.flow().enterState(game, CommonGameStateID.GAME_LEVEL_EATING_GHOST);
             }
         }
     }
 
     @Override
-    public void onExit(GameContext gameContext) {
-        final GameModel gameModel = gameContext.model();
-        LevelCounterSystem.clear(gameModel.levelCounter());
+    public void onExit(GameContext game) {
+        LevelCounterSystem.clear(game.session().levelCounter());
     }
 
-    private void configureLevelForTest(GameContext gameContext) {
-        final GameSystems sys = gameContext.systems();
-        final GameLevel level = gameContext.assertLevel();
+    private void configureLevelForTest(GameContext game) {
+        final GameSystems sys = game.systems();
+        final GameSession session = game.session();
+        final GameLevel level = session.assertLevel();
         final Pac pac = level.entities().pac();
 
         pac.show();
@@ -112,7 +113,7 @@ public class LevelMediumTestState extends GameState {
             sys.spriteAnim().playSelected(ghost);
         });
 
-        gameContext.hudState().show();
-        gameContext.eventManager().publishGameEvent(new StopAllSoundsEvent());
+        session.hud().show();
+        game.eventManager().publishGameEvent(new StopAllSoundsEvent());
     }
 }

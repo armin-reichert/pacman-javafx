@@ -27,6 +27,7 @@ import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
@@ -86,7 +87,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
             return;
         }
         if (gameState.id() instanceof TestStateID) {
-            handleTestState(appContext().ui().viewModel().common3D, gameContext().assertLevel());
+            handleTestState(appContext().ui().viewModel().common3D, gameContext().session().assertLevel());
         }
         else if (CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(newState)) {
             onHuntingStart(assertLevel3D());
@@ -159,21 +160,22 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 
     @Override
     default void onLevelCreated(LevelCreatedEvent event) {
-        gameScene().replaceGameLevel3D(event.level());
+        gameScene().replaceGameLevel3D(gameContext(), event.level());
     }
 
     @Override
     default void onLevelStarted(LevelStartedEvent event) {
         final GameLevel level = event.level();
+        final GameSession session = gameContext().session();
         final GameLevel3D level3D = assertLevel3D();
         final GameContext gameContext = gameContext();
         final State<GameContext> newState = gameContext.state();
 
-        level3D.replaceLevelCounter3D();
+        level3D.replaceLevelCounter3D(gameContext.session().levelCounter());
 
         //TODO rethink this
         if (newState instanceof GameState gameState && gameState.id() instanceof TestStateID) {
-            gameScene().replaceGameLevel3D(level);
+            gameScene().replaceGameLevel3D(gameContext, level);
             level3D.animationManager().startEnergizerPumping();
             showMessage(level3D, LevelMessageType.TEST, level.number());
         }
@@ -181,7 +183,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         //TODO: workaround, check cause for invisible Pac-Man 3D after cut scene
         level.entities().pac().requireComp(Pac3DViewComp.class).root().setVisible(true);
 
-        gameScene().replaceActionBindings(level);
+        gameScene().replaceActionBindings(session, level);
         gameScene().fadeInAnimation().playFromStart();
     }
 
@@ -223,7 +225,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     @Override
     default void onPacGetsPower(PacGetsPowerEvent e) {
         final Pac pac = e.pac();
-        final GameLevel level = gameContext().assertLevel();
+        final GameLevel level = gameContext().session().assertLevel();
         final GameLevel3D level3D = assertLevel3D();
         final GameRules rules = gameContext().model().rules();
 
@@ -279,7 +281,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     }
 
     private void onPacManDying(AnimationRegistry animationRegistry) {
-        final GameLevel level = gameContext().assertLevel();
+        final GameLevel level = gameContext().session().assertLevel();
         final GameLevel3D level3D = assertLevel3D();
 
         gameContext().state().waitForTimeout();
@@ -305,23 +307,21 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     }
 
     private void onLevelComplete() {
-        final GameLevel3D level3D = assertLevel3D();
-        final GameLevel level = gameContext().model().assertLevel();
-        final House house = level.entities().theOne(House.class);
-
-        final boolean cutSceneFollows = !level.isDemoLevel()
-            && gameContext().model().rules().cutSceneAfterLevel(level.number()).isPresent();
         final GameUISettingsVM viewModel = appContext().ui().viewModel();
+        final GameSession session = gameContext().session();
+        final GameLevel level = session.assertLevel();
+        final House house = level.entities().theOne(House.class);
+        final boolean cutSceneFollows = !session.isDemoLevel()
+            && gameContext().model().rules().cutSceneAfterLevel(level.number()).isPresent();
 
         gameScene().scoreOpacity.set(0);
-
         House3DSystem.hideDoors(house);
 
         optSoundEffects().ifPresent(GameSoundEffects::stopAll);
+
+        final GameLevel3D level3D = assertLevel3D();
         level3D.animationManager().stopAll();
-
         level3D.cleanupFoodAndParticles();
-
         level.optBonus().ifPresent(bonus -> Bonus3DViewSystem.lookExpired(bonus, level3D.animationManager().registry()));
 
         MessageView3DAnimationSystem.hideMessageView(level.entities().theOne(MessageView.class));
@@ -375,10 +375,11 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     }
 
     private void onGameOver() {
+        final GameSession session = gameContext().session();
+        final GameLevel level = session.assertLevel();
         final GameLevel3D level3D = assertLevel3D();
-        final GameLevel level = gameContext().model().assertLevel();
 
-        if (!level.isDemoLevel() && RandomNumberSupport.chance(0.25)) {
+        if (!session.isDemoLevel() && RandomNumberSupport.chance(0.25)) {
             appContext().ui().shortMessage(Duration.seconds(2.5), textPicker().selectNextText());
         }
 
@@ -390,7 +391,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 
     private void handleTestState(Game3DSettingsVM globals3D, GameLevel level) {
         gameScene().optGameLevel3D().ifPresent(level3D -> {
-            gameScene().replaceGameLevel3D(level);
+            gameScene().replaceGameLevel3D(gameContext(), level);
             showMessage(level3D, LevelMessageType.TEST, level.number());
             globals3D.cameraPerspectiveIdProperty.set(PerspectiveID.TOTAL);
         });

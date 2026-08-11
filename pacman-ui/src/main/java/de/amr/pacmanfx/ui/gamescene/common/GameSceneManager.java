@@ -6,16 +6,15 @@ package de.amr.pacmanfx.ui.gamescene.common;
 
 import de.amr.basics.Named;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
-import de.amr.pacmanfx.ui.gamescene.d3.GameLevel3D;
-import de.amr.pacmanfx.ui.gamescene.d3.PlayScene3D;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounter3DViewSystem;
+import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
+import de.amr.pacmanfx.ui.gamescene.d3.PlayScene3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -59,7 +58,7 @@ public class GameSceneManager {
         final GameVariantConfig variantConfig = appContext.variants().currentVariant().config();
         final GameContext gameContext = appContext.currentGameContext();
         final GameModel model = gameContext.model();
-
+        final GameSession session = gameContext.session();
         final GameScene currentGameScene = optCurrentGameScene().orElse(null);
         final GameScene nextGameScene = variantConfig.gameSceneConfig().selectGameScene(appContext, model).orElse(null);
 
@@ -77,7 +76,7 @@ public class GameSceneManager {
         appContext.ui().views().gamePlayView().replaceGameScene(currentGameScene, nextGameScene);
 
         //TODO rethink this
-        model.optLevel().ifPresent(_ -> handle2D3DSwitch(variantConfig, gameContext, currentGameScene, nextGameScene));
+        session.optLevel().ifPresent(_ -> handle2D3DSwitch(variantConfig, gameContext, currentGameScene, nextGameScene));
 
         currentGameSceneProperty().set(nextGameScene);
     }
@@ -138,18 +137,16 @@ public class GameSceneManager {
                 .formatted(nextGameScene.getClass().getSimpleName()));
         }
 
-        final GameLevel level = gameContext.assertLevel();
-        final LivesCounter livesCounter = level.entities().theOne(LivesCounter.class);
+        final GameSession session = gameContext.session();
+        final GameLevel level = session.assertLevel();
         final Pac pac = level.entities().pac();
 
-        playScene3D.replaceGameLevel3D(level);
-        final GameLevel3D level3D = playScene3D.optGameLevel3D().orElseThrow();
-
-        playScene3D.replaceActionBindings(level);
+        playScene3D.replaceGameLevel3D(gameContext, level);
+        playScene3D.replaceActionBindings(session, level);
         playScene3D.initFood3D(level, true);
-        playScene3D.updateHUD3D(level);
+        playScene3D.updateHUD3D(gameContext);
 
-        LivesCounter3DViewSystem.startTracking(livesCounter, pac);
+        LivesCounter3DViewSystem.startTracking(session.livesCounter(), pac);
 
         if (pac.power().isActive()) {
             variantConfig.optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);

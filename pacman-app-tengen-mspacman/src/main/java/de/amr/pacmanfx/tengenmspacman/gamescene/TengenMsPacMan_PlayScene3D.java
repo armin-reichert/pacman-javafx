@@ -6,6 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.gamescene;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.model.Difficulty;
@@ -47,7 +48,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     @Override
     protected void addAdditional3DLevelElements(GameLevel3D level3D) {
         // If any of the default level settings has been changed, display the level info
-        gameModel().optLevel().ifPresent(_ -> {
+        gameContext().session().optLevel().ifPresent(_ -> {
             if (!gameModel().allOptionsHaveDefaultValue()) {
                 final ImageView levelInfo = createLevelInfoView(gameContext(), level3D);
                 level3D.getChildren().add(levelInfo);
@@ -56,7 +57,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     }
 
     private ImageView createLevelInfoView(GameContext gameContext, GameLevel3D level3D) {
-        final GameLevel level = gameContext.assertLevel();
+        final GameLevel level = gameContext.session().assertLevel();
         final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) gameContext.model();
 
         final ImageView levelInfo = new ImageView();
@@ -112,13 +113,13 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     }
 
     @Override
-    public void replaceActionBindings(GameLevel level) {
+    public void replaceActionBindings(GameSession session, GameLevel level) {
         actionBindings().dispose();
 
         final var actions = appContext().getExtensionValue(
             TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
 
-        if (level.isDemoLevel()) {
+        if (session.isDemoLevel()) {
             // In demo level, allow going back to options screen
             actionBindings().selectAnyMatchingBinding(actions.actionQuitDemoLevel(), actions.localBindings());
         } else {
@@ -132,9 +133,10 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     }
 
     @Override
-    public void updateHUD3D(GameLevel level) {
+    public void updateHUD3D(GameContext gameContext) {
         optScoresView().ifPresent(scores3D -> {
-            final Score score = level.gameModel().score(), highScore = level.gameModel().highScore();
+            final GameSession session = gameContext.session();
+            final Score score = session.score(), highScore = session.highScore();
             if (score.data().isEnabled()) {
                 scores3D.showScore(score.data().points(), score.data().levelNumber());
             } else {

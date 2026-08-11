@@ -5,10 +5,10 @@
 package de.amr.pacmanfx.tengenmspacman.flow;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.gameplay.GameFlowController;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.session.GameSession;
 
 public class GameLevelCompleteState extends GameState {
 
@@ -18,30 +18,30 @@ public class GameLevelCompleteState extends GameState {
 
     @Override
     public void onEnter(GameContext gameContext) {
-        gameContext.gamePlay().onLevelCompleted(gameContext, gameContext.assertLevel());
+        gameContext.gamePlay().onLevelCompleted(gameContext, gameContext.session().assertLevel());
         waitForTimeout(); // Wait for UI to trigger timeout
     }
 
     @Override
-    public void onUpdate(GameContext gameContext) {
-        final GameFlowController flow = gameContext.flow();
-
-        if (gameContext.assertLevel().isDemoLevel()) {
-            flow.enterState(gameContext, TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME);
+    public void onUpdate(GameContext game) {
+        if (game.session().isDemoLevel()) {
+            game.flow().enterState(game, TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME);
             return;
         }
 
         if (timer().hasExpired()) {
-            flow.enterState(gameContext, computeNextState(gameContext, flow.cutScenesEnabled()));
+            game.flow().enterState(game,
+                computeNextState(game, game.flow().cutScenesEnabled()));
         }
     }
 
-    private CommonGameStateID computeNextState(GameContext gameContext, boolean cutScenesEnabled) {
-        final GameLevel level = gameContext.assertLevel();
-        if (level.isDemoLevel()) { // Just in case: if demo level is completed, go back to intro scene
+    private CommonGameStateID computeNextState(GameContext game, boolean cutScenesEnabled) {
+        final GameSession session = game.session();
+        final GameLevel level = session.assertLevel();
+        if (session.isDemoLevel()) { // Just in case: if demo level is completed, go back to intro scene
             return CommonGameStateID.GAME_INTRO;
         }
-        final boolean cutSceneFollows = gameContext.model().rules().cutSceneAfterLevel(level.number()).isPresent();
+        final boolean cutSceneFollows = game.model().rules().cutSceneAfterLevel(level.number()).isPresent();
         if (cutSceneFollows && cutScenesEnabled) {
             return CommonGameStateID.GAME_LEVEL_INTERMISSION;
         }

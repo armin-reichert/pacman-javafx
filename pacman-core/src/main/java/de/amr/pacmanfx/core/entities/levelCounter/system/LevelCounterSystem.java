@@ -25,7 +25,7 @@ public class LevelCounterSystem {
             data.symbolCodes().clear();
             data.setEnabled(true);
         }
-        if (data.isEnabled()) {
+        if (data.isEnabled() && data.capacity() > 0) {
             if (data.symbolCodes().size() == data.capacity()) {
                 data.symbolCodes().removeFirst();
             }

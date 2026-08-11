@@ -174,7 +174,7 @@ public final class ArcadeHouseGateKeeper {
         }
 
         // check Pac-Man starving ticks
-        final GameLevel level = gameContext.assertLevel();
+        final GameLevel level = gameContext.session().assertLevel();
         final Pac pac = level.entities().pac();
         final PacDigestionSystem digestionSystem = gameContext.systems().pacDigestion();
         if (pac.digestion().starvingTicks() >= pacStarvingLimit) {
@@ -217,7 +217,7 @@ public final class ArcadeHouseGateKeeper {
 
         final GameSystems sys = gameContext.systems();
 
-        final GameLevel level = gameContext.assertLevel();
+        final GameLevel level = gameContext.session().assertLevel();
         final House house = level.entities().theOne(House.class);
         final Ghost blinky = level.ghost(GhostPersonality.RED_GHOST_SHADOW);
 

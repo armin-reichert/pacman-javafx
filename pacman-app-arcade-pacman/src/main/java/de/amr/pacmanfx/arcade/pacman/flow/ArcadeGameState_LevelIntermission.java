@@ -8,7 +8,8 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.gameplay.GameFlowController;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
-import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.HUDState;
+import de.amr.pacmanfx.core.session.GameSession;
 
 public class ArcadeGameState_LevelIntermission extends GameState {
 
@@ -18,21 +19,23 @@ public class ArcadeGameState_LevelIntermission extends GameState {
 
     @Override
     public void onEnter(GameContext gameContext) {
-        gameContext.hudState().hideCredit().hideScore().showLevelCounter().hideLivesCounter().show();
+        final HUDState hudState = gameContext.session().hud();
+        hudState.hideCredit().hideScore().showLevelCounter().hideLivesCounter().show();
         waitForTimeout();
     }
 
     @Override
     public void onUpdate(GameContext gameContext) {
+        final GameSession session = gameContext.session();
         final GameFlowController gameFlow = gameContext.flow();
-        final GameModel model = gameContext.model();
         if (timer().hasExpired()) {
-            gameFlow.enterState(gameContext, model.isPlaying() ? CommonGameStateID.GAME_LEVEL_TRANSITION : CommonGameStateID.GAME_INTRO);
+            gameFlow.enterState(gameContext, session.isPlaying() ? CommonGameStateID.GAME_LEVEL_TRANSITION : CommonGameStateID.GAME_INTRO);
         }
     }
 
     @Override
     public void onExit(GameContext gameContext) {
-        gameContext.hudState().hideCredit().showScore().showLevelCounter().showLivesCounter().show();
+        gameContext.session().hud()
+            .hideCredit().showScore().showLevelCounter().showLivesCounter().show();
     }
 }

@@ -8,6 +8,7 @@ import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.Ghost;
+import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 
 public class Ghost3DTransformController {
@@ -33,10 +34,9 @@ public class Ghost3DTransformController {
             case DOWN  -> 270;
         });
 
-        gameContext.optLevel().ifPresent(level -> {
-            final boolean outside = center.x() < WorldMap.HTS
-                || center.x() > WorldMap.TS * level.worldMap().numCols() - WorldMap.HTS;
-            ghost3D.root().setVisible(ghost.isVisible() && !outside);
-        });
+        final GameLevel level = gameContext.session().assertLevel();
+        final boolean outside = center.x() < WorldMap.HTS
+            || center.x() > WorldMap.TS * level.worldMap().numCols() - WorldMap.HTS;
+        ghost3D.root().setVisible(ghost.isVisible() && !outside);
     }
 }

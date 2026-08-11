@@ -8,10 +8,10 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
@@ -45,10 +45,10 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D
 
     @Override
     public void onTick(GameContext gameContext) {
-        gameContext().model().optLevel().ifPresent(level -> {
+        final GameSession session = gameContext.session();
+        session.optLevel().ifPresent(level -> {
             ActorAnimationManager.ensureActorAnimationsCreated(appContext(), level);
-            final LivesCounter livesCounter = level.entities().theOne(LivesCounter.class);
-            updateLivesCounter(livesCounter, level.entities().pac());
+            updateLivesCounter(session, level.entities().pac());
             optSoundEffects().ifPresent(sfx -> sfx.playAmbientGameLevelSound(gameContext(), level));
         });
     }
@@ -94,7 +94,8 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D
 
     @Override
     public void onEnteredFrom3DScene() {
-        gameContext().model().optLevel().ifPresent(this::acceptGameLevel);
+        final GameSession session = gameContext().session();
+        session.optLevel().ifPresent(level -> acceptGameLevel(session, level));
     }
 
     public void setLevelCompletedAnimation(LevelCompletedAnimation levelCompletedAnimation) {
@@ -107,11 +108,11 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D
     }
 
     @Override
-    public void acceptGameLevel(GameLevel level) {
+    public void acceptGameLevel(GameSession session, GameLevel level) {
         final Vector2i terrainSize = level.worldMap().terrainLayer().sizeInPixel();
         unscaledWidthProperty().set(terrainSize.x());
         unscaledHeightProperty().set(terrainSize.y());
-        if (level.isDemoLevel()) {
+        if (session.isDemoLevel()) {
             acceptDemoLevel();
         } else {
             acceptNormalLevel(level);
@@ -136,10 +137,10 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D
     }
 
     // While Pac-Man is not yet visible on game/level start, an additional lives symbol more is shown in the counter
-    private void updateLivesCounter(LivesCounter livesCounter, Pac pac) {
+    private void updateLivesCounter(GameSession session, Pac pac) {
         final boolean oneMore = CommonGameStateID.GAME_OR_LEVEL_STARTING.hasSameNameAs(gameContext().state()) && !pac.isVisible();
-        final int livesToDisplay = livesCounter.data().numLives() - 1 + (oneMore ? 1 : 0);
-        final int livesDisplayed = Math.clamp(livesToDisplay, 0, gameContext().hudState().maxLivesShown());
-        gameContext().hudState().setLivesCount(livesDisplayed);
+        final int livesToDisplay = session.livesCounter().data().numLives() - 1 + (oneMore ? 1 : 0);
+        final int livesDisplayed = Math.clamp(livesToDisplay, 0, session.hud().maxLivesShown());
+        session.hud().setLivesCount(livesDisplayed);
     }
 }

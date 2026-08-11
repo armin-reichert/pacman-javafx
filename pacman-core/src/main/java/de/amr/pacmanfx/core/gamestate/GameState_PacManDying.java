@@ -15,6 +15,7 @@ import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.core.event.pac.PacDeadEvent;
 import de.amr.pacmanfx.core.event.pac.PacDyingEvent;
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.session.GameSession;
 
 import static java.util.Objects.requireNonNull;
 
@@ -37,7 +38,8 @@ public final class GameState_PacManDying extends GameState {
     public void onEnter(GameContext game) {
         requireNonNull(game);
 
-        final GameLevel level = game.assertLevel();
+        final GameLevel level = game.session().assertLevel();
+
         final Pac pac = level.entities().pac();
 
         game.model().gateKeeper().resetCounterAndSetEnabled(true);
@@ -56,20 +58,20 @@ public final class GameState_PacManDying extends GameState {
     }
 
     @Override
-    public void onUpdate(GameContext gameContext) {
-        final GameLevel level = gameContext.assertLevel();
-        final LivesCounter livesCounter = level.entities().theOne(LivesCounter.class);
+    public void onUpdate(GameContext game) {
+        final GameSession session = game.session();
+        final GameLevel level = session.assertLevel();
+        final LivesCounter livesCounter = session.livesCounter();
         final Pac pac = level.entities().pac();
-
         final long tick = timer().tickCount();
 
         if (timer().hasExpired()) {
-            if (level.isDemoLevel()) {
-                gameContext.flow().enterState(gameContext, CommonGameStateID.GAME_OVER);
+            if (session.isDemoLevel()) {
+                game.flow().enterState(game, CommonGameStateID.GAME_OVER);
             } else {
                 LivesCounterSystem.subtractLife(livesCounter);
                 final boolean gameOver = livesCounter.data().numLives() == 0;
-                gameContext.flow().enterState(gameContext,
+                game.flow().enterState(game,
                     gameOver ? CommonGameStateID.GAME_OVER : CommonGameStateID.GAME_OR_LEVEL_STARTING);
             }
             return;
@@ -81,20 +83,20 @@ public final class GameState_PacManDying extends GameState {
         }
         else if (tick == timing.animationStartTick()) {
             pac.animation().setStartDying(true);
-            gameContext.eventManager().publishGameEvent(new PacDyingEvent(pac));
+            game.eventManager().publishGameEvent(new PacDyingEvent(pac));
         }
         else if (tick == timing.hidePacTick()) {
             pac.hide();
-            level.optBonus().ifPresent(bonus -> gameContext.systems().bonusState().setInactive(bonus));
+            level.optBonus().ifPresent(bonus -> game.systems().bonusState().setInactive(bonus));
         }
         else if (tick == timing.pacDeadTick()) {
-            gameContext.eventManager().publishGameEvent(new PacDeadEvent(pac));
+            game.eventManager().publishGameEvent(new PacDeadEvent(pac));
         }
         else {
             level.heartbeat().triggerPulse();
-            gameContext.systems().pacState().update(pac);
+            game.systems().pacState().update(pac);
         }
 
-        gameContext.systems().pacAnimation().update(pac);
+        game.systems().pacAnimation().update(pac);
     }
 }

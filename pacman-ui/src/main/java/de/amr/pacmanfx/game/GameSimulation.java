@@ -40,7 +40,13 @@ public final class GameSimulation {
     }
 
     private static void renderCurrentView(GameAppContext appContext) {
-        Platform.runLater(() -> appContext.ui().views().assertCurrentView().render());
+        Platform.runLater(() -> {
+            try {
+                appContext.ui().views().assertCurrentView().render();
+            } catch (Exception x) {
+                Logger.error(x);
+            }
+        });
     }
 
     private static void handleFatalError(GameAppContext appContext, Throwable reason) {

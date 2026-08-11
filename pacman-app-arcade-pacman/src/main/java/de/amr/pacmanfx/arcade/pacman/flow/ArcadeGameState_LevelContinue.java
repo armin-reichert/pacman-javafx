@@ -12,6 +12,7 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
+import de.amr.pacmanfx.core.session.GameSession;
 
 public class ArcadeGameState_LevelContinue extends GameState {
 
@@ -23,15 +24,16 @@ public class ArcadeGameState_LevelContinue extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext gameContext) {
-        final GameLevel level = gameContext.assertLevel();
+    public void onEnter(GameContext game) {
+        final GameSession session = game.session();
+        final GameLevel level = session.assertLevel();
 
-        gameContext.gamePlay().prepareLevelForPlaying(gameContext);
+        game.gamePlay().prepareLevelForPlaying(game);
         level.entities().pac().show();
         level.entities().ghosts().forEach(GameEntity::show);
 
-        gameContext.gamePlay().showLevelMessage(level, GameLevelMessageType.READY);
-        gameContext.hudState().hideCredit().showLivesCounter();
+        game.gamePlay().showLevelMessage(level, GameLevelMessageType.READY);
+        session.hud().hideCredit().showLivesCounter();
     }
 
     @Override

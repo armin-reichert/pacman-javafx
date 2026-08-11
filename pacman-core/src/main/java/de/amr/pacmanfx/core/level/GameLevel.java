@@ -92,7 +92,6 @@ public class GameLevel {
     private byte currentBonusIndex; // -1=no bonus, 0=first, 1=second
     private GameLevelMessage message;
 
-    private boolean demoLevel;
     private int gameOverStateTicks;
     private long startTimeMillis;
     private float pacPowerSeconds;
@@ -218,17 +217,6 @@ public class GameLevel {
         requireNonNull(ghost);
         return ghostKillChain.indexOf(ghost);
     }
-
-    /**
-     * @return {@code true} if this is a demo level (attract mode)
-     */
-    public boolean isDemoLevel() { return demoLevel; }
-
-    /**
-     * Makes this level into a demo level.
-     * @param demoLevel {@code true} if this level should become a demo level
-     */
-    public void setDemoLevel(boolean demoLevel) { this.demoLevel = demoLevel; }
 
     /**
      * Record the start time of this level in milliseconds.

@@ -1,5 +1,6 @@
 package de.amr.pacmanfx.core.entities.score.system;
 
+import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.core.entities.score.comp.ScoreDataComp;
 import de.amr.pacmanfx.core.entities.score.comp.ScorePersistencyComp;
@@ -15,7 +16,21 @@ import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.Properties;
 
+import static java.util.Objects.requireNonNull;
+
 public class ScoreSystem {
+
+    /**
+     * High score file for game variant "YYZ" is stored as "highscore-yyz.xml" inside user home directory.
+     *
+     * @param variantName name of the game variant e.g. "MS_PACMAN"
+     * @return high score file name for this game variant
+     */
+    public static File highScoreFile(String variantName) {
+        requireNonNull(variantName);
+        final String fileName = "highscore-%s.xml".formatted(variantName.toLowerCase());
+        return new File(GameConstants.USER_HOME_DIR, fileName);
+    }
 
     public static void setPoints(Score score, int points) {
         score.data().setPoints(points);

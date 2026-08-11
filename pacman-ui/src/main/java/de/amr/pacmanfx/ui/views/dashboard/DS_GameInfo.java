@@ -18,6 +18,7 @@ import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
+import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import javafx.scene.paint.Color;
@@ -48,7 +49,7 @@ public class DS_GameInfo extends GameDashboardSection {
         );
 
         addDynamicInfo("Level Number", fnGameLevelInfo(appContext,
-            level -> (level.isDemoLevel() ? "%d (Demo Level)" : "%d").formatted(level.number()))
+            level -> (appContext.currentGameContext().session().isDemoLevel() ? "%d (Demo Level)" : "%d").formatted(level.number()))
         );
 
         addDynamicInfo("World Map", fnGameLevelInfo(appContext,
@@ -99,9 +100,10 @@ public class DS_GameInfo extends GameDashboardSection {
         GameAppContext appContext,
         BiFunction<GameLevel, ActorSpeedRules, String> fnInfo) {
         return () -> {
+            final GameSession session = appContext.currentGameContext().session();
             final GameModel model = appContext.currentGameContext().model();
             final ActorSpeedRules speedControl = model.rules().actorSpeedRules();
-            return model.optLevel().map(level -> fnInfo.apply(level, speedControl)).orElse(NO_INFO);
+            return session.optLevel().map(level -> fnInfo.apply(level, speedControl)).orElse(NO_INFO);
         };
     }
 

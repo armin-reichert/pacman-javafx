@@ -27,6 +27,7 @@ import de.amr.pacmanfx.core.model.rules.HuntingTimer;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
+import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
 import de.amr.pacmanfx.tengenmspacman.model.*;
 import de.amr.pacmanfx.tengenmspacman.rules.TengenMsPacMan_GameRules;
@@ -54,39 +55,25 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     // Game start
 
     @Override
-    public void init(GameContext gameContext) {
-        requireNonNull(gameContext);
-        gameContext.model().init();
-        resetForNewGame(gameContext);
-        gameContext.hudState().hide();
-    }
-
-    @Override
-    public void resetForNewGame(GameContext gameContext) {
-        requireNonNull(gameContext);
-
-        if (!(gameContext.model() instanceof TengenMsPacMan_GameModel tengenModel)) {
-            throw new IllegalArgumentException("Illegal model type");
-        }
-
-        super.resetForNewGame(gameContext);
-        tengenModel.setBoosterActive(false);
+    public void onSessionStart(GameContext gameContext) {
+        super.onSessionStart(gameContext);
+        gameContext.session().hud().hide();
     }
 
     // Level building and level start
 
     @Override
     public GameLevel createLevel(GameContext gameContext, int levelNumber, boolean demoLevel) {
+        final GameSession session = gameContext.session();
         final WorldNavigationSystem navigator = gameContext.systems().worldNavigator();
-
         final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) gameContext.model();
-
         final WorldMap worldMap = model.mapSelector().supplyWorldMap(levelNumber, model.mapCategory());
-
         final var huntingTimer = new HuntingTimer("Tengen Ms. Pac-Man Hunting Timer", model.rules().numHuntingPhases());
 
         final GameLevel level = new GameLevel(model, levelNumber, worldMap, huntingTimer, 3);
-        level.setDemoLevel(demoLevel);
+
+        session.setLevel(level);
+        session.setDemoLevel(demoLevel);
 
         final House house = HouseFactory.createArcadeHouse(TengenMsPacMan_GameModel.HOUSE_MIN_TILE);
         level.entities().add(house);
@@ -114,10 +101,6 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         level.setBonusSymbolCode(0, model.rules().selectBonusSymbolCode(level.number(), 0));
         level.setBonusSymbolCode(1, model.rules().selectBonusSymbolCode(level.number(), 1));
 
-        final LivesCounter livesCounter = new LivesCounter();
-        level.entities().add(livesCounter);
-        // Value is set later
-
         level.entities().add(new MessageView());
 
         return level;
@@ -137,9 +120,12 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     @Override
     public GameLevel buildDemoLevel(GameContext gameContext) {
         requireNonNull(gameContext);
+
+        final GameSession session = gameContext.session();
         final GameSystems sys = gameContext.systems();
         final GameModel model = gameContext.model();
         final GameLevel demoLevel = createLevel(gameContext, 1, true);
+
         demoLevel.setGameOverStateTicks(120);
 
         final Pac pac = demoLevel.entities().pac();
@@ -154,7 +140,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
         model.gateKeeper().setLevelNumber(1);
 
-        ScoreSystem.setLevelNumber(model.score(), 1);
+        ScoreSystem.setLevelNumber(session.score(), 1);
 
         return demoLevel;
     }
@@ -172,7 +158,9 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         if (!(gameContext.model() instanceof TengenMsPacMan_GameModel tengenModel)) {
             throw new IllegalArgumentException("Illegal model type");
         }
-        GameLevel level = gameContext.assertLevel();
+
+        final GameSession session = gameContext.session();
+        final GameLevel level = session.assertLevel();
 
         level.recordStartTime(System.currentTimeMillis());
         prepareLevelForPlaying(gameContext);
@@ -186,14 +174,14 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         }
         showLevelMessage(level, GameLevelMessageType.READY);
 
-        final LevelCounter levelCounter = tengenModel.levelCounter();
+        final LevelCounter levelCounter = session.levelCounter();
         LevelCounterSystem.update(levelCounter, level.number(), level.bonusSymbolCode(0));
         if (LevelCounterSystem.isFull(levelCounter)) {
             LevelCounterSystem.enable(levelCounter, false);
             Logger.info("Level counter is full and gets disabled!");
         }
 
-        tengenModel.score().data().setEnabled(true);
+        session.score().data().setEnabled(true);
 
         //TODO fixme
         //context.cheats().update(level);

@@ -11,7 +11,6 @@ import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.gameplay.HuntingStepResult;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
-import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.rules.GameRules;
 import org.tinylog.Logger;
 
@@ -24,10 +23,9 @@ public final class GameState_PlayingLevel extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext gameContext) {
-        final GameSystems sys = gameContext.systems();
-
-        final GameLevel level = gameContext.model().assertLevel();
+    public void onEnter(GameContext game) {
+        final GameSystems sys = game.systems();
+        final GameLevel level = game.session().assertLevel();
         final Pac pac = level.entities().pac();
 
         level.optMessage()
@@ -41,32 +39,31 @@ public final class GameState_PlayingLevel extends GameState {
         level.entities().ghosts().forEach(sys.spriteAnim()::playSelected);
 
         // This call fires a game event!
-        level.huntingTimerStrategy().startFirstPhase(gameContext, level.number());
+        level.huntingTimerStrategy().startFirstPhase(game, level.number());
     }
 
     @Override
-    public void onUpdate(GameContext gameContext) {
-        final GameModel model = gameContext.model();
-        final GameLevel level = model.assertLevel();
+    public void onUpdate(GameContext game) {
+        final GameLevel level = game.session().assertLevel();
 
-        gameContext.gamePlay().hunt(gameContext, level);
-        logHuntingStepResult(gameContext.thisFrame().huntingStep());
+        game.gamePlay().hunt(game, level);
+        logHuntingStepResult(game.thisFrame().huntingStep());
 
-        gameContext.cheats().update(level);
-        gameContext.flow().enterState(gameContext, computeNextState(gameContext));
+        game.cheats().update(game);
+        game.flow().enterState(game, computeNextState(game));
     }
 
-    private CommonGameStateID computeNextState(GameContext gameContext) {
-        final GameLevel level = gameContext.assertLevel();
-        final GameRules rules = gameContext.model().rules();
+    private CommonGameStateID computeNextState(GameContext game) {
+        final GameLevel level = game.session().assertLevel();
+        final GameRules rules = game.model().rules();
 
         if (rules.isLevelCompleted(level)) {
             return CommonGameStateID.GAME_LEVEL_COMPLETE;
         }
-        else if (gameContext.thisFrame().huntingStep().pacKilled()) {
+        else if (game.thisFrame().huntingStep().pacKilled()) {
             return CommonGameStateID.GAME_LEVEL_PACMAN_DYING;
         }
-        else if (gameContext.thisFrame().huntingStep().hasGhostBeenKilled()) {
+        else if (game.thisFrame().huntingStep().hasGhostBeenKilled()) {
             return CommonGameStateID.GAME_LEVEL_EATING_GHOST;
         }
         return CommonGameStateID.GAME_LEVEL_PLAYING;

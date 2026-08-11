@@ -4,8 +4,10 @@
 
 package de.amr.pacmanfx.core.model;
 
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.session.GameSession;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 
@@ -49,8 +51,10 @@ public class GameCheats {
         pacUsingAutopilotProperty().set(false);
     }
 
-    public void update(GameLevel level) {
-        if (level.isDemoLevel() || !level.gameModel().isPlaying()) {
+    public void update(GameContext game) {
+        final GameSession session = game.session();
+        final GameLevel level = session.assertLevel();
+        if (session.isDemoLevel() || !game.session().isPlaying()) {
             return;
         }
         final Pac pac = level.entities().pac();

@@ -25,6 +25,7 @@ import de.amr.pacmanfx.core.model.rules.HuntingTimer;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
+import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
 import org.tinylog.Logger;
 
@@ -48,6 +49,8 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         requireNonNull(gameContext);
         requireValidLevelNumber(levelNumber);
 
+        final GameSession session = gameContext.session();
+
         final WorldNavigationSystem navigator = gameContext.systems().worldNavigator();
 
         final GameModel model = gameContext.model();
@@ -63,8 +66,10 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         final HuntingTimer huntingTimer = new HuntingTimer("Arcade Ms. Pac-Man Hunting Timer", model.rules().numHuntingPhases());
 
         final GameLevel level = new GameLevel(model, levelNumber, worldMap, huntingTimer, numFlashes);
-        level.setDemoLevel(demoLevel);
         level.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
+
+        session.setLevel(level);
+        session.setDemoLevel(demoLevel);
 
         final House house = HouseFactory.createArcadeHouse(houseMinTile);
         level.entities().add(house);
@@ -85,13 +90,9 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         level.setBonusSymbolCode(0, model.rules().selectBonusSymbolCode(level.number(), 0));
         level.setBonusSymbolCode(1, model.rules().selectBonusSymbolCode(level.number(), 1));
 
-        final LivesCounter livesCounter = new LivesCounter();
-        level.entities().add(livesCounter);
-        // Value is set later
-
         /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
          * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
-        LevelCounterSystem.enable(model.levelCounter(), levelNumber < 8);
+        LevelCounterSystem.enable(session.levelCounter(), levelNumber < 8);
 
         level.entities().add(new MessageView());
 
@@ -102,7 +103,9 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
     public void startLevel(GameContext gameContext) {
         super.startLevel(gameContext);
 
-        final LevelCounter levelCounter = gameContext.model().levelCounter();
+        final GameSession session = gameContext.session();
+
+        final LevelCounter levelCounter = session.levelCounter();
         if (LevelCounterSystem.isFull(levelCounter)) {
             LevelCounterSystem.enable(levelCounter, false);
             Logger.info("Level counter is full and gets disabled!");
@@ -142,11 +145,14 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
     @Override
     public GameLevel buildDemoLevel(GameContext gameContext) {
         requireNonNull(gameContext);
+
+        final GameSession session = gameContext.session();
+        final GameModel model = gameContext.model();
         final GameSystems sys = gameContext.systems();
 
-        final int demoLevelNumber = 1;
+        session.setDemoLevel(true);
 
-        final GameModel model = gameContext.model();
+        final int demoLevelNumber = 1;
         final GameLevel demoLevel = createLevel(gameContext, demoLevelNumber, true);
 
         final Pac pac = demoLevel.entities().pac();
@@ -159,12 +165,11 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         );
         pac.autoSteering().setSteering(steering);
 
+        //TODO move into session
         model.gateKeeper().setLevelNumber(demoLevelNumber);
-
-        ScoreSystem.setLevelNumber(model.score(), demoLevelNumber);
-
+        ScoreSystem.setLevelNumber(session.score(), demoLevelNumber);
         //TODO check this
-        LevelCounterSystem.enable(model.levelCounter(), true);
+        LevelCounterSystem.enable(session.levelCounter(), true);
 
         return demoLevel;
     }

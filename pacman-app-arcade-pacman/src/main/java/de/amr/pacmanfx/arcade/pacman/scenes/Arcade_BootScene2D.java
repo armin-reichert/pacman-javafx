@@ -40,6 +40,7 @@ public class Arcade_BootScene2D extends AbstractGameScene2D {
     @Override
     public void onActivate() {
         sceneState = SceneState.BLANK;
+        gameContext().session().hud().hide();
     }
 
     @Override

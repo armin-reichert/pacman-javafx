@@ -5,11 +5,11 @@
 package de.amr.pacmanfx.tengenmspacman.flow;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.gameplay.GameFlowController;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.HUDState;
+import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 
@@ -22,17 +22,18 @@ public class GameLevelIntermissionState extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext gameContext) {
-        final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) gameContext.model();
-        final GameLevel level = gameContext.assertLevel();
+    public void onEnter(GameContext game) {
+        final GameSession session = game.session();
+        final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) game.model();
+        final GameLevel level = session.assertLevel();
         final OptionalInt cutSceneNumber = model.rules().cutSceneAfterLevel(level.number());
         final boolean isLastCutScene = cutSceneNumber.isPresent()
             && cutSceneNumber.getAsInt() == model.rules().lastCutSceneNumber();
 
         if (isLastCutScene) {
-            gameContext.hudState().hide();
+            session.hud().hide();
         } else {
-            gameContext.hudState()
+            session.hud()
                 .hideGameOptions()
                 .hideScore()
                 .showLevelCounter()
@@ -44,22 +45,21 @@ public class GameLevelIntermissionState extends GameState {
 
     @Override
     public void onUpdate(GameContext gameContext) {
-        final GameFlowController flow = gameContext.flow();
-        final GameModel model = gameContext.model();
-
+        final GameSession session = gameContext.session();
         if (timer().hasExpired()) {
-            flow.enterState(gameContext, model.isPlaying() ? CommonGameStateID.GAME_LEVEL_TRANSITION : CommonGameStateID.GAME_INTRO);
+            gameContext.flow().enterState(gameContext, session.isPlaying()
+                ? CommonGameStateID.GAME_LEVEL_TRANSITION : CommonGameStateID.GAME_INTRO);
         }
     }
 
     @Override
-    public void onExit(GameContext gameContext) {
-        final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) gameContext.model();
+    public void onExit(GameContext game) {
+        final HUDState hudState = game.session().hud();
+        final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) game.model();
         if (model.mapCategory() == MapCategory.ARCADE) {
-            gameContext.hudState().hide();
-        }
-        else {
-            gameContext.hudState()
+            hudState.hide();
+        } else {
+            hudState
                 .showGameOptions()
                 .showScore()
                 .showLevelCounter()

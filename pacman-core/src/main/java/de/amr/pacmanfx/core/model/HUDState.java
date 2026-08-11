@@ -25,42 +25,6 @@ public class HUDState {
 
     private int livesCount;
 
-    //TODO this is Tengen specific
-
-    public final BooleanProperty levelNumberVisible = new SimpleBooleanProperty();
-
-    public final BooleanProperty gameOptionsVisible = new SimpleBooleanProperty();
-
-    public HUDState showGameOptions() {
-        gameOptionsVisible.set(true);
-        return this;
-    }
-
-    public HUDState hideGameOptions() {
-        gameOptionsVisible.set(false);
-        return this;
-    }
-
-    public boolean gameOptionsVisible() {
-        return gameOptionsVisible.get();
-    }
-
-    public HUDState showLevelNumber() {
-        levelNumberVisible.set(true);
-        return this;
-    }
-
-    public HUDState hideLevelNumber() {
-        levelNumberVisible.set(false);
-        return this;
-    }
-
-    public boolean isLevelNumberVisible() {
-        return levelNumberVisible.get();
-    }
-
-    // End of Tengen-specific part
-
     public HUDState() {}
 
     public void show() { visible.set(true); }
@@ -159,5 +123,39 @@ public class HUDState {
 
     public IntegerProperty creditProperty() {
         return credit;
+    }
+
+    //TODO this is Tengen specific
+
+    public final BooleanProperty levelNumberVisible = new SimpleBooleanProperty();
+
+    public final BooleanProperty gameOptionsVisible = new SimpleBooleanProperty();
+
+    public HUDState showGameOptions() {
+        gameOptionsVisible.set(true);
+        return this;
+    }
+
+    public HUDState hideGameOptions() {
+        gameOptionsVisible.set(false);
+        return this;
+    }
+
+    public boolean gameOptionsVisible() {
+        return gameOptionsVisible.get();
+    }
+
+    public HUDState showLevelNumber() {
+        levelNumberVisible.set(true);
+        return this;
+    }
+
+    public HUDState hideLevelNumber() {
+        levelNumberVisible.set(false);
+        return this;
+    }
+
+    public boolean isLevelNumberVisible() {
+        return levelNumberVisible.get();
     }
 }

@@ -14,6 +14,7 @@ import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
 import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
+import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig.MapConfigKey;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.sprites.*;
@@ -76,7 +77,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
     }
 
     @Override
-    public void drawLevel(GameLevel level, RenderInfo info) {
+    public void drawLevel(GameSession session, GameLevel level, RenderInfo info) {
         final WorldMap worldMap = level.worldMap();
         applyLevelSettings(level, info);
         if (info.getBoolean(CommonRenderInfoKey.MAP_BRIGHT)) {
@@ -99,7 +100,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         drawFood(level);
         level.optMessage().ifPresent(message -> {
             switch (message.type()) {
-                case GAME_OVER -> drawGameOverMessage(level, message);
+                case GAME_OVER -> drawGameOverMessage(session, level, message);
                 case READY -> drawReadyMessage(message);
             }
         });
@@ -156,9 +157,9 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         });
     }
 
-    private void drawGameOverMessage(GameLevel level, GameLevelMessage message) {
+    private void drawGameOverMessage(GameSession session, GameLevel level, GameLevelMessage message) {
         final NES_WorldMapColorScheme colorScheme = level.worldMap().getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
-        final Color color = level.isDemoLevel()
+        final Color color = session.isDemoLevel()
             ? Color.valueOf(colorScheme.wallStroke()) : assets.color("color.game_over_message");
         fillTextCentered(GAME_OVER_MESSAGE_TEXT, color, arcadeFont8(), message.pos().x(), message.pos().y());
     }

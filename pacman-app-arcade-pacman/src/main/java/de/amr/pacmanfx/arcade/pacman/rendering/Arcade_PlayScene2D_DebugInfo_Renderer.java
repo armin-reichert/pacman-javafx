@@ -13,6 +13,7 @@ import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.rules.HuntingTimerStrategy;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import javafx.scene.canvas.Canvas;
@@ -45,7 +46,8 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
     public void draw(AbstractGameScene2D scene, long tick) {
         drawTileGrid(scene.unscaledWidth(), scene.unscaledHeight(), Color.LIGHTGRAY);
 
-        scene.gameContext().model().optLevel().ifPresent(level -> {
+        final GameSession session = scene.gameContext().session();
+        session.optLevel().ifPresent(level -> {
             // We assume all ghosts have the same set of special terrain tiles
             level.ghost(GhostPersonality.RED_GHOST_SHADOW).worldPlacement().specialTerrainTiles().forEach(tile -> {
                 final double x = scaled(tile.x() * WorldMap.TS);

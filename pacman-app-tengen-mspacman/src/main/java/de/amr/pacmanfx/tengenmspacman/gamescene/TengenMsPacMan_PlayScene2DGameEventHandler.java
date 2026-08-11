@@ -54,7 +54,7 @@ public interface TengenMsPacMan_PlayScene2DGameEventHandler extends DefaultGameE
 
     @Override
     default void onGameContinued(GameContinuedEvent e) {
-        gameContext().model().optLevel().ifPresent(level -> {
+        gameContext().session().optLevel().ifPresent(level -> {
             gameScene().resetActorAnimations(gameContext().systems().spriteAnim(), level);
             gameScene().dynamicCamera().playIntroSequence();
             if (gameContext().gamePlay() instanceof TengenMsPacMan_GamePlay tengenGame) {
@@ -77,14 +77,14 @@ public interface TengenMsPacMan_PlayScene2DGameEventHandler extends DefaultGameE
     default void onGameStateChange(GameStateChangeEvent e) {
         Logger.info("Enter game state '{}'", e.newState().name());
         if (e.newState() == TengenMsPacMan_GameState.GAME_LEVEL_COMPLETE.state()) {
-            final GameLevel level = gameContext().model().assertLevel();
+            final GameLevel level = gameContext().session().assertLevel();
             optSoundEffects().ifPresent(GameSoundEffects::stopAll);
             gameScene().playLevelCompleteAnimation(level);
         }
         else if (e.newState() == TengenMsPacMan_GameState.GAME_OVER.state()) {
             final TengenMsPacMan_PlayScene2D playScene2D = gameScene();
             final PlayScene2DCamera camera = playScene2D.dynamicCamera();
-            final GameLevel level = gameContext().model().assertLevel();
+            final GameLevel level = gameContext().session().assertLevel();
             optSoundEffects().ifPresent(GameSoundEffects::stopAll);
             camera.enterManualMode();
             camera.setToTopPosition();
@@ -99,12 +99,12 @@ public interface TengenMsPacMan_PlayScene2DGameEventHandler extends DefaultGameE
 
     @Override
     default void onLevelCreated(LevelCreatedEvent e) {
-        gameScene().acceptGameLevel(e.level());
+        gameScene().acceptGameLevel(gameContext().session(), e.level());
     }
 
     @Override
     default void onLevelStarted(LevelStartedEvent e) {
-        gameContext().model().optLevel().ifPresent(
+        gameContext().session().optLevel().ifPresent(
             level -> gameScene().resetActorAnimations(gameContext().systems().spriteAnim(), level));
         gameScene().dynamicCamera().playIntroSequence();
     }

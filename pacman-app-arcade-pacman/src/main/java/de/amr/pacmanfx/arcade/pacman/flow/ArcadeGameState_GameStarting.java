@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.event.gameplay.LevelStartedEvent;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.session.GameSession;
 
 public class ArcadeGameState_GameStarting extends GameState {
 
@@ -25,16 +25,15 @@ public class ArcadeGameState_GameStarting extends GameState {
 
     @Override
     public void onEnter(GameContext gameContext) {
-        gameContext.hudState().hideCredit().showLivesCounter();
-        gameContext.gamePlay().resetForNewGame(gameContext);
+        gameContext.session().hud().hideCredit().showLivesCounter();
         gameContext.gamePlay().buildNormalLevel(gameContext, 1, gameContext.model().initialLifeCount());
         gameContext.eventManager().publishGameEvent(new GameStartedEvent(gameContext));
     }
 
     @Override
     public void onUpdate(GameContext gameContext) {
-        final GameModel model = gameContext.model();
-        final GameLevel level = gameContext.assertLevel();
+        final GameSession session = gameContext.session();
+        final GameLevel level = session.assertLevel();
         final long tick = timer().tickCount();
 
         if (tick == TICK_NEW_GAME_START_LEVEL) {
@@ -47,7 +46,7 @@ public class ArcadeGameState_GameStarting extends GameState {
             level.entities().ghosts().forEach(GameEntity::show);
         }
         else if (tick == TICK_NEW_GAME_START_PLAYING) {
-            model.setPlaying(true);
+            session.setPlaying(true);
             gameContext.flow().enterState(gameContext, CommonGameStateID.GAME_LEVEL_PLAYING);
         }
     }

@@ -8,14 +8,11 @@ import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.basics.fsm.State;
 import de.amr.basics.fsm.StateChangeListener;
 import de.amr.pacmanfx.core.GameClock;
-import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.core.entities.Score;
-import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.event.gameplay.GameStateChangeEvent;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
-import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -28,7 +25,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import org.tinylog.Logger;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,18 +34,6 @@ import static java.util.Objects.requireNonNull;
  * The Pac-Man games collection.
  */
 public final class PacManGameCollection implements GameAppContext, GameLifecycle {
-
-    /**
-     * High score file for game variant "YYZ" is stored as "highscore-yyz.xml" inside user home directory.
-     *
-     * @param variantName name of the game variant e.g. "MS_PACMAN"
-     * @return high score file name for this game variant
-     */
-    public static File highScoreFile(String variantName) {
-        requireNonNull(variantName);
-        final String fileName = "highscore-%s.xml".formatted(variantName.toLowerCase());
-        return new File(GameConstants.USER_HOME_DIR, fileName);
-    }
 
     private final GameVariantManagerImpl variantManager;
 
@@ -159,6 +143,8 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
 
     @Override
     public void startPlaying() {
+        final GameSession session = new GameSession(variants().currentVariantName());
+        gameContext.setSession(session);
         gameContext.flow().restartState(gameContext, CommonGameStateID.BOOT);
         ui.views().selectGamePlayView();
         GameSimulation.start(this);
@@ -281,16 +267,6 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
             if (testStatesIncluded) {
                 gameVariant.gameFlow().addTestStates();
             }
-            final GameModel model = gameVariant.gameModel();
-
-            final Score highScore = ScoreSystem.createPersistentScore(PacManGameCollection.highScoreFile(variantName));
-            model.setHighScore(highScore); //TODO remove from model
-
-            gameVariant.cheats().cheatUsedProperty().addListener((_, _, cheated) -> {
-                if (cheated) {
-                    highScore.data().setEnabled(false);
-                }
-            });
             return gameVariant;
         }
     }

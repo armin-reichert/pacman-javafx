@@ -14,12 +14,9 @@ import de.amr.pacmanfx.core.gameplay.GameFlowController;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.gameplay.HuntingStepResult;
 import de.amr.pacmanfx.core.gamestate.GameState;
-import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.HUDState;
-
-import java.util.Optional;
+import de.amr.pacmanfx.core.session.GameSession;
 
 import static java.util.Objects.requireNonNull;
 
@@ -34,14 +31,13 @@ public class GameContextImpl implements GameContext {
 
     private final GameEventManager eventManager;
 
-    private final HUDState hudState;
+    private GameSession session;
 
     private FrameContext thisFrame;
 
     public GameContextImpl(GameVariant gameVariant, CoinMechanism coinMechanism) {
         this.gameVariant = requireNonNull(gameVariant);
         this.coinMechanism = requireNonNull(coinMechanism);
-        this.hudState = new HUDState();
         this.eventManager = new DefaultGameEventManager();
     }
 
@@ -76,8 +72,13 @@ public class GameContextImpl implements GameContext {
     }
 
     @Override
-    public HUDState hudState() {
-        return hudState;
+    public void setSession(GameSession session) {
+        this.session = requireNonNull(session);
+    }
+
+    @Override
+    public GameSession session() {
+        return session;
     }
 
     @Override
@@ -88,16 +89,6 @@ public class GameContextImpl implements GameContext {
     @Override
     public GameSystems systems() {
         return gameVariant.systems();
-    }
-
-    @Override
-    public Optional<GameLevel> optLevel() {
-        return model().optLevel();
-    }
-
-    @Override
-    public GameLevel assertLevel() {
-        return model().assertLevel();
     }
 
     @Override

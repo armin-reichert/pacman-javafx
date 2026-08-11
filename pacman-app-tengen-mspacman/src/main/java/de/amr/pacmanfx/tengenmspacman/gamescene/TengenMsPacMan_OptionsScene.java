@@ -6,6 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.gamescene;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
+import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
@@ -71,7 +72,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene2D {
     @Override
     public void onActivate() {
         final TengenMsPacMan_GameModel model = tengenGameModel();
-        gameContext().hudState().hide();
+        gameContext().session().hud().hide();
 
         final var actions = appContext().getExtensionValue(
             TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
@@ -114,6 +115,8 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene2D {
 
     @Override
     public void onInput() {
+        final GameSession session = gameContext().session();
+
         if (input().joypad().isButtonPressed(JoypadButton.DOWN)) {
             selectedOption.set(selectedOption() + 1 < NUM_OPTIONS ? selectedOption() + 1 : 0);
         }
@@ -124,8 +127,8 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene2D {
         else if (input().joypad().isButtonPressed(JoypadButton.A) || input().keyboard().isKeyPressed(KeyCode.RIGHT)) {
             switch (selectedOption()) {
                 case OPTION_PAC_BOOSTER    -> setNextPacBoosterValue();
-                case OPTION_DIFFICULTY     -> setNextDifficultyValue();
-                case OPTION_MAZE_SELECTION -> setNextMapCategoryValue();
+                case OPTION_DIFFICULTY     -> setNextDifficultyValue(session);
+                case OPTION_MAZE_SELECTION -> setNextMapCategoryValue(session);
                 case OPTION_STARTING_LEVEL -> setNextStartLevelValue();
             }
         }
@@ -133,8 +136,8 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene2D {
         else if (input().joypad().isButtonPressed(JoypadButton.B) || input().keyboard().isKeyPressed(KeyCode.LEFT)) {
             switch (selectedOption()) {
                 case OPTION_PAC_BOOSTER    -> setPrevPacBoosterValue();
-                case OPTION_DIFFICULTY     -> setPrevDifficultyValue();
-                case OPTION_MAZE_SELECTION -> setPrevMapCategoryValue();
+                case OPTION_DIFFICULTY     -> setPrevDifficultyValue(session);
+                case OPTION_MAZE_SELECTION -> setPrevMapCategoryValue(session);
                 case OPTION_STARTING_LEVEL -> setPrevStartLevelValue();
             }
         }
@@ -157,39 +160,39 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene2D {
         optionValueChanged();
     }
 
-    private void setPrevMapCategoryValue() {
+    private void setPrevMapCategoryValue(GameSession session) {
         MapCategory category = tengenGameModel().mapCategory();
         var values = MapCategory.values();
         int current = category.ordinal(), prev = (current == 0) ? values.length - 1 :  current - 1;
         tengenGameModel().setMapCategory(values[prev]);
-        saveHighScore();
+        saveHighScore(session);
         optionValueChanged();
     }
 
-    private void setNextMapCategoryValue() {
+    private void setNextMapCategoryValue(GameSession session) {
         MapCategory category = tengenGameModel().mapCategory();
         var values = MapCategory.values();
         int current = category.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
         tengenGameModel().setMapCategory(values[next]);
-        saveHighScore();
+        saveHighScore(session);
         optionValueChanged();
     }
 
-    private void setPrevDifficultyValue() {
+    private void setPrevDifficultyValue(GameSession session) {
         Difficulty difficulty = tengenGameModel().difficulty();
         var values = Difficulty.values();
         int current = difficulty.ordinal(), prev = (current == 0) ? values.length - 1 : current - 1;
         tengenGameModel().setDifficulty(values[prev]);
-        saveHighScore();
+        saveHighScore(session);
         optionValueChanged();
     }
 
-    private void setNextDifficultyValue() {
+    private void setNextDifficultyValue(GameSession session) {
         Difficulty difficulty = tengenGameModel().difficulty();
         var values = Difficulty.values();
         int current = difficulty.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
         tengenGameModel().setDifficulty(values[next]);
-        saveHighScore();
+        saveHighScore(session);
         optionValueChanged();
     }
 
@@ -209,9 +212,9 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene2D {
         optionValueChanged();
     }
 
-    private void saveHighScore() {
+    private void saveHighScore(GameSession session) {
         try {
-            ScoreSystem.save(tengenGameModel().highScore());
+            ScoreSystem.save(session.highScore());
         } catch (IOException x) {
             Logger.error(x, "Could not save Tengen Ms. Pac-Man high score");
             //TODO Show message in UI
