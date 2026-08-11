@@ -6,7 +6,6 @@ package de.amr.pacmanfx.core.entities.levelCounter.system;
 
 
 import de.amr.pacmanfx.core.entities.LevelCounter;
-import de.amr.pacmanfx.core.entities.levelCounter.comp.LevelCounterData;
 
 public class LevelCounterSystem {
 

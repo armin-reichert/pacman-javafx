@@ -30,7 +30,7 @@ public class GameLevel3DUpdateController {
         GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE);
 
     public static void update3DSceneEntities(GameContext game, GameLevel3D level3D) {
-        updateLivesCounter3D(game, level3D);
+        updateLivesCounter3D(game);
         updateHouse3D(level3D);
         updatePac3D(level3D);
         updateGhosts3D(level3D);
@@ -45,7 +45,7 @@ public class GameLevel3DUpdateController {
         Pac3DAnimationSystem.updatePowerLight(pac);
     }
 
-    private static void updateLivesCounter3D(GameContext game, GameLevel3D level3D) {
+    private static void updateLivesCounter3D(GameContext game) {
         final GameSession session = game.session();
         LivesCounter3DViewSystem.update(session.livesCounter());
     }
