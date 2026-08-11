@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.core.model;
 
-import de.amr.pacmanfx.core.gameplay.ArcadeHouseGateKeeper;
 import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelector;
 
@@ -15,26 +14,14 @@ public abstract class GameModel {
 
     protected WorldMapSelector mapSelector;
 
-    protected final ArcadeHouseGateKeeper gateKeeper;
+    private int initialLifeCount = 3;
 
-    protected int initialLifeCount;
-
-    protected GameModel() {
-        gateKeeper = new ArcadeHouseGateKeeper();
+    public void setInitialLifeCount(int initialLifeCount) {
+        this.initialLifeCount = initialLifeCount;
     }
-
-    public abstract void init();
 
     public int initialLifeCount() {
         return initialLifeCount;
-    }
-
-    public void setInitialLifeCount(int count) {
-        initialLifeCount = count;
-    }
-
-    public ArcadeHouseGateKeeper gateKeeper() {
-        return gateKeeper;
     }
 
     public WorldMapSelector mapSelector() {

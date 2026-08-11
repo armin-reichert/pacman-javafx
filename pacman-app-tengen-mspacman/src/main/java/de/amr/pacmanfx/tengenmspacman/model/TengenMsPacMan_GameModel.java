@@ -62,6 +62,7 @@ public class TengenMsPacMan_GameModel extends GameModel {
         mapSelector = new TengenMsPacMan_MapSelector();
         rules = new TengenMsPacMan_GameRules();
         setDifficulty(Difficulty.NORMAL);
+        setInitialLifeCount(3);
     }
 
     public boolean allOptionsHaveDefaultValue() {
@@ -153,17 +154,6 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     // GameModel interface
-
-    @Override
-    public void init() {
-        mapSelector().loadMapPrototypes();
-        setInitialLifeCount(3);
-        setPacBoosterMode(DEFAULT_PAC_BOOSTER);
-        setDifficulty(DEFAULT_DIFFICULTY);
-        setMapCategory(DEFAULT_MAP_CATEGORY);
-        setStartLevelNumber(DEFAULT_START_LEVEL);
-        setNumContinues(DEFAULT_NUM_CONTINUES);
-    }
 
     @Override
     public TengenMsPacMan_MapSelector mapSelector() {

@@ -35,7 +35,7 @@ public class ArcadeGameState_LevelComplete extends GameState {
     private CommonGameStateID computeNextState(GameContext game, boolean cutScenesEnabled) {
         final GameSession session = game.session();
         final GameLevel level = session.assertLevel();
-        if (session.isDemoLevel()) {
+        if (session.isAttractMode()) {
             // just in case: if demo level was completed, go back to intro scene
             return CommonGameStateID.GAME_INTRO;
         }

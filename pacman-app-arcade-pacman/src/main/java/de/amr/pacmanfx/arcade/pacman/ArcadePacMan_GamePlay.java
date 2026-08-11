@@ -19,6 +19,7 @@ import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
+import de.amr.pacmanfx.core.gameplay.ArcadeHouseGateKeeper;
 import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
@@ -33,6 +34,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
 import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.core.steering.RouteGuidedSteering;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
+import org.tinylog.Logger;
 
 import java.util.List;
 import java.util.Set;
@@ -82,12 +84,16 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     // Game start
 
     @Override
-    public void onSessionStart(GameContext gameContext) {
-        super.onSessionStart(gameContext);
+    public void onSessionStart(GameContext game) {
+        super.onSessionStart(game);
 
-        final HUDState hudState = gameContext.session().hud();
-        hudState.creditProperty().bind(gameContext.coinMechanism().numCoinsProperty());
+        final GameSession session = game.session();
+
+        final HUDState hudState = session.hud();
+        hudState.creditProperty().bind(game.coinMechanism().numCoinsProperty());
         hudState.hide();
+
+        configureGateKeeper(session.gateKeeper());
     }
 
     // Level building and level start
@@ -114,7 +120,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         final GameLevel level = new GameLevel(model, levelNumber, worldMap, huntingTimer, levelData.numFlashes());
 
         session.setLevel(level);
-        session.setDemoLevel(demoLevel);
+        session.setAttractMode(demoLevel);
 
         final House house = HouseFactory.createArcadeHouse(houseMinTile);
         level.entities().add(house);
@@ -186,10 +192,10 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         requireNonNull(gameContext);
 
         final GameSession session = gameContext.session();
-        final GameModel model = gameContext.model();
-        final GameLevel demoLevel = createLevel(gameContext, 1, true);
 
-        final Pac pac = demoLevel.entities().pac();
+        final GameLevel level = createLevel(gameContext, 1, true);
+
+        final Pac pac = level.entities().pac();
         pac.cheats().setImmune(false);
         pac.cheats().setUsingAutopilot(true);
 
@@ -200,11 +206,13 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
             DEMO_LEVEL_ROUTE
         ));
 
-        model.gateKeeper().setLevelNumber(1);
+        session.setLevel(level);
+        session.setAttractMode(true);
+        session.gateKeeper().setLevelNumber(1);
 
         ScoreSystem.setLevelNumber(session.score(), 1);
 
-        return demoLevel;
+        return level;
     }
 
     @Override
@@ -267,6 +275,20 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         level.setBonus(bonus);
         eventManager.publishGameEvent(new BonusActivatedEvent(bonus));
     }
+
+    protected void configureGateKeeper(ArcadeHouseGateKeeper gateKeeper) {
+        gateKeeper.setGhostReleasedCallback((level, prisoner) -> {
+            if (prisoner.personality() == GhostPersonality.ORANGE_GHOST_POKEY) {
+                final Ghost redGhost = level.ghost(GhostPersonality.RED_GHOST_SHADOW);
+                final ElroyComp elroy = redGhost.requireComp(ElroyComp.class);
+                if (elroy.boost() != ElroyComp.Boost.NONE && !elroy.enabled()) {
+                    elroy.setEnabled(true);
+                    Logger.debug("Re-enabled {}'s Cruise Elroy mode because {} is released:", redGhost.name(), prisoner.name());
+                }
+            }
+        });
+    }
+
 
     private void checkCruiseElroyActivation(GameLevel level) {
         final Ghost redGhost = level.ghost(GhostPersonality.RED_GHOST_SHADOW);

@@ -5,13 +5,9 @@ package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.rules.ArcadePacMan_GameRules;
-import de.amr.pacmanfx.core.entities.Ghost;
-import de.amr.pacmanfx.core.entities.ghost.comp.ElroyComp;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelector;
-import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tile;
 import static java.util.Objects.requireNonNull;
@@ -37,33 +33,12 @@ public class ArcadePacMan_GameModel extends GameModel {
     public ArcadePacMan_GameModel(WorldMapSelector mapSelector) {
         this.mapSelector = requireNonNull(mapSelector);
         rules = new ArcadePacMan_GameRules();
-        configureGateKeeper();
-    }
-
-    @Override
-    public void init() {
-        mapSelector().loadMapPrototypes();
         setInitialLifeCount(3);
     }
 
     @Override
     public GameRules rules() {
         return rules;
-    }
-
-    // helpers
-
-    protected void configureGateKeeper() {
-        gateKeeper.setGhostReleasedCallback((level, prisoner) -> {
-            if (prisoner.personality() == GhostPersonality.ORANGE_GHOST_POKEY) {
-                final Ghost redGhost = level.ghost(GhostPersonality.RED_GHOST_SHADOW);
-                final ElroyComp elroy = redGhost.requireComp(ElroyComp.class);
-                if (elroy.boost() != ElroyComp.Boost.NONE && !elroy.enabled()) {
-                    elroy.setEnabled(true);
-                    Logger.debug("Re-enabled {}'s Cruise Elroy mode because {} is released:", redGhost.name(), prisoner.name());
-                }
-            }
-        });
     }
 
 }

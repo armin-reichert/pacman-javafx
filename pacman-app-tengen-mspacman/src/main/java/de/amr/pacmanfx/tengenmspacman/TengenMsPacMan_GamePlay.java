@@ -57,6 +57,15 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     @Override
     public void onSessionStart(GameContext gameContext) {
         super.onSessionStart(gameContext);
+
+        //TODO move these into Tengen-specific session, keep in model for now
+        final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) gameContext.model();
+        model.setPacBoosterMode(TengenMsPacMan_GameModel.DEFAULT_PAC_BOOSTER);
+        model.setDifficulty(TengenMsPacMan_GameModel.DEFAULT_DIFFICULTY);
+        model.setMapCategory(TengenMsPacMan_GameModel.DEFAULT_MAP_CATEGORY);
+        model.setStartLevelNumber(TengenMsPacMan_GameModel.DEFAULT_START_LEVEL);
+        model.setNumContinues(TengenMsPacMan_GameModel.DEFAULT_NUM_CONTINUES);
+
         gameContext.session().hud().hide();
     }
 
@@ -73,7 +82,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final GameLevel level = new GameLevel(model, levelNumber, worldMap, huntingTimer, 3);
 
         session.setLevel(level);
-        session.setDemoLevel(demoLevel);
+        session.setAttractMode(demoLevel);
 
         final House house = HouseFactory.createArcadeHouse(TengenMsPacMan_GameModel.HOUSE_MIN_TILE);
         level.entities().add(house);
@@ -123,9 +132,8 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
         final GameSession session = gameContext.session();
         final GameSystems sys = gameContext.systems();
-        final GameModel model = gameContext.model();
-        final GameLevel demoLevel = createLevel(gameContext, 1, true);
 
+        final GameLevel demoLevel = createLevel(gameContext, 1, true);
         demoLevel.setGameOverStateTicks(120);
 
         final Pac pac = demoLevel.entities().pac();
@@ -138,8 +146,10 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         );
         pac.autoSteering().setSteering(steering);
 
-        model.gateKeeper().setLevelNumber(1);
+        session.setLevel(demoLevel);
+        session.setAttractMode(true);
 
+        session.gateKeeper().setLevelNumber(1);
         ScoreSystem.setLevelNumber(session.score(), 1);
 
         return demoLevel;

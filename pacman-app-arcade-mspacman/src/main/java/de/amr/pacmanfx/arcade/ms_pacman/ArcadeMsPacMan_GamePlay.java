@@ -69,7 +69,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         level.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
 
         session.setLevel(level);
-        session.setDemoLevel(demoLevel);
+        session.setAttractMode(demoLevel);
 
         final House house = HouseFactory.createArcadeHouse(houseMinTile);
         level.entities().add(house);
@@ -147,31 +147,28 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         requireNonNull(gameContext);
 
         final GameSession session = gameContext.session();
-        final GameModel model = gameContext.model();
-        final GameSystems sys = gameContext.systems();
+        final GameSystems systems = gameContext.systems();
 
-        session.setDemoLevel(true);
+        final GameLevel level = createLevel(gameContext, 1, true);
 
-        final int demoLevelNumber = 1;
-        final GameLevel demoLevel = createLevel(gameContext, demoLevelNumber, true);
+        session.setLevel(level);
+        session.setAttractMode(true);
 
-        final Pac pac = demoLevel.entities().pac();
+        final Pac pac = level.entities().pac();
         pac.cheats().setImmune(false);
         pac.cheats().setUsingAutopilot(true);
 
         final var steering = new RuleGuidedPacSteering(
-            sys.worldNavigator(),
-            sys.pacWorldMovementPolicy()
+            systems.worldNavigator(),
+            systems.pacWorldMovementPolicy()
         );
         pac.autoSteering().setSteering(steering);
 
-        //TODO move into session
-        model.gateKeeper().setLevelNumber(demoLevelNumber);
-        ScoreSystem.setLevelNumber(session.score(), demoLevelNumber);
-        //TODO check this
+        session.gateKeeper().setLevelNumber(1);
+        ScoreSystem.setLevelNumber(session.score(), 1);
         LevelCounterSystem.enable(session.levelCounter(), true);
 
-        return demoLevel;
+        return level;
     }
 
     /**

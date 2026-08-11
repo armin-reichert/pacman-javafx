@@ -167,13 +167,13 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
             if (subScene.getCamera() == dynamicCamera) {
                 dynamicCamera.update(tilesPx(terrain.numRows()), level.entities().pac());
             }
-            if (!session.isDemoLevel()) {
+            if (!session.isAttractMode()) {
                 updateLevelMessage(level);
             }
             ensureActorAnimationsCreated(level);
             updateHUD(session, level);
             optSoundEffects().ifPresent(soundEffects -> {
-                soundEffects.setEnabled(!session.isDemoLevel());
+                soundEffects.setEnabled(!session.isAttractMode());
                 soundEffects.playAmbientGameLevelSound(gameContext(), level);
             });
         });
@@ -232,7 +232,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
         dynamicCamera.enterTrackingMode();
         dynamicCamera.updateRange(terrain);
 
-        if (session.isDemoLevel()) {
+        if (session.isAttractMode()) {
             acceptDemoLevel();
         } else {
             acceptNormalLevel();

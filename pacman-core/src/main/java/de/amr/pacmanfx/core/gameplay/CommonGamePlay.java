@@ -73,7 +73,8 @@ public abstract class CommonGamePlay implements GamePlay {
         final GameSession session = gameContext.session();
         final GameModel model = gameContext.model();
 
-        model.init();
+//        model.init();
+        model.mapSelector().loadMapPrototypes(); // TODO move into session?
 
         initScores(session);
 
@@ -82,9 +83,8 @@ public abstract class CommonGamePlay implements GamePlay {
         LevelCounterSystem.clear(levelCounter);
         LevelCounterSystem.enable(levelCounter, true);
 
-        //TODO move these objects into session too!
-        model.gateKeeper().reset();
-
+        session.setGateKeeper(new ArcadeHouseGateKeeper()); // TODO not needed by Tengen
+        session.gateKeeper().reset();
         session.setLevel(null);
         session.setPlaying(false);
     }
@@ -136,7 +136,7 @@ public abstract class CommonGamePlay implements GamePlay {
     @Override
     public boolean isDemoLevelRunning(GameContext gameContext) {
         final GameSession session = gameContext.session();
-        return session.isDemoLevel();
+        return session.isAttractMode();
     }
 
     @Override
@@ -145,22 +145,16 @@ public abstract class CommonGamePlay implements GamePlay {
         requireValidLevelNumber(levelNumber);
 
         final GameSession session = gameContext.session();
-        final GameModel model = gameContext.model();
-        final GameEventManager eventManager = gameContext.eventManager();
 
         final GameLevel level = createLevel(gameContext, levelNumber, false);
 
-        final LivesCounter livesCounter = level.entities().theOne(LivesCounter.class);
-        livesCounter.data().setNumLives(numLives);
-
-        ScoreSystem.setLevelNumber(session.score(), levelNumber);
-        //TODO store in session
-        model.gateKeeper().setLevelNumber(levelNumber);
-
         session.setLevel(level);
-        session.setDemoLevel(false);
+        session.setAttractMode(false);
+        session.livesCounter().data().setNumLives(numLives);
+        ScoreSystem.setLevelNumber(session.score(), levelNumber);
+        session.gateKeeper().setLevelNumber(levelNumber);
 
-        eventManager.publishGameEvent(new LevelCreatedEvent(level));
+        gameContext.eventManager().publishGameEvent(new LevelCreatedEvent(level));
     }
 
     @Override
@@ -203,8 +197,9 @@ public abstract class CommonGamePlay implements GamePlay {
         requireNonNull(gameContext);
         requireNonNull(level);
 
+        final GameSession session = gameContext.session();
         final GameModel model = gameContext.model();
-        final ArcadeHouseGateKeeper gateKeeper = model.gateKeeper();
+        final ArcadeHouseGateKeeper gateKeeper = session.gateKeeper();
 
         //TODO enable this later again
         //final boolean doubleChecked = model.rules().actorCollisionRules().isCollisionDoubleChecked();
@@ -331,7 +326,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
     private void evalPacKilled(GameSession session, HuntingStepResult result) {
         final GameLevel level = session.assertLevel();
-        if (session.isDemoLevel() && isPacSafeInDemoLevel(level)
+        if (session.isAttractMode() && isPacSafeInDemoLevel(level)
             || level.entities().pac().cheats().isImmune()) {
             return;
         }
@@ -375,13 +370,14 @@ public abstract class CommonGamePlay implements GamePlay {
         requireNonNull(level);
         requireNonNull(tile);
 
+        final GameSession session = gameContext.session();
         final GameModel model = gameContext.model();
         final GameRules rules = model.rules();
         final Pac pac = level.entities().pac();
 
         scorePoints(gameContext, rules.scoringRules().pointsForPellet(), level.number());
-        model.gateKeeper().registerFoodEaten(level);
         gameContext.systems().pacDigestion().digestPellet(pac, rules);
+        session.gateKeeper().registerFoodEaten(level);
     }
 
     @Override
@@ -390,12 +386,13 @@ public abstract class CommonGamePlay implements GamePlay {
         requireNonNull(level);
         requireNonNull(tile);
 
+        final GameSession session = gameContext.session();
         final GameModel model = gameContext.model();
         final GameRules rules = model.rules();
         final Pac pac = level.entities().pac();
 
         scorePoints(gameContext, rules.scoringRules().pointsForEnergizer(), level.number());
-        model.gateKeeper().registerFoodEaten(level);
+        session.gateKeeper().registerFoodEaten(level);
         level.clearGhostKillChain();
         gameContext.systems().pacDigestion().digestEnergizer(pac, rules);
         startPacPower(gameContext, level, pac);

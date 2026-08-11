@@ -24,7 +24,7 @@ public class Arcade_PlayScene3D extends PlayScene3D {
 
         final Arcade_Actions actions = appContext().getExtensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
-        if (session.isDemoLevel()) {
+        if (session.isAttractMode()) {
             actionBindings().registerAllBindings(actions.gameStartActionBindings());
         } else {
             actionBindings().registerAllBindings(appContext().commonActions().steeringActions().bindings());

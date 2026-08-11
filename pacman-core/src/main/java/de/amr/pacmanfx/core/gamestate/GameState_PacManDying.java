@@ -38,11 +38,13 @@ public final class GameState_PacManDying extends GameState {
     public void onEnter(GameContext game) {
         requireNonNull(game);
 
-        final GameLevel level = game.session().assertLevel();
+        final GameSession session = game.session();
+        final GameLevel level = session.assertLevel();
 
         final Pac pac = level.entities().pac();
 
-        game.model().gateKeeper().resetCounterAndSetEnabled(true);
+        session.gateKeeper().resetCounterAndSetEnabled(true);
+
         level.huntingTimerStrategy().stop();
 
         level.entities().ghosts().forEach(ghost -> ghost.optComp(ElroyComp.class).ifPresent(elroy -> elroy.setEnabled(false)));
@@ -66,7 +68,7 @@ public final class GameState_PacManDying extends GameState {
         final long tick = timer().tickCount();
 
         if (timer().hasExpired()) {
-            if (session.isDemoLevel()) {
+            if (session.isAttractMode()) {
                 game.flow().enterState(game, CommonGameStateID.GAME_OVER);
             } else {
                 LivesCounterSystem.subtractLife(livesCounter);

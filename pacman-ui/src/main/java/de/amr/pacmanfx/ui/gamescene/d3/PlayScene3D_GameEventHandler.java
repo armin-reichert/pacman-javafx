@@ -311,7 +311,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         final GameSession session = gameContext().session();
         final GameLevel level = session.assertLevel();
         final House house = level.entities().theOne(House.class);
-        final boolean cutSceneFollows = !session.isDemoLevel()
+        final boolean cutSceneFollows = !session.isAttractMode()
             && gameContext().model().rules().cutSceneAfterLevel(level.number()).isPresent();
 
         gameScene().scoreOpacity.set(0);
@@ -379,7 +379,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         final GameLevel level = session.assertLevel();
         final GameLevel3D level3D = assertLevel3D();
 
-        if (!session.isDemoLevel() && RandomNumberSupport.chance(0.25)) {
+        if (!session.isAttractMode() && RandomNumberSupport.chance(0.25)) {
             appContext().ui().shortMessage(Duration.seconds(2.5), textPicker().selectNextText());
         }
 

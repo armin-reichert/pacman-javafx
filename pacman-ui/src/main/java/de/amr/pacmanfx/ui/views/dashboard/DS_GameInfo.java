@@ -49,7 +49,7 @@ public class DS_GameInfo extends GameDashboardSection {
         );
 
         addDynamicInfo("Level Number", fnGameLevelInfo(appContext,
-            level -> (appContext.currentGameContext().session().isDemoLevel() ? "%d (Demo Level)" : "%d").formatted(level.number()))
+            level -> (appContext.currentGameContext().session().isAttractMode() ? "%d (Demo Level)" : "%d").formatted(level.number()))
         );
 
         addDynamicInfo("World Map", fnGameLevelInfo(appContext,

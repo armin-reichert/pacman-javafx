@@ -24,7 +24,7 @@ public class GameLevelCompleteState extends GameState {
 
     @Override
     public void onUpdate(GameContext game) {
-        if (game.session().isDemoLevel()) {
+        if (game.session().isAttractMode()) {
             game.flow().enterState(game, TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME);
             return;
         }
@@ -38,7 +38,7 @@ public class GameLevelCompleteState extends GameState {
     private CommonGameStateID computeNextState(GameContext game, boolean cutScenesEnabled) {
         final GameSession session = game.session();
         final GameLevel level = session.assertLevel();
-        if (session.isDemoLevel()) { // Just in case: if demo level is completed, go back to intro scene
+        if (session.isAttractMode()) { // Just in case: if demo level is completed, go back to intro scene
             return CommonGameStateID.GAME_INTRO;
         }
         final boolean cutSceneFollows = game.model().rules().cutSceneAfterLevel(level.number()).isPresent();

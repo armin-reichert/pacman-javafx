@@ -8,6 +8,7 @@ import de.amr.pacmanfx.core.entities.LevelCounter;
 import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
+import de.amr.pacmanfx.core.gameplay.ArcadeHouseGateKeeper;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.HUDState;
@@ -21,7 +22,9 @@ public class GameSession {
 
     private GameLevel level;
 
-    private boolean demoLevel;
+    private ArcadeHouseGateKeeper gateKeeper;
+
+    private boolean attractMode;
 
     private boolean playing;
 
@@ -45,6 +48,7 @@ public class GameSession {
         levelCounter = new LevelCounter();
         livesCounter = new LivesCounter();
         hud = new HUDState();
+        gateKeeper = new ArcadeHouseGateKeeper();
     }
 
     public void setLevel(GameLevel level) {
@@ -57,6 +61,14 @@ public class GameSession {
 
     public GameLevel assertLevel() {
         return optLevel().orElseThrow();
+    }
+
+    public void setGateKeeper(ArcadeHouseGateKeeper gateKeeper) {
+        this.gateKeeper = gateKeeper;
+    }
+
+    public ArcadeHouseGateKeeper gateKeeper() {
+        return gateKeeper;
     }
 
     public HUDState hud() {
@@ -76,12 +88,12 @@ public class GameSession {
         });
     }
 
-    public void setDemoLevel(boolean demoLevel) {
-        this.demoLevel = demoLevel;
+    public void setAttractMode(boolean attractMode) {
+        this.attractMode = attractMode;
     }
 
-    public boolean isDemoLevel() {
-        return demoLevel;
+    public boolean isAttractMode() {
+        return attractMode;
     }
 
     public boolean isPlaying() {

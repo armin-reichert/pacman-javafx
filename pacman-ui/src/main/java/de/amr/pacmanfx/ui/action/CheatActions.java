@@ -284,6 +284,6 @@ public final class CheatActions {
 
     private Optional<GameLevel> normalLevel(GameAppContext appContext) {
         final GameSession session = appContext.currentGameContext().session();
-        return session.optLevel().filter(_ -> !session.isDemoLevel());
+        return session.optLevel().filter(_ -> !session.isAttractMode());
     }
 }

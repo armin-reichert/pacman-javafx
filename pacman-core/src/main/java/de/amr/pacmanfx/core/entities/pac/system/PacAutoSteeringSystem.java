@@ -8,7 +8,7 @@ public class PacAutoSteeringSystem {
 
     public void update(GameSession session, Pac pac) {
         final GameLevel level = session.assertLevel();
-        if (pac.cheats().isUsingAutopilot() || session.isDemoLevel()) {
+        if (pac.cheats().isUsingAutopilot() || session.isAttractMode()) {
             pac.autoSteering().steering().steer(pac, level);
         }
     }

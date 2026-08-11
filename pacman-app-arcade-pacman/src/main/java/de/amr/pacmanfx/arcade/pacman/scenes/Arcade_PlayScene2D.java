@@ -112,7 +112,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D
         final Vector2i terrainSize = level.worldMap().terrainLayer().sizeInPixel();
         unscaledWidthProperty().set(terrainSize.x());
         unscaledHeightProperty().set(terrainSize.y());
-        if (session.isDemoLevel()) {
+        if (session.isAttractMode()) {
             acceptDemoLevel();
         } else {
             acceptNormalLevel(level);

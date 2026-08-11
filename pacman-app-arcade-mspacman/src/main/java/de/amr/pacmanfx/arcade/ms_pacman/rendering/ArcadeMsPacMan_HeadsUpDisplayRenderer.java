@@ -66,7 +66,7 @@ public class ArcadeMsPacMan_HeadsUpDisplayRenderer extends BaseRenderer implemen
 
             final Score highScore = session.highScore();
             Color color = SCORE_TEXT_COLOR;
-            if (!session.isDemoLevel() && !highScore.data().isEnabled()) {
+            if (!session.isAttractMode() && !highScore.data().isEnabled()) {
                 color = SCORE_TEXT_COLOR_DISABLED;
             }
             drawScore(highScore, HIGH_SCORE_TEXT, arcadeFont8(), color, tilesPx(14), tilesPx(1));

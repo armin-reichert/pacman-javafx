@@ -59,7 +59,7 @@ public class GameOverState extends GameState {
         if (timer().hasExpired()) {
             level.clearMessage();
 
-            final Named nextStateID = session.isDemoLevel()
+            final Named nextStateID = session.isAttractMode()
                 ? TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME
                 : model.canContinueOnGameOver() ? CommonGameStateID.GAME_PREPARATION : CommonGameStateID.GAME_INTRO;
 

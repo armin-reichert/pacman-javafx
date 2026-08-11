@@ -289,7 +289,7 @@ public class PlayScene3D extends AbstractGameScene
         perspectiveManager.updatePerspective(level);
 
         optSoundEffects().ifPresent(soundEffects -> {
-            soundEffects.setEnabled(!session.isDemoLevel());
+            soundEffects.setEnabled(!session.isAttractMode());
             soundEffects.playAmbientGameLevelSound(game, level);
         });
     }

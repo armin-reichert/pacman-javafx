@@ -34,11 +34,6 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
     public ArcadeMsPacMan_GameModel(WorldMapSelector mapSelector) {
         this.mapSelector = requireNonNull(mapSelector);
         rules = new ArcadeMsPacMan_GameRules();
-    }
-
-    @Override
-    public void init() {
-        mapSelector().loadMapPrototypes();
         setInitialLifeCount(3);
     }
 
