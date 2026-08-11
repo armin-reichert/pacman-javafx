@@ -143,9 +143,14 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
 
     @Override
     public void startPlaying() {
+
         final GameSession session = new GameSession(variants().currentVariantName());
+        //TODO check where this should be done
+        session.hud().creditProperty().bind(GameBox.instance().coinMechanism().numCoinsProperty());
         gameContext.setSession(session);
+
         gameContext.flow().restartState(gameContext, CommonGameStateID.BOOT);
+
         ui.views().selectGamePlayView();
         GameSimulation.start(this);
     }
