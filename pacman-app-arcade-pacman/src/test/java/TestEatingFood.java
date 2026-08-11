@@ -67,8 +67,7 @@ public class TestEatingFood {
         }
 
         @Override
-        public void setSession(GameSession session) {
-        }
+        public void setSession(GameSession session) {}
 
         @Override
         public GameSession session() {
