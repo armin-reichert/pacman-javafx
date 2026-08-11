@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMapSelector;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tile;
 import static java.util.Objects.requireNonNull;
 
-public class ArcadePacMan_GameModel extends GameModel {
+public class ArcadePacMan_GameModel implements GameModel {
 
     /**
      * Top-left tile of ghost house in original Arcade maps (Pac-Man, Ms. Pac-Man).
@@ -20,6 +20,10 @@ public class ArcadePacMan_GameModel extends GameModel {
     public static final Vector2i ARCADE_MAP_HOUSE_MIN_TILE = tile(10, 15);
 
     public static final Vector2i DEFAULT_BONUS_TILE = new Vector2i(13, 20);
+
+    protected WorldMapSelector mapSelector;
+
+    private int initialLifeCount;
 
     protected ArcadePacMan_GameRules rules;
 
@@ -37,8 +41,22 @@ public class ArcadePacMan_GameModel extends GameModel {
     }
 
     @Override
+    public void setInitialLifeCount(int initialLifeCount) {
+        this.initialLifeCount = initialLifeCount;
+    }
+
+    @Override
+    public int initialLifeCount() {
+        return initialLifeCount;
+    }
+
+    @Override
     public GameRules rules() {
         return rules;
     }
 
+    @Override
+    public WorldMapSelector mapSelector() {
+        return mapSelector;
+    }
 }

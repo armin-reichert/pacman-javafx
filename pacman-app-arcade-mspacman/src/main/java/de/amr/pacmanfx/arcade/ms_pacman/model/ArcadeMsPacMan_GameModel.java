@@ -23,7 +23,11 @@ import static java.util.Objects.requireNonNull;
  * </ul>
  * </p>
  */
-public class ArcadeMsPacMan_GameModel extends GameModel {
+public class ArcadeMsPacMan_GameModel implements GameModel {
+
+    protected WorldMapSelector mapSelector;
+
+    private int initialLifeCount;
 
     protected ArcadeMsPacMan_GameRules rules;
 
@@ -38,7 +42,22 @@ public class ArcadeMsPacMan_GameModel extends GameModel {
     }
 
     @Override
+    public void setInitialLifeCount(int initialLifeCount) {
+        this.initialLifeCount = initialLifeCount;
+    }
+
+    @Override
+    public int initialLifeCount() {
+        return initialLifeCount;
+    }
+
+    @Override
     public GameRules rules() {
         return rules;
+    }
+
+    @Override
+    public WorldMapSelector mapSelector() {
+        return mapSelector;
     }
 }

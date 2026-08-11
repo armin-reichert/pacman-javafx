@@ -7,16 +7,15 @@ package de.amr.pacmanfx.tengenmspacman.model;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.core.model.world.map.WorldMapSelector;
 import de.amr.pacmanfx.tengenmspacman.rules.TengenMsPacMan_GameRules;
-
-import static java.util.Objects.requireNonNull;
 
 /**
  * Ms. Pac-Man (Tengen).
  *
  * @see <a href="https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly">Ms.Pac-Man-NES-Tengen-Disassembly</a>
  */
-public class TengenMsPacMan_GameModel extends GameModel {
+public class TengenMsPacMan_GameModel implements GameModel {
 
     public static final int DEFAULT_START_LEVEL = 1;
 
@@ -33,6 +32,10 @@ public class TengenMsPacMan_GameModel extends GameModel {
     public static final String READY_MESSAGE_TEXT = "READY!";
 
     public static final Vector2i HOUSE_MIN_TILE = WorldMap.tile(10, 15);
+
+    private WorldMapSelector mapSelector;
+
+    private int initialLifeCount;
 
     private final TengenMsPacMan_GameRules rules;
 
@@ -57,7 +60,18 @@ public class TengenMsPacMan_GameModel extends GameModel {
     }
 
     @Override
+    public void setInitialLifeCount(int initialLifeCount) {
+        this.initialLifeCount = initialLifeCount;
+    }
+
+    @Override
+    public int initialLifeCount() {
+        return initialLifeCount;
+    }
+
+    @Override
     public TengenMsPacMan_GameRules rules() {
         return rules;
     }
+
 }
