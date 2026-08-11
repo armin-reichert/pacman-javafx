@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.ms_pacman.rules.ArcadeMsPacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ScoringRules;
-import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_MapSelector;
+import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_WorldMapManager;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_ScoringRules;
 
 /**
@@ -29,12 +29,12 @@ public class XXL_MsPacMan_GameModel extends ArcadeMsPacMan_GameModel {
     }
 
     public XXL_MsPacMan_GameModel() {
-        mapSelector = XXL_MapSelector.instance();
+        worldMapManager = XXL_WorldMapManager.instance();
         rules = createRules();
     }
 
     @Override
-    public XXL_MapSelector mapSelector() {
-        return (XXL_MapSelector) mapSelector;
+    public XXL_WorldMapManager worldMapManager() {
+        return (XXL_WorldMapManager) worldMapManager;
     }
 }

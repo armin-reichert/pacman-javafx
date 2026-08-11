@@ -7,7 +7,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.rules.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.rules.GameRules;
-import de.amr.pacmanfx.core.model.world.map.WorldMapSelector;
+import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tile;
 import static java.util.Objects.requireNonNull;
@@ -21,21 +21,21 @@ public class ArcadePacMan_GameModel implements GameModel {
 
     public static final Vector2i DEFAULT_BONUS_TILE = new Vector2i(13, 20);
 
-    protected WorldMapSelector mapSelector;
+    protected WorldMapManager worldMapManager;
 
     private int initialLifeCount;
 
     protected ArcadePacMan_GameRules rules;
 
     public ArcadePacMan_GameModel() {
-        this(new ArcadePacMan_MapSelector());
+        this(new ArcadePacMan_WorldMapManager());
     }
 
     /**
-     * @param mapSelector e.g. selector that selects custom maps before standard maps
+     * @param worldMapManager e.g. selector that selects custom maps before standard maps
      */
-    public ArcadePacMan_GameModel(WorldMapSelector mapSelector) {
-        this.mapSelector = requireNonNull(mapSelector);
+    public ArcadePacMan_GameModel(WorldMapManager worldMapManager) {
+        this.worldMapManager = requireNonNull(worldMapManager);
         rules = new ArcadePacMan_GameRules();
         setInitialLifeCount(3);
     }
@@ -56,7 +56,7 @@ public class ArcadePacMan_GameModel implements GameModel {
     }
 
     @Override
-    public WorldMapSelector mapSelector() {
-        return mapSelector;
+    public WorldMapManager worldMapManager() {
+        return worldMapManager;
     }
 }

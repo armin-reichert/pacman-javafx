@@ -54,7 +54,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         final WorldNavigationSystem navigator = gameContext.systems().worldNavigator();
 
         final GameModel model = gameContext.model();
-        final WorldMap worldMap = model.mapSelector().supplyWorldMap(levelNumber);
+        final WorldMap worldMap = model.worldMapManager().supplyWorldMap(levelNumber);
         final TerrainLayer terrain = worldMap.terrainLayer();
 
         final Vector2i houseMinTile = terrain.getTilePropertyOrDefault(

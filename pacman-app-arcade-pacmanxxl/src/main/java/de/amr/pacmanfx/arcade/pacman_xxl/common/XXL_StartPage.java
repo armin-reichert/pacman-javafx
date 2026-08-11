@@ -81,7 +81,7 @@ public class XXL_StartPage implements StartPage {
         else if (keyboard.isKeyPressed(KeyCode.ENTER)) {
             pauseProgressTimer();
             final WorldMapSelectionMode mode = menu.selectedMapSelectionMode();
-            XXL_MapSelector.instance().setSelectionMode(mode);
+            XXL_WorldMapManager.instance().setSelectionMode(mode);
             Logger.info("Using map selection mode: {}", mode);
             appContext.lifecycle().startPlaying();
         }

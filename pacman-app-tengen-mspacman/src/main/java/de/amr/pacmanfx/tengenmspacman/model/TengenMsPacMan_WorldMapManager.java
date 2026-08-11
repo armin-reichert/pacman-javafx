@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.model;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
 import de.amr.pacmanfx.core.model.world.map.WorldMapParseException;
-import de.amr.pacmanfx.core.model.world.map.WorldMapSelector;
+import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig;
 import de.amr.pacmanfx.tengenmspacman.sprites.NES_WorldMapColorScheme;
 import de.amr.pacmanfx.tengenmspacman.sprites.NonArcadeMapsSpriteSheet;
@@ -26,7 +26,7 @@ import static de.amr.pacmanfx.tengenmspacman.sprites.NES_WorldMapColorScheme.*;
  * Handles the complex progression across 32 levels using four map categories (ARCADE, MINI, BIG, STRANGE)
  * with specific color schemes and random recoloring in levels 28–31.
  */
-public class TengenMsPacMan_MapSelector implements WorldMapSelector {
+public class TengenMsPacMan_WorldMapManager implements WorldMapManager {
 
     private record PrototypeConfig(String path, int numMaps) {}
 
@@ -79,7 +79,7 @@ public class TengenMsPacMan_MapSelector implements WorldMapSelector {
 
     private List<WorldMap> loadMaps(String path, int n) {
         try {
-            return WorldMapSelector.loadMaps(getClass(), path, n);
+            return WorldMapManager.loadMaps(getClass(), path, n);
         } catch (IOException x) {
             Logger.error(x, "Could not open world map");
             throw new RuntimeException(x);

@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.model;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
 import de.amr.pacmanfx.core.model.world.map.WorldMapParseException;
-import de.amr.pacmanfx.core.model.world.map.WorldMapSelector;
+import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 import org.tinylog.Logger;
 
 import java.io.IOException;
@@ -18,7 +18,7 @@ import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
 // different color scheme.) and store the color map index (0-5) in the map configuration instead.
 // The 2D renderer uses that index to extract the corresponding map image from the sprite sheet.
 // The 3D renderer uses that index and the color values in MAP_COLOR_SCHEMES to create the 3D materials.
-public class ArcadeMsPacMan_MapSelector implements WorldMapSelector {
+public class ArcadeMsPacMan_WorldMapManager implements WorldMapManager {
 
     private static final int PROTOTYPES_COUNT = 4;
     private static final String PROTOTYPES_PATH = "/de/amr/pacmanfx/arcade/ms_pacman/maps/mspacman_%d.world";
@@ -28,7 +28,7 @@ public class ArcadeMsPacMan_MapSelector implements WorldMapSelector {
     @Override
     public void loadMapPrototypes() {
         try {
-            mapPrototypes = WorldMapSelector.loadMaps(getClass(), PROTOTYPES_PATH, PROTOTYPES_COUNT);
+            mapPrototypes = WorldMapManager.loadMaps(getClass(), PROTOTYPES_PATH, PROTOTYPES_COUNT);
         } catch (IOException x) {
             Logger.error("Could not open world map");
             throw new RuntimeException(x);

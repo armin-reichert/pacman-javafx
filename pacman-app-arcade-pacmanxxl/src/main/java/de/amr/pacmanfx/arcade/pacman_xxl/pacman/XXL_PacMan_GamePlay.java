@@ -31,7 +31,7 @@ public class XXL_PacMan_GamePlay extends ArcadePacMan_GamePlay {
         final GameSystems sys = gameContext.systems();
         final XXL_PacMan_GameModel xxlModel = (XXL_PacMan_GameModel) gameContext.model();
 
-        xxlModel.mapSelector().setSelectionMode(WorldMapSelectionMode.NO_CUSTOM_MAPS);
+        xxlModel.worldMapManager().setSelectionMode(WorldMapSelectionMode.NO_CUSTOM_MAPS);
 
         // Select random (standard) level with different map and map color scheme for each choice
         final int levelNumber = DEMOLEVEL_NUMBERS[randomInt(0, DEMOLEVEL_NUMBERS.length)];

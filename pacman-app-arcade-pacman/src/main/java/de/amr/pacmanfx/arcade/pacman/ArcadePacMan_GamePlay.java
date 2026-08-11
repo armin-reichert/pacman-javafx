@@ -109,7 +109,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
         final GameSession session = gameContext.session();
         final GameModel model = gameContext.model();
-        final WorldMap worldMap = model.mapSelector().supplyWorldMap(levelNumber);
+        final WorldMap worldMap = model.worldMapManager().supplyWorldMap(levelNumber);
         final TerrainLayer terrain = worldMap.terrainLayer();
 
         final Vector2i houseMinTile = terrain.getTilePropertyOrDefault(

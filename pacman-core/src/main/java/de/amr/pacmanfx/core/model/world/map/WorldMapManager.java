@@ -10,7 +10,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface WorldMapSelector {
+public interface WorldMapManager {
 
     /**
      * @param levelNumber level number (starting with 1)

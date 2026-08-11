@@ -5,12 +5,12 @@ package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
-import de.amr.pacmanfx.core.model.world.map.WorldMapSelector;
+import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 import org.tinylog.Logger;
 
 import java.net.URL;
 
-public class ArcadePacMan_MapSelector implements WorldMapSelector {
+public class ArcadePacMan_WorldMapManager implements WorldMapManager {
 
     private static final String PROTOTYPE_PATH = "/de/amr/pacmanfx/arcade/pacman/maps/pacman.world";
 
@@ -40,7 +40,7 @@ public class ArcadePacMan_MapSelector implements WorldMapSelector {
         final WorldMap worldMap = new WorldMap(prototype);
         worldMap.setConfigValue(WorldMapConfigKey.MAP_NUMBER, 1);
         worldMap.setConfigValue(WorldMapConfigKey.COLOR_MAP_INDEX, 0);
-        worldMap.setConfigValue(WorldMapConfigKey.COLOR_SCHEME, WorldMapSelector.extractColorScheme(prototype));
+        worldMap.setConfigValue(WorldMapConfigKey.COLOR_SCHEME, WorldMapManager.extractColorScheme(prototype));
         return worldMap;
     }
 }

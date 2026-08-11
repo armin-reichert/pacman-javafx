@@ -73,7 +73,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final GameSession session = gameContext.session();
         final GameModel model = gameContext.model();
 
-        model.mapSelector().loadMapPrototypes();
+        model.worldMapManager().loadMapPrototypes();
         initScores(session);
 
         final LevelCounter levelCounter = gameContext.session().levelCounter();

@@ -24,14 +24,14 @@ import java.util.Optional;
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
 import static java.util.Objects.requireNonNull;
 
-public class XXL_MapSelector implements WorldMapSelector, PathWatchEventListener {
+public class XXL_WorldMapManager implements WorldMapManager, PathWatchEventListener {
 
-    private static class LazyThreadSafeSingletonHolder {
-        static final XXL_MapSelector SINGLETON = new XXL_MapSelector();
+    private static class SingletonHolder {
+        static final XXL_WorldMapManager SINGLETON = new XXL_WorldMapManager();
     }
 
-    public static XXL_MapSelector instance() {
-        return LazyThreadSafeSingletonHolder.SINGLETON;
+    public static XXL_WorldMapManager instance() {
+        return SingletonHolder.SINGLETON;
     }
 
     private final ObservableList<WorldMap> customMaps = FXCollections.observableArrayList();
@@ -40,7 +40,7 @@ public class XXL_MapSelector implements WorldMapSelector, PathWatchEventListener
 
     private WorldMapSelectionMode selectionMode;
 
-    private XXL_MapSelector() {
+    private XXL_WorldMapManager() {
         this.selectionMode = WorldMapSelectionMode.CUSTOM_MAPS_FIRST;
         addJuniorPacMapPrototypesIfEmptyDir();
     }
@@ -134,10 +134,10 @@ public class XXL_MapSelector implements WorldMapSelector, PathWatchEventListener
     public void loadMapPrototypes() {
         if (builtinMaps.isEmpty()) {
             try {
-                final List<WorldMap> masonicMaps = WorldMapSelector.loadMaps(getClass(),
+                final List<WorldMap> masonicMaps = WorldMapManager.loadMaps(getClass(),
                     "/de/amr/pacmanfx/arcade/pacman_xxl/maps/masonic_%d.world", 8);
                 for (WorldMap worldMap : masonicMaps) {
-                    builtInMapColorSchemes.add(WorldMapSelector.extractColorScheme(worldMap));
+                    builtInMapColorSchemes.add(WorldMapManager.extractColorScheme(worldMap));
                 }
                 builtinMaps.addAll(masonicMaps);
                 loadCustomMaps();
@@ -176,7 +176,7 @@ public class XXL_MapSelector implements WorldMapSelector, PathWatchEventListener
         // If selected map is a built-in map, use a random color scheme to get variation
         final WorldMapColorSchemeImpl colorScheme = builtinMaps.contains(prototype)
             ? builtInMapColorSchemes.get(randomInt(0, builtInMapColorSchemes.size()))
-            : WorldMapSelector.extractColorScheme(prototype);
+            : WorldMapManager.extractColorScheme(prototype);
         worldMap.setConfigValue(WorldMapConfigKey.COLOR_SCHEME, colorScheme);
         Logger.info("Map selected (mode {}): {}", selectionMode, worldMap.url());
 
@@ -194,7 +194,7 @@ public class XXL_MapSelector implements WorldMapSelector, PathWatchEventListener
             for (int i = 1; i <= 15; ++i) {
                 final String mapName = "Jr. Pac-Man %02d.world".formatted(i);
                 final String path = "/de/amr/pacmanfx/arcade/pacman_xxl/maps/junior_pacman/" + mapName;
-                final URL url = XXL_MapSelector.class.getResource(path);
+                final URL url = XXL_WorldMapManager.class.getResource(path);
                 if (url != null) {
                     final File targetFile = new File(GameConstants.CUSTOM_MAP_DIR, mapName);
                     WorldMap.fromURL(url).ifPresentOrElse(worldMap -> {

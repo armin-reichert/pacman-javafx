@@ -8,7 +8,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
-import de.amr.pacmanfx.core.model.world.map.WorldMapSelector;
+import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 import de.amr.pacmanfx.game.GameVariant;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GameUI;
@@ -90,9 +90,9 @@ public class XXL_OptionMenu extends OptionMenu {
         final GameVariantID variantID = GameVariantID.valueOf(appContext.variants().currentVariantName());
         final GameVariantRenderConfig renderConfig = variant.config().renderConfig();
         final GameContext gameContext = appContext.currentGameContext();
-        final WorldMapSelector worldMapSelector = gameContext.model().mapSelector();
+        final WorldMapManager worldMapSelector = gameContext.model().worldMapManager();
 
-        if (!(worldMapSelector instanceof XXL_MapSelector mapSelector)) {
+        if (!(worldMapSelector instanceof XXL_WorldMapManager mapSelector)) {
             final String message = "Expected XXL map selector but found %s".formatted(
                 worldMapSelector.getClass().getSimpleName());
             Logger.error(message);

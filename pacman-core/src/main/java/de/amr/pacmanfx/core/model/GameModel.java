@@ -5,12 +5,15 @@
 package de.amr.pacmanfx.core.model;
 
 import de.amr.pacmanfx.core.model.rules.GameRules;
-import de.amr.pacmanfx.core.model.world.map.WorldMapSelector;
+import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 
 public interface GameModel {
 
     void setInitialLifeCount(int initialLifeCount);
+
     int initialLifeCount();
-    WorldMapSelector mapSelector();
+
+    WorldMapManager worldMapManager();
+
     GameRules rules();
 }

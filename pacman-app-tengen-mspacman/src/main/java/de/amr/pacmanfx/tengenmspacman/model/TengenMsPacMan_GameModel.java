@@ -7,7 +7,7 @@ package de.amr.pacmanfx.tengenmspacman.model;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.core.model.world.map.WorldMapSelector;
+import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 import de.amr.pacmanfx.tengenmspacman.rules.TengenMsPacMan_GameRules;
 
 /**
@@ -33,14 +33,14 @@ public class TengenMsPacMan_GameModel implements GameModel {
 
     public static final Vector2i HOUSE_MIN_TILE = WorldMap.tile(10, 15);
 
-    private final WorldMapSelector mapSelector;
+    private final WorldMapManager worldMapManager;
 
     private int initialLifeCount;
 
     private final TengenMsPacMan_GameRules rules;
 
     public TengenMsPacMan_GameModel() {
-        mapSelector = new TengenMsPacMan_MapSelector();
+        worldMapManager = new TengenMsPacMan_WorldMapManager();
         rules = new TengenMsPacMan_GameRules();
         setInitialLifeCount(3);
     }
@@ -48,8 +48,8 @@ public class TengenMsPacMan_GameModel implements GameModel {
     // GameModel interface
 
     @Override
-    public TengenMsPacMan_MapSelector mapSelector() {
-        return (TengenMsPacMan_MapSelector) mapSelector;
+    public TengenMsPacMan_WorldMapManager worldMapManager() {
+        return (TengenMsPacMan_WorldMapManager) worldMapManager;
     }
 
     @Override

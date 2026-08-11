@@ -10,7 +10,7 @@ import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_StartPage;
 import de.amr.pacmanfx.arcade.pacman.app.ArcadePacMan_Cartridge;
 import de.amr.pacmanfx.arcade.pacman_xxl.app.XXL_MsPacMan_Cartridge;
 import de.amr.pacmanfx.arcade.pacman_xxl.app.XXL_PacMan_Cartridge;
-import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_MapSelector;
+import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_WorldMapManager;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_StartPage;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.game.GameBuilder;
@@ -52,7 +52,7 @@ public class PacManAllGamesApp extends Application {
             .orElse(null);
 
         if (game != null) {
-            game.watchdog().addEventListener(XXL_MapSelector.instance());
+            game.watchdog().addEventListener(XXL_WorldMapManager.instance());
             game.showGameVariant(GameVariantID.ARCADE_PACMAN);
         }
     }

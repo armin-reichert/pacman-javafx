@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.model;
 import de.amr.pacmanfx.arcade.ms_pacman.rules.ArcadeMsPacMan_GameRules;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.rules.GameRules;
-import de.amr.pacmanfx.core.model.world.map.WorldMapSelector;
+import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 
 import static java.util.Objects.requireNonNull;
 
@@ -25,18 +25,18 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadeMsPacMan_GameModel implements GameModel {
 
-    protected WorldMapSelector mapSelector;
+    protected WorldMapManager worldMapManager;
 
     private int initialLifeCount;
 
     protected ArcadeMsPacMan_GameRules rules;
 
     public ArcadeMsPacMan_GameModel() {
-        this(new ArcadeMsPacMan_MapSelector());
+        this(new ArcadeMsPacMan_WorldMapManager());
     }
 
-    public ArcadeMsPacMan_GameModel(WorldMapSelector mapSelector) {
-        this.mapSelector = requireNonNull(mapSelector);
+    public ArcadeMsPacMan_GameModel(WorldMapManager worldMapManager) {
+        this.worldMapManager = requireNonNull(worldMapManager);
         rules = new ArcadeMsPacMan_GameRules();
         setInitialLifeCount(3);
     }
@@ -57,7 +57,7 @@ public class ArcadeMsPacMan_GameModel implements GameModel {
     }
 
     @Override
-    public WorldMapSelector mapSelector() {
-        return mapSelector;
+    public WorldMapManager worldMapManager() {
+        return worldMapManager;
     }
 }
