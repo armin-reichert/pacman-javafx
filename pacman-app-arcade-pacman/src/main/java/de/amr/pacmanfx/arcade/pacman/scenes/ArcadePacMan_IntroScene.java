@@ -127,6 +127,8 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
 
         pacMan = factory.createPacMan();
         pacMan.spriteAnim().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        pacMan.spriteAnim().animation().select(CommonSpriteAnimationID.PAC_MUNCHING);
+        pacMan.spriteAnim().animation().playSelected();
 
         ghosts[0] = renderConfig.createAnimatedGhost(game(), spriteAnimations, GhostPersonality.RED_GHOST_SHADOW);
         ghosts[1] = renderConfig.createAnimatedGhost(game(), spriteAnimations, GhostPersonality.PINK_GHOST_SPEEDY);
@@ -155,9 +157,6 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
 
         sys.worldNavigator().setMoveDir(pacMan, Direction.LEFT);
         sys.worldNavigator().setSpeed(pacMan, CHASING_SPEED);
-
-        sys.spriteAnim().select(pacMan, CommonSpriteAnimationID.PAC_MUNCHING);
-        sys.spriteAnim().playSelected(pacMan);
 
         for (Ghost ghost : ghosts) {
             ghost.pos().set(pacMan.pos().x() + 16 * ghost.personality().ordinal() + 18, pacMan.pos().y());
@@ -206,27 +205,22 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
             sys.worldNavigator().setSpeed(ghost, GHOST_FRIGHTENED_SPEED);
 
             sys.ghostState().changeState(ghost, FRIGHTENED);
+            ghost.spriteAnimation().animation().select(CommonSpriteAnimationID.GHOST_FRIGHTENED);
+            ghost.spriteAnimation().animation().playSelected();
         }
     }
 
     private void turnCardsRestartPacMan(GameSystems sys) {
         sys.worldNavigator().setSpeed(pacMan, CHASING_SPEED);
-
-        sys.spriteAnim().select(pacMan, CommonSpriteAnimationID.PAC_MUNCHING);
-        sys.spriteAnim().playSelected(pacMan);
     }
 
     private void chaseGhosts(GameContext game, long tick) {
         final GameSystems sys = game.systems();
 
         blinking.triggerPulse();
-
         sys.motor().move(pacMan);
-
         for (Ghost ghost : ghosts) { sys.motor().move(ghost); }
-
         edibleGhost().ifPresent(victim -> eatGhostAndStopChasing(game, victim, tick));
-
         if (tick == lastGhostEatenTick + GHOST_EATING_TICKS) {
             continueChasing(sys);
         }
@@ -266,8 +260,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
             } else {
                 ghost.show();
                 sys.worldNavigator().setSpeed(ghost, GHOST_FRIGHTENED_SPEED);
-                sys.spriteAnim().select(ghost, CommonSpriteAnimationID.GHOST_FRIGHTENED);
-                sys.spriteAnim().playSelected(ghost);
+                ghost.spriteAnimation().animation().playSelected();
             }
         }
     }
