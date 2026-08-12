@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.entities.ghost.system.GhostHouseAccessSystem;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostStateSystem;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostWorldMovementPolicy;
 import de.amr.pacmanfx.core.entities.pac.system.*;
-import de.amr.pacmanfx.core.gameplay.*;
+import de.amr.pacmanfx.core.gameplay.hunt.*;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 
 public class DefaultGameSystems implements GameSystems {

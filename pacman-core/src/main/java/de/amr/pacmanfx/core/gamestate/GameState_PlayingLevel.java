@@ -8,7 +8,7 @@ import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.entities.Pac;
-import de.amr.pacmanfx.core.gameplay.HuntingStepResult;
+import de.amr.pacmanfx.core.gameplay.hunt.HuntingStep;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.model.rules.GameRules;
@@ -71,7 +71,7 @@ public final class GameState_PlayingLevel extends GameState {
         return CommonGameStateID.GAME_LEVEL_PLAYING;
     }
 
-    private void logHuntingStepResult(HuntingStepResult result) {
+    private void logHuntingStepResult(HuntingStep result) {
         final List<String> report = result.asText();
         if (!report.isEmpty()) {
             Logger.info("Hunting Step:");

@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core.gameplay;
+package de.amr.pacmanfx.core.gameplay.hunt;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.ecs.comp.PositionComp;
@@ -15,7 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public final class HuntingStepResult {
+public final class HuntingStep {
 
     private Vector2i foodFoundTile;
     private boolean energizerFound;
@@ -24,7 +24,7 @@ public final class HuntingStepResult {
     private final List<Ghost> ghostsKilled = new ArrayList<>();
     private final Set<Ghost> ghostsCollidingWithPac = new HashSet<>(4);
 
-    public HuntingStepResult() {}
+    public HuntingStep() {}
 
     public Vector2i foodFoundTile() {
         return foodFoundTile;

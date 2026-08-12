@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core.gameplay;
+package de.amr.pacmanfx.core.gameplay.hunt;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.ecs.systems.WorldMovementPolicy;

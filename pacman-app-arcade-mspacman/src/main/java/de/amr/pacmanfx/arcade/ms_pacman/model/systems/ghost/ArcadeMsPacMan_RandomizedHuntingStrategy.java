@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.ecs.systems.WorldMovementPolicy;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.ghost.comp.ElroyComp;
-import de.amr.pacmanfx.core.gameplay.GhostHuntingStrategy;
+import de.amr.pacmanfx.core.gameplay.hunt.GhostHuntingStrategy;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import org.tinylog.Logger;

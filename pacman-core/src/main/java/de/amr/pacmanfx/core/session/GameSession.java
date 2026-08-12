@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.gameplay.ArcadeHouseGateKeeper;
 import de.amr.pacmanfx.core.gameplay.FrameContext;
-import de.amr.pacmanfx.core.gameplay.HuntingStepResult;
+import de.amr.pacmanfx.core.gameplay.hunt.HuntingStep;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.HUDState;
@@ -147,6 +147,6 @@ public class GameSession {
     }
 
     public void newFrameContext(long tick) {
-        frame = new FrameContext(tick, new HuntingStepResult());
+        frame = new FrameContext(tick, new HuntingStep());
     }
 }
