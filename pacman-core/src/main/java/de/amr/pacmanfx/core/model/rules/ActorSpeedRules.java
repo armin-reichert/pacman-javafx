@@ -22,11 +22,11 @@ public interface ActorSpeedRules {
     /**
      * Returns the speed of the given ghost for the given level.
      *
-     * @param gameContext the game context (asserts level)
+     * @param game the game context (asserts level)
      * @param ghost the ghost whose speed is requested
      * @return the ghost's speed multiplier
      */
-    float ghostSpeed(GameContext gameContext, Ghost ghost);
+    float ghostSpeed(GameContext game, Ghost ghost);
 
     /**
      * Returns the ghost's speed while attacking.

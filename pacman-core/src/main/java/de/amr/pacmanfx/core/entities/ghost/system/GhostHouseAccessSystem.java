@@ -25,8 +25,8 @@ public class GhostHouseAccessSystem {
      * In locked state, ghosts inside the house are bouncing up and down. They become blue when Pac-Man gets power
      * and start blinking when Pac-Man's power starts fading. After that, they return to their normal color.
      */
-    public void stayInHouse(GameContext gameContext, Ghost ghost, float speed) {
-        final GameSystems sys = gameContext.systems();
+    public void stayInHouse(GameContext game, Ghost ghost, float speed) {
+        final GameSystems sys = game.systems();
 
         final House house = ghost.worldInfo().house();
         final PositionComp position = ghost.pos();
@@ -60,8 +60,8 @@ public class GhostHouseAccessSystem {
      * <p>
      * The ghost speed is slower than outside, but I do not know the exact value.
      */
-    public boolean leaveHouse(GameContext gameContext, Ghost ghost, float speed) {
-        final GameSystems sys = gameContext.systems();
+    public boolean leaveHouse(GameContext game, Ghost ghost, float speed) {
+        final GameSystems sys = game.systems();
 
         final PositionComp position = ghost.pos();
         final House house = ghost.worldInfo().house();
@@ -103,8 +103,8 @@ public class GhostHouseAccessSystem {
      * When an eaten ghost has arrived at the ghost house door, he falls down to the center of the house,
      * then moves up again (if the house center is his revival position), or moves sidewards towards his revival position.
      */
-    public void enterHouse(GameContext gameContext, Ghost ghost, float speed) {
-        final GameSystems sys = gameContext.systems();
+    public void enterHouse(GameContext game, Ghost ghost, float speed) {
+        final GameSystems sys = game.systems();
 
         final PositionComp position = ghost.pos();
         final House house = ghost.worldInfo().house();
@@ -137,9 +137,9 @@ public class GhostHouseAccessSystem {
     }
 
     //TODO extract state change
-    public void reachHouse(GameContext gameContext, Ghost ghost, float speed) {
-        final GameSession session = gameContext.session();
-        final GameSystems sys = gameContext.systems();
+    public void reachHouse(GameContext game, Ghost ghost, float speed) {
+        final GameSession session = game.session();
+        final GameSystems sys = game.systems();
         final WorldMovementPolicy policy = sys.ghostWorldMovementPolicy();
         final GameLevel level = session.assertLevel();
 

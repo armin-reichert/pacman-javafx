@@ -80,7 +80,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
     }
 
     @Override
-    public void onTick(GameContext gameContext) {
+    public void onTick(GameContext game) {
         sceneFlow.update(this);
     }
 
@@ -238,15 +238,15 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
         READY_TO_PLAY {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                final GameContext gameContext = scene.app().currentGame();
-                final boolean canPlay = !gameContext.coinMechanism().isEmpty();
+                final GameContext game = scene.app().currentGame();
+                final boolean canPlay = !game.coinMechanism().isEmpty();
                 MarqueeSystem.instance().update(scene.marquee);
                 if (timer.atSecond(2.0) && !canPlay) {
-                    scene.gameFlow().enterState(gameContext, CommonGameStateID.GAME_OR_LEVEL_STARTING); // play demo level after 2 seconds
+                    scene.gameFlow().enterState(game, CommonGameStateID.GAME_OR_LEVEL_STARTING); // play demo level after 2 seconds
                 }
                 //TODO can this happen at all?
                 else if (timer.atSecond(5)) {
-                    scene.gameFlow().enterState(gameContext, CommonGameStateID.GAME_PREPARATION);
+                    scene.gameFlow().enterState(game, CommonGameStateID.GAME_PREPARATION);
                 }
             }
         };

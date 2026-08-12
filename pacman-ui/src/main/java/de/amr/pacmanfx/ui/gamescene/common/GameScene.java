@@ -65,9 +65,9 @@ public interface GameScene extends QuitHandler, Disposable {
     /**
      * Called every game tick.
      *
-     * @param gameContext the current game context
+     * @param game the current game context
      */
-    void onTick(GameContext gameContext);
+    void onTick(GameContext game);
 
     /**
      * @return the JavaFX subscene used for this scene.

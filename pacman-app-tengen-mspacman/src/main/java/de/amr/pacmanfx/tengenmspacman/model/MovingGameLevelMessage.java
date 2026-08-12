@@ -45,7 +45,7 @@ public class MovingGameLevelMessage extends GameLevelMessage {
         playing = false;
     }
 
-    public void updateMovement(GameContext gameContext) {
+    public void updateMovement(GameContext game) {
         if (!playing) return;
 
         if (delayTicks > 0) {
@@ -53,7 +53,7 @@ public class MovingGameLevelMessage extends GameLevelMessage {
             return;
         }
 
-        final MovementSystem motor = gameContext.systems().motor();
+        final MovementSystem motor = game.systems().motor();
         motor.move(this);
         if (wrapped) {
             if (pos().x() >= startPosition.x()) {

@@ -23,7 +23,7 @@ public final class GameState_EatingGhost extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext gameContext) {
+    public void onEnter(GameContext game) {
         timer().restartTicks(FREEZE_TICKS);
     }
 

@@ -52,13 +52,13 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene2D {
     }
 
     @Override
-    public void onTick(GameContext gameContext) {
+    public void onTick(GameContext game) {
         ++sceneTick;
         if (sceneTick < TICK_ANIMATION_START) {
             return;
         }
 
-        final GameSystems sys = gameContext.systems();
+        final GameSystems sys = game.systems();
 
         switch (sceneTick) {
             case TICK_ANIMATION_START      -> startAnimation(sys);

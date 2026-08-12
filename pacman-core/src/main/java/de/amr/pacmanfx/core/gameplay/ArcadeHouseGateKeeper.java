@@ -154,11 +154,11 @@ public final class ArcadeHouseGateKeeper {
     }
 
     /**
-     * @param gameContext the game context (assumes level exists)
+     * @param game the game context (assumes level exists)
      * @param prisoner the ghost to possibly get released
      * @return description why ghost has been released or {@link Optional#empty()} if ghost is not released
      */
-    private Optional<String> checkReleaseOfGhost(GameContext gameContext, Ghost prisoner) {
+    private Optional<String> checkReleaseOfGhost(GameContext game, Ghost prisoner) {
         final GhostPersonality personality = prisoner.personality();
         final int ord = personality.ordinal();
         if (personality == GhostPersonality.RED_GHOST_SHADOW) {
@@ -174,9 +174,9 @@ public final class ArcadeHouseGateKeeper {
         }
 
         // check Pac-Man starving ticks
-        final GameLevel level = gameContext.session().assertLevel();
+        final GameLevel level = game.session().assertLevel();
         final Pac pac = level.entities().pac();
-        final PacDigestionSystem digestionSystem = gameContext.systems().pacDigestion();
+        final PacDigestionSystem digestionSystem = game.systems().pacDigestion();
         if (pac.digestion().starvingTicks() >= pacStarvingLimit) {
             digestionSystem.endStarving(pac);
             return Optional.of(String.format("%s reached starving limit (%d ticks)", pac.name(), pacStarvingLimit));
@@ -212,12 +212,12 @@ public final class ArcadeHouseGateKeeper {
         }
     }
 
-    public void unlockGhostIfPossible(GameContext gameContext) {
-        requireNonNull(gameContext);
+    public void unlockGhostIfPossible(GameContext game) {
+        requireNonNull(game);
 
-        final GameSystems sys = gameContext.systems();
+        final GameSystems sys = game.systems();
 
-        final GameLevel level = gameContext.session().assertLevel();
+        final GameLevel level = game.session().assertLevel();
         final House house = level.entities().theOne(House.class);
         final Ghost blinky = level.ghost(GhostPersonality.RED_GHOST_SHADOW);
 
@@ -241,7 +241,7 @@ public final class ArcadeHouseGateKeeper {
             .map(level::ghost)
             .filter(ghost -> ghost.ghostStateEnum() == GhostState.LOCKED)
             .findFirst()
-            .ifPresent(prisoner -> checkReleaseOfGhost(gameContext, prisoner).ifPresent(_ -> {
+            .ifPresent(prisoner -> checkReleaseOfGhost(game, prisoner).ifPresent(_ -> {
                 sys.worldNavigator().setMoveDir(prisoner, Direction.UP);
                 sys.worldNavigator().setWishDir(prisoner, Direction.UP);
                 sys.ghostState().changeState(prisoner, GhostState.LEAVING_HOUSE);

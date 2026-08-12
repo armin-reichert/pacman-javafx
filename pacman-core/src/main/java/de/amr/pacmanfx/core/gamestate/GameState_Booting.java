@@ -24,7 +24,7 @@ public final class GameState_Booting extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext gameContext) {
+    public void onEnter(GameContext game) {
         timer().restartTicks(Timing.EXPIRATION);
     }
 

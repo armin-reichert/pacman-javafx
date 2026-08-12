@@ -14,14 +14,14 @@ public final class GameState_PreparingGamePlay extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext gameContext) {
-        final GameSession session = gameContext.session();
+    public void onEnter(GameContext game) {
+        final GameSession session = game.session();
         session.hud()
             .showCredit().showScore().showLevelCounter().hideLivesCounter().show();
     }
 
     @Override
-    public void onUpdate(GameContext gameContext) {
+    public void onUpdate(GameContext game) {
         // Wait for user interaction (e.g. key press) to start playing
     }
 }

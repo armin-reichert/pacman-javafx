@@ -90,7 +90,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene2D {
     }
 
     @Override
-    public void onTick(GameContext gameContext) {
+    public void onTick(GameContext game) {
         if (initialDelay > 0) {
             --initialDelay;
             return;

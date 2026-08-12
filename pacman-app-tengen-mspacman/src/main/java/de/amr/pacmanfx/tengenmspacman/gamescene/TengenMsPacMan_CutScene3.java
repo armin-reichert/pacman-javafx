@@ -131,7 +131,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
     }
 
     @Override
-    public void onTick(GameContext gameContext) {
+    public void onTick(GameContext game) {
         final long tick = gameState().timer().tickCount();
 
         if (tick == TICK_CLAP) {
@@ -145,7 +145,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
         }
 
         TengenMsPacMan_ClapperboardStateSystem.update(clapperboard);
-        playCutScene(gameContext, tick);
+        playCutScene(game, tick);
         BagAnimationSystem.update(bag);
     }
     

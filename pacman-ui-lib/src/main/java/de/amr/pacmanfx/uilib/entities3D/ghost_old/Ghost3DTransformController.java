@@ -15,11 +15,11 @@ public class Ghost3DTransformController {
 
     public Ghost3DTransformController() {}
 
-    public void init(Ghost3DWrapperToBeRemoved ghost3D, GameContext gameContext) {
-        update(ghost3D, gameContext);
+    public void init(Ghost3DWrapperToBeRemoved ghost3D, GameContext game) {
+        update(ghost3D, game);
     }
 
-    public void update(Ghost3DWrapperToBeRemoved ghost3D, GameContext gameContext) {
+    public void update(Ghost3DWrapperToBeRemoved ghost3D, GameContext game) {
         final Ghost ghost = ghost3D.ghost();
         final Vector2f center = WorldNavigationSystem.computeCenter(ghost);
 
@@ -34,7 +34,7 @@ public class Ghost3DTransformController {
             case DOWN  -> 270;
         });
 
-        final GameLevel level = gameContext.session().assertLevel();
+        final GameLevel level = game.session().assertLevel();
         final boolean outside = center.x() < WorldMap.HTS
             || center.x() > WorldMap.TS * level.worldMap().numCols() - WorldMap.HTS;
         ghost3D.root().setVisible(ghost.isVisible() && !outside);

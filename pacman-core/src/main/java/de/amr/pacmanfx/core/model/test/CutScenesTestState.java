@@ -17,7 +17,7 @@ public class CutScenesTestState extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext gameContext) {
+    public void onEnter(GameContext game) {
         testedCutSceneNumber = 1;
         waitForTimeout();
     }

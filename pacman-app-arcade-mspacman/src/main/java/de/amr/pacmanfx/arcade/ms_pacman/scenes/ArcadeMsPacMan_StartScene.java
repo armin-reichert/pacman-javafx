@@ -31,5 +31,5 @@ public class ArcadeMsPacMan_StartScene extends AbstractGameScene2D {
     }
 
     @Override
-    public void onTick(GameContext gameContext) {}
+    public void onTick(GameContext game) {}
 }

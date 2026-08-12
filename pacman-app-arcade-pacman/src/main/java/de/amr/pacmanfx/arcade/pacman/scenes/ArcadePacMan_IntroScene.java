@@ -112,7 +112,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
     }
 
     @Override
-    public void onTick(GameContext gameContext) {
+    public void onTick(GameContext game) {
         flow.update(this);
     }
 
@@ -144,8 +144,8 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
         app().ui().sounds().voice().playAfterSec(1, GlobalAssets.VoiceID.EXPLAIN_GAME_START.media());
     }
 
-    private void startChasingPacMan(GameContext gameContext) {
-        final GameSystems sys = gameContext.systems();
+    private void startChasingPacMan(GameContext game) {
+        final GameSystems sys = game.systems();
 
         blinking.start();
 
@@ -195,8 +195,8 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
         }
     }
 
-    private void turnCardsStopPacMan(GameContext gameContext) {
-        final GameSystems sys = gameContext.systems();
+    private void turnCardsStopPacMan(GameContext game) {
+        final GameSystems sys = game.systems();
 
         sys.worldNavigator().setSpeed(pacMan, 0);
         sys.spriteAnim().stopSelected(pacMan);
@@ -217,8 +217,8 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
         sys.spriteAnim().playSelected(pacMan);
     }
 
-    private void chaseGhosts(GameContext gameContext, long tick) {
-        final GameSystems sys = gameContext.systems();
+    private void chaseGhosts(GameContext game, long tick) {
+        final GameSystems sys = game.systems();
 
         blinking.triggerPulse();
 
@@ -226,7 +226,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
 
         for (Ghost ghost : ghosts) { sys.motor().move(ghost); }
 
-        edibleGhost().ifPresent(victim -> eatGhostAndStopChasing(gameContext, victim, tick));
+        edibleGhost().ifPresent(victim -> eatGhostAndStopChasing(game, victim, tick));
 
         if (tick == lastGhostEatenTick + GHOST_EATING_TICKS) {
             continueChasing(sys);
@@ -240,8 +240,8 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
             .findFirst();
     }
 
-    private void eatGhostAndStopChasing(GameContext gameContext, Ghost victim, long tick) {
-        final GameSystems sys = gameContext.systems();
+    private void eatGhostAndStopChasing(GameContext game, Ghost victim, long tick) {
+        final GameSystems sys = game.systems();
 
         sys.ghostState().changeState(victim, EATEN);
         sys.spriteAnim().selectAndSetFrame(victim, CommonSpriteAnimationID.GHOST_POINTS, numGhostsEaten++);
@@ -393,11 +393,11 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
 
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
-                final GameContext gameContext = scene.game();
+                final GameContext game = scene.game();
 
                 if (timer.tickCount() == TICK_START_DEMO_LEVEL) {
                     scene.ghosts[GhostPersonality.ORANGE_GHOST_POKEY.ordinal()].hide();
-                    scene.gameFlow().enterState(gameContext, CommonGameStateID.GAME_OR_LEVEL_STARTING);
+                    scene.gameFlow().enterState(game, CommonGameStateID.GAME_OR_LEVEL_STARTING);
                 }
             }
         };

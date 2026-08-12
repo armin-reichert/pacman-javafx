@@ -66,7 +66,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
     }
 
     @Override
-    public void onTick(GameContext gameContext) {
+    public void onTick(GameContext game) {
         updateSceneState();
     }
 

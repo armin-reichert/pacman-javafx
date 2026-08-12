@@ -29,13 +29,13 @@ public class BonusStateSystem {
         this.moveAndJumpSystem = requireNonNull(moveAndJumpSystem);
     }
 
-    public void update(GameContext gameContext) {
-        requireNonNull(gameContext);
+    public void update(GameContext game) {
+        requireNonNull(game);
 
-        final GameSession session = gameContext.session();
+        final GameSession session = game.session();
         final GameLevel level = session.assertLevel();
 
-        level.entities().optBonus().ifPresent(bonus -> update(gameContext.eventManager(), level, bonus, session.thisFrame()));
+        level.entities().optBonus().ifPresent(bonus -> update(game.eventManager(), level, bonus, session.thisFrame()));
     }
 
     private void update(GameEventManager eventManager, GameLevel level, Bonus bonus, FrameState frame) {

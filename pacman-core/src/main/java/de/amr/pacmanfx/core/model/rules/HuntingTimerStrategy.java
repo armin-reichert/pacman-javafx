@@ -22,7 +22,7 @@ public interface HuntingTimerStrategy {
 
     void start();
 
-    void startFirstPhase(GameContext gameContext, int number);
+    void startFirstPhase(GameContext game, int number);
 
     int phaseIndex();
 

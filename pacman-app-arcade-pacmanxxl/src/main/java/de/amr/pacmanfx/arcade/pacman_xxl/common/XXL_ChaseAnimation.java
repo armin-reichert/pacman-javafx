@@ -81,13 +81,13 @@ class XXL_ChaseAnimation {
         timeline.stop();
     }
 
-    public void init(GameContext gameContext, GameVariantRenderConfig renderConfig, Canvas canvas, SpriteAnimationContainer container) {
-        requireNonNull(gameContext);
+    public void init(GameContext game, GameVariantRenderConfig renderConfig, Canvas canvas, SpriteAnimationContainer container) {
+        requireNonNull(game);
         requireNonNull(renderConfig);
         requireNonNull(canvas);
         requireNonNull(container);
 
-        final GameSystems sys = gameContext.systems();
+        final GameSystems sys = game.systems();
 
         timeline.getKeyFrames().setAll(new KeyFrame(FRAME_TIME, _ -> update(sys)));
 
@@ -109,10 +109,10 @@ class XXL_ChaseAnimation {
         sys.spriteAnim().playSelected(pac);
 
         ghosts = List.of(
-            renderConfig.createAnimatedGhost(gameContext, container, GhostPersonality.RED_GHOST_SHADOW),
-            renderConfig.createAnimatedGhost(gameContext, container, GhostPersonality.PINK_GHOST_SPEEDY),
-            renderConfig.createAnimatedGhost(gameContext, container, GhostPersonality.CYAN_GHOST_BASHFUL),
-            renderConfig.createAnimatedGhost(gameContext, container, GhostPersonality.ORANGE_GHOST_POKEY)
+            renderConfig.createAnimatedGhost(game, container, GhostPersonality.RED_GHOST_SHADOW),
+            renderConfig.createAnimatedGhost(game, container, GhostPersonality.PINK_GHOST_SPEEDY),
+            renderConfig.createAnimatedGhost(game, container, GhostPersonality.CYAN_GHOST_BASHFUL),
+            renderConfig.createAnimatedGhost(game, container, GhostPersonality.ORANGE_GHOST_POKEY)
         );
         for (Ghost ghost : ghosts) {
             ghost.pos().setX((numTilesX + 4) * WorldMap.TS + ghost.personality().ordinal() * GHOST_DISTANCE);

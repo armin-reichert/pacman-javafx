@@ -51,12 +51,12 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene2D {
     }
 
     @Override
-    public void onTick(GameContext gameContext) {
+    public void onTick(GameContext game) {
         if (++sceneTick < ANIMATION_START_TICK) {
             return;
         }
 
-        final GameSystems sys = gameContext.systems();
+        final GameSystems sys = game.systems();
 
         if (sceneTick == ANIMATION_START_TICK) {
             app().ui().sounds().play(PacManGameSoundID.INTERMISSION_1, 2);

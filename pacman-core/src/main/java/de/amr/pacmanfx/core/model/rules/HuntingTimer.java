@@ -55,14 +55,14 @@ public class HuntingTimer extends TickTimer implements HuntingTimerStrategy {
     }
 
     @Override
-    public void startFirstPhase(GameContext gameContext, int levelNumber) {
-        requireNonNull(gameContext);
+    public void startFirstPhase(GameContext game, int levelNumber) {
+        requireNonNull(game);
         requireValidLevelNumber(levelNumber);
 
-        startPhase(gameContext.model().rules(), levelNumber, 0);
+        startPhase(game.model().rules(), levelNumber, 0);
 
-        gameContext.eventManager().publishGameEvent(new HuntingPhaseStartedEvent(
-            gameContext,
+        game.eventManager().publishGameEvent(new HuntingPhaseStartedEvent(
+            game,
             phaseIndex,
             currentHuntingPhase())
         );

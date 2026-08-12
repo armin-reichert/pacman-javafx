@@ -80,16 +80,16 @@ public class Ghost3DWrapperToBeRemoved extends GameEntity implements DisposableG
         return root;
     }
 
-    public void init(GameContext gameContext) {
+    public void init(GameContext game) {
         assertControllersAssigned();
-        transformController.init(this, gameContext);
+        transformController.init(this, game);
         appearanceController.init(this);
     }
 
-    public void update(GameContext gameContext) {
+    public void update(GameContext game) {
         assertControllersAssigned();
-        transformController.update(this, gameContext);
-        appearanceController.update(this, gameContext);
+        transformController.update(this, game);
+        appearanceController.update(this, game);
     }
 
     @Override

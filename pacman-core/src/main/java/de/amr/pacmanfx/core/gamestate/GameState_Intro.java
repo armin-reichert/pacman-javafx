@@ -13,8 +13,8 @@ public final class GameState_Intro extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext gameContext) {
-        gameContext.session().hud().showLevelCounter().hideLivesCounter().showCredit().showScore().show();
+    public void onEnter(GameContext game) {
+        game.session().hud().showLevelCounter().hideLivesCounter().showCredit().showScore().show();
         waitForTimeout();
     }
 
