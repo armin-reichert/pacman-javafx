@@ -196,7 +196,6 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
         for (Ghost ghost : ghosts) {
             ghostSpriteAnimationSystem.update(ghost, pacMan);
         }
-
     }
 
     private void turnCardsStopPacMan(GameContext game) {
@@ -218,6 +217,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
 
     private void turnCardsRestartPacMan(GameSystems sys) {
         sys.worldNavigator().setSpeed(pacMan, CHASING_SPEED);
+        pacMan.spriteAnim().animation().playSelected();
     }
 
     private void chaseGhosts(GameContext game, long tick) {

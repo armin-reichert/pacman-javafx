@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.gamescene.d2;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
 import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
@@ -52,8 +53,6 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
             return;
         }
 
-        final WorldNavigationComp worldNavigation = actor.requireComp(WorldNavigationComp.class);
-
         ctx.setFill(Color.FORESTGREEN);
         if (actor instanceof Pac pac) {
             String autopilot = pac.cheats().isUsingAutopilot() ? "autopilot" : "";
@@ -62,13 +61,20 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
             ctx.setFont(debugTextFont);
             ctx.fillText(text, scaled(pac.pos().x() - 4), scaled(pac.pos().y() + 16));
         }
-        Object animationID = animSystem.selectedAnimationID(actor);
-        if (animationID != null) {
-            ctx.setFont(debugTextFont);
-            drawAnimationInfo(animSystem, actor, animationID);
+
+        if (actor.hasComp(SpriteAnimationComp.class)) {
+            Object animationID = animSystem.selectedAnimationID(actor);
+            if (animationID != null) {
+                ctx.setFont(debugTextFont);
+                drawAnimationInfo(animSystem, actor, animationID);
+            }
         }
-        if (worldNavigation.wishDir() != null) {
-            drawDirectionIndicator(actor);
+
+        if (actor.hasComp(WorldNavigationComp.class)) {
+            final WorldNavigationComp worldNavigation = actor.requireComp(WorldNavigationComp.class);
+            if (worldNavigation.wishDir() != null) {
+                drawDirectionIndicator(actor);
+            }
         }
     }
 

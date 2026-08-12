@@ -54,6 +54,10 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Ga
                 ArcadePacMan_IntroScene introScene = (ArcadePacMan_IntroScene) scene;
                 super.draw(scene, tick);
                 ctx.fillText("Scene timer %d".formatted(introScene.flow.state().timer().tickCount()), 0, scaled(5 * WorldMap.TS));
+                drawMovingActorInfo(animSystem, introScene.pacMan);
+                for (var ghost : introScene.ghosts) {
+                    //drawMovingActorInfo(animSystem, ghost);
+                }
             }
         });
 
