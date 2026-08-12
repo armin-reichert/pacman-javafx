@@ -64,7 +64,7 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class CommonGamePlay implements GamePlay {
 
-    private static final Set<GhostState> TURNBACK_STATES = Set.of(GhostState.FRIGHTENED, GhostState.HUNTING_PAC);
+    private static final Set<GhostState> GHOST_TURNBACK_STATES = Set.of(GhostState.FRIGHTENED, GhostState.HUNTING_PAC);
 
     @Override
     public void onSessionStart(GameContext game) {
@@ -229,7 +229,7 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     private void startPacPower(GameContext game, GameLevel level, Pac pac) {
-        level.ghostsInAnyOfStates(TURNBACK_STATES).forEach(game.systems().worldNavigator()::requestTurnBack);
+        level.ghostsInAnyOfStates(GHOST_TURNBACK_STATES).forEach(game.systems().worldNavigator()::requestTurnBack);
 
         if (level.pacPowerSeconds() > 0) {
             level.huntingTimerStrategy().stop();

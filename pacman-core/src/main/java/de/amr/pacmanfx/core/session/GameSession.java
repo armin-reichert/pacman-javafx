@@ -149,5 +149,4 @@ public class GameSession {
     public void newFrameContext(long tick) {
         frame = new FrameContext(tick, new HuntingStepResult());
     }
-
 }
