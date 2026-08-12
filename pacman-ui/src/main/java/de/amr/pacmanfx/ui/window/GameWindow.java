@@ -44,17 +44,17 @@ public class GameWindow {
         stage.setMinHeight(MIN_STAGE_HEIGHT);
     }
 
-    public void setGameAppContext(GameAppContext appContext) {
-        mainScene.setGameAppContext(appContext);
+    public void setGameApp(GameAppContext app) {
+        mainScene.setGameApp(app);
 
-        titleBinding = createStageTitleBinding(appContext);
+        titleBinding = createStageTitleBinding(app);
         stage.titleProperty().bind(titleBinding);
 
         //TODO Without this, the title is not changed when returning from the editor. Why?
-        appContext.ui().views().currentViewIDProperty().addListener(
-            (_, _, viewID) -> updateStageTitleBinding(appContext.ui(), viewID));
+        app.ui().views().currentViewIDProperty().addListener(
+            (_, _, viewID) -> updateStageTitleBinding(app.ui(), viewID));
 
-        appContext.variants().addVariantNameListener((_, _, _) -> updateStageIcon(appContext));
+        app.variants().addVariantNameListener((_, _, _) -> updateStageIcon(app));
 
         // Triggers title update
         connected.set(true);

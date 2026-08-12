@@ -25,23 +25,23 @@ public final class GameViewManager {
 
     public GameViewManager() {}
 
-    public void setGameAppContext(GameAppContext appContext) {
-        requireNonNull(appContext);
+    public void setGameApp(GameAppContext app) {
+        requireNonNull(app);
 
         currentViewIDProperty().addListener((_, oldID, newID) -> {
-            appContext.ui().clearMessage();
+            app.ui().clearMessage();
 
             if (oldID != null) {
                 assertView(oldID).onExit();
             }
 
             final GameView newView = assertView(newID);
-            appContext.ui().window().mainScene().replaceGameView(newView);
+            app.ui().window().mainScene().replaceGameView(newView);
 
             newView.onEnter();
         });
 
-        views.values().forEach(gameView -> gameView.setAppContext(appContext));
+        views.values().forEach(gameView -> gameView.setApp(app));
     }
 
     public void registerView(GameViewID viewID, GameView gameView) {

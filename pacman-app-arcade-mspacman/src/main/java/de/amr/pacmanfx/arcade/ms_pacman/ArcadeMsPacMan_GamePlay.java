@@ -45,15 +45,15 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
     private static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
 
     @Override
-    public GameLevel createLevel(GameContext gameContext, int levelNumber) {
-        requireNonNull(gameContext);
+    public GameLevel createLevel(GameContext game, int levelNumber) {
+        requireNonNull(game);
         requireValidLevelNumber(levelNumber);
 
-        final GameSession session = gameContext.session();
+        final GameSession session = game.session();
 
-        final WorldNavigationSystem navigator = gameContext.systems().worldNavigator();
+        final WorldNavigationSystem navigator = game.systems().worldNavigator();
 
-        final GameModel model = gameContext.model();
+        final GameModel model = game.model();
         final WorldMap worldMap = model.worldMapManager().supplyWorldMap(levelNumber);
         final TerrainLayer terrain = worldMap.terrainLayer();
 
@@ -83,7 +83,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         level.setPacPowerSeconds(levelData.secPacPower());
         level.setPacPowerFadingSeconds(0.5f * numFlashes); //TODO correct?
 
-        createAndSetMsPacMan(gameContext.systems(), level);
+        createAndSetMsPacMan(game.systems(), level);
         createAndSetGhosts(level);
 
         level.setBonusSymbolCode(0, model.rules().selectBonusSymbolCode(level.number(), 0));
@@ -144,13 +144,13 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
     }
 
     @Override
-    public GameLevel buildDemoLevel(GameContext gameContext) {
-        requireNonNull(gameContext);
+    public GameLevel buildDemoLevel(GameContext game) {
+        requireNonNull(game);
 
-        final GameSession session = gameContext.session();
-        final GameSystems systems = gameContext.systems();
+        final GameSession session = game.session();
+        final GameSystems systems = game.systems();
 
-        final GameLevel level = createLevel(gameContext, 1);
+        final GameLevel level = createLevel(game, 1);
 
         session.setLevel(level);
         session.setAttractMode(true);
@@ -233,7 +233,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
 
     // ------------------------------------------------
 
-    private void computeBonusRoute(GameContext gameContext, Bonus bonus, TerrainLayer terrain, House house) {
+    private void computeBonusRoute(GameContext game, Bonus bonus, TerrainLayer terrain, House house) {
         final List<HPortal> portals = terrain.horizontalPortals();
         if (portals.isEmpty()) {
             Logger.error("Moving bonus cannot be activated, game level does not contain any portals");
@@ -271,7 +271,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         final Vector2i backyard = houseEntry.plus(0, house.sizeInTiles().y() + 1);
         final List<Vector2i> route = Stream.of(entryTile, houseEntry, backyard, houseEntry, exitTile).toList();
 
-        gameContext.systems().bonusMoveAndJump().setRoute(bonus, route, leftToRight);
+        game.systems().bonusMoveAndJump().setRoute(bonus, route, leftToRight);
         Logger.info("Moving bonus route: {} (crossing {})", route, leftToRight ? "left to right" : "right to left");
     }
 }

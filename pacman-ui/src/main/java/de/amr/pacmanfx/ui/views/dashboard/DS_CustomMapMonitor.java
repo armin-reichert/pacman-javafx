@@ -64,7 +64,7 @@ public class DS_CustomMapMonitor extends GameDashboardSection {
     }
 
     @Override
-    public void setGameAppContext(GameAppContext appContext) {
+    public void setGameApp(GameAppContext appContext) {
         requireNonNull(appContext);
         setCustomDirWatchDog(appContext.watchdog());
         setMapEditFunction(mapFile ->

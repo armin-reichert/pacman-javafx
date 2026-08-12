@@ -60,8 +60,8 @@ public class StartPagesView implements GameView {
     }
 
     @Override
-    public void setAppContext(GameAppContext appContext) {
-        this.appContext = requireNonNull(appContext);
+    public void setApp(GameAppContext app) {
+        this.appContext = requireNonNull(app);
     }
 
     @Override
@@ -106,7 +106,7 @@ public class StartPagesView implements GameView {
         }
         pages.add(startPage);
         carousel.getItems().add(startPage.rootPane());
-        startPage.setGameAppContext(appContext);
+        startPage.setGameApp(appContext);
     }
 
     // Private area

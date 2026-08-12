@@ -18,9 +18,9 @@ public class DS_GameSceneKeys extends GameDashboardSection {
     }
 
     @Override
-    public void update(GameAppContext appContext) {
-        super.update(appContext);
-        appContext.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> updateInfo(appContext, gameScene));
+    public void update(GameAppContext app) {
+        super.update(app);
+        app.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> updateInfo(app, gameScene));
     }
 
     private void updateInfo(GameAppContext appContext, GameScene gameScene) {

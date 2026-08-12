@@ -30,11 +30,11 @@ public final class GameState_DemoLevelPlaying extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext gameContext) {
-        final GameSession session = gameContext.session();
-        session.setLevel(gameContext.gamePlay().buildDemoLevel(gameContext));
+    public void onEnter(GameContext game) {
+        final GameSession session = game.session();
+        session.setLevel(game.gamePlay().buildDemoLevel(game));
         session.hud().showCredit().hideLivesCounter();
-        gameContext.eventManager().publishGameEvent(new LevelCreatedEvent(session.assertLevel()));
+        game.eventManager().publishGameEvent(new LevelCreatedEvent(session.assertLevel()));
     }
 
     @Override
@@ -82,17 +82,17 @@ public final class GameState_DemoLevelPlaying extends GameState {
         }
     }
 
-    private CommonGameStateID computeNextState(GameContext gameContext) {
-        final GameLevel level = gameContext.session().assertLevel();
-        final GameRules rules = gameContext.model().rules();
+    private CommonGameStateID computeNextState(GameContext game) {
+        final GameLevel level = game.session().assertLevel();
+        final GameRules rules = game.model().rules();
 
         if (rules.isLevelCompleted(level)) {
             return CommonGameStateID.GAME_INTRO;
         }
-        else if (gameContext.session().thisFrame().huntingStep().pacKilled()) {
+        else if (game.session().thisFrame().huntingStep().pacKilled()) {
             return CommonGameStateID.GAME_LEVEL_PACMAN_DYING;
         }
-        else if (gameContext.session().thisFrame().huntingStep().hasGhostBeenKilled()) {
+        else if (game.session().thisFrame().huntingStep().hasGhostBeenKilled()) {
             return CommonGameStateID.GAME_LEVEL_EATING_GHOST;
         }
         return CommonGameStateID.DEMO_LEVEL_PLAYING;

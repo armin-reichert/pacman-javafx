@@ -15,7 +15,7 @@ public interface StartPage {
 
     Pane rootPane();
 
-    void setGameAppContext(GameAppContext appContext);
+    void setGameApp(GameAppContext app);
 
     void onEnter();
 

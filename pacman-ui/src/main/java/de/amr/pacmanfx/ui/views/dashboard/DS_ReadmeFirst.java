@@ -27,7 +27,7 @@ public class DS_ReadmeFirst extends GameDashboardSection {
     }
 
     @Override
-    public void setGameAppContext(GameAppContext appContext) {
+    public void setGameApp(GameAppContext appContext) {
         final var readmeText = new Text();
         readmeText.setText(appContext.ui().translations().translate("infobox.readme.content"));
 

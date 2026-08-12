@@ -101,17 +101,17 @@ public class DS_3DAnimationMonitor extends GameDashboardSection {
     }
 
     @Override
-    public void setGameAppContext(GameAppContext appContext) {
+    public void setGameApp(GameAppContext appContext) {
         tableView.prefHeightProperty().bind(appContext.ui().window().stage().heightProperty()
             .map(height -> height.doubleValue() * RELATIVE_TABLE_HEIGHT));
     }
 
     @Override
-    public void update(GameAppContext appContext) {
-        super.update(appContext);
+    public void update(GameAppContext app) {
+        super.update(app);
 
         final AnimationRegistry animationSet =
-            appContext.ui().gameScenes().optCurrentGameScene()
+            app.ui().gameScenes().optCurrentGameScene()
                 .filter(PlayScene3D.class::isInstance)
                 .map(PlayScene3D.class::cast)
                 .flatMap(PlayScene3D::optGameLevel3D)

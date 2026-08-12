@@ -44,7 +44,7 @@ public class Arcade_BootScene2D extends AbstractGameScene2D {
     }
 
     @Override
-    public void onTick(GameContext gameContext) {
+    public void onTick(GameContext game) {
         switch ((int) gameState().timer().tickCount()) {
             case GameState_Booting.Timing.HEX_CODES -> sceneState = SceneState.HEX_CODES;
             case GameState_Booting.Timing.SPRITE_GARBAGE -> sceneState = SceneState.RANDOM_SPRITE_FRAGMENTS;

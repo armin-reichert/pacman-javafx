@@ -18,9 +18,9 @@ public class ArcadeGameState_LevelComplete extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext gameContext) {
-        final GameSession session = gameContext.session();
-        gameContext.gamePlay().onLevelCompleted(gameContext, session.assertLevel());
+    public void onEnter(GameContext game) {
+        final GameSession session = game.session();
+        game.gamePlay().onLevelCompleted(game, session.assertLevel());
         waitForTimeout(); // UI triggers timeout
     }
 

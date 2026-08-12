@@ -74,15 +74,15 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
             && numContinues == TengenMsPacMan_GameModel.DEFAULT_NUM_CONTINUES;
     }
 
-    public void activateBooster(GameContext gameContext, Pac pac, boolean boosterOn) {
-        requireNonNull(gameContext);
+    public void activateBooster(GameContext game, Pac pac, boolean boosterOn) {
+        requireNonNull(game);
         requireNonNull(pac);
 
-        final GameSession session = gameContext.session();
+        final GameSession session = game.session();
 
         session.setValue(GamePlayOptions.BOOSTER_ON, boosterOn);
 
-        final SpriteAnimSystem animSystem = gameContext.systems().spriteAnim();
+        final SpriteAnimSystem animSystem = game.systems().spriteAnim();
         animSystem.select(pac, boosterOn ? TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER : CommonSpriteAnimationID.PAC_MUNCHING);
     }
 

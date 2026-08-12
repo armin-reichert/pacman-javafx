@@ -65,8 +65,8 @@ public class StatusIconBox implements Disposable {
         return Stream.of(iconMuted, icon3D, iconAutopilot, iconImmune, iconCheated);
     }
 
-    public void setGameAppContext(GameAppContext appContext) {
-        final TranslationManager translations = appContext.ui().translations();
+    public void setGameApp(GameAppContext app) {
+        final TranslationManager translations = app.ui().translations();
 
         setTooltip(iconMuted, translations.translate("status_icon.muted"));
         setTooltip(icon3D, translations.translate("status_icon.3d"));
@@ -74,7 +74,7 @@ public class StatusIconBox implements Disposable {
         setTooltip(iconImmune, translations.translate("status_icon.immune"));
         setTooltip(iconCheated, translations.translate("status_icon.cheated"));
 
-        final GameViewManager views = appContext.ui().views();
+        final GameViewManager views = app.ui().views();
         // Hide status icon box in editor view
         rootPane().visibleProperty().bind(
                 views.currentViewIDProperty().isEqualTo(GameViewID.GAMEPLAY)
@@ -83,8 +83,8 @@ public class StatusIconBox implements Disposable {
 
         // Visibility of "autopilot", "cheated" and "immune" is bound to *current game model*'s cheat object!
         final ChangeListener<String> variantChangeHandler = (_, _, variantName) -> {
-            final GameModel gameModel = appContext.variants().gameVariantByName(variantName).gameModel();
-            final GameCheats cheats = appContext.currentGame().cheats();
+            final GameModel gameModel = app.variants().gameVariantByName(variantName).gameModel();
+            final GameCheats cheats = app.currentGame().cheats();
 
             iconAutopilot.visibleProperty().unbind();
             iconAutopilot.visibleProperty().bind(cheats.pacUsingAutopilotProperty());
@@ -98,10 +98,10 @@ public class StatusIconBox implements Disposable {
             Logger.info("Icons autopilot, cheated and immune visibility bound to game model {}", gameModel);
         };
 
-        appContext.variants().addVariantNameListener(variantChangeHandler);
+        app.variants().addVariantNameListener(variantChangeHandler);
 
-        iconMuted.visibleProperty().bind(appContext.ui().viewModel().mutedProperty);
-        icon3D.visibleProperty().bind(appContext.ui().viewModel().common3D.view3DEnabledProperty);
+        iconMuted.visibleProperty().bind(app.ui().viewModel().mutedProperty);
+        icon3D.visibleProperty().bind(app.ui().viewModel().common3D.view3DEnabledProperty);
     }
 
     @Override

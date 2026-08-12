@@ -33,7 +33,7 @@ public class DS_ActorInfo extends GameDashboardSection {
     }
 
     @Override
-    public void setGameAppContext(GameAppContext appContext) {
+    public void setGameApp(GameAppContext appContext) {
         addDynamicInfo("Pac Name",  supplyPacText(appContext, (_, pac) -> pac.name()));
         addDynamicInfo("Lives",     supplyLivesCount(appContext));
         addDynamicInfo("Movement",  supplyPacText(appContext, this::actorMovementText));

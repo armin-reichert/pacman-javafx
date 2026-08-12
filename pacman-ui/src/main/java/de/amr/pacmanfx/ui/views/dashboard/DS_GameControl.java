@@ -40,7 +40,7 @@ public class DS_GameControl extends GameDashboardSection {
     }
 
     @Override
-    public void setGameAppContext(GameAppContext appContext) {
+    public void setGameApp(GameAppContext appContext) {
         final CoinMechanism coinMechanism = appContext.currentGame().coinMechanism();
         final CommonGameActions actions = appContext.commonActions();
 

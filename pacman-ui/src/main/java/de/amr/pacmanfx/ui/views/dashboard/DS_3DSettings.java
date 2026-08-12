@@ -38,7 +38,7 @@ public class DS_3DSettings extends GameDashboardSection {
     }
 
     @Override
-    public void setGameAppContext(GameAppContext app) {
+    public void setGameApp(GameAppContext app) {
         final GameUISettingsVM vm = app.ui().viewModel();
 
         cbUsePlayScene3D = checkBox("3D Play Scene");
@@ -106,11 +106,11 @@ public class DS_3DSettings extends GameDashboardSection {
     }
 
     @Override
-    public void update(GameAppContext appContext) {
-        super.update(appContext);
+    public void update(GameAppContext app) {
+        super.update(app);
 
-        final GameUISettingsVM vm = appContext.ui().viewModel();
-        final MiniPlaySceneView miniView = appContext.ui().views().gamePlayView().miniPlaySceneView();
+        final GameUISettingsVM vm = app.ui().viewModel();
+        final MiniPlaySceneView miniView = app.ui().views().gamePlayView().miniPlaySceneView();
 
         comboPerspectives.setValue(vm.common3D.cameraPerspectiveIdProperty.get());
 

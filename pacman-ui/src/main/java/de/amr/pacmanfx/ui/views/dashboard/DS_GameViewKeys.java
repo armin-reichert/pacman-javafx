@@ -21,9 +21,9 @@ public class DS_GameViewKeys extends GameDashboardSection {
     }
 
     @Override
-    public void update(GameAppContext appContext) {
-        super.update(appContext);
-        appContext.ui().views().optCurrentView().ifPresent(view -> updateInfo(appContext, view));
+    public void update(GameAppContext app) {
+        super.update(app);
+        app.ui().views().optCurrentView().ifPresent(view -> updateInfo(app, view));
     }
 
     private void updateInfo(GameAppContext appContext, GameView view) {

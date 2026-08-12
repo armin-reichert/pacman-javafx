@@ -8,4 +8,4 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.GameEvent;
 import de.amr.pacmanfx.core.model.rules.HuntingPhase;
 
-public record HuntingPhaseStartedEvent(GameContext gameContext, int phaseIndex, HuntingPhase phase) implements GameEvent {}
+public record HuntingPhaseStartedEvent(GameContext game, int phaseIndex, HuntingPhase phase) implements GameEvent {}

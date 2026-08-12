@@ -23,7 +23,7 @@ public class GameDashboard extends Dashboard<GameDashboardSection> {
 
     public void setAppContext(GameAppContext appContext) {
         requireNonNull(appContext);
-        sections().forEach(section -> section.setGameAppContext(appContext));
+        sections().forEach(section -> section.setGameApp(appContext));
     }
 
     public void update(GameAppContext appContext) {

@@ -77,13 +77,13 @@ public class MiniPlaySceneView {
         return rootPane;
     }
 
-    public void setGameAppContext(GameAppContext appContext) {
-        this.app = requireNonNull(appContext);
+    public void setGameApp(GameAppContext appcontext) {
+        this.app = requireNonNull(appcontext);
 
-        rootPane.backgroundProperty().bind(appContext.ui().viewModel().common2D.canvasBackgroundColorProperty.map(Background::fill));
-        rootPane.opacityProperty().bind(appContext.ui().viewModel().miniView.opacityPercentageProperty.divide(100.0));
+        rootPane.backgroundProperty().bind(appcontext.ui().viewModel().common2D.canvasBackgroundColorProperty.map(Background::fill));
+        rootPane.opacityProperty().bind(appcontext.ui().viewModel().miniView.opacityPercentageProperty.divide(100.0));
 
-        canvas.heightProperty().bind(appContext.ui().viewModel().miniView.heightProperty);
+        canvas.heightProperty().bind(appcontext.ui().viewModel().miniView.heightProperty);
         canvas.widthProperty().bind(Bindings.createDoubleBinding(
             () -> {
                 final double aspect = (double) worldSize.get().x() / worldSize.get().y();

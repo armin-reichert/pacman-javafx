@@ -37,7 +37,7 @@ public class EditorView implements GameView {
     }
 
     @Override
-    public void setAppContext(GameAppContext appContext) {}
+    public void setApp(GameAppContext app) {}
 
     public TileMapEditor editor() {
         return editor;

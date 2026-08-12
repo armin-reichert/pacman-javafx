@@ -67,8 +67,8 @@ public class XXL_StartPage implements StartPage {
     }
 
     @Override
-    public void setGameAppContext(GameAppContext appContext) {
-        this.appContext = requireNonNull(appContext);
+    public void setGameApp(GameAppContext app) {
+        this.appContext = requireNonNull(app);
     }
 
     @Override
