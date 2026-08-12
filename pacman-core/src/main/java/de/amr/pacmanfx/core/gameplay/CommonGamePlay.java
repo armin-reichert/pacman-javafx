@@ -69,34 +69,22 @@ public abstract class CommonGamePlay implements GamePlay {
     @Override
     public void onSessionStart(GameContext game) {
         requireNonNull(game);
-
         final GameSession session = game.session();
-        final GameModel model = game.model();
 
-        model.worldMapManager().loadMapPrototypes();
+        game.model().worldMapManager().loadMapPrototypes();
+
         initScores(session);
 
         final LevelCounter levelCounter = game.session().levelCounter();
+        LevelCounterSystem.enable(levelCounter, true);
         LevelCounterSystem.setCapacity(levelCounter, 7);
         LevelCounterSystem.clear(levelCounter);
-        LevelCounterSystem.enable(levelCounter, true);
 
         session.setGateKeeper(new ArcadeHouseGateKeeper()); // TODO not needed by Tengen
         session.gateKeeper().reset();
+
         session.setLevel(null);
         session.setPlaying(false);
-    }
-
-    private void initScores(GameSession session) {
-        session.score().reset();
-        final File highScoreFile = session.highScore().requireComp(ScorePersistencyComp.class).file();
-        try {
-            ScoreSystem.load(session.highScore());
-            ScoreSystem.enableScore(session.highScore(), true);
-        } catch (IOException x) {
-            //TODO throw exception?
-            Logger.error(x, "Error loading high-score file {}", highScoreFile.getAbsolutePath());
-        }
     }
 
     @Override
@@ -129,13 +117,12 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     @Override
-    public void buildNormalLevel(GameContext gameContext, int levelNumber, int numLives) {
-        requireNonNull(gameContext);
+    public void buildNormalLevel(GameContext game, int levelNumber, int numLives) {
+        requireNonNull(game);
         requireValidLevelNumber(levelNumber);
+        final GameSession session = game.session();
 
-        final GameSession session = gameContext.session();
-
-        final GameLevel level = createLevel(gameContext, levelNumber);
+        final GameLevel level = createLevel(game, levelNumber);
 
         session.setLevel(level);
         session.setAttractMode(false);
@@ -144,22 +131,23 @@ public abstract class CommonGamePlay implements GamePlay {
         ScoreSystem.setLevelNumber(session.score(), levelNumber);
         session.gateKeeper().setLevelNumber(levelNumber);
 
-        gameContext.eventManager().publishGameEvent(new LevelCreatedEvent(level));
+        game.eventManager().publishGameEvent(new LevelCreatedEvent(level));
     }
 
     @Override
-    public void startNextLevel(GameContext gameContext) {
-        requireNonNull(gameContext);
+    public void startNextLevel(GameContext game) {
+        requireNonNull(game);
 
-        final GameSession session = gameContext.session();
-        final GameModel model = gameContext.model();
-        final GameLevel oldLevel = gameContext.session().assertLevel();
-        final GameEventManager eventManager = gameContext.eventManager();
+        final GameSession session = game.session();
+        final GameModel model = game.model();
+        final GameEventManager eventManager = game.eventManager();
 
+        final GameLevel oldLevel = game.session().assertLevel();
         final int lastLevelNumber = model.rules().lastLevelNumber();
+
         if (oldLevel.number() < lastLevelNumber) {
-            buildNormalLevel(gameContext, oldLevel.number() + 1, session.livesCounter().data().numLives());
-            startLevel(gameContext);
+            buildNormalLevel(game, oldLevel.number() + 1, session.livesCounter().data().numLives());
+            startLevel(game);
             // Note: This event is very important because it triggers the creation of the actor animations!
             eventManager.publishGameEvent(new LevelStartedEvent(oldLevel));
         } else {
@@ -175,20 +163,19 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     @Override
-    public void updateEntities(GameContext gameContext, GameLevel level) {
-        final Pac pac = level.entities().pac();
-        updatePac(gameContext, level, pac);
-        updateGhosts(gameContext, level);
-        gameContext.systems().bonusState().update(gameContext);
+    public void updateEntities(GameContext game, GameLevel level) {
+        updatePac(game, level, level.entities().pac());
+        updateGhosts(game, level);
+        game.systems().bonusState().update(game);
     }
 
     @Override
-    public void hunt(GameContext gameContext, GameLevel level) {
-        requireNonNull(gameContext);
+    public void hunt(GameContext game, GameLevel level) {
+        requireNonNull(game);
         requireNonNull(level);
 
-        final GameSession session = gameContext.session();
-        final GameModel model = gameContext.model();
+        final GameSession session = game.session();
+        final GameModel model = game.model();
         final ArcadeHouseGateKeeper gateKeeper = session.gateKeeper();
 
         //TODO enable this later again
@@ -197,70 +184,81 @@ public abstract class CommonGamePlay implements GamePlay {
         level.heartbeat().triggerPulse();
         level.huntingTimerStrategy().update(model.rules(), level.number());
         if (gateKeeper != null) {
-            gateKeeper.unlockGhostIfPossible(gameContext);
+            gateKeeper.unlockGhostIfPossible(game);
         }
 
-        updateEntities(gameContext, level);
-        detectCollisions(gameContext, level);
-        evalCollisions(gameContext, level);
+        updateEntities(game, level);
+        detectCollisions(game, level);
+        evalCollisions(game, level);
     }
 
-    private void updateGhosts(GameContext gameContext, GameLevel level) {
-        if (gameContext.state().id().equals(CommonGameStateID.GAME_LEVEL_EATING_GHOST)) {
+    private void initScores(GameSession session) {
+        session.score().reset();
+        final File highScoreFile = session.highScore().requireComp(ScorePersistencyComp.class).file();
+        try {
+            ScoreSystem.load(session.highScore());
+            ScoreSystem.enableScore(session.highScore(), true);
+        } catch (IOException x) {
+            Logger.error(x, "Error loading high-score file {}", highScoreFile.getAbsolutePath());
+        }
+    }
+
+    private void updateGhosts(GameContext game, GameLevel level) {
+        if (game.state().id().equals(CommonGameStateID.GAME_LEVEL_EATING_GHOST)) {
             level.ghostsInAnyOfStates(GhostStateSystem.UPDATED_GHOST_STATES_WHILE_EATEN)
-                .forEach(ghost -> updateGhost(gameContext, level, ghost));
+                .forEach(ghost -> updateGhost(game, level, ghost));
         } else {
-            level.entities().ghosts().forEach(ghost -> updateGhost(gameContext, level, ghost));
+            level.entities().ghosts().forEach(ghost -> updateGhost(game, level, ghost));
         }
     }
 
-    private void updateGhost(GameContext gameContext, GameLevel level, Ghost ghost) {
-        gameContext.systems().ghostState().update(gameContext, level, ghost);
+    private void updateGhost(GameContext game, GameLevel level, Ghost ghost) {
+        game.systems().ghostState().update(game, level, ghost);
         //TODO Add into global game systems interface
         GhostSpriteAnimationSystem.update(ghost, level.entities().pac());
 
         //TODO should this be here?
         final GhostSpriteAnimationComp ghostAnimation = ghost.ghostAnimation();
         if (ghostAnimation.ghostAnimationID() != null) {
-            gameContext.systems().spriteAnim().select(ghost, ghostAnimation.ghostAnimationID());
-            gameContext.systems().spriteAnim().playSelected(ghost);
+            game.systems().spriteAnim().select(ghost, ghostAnimation.ghostAnimationID());
+            game.systems().spriteAnim().playSelected(ghost);
         }
     }
 
-    private void startPacPower(GameContext gameContext, GameLevel level, Pac pac) {
-        level.ghostsInAnyOfStates(TURNBACK_STATES).forEach(gameContext.systems().worldNavigator()::requestTurnBack);
+    private void startPacPower(GameContext game, GameLevel level, Pac pac) {
+        level.ghostsInAnyOfStates(TURNBACK_STATES).forEach(game.systems().worldNavigator()::requestTurnBack);
 
         if (level.pacPowerSeconds() > 0) {
             level.huntingTimerStrategy().stop();
             level.ghostsInState(GhostState.HUNTING_PAC)
-                .forEach(ghost -> gameContext.systems().ghostState().changeState(ghost, GhostState.FRIGHTENED));
-            gameContext.systems().pacPower().start(pac, TickTimer.secToTicks(level.pacPowerSeconds()));
-            gameContext.eventManager().publishGameEvent(new PacGetsPowerEvent(pac));
+                .forEach(ghost -> game.systems().ghostState().changeState(ghost, GhostState.FRIGHTENED));
+            game.systems().pacPower().start(pac, TickTimer.secToTicks(level.pacPowerSeconds()));
+            game.eventManager().publishGameEvent(new PacGetsPowerEvent(pac));
         }
     }
 
-    private void checkPacPower(GameContext gameContext, GameLevel level, Pac pac) {
+    private void checkPacPower(GameContext game, GameLevel level, Pac pac) {
         final PacPowerComp power = pac.power();
         if (power.isFading()) {
-            gameContext.eventManager().publishGameEvent(new PacPowerFadesEvent(pac));
+            game.eventManager().publishGameEvent(new PacPowerFadesEvent(pac));
         }
         else if (power.isOver()) {
             power.reset();
             level.ghostsInState(GhostState.FRIGHTENED).forEach(ghost ->
-                gameContext.systems().ghostState().changeState(ghost, GhostState.HUNTING_PAC));
+                game.systems().ghostState().changeState(ghost, GhostState.HUNTING_PAC));
             level.clearGhostKillChain();
             level.huntingTimerStrategy().start();
-            gameContext.eventManager().publishGameEvent(new PacLostPowerEvent(pac));
+            game.eventManager().publishGameEvent(new PacLostPowerEvent(pac));
         }
     }
 
-    private void updatePac(GameContext gameContext, GameLevel level, Pac pac) {
-        gameContext.systems().pacDigestion().update(pac);
-        gameContext.systems().pacPower().update(level, pac);
-        gameContext.systems().pacState().update(pac);
-        navigatePac(gameContext, level, pac);
-        gameContext.systems().pacAnimation().update(pac);
-        checkPacPower(gameContext, level, pac);
+    private void updatePac(GameContext game, GameLevel level, Pac pac) {
+        game.systems().pacDigestion().update(pac);
+        game.systems().pacPower().update(level, pac);
+        game.systems().pacState().update(pac);
+        navigatePac(game, level, pac);
+        game.systems().pacAnimation().update(pac);
+        checkPacPower(game, level, pac);
     }
 
     private void navigatePac(GameContext game, GameLevel level, Pac pac) {
@@ -275,39 +273,39 @@ public abstract class CommonGamePlay implements GamePlay {
         systems.worldNavigator().tryMovingOrTeleporting(pac, level, systems.pacWorldMovementPolicy());
     }
 
-    private void evalCollisions(GameContext gameContext, GameLevel level) {
-        final HuntingStepResult result = gameContext.session().thisFrame().huntingStep();
-        checkFoodFound(gameContext, level);
+    private void evalCollisions(GameContext game, GameLevel level) {
+        final HuntingStepResult result = game.session().thisFrame().huntingStep();
+        checkFoodFound(game, level);
         if (result.foundEdibleBonus()) {
-            onEatBonus(gameContext, level, result.edibleBonus());
+            onEatBonus(game, level, result.edibleBonus());
         }
-        evalPacKilled(gameContext.session(), result);
+        evalPacKilled(game.session(), result);
         if (result.pacKilled()) {
             fixPacPositionIfKilledInsidePortal(level);
         }
         else {
-            evalGhostsKilled(gameContext, level, result);
+            evalGhostsKilled(game, level, result);
         }
     }
 
-    private void checkFoodFound(GameContext gameContext, GameLevel level) {
-        final HuntingStepResult huntingResult = gameContext.session().thisFrame().huntingStep();
+    private void checkFoodFound(GameContext game, GameLevel level) {
+        final HuntingStepResult huntingResult = game.session().thisFrame().huntingStep();
         final Pac pac = level.entities().pac();
-        final PacDigestionSystem pacDigestionSystem = gameContext.systems().pacDigestion();
+        final PacDigestionSystem pacDigestionSystem = game.systems().pacDigestion();
 
         if (huntingResult.foodFound()) {
             pacDigestionSystem.endStarving(pac);
             final Vector2i foodTile = huntingResult.foodFoundTile();
             level.worldMap().foodLayer().markFoodEatenAt(foodTile);
             if (huntingResult.energizerFound()) {
-                onEatEnergizer(gameContext, level, foodTile);
+                onEatEnergizer(game, level, foodTile);
             } else {
-                onEatPellet(gameContext, level, foodTile);
+                onEatPellet(game, level, foodTile);
             }
-            if (gameContext.model().rules().scoringRules().isBonusAwarded(level)) {
-                activateNextBonus(gameContext, level);
+            if (game.model().rules().scoringRules().isBonusAwarded(level)) {
+                activateNextBonus(game, level);
             }
-            gameContext.eventManager().publishGameEvent(new PacEatsFoodEvent(pac, huntingResult.energizerFound(), false));
+            game.eventManager().publishGameEvent(new PacEatsFoodEvent(pac, huntingResult.energizerFound(), false));
         }
         else {
             pacDigestionSystem.starve(pac);
@@ -326,14 +324,14 @@ public abstract class CommonGamePlay implements GamePlay {
         );
     }
 
-    private void evalGhostsKilled(GameContext gameContext, GameLevel level, HuntingStepResult result) {
+    private void evalGhostsKilled(GameContext game, GameLevel level, HuntingStepResult result) {
         if (result.detectedPacGhostCollision()) {
             // Frightened ghosts get killed when colliding with Pac
             result.ghostsCollidingWithPac().stream()
                 .filter(ghost -> ghost.ghostStateEnum() == GhostState.FRIGHTENED)
                 .forEach(result.ghostsKilled()::add);
             // More than one ghost might have been killed in this step
-            result.ghostsKilled().forEach(ghost -> onEatGhost(gameContext, level, ghost));
+            result.ghostsKilled().forEach(ghost -> onEatGhost(game, level, ghost));
         }
     }
 
@@ -355,69 +353,69 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     @Override
-    public void onEatPellet(GameContext gameContext, GameLevel level, Vector2i tile) {
-        requireNonNull(gameContext);
+    public void onEatPellet(GameContext game, GameLevel level, Vector2i tile) {
+        requireNonNull(game);
         requireNonNull(level);
         requireNonNull(tile);
 
-        final GameSession session = gameContext.session();
-        final GameModel model = gameContext.model();
+        final GameSession session = game.session();
+        final GameModel model = game.model();
         final GameRules rules = model.rules();
         final Pac pac = level.entities().pac();
 
-        scorePoints(gameContext, rules.scoringRules().pointsForPellet(), level.number());
-        gameContext.systems().pacDigestion().digestPellet(pac, rules);
+        scorePoints(game, rules.scoringRules().pointsForPellet(), level.number());
+        game.systems().pacDigestion().digestPellet(pac, rules);
         session.gateKeeper().registerFoodEaten(level);
     }
 
     @Override
-    public void onEatEnergizer(GameContext gameContext, GameLevel level, Vector2i tile) {
-        requireNonNull(gameContext);
+    public void onEatEnergizer(GameContext game, GameLevel level, Vector2i tile) {
+        requireNonNull(game);
         requireNonNull(level);
         requireNonNull(tile);
 
-        final GameSession session = gameContext.session();
-        final GameModel model = gameContext.model();
+        final GameSession session = game.session();
+        final GameModel model = game.model();
         final GameRules rules = model.rules();
         final Pac pac = level.entities().pac();
 
-        scorePoints(gameContext, rules.scoringRules().pointsForEnergizer(), level.number());
+        scorePoints(game, rules.scoringRules().pointsForEnergizer(), level.number());
         session.gateKeeper().registerFoodEaten(level);
         level.clearGhostKillChain();
-        gameContext.systems().pacDigestion().digestEnergizer(pac, rules);
-        startPacPower(gameContext, level, pac);
+        game.systems().pacDigestion().digestEnergizer(pac, rules);
+        startPacPower(game, level, pac);
     }
 
     @Override
-    public void onEatBonus(GameContext gameContext, GameLevel level, Bonus bonus) {
-        requireNonNull(gameContext);
+    public void onEatBonus(GameContext game, GameLevel level, Bonus bonus) {
+        requireNonNull(game);
         requireNonNull(level);
         requireNonNull(bonus);
 
-        final GameSystems sys = gameContext.systems();
-        final GameModel model = gameContext.model();
+        final GameSystems sys = game.systems();
+        final GameModel model = game.model();
 
         sys.bonusState().showEatenForSeconds(bonus, model.rules().eatenBonusDisplaySeconds());
 
-        scorePoints(gameContext, bonus.data().points(), level.number());
+        scorePoints(game, bonus.data().points(), level.number());
         Logger.info("Scored {} points for eating bonus {}", bonus.data().points(), bonus);
 
-        gameContext.eventManager().publishGameEvent(new BonusEatenEvent(bonus));
+        game.eventManager().publishGameEvent(new BonusEatenEvent(bonus));
     }
 
     @Override
-    public void onEatGhost(GameContext gameContext, GameLevel level, Ghost eatenGhost) {
-        requireNonNull(gameContext);
+    public void onEatGhost(GameContext game, GameLevel level, Ghost eatenGhost) {
+        requireNonNull(game);
         requireNonNull(level);
         requireNonNull(eatenGhost);
 
-        final GameSystems sys = gameContext.systems();
-        final GameModel model = gameContext.model();
+        final GameSystems sys = game.systems();
+        final GameModel model = game.model();
 
         final int killedBefore = level.ghostKillChainSize();
         final int points = model.rules().scoringRules().pointsForGhost(killedBefore);
 
-        scorePoints(gameContext, points, level.number());
+        scorePoints(game, points, level.number());
         Logger.info("Scored {} points for killing {}", points, eatenGhost.name());
 
         sys.ghostState().changeState(eatenGhost, GhostState.EATEN);
@@ -429,15 +427,15 @@ public abstract class CommonGamePlay implements GamePlay {
         level.addToGhostKillChain(eatenGhost);
         level.entities().pac().hide();
 
-        gameContext.eventManager().publishGameEvent(new GhostEatenEvent(eatenGhost));
+        game.eventManager().publishGameEvent(new GhostEatenEvent(eatenGhost));
     }
 
     @Override
-    public void onLevelCompleted(GameContext gameContext, GameLevel level) {
-        requireNonNull(gameContext);
+    public void onLevelCompleted(GameContext game, GameLevel level) {
+        requireNonNull(game);
         requireNonNull(level);
 
-        final GameSystems sys = gameContext.systems();
+        final GameSystems systems = game.systems();
 
         level.huntingTimerStrategy().stop();
 
@@ -450,32 +448,32 @@ public abstract class CommonGamePlay implements GamePlay {
         final Pac pac = level.entities().pac();
         pac.power().reset();
 
-        sys.worldNavigator().setSpeed(pac, 0);
+        systems.worldNavigator().setSpeed(pac, 0);
 
-        sys.spriteAnim().stopSelected(pac);
-        sys.spriteAnim().select(pac, CommonSpriteAnimationID.PAC_FULL);
+        systems.spriteAnim().stopSelected(pac);
+        systems.spriteAnim().select(pac, CommonSpriteAnimationID.PAC_FULL);
 
         level.entities().ghosts().forEach(ghost -> {
-            sys.worldNavigator().setSpeed(ghost, 0);
+            systems.worldNavigator().setSpeed(ghost, 0);
 
             //TODO check in emulator if ghost animation is reset to normal
-            sys.spriteAnim().stopSelected(ghost);
-            sys.spriteAnim().select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);
+            systems.spriteAnim().stopSelected(ghost);
+            systems.spriteAnim().select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);
         });
 
-        level.optBonus().ifPresent(bonus -> sys.bonusState().setInactive(bonus));
+        level.optBonus().ifPresent(bonus -> systems.bonusState().setInactive(bonus));
     }
 
     // Scoring
 
     @Override
-    public void scorePoints(GameContext gameContext, int points, int levelNumber) {
-        requireNonNull(gameContext);
+    public void scorePoints(GameContext game, int points, int levelNumber) {
+        requireNonNull(game);
         requireValidLevelNumber(levelNumber);
 
-        final GameSession session = gameContext.session();
-        final GameModel model = gameContext.model();
-        final GameEventManager eventManager = gameContext.eventManager();
+        final GameSession session = game.session();
+        final GameModel model = game.model();
+        final GameEventManager eventManager = game.eventManager();
 
         if (!session.score().data().isEnabled()) {
             return;
@@ -510,41 +508,41 @@ public abstract class CommonGamePlay implements GamePlay {
 
     // private
 
-    private void detectCollisions(GameContext gameContext, GameLevel level) {
-        detectFoodCollision(gameContext, level);
-        detectEdibleBonusCollision(gameContext, level);
-        detectPacGhostCollision(gameContext, level);
+    private void detectCollisions(GameContext game, GameLevel level) {
+        detectFoodCollision(game, level);
+        detectEdibleBonusCollision(game, level);
+        detectPacGhostCollision(game, level);
     }
 
-    private void detectPacGhostCollision(GameContext gameContext, GameLevel level) {
-        final GameModel model = gameContext.model();
+    private void detectPacGhostCollision(GameContext game, GameLevel level) {
+        final GameModel model = game.model();
         final CollisionStrategy strategy = model.rules().actorCollisionRules().getCollisionStrategy();
         final Pac pac = level.entities().pac();
         final List<Ghost> ghosts = level.entities().ghosts();
-        gameContext.session().thisFrame().huntingStep().ghostsCollidingWithPac().clear();
+        game.session().thisFrame().huntingStep().ghostsCollidingWithPac().clear();
         ghosts.stream()
             .filter(ghost -> strategy.collide(pac, ghost))
-            .forEach(gameContext.session().thisFrame().huntingStep().ghostsCollidingWithPac()::add);
+            .forEach(game.session().thisFrame().huntingStep().ghostsCollidingWithPac()::add);
     }
 
-    private void detectEdibleBonusCollision(GameContext gameContext, GameLevel level) {
-        final GameModel model = gameContext.model();
+    private void detectEdibleBonusCollision(GameContext game, GameLevel level) {
+        final GameModel model = game.model();
         final CollisionStrategy strategy = model.rules().actorCollisionRules().getCollisionStrategy();
         final Pac pac = level.entities().pac();
         final Bonus bonus = level.entities().optBonus().orElse(null);
-        gameContext.session().thisFrame().huntingStep().setEdibleBonus(null);
+        game.session().thisFrame().huntingStep().setEdibleBonus(null);
         if (bonus != null && bonus.bonusState() == BonusState.EDIBLE && strategy.collide(pac, bonus)) {
-            gameContext.session().thisFrame().huntingStep().setEdibleBonus(bonus);
+            game.session().thisFrame().huntingStep().setEdibleBonus(bonus);
         }
     }
 
-    private void detectFoodCollision(GameContext gameContext, GameLevel level) {
+    private void detectFoodCollision(GameContext game, GameLevel level) {
         final Pac pac = level.entities().pac();
         final FoodLayer foodLayer = level.worldMap().foodLayer();
         final Vector2i pacTile = WorldNavigationSystem.computeTile(pac);
         if (foodLayer.hasFoodAtTile(pacTile)) {
-            gameContext.session().thisFrame().huntingStep().setFoodFoundTile(pacTile);
-            gameContext.session().thisFrame().huntingStep().setEnergizerFound(foodLayer.isEnergizerTile(pacTile));
+            game.session().thisFrame().huntingStep().setFoodFoundTile(pacTile);
+            game.session().thisFrame().huntingStep().setEnergizerFound(foodLayer.isEnergizerTile(pacTile));
         }
     }
 }

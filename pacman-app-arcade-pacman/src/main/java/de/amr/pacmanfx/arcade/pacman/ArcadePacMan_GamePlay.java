@@ -242,14 +242,14 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     // Playing level
 
     @Override
-    public void onEatPellet(GameContext gameContext, GameLevel level, Vector2i tile) {
-        super.onEatPellet(gameContext, level, tile);
+    public void onEatPellet(GameContext game, GameLevel level, Vector2i tile) {
+        super.onEatPellet(game, level, tile);
         checkCruiseElroyActivation(level);
     }
 
     @Override
-    public void onEatEnergizer(GameContext gameContext, GameLevel level, Vector2i tile) {
-        super.onEatEnergizer(gameContext, level, tile);
+    public void onEatEnergizer(GameContext game, GameLevel level, Vector2i tile) {
+        super.onEatEnergizer(game, level, tile);
         checkCruiseElroyActivation(level);
     }
 
