@@ -7,8 +7,8 @@ package de.amr.pacmanfx.arcade.pacman_xxl.common;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
 import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
+import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
 import de.amr.pacmanfx.game.GameVariant;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GameUI;
@@ -37,7 +37,7 @@ public class XXL_OptionMenu extends OptionMenu {
 
     private final XXL_ChaseAnimation chaseAnimation;
 
-    private GameAppContext appContext;
+    private GameAppContext app;
 
     private ObservableValue<Double> scaling;
 
@@ -82,15 +82,15 @@ public class XXL_OptionMenu extends OptionMenu {
             meMapOrder.value());
     }
 
-    public void init(GameAppContext appContext) {
-        this.appContext = requireNonNull(appContext);
+    public void init(GameAppContext app) {
+        this.app = requireNonNull(app);
 
-        final GameUI ui = appContext.ui();
-        final GameVariant variant = appContext.variants().currentVariant();
-        final GameVariantID variantID = GameVariantID.valueOf(appContext.variants().currentVariantName());
+        final GameUI ui = app.ui();
+        final GameVariant variant = app.variants().currentVariant();
+        final GameVariantID variantID = GameVariantID.valueOf(app.variants().currentVariantName());
         final GameVariantRenderConfig renderConfig = variant.config().renderConfig();
-        final GameContext gameContext = appContext.currentGameContext();
-        final WorldMapManager worldMapSelector = gameContext.model().worldMapManager();
+        final GameContext game = app.currentGame();
+        final WorldMapManager worldMapSelector = game.model().worldMapManager();
 
         if (!(worldMapSelector instanceof XXL_WorldMapManager mapSelector)) {
             final String message = "Expected XXL map selector but found %s".formatted(
@@ -105,14 +105,14 @@ public class XXL_OptionMenu extends OptionMenu {
         // Init entries
         meGameVariantID.setValue(variantID);
         meView3DEnabled.setValue(ui.viewModel().common3D.view3DEnabledProperty.get());
-        meCutScenesEnabled.setValue(gameContext.flow().cutScenesEnabled());
+        meCutScenesEnabled.setValue(game.session().gameFlow().cutScenesEnabled());
         meMapOrder.setValue(mapSelector.selectionMode());
         meMapOrder.setEnabled(!mapSelector.customMaps().isEmpty());
 
         logMenuState();
 
         soundEnabledProperty().bind(ui.sounds().muteProperty().not());
-        chaseAnimation.init(gameContext, renderConfig, canvas, ui.sprites().animations());
+        chaseAnimation.init(game, renderConfig, canvas, ui.sprites().animations());
     }
 
     public void bind() {
@@ -158,15 +158,15 @@ public class XXL_OptionMenu extends OptionMenu {
     }
 
     private void onGameVariantNameChanged(ObservableValue<? extends GameVariantID> observable, GameVariantID oldVariantID, GameVariantID newVariantID) {
-        appContext.variants().selectVariant(newVariantID.name());
+        app.variants().selectVariant(newVariantID.name());
     }
 
     private void onPlay3DSettingsChange(ObservableValue<? extends Boolean> obs,  Boolean oldValue, Boolean newValue) {
-        appContext.ui().viewModel().common3D.view3DEnabledProperty.set(newValue);
+        app.ui().viewModel().common3D.view3DEnabledProperty.set(newValue);
     }
 
     private void onCutScenesEnabledSettingsChange(ObservableValue<? extends Boolean> obs,  Boolean oldValue, Boolean newValue) {
-        appContext.currentGameContext().flow().setCutScenesEnabled(newValue);
+        app.currentGame().session().gameFlow().setCutScenesEnabled(newValue);
     }
 
     private OptionMenuEntry<GameVariantID> createGameVariantIDEntry() {
@@ -177,10 +177,10 @@ public class XXL_OptionMenu extends OptionMenu {
         {
             @Override
             public void onValueChanged(GameVariantID oldVariant, GameVariantID newVariant) {
-                if (appContext != null) {
-                    final GameContext gameContext = appContext.currentGameContext();
-                    final GameVariantRenderConfig renderConfig = appContext.variants().gameVariantByName(newVariant.name()).config().renderConfig();
-                    chaseAnimation.init(gameContext, renderConfig, canvas, appContext.ui().sprites().animations());
+                if (app != null) {
+                    final GameContext gameContext = app.currentGame();
+                    final GameVariantRenderConfig renderConfig = app.variants().gameVariantByName(newVariant.name()).config().renderConfig();
+                    chaseAnimation.init(gameContext, renderConfig, canvas, app.ui().sprites().animations());
                 }
             }
         };

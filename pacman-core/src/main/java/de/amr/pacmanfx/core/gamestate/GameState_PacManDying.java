@@ -69,11 +69,11 @@ public final class GameState_PacManDying extends GameState {
 
         if (timer().hasExpired()) {
             if (session.isAttractMode()) {
-                game.flow().enterState(game, CommonGameStateID.GAME_OVER);
+                session.gameFlow().enterState(game, CommonGameStateID.GAME_OVER);
             } else {
                 LivesCounterSystem.subtractLife(livesCounter);
                 final boolean gameOver = livesCounter.data().numLives() == 0;
-                game.flow().enterState(game,
+                session.gameFlow().enterState(game,
                     gameOver ? CommonGameStateID.GAME_OVER : CommonGameStateID.GAME_OR_LEVEL_STARTING);
             }
             return;

@@ -56,7 +56,7 @@ public class GameSceneManager {
 
     public void updateGameSceneAndForceReload(boolean forceReload) {
         final GameVariantConfig variantConfig = appContext.variants().currentVariant().config();
-        final GameContext gameContext = appContext.currentGameContext();
+        final GameContext gameContext = appContext.currentGame();
         final GameModel model = gameContext.model();
         final GameSession session = gameContext.session();
         final GameScene currentGameScene = optCurrentGameScene().orElse(null);

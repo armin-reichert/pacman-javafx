@@ -14,7 +14,6 @@ import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Pac;
-import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessage;
@@ -332,7 +331,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
         final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
         final SpriteAnimationContainer animationContainer = appContext().ui().sprites().animations();
 
-        final SpriteAnimSystem animSystem = appContext().currentGameContext().systems().spriteAnim();
+        final SpriteAnimSystem animSystem = appContext().currentGame().systems().spriteAnim();
 
         final Pac pac = level.entities().pac();
         if (animSystem.hasNoAnimations(pac)) {

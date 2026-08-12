@@ -23,15 +23,15 @@ public class CutScenesTestState extends GameState {
     }
 
     @Override
-    public void onUpdate(GameContext gameContext) {
+    public void onUpdate(GameContext game) {
         if (timer().hasExpired()) {
-            if (testedCutSceneNumber < gameContext.model().rules().lastCutSceneNumber()) {
+            if (testedCutSceneNumber < game.model().rules().lastCutSceneNumber()) {
                 testedCutSceneNumber += 1;
                 waitForTimeout();
                 //TODO find another solution and get rid of this event type
-                gameContext.eventManager().publishGameEvent(new GenericChangeEvent("Cut Scene Test"));
+                game.eventManager().publishGameEvent(new GenericChangeEvent("Cut Scene Test"));
             } else {
-                gameContext.flow().enterState(gameContext, CommonGameStateID.GAME_INTRO);
+                game.session().gameFlow().enterState(game, CommonGameStateID.GAME_INTRO);
             }
         }
     }

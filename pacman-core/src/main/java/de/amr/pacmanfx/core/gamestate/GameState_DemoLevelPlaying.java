@@ -78,7 +78,7 @@ public final class GameState_DemoLevelPlaying extends GameState {
         }
         else if (tick > huntingStartTick) {
             gamePlay.hunt(game, level);
-            game.flow().enterState(game, computeNextState(game));
+            session.gameFlow().enterState(game, computeNextState(game));
         }
     }
 

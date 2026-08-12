@@ -35,15 +35,15 @@ public class ArcadeGameState_GameStarting extends GameState {
     }
 
     @Override
-    public void onUpdate(GameContext gameContext) {
-        final GameSession session = gameContext.session();
+    public void onUpdate(GameContext game) {
+        final GameSession session = game.session();
         final GameLevel level = session.assertLevel();
         final long tick = timer().tickCount();
 
         if (tick == TICK_NEW_GAME_START_LEVEL) {
-            gameContext.gamePlay().startLevel(gameContext);
+            game.gamePlay().startLevel(game);
             // Note: This event is very important because it triggers the creation of the actor animations!
-            gameContext.eventManager().publishGameEvent(new LevelStartedEvent(level));
+            game.eventManager().publishGameEvent(new LevelStartedEvent(level));
         }
         else if (tick == TICK_NEW_GAME_SHOW_GUYS) {
             level.entities().pac().show();
@@ -51,7 +51,7 @@ public class ArcadeGameState_GameStarting extends GameState {
         }
         else if (tick == TICK_NEW_GAME_START_PLAYING) {
             session.setPlaying(true);
-            gameContext.flow().enterState(gameContext, CommonGameStateID.GAME_LEVEL_PLAYING);
+            session.gameFlow().enterState(game, CommonGameStateID.GAME_LEVEL_PLAYING);
         }
     }
 

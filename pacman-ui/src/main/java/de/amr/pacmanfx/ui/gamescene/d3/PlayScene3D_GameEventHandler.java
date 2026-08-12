@@ -70,7 +70,11 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     }
 
     default GameContext game() {
-        return appContext().currentGameContext();
+        return appContext().currentGame();
+    }
+
+    default GameSession session() {
+        return game().session();
     }
 
     RandomTextPicker textPicker();
@@ -141,7 +145,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     @Override
     default void onGameStarted(GameStartedEvent event) {
         final GameSession session = game().session();
-        final GameState state = game().state();
+        final GameState state = game().session().gameState();
 
         final boolean silent = session.isAttractMode() || state.id() instanceof TestStateID;
 
@@ -168,14 +172,13 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         final GameLevel level = event.level();
         final GameSession session = game().session();
         final GameLevel3D level3D = assertLevel3D();
-        final GameContext gameContext = game();
-        final State<GameContext> newState = gameContext.state();
+        final State<GameContext> newState = session.gameState();
 
-        level3D.replaceLevelCounter3D(gameContext.session().levelCounter());
+        level3D.replaceLevelCounter3D(session.levelCounter());
 
         //TODO rethink this
         if (newState instanceof GameState gameState && gameState.id() instanceof TestStateID) {
-            gameScene().replaceGameLevel3D(gameContext, level);
+            gameScene().replaceGameLevel3D(game(), level);
             level3D.animationManager().startEnergizerPumping();
             showMessage(level3D, LevelMessageType.TEST, level.number());
         }
@@ -281,10 +284,10 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     }
 
     private void onPacManDying(AnimationRegistry animationRegistry) {
-        final GameLevel level = game().session().assertLevel();
+        final GameLevel level = session().assertLevel();
         final GameLevel3D level3D = assertLevel3D();
 
-        game().state().waitForTimeout();
+        session().gameState().waitForTimeout();
 
         optSoundEffects().ifPresent(GameSoundEffects::stopAll);
 
@@ -296,7 +299,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         Pac3DAnimationSystem.playDyingAnimation(
             level.entities().pac(),
             () -> optSoundEffects().ifPresent(GameSoundEffects::playPacDeadSound),
-            game().state()::triggerTimeout
+            session().gameState()::triggerTimeout
         );
     }
 
@@ -308,10 +311,9 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 
     private void onLevelComplete() {
         final GameUISettingsVM viewModel = appContext().ui().viewModel();
-        final GameSession session = game().session();
-        final GameLevel level = session.assertLevel();
+        final GameLevel level = session().assertLevel();
         final House house = level.entities().theOne(House.class);
-        final boolean cutSceneFollows = !session.isAttractMode()
+        final boolean cutSceneFollows = !session().isAttractMode()
             && game().model().rules().cutSceneAfterLevel(level.number()).isPresent();
 
         gameScene().scoreOpacity.set(0);
@@ -346,11 +348,11 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         final Optional<ManagedAnimation> levelEndAnimation = animationRegistry.optAnimation(animationID);
 
         if (levelEndAnimation.isEmpty()) {
-            Ufx.pauseSecThen(2, () -> game().state().triggerTimeout()).play();
+            Ufx.pauseSecThen(2, () -> session().gameState().triggerTimeout()).play();
             return;
         }
 
-        game().state().waitForTimeout();
+        session().gameState().waitForTimeout();
 
         final PerspectiveID perspectiveBeforeAnimation = settings3D.cameraPerspectiveIdProperty.get();
 
@@ -369,8 +371,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
             levelEndAnimation.get().delegate(),
             restoreCameraPerspective
         );
-        seq.setOnFinished(_ -> game().state().triggerTimeout());
-
+        seq.setOnFinished(_ -> session().gameState().triggerTimeout());
         seq.play();
     }
 

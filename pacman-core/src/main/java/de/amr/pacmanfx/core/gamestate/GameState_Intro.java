@@ -19,9 +19,9 @@ public final class GameState_Intro extends GameState {
     }
 
     @Override
-    public void onUpdate(GameContext gameContext) {
+    public void onUpdate(GameContext game) {
         if (timer().hasExpired()) {
-            gameContext.flow().enterState(gameContext, CommonGameStateID.GAME_OR_LEVEL_STARTING);
+            game.session().gameFlow().enterState(game, CommonGameStateID.GAME_OR_LEVEL_STARTING);
         }
     }
 }

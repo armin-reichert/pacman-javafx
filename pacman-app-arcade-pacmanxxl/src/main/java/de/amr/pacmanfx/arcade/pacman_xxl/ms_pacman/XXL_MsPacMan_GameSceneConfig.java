@@ -41,8 +41,8 @@ public class XXL_MsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
     }
 
     @Override
-    protected Named determineSceneID(GameUISettingsVM viewModel, GameContext gameContext) {
-        final GameState state = gameContext.state();
+    protected Named determineSceneID(GameUISettingsVM viewModel, GameContext game) {
+        final GameState state = game.session().gameState();
 
         if (state instanceof CutScenesTestState testState) {
             return AbstractGameSceneConfig.cutSceneID(testState.testedCutSceneNumber);
@@ -52,7 +52,7 @@ public class XXL_MsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
             return CommonGameSceneID.BOOT_SCENE;
         }
         if (CommonGameStateID.GAME_LEVEL_INTERMISSION.hasSameNameAs(state)) {
-            return resolveCutSceneID(gameContext);
+            return resolveCutSceneID(game);
         }
         if (CommonGameStateID.GAME_INTRO.hasSameNameAs(state)) {
             return CommonGameSceneID.INTRO_SCENE;

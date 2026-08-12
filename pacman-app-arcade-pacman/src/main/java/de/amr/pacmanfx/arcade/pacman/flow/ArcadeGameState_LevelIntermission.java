@@ -18,24 +18,25 @@ public class ArcadeGameState_LevelIntermission extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext gameContext) {
-        final HUDState hudState = gameContext.session().hud();
+    public void onEnter(GameContext game) {
+        final HUDState hudState = game.session().hud();
         hudState.hideCredit().hideScore().showLevelCounter().hideLivesCounter().show();
         waitForTimeout();
     }
 
     @Override
-    public void onUpdate(GameContext gameContext) {
-        final GameSession session = gameContext.session();
-        final GameFlowController gameFlow = gameContext.flow();
+    public void onUpdate(GameContext game) {
+        final GameSession session = game.session();
+        final GameFlowController flow = game.session().gameFlow();
         if (timer().hasExpired()) {
-            gameFlow.enterState(gameContext, session.isPlaying() ? CommonGameStateID.GAME_LEVEL_TRANSITION : CommonGameStateID.GAME_INTRO);
+            flow.enterState(game, session.isPlaying()
+                ? CommonGameStateID.GAME_LEVEL_TRANSITION : CommonGameStateID.GAME_INTRO);
         }
     }
 
     @Override
-    public void onExit(GameContext gameContext) {
-        gameContext.session().hud()
+    public void onExit(GameContext game) {
+        game.session().hud()
             .hideCredit().showScore().showLevelCounter().showLivesCounter().show();
     }
 }

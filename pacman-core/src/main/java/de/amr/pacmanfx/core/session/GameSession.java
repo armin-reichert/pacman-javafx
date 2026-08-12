@@ -10,7 +10,9 @@ import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.gameplay.ArcadeHouseGateKeeper;
 import de.amr.pacmanfx.core.gameplay.FrameContext;
+import de.amr.pacmanfx.core.gameplay.GameFlowController;
 import de.amr.pacmanfx.core.gameplay.hunt.HuntingStep;
+import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.HUDState;
@@ -23,6 +25,8 @@ import java.util.Optional;
 import static java.util.Objects.requireNonNull;
 
 public class GameSession {
+
+    private GameFlowController gameFlow;
 
     private FrameContext frame;
 
@@ -57,6 +61,18 @@ public class GameSession {
         livesCounter = new LivesCounter();
         hud = new HUDState();
         gateKeeper = new ArcadeHouseGateKeeper();
+    }
+
+    public void setGameFlow(GameFlowController gameFlow) {
+        this.gameFlow = requireNonNull(gameFlow);
+    }
+
+    public GameFlowController gameFlow() {
+        return gameFlow;
+    }
+
+    public GameState gameState() {
+        return gameFlow.state();
     }
 
     public void setLevel(GameLevel level) {

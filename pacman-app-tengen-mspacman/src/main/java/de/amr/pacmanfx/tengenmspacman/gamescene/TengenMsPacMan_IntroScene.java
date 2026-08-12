@@ -286,9 +286,9 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
                     // start demo level or show options
                     if (gamePlay.allOptionsHaveDefaultValue(session)) {
                         gamePlay.setCanStartNewGame(session, false); // TODO check this
-                        game.flow().restartState(game, TengenMsPacMan_GameState.GAME_OR_LEVEL_STARTING.state());
+                        session.gameFlow().restartState(game, TengenMsPacMan_GameState.GAME_OR_LEVEL_STARTING.state());
                     } else {
-                        game.flow().enterState(game, TengenMsPacMan_GameState.GAME_PREPARATION.state());
+                        session.gameFlow().enterState(game, TengenMsPacMan_GameState.GAME_PREPARATION.state());
                     }
                 }
             }

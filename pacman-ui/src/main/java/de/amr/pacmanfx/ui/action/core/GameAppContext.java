@@ -18,7 +18,7 @@ public interface GameAppContext {
 
     GameLifecycle lifecycle();
 
-    GameContext currentGameContext();
+    GameContext currentGame();
 
     CommonGameActions commonActions();
 

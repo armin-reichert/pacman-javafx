@@ -23,11 +23,11 @@ public abstract class GameAction {
     }
 
     public GameContext game() {
-        return appContext.currentGameContext();
+        return appContext.currentGame();
     }
 
     public GameFlowController gameFlow() {
-        return game().flow();
+        return game().session().gameFlow();
     }
 
     @Override

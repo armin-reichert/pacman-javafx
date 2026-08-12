@@ -103,7 +103,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
             playMusic();
         }
         else if (tick == TICK_EXPIRES) {
-            game().flow().enterState(game(), TengenMsPacMan_GameState.GAME_PREPARATION.state());
+            game.session().gameFlow().enterState(game, TengenMsPacMan_GameState.GAME_PREPARATION.state());
 
         }
         TengenMsPacMan_ClapperboardStateSystem.update(clapperboard);

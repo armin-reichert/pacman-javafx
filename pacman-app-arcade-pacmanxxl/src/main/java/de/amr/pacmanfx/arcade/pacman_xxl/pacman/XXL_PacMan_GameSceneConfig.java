@@ -39,8 +39,8 @@ class XXL_PacMan_GameSceneConfig extends AbstractGameSceneConfig {
     }
 
     @Override
-    protected Named determineSceneID(GameUISettingsVM viewModel, GameContext gameContext) {
-        final State<GameContext> state = gameContext.state();
+    protected Named determineSceneID(GameUISettingsVM viewModel, GameContext game) {
+        final State<GameContext> state = game.session().gameState();
 
         if (state instanceof CutScenesTestState testState) {
             return AbstractGameSceneConfig.cutSceneID(testState.testedCutSceneNumber);
@@ -50,7 +50,7 @@ class XXL_PacMan_GameSceneConfig extends AbstractGameSceneConfig {
             return CommonGameSceneID.BOOT_SCENE;
         }
         if (CommonGameStateID.GAME_LEVEL_INTERMISSION.hasSameNameAs(state)) {
-            return resolveCutSceneID(gameContext);
+            return resolveCutSceneID(game);
         }
         if (CommonGameStateID.GAME_INTRO.hasSameNameAs(state)) {
             return CommonGameSceneID.INTRO_SCENE;

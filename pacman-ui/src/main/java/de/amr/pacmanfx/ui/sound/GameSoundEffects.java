@@ -188,15 +188,15 @@ public class GameSoundEffects implements Disposable {
      * Does nothing if sound is globally disabled.
      * </p>
      *
-     * @param gameContext the current game context
+     * @param game the current game context
      * @param level the current game level
      */
-    public void playAmbientGameLevelSound(GameContext gameContext, GameLevel level) {
+    public void playAmbientGameLevelSound(GameContext game, GameLevel level) {
         if (!soundManager.isEnabled()) {
             return;
         }
-        if (CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(gameContext.state())) {
-            playSiren(gameContext);
+        if (CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(game.session().gameState())) {
+            playSiren(game);
             playGhostSounds(level.entities().pac(), level.entities().ghosts());
         }
     }

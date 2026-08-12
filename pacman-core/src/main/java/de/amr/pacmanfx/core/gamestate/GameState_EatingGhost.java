@@ -28,23 +28,23 @@ public final class GameState_EatingGhost extends GameState {
     }
 
     @Override
-    public void onUpdate(GameContext gameContext) {
-        final GhostStateSystem ghostStateSystem = gameContext.systems().ghostState();
-        final SpriteAnimSystem spriteAnimSystem = gameContext.systems().spriteAnim();
-        final GameLevel level = gameContext.session().assertLevel();
+    public void onUpdate(GameContext game) {
+        final GhostStateSystem ghostStateSystem = game.systems().ghostState();
+        final SpriteAnimSystem spriteAnimSystem = game.systems().spriteAnim();
+        final GameLevel level = game.session().assertLevel();
 
         level.heartbeat().triggerPulse();
 
         level.entities().ghosts().stream()
             .filter(ghost -> GhostStateSystem.UPDATED_GHOST_STATES_WHILE_EATEN.contains(ghost.ghostStateEnum()))
-            .forEach(ghost -> ghostStateSystem.update(gameContext, level, ghost));
+            .forEach(ghost -> ghostStateSystem.update(game, level, ghost));
 
         if (timer().hasExpired()) {
             level.entities().pac().show();
             level.ghostsInState(GhostState.EATEN).forEach(
                 ghost -> ghostStateSystem.changeState(ghost, GhostState.RETURNING_HOME));
             level.entities().ghosts().forEach(spriteAnimSystem::playSelected);
-            gameContext.flow().resumePreviousState(gameContext);
+            game.session().gameFlow().resumePreviousState(game);
         }
     }
 }

@@ -31,12 +31,12 @@ public final class GameSimulation {
 
     // private
 
-    private static void simulate(GameAppContext appContext) {
-        final GameContext gameContext = appContext.currentGameContext();
-        gameContext.session().newFrameContext(appContext.clock().currentTick());
-        gameContext.flow().update(gameContext);
+    private static void simulate(GameAppContext app) {
+        final GameContext game = app.currentGame();
+        game.session().newFrameContext(app.clock().currentTick());
+        game.session().gameFlow().update(game);
 
-        appContext.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(gameContext));
+        app.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(game));
     }
 
     private static void renderCurrentView(GameAppContext appContext) {

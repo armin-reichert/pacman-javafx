@@ -138,7 +138,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D
 
     // While Pac-Man is not yet visible on game/level start, an additional lives symbol more is shown in the counter
     private void updateLivesCounter(GameSession session, Pac pac) {
-        final boolean oneMore = CommonGameStateID.GAME_OR_LEVEL_STARTING.hasSameNameAs(game().state()) && !pac.isVisible();
+        final boolean oneMore = CommonGameStateID.GAME_OR_LEVEL_STARTING.hasSameNameAs(session.gameState()) && !pac.isVisible();
         final int livesToDisplay = session.livesCounter().data().numLives() - 1 + (oneMore ? 1 : 0);
         final int livesDisplayed = Math.clamp(livesToDisplay, 0, session.hud().maxLivesShown());
         session.hud().setLivesCount(livesDisplayed);

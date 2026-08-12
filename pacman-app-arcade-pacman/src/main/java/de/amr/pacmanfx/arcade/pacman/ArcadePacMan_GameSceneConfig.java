@@ -4,10 +4,10 @@
 package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.basics.Named;
-import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.arcade.pacman.scenes.*;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
+import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.model.test.CutScenesTestState;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
@@ -39,9 +39,10 @@ class ArcadePacMan_GameSceneConfig extends AbstractGameSceneConfig {
     }
 
     @Override
-    protected Named determineSceneID(GameUISettingsVM viewModel, GameContext gameContext) {
-        requireNonNull(gameContext);
-        final State<GameContext> state = gameContext.state();
+    protected Named determineSceneID(GameUISettingsVM viewModel, GameContext game) {
+        requireNonNull(game);
+
+        final GameState state = game.session().gameState();
         if (state instanceof CutScenesTestState testState) {
             return AbstractGameSceneConfig.cutSceneID(testState.testedCutSceneNumber);
         }
@@ -49,7 +50,7 @@ class ArcadePacMan_GameSceneConfig extends AbstractGameSceneConfig {
             return CommonGameSceneID.BOOT_SCENE;
         }
         if (CommonGameStateID.GAME_LEVEL_INTERMISSION.hasSameNameAs(state)) {
-            return resolveCutSceneID(gameContext);
+            return resolveCutSceneID(game);
         }
         if (CommonGameStateID.GAME_INTRO.hasSameNameAs(state)) {
             return CommonGameSceneID.INTRO_SCENE;

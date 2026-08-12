@@ -34,7 +34,7 @@ public class GameOrLevelStartingState extends GameState {
 
     @Override
     public void onUpdate(GameContext game) {
-        game.flow().enterState(game, computeNextState(game));
+        game.session().gameFlow().enterState(game, computeNextState(game));
     }
 
     private CommonGameStateID computeNextState(GameContext game) {

@@ -150,7 +150,7 @@ public class MiniPlaySceneView {
             return;
         }
         if (app != null) {
-            final GameSession session = app.currentGameContext().session();
+            final GameSession session = app.currentGame().session();
             session.optLevel().ifPresent(level -> draw(session, level));
         }
     }

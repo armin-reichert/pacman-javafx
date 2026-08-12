@@ -54,7 +54,7 @@ public abstract class AbstractGameScene
     }
 
     public GameFlowController gameFlow() {
-        return game().flow();
+        return game().session().gameFlow();
     }
 
     // --- Interface "GameScene"
@@ -86,7 +86,7 @@ public abstract class AbstractGameScene
 
     @Override
     public GameContext game() {
-        return appContext.currentGameContext();
+        return appContext.currentGame();
     }
 
     @Override
@@ -96,7 +96,7 @@ public abstract class AbstractGameScene
 
     @Override
     public GameState gameState() {
-        return game().state();
+        return game().session().gameState();
     }
 
     @Override

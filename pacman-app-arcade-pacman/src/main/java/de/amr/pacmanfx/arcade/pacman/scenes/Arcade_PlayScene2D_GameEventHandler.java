@@ -37,8 +37,8 @@ public interface Arcade_PlayScene2D_GameEventHandler extends DefaultGameEventLis
         return appContext().variants().currentVariant().config().optSoundEffects();
     }
 
-    default GameContext gameContext() {
-        return appContext().currentGameContext();
+    default GameContext game() {
+        return appContext().currentGame();
     }
 
     @Override
@@ -59,16 +59,16 @@ public interface Arcade_PlayScene2D_GameEventHandler extends DefaultGameEventLis
 
     @Override
     default void onGameContinued(GameContinuedEvent e) {
-        final SpriteAnimSystem animSystem = gameContext().systems().spriteAnim();
+        final SpriteAnimSystem animSystem = game().systems().spriteAnim();
         //TODO make animation systems from animation manager class
-        gameContext().session().optLevel().ifPresent(level -> ActorAnimationManager.resetActorAnimations(animSystem, level));
+        game().session().optLevel().ifPresent(level -> ActorAnimationManager.resetActorAnimations(animSystem, level));
     }
 
     @Override
     default void onGameStarted(GameStartedEvent e) {
-        final GameContext game = e.gameContext();
+        final GameContext game = e.game();
         final GameSession session = game.session();
-        final boolean silent = session.isAttractMode() || game.state().id() instanceof TestStateID;
+        final boolean silent = session.isAttractMode() || session.gameState().id() instanceof TestStateID;
         if (!silent) {
             optSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
         }
@@ -80,15 +80,15 @@ public interface Arcade_PlayScene2D_GameEventHandler extends DefaultGameEventLis
         final GameState newState = (GameState) e.newState();
 
         if (CommonGameStateID.GAME_LEVEL_COMPLETE.hasSameNameAs(newState)) {
-            final GameLevel level = gameContext().session().assertLevel();
+            final GameLevel level = game().session().assertLevel();
             optSoundEffects().ifPresent(GameSoundEffects::stopAll);
 
-            final var completedAnimation = new LevelCompletedAnimation(level, () -> gameContext().state().triggerTimeout());
+            final var completedAnimation = new LevelCompletedAnimation(level, () -> game().session().gameState().triggerTimeout());
             playScene().setLevelCompletedAnimation(completedAnimation);
             completedAnimation.play();
         }
         else if (CommonGameStateID.GAME_OVER.hasSameNameAs(newState)) {
-            gameContext().session().hud().showCredit();
+            game().session().hud().showCredit();
             optSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);
         }
     }
@@ -100,13 +100,13 @@ public interface Arcade_PlayScene2D_GameEventHandler extends DefaultGameEventLis
 
     @Override
     default void onLevelCreated(LevelCreatedEvent e) {
-        playScene().acceptGameLevel(gameContext().session(), e.level());
+        playScene().acceptGameLevel(game().session(), e.level());
     }
 
     @Override
     default void onPacDead(PacDeadEvent e) {
         // Trigger end of game state PACMAN_DYING after dying animation has finished
-        gameContext().state().triggerTimeout();
+        game().session().gameState().triggerTimeout();
     }
 
     @Override

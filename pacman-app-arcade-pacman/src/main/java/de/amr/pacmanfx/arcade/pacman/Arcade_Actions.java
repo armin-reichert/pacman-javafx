@@ -33,7 +33,7 @@ public final class Arcade_Actions {
             @Override
             public void doAction() {
                 final GameContext gameContext = game();
-                final CoinMechanism coinMechanism = appContext.currentGameContext().coinMechanism();
+                final CoinMechanism coinMechanism = appContext.currentGame().coinMechanism();
                 appContext.ui().sounds().voice().stop();
                 appContext.ui().sounds().setEnabled(true);
                 coinMechanism.insertCoin();
@@ -44,7 +44,7 @@ public final class Arcade_Actions {
             @Override
             public boolean isEnabled() {
                 final GameSession session = game().session();
-                final GameState gameState = game().state();
+                final GameState gameState = session.gameState();
                 if (game().coinMechanism().isFull()) {
                     return false;
                 }
@@ -69,7 +69,7 @@ public final class Arcade_Actions {
                 if (game().coinMechanism().isEmpty()) {
                     return false;
                 }
-                final GameState state = game().state();
+                final GameState state = game().session().gameState();
                 return (CommonGameStateID.GAME_INTRO.hasSameNameAs(state)
                     || CommonGameStateID.GAME_PREPARATION.hasSameNameAs(state));
             }

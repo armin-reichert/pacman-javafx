@@ -165,7 +165,7 @@ public class GameUI implements GameEventListener {
         boolean forceGameSceneReload = false;
         switch (gameEvent) {
             case LevelCreatedEvent e -> {
-                final GameContext gameContext = appContext.currentGameContext();
+                final GameContext gameContext = appContext.currentGame();
                 views.gamePlayView().onLevelCreated(gameContext, e.level());
             }
             case GameStateChangeEvent e -> {

@@ -43,9 +43,9 @@ public final class CheatActions {
 
     private final Set<ActionKeyBinding> bindings;
 
-    public CheatActions(GameAppContext appContext) {
+    public CheatActions(GameAppContext app) {
 
-        actionAddLives = new GameAction(appContext, "cheat_add_lives") {
+        actionAddLives = new GameAction(app, "cheat_add_lives") {
             @Override
             public void doAction() {
                 final GameSession session = game().session();
@@ -62,7 +62,7 @@ public final class CheatActions {
             }
         };
 
-        actionEatAllPellets = new GameAction(appContext, "cheat_eat_all_pellets") {
+        actionEatAllPellets = new GameAction(app, "cheat_eat_all_pellets") {
             @Override
             public void doAction() {
                 final GameLevel level = game().session().assertLevel();
@@ -75,18 +75,18 @@ public final class CheatActions {
 
             @Override
             public boolean isEnabled() {
-                final GameState gameState = game().state();
+                final GameState gameState = game().session().gameState();
                 return normalLevel(appContext).isPresent() && CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(gameState);
             }
         };
 
-        actionKillGhosts = new GameAction(appContext, "cheat_kill_ghosts") {
+        actionKillGhosts = new GameAction(app, "cheat_kill_ghosts") {
             @Override
             public void doAction() {
-                final GameContext gameContext = game();
-                final GameLevel level = gameContext.session().assertLevel();
+                final GameContext game = game();
+                final GameLevel level = game.session().assertLevel();
 
-                gameContext.cheats().notifyCheatUsed();
+                game.cheats().notifyCheatUsed();
 
                 final List<Ghost> killableGhosts = level.entities().ghosts().stream()
                     .filter(ghost -> GhostState.FRIGHTENED == ghost.ghostStateEnum() || GhostState.HUNTING_PAC == ghost.ghostStateEnum())
@@ -94,19 +94,19 @@ public final class CheatActions {
 
                 if (!killableGhosts.isEmpty()) {
                     level.clearGhostKillChain(); // start again with lowest number for killing ghost
-                    killableGhosts.forEach(ghost -> gameContext.gamePlay().onEatGhost(gameContext, level, ghost));
-                    gameContext.flow().enterState(gameContext, CommonGameStateID.GAME_LEVEL_EATING_GHOST);
+                    killableGhosts.forEach(ghost -> game.gamePlay().onEatGhost(game, level, ghost));
+                    game.session().gameFlow().enterState(game, CommonGameStateID.GAME_LEVEL_EATING_GHOST);
                 }
             }
 
             @Override
             public boolean isEnabled() {
-                final GameState gameState = game().state();
+                final GameState gameState = game().session().gameState();
                 return normalLevel(appContext).isPresent() && CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(gameState);
             }
         };
 
-        actionEnterNextLevel = new GameAction(appContext, "cheat_enter_next_level") {
+        actionEnterNextLevel = new GameAction(app, "cheat_enter_next_level") {
             @Override
             public void doAction() {
                 final GameContext gameContext = game();
@@ -116,7 +116,7 @@ public final class CheatActions {
 
             @Override
             public boolean isEnabled() {
-                final GameState state = game().state();
+                final GameState state = game().session().gameState();
                 final GameLevel level = normalLevel(this.appContext).orElse(null);
                 return level != null
                     && CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(state)
@@ -124,7 +124,7 @@ public final class CheatActions {
             }
         };
 
-        actionToggleAutopilot = new GameAction(appContext, "toggle_autopilot") {
+        actionToggleAutopilot = new GameAction(app, "toggle_autopilot") {
             @Override
             public void doAction() {
                 final GameCheats cheats = game().cheats();
@@ -137,7 +137,7 @@ public final class CheatActions {
             }
         };
 
-        actionActivateAutopilot = new GameAction(appContext, "activate_autopilot") {
+        actionActivateAutopilot = new GameAction(app, "activate_autopilot") {
             @Override
             public void doAction() {
                 setAutopilot(appContext, true);
@@ -149,7 +149,7 @@ public final class CheatActions {
             }
         };
 
-        actionDeactivateAutopilot = new GameAction(appContext, "deactivate_autopilot") {
+        actionDeactivateAutopilot = new GameAction(app, "deactivate_autopilot") {
             @Override
             public void doAction() {
                 setAutopilot(appContext, false);
@@ -161,7 +161,7 @@ public final class CheatActions {
             }
         };
 
-        actionActivateImmunity = new GameAction(appContext, "activate_immunity") {
+        actionActivateImmunity = new GameAction(app, "activate_immunity") {
             @Override
             public void doAction() {
                 setPacImmune(appContext, true);
@@ -173,7 +173,7 @@ public final class CheatActions {
             }
         };
 
-        actionDeactivateImmunity = new GameAction(appContext, "deactivate_immunity") {
+        actionDeactivateImmunity = new GameAction(app, "deactivate_immunity") {
             @Override
             public void doAction() {
                 setPacImmune(appContext, false);
@@ -185,7 +185,7 @@ public final class CheatActions {
             }
         };
 
-        actionToggleImmunity = new GameAction(appContext, "toggle_immunity") {
+        actionToggleImmunity = new GameAction(app, "toggle_immunity") {
             @Override
             public void doAction() {
                 final GameCheats cheats = game().cheats();
@@ -255,7 +255,7 @@ public final class CheatActions {
     // Helpers
 
     private void setAutopilot(GameAppContext appContext, boolean auto) {
-        final GameCheats cheats = appContext.currentGameContext().cheats();
+        final GameCheats cheats = appContext.currentGame().cheats();
         final GameUI ui = appContext.ui();
 
         cheats.pacUsingAutopilotProperty().set(auto);
@@ -268,7 +268,7 @@ public final class CheatActions {
     }
 
     private void setPacImmune(GameAppContext appContext, boolean immune) {
-        final GameCheats cheats = appContext.currentGameContext().cheats();
+        final GameCheats cheats = appContext.currentGame().cheats();
         final GameUI ui = appContext.ui();
 
         cheats.pacImmuneProperty().set(immune);
@@ -281,7 +281,7 @@ public final class CheatActions {
     }
 
     private Optional<GameLevel> normalLevel(GameAppContext appContext) {
-        final GameSession session = appContext.currentGameContext().session();
+        final GameSession session = appContext.currentGame().session();
         return session.optLevel().filter(_ -> !session.isAttractMode());
     }
 }

@@ -25,10 +25,10 @@ public class ArcadeGameState_LevelComplete extends GameState {
     }
 
     @Override
-    public void onUpdate(GameContext gameContext) {
-        final GameFlowController gameFlow = gameContext.flow();
+    public void onUpdate(GameContext game) {
+        final GameFlowController flow = game.session().gameFlow();
         if (timer().hasExpired()) {
-            gameFlow.enterState(gameContext, computeNextState(gameContext, gameFlow.cutScenesEnabled()));
+            flow.enterState(game, computeNextState(game, flow.cutScenesEnabled()));
         }
     }
 

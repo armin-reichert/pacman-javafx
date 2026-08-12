@@ -248,7 +248,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
     @Override
     public void render() {
-        final GameContext gameContext = appContext.currentGameContext();
+        final GameContext gameContext = appContext.currentGame();
         final GameSession session = gameContext.session();
         final long tick = appContext.clock().currentTick();
 
@@ -299,7 +299,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     public void updateGameSceneRenderers(AbstractGameScene2D gameScene2D) {
         final GameVariantRenderConfig renderConfig = appContext.variants().currentVariant().config().renderConfig();
         if (gameScene2D.canvas() != null) {
-            final SpriteAnimSystem animSystem = appContext.currentGameContext().systems().spriteAnim();
+            final SpriteAnimSystem animSystem = appContext.currentGame().systems().spriteAnim();
             sceneRenderer = renderConfig.createGameSceneRenderer(gameScene2D, animSystem, gameScene2D.canvas());
             setFontSmoothing(appContext.ui().viewModel().common2D.fontSmoothingOnProperty.get());
             hudRenderer = renderConfig.createHUDRenderer(gameScene2D, animSystem, gameScene2D.canvas()); // may return null!

@@ -6,10 +6,7 @@ package de.amr.pacmanfx.core;
 
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
-import de.amr.pacmanfx.core.gameplay.FrameContext;
-import de.amr.pacmanfx.core.gameplay.GameFlowController;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
-import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.session.GameSession;
@@ -25,11 +22,7 @@ public interface GameContext {
 
     GamePlay gamePlay();
 
-    GameFlowController flow();
-
     GameEventManager eventManager();
-
-    GameState state();
 
     GameCheats cheats();
 

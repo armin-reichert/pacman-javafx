@@ -11,7 +11,6 @@ import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.event.gameplay.GameStateChangeEvent;
-import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
@@ -35,7 +34,7 @@ import static java.util.Objects.requireNonNull;
  */
 public final class PacManGameCollection implements GameAppContext, GameLifecycle {
 
-    private final GameVariantManagerImpl variantManager;
+    private final GameVariantManagerImpl gameVariantManager;
 
     private final StateChangeEventConverter changeEventConverter;
 
@@ -46,7 +45,7 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
     private GameContext game;
 
     public PacManGameCollection() {
-        variantManager = new GameVariantManagerImpl();
+        gameVariantManager = new GameVariantManagerImpl();
         changeEventConverter = new StateChangeEventConverter();
         actions = new CommonGameActions(this);
     }
@@ -58,7 +57,7 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
 
     public void showGameVariant(GameVariantID variantID) {
         requireNonNull(variantID);
-        variantManager.selectVariant(variantID.name());
+        gameVariantManager.selectVariant(variantID.name());
 
         //TODO rethink this
         ui.views().selectStartPagesView();
@@ -81,15 +80,16 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
         game = new GameContextImpl(gameVariant, gameBox().coinMechanism());
         game.eventManager().addGameEventSubscriber(ui);
 
-        game.flow().addStateChangeListener(changeEventConverter);
+        gameVariant.gameFlow().addStateChangeListener(changeEventConverter);
     }
 
     public void exitGameVariant(GameVariant gameVariant) {
         requireNonNull(gameVariant);
+
+        gameVariant.gameFlow().removeStateChangeListener(changeEventConverter);
         gameVariant.config().dispose();
         ui.sounds().dispose();
         game.eventManager().removeGameEventSubscriber(ui);
-        game.flow().removeStateChangeListener(changeEventConverter);
         game = null;
     }
 
@@ -106,11 +106,11 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
 
     @Override
     public GameVariantManager variants() {
-        return variantManager;
+        return gameVariantManager;
     }
 
     @Override
-    public GameContext currentGameContext() {
+    public GameContext currentGame() {
         return game;
     }
 
@@ -143,14 +143,16 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
 
     @Override
     public void startPlaying() {
+        final GameVariant gameVariant = gameVariantManager.currentVariant();
 
-        final GameSession session = new GameSession(variants().currentVariantName());
+        final GameSession session = new GameSession(gameVariantManager.currentVariantName());
+        session.setGameFlow(gameVariant.gameFlow());
         //TODO check where this should be done
         session.hud().creditProperty().bind(GameBox.instance().coinMechanism().numCoinsProperty());
+
         game.setSession(session);
 
         game.gamePlay().onSessionStart(game);
-        game.flow().restartState(game, CommonGameStateID.BOOT);
         ui.views().selectGamePlayView();
         GameSimulation.start(this);
     }

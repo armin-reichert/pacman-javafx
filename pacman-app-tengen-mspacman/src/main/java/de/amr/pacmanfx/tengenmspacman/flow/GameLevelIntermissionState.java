@@ -45,10 +45,10 @@ public class GameLevelIntermissionState extends GameState {
     }
 
     @Override
-    public void onUpdate(GameContext gameContext) {
-        final GameSession session = gameContext.session();
+    public void onUpdate(GameContext game) {
+        final GameSession session = game.session();
         if (timer().hasExpired()) {
-            gameContext.flow().enterState(gameContext, session.isPlaying()
+            session.gameFlow().enterState(game, session.isPlaying()
                 ? CommonGameStateID.GAME_LEVEL_TRANSITION : CommonGameStateID.GAME_INTRO);
         }
     }

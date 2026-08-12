@@ -9,9 +9,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventManager;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
-import de.amr.pacmanfx.core.gameplay.GameFlowController;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
-import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.session.GameSession;
@@ -58,11 +56,6 @@ public class GameContextImpl implements GameContext {
     }
 
     @Override
-    public GameFlowController flow() {
-        return gameVariant.gameFlow();
-    }
-
-    @Override
     public GamePlay gamePlay() {
         return gameVariant.gamePlay();
     }
@@ -75,11 +68,6 @@ public class GameContextImpl implements GameContext {
     @Override
     public GameSession session() {
         return session;
-    }
-
-    @Override
-    public GameState state() {
-        return flow().state();
     }
 
     @Override

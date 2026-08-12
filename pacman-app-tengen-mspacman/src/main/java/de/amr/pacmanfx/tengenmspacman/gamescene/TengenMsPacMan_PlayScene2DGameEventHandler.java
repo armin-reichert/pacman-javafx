@@ -33,7 +33,7 @@ public interface TengenMsPacMan_PlayScene2DGameEventHandler extends DefaultGameE
     }
 
     default GameContext game() {
-        return appContext().currentGameContext();
+        return appContext().currentGame();
     }
 
     TengenMsPacMan_PlayScene2D gameScene();
@@ -67,9 +67,9 @@ public interface TengenMsPacMan_PlayScene2DGameEventHandler extends DefaultGameE
 
     @Override
     default void onGameStarted(GameStartedEvent e) {
-        final GameContext game = e.gameContext();
+        final GameContext game = e.game();
         final GameSession session = game.session();
-        final boolean silent = session.isAttractMode() || game.state().id() instanceof TestStateID;
+        final boolean silent = session.isAttractMode() || session.gameState().id() instanceof TestStateID;
         if (!silent) {
             optSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
         }
@@ -114,7 +114,7 @@ public interface TengenMsPacMan_PlayScene2DGameEventHandler extends DefaultGameE
 
     @Override
     default void onPacDead(PacDeadEvent e) {
-        game().state().triggerTimeout();
+        game().session().gameState().triggerTimeout();
     }
 
     @Override

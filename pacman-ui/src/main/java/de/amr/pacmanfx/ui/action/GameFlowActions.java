@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui.action;
 
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.model.test.TestStateID;
@@ -47,23 +46,22 @@ public class GameFlowActions {
         actionLetGameStateExpire = new GameAction(appContext, "let_game_state_expire") {
             @Override
             protected void doAction() {
-                game().state().triggerTimeout();
+                game().session().gameState().triggerTimeout();
             }
         };
 
         actionRestartIntro = new GameAction(appContext, "restart_intro") {
             @Override
             protected void doAction() {
-                final GameContext gameContext = game();
-                final GameState gameState = gameContext.state();
+                final GameState gameState = game().session().gameState();
 
                 if (gameState.id() instanceof TestStateID) {
-                    gameState.onExit(gameContext);
+                    gameState.onExit(game());
                 }
 
                 appContext.lifecycle().suspendPlaying();
                 appContext.clock().start();
-                gameFlow().restartState(gameContext, CommonGameStateID.GAME_INTRO);
+                gameFlow().restartState(game(), CommonGameStateID.GAME_INTRO);
             }
         };
 

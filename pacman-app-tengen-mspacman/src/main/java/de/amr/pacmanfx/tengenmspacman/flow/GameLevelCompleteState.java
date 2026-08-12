@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.tengenmspacman.flow;
 
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.gameplay.GameFlowController;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -24,14 +25,15 @@ public class GameLevelCompleteState extends GameState {
 
     @Override
     public void onUpdate(GameContext game) {
+        final GameFlowController flow = game.session().gameFlow();
+
         if (game.session().isAttractMode()) {
-            game.flow().enterState(game, TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME);
+            flow.enterState(game, TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME);
             return;
         }
 
         if (timer().hasExpired()) {
-            game.flow().enterState(game,
-                computeNextState(game, game.flow().cutScenesEnabled()));
+            flow.enterState(game, computeNextState(game, flow.cutScenesEnabled()));
         }
     }
 

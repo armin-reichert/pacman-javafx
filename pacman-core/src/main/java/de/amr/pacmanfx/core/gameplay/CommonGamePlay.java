@@ -86,6 +86,8 @@ public abstract class CommonGamePlay implements GamePlay {
 
         session.setLevel(null);
         session.setPlaying(false);
+
+        session.gameFlow().restartState(game, CommonGameStateID.BOOT);
     }
 
     @Override
@@ -208,7 +210,8 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     private void updateGhosts(GameContext game, GameLevel level) {
-        if (game.state().id().equals(CommonGameStateID.GAME_LEVEL_EATING_GHOST)) {
+        final GameSession session = game.session();
+        if (session.gameState().id().equals(CommonGameStateID.GAME_LEVEL_EATING_GHOST)) {
             level.ghostsInAnyOfStates(GhostStateSystem.UPDATED_GHOST_STATES_WHILE_EATEN)
                 .forEach(ghost -> updateGhost(game, level, ghost));
         } else {

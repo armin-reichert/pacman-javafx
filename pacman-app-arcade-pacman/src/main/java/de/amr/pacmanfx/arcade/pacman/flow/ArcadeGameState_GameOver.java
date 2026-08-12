@@ -44,12 +44,12 @@ public class ArcadeGameState_GameOver extends GameState {
     }
 
     @Override
-    public void onUpdate(GameContext gameContext) {
+    public void onUpdate(GameContext game) {
         if (timer().hasExpired()) {
-            final GameLevel level = gameContext.session().assertLevel();
+            final GameLevel level = game.session().assertLevel();
             level.clearMessage();
-            gameContext.cheats().clear();
-            gameContext.flow().enterState(gameContext, gameContext.coinMechanism().isEmpty()
+            game.cheats().clear();
+            game.session().gameFlow().enterState(game, game.coinMechanism().isEmpty()
                 ? CommonGameStateID.GAME_INTRO
                 : CommonGameStateID.GAME_PREPARATION);
         }

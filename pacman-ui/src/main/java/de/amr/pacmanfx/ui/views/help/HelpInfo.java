@@ -27,9 +27,9 @@ import static java.util.Objects.requireNonNull;
 public class HelpInfo {
 
     public static HelpInfo build(GameAppContext app) {
-        final GameContext game = app.currentGameContext();
+        final GameContext game = app.currentGame();
         final GameSession session = game.session();
-        final GameState state = game.state();
+        final GameState state = session.gameState();
         final boolean demoLevel = session.isAttractMode();
 
         final HelpInfo helpInfo = new HelpInfo(app);
@@ -82,7 +82,7 @@ public class HelpInfo {
         pane.setPadding(new Insets(10));
         pane.setBackground(Ufx.roundedBackground(backgroundColor, 10));
 
-        final GameContext gameContext = appContext.currentGameContext();
+        final GameContext gameContext = appContext.currentGame();
         final GameCheats cheats = gameContext.cheats();
 
         // add default entries:
