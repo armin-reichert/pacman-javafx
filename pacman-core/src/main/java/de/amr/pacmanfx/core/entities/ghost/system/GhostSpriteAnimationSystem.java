@@ -11,7 +11,10 @@ import de.amr.pacmanfx.core.entities.ghost.comp.GhostStateComp;
 
 public class GhostSpriteAnimationSystem {
 
-    public static void update(Ghost ghost, Pac pac) {
+    public GhostSpriteAnimationSystem() {
+    }
+
+    public void update(Ghost ghost, Pac pac) {
         final CommonSpriteAnimationID animationID = switch (ghost.ghostStateEnum()) {
             case LOCKED, LEAVING_HOUSE -> threatenedOrNormalAnimation(ghost, pac);
             case HUNTING_PAC    -> CommonSpriteAnimationID.GHOST_NORMAL;
@@ -22,14 +25,14 @@ public class GhostSpriteAnimationSystem {
         ghost.spriteAnimation().animation().playSelected();
     }
 
-    private static CommonSpriteAnimationID threatenedOrNormalAnimation(Ghost ghost, Pac pac) {
+    private CommonSpriteAnimationID threatenedOrNormalAnimation(Ghost ghost, Pac pac) {
         final GhostStateComp state = ghost.state();
         return state.isThreatenedByPac()
             ? frightenedOrFlashingAnimation(pac)
             : CommonSpriteAnimationID.GHOST_NORMAL;
     }
 
-    private static CommonSpriteAnimationID frightenedOrFlashingAnimation(Pac pac) {
+    private CommonSpriteAnimationID frightenedOrFlashingAnimation(Pac pac) {
         final boolean flashing = pac.power().isFadingStart() || pac.power().isFading();
         return flashing ? CommonSpriteAnimationID.GHOST_FLASHING : CommonSpriteAnimationID.GHOST_FRIGHTENED;
     }

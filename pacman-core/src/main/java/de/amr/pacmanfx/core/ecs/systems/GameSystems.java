@@ -7,6 +7,7 @@ package de.amr.pacmanfx.core.ecs.systems;
 import de.amr.pacmanfx.core.entities.bonus.system.BonusMoveAndJumpSystem;
 import de.amr.pacmanfx.core.entities.bonus.system.BonusStateSystem;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostHouseAccessSystem;
+import de.amr.pacmanfx.core.entities.ghost.system.GhostSpriteAnimationSystem;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostStateSystem;
 import de.amr.pacmanfx.core.entities.pac.system.*;
 import de.amr.pacmanfx.core.gameplay.hunt.GhostHuntingStrategy;
@@ -35,6 +36,8 @@ public interface GameSystems {
     PacAnimationSystem pacAnimation();
 
     GhostStateSystem ghostState();
+
+    GhostSpriteAnimationSystem ghostSpriteAnimation();
 
     GhostHouseAccessSystem ghostHouseAccess();
 

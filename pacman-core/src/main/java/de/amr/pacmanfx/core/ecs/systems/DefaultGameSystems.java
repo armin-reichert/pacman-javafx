@@ -8,6 +8,7 @@ import de.amr.pacmanfx.core.entities.bonus.system.BonusMoveAndJumpSystem;
 import de.amr.pacmanfx.core.entities.bonus.system.BonusStateSystem;
 import de.amr.pacmanfx.core.entities.bonus.system.BonusWorldMovementPolicy;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostHouseAccessSystem;
+import de.amr.pacmanfx.core.entities.ghost.system.GhostSpriteAnimationSystem;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostStateSystem;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostWorldMovementPolicy;
 import de.amr.pacmanfx.core.entities.pac.system.*;
@@ -32,6 +33,7 @@ public class DefaultGameSystems implements GameSystems {
     protected GhostStateSystem ghostState;
     protected GhostHouseAccessSystem ghostHouseAccess;
     protected GhostWorldMovementPolicy ghostWorldMovementPolicy;
+    protected GhostSpriteAnimationSystem ghostSpriteAnimation;
 
     protected GhostHuntingStrategy orangeGhostPokeyHuntingStrategy;
     protected GhostHuntingStrategy cyanGhostBashfulHuntingStrategy;
@@ -66,6 +68,8 @@ public class DefaultGameSystems implements GameSystems {
         pinkGhostSpeedyHuntingStrategy = createSpeedyHuntingStrategy();
         cyanGhostBashfulHuntingStrategy = createBashfulHuntingStrategy();
         orangeGhostPokeyHuntingStrategy = createPokeyHuntingStrategy();
+
+        ghostSpriteAnimation = new GhostSpriteAnimationSystem();
     }
 
     protected void createBonusSystems() {
@@ -174,6 +178,11 @@ public class DefaultGameSystems implements GameSystems {
             case CYAN_GHOST_BASHFUL -> cyanGhostBashfulHuntingStrategy;
             case ORANGE_GHOST_POKEY -> orangeGhostPokeyHuntingStrategy;
         };
+    }
+
+    @Override
+    public GhostSpriteAnimationSystem ghostSpriteAnimation() {
+        return ghostSpriteAnimation;
     }
 
     public BonusStateSystem bonusState() {

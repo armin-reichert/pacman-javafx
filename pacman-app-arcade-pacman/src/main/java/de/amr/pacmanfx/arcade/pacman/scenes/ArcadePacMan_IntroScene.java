@@ -172,11 +172,12 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
 
     private void chasePacMan(long tick) {
         final MovementSystem motor = game().systems().motor();
+        final GhostSpriteAnimationSystem ghostSpriteAnimationSystem = game().systems().ghostSpriteAnimation();
+
         blinking.triggerPulse();
         motor.move(pacMan);
         for (Ghost ghost : ghosts) {
             motor.move(ghost);
-            GhostSpriteAnimationSystem.update(ghost, pacMan);
         }
 
         // "shaking" effect
@@ -191,6 +192,11 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
             pinkGhost.pos().setX(pinkGhost.pos().x() - 0.5);
             cyanGhost.pos().setX(cyanGhost.pos().x() + 0.5);
         }
+
+        for (Ghost ghost : ghosts) {
+            ghostSpriteAnimationSystem.update(ghost, pacMan);
+        }
+
     }
 
     private void turnCardsStopPacMan(GameContext game) {

@@ -16,7 +16,6 @@ import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusState;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostSpriteAnimationComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
-import de.amr.pacmanfx.core.entities.ghost.system.GhostSpriteAnimationSystem;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostStateSystem;
 import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.entities.livescounter.system.LivesCounterSystem;
@@ -221,8 +220,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
     private void updateGhost(GameContext game, GameLevel level, Ghost ghost) {
         game.systems().ghostState().update(game, level, ghost);
-        //TODO Add into global game systems interface
-        GhostSpriteAnimationSystem.update(ghost, level.entities().pac());
+        game.systems().ghostSpriteAnimation().update(ghost, level.entities().pac());
 
         //TODO should this be here?
         final GhostSpriteAnimationComp ghostAnimation = ghost.ghostAnimation();
