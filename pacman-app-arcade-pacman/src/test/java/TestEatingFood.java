@@ -18,7 +18,6 @@ import de.amr.pacmanfx.core.event.base.GameEventListener;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.gameplay.GameFlowController;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
-import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.GameModel;
@@ -87,16 +86,6 @@ public class TestEatingFood {
         @Override
         public GamePlay gamePlay() {
             return gamePlay;
-        }
-
-        @Override
-        public GameFlowController flow() {
-            return gameFlow;
-        }
-
-        @Override
-        public GameState state() {
-            return flow().state();
         }
 
         @Override
