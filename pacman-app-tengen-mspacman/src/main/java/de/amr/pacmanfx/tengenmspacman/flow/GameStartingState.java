@@ -6,6 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.flow;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.event.gameplay.GameStartedEvent;
 import de.amr.pacmanfx.core.event.gameplay.LevelStartedEvent;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
@@ -32,6 +33,9 @@ public class GameStartingState extends GameState {
         final GameSession session = game.session();
 
         gamePlay.buildNormalLevel(game, gamePlay.startLevelNumber(session), model.initialLifeCount());
+
+        ScoreSystem.enableScore(session.highScore(), true);
+
         game.eventManager().publishGameEvent(new GameStartedEvent(game));
     }
 
