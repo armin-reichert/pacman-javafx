@@ -38,7 +38,7 @@ public class LevelShortTestState extends GameState {
             ? 25
             : model.rules().lastLevelNumber();
 
-        gamePlay.buildNormalLevel(game, 1, model.initialLifeCount());
+        gamePlay.buildNormalLevel(game, 1, game.initialLifeCount());
         gamePlay.startLevel(game);
 
         final GameLevel level = session.assertLevel();

@@ -27,8 +27,6 @@ public class ArcadeMsPacMan_GameModel implements GameModel {
 
     protected WorldMapManager worldMapManager;
 
-    private int initialLifeCount;
-
     protected ArcadeMsPacMan_GameRules rules;
 
     public ArcadeMsPacMan_GameModel() {
@@ -38,17 +36,6 @@ public class ArcadeMsPacMan_GameModel implements GameModel {
     public ArcadeMsPacMan_GameModel(WorldMapManager worldMapManager) {
         this.worldMapManager = requireNonNull(worldMapManager);
         rules = new ArcadeMsPacMan_GameRules();
-        setInitialLifeCount(3);
-    }
-
-    @Override
-    public void setInitialLifeCount(int initialLifeCount) {
-        this.initialLifeCount = initialLifeCount;
-    }
-
-    @Override
-    public int initialLifeCount() {
-        return initialLifeCount;
     }
 
     @Override

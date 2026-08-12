@@ -14,7 +14,6 @@ import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
-import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 
 public class GameStartingState extends GameState {
 
@@ -28,14 +27,11 @@ public class GameStartingState extends GameState {
 
     @Override
     public void onEnter(GameContext game) {
-        final var model = (TengenMsPacMan_GameModel) game.model();
         final var gamePlay = (TengenMsPacMan_GamePlay) game.gamePlay();
         final GameSession session = game.session();
 
-        gamePlay.buildNormalLevel(game, gamePlay.startLevelNumber(session), model.initialLifeCount());
-
+        gamePlay.buildNormalLevel(game, gamePlay.startLevelNumber(session), game.initialLifeCount());
         ScoreSystem.enableScore(session.highScore(), true);
-
         game.eventManager().publishGameEvent(new GameStartedEvent(game));
     }
 

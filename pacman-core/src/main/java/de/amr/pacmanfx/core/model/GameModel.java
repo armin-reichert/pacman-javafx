@@ -9,10 +9,6 @@ import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 
 public interface GameModel {
 
-    void setInitialLifeCount(int initialLifeCount);
-
-    int initialLifeCount();
-
     WorldMapManager worldMapManager();
 
     GameRules rules();

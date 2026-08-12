@@ -30,16 +30,27 @@ public class GameContext {
 
     private GameSession session;
 
-    public GameContext(CoinMechanism coinMechanism, GamePlay gamePlay, GameSystems systems, GameModel model) {
+    private int initialLifeCount;
+
+    public GameContext(CoinMechanism coinMechanism, GamePlay gamePlay, GameSystems systems, GameModel model, int initialLifeCount) {
         this.coinMechanism = requireNonNull(coinMechanism);
         this.gamePlay = requireNonNull(gamePlay);
         this.systems = requireNonNull(systems);
         this.model = requireNonNull(model);
         this.eventManager = new DefaultGameEventManager();
+        this.initialLifeCount = initialLifeCount;
     }
 
     public void setSession(GameSession session) {
         this.session = requireNonNull(session);
+    }
+
+    public void setInitialLifeCount(int initialLifeCount) {
+        this.initialLifeCount = initialLifeCount;
+    }
+
+    public int initialLifeCount() {
+        return initialLifeCount;
     }
 
     public CoinMechanism coinMechanism() {

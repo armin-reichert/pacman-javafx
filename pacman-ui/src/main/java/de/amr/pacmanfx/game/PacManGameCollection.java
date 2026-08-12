@@ -81,7 +81,8 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
             gameBox().coinMechanism(),
             gameVariant.gamePlay(),
             gameVariant.systems(),
-            gameVariant.gameModel()
+            gameVariant.gameModel(),
+            gameVariant.initialLifeCount()
         );
         game.eventManager().addGameEventSubscriber(ui);
 

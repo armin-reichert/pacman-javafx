@@ -11,6 +11,7 @@ import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import org.tinylog.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +28,8 @@ public class GameVariant {
     private final Set<GameExtension> extensions;
     private final Map<Named, Object> extensionValues;
 
+    private int initialLifeCount;
+
     public GameVariant(Cartridge cartridge) {
         systems = cartridge.systemsFactory().get();
         gamePlay = cartridge.gamePlayFactory().get();
@@ -36,6 +39,16 @@ public class GameVariant {
         config = cartridge.uiConfigFactory().get();
         extensions = cartridge.gameExtensions();
         extensionValues = new HashMap<>();
+        initialLifeCount = 3;
+    }
+
+    public int initialLifeCount() {
+        return initialLifeCount;
+    }
+
+    public void setInitialLifeCount(int initialLifeCount) {
+        this.initialLifeCount = initialLifeCount;
+        Logger.info("Initial life count: {}", initialLifeCount);
     }
 
     public GameSystems systems() {

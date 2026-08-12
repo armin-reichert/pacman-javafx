@@ -35,14 +35,11 @@ public class TengenMsPacMan_GameModel implements GameModel {
 
     private final WorldMapManager worldMapManager;
 
-    private int initialLifeCount;
-
     private final TengenMsPacMan_GameRules rules;
 
     public TengenMsPacMan_GameModel() {
         worldMapManager = new TengenMsPacMan_WorldMapManager();
         rules = new TengenMsPacMan_GameRules();
-        setInitialLifeCount(3);
     }
 
     // GameModel interface
@@ -50,16 +47,6 @@ public class TengenMsPacMan_GameModel implements GameModel {
     @Override
     public TengenMsPacMan_WorldMapManager worldMapManager() {
         return (TengenMsPacMan_WorldMapManager) worldMapManager;
-    }
-
-    @Override
-    public void setInitialLifeCount(int initialLifeCount) {
-        this.initialLifeCount = initialLifeCount;
-    }
-
-    @Override
-    public int initialLifeCount() {
-        return initialLifeCount;
     }
 
     @Override

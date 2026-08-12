@@ -8,7 +8,6 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
-import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.test.CutScenesTestState;
 import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
@@ -17,14 +16,15 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Spinner;
+import org.tinylog.Logger;
 
 import java.util.List;
 
 public class DS_GameControl extends GameDashboardSection {
 
-    private static final int GAME_LEVEL_START = 0;
-    private static final int GAME_LEVEL_QUIT = 1;
-    private static final int GAME_LEVEL_NEXT = 2;
+//    private static final int GAME_LEVEL_START = 0;
+    private static final int GAME_LEVEL_QUIT = 0;
+    private static final int GAME_LEVEL_NEXT = 1;
 
     private static final int CUT_SCENES_TEST_START = 0;
     private static final int CUT_SCENES_TEST_QUIT = 1;
@@ -40,18 +40,24 @@ public class DS_GameControl extends GameDashboardSection {
     }
 
     @Override
-    public void setGameApp(GameAppContext appContext) {
-        final CoinMechanism coinMechanism = appContext.currentGame().coinMechanism();
-        final CommonGameActions actions = appContext.commonActions();
+    public void setGameApp(GameAppContext app) {
+        final CoinMechanism coinMechanism = app.currentGame().coinMechanism();
+        final CommonGameActions actions = app.commonActions();
 
         spinnerCredit            = intSpinner("Credit", 0, coinMechanism.maxCoins(), coinMechanism.numCoinsProperty());
         choiceBoxInitialLives    = choiceBox("Initial Lives", new Integer[] {3, 5});
-        buttonGroupLevelActions  = buttonList("Game Level", List.of("Start", "Quit", "Next"));
+        buttonGroupLevelActions  = buttonList("Game Level", List.of(/*"Start",*/ "Quit", "Next"));
         buttonGroupCutScenesTest = buttonList("Cut Scenes Test", List.of("Start", "Quit"));
-        addDynamicInfo("Collision Mode", fnGameRulesInfo(appContext, rules -> rules.actorCollisionRules().getCollisionStrategy().name()));
+        addDynamicInfo("Collision Mode", fnGameRulesInfo(app, rules -> rules.actorCollisionRules().getCollisionStrategy().name()));
         cbCollisionCheckedTwice  = checkBox("Collision Check 2x");
 
-        setAction(choiceBoxInitialLives, () -> appContext.currentGame().model().setInitialLifeCount(choiceBoxInitialLives.getValue()));
+        setAction(choiceBoxInitialLives,
+            () -> {
+                final int lifeCount = choiceBoxInitialLives.getValue();
+                Logger.info("Settings life count to: {}", lifeCount);
+                app.gameVariants().currentGameVariant().setInitialLifeCount(lifeCount);
+                app.currentGame().setInitialLifeCount(lifeCount);
+            });
 
         //TODO Here we would need to access the Arcade-specific action to start the game
 //        setGameAction(buttonGroupLevelActions[GAME_LEVEL_START],       actionToStartTheGamePlay);
@@ -62,7 +68,7 @@ public class DS_GameControl extends GameDashboardSection {
         setGameAction(buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT],  actions.gameFlowActions().actionRestartIntro());
 
         cbCollisionCheckedTwice.setOnAction(_ ->
-            appContext.currentGame().model().rules().actorCollisionRules().collisionDoubleCheckedProperty()
+            app.currentGame().model().rules().actorCollisionRules().collisionDoubleCheckedProperty()
                 .set(cbCollisionCheckedTwice.isSelected()));
     }
 
@@ -72,17 +78,16 @@ public class DS_GameControl extends GameDashboardSection {
 
         final GameContext game = app.currentGame();
         final GameSession session = game.session();
-        final GameModel model = game.model();
         final GameState state = session.gameState();
 
-        choiceBoxInitialLives.setValue(model.initialLifeCount());
+        choiceBoxInitialLives.setValue(app.gameVariants().currentGameVariant().initialLifeCount());
         choiceBoxInitialLives.setDisable(!CommonGameStateID.GAME_INTRO.hasSameNameAs(state));
 
         final boolean creditDisabled = !state.nameIsOneOf(CommonGameStateID.GAME_INTRO, CommonGameStateID.GAME_PREPARATION);
         spinnerCredit.setDisable(creditDisabled);
 
         final boolean booting = CommonGameStateID.BOOT.hasSameNameAs(state);
-        buttonGroupLevelActions[GAME_LEVEL_START].setDisable(booting || !canStartLevel(app, state));
+        //buttonGroupLevelActions[GAME_LEVEL_START].setDisable(booting || !canStartLevel(app, state));
         buttonGroupLevelActions[GAME_LEVEL_NEXT] .setDisable(booting || !canEnterNextLevel(game.session(), state));
         buttonGroupLevelActions[GAME_LEVEL_QUIT] .setDisable(booting || session.optLevel().isEmpty());
 
