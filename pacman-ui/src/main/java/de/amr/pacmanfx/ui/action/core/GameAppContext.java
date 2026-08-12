@@ -22,7 +22,7 @@ public interface GameAppContext {
 
     CommonGameActions commonActions();
 
-    GameVariantManager variants();
+    GameVariantManager gameVariants();
 
     GameUI ui();
 
@@ -33,6 +33,6 @@ public interface GameAppContext {
     DirectoryWatchdog watchdog();
 
     default <T> T getExtensionValue(Named id, Class<T> type) {
-        return variants().currentVariant().getExtensionValue(this, id, type);
+        return gameVariants().currentGameVariant().getExtensionValue(this, id, type);
     }
 }

@@ -65,17 +65,17 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
 
     @Override
     public void onActivate() {
-        final Arcade_Actions actions = appContext().getExtensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
+        final Arcade_Actions actions = app().getExtensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         actionBindings().registerAllBindings(actions.gameStartActionBindings());
-        actionBindings().registerAllBindings(appContext().commonActions().sceneTestActions().bindings());
+        actionBindings().registerAllBindings(app().commonActions().sceneTestActions().bindings());
 
         sceneFlow.restartState(this, SceneState.STARTING);
     }
 
     @Override
     public void onDeactivate() {
-        appContext().ui().sounds().voice().stop();
+        app().ui().sounds().voice().stop();
         actionBindings().dispose();
     }
 
@@ -85,8 +85,8 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
     }
 
     private void initScene() {
-        final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
-        final SpriteAnimationContainer container = appContext().ui().sprites().animations();
+        final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().config().renderConfig();
+        final SpriteAnimationContainer container = app().ui().sprites().animations();
 
         final GameSystems sys = game().systems();
 
@@ -130,7 +130,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
         ghostPresented = GhostPersonality.RED_GHOST_SHADOW;
         numTicksBeforeRising = 0;
 
-        appContext().ui().sounds().voice().playAfterSec(1, GlobalAssets.VoiceID.EXPLAIN_GAME_START.media());
+        app().ui().sounds().voice().playAfterSec(1, GlobalAssets.VoiceID.EXPLAIN_GAME_START.media());
     }
 
     private void createMarquee() {
@@ -238,7 +238,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
         READY_TO_PLAY {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                final GameContext gameContext = scene.appContext().currentGame();
+                final GameContext gameContext = scene.app().currentGame();
                 final boolean canPlay = !gameContext.coinMechanism().isEmpty();
                 MarqueeSystem.instance().update(scene.marquee);
                 if (timer.atSecond(2.0) && !canPlay) {

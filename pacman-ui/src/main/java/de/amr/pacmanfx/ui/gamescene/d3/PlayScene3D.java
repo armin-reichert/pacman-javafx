@@ -153,8 +153,8 @@ public class PlayScene3D extends AbstractGameScene
             scoresView.showScore(score.data().points(), score.data().levelNumber());
         } else {
             scoresView.showTextForScore(
-                appContext().ui().translations().translate("score.game_over"),
-                appContext().variants().currentVariant().config().assets().color("color.game_over_message"));
+                app().ui().translations().translate("score.game_over"),
+                app().gameVariants().currentGameVariant().config().assets().color("color.game_over_message"));
         }
 
         // High score is always visible
@@ -187,8 +187,8 @@ public class PlayScene3D extends AbstractGameScene
         requireNonNull(game);
         requireNonNull(level);
 
-        final GameVariantConfig gameVariantConfig = appContext().variants().currentVariant().config();
-        final GameUISettingsVM viewModel = appContext().ui().viewModel();
+        final GameVariantConfig gameVariantConfig = app().gameVariants().currentGameVariant().config();
+        final GameUISettingsVM viewModel = app().ui().viewModel();
         final GameSession session = game.session();
 
         if (level3D != null) {
@@ -228,14 +228,14 @@ public class PlayScene3D extends AbstractGameScene
     @Override
     public void onBeforeEmbedded() {
         // TODO: reconsider whether scores need recreation here (variant/font change?)
-        final String scoreTitle = appContext().ui().translations().translate("score.score");
-        final String highScoreTitle = appContext().ui().translations().translate("score.high_score");
+        final String scoreTitle = app().ui().translations().translate("score.score");
+        final String highScoreTitle = app().ui().translations().translate("score.high_score");
         replaceScoresView(scoreTitle, highScoreTitle);
     }
 
     @Override
     public void onActivate() {
-        final Game3DSettingsVM settings3D = appContext().ui().viewModel().common3D;
+        final Game3DSettingsVM settings3D = app().ui().viewModel().common3D;
         perspectiveManager.activeIDProperty().bind(settings3D.cameraPerspectiveIdProperty);
         settings3D.drawModeProperty.addListener(drawModeChangeListener);
         subScene.setFill(Color.BLACK);
@@ -245,7 +245,7 @@ public class PlayScene3D extends AbstractGameScene
     @Override
     public void onDeactivate() {
         perspectiveManager.activeIDProperty().unbind();
-        appContext().ui().viewModel().common3D.drawModeProperty.removeListener(drawModeChangeListener);
+        app().ui().viewModel().common3D.drawModeProperty.removeListener(drawModeChangeListener);
         disposeContextMenu();
         actionBindings().dispose();
     }
@@ -307,16 +307,15 @@ public class PlayScene3D extends AbstractGameScene
 
     @Override
     public Optional<ContextMenu> optContextMenu() {
-        contextMenu = new PlaySceneContextMenu(appContext());
+        contextMenu = new PlaySceneContextMenu(app());
         return Optional.of(contextMenu);
     }
 
     @Override
     public void handleQuit(GameAppContext appContext) {
-        final GameContext gameContext = game();
         onDeactivate();
         appContext.ui().sounds().setEnabled(false);
-        gameFlow().enterState(gameContext, CommonGameStateID.GAME_OVER);
+        gameFlow().enterState(game(), CommonGameStateID.GAME_OVER);
     }
 
     // Other stuff

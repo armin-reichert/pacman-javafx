@@ -41,7 +41,7 @@ public interface GameVariantRenderConfig {
 
     ActorRenderer createActorRenderer(SpriteAnimSystem animSystem, Canvas canvas);
 
-    Ghost createAnimatedGhost(GameContext gameContext, SpriteAnimationContainer container, GhostPersonality personality);
+    Ghost createAnimatedGhost(GameContext game, SpriteAnimationContainer container, GhostPersonality personality);
 
     SpriteAnimationAccessor createGhostAnimations(SpriteAnimationContainer container, GhostPersonality personality);
 

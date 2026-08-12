@@ -11,7 +11,7 @@ public interface GameVariantManager {
 
     StringProperty variantNameProperty();
 
-    GameVariant currentVariant();
+    GameVariant currentGameVariant();
 
     void addVariantNameListener(ChangeListener<String> listener);
 

@@ -23,7 +23,7 @@ public interface GameScene extends QuitHandler, Disposable {
 
     Input input();
 
-    GameAppContext appContext();
+    GameAppContext app();
 
     GameContext game();
 

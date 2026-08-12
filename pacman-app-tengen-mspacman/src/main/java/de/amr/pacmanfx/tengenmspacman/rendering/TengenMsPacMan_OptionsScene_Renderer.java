@@ -68,9 +68,9 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
 
     @Override
     public void draw(AbstractGameScene2D gameScene2D, long tick) {
-        final GameAppContext app = gameScene2D.appContext();
+        final GameAppContext app = gameScene2D.app();
 
-        final GameVariantConfig gameVariantConfig = app.variants().currentVariant().config();
+        final GameVariantConfig gameVariantConfig = app.gameVariants().currentGameVariant().config();
         final TengenMsPacMan_UISettings uiSettings = app.getExtensionValue(
             TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
 
@@ -87,7 +87,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
         ctx.setFont(arcadeFont8());
 
         if (uiSettings.joypadBindingsDisplayed.get()) {
-            drawJoypadKeyBinding(gameScene2D.appContext().input().joypad().currentKeyBinding());
+            drawJoypadKeyBinding(gameScene2D.app().input().joypad().currentKeyBinding());
         }
 
         drawHorizontalBar(NES_Palette.color(0x20), NES_Palette.color(0x21), scene.unscaledWidth(), TS, 20);
@@ -161,7 +161,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
 
         drawHorizontalBar(NES_Palette.color(0x20), NES_Palette.color(0x21), scene.unscaledWidth(), TS, 212);
 
-        if (gameScene2D.appContext().ui().viewModel().debugModeOnProperty.get()) {
+        if (gameScene2D.app().ui().viewModel().debugModeOnProperty.get()) {
             debugRenderer.draw(gameScene2D, tick);
         }
     }

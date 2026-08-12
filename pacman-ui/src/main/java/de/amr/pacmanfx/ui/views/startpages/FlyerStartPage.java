@@ -109,7 +109,7 @@ public class FlyerStartPage implements StartPage {
 
     @Override
     public void onEnter() {
-        appContext.variants().selectVariant(gameVariantName);
+        appContext.gameVariants().selectVariant(gameVariantName);
         flyer.selectPage(0);
         appContext.ui().sounds().voice().playAfterSec(VOICE_DELAY_SEC, voiceMedia);
         Platform.runLater(startButton::requestFocus);

@@ -59,7 +59,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
         actorRenderer = scene.configureRenderer(renderConfig.createActorRenderer(animSystem, canvas));
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
 
-        uiSettings = scene.appContext().getExtensionValue(
+        uiSettings = scene.app().getExtensionValue(
             TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
     }
 
@@ -138,7 +138,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
             drawJoypadKeyBinding(scene.input().joypad().currentKeyBinding());
         }
 
-        if (scene.appContext().ui().viewModel().debugModeOnProperty.get()) {
+        if (scene.app().ui().viewModel().debugModeOnProperty.get()) {
             debugRenderer.draw(scene, globalTick);
         }
     }

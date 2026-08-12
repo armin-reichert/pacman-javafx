@@ -69,7 +69,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         final double infoHeight = tilesPx(2);
         levelInfo.setFitWidth(infoWidth);
         levelInfo.setFitHeight(infoHeight);
-        levelInfo.imageProperty().bind(appContext().ui().viewModel().maze3D.floorColorProperty.map(
+        levelInfo.imageProperty().bind(app().ui().viewModel().maze3D.floorColorProperty.map(
             color -> createLevelInfoImage(
                 level.number(),
                 gamePlay.mapCategory(session),
@@ -120,7 +120,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     public void replaceActionBindings(GameSession session, GameLevel level) {
         actionBindings().dispose();
 
-        final var actions = appContext().getExtensionValue(
+        final var actions = app().getExtensionValue(
             TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
 
         if (session.isAttractMode()) {
@@ -129,7 +129,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         } else {
             actionBindings().registerAllBindings(actions.steeringBindings());
             actionBindings().selectAnyMatchingBinding(actions.actionTogglePacBooster(), actions.localBindings());
-            actionBindings().registerAllBindings(appContext().commonActions().cheatActions().bindings());
+            actionBindings().registerAllBindings(app().commonActions().cheatActions().bindings());
         }
         bindActions();
 
@@ -144,7 +144,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
             if (score.data().isEnabled()) {
                 scores3D.showScore(score.data().points(), score.data().levelNumber());
             } else {
-                scores3D.showTextForScore(appContext().ui().translations().translate("score.game_over"),
+                scores3D.showTextForScore(app().ui().translations().translate("score.game_over"),
                     Color.valueOf(NES_Palette.rgb(0x16)));
             }
             // Always show high score

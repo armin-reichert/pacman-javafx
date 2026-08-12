@@ -26,14 +26,14 @@ import java.util.Optional;
 
 public interface TengenMsPacMan_PlayScene2DGameEventHandler extends DefaultGameEventListener {
 
-    GameAppContext appContext();
+    GameAppContext app();
 
     default Optional<GameSoundEffects> optSoundEffects() {
-        return appContext().variants().currentVariant().config().optSoundEffects();
+        return app().gameVariants().currentGameVariant().config().optSoundEffects();
     }
 
     default GameContext game() {
-        return appContext().currentGame();
+        return app().currentGame();
     }
 
     TengenMsPacMan_PlayScene2D gameScene();
@@ -125,7 +125,7 @@ public interface TengenMsPacMan_PlayScene2DGameEventHandler extends DefaultGameE
 
     @Override
     default void onPacEatsFood(PacEatsFoodEvent e) {
-        final long tick = appContext().clock().currentTick();
+        final long tick = app().clock().currentTick();
         gameScene().optSoundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
     }
 

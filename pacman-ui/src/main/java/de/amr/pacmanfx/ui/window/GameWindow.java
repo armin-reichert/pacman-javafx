@@ -54,7 +54,7 @@ public class GameWindow {
         app.ui().views().currentViewIDProperty().addListener(
             (_, _, viewID) -> updateStageTitleBinding(app.ui(), viewID));
 
-        app.variants().addVariantNameListener((_, _, _) -> updateStageIcon(app));
+        app.gameVariants().addVariantNameListener((_, _, _) -> updateStageIcon(app));
 
         // Triggers title update
         connected.set(true);
@@ -86,7 +86,7 @@ public class GameWindow {
                 case EDITOR -> optCurrentViewTitle(ui).orElse(("Map Editor"));
             },
             connected,
-            appContext.variants().variantNameProperty(),
+            appContext.gameVariants().variantNameProperty(),
             appContext.clock().updatesDisabledProperty(),
             ui.viewModel().debugModeOnProperty,
             ui.viewModel().common3D.view3DEnabledProperty,
@@ -112,7 +112,7 @@ public class GameWindow {
     }
 
     private void updateStageIcon(GameAppContext appContext) {
-        final Image icon = appContext.variants().currentVariant().config().assets().image("app_icon");
+        final Image icon = appContext.gameVariants().currentGameVariant().config().assets().image("app_icon");
         if (icon != null) {
             stage.getIcons().setAll(icon);
         } else {
@@ -134,7 +134,7 @@ public class GameWindow {
     }
 
     private String stageTitle(GameAppContext appContext, boolean paused, boolean is3D) {
-        final String gameVariantName = appContext.variants().currentVariantName();
+        final String gameVariantName = appContext.gameVariants().currentVariantName();
         if (gameVariantName == null) {
             return "";
         }
@@ -146,7 +146,7 @@ public class GameWindow {
         // app.title = Game Variant Name {0}
         // app.title = Game Variant Name {0} (paused)
 
-        final TranslationManager variantTranslations = appContext.variants().currentVariant().config().translations();
+        final TranslationManager variantTranslations = appContext.gameVariants().currentGameVariant().config().translations();
         final String titleKey = paused ? "app.title.paused" : "app.title";
         if (variantTranslations.textBundle() != null
             && variantTranslations.textBundle().containsKey(titleKey)) {

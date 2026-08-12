@@ -80,7 +80,7 @@ public abstract class AbstractGameScene
     }
 
     @Override
-    public GameAppContext appContext() {
+    public GameAppContext app() {
         return appContext;
     }
 
@@ -111,7 +111,7 @@ public abstract class AbstractGameScene
 
     @Override
     public Optional<GameSoundEffects> optSoundEffects() {
-        return appContext.variants().currentVariant().config().optSoundEffects();
+        return appContext.gameVariants().currentGameVariant().config().optSoundEffects();
     }
 
     @Override

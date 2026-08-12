@@ -27,18 +27,17 @@ public final class Arcade_Actions {
 
     private final Set<ActionKeyBinding> gameStartActionBindings;
 
-    public Arcade_Actions(GameAppContext appContext) {
+    public Arcade_Actions(GameAppContext app) {
 
-        actionInsertCoin = new GameAction(appContext, "insert_coin") {
+        actionInsertCoin = new GameAction(app, "insert_coin") {
             @Override
             public void doAction() {
-                final GameContext gameContext = game();
                 final CoinMechanism coinMechanism = appContext.currentGame().coinMechanism();
                 appContext.ui().sounds().voice().stop();
                 appContext.ui().sounds().setEnabled(true);
                 coinMechanism.insertCoin();
-                gameContext.eventManager().publishGameEvent(new CreditAddedEvent(1));
-                gameFlow().enterState(gameContext, CommonGameStateID.GAME_PREPARATION);
+                game().eventManager().publishGameEvent(new CreditAddedEvent(1));
+                gameFlow().enterState(game(), CommonGameStateID.GAME_PREPARATION);
             }
 
             @Override
@@ -57,7 +56,7 @@ public final class Arcade_Actions {
             }
         };
 
-        actionStartPlaying = new GameAction(appContext, "start_playing") {
+        actionStartPlaying = new GameAction(app, "start_playing") {
             @Override
             public void doAction() {
                 appContext.ui().sounds().voice().stop();

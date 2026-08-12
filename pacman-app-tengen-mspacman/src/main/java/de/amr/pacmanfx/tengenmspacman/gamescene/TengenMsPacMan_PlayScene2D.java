@@ -192,7 +192,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
     public Optional<ContextMenu> optContextMenu() {
         final var uiSettings = tengenUISettings();
 
-        final TranslationManager translations = appContext().ui().translations();
+        final TranslationManager translations = app().ui().translations();
         final SceneDisplay displayMode = uiSettings.playSceneDisplay.get();
         final var contextMenu = new ContextMenu();
 
@@ -212,8 +212,8 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
         addLocalizedCheckBox(contextMenu, translations, game().cheats().pacUsingAutopilotProperty(), "context_menu.autopilot");
         addLocalizedCheckBox(contextMenu, translations, game().cheats().pacImmuneProperty(), "context_menu.immunity");
         addSeparator(contextMenu);
-        addLocalizedCheckBox(contextMenu, translations, appContext().ui().viewModel().mutedProperty, "context_menu.muted");
-        addLocalizedActionItem(contextMenu, translations, appContext().commonActions().gameFlowActions().actionQuit(), "context_menu.quit");
+        addLocalizedCheckBox(contextMenu, translations, app().ui().viewModel().mutedProperty, "context_menu.muted");
+        addLocalizedActionItem(contextMenu, translations, app().commonActions().gameFlowActions().actionQuit(), "context_menu.quit");
 
         return Optional.of(contextMenu);
     }
@@ -245,29 +245,29 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
     }
 
     private TengenMsPacMan_Actions tengenActions() {
-        return appContext().getExtensionValue(
+        return app().getExtensionValue(
             TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
     }
 
     private TengenMsPacMan_UISettings tengenUISettings() {
-        return appContext().getExtensionValue(
+        return app().getExtensionValue(
             TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
     }
 
     private void acceptNormalLevel() {
-        appContext().ui().sounds().setEnabled(true); //TODO needed?
+        app().ui().sounds().setEnabled(true); //TODO needed?
 
         final var actions = tengenActions();
 
         // Pac-Man is steered using keys simulating the NES "Joypad" buttons ("START", "SELECT", "B", "A" etc.)
         actionBindings().registerAllBindings(actions.steeringBindings());
-        actionBindings().registerAllBindings(appContext().commonActions().cheatActions().bindings());
+        actionBindings().registerAllBindings(app().commonActions().cheatActions().bindings());
         actionBindings().selectAnyMatchingBinding(actions.actionTogglePlaySceneDisplayMode(), actions.localBindings());
         actionBindings().selectAnyMatchingBinding(actions.actionTogglePacBooster(), actions.localBindings());
     }
 
     private void acceptDemoLevel() {
-        appContext().ui().sounds().setEnabled(false); //TODO needed?
+        app().ui().sounds().setEnabled(false); //TODO needed?
 
         final var actions = tengenActions();
         actionBindings().selectAnyMatchingBinding(actions.actionTogglePlaySceneDisplayMode(), actions.localBindings());
@@ -327,10 +327,10 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
     }
 
     private void ensureActorAnimationsCreated(GameSession session, GameLevel level) {
-        final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
-        final SpriteAnimationContainer animationContainer = appContext().ui().sprites().animations();
+        final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().config().renderConfig();
+        final SpriteAnimationContainer animationContainer = app().ui().sprites().animations();
 
-        final SpriteAnimSystem animSystem = appContext().currentGame().systems().spriteAnim();
+        final SpriteAnimSystem animSystem = app().currentGame().systems().spriteAnim();
 
         final Pac pac = level.entities().pac();
         if (animSystem.hasNoAnimations(pac)) {

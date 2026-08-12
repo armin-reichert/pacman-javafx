@@ -101,14 +101,14 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     // Level building and level start
 
     @Override
-    public GameLevel createLevel(GameContext gameContext, int levelNumber) {
-        requireNonNull(gameContext);
+    public GameLevel createLevel(GameContext game, int levelNumber) {
+        requireNonNull(game);
         requireValidLevelNumber(levelNumber);
 
-        final WorldNavigationSystem navigator = gameContext.systems().worldNavigator();
+        final WorldNavigationSystem navigator = game.systems().worldNavigator();
 
-        final GameSession session = gameContext.session();
-        final GameModel model = gameContext.model();
+        final GameSession session = game.session();
+        final GameModel model = game.model();
         final WorldMap worldMap = model.worldMapManager().supplyWorldMap(levelNumber);
         final TerrainLayer terrain = worldMap.terrainLayer();
 
@@ -138,7 +138,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         level.setPacPowerSeconds(levelData.secPacPower());
         level.setPacPowerFadingSeconds(0.5f * levelData.numFlashes()); //TODO correct?
 
-        createAndSetPacMan(gameContext.systems(), level);
+        createAndSetPacMan(game.systems(), level);
         createAndSetGhosts(level);
 
         level.setBonusSymbolCode(0, model.rules().selectBonusSymbolCode(level.number(), 0));
@@ -189,12 +189,12 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     }
 
     @Override
-    public GameLevel buildDemoLevel(GameContext gameContext) {
-        requireNonNull(gameContext);
+    public GameLevel buildDemoLevel(GameContext game) {
+        requireNonNull(game);
 
-        final GameSession session = gameContext.session();
+        final GameSession session = game.session();
 
-        final GameLevel level = createLevel(gameContext, 1);
+        final GameLevel level = createLevel(game, 1);
 
         final Pac pac = level.entities().pac();
         pac.cheats().setImmune(false);
@@ -202,8 +202,8 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
         // Overwrite autosteering for demo level by fixed route steering
         pac.autoSteering().setSteering(new RouteGuidedSteering(
-            gameContext.systems().worldNavigator(),
-            gameContext.systems().pacWorldMovementPolicy(),
+            game.systems().worldNavigator(),
+            game.systems().pacWorldMovementPolicy(),
             DEMO_LEVEL_ROUTE
         ));
 
@@ -254,13 +254,13 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     }
 
     @Override
-    public void activateNextBonus(GameContext gameContext, GameLevel level) {
-        requireNonNull(gameContext);
+    public void activateNextBonus(GameContext game, GameLevel level) {
+        requireNonNull(game);
         requireNonNull(level);
 
-        final GameSystems sys = gameContext.systems();
-        final GameModel model = gameContext.model();
-        final GameEventManager eventManager = gameContext.eventManager();
+        final GameSystems sys = game.systems();
+        final GameModel model = game.model();
+        final GameEventManager eventManager = game.eventManager();
 
         level.selectNextBonus();
 

@@ -63,14 +63,14 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 
     double PELLET_EATING_DELAY_SEC = 0.05;
 
-    GameAppContext appContext();
+    GameAppContext app();
 
     default Optional<GameSoundEffects> optSoundEffects() {
-        return appContext().variants().currentVariant().config().optSoundEffects();
+        return app().gameVariants().currentGameVariant().config().optSoundEffects();
     }
 
     default GameContext game() {
-        return appContext().currentGame();
+        return app().currentGame();
     }
 
     default GameSession session() {
@@ -91,7 +91,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
             return;
         }
         if (gameState.id() instanceof TestStateID) {
-            handleTestState(appContext().ui().viewModel().common3D, game().session().assertLevel());
+            handleTestState(app().ui().viewModel().common3D, game().session().assertLevel());
         }
         else if (CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(newState)) {
             onHuntingStart(assertLevel3D());
@@ -193,7 +193,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     @Override
     default void onPacEatsFood(PacEatsFoodEvent event) {
         final GameLevel3D level3D = assertLevel3D();
-        final long tick = appContext().clock().currentTick();
+        final long tick = app().clock().currentTick();
 
         if (event.allPellets()) {
             level3D.pellets3D().map(Pellet3D::root).forEach(shape -> level3D.getChildren().remove(shape));
@@ -310,7 +310,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     }
 
     private void onLevelComplete() {
-        final GameUISettingsVM viewModel = appContext().ui().viewModel();
+        final GameUISettingsVM viewModel = app().ui().viewModel();
         final GameLevel level = session().assertLevel();
         final House house = level.entities().theOne(House.class);
         final boolean cutSceneFollows = !session().isAttractMode()
@@ -381,7 +381,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         final GameLevel3D level3D = assertLevel3D();
 
         if (!session.isAttractMode() && RandomNumberSupport.chance(0.25)) {
-            appContext().ui().shortMessage(Duration.seconds(2.5), textPicker().selectNextText());
+            app().ui().shortMessage(Duration.seconds(2.5), textPicker().selectNextText());
         }
 
         level3D.animationManager().stopAll();

@@ -201,10 +201,10 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     // Level building and level start
 
     @Override
-    public GameLevel createLevel(GameContext gameContext, int levelNumber) {
-        final GameSession session = gameContext.session();
-        final WorldNavigationSystem navigator = gameContext.systems().worldNavigator();
-        final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) gameContext.model();
+    public GameLevel createLevel(GameContext game, int levelNumber) {
+        final GameSession session = game.session();
+        final WorldNavigationSystem navigator = game.systems().worldNavigator();
+        final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) game.model();
         final WorldMap worldMap = model.worldMapManager().supplyWorldMap(levelNumber, mapCategory(session));
         final var huntingTimer = new HuntingTimer("Tengen Ms. Pac-Man Hunting Timer", model.rules().numHuntingPhases());
 
@@ -231,7 +231,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         level.setGameOverStateTicks(mapCategory(session) == MapCategory.ARCADE
             ? ARCADE_MAP_GAME_OVER_TICKS : NON_ARCADE_MAP_GAME_OVER_TICKS);
 
-        setMsPacMan(gameContext, level);
+        setMsPacMan(game, level);
         createAndSetGhosts(level, house);
 
         //TODO not sure about this:
@@ -255,13 +255,13 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     }
 
     @Override
-    public GameLevel buildDemoLevel(GameContext gameContext) {
-        requireNonNull(gameContext);
+    public GameLevel buildDemoLevel(GameContext game) {
+        requireNonNull(game);
 
-        final GameSession session = gameContext.session();
-        final GameSystems sys = gameContext.systems();
+        final GameSession session = game.session();
+        final GameSystems sys = game.systems();
 
-        final GameLevel demoLevel = createLevel(gameContext, 1);
+        final GameLevel demoLevel = createLevel(game, 1);
         demoLevel.setGameOverStateTicks(120);
 
         final Pac pac = demoLevel.entities().pac();
@@ -373,16 +373,16 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
     // private
 
-    private void setMsPacMan(GameContext gameContext, GameLevel level) {
-        final GameSession session = gameContext.session();
-        final GameSystems systems = gameContext.systems();
+    private void setMsPacMan(GameContext game, GameLevel level) {
+        final GameSession session = game.session();
+        final GameSystems systems = game.systems();
         final var factory = TengenMsPacMan_ActorFactory.instance();
         final Pac msPacMan = factory.createMsPacMan();
 
         msPacMan.autoSteering().setSteering(new RuleGuidedPacSteering(
             systems.worldNavigator(), systems.pacWorldMovementPolicy()
         ));
-        activateBooster(gameContext, msPacMan, boosterMode(session) == BoosterMode.BOOSTER_ALWAYS_ON);
+        activateBooster(game, msPacMan, boosterMode(session) == BoosterMode.BOOSTER_ALWAYS_ON);
         level.setPac(msPacMan);
     }
 

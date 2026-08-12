@@ -91,7 +91,7 @@ public class XXL_PacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public Ghost createAnimatedGhost(GameContext gameContext, SpriteAnimationContainer container, GhostPersonality personality) {
+    public Ghost createAnimatedGhost(GameContext game, SpriteAnimationContainer container, GhostPersonality personality) {
         final var factory = ArcadePacMan_ActorFactory.instance();
         final Ghost ghost = switch (personality) {
             case RED_GHOST_SHADOW   -> factory.createRedGhost();
@@ -100,7 +100,7 @@ public class XXL_PacMan_RenderConfig implements GameVariantRenderConfig {
             case ORANGE_GHOST_POKEY -> factory.createOrangeGhost();
         };
 
-        final SpriteAnimSystem animSystem = gameContext.systems().spriteAnim();
+        final SpriteAnimSystem animSystem = game.systems().spriteAnim();
         animSystem.setAnimations(ghost, createGhostAnimations(container, personality));
         animSystem.select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);
 

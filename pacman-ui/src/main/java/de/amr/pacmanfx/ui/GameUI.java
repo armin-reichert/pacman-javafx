@@ -66,7 +66,7 @@ public class GameUI implements GameEventListener {
     private final GameUISettingsVM viewModel;
     private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Global Action Bindings");
 
-    private GameAppContext appContext;
+    private GameAppContext app;
 
     public GameUI(Stage stage, int width, int height, GameUISettings settings, DashboardFactory dashboardFactory) {
         viewModel = new GameUISettingsVM();
@@ -112,15 +112,15 @@ public class GameUI implements GameEventListener {
         return viewModel;
     }
 
-    public void setAppContext(GameAppContext appContext) {
-        this.appContext = requireNonNull(appContext);
+    public void setApp(GameAppContext app) {
+        this.app = requireNonNull(app);
 
-        gameScenes.setGameApp(appContext);
-        views.setGameApp(appContext);
-        window.setGameApp(appContext);
+        gameScenes.setGameApp(app);
+        views.setGameApp(app);
+        window.setGameApp(app);
 
-        connectKeyboard(appContext);
-        bindCommonActions(appContext);
+        connectKeyboard(app);
+        bindCommonActions(app);
     }
 
     public void terminate() {
@@ -165,8 +165,8 @@ public class GameUI implements GameEventListener {
         boolean forceGameSceneReload = false;
         switch (gameEvent) {
             case LevelCreatedEvent e -> {
-                final GameContext gameContext = appContext.currentGame();
-                views.gamePlayView().onLevelCreated(gameContext, e.level());
+                final GameContext game = app.currentGame();
+                views.gamePlayView().onLevelCreated(game, e.level());
             }
             case GameStateChangeEvent e -> {
                 if (CommonGameStateID.GAME_LEVEL_COMPLETE.hasSameNameAs(e.newState())) {

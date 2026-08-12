@@ -55,7 +55,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene2D {
     private final IntegerProperty selectedOption = new SimpleIntegerProperty() {
         @Override
         protected void invalidated() {
-            appContext().ui().sounds().play(TengenMsPacManSoundID.OPTION_SELECTION_CHANGE);
+            app().ui().sounds().play(TengenMsPacManSoundID.OPTION_SELECTION_CHANGE);
             idleTicks = 0;
         }
     };
@@ -75,12 +75,12 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene2D {
         final GameSession session = game().session();
         session.hud().hide();
 
-        final var actions = appContext().getExtensionValue(TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
+        final var actions = app().getExtensionValue(TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
 
         actionBindings().selectAnyMatchingBinding(actions.actionStartPlaying(), actions.localBindings());
         actionBindings().selectAnyMatchingBinding(actions.actionToggleJoypadBindingsDisplayed(), actions.localBindings());
         actionBindings().bindActionToKeyCombination(actions.actionSelectNextJoypadKeyBinding(), combine().alt().key(KeyCode.J));
-        actionBindings().registerAllBindings(appContext().commonActions().sceneTestActions().bindings());
+        actionBindings().registerAllBindings(app().commonActions().sceneTestActions().bindings());
 
         selectedOption.set(OPTION_PAC_BOOSTER);
         gamePlay.setCanStartNewGame(session, true);
@@ -103,7 +103,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene2D {
     }
 
     private void optionValueChanged() {
-        appContext().ui().sounds().play(TengenMsPacManSoundID.OPTION_VALUE_CHANGE);
+        app().ui().sounds().play(TengenMsPacManSoundID.OPTION_VALUE_CHANGE);
         idleTicks = 0;
     }
 

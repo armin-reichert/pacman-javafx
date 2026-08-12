@@ -34,8 +34,8 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D
 {
     private LevelCompletedAnimation levelCompletedAnimation;
 
-    public Arcade_PlayScene2D(GameAppContext appContext) {
-        super(appContext);
+    public Arcade_PlayScene2D(GameAppContext app) {
+        super(app);
     }
 
     @Override
@@ -44,28 +44,27 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D
     }
 
     @Override
-    public void onTick(GameContext gameContext) {
-        final GameSession session = gameContext.session();
+    public void onTick(GameContext game) {
+        final GameSession session = game.session();
         session.optLevel().ifPresent(level -> {
-            ActorAnimationManager.ensureActorAnimationsCreated(appContext(), level);
+            ActorAnimationManager.ensureActorAnimationsCreated(app(), level);
             updateLivesCounter(session, level.entities().pac());
             optSoundEffects().ifPresent(sfx -> sfx.playAmbientGameLevelSound(game(), level));
         });
     }
 
     @Override
-    public void handleQuit(GameAppContext appContext) {
-        final GameContext gameContext = game();
+    public void handleQuit(GameAppContext app) {
         onDeactivate();
         // Avoid game over sound being played
-        appContext.ui().sounds().setEnabled(false);
-        gameFlow().enterState(gameContext, CommonGameStateID.GAME_OVER);
+        app.ui().sounds().setEnabled(false);
+        gameFlow().enterState(game(), CommonGameStateID.GAME_OVER);
     }
 
     @Override
     public Optional<ContextMenu> optContextMenu() {
-        final TranslationManager translations = appContext().ui().translations();
-        final CheatActions cheatActions = appContext().commonActions().cheatActions();
+        final TranslationManager translations = app().ui().translations();
+        final CheatActions cheatActions = app().commonActions().cheatActions();
 
         final var contextMenu = new ContextMenu();
         addLocalizedTitleItem(contextMenu, translations, "context_menu.pacman");
@@ -86,8 +85,8 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D
             }
         });
         addSeparator(contextMenu);
-        addLocalizedCheckBox(contextMenu, translations, appContext().ui().viewModel().mutedProperty, "context_menu.muted");
-        addLocalizedActionItem(contextMenu, translations, appContext().commonActions().gameFlowActions().actionQuit(), "context_menu.quit");
+        addLocalizedCheckBox(contextMenu, translations, app().ui().viewModel().mutedProperty, "context_menu.muted");
+        addLocalizedActionItem(contextMenu, translations, app().commonActions().gameFlowActions().actionQuit(), "context_menu.quit");
 
         return Optional.of(contextMenu);
     }
@@ -120,19 +119,19 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D
     }
 
     private void acceptNormalLevel(GameLevel level) {
-        actionBindings().registerAllBindings(appContext().commonActions().steeringActions().bindings());
-        actionBindings().registerAllBindings(appContext().commonActions().cheatActions().bindings());
+        actionBindings().registerAllBindings(app().commonActions().steeringActions().bindings());
+        actionBindings().registerAllBindings(app().commonActions().cheatActions().bindings());
         Logger.info(actionBindings());
-        appContext().ui().sounds().setEnabled(true);
+        app().ui().sounds().setEnabled(true);
         Logger.info("Game scene {} accepted game level #{}", getClass().getSimpleName(), level.number());
     }
 
     private void acceptDemoLevel() {
-        final Arcade_Actions actions = appContext().getExtensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
+        final Arcade_Actions actions = app().getExtensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         actionBindings().registerAllBindings(actions.gameStartActionBindings());
         Logger.info(actionBindings());
-        appContext().ui().sounds().setEnabled(false);
+        app().ui().sounds().setEnabled(false);
         Logger.info("Game scene {} accepted demo level", getClass().getSimpleName());
     }
 

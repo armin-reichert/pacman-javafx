@@ -286,17 +286,17 @@ public class GameSoundEffects implements Disposable {
      * Siren is only played when Pac-Man is being chased (not powered).
      * </p>
      */
-    public void playSiren(GameContext gameContext) {
-        requireNonNull(gameContext);
-        final int sirenNumber = computeSirenNumber(gameContext);
+    public void playSiren(GameContext game) {
+        requireNonNull(game);
+        final int sirenNumber = computeSirenNumber(game);
         if (sirenNumber != NO_SIREN) {
             playSiren(sirenNumber);
         }
     }
 
     // siren numbers are 1..4, hunting phase index = 0..7
-    private int computeSirenNumber(GameContext gameContext) {
-        final GameLevel level = gameContext.session().assertLevel();
+    private int computeSirenNumber(GameContext game) {
+        final GameLevel level = game.session().assertLevel();
         final Pac pac = level.entities().pac();
         if (pac.power().isActive()) {
             return NO_SIREN;

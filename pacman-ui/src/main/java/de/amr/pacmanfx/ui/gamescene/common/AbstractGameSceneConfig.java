@@ -37,7 +37,7 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
 
     protected abstract GameScene createGameScene(GameAppContext appContext, Named Identifier);
 
-    protected abstract Named determineSceneID(GameUISettingsVM viewModel, GameContext gameContext);
+    protected abstract Named determineSceneID(GameUISettingsVM viewModel, GameContext game);
 
     @Override
     public void dispose() {
@@ -47,9 +47,9 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
     }
 
     @Override
-    public Named resolveCutSceneID(GameContext gameContext) {
-        final GameLevel level = gameContext.session().assertLevel();
-        final OptionalInt cutSceneNumber = gameContext.model().rules().cutSceneAfterLevel(level.number());
+    public Named resolveCutSceneID(GameContext game) {
+        final GameLevel level = game.session().assertLevel();
+        final OptionalInt cutSceneNumber = game.model().rules().cutSceneAfterLevel(level.number());
         if (cutSceneNumber.isEmpty()) {
             throw new IllegalStateException("Cannot determine cut scene following level %d".formatted(level.number()));
         }
@@ -63,10 +63,10 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
     }
 
     @Override
-    public final Optional<GameScene> selectGameScene(GameAppContext appContext, GameModel model) {
-        requireNonNull(appContext);
-        final Named Identifier = determineSceneID(appContext.ui().viewModel(), appContext.currentGame());
-        final GameScene gameScene = scenesByID.computeIfAbsent(Identifier, id -> createGameScene(appContext, id));
+    public final Optional<GameScene> selectGameScene(GameAppContext app, GameModel model) {
+        requireNonNull(app);
+        final Named Identifier = determineSceneID(app.ui().viewModel(), app.currentGame());
+        final GameScene gameScene = scenesByID.computeIfAbsent(Identifier, id -> createGameScene(app, id));
         return Optional.of(gameScene);
     }
 

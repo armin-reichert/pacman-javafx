@@ -83,7 +83,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
     @Override
     public void onActivate() {
         // Quit cut scene when "START" button on "joypad" is pressed
-        final GameAction quitAction = appContext().commonActions().gameFlowActions().actionLetGameStateExpire();
+        final GameAction quitAction = app().commonActions().gameFlowActions().actionLetGameStateExpire();
         actionBindings().bindActionToKeyCombination(quitAction, input().joypad().keyForButton(JoypadButton.START));
 
         createActors();
@@ -111,17 +111,17 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
     }
 
     private void playMusic() {
-        appContext().ui().sounds().play(PacManGameSoundID.INTERMISSION_4);
+        app().ui().sounds().play(PacManGameSoundID.INTERMISSION_4);
     }
 
     private void stopMusic() {
-        appContext().ui().sounds().stop(PacManGameSoundID.INTERMISSION_4);
+        app().ui().sounds().stop(PacManGameSoundID.INTERMISSION_4);
     }
 
     private void createActors() {
         final var actorFactory = TengenMsPacMan_ActorFactory.instance();
-        final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
-        final SpriteAnimationContainer spriteAnimations = appContext().ui().sprites().animations();
+        final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().config().renderConfig();
+        final SpriteAnimationContainer spriteAnimations = app().ui().sprites().animations();
 
         clapperboard = new Clapperboard("4", "THE END");
         clapperboard.pos().set(tilesPx(3), tilesPx(10));
@@ -221,10 +221,10 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
 
     private void spawnJunior(GameContext game, long tick) {
         final var factory = TengenMsPacMan_ActorFactory.instance();
-        final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
+        final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().config().renderConfig();
         final WorldNavigationSystem navigator = game.systems().worldNavigator();
         final SpriteAnimSystem animSystem = game.systems().spriteAnim();
-        final SpriteAnimationContainer spriteAnimations = appContext().ui().sprites().animations();
+        final SpriteAnimationContainer spriteAnimations = app().ui().sprites().animations();
 
         final Pac junior = factory.createPacMan();
         double randomX = 8 * TS + (8 * TS) * Math.random();
@@ -251,7 +251,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
             case 2 -> TengenMsPacManSoundID.INTERMISSION_4_JUNIOR_2;
             default -> throw new IllegalArgumentException();
         };
-        appContext().ui().sounds().playLoop(soundID);
+        app().ui().sounds().playLoop(soundID);
     }
 
     private void updateJunior(GameContext game, long tick, int index) {

@@ -55,10 +55,10 @@ public class GameSceneManager {
     }
 
     public void updateGameSceneAndForceReload(boolean forceReload) {
-        final GameVariantConfig variantConfig = app.variants().currentVariant().config();
-        final GameContext gameContext = app.currentGame();
-        final GameModel model = gameContext.model();
-        final GameSession session = gameContext.session();
+        final GameVariantConfig variantConfig = app.gameVariants().currentGameVariant().config();
+        final GameContext game = app.currentGame();
+        final GameModel model = game.model();
+        final GameSession session = game.session();
         final GameScene currentGameScene = optCurrentGameScene().orElse(null);
         final GameScene nextGameScene = variantConfig.gameSceneConfig().selectGameScene(app, model).orElse(null);
 
@@ -76,7 +76,7 @@ public class GameSceneManager {
         app.ui().views().gamePlayView().replaceGameScene(currentGameScene, nextGameScene);
 
         //TODO rethink this
-        session.optLevel().ifPresent(_ -> handle2D3DSwitch(variantConfig, gameContext, currentGameScene, nextGameScene));
+        session.optLevel().ifPresent(_ -> handle2D3DSwitch(variantConfig, game, currentGameScene, nextGameScene));
 
         currentGameSceneProperty().set(nextGameScene);
     }
@@ -92,7 +92,7 @@ public class GameSceneManager {
         requireNonNull(gameScene);
         requireNonNull(sceneID);
 
-        final GameVariantConfig config = app.variants().currentVariant().config();
+        final GameVariantConfig config = app.gameVariants().currentGameVariant().config();
         return config.gameSceneConfig().gameSceneHasID(gameScene, sceneID);
     }
 
@@ -113,13 +113,13 @@ public class GameSceneManager {
 
     private void handle2D3DSwitch(
         GameVariantConfig variantConfig,
-        GameContext gameContext,
+        GameContext game,
         GameScene currentGameScene,
         GameScene nextGameScene)
     {
         final GameSceneSwitchType switchType = identifySwitchType(currentGameScene, nextGameScene);
         switch (switchType) {
-            case FROM_2D_TO_3D -> switchPlaySceneTo3D(variantConfig, gameContext, currentGameScene, nextGameScene);
+            case FROM_2D_TO_3D -> switchPlaySceneTo3D(variantConfig, game, currentGameScene, nextGameScene);
             case FROM_3D_TO_2D -> switchPlaySceneTo2D(currentGameScene, nextGameScene);
             case NONE -> {}
             default -> throw new IllegalArgumentException("Illegal scene switch type: " + switchType);

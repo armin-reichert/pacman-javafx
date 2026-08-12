@@ -71,8 +71,8 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
     }
 
     private void initScene() {
-        final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
-        final SpriteAnimationContainer animationContainer = appContext().ui().sprites().animations();
+        final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().config().renderConfig();
+        final SpriteAnimationContainer animationContainer = app().ui().sprites().animations();
 
         final var factory = new ArcadeMsPacMan_ActorFactory();
 
@@ -144,7 +144,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
     private void updateClapperboardState() {
         ClapperboardStateSystem.update(clapperboard);
         if (sceneTick == SceneState.CLAPPERBOARD.start() + 60) {
-            appContext().ui().sounds().play(PacManGameSoundID.INTERMISSION_3);
+            app().ui().sounds().play(PacManGameSoundID.INTERMISSION_3);
         }
     }
 

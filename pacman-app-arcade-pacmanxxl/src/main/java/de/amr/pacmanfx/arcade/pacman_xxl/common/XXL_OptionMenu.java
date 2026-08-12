@@ -86,8 +86,8 @@ public class XXL_OptionMenu extends OptionMenu {
         this.app = requireNonNull(app);
 
         final GameUI ui = app.ui();
-        final GameVariant variant = app.variants().currentVariant();
-        final GameVariantID variantID = GameVariantID.valueOf(app.variants().currentVariantName());
+        final GameVariant variant = app.gameVariants().currentGameVariant();
+        final GameVariantID variantID = GameVariantID.valueOf(app.gameVariants().currentVariantName());
         final GameVariantRenderConfig renderConfig = variant.config().renderConfig();
         final GameContext game = app.currentGame();
         final WorldMapManager worldMapSelector = game.model().worldMapManager();
@@ -158,7 +158,7 @@ public class XXL_OptionMenu extends OptionMenu {
     }
 
     private void onGameVariantNameChanged(ObservableValue<? extends GameVariantID> observable, GameVariantID oldVariantID, GameVariantID newVariantID) {
-        app.variants().selectVariant(newVariantID.name());
+        app.gameVariants().selectVariant(newVariantID.name());
     }
 
     private void onPlay3DSettingsChange(ObservableValue<? extends Boolean> obs,  Boolean oldValue, Boolean newValue) {
@@ -178,9 +178,9 @@ public class XXL_OptionMenu extends OptionMenu {
             @Override
             public void onValueChanged(GameVariantID oldVariant, GameVariantID newVariant) {
                 if (app != null) {
-                    final GameContext gameContext = app.currentGame();
-                    final GameVariantRenderConfig renderConfig = app.variants().gameVariantByName(newVariant.name()).config().renderConfig();
-                    chaseAnimation.init(gameContext, renderConfig, canvas, app.ui().sprites().animations());
+                    final GameContext game = app.currentGame();
+                    final GameVariantRenderConfig renderConfig = app.gameVariants().gameVariantByName(newVariant.name()).config().renderConfig();
+                    chaseAnimation.init(game, renderConfig, canvas, app.ui().sprites().animations());
                 }
             }
         };

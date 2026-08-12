@@ -82,7 +82,7 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer implements 
         }
         copyrightRenderer.drawCopyright(copyrightImage, tilesPx(6), tilesPx(28));
 
-        if (scene.appContext().ui().viewModel().debugModeOnProperty.get()) {
+        if (scene.app().ui().viewModel().debugModeOnProperty.get()) {
             debugRenderer.draw(scene, tick);
         }
     }

@@ -38,8 +38,8 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene2D {
     
     @Override
     public void onActivate() {
-        final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
-        final SpriteAnimationContainer container = appContext().ui().sprites().animations();
+        final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().config().renderConfig();
+        final SpriteAnimationContainer container = app().ui().sprites().animations();
         final var factory = ArcadePacMan_ActorFactory.instance();
 
         pacMan = factory.createPacMan();
@@ -59,7 +59,7 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene2D {
         final GameSystems sys = gameContext.systems();
 
         if (sceneTick == ANIMATION_START_TICK) {
-            appContext().ui().sounds().play(PacManGameSoundID.INTERMISSION_1, 2);
+            app().ui().sounds().play(PacManGameSoundID.INTERMISSION_1, 2);
             startBlinkyChasingPacMan(sys);
         }
         else if (sceneTick == ANIMATION_START_TICK + 260) {

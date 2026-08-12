@@ -31,14 +31,14 @@ public interface Arcade_PlayScene2D_GameEventHandler extends DefaultGameEventLis
 
     Arcade_PlayScene2D playScene();
 
-    GameAppContext appContext();
+    GameAppContext app();
 
     default Optional<GameSoundEffects> optSoundEffects() {
-        return appContext().variants().currentVariant().config().optSoundEffects();
+        return app().gameVariants().currentGameVariant().config().optSoundEffects();
     }
 
     default GameContext game() {
-        return appContext().currentGame();
+        return app().currentGame();
     }
 
     @Override
@@ -116,7 +116,7 @@ public interface Arcade_PlayScene2D_GameEventHandler extends DefaultGameEventLis
 
     @Override
     default void onPacEatsFood(PacEatsFoodEvent e) {
-        final long tick = appContext().clock().currentTick();
+        final long tick = app().clock().currentTick();
         optSoundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
     }
 
@@ -137,6 +137,6 @@ public interface Arcade_PlayScene2D_GameEventHandler extends DefaultGameEventLis
 
     @Override
     default void onTestStarted(TestStartedEvent e) {
-        appContext().ui().shortMessage("Testing level %d".formatted(e.level().number()));
+        app().ui().shortMessage("Testing level %d".formatted(e.level().number()));
     }
 }

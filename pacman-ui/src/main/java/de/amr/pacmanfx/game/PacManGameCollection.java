@@ -52,7 +52,7 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
 
     public void setUI(GameUI ui) {
         this.ui = requireNonNull(ui);
-        ui.setAppContext(this);
+        ui.setApp(this);
     }
 
     public void showGameVariant(GameVariantID variantID) {
@@ -105,7 +105,7 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
     }
 
     @Override
-    public GameVariantManager variants() {
+    public GameVariantManager gameVariants() {
         return gameVariantManager;
     }
 
@@ -143,7 +143,7 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
 
     @Override
     public void startPlaying() {
-        final GameVariant gameVariant = gameVariantManager.currentVariant();
+        final GameVariant gameVariant = gameVariantManager.currentGameVariant();
 
         final GameSession session = new GameSession(gameVariantManager.currentVariantName(), gameVariant.gameFlow());
         //TODO check where this should be done
@@ -228,7 +228,7 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
         }
 
         @Override
-        public GameVariant currentVariant() {
+        public GameVariant currentGameVariant() {
             return gameVariantByName(currentVariantName());
         }
 

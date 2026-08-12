@@ -109,9 +109,8 @@ public final class CheatActions {
         actionEnterNextLevel = new GameAction(app, "cheat_enter_next_level") {
             @Override
             public void doAction() {
-                final GameContext gameContext = game();
-                gameContext.cheats().notifyCheatUsed();
-                gameFlow().enterState(gameContext, CommonGameStateID.GAME_LEVEL_COMPLETE);
+                game().cheats().notifyCheatUsed();
+                gameFlow().enterState(game(), CommonGameStateID.GAME_LEVEL_COMPLETE);
             }
 
             @Override

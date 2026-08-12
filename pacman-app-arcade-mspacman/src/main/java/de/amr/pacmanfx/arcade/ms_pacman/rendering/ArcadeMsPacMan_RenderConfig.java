@@ -154,9 +154,9 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public Ghost createAnimatedGhost(GameContext gameContext, SpriteAnimationContainer container, GhostPersonality personality) {
+    public Ghost createAnimatedGhost(GameContext game, SpriteAnimationContainer container, GhostPersonality personality) {
         final var factory = new ArcadeMsPacMan_ActorFactory();
-        final SpriteAnimSystem animSystem = gameContext.systems().spriteAnim();
+        final SpriteAnimSystem animSystem = game.systems().spriteAnim();
 
         final Ghost ghost = switch (personality) {
             case RED_GHOST_SHADOW   -> factory.createRedGhost();

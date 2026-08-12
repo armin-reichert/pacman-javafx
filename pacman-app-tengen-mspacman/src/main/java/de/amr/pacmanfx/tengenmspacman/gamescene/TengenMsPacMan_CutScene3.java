@@ -88,7 +88,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
     @Override
     public void onActivate() {
         // Quit cut scene when "START" button on "joypad" is pressed
-        final GameAction quitAction = appContext().commonActions().gameFlowActions().actionLetGameStateExpire();
+        final GameAction quitAction = app().commonActions().gameFlowActions().actionLetGameStateExpire();
         actionBindings().bindActionToKeyCombination(quitAction, input().joypad().keyForButton(JoypadButton.START));
 
         createActors();
@@ -96,8 +96,8 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
     }
     
     private void createActors() {
-        final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
-        final SpriteAnimationContainer animationContainer = appContext().ui().sprites().animations();
+        final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().config().renderConfig();
+        final SpriteAnimationContainer animationContainer = app().ui().sprites().animations();
 
         clapperboard = new Clapperboard("3", "JUNIOR");
         clapperboard.pos().set(3 * WorldMap.TS, 10 * WorldMap.TS);
@@ -118,11 +118,11 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
     }
     
     private void playMusic() {
-        appContext().ui().sounds().play(PacManGameSoundID.INTERMISSION_3);
+        app().ui().sounds().play(PacManGameSoundID.INTERMISSION_3);
     }
     
     private void stopMusic() {
-        appContext().ui().sounds().stop(PacManGameSoundID.INTERMISSION_3);
+        app().ui().sounds().stop(PacManGameSoundID.INTERMISSION_3);
     }
 
     @Override

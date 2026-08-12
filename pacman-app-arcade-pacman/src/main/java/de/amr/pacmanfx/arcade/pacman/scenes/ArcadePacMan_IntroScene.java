@@ -96,10 +96,10 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
 
     @Override
     public void onActivate() {
-        final Arcade_Actions actions = appContext().getExtensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
+        final Arcade_Actions actions = app().getExtensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         actionBindings().registerAllBindings(actions.gameStartActionBindings()); // insert coin + start game actions
-        actionBindings().registerAllBindings(appContext().commonActions().sceneTestActions().bindings()); // actions for starting tests
+        actionBindings().registerAllBindings(app().commonActions().sceneTestActions().bindings()); // actions for starting tests
 
         flow.restartState(this, SceneState.STARTING);
     }
@@ -107,7 +107,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
     @Override
     public void onDeactivate() {
         blinking.stop();
-        appContext().ui().sounds().voice().stop();
+        app().ui().sounds().voice().stop();
         actionBindings().dispose();
     }
 
@@ -117,8 +117,8 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
     }
 
     private void initScene() {
-        final GameVariantRenderConfig renderConfig = appContext().variants().currentVariant().config().renderConfig();
-        final SpriteAnimationContainer spriteAnimations = appContext().ui().sprites().animations();
+        final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().config().renderConfig();
+        final SpriteAnimationContainer spriteAnimations = app().ui().sprites().animations();
 
         blinking = new Pulse(10, Pulse.State.ON);
 
@@ -141,7 +141,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
         lastGhostEatenTick = 0;
         numGhostsEaten = 0;
 
-        appContext().ui().sounds().voice().playAfterSec(1, GlobalAssets.VoiceID.EXPLAIN_GAME_START.media());
+        app().ui().sounds().voice().playAfterSec(1, GlobalAssets.VoiceID.EXPLAIN_GAME_START.media());
     }
 
     private void startChasingPacMan(GameContext gameContext) {

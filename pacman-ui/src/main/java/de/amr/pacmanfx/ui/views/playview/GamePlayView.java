@@ -181,7 +181,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
     public void showHelp(GameAppContext app) {
         final double scaling = gameSceneFrame.scalingProperty().get();
-        helpLayer.showHelpPopup(app, scaling, app.variants().currentVariantName());
+        helpLayer.showHelpPopup(app, scaling, app.gameVariants().currentVariantName());
     }
 
     public void setGameSceneContent(Node gameSceneContent) {
@@ -297,7 +297,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     }
 
     public void updateGameSceneRenderers(AbstractGameScene2D gameScene2D) {
-        final GameVariantRenderConfig renderConfig = app.variants().currentVariant().config().renderConfig();
+        final GameVariantRenderConfig renderConfig = app.gameVariants().currentGameVariant().config().renderConfig();
         if (gameScene2D.canvas() != null) {
             final SpriteAnimSystem animSystem = app.currentGame().systems().spriteAnim();
             sceneRenderer = renderConfig.createGameSceneRenderer(gameScene2D, animSystem, gameScene2D.canvas());
@@ -318,7 +318,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     }
 
     public void embedGameScene(GameScene gameScene) {
-        final GameVariantConfig config = app.variants().currentVariant().config();
+        final GameVariantConfig config = app.gameVariants().currentGameVariant().config();
 
         contextMenu.hide();
 
@@ -403,7 +403,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     }
 
     private void showMiniPlayView(GameContext game, GameLevel level) {
-        final GameVariantRenderConfig renderConfig = app.variants().currentVariant().config().renderConfig();
+        final GameVariantRenderConfig renderConfig = app.gameVariants().currentGameVariant().config().renderConfig();
         final SpriteAnimSystem animSystem = game.systems().spriteAnim();
         miniPlaySceneView.setRenderConfig(animSystem, renderConfig);
         miniPlaySceneView.setWorldSizeInPixel(level.worldMap().terrainLayer().sizeInPixel());

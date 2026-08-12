@@ -70,7 +70,7 @@ public class DS_GameInfo extends GameDashboardSection {
                     colorScheme = worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
                 }
                 else if (worldMap.hasConfigValue(WorldMapConfigKey.COLOR_MAP_INDEX)) {
-                    final GameVariantConfig variantConfig = app.variants().currentVariant().config();
+                    final GameVariantConfig variantConfig = app.gameVariants().currentGameVariant().config();
                     colorScheme = variantConfig.renderConfig().colorScheme(worldMap, variantConfig.worldSettings());
                 }
                 if (colorScheme != null) {
