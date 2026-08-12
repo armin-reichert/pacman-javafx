@@ -19,6 +19,7 @@ public class GhostSpriteAnimationSystem {
             case EATEN, RETURNING_HOME, ENTERING_HOUSE -> CommonSpriteAnimationID.GHOST_EYES;
         };
         ghost.ghostAnimation().setAnimationID(animationID);
+        ghost.spriteAnimation().animation().playSelected();
     }
 
     private static CommonSpriteAnimationID threatenedOrNormalAnimation(Ghost ghost, Pac pac) {

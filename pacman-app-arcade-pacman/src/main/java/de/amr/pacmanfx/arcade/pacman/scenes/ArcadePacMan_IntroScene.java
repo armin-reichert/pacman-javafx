@@ -20,6 +20,7 @@ import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
+import de.amr.pacmanfx.core.entities.ghost.system.GhostSpriteAnimationSystem;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.rules.CollisionStrategy;
@@ -166,9 +167,6 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
             sys.worldNavigator().setWishDir(ghost, Direction.LEFT);
             sys.worldNavigator().setSpeed(ghost, CHASING_SPEED);
 
-            sys.spriteAnim().select(pacMan, CommonSpriteAnimationID.PAC_MUNCHING);
-            sys.spriteAnim().playSelected(pacMan);
-
             sys.ghostState().changeState(ghost, GhostState.HUNTING_PAC);
         }
     }
@@ -179,6 +177,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
         motor.move(pacMan);
         for (Ghost ghost : ghosts) {
             motor.move(ghost);
+            GhostSpriteAnimationSystem.update(ghost, pacMan);
         }
 
         // "shaking" effect
