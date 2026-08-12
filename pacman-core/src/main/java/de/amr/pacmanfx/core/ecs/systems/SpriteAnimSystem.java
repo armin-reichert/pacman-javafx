@@ -61,7 +61,7 @@ public class SpriteAnimSystem {
     public void advanceFrame(GameEntity actor) {
         final int currentFrame = currentFrame(actor);
         if (currentFrame < spriteAnim(actor).numFrames()) {
-
+            spriteAnim(actor).setAnimationFrame(selectedAnimationID(actor), currentFrame + 1);
         }
     }
 
