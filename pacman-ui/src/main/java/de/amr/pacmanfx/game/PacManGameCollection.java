@@ -145,8 +145,7 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
     public void startPlaying() {
         final GameVariant gameVariant = gameVariantManager.currentVariant();
 
-        final GameSession session = new GameSession(gameVariantManager.currentVariantName());
-        session.setGameFlow(gameVariant.gameFlow());
+        final GameSession session = new GameSession(gameVariantManager.currentVariantName(), gameVariant.gameFlow());
         //TODO check where this should be done
         session.hud().creditProperty().bind(GameBox.instance().coinMechanism().numCoinsProperty());
 

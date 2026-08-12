@@ -26,7 +26,7 @@ import static java.util.Objects.requireNonNull;
 
 public class GameSession {
 
-    private GameFlowController gameFlow;
+    private final GameFlowController gameFlow;
 
     private FrameContext frame;
 
@@ -52,8 +52,9 @@ public class GameSession {
 
     private final Map<Object, Object> values = new HashMap<>();
 
-    public GameSession(String variantName) {
+    public GameSession(String variantName, GameFlowController gameFlow) {
         requireNonNull(variantName);
+        this.gameFlow = requireNonNull(gameFlow);
         score = new Score();
         final File highScoreFile = ScoreSystem.highScoreFile(variantName);
         highScore = ScoreSystem.createPersistentScore(highScoreFile);
@@ -61,10 +62,6 @@ public class GameSession {
         livesCounter = new LivesCounter();
         hud = new HUDState();
         gateKeeper = new ArcadeHouseGateKeeper();
-    }
-
-    public void setGameFlow(GameFlowController gameFlow) {
-        this.gameFlow = requireNonNull(gameFlow);
     }
 
     public GameFlowController gameFlow() {
