@@ -46,7 +46,7 @@ import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
-    public enum GamePlayOptions {
+    public enum GamePlayOptions implements GameSession.GameSessionValueKey {
         BOOSTER_MODE, BOOSTER_ON, CAN_START_GAME, DIFFICULTY, MAP_CATEGORY, START_LEVEL_NUMBER, NUM_CONTINUES
     }
 
