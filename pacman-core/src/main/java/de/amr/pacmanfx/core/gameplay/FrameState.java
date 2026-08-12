@@ -6,4 +6,4 @@ package de.amr.pacmanfx.core.gameplay;
 
 import de.amr.pacmanfx.core.gameplay.hunt.HuntingStep;
 
-public record FrameContext(long tick, HuntingStep huntingStep) {}
+public record FrameState(long tick, HuntingStep huntingStep) {}

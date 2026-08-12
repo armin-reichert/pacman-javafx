@@ -33,7 +33,7 @@ public final class GameSimulation {
 
     private static void simulate(GameAppContext app) {
         final GameContext game = app.currentGame();
-        game.session().newFrameContext(app.clock().currentTick());
+        game.session().newFrameState(app.clock().currentTick());
         game.session().gameFlow().update(game);
 
         app.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(game));

@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.gameplay.ArcadeHouseGateKeeper;
-import de.amr.pacmanfx.core.gameplay.FrameContext;
+import de.amr.pacmanfx.core.gameplay.FrameState;
 import de.amr.pacmanfx.core.gameplay.GameFlowController;
 import de.amr.pacmanfx.core.gameplay.hunt.HuntingStep;
 import de.amr.pacmanfx.core.gamestate.GameState;
@@ -28,7 +28,7 @@ public class GameSession {
 
     private final GameFlowController gameFlow;
 
-    private FrameContext frame;
+    private FrameState frameState;
 
     private GameLevel level;
 
@@ -155,11 +155,11 @@ public class GameSession {
         values.put(key, value);
     }
 
-    public FrameContext thisFrame() {
-        return frame;
+    public FrameState thisFrame() {
+        return frameState;
     }
 
-    public void newFrameContext(long tick) {
-        frame = new FrameContext(tick, new HuntingStep());
+    public void newFrameState(long tick) {
+        frameState = new FrameState(tick, new HuntingStep());
     }
 }

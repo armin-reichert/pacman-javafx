@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.entities.bonus.comp.BonusState;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusStateComp;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.event.bonus.BonusExpiredEvent;
-import de.amr.pacmanfx.core.gameplay.FrameContext;
+import de.amr.pacmanfx.core.gameplay.FrameState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.session.GameSession;
 import org.tinylog.Logger;
@@ -38,7 +38,7 @@ public class BonusStateSystem {
         level.entities().optBonus().ifPresent(bonus -> update(gameContext.eventManager(), level, bonus, session.thisFrame()));
     }
 
-    private void update(GameEventManager eventManager, GameLevel level, Bonus bonus, FrameContext frame) {
+    private void update(GameEventManager eventManager, GameLevel level, Bonus bonus, FrameState frame) {
         final BonusStateComp state = bonus.state();
         final BonusMoveAndJumpComp moveAndJumpComp = bonus.optMoveAndJump().orElse(null);
 
