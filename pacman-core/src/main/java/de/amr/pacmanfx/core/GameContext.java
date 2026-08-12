@@ -5,27 +5,64 @@
 package de.amr.pacmanfx.core;
 
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
+import de.amr.pacmanfx.core.event.base.DefaultGameEventManager;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.session.GameSession;
 
+import static java.util.Objects.requireNonNull;
+
 /**
- * Facade giving access to non UI related classes.
+ * Context passed to game scenes and game flow state machines for the currently running game variant.
  */
-public interface GameContext {
+public class GameContext {
 
-    GameSystems systems();
+    private final CoinMechanism coinMechanism;
 
-    CoinMechanism coinMechanism();
+    private final GamePlay gamePlay;
 
-    GamePlay gamePlay();
+    private final GameSystems systems;
 
-    GameEventManager eventManager();
+    private final GameModel model;
 
-    GameModel model();
+    private final GameEventManager eventManager;
 
-    void setSession(GameSession session);
+    private GameSession session;
 
-    GameSession session();
+    public GameContext(CoinMechanism coinMechanism, GamePlay gamePlay, GameSystems systems, GameModel model) {
+        this.coinMechanism = requireNonNull(coinMechanism);
+        this.gamePlay = requireNonNull(gamePlay);
+        this.systems = requireNonNull(systems);
+        this.model = requireNonNull(model);
+        this.eventManager = new DefaultGameEventManager();
+    }
+
+    public void setSession(GameSession session) {
+        this.session = requireNonNull(session);
+    }
+
+    public CoinMechanism coinMechanism() {
+        return coinMechanism;
+    }
+
+    public GameEventManager eventManager() {
+        return eventManager;
+    }
+
+    public GamePlay gamePlay() {
+        return gamePlay;
+    }
+
+    public GameModel model() {
+        return model;
+    }
+
+    public GameSession session() {
+        return session;
+    }
+
+    public GameSystems systems() {
+        return systems;
+    }
 }

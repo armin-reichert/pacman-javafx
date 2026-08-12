@@ -31,12 +31,12 @@ import static java.util.Objects.requireNonNull;
 public abstract class AbstractGameScene
     implements GameScene, DefaultGameEventListener, Disposable {
 
-    private final GameAppContext appContext;
+    private final GameAppContext app;
 
     private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Action Bindings for " + getClass().getSimpleName());
 
-    public AbstractGameScene(GameAppContext appContext) {
-        this.appContext = requireNonNull(appContext);
+    public AbstractGameScene(GameAppContext app) {
+        this.app = requireNonNull(app);
     }
 
     /**
@@ -81,12 +81,12 @@ public abstract class AbstractGameScene
 
     @Override
     public GameAppContext app() {
-        return appContext;
+        return app;
     }
 
     @Override
     public GameContext game() {
-        return appContext.currentGame();
+        return app.currentGame();
     }
 
     @Override
@@ -101,7 +101,7 @@ public abstract class AbstractGameScene
 
     @Override
     public Input input() {
-        return appContext.input();
+        return app.input();
     }
 
     @Override
@@ -111,7 +111,7 @@ public abstract class AbstractGameScene
 
     @Override
     public Optional<GameSoundEffects> optSoundEffects() {
-        return appContext.gameVariants().currentGameVariant().config().optSoundEffects();
+        return app.gameVariants().currentGameVariant().config().optSoundEffects();
     }
 
     @Override

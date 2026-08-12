@@ -5,8 +5,8 @@ package de.amr.pacmanfx.tengenmspacman.model;
 
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
-import de.amr.pacmanfx.core.model.world.map.WorldMapParseException;
 import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
+import de.amr.pacmanfx.core.model.world.map.WorldMapParseException;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig;
 import de.amr.pacmanfx.tengenmspacman.sprites.NES_WorldMapColorScheme;
 import de.amr.pacmanfx.tengenmspacman.sprites.NonArcadeMapsSpriteSheet;

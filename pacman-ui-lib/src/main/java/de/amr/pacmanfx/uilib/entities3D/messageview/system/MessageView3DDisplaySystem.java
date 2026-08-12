@@ -7,7 +7,6 @@ import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.entities.MessageView;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.entities3D.messageview.MessageView3DBuilder;
-import de.amr.pacmanfx.uilib.entities3D.messageview.comp.MessageView3DAnimationComp;
 import de.amr.pacmanfx.uilib.entities3D.messageview.comp.MessageView3DComp;
 import javafx.scene.Group;
 import javafx.scene.paint.Color;

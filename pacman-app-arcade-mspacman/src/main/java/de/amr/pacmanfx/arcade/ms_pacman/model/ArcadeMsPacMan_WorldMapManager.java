@@ -5,8 +5,8 @@ package de.amr.pacmanfx.arcade.ms_pacman.model;
 
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
-import de.amr.pacmanfx.core.model.world.map.WorldMapParseException;
 import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
+import de.amr.pacmanfx.core.model.world.map.WorldMapParseException;
 import org.tinylog.Logger;
 
 import java.io.IOException;

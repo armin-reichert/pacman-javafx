@@ -7,8 +7,8 @@ package de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.ms_pacman.rules.ArcadeMsPacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ScoringRules;
-import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_WorldMapManager;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_ScoringRules;
+import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_WorldMapManager;
 
 /**
  * Extension of Arcade Ms. Pac-Man with 8 new builtin mazes (thanks to the one and only

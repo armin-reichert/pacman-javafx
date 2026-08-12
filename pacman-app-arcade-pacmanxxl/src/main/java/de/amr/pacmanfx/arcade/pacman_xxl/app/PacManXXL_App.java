@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.arcade.pacman_xxl.app;
 
-import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_WorldMapManager;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_StartPage;
+import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_WorldMapManager;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.game.GameBuilder;
 import de.amr.pacmanfx.game.PacManGameCollection;

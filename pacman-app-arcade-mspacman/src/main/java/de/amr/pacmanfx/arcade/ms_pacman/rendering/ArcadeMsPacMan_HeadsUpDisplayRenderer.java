@@ -7,7 +7,6 @@ import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
 import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Score;
-import de.amr.pacmanfx.core.entities.levelCounter.comp.LevelCounterData;
 import de.amr.pacmanfx.core.model.HUDState;
 import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;

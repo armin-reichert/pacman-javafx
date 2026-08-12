@@ -77,7 +77,12 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
         config.init(this);
         ui.viewModel().maze3D.init(config.worldSettings().maze());
 
-        game = new GameContextImpl(gameVariant, gameBox().coinMechanism());
+        game = new GameContext(
+            gameBox().coinMechanism(),
+            gameVariant.gamePlay(),
+            gameVariant.systems(),
+            gameVariant.gameModel()
+        );
         game.eventManager().addGameEventSubscriber(ui);
 
         gameVariant.gameFlow().addStateChangeListener(changeEventConverter);
