@@ -188,8 +188,11 @@ public abstract class CommonGamePlay implements GamePlay {
         }
 
         updateEntities(game, level);
-        detectCollisions(game, level);
-        evalCollisions(game, level);
+
+        final CollisionStrategy strategy = game.model().rules().actorCollisionRules().getCollisionStrategy();
+        final HuntingStepResult huntingStep = session.thisFrame().huntingStep();
+        detectCollisions(strategy, level, huntingStep);
+        evalCollisions(game, level, huntingStep);
     }
 
     private void initScores(GameSession session) {
@@ -273,18 +276,17 @@ public abstract class CommonGamePlay implements GamePlay {
         systems.worldNavigator().tryMovingOrTeleporting(pac, level, systems.pacWorldMovementPolicy());
     }
 
-    private void evalCollisions(GameContext game, GameLevel level) {
-        final HuntingStepResult result = game.session().thisFrame().huntingStep();
+    private void evalCollisions(GameContext game, GameLevel level, HuntingStepResult huntingStep) {
         checkFoodFound(game, level);
-        if (result.foundEdibleBonus()) {
-            onEatBonus(game, level, result.edibleBonus());
+        if (huntingStep.foundEdibleBonus()) {
+            onEatBonus(game, level, huntingStep.edibleBonus());
         }
-        evalPacKilled(game.session(), result);
-        if (result.pacKilled()) {
+        evalPacKilled(game.session(), huntingStep);
+        if (huntingStep.pacKilled()) {
             fixPacPositionIfKilledInsidePortal(level);
         }
         else {
-            evalGhostsKilled(game, level, result);
+            evalGhostsKilled(game, level, huntingStep);
         }
     }
 
@@ -508,41 +510,37 @@ public abstract class CommonGamePlay implements GamePlay {
 
     // private
 
-    private void detectCollisions(GameContext game, GameLevel level) {
-        detectFoodCollision(game, level);
-        detectEdibleBonusCollision(game, level);
-        detectPacGhostCollision(game, level);
+    private void detectCollisions(CollisionStrategy strategy, GameLevel level, HuntingStepResult huntingStep) {
+        detectFoodCollision(level, huntingStep);
+        detectEdibleBonusCollision(strategy, level, huntingStep);
+        detectPacGhostCollision(strategy, level, huntingStep);
     }
 
-    private void detectPacGhostCollision(GameContext game, GameLevel level) {
-        final GameModel model = game.model();
-        final CollisionStrategy strategy = model.rules().actorCollisionRules().getCollisionStrategy();
+    private void detectPacGhostCollision(CollisionStrategy strategy, GameLevel level, HuntingStepResult huntingStep) {
         final Pac pac = level.entities().pac();
         final List<Ghost> ghosts = level.entities().ghosts();
-        game.session().thisFrame().huntingStep().ghostsCollidingWithPac().clear();
+        huntingStep.ghostsCollidingWithPac().clear();
         ghosts.stream()
             .filter(ghost -> strategy.collide(pac, ghost))
-            .forEach(game.session().thisFrame().huntingStep().ghostsCollidingWithPac()::add);
+            .forEach(huntingStep.ghostsCollidingWithPac()::add);
     }
 
-    private void detectEdibleBonusCollision(GameContext game, GameLevel level) {
-        final GameModel model = game.model();
-        final CollisionStrategy strategy = model.rules().actorCollisionRules().getCollisionStrategy();
+    private void detectEdibleBonusCollision(CollisionStrategy strategy, GameLevel level, HuntingStepResult huntingStep) {
         final Pac pac = level.entities().pac();
         final Bonus bonus = level.entities().optBonus().orElse(null);
-        game.session().thisFrame().huntingStep().setEdibleBonus(null);
+        huntingStep.setEdibleBonus(null);
         if (bonus != null && bonus.bonusState() == BonusState.EDIBLE && strategy.collide(pac, bonus)) {
-            game.session().thisFrame().huntingStep().setEdibleBonus(bonus);
+            huntingStep.setEdibleBonus(bonus);
         }
     }
 
-    private void detectFoodCollision(GameContext game, GameLevel level) {
+    private void detectFoodCollision(GameLevel level, HuntingStepResult huntingStep) {
         final Pac pac = level.entities().pac();
         final FoodLayer foodLayer = level.worldMap().foodLayer();
         final Vector2i pacTile = WorldNavigationSystem.computeTile(pac);
         if (foodLayer.hasFoodAtTile(pacTile)) {
-            game.session().thisFrame().huntingStep().setFoodFoundTile(pacTile);
-            game.session().thisFrame().huntingStep().setEnergizerFound(foodLayer.isEnergizerTile(pacTile));
+            huntingStep.setFoodFoundTile(pacTile);
+            huntingStep.setEnergizerFound(foodLayer.isEnergizerTile(pacTile));
         }
     }
 }
