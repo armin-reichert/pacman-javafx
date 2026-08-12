@@ -10,6 +10,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.gameplay.CreditAddedEvent;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
+import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -42,14 +43,15 @@ public final class Arcade_Actions {
 
             @Override
             public boolean isEnabled() {
+                final GameSession session = game().session();
+                final GameState gameState = game().state();
                 if (game().coinMechanism().isFull()) {
                     return false;
                 }
                 // In demo level, coin can always be inserted
-                if (game().gamePlay().isDemoLevelRunning(game())) {
+                if (session.isAttractMode()) {
                     return true;
                 }
-                final GameState gameState = game().state();
                 return CommonGameStateID.GAME_INTRO.hasSameNameAs(gameState)
                     || CommonGameStateID.GAME_PREPARATION.hasSameNameAs(gameState);
             }

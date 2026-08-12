@@ -67,16 +67,16 @@ public abstract class CommonGamePlay implements GamePlay {
     private static final Set<GhostState> TURNBACK_STATES = Set.of(GhostState.FRIGHTENED, GhostState.HUNTING_PAC);
 
     @Override
-    public void onSessionStart(GameContext gameContext) {
-        requireNonNull(gameContext);
+    public void onSessionStart(GameContext game) {
+        requireNonNull(game);
 
-        final GameSession session = gameContext.session();
-        final GameModel model = gameContext.model();
+        final GameSession session = game.session();
+        final GameModel model = game.model();
 
         model.worldMapManager().loadMapPrototypes();
         initScores(session);
 
-        final LevelCounter levelCounter = gameContext.session().levelCounter();
+        final LevelCounter levelCounter = game.session().levelCounter();
         LevelCounterSystem.setCapacity(levelCounter, 7);
         LevelCounterSystem.clear(levelCounter);
         LevelCounterSystem.enable(levelCounter, true);
@@ -100,41 +100,32 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     @Override
-    public void prepareLevelForPlaying(GameContext gameContext) {
-        final GameSystems sys = gameContext.systems();
-
-        final GameLevel level = gameContext.session().assertLevel();
+    public void prepareLevelForPlaying(GameContext game) {
+        final GameSystems systems = game.systems();
+        final GameLevel level = game.session().assertLevel();
         final House house = level.entities().theOne(House.class);
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-
         final Pac pac = level.entities().pac();
+
         pac.reset(); // initially invisible!
         pac.pos().set(terrain.pacStartPosition());
-        sys.pacPower().reset(pac);
-
-        sys.worldNavigator().setMoveDir(pac, Direction.LEFT);
-        sys.worldNavigator().setWishDir(pac, Direction.LEFT);
-
-        sys.spriteAnim().resetSelected(pac);
+        systems.pacPower().reset(pac);
+        systems.worldNavigator().setMoveDir(pac, Direction.LEFT);
+        systems.worldNavigator().setWishDir(pac, Direction.LEFT);
 
         level.entities().ghosts().forEach(ghost -> {
             ghost.reset(); // initially invisible!
-            ghost.pos().set(ghost.worldPlacement().startPosition());
+            ghost.pos().set(ghost.worldInfo().startPosition());
             final Direction direction = house.floorplan().ghostStartDirection(ghost.personality());
-            sys.worldNavigator().setMoveDir(ghost, direction);
-            sys.worldNavigator().setWishDir(ghost, direction);
-            sys.ghostState().changeState(ghost, GhostState.LOCKED);
-            sys.spriteAnim().resetSelected(ghost);
+            systems.worldNavigator().setMoveDir(ghost, direction);
+            systems.worldNavigator().setWishDir(ghost, direction);
+            systems.ghostState().changeState(ghost, GhostState.LOCKED);
+            systems.spriteAnim().resetSelected(ghost);
         });
 
-        level.heartbeat().setStartState(Pulse.State.ON); // Energizers are visible when ON
+        // Blinking energizers are visible when state is ON
+        level.heartbeat().setStartState(Pulse.State.ON);
         level.heartbeat().reset();
-    }
-
-    @Override
-    public boolean isDemoLevelRunning(GameContext gameContext) {
-        final GameSession session = gameContext.session();
-        return session.isAttractMode();
     }
 
     @Override

@@ -15,7 +15,7 @@ import java.util.Set;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.halfTileRightOf;
 import static java.util.Objects.requireNonNull;
 
-public class GhostWorldPlacementComp implements GameEntityComponent {
+public class GhostWorldInfoComp implements GameEntityComponent {
 
     private House house;
 
@@ -23,12 +23,11 @@ public class GhostWorldPlacementComp implements GameEntityComponent {
 
     private Vector2f startPosition;
 
-    public GhostWorldPlacementComp() {
-    }
+    public GhostWorldInfoComp() {}
 
     @Override
     public String toString() {
-        return "GhostWorldPlacement{" +
+        return "GhostWorldInfo{" +
             "house=" + house +
             ", specialTerrainTiles=" + specialTerrainTiles +
             ", startPosition=" + startPosition +

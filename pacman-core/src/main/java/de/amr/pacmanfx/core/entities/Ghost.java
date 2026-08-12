@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostSpriteAnimationComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostStateComp;
-import de.amr.pacmanfx.core.entities.ghost.comp.GhostWorldPlacementComp;
+import de.amr.pacmanfx.core.entities.ghost.comp.GhostWorldInfoComp;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 
 import static java.util.Objects.requireNonNull;
@@ -29,7 +29,7 @@ public final class Ghost extends GameEntity {
 
         setComp(MovementComp.class, new MovementComp());
         setComp(WorldNavigationComp.class, new WorldNavigationComp());
-        setComp(GhostWorldPlacementComp.class, new GhostWorldPlacementComp());
+        setComp(GhostWorldInfoComp.class, new GhostWorldInfoComp());
         setComp(GhostStateComp.class, new GhostStateComp());
         setComp(GhostSpriteAnimationComp.class, new GhostSpriteAnimationComp());
         setComp(SpriteAnimationComp.class, new SpriteAnimationComp());
@@ -56,8 +56,8 @@ public final class Ghost extends GameEntity {
         return requireComp(WorldNavigationComp.class);
     }
 
-    public GhostWorldPlacementComp worldPlacement() {
-        return requireComp(GhostWorldPlacementComp.class);
+    public GhostWorldInfoComp worldInfo() {
+        return requireComp(GhostWorldInfoComp.class);
     }
 
     public GhostStateComp state() {

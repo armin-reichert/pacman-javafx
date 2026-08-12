@@ -49,7 +49,7 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
         final GameSession session = scene.game().session();
         session.optLevel().ifPresent(level -> {
             // We assume all ghosts have the same set of special terrain tiles
-            level.ghost(GhostPersonality.RED_GHOST_SHADOW).worldPlacement().specialTerrainTiles().forEach(tile -> {
+            level.ghost(GhostPersonality.RED_GHOST_SHADOW).worldInfo().specialTerrainTiles().forEach(tile -> {
                 final double x = scaled(tile.x() * WorldMap.TS);
                 final double y = scaled(tile.y() * WorldMap.TS + WorldMap.HTS), size = scaled(WorldMap.TS);
                 ctx.setFill(Color.RED);

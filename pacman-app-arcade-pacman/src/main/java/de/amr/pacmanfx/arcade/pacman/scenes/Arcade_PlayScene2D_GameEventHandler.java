@@ -18,6 +18,7 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.test.TestStateID;
+import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationManager;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
@@ -65,9 +66,9 @@ public interface Arcade_PlayScene2D_GameEventHandler extends DefaultGameEventLis
 
     @Override
     default void onGameStarted(GameStartedEvent e) {
-        final GameContext gameContext  = e.gameContext();
-        final boolean silent = gameContext.gamePlay().isDemoLevelRunning(gameContext)
-            || gameContext.state().id() instanceof TestStateID;
+        final GameContext game = e.gameContext();
+        final GameSession session = game.session();
+        final boolean silent = session.isAttractMode() || game.state().id() instanceof TestStateID;
         if (!silent) {
             optSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
         }

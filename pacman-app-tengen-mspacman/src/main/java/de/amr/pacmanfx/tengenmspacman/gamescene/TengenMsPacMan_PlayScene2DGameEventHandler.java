@@ -67,9 +67,9 @@ public interface TengenMsPacMan_PlayScene2DGameEventHandler extends DefaultGameE
 
     @Override
     default void onGameStarted(GameStartedEvent e) {
-        final GameContext gameContext = e.gameContext();
-        final boolean silent = gameContext.gamePlay().isDemoLevelRunning(gameContext)
-            || gameContext.state().id() instanceof TestStateID;
+        final GameContext game = e.gameContext();
+        final GameSession session = game.session();
+        final boolean silent = session.isAttractMode() || game.state().id() instanceof TestStateID;
         if (!silent) {
             optSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
         }

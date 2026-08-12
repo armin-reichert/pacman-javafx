@@ -396,10 +396,10 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
-        redGhost.worldPlacement()   .init(terrain, house, WorldMapPropertyName.POS_GHOST_1_RED);
-        pinkGhost.worldPlacement()  .init(terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK);
-        cyanGhost.worldPlacement()  .init(terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN);
-        orangeGhost.worldPlacement().init(terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE);
+        redGhost.worldInfo()   .init(terrain, house, WorldMapPropertyName.POS_GHOST_1_RED);
+        pinkGhost.worldInfo()  .init(terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK);
+        cyanGhost.worldInfo()  .init(terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN);
+        orangeGhost.worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE);
 
         level.setGhosts(redGhost, pinkGhost, cyanGhost, orangeGhost);
     }

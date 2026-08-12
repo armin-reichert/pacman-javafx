@@ -28,7 +28,7 @@ public class GhostHouseAccessSystem {
     public void stayInHouse(GameContext gameContext, Ghost ghost, float speed) {
         final GameSystems sys = gameContext.systems();
 
-        final House house = ghost.worldPlacement().house();
+        final House house = ghost.worldInfo().house();
         final PositionComp position = ghost.pos();
 
         if (house.isVisitedBy(ghost)) {
@@ -64,7 +64,7 @@ public class GhostHouseAccessSystem {
         final GameSystems sys = gameContext.systems();
 
         final PositionComp position = ghost.pos();
-        final House house = ghost.worldPlacement().house();
+        final House house = ghost.worldInfo().house();
         final Vector2f houseEntryPosition = house.floorplan().entryPosition();
 
         if (position.y() <= houseEntryPosition.y()) {
@@ -107,7 +107,7 @@ public class GhostHouseAccessSystem {
         final GameSystems sys = gameContext.systems();
 
         final PositionComp position = ghost.pos();
-        final House house = ghost.worldPlacement().house();
+        final House house = ghost.worldInfo().house();
         final Vector2f revivalPosition = WorldMap.halfTileRightOf(
             house.floorplan().ghostRevivalTile(ghost.personality()));
         final Vector2f positionVec = position.asVector2f();
@@ -144,7 +144,7 @@ public class GhostHouseAccessSystem {
         final GameLevel level = session.assertLevel();
 
         final PositionComp position = ghost.pos();
-        final House house = ghost.worldPlacement().house();
+        final House house = ghost.worldInfo().house();
         final Vector2f houseEntry = house.floorplan().entryPosition();
         final Vector2f positionVec =  position.asVector2f();
         if (positionVec.roughlyEquals(houseEntry, speed, 0)) {

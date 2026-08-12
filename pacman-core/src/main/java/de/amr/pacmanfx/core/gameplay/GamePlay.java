@@ -27,8 +27,6 @@ public interface GamePlay {
 
     void buildNormalLevel(GameContext game, int levelNumber, int numLives);
 
-    boolean isDemoLevelRunning(GameContext game);
-
     boolean isPacSafeInDemoLevel(GameLevel demoLevel);
 
     void startLevel(GameContext game);

@@ -180,10 +180,10 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
             .filter(tile -> terrain.content(tile) == TerrainTile.ONE_WAY_DOWN.$)
             .collect(Collectors.toUnmodifiableSet());
 
-        redGhost.worldPlacement()   .init(terrain, house, WorldMapPropertyName.POS_GHOST_1_RED,    oneWayTiles);
-        pinkGhost.worldPlacement()  .init(terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK,   oneWayTiles);
-        cyanGhost.worldPlacement()  .init(terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN,   oneWayTiles);
-        orangeGhost.worldPlacement().init(terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE, oneWayTiles);
+        redGhost.worldInfo()   .init(terrain, house, WorldMapPropertyName.POS_GHOST_1_RED,    oneWayTiles);
+        pinkGhost.worldInfo()  .init(terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK,   oneWayTiles);
+        cyanGhost.worldInfo()  .init(terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN,   oneWayTiles);
+        orangeGhost.worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE, oneWayTiles);
 
         level.setGhosts(redGhost, pinkGhost, cyanGhost, orangeGhost);
     }

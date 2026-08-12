@@ -8,6 +8,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.model.GameCheats;
+import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
@@ -25,12 +26,13 @@ import static java.util.Objects.requireNonNull;
 
 public class HelpInfo {
 
-    public static HelpInfo build(GameAppContext appContext) {
-        final GameContext gameContext = appContext.currentGameContext();
-        final GameState state = gameContext.state();
-        final boolean demoLevel = gameContext.gamePlay().isDemoLevelRunning(gameContext);
+    public static HelpInfo build(GameAppContext app) {
+        final GameContext game = app.currentGameContext();
+        final GameSession session = game.session();
+        final GameState state = game.state();
+        final boolean demoLevel = session.isAttractMode();
 
-        final HelpInfo helpInfo = new HelpInfo(appContext);
+        final HelpInfo helpInfo = new HelpInfo(app);
         if (CommonGameStateID.GAME_INTRO.hasSameNameAs(state)) {
             helpInfo.addInfoForIntroScene();
         }

@@ -57,7 +57,7 @@ public final class TengenMsPacMan_Actions {
 
             @Override
             public boolean isEnabled() {
-                return game().gamePlay().isDemoLevelRunning(game());
+                return game().session().isAttractMode();
             }
         };
 
