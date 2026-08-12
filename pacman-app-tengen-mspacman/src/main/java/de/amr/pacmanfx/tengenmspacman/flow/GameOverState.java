@@ -40,7 +40,7 @@ public class GameOverState extends GameState {
 
         gamePlay.showLevelMessage(game, level, GameLevelMessageType.GAME_OVER);
 
-        game.cheats().clear();
+        game.session().cheats().clear();
 
         //TODO rethink this
         timer().restartTicks(level.gameOverStateTicks());

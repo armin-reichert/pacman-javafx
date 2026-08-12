@@ -15,13 +15,14 @@ import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Supplier;
 
 public class GameVariant {
     private final GameSystems systems;
     private final GamePlay gamePlay;
     private final GameFlowController gameFlow;
     private final GameModel gameModel;
-    private final GameCheats cheats;
+    private final Supplier<GameCheats> cheatsFactory;
     private final GameVariantConfig config;
     private final Set<GameExtension> extensions;
     private final Map<Named, Object> extensionValues;
@@ -31,7 +32,7 @@ public class GameVariant {
         gamePlay = cartridge.gamePlayFactory().get();
         gameFlow = cartridge.gameFlowFactory().get();
         gameModel = cartridge.gameModelFactory().get();
-        cheats = new GameCheats();
+        cheatsFactory = GameCheats::new;
         config = cartridge.uiConfigFactory().get();
         extensions = cartridge.gameExtensions();
         extensionValues = new HashMap<>();
@@ -53,8 +54,8 @@ public class GameVariant {
         return gameModel;
     }
 
-    public GameCheats cheats() {
-        return cheats;
+    public Supplier<GameCheats> cheatsFactory() {
+        return cheatsFactory;
     }
 
     public GameVariantConfig config() {

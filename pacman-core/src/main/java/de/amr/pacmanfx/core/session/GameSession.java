@@ -17,7 +17,6 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.HUDState;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -50,20 +49,31 @@ public class GameSession {
 
     private final LivesCounter livesCounter;
 
-    private GameCheats cheats;
+    private final GameCheats cheats;
 
     private final Map<GameSessionValueKey, Object> values = new HashMap<>();
 
-    public GameSession(String variantName, GameFlowController gameFlow) {
+    public GameSession(String variantName, GameFlowController gameFlow, GameCheats cheats) {
         requireNonNull(variantName);
-        this.gameFlow = requireNonNull(gameFlow);
-        score = new Score();
-        highScore = ScoreSystem.createPersistentScore(ScoreSystem.highScoreFile(variantName));
-        levelCounter = new LevelCounter();
-        livesCounter = new LivesCounter();
-        hud = new HUDState();
-        gateKeeper = new ArcadeHouseGateKeeper();
+        requireNonNull(gameFlow);
+        requireNonNull(cheats);
+
+        this.gameFlow = gameFlow;
+        this.cheats = cheats;
+        this.score = new Score();
+        this.highScore = ScoreSystem.createPersistentScore(ScoreSystem.highScoreFile(variantName));
+        this.levelCounter = new LevelCounter();
+        this.livesCounter = new LivesCounter();
+        this.hud = new HUDState();
+        this.gateKeeper = new ArcadeHouseGateKeeper();
+
         newFrameState(0);
+
+        cheats.cheatUsedProperty().addListener((_, _, cheated) -> {
+            if (cheated) {
+                highScore.data().setEnabled(false);
+            }
+        });
     }
 
     public GameFlowController gameFlow() {
@@ -100,15 +110,6 @@ public class GameSession {
 
     public GameCheats cheats() {
         return cheats;
-    }
-
-    public void setCheats(GameCheats cheats) {
-        this.cheats = requireNonNull(cheats);
-        cheats.cheatUsedProperty().addListener((_, _, cheated) -> {
-            if (cheated) {
-                highScore.data().setEnabled(false);
-            }
-        });
     }
 
     public void setAttractMode(boolean attractMode) {

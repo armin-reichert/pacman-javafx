@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.window;
 
+import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -72,6 +73,10 @@ public class GameMainScene extends Scene {
             flashMessageManager.messageView().rootPane(),
             keyboardInfoPopup.rootPane()
         );
+    }
+
+    public void connect(GameSession session) {
+        statusIconBox.bind(session.cheats());
     }
 
     public FlashMessageManager flashMessageManager() {

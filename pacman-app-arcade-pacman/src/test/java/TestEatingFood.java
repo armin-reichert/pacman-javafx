@@ -3,6 +3,7 @@
  */
 
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GamePlay;
+import de.amr.pacmanfx.arcade.pacman.app.ArcadePacMan_Cartridge;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.arcade.pacman.rules.ArcadePacMan_GameRules;
@@ -62,7 +63,11 @@ public class TestEatingFood {
         private final GameSession testSession;
 
         public TestContext() {
-            testSession = new GameSession(GameVariantID.ARCADE_MS_PACMAN.name());
+            testSession = new GameSession(
+                GameVariantID.ARCADE_MS_PACMAN.name(),
+                ArcadePacMan_Cartridge.CARTRIDGE.gameFlowFactory().get(),
+                new GameCheats()
+            );
         }
 
         @Override
@@ -86,11 +91,6 @@ public class TestEatingFood {
         @Override
         public GamePlay gamePlay() {
             return gamePlay;
-        }
-
-        @Override
-        public GameCheats cheats() {
-            throw new UnsupportedOperationException();
         }
 
         @Override

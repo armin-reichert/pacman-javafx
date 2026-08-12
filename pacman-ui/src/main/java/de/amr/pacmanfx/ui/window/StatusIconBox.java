@@ -5,14 +5,12 @@ package de.amr.pacmanfx.ui.window;
 
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.core.model.GameCheats;
-import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.controls.FontAwesomeIcon;
 import de.amr.pacmanfx.uilib.controls.FontAwesomeSymbol;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.Node;
 import javafx.scene.control.Tooltip;
@@ -42,10 +40,9 @@ public class StatusIconBox implements Disposable {
         icon3D = createIcon(FontAwesomeSymbol.CUBES);
         iconAutopilot = createIcon(FontAwesomeSymbol.TAXI);
         iconImmune = createIcon(FontAwesomeSymbol.USER_SECRET);
-
         iconCheated = createIcon(FontAwesomeSymbol.FLAG);
-        iconCheated.setId("icon-cheated");
 
+        iconCheated.setId("icon-cheated");
         rootPane.setId("status-icon-box");
         hbox.setId("status-icon-layout");
 
@@ -55,6 +52,9 @@ public class StatusIconBox implements Disposable {
         // Without this the button fill the complete area
         rootPane.setPrefSize(StackPane.USE_COMPUTED_SIZE, StackPane.USE_COMPUTED_SIZE);
         rootPane.setMaxSize(StackPane.USE_PREF_SIZE, StackPane.USE_PREF_SIZE);
+
+        // initially hide all
+        iconsInOrder().forEach(icon -> icon.setVisible(false));
     }
 
     public Pane rootPane() {
@@ -75,33 +75,28 @@ public class StatusIconBox implements Disposable {
         setTooltip(iconCheated, translations.translate("status_icon.cheated"));
 
         final GameViewManager views = app.ui().views();
+
         // Hide status icon box in editor view
         rootPane().visibleProperty().bind(
                 views.currentViewIDProperty().isEqualTo(GameViewID.GAMEPLAY)
             .or(views.currentViewIDProperty().isEqualTo(GameViewID.START_PAGES))
         );
 
-        // Visibility of "autopilot", "cheated" and "immune" is bound to *current game model*'s cheat object!
-        final ChangeListener<String> variantChangeHandler = (_, _, variantName) -> {
-            final GameModel gameModel = app.gameVariants().gameVariantByName(variantName).gameModel();
-            final GameCheats cheats = app.currentGame().cheats();
-
-            iconAutopilot.visibleProperty().unbind();
-            iconAutopilot.visibleProperty().bind(cheats.pacUsingAutopilotProperty());
-
-            iconCheated.visibleProperty().unbind();
-            iconCheated.visibleProperty().bind(cheats.cheatUsedProperty());
-
-            iconImmune.visibleProperty().unbind();
-            iconImmune.visibleProperty().bind(cheats.pacImmuneProperty());
-
-            Logger.info("Icons autopilot, cheated and immune visibility bound to game model {}", gameModel);
-        };
-
-        app.gameVariants().addVariantNameListener(variantChangeHandler);
-
         iconMuted.visibleProperty().bind(app.ui().viewModel().mutedProperty);
         icon3D.visibleProperty().bind(app.ui().viewModel().common3D.view3DEnabledProperty);
+    }
+
+    public void bind(GameCheats cheats) {
+        iconAutopilot.visibleProperty().unbind();
+        iconAutopilot.visibleProperty().bind(cheats.pacUsingAutopilotProperty());
+
+        iconCheated.visibleProperty().unbind();
+        iconCheated.visibleProperty().bind(cheats.cheatUsedProperty());
+
+        iconImmune.visibleProperty().unbind();
+        iconImmune.visibleProperty().bind(cheats.pacImmuneProperty());
+
+        Logger.info("Status icons (autopilot, cheated, immunity) bound");
     }
 
     @Override

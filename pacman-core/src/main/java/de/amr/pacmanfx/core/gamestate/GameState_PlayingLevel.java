@@ -51,7 +51,7 @@ public final class GameState_PlayingLevel extends GameState {
         game.gamePlay().hunt(game, level);
         logHuntingStepResult(game.session().thisFrame().huntingStep());
 
-        game.cheats().update(game);
+        game.session().cheats().update(game);
         session.gameFlow().enterState(game, computeNextState(game));
     }
 

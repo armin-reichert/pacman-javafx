@@ -7,7 +7,6 @@ package de.amr.pacmanfx.core;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
-import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.session.GameSession;
 
@@ -23,8 +22,6 @@ public interface GameContext {
     GamePlay gamePlay();
 
     GameEventManager eventManager();
-
-    GameCheats cheats();
 
     GameModel model();
 

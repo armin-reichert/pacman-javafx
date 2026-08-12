@@ -38,7 +38,7 @@ public class ArcadeGameState_GameOver extends GameState {
         LivesCounterSystem.setNumLives(session.livesCounter(), 0);
         session.setPlaying(false);
 
-        game.cheats().clear();
+        game.session().cheats().clear();
 
         timer().restartTicks(level.gameOverStateTicks());
     }
@@ -48,7 +48,7 @@ public class ArcadeGameState_GameOver extends GameState {
         if (timer().hasExpired()) {
             final GameLevel level = game.session().assertLevel();
             level.clearMessage();
-            game.cheats().clear();
+            game.session().cheats().clear();
             game.session().gameFlow().enterState(game, game.coinMechanism().isEmpty()
                 ? CommonGameStateID.GAME_INTRO
                 : CommonGameStateID.GAME_PREPARATION);
