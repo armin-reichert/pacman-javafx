@@ -7,7 +7,7 @@ package de.amr.pacmanfx.core.model;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.session.GameSession;
+import de.amr.pacmanfx.core.GameSession;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 

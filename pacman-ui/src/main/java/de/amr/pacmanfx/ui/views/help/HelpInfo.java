@@ -8,7 +8,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.model.GameCheats;
-import de.amr.pacmanfx.core.session.GameSession;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;

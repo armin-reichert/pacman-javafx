@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.event.gameplay.GameStateChangeEvent;
-import de.amr.pacmanfx.core.session.GameSession;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;

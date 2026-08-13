@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.gamescene;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
-import de.amr.pacmanfx.core.session.GameSession;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;

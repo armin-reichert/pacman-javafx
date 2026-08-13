@@ -8,7 +8,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.model.HUDState;
-import de.amr.pacmanfx.core.session.GameSession;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
 import de.amr.pacmanfx.tengenmspacman.rules.TengenMsPacMan_GameRules;
 import org.tinylog.Logger;

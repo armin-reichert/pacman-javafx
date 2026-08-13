@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.gameplay.hunt.HuntingStep;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
-import de.amr.pacmanfx.core.session.GameSession;
+import de.amr.pacmanfx.core.GameSession;
 import org.tinylog.Logger;
 
 import java.util.List;

@@ -2,7 +2,7 @@ package de.amr.pacmanfx.core.entities.pac.system;
 
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.session.GameSession;
+import de.amr.pacmanfx.core.GameSession;
 
 public class PacAutoSteeringSystem {
 

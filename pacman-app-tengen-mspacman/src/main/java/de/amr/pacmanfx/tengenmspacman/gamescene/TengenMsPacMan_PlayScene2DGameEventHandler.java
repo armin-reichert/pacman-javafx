@@ -15,7 +15,7 @@ import de.amr.pacmanfx.core.event.pac.*;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.model.test.TestStateID;
-import de.amr.pacmanfx.core.session.GameSession;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;

@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.core.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.session.GameSession;
+import de.amr.pacmanfx.core.GameSession;
 
 public final class GameState_PreparingGamePlay extends GameState {
 

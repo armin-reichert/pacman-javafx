@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.window;
 
-import de.amr.pacmanfx.core.session.GameSession;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;

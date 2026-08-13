@@ -28,7 +28,7 @@ import de.amr.pacmanfx.core.model.rules.HuntingTimer;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
-import de.amr.pacmanfx.core.session.GameSession;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
 import de.amr.pacmanfx.tengenmspacman.model.*;
 import de.amr.pacmanfx.tengenmspacman.rules.TengenMsPacMan_ActorSpeedRules;

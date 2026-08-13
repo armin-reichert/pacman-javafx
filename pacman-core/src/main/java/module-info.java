@@ -49,6 +49,5 @@ module de.amr.pacmanfx.core {
     exports de.amr.pacmanfx.core.entities.livescounter.system;
     exports de.amr.pacmanfx.core.entities.score.comp;
     exports de.amr.pacmanfx.core.entities.score.system;
-    exports de.amr.pacmanfx.core.session;
     exports de.amr.pacmanfx.core.gameplay.hunt;
 }

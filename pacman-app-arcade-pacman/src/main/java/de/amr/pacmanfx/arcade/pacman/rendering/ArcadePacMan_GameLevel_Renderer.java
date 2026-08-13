@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.core.session.GameSession;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;

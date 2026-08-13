@@ -16,7 +16,7 @@ import de.amr.pacmanfx.core.event.gameplay.LevelStartedEvent;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
-import de.amr.pacmanfx.core.session.GameSession;
+import de.amr.pacmanfx.core.GameSession;
 import org.tinylog.Logger;
 
 public final class GameState_DemoLevelPlaying extends GameState {

@@ -15,7 +15,7 @@ import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.core.event.pac.PacDeadEvent;
 import de.amr.pacmanfx.core.event.pac.PacDyingEvent;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.session.GameSession;
+import de.amr.pacmanfx.core.GameSession;
 
 import static java.util.Objects.requireNonNull;
 

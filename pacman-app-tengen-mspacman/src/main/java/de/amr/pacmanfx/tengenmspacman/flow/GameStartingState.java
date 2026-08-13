@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.event.gameplay.LevelStartedEvent;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.session.GameSession;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
 
 public class GameStartingState extends GameState {

@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
-import de.amr.pacmanfx.core.session.GameSession;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.gamescene.SceneDisplay;
 import de.amr.pacmanfx.tengenmspacman.model.BoosterMode;

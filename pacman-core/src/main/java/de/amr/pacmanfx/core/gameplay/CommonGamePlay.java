@@ -44,7 +44,7 @@ import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.core.session.GameSession;
+import de.amr.pacmanfx.core.GameSession;
 import org.tinylog.Logger;
 
 import java.io.File;

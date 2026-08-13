@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.gamescene.d2;
 
-import de.amr.pacmanfx.core.session.GameSession;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 
 public interface HeadsUpDisplay_Renderer extends Renderer {

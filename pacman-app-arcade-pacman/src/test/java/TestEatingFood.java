@@ -22,7 +22,7 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
-import de.amr.pacmanfx.core.session.GameSession;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.game.GameBox;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;

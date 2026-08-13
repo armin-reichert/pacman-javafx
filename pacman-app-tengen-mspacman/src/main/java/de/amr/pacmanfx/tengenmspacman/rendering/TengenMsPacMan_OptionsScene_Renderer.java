@@ -7,7 +7,7 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
-import de.amr.pacmanfx.core.session.GameSession;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;

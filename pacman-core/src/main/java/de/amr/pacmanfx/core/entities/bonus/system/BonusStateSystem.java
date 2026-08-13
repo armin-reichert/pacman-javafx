@@ -14,7 +14,7 @@ import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.event.bonus.BonusExpiredEvent;
 import de.amr.pacmanfx.core.gameplay.FrameState;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.session.GameSession;
+import de.amr.pacmanfx.core.GameSession;
 import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;

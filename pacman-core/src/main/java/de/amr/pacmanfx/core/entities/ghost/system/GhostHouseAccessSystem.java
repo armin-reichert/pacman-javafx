@@ -14,7 +14,7 @@ import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.core.session.GameSession;
+import de.amr.pacmanfx.core.GameSession;
 
 import static de.amr.basics.math.Direction.*;
 import static de.amr.pacmanfx.core.Validations.differsAtMost;

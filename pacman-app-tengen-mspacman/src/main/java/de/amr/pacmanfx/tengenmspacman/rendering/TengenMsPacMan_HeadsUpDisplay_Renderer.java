@@ -8,7 +8,7 @@ import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
 import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.core.model.HUDState;
-import de.amr.pacmanfx.core.session.GameSession;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene1;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene2;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene3;

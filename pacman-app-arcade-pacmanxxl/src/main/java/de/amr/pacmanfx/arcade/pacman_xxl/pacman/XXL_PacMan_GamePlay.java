@@ -14,7 +14,7 @@ import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
-import de.amr.pacmanfx.core.session.GameSession;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
 
 import static de.amr.basics.math.RandomNumberSupport.randomInt;

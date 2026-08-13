@@ -10,7 +10,6 @@ import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
-import de.amr.pacmanfx.core.session.GameSession;
 
 import static java.util.Objects.requireNonNull;
 
