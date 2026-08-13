@@ -38,6 +38,7 @@ public class GameContext {
 
     public void newSession() {
         session = new GameSession(variantName, variantConfig.gameFlow(), new GameCheats());
+        session.hud().creditProperty().bind(coinMechanism().numCoinsProperty());
     }
 
     public GameSession session() {
