@@ -12,7 +12,6 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventManager;
 import de.amr.pacmanfx.core.event.gameplay.GameStateChangeEvent;
-import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.core.GameAction;
@@ -81,6 +80,7 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
 
         game = new GameContext(
             gameBox().coinMechanism(),
+            gameVariantManager.currentVariantName(),
             gameVariant.config(),
             new DefaultGameEventManager()
         );
@@ -173,12 +173,7 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
     public void startPlaying() {
         final GameVariant gameVariant = gameVariantManager.currentGameVariant();
 
-        game.newSession(
-            gameVariantManager.currentVariantName(),
-            gameVariant.config().gameFlow(),
-            new GameCheats()
-        );
-
+        game.newSession();
         //TODO check where this should be done
         game.session().hud().creditProperty().bind(GameBox.instance().coinMechanism().numCoinsProperty());
 
