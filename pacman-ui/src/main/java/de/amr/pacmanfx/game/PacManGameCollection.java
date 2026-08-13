@@ -152,7 +152,7 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
         boolean success = false;
         if (gameAction.isEnabled(this)) {
             try {
-                gameAction.doAction(this);
+                gameAction.execute(this);
                 success = true;
                 Logger.info("Action '{}' executed successfully", gameAction.id());
             }

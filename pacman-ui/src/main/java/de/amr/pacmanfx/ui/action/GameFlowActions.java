@@ -31,14 +31,14 @@ public class GameFlowActions {
 
         actionStartGame = new GameAction("start_game") {
             @Override
-            public void doAction(GameAppContext app) {
+            public void execute(GameAppContext app) {
                 app.lifecycle().startPlaying();
             }
         };
 
         actionQuit = new GameAction("quit") {
             @Override
-            public void doAction(GameAppContext app) {
+            public void execute(GameAppContext app) {
                 Logger.info("Call QUIT handler for {}", app.ui().views().assertCurrentView());
                 app.ui().views().assertCurrentView().handleQuit(app);
             }
@@ -46,14 +46,14 @@ public class GameFlowActions {
 
         actionLetGameStateExpire = new GameAction("let_game_state_expire") {
             @Override
-            public void doAction(GameAppContext app) {
+            public void execute(GameAppContext app) {
                 app.game().session().gameState().triggerTimeout();
             }
         };
 
         actionRestartIntro = new GameAction("restart_intro") {
             @Override
-            public void doAction(GameAppContext app) {
+            public void execute(GameAppContext app) {
                 final GameContext game = app.game();
                 final GameState gameState = game.session().gameState();
 

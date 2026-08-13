@@ -39,14 +39,14 @@ public class UISettingsActions {
 
         actionEnterFullScreen = new GameAction("enter_fullscreen") {
             @Override
-            public void doAction(GameAppContext app) {
+            public void execute(GameAppContext app) {
                 app.ui().setFullScreenMode(true);
             }
         };
 
         actionShowHelp = new GameAction("show_help") {
             @Override
-            public void doAction(GameAppContext app) {
+            public void execute(GameAppContext app) {
                 app.ui().views().gamePlayView().showHelp(app);
             }
 
@@ -64,7 +64,7 @@ public class UISettingsActions {
 
         actionToggleDashboard = new GameAction("toggle_dashboard") {
             @Override
-            public void doAction(GameAppContext app) {
+            public void execute(GameAppContext app) {
                 app.ui().views().gamePlayView().dashboard().toggleVisibility();
             }
 
@@ -76,21 +76,21 @@ public class UISettingsActions {
 
         actionToggleDebugInfo = new GameAction("toggle_debug_info") {
             @Override
-            public void doAction(GameAppContext app) {
+            public void execute(GameAppContext app) {
                 toggleBooleanProperty(app.ui().viewModel().debugModeOnProperty);
             }
         };
 
         actionToggleKeyboardMonitor = new GameAction("toggle_keyboard_monitor") {
             @Override
-            public void doAction(GameAppContext app) {
+            public void execute(GameAppContext app) {
                 toggleBooleanProperty(app.ui().viewModel().keyboardMonitorOnProperty);
             }
         };
 
         actionToggleMiniViewVisibility = new GameAction("toggle_mini_view_visibility") {
             @Override
-            public void doAction(GameAppContext app) {
+            public void execute(GameAppContext app) {
                 toggleBooleanProperty(app.ui().viewModel().miniView.activeProperty);
                 if (!app.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D)) {
                     final String msg = app.ui().translations().translate(
@@ -102,7 +102,7 @@ public class UISettingsActions {
 
         actionTogglePlayScene2D3D = new GameAction("toggle_play_scene_2d_3d") {
             @Override
-            public void doAction(GameAppContext app) {
+            public void execute(GameAppContext app) {
                 final GameContext game = app.game();
                 toggleBooleanProperty(app.ui().viewModel().common3D.view3DEnabledProperty);
                 final boolean is3DEnabled = app.ui().viewModel().common3D.view3DEnabledProperty.get();

@@ -27,7 +27,7 @@ public class TestActions {
 
         actionTestCutScenes = new GameAction("test_cut_scenes") {
             @Override
-            public void doAction(GameAppContext app) {
+            public void execute(GameAppContext app) {
                 app.game().session().gameFlow().enterState(app.game(), TestStateID.CUT_SCENE_TEST);
                 app.ui().shortMessage("Cut scenes test"); //TODO localize
             }
@@ -40,7 +40,7 @@ public class TestActions {
 
         actionTestLevelShort = new GameAction("short_level_test") {
             @Override
-            public void doAction(GameAppContext app) {
+            public void execute(GameAppContext app) {
                 app.game().session().gameFlow().restartState(app.game(), TestStateID.LEVEL_TEST_S);
                 app.ui().shortMessage(Duration.seconds(3), "Level Test Mode (Short tests)");
             }
@@ -53,7 +53,7 @@ public class TestActions {
 
         actionTestLevelMedium = new GameAction("medium_level_test") {
             @Override
-            public void doAction(GameAppContext app) {
+            public void execute(GameAppContext app) {
                 app.game().session().gameFlow().restartState(app.game(), TestStateID.LEVEL_TEST_M);
                 app.ui().shortMessage(Duration.seconds(3), "Level Test Mode (Medium tests)");
             }

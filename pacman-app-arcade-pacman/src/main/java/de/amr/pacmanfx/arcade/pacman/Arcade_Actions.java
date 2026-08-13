@@ -30,7 +30,7 @@ public final class Arcade_Actions {
 
         actionInsertCoin = new GameAction("insert_coin") {
             @Override
-            public void doAction(GameAppContext app) {
+            public void execute(GameAppContext app) {
                 final CoinMechanism coinMechanism = app.game().coinMechanism();
                 app.ui().sounds().voice().stop();
                 app.ui().sounds().setEnabled(true);
@@ -57,7 +57,7 @@ public final class Arcade_Actions {
 
         actionStartPlaying = new GameAction("start_playing") {
             @Override
-            public void doAction(GameAppContext app) {
+            public void execute(GameAppContext app) {
                 app.ui().sounds().voice().stop();
                 app.game().session().gameFlow().enterState(app.game(), Arcade_GameState.GAME_OR_LEVEL_STARTING.state());
             }

@@ -44,14 +44,14 @@ public final class TengenMsPacMan_Actions {
 
         actionEnterStartScreen = new GameAction("enter_start_screen") {
             @Override
-            public void doAction(GameAppContext app) {
+            public void execute(GameAppContext app) {
                 app.game().session().gameFlow().enterState(app.game(), CommonGameStateID.GAME_PREPARATION);
             }
         };
 
         actionQuitDemoLevel = new GameAction("quit_demo_level") {
             @Override
-            public void doAction(GameAppContext app) {
+            public void execute(GameAppContext app) {
                 app.game().session().gameFlow().enterState(app.game(), CommonGameStateID.GAME_PREPARATION);
             }
 
@@ -63,14 +63,14 @@ public final class TengenMsPacMan_Actions {
 
         actionStartPlaying = new GameAction("start_playing") {
             @Override
-            public void doAction(GameAppContext app) {
+            public void execute(GameAppContext app) {
                 app.game().session().gameFlow().enterState(app.game(), CommonGameStateID.GAME_OR_LEVEL_STARTING);
             }
         };
 
         actionTogglePlaySceneDisplayMode = new GameAction("toggle_play_scene_display_mode") {
             @Override
-            public void doAction(GameAppContext app) {
+            public void execute(GameAppContext app) {
                 final var uiSettings = app.getExtensionValue(
                     TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
 
@@ -88,7 +88,7 @@ public final class TengenMsPacMan_Actions {
 
         actionToggleJoypadBindingsDisplayed = new GameAction("toggle_joypad_bindings_displayed") {
             @Override
-            public void doAction(GameAppContext app) {
+            public void execute(GameAppContext app) {
                 final var uiSettings = app.getExtensionValue(
                     TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
 
@@ -98,7 +98,7 @@ public final class TengenMsPacMan_Actions {
 
         actionTogglePacBooster = new GameAction("toggle_pac_booster") {
             @Override
-            public void doAction(GameAppContext app) {
+            public void execute(GameAppContext app) {
                 final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) app.game().gamePlay();
                 final GameSession session = app.game().session();
                 session.optLevel().ifPresent(gameLevel -> {
@@ -119,7 +119,7 @@ public final class TengenMsPacMan_Actions {
 
         actionSelectNextJoypadKeyBinding = new GameAction("select_next_joypad_binding") {
             @Override
-            public void doAction(GameAppContext app) {
+            public void execute(GameAppContext app) {
                 app.input().joypad().selectNextBinding();
             }
         };
