@@ -38,7 +38,7 @@ public class SimulationActions {
 
         actionFaster = new GameAction("simulation_faster") {
             @Override
-            protected void doAction(GameAppContext app) {
+            public void doAction(GameAppContext app) {
                 final GameClock clock = app.clock();
                 final int newRate = Math.clamp(clock.targetFrameRate() + GameConstants.SIM_SPEED_DELTA,
                     GameConstants.SIM_SPEED_MIN, GameConstants.SIM_SPEED_MAX);
@@ -51,7 +51,7 @@ public class SimulationActions {
 
         actionFastest = new GameAction("simulation_fastest") {
             @Override
-            protected void doAction(GameAppContext app) {
+            public void doAction(GameAppContext app) {
                 app.clock().setTargetFrameRate(GameConstants.SIM_SPEED_MAX);
                 final String msg = "At maximum speed: %d Hz".formatted(GameConstants.SIM_SPEED_MAX);
                 app.ui().shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg);
@@ -60,7 +60,7 @@ public class SimulationActions {
 
         actionSlower = new GameAction("simulation_slower") {
             @Override
-            protected void doAction(GameAppContext app) {
+            public void doAction(GameAppContext app) {
                 final GameClock clock = app.clock();
                 final int newRate = Math.clamp(clock.targetFrameRate() - GameConstants.SIM_SPEED_DELTA,
                     GameConstants.SIM_SPEED_MIN, GameConstants.SIM_SPEED_MAX);
@@ -73,7 +73,7 @@ public class SimulationActions {
 
         actionSlowest = new GameAction("simulation_slowest") {
             @Override
-            protected void doAction(GameAppContext app) {
+            public void doAction(GameAppContext app) {
                 app.clock().setTargetFrameRate(GameConstants.SIM_SPEED_MIN);
                 final String msg = "At minimum speed: %d Hz".formatted(GameConstants.SIM_SPEED_MIN);
                 app.ui().shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), msg);
@@ -82,7 +82,7 @@ public class SimulationActions {
 
         actionOneStep = new GameAction("simulation_one_step") {
             @Override
-            protected void doAction(GameAppContext app) {
+            public void doAction(GameAppContext app) {
                 final boolean failure = !app.clock().makeOneStep(true);
                 if (failure) {
                     app.ui().shortMessage("Simulation step error!");
@@ -95,7 +95,7 @@ public class SimulationActions {
 
         actionTenSteps = new GameAction("simulation_ten_steps") {
             @Override
-            protected void doAction(GameAppContext app) {
+            public void doAction(GameAppContext app) {
                 final boolean failure = !app.clock().makeSteps(10, true);
                 if (failure) {
                     app.ui().shortMessage("Simulation steps error!");
@@ -108,7 +108,7 @@ public class SimulationActions {
 
         actionReset = new GameAction("simulation_reset") {
             @Override
-            protected void doAction(GameAppContext app) {
+            public void doAction(GameAppContext app) {
                 final GameClock gameClock = app.clock();
                 gameClock.setTargetFrameRate(GameConstants.SIMULATION_FPS);
                 app.ui().shortMessage(Duration.seconds(GameConstants.SIM_STEP_MESSAGE_SEC), gameClock.targetFrameRate() + "Hz");
@@ -117,7 +117,7 @@ public class SimulationActions {
 
         actionTogglePaused = new GameAction("toggle_paused") {
             @Override
-            protected void doAction(GameAppContext app) {
+            public void doAction(GameAppContext app) {
                 final GameClock gameClock = app.clock();
                 toggleBooleanProperty(gameClock.updatesDisabledProperty());
                 final boolean paused = gameClock.getUpdatesDisabled();
@@ -135,7 +135,7 @@ public class SimulationActions {
 
         actionToggleMuted = new GameAction("toggle_muted") {
             @Override
-            protected void doAction(GameAppContext app) {
+            public void doAction(GameAppContext app) {
                 toggleBooleanProperty(app.ui().viewModel().mutedProperty);
             }
         };

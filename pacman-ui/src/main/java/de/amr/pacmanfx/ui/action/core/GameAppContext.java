@@ -20,6 +20,8 @@ public interface GameAppContext {
 
     GameContext game();
 
+    boolean runAction(GameAction gameAction);
+
     CommonGameActions commonActions();
 
     GameVariantManager gameVariants();

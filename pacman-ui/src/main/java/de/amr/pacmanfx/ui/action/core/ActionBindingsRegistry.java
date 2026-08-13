@@ -24,7 +24,7 @@ public interface ActionBindingsRegistry extends Disposable {
 
     default Optional<GameAction> executeMatchingAction(GameAppContext app) {
         final Optional<GameAction> matchingAction = findActionMatchingPressedKeys(app.input().keyboard());
-        matchingAction.ifPresent(action -> action.execute(app));
+        matchingAction.ifPresent(app::runAction);
         return matchingAction;
     }
 

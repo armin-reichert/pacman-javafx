@@ -30,7 +30,7 @@ public class Camera3DActions {
 
         actionNextPerspective = new GameAction("perspective_next") {
             @Override
-            protected void doAction(GameAppContext app) {
+            public void doAction(GameAppContext app) {
                 final PerspectiveID nextID = app.ui().viewModel().common3D.cameraPerspectiveIdProperty.get().next();
                 app.ui().viewModel().common3D.cameraPerspectiveIdProperty.set(nextID);
                 app.ui().shortMessage(translatedPerspectiveMessage(app, nextID));
@@ -44,7 +44,7 @@ public class Camera3DActions {
 
         actionPreviousPerspective = new GameAction("perspective_previous") {
             @Override
-            protected void doAction(GameAppContext app) {
+            public void doAction(GameAppContext app) {
                 final PerspectiveID prevID = app.ui().viewModel().common3D.cameraPerspectiveIdProperty.get().prev();
                 app.ui().viewModel().common3D.cameraPerspectiveIdProperty.set(prevID);
                 app.ui().shortMessage(translatedPerspectiveMessage(app, prevID));
@@ -57,7 +57,7 @@ public class Camera3DActions {
 
         actionToggleDrawMode = new GameAction("toggle_draw_mode") {
             @Override
-            protected void doAction(GameAppContext app) {
+            public void doAction(GameAppContext app) {
                 Ufx.toggleProperty(app.ui().viewModel().common3D.drawModeProperty, DrawMode.LINE, DrawMode.FILL);
             }
             @Override

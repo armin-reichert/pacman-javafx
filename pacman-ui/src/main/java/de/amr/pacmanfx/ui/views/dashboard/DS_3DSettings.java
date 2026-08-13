@@ -101,8 +101,8 @@ public class DS_3DSettings extends GameDashboardSection {
         editPropertyWithSlider(sliderWallOpacity,               vm.maze3D.wallOpacityProperty);
         editPropertyWithChoiceBox(comboPerspectives,            vm.common3D.cameraPerspectiveIdProperty);
 
-        cbUsePlayScene3D.setOnAction(_ -> app.commonActions().uiSettingsActions().actionTogglePlayScene2D3D().execute(app));
-        cbWireframeMode .setOnAction(_ -> app.commonActions().camera3DActions().actionToggleDrawMode().execute(app));
+        cbUsePlayScene3D.setOnAction(_ -> app.runAction(app.commonActions().uiSettingsActions().actionTogglePlayScene2D3D()));
+        cbWireframeMode .setOnAction(_ -> app.runAction(app.commonActions().camera3DActions().actionToggleDrawMode()));
     }
 
     @Override

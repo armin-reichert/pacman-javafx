@@ -52,7 +52,7 @@ public final class ContextMenuSupport {
         Object... args)
     {
         var item = new MenuItem(translator.translate(globalAssetsKey, args));
-        item.setOnAction(_ -> action.execute(app));
+        item.setOnAction(_ -> app.runAction(action));
         return add(menu, item);
     }
 

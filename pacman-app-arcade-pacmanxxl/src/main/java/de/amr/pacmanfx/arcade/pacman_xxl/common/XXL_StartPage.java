@@ -80,7 +80,7 @@ public class XXL_StartPage implements StartPage {
         final Keyboard keyboard = app.input().keyboard();
         if (keyboard.isKeyPressed(KeyCode.E)) {
             pauseProgressTimer();
-            app.commonActions().editorActions().actionOpenEditor().execute(app);
+            app.runAction(app.commonActions().editorActions().actionOpenEditor());
         }
         else if (keyboard.isKeyPressed(KeyCode.ENTER)) {
             pauseProgressTimer();

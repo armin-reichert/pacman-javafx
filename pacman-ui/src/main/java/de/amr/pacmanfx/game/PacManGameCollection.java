@@ -14,6 +14,7 @@ import de.amr.pacmanfx.core.event.gameplay.GameStateChangeEvent;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
+import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.uilib.PacMan3DModel;
@@ -144,6 +145,29 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
     @Override
     public GameUI ui() {
         return ui;
+    }
+
+    @Override
+    public boolean runAction(GameAction gameAction) {
+        boolean success = false;
+        if (gameAction.isEnabled(this)) {
+            try {
+                gameAction.doAction(this);
+                success = true;
+                Logger.info("Action '{}' executed successfully", gameAction.id());
+            }
+            catch (Exception x) {
+                Logger.error(x, "An error occurred executing action '{}'", gameAction.id());
+            }
+        } else {
+            Logger.warn("Action {}' not executed (disabled)", gameAction.id());
+        }
+
+        //TODO This is dubious!
+        // Clear the input that triggered this action
+        input().keyboard().clearState();
+
+        return success;
     }
 
     // GameLifecycle

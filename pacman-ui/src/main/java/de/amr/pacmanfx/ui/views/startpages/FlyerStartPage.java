@@ -140,7 +140,7 @@ public class FlyerStartPage implements StartPage {
 
     protected GameStartButton createStartButton() {
         final var button = new GameStartButton("START!");
-        button.setOnAction(_ -> app.commonActions().gameFlowActions().actionStartGame().execute(app));
+        button.setOnAction(_ -> app.runAction(app.commonActions().gameFlowActions().actionStartGame()));
         rootPane.getChildren().add(button);
 
         StackPane.setAlignment(button, Pos.BOTTOM_CENTER);

@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.ui.action.core;
 
 import de.amr.pacmanfx.core.Validations;
-import org.tinylog.Logger;
 
 /**
  * Common base class for game actions.
@@ -25,8 +24,10 @@ public abstract class GameAction {
 
     /**
      * This method has to be implemented by subclasses.
+     *
+     * @param app the application context
      */
-    protected abstract void doAction(GameAppContext app);
+    public abstract void doAction(GameAppContext app);
 
     /**
      * This method may be implemented by subclasses to define when this action is enabled.
@@ -35,29 +36,6 @@ public abstract class GameAction {
      * @return {@code true} if this action can be executed
      */
     public boolean isEnabled(GameAppContext app) { return true; }
-
-    public final boolean execute(GameAppContext app) {
-        boolean success = false;
-        if (isEnabled(app)) {
-            try {
-                doAction(app);
-                success = true;
-                Logger.info("Action '{}' executed successfully", id);
-            }
-            catch (Exception x) {
-                Logger.error(x, "An error occurred executing action '{}'", id);
-            }
-        } else {
-            Logger.warn("Action {}' not executed (disabled)", id);
-        }
-
-        //TODO This is dubious!
-
-        // Clear the input that triggered this action
-        app.input().keyboard().clearState();
-
-        return success;
-    }
 
     public final String id() {
         return id;

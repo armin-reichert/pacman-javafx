@@ -59,6 +59,6 @@ public class GameDashboardSection extends DashboardSection implements DashboardS
     }
 
     protected void setGameAction(GameAppContext app, Button button, GameAction gameAction) {
-        button.setOnAction(_ -> gameAction.execute(app));
+        button.setOnAction(_ -> app.runAction(gameAction));
     }
 }

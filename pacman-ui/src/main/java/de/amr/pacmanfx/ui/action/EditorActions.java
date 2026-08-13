@@ -30,7 +30,7 @@ public class EditorActions {
 
         actionOpenEditor = new GameAction("open_editor") {
             @Override
-            protected void doAction(GameAppContext app) {
+            public void doAction(GameAppContext app) {
                 openMapEditor(app).ifPresent(editor -> startEditor(app, editor));
             }
         };
@@ -48,7 +48,7 @@ public class EditorActions {
 
         return new GameAction("edit_map_file") {
             @Override
-            protected void doAction(GameAppContext app) {
+            public void doAction(GameAppContext app) {
                 openMapEditor(app).ifPresent(editor -> {
                     startEditor(app, editor);
                     if (mapFile != null) {
