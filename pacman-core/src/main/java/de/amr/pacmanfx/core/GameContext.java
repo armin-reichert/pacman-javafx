@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.core;
 
 import de.amr.pacmanfx.core.event.base.GameEventManager;
-import de.amr.pacmanfx.core.model.GameCheats;
 
 import static java.util.Objects.requireNonNull;
 
@@ -16,29 +15,22 @@ public class GameContext {
 
     private final CoinMechanism coinMechanism;
 
-    private final String variantName;
-
     private final GameVariantConfig variantConfig;
 
     private final GameEventManager eventManager;
 
-    private GameSession session;
+    private final GameSession session;
 
     public GameContext(
         CoinMechanism coinMechanism,
-        String variantName,
         GameVariantConfig variantConfig,
-        GameEventManager eventManager)
+        GameEventManager eventManager,
+        GameSession session)
     {
         this.coinMechanism = requireNonNull(coinMechanism);
-        this.variantName = requireNonNull(variantName);
         this.variantConfig = requireNonNull(variantConfig);
         this.eventManager = requireNonNull(eventManager);
-    }
-
-    public void newSession() {
-        session = new GameSession(variantName, variantConfig.gameFlow(), new GameCheats());
-        session.hud().creditProperty().bind(coinMechanism().numCoinsProperty());
+        this.session = requireNonNull(session);
     }
 
     public GameSession session() {

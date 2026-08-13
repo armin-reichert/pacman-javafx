@@ -9,9 +9,11 @@ import de.amr.basics.fsm.State;
 import de.amr.basics.fsm.StateChangeListener;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventManager;
 import de.amr.pacmanfx.core.event.gameplay.GameStateChangeEvent;
+import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.core.GameAction;
@@ -74,18 +76,24 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
         requireNonNull(gameVariant);
 
         //TODO rethink this
-        final GameVariantUIConfig config = gameVariant.uiConfig();
-        config.init(this);
-        ui.viewModel().maze3D.init(config.worldSettings().maze());
+        gameVariant.uiConfig().init(this);
+        ui.viewModel().maze3D.init(gameVariant.uiConfig().worldSettings().maze());
 
-        game = new GameContext(
-            gameBox().coinMechanism(),
-            gameVariantManager.currentVariantName(),
-            gameVariant.config(),
-            new DefaultGameEventManager()
-        );
+        game = createGameContext(gameVariant);
         game.eventManager().addGameEventSubscriber(ui);
         gameVariant.config().gameFlow().addStateChangeListener(changeEventConverter);
+    }
+
+    private GameContext createGameContext(GameVariant gameVariant) {
+        final String variantName = gameVariantManager.currentVariantName();
+        final var session = new GameSession(variantName, gameVariant.config().gameFlow(), new GameCheats());
+        session.hud().creditProperty().bind(gameBox().coinMechanism().numCoinsProperty());
+        return new GameContext(
+            gameBox().coinMechanism(),
+            gameVariant.config(),
+            new DefaultGameEventManager(),
+            session
+        );
     }
 
     public void exitGameVariant(GameVariant gameVariant) {
@@ -171,7 +179,7 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
 
     @Override
     public void startPlaying() {
-        game.newSession();
+        game = createGameContext(gameVariantManager.currentGameVariant());
         ui.window().mainScene().connect(game.session());
         ui.views().selectGamePlayView();
         game.variantConfig().gamePlay().onSessionStart(game);
