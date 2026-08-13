@@ -96,7 +96,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
     }
     
     private void createActors() {
-        final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().config().renderConfig();
+        final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().uiConfig().renderConfig();
         final SpriteAnimationContainer animationContainer = app().ui().sprites().animations();
 
         clapperboard = new Clapperboard("3", "JUNIOR");

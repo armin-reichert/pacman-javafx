@@ -65,7 +65,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
 
     @Override
     public void onActivate() {
-        final Arcade_Actions actions = app().gameVariants().currentGameVariant().config()
+        final Arcade_Actions actions = app().gameVariants().currentGameVariant().uiConfig()
             .getExtensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         actionBindings().registerAllBindings(actions.gameStartActionBindings());
@@ -86,7 +86,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
     }
 
     private void initScene() {
-        final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().config().renderConfig();
+        final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().uiConfig().renderConfig();
         final SpriteAnimationContainer container = app().ui().sprites().animations();
 
         final GameSystems sys = game().systems();

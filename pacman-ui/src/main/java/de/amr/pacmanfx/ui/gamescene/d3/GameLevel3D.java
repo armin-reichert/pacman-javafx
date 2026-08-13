@@ -14,7 +14,7 @@ import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorSchemeImpl;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.entities3D.levelcounter.system.LevelCounter3DViewSystem;
 import de.amr.pacmanfx.ui.entities3D.livescounter.comp.LivesCounter3DViewComp;
@@ -63,7 +63,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private final GameLevel level;
 
-    private final GameVariantConfig gameVariantConfig;
+    private final GameVariantUIConfig gameVariantConfig;
 
     private final PointLight ghostHunterLight = new PointLight();
 
@@ -75,7 +75,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private GameLevel3DAnimationManager animationManager;
 
-    public GameLevel3D(GameContext game, GameLevel level, AnimationRegistry registry, GameUISettingsVM viewModel, GameVariantConfig gameVariantConfig) {
+    public GameLevel3D(GameContext game, GameLevel level, AnimationRegistry registry, GameUISettingsVM viewModel, GameVariantUIConfig gameVariantConfig) {
         requireNonNull(game);
 
         this.level = requireNonNull(level);

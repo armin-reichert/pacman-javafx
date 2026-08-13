@@ -21,7 +21,7 @@ public class GameVariant {
     private final GameRules gameRules;
     private final WorldMapManager worldMapManager;
     private final Supplier<GameCheats> cheatsFactory;
-    private final GameVariantConfig config;
+    private final GameVariantUIConfig uiConfig;
 
     private int initialLifeCount;
 
@@ -32,7 +32,7 @@ public class GameVariant {
         gameRules = cartridge.gameRulesFactory().get();
         worldMapManager = cartridge.worldMapManagerFactory().get();
         cheatsFactory = GameCheats::new;
-        config = cartridge.uiConfigFactory().get();
+        uiConfig = cartridge.uiConfigFactory().get();
         initialLifeCount = 3;
     }
 
@@ -69,8 +69,7 @@ public class GameVariant {
         return cheatsFactory;
     }
 
-    public GameVariantConfig config() {
-        return config;
+    public GameVariantUIConfig uiConfig() {
+        return uiConfig;
     }
-
 }

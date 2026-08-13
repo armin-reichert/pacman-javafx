@@ -13,7 +13,7 @@ import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorSchemeImpl;
-import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.GhostLightRelayAnimation;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.LevelCompletedAnimation;
@@ -72,7 +72,7 @@ public class GameLevel3DAnimationManager implements Disposable {
 
     private final GameLevel3D level3D;
 
-    public GameLevel3DAnimationManager(AnimationRegistry registry, GameLevel3D level3D, GameVariantConfig gameVariantConfig) {
+    public GameLevel3DAnimationManager(AnimationRegistry registry, GameLevel3D level3D, GameVariantUIConfig gameVariantConfig) {
         this.registry = requireNonNull(registry);
         this.level3D = requireNonNull(level3D);
         requireNonNull(gameVariantConfig);
@@ -247,7 +247,7 @@ public class GameLevel3DAnimationManager implements Disposable {
         ));
     }
 
-    private void createGhostLightAnimation(GameVariantConfig gameVariantConfig, GameLevel level, PointLight ghostHunterLight) {
+    private void createGhostLightAnimation(GameVariantUIConfig gameVariantConfig, GameLevel level, PointLight ghostHunterLight) {
         final var animation = new GhostLightRelayAnimation(ghostHunterLight, level.entities().ghosts(),
             gameVariantConfig.worldSettings().ghosts());
         registry.register(AnimationID.GHOST_LIGHT, animation);

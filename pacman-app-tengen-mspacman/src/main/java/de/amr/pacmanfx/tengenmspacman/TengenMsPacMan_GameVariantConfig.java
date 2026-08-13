@@ -8,7 +8,7 @@ import de.amr.basics.Named;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.gameplay.GameFlowController;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.config.TengenJsonConfigLoader;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
@@ -36,7 +36,7 @@ import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.audioClip;
 import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.mediaPlayer;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_GameVariantConfig implements GameVariantConfig {
+public class TengenMsPacMan_GameVariantConfig implements GameVariantUIConfig {
 
     public static final int DEFAULT_START_LEVEL = 1;
     public static final int DEFAULT_NUM_CONTINUES = 4;

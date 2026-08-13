@@ -321,7 +321,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
     }
 
     private void ensureActorAnimationsCreated(GameSession session, GameLevel level) {
-        final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().config().renderConfig();
+        final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().uiConfig().renderConfig();
         final SpriteAnimationContainer animationContainer = app().ui().sprites().animations();
 
         final SpriteAnimSystem animSystem = app().game().systems().spriteAnim();

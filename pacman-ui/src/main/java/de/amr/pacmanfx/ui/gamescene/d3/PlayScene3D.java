@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
@@ -154,7 +154,7 @@ public class PlayScene3D extends AbstractGameScene
         } else {
             scoresView.showTextForScore(
                 app().ui().translations().translate("score.game_over"),
-                app().gameVariants().currentGameVariant().config().assets().color("color.game_over_message"));
+                app().gameVariants().currentGameVariant().uiConfig().assets().color("color.game_over_message"));
         }
 
         // High score is always visible
@@ -187,7 +187,7 @@ public class PlayScene3D extends AbstractGameScene
         requireNonNull(game);
         requireNonNull(level);
 
-        final GameVariantConfig gameVariantConfig = app().gameVariants().currentGameVariant().config();
+        final GameVariantUIConfig gameVariantConfig = app().gameVariants().currentGameVariant().uiConfig();
         final GameUISettingsVM viewModel = app().ui().viewModel();
         final GameSession session = game.session();
 

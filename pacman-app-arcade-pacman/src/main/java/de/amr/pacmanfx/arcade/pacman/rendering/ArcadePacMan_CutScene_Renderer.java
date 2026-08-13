@@ -24,7 +24,7 @@ public abstract class ArcadePacMan_CutScene_Renderer extends BaseRenderer implem
     public ArcadePacMan_CutScene_Renderer(AbstractGameScene2D scene, SpriteAnimSystem animSystem, Canvas canvas) {
         super(canvas);
         this.animSystem = requireNonNull(animSystem);
-        final GameVariantRenderConfig renderConfig = scene.app().gameVariants().currentGameVariant().config().renderConfig();
+        final GameVariantRenderConfig renderConfig = scene.app().gameVariants().currentGameVariant().uiConfig().renderConfig();
         actorRenderer = scene.configureRenderer(renderConfig.createActorRenderer(animSystem, canvas));
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
     }

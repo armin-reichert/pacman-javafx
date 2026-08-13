@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounter3DViewSystem;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
@@ -54,7 +54,7 @@ public class GameSceneManager {
     }
 
     public void updateGameSceneAndForceReload(boolean forceReload) {
-        final GameVariantConfig variantConfig = app.gameVariants().currentGameVariant().config();
+        final GameVariantUIConfig variantConfig = app.gameVariants().currentGameVariant().uiConfig();
         final GameContext game = app.game();
         final GameSession session = game.session();
         final GameScene currentGameScene = optCurrentGameScene().orElse(null);
@@ -90,7 +90,7 @@ public class GameSceneManager {
         requireNonNull(gameScene);
         requireNonNull(sceneID);
 
-        final GameVariantConfig config = app.gameVariants().currentGameVariant().config();
+        final GameVariantUIConfig config = app.gameVariants().currentGameVariant().uiConfig();
         return config.gameSceneConfig().gameSceneHasID(gameScene, sceneID);
     }
 
@@ -110,7 +110,7 @@ public class GameSceneManager {
     // 2D-3D scene switch
 
     private void handle2D3DSwitch(
-        GameVariantConfig variantConfig,
+        GameVariantUIConfig variantConfig,
         GameContext game,
         GameScene currentGameScene,
         GameScene nextGameScene)
@@ -125,7 +125,7 @@ public class GameSceneManager {
     }
 
     private void switchPlaySceneTo3D(
-        GameVariantConfig variantConfig,
+        GameVariantUIConfig variantConfig,
         GameContext game,
         GameScene currentGameScene,
         GameScene nextGameScene)

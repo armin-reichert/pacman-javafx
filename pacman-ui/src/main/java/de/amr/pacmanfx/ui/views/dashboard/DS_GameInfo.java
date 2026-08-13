@@ -18,7 +18,7 @@ import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
-import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import javafx.scene.paint.Color;
 
@@ -68,7 +68,7 @@ public class DS_GameInfo extends GameDashboardSection {
                     colorScheme = worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
                 }
                 else if (worldMap.hasConfigValue(WorldMapConfigKey.COLOR_MAP_INDEX)) {
-                    final GameVariantConfig variantConfig = app.gameVariants().currentGameVariant().config();
+                    final GameVariantUIConfig variantConfig = app.gameVariants().currentGameVariant().uiConfig();
                     colorScheme = variantConfig.renderConfig().colorScheme(worldMap, variantConfig.worldSettings());
                 }
                 if (colorScheme != null) {

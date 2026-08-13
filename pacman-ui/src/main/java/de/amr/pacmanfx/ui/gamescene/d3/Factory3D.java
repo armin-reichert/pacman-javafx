@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorSchemeImpl;
-import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Pellet3DSettings;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
@@ -73,5 +73,5 @@ public interface Factory3D extends Disposable {
      */
     Energizer3D createEnergizer3D(Energizer3DSettings config, PhongMaterial material);
 
-    Node createNumberBox3D(GameVariantConfig gameVariant, int index);
+    Node createNumberBox3D(GameVariantUIConfig gameVariant, int index);
 }

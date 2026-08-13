@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
@@ -300,7 +300,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     }
 
     public void updateGameSceneRenderers(AbstractGameScene2D gameScene2D) {
-        final GameVariantRenderConfig renderConfig = app.gameVariants().currentGameVariant().config().renderConfig();
+        final GameVariantRenderConfig renderConfig = app.gameVariants().currentGameVariant().uiConfig().renderConfig();
         if (gameScene2D.canvas() != null) {
             final SpriteAnimSystem animSystem = app.game().systems().spriteAnim();
             sceneRenderer = renderConfig.createGameSceneRenderer(gameScene2D, animSystem, gameScene2D.canvas());
@@ -321,7 +321,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     }
 
     public void embedGameScene(GameScene gameScene) {
-        final GameVariantConfig config = app.gameVariants().currentGameVariant().config();
+        final GameVariantUIConfig config = app.gameVariants().currentGameVariant().uiConfig();
 
         contextMenu.hide();
 
@@ -406,7 +406,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     }
 
     private void showMiniPlayView(GameContext game, GameLevel level) {
-        final GameVariantRenderConfig renderConfig = app.gameVariants().currentGameVariant().config().renderConfig();
+        final GameVariantRenderConfig renderConfig = app.gameVariants().currentGameVariant().uiConfig().renderConfig();
         final SpriteAnimSystem animSystem = game.systems().spriteAnim();
         miniPlaySceneView.setRenderConfig(animSystem, renderConfig);
         miniPlaySceneView.setWorldSizeInPixel(level.worldMap().terrainLayer().sizeInPixel());

@@ -88,7 +88,7 @@ public class XXL_OptionMenu extends OptionMenu {
         final GameUI ui = app.ui();
         final GameVariant variant = app.gameVariants().currentGameVariant();
         final GameVariantID variantID = GameVariantID.valueOf(app.gameVariants().currentVariantName());
-        final GameVariantRenderConfig renderConfig = variant.config().renderConfig();
+        final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final GameContext game = app.game();
         final WorldMapManager worldMapSelector = game.worldMapManager();
 
@@ -179,7 +179,7 @@ public class XXL_OptionMenu extends OptionMenu {
             public void onValueChanged(GameVariantID oldVariant, GameVariantID newVariant) {
                 if (app != null) {
                     final GameContext game = app.game();
-                    final GameVariantRenderConfig renderConfig = app.gameVariants().gameVariantByName(newVariant.name()).config().renderConfig();
+                    final GameVariantRenderConfig renderConfig = app.gameVariants().gameVariantByName(newVariant.name()).uiConfig().renderConfig();
                     chaseAnimation.init(game, renderConfig, canvas, app.ui().sprites().animations());
                 }
             }

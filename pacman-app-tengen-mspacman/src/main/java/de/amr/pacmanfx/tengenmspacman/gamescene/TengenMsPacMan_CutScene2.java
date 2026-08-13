@@ -109,7 +109,7 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene2D {
 
     private void createActors() {
         final var actorFactory = TengenMsPacMan_ActorFactory.instance();
-        final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().config().renderConfig();
+        final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().uiConfig().renderConfig();
         final SpriteAnimationContainer spriteAnimations = app().ui().sprites().animations();
 
         clapperboard = new Clapperboard("2", "THE CHASE");

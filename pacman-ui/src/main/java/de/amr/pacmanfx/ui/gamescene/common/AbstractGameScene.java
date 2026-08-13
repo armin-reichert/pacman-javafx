@@ -105,7 +105,7 @@ public abstract class AbstractGameScene
 
     @Override
     public Optional<GameSoundEffects> optSoundEffects() {
-        return app.gameVariants().currentGameVariant().config().optSoundEffects();
+        return app.gameVariants().currentGameVariant().uiConfig().optSoundEffects();
     }
 
     @Override

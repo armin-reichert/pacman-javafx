@@ -128,7 +128,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
 
     private void createActors(GameContext game) {
         final var actorFactory = TengenMsPacMan_ActorFactory.instance();
-        final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().config().renderConfig();
+        final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().uiConfig().renderConfig();
         final SpriteAnimationContainer animationContainer = app().ui().sprites().animations();
 
         clapperboard = new Clapperboard("1", "THEY MEET");

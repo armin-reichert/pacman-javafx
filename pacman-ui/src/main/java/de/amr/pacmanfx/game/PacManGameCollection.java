@@ -75,7 +75,7 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
         requireNonNull(gameVariant);
 
         //TODO rethink this
-        final GameVariantConfig config = gameVariant.config();
+        final GameVariantUIConfig config = gameVariant.uiConfig();
         config.init(this);
         ui.viewModel().maze3D.init(config.worldSettings().maze());
 
@@ -97,7 +97,7 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
         requireNonNull(gameVariant);
 
         gameVariant.gameFlow().removeStateChangeListener(changeEventConverter);
-        gameVariant.config().dispose();
+        gameVariant.uiConfig().dispose();
         ui.sounds().dispose();
         game.eventManager().removeGameEventSubscriber(ui);
         game = null;

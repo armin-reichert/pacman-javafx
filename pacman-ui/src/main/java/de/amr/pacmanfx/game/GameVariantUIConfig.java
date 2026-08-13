@@ -16,7 +16,7 @@ import de.amr.pacmanfx.uilib.assets.TranslationManager;
 
 import java.util.Optional;
 
-public interface GameVariantConfig extends Disposable {
+public interface GameVariantUIConfig extends Disposable {
 
     /**
      * Called when the corresponding game variant gets the current one, e.g. by selecting its start page.

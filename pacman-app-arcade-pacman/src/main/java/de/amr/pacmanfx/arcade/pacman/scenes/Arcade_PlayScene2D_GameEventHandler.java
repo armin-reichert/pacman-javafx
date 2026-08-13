@@ -34,7 +34,7 @@ public interface Arcade_PlayScene2D_GameEventHandler extends DefaultGameEventLis
     GameAppContext app();
 
     default Optional<GameSoundEffects> optSoundEffects() {
-        return app().gameVariants().currentGameVariant().config().optSoundEffects();
+        return app().gameVariants().currentGameVariant().uiConfig().optSoundEffects();
     }
 
     default GameContext game() {
