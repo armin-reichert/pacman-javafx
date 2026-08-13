@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventManager;
 import de.amr.pacmanfx.core.event.gameplay.GameStateChangeEvent;
-import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.core.GameAction;
@@ -81,22 +81,17 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
 
         game = new GameContext(
             gameBox().coinMechanism(),
-            gameVariant.gamePlay(),
-            gameVariant.systems(),
-            gameVariant.gameRules(),
-            gameVariant.worldMapManager(),
-            new DefaultGameEventManager(),
-            gameVariant.initialLifeCount()
+            gameVariant.config(),
+            new DefaultGameEventManager()
         );
         game.eventManager().addGameEventSubscriber(ui);
-
-        gameVariant.gameFlow().addStateChangeListener(changeEventConverter);
+        gameVariant.config().gameFlow().addStateChangeListener(changeEventConverter);
     }
 
     public void exitGameVariant(GameVariant gameVariant) {
         requireNonNull(gameVariant);
 
-        gameVariant.gameFlow().removeStateChangeListener(changeEventConverter);
+        gameVariant.config().gameFlow().removeStateChangeListener(changeEventConverter);
         gameVariant.uiConfig().dispose();
         ui.sounds().dispose();
         game.eventManager().removeGameEventSubscriber(ui);
@@ -178,22 +173,19 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
     public void startPlaying() {
         final GameVariant gameVariant = gameVariantManager.currentGameVariant();
 
-        final GameSession session = new GameSession(
+        game.newSession(
             gameVariantManager.currentVariantName(),
-            gameVariant.gameFlow(),
-            gameVariant.cheatsFactory().get()
+            gameVariant.config().gameFlow(),
+            new GameCheats()
         );
 
         //TODO check where this should be done
-        session.hud().creditProperty().bind(GameBox.instance().coinMechanism().numCoinsProperty());
+        game.session().hud().creditProperty().bind(GameBox.instance().coinMechanism().numCoinsProperty());
 
-        game.setSession(session);
-
-        game.gamePlay().onSessionStart(game);
-
-        ui.window().mainScene().connect(session);
+        ui.window().mainScene().connect(game.session());
         ui.views().selectGamePlayView();
 
+        game.gamePlay().onSessionStart(game);
         GameSimulation.start(this);
     }
 
@@ -312,7 +304,7 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
             final Cartridge cartridge = gameBox().cartridgeByName(variantName);
             final var gameVariant = new GameVariant(cartridge);
             if (testStatesIncluded) {
-                gameVariant.gameFlow().addTestStates();
+                gameVariant.config().gameFlow().addTestStates();
             }
             return gameVariant;
         }

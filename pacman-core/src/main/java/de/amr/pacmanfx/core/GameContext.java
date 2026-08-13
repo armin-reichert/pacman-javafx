@@ -5,9 +5,10 @@
 package de.amr.pacmanfx.core;
 
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
-import de.amr.pacmanfx.core.event.base.DefaultGameEventManager;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
+import de.amr.pacmanfx.core.gameplay.GameFlowController;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
+import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 
@@ -20,48 +21,32 @@ public class GameContext {
 
     private final CoinMechanism coinMechanism;
 
-    private final GamePlay gamePlay;
-
-    private final GameSystems systems;
-
-    private final GameRules rules;
-
-    private final WorldMapManager worldMapManager;
+    private final GameVariantConfig gameVariantConfig;
 
     private final GameEventManager eventManager;
 
     private GameSession session;
 
-    private int initialLifeCount;
-
     public GameContext(
         CoinMechanism coinMechanism,
-        GamePlay gamePlay,
-        GameSystems systems,
-        GameRules rules,
-        WorldMapManager worldMapManager,
-        GameEventManager eventManager,
-        int initialLifeCount)
+        GameVariantConfig gameVariantConfig,
+        GameEventManager eventManager)
     {
         this.coinMechanism = requireNonNull(coinMechanism);
-        this.gamePlay = requireNonNull(gamePlay);
-        this.systems = requireNonNull(systems);
-        this.rules = requireNonNull(rules);
-        this.worldMapManager = requireNonNull(worldMapManager);
+        this.gameVariantConfig = requireNonNull(gameVariantConfig);
         this.eventManager = requireNonNull(eventManager);
-        this.initialLifeCount = initialLifeCount;
     }
 
-    public void setSession(GameSession session) {
-        this.session = requireNonNull(session);
+    public void newSession(String variantName, GameFlowController gameFlow, GameCheats cheats) {
+        session = new GameSession(variantName, gameFlow, cheats);
     }
 
-    public void setInitialLifeCount(int initialLifeCount) {
-        this.initialLifeCount = initialLifeCount;
+    public GameSession session() {
+        return session;
     }
 
-    public int initialLifeCount() {
-        return initialLifeCount;
+    public GameVariantConfig gameVariantConfig() {
+        return gameVariantConfig;
     }
 
     public CoinMechanism coinMechanism() {
@@ -73,22 +58,18 @@ public class GameContext {
     }
 
     public GamePlay gamePlay() {
-        return gamePlay;
+        return gameVariantConfig.gamePlay();
     }
 
     public GameRules rules() {
-        return rules;
+        return gameVariantConfig.gameRules();
     }
 
     public WorldMapManager worldMapManager() {
-        return worldMapManager;
-    }
-
-    public GameSession session() {
-        return session;
+        return gameVariantConfig.worldMapManager();
     }
 
     public GameSystems systems() {
-        return systems;
+        return gameVariantConfig.systems();
     }
 }

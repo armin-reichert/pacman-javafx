@@ -61,7 +61,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
     public void draw(AbstractGameScene2D gameScene2D, long tick) {
         final GameAppContext app = gameScene2D.app();
 
-        final TengenMsPacMan_UISettings uiSettings = app.currentGameVariantConfig().getExtensionValue(
+        final TengenMsPacMan_UISettings uiSettings = app.currentGameVariantUIConfig().getExtensionValue(
             TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
 
 
@@ -129,7 +129,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
         fillText(":", NES_YELLOW, COL_COLON, y);
         fillText(String.valueOf(startLevelNumber), NES_WHITE, COL_VALUE, y);
         if (numContinues < 4) {
-            final var spriteSheet = (TengenMsPacMan_SpriteSheet) app.currentGameVariantConfig().renderConfig().spriteSheet();
+            final var spriteSheet = (TengenMsPacMan_SpriteSheet) app.currentGameVariantUIConfig().renderConfig().spriteSheet();
             final RectShort continuesSprite = spriteSheet.findSprite(switch (numContinues) {
                 case 0 -> SpriteID.CONTINUES_0;
                 case 1 -> SpriteID.CONTINUES_1;

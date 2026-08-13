@@ -54,9 +54,8 @@ public class DS_GameControl extends GameDashboardSection {
         setAction(choiceBoxInitialLives,
             () -> {
                 final int lifeCount = choiceBoxInitialLives.getValue();
-                Logger.info("Settings life count to: {}", lifeCount);
-                app.gameVariants().currentGameVariant().setInitialLifeCount(lifeCount);
-                app.game().setInitialLifeCount(lifeCount);
+                app.currentGameVariantConfig().setInitialLifeCount(lifeCount);
+                Logger.info("Initial life count was set to: {}", lifeCount);
             });
 
         //TODO Here we would need to access the Arcade-specific action to start the game
@@ -79,7 +78,7 @@ public class DS_GameControl extends GameDashboardSection {
         final GameSession session = game.session();
         final GameState state = session.gameState();
 
-        choiceBoxInitialLives.setValue(app.gameVariants().currentGameVariant().initialLifeCount());
+        choiceBoxInitialLives.setValue(app.currentGameVariantConfig().initialLifeCount());
         choiceBoxInitialLives.setDisable(!CommonGameStateID.GAME_INTRO.hasSameNameAs(state));
 
         final boolean creditDisabled = !state.nameIsOneOf(CommonGameStateID.GAME_INTRO, CommonGameStateID.GAME_PREPARATION);

@@ -30,7 +30,7 @@ public class GameStartingState extends GameState {
         final var gamePlay = (TengenMsPacMan_GamePlay) game.gamePlay();
         final GameSession session = game.session();
 
-        gamePlay.buildNormalLevel(game, gamePlay.startLevelNumber(session), game.initialLifeCount());
+        gamePlay.buildNormalLevel(game, gamePlay.startLevelNumber(session), game.gameVariantConfig().initialLifeCount());
         ScoreSystem.enableScore(session.highScore(), true);
         game.eventManager().publishGameEvent(new GameStartedEvent(game));
     }

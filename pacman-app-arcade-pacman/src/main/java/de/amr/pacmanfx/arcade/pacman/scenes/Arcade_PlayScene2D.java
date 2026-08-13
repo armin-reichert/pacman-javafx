@@ -127,7 +127,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D
     }
 
     private void acceptDemoLevel() {
-        final Arcade_Actions actions = app().currentGameVariantConfig()
+        final Arcade_Actions actions = app().currentGameVariantUIConfig()
             .getExtensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         actionBindings().registerAllBindings(actions.gameStartActionBindings());

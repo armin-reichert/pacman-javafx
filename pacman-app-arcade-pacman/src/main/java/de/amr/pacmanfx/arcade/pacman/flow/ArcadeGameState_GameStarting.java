@@ -26,7 +26,7 @@ public class ArcadeGameState_GameStarting extends GameState {
 
     @Override
     public void onEnter(GameContext game) {
-        game.gamePlay().buildNormalLevel(game, 1, game.initialLifeCount());
+        game.gamePlay().buildNormalLevel(game, 1, game.gameVariantConfig().initialLifeCount());
 
         game.session().hud().hideCredit().showLivesCounter();
         ScoreSystem.enableScore(game.session().highScore(), true);

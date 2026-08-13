@@ -8,8 +8,9 @@ import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.game.GameLifecycle;
-import de.amr.pacmanfx.game.GameVariantUIConfig;
+import de.amr.pacmanfx.core.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantManager;
+import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.input.Input;
@@ -26,7 +27,11 @@ public interface GameAppContext {
 
     GameVariantManager gameVariants();
 
-    default GameVariantUIConfig currentGameVariantConfig() {
+    default GameVariantConfig currentGameVariantConfig() {
+        return gameVariants().currentGameVariant().config();
+    }
+
+    default GameVariantUIConfig currentGameVariantUIConfig() {
         return gameVariants().currentGameVariant().uiConfig();
     }
 
