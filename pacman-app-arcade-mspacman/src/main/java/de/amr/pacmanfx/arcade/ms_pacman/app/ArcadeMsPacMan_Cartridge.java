@@ -8,6 +8,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GamePlay;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameVariantConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameSystems;
+import de.amr.pacmanfx.arcade.ms_pacman.rules.ArcadeMsPacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameVariantID;
@@ -23,6 +24,7 @@ public class ArcadeMsPacMan_Cartridge {
         ArcadeMsPacMan_GameSystems::new,
         ArcadeMsPacMan_GamePlay::new,
         ArcadeMsPacMan_GameVariantConfig::createGameFlow,
+        ArcadeMsPacMan_GameRules::new,
         ArcadeMsPacMan_GameModel::new,
         ArcadeMsPacMan_GameVariantConfig::new,
         Set.of(new GameExtension(Arcade_GameExtensions.ACTIONS, Arcade_Actions::new))

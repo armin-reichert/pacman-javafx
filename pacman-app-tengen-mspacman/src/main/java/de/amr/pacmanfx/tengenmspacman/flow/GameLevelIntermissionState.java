@@ -12,7 +12,6 @@ import de.amr.pacmanfx.core.model.HUDState;
 import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
-import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 
 import java.util.OptionalInt;
 
@@ -25,11 +24,10 @@ public class GameLevelIntermissionState extends GameState {
     @Override
     public void onEnter(GameContext game) {
         final GameSession session = game.session();
-        final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) game.model();
         final GameLevel level = session.assertLevel();
-        final OptionalInt cutSceneNumber = model.rules().cutSceneAfterLevel(level.number());
+        final OptionalInt cutSceneNumber = game.rules().cutSceneAfterLevel(level.number());
         final boolean isLastCutScene = cutSceneNumber.isPresent()
-            && cutSceneNumber.getAsInt() == model.rules().lastCutSceneNumber();
+            && cutSceneNumber.getAsInt() == game.rules().lastCutSceneNumber();
 
         if (isLastCutScene) {
             session.hud().hide();

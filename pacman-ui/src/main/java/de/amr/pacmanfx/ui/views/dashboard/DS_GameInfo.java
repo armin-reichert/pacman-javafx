@@ -9,7 +9,6 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.rules.ActorSpeedRules;
 import de.amr.pacmanfx.core.model.rules.CollisionStrategy;
@@ -19,7 +18,6 @@ import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
-import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import javafx.scene.paint.Color;
@@ -101,10 +99,10 @@ public class DS_GameInfo extends GameDashboardSection {
         GameAppContext appContext,
         BiFunction<GameLevel, ActorSpeedRules, String> fnInfo) {
         return () -> {
-            final GameSession session = appContext.currentGame().session();
-            final GameModel model = appContext.currentGame().model();
-            final ActorSpeedRules speedControl = model.rules().actorSpeedRules();
-            return session.optLevel().map(level -> fnInfo.apply(level, speedControl)).orElse(NO_INFO);
+            final GameContext game = appContext.currentGame();
+            final ActorSpeedRules speedRules = game.rules().actorSpeedRules();
+            return game.session().optLevel()
+                .map(level -> fnInfo.apply(level, speedRules)).orElse(NO_INFO);
         };
     }
 

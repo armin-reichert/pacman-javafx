@@ -24,7 +24,6 @@ import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessage;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
-import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.rules.HuntingTimer;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -113,7 +112,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         session.setValue(GamePlayOptions.DIFFICULTY, difficulty);
 
         //TODO this should also move into session!
-        final var speedRules = (TengenMsPacMan_ActorSpeedRules) game.model().rules().actorSpeedRules();
+        final var speedRules = (TengenMsPacMan_ActorSpeedRules) game.rules().actorSpeedRules();
         speedRules.setDifficulty(difficulty);
     }
 
@@ -204,9 +203,12 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     public GameLevel createLevel(GameContext game, int levelNumber) {
         final GameSession session = game.session();
         final WorldNavigationSystem navigator = game.systems().worldNavigator();
+
         final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) game.model();
         final WorldMap worldMap = model.worldMapManager().supplyWorldMap(levelNumber, mapCategory(session));
-        final var huntingTimer = new HuntingTimer("Tengen Ms. Pac-Man Hunting Timer", model.rules().numHuntingPhases());
+
+        final TengenMsPacMan_GameRules rules = (TengenMsPacMan_GameRules) game.rules();
+        final var huntingTimer = new HuntingTimer("Tengen Ms. Pac-Man Hunting Timer", rules.numHuntingPhases());
 
         final GameLevel level = new GameLevel(levelNumber, worldMap, huntingTimer, 3);
 
@@ -235,8 +237,8 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         createAndSetGhosts(level, house);
 
         //TODO not sure about this:
-        level.setBonusSymbolCode(0, model.rules().selectBonusSymbolCode(level.number(), 0));
-        level.setBonusSymbolCode(1, model.rules().selectBonusSymbolCode(level.number(), 1));
+        level.setBonusSymbolCode(0, rules.selectBonusSymbolCode(level.number(), 0));
+        level.setBonusSymbolCode(1, rules.selectBonusSymbolCode(level.number(), 1));
 
         level.entities().add(new MessageView());
 
@@ -326,7 +328,6 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     @Override
     public void activateNextBonus(GameContext game, GameLevel level) {
         final GameSystems sys = game.systems();
-        final GameModel model = game.model();
         final GameEventManager eventManager = game.eventManager();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
@@ -361,8 +362,8 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         level.selectNextBonus();
 
         final int symbolCode = level.bonusSymbolCode(level.currentBonusIndex());
-        final int value = model.rules().scoringRules().pointsForBonus(symbolCode);
-        final float speed = model.rules().actorSpeedRules().bonusSpeed(game, level);
+        final int value = game.rules().scoringRules().pointsForBonus(symbolCode);
+        final float speed = game.rules().actorSpeedRules().bonusSpeed(game, level);
         final Bonus bonus = Bonus.createMovingBonus(symbolCode, value);
         sys.bonusMoveAndJump().setRoute(bonus, route, leftToRight);
         sys.bonusState().showEdibleAndStartWandering(bonus, speed);

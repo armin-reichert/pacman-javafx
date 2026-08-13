@@ -43,7 +43,7 @@ public class GameLevelCompleteState extends GameState {
         if (session.isAttractMode()) { // Just in case: if demo level is completed, go back to intro scene
             return CommonGameStateID.GAME_INTRO;
         }
-        final boolean cutSceneFollows = game.model().rules().cutSceneAfterLevel(level.number()).isPresent();
+        final boolean cutSceneFollows = game.rules().cutSceneAfterLevel(level.number()).isPresent();
         if (cutSceneFollows && cutScenesEnabled) {
             return CommonGameStateID.GAME_LEVEL_INTERMISSION;
         }

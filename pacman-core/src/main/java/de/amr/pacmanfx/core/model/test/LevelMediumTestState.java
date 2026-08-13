@@ -15,7 +15,6 @@ import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.session.GameSession;
 
 import java.util.List;
@@ -38,13 +37,12 @@ public class LevelMediumTestState extends GameState {
     @Override
     public void onEnter(GameContext game) {
         final GamePlay gamePlay = game.gamePlay();
-        final GameModel model = game.model();
         final GameEventManager eventManager = game.eventManager();
         final GameSession session = game.session();
 
-        lastTestedLevelNumber = model.rules().lastLevelNumber() == Integer.MAX_VALUE
+        lastTestedLevelNumber = game.rules().lastLevelNumber() == Integer.MAX_VALUE
             ? 25
-            : model.rules().lastLevelNumber();
+            : game.rules().lastLevelNumber();
 
         timer().restartSeconds(TEST_DURATION_SEC);
 
@@ -58,7 +56,6 @@ public class LevelMediumTestState extends GameState {
 
     @Override
     public void onUpdate(GameContext game) {
-        final GameModel model = game.model();
         final GameLevel level = game.session().assertLevel();
         final GameEventManager eventManager = game.eventManager();
 
@@ -77,7 +74,7 @@ public class LevelMediumTestState extends GameState {
         }
         else {
             game.gamePlay().hunt(game, level);
-            if (model.rules().isLevelCompleted(level)) {
+            if (game.rules().isLevelCompleted(level)) {
                 game.session().gameFlow().enterState(game, CommonGameStateID.GAME_INTRO);
             }
             else if (game.session().thisFrame().huntingStep().pacKilled()) {

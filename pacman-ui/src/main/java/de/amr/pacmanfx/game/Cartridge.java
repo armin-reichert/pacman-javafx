@@ -9,6 +9,7 @@ import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.gameplay.GameFlowController;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.rules.GameRules;
 
 import java.util.Set;
 import java.util.function.Supplier;
@@ -18,6 +19,7 @@ public record Cartridge(
     Supplier<? extends GameSystems> systemsFactory,
     Supplier<? extends GamePlay> gamePlayFactory,
     Supplier<? extends GameFlowController> gameFlowFactory,
+    Supplier<? extends GameRules> gameRulesFactory,
     Supplier<? extends GameModel> gameModelFactory,
     Supplier<? extends GameVariantConfig> uiConfigFactory,
     Set<GameExtension> gameExtensions

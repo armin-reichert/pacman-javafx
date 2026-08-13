@@ -5,6 +5,7 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.XXL_MsPacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.XXL_MsPacMan_GamePlay;
+import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.XXL_MsPacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.XXL_MsPacMan_GameVariantConfig;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.game.Cartridge;
@@ -12,6 +13,14 @@ import de.amr.pacmanfx.game.GameExtension;
 
 import java.util.Set;
 
+/**
+ * Extension of Arcade Ms. Pac-Man with
+ * <ul>
+ * <li>8 new builtin Arcade-like mazes (shamelessly stole from to the one and only
+ * <a href="https://github.com/masonicGIT/pacman">Shaun Williams</a>)</li>
+ * <li>the possibility to play custom maps.</li>
+ * </ul>
+ */
 public class XXL_MsPacMan_Cartridge {
 
     public static final Cartridge CARTRIDGE = new Cartridge(
@@ -19,6 +28,7 @@ public class XXL_MsPacMan_Cartridge {
         ArcadeMsPacMan_GameSystems::new,
         XXL_MsPacMan_GamePlay::new,
         XXL_MsPacMan_GameVariantConfig::createGameFlow,
+        XXL_MsPacMan_GameRules::new,
         XXL_MsPacMan_GameModel::new,
         XXL_MsPacMan_GameVariantConfig::new,
         Set.of(new GameExtension(Arcade_GameExtensions.ACTIONS, Arcade_Actions::new))

@@ -63,7 +63,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
 
         final int numFlashes = ArcadePacMan_GameRules.levelData(levelNumber).numFlashes();
 
-        final HuntingTimer huntingTimer = new HuntingTimer("Arcade Ms. Pac-Man Hunting Timer", model.rules().numHuntingPhases());
+        final HuntingTimer huntingTimer = new HuntingTimer("Arcade Ms. Pac-Man Hunting Timer", game.rules().numHuntingPhases());
 
         final GameLevel level = new GameLevel(levelNumber, worldMap, huntingTimer, numFlashes);
         level.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
@@ -86,8 +86,8 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         createAndSetMsPacMan(game.systems(), level);
         createAndSetGhosts(level);
 
-        level.setBonusSymbolCode(0, model.rules().selectBonusSymbolCode(level.number(), 0));
-        level.setBonusSymbolCode(1, model.rules().selectBonusSymbolCode(level.number(), 1));
+        level.setBonusSymbolCode(0, game.rules().selectBonusSymbolCode(level.number(), 0));
+        level.setBonusSymbolCode(1, game.rules().selectBonusSymbolCode(level.number(), 1));
 
         /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
          * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
@@ -189,7 +189,6 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         requireNonNull(level);
 
         final GameSystems sys = game.systems();
-        final GameModel model = game.model();
 
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
@@ -207,7 +206,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         level.selectNextBonus();
 
         final int symbolCode = level.bonusSymbolCode(level.currentBonusIndex());
-        final int value = model.rules().scoringRules().pointsForBonus(symbolCode);
+        final int value = game.rules().scoringRules().pointsForBonus(symbolCode);
         Bonus bonus;
         if (terrain.horizontalPortals().isEmpty()) {
             bonus = Bonus.createStaticBonus(symbolCode, value);
@@ -217,7 +216,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         } else {
             bonus = Bonus.createMovingBonus(symbolCode, value);
             computeBonusRoute(game, bonus, terrain, house);
-            final float speed = model.rules().actorSpeedRules().bonusSpeed(game, level);
+            final float speed = game.rules().actorSpeedRules().bonusSpeed(game, level);
             sys.bonusState().showEdibleAndStartWandering(bonus, speed);
         }
 

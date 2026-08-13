@@ -9,6 +9,7 @@ import de.amr.pacmanfx.core.event.base.DefaultGameEventManager;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.core.session.GameSession;
 
 import static java.util.Objects.requireNonNull;
@@ -24,6 +25,8 @@ public class GameContext {
 
     private final GameSystems systems;
 
+    private final GameRules rules;
+
     private final GameModel model;
 
     private final GameEventManager eventManager;
@@ -32,10 +35,11 @@ public class GameContext {
 
     private int initialLifeCount;
 
-    public GameContext(CoinMechanism coinMechanism, GamePlay gamePlay, GameSystems systems, GameModel model, int initialLifeCount) {
+    public GameContext(CoinMechanism coinMechanism, GamePlay gamePlay, GameSystems systems, GameRules rules, GameModel model, int initialLifeCount) {
         this.coinMechanism = requireNonNull(coinMechanism);
         this.gamePlay = requireNonNull(gamePlay);
         this.systems = requireNonNull(systems);
+        this.rules = requireNonNull(rules);
         this.model = requireNonNull(model);
         this.eventManager = new DefaultGameEventManager();
         this.initialLifeCount = initialLifeCount;
@@ -63,6 +67,10 @@ public class GameContext {
 
     public GamePlay gamePlay() {
         return gamePlay;
+    }
+
+    public GameRules rules() {
+        return rules;
     }
 
     public GameModel model() {

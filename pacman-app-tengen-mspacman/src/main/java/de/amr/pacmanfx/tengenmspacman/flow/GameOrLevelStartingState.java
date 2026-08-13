@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.model.HUDState;
 import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
-import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
+import de.amr.pacmanfx.tengenmspacman.rules.TengenMsPacMan_GameRules;
 import org.tinylog.Logger;
 
 public class GameOrLevelStartingState extends GameState {
@@ -24,12 +24,13 @@ public class GameOrLevelStartingState extends GameState {
         final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game.gamePlay();
         final GameSession session = game.session();
         final HUDState hudState = session.hud();
-        final TengenMsPacMan_GameModel model = (TengenMsPacMan_GameModel) game.model();
+        final TengenMsPacMan_GameRules rules = (TengenMsPacMan_GameRules) game.rules();
 
         hudState.hideCredit().showScore().showLevelCounter().showLivesCounter().show();
-        // The rules vary between map categories so update the rules here:
-        model.rules().setMapCategory(gamePlay.mapCategory(session));
-        Logger.info("Using game rules for map category {}", model.rules().mapCategory());
+
+        // TODO: Probably current map category should be stored in session and passed to rules
+        rules.setMapCategory(gamePlay.mapCategory(session));
+        Logger.info("Using game rules for map category {}", rules.mapCategory());
     }
 
     @Override

@@ -54,7 +54,7 @@ public final class GameState_PlayingLevel extends GameState {
 
         session.cheats().update(game);
 
-        if (game.model().rules().isLevelCompleted(level)) {
+        if (game.rules().isLevelCompleted(level)) {
             session.gameFlow().enterState(game, CommonGameStateID.GAME_LEVEL_COMPLETE);
         }
         else if (huntingStep.pacKilled()) {

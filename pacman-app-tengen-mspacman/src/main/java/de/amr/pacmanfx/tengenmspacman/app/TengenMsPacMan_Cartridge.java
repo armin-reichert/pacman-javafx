@@ -10,9 +10,15 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
+import de.amr.pacmanfx.tengenmspacman.rules.TengenMsPacMan_GameRules;
 
 import java.util.Set;
 
+/**
+ * Ms. Pac-Man (Tengen).
+ *
+ * @see <a href="https://github.com/RussianManSMWC/Ms.-Pac-Man-NES-Tengen-Disassembly">Ms.Pac-Man-NES-Tengen-Disassembly</a>
+ */
 public class TengenMsPacMan_Cartridge {
 
     public static final Cartridge CARTRIDGE = new Cartridge(
@@ -20,6 +26,7 @@ public class TengenMsPacMan_Cartridge {
         DefaultGameSystems::new,
         TengenMsPacMan_GamePlay::new,
         TengenMsPacMan_GameVariantConfig::createGameFlow,
+        TengenMsPacMan_GameRules::new,
         TengenMsPacMan_GameModel::new,
         TengenMsPacMan_GameVariantConfig::new,
         Set.of(

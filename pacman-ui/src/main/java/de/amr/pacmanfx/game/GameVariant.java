@@ -10,6 +10,7 @@ import de.amr.pacmanfx.core.gameplay.GameFlowController;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.GameModel;
+import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import org.tinylog.Logger;
 
@@ -22,6 +23,7 @@ public class GameVariant {
     private final GameSystems systems;
     private final GamePlay gamePlay;
     private final GameFlowController gameFlow;
+    private final GameRules gameRules;
     private final GameModel gameModel;
     private final Supplier<GameCheats> cheatsFactory;
     private final GameVariantConfig config;
@@ -34,6 +36,7 @@ public class GameVariant {
         systems = cartridge.systemsFactory().get();
         gamePlay = cartridge.gamePlayFactory().get();
         gameFlow = cartridge.gameFlowFactory().get();
+        gameRules = cartridge.gameRulesFactory().get();
         gameModel = cartridge.gameModelFactory().get();
         cheatsFactory = GameCheats::new;
         config = cartridge.uiConfigFactory().get();
@@ -61,6 +64,10 @@ public class GameVariant {
 
     public GameFlowController gameFlow() {
         return gameFlow;
+    }
+
+    public GameRules gameRules() {
+        return gameRules;
     }
 
     public GameModel gameModel() {

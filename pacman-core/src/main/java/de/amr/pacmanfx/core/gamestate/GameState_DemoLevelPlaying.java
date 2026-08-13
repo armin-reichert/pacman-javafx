@@ -16,7 +16,6 @@ import de.amr.pacmanfx.core.event.gameplay.LevelStartedEvent;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
-import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.core.session.GameSession;
 import org.tinylog.Logger;
 
@@ -78,15 +77,12 @@ public final class GameState_DemoLevelPlaying extends GameState {
         }
         else if (tick > huntingStartTick) {
             gamePlay.hunt(game, level);
-            session.gameFlow().enterState(game, computeNextState(game));
+            session.gameFlow().enterState(game, computeNextState(game, level));
         }
     }
 
-    private CommonGameStateID computeNextState(GameContext game) {
-        final GameLevel level = game.session().assertLevel();
-        final GameRules rules = game.model().rules();
-
-        if (rules.isLevelCompleted(level)) {
+    private CommonGameStateID computeNextState(GameContext game, GameLevel level) {
+        if (game.rules().isLevelCompleted(level)) {
             return CommonGameStateID.GAME_INTRO;
         }
         else if (game.session().thisFrame().huntingStep().pacKilled()) {

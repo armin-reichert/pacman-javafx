@@ -23,7 +23,6 @@ import de.amr.pacmanfx.core.event.pac.PacLostPowerEvent;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -230,10 +229,9 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         final Pac pac = e.pac();
         final GameLevel level = game().session().assertLevel();
         final GameLevel3D level3D = assertLevel3D();
-        final GameRules rules = game().model().rules();
 
         optSoundEffects().ifPresent(GameSoundEffects::stopSiren);
-        if (!rules.isLevelCompleted(level)) {
+        if (!game().rules().isLevelCompleted(level)) {
             optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
             Pac3DAnimationSystem.setPowerMode(pac, true);
             level3D.animationManager().startWallFlashing();
@@ -314,7 +312,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         final GameLevel level = session().assertLevel();
         final House house = level.entities().theOne(House.class);
         final boolean cutSceneFollows = !session().isAttractMode()
-            && game().model().rules().cutSceneAfterLevel(level.number()).isPresent();
+            && game().rules().cutSceneAfterLevel(level.number()).isPresent();
 
         gameScene().scoreOpacity.set(0);
         House3DSystem.hideDoors(house);

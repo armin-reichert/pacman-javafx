@@ -117,7 +117,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         terrain.propertyMap().put(WorldMapPropertyName.POS_HOUSE_MIN_TILE,  String.valueOf(houseMinTile));
 
         final LevelData levelData = ArcadePacMan_GameRules.levelData(levelNumber);
-        final HuntingTimer huntingTimer = new HuntingTimer("Arcade Pac-Man Hunting Timer", model.rules().numHuntingPhases());
+        final HuntingTimer huntingTimer = new HuntingTimer("Arcade Pac-Man Hunting Timer", game.rules().numHuntingPhases());
 
         final GameLevel level = new GameLevel(levelNumber, worldMap, huntingTimer, levelData.numFlashes());
 
@@ -141,8 +141,8 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         createAndSetPacMan(game.systems(), level);
         createAndSetGhosts(level);
 
-        level.setBonusSymbolCode(0, model.rules().selectBonusSymbolCode(level.number(), 0));
-        level.setBonusSymbolCode(1, model.rules().selectBonusSymbolCode(level.number(), 1));
+        level.setBonusSymbolCode(0, game.rules().selectBonusSymbolCode(level.number(), 0));
+        level.setBonusSymbolCode(1, game.rules().selectBonusSymbolCode(level.number(), 1));
 
         final LivesCounter livesCounter = new LivesCounter();
         level.entities().add(livesCounter);
@@ -259,13 +259,12 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         requireNonNull(level);
 
         final GameSystems sys = game.systems();
-        final GameModel model = game.model();
         final GameEventManager eventManager = game.eventManager();
 
         level.selectNextBonus();
 
         final int symbolCode = level.bonusSymbolCode(level.currentBonusIndex());
-        final int value = model.rules().scoringRules().pointsForBonus(symbolCode);
+        final int value = game.rules().scoringRules().pointsForBonus(symbolCode);
         final float edibleSec = randomFloat(9, 10);
         final Vector2i tile = level.worldMap().terrainLayer().getTilePropertyOrDefault(
             WorldMapPropertyName.POS_BONUS, ArcadePacMan_GameModel.DEFAULT_BONUS_TILE);

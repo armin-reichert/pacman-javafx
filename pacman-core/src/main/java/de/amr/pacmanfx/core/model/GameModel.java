@@ -10,6 +10,4 @@ import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 public interface GameModel {
 
     WorldMapManager worldMapManager();
-
-    GameRules rules();
 }

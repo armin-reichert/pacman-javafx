@@ -119,7 +119,7 @@ public final class CheatActions {
                 final GameLevel level = normalLevel(this.appContext).orElse(null);
                 return level != null
                     && CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(state)
-                    && level.number() < game().model().rules().lastLevelNumber();
+                    && level.number() < game().rules().lastLevelNumber();
             }
         };
 

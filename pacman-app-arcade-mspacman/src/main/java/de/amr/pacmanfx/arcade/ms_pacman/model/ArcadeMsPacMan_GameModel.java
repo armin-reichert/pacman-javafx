@@ -4,9 +4,7 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.model;
 
-import de.amr.pacmanfx.arcade.ms_pacman.rules.ArcadeMsPacMan_GameRules;
 import de.amr.pacmanfx.core.model.GameModel;
-import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 
 import static java.util.Objects.requireNonNull;
@@ -27,20 +25,12 @@ public class ArcadeMsPacMan_GameModel implements GameModel {
 
     protected WorldMapManager worldMapManager;
 
-    protected ArcadeMsPacMan_GameRules rules;
-
     public ArcadeMsPacMan_GameModel() {
         this(new ArcadeMsPacMan_WorldMapManager());
     }
 
     public ArcadeMsPacMan_GameModel(WorldMapManager worldMapManager) {
         this.worldMapManager = requireNonNull(worldMapManager);
-        rules = new ArcadeMsPacMan_GameRules();
-    }
-
-    @Override
-    public GameRules rules() {
-        return rules;
     }
 
     @Override

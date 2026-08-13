@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui.action;
 
-import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.model.rules.ActorCollisionRules;
 import de.amr.pacmanfx.core.model.rules.CollisionStrategy;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
@@ -16,6 +15,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import static de.amr.basics.util.Ufx.toggleProperty;
 import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
 
 /**
@@ -52,9 +52,9 @@ public final class CommonGameActions {
         actionToggleCollisionStrategy = new GameAction(appContext, "toggle_collision_strategy") {
             @Override
             protected void doAction() {
-                final ActorCollisionRules rules = game().model().rules().actorCollisionRules();
-                Ufx.toggleProperty(rules.collisionStrategyProperty(), CollisionStrategy.SAME_TILE, CollisionStrategy.CENTER_DISTANCE);
-                final CollisionStrategy strategy = rules.getCollisionStrategy();
+                final ActorCollisionRules collisionRules = game().rules().actorCollisionRules();
+                toggleProperty(collisionRules.collisionStrategyProperty(), CollisionStrategy.SAME_TILE, CollisionStrategy.CENTER_DISTANCE);
+                final CollisionStrategy strategy = collisionRules.getCollisionStrategy();
                 if (strategy == CollisionStrategy.SAME_TILE) {
                     appContext.ui().shortMessage("Using original Arcade collision strategy (same tile)");
                 } else {

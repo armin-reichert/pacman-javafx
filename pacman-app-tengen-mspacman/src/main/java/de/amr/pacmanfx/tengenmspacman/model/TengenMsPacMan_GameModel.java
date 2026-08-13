@@ -8,7 +8,6 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
-import de.amr.pacmanfx.tengenmspacman.rules.TengenMsPacMan_GameRules;
 
 /**
  * Ms. Pac-Man (Tengen).
@@ -35,23 +34,12 @@ public class TengenMsPacMan_GameModel implements GameModel {
 
     private final WorldMapManager worldMapManager;
 
-    private final TengenMsPacMan_GameRules rules;
-
     public TengenMsPacMan_GameModel() {
         worldMapManager = new TengenMsPacMan_WorldMapManager();
-        rules = new TengenMsPacMan_GameRules();
     }
-
-    // GameModel interface
 
     @Override
     public TengenMsPacMan_WorldMapManager worldMapManager() {
         return (TengenMsPacMan_WorldMapManager) worldMapManager;
     }
-
-    @Override
-    public TengenMsPacMan_GameRules rules() {
-        return rules;
-    }
-
 }

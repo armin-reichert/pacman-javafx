@@ -15,7 +15,6 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
-import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.session.GameSession;
 
 public class LevelShortTestState extends GameState {
@@ -29,14 +28,13 @@ public class LevelShortTestState extends GameState {
     @Override
     public void onEnter(GameContext game) {
         final GamePlay gamePlay = game.gamePlay();
-        final GameModel model = game.model();
         final GameSession session = game.session();
 
         //coinMechanism.setNumCoins(1);
 
-        lastTestedLevelNumber = model.rules().lastLevelNumber() == Integer.MAX_VALUE
+        lastTestedLevelNumber = game.rules().lastLevelNumber() == Integer.MAX_VALUE
             ? 25
-            : model.rules().lastLevelNumber();
+            : game.rules().lastLevelNumber();
 
         gamePlay.buildNormalLevel(game, 1, game.initialLifeCount());
         gamePlay.startLevel(game);

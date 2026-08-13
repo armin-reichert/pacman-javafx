@@ -41,7 +41,7 @@ public class GhostStateSystem {
         state.setFlashing(pac.power().isFading());
         state.setThreatenedByPac(isGhostThreatenedByPac(level, ghost, pac));
 
-        final float speed = game.model().rules().actorSpeedRules().ghostSpeed(game, ghost);
+        final float speed = game.rules().actorSpeedRules().ghostSpeed(game, ghost);
 
         switch (ghost.ghostStateEnum()) {
             case LOCKED -> houseAccessSystem.stayInHouse(game, ghost, speed);

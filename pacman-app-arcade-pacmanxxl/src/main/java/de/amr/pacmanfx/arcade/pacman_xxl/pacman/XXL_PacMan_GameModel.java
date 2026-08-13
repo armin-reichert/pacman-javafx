@@ -17,20 +17,8 @@ import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_WorldMapManager;
  */
 public class XXL_PacMan_GameModel extends ArcadePacMan_GameModel {
 
-    private static final XXL_ScoringRules XXL_SCORING_RULES = new XXL_ScoringRules();
-
-    private static ArcadePacMan_GameRules createRules() {
-        return new ArcadePacMan_GameRules() {
-            @Override
-            public ArcadePacMan_ScoringRules scoringRules() {
-                return XXL_SCORING_RULES;
-            }
-        };
-    }
-
     public XXL_PacMan_GameModel() {
         worldMapManager = XXL_WorldMapManager.instance();
-        rules = createRules();
     }
 
     @Override
