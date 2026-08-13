@@ -96,11 +96,15 @@ public class GameLevel {
     private float pacPowerSeconds;
     private float pacPowerFadingSeconds;
 
+    private final FoodState foodState;
+
     public GameLevel(int number, WorldMap worldMap, HuntingTimerStrategy huntingTimerStrategy, int numFlashes) {
         this.number = requireValidLevelNumber(number);
         this.worldMap = requireNonNull(worldMap);
         this.huntingTimerStrategy = requireNonNull(huntingTimerStrategy);
         this.numFlashes = requireNonNegativeInt(numFlashes);
+
+        foodState = new FoodState(worldMap.foodLayer());
 
         heartbeat = new Pulse(10, Pulse.State.OFF);
         currentBonusIndex = -1;
@@ -109,7 +113,7 @@ public class GameLevel {
     }
 
     public FoodState food() {
-        return worldMap.foodLayer().foodState(); //TODO store directly here and remove from food layer
+        return foodState;
     }
 
     /**

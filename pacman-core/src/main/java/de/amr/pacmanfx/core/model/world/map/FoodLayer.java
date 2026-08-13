@@ -13,26 +13,16 @@ import static de.amr.pacmanfx.core.model.world.map.FoodTile.ENERGIZER;
 
 public final class FoodLayer extends WorldMapLayer {
 
-    //TODO move out of here
-    private FoodState foodState;
-
     private final Set<Vector2i> energizerTiles;
 
     public FoodLayer(int numRows, int numCols) {
         super(numRows, numCols);
         energizerTiles = tilesContaining(ENERGIZER.$).collect(Collectors.toSet());
-        foodState = new FoodState(this);
     }
 
     public FoodLayer(FoodLayer layer) {
         super(layer);
         energizerTiles = tilesContaining(ENERGIZER.$).collect(Collectors.toSet());
-        foodState = new FoodState(layer);
-    }
-
-    //TODO remove
-    public FoodState foodState() {
-        return foodState;
     }
 
     public Set<Vector2i> energizerTiles() { return Collections.unmodifiableSet(energizerTiles); }
