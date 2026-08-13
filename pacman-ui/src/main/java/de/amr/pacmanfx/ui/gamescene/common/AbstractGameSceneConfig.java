@@ -7,7 +7,6 @@ package de.amr.pacmanfx.ui.gamescene.common;
 import de.amr.basics.Named;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.vm.GameUISettingsVM;
 import org.tinylog.Logger;
@@ -63,7 +62,7 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
     }
 
     @Override
-    public final Optional<GameScene> selectGameScene(GameAppContext app, GameModel model) {
+    public final Optional<GameScene> selectGameScene(GameAppContext app) {
         requireNonNull(app);
         final Named Identifier = determineSceneID(app.ui().viewModel(), app.currentGame());
         final GameScene gameScene = scenesByID.computeIfAbsent(Identifier, id -> createGameScene(app, id));

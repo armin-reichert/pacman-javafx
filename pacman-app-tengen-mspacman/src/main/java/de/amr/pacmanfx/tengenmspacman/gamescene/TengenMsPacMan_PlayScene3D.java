@@ -13,7 +13,6 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
 import de.amr.pacmanfx.tengenmspacman.model.BoosterMode;
 import de.amr.pacmanfx.tengenmspacman.model.Difficulty;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
-import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -39,11 +38,6 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     public TengenMsPacMan_PlayScene3D(GameAppContext appContext) {
         super(appContext);
-    }
-
-    @Override
-    public TengenMsPacMan_GameModel gameModel() {
-        return (TengenMsPacMan_GameModel) super.gameModel();
     }
 
     @Override

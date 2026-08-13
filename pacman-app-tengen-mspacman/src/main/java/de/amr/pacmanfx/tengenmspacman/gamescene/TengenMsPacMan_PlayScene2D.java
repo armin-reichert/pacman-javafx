@@ -27,7 +27,6 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.model.MovingGameLevelMessage;
-import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
@@ -54,7 +53,7 @@ import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig.NES_SCREEN_WIDTH;
 import static de.amr.pacmanfx.tengenmspacman.gamescene.SceneDisplay.SCROLLING;
-import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.GAME_OVER_MESSAGE_TEXT;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig.GAME_OVER_MESSAGE_TEXT;
 import static de.amr.pacmanfx.ui.views.ContextMenuSupport.*;
 
 /**
@@ -115,11 +114,6 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
 
     public Optional<LevelCompletedAnimation> optLevelCompletedAnimation() {
         return Optional.ofNullable(levelCompletedAnimation);
-    }
-
-    @Override
-    public TengenMsPacMan_GameModel gameModel() {
-        return (TengenMsPacMan_GameModel) super.gameModel();
     }
 
     @Override

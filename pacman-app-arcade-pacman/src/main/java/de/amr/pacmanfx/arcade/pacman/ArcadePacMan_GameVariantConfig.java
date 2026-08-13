@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.arcade.pacman;
 
+import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_RenderConfig;
 import de.amr.pacmanfx.core.gameplay.GameFlowController;
@@ -26,6 +27,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.tile;
 import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.audioClip;
 import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.mediaPlayer;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
@@ -35,6 +37,13 @@ import static java.util.Objects.requireNonNull;
  * The Arcade Pac‑Man game variant.
  */
 public class ArcadePacMan_GameVariantConfig implements GameVariantConfig {
+
+    /**
+     * Top-left tile of ghost house in original Arcade maps (Pac-Man, Ms. Pac-Man).
+     */
+    public static final Vector2i ARCADE_MAP_HOUSE_MIN_TILE = tile(10, 15);
+
+    public static final Vector2i DEFAULT_BONUS_TILE = new Vector2i(13, 20);
 
     public static GameFlowController createGameFlow() {
         final var gameFlow = new GameFlowController("Arcade Pac-Man Game Flow");

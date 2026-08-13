@@ -12,7 +12,6 @@ import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.event.gameplay.CreditAddedEvent;
 import de.amr.pacmanfx.core.gameplay.GameFlowController;
 import de.amr.pacmanfx.core.gamestate.GameState;
-import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -87,11 +86,6 @@ public abstract class AbstractGameScene
     @Override
     public GameContext game() {
         return app.currentGame();
-    }
-
-    @Override
-    public GameModel gameModel() {
-        return game().model();
     }
 
     @Override

@@ -70,7 +70,7 @@ public abstract class CommonGamePlay implements GamePlay {
         requireNonNull(game);
         final GameSession session = game.session();
 
-        game.model().worldMapManager().loadMapPrototypes();
+        game.worldMapManager().loadMapPrototypes();
 
         initScores(session);
 

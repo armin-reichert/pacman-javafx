@@ -9,7 +9,7 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
-import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel;
+import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_WorldMapManager;
 import de.amr.pacmanfx.tengenmspacman.rules.TengenMsPacMan_GameRules;
 
 import java.util.Set;
@@ -27,7 +27,7 @@ public class TengenMsPacMan_Cartridge {
         TengenMsPacMan_GamePlay::new,
         TengenMsPacMan_GameVariantConfig::createGameFlow,
         TengenMsPacMan_GameRules::new,
-        TengenMsPacMan_GameModel::new,
+        TengenMsPacMan_WorldMapManager::new,
         TengenMsPacMan_GameVariantConfig::new,
         Set.of(
             new GameExtension(TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings::new),

@@ -8,7 +8,6 @@ import de.amr.basics.Named;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.session.GameSession;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -57,10 +56,9 @@ public class GameSceneManager {
     public void updateGameSceneAndForceReload(boolean forceReload) {
         final GameVariantConfig variantConfig = app.gameVariants().currentGameVariant().config();
         final GameContext game = app.currentGame();
-        final GameModel model = game.model();
         final GameSession session = game.session();
         final GameScene currentGameScene = optCurrentGameScene().orElse(null);
-        final GameScene nextGameScene = variantConfig.gameSceneConfig().selectGameScene(app, model).orElse(null);
+        final GameScene nextGameScene = variantConfig.gameSceneConfig().selectGameScene(app).orElse(null);
 
         if (nextGameScene == null) {
             throw new IllegalStateException("Could not determine next game scene");

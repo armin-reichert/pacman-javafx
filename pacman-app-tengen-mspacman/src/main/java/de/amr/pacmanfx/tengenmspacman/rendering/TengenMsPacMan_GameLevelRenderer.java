@@ -26,8 +26,8 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.GAME_OVER_MESSAGE_TEXT;
-import static de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_GameModel.READY_MESSAGE_TEXT;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig.GAME_OVER_MESSAGE_TEXT;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig.READY_MESSAGE_TEXT;
 import static de.amr.pacmanfx.tengenmspacman.sprites.NonArcadeMapsSpriteSheet.MapID.MAP32_ANIMATED;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;

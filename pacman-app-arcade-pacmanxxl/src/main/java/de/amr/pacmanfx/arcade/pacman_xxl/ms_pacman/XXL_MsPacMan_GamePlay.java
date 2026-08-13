@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman;
 
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GamePlay;
+import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_WorldMapManager;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.entities.Pac;
@@ -27,10 +28,10 @@ public class XXL_MsPacMan_GamePlay extends ArcadeMsPacMan_GamePlay {
         requireNonNull(game);
 
         final GameSession session = game.session();
-        final GameSystems sys = game.systems();
-        final XXL_MsPacMan_GameModel xxlModel = (XXL_MsPacMan_GameModel) game.model();
+        final GameSystems systems = game.systems();
+        final XXL_WorldMapManager worldMapManager = (XXL_WorldMapManager) game.worldMapManager();
 
-        xxlModel.worldMapManager().setSelectionMode(WorldMapSelectionMode.NO_CUSTOM_MAPS);
+        worldMapManager.setSelectionMode(WorldMapSelectionMode.NO_CUSTOM_MAPS);
 
         // Select random (standard) level with different map and map color scheme for each choice
         final int levelNumber = DEMO_LEVEL_NUMBERS[randomInt(0, DEMO_LEVEL_NUMBERS.length)];
@@ -41,8 +42,8 @@ public class XXL_MsPacMan_GamePlay extends ArcadeMsPacMan_GamePlay {
         pac.cheats().setUsingAutopilot(true);
 
         final var steering = new RuleGuidedPacSteering(
-            sys.worldNavigator(),
-            sys.pacWorldMovementPolicy()
+            systems.worldNavigator(),
+            systems.pacWorldMovementPolicy()
         );
         pac.autoSteering().setSteering(steering);
 

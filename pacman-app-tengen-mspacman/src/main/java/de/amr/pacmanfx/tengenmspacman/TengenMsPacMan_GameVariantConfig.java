@@ -6,11 +6,15 @@ package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.gameplay.GameFlowController;
+import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.config.TengenJsonConfigLoader;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_GameSceneConfig;
+import de.amr.pacmanfx.tengenmspacman.model.BoosterMode;
+import de.amr.pacmanfx.tengenmspacman.model.Difficulty;
+import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -34,6 +38,15 @@ import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.mediaPlayer;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_GameVariantConfig implements GameVariantConfig {
+
+    public static final int DEFAULT_START_LEVEL = 1;
+    public static final int DEFAULT_NUM_CONTINUES = 4;
+    public static final BoosterMode DEFAULT_PAC_BOOSTER = BoosterMode.BOOSTER_OFF;
+    public static final Difficulty DEFAULT_DIFFICULTY = Difficulty.NORMAL;
+    public static final MapCategory DEFAULT_MAP_CATEGORY = MapCategory.ARCADE;
+    public static final String GAME_OVER_MESSAGE_TEXT = "GAME OVER";
+    public static final String READY_MESSAGE_TEXT = "READY!";
+    public static final Vector2i HOUSE_MIN_TILE = WorldMap.tile(10, 15);
 
     public static GameFlowController createGameFlow() {
         final var gameFlow = new GameFlowController("Tengen Ms. Pac-Man Game Flow");

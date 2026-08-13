@@ -6,7 +6,6 @@ package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
-import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_GameModel;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.arcade.pacman.rules.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.core.GameContext;
@@ -23,7 +22,6 @@ import de.amr.pacmanfx.core.gameplay.ArcadeHouseGateKeeper;
 import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
-import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.HUDState;
 import de.amr.pacmanfx.core.model.rules.HuntingTimer;
@@ -108,12 +106,11 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         final WorldNavigationSystem navigator = game.systems().worldNavigator();
 
         final GameSession session = game.session();
-        final GameModel model = game.model();
-        final WorldMap worldMap = model.worldMapManager().supplyWorldMap(levelNumber);
+        final WorldMap worldMap = game.worldMapManager().supplyWorldMap(levelNumber);
         final TerrainLayer terrain = worldMap.terrainLayer();
 
         final Vector2i houseMinTile = terrain.getTilePropertyOrDefault(
-            WorldMapPropertyName.POS_HOUSE_MIN_TILE, ArcadePacMan_GameModel.ARCADE_MAP_HOUSE_MIN_TILE);
+            WorldMapPropertyName.POS_HOUSE_MIN_TILE, ArcadePacMan_GameVariantConfig.ARCADE_MAP_HOUSE_MIN_TILE);
         terrain.propertyMap().put(WorldMapPropertyName.POS_HOUSE_MIN_TILE,  String.valueOf(houseMinTile));
 
         final LevelData levelData = ArcadePacMan_GameRules.levelData(levelNumber);
@@ -267,7 +264,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         final int value = game.rules().scoringRules().pointsForBonus(symbolCode);
         final float edibleSec = randomFloat(9, 10);
         final Vector2i tile = level.worldMap().terrainLayer().getTilePropertyOrDefault(
-            WorldMapPropertyName.POS_BONUS, ArcadePacMan_GameModel.DEFAULT_BONUS_TILE);
+            WorldMapPropertyName.POS_BONUS, ArcadePacMan_GameVariantConfig.DEFAULT_BONUS_TILE);
 
         final Bonus bonus = Bonus.createStaticBonus(symbolCode, value);
         bonus.pos().set(WorldMap.halfTileRightOf(tile));

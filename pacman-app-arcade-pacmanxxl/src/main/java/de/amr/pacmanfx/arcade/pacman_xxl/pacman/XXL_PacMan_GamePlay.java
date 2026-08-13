@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl.pacman;
 
 
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GamePlay;
+import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_WorldMapManager;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.entities.Pac;
@@ -29,9 +30,9 @@ public class XXL_PacMan_GamePlay extends ArcadePacMan_GamePlay {
 
         final GameSession session = game.session();
         final GameSystems sys = game.systems();
-        final XXL_PacMan_GameModel xxlModel = (XXL_PacMan_GameModel) game.model();
+        final XXL_WorldMapManager worldMapManager = (XXL_WorldMapManager) game.worldMapManager();
 
-        xxlModel.worldMapManager().setSelectionMode(WorldMapSelectionMode.NO_CUSTOM_MAPS);
+        worldMapManager.setSelectionMode(WorldMapSelectionMode.NO_CUSTOM_MAPS);
 
         // Select random (standard) level with different map and map color scheme for each choice
         final int levelNumber = DEMOLEVEL_NUMBERS[randomInt(0, DEMOLEVEL_NUMBERS.length)];

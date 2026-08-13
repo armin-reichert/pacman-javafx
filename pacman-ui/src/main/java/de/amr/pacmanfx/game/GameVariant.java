@@ -9,8 +9,8 @@ import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.gameplay.GameFlowController;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.model.GameCheats;
-import de.amr.pacmanfx.core.model.GameModel;
 import de.amr.pacmanfx.core.model.rules.GameRules;
+import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import org.tinylog.Logger;
 
@@ -24,7 +24,7 @@ public class GameVariant {
     private final GamePlay gamePlay;
     private final GameFlowController gameFlow;
     private final GameRules gameRules;
-    private final GameModel gameModel;
+    private final WorldMapManager worldMapManager;
     private final Supplier<GameCheats> cheatsFactory;
     private final GameVariantConfig config;
     private final Set<GameExtension> extensions;
@@ -37,7 +37,7 @@ public class GameVariant {
         gamePlay = cartridge.gamePlayFactory().get();
         gameFlow = cartridge.gameFlowFactory().get();
         gameRules = cartridge.gameRulesFactory().get();
-        gameModel = cartridge.gameModelFactory().get();
+        worldMapManager = cartridge.worldMapManagerFactory().get();
         cheatsFactory = GameCheats::new;
         config = cartridge.uiConfigFactory().get();
         extensions = cartridge.gameExtensions();
@@ -70,8 +70,8 @@ public class GameVariant {
         return gameRules;
     }
 
-    public GameModel gameModel() {
-        return gameModel;
+    public WorldMapManager worldMapManager() {
+        return worldMapManager;
     }
 
     public Supplier<GameCheats> cheatsFactory() {
