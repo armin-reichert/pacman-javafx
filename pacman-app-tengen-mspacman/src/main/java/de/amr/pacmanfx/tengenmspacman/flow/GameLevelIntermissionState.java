@@ -25,9 +25,9 @@ public class GameLevelIntermissionState extends GameState {
     public void onEnter(GameContext game) {
         final GameSession session = game.session();
         final GameLevel level = session.assertLevel();
-        final OptionalInt cutSceneNumber = game.rules().cutSceneAfterLevel(level.number());
+        final OptionalInt cutSceneNumber = game.variantConfig().rules().cutSceneAfterLevel(level.number());
         final boolean isLastCutScene = cutSceneNumber.isPresent()
-            && cutSceneNumber.getAsInt() == game.rules().lastCutSceneNumber();
+            && cutSceneNumber.getAsInt() == game.variantConfig().rules().lastCutSceneNumber();
 
         if (isLastCutScene) {
             session.hud().hide();
@@ -53,7 +53,7 @@ public class GameLevelIntermissionState extends GameState {
 
     @Override
     public void onExit(GameContext game) {
-        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game.gamePlay();
+        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game.variantConfig().gamePlay();
         final GameSession session = game.session();
         final HUDState hudState = session.hud();
         if (gamePlay.mapCategory(session) == MapCategory.ARCADE) {

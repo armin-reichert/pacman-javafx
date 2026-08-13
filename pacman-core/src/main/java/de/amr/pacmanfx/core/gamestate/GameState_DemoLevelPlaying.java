@@ -31,15 +31,15 @@ public final class GameState_DemoLevelPlaying extends GameState {
     @Override
     public void onEnter(GameContext game) {
         final GameSession session = game.session();
-        session.setLevel(game.gamePlay().buildDemoLevel(game));
+        session.setLevel(game.variantConfig().gamePlay().buildDemoLevel(game));
         session.hud().showCredit().hideLivesCounter();
         game.eventManager().publishGameEvent(new LevelCreatedEvent(session.assertLevel()));
     }
 
     @Override
     public void onUpdate(GameContext game) {
-        final GameSystems systems = game.systems();
-        final GamePlay gamePlay = game.gamePlay();
+        final GameSystems systems = game.variantConfig().systems();
+        final GamePlay gamePlay = game.variantConfig().gamePlay();
         final GameSession session = game.session();
         final GameLevel level = session.assertLevel();
         final Pac pac = level.entities().pac();
@@ -82,7 +82,7 @@ public final class GameState_DemoLevelPlaying extends GameState {
     }
 
     private CommonGameStateID computeNextState(GameContext game, GameLevel level) {
-        if (game.rules().isLevelCompleted(level)) {
+        if (game.variantConfig().rules().isLevelCompleted(level)) {
             return CommonGameStateID.GAME_INTRO;
         }
         else if (game.session().thisFrame().huntingStep().pacKilled()) {

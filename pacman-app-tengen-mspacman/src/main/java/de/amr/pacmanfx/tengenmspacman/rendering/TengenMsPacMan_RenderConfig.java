@@ -140,7 +140,7 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
             case ORANGE_GHOST_POKEY -> factory.createOrangeGhost();
         };
 
-        final SpriteAnimSystem animSystem = game.systems().spriteAnim();
+        final SpriteAnimSystem animSystem = game.variantConfig().systems().spriteAnim();
         animSystem.setAnimations(ghost, createGhostAnimations(container, personality));
         animSystem.select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);
 

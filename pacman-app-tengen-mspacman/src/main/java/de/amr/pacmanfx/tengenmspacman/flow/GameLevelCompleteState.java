@@ -19,7 +19,7 @@ public class GameLevelCompleteState extends GameState {
 
     @Override
     public void onEnter(GameContext game) {
-        game.gamePlay().onLevelCompleted(game, game.session().assertLevel());
+        game.variantConfig().gamePlay().onLevelCompleted(game, game.session().assertLevel());
         waitForTimeout(); // Wait for UI to trigger timeout
     }
 
@@ -43,7 +43,7 @@ public class GameLevelCompleteState extends GameState {
         if (session.isAttractMode()) { // Just in case: if demo level is completed, go back to intro scene
             return CommonGameStateID.GAME_INTRO;
         }
-        final boolean cutSceneFollows = game.rules().cutSceneAfterLevel(level.number()).isPresent();
+        final boolean cutSceneFollows = game.variantConfig().rules().cutSceneAfterLevel(level.number()).isPresent();
         if (cutSceneFollows && cutScenesEnabled) {
             return CommonGameStateID.GAME_LEVEL_INTERMISSION;
         }

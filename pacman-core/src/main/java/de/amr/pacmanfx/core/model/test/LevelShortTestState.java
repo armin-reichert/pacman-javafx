@@ -27,16 +27,16 @@ public class LevelShortTestState extends GameState {
 
     @Override
     public void onEnter(GameContext game) {
-        final GamePlay gamePlay = game.gamePlay();
+        final GamePlay gamePlay = game.variantConfig().gamePlay();
         final GameSession session = game.session();
 
         //coinMechanism.setNumCoins(1);
 
-        lastTestedLevelNumber = game.rules().lastLevelNumber() == Integer.MAX_VALUE
+        lastTestedLevelNumber = game.variantConfig().rules().lastLevelNumber() == Integer.MAX_VALUE
             ? 25
-            : game.rules().lastLevelNumber();
+            : game.variantConfig().rules().lastLevelNumber();
 
-        gamePlay.buildNormalLevel(game, 1, game.gameVariantConfig().initialLifeCount());
+        gamePlay.buildNormalLevel(game, 1, game.variantConfig().initialLifeCount());
         gamePlay.startLevel(game);
 
         final GameLevel level = session.assertLevel();
@@ -50,9 +50,9 @@ public class LevelShortTestState extends GameState {
 
     @Override
     public void onUpdate(GameContext game) {
-        final GameSystems systems = game.systems();
+        final GameSystems systems = game.variantConfig().systems();
         final GameSession session = game.session();
-        final GamePlay gamePlay = game.gamePlay();
+        final GamePlay gamePlay = game.variantConfig().gamePlay();
         final GameLevel level = session.assertLevel();
 
         final float START = 1.0f;

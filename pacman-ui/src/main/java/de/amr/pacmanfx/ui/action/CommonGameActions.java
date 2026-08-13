@@ -54,7 +54,7 @@ public final class CommonGameActions {
             @Override
             public void execute(GameAppContext app) {
                 final GameContext game = app.game();
-                final ActorCollisionRules collisionRules = game.rules().actorCollisionRules();
+                final ActorCollisionRules collisionRules = game.variantConfig().rules().actorCollisionRules();
                 toggleProperty(collisionRules.collisionStrategyProperty(), CollisionStrategy.SAME_TILE, CollisionStrategy.CENTER_DISTANCE);
                 final CollisionStrategy strategy = collisionRules.getCollisionStrategy();
                 if (strategy == CollisionStrategy.SAME_TILE) {

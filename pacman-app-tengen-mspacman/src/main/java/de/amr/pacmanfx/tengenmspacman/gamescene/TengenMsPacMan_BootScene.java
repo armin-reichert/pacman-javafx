@@ -55,7 +55,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
 
     @Override
     public void onTick(GameContext game) {
-        final GameSystems sys = game.systems();
+        final GameSystems sys = game.variantConfig().systems();
 
         final GameState gameState = gameState();
         final int stateTick = (int) gameState.timer().tickCount();

@@ -21,10 +21,10 @@ public class GameOrLevelStartingState extends GameState {
 
     @Override
     public void onEnter(GameContext game) {
-        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game.gamePlay();
+        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game.variantConfig().gamePlay();
         final GameSession session = game.session();
         final HUDState hudState = session.hud();
-        final TengenMsPacMan_GameRules rules = (TengenMsPacMan_GameRules) game.rules();
+        final TengenMsPacMan_GameRules rules = (TengenMsPacMan_GameRules) game.variantConfig().rules();
 
         hudState.hideCredit().showScore().showLevelCounter().showLivesCounter().show();
 
@@ -39,7 +39,7 @@ public class GameOrLevelStartingState extends GameState {
     }
 
     private CommonGameStateID computeNextState(GameContext game) {
-        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game.gamePlay();
+        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game.variantConfig().gamePlay();
         if (game.session().isPlaying()) {
             return CommonGameStateID.GAME_LEVEL_CONTINUE;
         }

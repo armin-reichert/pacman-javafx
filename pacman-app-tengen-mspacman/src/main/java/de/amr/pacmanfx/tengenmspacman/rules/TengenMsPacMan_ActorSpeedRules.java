@@ -46,7 +46,7 @@ public class TengenMsPacMan_ActorSpeedRules implements ActorSpeedRules {
         if (level == null) {
             return 0;
         }
-        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game.gamePlay();
+        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game.variantConfig().gamePlay();
         final GameSession session = game.session();
         final BoosterMode boosterMode = gamePlay.boosterMode(session);
 

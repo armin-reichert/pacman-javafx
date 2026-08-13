@@ -87,7 +87,7 @@ class XXL_ChaseAnimation {
         requireNonNull(canvas);
         requireNonNull(container);
 
-        final GameSystems sys = game.systems();
+        final GameSystems sys = game.variantConfig().systems();
 
         timeline.getKeyFrames().setAll(new KeyFrame(FRAME_TIME, _ -> update(sys)));
 

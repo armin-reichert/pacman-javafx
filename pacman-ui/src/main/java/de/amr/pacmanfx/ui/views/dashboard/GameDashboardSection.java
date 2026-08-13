@@ -49,7 +49,7 @@ public class GameDashboardSection extends DashboardSection implements DashboardS
     }
 
     protected Supplier<String> fnGameRulesInfo(GameAppContext app, Function<GameRules, String> fnInfo) {
-        return () -> fnInfo.apply(app.game().rules());
+        return () -> fnInfo.apply(app.game().variantConfig().rules());
     }
 
     protected void addDynamicInfo(String label, Supplier<?> infoSupplier) {

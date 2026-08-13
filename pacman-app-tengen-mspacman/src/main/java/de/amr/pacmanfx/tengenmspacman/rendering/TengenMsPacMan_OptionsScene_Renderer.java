@@ -68,7 +68,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
         final GameContext game = gameScene2D.game();
         final GameSession session = game.session();
 
-        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game.gamePlay();
+        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game.variantConfig().gamePlay();
         final var scene = (TengenMsPacMan_OptionsScene) gameScene2D;
 
         clearCanvas();

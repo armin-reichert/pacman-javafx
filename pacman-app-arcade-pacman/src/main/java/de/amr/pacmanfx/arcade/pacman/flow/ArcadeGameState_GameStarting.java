@@ -26,7 +26,7 @@ public class ArcadeGameState_GameStarting extends GameState {
 
     @Override
     public void onEnter(GameContext game) {
-        game.gamePlay().buildNormalLevel(game, 1, game.gameVariantConfig().initialLifeCount());
+        game.variantConfig().gamePlay().buildNormalLevel(game, 1, game.variantConfig().initialLifeCount());
 
         game.session().hud().hideCredit().showLivesCounter();
         ScoreSystem.enableScore(game.session().highScore(), true);
@@ -41,7 +41,7 @@ public class ArcadeGameState_GameStarting extends GameState {
         final long tick = timer().tickCount();
 
         if (tick == TICK_NEW_GAME_START_LEVEL) {
-            game.gamePlay().startLevel(game);
+            game.variantConfig().gamePlay().startLevel(game);
             // Note: This event is very important because it triggers the creation of the actor animations!
             game.eventManager().publishGameEvent(new LevelStartedEvent(level));
         }

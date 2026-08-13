@@ -185,7 +185,7 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
         ui.window().mainScene().connect(game.session());
         ui.views().selectGamePlayView();
 
-        game.gamePlay().onSessionStart(game);
+        game.variantConfig().gamePlay().onSessionStart(game);
         GameSimulation.start(this);
     }
 

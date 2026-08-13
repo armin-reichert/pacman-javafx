@@ -6,6 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.gamescene;
 import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
@@ -164,9 +165,10 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
     }
     
     private void playCutScene(GameContext game, long tick) {
-        final MovementSystem motor = game.systems().motor();
-        final WorldNavigationSystem navigator = game.systems().worldNavigator();
-        final SpriteAnimSystem animSystem = game.systems().spriteAnim();
+        final GameSystems systems = game.variantConfig().systems();
+        final MovementSystem motor = systems.motor();
+        final WorldNavigationSystem navigator = systems.worldNavigator();
+        final SpriteAnimSystem animSystem = systems.spriteAnim();
 
         letActorsMove(motor);
         

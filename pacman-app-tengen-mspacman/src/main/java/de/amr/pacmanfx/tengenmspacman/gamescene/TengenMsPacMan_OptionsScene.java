@@ -71,7 +71,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene2D {
 
     @Override
     public void onActivate() {
-        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().gamePlay();
+        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().variantConfig().gamePlay();
         final GameSession session = game().session();
         session.hud().hide();
 
@@ -146,7 +146,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene2D {
     }
 
     private void setPrevStartLevelValue() {
-        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().gamePlay();
+        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().variantConfig().gamePlay();
         final GameSession session = game().session();
 
         int current = gamePlay.startLevelNumber(session);
@@ -157,7 +157,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene2D {
     }
 
     private void setNextStartLevelValue() {
-        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().gamePlay();
+        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().variantConfig().gamePlay();
         final GameSession session = game().session();
 
         int current = gamePlay.startLevelNumber(session);
@@ -168,7 +168,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene2D {
     }
 
     private void setPrevMapCategoryValue(GameSession session) {
-        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().gamePlay();
+        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().variantConfig().gamePlay();
 
         final MapCategory category = gamePlay.mapCategory(session);
         final var values = MapCategory.values();
@@ -180,7 +180,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene2D {
     }
 
     private void setNextMapCategoryValue(GameSession session) {
-        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().gamePlay();
+        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().variantConfig().gamePlay();
 
         final MapCategory category = gamePlay.mapCategory(session);
         var values = MapCategory.values();
@@ -192,7 +192,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene2D {
     }
 
     private void setPrevDifficultyValue(GameSession session) {
-        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().gamePlay();
+        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().variantConfig().gamePlay();
 
         final Difficulty difficulty = gamePlay.difficulty(session);
         final var values = Difficulty.values();
@@ -204,7 +204,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene2D {
     }
 
     private void setNextDifficultyValue(GameSession session) {
-        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().gamePlay();
+        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().variantConfig().gamePlay();
 
         final Difficulty difficulty = gamePlay.difficulty(session);
         final var values = Difficulty.values();
@@ -216,7 +216,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene2D {
     }
 
     private void setPrevPacBoosterValue(GameSession session) {
-        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().gamePlay();
+        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().variantConfig().gamePlay();
 
         final BoosterMode boosterMode = gamePlay.boosterMode(session);
         final var values = BoosterMode.values();
@@ -227,7 +227,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene2D {
     }
 
     private void setNextPacBoosterValue(GameSession session) {
-        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().gamePlay();
+        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().variantConfig().gamePlay();
 
         final BoosterMode boosterMode = gamePlay.boosterMode(session);
         final var values = BoosterMode.values();

@@ -29,8 +29,8 @@ public class XXL_PacMan_GamePlay extends ArcadePacMan_GamePlay {
         requireNonNull(game);
 
         final GameSession session = game.session();
-        final GameSystems sys = game.systems();
-        final XXL_WorldMapManager worldMapManager = (XXL_WorldMapManager) game.worldMapManager();
+        final GameSystems sys = game.variantConfig().systems();
+        final XXL_WorldMapManager worldMapManager = (XXL_WorldMapManager) game.variantConfig().worldMapManager();
 
         worldMapManager.setSelectionMode(WorldMapSelectionMode.NO_CUSTOM_MAPS);
 

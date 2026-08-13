@@ -28,11 +28,11 @@ public class ArcadeGameState_LevelContinue extends GameState {
         final GameSession session = game.session();
         final GameLevel level = session.assertLevel();
 
-        game.gamePlay().prepareLevelForPlaying(game);
+        game.variantConfig().gamePlay().prepareLevelForPlaying(game);
         level.entities().pac().show();
         level.entities().ghosts().forEach(GameEntity::show);
 
-        game.gamePlay().showLevelMessage(game, level, GameLevelMessageType.READY);
+        game.variantConfig().gamePlay().showLevelMessage(game, level, GameLevelMessageType.READY);
         session.hud().hideCredit().showLivesCounter();
     }
 

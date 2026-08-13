@@ -24,7 +24,7 @@ public final class GameState_PlayingLevel extends GameState {
 
     @Override
     public void onEnter(GameContext game) {
-        final GameSystems systems = game.systems();
+        final GameSystems systems = game.variantConfig().systems();
         final GameLevel level = game.session().assertLevel();
         final Pac pac = level.entities().pac();
 
@@ -47,14 +47,14 @@ public final class GameState_PlayingLevel extends GameState {
         final GameSession session = game.session();
         final GameLevel level = session.assertLevel();
 
-        game.gamePlay().hunt(game, level);
+        game.variantConfig().gamePlay().hunt(game, level);
 
         final HuntingStep huntingStep = game.session().thisFrame().huntingStep();
         logHuntingStepResult(huntingStep);
 
         session.cheats().update(game);
 
-        if (game.rules().isLevelCompleted(level)) {
+        if (game.variantConfig().rules().isLevelCompleted(level)) {
             session.gameFlow().enterState(game, CommonGameStateID.GAME_LEVEL_COMPLETE);
         }
         else if (huntingStep.pacKilled()) {

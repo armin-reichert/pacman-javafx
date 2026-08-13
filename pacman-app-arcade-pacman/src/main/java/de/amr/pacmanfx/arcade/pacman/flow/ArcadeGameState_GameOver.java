@@ -32,7 +32,7 @@ public class ArcadeGameState_GameOver extends GameState {
             throw new RuntimeException(e);
         }
 
-        game.gamePlay().showLevelMessage(game, level, GameLevelMessageType.GAME_OVER);
+        game.variantConfig().gamePlay().showLevelMessage(game, level, GameLevelMessageType.GAME_OVER);
 
         // In case, entering game over state was forced by user:
         LivesCounterSystem.setNumLives(session.livesCounter(), 0);

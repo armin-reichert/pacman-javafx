@@ -50,9 +50,9 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
 
         final GameSession session = game.session();
 
-        final WorldNavigationSystem navigator = game.systems().worldNavigator();
+        final WorldNavigationSystem navigator = game.variantConfig().systems().worldNavigator();
 
-        final WorldMap worldMap = game.worldMapManager().supplyWorldMap(levelNumber);
+        final WorldMap worldMap = game.variantConfig().worldMapManager().supplyWorldMap(levelNumber);
         final TerrainLayer terrain = worldMap.terrainLayer();
 
         final Vector2i houseMinTile = terrain.getTilePropertyOrDefault(
@@ -61,7 +61,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
 
         final int numFlashes = ArcadePacMan_GameRules.levelData(levelNumber).numFlashes();
 
-        final HuntingTimer huntingTimer = new HuntingTimer("Arcade Ms. Pac-Man Hunting Timer", game.rules().numHuntingPhases());
+        final HuntingTimer huntingTimer = new HuntingTimer("Arcade Ms. Pac-Man Hunting Timer", game.variantConfig().rules().numHuntingPhases());
 
         final GameLevel level = new GameLevel(levelNumber, worldMap, huntingTimer, numFlashes);
         level.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
@@ -81,11 +81,11 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         level.setPacPowerSeconds(levelData.secPacPower());
         level.setPacPowerFadingSeconds(0.5f * numFlashes); //TODO correct?
 
-        createAndSetMsPacMan(game.systems(), level);
+        createAndSetMsPacMan(game.variantConfig().systems(), level);
         createAndSetGhosts(level);
 
-        level.setBonusSymbolCode(0, game.rules().selectBonusSymbolCode(level.number(), 0));
-        level.setBonusSymbolCode(1, game.rules().selectBonusSymbolCode(level.number(), 1));
+        level.setBonusSymbolCode(0, game.variantConfig().rules().selectBonusSymbolCode(level.number(), 0));
+        level.setBonusSymbolCode(1, game.variantConfig().rules().selectBonusSymbolCode(level.number(), 1));
 
         /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
          * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
@@ -146,7 +146,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         requireNonNull(game);
 
         final GameSession session = game.session();
-        final GameSystems systems = game.systems();
+        final GameSystems systems = game.variantConfig().systems();
 
         final GameLevel level = createLevel(game, 1);
 
@@ -186,7 +186,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         requireNonNull(game);
         requireNonNull(level);
 
-        final GameSystems sys = game.systems();
+        final GameSystems sys = game.variantConfig().systems();
 
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
@@ -204,7 +204,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         level.selectNextBonus();
 
         final int symbolCode = level.bonusSymbolCode(level.currentBonusIndex());
-        final int value = game.rules().scoringRules().pointsForBonus(symbolCode);
+        final int value = game.variantConfig().rules().scoringRules().pointsForBonus(symbolCode);
         Bonus bonus;
         if (terrain.horizontalPortals().isEmpty()) {
             bonus = Bonus.createStaticBonus(symbolCode, value);
@@ -214,7 +214,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         } else {
             bonus = Bonus.createMovingBonus(symbolCode, value);
             computeBonusRoute(game, bonus, terrain, house);
-            final float speed = game.rules().actorSpeedRules().bonusSpeed(game, level);
+            final float speed = game.variantConfig().rules().actorSpeedRules().bonusSpeed(game, level);
             sys.bonusState().showEdibleAndStartWandering(bonus, speed);
         }
 
@@ -268,7 +268,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         final Vector2i backyard = houseEntry.plus(0, house.sizeInTiles().y() + 1);
         final List<Vector2i> route = Stream.of(entryTile, houseEntry, backyard, houseEntry, exitTile).toList();
 
-        game.systems().bonusMoveAndJump().setRoute(bonus, route, leftToRight);
+        game.variantConfig().systems().bonusMoveAndJump().setRoute(bonus, route, leftToRight);
         Logger.info("Moving bonus route: {} (crossing {})", route, leftToRight ? "left to right" : "right to left");
     }
 }

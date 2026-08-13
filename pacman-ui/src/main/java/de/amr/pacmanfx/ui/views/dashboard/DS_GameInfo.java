@@ -100,7 +100,7 @@ public class DS_GameInfo extends GameDashboardSection {
         BiFunction<GameLevel, ActorSpeedRules, String> fnInfo) {
         return () -> {
             final GameContext game = appContext.game();
-            final ActorSpeedRules speedRules = game.rules().actorSpeedRules();
+            final ActorSpeedRules speedRules = game.variantConfig().rules().actorSpeedRules();
             return game.session().optLevel()
                 .map(level -> fnInfo.apply(level, speedRules)).orElse(NO_INFO);
         };

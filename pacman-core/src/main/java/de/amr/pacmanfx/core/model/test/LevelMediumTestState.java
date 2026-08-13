@@ -36,17 +36,17 @@ public class LevelMediumTestState extends GameState {
 
     @Override
     public void onEnter(GameContext game) {
-        final GamePlay gamePlay = game.gamePlay();
+        final GamePlay gamePlay = game.variantConfig().gamePlay();
         final GameEventManager eventManager = game.eventManager();
         final GameSession session = game.session();
 
-        lastTestedLevelNumber = game.rules().lastLevelNumber() == Integer.MAX_VALUE
+        lastTestedLevelNumber = game.variantConfig().rules().lastLevelNumber() == Integer.MAX_VALUE
             ? 25
-            : game.rules().lastLevelNumber();
+            : game.variantConfig().rules().lastLevelNumber();
 
         timer().restartSeconds(TEST_DURATION_SEC);
 
-        gamePlay.buildNormalLevel(game, 1, game.gameVariantConfig().initialLifeCount());
+        gamePlay.buildNormalLevel(game, 1, game.variantConfig().initialLifeCount());
         gamePlay.startLevel(game);
         configureLevelForTest(game);
 
@@ -67,14 +67,14 @@ public class LevelMediumTestState extends GameState {
             }
             else {
                 // Test next level
-                game.gamePlay().startNextLevel(game);
+                game.variantConfig().gamePlay().startNextLevel(game);
                 configureLevelForTest(game);
                 timer().restartSeconds(TEST_DURATION_SEC);
             }
         }
         else {
-            game.gamePlay().hunt(game, level);
-            if (game.rules().isLevelCompleted(level)) {
+            game.variantConfig().gamePlay().hunt(game, level);
+            if (game.variantConfig().rules().isLevelCompleted(level)) {
                 game.session().gameFlow().enterState(game, CommonGameStateID.GAME_INTRO);
             }
             else if (game.session().thisFrame().huntingStep().pacKilled()) {
@@ -92,7 +92,7 @@ public class LevelMediumTestState extends GameState {
     }
 
     private void configureLevelForTest(GameContext game) {
-        final GameSystems sys = game.systems();
+        final GameSystems systems = game.variantConfig().systems();
         final GameSession session = game.session();
         final GameLevel level = session.assertLevel();
         final Pac pac = level.entities().pac();
@@ -102,12 +102,12 @@ public class LevelMediumTestState extends GameState {
         pac.cheats().usingAutopilotProperty().unbind();
         pac.cheats().setUsingAutopilot(true);
 
-        sys.spriteAnim().playSelected(pac);
+        systems.spriteAnim().playSelected(pac);
 
         final List<Ghost> ghosts = level.entities().ghosts();
         ghosts.forEach(ghost -> {
             ghost.show();
-            sys.spriteAnim().playSelected(ghost);
+            systems.spriteAnim().playSelected(ghost);
         });
 
         session.hud().show();

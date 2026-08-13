@@ -176,7 +176,7 @@ public final class ArcadeHouseGateKeeper {
         // check Pac-Man starving ticks
         final GameLevel level = game.session().assertLevel();
         final Pac pac = level.entities().pac();
-        final PacDigestionSystem digestionSystem = game.systems().pacDigestion();
+        final PacDigestionSystem digestionSystem = game.variantConfig().systems().pacDigestion();
         if (pac.digestion().starvingTicks() >= pacStarvingLimit) {
             digestionSystem.endStarving(pac);
             return Optional.of(String.format("%s reached starving limit (%d ticks)", pac.name(), pacStarvingLimit));
@@ -215,7 +215,7 @@ public final class ArcadeHouseGateKeeper {
     public void unlockGhostIfPossible(GameContext game) {
         requireNonNull(game);
 
-        final GameSystems sys = game.systems();
+        final GameSystems systems = game.variantConfig().systems();
 
         final GameLevel level = game.session().assertLevel();
         final House house = level.entities().theOne(House.class);
@@ -224,17 +224,17 @@ public final class ArcadeHouseGateKeeper {
         if (blinky.ghostStateEnum() == GhostState.LOCKED) {
             if (house.isVisitedBy(blinky)) {
                 // Leave house immediately again after being eaten
-                sys.worldNavigator().setMoveDir(blinky, Direction.UP);
-                sys.worldNavigator().setWishDir(blinky, Direction.UP);
+                systems.worldNavigator().setMoveDir(blinky, Direction.UP);
+                systems.worldNavigator().setWishDir(blinky, Direction.UP);
 
-                sys.ghostState().changeState(blinky, GhostState.LEAVING_HOUSE);
+                systems.ghostState().changeState(blinky, GhostState.LEAVING_HOUSE);
             }
             else {
                 // Start hunting towards west direction
-                sys.worldNavigator().setMoveDir(blinky, Direction.LEFT);
-                sys.worldNavigator().setWishDir(blinky, Direction.LEFT);
+                systems.worldNavigator().setMoveDir(blinky, Direction.LEFT);
+                systems.worldNavigator().setWishDir(blinky, Direction.LEFT);
 
-                sys.ghostState().changeState(blinky, GhostState.HUNTING_PAC);
+                systems.ghostState().changeState(blinky, GhostState.HUNTING_PAC);
             }
         }
         Stream.of(GhostPersonality.PINK_GHOST_SPEEDY, GhostPersonality.CYAN_GHOST_BASHFUL, GhostPersonality.ORANGE_GHOST_POKEY)
@@ -242,9 +242,9 @@ public final class ArcadeHouseGateKeeper {
             .filter(ghost -> ghost.ghostStateEnum() == GhostState.LOCKED)
             .findFirst()
             .ifPresent(prisoner -> checkReleaseOfGhost(game, prisoner).ifPresent(_ -> {
-                sys.worldNavigator().setMoveDir(prisoner, Direction.UP);
-                sys.worldNavigator().setWishDir(prisoner, Direction.UP);
-                sys.ghostState().changeState(prisoner, GhostState.LEAVING_HOUSE);
+                systems.worldNavigator().setMoveDir(prisoner, Direction.UP);
+                systems.worldNavigator().setWishDir(prisoner, Direction.UP);
+                systems.ghostState().changeState(prisoner, GhostState.LEAVING_HOUSE);
                 ghostReleasedCallback.accept(level, prisoner);
             }));
     }

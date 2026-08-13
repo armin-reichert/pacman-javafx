@@ -103,10 +103,10 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         requireNonNull(game);
         requireValidLevelNumber(levelNumber);
 
-        final WorldNavigationSystem navigator = game.systems().worldNavigator();
+        final WorldNavigationSystem navigator = game.variantConfig().systems().worldNavigator();
 
         final GameSession session = game.session();
-        final WorldMap worldMap = game.worldMapManager().supplyWorldMap(levelNumber);
+        final WorldMap worldMap = game.variantConfig().worldMapManager().supplyWorldMap(levelNumber);
         final TerrainLayer terrain = worldMap.terrainLayer();
 
         final Vector2i houseMinTile = terrain.getTilePropertyOrDefault(
@@ -114,7 +114,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         terrain.propertyMap().put(WorldMapPropertyName.POS_HOUSE_MIN_TILE,  String.valueOf(houseMinTile));
 
         final LevelData levelData = ArcadePacMan_GameRules.levelData(levelNumber);
-        final HuntingTimer huntingTimer = new HuntingTimer("Arcade Pac-Man Hunting Timer", game.rules().numHuntingPhases());
+        final HuntingTimer huntingTimer = new HuntingTimer("Arcade Pac-Man Hunting Timer", game.variantConfig().rules().numHuntingPhases());
 
         final GameLevel level = new GameLevel(levelNumber, worldMap, huntingTimer, levelData.numFlashes());
 
@@ -135,11 +135,11 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         level.setPacPowerSeconds(levelData.secPacPower());
         level.setPacPowerFadingSeconds(0.5f * levelData.numFlashes()); //TODO correct?
 
-        createAndSetPacMan(game.systems(), level);
+        createAndSetPacMan(game.variantConfig().systems(), level);
         createAndSetGhosts(level);
 
-        level.setBonusSymbolCode(0, game.rules().selectBonusSymbolCode(level.number(), 0));
-        level.setBonusSymbolCode(1, game.rules().selectBonusSymbolCode(level.number(), 1));
+        level.setBonusSymbolCode(0, game.variantConfig().rules().selectBonusSymbolCode(level.number(), 0));
+        level.setBonusSymbolCode(1, game.variantConfig().rules().selectBonusSymbolCode(level.number(), 1));
 
         final LivesCounter livesCounter = new LivesCounter();
         level.entities().add(livesCounter);
@@ -199,8 +199,8 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
         // Overwrite autosteering for demo level by fixed route steering
         pac.autoSteering().setSteering(new RouteGuidedSteering(
-            game.systems().worldNavigator(),
-            game.systems().pacWorldMovementPolicy(),
+            game.variantConfig().systems().worldNavigator(),
+            game.variantConfig().systems().pacWorldMovementPolicy(),
             DEMO_LEVEL_ROUTE
         ));
 
@@ -255,20 +255,20 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         requireNonNull(game);
         requireNonNull(level);
 
-        final GameSystems sys = game.systems();
+        final GameSystems systems = game.variantConfig().systems();
         final GameEventManager eventManager = game.eventManager();
 
         level.selectNextBonus();
 
         final int symbolCode = level.bonusSymbolCode(level.currentBonusIndex());
-        final int value = game.rules().scoringRules().pointsForBonus(symbolCode);
+        final int value = game.variantConfig().rules().scoringRules().pointsForBonus(symbolCode);
         final float edibleSec = randomFloat(9, 10);
         final Vector2i tile = level.worldMap().terrainLayer().getTilePropertyOrDefault(
             WorldMapPropertyName.POS_BONUS, ArcadePacMan_GameVariantConfig.DEFAULT_BONUS_TILE);
 
         final Bonus bonus = Bonus.createStaticBonus(symbolCode, value);
         bonus.pos().set(WorldMap.halfTileRightOf(tile));
-        sys.bonusState().showEdibleForSeconds(bonus, edibleSec);
+        systems.bonusState().showEdibleForSeconds(bonus, edibleSec);
 
         level.setBonus(bonus);
         eventManager.publishGameEvent(new BonusActivatedEvent(bonus));

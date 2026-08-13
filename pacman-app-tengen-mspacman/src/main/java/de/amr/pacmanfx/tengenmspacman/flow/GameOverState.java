@@ -27,7 +27,7 @@ public class GameOverState extends GameState {
     public void onEnter(GameContext game) {
         final GameSession session = game.session();
         final GameLevel level = session.assertLevel();
-        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game.gamePlay();
+        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game.variantConfig().gamePlay();
 
         LivesCounterSystem.setNumLives(session.livesCounter(), 0); // Needed if state entry was triggered by user interaction
         session.setPlaying(false);
@@ -48,7 +48,7 @@ public class GameOverState extends GameState {
 
     @Override
     public void onUpdate(GameContext game) {
-        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game.gamePlay();
+        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game.variantConfig().gamePlay();
         final GameSession session = game.session();
         final GameLevel level = session.assertLevel();
 

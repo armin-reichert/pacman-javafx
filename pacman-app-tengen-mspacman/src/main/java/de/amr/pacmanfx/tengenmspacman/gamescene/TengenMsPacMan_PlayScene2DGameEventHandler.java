@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.tengenmspacman.gamescene;
 
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventListener;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
 import de.amr.pacmanfx.core.event.bonus.BonusEatenEvent;
@@ -55,11 +56,12 @@ public interface TengenMsPacMan_PlayScene2DGameEventHandler extends DefaultGameE
 
     @Override
     default void onGameContinued(GameContinuedEvent e) {
+        final GameSystems systems = game().variantConfig().systems();
         final GameSession session = game().session();
         session.optLevel().ifPresent(level -> {
-            gameScene().resetActorAnimations(game().systems().spriteAnim(), session, level);
+            gameScene().resetActorAnimations(systems.spriteAnim(), session, level);
             gameScene().dynamicCamera().playIntroSequence();
-            if (game().gamePlay() instanceof TengenMsPacMan_GamePlay tengenGame) {
+            if (game().variantConfig().gamePlay() instanceof TengenMsPacMan_GamePlay tengenGame) {
                 tengenGame.showLevelMessage(game(), level, GameLevelMessageType.READY);
             }
         });
@@ -108,7 +110,7 @@ public interface TengenMsPacMan_PlayScene2DGameEventHandler extends DefaultGameE
     default void onLevelStarted(LevelStartedEvent e) {
         final GameSession session = game().session();
         session.optLevel().ifPresent(
-            level -> gameScene().resetActorAnimations(game().systems().spriteAnim(), session, level));
+            level -> gameScene().resetActorAnimations(game().variantConfig().systems().spriteAnim(), session, level));
         gameScene().dynamicCamera().playIntroSequence();
     }
 

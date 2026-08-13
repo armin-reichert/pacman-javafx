@@ -149,31 +149,32 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
     }
 
     private void startChasingPacMan(GameContext game) {
-        final GameSystems sys = game.systems();
+        final GameSystems systems = game.variantConfig().systems();
 
         blinking.start();
 
         pacMan.pos().set(WorldMap.TS * 28, WorldMap.TS * 20);
         pacMan.show();
 
-        sys.worldNavigator().setMoveDir(pacMan, Direction.LEFT);
-        sys.worldNavigator().setSpeed(pacMan, CHASING_SPEED);
+        systems.worldNavigator().setMoveDir(pacMan, Direction.LEFT);
+        systems.worldNavigator().setSpeed(pacMan, CHASING_SPEED);
 
         for (Ghost ghost : ghosts) {
             ghost.pos().set(pacMan.pos().x() + 16 * ghost.personality().ordinal() + 18, pacMan.pos().y());
             ghost.show();
 
-            sys.worldNavigator().setMoveDir(ghost, Direction.LEFT);
-            sys.worldNavigator().setWishDir(ghost, Direction.LEFT);
-            sys.worldNavigator().setSpeed(ghost, CHASING_SPEED);
+            systems.worldNavigator().setMoveDir(ghost, Direction.LEFT);
+            systems.worldNavigator().setWishDir(ghost, Direction.LEFT);
+            systems.worldNavigator().setSpeed(ghost, CHASING_SPEED);
 
-            sys.ghostState().changeState(ghost, GhostState.HUNTING_PAC);
+            systems.ghostState().changeState(ghost, GhostState.HUNTING_PAC);
         }
     }
 
     private void chasePacMan(long tick) {
-        final MovementSystem motor = game().systems().motor();
-        final GhostSpriteAnimationSystem ghostSpriteAnimationSystem = game().systems().ghostSpriteAnimation();
+        final GameSystems systems = game().variantConfig().systems();
+        final MovementSystem motor = systems.motor();
+        final GhostSpriteAnimationSystem ghostSpriteAnimationSystem = systems.ghostSpriteAnimation();
 
         blinking.triggerPulse();
         motor.move(pacMan);
@@ -200,17 +201,17 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
     }
 
     private void turnCardsStopPacMan(GameContext game) {
-        final GameSystems sys = game.systems();
+        final GameSystems systems = game.variantConfig().systems();
 
-        sys.worldNavigator().setSpeed(pacMan, 0);
-        sys.spriteAnim().stopSelected(pacMan);
+        systems.worldNavigator().setSpeed(pacMan, 0);
+        systems.spriteAnim().stopSelected(pacMan);
 
         for (Ghost ghost : ghosts) {
-            sys.worldNavigator().setMoveDir(ghost, Direction.RIGHT);
-            sys.worldNavigator().setWishDir(ghost, Direction.RIGHT);
-            sys.worldNavigator().setSpeed(ghost, GHOST_FRIGHTENED_SPEED);
+            systems.worldNavigator().setMoveDir(ghost, Direction.RIGHT);
+            systems.worldNavigator().setWishDir(ghost, Direction.RIGHT);
+            systems.worldNavigator().setSpeed(ghost, GHOST_FRIGHTENED_SPEED);
 
-            sys.ghostState().changeState(ghost, FRIGHTENED);
+            systems.ghostState().changeState(ghost, FRIGHTENED);
             ghost.spriteAnimation().animation().select(CommonSpriteAnimationID.GHOST_FRIGHTENED);
             ghost.spriteAnimation().animation().playSelected();
         }
@@ -222,14 +223,14 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
     }
 
     private void chaseGhosts(GameContext game, long tick) {
-        final GameSystems sys = game.systems();
+        final GameSystems systems = game.variantConfig().systems();
 
         blinking.triggerPulse();
-        sys.motor().move(pacMan);
-        for (Ghost ghost : ghosts) { sys.motor().move(ghost); }
+        systems.motor().move(pacMan);
+        for (Ghost ghost : ghosts) { systems.motor().move(ghost); }
         edibleGhost().ifPresent(victim -> eatGhostAndStopChasing(game, victim, tick));
         if (tick == lastGhostEatenTick + GHOST_EATING_TICKS) {
-            continueChasing(sys);
+            continueChasing(systems);
         }
     }
 
@@ -241,17 +242,17 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
     }
 
     private void eatGhostAndStopChasing(GameContext game, Ghost victim, long tick) {
-        final GameSystems sys = game.systems();
+        final GameSystems systems = game.variantConfig().systems();
 
-        sys.ghostState().changeState(victim, EATEN);
-        sys.spriteAnim().selectAndSetFrame(victim, CommonSpriteAnimationID.GHOST_POINTS, numGhostsEaten++);
+        systems.ghostState().changeState(victim, EATEN);
+        systems.spriteAnim().selectAndSetFrame(victim, CommonSpriteAnimationID.GHOST_POINTS, numGhostsEaten++);
 
         pacMan.hide();
-        sys.worldNavigator().setSpeed(pacMan, 0);
+        systems.worldNavigator().setSpeed(pacMan, 0);
 
         for (Ghost ghost : ghosts) {
-            sys.worldNavigator().setSpeed(ghost, 0);
-            sys.spriteAnim().stopSelected(ghost);
+            systems.worldNavigator().setSpeed(ghost, 0);
+            systems.spriteAnim().stopSelected(ghost);
         }
 
         lastGhostEatenTick = tick;
@@ -338,7 +339,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
 
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
-                final GameSystems sys = scene.game().systems();
+                final GameSystems systems = scene.game().variantConfig().systems();
 
                 final long tick = timer.tickCount();
                 if (tick == TICK_PAC_MAN_APPEARS) {
@@ -348,7 +349,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
                     scene.turnCardsStopPacMan(scene.game());
                 }
                 else if (tick == TICK_PAC_MAN_MOVES_AGAIN) {
-                    scene.turnCardsRestartPacMan(sys);
+                    scene.turnCardsRestartPacMan(systems);
                 }
                 else if (tick == TICK_CHASING_PAC_MAN_END) {
                     scene.flow.enterState(scene, CHASING_GHOSTS);
@@ -361,15 +362,15 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
         CHASING_GHOSTS {
             @Override
             public void onEnter(ArcadePacMan_IntroScene scene) {
-                final GameSystems sys = scene.game().systems();
+                final GameSystems systems = scene.game().variantConfig().systems();
 
                 timer.restartTicks(TICK_CHASING_GHOSTS_END);
 
                 scene.lastGhostEatenTick = timer.tickCount();
                 scene.numGhostsEaten = 0;
 
-                sys.worldNavigator().setMoveDir(scene.pacMan, Direction.RIGHT);
-                sys.worldNavigator().setSpeed(scene.pacMan, CHASING_SPEED);
+                systems.worldNavigator().setMoveDir(scene.pacMan, Direction.RIGHT);
+                systems.worldNavigator().setSpeed(scene.pacMan, CHASING_SPEED);
             }
 
             @Override

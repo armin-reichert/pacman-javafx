@@ -81,7 +81,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
         session.setValue(GamePlayOptions.BOOSTER_ON, boosterOn);
 
-        final SpriteAnimSystem animSystem = game.systems().spriteAnim();
+        final SpriteAnimSystem animSystem = game.variantConfig().systems().spriteAnim();
         animSystem.select(pac, boosterOn ? TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER : CommonSpriteAnimationID.PAC_MUNCHING);
     }
 
@@ -112,7 +112,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         session.setValue(GamePlayOptions.DIFFICULTY, difficulty);
 
         //TODO this should also move into session!
-        final var speedRules = (TengenMsPacMan_ActorSpeedRules) game.rules().actorSpeedRules();
+        final var speedRules = (TengenMsPacMan_ActorSpeedRules) game.variantConfig().rules().actorSpeedRules();
         speedRules.setDifficulty(difficulty);
     }
 
@@ -202,12 +202,12 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     @Override
     public GameLevel createLevel(GameContext game, int levelNumber) {
         final GameSession session = game.session();
-        final WorldNavigationSystem navigator = game.systems().worldNavigator();
+        final WorldNavigationSystem navigator = game.variantConfig().systems().worldNavigator();
 
-        final TengenMsPacMan_WorldMapManager worldMapManager = (TengenMsPacMan_WorldMapManager) game.worldMapManager();
+        final TengenMsPacMan_WorldMapManager worldMapManager = (TengenMsPacMan_WorldMapManager) game.variantConfig().worldMapManager();
         final WorldMap worldMap = worldMapManager.supplyWorldMap(levelNumber, mapCategory(session));
 
-        final TengenMsPacMan_GameRules rules = (TengenMsPacMan_GameRules) game.rules();
+        final TengenMsPacMan_GameRules rules = (TengenMsPacMan_GameRules) game.variantConfig().rules();
         final var huntingTimer = new HuntingTimer("Tengen Ms. Pac-Man Hunting Timer", rules.numHuntingPhases());
 
         final GameLevel level = new GameLevel(levelNumber, worldMap, huntingTimer, 3);
@@ -261,7 +261,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         requireNonNull(game);
 
         final GameSession session = game.session();
-        final GameSystems sys = game.systems();
+        final GameSystems systems = game.variantConfig().systems();
 
         final GameLevel demoLevel = createLevel(game, 1);
         demoLevel.setGameOverStateTicks(120);
@@ -271,8 +271,8 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         pac.cheats().setUsingAutopilot(true);
 
         final var steering = new RuleGuidedPacSteering(
-            sys.worldNavigator(),
-            sys.pacWorldMovementPolicy()
+            systems.worldNavigator(),
+            systems.pacWorldMovementPolicy()
         );
         pac.autoSteering().setSteering(steering);
 
@@ -327,7 +327,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
     @Override
     public void activateNextBonus(GameContext game, GameLevel level) {
-        final GameSystems sys = game.systems();
+        final GameSystems systems = game.variantConfig().systems();
         final GameEventManager eventManager = game.eventManager();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
@@ -362,11 +362,11 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         level.selectNextBonus();
 
         final int symbolCode = level.bonusSymbolCode(level.currentBonusIndex());
-        final int value = game.rules().scoringRules().pointsForBonus(symbolCode);
-        final float speed = game.rules().actorSpeedRules().bonusSpeed(game, level);
+        final int value = game.variantConfig().rules().scoringRules().pointsForBonus(symbolCode);
+        final float speed = game.variantConfig().rules().actorSpeedRules().bonusSpeed(game, level);
         final Bonus bonus = Bonus.createMovingBonus(symbolCode, value);
-        sys.bonusMoveAndJump().setRoute(bonus, route, leftToRight);
-        sys.bonusState().showEdibleAndStartWandering(bonus, speed);
+        systems.bonusMoveAndJump().setRoute(bonus, route, leftToRight);
+        systems.bonusState().showEdibleAndStartWandering(bonus, speed);
 
         level.setBonus(bonus);
         eventManager.publishGameEvent(new BonusActivatedEvent(bonus));
@@ -376,7 +376,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
     private void setMsPacMan(GameContext game, GameLevel level) {
         final GameSession session = game.session();
-        final GameSystems systems = game.systems();
+        final GameSystems systems = game.variantConfig().systems();
         final var factory = TengenMsPacMan_ActorFactory.instance();
         final Pac msPacMan = factory.createMsPacMan();
 

@@ -4,13 +4,9 @@
 
 package de.amr.pacmanfx.core;
 
-import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.gameplay.GameFlowController;
-import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.model.GameCheats;
-import de.amr.pacmanfx.core.model.rules.GameRules;
-import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 
 import static java.util.Objects.requireNonNull;
 
@@ -21,7 +17,7 @@ public class GameContext {
 
     private final CoinMechanism coinMechanism;
 
-    private final GameVariantConfig gameVariantConfig;
+    private final GameVariantConfig variantConfig;
 
     private final GameEventManager eventManager;
 
@@ -29,11 +25,11 @@ public class GameContext {
 
     public GameContext(
         CoinMechanism coinMechanism,
-        GameVariantConfig gameVariantConfig,
+        GameVariantConfig variantConfig,
         GameEventManager eventManager)
     {
         this.coinMechanism = requireNonNull(coinMechanism);
-        this.gameVariantConfig = requireNonNull(gameVariantConfig);
+        this.variantConfig = requireNonNull(variantConfig);
         this.eventManager = requireNonNull(eventManager);
     }
 
@@ -45,8 +41,8 @@ public class GameContext {
         return session;
     }
 
-    public GameVariantConfig gameVariantConfig() {
-        return gameVariantConfig;
+    public GameVariantConfig variantConfig() {
+        return variantConfig;
     }
 
     public CoinMechanism coinMechanism() {
@@ -55,21 +51,5 @@ public class GameContext {
 
     public GameEventManager eventManager() {
         return eventManager;
-    }
-
-    public GamePlay gamePlay() {
-        return gameVariantConfig.gamePlay();
-    }
-
-    public GameRules rules() {
-        return gameVariantConfig.gameRules();
-    }
-
-    public WorldMapManager worldMapManager() {
-        return gameVariantConfig.worldMapManager();
-    }
-
-    public GameSystems systems() {
-        return gameVariantConfig.systems();
     }
 }

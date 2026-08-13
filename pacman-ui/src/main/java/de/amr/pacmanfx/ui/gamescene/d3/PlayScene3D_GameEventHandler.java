@@ -231,7 +231,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         final GameLevel3D level3D = assertLevel3D();
 
         optSoundEffects().ifPresent(GameSoundEffects::stopSiren);
-        if (!game().rules().isLevelCompleted(level)) {
+        if (!game().variantConfig().rules().isLevelCompleted(level)) {
             optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
             Pac3DAnimationSystem.setPowerMode(pac, true);
             level3D.animationManager().startWallFlashing();
@@ -312,7 +312,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         final GameLevel level = session().assertLevel();
         final House house = level.entities().theOne(House.class);
         final boolean cutSceneFollows = !session().isAttractMode()
-            && game().rules().cutSceneAfterLevel(level.number()).isPresent();
+            && game().variantConfig().rules().cutSceneAfterLevel(level.number()).isPresent();
 
         gameScene().scoreOpacity.set(0);
         House3DSystem.hideDoors(house);

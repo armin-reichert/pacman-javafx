@@ -26,7 +26,7 @@ public class GhostHouseAccessSystem {
      * and start blinking when Pac-Man's power starts fading. After that, they return to their normal color.
      */
     public void stayInHouse(GameContext game, Ghost ghost, float speed) {
-        final GameSystems sys = game.systems();
+        final GameSystems systems = game.variantConfig().systems();
 
         final House house = ghost.worldInfo().house();
         final PositionComp position = ghost.pos();
@@ -36,20 +36,20 @@ public class GhostHouseAccessSystem {
             final float minY = (house.floorplan().minTile().y() + 1) * WorldMap.TS + WorldMap.HTS;
             final float maxY = (house.floorplan().maxTile().y() - 1) * WorldMap.TS - WorldMap.HTS;
             if (position.y() <= minY) {
-                sys.worldNavigator().setMoveDir(ghost, DOWN);
-                sys.worldNavigator().setWishDir(ghost, DOWN);
+                systems.worldNavigator().setMoveDir(ghost, DOWN);
+                systems.worldNavigator().setWishDir(ghost, DOWN);
             }
             else if (position.y() >= maxY) {
-                sys.worldNavigator().setMoveDir(ghost, UP);
-                sys.worldNavigator().setWishDir(ghost, UP);
+                systems.worldNavigator().setMoveDir(ghost, UP);
+                systems.worldNavigator().setWishDir(ghost, UP);
             }
             position.setY(Math.clamp(position.y(), minY, maxY));
-            sys.worldNavigator().setSpeed(ghost, speed);
-            sys.motor().move(ghost);
+            systems.worldNavigator().setSpeed(ghost, speed);
+            systems.motor().move(ghost);
         }
         else {
             // locked outside of house: standing still
-            sys.worldNavigator().setSpeed(ghost, 0);
+            systems.worldNavigator().setSpeed(ghost, 0);
         }
     }
 
@@ -61,7 +61,7 @@ public class GhostHouseAccessSystem {
      * The ghost speed is slower than outside, but I do not know the exact value.
      */
     public boolean leaveHouse(GameContext game, Ghost ghost, float speed) {
-        final GameSystems sys = game.systems();
+        final GameSystems systems = game.variantConfig().systems();
 
         final PositionComp position = ghost.pos();
         final House house = ghost.worldInfo().house();
@@ -69,8 +69,8 @@ public class GhostHouseAccessSystem {
 
         if (position.y() <= houseEntryPosition.y()) {
             position.setY(houseEntryPosition.y());
-            sys.worldNavigator().setMoveDir(ghost, LEFT);
-            sys.worldNavigator().setWishDir(ghost, LEFT);
+            systems.worldNavigator().setMoveDir(ghost, LEFT);
+            systems.worldNavigator().setWishDir(ghost, LEFT);
 
             // don't change direction directly when outside house
             ghost.worldNavigation().setNewTileEntered(false);
@@ -83,17 +83,17 @@ public class GhostHouseAccessSystem {
             if (differsAtMost(0.5f * speed, centerX, houseCenterX)) {
                 // align horizontally and raise
                 position.setX(houseCenterX - WorldMap.HTS);
-                sys.worldNavigator().setMoveDir(ghost, UP);
-                sys.worldNavigator().setWishDir(ghost, UP);
+                systems.worldNavigator().setMoveDir(ghost, UP);
+                systems.worldNavigator().setWishDir(ghost, UP);
             }
             else {
                 // move sidewards until center axis is reached
-                sys.worldNavigator().setMoveDir(ghost, centerX < houseCenterX ? RIGHT : LEFT);
-                sys.worldNavigator().setWishDir(ghost, centerX < houseCenterX ? RIGHT : LEFT);
+                systems.worldNavigator().setMoveDir(ghost, centerX < houseCenterX ? RIGHT : LEFT);
+                systems.worldNavigator().setWishDir(ghost, centerX < houseCenterX ? RIGHT : LEFT);
             }
 
-            sys.worldNavigator().setSpeed(ghost, speed);
-            sys.motor().move(ghost);
+            systems.worldNavigator().setSpeed(ghost, speed);
+            systems.motor().move(ghost);
 
             return false;
         }
@@ -104,7 +104,7 @@ public class GhostHouseAccessSystem {
      * then moves up again (if the house center is his revival position), or moves sidewards towards his revival position.
      */
     public void enterHouse(GameContext game, Ghost ghost, float speed) {
-        final GameSystems sys = game.systems();
+        final GameSystems systems = game.variantConfig().systems();
 
         final PositionComp position = ghost.pos();
         final House house = ghost.worldInfo().house();
@@ -113,34 +113,34 @@ public class GhostHouseAccessSystem {
         final Vector2f positionVec = position.asVector2f();
         if (positionVec.roughlyEquals(revivalPosition, 0.5f * speed, 0.5f * speed)) {
             position.set(revivalPosition.x(), revivalPosition.y());
-            sys.worldNavigator().setMoveDir(ghost, UP);
-            sys.worldNavigator().setWishDir(ghost, UP);
+            systems.worldNavigator().setMoveDir(ghost, UP);
+            systems.worldNavigator().setWishDir(ghost, UP);
 
-            sys.ghostState().changeState(ghost, GhostState.LOCKED);
+            systems.ghostState().changeState(ghost, GhostState.LOCKED);
             return;
         }
         if (position.y() < revivalPosition.y()) {
-            sys.worldNavigator().setMoveDir(ghost, DOWN);
-            sys.worldNavigator().setWishDir(ghost, DOWN);
+            systems.worldNavigator().setMoveDir(ghost, DOWN);
+            systems.worldNavigator().setWishDir(ghost, DOWN);
         }
         else if (position.x() > revivalPosition.x()) {
-            sys.worldNavigator().setMoveDir(ghost, LEFT);
-            sys.worldNavigator().setWishDir(ghost, LEFT);
+            systems.worldNavigator().setMoveDir(ghost, LEFT);
+            systems.worldNavigator().setWishDir(ghost, LEFT);
         }
         else if (position.x() < revivalPosition.x()) {
-            sys.worldNavigator().setMoveDir(ghost, RIGHT);
-            sys.worldNavigator().setWishDir(ghost, RIGHT);
+            systems.worldNavigator().setMoveDir(ghost, RIGHT);
+            systems.worldNavigator().setWishDir(ghost, RIGHT);
         }
-        sys.worldNavigator().setSpeed(ghost, speed);
+        systems.worldNavigator().setSpeed(ghost, speed);
 
-        sys.motor().move(ghost);
+        systems.motor().move(ghost);
     }
 
     //TODO extract state change
     public void reachHouse(GameContext game, Ghost ghost, float speed) {
         final GameSession session = game.session();
-        final GameSystems sys = game.systems();
-        final WorldMovementPolicy policy = sys.ghostWorldMovementPolicy();
+        final GameSystems systems = game.variantConfig().systems();
+        final WorldMovementPolicy policy = systems.ghostWorldMovementPolicy();
         final GameLevel level = session.assertLevel();
 
         final PositionComp position = ghost.pos();
@@ -149,19 +149,19 @@ public class GhostHouseAccessSystem {
         final Vector2f positionVec =  position.asVector2f();
         if (positionVec.roughlyEquals(houseEntry, speed, 0)) {
             position.set(houseEntry.x(), houseEntry.y());
-            sys.worldNavigator().setMoveDir(ghost, DOWN);
-            sys.worldNavigator().setWishDir(ghost, DOWN);
+            systems.worldNavigator().setMoveDir(ghost, DOWN);
+            systems.worldNavigator().setWishDir(ghost, DOWN);
 
             //TODO check if this should be done here
-            sys.ghostState().changeState(ghost, GhostState.ENTERING_HOUSE);
+            systems.ghostState().changeState(ghost, GhostState.ENTERING_HOUSE);
 
         }
         else {
             //TODO use system method
             ghost.worldNavigation().setTargetTile(house.floorplan().leftDoorTile());
-            sys.worldNavigator().setSpeed(ghost, speed);
-            sys.worldNavigator().navigateTowardsTarget(ghost, level, policy);
-            sys.worldNavigator().tryMovingOrTeleporting(ghost, level, policy);
+            systems.worldNavigator().setSpeed(ghost, speed);
+            systems.worldNavigator().navigateTowardsTarget(ghost, level, policy);
+            systems.worldNavigator().tryMovingOrTeleporting(ghost, level, policy);
         }
     }
 }

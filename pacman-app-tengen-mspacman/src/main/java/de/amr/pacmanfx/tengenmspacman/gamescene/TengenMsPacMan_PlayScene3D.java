@@ -42,7 +42,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     protected void addAdditional3DLevelElements(GameLevel3D level3D) {
-        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().gamePlay();
+        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().variantConfig().gamePlay();
         final GameSession session = game().session();
         // If any of the default level settings has been changed, display the level info
         session.optLevel().ifPresent(_ -> {
@@ -54,7 +54,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     }
 
     private ImageView createLevelInfoView(GameLevel3D level3D) {
-        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().gamePlay();
+        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().variantConfig().gamePlay();
         final GameSession session = game().session();
         final GameLevel level = session.assertLevel();
 

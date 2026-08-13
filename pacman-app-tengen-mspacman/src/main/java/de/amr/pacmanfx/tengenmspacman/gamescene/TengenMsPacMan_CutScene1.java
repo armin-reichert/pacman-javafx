@@ -142,7 +142,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
     }
 
     private void getReady(GameContext game) {
-        final WorldNavigationSystem navigator = game.systems().worldNavigator();
+        final WorldNavigationSystem navigator = game.variantConfig().systems().worldNavigator();
 
         clapperboard.pos().set(3 * WorldMap.TS, 10 * WorldMap.TS);
 
@@ -176,7 +176,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
     }
 
     private void letActorsMove(GameContext game) {
-        List.of(pacMan, msPacMan, inky, pinky).forEach(game.systems().motor()::move);
+        List.of(pacMan, msPacMan, inky, pinky).forEach(game.variantConfig().systems().motor()::move);
         if (collided) {
             if (inky.pos().y() > MIDDLE_LANE) {
                 inky.pos().setY(MIDDLE_LANE);
@@ -188,8 +188,8 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
     }
 
     private void playCutScene(GameContext game, int tick) {
-        final WorldNavigationSystem navigator = game.systems().worldNavigator();
-        final SpriteAnimSystem animSystem = game.systems().spriteAnim();
+        final WorldNavigationSystem navigator = game.variantConfig().systems().worldNavigator();
+        final SpriteAnimSystem animSystem = game.variantConfig().systems().spriteAnim();
 
         letActorsMove(game);
 

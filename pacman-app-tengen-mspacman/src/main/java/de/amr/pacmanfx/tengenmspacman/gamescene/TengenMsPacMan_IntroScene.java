@@ -153,7 +153,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
         SHOWING_MARQUEE {
             @Override
             public void onEnter(TengenMsPacMan_IntroScene scene) {
-                GameSystems sys = scene.game().systems();
+                GameSystems sys = scene.game().variantConfig().systems();
 
                 final GameVariantRenderConfig renderConfig = scene.app().gameVariants().currentGameVariant().uiConfig().renderConfig();
                 final SpriteAnimationContainer spriteAnimations = scene.app().ui().sprites().animations();
@@ -228,8 +228,9 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
             }
 
             boolean letGhostMarchIn(TengenMsPacMan_IntroScene scene) {
-                final MovementSystem motor = scene.game().systems().motor();
-                final WorldNavigationSystem navigator = scene.game().systems().worldNavigator();
+                final GameSystems systems = scene.game().variantConfig().systems();
+                final MovementSystem motor = systems.motor();
+                final WorldNavigationSystem navigator = systems.worldNavigator();
 
                 final Ghost ghost = scene.ghosts.get(scene.ghostIndex);
                 if (ghost.worldNavigation().moveDir() == Direction.LEFT) {
@@ -272,8 +273,8 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
                 final GameContext game = scene.game();
-                final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game.gamePlay();
-                final GameSystems systems = game.systems();
+                final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game.variantConfig().gamePlay();
+                final GameSystems systems = game.variantConfig().systems();
                 final GameSession session = game.session();
 
                 MarqueeSystem.instance().update(scene.marquee);

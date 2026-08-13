@@ -53,7 +53,7 @@ public class MovingGameLevelMessage extends GameLevelMessage {
             return;
         }
 
-        final MovementSystem motor = game.systems().motor();
+        final MovementSystem motor = game.variantConfig().systems().motor();
         motor.move(this);
         if (wrapped) {
             if (pos().x() >= startPosition.x()) {

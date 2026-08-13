@@ -99,7 +99,7 @@ public final class TengenMsPacMan_Actions {
         actionTogglePacBooster = new GameAction("toggle_pac_booster") {
             @Override
             public void execute(GameAppContext app) {
-                final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) app.game().gamePlay();
+                final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) app.game().variantConfig().gamePlay();
                 final GameSession session = app.game().session();
                 session.optLevel().ifPresent(gameLevel -> {
                     gamePlay.activateBooster(app.game(), gameLevel.entities().pac(), !gamePlay.isBoosterOn(session));
@@ -111,7 +111,7 @@ public final class TengenMsPacMan_Actions {
 
             @Override
             public boolean isEnabled(GameAppContext app) {
-                final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) app.game().gamePlay();
+                final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) app.game().variantConfig().gamePlay();
                 final GameSession session = app.game().session();
                 return gamePlay.boosterMode(session) == BoosterMode.ACTIVATE_WITH_A_OR_B && session.optLevel().isPresent();
             }

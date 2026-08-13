@@ -6,6 +6,7 @@ package de.amr.pacmanfx.core.entities.ghost.system;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
+import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.RandomWorldMovementSystem;
 import de.amr.pacmanfx.core.ecs.systems.WorldMovementPolicy;
 import de.amr.pacmanfx.core.entities.Ghost;
@@ -35,13 +36,14 @@ public class GhostStateSystem {
         requireNonNull(game);
         requireNonNull(ghost);
 
+        final GameSystems systems = game.variantConfig().systems();
         final Pac pac = level.entities().pac();
         final GhostStateComp state = ghost.requireComp(GhostStateComp.class);
 
         state.setFlashing(pac.power().isFading());
         state.setThreatenedByPac(isGhostThreatenedByPac(level, ghost, pac));
 
-        final float speed = game.rules().actorSpeedRules().ghostSpeed(game, ghost);
+        final float speed = game.variantConfig().rules().actorSpeedRules().ghostSpeed(game, ghost);
 
         switch (ghost.ghostStateEnum()) {
             case LOCKED -> houseAccessSystem.stayInHouse(game, ghost, speed);
@@ -55,14 +57,14 @@ public class GhostStateSystem {
             }
 
             case HUNTING_PAC -> {
-                final GhostHuntingStrategy huntingStrategy = game.systems().ghostHuntingStrategy(ghost.personality());
-                final WorldMovementPolicy worldMovementPolicy = game.systems().ghostWorldMovementPolicy();
+                final GhostHuntingStrategy huntingStrategy = systems.ghostHuntingStrategy(ghost.personality());
+                final WorldMovementPolicy worldMovementPolicy = systems.ghostWorldMovementPolicy();
                 huntingStrategy.hunt(level, ghost, speed, worldMovementPolicy);
             }
 
             case FRIGHTENED -> {
-                final RandomWorldMovementSystem roamingSystem = game.systems().roamingNavigator();
-                WorldMovementPolicy worldMovementPolicy =  game.systems().ghostWorldMovementPolicy();
+                final RandomWorldMovementSystem roamingSystem = systems.roamingNavigator();
+                WorldMovementPolicy worldMovementPolicy = systems.ghostWorldMovementPolicy();
                 WorldNavigationComp navigation = ghost.worldNavigation();
                 roamingSystem.roam(navigation, worldMovementPolicy, level, ghost, speed);
             }

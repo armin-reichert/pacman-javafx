@@ -90,7 +90,7 @@ public class XXL_OptionMenu extends OptionMenu {
         final GameVariantID variantID = GameVariantID.valueOf(app.gameVariants().currentVariantName());
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final GameContext game = app.game();
-        final WorldMapManager worldMapSelector = game.worldMapManager();
+        final WorldMapManager worldMapSelector = game.variantConfig().worldMapManager();
 
         if (!(worldMapSelector instanceof XXL_WorldMapManager mapSelector)) {
             final String message = "Expected XXL map selector but found %s".formatted(

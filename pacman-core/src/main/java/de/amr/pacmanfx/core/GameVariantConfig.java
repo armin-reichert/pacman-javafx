@@ -51,7 +51,7 @@ public class GameVariantConfig {
         return gameFlow;
     }
 
-    public GameRules gameRules() {
+    public GameRules rules() {
         return gameRules;
     }
 
