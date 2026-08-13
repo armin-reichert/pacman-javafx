@@ -295,7 +295,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         }
         final ElroyComp elroy = redGhost.requireComp(ElroyComp.class);
         final LevelData data = ArcadePacMan_GameRules.levelData(level.number());
-        final int remainingFoodCount = level.worldMap().foodLayer().remainingFoodCount();
+        final int remainingFoodCount = level.food().remainingFoodCount();
         if (remainingFoodCount == data.numDotsLeftElroy1()) {
             elroy.setBoost(ElroyComp.Boost.MEDIUM);
         } else if (remainingFoodCount == data.numDotsLeftElroy2()) {

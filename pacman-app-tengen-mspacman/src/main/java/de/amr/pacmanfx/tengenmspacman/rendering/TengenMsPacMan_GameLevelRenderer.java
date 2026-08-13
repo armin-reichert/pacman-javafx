@@ -107,19 +107,20 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
 
         ctx.save();
         ctx.scale(scaling(), scaling());
-        drawPellets(worldMap.foodLayer(), pelletColor);
-        drawEnergizers(worldMap.foodLayer(), pelletColor, blinkingOn);
+        drawPellets(level, pelletColor);
+        drawEnergizers(level, pelletColor, blinkingOn);
         ctx.restore();
     }
 
-    private void drawPellets(FoodLayer foodLayer, Color pelletColor) {
+    private void drawPellets(GameLevel level, Color pelletColor) {
+        final FoodLayer foodLayer = level.worldMap().foodLayer();
         foodLayer.tiles()
             .filter(foodLayer::isFoodTile)
             .filter(not(foodLayer::isEnergizerTile)).forEach(tile -> {
                 // overpaint the pellet from the map image
                 ctx.setFill(backgroundColor());
                 fillSquareAtTileCenter(tile, 4);
-                if (!foodLayer.hasEatenFoodAtTile(tile)) {
+                if (!level.food().hasEatenFoodAtTile(tile)) {
                     // draw pellet using the right color
                     ctx.setFill(pelletColor);
                     fillSquareAtTileCenter(tile, 2);
@@ -127,7 +128,8 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         });
     }
 
-    private void drawEnergizers(FoodLayer foodLayer, Color pelletColor, boolean blinkingOn) {
+    private void drawEnergizers(GameLevel level, Color pelletColor, boolean blinkingOn) {
+        final FoodLayer foodLayer = level.worldMap().foodLayer();
         final double size = WorldMap.TS;
         final double centerOffset = 0.5 * WorldMap.HTS;
         foodLayer.tiles().filter(foodLayer::isEnergizerTile).forEach(tile -> {
@@ -135,7 +137,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
             ctx.setFill(backgroundColor());
             fillSquareAtTileCenter(tile, WorldMap.TS + 2);
             // draw energizer if not eaten and blinking is in ON phase
-            if (!foodLayer.hasEatenFoodAtTile(tile) && blinkingOn) {
+            if (!level.food().hasEatenFoodAtTile(tile) && blinkingOn) {
                 final int x = tile.x() * WorldMap.TS;
                 final int y = tile.y() * WorldMap.TS;
                 // draw pixelated "circle"

@@ -162,7 +162,8 @@ public class TileMapEditor {
             terrainMapPropertyChanged = false;
         }
         if (foodMapChanged) {
-            currentWorldMap().foodLayer().initFoodCount();
+            //TODO fixme
+            //currentWorldMap().foodLayer().initFoodCount();
             ui.onFoodMapChanged();
             sourceNeedsUpdate = true;
             foodMapChanged = false;

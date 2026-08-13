@@ -42,7 +42,6 @@ import de.amr.pacmanfx.core.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.model.rules.ActorSpeedRules;
 import de.amr.pacmanfx.core.model.rules.CollisionStrategy;
 import de.amr.pacmanfx.core.model.rules.GameRules;
-import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import org.tinylog.Logger;
@@ -306,7 +305,7 @@ public abstract class CommonGamePlay implements GamePlay {
         if (huntingResult.foodFound()) {
             digestionSystem.endStarving(pac);
             final Vector2i foodTile = huntingResult.foodFoundTile();
-            level.worldMap().foodLayer().markFoodEatenAt(foodTile);
+            level.food().markFoodEatenAt(foodTile);
             if (huntingResult.energizerFound()) {
                 onEatEnergizer(game, level, foodTile);
             } else {
@@ -448,7 +447,7 @@ public abstract class CommonGamePlay implements GamePlay {
         level.heartbeat().reset();
 
         // If level was ended by cheat, there might still be food remaining, so eat it:
-        level.worldMap().foodLayer().eatAll();
+        level.food().eatAll();
 
         final Pac pac = level.entities().pac();
         pac.power().reset();
@@ -535,11 +534,10 @@ public abstract class CommonGamePlay implements GamePlay {
 
     private void detectFoodCollision(GameLevel level, HuntingStep huntingStep) {
         final Pac pac = level.entities().pac();
-        final FoodLayer foodLayer = level.worldMap().foodLayer();
         final Vector2i pacTile = WorldNavigationSystem.computeTile(pac);
-        if (foodLayer.hasFoodAtTile(pacTile)) {
+        if (level.food().hasFoodAtTile(pacTile)) {
             huntingStep.setFoodFoundTile(pacTile);
-            huntingStep.setEnergizerFound(foodLayer.isEnergizerTile(pacTile));
+            huntingStep.setEnergizerFound(level.worldMap().foodLayer().isEnergizerTile(pacTile));
         }
     }
 }

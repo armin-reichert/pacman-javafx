@@ -163,7 +163,7 @@ public class TengenMsPacMan_ActorSpeedRules implements ActorSpeedRules {
     private static float ghostSpeedIncreaseByFoodRemaining(GameLevel level, Difficulty difficulty) {
         byte units = 0;
         if (difficulty == Difficulty.NORMAL && level.number() >= 5) {
-            int dotsLeft = level.worldMap().foodLayer().remainingFoodCount();
+            int dotsLeft = level.food().remainingFoodCount();
             if (dotsLeft <= 7) {
                 units = 5;
             } else if (dotsLeft <= 15) {

@@ -195,7 +195,7 @@ public class RuleGuidedPacSteering implements Steering {
             if (!worldMovementPolicy.canAccessTile(level, pac, ahead)) {
                 break;
             }
-            if (foodLayer.isEnergizerTile(ahead) && !foodLayer.hasEatenFoodAtTile(ahead)) {
+            if (foodLayer.isEnergizerTile(ahead) && !level.food().hasEatenFoodAtTile(ahead)) {
                 energizerFound = true;
             }
             final Vector2i aheadLeft = ahead.plus(worldNavigation.moveDir().nextCounterClockwise().vector());
@@ -272,12 +272,12 @@ public class RuleGuidedPacSteering implements Steering {
         for (int x = 0; x < worldMap.numCols(); ++x) {
             for (int y = 0; y < worldMap.numRows(); ++y) {
                 final Vector2i tile = new Vector2i(x, y);
-                if (!foodLayer.isFoodTile(tile) || foodLayer.hasEatenFoodAtTile(tile)) {
+                if (!foodLayer.isFoodTile(tile) || level.food().hasEatenFoodAtTile(tile)) {
                     continue;
                 }
                 if (foodLayer.isEnergizerTile(tile)
                     && enoughTimeLeft
-                    && foodLayer.remainingFoodCount() > 1) {
+                    && level.food().remainingFoodCount() > 1) {
                     continue;
                 }
                 float dist = pacManTile.manhattanDist(tile);

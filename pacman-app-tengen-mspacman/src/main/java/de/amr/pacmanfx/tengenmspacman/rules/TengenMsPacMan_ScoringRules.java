@@ -73,7 +73,7 @@ public class TengenMsPacMan_ScoringRules implements ScoringRules {
 
     @Override
     public boolean isBonusAwarded(GameLevel level) {
-        int eatenFoodCount = level.worldMap().foodLayer().eatenFoodCount();
+        int eatenFoodCount = level.food().eatenFoodCount();
         return eatenFoodCount == 64 || eatenFoodCount == 176;
     }
 

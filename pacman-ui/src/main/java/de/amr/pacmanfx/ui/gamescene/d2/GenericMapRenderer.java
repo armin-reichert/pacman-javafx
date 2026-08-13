@@ -82,14 +82,14 @@ public class GenericMapRenderer extends BaseRenderer {
             final Color pelletColor = Color.valueOf(foodColorScheme.pellet());
             foodRenderer.setPelletColor(pelletColor);
             foodLayer.tiles()
-                .filter(foodLayer::hasFoodAtTile)
+                .filter(level.food()::hasFoodAtTile)
                 .filter(not(foodLayer::isEnergizerTile))
                 .forEach(foodRenderer::drawPellet);
 
             if (info.getBoolean(CommonRenderInfoKey.ENERGIZER_VISIBLE)) {
                 foodRenderer.setEnergizerColor(pelletColor);
                 foodLayer.energizerTiles().stream()
-                    .filter(foodLayer::hasFoodAtTile)
+                    .filter(level.food()::hasFoodAtTile)
                     .forEach(foodRenderer::drawEnergizer);
             }
         }

@@ -6,15 +6,13 @@ package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
 import de.amr.pacmanfx.arcade.ms_pacman.rules.ArcadeMsPacMan_ScoringRules;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 
 public class XXL_ScoringRules extends ArcadeMsPacMan_ScoringRules {
 
     @Override
     public boolean isBonusAwarded(GameLevel level) {
-        final FoodLayer foodLayer = level.worldMap().foodLayer();
-        final int total = foodLayer.totalFoodCount();
-        final int eaten = foodLayer.eatenFoodCount();
+        final int total = level.food().totalFoodCount();
+        final int eaten = level.food().eatenFoodCount();
         // XXL maps may have different food count, use heuristic values
         return eaten == total / 4 || eaten == total * 3 / 4;
     }

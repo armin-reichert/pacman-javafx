@@ -179,7 +179,7 @@ public class MiniPlaySceneView {
         info.putAll(Map.of(
             CommonRenderInfoKey.ENERGIZER_VISIBLE, level.heartbeat().state() == Pulse.State.ON,
             CommonRenderInfoKey.MAP_BRIGHT, false,
-            CommonRenderInfoKey.MAP_EMPTY, level.worldMap().foodLayer().remainingFoodCount() == 0,
+            CommonRenderInfoKey.MAP_EMPTY, level.food().remainingFoodCount() == 0,
             CommonRenderInfoKey.MAP_FLASHING, false,
             CommonRenderInfoKey.TICK, app.clock().currentTick()
         ));

@@ -15,6 +15,7 @@ import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.rules.HuntingTimerStrategy;
+import de.amr.pacmanfx.core.model.world.map.FoodState;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 
@@ -105,6 +106,10 @@ public class GameLevel {
         currentBonusIndex = -1;
 
         huntingTimerStrategy.reset();
+    }
+
+    public FoodState food() {
+        return worldMap.foodLayer().foodState(); //TODO store directly here and remove from food layer
     }
 
     /**

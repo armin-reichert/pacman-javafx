@@ -36,7 +36,6 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
         GhostPersonality.PINK_GHOST_SPEEDY,
         GhostPersonality.RED_GHOST_SHADOW);
 
-    private final SpriteAnimSystem animSystem;
     private final SpriteSheet<?> spriteSheet;
     private final GameLevelRenderer levelRenderer;
     private final ActorRenderer actorRenderer;
@@ -46,7 +45,6 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
     public Arcade_PlayScene2D_Renderer(AbstractGameScene2D scene, SpriteAnimSystem animSystem, Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(canvas);
         requireNonNull(scene);
-        this.animSystem = requireNonNull(animSystem);
         this.spriteSheet = requireNonNull(spriteSheet);
 
         final GameVariantRenderConfig renderConfig = scene.app().gameVariants().currentGameVariant().uiConfig().renderConfig();
@@ -86,7 +84,7 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
     private RenderInfo createRenderInfo(GameLevel level, Arcade_PlayScene2D playScene2D) {
         final var info = new RenderInfo();
         final boolean energizerVisible = level.heartbeat().state() == Pulse.State.ON;
-        final boolean mapIsEmpty = level.worldMap().foodLayer().remainingFoodCount() == 0;
+        final boolean mapIsEmpty = level.food().remainingFoodCount() == 0;
         info.put(CommonRenderInfoKey.ENERGIZER_VISIBLE, energizerVisible);
         info.put(CommonRenderInfoKey.MAP_EMPTY, mapIsEmpty);
         info.put(CommonRenderInfoKey.MAP_BRIGHT, false);

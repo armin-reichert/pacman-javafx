@@ -4,69 +4,35 @@
 package de.amr.pacmanfx.core.model.world.map;
 
 import de.amr.basics.math.Vector2i;
-import org.tinylog.Logger;
 
-import java.util.BitSet;
 import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import static de.amr.pacmanfx.core.model.world.map.FoodTile.ENERGIZER;
-import static de.amr.pacmanfx.core.model.world.map.FoodTile.PELLET;
-import static java.util.function.Predicate.not;
 
 public final class FoodLayer extends WorldMapLayer {
 
-    // instead of Set<Vector2i> we use a bit-set indexed by top-down-left-to-right tile index
-    private final BitSet eatenFoodBits;
-    private int totalFoodCount;
-    private int remainingFoodCount;
-    private Set<Vector2i> energizerTiles;
+    //TODO move out of here
+    private FoodState foodState;
+
+    private final Set<Vector2i> energizerTiles;
 
     public FoodLayer(int numRows, int numCols) {
         super(numRows, numCols);
-        eatenFoodBits = new BitSet(numCols() * numRows());
-        initFoodCount();
+        energizerTiles = tilesContaining(ENERGIZER.$).collect(Collectors.toSet());
+        foodState = new FoodState(this);
     }
 
     public FoodLayer(FoodLayer layer) {
         super(layer);
-        eatenFoodBits = new BitSet(numCols() * numRows());
-        initFoodCount();
-    }
-
-    public void initFoodCount() {
         energizerTiles = tilesContaining(ENERGIZER.$).collect(Collectors.toSet());
-        remainingFoodCount = totalFoodCount = (int) tilesContaining(PELLET.$).count() + energizerTiles.size();
+        foodState = new FoodState(layer);
     }
 
-    public int totalFoodCount() {
-        return totalFoodCount;
-    }
-
-    public int remainingFoodCount() {
-        return remainingFoodCount;
-    }
-
-    public int eatenFoodCount() {
-        return totalFoodCount - remainingFoodCount;
-    }
-
-    public void markFoodEatenAt(Vector2i tile) {
-        if (hasFoodAtTile(tile)) {
-            eatenFoodBits.set(indexInRowWiseOrder(tile));
-            --remainingFoodCount;
-        } else {
-            Logger.warn("Attempt to eat foot at tile {} that has none", tile);
-        }
-    }
-
-    public void eatAll() {
-        tiles().filter(this::hasFoodAtTile).forEach(this::markFoodEatenAt);
-    }
-
-    public void eatPellets() {
-        tiles().filter(this::hasFoodAtTile).filter(not(this::isEnergizerTile)).forEach(this::markFoodEatenAt);
+    //TODO remove
+    public FoodState foodState() {
+        return foodState;
     }
 
     public Set<Vector2i> energizerTiles() { return Collections.unmodifiableSet(energizerTiles); }
@@ -77,13 +43,5 @@ public final class FoodLayer extends WorldMapLayer {
 
     public boolean isFoodTile(Vector2i tile) {
         return !outOfBounds(tile) && content(tile) != FoodTile.EMPTY.$;
-    }
-
-    public boolean hasFoodAtTile(Vector2i tile) {
-        return isFoodTile(tile) && !hasEatenFoodAtTile(tile);
-    }
-
-    public boolean hasEatenFoodAtTile(Vector2i tile) {
-        return !outOfBounds(tile) && eatenFoodBits.get(indexInRowWiseOrder(tile));
     }
 }

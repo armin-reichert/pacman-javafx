@@ -219,7 +219,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final double energizerZ = maze3D.floorTop() - energizerConfig3D.floorElevation();
 
         foodLayer.tiles()
-            .filter(foodLayer::hasFoodAtTile)
+            .filter(level.food()::hasFoodAtTile)
             .forEach(tile -> {
                 if (foodLayer.isEnergizerTile(tile)) {
                     energizer3DByTile.put(tile, createEnergizer3D(tile, energizerZ, foodMaterial));

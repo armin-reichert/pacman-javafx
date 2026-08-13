@@ -67,7 +67,7 @@ public final class CheatActions {
             public void execute(GameAppContext app) {
                 final GameSession session = app.game().session();
                 final GameLevel level = session.assertLevel();
-                level.worldMap().foodLayer().eatPellets();
+                level.food().eatPellets();
                 session.cheats().notifyCheatUsed();
                 app.game().eventManager().publishGameEvent(new PacEatsFoodEvent(level.entities().pac(), false, true));
             }

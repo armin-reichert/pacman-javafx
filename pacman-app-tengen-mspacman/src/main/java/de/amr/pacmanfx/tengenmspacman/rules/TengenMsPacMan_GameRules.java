@@ -74,7 +74,7 @@ public class TengenMsPacMan_GameRules implements GameRules {
 
     @Override
     public boolean isLevelCompleted(GameLevel level) {
-        return level.worldMap().foodLayer().remainingFoodCount() == 0;
+        return level.food().remainingFoodCount() == 0;
     }
 
     @Override
@@ -118,10 +118,6 @@ public class TengenMsPacMan_GameRules implements GameRules {
 
     public MapCategory mapCategory() {
         return mapCategory.get();
-    }
-
-    public ObjectProperty<MapCategory> mapCategoryProperty() {
-        return mapCategory;
     }
 
     // Hunting

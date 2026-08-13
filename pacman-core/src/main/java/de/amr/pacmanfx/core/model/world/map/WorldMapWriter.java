@@ -50,7 +50,6 @@ public class WorldMapWriter {
 
         final FoodLayer foodLayer = worldMap.foodLayer();
         printer.println(WorldMap.Marker.BEGIN_FOOD_LAYER.literal());
-        printComment(" Pellets (total): %d".formatted(foodLayer.totalFoodCount()));
         printComment(" Energizers: %d".formatted(foodLayer.energizerTiles().size()));
         printLayerProperties(foodLayer);
         printLayerData(foodLayer);

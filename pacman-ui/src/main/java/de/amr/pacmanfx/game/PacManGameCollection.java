@@ -80,15 +80,16 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
         ui.viewModel().maze3D.init(gameVariant.uiConfig().worldSettings().maze());
 
         game = createGameContext(gameVariant);
+        createSession(gameVariant);
         game.eventManager().addGameEventSubscriber(ui);
         gameVariant.config().gameFlow().addStateChangeListener(changeEventConverter);
     }
 
-    private void createSession(GameVariant gameVariant, GameContext gameContext) {
+    private void createSession(GameVariant gameVariant) {
         final String variantName = gameVariantManager.currentVariantName();
         final var session = new GameSession(variantName, gameVariant.config().gameFlow(), new GameCheats());
         session.hud().creditProperty().bind(gameBox().coinMechanism().numCoinsProperty());
-        gameContext.setSession(session);
+        game.setSession(session);
     }
 
     private GameContext createGameContext(GameVariant gameVariant) {
@@ -182,7 +183,7 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
 
     @Override
     public void startPlaying() {
-        createSession(gameVariantManager.currentGameVariant(), game);
+        createSession(gameVariantManager.currentGameVariant());
         ui.window().mainScene().connect(game.session());
         ui.views().selectGamePlayView();
         game.variantConfig().gamePlay().onSessionStart(game);
@@ -283,7 +284,8 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
             requireNonNull(gameVariantName);
             if (gameBox().containsCartridgeWithName(gameVariantName)) {
                 this.variantName.set(gameVariantName);
-            } else throw new IllegalArgumentException("Game with name '" + gameVariantName + "' not found");
+            }
+            else throw new IllegalArgumentException("Game with name '" + gameVariantName + "' not found");
         }
 
         @Override
