@@ -4,11 +4,12 @@
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.math.RectShort;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
 import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.core.model.HUDState;
-import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.GamePlayOptions;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene1;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene2;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene3;
@@ -99,13 +100,13 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
             drawLevelCounter(session, counterY);
         }
 
-        //TODO add these to session too, but then a game-variant-specific session is needed!
-
-/*
         if (hud.gameOptionsVisible()) {
-            drawGameOptions(model.mapCategory(), model.difficulty(), model.pacBoosterMode(), tilesPx(16), tilesPx(2.5f));
+            drawGameOptions(
+                session.value(GamePlayOptions.MAP_CATEGORY, MapCategory.class),
+                session.value(GamePlayOptions.DIFFICULTY, Difficulty.class),
+                session.value(GamePlayOptions.BOOSTER_MODE, BoosterMode.class),
+                tilesPx(16), tilesPx(2.5f));
         }
-*/
 
         ctx.restore();
     }
