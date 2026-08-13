@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.action;
 
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.rules.ActorCollisionRules;
 import de.amr.pacmanfx.core.model.rules.CollisionStrategy;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
@@ -39,26 +40,27 @@ public final class CommonGameActions {
 
     private final Set<ActionKeyBinding> commonBindings;
 
-    public CommonGameActions(GameAppContext appContext) {
-        simulationActions = new SimulationActions(appContext);
-        gameFlowActions = new GameFlowActions(appContext);
-        steeringActions = new SteeringActions(appContext);
-        camera3DActions = new Camera3DActions(appContext);
-        editorActions = new EditorActions(appContext);
-        cheatActions = new CheatActions(appContext);
-        sceneTestActions = new TestActions(appContext);
-        uiSettingsActions = new UISettingsActions(appContext);
+    public CommonGameActions() {
+        simulationActions = new SimulationActions();
+        gameFlowActions = new GameFlowActions();
+        steeringActions = new SteeringActions();
+        camera3DActions = new Camera3DActions();
+        editorActions = new EditorActions();
+        cheatActions = new CheatActions();
+        sceneTestActions = new TestActions();
+        uiSettingsActions = new UISettingsActions();
 
-        actionToggleCollisionStrategy = new GameAction(appContext, "toggle_collision_strategy") {
+        actionToggleCollisionStrategy = new GameAction("toggle_collision_strategy") {
             @Override
-            protected void doAction() {
-                final ActorCollisionRules collisionRules = game().rules().actorCollisionRules();
+            protected void doAction(GameAppContext app) {
+                final GameContext game = app.game();
+                final ActorCollisionRules collisionRules = game.rules().actorCollisionRules();
                 toggleProperty(collisionRules.collisionStrategyProperty(), CollisionStrategy.SAME_TILE, CollisionStrategy.CENTER_DISTANCE);
                 final CollisionStrategy strategy = collisionRules.getCollisionStrategy();
                 if (strategy == CollisionStrategy.SAME_TILE) {
-                    appContext.ui().shortMessage("Using original Arcade collision strategy (same tile)");
+                    app.ui().shortMessage("Using original Arcade collision strategy (same tile)");
                 } else {
-                    appContext.ui().shortMessage("Using safe collision strategy");
+                    app.ui().shortMessage("Using safe collision strategy");
                 }
             }
         };

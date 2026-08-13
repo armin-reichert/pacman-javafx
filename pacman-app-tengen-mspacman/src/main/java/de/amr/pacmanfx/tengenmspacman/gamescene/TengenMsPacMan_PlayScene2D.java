@@ -207,7 +207,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
         addLocalizedCheckBox(contextMenu, translations, game().session().cheats().pacImmuneProperty(), "context_menu.immunity");
         addSeparator(contextMenu);
         addLocalizedCheckBox(contextMenu, translations, app().ui().viewModel().mutedProperty, "context_menu.muted");
-        addLocalizedActionItem(contextMenu, translations, app().commonActions().gameFlowActions().actionQuit(), "context_menu.quit");
+        addLocalizedActionItem(app(), contextMenu, translations, app().commonActions().gameFlowActions().actionQuit(), "context_menu.quit");
 
         return Optional.of(contextMenu);
     }
@@ -324,7 +324,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
         final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().config().renderConfig();
         final SpriteAnimationContainer animationContainer = app().ui().sprites().animations();
 
-        final SpriteAnimSystem animSystem = app().currentGame().systems().spriteAnim();
+        final SpriteAnimSystem animSystem = app().game().systems().spriteAnim();
 
         final Pac pac = level.entities().pac();
         if (animSystem.hasNoAnimations(pac)) {

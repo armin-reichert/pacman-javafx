@@ -38,7 +38,7 @@ public interface Arcade_PlayScene2D_GameEventHandler extends DefaultGameEventLis
     }
 
     default GameContext game() {
-        return app().currentGame();
+        return app().game();
     }
 
     @Override

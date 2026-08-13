@@ -51,14 +51,18 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
         this.appContext = requireNonNull(app);
 
         final GameUI ui = app.ui();
-        final GameContext game = app.currentGame();
+        final GameContext game = app.game();
         final TranslationManager translations = ui.translations();
         final Game3DSettingsVM settings3D = ui.viewModel().common3D;
 
         addLocalizedTitleItem(this, translations, "context_menu.scene_display");
 
-        addLocalizedActionItem(this, translations,
-            app.commonActions().uiSettingsActions().actionTogglePlayScene2D3D(), "context_menu.use_2D_scene");
+        addLocalizedActionItem(
+            app,
+            this,
+            translations,
+            app.commonActions().uiSettingsActions().actionTogglePlayScene2D3D(),
+            "context_menu.use_2D_scene");
 
         addLocalizedCheckBox(this, translations,
             ui.viewModel().miniView.activeProperty, "context_menu.pip");
@@ -82,7 +86,7 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
 
         addSeparator(this);
         addLocalizedCheckBox(this, translations, ui.viewModel().mutedProperty, "context_menu.muted");
-        addLocalizedActionItem(this, translations, app.commonActions().gameFlowActions().actionQuit(), "context_menu.quit");
+        addLocalizedActionItem(app, this, translations, app.commonActions().gameFlowActions().actionQuit(), "context_menu.quit");
 
         settings3D.cameraPerspectiveIdProperty.addListener(perspectiveListener);
     }

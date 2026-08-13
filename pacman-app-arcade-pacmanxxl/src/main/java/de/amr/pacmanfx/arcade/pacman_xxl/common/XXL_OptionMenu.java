@@ -89,7 +89,7 @@ public class XXL_OptionMenu extends OptionMenu {
         final GameVariant variant = app.gameVariants().currentGameVariant();
         final GameVariantID variantID = GameVariantID.valueOf(app.gameVariants().currentVariantName());
         final GameVariantRenderConfig renderConfig = variant.config().renderConfig();
-        final GameContext game = app.currentGame();
+        final GameContext game = app.game();
         final WorldMapManager worldMapSelector = game.worldMapManager();
 
         if (!(worldMapSelector instanceof XXL_WorldMapManager mapSelector)) {
@@ -166,7 +166,7 @@ public class XXL_OptionMenu extends OptionMenu {
     }
 
     private void onCutScenesEnabledSettingsChange(ObservableValue<? extends Boolean> obs,  Boolean oldValue, Boolean newValue) {
-        app.currentGame().session().gameFlow().setCutScenesEnabled(newValue);
+        app.game().session().gameFlow().setCutScenesEnabled(newValue);
     }
 
     private OptionMenuEntry<GameVariantID> createGameVariantIDEntry() {
@@ -178,7 +178,7 @@ public class XXL_OptionMenu extends OptionMenu {
             @Override
             public void onValueChanged(GameVariantID oldVariant, GameVariantID newVariant) {
                 if (app != null) {
-                    final GameContext game = app.currentGame();
+                    final GameContext game = app.game();
                     final GameVariantRenderConfig renderConfig = app.gameVariants().gameVariantByName(newVariant.name()).config().renderConfig();
                     chaseAnimation.init(game, renderConfig, canvas, app.ui().sprites().animations());
                 }

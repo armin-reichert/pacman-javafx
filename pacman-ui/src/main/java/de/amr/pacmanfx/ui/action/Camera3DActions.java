@@ -26,43 +26,43 @@ public class Camera3DActions {
 
     private final Set<ActionKeyBinding> bindings;
 
-    public Camera3DActions(GameAppContext appContext) {
+    public Camera3DActions() {
 
-        actionNextPerspective = new GameAction(appContext, "perspective_next") {
+        actionNextPerspective = new GameAction("perspective_next") {
             @Override
-            protected void doAction() {
-                final PerspectiveID nextID = appContext.ui().viewModel().common3D.cameraPerspectiveIdProperty.get().next();
-                appContext.ui().viewModel().common3D.cameraPerspectiveIdProperty.set(nextID);
-                appContext.ui().shortMessage(translatedPerspectiveMessage(appContext, nextID));
+            protected void doAction(GameAppContext app) {
+                final PerspectiveID nextID = app.ui().viewModel().common3D.cameraPerspectiveIdProperty.get().next();
+                app.ui().viewModel().common3D.cameraPerspectiveIdProperty.set(nextID);
+                app.ui().shortMessage(translatedPerspectiveMessage(app, nextID));
             }
 
             @Override
-            public boolean isEnabled() {
-                return is3DPlaySceneActive(appContext);
+            public boolean isEnabled(GameAppContext app) {
+                return is3DPlaySceneActive(app);
             }
         };
 
-        actionPreviousPerspective = new GameAction(appContext, "perspective_previous") {
+        actionPreviousPerspective = new GameAction("perspective_previous") {
             @Override
-            protected void doAction() {
-                final PerspectiveID prevID = appContext.ui().viewModel().common3D.cameraPerspectiveIdProperty.get().prev();
-                appContext.ui().viewModel().common3D.cameraPerspectiveIdProperty.set(prevID);
-                appContext.ui().shortMessage(translatedPerspectiveMessage(appContext, prevID));
+            protected void doAction(GameAppContext app) {
+                final PerspectiveID prevID = app.ui().viewModel().common3D.cameraPerspectiveIdProperty.get().prev();
+                app.ui().viewModel().common3D.cameraPerspectiveIdProperty.set(prevID);
+                app.ui().shortMessage(translatedPerspectiveMessage(app, prevID));
             }
             @Override
-            public boolean isEnabled() {
-                return is3DPlaySceneActive(appContext);
+            public boolean isEnabled(GameAppContext app) {
+                return is3DPlaySceneActive(app);
             }
         };
 
-        actionToggleDrawMode = new GameAction(appContext, "toggle_draw_mode") {
+        actionToggleDrawMode = new GameAction("toggle_draw_mode") {
             @Override
-            protected void doAction() {
-                Ufx.toggleProperty(appContext.ui().viewModel().common3D.drawModeProperty, DrawMode.LINE, DrawMode.FILL);
+            protected void doAction(GameAppContext app) {
+                Ufx.toggleProperty(app.ui().viewModel().common3D.drawModeProperty, DrawMode.LINE, DrawMode.FILL);
             }
             @Override
-            public boolean isEnabled() {
-                return is3DPlaySceneActive(appContext);
+            public boolean isEnabled(GameAppContext app) {
+                return is3DPlaySceneActive(app);
             }
         };
 
@@ -89,12 +89,12 @@ public class Camera3DActions {
         return bindings;
     }
 
-    private boolean is3DPlaySceneActive(GameAppContext appContext) {
-        return appContext.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D);
+    private boolean is3DPlaySceneActive(GameAppContext app) {
+        return app.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D);
     }
 
-    private String translatedPerspectiveMessage(GameAppContext appContext, PerspectiveID perspectiveID) {
-        final TranslationManager translations = appContext.ui().translations();
+    private String translatedPerspectiveMessage(GameAppContext app, PerspectiveID perspectiveID) {
+        final TranslationManager translations = app.ui().translations();
         return translations.translate(
             "camera_perspective",
             translations.translate("perspective_id_" + perspectiveID.name())

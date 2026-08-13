@@ -22,18 +22,16 @@ import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
 
 public class EditorActions {
 
-    private final GameAppContext appContext;
     private final GameAction actionOpenEditor;
 
     private final Set<ActionKeyBinding> bindings;
 
-    public EditorActions(GameAppContext appContext) {
-        this.appContext = appContext;
+    public EditorActions() {
 
-        actionOpenEditor = new GameAction(appContext, "open_editor") {
+        actionOpenEditor = new GameAction("open_editor") {
             @Override
-            protected void doAction() {
-                openMapEditor().ifPresent(editor -> startEditor(editor));
+            protected void doAction(GameAppContext app) {
+                openMapEditor(app).ifPresent(editor -> startEditor(app, editor));
             }
         };
 
@@ -48,16 +46,16 @@ public class EditorActions {
      */
     public GameAction createEditMapFileAction(File mapFile) {
 
-        return new GameAction(appContext, "edit_map_file") {
+        return new GameAction("edit_map_file") {
             @Override
-            protected void doAction() {
-                openMapEditor().ifPresent(editor -> {
-                    startEditor(editor);
+            protected void doAction(GameAppContext app) {
+                openMapEditor(app).ifPresent(editor -> {
+                    startEditor(app, editor);
                     if (mapFile != null) {
                         try {
                             editor.editFile(mapFile);
                         } catch (Exception x) {
-                            appContext.ui().shortMessage("Cannot edit map file");
+                            app.ui().shortMessage("Cannot edit map file");
                             Logger.error(x, "Cannot edit map file {}", mapFile);
                         }
                     }
@@ -76,17 +74,17 @@ public class EditorActions {
 
     // Private
 
-    private void startEditor(TileMapEditor editor) {
-        appContext.lifecycle().suspendPlaying();
+    private void startEditor(GameAppContext app, TileMapEditor editor) {
+        app.lifecycle().suspendPlaying();
         editor.init(GameConstants.CUSTOM_MAP_DIR);
         editor.start();
     }
 
-    private Optional<TileMapEditor> openMapEditor() {
-        final EditorView editorView = appContext.ui().views().assertView(GameViewID.EDITOR, EditorView.class);
-        editorView.ensureEditorCreated(appContext);
-        if (!appContext.ui().views().trySelectEditorView(appContext)) {
-            appContext.ui().shortMessage("Cannot open the map editor.");
+    private Optional<TileMapEditor> openMapEditor(GameAppContext app) {
+        final EditorView editorView = app.ui().views().assertView(GameViewID.EDITOR, EditorView.class);
+        editorView.ensureEditorCreated(app);
+        if (!app.ui().views().trySelectEditorView(app)) {
+            app.ui().shortMessage("Cannot open the map editor.");
             return Optional.empty();
         }
         return Optional.of(editorView.editor());

@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.ui.action;
 
 import de.amr.basics.math.Direction;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
@@ -29,20 +30,21 @@ public class SteeringActions {
 
         private final Direction dir;
 
-        public SteeringAction(GameAppContext appContext, Direction dir) {
-            super(appContext, createActionID(requireNonNull(dir)));
+        public SteeringAction(Direction dir) {
+            super(createActionID(requireNonNull(dir)));
             this.dir = requireNonNull(dir);
         }
 
         @Override
-        public void doAction() {
-            final WorldNavigationSystem navigator = game().systems().worldNavigator();
-            game().session().optLevel().ifPresent(level -> navigator.setWishDir(level.entities().pac(), dir));
+        public void doAction(GameAppContext app) {
+            final GameContext game = app.game();
+            final WorldNavigationSystem navigator = game.systems().worldNavigator();
+            game.session().optLevel().ifPresent(level -> navigator.setWishDir(level.entities().pac(), dir));
         }
 
         @Override
-        public boolean isEnabled() {
-            final GameSession session = game().session();
+        public boolean isEnabled(GameAppContext app) {
+            final GameSession session = app.game().session();
             return session.optLevel().isPresent()
                 && !session.isAttractMode()
                 && !session.assertLevel().entities().pac().cheats().isUsingAutopilot();
@@ -52,9 +54,9 @@ public class SteeringActions {
     private final EnumMap<Direction, GameAction> actions = new EnumMap<>(Direction.class);
     private final Set<ActionKeyBinding> bindings;
 
-    public SteeringActions(GameAppContext appContext) {
+    public SteeringActions() {
         for (Direction dir : Direction.values()) {
-            actions.put(dir, new SteeringAction(appContext, dir));
+            actions.put(dir, new SteeringAction(dir));
         }
 
         bindings = Set.of(

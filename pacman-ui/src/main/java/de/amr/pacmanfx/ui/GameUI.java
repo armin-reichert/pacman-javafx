@@ -19,7 +19,6 @@ import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationManager;
-import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.settings.ui.GameUISettings;
 import de.amr.pacmanfx.ui.sound.SoundManager;
@@ -165,7 +164,7 @@ public class GameUI implements GameEventListener {
         boolean forceGameSceneReload = false;
         switch (gameEvent) {
             case LevelCreatedEvent e -> {
-                final GameContext game = app.currentGame();
+                final GameContext game = app.game();
                 views.gamePlayView().onLevelCreated(game, e.level());
             }
             case GameStateChangeEvent e -> {
@@ -198,17 +197,17 @@ public class GameUI implements GameEventListener {
     private void connectKeyboard(GameAppContext appContext) {
         final Keyboard keyboard = appContext.input().keyboard();
         keyboard.enabledProperty().bind(views.currentViewIDProperty().map(GameUI::isViewAcceptingKeyboardInput));
-        keyboard.addStateListener(_ -> handleKeyboardStateChange(appContext.input()));
+        keyboard.addStateListener(_ -> handleKeyboardStateChange());
         keyboard.filterKeyEventsFrom(window.mainScene());
     }
 
-    private void handleKeyboardStateChange(Input input) {
-        if (input.keyboard().anyNormalKeyPressed()) { // ignore modifier state change
+    private void handleKeyboardStateChange() {
+        if (app.input().keyboard().anyNormalKeyPressed()) { // ignore modifier state change
             final GameViewID currentViewID = views.currentViewID();
             if (isViewAcceptingKeyboardInput(currentViewID)) {
                 // Check for matching "global" action first, if none, let current view handle it.
-                if (actionBindings.executeMatchingAction(input).isEmpty()) {
-                    views.assertView(currentViewID).onInput(input);
+                if (actionBindings.executeMatchingAction(app).isEmpty()) {
+                    views.assertView(currentViewID).onInput(app);
                 }
             }
         }

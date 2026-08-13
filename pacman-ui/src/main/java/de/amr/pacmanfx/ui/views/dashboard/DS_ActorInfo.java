@@ -52,7 +52,7 @@ public class DS_ActorInfo extends GameDashboardSection {
 
     private Supplier<String> supplyLivesCount(GameAppContext appContext) {
         return fnGameLevelInfo(appContext, _ -> {
-            final GameSession session = appContext.currentGame().session();
+            final GameSession session = appContext.game().session();
             final LivesCounter livesCounter = session.livesCounter();
             return String.valueOf(livesCounter.data().numLives());
         });
@@ -63,7 +63,7 @@ public class DS_ActorInfo extends GameDashboardSection {
         addDynamicInfo("Movement",  supplyGhostText(appContext, this::actorMovementText,  personality));
         addDynamicInfo("Tile",      supplyGhostText(appContext, this::actorLocationText,  personality));
         addDynamicInfo("Animation", supplyGhostText(appContext,
-            (_, ghost) -> ghostAnimationText(appContext.currentGame().systems().spriteAnim(), ghost),
+            (_, ghost) -> ghostAnimationText(appContext.game().systems().spriteAnim(), ghost),
             personality));
     }
 
@@ -105,7 +105,7 @@ public class DS_ActorInfo extends GameDashboardSection {
     }
 
     private Supplier<String> supplyPacPowerText(GameAppContext appContext) {
-        return () -> appContext.currentGame().session().optLevel()
+        return () -> appContext.game().session().optLevel()
             .map(level -> level.entities().pac())
             .map(this::pacPowerText)
             .orElse(NO_INFO);
@@ -122,8 +122,8 @@ public class DS_ActorInfo extends GameDashboardSection {
     }
 
     private Supplier<String> supplyPacAnimationText(GameAppContext appContext) {
-        return () -> appContext.currentGame().session().optLevel().map(level -> {
-            final SpriteAnimSystem animSystem = appContext.currentGame().systems().spriteAnim();
+        return () -> appContext.game().session().optLevel().map(level -> {
+            final SpriteAnimSystem animSystem = appContext.game().systems().spriteAnim();
             final Pac pac = level.entities().pac();
             if (animSystem.selectedAnimationID(pac) != null) {
                 return "%s:%d".formatted(animSystem.selectedAnimationID(pac), animSystem.currentFrame(pac));

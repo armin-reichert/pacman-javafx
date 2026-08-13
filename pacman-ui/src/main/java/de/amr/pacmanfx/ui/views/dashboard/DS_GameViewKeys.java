@@ -26,7 +26,7 @@ public class DS_GameViewKeys extends GameDashboardSection {
         app.ui().views().optCurrentView().ifPresent(view -> updateInfo(app, view));
     }
 
-    private void updateInfo(GameAppContext appContext, GameView view) {
+    private void updateInfo(GameAppContext app, GameView view) {
         clearSection();
 
         final Map<KeyCodeCombination, GameAction> currentBindingMap = view.actionBindings().actionBindings();
@@ -38,8 +38,8 @@ public class DS_GameViewKeys extends GameDashboardSection {
                 .sorted(Comparator.comparing(KeyCombination::getDisplayText))
                 .forEach(key -> {
                     final GameAction action = currentBindingMap.get(key);
-                    final String actionText = appContext.ui().translations().translate(action.resourceBundleKey());
-                    final Label label = createLabel(actionText, action.isEnabled());
+                    final String actionText = app.ui().translations().translate(action.resourceBundleKey());
+                    final Label label = createLabel(actionText, action.isEnabled(app));
                     addRow(key.getDisplayText(), label);
                 });
         }

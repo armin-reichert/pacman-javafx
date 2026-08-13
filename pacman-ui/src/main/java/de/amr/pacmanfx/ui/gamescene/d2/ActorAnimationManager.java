@@ -20,7 +20,7 @@ public class ActorAnimationManager {
         final GameVariantRenderConfig renderConfig = appContext.gameVariants().currentGameVariant().config().renderConfig();
         final SpriteAnimationContainer animationContainer = appContext.ui().sprites().animations();
 
-        final SpriteAnimSystem animSystem = appContext.currentGame().systems().spriteAnim();
+        final SpriteAnimSystem animSystem = appContext.game().systems().spriteAnim();
 
         final Pac pac = level.entities().pac();
         if (animSystem.hasNoAnimations(pac)) {

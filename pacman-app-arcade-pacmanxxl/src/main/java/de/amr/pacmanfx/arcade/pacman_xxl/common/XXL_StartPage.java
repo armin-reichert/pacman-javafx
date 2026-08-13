@@ -10,7 +10,6 @@ import de.amr.pacmanfx.arcade.pacman_xxl.pacman.XXL_PacMan_GameVariantConfig;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.startpages.StartPage;
@@ -44,7 +43,7 @@ public class XXL_StartPage implements StartPage {
     private final XXL_OptionMenu menu;
     private final String title;
 
-    private GameAppContext appContext;
+    private GameAppContext app;
 
     public XXL_StartPage() {
         title = "Pac-Man XXL games"; // TODO localize
@@ -67,26 +66,31 @@ public class XXL_StartPage implements StartPage {
     }
 
     @Override
-    public void setGameApp(GameAppContext app) {
-        this.appContext = requireNonNull(app);
+    public GameAppContext app() {
+        return app;
     }
 
     @Override
-    public void onInput(Input input) {
-        final Keyboard keyboard = input.keyboard();
+    public void setGameApp(GameAppContext app) {
+        this.app = requireNonNull(app);
+    }
+
+    @Override
+    public void onInput() {
+        final Keyboard keyboard = app.input().keyboard();
         if (keyboard.isKeyPressed(KeyCode.E)) {
             pauseProgressTimer();
-            appContext.commonActions().editorActions().actionOpenEditor().execute();
+            app.commonActions().editorActions().actionOpenEditor().execute(app);
         }
         else if (keyboard.isKeyPressed(KeyCode.ENTER)) {
             pauseProgressTimer();
             final WorldMapSelectionMode mode = menu.selectedMapSelectionMode();
             XXL_WorldMapManager.instance().setSelectionMode(mode);
             Logger.info("Using map selection mode: {}", mode);
-            appContext.lifecycle().startPlaying();
+            app.lifecycle().startPlaying();
         }
         else if (keyboard.isKeyPressed(KeyCode.S)) {
-            appContext.ui().shortMessage("OK, I shut my mouth");
+            app.ui().shortMessage("OK, I shut my mouth");
             stopTalking();
         }
     }
@@ -95,11 +99,11 @@ public class XXL_StartPage implements StartPage {
     public void onEnter() {
         final GameVariantID selectedGameVariantID = menu.meGameVariantID().value();
         switch (selectedGameVariantID) {
-            case ARCADE_PACMAN_XXL, ARCADE_MS_PACMAN_XXL -> appContext.gameVariants().selectVariant(selectedGameVariantID.name());
+            case ARCADE_PACMAN_XXL, ARCADE_MS_PACMAN_XXL -> app.gameVariants().selectVariant(selectedGameVariantID.name());
             default -> throw new IllegalStateException("Unexpected game variant in XXL menu: " + selectedGameVariantID);
         }
-        appContext.ui().sounds().voice().playAfterSec(1, VARIANT_NARRATION);
-        menu.init(appContext);
+        app.ui().sounds().voice().playAfterSec(1, VARIANT_NARRATION);
+        menu.init(app);
         menu.bind();
         menu.startAnimation();
         Platform.runLater(menu::requestFocus);
@@ -126,10 +130,10 @@ public class XXL_StartPage implements StartPage {
     // Private area
 
     private void pauseProgressTimer() {
-        appContext.ui().views().assertView(GameViewID.START_PAGES, StartPagesView.class).rootPane().pauseProgress();
+        app.ui().views().assertView(GameViewID.START_PAGES, StartPagesView.class).rootPane().pauseProgress();
     }
 
     private void stopTalking() {
-        appContext.ui().sounds().voice().stop();
+        app.ui().sounds().voice().stop();
     }
 }

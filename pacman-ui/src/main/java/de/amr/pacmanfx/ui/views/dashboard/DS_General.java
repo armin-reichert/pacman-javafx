@@ -26,9 +26,9 @@ public class DS_General extends GameDashboardSection {
     }
 
     @Override
-    public void setGameApp(GameAppContext appContext) {
-        final GameUISettingsVM viewModel = appContext.ui().viewModel();
-        final GameClock gameClock = appContext.clock();
+    public void setGameApp(GameAppContext app) {
+        final GameUISettingsVM viewModel = app.ui().viewModel();
+        final GameClock gameClock = app.clock();
 
         info("Java Version",   Runtime.version().toString());
         info("JavaFX Version", System.getProperty("javafx.runtime.version"));
@@ -51,7 +51,7 @@ public class DS_General extends GameDashboardSection {
         btnPlayPause.setStyle("-fx-background-color: transparent");
         btnPlayPause.graphicProperty().bind(gameClock.updatesDisabledProperty().map(paused -> paused ? iconPlay : iconStop));
         btnPlayPause.tooltipProperty().bind(gameClock.updatesDisabledProperty().map(paused -> paused ? tooltipPlay : tooltipStop));
-        setGameAction(btnPlayPause, appContext.commonActions().simulationActions().actionTogglePaused());
+        setGameAction(app, btnPlayPause, app.commonActions().simulationActions().actionTogglePaused());
 
         final Button btnStep = buttonsSimulationControl[1];
         btnStep.setGraphic(iconStep);

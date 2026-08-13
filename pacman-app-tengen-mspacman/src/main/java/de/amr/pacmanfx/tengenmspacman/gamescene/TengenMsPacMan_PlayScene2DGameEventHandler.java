@@ -33,7 +33,7 @@ public interface TengenMsPacMan_PlayScene2DGameEventHandler extends DefaultGameE
     }
 
     default GameContext game() {
-        return app().currentGame();
+        return app().game();
     }
 
     TengenMsPacMan_PlayScene2D gameScene();

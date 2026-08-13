@@ -85,7 +85,7 @@ public abstract class AbstractGameScene
 
     @Override
     public GameContext game() {
-        return app.currentGame();
+        return app.game();
     }
 
     @Override
@@ -110,7 +110,7 @@ public abstract class AbstractGameScene
 
     @Override
     public void onInput() {
-        actionBindings().executeMatchingAction(input());
+        actionBindings().executeMatchingAction(app());
     }
 
     // --- Interface "QuitHandler"

@@ -8,7 +8,6 @@ import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.views.GameView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SeparatorMenuItem;
@@ -55,12 +54,12 @@ public class EditorView implements GameView {
     public void onExit() {}
 
     @Override
-    public void onInput(Input input) {
+    public void onInput(GameAppContext app) {
         Logger.warn("I should never get input from the global keyboard!");
     }
 
     @Override
-    public void handleQuit(GameAppContext appContext) {
+    public void handleQuit(GameAppContext app) {
         editor.quit();
     }
 

@@ -47,7 +47,7 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
     public PacManGameCollection() {
         gameVariantManager = new GameVariantManagerImpl();
         changeEventConverter = new StateChangeEventConverter();
-        actions = new CommonGameActions(this);
+        actions = new CommonGameActions();
     }
 
     public void setUI(GameUI ui) {
@@ -117,7 +117,7 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
     }
 
     @Override
-    public GameContext currentGame() {
+    public GameContext game() {
         return game;
     }
 

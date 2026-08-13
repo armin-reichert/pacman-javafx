@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui.views.startpages;
 
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.uilib.controls.Carousel;
 import org.tinylog.Logger;
@@ -78,8 +77,8 @@ public class StartPagesView implements GameView {
     }
 
     @Override
-    public void onInput(Input input) {
-        currentStartPage().ifPresent(startPage -> startPage.onInput(input));
+    public void onInput(GameAppContext app) {
+        currentStartPage().ifPresent(StartPage::onInput);
     }
 
     @Override

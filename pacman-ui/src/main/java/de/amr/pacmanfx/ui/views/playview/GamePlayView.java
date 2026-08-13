@@ -6,10 +6,10 @@ package de.amr.pacmanfx.ui.views.playview;
 
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
@@ -22,7 +22,6 @@ import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
-import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.settings.ui.DashboardSectionSettings;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
@@ -209,9 +208,9 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     }
 
     @Override
-    public void onInput(Input input) {
+    public void onInput(GameAppContext app) {
         // First look for a matching action of the play view itself; if none found, delegate to the current game scene.
-        if (actionBindings.executeMatchingAction(input).isEmpty()) {
+        if (actionBindings.executeMatchingAction(app).isEmpty()) {
             app.ui().gameScenes().optCurrentGameScene().ifPresent(GameScene::onInput);
         }
     }
@@ -248,7 +247,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
     @Override
     public void render() {
-        final GameContext game = app.currentGame();
+        final GameContext game = app.game();
         final GameSession session = game.session();
         final long tick = app.clock().currentTick();
 
@@ -283,7 +282,11 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
             // Add 2D play scene-specific entries
             if (app.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_2D)) {
                 addLocalizedTitleItem(contextMenu, translations, "context_menu.scene_display");
-                addLocalizedActionItem(contextMenu, translations, app.commonActions().uiSettingsActions().actionTogglePlayScene2D3D(),
+                addLocalizedActionItem(
+                    app,
+                    contextMenu,
+                    translations,
+                    app.commonActions().uiSettingsActions().actionTogglePlayScene2D3D(),
                     "context_menu.use_3D_scene");
             }
             // Add scene-specific entries
@@ -299,7 +302,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     public void updateGameSceneRenderers(AbstractGameScene2D gameScene2D) {
         final GameVariantRenderConfig renderConfig = app.gameVariants().currentGameVariant().config().renderConfig();
         if (gameScene2D.canvas() != null) {
-            final SpriteAnimSystem animSystem = app.currentGame().systems().spriteAnim();
+            final SpriteAnimSystem animSystem = app.game().systems().spriteAnim();
             sceneRenderer = renderConfig.createGameSceneRenderer(gameScene2D, animSystem, gameScene2D.canvas());
             setFontSmoothing(app.ui().viewModel().common2D.fontSmoothingOnProperty.get());
             hudRenderer = renderConfig.createHUDRenderer(gameScene2D, animSystem, gameScene2D.canvas()); // may return null!

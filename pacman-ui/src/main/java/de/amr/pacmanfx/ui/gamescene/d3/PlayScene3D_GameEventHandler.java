@@ -69,7 +69,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     }
 
     default GameContext game() {
-        return app().currentGame();
+        return app().game();
     }
 
     default GameSession session() {

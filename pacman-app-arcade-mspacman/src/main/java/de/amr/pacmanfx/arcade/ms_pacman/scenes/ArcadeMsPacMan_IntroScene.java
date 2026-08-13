@@ -238,7 +238,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
         READY_TO_PLAY {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                final GameContext game = scene.app().currentGame();
+                final GameContext game = scene.app().game();
                 final boolean canPlay = !game.coinMechanism().isEmpty();
                 MarqueeSystem.instance().update(scene.marquee);
                 if (timer.atSecond(2.0) && !canPlay) {

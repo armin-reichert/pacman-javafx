@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.action;
 
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.model.test.TestStateID;
@@ -26,42 +27,43 @@ public class GameFlowActions {
 
     private final Set<ActionKeyBinding> bindings;
 
-    public GameFlowActions(GameAppContext appContext) {
+    public GameFlowActions() {
 
-        actionStartGame = new GameAction(appContext, "start_game") {
+        actionStartGame = new GameAction("start_game") {
             @Override
-            protected void doAction() {
-                appContext.lifecycle().startPlaying();
+            protected void doAction(GameAppContext app) {
+                app.lifecycle().startPlaying();
             }
         };
 
-        actionQuit = new GameAction(appContext, "quit") {
+        actionQuit = new GameAction("quit") {
             @Override
-            protected void doAction() {
-                Logger.info("Call QUIT handler for {}", appContext.ui().views().assertCurrentView());
-                appContext.ui().views().assertCurrentView().handleQuit(appContext);
+            protected void doAction(GameAppContext app) {
+                Logger.info("Call QUIT handler for {}", app.ui().views().assertCurrentView());
+                app.ui().views().assertCurrentView().handleQuit(app);
             }
         };
 
-        actionLetGameStateExpire = new GameAction(appContext, "let_game_state_expire") {
+        actionLetGameStateExpire = new GameAction("let_game_state_expire") {
             @Override
-            protected void doAction() {
-                game().session().gameState().triggerTimeout();
+            protected void doAction(GameAppContext app) {
+                app.game().session().gameState().triggerTimeout();
             }
         };
 
-        actionRestartIntro = new GameAction(appContext, "restart_intro") {
+        actionRestartIntro = new GameAction("restart_intro") {
             @Override
-            protected void doAction() {
-                final GameState gameState = game().session().gameState();
+            protected void doAction(GameAppContext app) {
+                final GameContext game = app.game();
+                final GameState gameState = game.session().gameState();
 
                 if (gameState.id() instanceof TestStateID) {
-                    gameState.onExit(game());
+                    gameState.onExit(game);
                 }
 
-                appContext.lifecycle().suspendPlaying();
-                appContext.clock().start();
-                gameFlow().restartState(game(), CommonGameStateID.GAME_INTRO);
+                app.lifecycle().suspendPlaying();
+                app.clock().start();
+                game.session().gameFlow().restartState(game, CommonGameStateID.GAME_INTRO);
             }
         };
 

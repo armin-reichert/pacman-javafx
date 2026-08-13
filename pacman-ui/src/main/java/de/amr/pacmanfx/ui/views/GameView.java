@@ -7,7 +7,6 @@ package de.amr.pacmanfx.ui.views;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.action.core.QuitHandler;
-import de.amr.pacmanfx.ui.input.Input;
 import javafx.scene.Node;
 
 import java.util.Optional;
@@ -17,8 +16,8 @@ public interface GameView extends QuitHandler {
 
     ActionBindingsRegistry actionBindings();
 
-    default void onInput(Input input) {
-        actionBindings().executeMatchingAction(input);
+    default void onInput(GameAppContext app) {
+        actionBindings().executeMatchingAction(app);
     }
 
     Node rootPane();

@@ -31,6 +31,6 @@ public class XXL_MsPacMan_Cartridge {
         XXL_MsPacMan_GameRules::new,
         XXL_WorldMapManager::instance,
         XXL_MsPacMan_GameVariantConfig::new,
-        Set.of(new GameExtension(Arcade_GameExtensions.ACTIONS, Arcade_Actions::new))
+        Set.of(new GameExtension(Arcade_GameExtensions.ACTIONS, _ -> new Arcade_Actions()))
     );
 }

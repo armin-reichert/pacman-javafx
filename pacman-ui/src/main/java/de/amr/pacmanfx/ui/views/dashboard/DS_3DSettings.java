@@ -55,7 +55,7 @@ public class DS_3DSettings extends GameDashboardSection {
 
         addDynamicInfo("Scene Size", () -> sceneSizeInfo(
             app.ui().gameScenes().optCurrentGameScene().orElse(null),
-            app.currentGame().session().optLevel().orElse(null)
+            app.game().session().optLevel().orElse(null)
         ));
 
         cbMiniViewVisible = checkBox("Mini View", vm.miniView.activeProperty);
@@ -101,8 +101,8 @@ public class DS_3DSettings extends GameDashboardSection {
         editPropertyWithSlider(sliderWallOpacity,               vm.maze3D.wallOpacityProperty);
         editPropertyWithChoiceBox(comboPerspectives,            vm.common3D.cameraPerspectiveIdProperty);
 
-        cbUsePlayScene3D.setOnAction(_ -> app.commonActions().uiSettingsActions().actionTogglePlayScene2D3D().execute());
-        cbWireframeMode .setOnAction(_ -> app.commonActions().camera3DActions().actionToggleDrawMode().execute());
+        cbUsePlayScene3D.setOnAction(_ -> app.commonActions().uiSettingsActions().actionTogglePlayScene2D3D().execute(app));
+        cbWireframeMode .setOnAction(_ -> app.commonActions().camera3DActions().actionToggleDrawMode().execute(app));
     }
 
     @Override

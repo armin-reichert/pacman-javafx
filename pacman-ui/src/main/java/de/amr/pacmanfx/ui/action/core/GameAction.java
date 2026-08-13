@@ -4,9 +4,7 @@
 
 package de.amr.pacmanfx.ui.action.core;
 
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Validations;
-import de.amr.pacmanfx.core.gameplay.GameFlowController;
 import org.tinylog.Logger;
 
 /**
@@ -14,20 +12,10 @@ import org.tinylog.Logger;
  */
 public abstract class GameAction {
 
-    protected final GameAppContext appContext;
     protected final String id;
 
-    protected GameAction(GameAppContext appContext, String id) {
-        this.appContext = appContext;
+    protected GameAction(String id) {
         this.id = Validations.requireValidIdentifier(id);
-    }
-
-    public GameContext game() {
-        return appContext.currentGame();
-    }
-
-    public GameFlowController gameFlow() {
-        return game().session().gameFlow();
     }
 
     @Override
@@ -38,20 +26,21 @@ public abstract class GameAction {
     /**
      * This method has to be implemented by subclasses.
      */
-    protected abstract void doAction();
+    protected abstract void doAction(GameAppContext app);
 
     /**
      * This method may be implemented by subclasses to define when this action is enabled.
      *
+     * @param app application context
      * @return {@code true} if this action can be executed
      */
-    public boolean isEnabled() { return true; }
+    public boolean isEnabled(GameAppContext app) { return true; }
 
-    public final boolean execute() {
+    public final boolean execute(GameAppContext app) {
         boolean success = false;
-        if (isEnabled()) {
+        if (isEnabled(app)) {
             try {
-                doAction();
+                doAction(app);
                 success = true;
                 Logger.info("Action '{}' executed successfully", id);
             }
@@ -62,8 +51,10 @@ public abstract class GameAction {
             Logger.warn("Action {}' not executed (disabled)", id);
         }
 
+        //TODO This is dubious!
+
         // Clear the input that triggered this action
-        appContext.input().keyboard().clearState();
+        app.input().keyboard().clearState();
 
         return success;
     }

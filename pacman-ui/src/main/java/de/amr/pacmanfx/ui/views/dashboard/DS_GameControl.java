@@ -5,11 +5,11 @@ package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.model.test.CutScenesTestState;
-import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import javafx.scene.control.Button;
@@ -41,7 +41,7 @@ public class DS_GameControl extends GameDashboardSection {
 
     @Override
     public void setGameApp(GameAppContext app) {
-        final CoinMechanism coinMechanism = app.currentGame().coinMechanism();
+        final CoinMechanism coinMechanism = app.game().coinMechanism();
         final CommonGameActions actions = app.commonActions();
 
         spinnerCredit            = intSpinner("Credit", 0, coinMechanism.maxCoins(), coinMechanism.numCoinsProperty());
@@ -56,19 +56,18 @@ public class DS_GameControl extends GameDashboardSection {
                 final int lifeCount = choiceBoxInitialLives.getValue();
                 Logger.info("Settings life count to: {}", lifeCount);
                 app.gameVariants().currentGameVariant().setInitialLifeCount(lifeCount);
-                app.currentGame().setInitialLifeCount(lifeCount);
+                app.game().setInitialLifeCount(lifeCount);
             });
 
         //TODO Here we would need to access the Arcade-specific action to start the game
-//        setGameAction(buttonGroupLevelActions[GAME_LEVEL_START],       actionToStartTheGamePlay);
-        setGameAction(buttonGroupLevelActions[GAME_LEVEL_QUIT],        actions.gameFlowActions().actionRestartIntro());
-        setGameAction(buttonGroupLevelActions[GAME_LEVEL_NEXT],        actions.cheatActions().actionEnterNextLevel());
-
-        setGameAction(buttonGroupCutScenesTest[CUT_SCENES_TEST_START], actions.sceneTestActions().actionTestCutScenes());
-        setGameAction(buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT],  actions.gameFlowActions().actionRestartIntro());
+//        setGameAction(app, buttonGroupLevelActions[GAME_LEVEL_START],       actionToStartTheGamePlay);
+        setGameAction(app, buttonGroupLevelActions[GAME_LEVEL_QUIT],        actions.gameFlowActions().actionRestartIntro());
+        setGameAction(app, buttonGroupLevelActions[GAME_LEVEL_NEXT],        actions.cheatActions().actionEnterNextLevel());
+        setGameAction(app, buttonGroupCutScenesTest[CUT_SCENES_TEST_START], actions.sceneTestActions().actionTestCutScenes());
+        setGameAction(app, buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT],  actions.gameFlowActions().actionRestartIntro());
 
         cbCollisionCheckedTwice.setOnAction(_ ->
-            app.currentGame().rules().actorCollisionRules().collisionDoubleCheckedProperty()
+            app.game().rules().actorCollisionRules().collisionDoubleCheckedProperty()
                 .set(cbCollisionCheckedTwice.isSelected()));
     }
 
@@ -76,7 +75,7 @@ public class DS_GameControl extends GameDashboardSection {
     public void update(GameAppContext app) {
         super.update(app);
 
-        final GameContext game = app.currentGame();
+        final GameContext game = app.game();
         final GameSession session = game.session();
         final GameState state = session.gameState();
 
@@ -100,7 +99,7 @@ public class DS_GameControl extends GameDashboardSection {
     private boolean canStartLevel(GameAppContext appContext, GameState gameState) {
         boolean isArcadeGame = GameVariantID.isArcadeGameName(appContext.gameVariants().currentVariantName());
         if (!isArcadeGame) return true; //TODO not 100% correct but we cannot access Tengen game model from here
-        return !appContext.currentGame().coinMechanism().isEmpty()
+        return !appContext.game().coinMechanism().isEmpty()
             && gameState.nameIsOneOf(CommonGameStateID.GAME_INTRO, CommonGameStateID.GAME_PREPARATION);
     }
 

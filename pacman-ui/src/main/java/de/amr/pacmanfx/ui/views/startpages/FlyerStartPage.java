@@ -7,7 +7,6 @@ package de.amr.pacmanfx.ui.views.startpages;
 import de.amr.basics.json.JsonLoader;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.controls.GameStartButton;
@@ -43,7 +42,7 @@ public class FlyerStartPage implements StartPage {
     protected String title;
     protected String gameVariantName;
     protected GameStartButton startButton;
-    protected GameAppContext appContext;
+    protected GameAppContext app;
 
     protected GameScene gameScene;
 
@@ -83,8 +82,8 @@ public class FlyerStartPage implements StartPage {
     }
 
     @Override
-    public void onInput(Input input) {
-        final Keyboard keyboard = input.keyboard();
+    public void onInput() {
+        final Keyboard keyboard = app().input().keyboard();
         if (keyboard.isKeyPressed(KeyCode.DOWN)) {
             flyer.nextFlyerPage();
         }
@@ -92,9 +91,9 @@ public class FlyerStartPage implements StartPage {
             flyer.prevFlyerPage();
         }
         else if (keyboard.isKeyPressed(KeyCode.S)) {
-            if (appContext != null) {
-                appContext.ui().sounds().voice().stop();
-                appContext.ui().shortMessage(appContext.ui().translations().translate("flash.shut_up"));
+            if (app != null) {
+                app.ui().sounds().voice().stop();
+                app.ui().shortMessage(app.ui().translations().translate("flash.shut_up"));
             }
         }
         else if (keyboard.isKeyPressed(KeyCode.ENTER) && startButton != null) {
@@ -103,21 +102,26 @@ public class FlyerStartPage implements StartPage {
     }
 
     @Override
+    public GameAppContext app() {
+        return app;
+    }
+
+    @Override
     public void setGameApp(GameAppContext app) {
-        this.appContext = requireNonNull(app);
+        this.app = requireNonNull(app);
     }
 
     @Override
     public void onEnter() {
-        appContext.gameVariants().selectVariant(gameVariantName);
+        app.gameVariants().selectVariant(gameVariantName);
         flyer.selectPage(0);
-        appContext.ui().sounds().voice().playAfterSec(VOICE_DELAY_SEC, voiceMedia);
+        app.ui().sounds().voice().playAfterSec(VOICE_DELAY_SEC, voiceMedia);
         Platform.runLater(startButton::requestFocus);
     }
 
     @Override
     public void onExit() {
-        appContext.ui().sounds().voice().stop();
+        app.ui().sounds().voice().stop();
     }
 
     @Override
@@ -136,7 +140,7 @@ public class FlyerStartPage implements StartPage {
 
     protected GameStartButton createStartButton() {
         final var button = new GameStartButton("START!");
-        button.setOnAction(_ -> appContext.commonActions().gameFlowActions().actionStartGame().execute());
+        button.setOnAction(_ -> app.commonActions().gameFlowActions().actionStartGame().execute(app));
         rootPane.getChildren().add(button);
 
         StackPane.setAlignment(button, Pos.BOTTOM_CENTER);

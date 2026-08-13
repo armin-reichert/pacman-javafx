@@ -26,24 +26,24 @@ public final class Arcade_Actions {
 
     private final Set<ActionKeyBinding> gameStartActionBindings;
 
-    public Arcade_Actions(GameAppContext app) {
+    public Arcade_Actions() {
 
-        actionInsertCoin = new GameAction(app, "insert_coin") {
+        actionInsertCoin = new GameAction("insert_coin") {
             @Override
-            public void doAction() {
-                final CoinMechanism coinMechanism = appContext.currentGame().coinMechanism();
-                appContext.ui().sounds().voice().stop();
-                appContext.ui().sounds().setEnabled(true);
+            public void doAction(GameAppContext app) {
+                final CoinMechanism coinMechanism = app.game().coinMechanism();
+                app.ui().sounds().voice().stop();
+                app.ui().sounds().setEnabled(true);
                 coinMechanism.insertCoin();
-                game().eventManager().publishGameEvent(new CreditAddedEvent(1));
-                gameFlow().enterState(game(), CommonGameStateID.GAME_PREPARATION);
+                app.game().eventManager().publishGameEvent(new CreditAddedEvent(1));
+                app.game().session().gameFlow().enterState(app.game(), CommonGameStateID.GAME_PREPARATION);
             }
 
             @Override
-            public boolean isEnabled() {
-                final GameSession session = game().session();
+            public boolean isEnabled(GameAppContext app) {
+                final GameSession session = app.game().session();
                 final GameState gameState = session.gameState();
-                if (game().coinMechanism().isFull()) {
+                if (app.game().coinMechanism().isFull()) {
                     return false;
                 }
                 // In demo level, coin can always be inserted
@@ -55,19 +55,19 @@ public final class Arcade_Actions {
             }
         };
 
-        actionStartPlaying = new GameAction(app, "start_playing") {
+        actionStartPlaying = new GameAction("start_playing") {
             @Override
-            public void doAction() {
-                appContext.ui().sounds().voice().stop();
-                gameFlow().enterState(game(), Arcade_GameState.GAME_OR_LEVEL_STARTING.state());
+            public void doAction(GameAppContext app) {
+                app.ui().sounds().voice().stop();
+                app.game().session().gameFlow().enterState(app.game(), Arcade_GameState.GAME_OR_LEVEL_STARTING.state());
             }
 
             @Override
-            public boolean isEnabled() {
-                if (game().coinMechanism().isEmpty()) {
+            public boolean isEnabled(GameAppContext app) {
+                if (app.game().coinMechanism().isEmpty()) {
                     return false;
                 }
-                final GameState state = game().session().gameState();
+                final GameState state = app.game().session().gameState();
                 return (CommonGameStateID.GAME_INTRO.hasSameNameAs(state)
                     || CommonGameStateID.GAME_PREPARATION.hasSameNameAs(state));
             }

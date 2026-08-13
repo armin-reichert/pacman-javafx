@@ -71,22 +71,22 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D
         addLocalizedCheckBox(contextMenu, translations, game().session().cheats().pacUsingAutopilotProperty(), "context_menu.autopilot").setOnAction(e -> {
             final var checkBox = (CheckMenuItem) e.getSource();
             if (checkBox.isSelected()) {
-                cheatActions.actionActivateAutopilot().execute();
+                cheatActions.actionActivateAutopilot().execute(app());
             } else {
-                cheatActions.actionDeactivateAutopilot().execute();
+                cheatActions.actionDeactivateAutopilot().execute(app());
             }
         });
         addLocalizedCheckBox(contextMenu, translations, game().session().cheats().pacImmuneProperty(), "context_menu.immunity").setOnAction(e -> {
             final var checkBox = (CheckMenuItem) e.getSource();
             if (checkBox.isSelected()) {
-                cheatActions.actionActivateImmunity().execute();
+                cheatActions.actionActivateImmunity().execute(app());
             } else {
-                cheatActions.actionDeactivateImmunity().execute();
+                cheatActions.actionDeactivateImmunity().execute(app());
             }
         });
         addSeparator(contextMenu);
         addLocalizedCheckBox(contextMenu, translations, app().ui().viewModel().mutedProperty, "context_menu.muted");
-        addLocalizedActionItem(contextMenu, translations, app().commonActions().gameFlowActions().actionQuit(), "context_menu.quit");
+        addLocalizedActionItem(app(), contextMenu, translations, app().commonActions().gameFlowActions().actionQuit(), "context_menu.quit");
 
         return Optional.of(contextMenu);
     }
