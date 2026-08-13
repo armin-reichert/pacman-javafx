@@ -10,6 +10,7 @@ import de.amr.basics.fsm.StateChangeListener;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameVariantID;
+import de.amr.pacmanfx.core.event.base.DefaultGameEventManager;
 import de.amr.pacmanfx.core.event.gameplay.GameStateChangeEvent;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.ui.GameUI;
@@ -84,6 +85,7 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
             gameVariant.systems(),
             gameVariant.gameRules(),
             gameVariant.worldMapManager(),
+            new DefaultGameEventManager(),
             gameVariant.initialLifeCount()
         );
         game.eventManager().addGameEventSubscriber(ui);

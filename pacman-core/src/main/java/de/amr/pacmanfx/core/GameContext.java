@@ -34,18 +34,21 @@ public class GameContext {
 
     private int initialLifeCount;
 
-    public GameContext(CoinMechanism coinMechanism,
-                       GamePlay gamePlay,
-                       GameSystems systems,
-                       GameRules rules,
-                       WorldMapManager worldMapManager,
-                       int initialLifeCount) {
+    public GameContext(
+        CoinMechanism coinMechanism,
+        GamePlay gamePlay,
+        GameSystems systems,
+        GameRules rules,
+        WorldMapManager worldMapManager,
+        GameEventManager eventManager,
+        int initialLifeCount)
+    {
         this.coinMechanism = requireNonNull(coinMechanism);
         this.gamePlay = requireNonNull(gamePlay);
         this.systems = requireNonNull(systems);
         this.rules = requireNonNull(rules);
         this.worldMapManager = requireNonNull(worldMapManager);
-        this.eventManager = new DefaultGameEventManager();
+        this.eventManager = requireNonNull(eventManager);
         this.initialLifeCount = initialLifeCount;
     }
 
