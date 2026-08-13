@@ -19,18 +19,20 @@ public class GameContext {
 
     private final GameEventManager eventManager;
 
-    private final GameSession session;
+    private GameSession session;
 
     public GameContext(
         CoinMechanism coinMechanism,
         GameVariantConfig variantConfig,
-        GameEventManager eventManager,
-        GameSession session)
+        GameEventManager eventManager)
     {
         this.coinMechanism = requireNonNull(coinMechanism);
         this.variantConfig = requireNonNull(variantConfig);
         this.eventManager = requireNonNull(eventManager);
-        this.session = requireNonNull(session);
+    }
+
+    public void setSession(GameSession session) {
+        this.session = session;
     }
 
     public GameSession session() {

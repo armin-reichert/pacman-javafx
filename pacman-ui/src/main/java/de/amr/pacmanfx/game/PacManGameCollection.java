@@ -84,15 +84,18 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
         gameVariant.config().gameFlow().addStateChangeListener(changeEventConverter);
     }
 
-    private GameContext createGameContext(GameVariant gameVariant) {
+    private void createSession(GameVariant gameVariant, GameContext gameContext) {
         final String variantName = gameVariantManager.currentVariantName();
         final var session = new GameSession(variantName, gameVariant.config().gameFlow(), new GameCheats());
         session.hud().creditProperty().bind(gameBox().coinMechanism().numCoinsProperty());
+        gameContext.setSession(session);
+    }
+
+    private GameContext createGameContext(GameVariant gameVariant) {
         return new GameContext(
             gameBox().coinMechanism(),
             gameVariant.config(),
-            new DefaultGameEventManager(),
-            session
+            new DefaultGameEventManager()
         );
     }
 
@@ -179,7 +182,7 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
 
     @Override
     public void startPlaying() {
-        game = createGameContext(gameVariantManager.currentGameVariant());
+        createSession(gameVariantManager.currentGameVariant(), game);
         ui.window().mainScene().connect(game.session());
         ui.views().selectGamePlayView();
         game.variantConfig().gamePlay().onSessionStart(game);
