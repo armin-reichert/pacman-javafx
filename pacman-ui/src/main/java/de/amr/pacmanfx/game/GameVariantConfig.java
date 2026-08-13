@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.game;
 
 import de.amr.basics.Disposable;
+import de.amr.basics.Named;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
@@ -58,4 +59,6 @@ public interface GameVariantConfig extends Disposable {
      * @return the game level map ("world") settings
      */
     WorldSettings worldSettings();
+
+    <T> T getExtensionValue(Named id, Class<T> type);
 }

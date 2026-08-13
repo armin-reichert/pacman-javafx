@@ -239,12 +239,12 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
     }
 
     private TengenMsPacMan_Actions tengenActions() {
-        return app().getExtensionValue(
+        return app().currentGameVariantConfig().getExtensionValue(
             TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
     }
 
     private TengenMsPacMan_UISettings tengenUISettings() {
-        return app().getExtensionValue(
+        return app().currentGameVariantConfig().getExtensionValue(
             TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
     }
 

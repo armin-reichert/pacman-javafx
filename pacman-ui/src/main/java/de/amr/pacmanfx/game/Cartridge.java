@@ -21,6 +21,5 @@ public record Cartridge(
     Supplier<? extends GameFlowController> gameFlowFactory,
     Supplier<? extends GameRules> gameRulesFactory,
     Supplier<? extends WorldMapManager> worldMapManagerFactory,
-    Supplier<? extends GameVariantConfig> uiConfigFactory,
-    Set<GameExtension> gameExtensions
-) {}
+    Supplier<? extends GameVariantConfig> uiConfigFactory)
+{}

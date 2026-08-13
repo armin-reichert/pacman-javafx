@@ -3,16 +3,10 @@ package de.amr.pacmanfx.tengenmspacman.app;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.ecs.systems.DefaultGameSystems;
 import de.amr.pacmanfx.game.Cartridge;
-import de.amr.pacmanfx.game.GameExtension;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig;
-import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_WorldMapManager;
 import de.amr.pacmanfx.tengenmspacman.rules.TengenMsPacMan_GameRules;
-
-import java.util.Set;
 
 /**
  * Ms. Pac-Man (Tengen).
@@ -28,10 +22,6 @@ public class TengenMsPacMan_Cartridge {
         TengenMsPacMan_GameVariantConfig::createGameFlow,
         TengenMsPacMan_GameRules::new,
         TengenMsPacMan_WorldMapManager::new,
-        TengenMsPacMan_GameVariantConfig::new,
-        Set.of(
-            new GameExtension(TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings::new),
-            new GameExtension(TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions::new)
-        )
+        TengenMsPacMan_GameVariantConfig::new
     );
 }

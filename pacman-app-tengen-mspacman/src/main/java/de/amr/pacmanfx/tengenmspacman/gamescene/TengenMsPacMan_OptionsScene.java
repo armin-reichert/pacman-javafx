@@ -75,7 +75,8 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene2D {
         final GameSession session = game().session();
         session.hud().hide();
 
-        final var actions = app().getExtensionValue(TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
+        final var actions = app().currentGameVariantConfig().getExtensionValue(
+            TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
 
         actionBindings().selectAnyMatchingBinding(actions.actionStartPlaying(), actions.localBindings());
         actionBindings().selectAnyMatchingBinding(actions.actionToggleJoypadBindingsDisplayed(), actions.localBindings());

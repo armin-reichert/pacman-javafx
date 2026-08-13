@@ -10,6 +10,7 @@ import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.gamescene.SceneDisplay;
 import de.amr.pacmanfx.tengenmspacman.model.BoosterMode;
+import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.SteeringActions;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
@@ -39,8 +40,7 @@ public final class TengenMsPacMan_Actions {
     private final Set<ActionKeyBinding> steeringBindings;
     private final Set<ActionKeyBinding> localBindings;
 
-    public TengenMsPacMan_Actions(GameAppContext app) {
-        final Joypad joypad = app.input().joypad();
+    public TengenMsPacMan_Actions(Joypad joypad, CommonGameActions commonGameActions) {
 
         actionEnterStartScreen = new GameAction("enter_start_screen") {
             @Override
@@ -71,7 +71,7 @@ public final class TengenMsPacMan_Actions {
         actionTogglePlaySceneDisplayMode = new GameAction("toggle_play_scene_display_mode") {
             @Override
             public void execute(GameAppContext app) {
-                final var uiSettings = app.getExtensionValue(
+                final var uiSettings = app.currentGameVariantConfig().getExtensionValue(
                     TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
 
                 final SceneDisplay mode = uiSettings.playSceneDisplay.get();
@@ -89,7 +89,7 @@ public final class TengenMsPacMan_Actions {
         actionToggleJoypadBindingsDisplayed = new GameAction("toggle_joypad_bindings_displayed") {
             @Override
             public void execute(GameAppContext app) {
-                final var uiSettings = app.getExtensionValue(
+                final var uiSettings = app.currentGameVariantConfig().getExtensionValue(
                     TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
 
                 toggleBooleanProperty(uiSettings.joypadBindingsDisplayed);
@@ -124,7 +124,8 @@ public final class TengenMsPacMan_Actions {
             }
         };
 
-        final SteeringActions steeringActions = app.commonActions().steeringActions();
+        final SteeringActions steeringActions = commonGameActions.steeringActions();
+
         steeringBindings = Set.of(
             new ActionKeyBinding(steeringActions.actionSteer(Direction.UP),    keyForJoypadButton(joypad, JoypadButton.UP),    combine().ctrl().key(KeyCode.UP)),
             new ActionKeyBinding(steeringActions.actionSteer(Direction.DOWN),  keyForJoypadButton(joypad, JoypadButton.DOWN),  combine().ctrl().key(KeyCode.DOWN)),

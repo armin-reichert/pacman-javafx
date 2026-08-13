@@ -18,7 +18,8 @@ public class ArcadeMsPacMan_StartScene extends AbstractGameScene2D {
 
     @Override
     public void onActivate() {
-        final Arcade_Actions actions = app().getExtensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
+        final Arcade_Actions actions = app().currentGameVariantConfig()
+            .getExtensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         // Insert coin + start game actions
         actionBindings().registerAllBindings(actions.gameStartActionBindings());

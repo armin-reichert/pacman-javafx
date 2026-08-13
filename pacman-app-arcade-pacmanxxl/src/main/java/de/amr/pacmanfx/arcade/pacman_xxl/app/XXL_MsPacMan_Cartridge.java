@@ -1,17 +1,12 @@
 package de.amr.pacmanfx.arcade.pacman_xxl.app;
 
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameSystems;
-import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
-import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_WorldMapManager;
 import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.XXL_MsPacMan_GamePlay;
 import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.XXL_MsPacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.XXL_MsPacMan_GameVariantConfig;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.game.Cartridge;
-import de.amr.pacmanfx.game.GameExtension;
-
-import java.util.Set;
 
 /**
  * Extension of Arcade Ms. Pac-Man with
@@ -30,7 +25,6 @@ public class XXL_MsPacMan_Cartridge {
         XXL_MsPacMan_GameVariantConfig::createGameFlow,
         XXL_MsPacMan_GameRules::new,
         XXL_WorldMapManager::instance,
-        XXL_MsPacMan_GameVariantConfig::new,
-        Set.of(new GameExtension(Arcade_GameExtensions.ACTIONS, _ -> new Arcade_Actions()))
+        XXL_MsPacMan_GameVariantConfig::new
     );
 }

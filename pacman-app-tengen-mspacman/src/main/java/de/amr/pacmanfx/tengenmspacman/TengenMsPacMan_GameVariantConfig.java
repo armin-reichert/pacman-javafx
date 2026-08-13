@@ -4,12 +4,14 @@
 
 package de.amr.pacmanfx.tengenmspacman;
 
+import de.amr.basics.Named;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.gameplay.GameFlowController;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.config.TengenJsonConfigLoader;
+import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_GameSceneConfig;
 import de.amr.pacmanfx.tengenmspacman.model.BoosterMode;
@@ -28,10 +30,7 @@ import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.scene.media.MediaPlayer;
 import org.tinylog.Logger;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.audioClip;
 import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.mediaPlayer;
@@ -127,10 +126,21 @@ public class TengenMsPacMan_GameVariantConfig implements GameVariantConfig {
     private SoundManager sounds;
     private GameSoundEffects soundEffects;
 
+    private final Map<Named, Object> extensions = new HashMap<>();
+
     public TengenMsPacMan_GameVariantConfig() {
         textBundle = ResourceBundle.getBundle("de.amr.pacmanfx.tengenmspacman.localized_texts");
         assets = new AssetMap();
         factory3D = new TengenMsPacMan_Factory3D();
+    }
+
+    @Override
+    public <T> T getExtensionValue(Named id, Class<T> type) {
+        final Object value = extensions.get(id);
+        if (type.isInstance(value)) {
+            return type.cast(value);
+        }
+        throw new IllegalArgumentException("Extension value " + value + " of type " + type.getName() + " not found");
     }
 
     @Override
@@ -152,6 +162,11 @@ public class TengenMsPacMan_GameVariantConfig implements GameVariantConfig {
         renderConfig.addAssets();
 
         assets.freeze();
+
+        extensions.put(TengenMsPacMan_GameExtension.UI_SETTINGS, new TengenMsPacMan_UISettings(appContext));
+        extensions.put(TengenMsPacMan_GameExtension.ACTIONS, new TengenMsPacMan_Actions(
+            appContext.input().joypad(), appContext.commonActions())
+        );
     }
 
     @Override

@@ -4,19 +4,14 @@
 
 package de.amr.pacmanfx.game;
 
-import de.amr.basics.Named;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.gameplay.GameFlowController;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import org.tinylog.Logger;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 import java.util.function.Supplier;
 
 public class GameVariant {
@@ -27,8 +22,6 @@ public class GameVariant {
     private final WorldMapManager worldMapManager;
     private final Supplier<GameCheats> cheatsFactory;
     private final GameVariantConfig config;
-    private final Set<GameExtension> extensions;
-    private final Map<Named, Object> extensionValues;
 
     private int initialLifeCount;
 
@@ -40,8 +33,6 @@ public class GameVariant {
         worldMapManager = cartridge.worldMapManagerFactory().get();
         cheatsFactory = GameCheats::new;
         config = cartridge.uiConfigFactory().get();
-        extensions = cartridge.gameExtensions();
-        extensionValues = new HashMap<>();
         initialLifeCount = 3;
     }
 
@@ -82,27 +73,4 @@ public class GameVariant {
         return config;
     }
 
-    public Set<GameExtension> extensions() {
-        return extensions;
-    }
-
-    public Map<Named, Object> extensionValues() {
-        return extensionValues;
-    }
-
-    public <T> T getExtensionValue(GameAppContext appContext, Named id, Class<T> type) {
-        final Object cached = extensionValues.get(id);
-        if (cached != null) {
-            return type.cast(cached);
-        }
-
-        final GameExtension ext = extensions.stream()
-            .filter(e -> e.id().equals(id))
-            .findFirst()
-            .orElseThrow(() -> new IllegalArgumentException("Extension with id " + id + " not found"));
-
-        final Object created = ext.creator().apply(appContext);
-        extensionValues.put(id, created);
-        return type.cast(created);
-    }
 }

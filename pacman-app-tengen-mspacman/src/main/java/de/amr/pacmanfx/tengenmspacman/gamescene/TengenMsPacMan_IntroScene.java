@@ -83,7 +83,8 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
 
         spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
-        final var actions = app().getExtensionValue(TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
+        final var actions = app().currentGameVariantConfig().getExtensionValue(
+            TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
 
         actionBindings().selectAnyMatchingBinding(actions.actionEnterStartScreen(), actions.localBindings());
         actionBindings().selectAnyMatchingBinding(actions.actionToggleJoypadBindingsDisplayed(), actions.localBindings());

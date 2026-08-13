@@ -9,6 +9,7 @@ import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.game.GameLifecycle;
+import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantManager;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
@@ -26,6 +27,10 @@ public interface GameAppContext {
 
     GameVariantManager gameVariants();
 
+    default GameVariantConfig currentGameVariantConfig() {
+        return gameVariants().currentGameVariant().config();
+    }
+
     GameUI ui();
 
     Input input();
@@ -34,7 +39,4 @@ public interface GameAppContext {
 
     DirectoryWatchdog watchdog();
 
-    default <T> T getExtensionValue(Named id, Class<T> type) {
-        return gameVariants().currentGameVariant().getExtensionValue(this, id, type);
-    }
 }

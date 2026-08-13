@@ -2,16 +2,11 @@ package de.amr.pacmanfx.arcade.pacman.app;
 
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GamePlay;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameVariantConfig;
-import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
-import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_WorldMapManager;
 import de.amr.pacmanfx.arcade.pacman.rules.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.ecs.systems.DefaultGameSystems;
 import de.amr.pacmanfx.game.Cartridge;
-import de.amr.pacmanfx.game.GameExtension;
-
-import java.util.Set;
 
 public class ArcadePacMan_Cartridge {
 
@@ -22,9 +17,6 @@ public class ArcadePacMan_Cartridge {
         ArcadePacMan_GameVariantConfig::createGameFlow,
         ArcadePacMan_GameRules::new,
         ArcadePacMan_WorldMapManager::new,
-        ArcadePacMan_GameVariantConfig::new,
-        Set.of(
-            new GameExtension(Arcade_GameExtensions.ACTIONS, _ -> new Arcade_Actions())
-        )
+        ArcadePacMan_GameVariantConfig::new
     );
 }

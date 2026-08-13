@@ -97,7 +97,8 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
 
     @Override
     public void onActivate() {
-        final Arcade_Actions actions = app().getExtensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
+        final Arcade_Actions actions = app().currentGameVariantConfig()
+            .getExtensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         actionBindings().registerAllBindings(actions.gameStartActionBindings()); // insert coin + start game actions
         actionBindings().registerAllBindings(app().commonActions().sceneTestActions().bindings()); // actions for starting tests

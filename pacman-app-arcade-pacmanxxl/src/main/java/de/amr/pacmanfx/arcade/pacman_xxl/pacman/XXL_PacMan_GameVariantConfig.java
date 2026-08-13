@@ -3,7 +3,10 @@
  */
 package de.amr.pacmanfx.arcade.pacman_xxl.pacman;
 
+import de.amr.basics.Named;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameVariantConfig;
+import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
+import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
 import de.amr.pacmanfx.core.gameplay.GameFlowController;
 import de.amr.pacmanfx.game.GameVariantConfig;
@@ -21,10 +24,7 @@ import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import org.tinylog.Logger;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.audioClip;
 import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.mediaPlayer;
@@ -81,10 +81,23 @@ public final class XXL_PacMan_GameVariantConfig implements GameVariantConfig {
     private SoundManager sounds;
     private GameSoundEffects soundEffects;
 
+    private final Map<Named, Object> extensions = new HashMap<>();
+
     public XXL_PacMan_GameVariantConfig() {
         textBundle = ResourceBundle.getBundle(XXL_PKG + "localized_texts_pacman");
         assets = new AssetMap();
         factory3D = new DefaultFactory3D();
+
+        extensions.put(Arcade_GameExtensions.ACTIONS, new Arcade_Actions());
+    }
+
+    @Override
+    public <T> T getExtensionValue(Named id, Class<T> type) {
+        final Object value = extensions.get(id);
+        if (type.isInstance(value)) {
+            return type.cast(value);
+        }
+        throw new IllegalArgumentException("Extension value " + value + " of type " + type.getName() + " not found");
     }
 
     @Override
