@@ -37,11 +37,6 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
     }
 
     @Override
-    public SpriteAnimSystem animSystem() {
-        return animSystem;
-    }
-
-    @Override
     public ArcadeMsPacMan_SpriteSheet spriteSheet() {
         return ArcadeMsPacMan_SpriteSheet.instance();
     }

@@ -6,7 +6,6 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
@@ -41,19 +40,12 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
     private static final Color NES_YELLOW = NES_Palette.color(0x28);
     private static final Color NES_WHITE = NES_Palette.color(0x20);
 
-    private final SpriteAnimSystem animSystem;
     private final BaseDebugInfoRenderer debugRenderer;
 
-    public TengenMsPacMan_OptionsScene_Renderer(AbstractGameScene2D scene, SpriteAnimSystem animSystem, Canvas canvas) {
+    public TengenMsPacMan_OptionsScene_Renderer(AbstractGameScene2D scene, Canvas canvas) {
         super(canvas);
         requireNonNull(scene);
-        this.animSystem = requireNonNull(animSystem);
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
-    }
-
-    @Override
-    public SpriteAnimSystem animSystem() {
-        return animSystem;
     }
 
     @Override

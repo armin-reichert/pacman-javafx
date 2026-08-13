@@ -42,7 +42,6 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
     public static final String MS_PAC_MAN = "MS PAC-MAN";
     public static final String QUOTED_MS_PACMAN = "\"MS PAC-MAN\"";
 
-    private final SpriteAnimSystem animSystem;
     private final ActorRenderer actorRenderer;
     private final BaseDebugInfoRenderer debugRenderer;
     private final MarqueeRenderer marqueeRenderer;
@@ -53,7 +52,6 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
         super(canvas);
         requireNonNull(renderConfig);
         requireNonNull(scene);
-        this.animSystem = requireNonNull(animSystem);
 
         marqueeRenderer = scene.configureRenderer(new MarqueeRenderer(canvas));
         actorRenderer = scene.configureRenderer(renderConfig.createActorRenderer(animSystem, canvas));
@@ -61,11 +59,6 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
 
         uiSettings = scene.app().getExtensionValue(
             TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
-    }
-
-    @Override
-    public SpriteAnimSystem animSystem() {
-        return animSystem;
     }
 
     @Override

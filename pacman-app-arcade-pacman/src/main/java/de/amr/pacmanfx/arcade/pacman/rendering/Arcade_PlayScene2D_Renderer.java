@@ -5,11 +5,11 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
@@ -53,11 +53,6 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
         levelRenderer = scene.configureRenderer(renderConfig.createGameLevelRenderer(animSystem, canvas));
         actorRenderer = scene.configureRenderer(renderConfig.createActorRenderer(animSystem, canvas));
         debugRenderer = scene.configureRenderer(new Arcade_PlayScene2D_DebugInfo_Renderer(animSystem, canvas));
-    }
-
-    @Override
-    public SpriteAnimSystem animSystem() {
-        return animSystem;
     }
 
     @Override

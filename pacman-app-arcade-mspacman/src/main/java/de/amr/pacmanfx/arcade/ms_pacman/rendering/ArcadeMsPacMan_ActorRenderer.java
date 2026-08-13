@@ -32,11 +32,6 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     }
 
     @Override
-    public SpriteAnimSystem animSystem() {
-        return animSystem;
-    }
-
-    @Override
     public ArcadeMsPacMan_SpriteSheet spriteSheet() {
         return ArcadeMsPacMan_SpriteSheet.instance();
     }
@@ -51,21 +46,21 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             case Ghost ghost               -> drawSpriteCentered(computeGhostSprite(ghost), center);
             case Bonus bonus               -> drawSpriteCentered(computeBonusSprite(bonus), center);
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
-            default                        -> drawSpriteCentered(animSystem().currentSprite(actor), center);
+            default                        -> drawSpriteCentered(animSystem.currentSprite(actor), center);
         }
     }
 
     private RectShort computeGhostSprite(Ghost ghost) {
         RectShort sprite;
-        if (animSystem().isSelected(ghost, CommonSpriteAnimationID.GHOST_NORMAL)) {
+        if (animSystem.isSelected(ghost, CommonSpriteAnimationID.GHOST_NORMAL)) {
             final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.worldNavigation().wishDir());
-            sprite = spriteOrDefault(sprites, animSystem().currentFrame(ghost));
+            sprite = spriteOrDefault(sprites, animSystem.currentFrame(ghost));
         }
-        else if (animSystem().isSelected(ghost, CommonSpriteAnimationID.GHOST_EYES)) {
+        else if (animSystem.isSelected(ghost, CommonSpriteAnimationID.GHOST_EYES)) {
             sprite = spriteSheet().ghostEyesSprite(ghost.worldNavigation().wishDir());
         }
         else {
-            sprite = animSystem().currentSprite(ghost);
+            sprite = animSystem.currentSprite(ghost);
         }
         if (sprite == null) {
             throw new IllegalStateException("Could not determine Pac sprite");
@@ -75,16 +70,16 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
 
     private RectShort computePacSprite(Pac pac) {
         RectShort sprite;
-        if (animSystem().isSelected(pac, CommonSpriteAnimationID.PAC_MUNCHING)) {
+        if (animSystem.isSelected(pac, CommonSpriteAnimationID.PAC_MUNCHING)) {
             final RectShort[] sprites = spriteSheet().msPacManMunchingSprites(pac.worldNavigation().moveDir());
-            sprite = spriteOrDefault(sprites, animSystem().currentFrame(pac));
+            sprite = spriteOrDefault(sprites, animSystem.currentFrame(pac));
         }
-        else if (animSystem().isSelected(pac, CommonSpriteAnimationID.MR_PAC_MAN_MUNCHING)) {
+        else if (animSystem.isSelected(pac, CommonSpriteAnimationID.MR_PAC_MAN_MUNCHING)) {
             final RectShort[] sprites = spriteSheet().mrPacManMunchingSprites(pac.worldNavigation().moveDir());
-            sprite = spriteOrDefault(sprites, animSystem().currentFrame(pac));
+            sprite = spriteOrDefault(sprites, animSystem.currentFrame(pac));
         }
         else {
-            sprite = animSystem().currentSprite(pac);
+            sprite = animSystem.currentSprite(pac);
         }
         if (sprite == null) {
             throw new IllegalStateException("Could not determine Pac sprite");

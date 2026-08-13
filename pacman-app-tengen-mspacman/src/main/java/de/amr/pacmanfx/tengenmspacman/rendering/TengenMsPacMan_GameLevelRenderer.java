@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessage;
@@ -14,7 +14,6 @@ import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
 import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
-import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig.MapConfigKey;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.sprites.*;
@@ -43,20 +42,12 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         return (int) (phase < 3 ? phase : 1);
     }
 
-    private final SpriteAnimSystem animSystem;
-
     //TODO pass render config instead?
     private final AssetMap assets;
 
-    public TengenMsPacMan_GameLevelRenderer(AssetMap assets, SpriteAnimSystem animSystem, Canvas canvas) {
+    public TengenMsPacMan_GameLevelRenderer(AssetMap assets, Canvas canvas) {
         super(canvas);
-        this.animSystem = requireNonNull(animSystem);
         this.assets = requireNonNull(assets);
-    }
-
-    @Override
-    public SpriteAnimSystem animSystem() {
-        return animSystem;
     }
 
     @Override

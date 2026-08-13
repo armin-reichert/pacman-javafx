@@ -4,11 +4,10 @@
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.basics.math.RectShort;
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.core.model.HUDState;
-import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
@@ -34,16 +33,8 @@ public class ArcadeMsPacMan_HeadsUpDisplayRenderer extends BaseRenderer implemen
     private static final Color SCORE_TEXT_COLOR = ARCADE_WHITE;
     private static final Color SCORE_TEXT_COLOR_DISABLED = Color.GRAY;
 
-    private final SpriteAnimSystem animSystem;
-
-    public ArcadeMsPacMan_HeadsUpDisplayRenderer(SpriteAnimSystem animSystem, Canvas canvas) {
+    public ArcadeMsPacMan_HeadsUpDisplayRenderer(Canvas canvas) {
         super(canvas);
-        this.animSystem = requireNonNull(animSystem);
-    }
-
-    @Override
-    public SpriteAnimSystem animSystem() {
-        return animSystem;
     }
 
     @Override

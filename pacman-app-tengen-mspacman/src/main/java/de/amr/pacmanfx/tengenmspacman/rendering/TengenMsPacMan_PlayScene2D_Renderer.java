@@ -90,11 +90,6 @@ public class TengenMsPacMan_PlayScene2D_Renderer
     }
 
     @Override
-    public SpriteAnimSystem animSystem() {
-        return animSystem;
-    }
-
-    @Override
     public TengenMsPacMan_SpriteSheet spriteSheet() {
         return TengenMsPacMan_SpriteSheet.instance();
     }

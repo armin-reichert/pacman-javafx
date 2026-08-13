@@ -30,11 +30,6 @@ public abstract class ArcadePacMan_CutScene_Renderer extends BaseRenderer implem
     }
 
     @Override
-    public SpriteAnimSystem animSystem() {
-        return animSystem;
-    }
-
-    @Override
     public ArcadePacMan_SpriteSheet spriteSheet() {
         return ArcadePacMan_SpriteSheet.instance();
     }

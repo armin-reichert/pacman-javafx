@@ -33,27 +33,20 @@ public class Arcade_BootScene2D_Renderer extends BaseRenderer implements GameSce
 
     public static final int GRID_SIZE = 16;
 
-    private final SpriteAnimSystem animSystem;
     private final SpriteSheet<?> spriteSheet;
     private final Rectangle2D spriteRegion;
     private final BaseDebugInfoRenderer debugRenderer;
 
     public Arcade_BootScene2D_Renderer(
-        AbstractGameScene2D scene, SpriteAnimSystem animSystem, Canvas canvas, SpriteSheet<?> spriteSheet, Rectangle2D spriteRegion) {
+        AbstractGameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet, Rectangle2D spriteRegion) {
 
         super(canvas);
 
-        this.animSystem = requireNonNull(animSystem);
         this.spriteSheet = requireNonNull(spriteSheet);
         this.spriteRegion = requireNonNull(spriteRegion);
 
         requireNonNull(scene);
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
-    }
-
-    @Override
-    public SpriteAnimSystem animSystem() {
-        return animSystem;
     }
 
     @Override

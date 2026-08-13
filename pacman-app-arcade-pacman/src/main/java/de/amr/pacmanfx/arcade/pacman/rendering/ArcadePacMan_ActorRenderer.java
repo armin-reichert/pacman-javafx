@@ -30,11 +30,6 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
     }
 
     @Override
-    public SpriteAnimSystem animSystem() {
-        return animSystem;
-    }
-
-    @Override
     public ArcadePacMan_SpriteSheet spriteSheet() {
         return ArcadePacMan_SpriteSheet.instance();
     }

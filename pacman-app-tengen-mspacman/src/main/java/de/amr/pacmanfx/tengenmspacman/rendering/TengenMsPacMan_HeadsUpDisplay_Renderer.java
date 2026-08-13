@@ -5,7 +5,6 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
 import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.core.model.HUDState;
@@ -46,18 +45,9 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
 
     private final ObjectProperty<Font> totalLivesFont = new SimpleObjectProperty<>(Font.font("Serif", FontWeight.BOLD, 8));
 
-    private final SpriteAnimSystem animSystem;
-
-    public TengenMsPacMan_HeadsUpDisplay_Renderer(SpriteAnimSystem animSystem, Canvas canvas) {
+    public TengenMsPacMan_HeadsUpDisplay_Renderer(Canvas canvas) {
         super(canvas);
-        this.animSystem = requireNonNull(animSystem);
-
         totalLivesFont.bind(scalingProperty().map(scaling -> Font.font("Serif", FontWeight.BOLD, scaling.doubleValue() * 8)));
-    }
-
-    @Override
-    public SpriteAnimSystem animSystem() {
-        return animSystem;
     }
 
     @Override

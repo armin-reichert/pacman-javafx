@@ -100,7 +100,7 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
         requireNonNull(canvas);
         requireNonNull(gameScene2D);
         final GameScene2D_Renderer renderer = switch (gameScene2D) {
-            case Arcade_BootScene2D ignored        -> new Arcade_BootScene2D_Renderer(gameScene2D, animSystem, canvas, spriteSheet(), BOOT_SCENE_SPRITES);
+            case Arcade_BootScene2D ignored        -> new Arcade_BootScene2D_Renderer(gameScene2D, canvas, spriteSheet(), BOOT_SCENE_SPRITES);
             case ArcadeMsPacMan_IntroScene ignored -> new ArcadeMsPacMan_IntroScene_Renderer(this, gameScene2D, animSystem, canvas);
             case ArcadeMsPacMan_StartScene ignored -> new ArcadeMsPacMan_StartScene_Renderer(this, gameScene2D, canvas);
             case Arcade_PlayScene2D ignored        -> new Arcade_PlayScene2D_Renderer(gameScene2D, animSystem, canvas, spriteSheet());
@@ -125,7 +125,7 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
         requireNonNull(animSystem);
         requireNonNull(canvas);
 
-        final var renderer = new ArcadeMsPacMan_HeadsUpDisplayRenderer(animSystem, canvas);
+        final var renderer = new ArcadeMsPacMan_HeadsUpDisplayRenderer(canvas);
         renderer.setImageSmoothing(true);
         gameScene2D.configureRenderer(renderer);
 

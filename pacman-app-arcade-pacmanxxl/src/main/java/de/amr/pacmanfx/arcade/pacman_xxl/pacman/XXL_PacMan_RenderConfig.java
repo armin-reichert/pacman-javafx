@@ -57,13 +57,13 @@ public class XXL_PacMan_RenderConfig implements GameVariantRenderConfig {
 
     @Override
     public XXL_PacMan_GameLevelRenderer createGameLevelRenderer(SpriteAnimSystem animSystem, Canvas canvas) {
-        return new XXL_PacMan_GameLevelRenderer(animSystem, canvas);
+        return new XXL_PacMan_GameLevelRenderer(canvas);
     }
 
     @Override
     public GameScene2D_Renderer createGameSceneRenderer(AbstractGameScene2D gameScene2D, SpriteAnimSystem animSystem, Canvas canvas) {
         final GameScene2D_Renderer renderer = switch (gameScene2D) {
-            case Arcade_BootScene2D ignored -> new Arcade_BootScene2D_Renderer(gameScene2D, animSystem, canvas, spriteSheet(), BOOT_SCENE_SPRITES);
+            case Arcade_BootScene2D ignored -> new Arcade_BootScene2D_Renderer(gameScene2D, canvas, spriteSheet(), BOOT_SCENE_SPRITES);
             case ArcadePacMan_IntroScene ignored -> new ArcadePacMan_IntroScene_Renderer(this, gameScene2D, animSystem, canvas);
             case ArcadePacMan_StartScene ignored -> new ArcadePacMan_StartScene_Renderer(gameScene2D, canvas);
             case Arcade_PlayScene2D ignored -> new Arcade_PlayScene2D_Renderer(gameScene2D, animSystem, canvas, spriteSheet());
@@ -77,7 +77,7 @@ public class XXL_PacMan_RenderConfig implements GameVariantRenderConfig {
 
     @Override
     public HeadsUpDisplay_Renderer createHUDRenderer(AbstractGameScene2D gameScene2D, SpriteAnimSystem animSystem, Canvas canvas) {
-        final var hudRenderer = new ArcadePacMan_HeadsUpDisplay_Renderer(animSystem, canvas);
+        final var hudRenderer = new ArcadePacMan_HeadsUpDisplay_Renderer(canvas);
         hudRenderer.setImageSmoothing(true);
         gameScene2D.configureRenderer(hudRenderer);
         return hudRenderer;

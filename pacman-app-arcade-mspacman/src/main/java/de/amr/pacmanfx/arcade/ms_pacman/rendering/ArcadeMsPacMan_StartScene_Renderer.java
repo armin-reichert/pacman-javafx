@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
@@ -31,11 +30,6 @@ public class ArcadeMsPacMan_StartScene_Renderer extends BaseRenderer implements 
         copyrightImage = renderConfig.assets().image("logo.midway");
         copyrightRenderer = scene.configureRenderer(new CopyrightRenderer(canvas));
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
-    }
-
-    @Override
-    public SpriteAnimSystem animSystem() {
-        return null; // no animation needed
     }
 
     @Override

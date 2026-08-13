@@ -4,9 +4,9 @@
 package de.amr.pacmanfx.tengenmspacman.gamescene;
 
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
@@ -95,7 +95,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         final var canvas = new Canvas(quality * width, quality * height);
         canvas.getGraphicsContext2D().setImageSmoothing(false); // important for crisp image!
 
-        final var hudRenderer = new TengenMsPacMan_HeadsUpDisplay_Renderer(game().systems().spriteAnim(), canvas);
+        final var hudRenderer = new TengenMsPacMan_HeadsUpDisplay_Renderer(canvas);
         hudRenderer.setScaling(quality);
         hudRenderer.fillCanvas(backgroundColor);
         hudRenderer.drawLevelNumberBox(levelNumber, 0, 0);
