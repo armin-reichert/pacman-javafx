@@ -261,17 +261,20 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
             WorldMapPropertyName.POS_BONUS, ArcadePacMan_GameVariantConfig.DEFAULT_BONUS_TILE);
 
         final Bonus bonus = Bonus.createStaticBonus(symbolCode, value);
+        level.entities().optBonus().ifPresent(oldBonus -> level.entities().remove(oldBonus));
+        level.entities().add(bonus);
+
         bonus.pos().set(WorldMap.halfTileRightOf(tile));
         systems.bonusState().showEdibleForSeconds(bonus, edibleSec);
 
-        level.setBonus(bonus);
         eventManager.publishGameEvent(new BonusActivatedEvent(bonus));
     }
 
     protected void configureGateKeeper(ArcadeHouseGateKeeper gateKeeper) {
         gateKeeper.setGhostReleasedCallback((level, prisoner) -> {
+            final Ghost redGhost = level.ghost(GhostPersonality.RED_GHOST_SHADOW);
+            if (!redGhost.hasComp(ElroyComp.class)) return;
             if (prisoner.personality() == GhostPersonality.ORANGE_GHOST_POKEY) {
-                final Ghost redGhost = level.ghost(GhostPersonality.RED_GHOST_SHADOW);
                 final ElroyComp elroy = redGhost.requireComp(ElroyComp.class);
                 if (elroy.boost() != ElroyComp.Boost.NONE && !elroy.enabled()) {
                     elroy.setEnabled(true);
@@ -280,7 +283,6 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
             }
         });
     }
-
 
     private void checkCruiseElroyActivation(GameLevel level) {
         final Ghost redGhost = level.ghost(GhostPersonality.RED_GHOST_SHADOW);

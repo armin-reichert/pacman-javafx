@@ -185,7 +185,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
 
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
-        if (level.optBonus().isPresent() && level.optBonus().get().bonusState() == BonusState.EDIBLE) {
+        if (level.entities().optBonus().isPresent() && level.entities().optBonus().get().bonusState() == BonusState.EDIBLE) {
             Logger.info("Previous bonus is still active, skip this bonus");
             return;
         }
@@ -200,6 +200,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
 
         final int symbolCode = level.bonusSymbolCode(level.currentBonusIndex());
         final int value = game.variantConfig().rules().scoringRules().pointsForBonus(symbolCode);
+
         Bonus bonus;
         if (terrain.horizontalPortals().isEmpty()) {
             bonus = Bonus.createStaticBonus(symbolCode, value);
@@ -213,7 +214,9 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
             sys.bonusState().showEdibleAndStartWandering(bonus, speed);
         }
 
-        level.setBonus(bonus);
+        level.entities().optBonus().ifPresent(oldBonus -> level.entities().remove(oldBonus));
+        level.entities().add(bonus);
+
         game.eventManager().publishGameEvent(new BonusActivatedEvent(bonus));
     }
 

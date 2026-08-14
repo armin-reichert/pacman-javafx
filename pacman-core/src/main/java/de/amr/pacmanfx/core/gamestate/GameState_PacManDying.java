@@ -92,7 +92,10 @@ public final class GameState_PacManDying extends GameState {
         }
         else if (tick == timing.hidePacTick()) {
             pac.hide();
-            level.optBonus().ifPresent(bonus -> systems.bonusState().setInactive(bonus));
+            level.entities().optBonus().ifPresent(bonus -> {
+                systems.bonusState().setInactive(bonus);
+                level.entities().remove(bonus);
+            });
         }
         else if (tick == timing.pacDeadTick()) {
             game.eventManager().publishGameEvent(new PacDeadEvent(pac));

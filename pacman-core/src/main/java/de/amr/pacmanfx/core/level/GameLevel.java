@@ -6,7 +6,6 @@ package de.amr.pacmanfx.core.level;
 
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.entities.Bonus;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.model.GhostPersonality;
@@ -17,7 +16,6 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
@@ -145,24 +143,6 @@ public class GameLevel {
     public Stream<Ghost> ghostsInState(GhostState state) {
         requireNonNull(state);
         return entities.ghosts().stream().filter(ghost -> state.equals(ghost.ghostStateEnum()));
-    }
-
-    // Bonus
-
-    /**
-     * @return (Optional) bonus actor used in this level
-     */
-    public Optional<Bonus> optBonus() {
-        return entities.optBonus();
-    }
-
-    /**
-     * Sets the bonus actor used in this level. This happens when the bonus gets activated.
-     * @param bonus the bonus
-     */
-    public void setBonus(Bonus bonus) {
-        entities.optBonus().ifPresent(entities::remove);
-        entities.add(requireNonNull(bonus));
     }
 
     /**

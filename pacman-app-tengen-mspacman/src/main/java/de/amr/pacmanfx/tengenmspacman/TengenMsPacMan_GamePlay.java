@@ -364,7 +364,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
         //TODO Find out how Tengen really implemented this
-        if (level.optBonus().isPresent() && level.optBonus().get().bonusState() == BonusState.EDIBLE) {
+        if (level.entities().optBonus().isPresent() && level.entities().optBonus().get().bonusState() == BonusState.EDIBLE) {
             Logger.info("Previous bonus is still active, skip this bonus");
             return;
         }
@@ -396,11 +396,14 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final int symbolCode = level.bonusSymbolCode(level.currentBonusIndex());
         final int value = game.variantConfig().rules().scoringRules().pointsForBonus(symbolCode);
         final float speed = game.variantConfig().rules().actorSpeedRules().bonusSpeed(game, level);
+
         final Bonus bonus = Bonus.createMovingBonus(symbolCode, value);
+        level.entities().optBonus().ifPresent(oldBonus -> level.entities().remove(oldBonus));
+        level.entities().add(bonus);
+
         systems.bonusMoveAndJump().setRoute(bonus, route, leftToRight);
         systems.bonusState().showEdibleAndStartWandering(bonus, speed);
 
-        level.setBonus(bonus);
         eventManager.publishGameEvent(new BonusActivatedEvent(bonus));
     }
 

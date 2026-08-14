@@ -163,7 +163,7 @@ public class RuleGuidedPacSteering implements Steering {
         } 
         else if (isEdibleBonusNearPac(level, pac)) {
             Logger.trace("Active bonus detected, get it!");
-            level.optBonus().ifPresent(bonus -> worldNavigation.setTargetTile(
+            level.entities().optBonus().ifPresent(bonus -> worldNavigation.setTargetTile(
                 WorldMap.computeTileAt(bonus.pos().x(), bonus.pos().y())));
         } 
         else {
@@ -179,8 +179,8 @@ public class RuleGuidedPacSteering implements Steering {
 
     private boolean isEdibleBonusNearPac(GameLevel level, Pac pac) {
         final Vector2i pacTile = WorldNavigationSystem.computeTile(pac);
-        if (level.optBonus().isPresent()) {
-            final Bonus bonus = level.optBonus().get();
+        if (level.entities().optBonus().isPresent()) {
+            final Bonus bonus = level.entities().optBonus().get();
             final Vector2i bonusTile = WorldNavigationSystem.computeTile(bonus);
             return bonus.bonusState() == BonusState.EDIBLE
                 && bonusTile.manhattanDist(pacTile) <= CollectedData.MAX_BONUS_HARVEST_DIST;

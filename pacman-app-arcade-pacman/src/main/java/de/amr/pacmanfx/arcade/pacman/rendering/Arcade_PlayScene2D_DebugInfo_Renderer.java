@@ -97,7 +97,7 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
 
     private void updateActorDrawingOrder(GameLevel level) {
         actorsInZOrder.clear();
-        level.optBonus().ifPresent(actorsInZOrder::add);
+        level.entities().optBonus().ifPresent(actorsInZOrder::add);
         actorsInZOrder.add(level.entities().pac());
         Stream.of(
             GhostPersonality.ORANGE_GHOST_POKEY,

@@ -189,7 +189,7 @@ public class MiniPlaySceneView {
         levelRenderer.applyLevelSettings(rules, level, info);
         levelRenderer.drawLevel(game, level, info);
 
-        level.optBonus().ifPresent(bonus -> actorRenderer.drawActor(bonus));
+        level.entities().optBonus().ifPresent(bonus -> actorRenderer.drawActor(bonus));
         actorRenderer.drawActor(level.entities().pac());
         Stream.of(
             GhostPersonality.ORANGE_GHOST_POKEY,

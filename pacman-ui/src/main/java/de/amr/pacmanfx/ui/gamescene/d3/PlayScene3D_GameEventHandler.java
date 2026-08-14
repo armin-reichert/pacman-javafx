@@ -322,7 +322,8 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         final GameLevel3D level3D = assertLevel3D();
         level3D.animationManager().stopAll();
         level3D.cleanupFoodAndParticles();
-        level.optBonus().ifPresent(bonus -> Bonus3DViewSystem.lookExpired(bonus, level3D.animationManager().registry()));
+        level.entities().optBonus().ifPresent(bonus ->
+            Bonus3DViewSystem.lookExpired(bonus, level3D.animationManager().registry()));
 
         MessageView3DAnimationSystem.hideMessageView(level.entities().theOne(MessageView.class));
 
@@ -384,7 +385,8 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 
         level3D.animationManager().stopAll();
         level3D.cleanupFoodAndParticles();
-        level.optBonus().ifPresent(bonus -> Bonus3DViewSystem.lookExpired(bonus, level3D.animationManager().registry()));
+        level.entities().optBonus().ifPresent(bonus ->
+            Bonus3DViewSystem.lookExpired(bonus, level3D.animationManager().registry()));
         level3D.optSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);
     }
 

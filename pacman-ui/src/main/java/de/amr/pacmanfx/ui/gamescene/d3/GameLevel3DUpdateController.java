@@ -84,7 +84,7 @@ public class GameLevel3DUpdateController {
 
     private static void updateBonus3D(GameLevel3D level3D) {
         final GameLevel level = level3D.level();
-        level.optBonus().ifPresent(bonus -> {
+        level.entities().optBonus().ifPresent(bonus -> {
             level3D.ensureBonus3DViewAddedToSceneGraph(bonus);
             switch (bonus.bonusState()) {
                 case EDIBLE -> Bonus3DViewSystem.lookEdible(bonus);

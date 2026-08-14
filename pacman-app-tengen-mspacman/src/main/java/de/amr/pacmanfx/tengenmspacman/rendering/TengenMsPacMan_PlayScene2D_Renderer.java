@@ -155,6 +155,6 @@ public class TengenMsPacMan_PlayScene2D_Renderer
         actorsInZOrder.clear();
         actorsInZOrder.add(level.entities().pac());
         GHOSTS_Z_ORDER.stream().map(level::ghost).forEach(actorsInZOrder::add);
-        level.optBonus().ifPresent(actorsInZOrder::add);
+        level.entities().optBonus().ifPresent(actorsInZOrder::add);
     }
 }
