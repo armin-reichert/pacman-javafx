@@ -109,20 +109,8 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         final GameSession session = game.session();
         final WorldNavigationSystem navigator = game.variantConfig().systems().worldNavigator();
         final WorldMap worldMap = game.variantConfig().worldMapManager().supplyWorldMap(levelNumber);
-        final TerrainLayer terrain = worldMap.terrainLayer();
 
-        final Vector2i houseMinTile = terrain.getTilePropertyOrDefault(
-            WorldMapPropertyName.POS_HOUSE_MIN_TILE, ArcadePacMan_GameVariantConfig.ARCADE_MAP_HOUSE_MIN_TILE);
-        terrain.propertyMap().put(WorldMapPropertyName.POS_HOUSE_MIN_TILE,  String.valueOf(houseMinTile));
-
-        final House house = HouseFactory.createArcadeHouse(houseMinTile);
-        entities.add(house);
-
-        createAndSetPacMan(entities, game.variantConfig().systems());
-        createAndSetGhosts(entities, worldMap.terrainLayer(), house);
-
-        entities.add(new LivesCounter());
-        entities.add(new MessageView());
+        addEntities(entities, game, worldMap);
 
         final HuntingTimer huntingTimer = new HuntingTimer("Arcade Pac-Man Hunting Timer", game.variantConfig().rules().numHuntingPhases());
 
@@ -145,23 +133,41 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         return level;
     }
 
-    private void createAndSetPacMan(GameLevelEntitySet entities, GameSystems systems) {
-        final var factory = ArcadePacMan_ActorFactory.instance();
-        final Pac pacMan = factory.createPacMan();
+    private void addEntities(GameLevelEntitySet entities, GameContext game, WorldMap worldMap) {
+        final TerrainLayer terrain = worldMap.terrainLayer();
+
+        final Vector2i houseMinTile = terrain.getTilePropertyOrDefault(
+            WorldMapPropertyName.POS_HOUSE_MIN_TILE, ArcadePacMan_GameVariantConfig.ARCADE_MAP_HOUSE_MIN_TILE);
+        terrain.propertyMap().put(WorldMapPropertyName.POS_HOUSE_MIN_TILE,  String.valueOf(houseMinTile));
+
+        final var actorFactory = ArcadePacMan_ActorFactory.instance();
+
+        final House house = HouseFactory.createArcadeHouse(houseMinTile);
+
+        final Pac pacMan        = actorFactory.createPacMan();
+        final Ghost redGhost    = actorFactory.createRedGhost();
+        final Ghost pinkGhost   = actorFactory.createPinkGhost();
+        final Ghost cyanGhost   = actorFactory.createCyanGhost();
+        final Ghost orangeGhost = actorFactory.createOrangeGhost();
+
+        entities.add(house);
+
         entities.add(pacMan);
 
+        entities.add(redGhost);
+        entities.add(pinkGhost);
+        entities.add(cyanGhost);
+        entities.add(orangeGhost);
+
+        entities.add(new LivesCounter());
+        entities.add(new MessageView());
+
+        // Configure entities
+
+        final GameSystems systems = game.variantConfig().systems();
         pacMan.autoSteering().setSteering(new RuleGuidedPacSteering(
             systems.worldNavigator(), systems.pacWorldMovementPolicy()
         ));
-    }
-
-    private void createAndSetGhosts(GameLevelEntitySet entities, TerrainLayer terrain, House house) {
-        final var factory = ArcadePacMan_ActorFactory.instance();
-
-        final Ghost redGhost    = factory.createRedGhost();
-        final Ghost pinkGhost   = factory.createPinkGhost();
-        final Ghost cyanGhost   = factory.createCyanGhost();
-        final Ghost orangeGhost = factory.createOrangeGhost();
 
         // Special tiles where attacking ghosts cannot move up
         final Set<Vector2i> oneWayTiles = terrain.tiles()
@@ -172,11 +178,6 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         pinkGhost.worldInfo()  .init(terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK,   oneWayTiles);
         cyanGhost.worldInfo()  .init(terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN,   oneWayTiles);
         orangeGhost.worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE, oneWayTiles);
-
-        entities.add(redGhost);
-        entities.add(pinkGhost);
-        entities.add(cyanGhost);
-        entities.add(orangeGhost);
     }
 
     @Override
