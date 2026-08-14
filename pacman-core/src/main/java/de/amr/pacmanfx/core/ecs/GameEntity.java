@@ -42,27 +42,27 @@ public class GameEntity implements Disposable {
         components.put(type, component);
     }
 
-    public final <T extends GameEntityComponent> T requireComp(Class<T> componentClass) {
-        requireNonNull(componentClass);
-        final GameEntityComponent component = components.get(componentClass);
+    public final <T extends GameEntityComponent> T requireComp(Class<T> type) {
+        requireNonNull(type);
+        final GameEntityComponent component = components.get(type);
         if (component == null) {
-            throw new IllegalArgumentException("No component found for class %s".formatted(componentClass.getSimpleName()));
+            throw new IllegalArgumentException("No component found for class %s".formatted(type.getSimpleName()));
         }
-        return componentClass.cast(component);
+        return type.cast(component);
     }
 
-    public final <T extends GameEntityComponent> boolean hasComp(Class<T> componentClass) {
-        requireNonNull(componentClass);
-        return components.get(componentClass) != null;
+    public final <T extends GameEntityComponent> boolean hasComp(Class<T> type) {
+        requireNonNull(type);
+        return components.get(type) != null;
     }
 
-    public final <T extends GameEntityComponent> Optional<T> optComp(Class<T> componentClass) {
-        requireNonNull(componentClass);
-        final GameEntityComponent component = components.get(componentClass);
-        return Optional.ofNullable(component).map(componentClass::cast);
+    public final <T extends GameEntityComponent> Optional<T> optComp(Class<T> type) {
+        requireNonNull(type);
+        final GameEntityComponent component = components.get(type);
+        return Optional.ofNullable(component).map(type::cast);
     }
 
-    // Component API
+    // Typed access
 
     public final PositionComp pos() {
         return requireComp(PositionComp.class);
@@ -88,8 +88,7 @@ public class GameEntity implements Disposable {
     }
 
     /**
-     * Resets this actor's components (position, movement, visibility) to their default values.
-     * Note: actor is invisible by default!
+     * Resets all components (position, visibility etc.) to their default values.
      */
     public void reset() {
         components.values().forEach(GameEntityComponent::reset);
@@ -118,8 +117,9 @@ public class GameEntity implements Disposable {
 
     @Override
     public String toString() {
-        StringBuilder b = new StringBuilder();
-        b.append("{name=").append(name).append(", components=[");
+        final StringBuilder b = new StringBuilder();
+        b.append("{name=").append(name);
+        b.append(", components=[");
         boolean first = true;
         for (var component : components.values()) {
             if (!first) b.append(", ");
