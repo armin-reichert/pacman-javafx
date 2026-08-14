@@ -140,11 +140,6 @@ public class GameLevel {
         return entities.ghosts().stream().filter(ghost -> states.contains(ghost.ghostStateEnum()));
     }
 
-    public Stream<Ghost> ghostsInState(GhostState state) {
-        requireNonNull(state);
-        return entities.ghosts().stream().filter(ghost -> state.equals(ghost.ghostStateEnum()));
-    }
-
     /**
      * @return the index of the current bonus
      */

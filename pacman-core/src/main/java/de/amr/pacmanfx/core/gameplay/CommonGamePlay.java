@@ -236,7 +236,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
         if (rules.pacPowerSeconds(level.number()) > 0) {
             level.huntingTimerStrategy().stop();
-            level.ghostsInState(GhostState.HUNTING_PAC)
+            level.entities().ghostsInState(GhostState.HUNTING_PAC)
                 .forEach(ghost -> systems.ghostState().changeState(ghost, GhostState.FRIGHTENED));
             systems.pacPower().start(pac, TickTimer.secToTicks(rules.pacPowerSeconds(level.number())));
             game.eventManager().publishGameEvent(new PacGetsPowerEvent(pac));
@@ -252,7 +252,7 @@ public abstract class CommonGamePlay implements GamePlay {
         }
         else if (power.isOver()) {
             power.reset();
-            level.ghostsInState(GhostState.FRIGHTENED).forEach(ghost ->
+            level.entities().ghostsInState(GhostState.FRIGHTENED).forEach(ghost ->
                 systems.ghostState().changeState(ghost, GhostState.HUNTING_PAC));
             level.clearGhostKillChain();
             level.huntingTimerStrategy().start();

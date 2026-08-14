@@ -116,7 +116,7 @@ public class RuleGuidedPacSteering implements Steering {
             data.hunterBehindDistance = pacTile.manhattanDist(tile);
         }
 
-        data.frightenedGhosts = level.ghostsInState(GhostState.FRIGHTENED)
+        data.frightenedGhosts = level.entities().ghostsInState(GhostState.FRIGHTENED)
             .filter(ghost -> WorldNavigationSystem.computeTile(ghost).manhattanDist(pacTile) <= CollectedData.MAX_GHOST_CHASE_DIST)
             .collect(Collectors.toList());
 
@@ -205,7 +205,7 @@ public class RuleGuidedPacSteering implements Steering {
             }
             final Vector2i aheadLeft = ahead.plus(worldNavigation.moveDir().nextCounterClockwise().vector());
             final Vector2i aheadRight = ahead.plus(worldNavigation.moveDir().nextClockwise().vector());
-            final List<Ghost> huntingGhosts = level.ghostsInState(GhostState.HUNTING_PAC).toList();
+            final List<Ghost> huntingGhosts = level.entities().ghostsInState(GhostState.HUNTING_PAC).toList();
             for (var ghost : huntingGhosts) {
                 final Vector2i ghostTile = WorldNavigationSystem.computeTile(ghost);
                 if (ghostTile.equals(ahead) || ghostTile.equals(aheadLeft) || ghostTile.equals(aheadRight)) {
@@ -229,7 +229,7 @@ public class RuleGuidedPacSteering implements Steering {
             if (!worldMovementPolicy.canAccessTile(level, pac, behind)) {
                 break;
             }
-            Iterable<Ghost> huntingGhosts = level.ghostsInState(GhostState.HUNTING_PAC)::iterator;
+            Iterable<Ghost> huntingGhosts = level.entities().ghostsInState(GhostState.HUNTING_PAC)::iterator;
             for (Ghost ghost : huntingGhosts) {
                 final Vector2i ghostTile = WorldNavigationSystem.computeTile(ghost);
                 if (ghostTile.equals(behind)) {

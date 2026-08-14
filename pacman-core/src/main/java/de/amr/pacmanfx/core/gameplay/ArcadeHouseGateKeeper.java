@@ -205,7 +205,7 @@ public final class ArcadeHouseGateKeeper {
                 Logger.trace("Global dot counter = {}", globalCounterValue);
             }
         } else {
-            level.ghostsInState(GhostState.LOCKED).filter(house::isVisitedBy).findFirst().ifPresent(ghost -> {
+            level.entities().ghostsInState(GhostState.LOCKED).filter(house::isVisitedBy).findFirst().ifPresent(ghost -> {
                 ghostCounters[ghost.personality().ordinal()]++;
                 Logger.trace("{} dot counter = {}", ghost.name(), ghostCounters[ghost.personality().ordinal()]);
             });
