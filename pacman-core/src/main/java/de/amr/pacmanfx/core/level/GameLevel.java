@@ -7,16 +7,12 @@ package de.amr.pacmanfx.core.level;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.entities.Ghost;
-import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
-import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.rules.HuntingTimerStrategy;
 import de.amr.pacmanfx.core.model.world.map.FoodState;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
 import static java.util.Objects.requireNonNull;
@@ -124,20 +120,6 @@ public class GameLevel {
 
     public GameLevelEntitySet entities() {
         return entities;
-    }
-
-    /**
-     * @param personality a ghost personality (e.g. {@link GhostPersonality#ORANGE_GHOST_POKEY})
-     * @return the ghost with this ID
-     */
-    public Ghost ghost(GhostPersonality personality) {
-        requireNonNull(personality);
-        return entities.ghosts().get(personality.ordinal());
-    }
-
-    public Stream<Ghost> ghostsInAnyOfStates(Collection<GhostState> states) {
-        requireNonNull(states);
-        return entities.ghosts().stream().filter(ghost -> states.contains(ghost.ghostStateEnum()));
     }
 
     /**

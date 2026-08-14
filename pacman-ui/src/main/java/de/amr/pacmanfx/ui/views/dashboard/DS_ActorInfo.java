@@ -138,7 +138,7 @@ public class DS_ActorInfo extends GameDashboardSection {
 
         return fnLevelInfo(appContext, level -> {
             if (!level.entities().ghosts().isEmpty()) {
-                return infoSupplier.apply(level, level.ghost(personality));
+                return infoSupplier.apply(level, level.entities().ghost(personality));
             }
             return NO_INFO;
         });

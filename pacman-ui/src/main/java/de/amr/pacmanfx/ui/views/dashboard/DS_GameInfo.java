@@ -164,7 +164,7 @@ public class DS_GameInfo extends GameDashboardSection {
 
     private String fmtGhostAttackSpeed(GameLevel level, ActorSpeedRules speedControl) {
         // do not use Blinky because he has varying attack speed (Cruise Elroy mode)
-        final float speed = speedControl.ghostSpeedAttacking(level, level.ghost(GhostPersonality.CYAN_GHOST_BASHFUL));
+        final float speed = speedControl.ghostSpeedAttacking(level, level.entities().ghost(GhostPersonality.CYAN_GHOST_BASHFUL));
         return "%.4f px/s".formatted(speed * GameConstants.SIMULATION_FPS);
     }
 

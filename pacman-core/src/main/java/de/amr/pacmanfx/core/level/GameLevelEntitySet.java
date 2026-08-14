@@ -11,7 +11,9 @@ import de.amr.pacmanfx.core.entities.Bonus;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
+import de.amr.pacmanfx.core.model.GhostPersonality;
 
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -62,6 +64,19 @@ public class GameLevelEntitySet extends QuerySet<GameEntity> {
         return ghosts().stream().filter(ghost -> state.equals(ghost.ghostStateEnum()));
     }
 
+    /**
+     * @param personality a ghost personality (e.g. {@link GhostPersonality#ORANGE_GHOST_POKEY})
+     * @return the ghost with this ID
+     */
+    public Ghost ghost(GhostPersonality personality) {
+        requireNonNull(personality);
+        return ghosts().get(personality.ordinal());
+    }
+
+    public Stream<Ghost> ghostsInAnyOfStates(Collection<GhostState> states) {
+        requireNonNull(states);
+        return ghosts().stream().filter(ghost -> states.contains(ghost.ghostStateEnum()));
+    }
 
     public Optional<Bonus> optBonus() {
         if (cachedBonus == null) {

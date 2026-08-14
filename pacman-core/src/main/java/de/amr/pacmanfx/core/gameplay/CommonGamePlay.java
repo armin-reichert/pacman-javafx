@@ -207,7 +207,7 @@ public abstract class CommonGamePlay implements GamePlay {
     private void updateGhosts(GameContext game, GameLevel level) {
         final GameSession session = game.session();
         if (session.gameState().id().equals(CommonGameStateID.GAME_LEVEL_EATING_GHOST)) {
-            level.ghostsInAnyOfStates(GhostStateSystem.UPDATED_GHOST_STATES_WHILE_EATEN)
+            level.entities().ghostsInAnyOfStates(GhostStateSystem.UPDATED_GHOST_STATES_WHILE_EATEN)
                 .forEach(ghost -> updateGhost(game, level, ghost));
         } else {
             level.entities().ghosts().forEach(ghost -> updateGhost(game, level, ghost));
@@ -232,7 +232,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final GameSystems systems = game.variantConfig().systems();
         final GameRules rules = game.variantConfig().rules();
 
-        level.ghostsInAnyOfStates(GHOST_TURNBACK_STATES).forEach(systems.worldNavigator()::requestTurnBack);
+        level.entities().ghostsInAnyOfStates(GHOST_TURNBACK_STATES).forEach(systems.worldNavigator()::requestTurnBack);
 
         if (rules.pacPowerSeconds(level.number()) > 0) {
             level.huntingTimerStrategy().stop();

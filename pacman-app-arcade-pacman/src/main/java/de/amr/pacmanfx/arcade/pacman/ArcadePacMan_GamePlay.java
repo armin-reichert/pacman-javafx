@@ -125,7 +125,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         // On each phase start (except the initial phase), the ghosts reverse their move direction
         huntingTimer.setPhaseChangeCallback(newPhaseIndex -> {
             if (newPhaseIndex > 0) {
-                level.ghostsInAnyOfStates(Set.of(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE))
+                level.entities().ghostsInAnyOfStates(Set.of(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE))
                     .forEach(navigator::requestTurnBack);
             }
         });
@@ -272,7 +272,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
     protected void configureGateKeeper(ArcadeHouseGateKeeper gateKeeper) {
         gateKeeper.setGhostReleasedCallback((level, prisoner) -> {
-            final Ghost redGhost = level.ghost(GhostPersonality.RED_GHOST_SHADOW);
+            final Ghost redGhost = level.entities().ghost(GhostPersonality.RED_GHOST_SHADOW);
             if (!redGhost.hasComp(ElroyComp.class)) return;
             if (prisoner.personality() == GhostPersonality.ORANGE_GHOST_POKEY) {
                 final ElroyComp elroy = redGhost.requireComp(ElroyComp.class);
@@ -285,7 +285,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     }
 
     private void checkCruiseElroyActivation(GameLevel level) {
-        final Ghost redGhost = level.ghost(GhostPersonality.RED_GHOST_SHADOW);
+        final Ghost redGhost = level.entities().ghost(GhostPersonality.RED_GHOST_SHADOW);
         if (!redGhost.hasComp(ElroyComp.class)) {
             return;
         }

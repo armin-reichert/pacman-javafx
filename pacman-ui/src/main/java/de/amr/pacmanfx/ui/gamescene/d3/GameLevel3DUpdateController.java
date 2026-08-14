@@ -64,11 +64,11 @@ public class GameLevel3DUpdateController {
         final GameLevel level = level3D.level();
         final House house = level.entities().theOne(House.class);
 
-        boolean accessRequested = level.ghostsInAnyOfStates(GHOST_STATES_WITH_ACCESS_TO_HOUSE)
+        boolean accessRequested = level.entities().ghostsInAnyOfStates(GHOST_STATES_WITH_ACCESS_TO_HOUSE)
             .filter(ghost -> house.isDoorAt(WorldNavigationSystem.computeTile(ghost)))
             .anyMatch(GameEntity::isVisible);
 
-        boolean ghostNearHouseDoor = level.ghostsInAnyOfStates(GHOST_STATES_REQUIRING_HOUSE_LIGHTING)
+        boolean ghostNearHouseDoor = level.entities().ghostsInAnyOfStates(GHOST_STATES_REQUIRING_HOUSE_LIGHTING)
             .filter(ghost -> ghostIsNearHouseDoor(house, ghost))
             .anyMatch(GameEntity::isVisible);
 

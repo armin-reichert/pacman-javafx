@@ -44,7 +44,7 @@ public class BashfulHuntingStrategy implements GhostHuntingStrategy {
     private Vector2i computeChasingTargetTile(GameLevel level) {
         final Pac pac = level.entities().pac();
         final Vector2i pacAhead2 = tilesAheadWithOverflowBug(pac, 2);
-        final Vector2i redGhostTile = computeTile(level.ghost(GhostPersonality.RED_GHOST_SHADOW));
+        final Vector2i redGhostTile = computeTile(level.entities().ghost(GhostPersonality.RED_GHOST_SHADOW));
         final Vector2i arrow = pacAhead2.minus(redGhostTile).scaled(2);
         return redGhostTile.plus(arrow);
     }

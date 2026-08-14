@@ -196,6 +196,6 @@ public class MiniPlaySceneView {
             GhostPersonality.CYAN_GHOST_BASHFUL,
             GhostPersonality.PINK_GHOST_SPEEDY,
             GhostPersonality.RED_GHOST_SHADOW
-        ).map(level::ghost).forEach(ghost -> actorRenderer.drawActor(ghost));
+        ).map(level.entities()::ghost).forEach(ghost -> actorRenderer.drawActor(ghost));
     }
 }

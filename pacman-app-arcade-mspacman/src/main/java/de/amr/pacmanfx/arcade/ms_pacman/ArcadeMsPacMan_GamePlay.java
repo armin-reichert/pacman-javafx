@@ -77,7 +77,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
 
         huntingTimer.setPhaseChangeCallback(newPhaseIndex -> {
             if (newPhaseIndex > 0) {
-                level.ghostsInAnyOfStates(TURNBACK_STATES).forEach(navigator::requestTurnBack);
+                level.entities().ghostsInAnyOfStates(TURNBACK_STATES).forEach(navigator::requestTurnBack);
             }
         });
 
