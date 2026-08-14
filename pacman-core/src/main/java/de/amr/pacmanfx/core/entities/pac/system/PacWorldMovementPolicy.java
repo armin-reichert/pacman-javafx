@@ -38,6 +38,6 @@ public class PacWorldMovementPolicy implements WorldMovementPolicy {
         if (house != null && house.contains(tile)) {
             return false; // Schieb ab, Alter!
         }
-        return !terrain.isTileBlocked(tile);
+        return !terrain.isInaccessibleTerrainTile(tile);
     }
 }

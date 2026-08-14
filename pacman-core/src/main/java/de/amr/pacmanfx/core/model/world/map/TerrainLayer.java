@@ -13,6 +13,7 @@ import de.amr.pacmanfx.core.model.world.obstacle.ObstacleBuilder;
 import org.tinylog.Logger;
 
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static de.amr.basics.math.Vector2f.vec2_float;
@@ -65,6 +66,29 @@ public final class TerrainLayer extends WorldMapLayer {
     public Vector2i ghostScatterTile(GhostPersonality personality) {
         return scatterTiles[requireNonNull(personality).ordinal()];
     }
+
+    /**
+     * Computes if the given tile is a "real" intersection in the terrain. The predicate for example could define
+     * tiles covered by the ghost house as inaccessible tiles.
+     *
+     * @param tile a tile
+     * @param inaccessibleCondition an additional condition marking tiles as inaccessible
+     * @return if the tile is a real intersection i.e. an accessible tile with 3 or 4 accessible neighbor tiles
+     */
+    public boolean isRealIntersectionTile(Vector2i tile, Predicate<Vector2i> inaccessibleCondition) {
+        requireNonNull(tile);
+
+        if (outOfBounds(tile) || isInaccessibleTerrainTile(tile) || inaccessibleCondition.test(tile)) {
+            return false;
+        }
+
+        long inaccessibleNeighbors = 0;
+        inaccessibleNeighbors += neighborTilesOutsideWorld(tile).count();
+        inaccessibleNeighbors += neighborTilesInsideWorld(tile).filter(this::isInaccessibleTerrainTile).count();
+        inaccessibleNeighbors += neighborTilesInsideWorld(tile).filter(inaccessibleCondition).count();
+        return inaccessibleNeighbors <= 1; // 3 or 4 accessible neighbors
+    }
+
 
     public List<HPortal> horizontalPortals() { return Arrays.asList(hPortals); }
 
@@ -128,7 +152,7 @@ public final class TerrainLayer extends WorldMapLayer {
         return horizontalPortals().stream().anyMatch(portal -> portal.contains(tile));
     }
 
-    public boolean isTileBlocked(Vector2i tile) {
+    public boolean isInaccessibleTerrainTile(Vector2i tile) {
         return !outOfBounds(tile) && isBlocked(content(tile));
     }
 

@@ -59,7 +59,7 @@ public class GhostWorldMovementPolicy implements WorldMovementPolicy {
         if (worldPlacement.house() != null && worldPlacement.house().isDoorAt(tile)) {
             return isOneOf(ghost.ghostStateEnum(), DOOR_PASSING_STATES);
         }
-        return !terrainLayer.isTileBlocked(tile);
+        return !terrainLayer.isInaccessibleTerrainTile(tile);
     }
 
     @Override

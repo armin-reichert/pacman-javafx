@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.math.Direction;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
 import de.amr.pacmanfx.core.entities.House;
@@ -14,7 +15,6 @@ import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.rules.HuntingTimerStrategy;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import javafx.scene.canvas.Canvas;
@@ -63,12 +63,12 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
             terrain.tiles()
                 .filter(tile -> tile.y() >= terrain.emptyRowsOverMaze())
                 .filter(tile -> tile.y() < terrain.numRows() - terrain.emptyRowsBelowMaze())
-                .filter(tile -> GameLevel.isIntersection(level.worldMap().terrainLayer(), house,tile))
+                .filter(tile -> terrain.isRealIntersectionTile(tile, house::contains))
                 .forEach(tile -> {
                     final double cx = tile.x() * WorldMap.TS + WorldMap.HTS;
                     final double cy = tile.y() * WorldMap.TS + WorldMap.HTS;
                     for (Direction dir : CLOCK_ORDER) {
-                        if (!terrain.isTileBlocked(tile.plus(dir.vector()))) {
+                        if (!terrain.isInaccessibleTerrainTile(tile.plus(dir.vector()))) {
                             final double x = cx + dir.vector().x() * WorldMap.HTS;
                             final double y = cy + dir.vector().y() * WorldMap.HTS;
                             ctx.setStroke(Color.WHITE);

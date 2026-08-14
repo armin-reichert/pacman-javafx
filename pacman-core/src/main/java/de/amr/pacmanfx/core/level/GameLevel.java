@@ -4,18 +4,15 @@
 
 package de.amr.pacmanfx.core.level;
 
-import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.entities.Bonus;
 import de.amr.pacmanfx.core.entities.Ghost;
-import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.rules.HuntingTimerStrategy;
 import de.amr.pacmanfx.core.model.world.map.FoodState;
-import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 
 import java.util.ArrayList;
@@ -256,27 +253,5 @@ public class GameLevel {
         } else {
             throw new IllegalArgumentException("Cannot set bonus symbol at index " + i);
         }
-    }
-
-    // Others
-
-    public static boolean isIntersection(TerrainLayer terrain, House house, Vector2i tile) {
-        requireNonNull(terrain);
-        requireNonNull(house);
-        requireNonNull(tile);
-
-        if (house.contains(tile)) {
-            return false;
-        }
-
-        if (terrain.outOfBounds(tile) || terrain.isTileBlocked(tile)) {
-            return false;
-        }
-
-        long inaccessible = 0;
-        inaccessible += terrain.neighborTilesOutsideWorld(tile).count();
-        inaccessible += terrain.neighborTilesInsideWorld(tile).filter(terrain::isTileBlocked).count();
-        inaccessible += terrain.neighborTilesInsideWorld(tile).filter(house::isDoorAt).count();
-        return inaccessible <= 1;
     }
 }

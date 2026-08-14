@@ -33,6 +33,6 @@ public class BonusWorldMovementPolicy implements WorldMovementPolicy {
         if (house != null && house.contains(tile)) {
             return false;
         }
-        return !terrain.isTileBlocked(tile);
+        return !terrain.isInaccessibleTerrainTile(tile);
     }
 }

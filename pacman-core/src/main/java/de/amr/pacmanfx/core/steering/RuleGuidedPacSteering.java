@@ -150,7 +150,8 @@ public class RuleGuidedPacSteering implements Steering {
         // when not escaping ghost, keep move direction at least until next intersection
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final House house = level.entities().theOne(House.class);
-        if (worldNavigation.info().moved && !GameLevel.isIntersection(terrain, house, pacTile))
+        final boolean intersection = terrain.isRealIntersectionTile(pacTile, house::contains);
+        if (worldNavigation.info().moved && !intersection)
             return;
 
         if (!data.frightenedGhosts.isEmpty()
