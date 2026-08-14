@@ -17,6 +17,7 @@ import de.amr.pacmanfx.core.event.pac.*;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.model.test.TestStateID;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Extras;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.MessageAnimation;
@@ -101,7 +102,7 @@ public interface TengenMsPacMan_PlayScene2DGameEventHandler extends DefaultGameE
             optSoundEffects().ifPresent(GameSoundEffects::stopAll);
 
             final MessageAnimation messageAnimation = session.value(
-                TengenMsPacMan_GamePlay.EXTRAS.GAME_OVER_MESSAGE_ANIMATION, MessageAnimation.class);
+                TengenMsPacMan_Extras.GAME_OVER_MESSAGE_ANIMATION, MessageAnimation.class);
 
             if (messageAnimation != null) {
                 // Compute exact message size and wrap position at right border

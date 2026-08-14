@@ -8,7 +8,7 @@ import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.core.model.HUDState;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.GamePlayOptions;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlayOptions;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene1;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene2;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene3;
@@ -92,9 +92,9 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
 
         if (hud.gameOptionsVisible()) {
             drawGameOptions(
-                session.value(GamePlayOptions.MAP_CATEGORY, MapCategory.class),
-                session.value(GamePlayOptions.DIFFICULTY, Difficulty.class),
-                session.value(GamePlayOptions.BOOSTER_MODE, BoosterMode.class),
+                session.value(TengenMsPacMan_GamePlayOptions.MAP_CATEGORY, MapCategory.class),
+                session.value(TengenMsPacMan_GamePlayOptions.DIFFICULTY, Difficulty.class),
+                session.value(TengenMsPacMan_GamePlayOptions.BOOSTER_MODE, BoosterMode.class),
                 tilesPx(16), tilesPx(2.5f));
         }
 

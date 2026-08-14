@@ -44,14 +44,6 @@ import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
-    public enum GamePlayOptions implements GameSession.GameSessionValueKey {
-        BOOSTER_MODE, BOOSTER_ON, CAN_START_GAME, DIFFICULTY, MAP_CATEGORY, START_LEVEL_NUMBER, NUM_CONTINUES
-    }
-
-    public enum EXTRAS implements GameSession.GameSessionValueKey {
-        GAME_OVER_MESSAGE_ANIMATION
-    }
-
     private static final int ARCADE_MAP_GAME_OVER_TICKS = 420;
 
     private static final int NON_ARCADE_MAP_GAME_OVER_TICKS = 600;
@@ -61,11 +53,11 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     public TengenMsPacMan_GamePlay() {}
 
     public boolean allOptionsHaveDefaultValue(GameSession session) {
-        final BoosterMode boosterMode = session.value(GamePlayOptions.BOOSTER_MODE, BoosterMode.class);
-        final Difficulty difficulty = session.value(GamePlayOptions.DIFFICULTY, Difficulty.class);
-        final MapCategory mapCategory = session.value(GamePlayOptions.MAP_CATEGORY, MapCategory.class);
-        final int startLevel = session.value(GamePlayOptions.START_LEVEL_NUMBER, Integer.class);
-        final int numContinues = session.value(GamePlayOptions.NUM_CONTINUES, Integer.class);
+        final BoosterMode boosterMode = session.value(TengenMsPacMan_GamePlayOptions.BOOSTER_MODE, BoosterMode.class);
+        final Difficulty difficulty = session.value(TengenMsPacMan_GamePlayOptions.DIFFICULTY, Difficulty.class);
+        final MapCategory mapCategory = session.value(TengenMsPacMan_GamePlayOptions.MAP_CATEGORY, MapCategory.class);
+        final int startLevel = session.value(TengenMsPacMan_GamePlayOptions.START_LEVEL_NUMBER, Integer.class);
+        final int numContinues = session.value(TengenMsPacMan_GamePlayOptions.NUM_CONTINUES, Integer.class);
 
         return boosterMode == TengenMsPacMan_GameVariantConfig.DEFAULT_PAC_BOOSTER
             && difficulty == TengenMsPacMan_GameVariantConfig.DEFAULT_DIFFICULTY
@@ -80,7 +72,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
         final GameSession session = game.session();
 
-        session.setValue(GamePlayOptions.BOOSTER_ON, boosterOn);
+        session.setValue(TengenMsPacMan_GamePlayOptions.BOOSTER_ON, boosterOn);
 
         final SpriteAnimSystem animSystem = game.variantConfig().systems().spriteAnim();
         animSystem.select(pac, boosterOn ? TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER : CommonSpriteAnimationID.PAC_MUNCHING);
@@ -88,21 +80,21 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
     public void setBoosterMode(GameSession session, BoosterMode boosterMode) {
         requireNonNull(session);
-        session.setValue(GamePlayOptions.BOOSTER_MODE, boosterMode);
+        session.setValue(TengenMsPacMan_GamePlayOptions.BOOSTER_MODE, boosterMode);
     }
 
     public BoosterMode boosterMode(GameSession session) {
-        return session.value(GamePlayOptions.BOOSTER_MODE, BoosterMode.class);
+        return session.value(TengenMsPacMan_GamePlayOptions.BOOSTER_MODE, BoosterMode.class);
     }
 
     public void setMapCategory(GameSession session, MapCategory mapCategory) {
         requireNonNull(session);
         requireNonNull(mapCategory);
-        session.setValue(GamePlayOptions.MAP_CATEGORY, mapCategory);
+        session.setValue(TengenMsPacMan_GamePlayOptions.MAP_CATEGORY, mapCategory);
     }
 
     public MapCategory mapCategory(GameSession session) {
-        return session.value(GamePlayOptions.MAP_CATEGORY, MapCategory.class);
+        return session.value(TengenMsPacMan_GamePlayOptions.MAP_CATEGORY, MapCategory.class);
     }
 
     public void setDifficulty(GameContext game, Difficulty difficulty) {
@@ -110,7 +102,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         requireNonNull(difficulty);
 
         final GameSession session = game.session();
-        session.setValue(GamePlayOptions.DIFFICULTY, difficulty);
+        session.setValue(TengenMsPacMan_GamePlayOptions.DIFFICULTY, difficulty);
 
         //TODO this should also move into session!
         final var speedRules = (TengenMsPacMan_ActorSpeedRules) game.variantConfig().rules().actorSpeedRules();
@@ -119,7 +111,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
     public Difficulty difficulty(GameSession session) {
         requireNonNull(session);
-        return session.value(GamePlayOptions.DIFFICULTY, Difficulty.class);
+        return session.value(TengenMsPacMan_GamePlayOptions.DIFFICULTY, Difficulty.class);
     }
 
     public void setStartLevelNumber(GameSession session, int number) {
@@ -127,55 +119,55 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         if (number < TengenMsPacMan_GameRules.FIRST_LEVEL || number > TengenMsPacMan_GameRules.LAST_LEVEL_NUMBER) {
             throw GameException.invalidLevelNumber(number);
         }
-        session.setValue(GamePlayOptions.START_LEVEL_NUMBER, number);
+        session.setValue(TengenMsPacMan_GamePlayOptions.START_LEVEL_NUMBER, number);
     }
 
     public int startLevelNumber(GameSession session) {
         requireNonNull(session);
-        return session.value(GamePlayOptions.START_LEVEL_NUMBER, Integer.class);
+        return session.value(TengenMsPacMan_GamePlayOptions.START_LEVEL_NUMBER, Integer.class);
     }
 
     public void setNumContinues(GameSession session, int numContinues) {
         requireNonNull(session);
-        session.setValue(GamePlayOptions.NUM_CONTINUES, numContinues);
+        session.setValue(TengenMsPacMan_GamePlayOptions.NUM_CONTINUES, numContinues);
     }
 
     public int numContinues(GameSession session) {
         requireNonNull(session);
-        return session.value(GamePlayOptions.NUM_CONTINUES, Integer.class);
+        return session.value(TengenMsPacMan_GamePlayOptions.NUM_CONTINUES, Integer.class);
     }
 
     //TODO don't change values inside this method
     public boolean canContinueOnGameOver(GameSession session) {
         requireNonNull(session);
-        final int startLevelNumber = session.value(GamePlayOptions.START_LEVEL_NUMBER, Integer.class);
-        final int numContinues = session.value(GamePlayOptions.NUM_CONTINUES, Integer.class);
+        final int startLevelNumber = session.value(TengenMsPacMan_GamePlayOptions.START_LEVEL_NUMBER, Integer.class);
+        final int numContinues = session.value(TengenMsPacMan_GamePlayOptions.NUM_CONTINUES, Integer.class);
         if (startLevelNumber >= 10 && numContinues > 0) {
-            session.setValue(GamePlayOptions.NUM_CONTINUES, numContinues - 1);
+            session.setValue(TengenMsPacMan_GamePlayOptions.NUM_CONTINUES, numContinues - 1);
             return true;
         } else {
-            session.setValue(GamePlayOptions.NUM_CONTINUES, 4);
+            session.setValue(TengenMsPacMan_GamePlayOptions.NUM_CONTINUES, 4);
             return false;
         }
     }
 
     public void setBoosterOn(GameSession session, boolean boosterOn) {
         requireNonNull(session);
-        session.setValue(GamePlayOptions.BOOSTER_ON, boosterOn);
+        session.setValue(TengenMsPacMan_GamePlayOptions.BOOSTER_ON, boosterOn);
     }
 
     public boolean isBoosterOn(GameSession session) {
         requireNonNull(session);
-        return session.value(GamePlayOptions.BOOSTER_ON, Boolean.class);
+        return session.value(TengenMsPacMan_GamePlayOptions.BOOSTER_ON, Boolean.class);
     }
 
     public boolean canStartNewGame(GameSession session) {
-        return session.value(GamePlayOptions.CAN_START_GAME, Boolean.class);
+        return session.value(TengenMsPacMan_GamePlayOptions.CAN_START_GAME, Boolean.class);
 
     }
     public void setCanStartNewGame(GameSession session, boolean canStartNewGame) {
         requireNonNull(session);
-        session.setValue(GamePlayOptions.CAN_START_GAME, canStartNewGame);
+        session.setValue(TengenMsPacMan_GamePlayOptions.CAN_START_GAME, canStartNewGame);
     }
 
     // Game start

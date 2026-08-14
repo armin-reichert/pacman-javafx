@@ -17,8 +17,9 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Extras;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.GamePlayOptions;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlayOptions;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.model.MessageAnimation;
 import org.tinylog.Logger;
@@ -58,7 +59,7 @@ public class GameOverState extends GameState {
 
         gamePlay.showLevelMessage(game, level, GameLevelMessageType.GAME_OVER);
 
-        final MapCategory mapCategory = session.value(GamePlayOptions.MAP_CATEGORY, MapCategory.class);
+        final MapCategory mapCategory = session.value(TengenMsPacMan_GamePlayOptions.MAP_CATEGORY, MapCategory.class);
         if (!session.isAttractMode() && mapCategory != MapCategory.ARCADE) {
             timer().restartIndefinitely(); // animation end triggers state exit
             startGameOverMessageAnimation(
@@ -112,19 +113,19 @@ public class GameOverState extends GameState {
     public void onExit(GameContext game) {
         final GameSession session = game.session();
         session.hud().clearMessage();
-        session.clearValue(TengenMsPacMan_GamePlay.EXTRAS.GAME_OVER_MESSAGE_ANIMATION);
+        session.clearValue(TengenMsPacMan_Extras.GAME_OVER_MESSAGE_ANIMATION);
     }
 
     private Optional<MessageAnimation> getMessageAnimation(GameSession session) {
         return Optional.ofNullable(
-            session.value(TengenMsPacMan_GamePlay.EXTRAS.GAME_OVER_MESSAGE_ANIMATION, MessageAnimation.class)
+            session.value(TengenMsPacMan_Extras.GAME_OVER_MESSAGE_ANIMATION, MessageAnimation.class)
         );
     }
 
     // For map categories "mini", "big" or "strange", the "game over" message is animated
     private void startGameOverMessageAnimation(GameSession session, House house, MovementSystem motor) {
         final var messageAnimation = new MessageAnimation();
-        session.setValue(TengenMsPacMan_GamePlay.EXTRAS.GAME_OVER_MESSAGE_ANIMATION, messageAnimation);
+        session.setValue(TengenMsPacMan_Extras.GAME_OVER_MESSAGE_ANIMATION, messageAnimation);
         messageAnimation.setDelayTicks(GAME_OVER_MESSAGE_DELAY_SEC * GameConstants.SIMULATION_FPS);
         messageAnimation.start(house, motor);
     }

@@ -16,7 +16,7 @@ import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
 import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Extras;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig.MapConfigKey;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.model.MessageAnimation;
@@ -100,7 +100,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
             switch (message.type()) {
                 case GAME_OVER -> {
                     final MessageAnimation messageAnimation = game.session().value(
-                        TengenMsPacMan_GamePlay.EXTRAS.GAME_OVER_MESSAGE_ANIMATION, MessageAnimation.class);
+                        TengenMsPacMan_Extras.GAME_OVER_MESSAGE_ANIMATION, MessageAnimation.class);
                     final Vector2f pos = (messageAnimation != null)
                         ? messageAnimation.pos().asVector2f()
                         : messagePosition(level);
