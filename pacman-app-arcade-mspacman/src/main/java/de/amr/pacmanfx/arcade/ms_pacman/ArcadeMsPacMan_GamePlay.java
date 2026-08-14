@@ -19,6 +19,7 @@ import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 import de.amr.pacmanfx.core.model.rules.HuntingTimer;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -46,10 +47,10 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         requireNonNull(game);
         requireValidLevelNumber(levelNumber);
 
+        final GameLevelEntitySet entities = new GameLevelEntitySet();
+
         final GameSession session = game.session();
-
         final WorldNavigationSystem navigator = game.variantConfig().systems().worldNavigator();
-
         final WorldMap worldMap = game.variantConfig().worldMapManager().supplyWorldMap(levelNumber);
         final TerrainLayer terrain = worldMap.terrainLayer();
 
@@ -57,24 +58,29 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
             WorldMapPropertyName.POS_HOUSE_MIN_TILE, ArcadePacMan_GameVariantConfig.ARCADE_MAP_HOUSE_MIN_TILE);
         terrain.propertyMap().put(WorldMapPropertyName.POS_HOUSE_MIN_TILE, houseMinTile.toString());
 
+        final House house = HouseFactory.createArcadeHouse(houseMinTile);
+        entities.add(house);
+
+        entities.add(house);
+
+        createAndSetMsPacMan(entities, game.variantConfig().systems());
+        createAndSetGhosts(entities, worldMap.terrainLayer(), house);
+
+        entities.add(new LivesCounter());
+        entities.add(new MessageView());
+
         final HuntingTimer huntingTimer = new HuntingTimer("Arcade Ms. Pac-Man Hunting Timer", game.variantConfig().rules().numHuntingPhases());
 
-        final GameLevel level = new GameLevel(levelNumber, worldMap, huntingTimer);
+        final GameLevel level = new GameLevel(levelNumber, worldMap, entities, huntingTimer);
 
         session.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
         session.setLevel(level);
-
-        final House house = HouseFactory.createArcadeHouse(houseMinTile);
-        level.entities().add(house);
 
         huntingTimer.setPhaseChangeCallback(newPhaseIndex -> {
             if (newPhaseIndex > 0) {
                 level.ghostsInAnyOfStates(TURNBACK_STATES).forEach(navigator::requestTurnBack);
             }
         });
-
-        createAndSetMsPacMan(game.variantConfig().systems(), level);
-        createAndSetGhosts(level);
 
         level.setBonusSymbolCode(0, game.variantConfig().rules().selectBonusSymbolCode(level.number(), 0));
         level.setBonusSymbolCode(1, game.variantConfig().rules().selectBonusSymbolCode(level.number(), 1));
@@ -83,7 +89,6 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
          * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
         LevelCounterSystem.enable(session.levelCounter(), levelNumber < 8);
 
-        level.entities().add(new MessageView());
 
         return level;
     }
@@ -103,18 +108,17 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         }
     }
 
-    protected void createAndSetMsPacMan(GameSystems sys, GameLevel level) {
+    protected void createAndSetMsPacMan(GameLevelEntitySet entities, GameSystems systems) {
         final var factory = new ArcadeMsPacMan_ActorFactory();
         final Pac msPacMan = factory.createMsPacMan();
+        entities.add(msPacMan);
 
         msPacMan.autoSteering().setSteering(new RuleGuidedPacSteering(
-            sys.worldNavigator(), sys.pacWorldMovementPolicy()
+            systems.worldNavigator(), systems.pacWorldMovementPolicy()
         ));
-
-        level.setPac(msPacMan);
     }
 
-    protected void createAndSetGhosts(GameLevel level) {
+    private void createAndSetGhosts(GameLevelEntitySet entities, TerrainLayer terrain, House house) {
         final var factory = new ArcadeMsPacMan_ActorFactory();
 
         final Ghost redGhost = factory.createRedGhost();
@@ -122,15 +126,15 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         final Ghost cyanGhost = factory.createCyanGhost();
         final Ghost orangeGhost = factory.createOrangeGhost();
 
-        final TerrainLayer terrain = level.worldMap().terrainLayer();
-        final House house = level.entities().theOne(House.class);
-
         redGhost.worldInfo()   .init(terrain, house, WorldMapPropertyName.POS_GHOST_1_RED);
         pinkGhost.worldInfo()  .init(terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK);
         cyanGhost.worldInfo()  .init(terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN);
         orangeGhost.worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE);
 
-        level.setGhosts(redGhost, pinkGhost, cyanGhost, orangeGhost);
+        entities.add(redGhost);
+        entities.add(pinkGhost);
+        entities.add(cyanGhost);
+        entities.add(orangeGhost);
     }
 
     @Override

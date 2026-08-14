@@ -22,6 +22,7 @@ import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
 import de.amr.pacmanfx.core.gameplay.ArcadeHouseGateKeeper;
 import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.HUDState;
@@ -103,9 +104,10 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         requireNonNull(game);
         requireValidLevelNumber(levelNumber);
 
-        final WorldNavigationSystem navigator = game.variantConfig().systems().worldNavigator();
+        final GameLevelEntitySet entities = new GameLevelEntitySet();
 
         final GameSession session = game.session();
+        final WorldNavigationSystem navigator = game.variantConfig().systems().worldNavigator();
         final WorldMap worldMap = game.variantConfig().worldMapManager().supplyWorldMap(levelNumber);
         final TerrainLayer terrain = worldMap.terrainLayer();
 
@@ -113,14 +115,24 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
             WorldMapPropertyName.POS_HOUSE_MIN_TILE, ArcadePacMan_GameVariantConfig.ARCADE_MAP_HOUSE_MIN_TILE);
         terrain.propertyMap().put(WorldMapPropertyName.POS_HOUSE_MIN_TILE,  String.valueOf(houseMinTile));
 
+        final House house = HouseFactory.createArcadeHouse(houseMinTile);
+        entities.add(house);
+
+        createAndSetPacMan(entities, game.variantConfig().systems());
+        createAndSetGhosts(entities, worldMap.terrainLayer(), house);
+
+        entities.add(new LivesCounter());
+        entities.add(new MessageView());
+
         final HuntingTimer huntingTimer = new HuntingTimer("Arcade Pac-Man Hunting Timer", game.variantConfig().rules().numHuntingPhases());
 
-        final GameLevel level = new GameLevel(levelNumber, worldMap, huntingTimer);
-
+        final GameLevel level = new GameLevel(levelNumber, worldMap, entities, huntingTimer);
         session.setLevel(level);
 
-        final House house = HouseFactory.createArcadeHouse(houseMinTile);
-        level.entities().add(house);
+        session.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
+
+        level.setBonusSymbolCode(0, game.variantConfig().rules().selectBonusSymbolCode(level.number(), 0));
+        level.setBonusSymbolCode(1, game.variantConfig().rules().selectBonusSymbolCode(level.number(), 1));
 
         // On each phase start (except the initial phase), the ghosts reverse their move direction
         huntingTimer.setPhaseChangeCallback(newPhaseIndex -> {
@@ -130,44 +142,26 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
             }
         });
 
-        session.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
-
-        createAndSetPacMan(game.variantConfig().systems(), level);
-        createAndSetGhosts(level);
-
-        level.setBonusSymbolCode(0, game.variantConfig().rules().selectBonusSymbolCode(level.number(), 0));
-        level.setBonusSymbolCode(1, game.variantConfig().rules().selectBonusSymbolCode(level.number(), 1));
-
-        final LivesCounter livesCounter = new LivesCounter();
-        level.entities().add(livesCounter);
-        // Value is set later
-
-        level.entities().add(new MessageView());
-
         return level;
     }
 
-    protected void createAndSetPacMan(GameSystems sys, GameLevel level) {
+    private void createAndSetPacMan(GameLevelEntitySet entities, GameSystems systems) {
         final var factory = ArcadePacMan_ActorFactory.instance();
         final Pac pacMan = factory.createPacMan();
+        entities.add(pacMan);
 
         pacMan.autoSteering().setSteering(new RuleGuidedPacSteering(
-            sys.worldNavigator(), sys.pacWorldMovementPolicy()
+            systems.worldNavigator(), systems.pacWorldMovementPolicy()
         ));
-
-        level.setPac(pacMan);
     }
 
-    protected void createAndSetGhosts(GameLevel level) {
+    private void createAndSetGhosts(GameLevelEntitySet entities, TerrainLayer terrain, House house) {
         final var factory = ArcadePacMan_ActorFactory.instance();
 
         final Ghost redGhost    = factory.createRedGhost();
         final Ghost pinkGhost   = factory.createPinkGhost();
         final Ghost cyanGhost   = factory.createCyanGhost();
         final Ghost orangeGhost = factory.createOrangeGhost();
-
-        final TerrainLayer terrain = level.worldMap().terrainLayer();
-        final House house = level.entities().theOne(House.class);
 
         // Special tiles where attacking ghosts cannot move up
         final Set<Vector2i> oneWayTiles = terrain.tiles()
@@ -179,7 +173,10 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         cyanGhost.worldInfo()  .init(terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN,   oneWayTiles);
         orangeGhost.worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE, oneWayTiles);
 
-        level.setGhosts(redGhost, pinkGhost, cyanGhost, orangeGhost);
+        entities.add(redGhost);
+        entities.add(pinkGhost);
+        entities.add(cyanGhost);
+        entities.add(orangeGhost);
     }
 
     @Override

@@ -9,6 +9,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameException;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
@@ -22,13 +23,13 @@ import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
 import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 import de.amr.pacmanfx.core.level.GameLevelMessage;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.model.rules.HuntingTimer;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
-import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
 import de.amr.pacmanfx.tengenmspacman.model.*;
 import de.amr.pacmanfx.tengenmspacman.rules.TengenMsPacMan_ActorSpeedRules;
@@ -201,6 +202,8 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
     @Override
     public GameLevel createLevel(GameContext game, int levelNumber) {
+        final GameLevelEntitySet entities = new GameLevelEntitySet();
+
         final GameSession session = game.session();
         final WorldNavigationSystem navigator = game.variantConfig().systems().worldNavigator();
 
@@ -210,12 +213,16 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final TengenMsPacMan_GameRules rules = (TengenMsPacMan_GameRules) game.variantConfig().rules();
         final var huntingTimer = new HuntingTimer("Tengen Ms. Pac-Man Hunting Timer", rules.numHuntingPhases());
 
-        final GameLevel level = new GameLevel(levelNumber, worldMap, huntingTimer);
-
-        session.setLevel(level);
-
         final House house = HouseFactory.createArcadeHouse(TengenMsPacMan_GameVariantConfig.HOUSE_MIN_TILE);
-        level.entities().add(house);
+        entities.add(house);
+
+        createAndAddMsPacMan(entities, game.variantConfig().systems());
+        createAndAddGhosts(entities, worldMap.terrainLayer(), house);
+
+        entities.add(new MessageView());
+
+        final GameLevel level = new GameLevel(levelNumber, worldMap, entities, huntingTimer);
+        session.setLevel(level);
 
         huntingTimer.setPhaseChangeCallback(newPhaseIndex -> {
             if (newPhaseIndex > 0) {
@@ -228,14 +235,10 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         session.setGameOverStateTicks(mapCategory(session) == MapCategory.ARCADE
             ? ARCADE_MAP_GAME_OVER_TICKS : NON_ARCADE_MAP_GAME_OVER_TICKS);
 
-        setMsPacMan(game, level);
-        createAndSetGhosts(level, house);
 
         //TODO not sure about this:
         level.setBonusSymbolCode(0, rules.selectBonusSymbolCode(level.number(), 0));
         level.setBonusSymbolCode(1, rules.selectBonusSymbolCode(level.number(), 1));
-
-        level.entities().add(new MessageView());
 
         return level;
     }
@@ -296,6 +299,8 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
         session.setLevelStartTimeMillis(System.currentTimeMillis());
         prepareLevelForPlaying(game);
+
+        activateBooster(game, level.entities().pac(), boosterMode(session) == BoosterMode.BOOSTER_ALWAYS_ON);
 
         // In Tengen, actors are shown immediately
         level.entities().pac().show();
@@ -370,20 +375,16 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
     // private
 
-    private void setMsPacMan(GameContext game, GameLevel level) {
-        final GameSession session = game.session();
-        final GameSystems systems = game.variantConfig().systems();
-        final var factory = TengenMsPacMan_ActorFactory.instance();
-        final Pac msPacMan = factory.createMsPacMan();
+    private void createAndAddMsPacMan(GameLevelEntitySet entities, GameSystems systems) {
+        final Pac msPacMan = TengenMsPacMan_ActorFactory.instance().createMsPacMan();
+        entities.add(msPacMan);
 
         msPacMan.autoSteering().setSteering(new RuleGuidedPacSteering(
             systems.worldNavigator(), systems.pacWorldMovementPolicy()
         ));
-        activateBooster(game, msPacMan, boosterMode(session) == BoosterMode.BOOSTER_ALWAYS_ON);
-        level.setPac(msPacMan);
     }
 
-    private void createAndSetGhosts(GameLevel level, House house) {
+    private void createAndAddGhosts(GameLevelEntitySet entities, TerrainLayer terrain, House house) {
         final var factory = TengenMsPacMan_ActorFactory.instance();
 
         final Ghost redGhost    = factory.createRedGhost();
@@ -391,13 +392,14 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final Ghost cyanGhost   = factory.createCyanGhost();
         final Ghost orangeGhost = factory.createOrangeGhost();
 
-        final TerrainLayer terrain = level.worldMap().terrainLayer();
-
         redGhost.worldInfo()   .init(terrain, house, WorldMapPropertyName.POS_GHOST_1_RED);
         pinkGhost.worldInfo()  .init(terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK);
         cyanGhost.worldInfo()  .init(terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN);
         orangeGhost.worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE);
 
-        level.setGhosts(redGhost, pinkGhost, cyanGhost, orangeGhost);
+        entities.add(redGhost);
+        entities.add(pinkGhost);
+        entities.add(cyanGhost);
+        entities.add(orangeGhost);
     }
 }

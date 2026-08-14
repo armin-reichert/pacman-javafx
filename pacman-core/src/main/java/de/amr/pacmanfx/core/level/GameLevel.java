@@ -32,7 +32,7 @@ public class GameLevel {
     private final int number; // 1=first level
 
     private final WorldMap worldMap;
-    private final GameLevelEntitySet entities = new GameLevelEntitySet();
+    private final GameLevelEntitySet entities;
     private final Pulse heartbeat;
     private final List<Ghost> ghostKillChain = new ArrayList<>();
     private final int[] bonusSymbolCodes = new int[2];
@@ -43,9 +43,10 @@ public class GameLevel {
 
     private final FoodState foodState;
 
-    public GameLevel(int number, WorldMap worldMap, HuntingTimerStrategy huntingTimerStrategy) {
+    public GameLevel(int number, WorldMap worldMap, GameLevelEntitySet entities, HuntingTimerStrategy huntingTimerStrategy) {
         this.number = requireValidLevelNumber(number);
         this.worldMap = requireNonNull(worldMap);
+        this.entities = requireNonNull(entities);
         this.huntingTimerStrategy = requireNonNull(huntingTimerStrategy);
 
         foodState = new FoodState(worldMap.foodLayer());
@@ -126,29 +127,6 @@ public class GameLevel {
 
     public GameLevelEntitySet entities() {
         return entities;
-    }
-
-    /**
-     * Sets the Pac-Man used in this level.
-     * @param pac Pac-Man or Ms. Pac-Man
-     */
-    public void setPac(Pac pac) {
-        requireNonNull(pac);
-        entities.add(pac);
-    }
-
-    /**
-     * Sets the ghosts used in this level.
-     * @param redGhost Blinky, the red ghost
-     * @param pinkGhost Pinky, the pink ghost
-     * @param cyanGhost Inky, the cyan ghost
-     * @param orangeGhost Clyde/Sue, the orange ghost
-     */
-    public void setGhosts(Ghost redGhost, Ghost pinkGhost, Ghost cyanGhost, Ghost orangeGhost) {
-        entities.add(requireNonNull(redGhost));
-        entities.add(requireNonNull(pinkGhost));
-        entities.add(requireNonNull(cyanGhost));
-        entities.add(requireNonNull(orangeGhost));
     }
 
     /**
