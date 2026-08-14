@@ -88,7 +88,8 @@ public class LevelShortTestState extends GameState {
             });
         }
         else if (timer().atSecond(START + 9)) {
-            level.hidePacAndGhosts();
+            level.entities().pac().hide();
+            level.entities().ghosts().forEach(GameEntity::hide);
             level.heartbeat().stop();
             gamePlay.onLevelCompleted(game, level);
         }

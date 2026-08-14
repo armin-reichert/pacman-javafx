@@ -82,14 +82,6 @@ public class GameLevel {
         return huntingTimerStrategy;
     }
 
-    /**
-     * Makes Pac-Man and the ghosts invisible.
-     */
-    public void hidePacAndGhosts() {
-        entities.pac().hide();
-        entities.ghosts().forEach(GameEntity::hide);
-    }
-
     // Ghost kill chain
 
     public void clearGhostKillChain() {
