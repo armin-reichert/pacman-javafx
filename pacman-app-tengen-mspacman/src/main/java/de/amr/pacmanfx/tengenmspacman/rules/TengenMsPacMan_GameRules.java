@@ -82,6 +82,10 @@ public class TengenMsPacMan_GameRules implements GameRules {
         return LAST_LEVEL_NUMBER;
     }
 
+    @Override
+    public int numLevelFlashes(int levelNumber) {
+        return 3;
+    }
 
     // TODO: I have no idea yet how Tengen Ms. Pac-Man exactly implemented this.
     //       What I know is that the "strange" maps use an extended set of bonus symbols.

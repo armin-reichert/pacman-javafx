@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.core.Validations.requireNonNegativeInt;
 import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
 import static java.util.Objects.requireNonNull;
 
@@ -37,7 +36,6 @@ public class GameLevel {
     private final Pulse heartbeat;
     private final List<Ghost> ghostKillChain = new ArrayList<>();
     private final int[] bonusSymbolCodes = new int[2];
-    private final int numFlashes;
 
     private final HuntingTimerStrategy huntingTimerStrategy;
 
@@ -45,11 +43,10 @@ public class GameLevel {
 
     private final FoodState foodState;
 
-    public GameLevel(int number, WorldMap worldMap, HuntingTimerStrategy huntingTimerStrategy, int numFlashes) {
+    public GameLevel(int number, WorldMap worldMap, HuntingTimerStrategy huntingTimerStrategy) {
         this.number = requireValidLevelNumber(number);
         this.worldMap = requireNonNull(worldMap);
         this.huntingTimerStrategy = requireNonNull(huntingTimerStrategy);
-        this.numFlashes = requireNonNegativeInt(numFlashes);
 
         foodState = new FoodState(worldMap.foodLayer());
 
@@ -68,13 +65,6 @@ public class GameLevel {
      */
     public int number() {
         return number;
-    }
-
-    /**
-     * @return how often maze image flashes at the end of this level.
-     */
-    public int numFlashes() {
-        return numFlashes;
     }
 
     /**

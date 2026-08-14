@@ -8,13 +8,14 @@ import de.amr.basics.Disposable;
 import de.amr.basics.Named;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.math.Vector3f;
+import de.amr.pacmanfx.core.GameVariantConfig;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorSchemeImpl;
-import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
+import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.GhostLightRelayAnimation;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.LevelCompletedAnimationShort;
@@ -72,29 +73,37 @@ public class GameLevel3DAnimationManager implements Disposable {
 
     private final GameLevel3D level3D;
 
-    public GameLevel3DAnimationManager(AnimationRegistry registry, GameLevel3D level3D, GameVariantUIConfig gameVariantConfig) {
+    public GameLevel3DAnimationManager(
+        AnimationRegistry registry,
+        GameLevel3D level3D,
+        GameVariantConfig variantConfig,
+        GameVariantUIConfig variantUIConfig)
+    {
         this.registry = requireNonNull(registry);
         this.level3D = requireNonNull(level3D);
-        requireNonNull(gameVariantConfig);
+        requireNonNull(variantConfig);
+        requireNonNull(variantUIConfig);
 
         final GameLevel level = level3D.level();
-        final GameVariantRenderConfig renderConfig = gameVariantConfig.renderConfig();
-        final WorldMapColorSchemeImpl mapColorScheme = renderConfig.colorScheme(level.worldMap(), gameVariantConfig.worldSettings());
+        final int numFlashes = variantConfig.rules().numLevelFlashes(level.number());
+        final GameVariantRenderConfig renderConfig = variantUIConfig.renderConfig();
+        final WorldMapColorSchemeImpl mapColorScheme = renderConfig.colorScheme(level.worldMap(), variantUIConfig.worldSettings());
 
         registry.register(AnimationID.WALL_COLOR_FLASHING,
             new WallColorFlashingAnimation(mapColorScheme, level3D.maze3D().materials().wallTopMaterial()));
 
-        registry.register(AnimationID.LEVEL_COMPLETED_FULL, new LevelCompletedAnimation(level3D));
+        registry.register(AnimationID.LEVEL_COMPLETED_FULL,
+            new LevelCompletedAnimation(level3D, variantConfig.rules().numLevelFlashes(level.number())));
 
-        registry.register(AnimationID.LEVEL_COMPLETED_SHORT, new LevelCompletedAnimationShort(level3D));
+        registry.register(AnimationID.LEVEL_COMPLETED_SHORT, new LevelCompletedAnimationShort(level3D, numFlashes));
 
         createHouseAnimations(level.entities().theOne(House.class));
 
-        createEnergizerAnimations(gameVariantConfig.worldSettings().energizer());
+        createEnergizerAnimations(variantUIConfig.worldSettings().energizer());
 
         createEnergizerParticlesAnimation(level3D.maze3D(), level);
 
-        createGhostLightAnimation(gameVariantConfig, level, level3D.ghostHunterLight());
+        createGhostLightAnimation(variantUIConfig, level, level3D.ghostHunterLight());
 
         final Pac pac = level.entities().pac();
         if (pac.state().isMale()) {
@@ -107,7 +116,7 @@ public class GameLevel3DAnimationManager implements Disposable {
         // See! Only TWO genders exist! Compiler knows it too!
         //}
 
-        createGhostAnimations(level, gameVariantConfig.worldSettings().ghosts());
+        createGhostAnimations(level, variantUIConfig.worldSettings().ghosts(), numFlashes);
     }
 
     public void stopAll() {
@@ -193,10 +202,10 @@ public class GameLevel3DAnimationManager implements Disposable {
         return pac.requireComp(Pac3DAnimationComp.class);
     }
 
-    private void createGhostAnimations(GameLevel level, List<GhostSettings> settingsByPersonality) {
+    private void createGhostAnimations(GameLevel level, List<GhostSettings> settingsByPersonality, int numFlashes) {
         level.entities().ghosts().forEach(ghost -> {
             final GhostSettings settings = settingsByPersonality.get(ghost.personality().ordinal());
-            createGhostAnimations(ghost, settings, level.numFlashes());
+            createGhostAnimations(ghost, settings, numFlashes);
         });
     }
 

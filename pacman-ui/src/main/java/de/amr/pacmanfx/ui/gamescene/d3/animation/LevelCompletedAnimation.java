@@ -61,20 +61,20 @@ public class LevelCompletedAnimation extends ManagedAnimation {
 
     private final GameLevel3D level3D;
 
-    public LevelCompletedAnimation(GameLevel3D level3D) {
+    public LevelCompletedAnimation(GameLevel3D level3D, int numFlashes) {
         super("Level Completed");
         this.level3D = requireNonNull(level3D);
-        setAnimationFactory(this::createAnimationFX);
+        setAnimationFactory(() -> createAnimationFX(numFlashes));
     }
 
-    private Animation createAnimationFX() {
+    private Animation createAnimationFX(int numFlashes) {
         final GameLevel level = level3D.level();
         final Maze3D maze3D = level3D.maze3D();
         final House house = level.entities().theOne(House.class);
         final Point3D rotationAxis = chance(0.5) ? Rotate.X_AXIS : Rotate.Z_AXIS;
         return new SequentialTransition(
             pauseSecThen(0.5, () -> level.entities().ghosts().forEach(GameEntity::hide)),
-            createMazeWallsSwingingAnimation(maze3D, level.numFlashes()),
+            createMazeWallsSwingingAnimation(maze3D, numFlashes),
             pauseSecThen(0.5, () -> level.entities().pac().hide()),
             pauseSec(0.5),
             levelRotation(rotationAxis),

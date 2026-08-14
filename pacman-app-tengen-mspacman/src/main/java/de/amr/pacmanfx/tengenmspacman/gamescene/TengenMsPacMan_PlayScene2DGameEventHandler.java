@@ -83,8 +83,9 @@ public interface TengenMsPacMan_PlayScene2DGameEventHandler extends DefaultGameE
         final GameSession session = game().session();
         if (e.newState() == TengenMsPacMan_GameState.GAME_LEVEL_COMPLETE.state()) {
             final GameLevel level = session.assertLevel();
+            final int numFlashes = game().variantConfig().rules().numLevelFlashes(level.number());
             optSoundEffects().ifPresent(GameSoundEffects::stopAll);
-            gameScene().playLevelCompleteAnimation(level);
+            gameScene().playLevelCompleteAnimation(level, numFlashes);
         }
         else if (e.newState() == TengenMsPacMan_GameState.GAME_OVER.state()) {
             final TengenMsPacMan_PlayScene2D playScene2D = gameScene();

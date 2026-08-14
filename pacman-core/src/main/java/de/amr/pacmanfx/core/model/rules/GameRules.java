@@ -20,6 +20,8 @@ public interface GameRules {
 
     int lastLevelNumber();
 
+    int numLevelFlashes(int levelNumber);
+
     default int restingTicksForPellet() {
         return 0;
     }

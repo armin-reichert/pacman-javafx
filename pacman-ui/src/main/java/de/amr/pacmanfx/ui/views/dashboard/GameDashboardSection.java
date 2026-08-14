@@ -44,11 +44,11 @@ public class GameDashboardSection extends DashboardSection implements DashboardS
         return () -> app.ui().gameScenes().optCurrentGameScene().map(fnInfo).orElse(NO_INFO);
     }
 
-    protected Supplier<String> fnGameLevelInfo(GameAppContext app, Function<GameLevel, String> fnInfo) {
+    protected Supplier<String> fnLevelInfo(GameAppContext app, Function<GameLevel, String> fnInfo) {
         return () -> app.game().session().optLevel().map(fnInfo).orElse(NO_INFO);
     }
 
-    protected Supplier<String> fnGameRulesInfo(GameAppContext app, Function<GameRules, String> fnInfo) {
+    protected Supplier<String> fnRulesInfo(GameAppContext app, Function<GameRules, String> fnInfo) {
         return () -> fnInfo.apply(app.game().variantConfig().rules());
     }
 

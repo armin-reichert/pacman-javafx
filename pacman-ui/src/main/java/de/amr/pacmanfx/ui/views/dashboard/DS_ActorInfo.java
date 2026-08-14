@@ -51,7 +51,7 @@ public class DS_ActorInfo extends GameDashboardSection {
     }
 
     private Supplier<String> supplyLivesCount(GameAppContext appContext) {
-        return fnGameLevelInfo(appContext, _ -> {
+        return fnLevelInfo(appContext, _ -> {
             final GameSession session = appContext.game().session();
             final LivesCounter livesCounter = session.livesCounter();
             return String.valueOf(livesCounter.data().numLives());
@@ -118,7 +118,7 @@ public class DS_ActorInfo extends GameDashboardSection {
     }
 
     private Supplier<String> supplyPacText(GameAppContext appContext, BiFunction<GameLevel, Pac, String> infoSupplier) {
-        return fnGameLevelInfo(appContext, level -> infoSupplier.apply(level, level.entities().pac()));
+        return fnLevelInfo(appContext, level -> infoSupplier.apply(level, level.entities().pac()));
     }
 
     private Supplier<String> supplyPacAnimationText(GameAppContext app) {
@@ -136,7 +136,7 @@ public class DS_ActorInfo extends GameDashboardSection {
         GameAppContext appContext,
         BiFunction<GameLevel, Ghost, String> infoSupplier, GhostPersonality personality) {
 
-        return fnGameLevelInfo(appContext, level -> {
+        return fnLevelInfo(appContext, level -> {
             if (!level.entities().ghosts().isEmpty()) {
                 return infoSupplier.apply(level, level.ghost(personality));
             }

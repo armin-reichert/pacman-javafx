@@ -210,7 +210,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final TengenMsPacMan_GameRules rules = (TengenMsPacMan_GameRules) game.variantConfig().rules();
         final var huntingTimer = new HuntingTimer("Tengen Ms. Pac-Man Hunting Timer", rules.numHuntingPhases());
 
-        final GameLevel level = new GameLevel(levelNumber, worldMap, huntingTimer, 3);
+        final GameLevel level = new GameLevel(levelNumber, worldMap, huntingTimer);
 
         session.setLevel(level);
 

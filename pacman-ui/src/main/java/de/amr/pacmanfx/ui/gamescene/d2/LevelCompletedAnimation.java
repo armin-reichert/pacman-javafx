@@ -126,17 +126,17 @@ public class LevelCompletedAnimation {
     }
 
     /** Starts (or restarts) the level-complete animation. */
-    public void play() {
+    public void play(int numFlashes) {
         if (animation == null) {
-            createAnimation();
+            createAnimation(numFlashes);
         }
         animation.playFromStart();
     }
 
-    private void createAnimation() {
+    private void createAnimation(int numFlashes) {
         final Animation hideGhosts = pauseSecThen(1.5, this::hideGhosts);
-        if (level.numFlashes() > 0) {
-            flashingAnimation = new FlashingAnimation(level.numFlashes(), singleFlashMillis);
+        if (numFlashes != 0) {
+            flashingAnimation = new FlashingAnimation(numFlashes, singleFlashMillis);
             animation = new SequentialTransition(
                     hideGhosts,
                     pauseSec(0.5),

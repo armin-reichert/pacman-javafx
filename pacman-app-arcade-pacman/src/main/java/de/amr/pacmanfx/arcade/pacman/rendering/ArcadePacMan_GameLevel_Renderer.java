@@ -3,10 +3,11 @@
  */
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
-import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessage;
+import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -37,12 +38,12 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
     }
 
     @Override
-    public void applyLevelSettings(GameLevel level, RenderInfo info) {}
+    public void applyLevelSettings(GameRules rules, GameLevel level, RenderInfo info) {}
 
     @Override
-    public void drawLevel(GameSession session, GameLevel level, RenderInfo info) {
+    public void drawLevel(GameContext game, GameLevel level, RenderInfo info) {
         drawMap(level, info);
-        session.hud().optMessage().ifPresent(this::drawLevelMessage);
+        game.session().hud().optMessage().ifPresent(this::drawLevelMessage);
     }
 
     protected void drawMap(GameLevel level, RenderInfo info) {

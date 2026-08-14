@@ -8,7 +8,6 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GamePlay;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameVariantConfig;
-import de.amr.pacmanfx.arcade.pacman.rules.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
@@ -58,11 +57,9 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
             WorldMapPropertyName.POS_HOUSE_MIN_TILE, ArcadePacMan_GameVariantConfig.ARCADE_MAP_HOUSE_MIN_TILE);
         terrain.propertyMap().put(WorldMapPropertyName.POS_HOUSE_MIN_TILE, houseMinTile.toString());
 
-        final int numFlashes = ArcadePacMan_GameRules.levelData(levelNumber).numFlashes();
-
         final HuntingTimer huntingTimer = new HuntingTimer("Arcade Ms. Pac-Man Hunting Timer", game.variantConfig().rules().numHuntingPhases());
 
-        final GameLevel level = new GameLevel(levelNumber, worldMap, huntingTimer, numFlashes);
+        final GameLevel level = new GameLevel(levelNumber, worldMap, huntingTimer);
 
         session.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
         session.setLevel(level);

@@ -5,13 +5,13 @@
 package de.amr.pacmanfx.ui.gamescene.d3;
 
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.GameVariantConfig;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
@@ -185,7 +185,8 @@ public class PlayScene3D extends AbstractGameScene
         requireNonNull(game);
         requireNonNull(level);
 
-        final GameVariantUIConfig gameVariantConfig = app().gameVariants().currentGameVariant().uiConfig();
+        final GameVariantConfig variantConfig = app().currentGameVariantConfig();
+        final GameVariantUIConfig variantUIConfig = app().currentGameVariantUIConfig();
         final GameUISettingsVM viewModel = app().ui().viewModel();
         final GameSession session = game.session();
 
@@ -195,10 +196,11 @@ public class PlayScene3D extends AbstractGameScene
         }
 
         // Create a new 3D game level representation
-        level3D = new GameLevel3D(game(), level, registry, viewModel, gameVariantConfig);
+        level3D = new GameLevel3D(game(), level, registry, viewModel, variantUIConfig);
         addAdditional3DLevelElements(level3D);
         level3D.replaceLevelCounter3D(session.levelCounter());
-        level3D.setAnimationManager(new GameLevel3DAnimationManager(registry, level3D, gameVariantConfig));
+        level3D.setAnimationManager(
+            new GameLevel3DAnimationManager(registry, level3D, variantConfig, variantUIConfig));
 
         level3DParent.getChildren().setAll(level3D);
 

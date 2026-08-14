@@ -81,11 +81,13 @@ public interface Arcade_PlayScene2D_GameEventHandler extends DefaultGameEventLis
 
         if (CommonGameStateID.GAME_LEVEL_COMPLETE.hasSameNameAs(newState)) {
             final GameLevel level = game().session().assertLevel();
+            final int numFlashes = game().variantConfig().rules().numLevelFlashes(level.number());
+
             optSoundEffects().ifPresent(GameSoundEffects::stopAll);
 
             final var completedAnimation = new LevelCompletedAnimation(level, () -> game().session().gameState().triggerTimeout());
             playScene().setLevelCompletedAnimation(completedAnimation);
-            completedAnimation.play();
+            completedAnimation.play(numFlashes);
         }
         else if (CommonGameStateID.GAME_OVER.hasSameNameAs(newState)) {
             game().session().hud().showCredit();

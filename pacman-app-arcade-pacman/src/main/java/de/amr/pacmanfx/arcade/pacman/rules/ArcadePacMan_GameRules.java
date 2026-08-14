@@ -100,6 +100,11 @@ public class ArcadePacMan_GameRules implements GameRules {
     }
 
     @Override
+    public int numLevelFlashes(int levelNumber) {
+        return levelData(levelNumber).numFlashes();
+    }
+
+    @Override
     public int restingTicksForPellet() {
         return 1;
     }

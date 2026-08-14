@@ -6,10 +6,12 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessage;
+import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
@@ -56,11 +58,11 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
     }
 
     @Override
-    public void applyLevelSettings(GameLevel level, RenderInfo info) {
+    public void applyLevelSettings(GameRules rules, GameLevel level, RenderInfo info) {
         final WorldMap worldMap = level.worldMap();
         // store the maze sprite set with the correct colors for this level in the map configuration:
         if (!worldMap.hasConfigValue(MapConfigKey.MAP_IMAGE_SET)) {
-            final int numFlashes = level.numFlashes();
+            final int numFlashes = rules.numLevelFlashes(level.number());
             final MapImageSet mapImageSet = TengenMsPacMan_MapRepository.instance().createMapImageSet(worldMap, numFlashes);
             worldMap.setConfigValue(MapConfigKey.MAP_IMAGE_SET, mapImageSet);
             Logger.debug("Maze sprite set created: {}", mapImageSet);
@@ -68,9 +70,9 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
     }
 
     @Override
-    public void drawLevel(GameSession session, GameLevel level, RenderInfo info) {
+    public void drawLevel(GameContext game, GameLevel level, RenderInfo info) {
         final WorldMap worldMap = level.worldMap();
-        applyLevelSettings(level, info);
+        applyLevelSettings(game.variantConfig().rules(), level, info);
         if (info.getBoolean(CommonRenderInfoKey.MAP_BRIGHT)) {
             final int flashingIndex = info.get(CommonRenderInfoKey.MAZE_FLASHING_INDEX, Integer.class);
             configureHighlightedMapRenderInfo(info, worldMap, flashingIndex);
@@ -89,9 +91,9 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         );
         overPaintActorSprites(level);
         drawFood(level);
-        session.hud().optMessage().ifPresent(message -> {
+        game.session().hud().optMessage().ifPresent(message -> {
             switch (message.type()) {
-                case GAME_OVER -> drawGameOverMessage(session, level, message);
+                case GAME_OVER -> drawGameOverMessage(game.session(), level, message);
                 case READY -> drawReadyMessage(message);
             }
         });

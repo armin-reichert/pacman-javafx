@@ -5,9 +5,11 @@ package de.amr.pacmanfx.ui.views.playview;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
+import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -151,16 +153,16 @@ public class MiniPlaySceneView {
         }
         if (app != null) {
             final GameSession session = app.game().session();
-            session.optLevel().ifPresent(level -> draw(session, level));
+            session.optLevel().ifPresent(level -> draw(app.game(), level));
         }
     }
     
-    private void draw(GameSession session, GameLevel level) {
+    private void draw(GameContext game, GameLevel level) {
         canvasRenderer.clearCanvas();
 
         if (levelRenderer != null && actorRenderer != null) {
             ActorAnimationManager.ensureActorAnimationsCreated(app, level);
-            drawGameLevel(session, level);
+            drawGameLevel(game, level);
         }
 
         if (app.ui().viewModel().debugModeOnProperty.get()) {
@@ -174,7 +176,8 @@ public class MiniPlaySceneView {
         drawCallCount += 1;
     }
 
-    private void drawGameLevel(GameSession session, GameLevel level) {
+    private void drawGameLevel(GameContext game, GameLevel level) {
+        final GameRules rules = game.variantConfig().rules();
         final var info = new RenderInfo();
         info.putAll(Map.of(
             CommonRenderInfoKey.ENERGIZER_VISIBLE, level.heartbeat().state() == Pulse.State.ON,
@@ -183,8 +186,8 @@ public class MiniPlaySceneView {
             CommonRenderInfoKey.MAP_FLASHING, false,
             CommonRenderInfoKey.TICK, app.clock().currentTick()
         ));
-        levelRenderer.applyLevelSettings(level, info);
-        levelRenderer.drawLevel(session, level, info);
+        levelRenderer.applyLevelSettings(rules, level, info);
+        levelRenderer.drawLevel(game, level, info);
 
         level.optBonus().ifPresent(bonus -> actorRenderer.drawActor(bonus));
         actorRenderer.drawActor(level.entities().pac());
