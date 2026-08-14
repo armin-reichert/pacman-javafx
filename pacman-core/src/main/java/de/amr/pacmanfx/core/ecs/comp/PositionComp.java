@@ -7,6 +7,8 @@ package de.amr.pacmanfx.core.ecs.comp;
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.ecs.GameEntityComponent;
 
+import static java.util.Objects.requireNonNull;
+
 public final class PositionComp implements GameEntityComponent {
 
     private float x;
@@ -40,6 +42,7 @@ public final class PositionComp implements GameEntityComponent {
     }
 
     public void set(Vector2f v) {
+        requireNonNull(v);
         x = v.x();
         y = v.y();
     }
@@ -49,7 +52,7 @@ public final class PositionComp implements GameEntityComponent {
         y += dy;
     }
 
-    public void subtract(float dx, float dy) {
+    public void sub(float dx, float dy) {
         x -= dx;
         y -= dy;
     }
@@ -65,9 +68,6 @@ public final class PositionComp implements GameEntityComponent {
 
     @Override
     public String toString() {
-        return "Position{" +
-            "x=" + x +
-            ", y=" + y +
-            '}';
+        return "Position{" + "x=" + x + ", y=" + y + '}';
     }
 }
