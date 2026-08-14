@@ -5,14 +5,12 @@
 package de.amr.pacmanfx.core.ecs.comp;
 
 import de.amr.pacmanfx.core.ecs.GameEntityComponent;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 
 public class VisibilityComp implements GameEntityComponent {
 
     private final boolean defaultVisibility;
 
-    private BooleanProperty visible;
+    private boolean visible;
 
     public VisibilityComp(boolean defaultVisibility) {
         this.defaultVisibility = defaultVisibility;
@@ -20,23 +18,15 @@ public class VisibilityComp implements GameEntityComponent {
 
     @Override
     public void reset() {
-        visibleProperty().set(defaultVisibility);
-    }
-
-    public BooleanProperty visibleProperty() {
-        if (visible == null) {
-            visible = new SimpleBooleanProperty(defaultVisibility);
-        }
-        return visible;
+        visible = defaultVisibility;
     }
 
     public boolean isVisible() {
-        return visible == null ? defaultVisibility : visibleProperty().get();
+        return visible;
     }
 
     public final void set(boolean value) {
-        if (visible == null && defaultVisibility == value) return;
-        visibleProperty().set(value);
+        visible = value;
     }
 
     @Override
