@@ -157,7 +157,6 @@ public abstract class CommonGamePlay implements GamePlay {
     @Override
     public void showLevelMessage(GameContext game, GameLevel level, GameLevelMessageType type) {
         final var message = new GameLevelMessage(type);
-        message.pos().set(messageCenterPosition(level));
         game.session().hud().setMessage(message);
     }
 
@@ -498,17 +497,6 @@ public abstract class CommonGamePlay implements GamePlay {
             ScoreSystem.setDate(highScore, LocalDate.now());
         }
         ScoreSystem.setPoints(session.score(), newScore);
-    }
-
-    /**
-     * @return position where level messages ("READY!", "GAME OVER") are displayed.
-     */
-    public Vector2f messageCenterPosition(GameLevel level) {
-        final House house = level.entities().theOne(House.class);
-        Vector2i houseSize = house.sizeInTiles();
-        float cx = tilesPx(house.floorplan().minTile().x() + houseSize.x() * 0.5f);
-        float cy = tilesPx(house.floorplan().minTile().y() + houseSize.y() + 1);
-        return vec2_float(cx, cy);
     }
 
     // private

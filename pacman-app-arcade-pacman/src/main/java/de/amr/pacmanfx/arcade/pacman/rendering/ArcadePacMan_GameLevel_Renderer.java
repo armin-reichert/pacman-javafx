@@ -3,6 +3,8 @@
  */
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
+import de.amr.basics.math.Vector2f;
+import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -15,6 +17,8 @@ import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
+import static de.amr.basics.math.Vector2f.vec2_float;
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_YELLOW;
 import static java.util.function.Predicate.not;
@@ -43,7 +47,7 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
     @Override
     public void drawLevel(GameContext game, GameLevel level, RenderInfo info) {
         drawMap(level, info);
-        game.session().hud().optMessage().ifPresent(this::drawLevelMessage);
+        game.session().hud().optMessage().ifPresent(message -> drawLevelMessage(message, messagePosition(level)));
     }
 
     protected void drawMap(GameLevel level, RenderInfo info) {
@@ -91,10 +95,18 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
         ctx.restore();
     }
 
-    protected void drawLevelMessage(GameLevelMessage msg) {
+    protected void drawLevelMessage(GameLevelMessage msg, Vector2f pos) {
         switch (msg.type()) {
-            case GAME_OVER -> fillTextCentered("GAME  OVER", ARCADE_RED, arcadeFont8(), msg.pos().x(), msg.pos().y());
-            case READY -> fillTextCentered("READY!", ARCADE_YELLOW, arcadeFont8(), msg.pos().x(), msg.pos().y());
+            case GAME_OVER -> fillTextCentered("GAME  OVER", ARCADE_RED, arcadeFont8(), pos.x(), pos.y());
+            case READY -> fillTextCentered("READY!", ARCADE_YELLOW, arcadeFont8(), pos.x(), pos.y());
         }
+    }
+
+    protected Vector2f messagePosition(GameLevel level) {
+        final House house = level.entities().theOne(House.class);
+        Vector2i houseSize = house.sizeInTiles();
+        float cx = tilesPx(house.floorplan().minTile().x() + houseSize.x() * 0.5f);
+        float cy = tilesPx(house.floorplan().minTile().y() + houseSize.y() + 1);
+        return vec2_float(cx, cy);
     }
 }

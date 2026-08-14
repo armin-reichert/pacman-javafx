@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.tengenmspacman.gamescene;
 
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventListener;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
@@ -16,14 +17,20 @@ import de.amr.pacmanfx.core.event.pac.*;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.model.test.TestStateID;
-import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
+import de.amr.pacmanfx.tengenmspacman.model.MessageAnimation;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 import java.util.Optional;
+
+import static de.amr.basics.util.Ufx.textWidth;
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig.GAME_OVER_MESSAGE_TEXT;
 
 public interface TengenMsPacMan_PlayScene2DGameEventHandler extends DefaultGameEventListener {
 
@@ -90,8 +97,22 @@ public interface TengenMsPacMan_PlayScene2DGameEventHandler extends DefaultGameE
         else if (e.newState() == TengenMsPacMan_GameState.GAME_OVER.state()) {
             final TengenMsPacMan_PlayScene2D playScene2D = gameScene();
             final PlayScene2DCamera camera = playScene2D.dynamicCamera();
+
             optSoundEffects().ifPresent(GameSoundEffects::stopAll);
-            session.hud().optMessage().ifPresent(playScene2D::startGameOverMessageAnimation);
+
+            final MessageAnimation messageAnimation = session.value(
+                TengenMsPacMan_GamePlay.EXTRAS.GAME_OVER_MESSAGE_ANIMATION, MessageAnimation.class);
+
+            if (messageAnimation != null) {
+                // Compute exact message size and wrap position at right border
+                final Font font = Font.font(BaseRenderer.ARCADE_FONT.getFamily(), TS);
+                final double width = textWidth(GAME_OVER_MESSAGE_TEXT, font);
+                final double wrapX = gameScene().unscaledWidth() + 0.5 * width;
+                messageAnimation.setWidth(width);
+                messageAnimation.setWrapX(wrapX);
+                Logger.info("Message animation bounds computed: width={}, wrapX={}", width, wrapX);
+            }
+
             camera.enterManualMode();
             camera.setToTopPosition();
         }

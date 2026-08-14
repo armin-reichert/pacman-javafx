@@ -16,7 +16,6 @@ import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.HUDState;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.GameSession;
@@ -26,7 +25,7 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
-import de.amr.pacmanfx.tengenmspacman.model.MovingGameLevelMessage;
+import de.amr.pacmanfx.tengenmspacman.model.MessageAnimation;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
@@ -164,9 +163,6 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
             if (subScene.getCamera() == dynamicCamera) {
                 dynamicCamera.update(tilesPx(terrain.numRows()), level.entities().pac());
             }
-            if (!session.isAttractMode()) {
-                updateLevelMessage(session.hud());
-            }
             ensureActorAnimationsCreated(session, level);
             updateHUD(session, level);
             optSoundEffects().ifPresent(soundEffects -> {
@@ -300,25 +296,9 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
         }
     }
 
-    private void updateLevelMessage(HUDState hud) {
-        if (hud.optMessage().isPresent()
-            && hud.optMessage().get() instanceof MovingGameLevelMessage message) {
-            message.updateMovement(game());
-        }
-    }
-
     void playLevelCompleteAnimation(GameLevel level, int numFlashes) {
         levelCompletedAnimation = new LevelCompletedAnimation(level, () -> gameState().triggerTimeout());
         levelCompletedAnimation.play(numFlashes);
-    }
-
-    void startGameOverMessageAnimation(GameLevelMessage message) {
-        if (message instanceof MovingGameLevelMessage movingMessage) {
-            final Font font = Font.font(BaseRenderer.ARCADE_FONT.getFamily(), TS);
-            final double width = Ufx.textWidth(GAME_OVER_MESSAGE_TEXT, font);
-            final MovementSystem motor = game().variantConfig().systems().motor();
-            movingMessage.startMovement(motor, unscaledWidth(), width);
-        }
     }
 
     private void ensureActorAnimationsCreated(GameSession session, GameLevel level) {

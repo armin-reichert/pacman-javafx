@@ -162,6 +162,11 @@ public class GameSession {
         values.put(key, value);
     }
 
+    public void clearValue(GameSessionValueKey key) {
+        requireNonNull(key);
+        values.remove(key);
+    }
+
     public FrameState thisFrame() {
         return frameState;
     }

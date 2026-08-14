@@ -4,9 +4,7 @@
 
 package de.amr.pacmanfx.tengenmspacman;
 
-import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameException;
 import de.amr.pacmanfx.core.GameSession;
@@ -50,13 +48,15 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         BOOSTER_MODE, BOOSTER_ON, CAN_START_GAME, DIFFICULTY, MAP_CATEGORY, START_LEVEL_NUMBER, NUM_CONTINUES
     }
 
+    public enum EXTRAS implements GameSession.GameSessionValueKey {
+        GAME_OVER_MESSAGE_ANIMATION
+    }
+
     private static final int ARCADE_MAP_GAME_OVER_TICKS = 420;
 
     private static final int NON_ARCADE_MAP_GAME_OVER_TICKS = 600;
 
     public static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
-
-    public static final int GAME_OVER_MESSAGE_DELAY_SEC = 2;
 
     public TengenMsPacMan_GamePlay() {}
 
@@ -277,21 +277,8 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     @Override
     public void showLevelMessage(GameContext game, GameLevel level, GameLevelMessageType type) {
         final GameSession session = game.session();
-        final Vector2f messagePosition = messageCenterPosition(level);
-
-        // For map categories "mini", "big" or "strange", the "game over" message is animated
-        final boolean animated = type == GameLevelMessageType.GAME_OVER && mapCategory(session) != MapCategory.ARCADE;
-        if (animated) {
-            final var message = new MovingGameLevelMessage(type);
-            message.setStartPosition(messagePosition);
-            message.setDelayTicks(GAME_OVER_MESSAGE_DELAY_SEC * GameConstants.SIMULATION_FPS);
-            session.hud().setMessage(message);
-        }
-        else {
-            final var message = new GameLevelMessage(type);
-            message.pos().set(messagePosition);
-            session.hud().setMessage(message);
-        }
+        final var message = new GameLevelMessage(type);
+        session.hud().setMessage(message);
     }
 
     @Override
@@ -415,7 +402,4 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
         eventManager.publishGameEvent(new BonusActivatedEvent(bonus));
     }
-
-    // private
-
 }

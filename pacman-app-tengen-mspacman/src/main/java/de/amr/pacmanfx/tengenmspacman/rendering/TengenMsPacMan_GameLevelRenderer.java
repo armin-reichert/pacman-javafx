@@ -4,20 +4,22 @@
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.math.RectShort;
+import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.level.GameLevelMessage;
 import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
 import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig.MapConfigKey;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
+import de.amr.pacmanfx.tengenmspacman.model.MessageAnimation;
 import de.amr.pacmanfx.tengenmspacman.sprites.*;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.rendering.*;
@@ -27,6 +29,8 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
+import static de.amr.basics.math.Vector2f.vec2_float;
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig.GAME_OVER_MESSAGE_TEXT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig.READY_MESSAGE_TEXT;
 import static de.amr.pacmanfx.tengenmspacman.sprites.NonArcadeMapsSpriteSheet.MapID.MAP32_ANIMATED;
@@ -91,10 +95,18 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         );
         overPaintActorSprites(level);
         drawFood(level);
+
         game.session().hud().optMessage().ifPresent(message -> {
             switch (message.type()) {
-                case GAME_OVER -> drawGameOverMessage(game.session(), level, message);
-                case READY -> drawReadyMessage(message);
+                case GAME_OVER -> {
+                    final MessageAnimation messageAnimation = game.session().value(
+                        TengenMsPacMan_GamePlay.EXTRAS.GAME_OVER_MESSAGE_ANIMATION, MessageAnimation.class);
+                    final Vector2f pos = (messageAnimation != null)
+                        ? messageAnimation.pos().asVector2f()
+                        : messagePosition(level);
+                    drawGameOverMessage(game.session(), level.worldMap(), pos);
+                }
+                case READY -> drawReadyMessage(messagePosition(level));
             }
         });
     }
@@ -152,16 +164,16 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         });
     }
 
-    private void drawGameOverMessage(GameSession session, GameLevel level, GameLevelMessage message) {
-        final NES_WorldMapColorScheme colorScheme = level.worldMap().getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
+    private void drawGameOverMessage(GameSession session, WorldMap worldMap, Vector2f pos) {
+        final NES_WorldMapColorScheme colorScheme = worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
         final Color color = session.isAttractMode()
-            ? Color.valueOf(colorScheme.wallStroke()) : assets.color("color.game_over_message");
-        fillTextCentered(GAME_OVER_MESSAGE_TEXT, color, arcadeFont8(), message.pos().x(), message.pos().y());
+            ? Color.valueOf(colorScheme.wallStroke())
+            : assets.color("color.game_over_message");
+        fillTextCentered(GAME_OVER_MESSAGE_TEXT, color, arcadeFont8(), pos.x(), pos.y());
     }
 
-    private void drawReadyMessage(GameLevelMessage message) {
-        fillTextCentered(READY_MESSAGE_TEXT, assets.color("color.ready_message"), arcadeFont8(),
-            message.pos().x(), message.pos().y());
+    private void drawReadyMessage(Vector2f pos) {
+        fillTextCentered(READY_MESSAGE_TEXT, assets.color("color.ready_message"), arcadeFont8(), pos.x(), pos.y());
     }
 
     public void drawDoor(House house, WorldMap worldMap) {
@@ -227,5 +239,13 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         } else {
             info.put(CommonRenderInfoKey.MAZE_SPRITE, imageSet.mapImage().sprite());
         }
+    }
+
+    protected Vector2f messagePosition(GameLevel level) {
+        final House house = level.entities().theOne(House.class);
+        Vector2i houseSize = house.sizeInTiles();
+        float cx = tilesPx(house.floorplan().minTile().x() + houseSize.x() * 0.5f);
+        float cy = tilesPx(house.floorplan().minTile().y() + houseSize.y() + 1);
+        return vec2_float(cx, cy);
     }
 }

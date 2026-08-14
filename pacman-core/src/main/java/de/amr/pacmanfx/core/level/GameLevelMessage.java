@@ -1,18 +1,16 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.core.level;
 
-import de.amr.pacmanfx.core.ecs.GameEntity;
+package de.amr.pacmanfx.core.level;
 
 import static java.util.Objects.requireNonNull;
 
-public class GameLevelMessage extends GameEntity {
+public class GameLevelMessage {
 
     private final GameLevelMessageType type;
 
     public GameLevelMessage(GameLevelMessageType type) {
-        this.name = "GameLevelMessage";
         this.type = requireNonNull(type);
     }
 
