@@ -55,7 +55,7 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
     }
 
     protected void drawMap(GameLevel level, RenderInfo info) {
-        final House house = level.entities().theOne(House.class);
+        final House house = level.entities().house();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final float emptySpaceOverMazePixels = tilesPx(terrain.emptyRowsOverMaze());
         final int colorMapIndex = level.worldMap().getConfigValue(WorldMapConfigKey.COLOR_MAP_INDEX);
@@ -116,7 +116,7 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
     }
 
     protected Vector2f messagePosition(GameLevel level) {
-        final House house = level.entities().theOne(House.class);
+        final House house = level.entities().house();
         Vector2i houseSize = house.sizeInTiles();
         float cx = tilesPx(house.floorplan().minTile().x() + houseSize.x() * 0.5f);
         float cy = tilesPx(house.floorplan().minTile().y() + houseSize.y() + 1);

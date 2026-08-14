@@ -34,7 +34,7 @@ public class PacWorldMovementPolicy implements WorldMovementPolicy {
         if (terrain.outOfBounds(tile)) {
             return terrain.isTileInPortalSpace(tile);
         }
-        final House house = level.entities().theOne(House.class);
+        final House house = level.entities().house();
         if (house != null && house.contains(tile)) {
             return false; // Schieb ab, Alter!
         }

@@ -59,7 +59,7 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
 
             // Mark intersection tiles
             final TerrainLayer terrain = level.worldMap().terrainLayer();
-            final House house = level.entities().theOne(House.class);
+            final House house = level.entities().house();
             terrain.tiles()
                 .filter(tile -> tile.y() >= terrain.emptyRowsOverMaze())
                 .filter(tile -> tile.y() < terrain.numRows() - terrain.emptyRowsBelowMaze())

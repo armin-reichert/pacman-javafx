@@ -64,7 +64,7 @@ public class GameOverState extends GameState {
             timer().restartIndefinitely(); // animation end triggers state exit
             startGameOverMessageAnimation(
                 session,
-                level.entities().theOne(House.class),
+                level.entities().house(),
                 game.variantConfig().systems().motor()
             );
         }

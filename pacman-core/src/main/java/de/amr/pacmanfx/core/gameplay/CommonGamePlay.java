@@ -91,7 +91,7 @@ public abstract class CommonGamePlay implements GamePlay {
     public void prepareLevelForPlaying(GameContext game) {
         final GameSystems systems = game.variantConfig().systems();
         final GameLevel level = game.session().assertLevel();
-        final House house = level.entities().theOne(House.class);
+        final House house = level.entities().house();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final Pac pac = level.entities().pac();
 

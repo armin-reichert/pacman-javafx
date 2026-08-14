@@ -4,59 +4,57 @@
 
 package de.amr.pacmanfx.core.level;
 
-
 import de.amr.basics.QuerySet;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.entities.Bonus;
-import de.amr.pacmanfx.core.entities.Ghost;
-import de.amr.pacmanfx.core.entities.Pac;
+import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
-// This is just an experimental class for a general entity set with cache
-public class GameLevelEntitySet extends QuerySet<GameEntity> {
+public class GameLevelEntitySet {
 
-    private Pac cachedPac;
-    private List<Ghost> cachedGhosts;
-    private Bonus cachedBonus;
+    private final QuerySet<GameEntity> entities = new QuerySet<>();
 
-    private void maybeInvalidateCache(GameEntity entity) {
-        if (entity instanceof Pac) cachedPac = null;
-        if (entity instanceof Ghost) cachedGhosts = null;
-        if (entity instanceof Bonus) cachedBonus = null;
-    }
+    private Pac thePac;
+    private final List<Ghost> ghosts = new ArrayList<>();
+    private Bonus theBonus;
+    private House theHouse;
 
     public void add(GameEntity entity) {
-        super.add(entity);
-        maybeInvalidateCache(entity);
+        requireNonNull(entity);
+        switch (entity) {
+            case Ghost ghost -> ghosts.add(ghost);
+            case Pac   pac ->   thePac = pac;
+            case Bonus bonus -> theBonus = bonus;
+            case House house -> theHouse = house;
+            default -> entities.add(entity);
+        }
     }
 
     public void remove(GameEntity entity) {
-        super.remove(entity);
-        maybeInvalidateCache(entity);
+        requireNonNull(entity);
+        switch (entity) {
+            case Ghost _ -> ghosts.remove(entity);
+            case Pac   _ -> thePac = null;
+            case Bonus _ -> theBonus = null;
+            case House _ -> theHouse = null;
+            default -> entities.remove(entity);
+        }
     }
 
     public Pac pac() {
-        if (cachedPac == null) {
-            cachedPac = theOne(Pac.class);
-        }
-        return cachedPac;
+        return thePac;
     }
 
     public List<Ghost> ghosts() {
-        if (cachedGhosts == null) {
-            cachedGhosts = List.copyOf(selectAllOfType(Ghost.class)
-                .sorted(Comparator.comparing(Ghost::personality)).toList());
-        }
-        return cachedGhosts;
+        return ghosts;
     }
 
     public Stream<Ghost> ghostsInState(GhostState state) {
@@ -79,9 +77,14 @@ public class GameLevelEntitySet extends QuerySet<GameEntity> {
     }
 
     public Optional<Bonus> optBonus() {
-        if (cachedBonus == null) {
-            cachedBonus = anyOfType(Bonus.class);
-        }
-        return Optional.ofNullable(cachedBonus);
+        return Optional.ofNullable(theBonus);
+    }
+
+    public House house() {
+        return theHouse;
+    }
+
+    public MessageView messageView() {
+        return entities.theOne(MessageView.class);
     }
 }

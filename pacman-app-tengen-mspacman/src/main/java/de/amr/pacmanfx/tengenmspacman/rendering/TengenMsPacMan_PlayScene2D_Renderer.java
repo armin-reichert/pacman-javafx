@@ -109,7 +109,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
         final GameSession session = scene.game().session();
         session.optLevel().ifPresent(level -> {
             final WorldMap worldMap = level.worldMap();
-            final House house = level.entities().theOne(House.class);
+            final House house = level.entities().house();
             final double scaledIndent = scaled(CONTENT_INDENT);
 
             configureRenderInfo(playScene2D, worldMap, tick);

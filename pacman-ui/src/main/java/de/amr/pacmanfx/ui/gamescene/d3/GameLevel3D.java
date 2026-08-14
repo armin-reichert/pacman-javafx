@@ -192,7 +192,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private void createMaze3D(GameUISettingsVM viewModel) {
         final WorldMapColorSchemeImpl colorScheme = gameVariantConfig.renderConfig().colorScheme(level.worldMap(), gameVariantConfig.worldSettings());
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        final House house = level.entities().theOne(House.class);
+        final House house = level.entities().house();
         maze3D = gameVariantConfig.factory3D().createMaze3D(
             house,
             terrain,
@@ -313,7 +313,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private void createMessageView3D(AnimationRegistry registry) {
-        MessageView3DBuilder.ensureAnim3DExists(level.entities().theOne(MessageView.class), registry);
+        MessageView3DBuilder.ensureAnim3DExists(level.entities().messageView(), registry);
     }
 
     // Order matters for correct transparency!
@@ -325,7 +325,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final Pac pac = level.entities().pac();
         final Pac3DViewComp pac3D = pac.requireComp(Pac3DViewComp.class);
 
-        final House house = level.entities().theOne(House.class);
+        final House house = level.entities().house();
         final House3DViewComp house3D = house.requireComp(House3DViewComp.class);
 
         getChildren().add(livesCounter3D.root());

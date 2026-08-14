@@ -259,11 +259,11 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         final GameLevel level = level3D.level();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final var center = switch (type) {
-            case READY -> level.entities().theOne(House.class).centerPositionUnderHouse();
+            case READY -> level.entities().house().centerPositionUnderHouse();
             case TEST -> vec2_float(terrain.numCols() * WorldMap.HTS, (terrain.numRows() - 2) * WorldMap.TS);
         };
         MessageView3DDisplaySystem.showMessage(
-            level.entities().theOne(MessageView.class),
+            level.entities().messageView(),
             level3D,
             center,
             GlobalAssets.PredefinedFont.ARCADE6.font(),
@@ -310,7 +310,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     private void onLevelComplete() {
         final GameUISettingsVM viewModel = app().ui().viewModel();
         final GameLevel level = session().assertLevel();
-        final House house = level.entities().theOne(House.class);
+        final House house = level.entities().house();
         final boolean cutSceneFollows = !session().isAttractMode()
             && game().variantConfig().rules().cutSceneAfterLevel(level.number()).isPresent();
 
@@ -325,7 +325,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         level.entities().optBonus().ifPresent(bonus ->
             Bonus3DViewSystem.lookExpired(bonus, level3D.animationManager().registry()));
 
-        MessageView3DAnimationSystem.hideMessageView(level.entities().theOne(MessageView.class));
+        MessageView3DAnimationSystem.hideMessageView(level.entities().messageView());
 
         playLevelEndAnimation(level3D.animationManager().registry(),
             viewModel.common3D, viewModel.maze3D,

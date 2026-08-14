@@ -97,7 +97,7 @@ public class GameLevel3DAnimationManager implements Disposable {
 
         registry.register(AnimationID.LEVEL_COMPLETED_SHORT, new LevelCompletedAnimationShort(level3D, numFlashes));
 
-        createHouseAnimations(level.entities().theOne(House.class));
+        createHouseAnimations(level.entities().house());
 
         createEnergizerAnimations(variantUIConfig.worldSettings().energizer());
 
@@ -243,7 +243,7 @@ public class GameLevel3DAnimationManager implements Disposable {
             }
         );
 
-        final House house = level.entities().theOne(House.class);
+        final House house = level.entities().house();
 
         registry.register(AnimationID.PARTICLES, new ParticlesAnimation3D(
             house,

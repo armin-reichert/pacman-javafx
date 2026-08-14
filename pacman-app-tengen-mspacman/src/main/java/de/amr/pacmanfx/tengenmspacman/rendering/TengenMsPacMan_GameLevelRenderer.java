@@ -187,7 +187,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
     }
 
     private void overPaintActorSprites(GameLevel level) {
-        final House house = level.entities().theOne(House.class);
+        final House house = level.entities().house();
 
         // Over-paint area at house bottom where the ghost sprites are shown in map
         final double margin = scaling();
@@ -242,7 +242,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
     }
 
     protected Vector2f messagePosition(GameLevel level) {
-        final House house = level.entities().theOne(House.class);
+        final House house = level.entities().house();
         Vector2i houseSize = house.sizeInTiles();
         float cx = tilesPx(house.floorplan().minTile().x() + houseSize.x() * 0.5f);
         float cy = tilesPx(house.floorplan().minTile().y() + houseSize.y() + 1);
