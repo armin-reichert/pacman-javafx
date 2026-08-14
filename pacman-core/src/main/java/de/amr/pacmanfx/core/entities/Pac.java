@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.core.entities;
 
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.comp.AutoSteeringComp;
+import de.amr.pacmanfx.core.ecs.comp.SteeringComp;
 import de.amr.pacmanfx.core.ecs.comp.MovementComp;
 import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
 import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
@@ -26,7 +26,7 @@ public final class Pac extends GameEntity {
 
         setComp(MovementComp.class, new MovementComp());
         setComp(WorldNavigationComp.class, new WorldNavigationComp());
-        setComp(AutoSteeringComp.class, new AutoSteeringComp());
+        setComp(SteeringComp.class, new SteeringComp());
         setComp(PacDigestionComp.class, new PacDigestionComp());
         setComp(PacPowerComp.class, new PacPowerComp());
         setComp(PacCheatsComp.class, new PacCheatsComp());
@@ -43,8 +43,8 @@ public final class Pac extends GameEntity {
         return requireComp(WorldNavigationComp.class);
     }
 
-    public AutoSteeringComp autoSteering() {
-        return requireComp(AutoSteeringComp.class);
+    public SteeringComp autoSteering() {
+        return requireComp(SteeringComp.class);
     }
 
     public PacDigestionComp digestion() {

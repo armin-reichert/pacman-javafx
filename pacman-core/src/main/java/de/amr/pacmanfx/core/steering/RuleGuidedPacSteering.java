@@ -84,7 +84,7 @@ public class RuleGuidedPacSteering implements Steering {
     public void steer(GameEntity gameEntity, GameLevel level) {
         final WorldNavigationComp worldNavigation = gameEntity.requireComp(WorldNavigationComp.class);
 
-        if (worldNavigation.info.moved && !worldNavigation.isNewTileEntered()) {
+        if (worldNavigation.info().moved && !worldNavigation.isNewTileEntered()) {
             return;
         }
         var data = collectData(level);
@@ -146,7 +146,7 @@ public class RuleGuidedPacSteering implements Steering {
         final Vector2i pacTile = WorldNavigationSystem.computeTile(pac);
 
         // when not escaping ghost, keep move direction at least until next intersection
-        if (worldNavigation.info.moved && !level.isIntersection(pacTile))
+        if (worldNavigation.info().moved && !level.isIntersection(pacTile))
             return;
 
         if (!data.frightenedGhosts.isEmpty()

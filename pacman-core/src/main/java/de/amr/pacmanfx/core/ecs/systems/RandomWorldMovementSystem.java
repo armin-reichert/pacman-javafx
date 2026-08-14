@@ -37,7 +37,7 @@ public class RandomWorldMovementSystem {
         final Vector2i tile = WorldNavigationSystem.computeTile(ghost);
         final boolean teleporting = level.worldMap().terrainLayer().isTileInPortalSpace(tile);
 
-        final boolean stuck = !navigation.info.moved;
+        final boolean stuck = !navigation.info().moved;
         if ((navigation.isNewTileEntered() || stuck) && !teleporting) {
             final Direction dir = computeRoamingDirection(level, ghost, worldMovementPolicy, tile);
             navigator.setWishDir(ghost, dir);

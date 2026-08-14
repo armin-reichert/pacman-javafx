@@ -180,7 +180,7 @@ public class WorldNavigationSystem {
 
         final WorldNavigationComp navigation = actor.requireComp(WorldNavigationComp.class);
 
-        if (!navigation.isNewTileEntered() && navigation.info.moved || navigation.targetTile() == null) {
+        if (!navigation.isNewTileEntered() && navigation.info().moved || navigation.targetTile() == null) {
             return; // we don't need no navigation, dim dit didit didit...
         }
 
@@ -232,11 +232,11 @@ public class WorldNavigationSystem {
 
         final WorldNavigationComp navigation = actor.requireComp(WorldNavigationComp.class);
 
-        navigation.info.clear();
+        navigation.info().clear();
 
         if (navigation.canTeleport()) {
-            navigation.info.teleportStarted = tryTeleporting(actor, level.worldMap().terrainLayer());
-            if (navigation.info.teleportStarted) {
+            navigation.info().teleportStarted = tryTeleporting(actor, level.worldMap().terrainLayer());
+            if (navigation.info().teleportStarted) {
                 navigation.setInTeleportingSpace(true);
                 return;
             }
@@ -252,7 +252,7 @@ public class WorldNavigationSystem {
             navigation.setTurnBackRequested(false);
         }
         tryMovingTowards(actor, level, movementPolicy, computeTile(actor), navigation.wishDir());
-        if (navigation.info.moved) {
+        if (navigation.info().moved) {
             setMoveDir(actor, navigation.wishDir());
         } else {
             tryMovingTowards(actor, level, movementPolicy, computeTile(actor), navigation.moveDir());
@@ -316,23 +316,23 @@ public class WorldNavigationSystem {
         final Vector2i tileAfterMoving = computeTile(actor);
         navigation.setNewTileEntered(!tileBeforeMoving.equals(tileAfterMoving));
 
-        navigation.info.moved = true;
+        navigation.info().moved = true;
 
         final TerrainLayer terrainLayer = level.worldMap().terrainLayer();
 
-        navigation.info.tunnelEntered = terrainLayer.isTunnel(tileAfterMoving)
+        navigation.info().tunnelEntered = terrainLayer.isTunnel(tileAfterMoving)
             && !terrainLayer.isTunnel(tileBeforeMoving)
             && !terrainLayer.isTileInPortalSpace(tileBeforeMoving);
 
-        navigation.info.tunnelLeft = !terrainLayer.isTunnel(tileAfterMoving)
+        navigation.info().tunnelLeft = !terrainLayer.isTunnel(tileAfterMoving)
             && terrainLayer.isTunnel(tileBeforeMoving)
             && !terrainLayer.isTileInPortalSpace(tileAfterMoving);
 
         Logger.debug("%5s (%.2f pixels)".formatted(dir, newVelocity.length()));
-        if (navigation.info.tunnelEntered) {
+        if (navigation.info().tunnelEntered) {
             Logger.trace("{} entered tunnel", actor.name());
         }
-        if (navigation.info.tunnelLeft) {
+        if (navigation.info().tunnelLeft) {
             Logger.trace("{} left tunnel", actor.name());
         }
     }

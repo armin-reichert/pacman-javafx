@@ -96,7 +96,7 @@ public class DS_ActorInfo extends GameDashboardSection {
         return actor.optComp(MovementComp.class).map(movement -> {
             final WorldNavigationComp navigation = actor.requireComp(WorldNavigationComp.class);
             final float speed = movement.speed() * GameConstants.SIMULATION_FPS;
-            final boolean blocked = !navigation.info.moved;
+            final boolean blocked = !navigation.info().moved;
             final String turnbackHint = navigation.isTurnBackRequested() ? "REV!" : "";
             return blocked
                 ? "BLOCKED!"

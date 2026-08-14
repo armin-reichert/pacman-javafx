@@ -65,6 +65,10 @@ public class WorldNavigationComp implements GameEntityComponent {
             '}';
     }
 
+    public WorldNavigationInfo info() {
+        return info;
+    }
+
     /**
      * Sets the tile this actor tries to reach (can be an unreachable tile or <code>null</code>).
      *

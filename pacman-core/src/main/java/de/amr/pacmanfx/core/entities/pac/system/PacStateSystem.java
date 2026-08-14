@@ -33,6 +33,6 @@ public class PacStateSystem {
 
     private boolean didNotMoveThroughWorld(Pac pac) {
         final WorldNavigationComp worldNavigation = pac.worldNavigation();
-        return !worldNavigation.info.moved;
+        return !worldNavigation.info().moved;
     }
 }
