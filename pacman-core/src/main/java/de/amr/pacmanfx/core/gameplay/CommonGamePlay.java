@@ -230,14 +230,15 @@ public abstract class CommonGamePlay implements GamePlay {
 
     private void startPacPower(GameContext game, GameLevel level, Pac pac) {
         final GameSystems systems = game.variantConfig().systems();
+        final GameRules rules = game.variantConfig().rules();
 
         level.ghostsInAnyOfStates(GHOST_TURNBACK_STATES).forEach(systems.worldNavigator()::requestTurnBack);
 
-        if (level.pacPowerSeconds() > 0) {
+        if (rules.pacPowerSeconds(level.number()) > 0) {
             level.huntingTimerStrategy().stop();
             level.ghostsInState(GhostState.HUNTING_PAC)
                 .forEach(ghost -> systems.ghostState().changeState(ghost, GhostState.FRIGHTENED));
-            systems.pacPower().start(pac, TickTimer.secToTicks(level.pacPowerSeconds()));
+            systems.pacPower().start(pac, TickTimer.secToTicks(rules.pacPowerSeconds(level.number())));
             game.eventManager().publishGameEvent(new PacGetsPowerEvent(pac));
         }
     }
@@ -261,9 +262,10 @@ public abstract class CommonGamePlay implements GamePlay {
 
     private void updatePac(GameContext game, GameLevel level, Pac pac) {
         final GameSystems systems = game.variantConfig().systems();
+        final GameRules rules = game.variantConfig().rules();
 
         systems.pacDigestion().update(pac);
-        systems.pacPower().update(level, pac);
+        systems.pacPower().update(rules, level, pac);
         systems.pacState().update(pac);
         navigatePac(game, level, pac);
         systems.pacAnimation().update(pac);

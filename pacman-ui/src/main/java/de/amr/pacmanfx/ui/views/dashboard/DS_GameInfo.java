@@ -10,10 +10,7 @@ import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.rules.ActorSpeedRules;
-import de.amr.pacmanfx.core.model.rules.CollisionStrategy;
-import de.amr.pacmanfx.core.model.rules.HuntingPhase;
-import de.amr.pacmanfx.core.model.rules.HuntingTimerStrategy;
+import de.amr.pacmanfx.core.model.rules.*;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorScheme;
@@ -87,7 +84,7 @@ public class DS_GameInfo extends GameDashboardSection {
         addDynamicInfo("Collision mode", fnGameRulesInfo(app, rules -> fmtCollisionMode(rules.actorCollisionRules().getCollisionStrategy())));
         addDynamicInfo("Pac-Man speed",  supplyGameLevelSpeedInfo(app, (level, rules) -> fmtPacNormalSpeed(app.game(), level, rules)));
         addDynamicInfo("- empowered",    supplyGameLevelSpeedInfo(app, (level, rules) -> fmtPacSpeedPowered(app.game(), level, rules)));
-        addDynamicInfo("Power Duration", fnGameLevelInfo(app, this::fmtPacPowerTime));
+        addDynamicInfo("Power Duration", fnGameLevelInfo(app, level -> fmtPacPowerTime(app.game().variantConfig().rules(), level)));
         addDynamicInfo("Pellets",        fnGameLevelInfo(app, this::fmtPelletCount));
         addDynamicInfo("Ghost speed",    supplyGameLevelSpeedInfo(app, this::fmtGhostAttackSpeed));
         addDynamicInfo("- frightened",   supplyGameLevelSpeedInfo(app, this::fmtGhostSpeedFrightened));
@@ -187,9 +184,9 @@ public class DS_GameInfo extends GameDashboardSection {
         return "%.4f px/s".formatted(speed * GameConstants.SIMULATION_FPS);
     }
 
-    private String fmtPacPowerTime(GameLevel level) {
-        double powerSec = level.pacPowerSeconds();
-        long powerTicks = secToTicks(powerSec);
+    private String fmtPacPowerTime(GameRules rules, GameLevel level) {
+        final double powerSec = rules.pacPowerSeconds(level.number());
+        final long powerTicks = secToTicks(powerSec);
         return "%.2f sec (%d ticks)".formatted(powerTicks / (float) GameConstants.SIMULATION_FPS, powerTicks);
     }
 

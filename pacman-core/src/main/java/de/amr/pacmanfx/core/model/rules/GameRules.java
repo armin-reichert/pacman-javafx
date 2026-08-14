@@ -42,6 +42,10 @@ public interface GameRules {
 
     // Hunting
 
+    float pacPowerSeconds(int levelNumber);
+
+    float pacPowerFadingSeconds(int levelNumber);
+
     int numHuntingPhases();
 
     /**

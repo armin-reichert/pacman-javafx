@@ -224,11 +224,6 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
             }
         });
 
-        int index = levelNumber <= 19 ? levelNumber - 1 : 18;
-        float powerSeconds = TengenMsPacMan_GameRules.POWER_PELLET_TIMES[index] / 16.0f;
-        level.setPacPowerSeconds(powerSeconds);
-        level.setPacPowerFadingSeconds(0.5f * 3);
-
         // For non-Arcade game levels, spend some extra time for the moving "game over" text animation
         session.setGameOverStateTicks(mapCategory(session) == MapCategory.ARCADE
             ? ARCADE_MAP_GAME_OVER_TICKS : NON_ARCADE_MAP_GAME_OVER_TICKS);

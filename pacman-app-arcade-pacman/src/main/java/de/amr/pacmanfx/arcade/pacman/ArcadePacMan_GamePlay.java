@@ -133,9 +133,6 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
         session.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
 
-        level.setPacPowerSeconds(levelData.secPacPower());
-        level.setPacPowerFadingSeconds(0.5f * levelData.numFlashes()); //TODO correct?
-
         createAndSetPacMan(game.variantConfig().systems(), level);
         createAndSetGhosts(level);
 

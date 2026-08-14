@@ -47,9 +47,6 @@ public class GameLevel {
     private byte currentBonusIndex; // -1=no bonus, 0=first, 1=second
     private GameLevelMessage message;
 
-    private float pacPowerSeconds;
-    private float pacPowerFadingSeconds;
-
     private final FoodState foodState;
 
     public GameLevel(int number, WorldMap worldMap, HuntingTimerStrategy huntingTimerStrategy, int numFlashes) {
@@ -96,36 +93,6 @@ public class GameLevel {
      */
     public WorldMap worldMap() {
         return worldMap;
-    }
-
-    /**
-     * Sets the duration (in seconds) of the power fading period of Pac-Man.
-     * @param seconds number of seconds
-     */
-    public void setPacPowerFadingSeconds(float seconds) {
-        this.pacPowerFadingSeconds = seconds;
-    }
-
-    /**
-     * @return the duration (in seconds) of the power fading period of Pac-Man.
-     */
-    public float pacPowerFadingSeconds() {
-        return pacPowerFadingSeconds;
-    }
-
-    /**
-     * Sets the duration (in seconds) of the complete power period (including the fading at the end)  of Pac-Man.
-     * @param seconds number of seconds
-     */
-    public void setPacPowerSeconds(float seconds) {
-        this.pacPowerSeconds = seconds;
-    }
-
-    /**
-     * @return the duration (in seconds) of the complete power period (including the fading at the end)  of Pac-Man.
-     */
-    public float pacPowerSeconds() {
-        return pacPowerSeconds;
     }
 
     /**

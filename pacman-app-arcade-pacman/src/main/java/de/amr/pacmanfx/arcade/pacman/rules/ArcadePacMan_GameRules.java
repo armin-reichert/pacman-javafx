@@ -171,4 +171,15 @@ public class ArcadePacMan_GameRules implements GameRules {
         };
         return ticks != -1 ? ticks : TickTimer.INDEFINITE;
     }
+
+    @Override
+    public float pacPowerSeconds(int levelNumber) {
+        return levelData(levelNumber).secPacPower();
+    }
+
+    @Override
+    public float pacPowerFadingSeconds(int levelNumber) {
+        //TODO not sure what is correct
+        return levelData(levelNumber).numFlashes() * 0.5f;
+    }
 }

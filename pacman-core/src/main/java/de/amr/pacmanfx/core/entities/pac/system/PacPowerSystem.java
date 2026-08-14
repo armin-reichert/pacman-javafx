@@ -8,30 +8,31 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.pac.comp.PacPowerComp;
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.model.rules.GameRules;
 import org.tinylog.Logger;
 
 public final class PacPowerSystem {
 
-    public void update(GameLevel level, Pac pac) {
+    public void update(GameRules rules, GameLevel level, Pac pac) {
         final PacPowerComp power = pac.power();
         final TickTimer timer = power.timer();
 
         timer.doTick();
         power.setActive(timer.isRunning());
-        power.setFading(isPowerFading(level, timer));
-        power.setFadingStart(isPowerStartingFading(level, timer));
+        power.setFading(isPowerFading(rules, level, timer));
+        power.setFadingStart(isPowerStartingFading(rules, level, timer));
     }
 
-    private boolean isPowerFading(GameLevel level, TickTimer timer) {
-        long fadingTicks = TickTimer.secToTicks(level.pacPowerFadingSeconds());
+    private boolean isPowerFading(GameRules rules, GameLevel level, TickTimer timer) {
+        long fadingTicks = TickTimer.secToTicks(rules.pacPowerFadingSeconds(level.number()));
         if (!timer.isRunning()) {
             return false;
         }
         return timer.remainingTicks() <= fadingTicks;
     }
 
-    private boolean isPowerStartingFading(GameLevel level, TickTimer timer) {
-        long fadingTicks = TickTimer.secToTicks(level.pacPowerFadingSeconds());
+    private boolean isPowerStartingFading(GameRules rules, GameLevel level, TickTimer timer) {
+        long fadingTicks = TickTimer.secToTicks(rules.pacPowerFadingSeconds(level.number()));
         if (!timer.isRunning()) {
             return false;
         }

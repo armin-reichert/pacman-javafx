@@ -8,9 +8,9 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GamePlay;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameVariantConfig;
-import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.arcade.pacman.rules.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.*;
@@ -24,7 +24,6 @@ import de.amr.pacmanfx.core.model.rules.HuntingTimer;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
-import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
 import org.tinylog.Logger;
 
@@ -76,10 +75,6 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
                 level.ghostsInAnyOfStates(TURNBACK_STATES).forEach(navigator::requestTurnBack);
             }
         });
-
-        final LevelData levelData = ArcadePacMan_GameRules.levelData(levelNumber);
-        level.setPacPowerSeconds(levelData.secPacPower());
-        level.setPacPowerFadingSeconds(0.5f * numFlashes); //TODO correct?
 
         createAndSetMsPacMan(game.variantConfig().systems(), level);
         createAndSetGhosts(level);

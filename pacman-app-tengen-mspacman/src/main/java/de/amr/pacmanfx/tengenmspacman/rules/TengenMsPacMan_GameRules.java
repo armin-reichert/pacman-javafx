@@ -143,4 +143,15 @@ public class TengenMsPacMan_GameRules implements GameRules {
             throw new IllegalArgumentException("Phase index " + phaseIndex + " is invalid");
         }
     }
+
+    @Override
+    public float pacPowerSeconds(int levelNumber) {
+        int index = levelNumber <= 19 ? levelNumber - 1 : 18;
+        return TengenMsPacMan_GameRules.POWER_PELLET_TIMES[index] / 16.0f;
+    }
+
+    @Override
+    public float pacPowerFadingSeconds(int levelNumber) {
+        return 1.5f; //TODO  not sure about this
+    }
 }
