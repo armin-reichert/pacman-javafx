@@ -260,22 +260,23 @@ public class GameLevel {
 
     // Others
 
-    public boolean isIntersection(Vector2i tile) {
-        final House house = entities().theOne(House.class);
-        final TerrainLayer terrain = worldMap.terrainLayer();
+    public static boolean isIntersection(TerrainLayer terrain, House house, Vector2i tile) {
+        requireNonNull(terrain);
+        requireNonNull(house);
+        requireNonNull(tile);
+
+        if (house.contains(tile)) {
+            return false;
+        }
+
         if (terrain.outOfBounds(tile) || terrain.isTileBlocked(tile)) {
             return false;
         }
-        if (house != null && house.contains(tile)) {
-            return false;
-        }
+
         long inaccessible = 0;
         inaccessible += terrain.neighborTilesOutsideWorld(tile).count();
         inaccessible += terrain.neighborTilesInsideWorld(tile).filter(terrain::isTileBlocked).count();
-        if (house != null) {
-            inaccessible += terrain.neighborTilesInsideWorld(tile).filter(house::isDoorAt).count();
-        }
+        inaccessible += terrain.neighborTilesInsideWorld(tile).filter(house::isDoorAt).count();
         return inaccessible <= 1;
     }
-
 }

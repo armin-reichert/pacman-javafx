@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
+import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -58,10 +59,11 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
 
             // Mark intersection tiles
             final TerrainLayer terrain = level.worldMap().terrainLayer();
+            final House house = level.entities().theOne(House.class);
             terrain.tiles()
                 .filter(tile -> tile.y() >= terrain.emptyRowsOverMaze())
                 .filter(tile -> tile.y() < terrain.numRows() - terrain.emptyRowsBelowMaze())
-                .filter(level::isIntersection)
+                .filter(tile -> GameLevel.isIntersection(level.worldMap().terrainLayer(), house,tile))
                 .forEach(tile -> {
                     final double cx = tile.x() * WorldMap.TS + WorldMap.HTS;
                     final double cy = tile.y() * WorldMap.TS + WorldMap.HTS;

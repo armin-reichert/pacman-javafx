@@ -12,11 +12,13 @@ import de.amr.pacmanfx.core.ecs.systems.WorldMovementPolicy;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.Bonus;
 import de.amr.pacmanfx.core.entities.Ghost;
+import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusState;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
+import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import org.tinylog.Logger;
 
@@ -146,7 +148,9 @@ public class RuleGuidedPacSteering implements Steering {
         final Vector2i pacTile = WorldNavigationSystem.computeTile(pac);
 
         // when not escaping ghost, keep move direction at least until next intersection
-        if (worldNavigation.info().moved && !level.isIntersection(pacTile))
+        final TerrainLayer terrain = level.worldMap().terrainLayer();
+        final House house = level.entities().theOne(House.class);
+        if (worldNavigation.info().moved && !GameLevel.isIntersection(terrain, house, pacTile))
             return;
 
         if (!data.frightenedGhosts.isEmpty()

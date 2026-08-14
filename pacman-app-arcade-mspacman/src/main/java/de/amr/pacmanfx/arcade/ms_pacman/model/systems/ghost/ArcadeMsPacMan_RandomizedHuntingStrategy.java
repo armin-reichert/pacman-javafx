@@ -9,6 +9,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.ecs.systems.WorldMovementPolicy;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.Ghost;
+import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.entities.ghost.comp.ElroyComp;
 import de.amr.pacmanfx.core.gameplay.hunt.GhostHuntingStrategy;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -67,8 +68,9 @@ public abstract class ArcadeMsPacMan_RandomizedHuntingStrategy implements GhostH
             return;
         }
 
+        final House house = level.entities().theOne(House.class);
         final boolean changeWishDirection = !ghost.worldNavigation().info().moved
-          || (ghost.worldNavigation().isNewTileEntered() && level.isIntersection(tile));
+          || (ghost.worldNavigation().isNewTileEntered() && GameLevel.isIntersection(terrain, house, tile));
         if (changeWishDirection) {
             selectRandomWishDir(ghost, level, worldMovementPolicy);
         }
