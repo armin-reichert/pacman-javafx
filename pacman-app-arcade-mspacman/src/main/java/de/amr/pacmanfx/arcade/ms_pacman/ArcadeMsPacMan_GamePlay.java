@@ -223,8 +223,8 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
     }
 
     @Override
-    public boolean isPacSafeInDemoLevel(GameLevel demoLevel) {
-        float runningMillis = System.currentTimeMillis() - demoLevel.startTime();
+    public boolean isPacSafeInDemoLevel(GameSession session, GameLevel demoLevel) {
+        float runningMillis = System.currentTimeMillis() - session.levelStartTimeMillis();
         return runningMillis <= DEMO_LEVEL_MIN_DURATION_MILLIS;
     }
 

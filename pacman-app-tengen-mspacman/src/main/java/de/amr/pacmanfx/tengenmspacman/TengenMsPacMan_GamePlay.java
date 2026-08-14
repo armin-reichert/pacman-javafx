@@ -287,8 +287,8 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     }
 
     @Override
-    public boolean isPacSafeInDemoLevel(GameLevel demoLevel) {
-        float runningMillis = System.currentTimeMillis() - demoLevel.startTime();
+    public boolean isPacSafeInDemoLevel(GameSession session, GameLevel demoLevel) {
+        float runningMillis = System.currentTimeMillis() - session.levelStartTimeMillis();
         return runningMillis <= DEMO_LEVEL_MIN_DURATION_MILLIS;
     }
 
@@ -299,7 +299,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final GameSession session = game.session();
         final GameLevel level = session.assertLevel();
 
-        level.recordStartTime(System.currentTimeMillis());
+        session.setLevelStartTimeMillis(System.currentTimeMillis());
         prepareLevelForPlaying(game);
 
         // In Tengen, actors are shown immediately

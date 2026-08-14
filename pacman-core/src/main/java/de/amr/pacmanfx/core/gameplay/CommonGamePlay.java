@@ -323,7 +323,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
     private void evalPacKilled(GameSession session, HuntingStep result) {
         final GameLevel level = session.assertLevel();
-        if (session.isAttractMode() && isPacSafeInDemoLevel(level)
+        if (session.isAttractMode() && isPacSafeInDemoLevel(session, level)
             || level.entities().pac().cheats().isImmune()) {
             return;
         }

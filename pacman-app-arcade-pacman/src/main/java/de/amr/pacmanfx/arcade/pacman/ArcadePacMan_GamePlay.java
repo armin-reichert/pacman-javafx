@@ -216,7 +216,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     }
 
     @Override
-    public boolean isPacSafeInDemoLevel(GameLevel demoLevel) {
+    public boolean isPacSafeInDemoLevel(GameSession session, GameLevel demoLevel) {
         return false;
     }
 
@@ -227,7 +227,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         final GameSession session = game.session();
         final GameLevel level = session.assertLevel();
 
-        level.recordStartTime(System.currentTimeMillis());
+        session.setLevelStartTimeMillis(System.currentTimeMillis());
         prepareLevelForPlaying(game);
         showLevelMessage(game, level, GameLevelMessageType.READY);
         session.score().data().setEnabled(true);

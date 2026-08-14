@@ -47,7 +47,6 @@ public class GameLevel {
     private byte currentBonusIndex; // -1=no bonus, 0=first, 1=second
     private GameLevelMessage message;
 
-    private long startTimeMillis;
     private float pacPowerSeconds;
     private float pacPowerFadingSeconds;
 
@@ -171,17 +170,6 @@ public class GameLevel {
         requireNonNull(ghost);
         return ghostKillChain.indexOf(ghost);
     }
-
-    /**
-     * Record the start time of this level in milliseconds.
-     * @param millis milliseconds
-     */
-    public void recordStartTime(long millis) { this.startTimeMillis = millis; }
-
-    /**
-     * @return the start time of this level in milliseconds
-     */
-    public long startTime() { return startTimeMillis; }
 
     /**
      * Sets the message that should be displayed in the level (READY, GAME OVER, TESTING).

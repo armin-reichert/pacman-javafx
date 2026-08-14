@@ -55,6 +55,8 @@ public class GameSession {
 
     private int gameOverStateTicks;
 
+    private long levelStartTimeMillis;
+
     public GameSession(String variantName, GameFlowController gameFlow, GameCheats cheats) {
         requireNonNull(variantName);
         requireNonNull(gameFlow);
@@ -174,5 +176,13 @@ public class GameSession {
 
     public void setGameOverStateTicks(int gameOverStateTicks) {
         this.gameOverStateTicks = gameOverStateTicks;
+    }
+
+    public long levelStartTimeMillis() {
+        return levelStartTimeMillis;
+    }
+
+    public void setLevelStartTimeMillis(long levelStartTimeMillis) {
+        this.levelStartTimeMillis = levelStartTimeMillis;
     }
 }
