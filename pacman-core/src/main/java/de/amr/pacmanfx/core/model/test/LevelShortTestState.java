@@ -67,7 +67,7 @@ public class LevelShortTestState extends GameState {
             game.eventManager().publishGameEvent(new TestStartedEvent(level));
         }
         else if (timer().atSecond(START + 1)) {
-            level.clearMessage();
+            session.hud().clearMessage();
         }
         else if (timer().atSecond(START + 3)) {
             gamePlay.activateNextBonus(game, level);

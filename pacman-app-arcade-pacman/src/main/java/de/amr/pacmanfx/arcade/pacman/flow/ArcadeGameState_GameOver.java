@@ -5,13 +5,13 @@
 package de.amr.pacmanfx.arcade.pacman.flow;
 
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.livescounter.system.LivesCounterSystem;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
-import de.amr.pacmanfx.core.GameSession;
 
 import java.io.IOException;
 
@@ -45,11 +45,11 @@ public class ArcadeGameState_GameOver extends GameState {
 
     @Override
     public void onUpdate(GameContext game) {
+        final GameSession session = game.session();
         if (timer().hasExpired()) {
-            final GameLevel level = game.session().assertLevel();
-            level.clearMessage();
-            game.session().cheats().clear();
-            game.session().gameFlow().enterState(game, game.coinMechanism().isEmpty()
+            session.hud().clearMessage();
+            session.cheats().clear();
+            session.gameFlow().enterState(game, game.coinMechanism().isEmpty()
                 ? CommonGameStateID.GAME_INTRO
                 : CommonGameStateID.GAME_PREPARATION);
         }

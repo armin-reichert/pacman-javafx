@@ -158,7 +158,7 @@ public abstract class CommonGamePlay implements GamePlay {
     public void showLevelMessage(GameContext game, GameLevel level, GameLevelMessageType type) {
         final var message = new GameLevelMessage(type);
         message.pos().set(messageCenterPosition(level));
-        level.setMessage(message);
+        game.session().hud().setMessage(message);
     }
 
     @Override

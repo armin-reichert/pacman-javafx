@@ -25,12 +25,13 @@ public final class GameState_PlayingLevel extends GameState {
     @Override
     public void onEnter(GameContext game) {
         final GameSystems systems = game.variantConfig().systems();
+        final GameSession session = game.session();
         final GameLevel level = game.session().assertLevel();
         final Pac pac = level.entities().pac();
 
-        level.optMessage()
+        session.hud().optMessage()
             .filter(message -> message.type() == GameLevelMessageType.READY)
-            .ifPresent(_ -> level.clearMessage());
+            .ifPresent(_ -> session.hud().clearMessage());
 
         level.heartbeat().setStartState(Pulse.State.ON);
         level.heartbeat().restart();

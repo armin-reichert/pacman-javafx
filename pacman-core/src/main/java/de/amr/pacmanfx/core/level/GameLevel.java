@@ -42,7 +42,6 @@ public class GameLevel {
     private final HuntingTimerStrategy huntingTimerStrategy;
 
     private byte currentBonusIndex; // -1=no bonus, 0=first, 1=second
-    private GameLevelMessage message;
 
     private final FoodState foodState;
 
@@ -133,28 +132,6 @@ public class GameLevel {
     public int indexInGhostKilledChain(Ghost ghost) {
         requireNonNull(ghost);
         return ghostKillChain.indexOf(ghost);
-    }
-
-    /**
-     * Sets the message that should be displayed in the level (READY, GAME OVER, TESTING).
-     * @param message the message
-     */
-    public void setMessage(GameLevelMessage message) {
-        this.message = message;
-    }
-
-    /**
-     * Clears the level message.
-     */
-    public void clearMessage() {
-        message = null;
-    }
-
-    /**
-     * @return (optional) the current level message
-     */
-    public Optional<GameLevelMessage> optMessage() {
-        return Optional.ofNullable(message);
     }
 
     public GameLevelEntitySet entities() {

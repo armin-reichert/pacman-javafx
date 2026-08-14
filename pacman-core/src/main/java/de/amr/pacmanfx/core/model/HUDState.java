@@ -4,10 +4,13 @@
 
 package de.amr.pacmanfx.core.model;
 
+import de.amr.pacmanfx.core.level.GameLevelMessage;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+
+import java.util.Optional;
 
 public class HUDState {
 
@@ -24,6 +27,8 @@ public class HUDState {
     public final BooleanProperty scoreShown = new SimpleBooleanProperty(true);
 
     private int livesCount;
+
+    private GameLevelMessage message;
 
     public HUDState() {}
 
@@ -123,6 +128,31 @@ public class HUDState {
 
     public IntegerProperty creditProperty() {
         return credit;
+    }
+
+    // Messages appearing over level ("READY", "GAME OVER")
+
+    /**
+     * Sets the message that should be displayed in the level (READY, GAME OVER, TESTING).
+     * @param message the message
+     */
+    public void setMessage(GameLevelMessage message) {
+        this.message = message;
+    }
+
+    /**
+     * Clears the level message.
+     */
+    public void clearMessage() {
+        message = null;
+    }
+
+
+    /**
+     * @return (optional) the current level message
+     */
+    public Optional<GameLevelMessage> optMessage() {
+        return Optional.ofNullable(message);
     }
 
     //TODO this is Tengen specific

@@ -80,19 +80,19 @@ public interface TengenMsPacMan_PlayScene2DGameEventHandler extends DefaultGameE
     @Override
     default void onGameStateChange(GameStateChangeEvent e) {
         Logger.info("Enter game state '{}'", e.newState().name());
+        final GameSession session = game().session();
         if (e.newState() == TengenMsPacMan_GameState.GAME_LEVEL_COMPLETE.state()) {
-            final GameLevel level = game().session().assertLevel();
+            final GameLevel level = session.assertLevel();
             optSoundEffects().ifPresent(GameSoundEffects::stopAll);
             gameScene().playLevelCompleteAnimation(level);
         }
         else if (e.newState() == TengenMsPacMan_GameState.GAME_OVER.state()) {
             final TengenMsPacMan_PlayScene2D playScene2D = gameScene();
             final PlayScene2DCamera camera = playScene2D.dynamicCamera();
-            final GameLevel level = game().session().assertLevel();
             optSoundEffects().ifPresent(GameSoundEffects::stopAll);
+            session.hud().optMessage().ifPresent(playScene2D::startGameOverMessageAnimation);
             camera.enterManualMode();
             camera.setToTopPosition();
-            level.optMessage().ifPresent(playScene2D::startGameOverMessageAnimation);
         }
     }
 

@@ -248,7 +248,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final GameLevelMessage message = type == GameLevelMessageType.GAME_OVER && mapCategory(session) != MapCategory.ARCADE
             ? new MovingGameLevelMessage(type, messagePosition, GAME_OVER_MESSAGE_DELAY_SEC * GameConstants.SIMULATION_FPS)
             : new GameLevelMessage(type, messagePosition);
-        level.setMessage(message);
+        session.hud().setMessage(message);
     }
 
     @Override

@@ -42,7 +42,7 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
     @Override
     public void drawLevel(GameSession session, GameLevel level, RenderInfo info) {
         drawMap(level, info);
-        level.optMessage().ifPresent(this::drawLevelMessage);
+        session.hud().optMessage().ifPresent(this::drawLevelMessage);
     }
 
     protected void drawMap(GameLevel level, RenderInfo info) {

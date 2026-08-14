@@ -50,10 +50,9 @@ public class GameOverState extends GameState {
     public void onUpdate(GameContext game) {
         final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game.variantConfig().gamePlay();
         final GameSession session = game.session();
-        final GameLevel level = session.assertLevel();
 
         if (timer().hasExpired()) {
-            level.clearMessage();
+            session.hud().clearMessage();
             final Named nextStateID = session.isAttractMode()
                 ? TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME
                 : gamePlay.canContinueOnGameOver(session) ? CommonGameStateID.GAME_PREPARATION : CommonGameStateID.GAME_INTRO;

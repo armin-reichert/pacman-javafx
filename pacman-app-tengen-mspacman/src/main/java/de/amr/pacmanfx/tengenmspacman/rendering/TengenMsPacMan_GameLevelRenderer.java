@@ -89,7 +89,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         );
         overPaintActorSprites(level);
         drawFood(level);
-        level.optMessage().ifPresent(message -> {
+        session.hud().optMessage().ifPresent(message -> {
             switch (message.type()) {
                 case GAME_OVER -> drawGameOverMessage(session, level, message);
                 case READY -> drawReadyMessage(message);

@@ -62,9 +62,9 @@ public final class GameState_DemoLevelPlaying extends GameState {
         }
         else if (tick == huntingStartTick) {
             // Clear "READY!" message. "GAME_OVER" (demo level) and  "TEST LEVEL XX" messages are not cleared!
-            level.optMessage()
+            session.hud().optMessage()
                 .filter(message -> message.type() == GameLevelMessageType.READY)
-                .ifPresent(_ -> level.clearMessage());
+                .ifPresent(_ -> session.hud().clearMessage());
 
             level.heartbeat().setStartState(Pulse.State.ON);
             level.heartbeat().restart();
