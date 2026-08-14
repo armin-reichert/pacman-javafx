@@ -64,8 +64,8 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         final HuntingTimer huntingTimer = new HuntingTimer("Arcade Ms. Pac-Man Hunting Timer", game.variantConfig().rules().numHuntingPhases());
 
         final GameLevel level = new GameLevel(levelNumber, worldMap, huntingTimer, numFlashes);
-        level.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
 
+        session.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
         session.setLevel(level);
 
         final House house = HouseFactory.createArcadeHouse(houseMinTile);

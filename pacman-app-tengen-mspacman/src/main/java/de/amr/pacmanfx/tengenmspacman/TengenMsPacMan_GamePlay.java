@@ -230,7 +230,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         level.setPacPowerFadingSeconds(0.5f * 3);
 
         // For non-Arcade game levels, spend some extra time for the moving "game over" text animation
-        level.setGameOverStateTicks(mapCategory(session) == MapCategory.ARCADE
+        session.setGameOverStateTicks(mapCategory(session) == MapCategory.ARCADE
             ? ARCADE_MAP_GAME_OVER_TICKS : NON_ARCADE_MAP_GAME_OVER_TICKS);
 
         setMsPacMan(game, level);
@@ -264,7 +264,8 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final GameSystems systems = game.variantConfig().systems();
 
         final GameLevel demoLevel = createLevel(game, 1);
-        demoLevel.setGameOverStateTicks(120);
+
+        session.setGameOverStateTicks(120);
 
         final Pac pac = demoLevel.entities().pac();
         pac.cheats().setImmune(false);

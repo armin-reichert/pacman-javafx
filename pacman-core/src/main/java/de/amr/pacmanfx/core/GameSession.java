@@ -53,6 +53,8 @@ public class GameSession {
 
     private final Map<GameSessionValueKey, Object> values = new HashMap<>();
 
+    private int gameOverStateTicks;
+
     public GameSession(String variantName, GameFlowController gameFlow, GameCheats cheats) {
         requireNonNull(variantName);
         requireNonNull(gameFlow);
@@ -164,5 +166,13 @@ public class GameSession {
 
     public void newFrameState(long tick) {
         frameState = new FrameState(tick, new HuntingStep());
+    }
+
+    public int gameOverStateTicks() {
+        return gameOverStateTicks;
+    }
+
+    public void setGameOverStateTicks(int gameOverStateTicks) {
+        this.gameOverStateTicks = gameOverStateTicks;
     }
 }

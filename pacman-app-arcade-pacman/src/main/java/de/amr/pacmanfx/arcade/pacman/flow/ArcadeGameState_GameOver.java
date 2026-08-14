@@ -40,7 +40,7 @@ public class ArcadeGameState_GameOver extends GameState {
 
         game.session().cheats().clear();
 
-        timer().restartTicks(level.gameOverStateTicks());
+        timer().restartTicks(session.gameOverStateTicks());
     }
 
     @Override
