@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.core.level;
 
-import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 
 import static java.util.Objects.requireNonNull;
@@ -15,12 +14,6 @@ public class GameLevelMessage extends GameEntity {
     public GameLevelMessage(GameLevelMessageType type) {
         this.name = "GameLevelMessage";
         this.type = requireNonNull(type);
-    }
-
-    public GameLevelMessage(GameLevelMessageType type, Vector2f pos) {
-        this.name = "GameLevelMessage";
-        this.type = requireNonNull(type);
-        pos().set(pos);
     }
 
     public GameLevelMessageType type() {

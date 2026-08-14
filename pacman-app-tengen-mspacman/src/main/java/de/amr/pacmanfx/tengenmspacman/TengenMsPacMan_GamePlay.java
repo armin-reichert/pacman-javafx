@@ -278,11 +278,20 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     public void showLevelMessage(GameContext game, GameLevel level, GameLevelMessageType type) {
         final GameSession session = game.session();
         final Vector2f messagePosition = messageCenterPosition(level);
+
         // For map categories "mini", "big" or "strange", the "game over" message is animated
-        final GameLevelMessage message = type == GameLevelMessageType.GAME_OVER && mapCategory(session) != MapCategory.ARCADE
-            ? new MovingGameLevelMessage(type, messagePosition, GAME_OVER_MESSAGE_DELAY_SEC * GameConstants.SIMULATION_FPS)
-            : new GameLevelMessage(type, messagePosition);
-        session.hud().setMessage(message);
+        final boolean animated = type == GameLevelMessageType.GAME_OVER && mapCategory(session) != MapCategory.ARCADE;
+        if (animated) {
+            final var message = new MovingGameLevelMessage(type);
+            message.setStartPosition(messagePosition);
+            message.setDelayTicks(GAME_OVER_MESSAGE_DELAY_SEC * GameConstants.SIMULATION_FPS);
+            session.hud().setMessage(message);
+        }
+        else {
+            final var message = new GameLevelMessage(type);
+            message.pos().set(messagePosition);
+            session.hud().setMessage(message);
+        }
     }
 
     @Override

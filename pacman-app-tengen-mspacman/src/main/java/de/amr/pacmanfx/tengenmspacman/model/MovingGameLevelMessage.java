@@ -10,32 +10,36 @@ import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
 import de.amr.pacmanfx.core.level.GameLevelMessage;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
 
-import static java.util.Objects.requireNonNull;
-
 /**
  * The "game over" message in Tengen Ms. Pac-Man (in non-Arcade maps) moves (after some delay) from the center of the
  * scene to the right border, wraps around and moves from the left border back to the center.
  */
 public class MovingGameLevelMessage extends GameLevelMessage {
 
-    private final Vector2f startPosition;
+    private Vector2f startPosition;
     private float wrapX;
     private float width;
     private boolean wrapped;
-    private long delayTicks;
+    private int delayTicks;
     private boolean playing;
 
-    public MovingGameLevelMessage(GameLevelMessageType messageType, Vector2f startPosition, int delayTicks) {
+    public MovingGameLevelMessage(GameLevelMessageType messageType) {
         super(messageType);
         setComp(MovementComp.class, new MovementComp());
-        this.startPosition = requireNonNull(startPosition);
+    }
+
+    public void setStartPosition(Vector2f startPosition) {
+        this.startPosition = startPosition;
+    }
+
+    public void setDelayTicks(int delayTicks) {
         this.delayTicks = delayTicks;
-        pos().set(startPosition);
     }
 
     public void startMovement(MovementSystem motor, float rightEdge, double messageTextWidth) {
         width = (float) messageTextWidth;
         wrapX = rightEdge + 0.5f * width;
+        pos().set(startPosition);
         motor.setVelocity(this, 1, 0);
         playing = true;
     }
