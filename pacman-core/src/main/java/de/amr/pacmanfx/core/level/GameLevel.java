@@ -8,7 +8,6 @@ import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.entities.Bonus;
 import de.amr.pacmanfx.core.entities.Ghost;
-import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.rules.HuntingTimerStrategy;

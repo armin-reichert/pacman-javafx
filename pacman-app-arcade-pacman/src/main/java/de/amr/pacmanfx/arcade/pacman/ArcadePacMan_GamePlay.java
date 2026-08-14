@@ -159,7 +159,6 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         entities.add(cyanGhost);
         entities.add(orangeGhost);
 
-        entities.add(new LivesCounter());
         entities.add(new MessageView());
 
         // Configure entities

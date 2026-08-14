@@ -207,22 +207,22 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final GameSession session = game.session();
         final WorldNavigationSystem navigator = game.variantConfig().systems().worldNavigator();
 
-        final TengenMsPacMan_WorldMapManager worldMapManager = (TengenMsPacMan_WorldMapManager) game.variantConfig().worldMapManager();
-        final WorldMap worldMap = worldMapManager.supplyWorldMap(levelNumber, mapCategory(session));
-
+        final WorldMap worldMap = game.variantConfig().worldMapManager().supplyWorldMap(levelNumber, mapCategory(session));
         final TengenMsPacMan_GameRules rules = (TengenMsPacMan_GameRules) game.variantConfig().rules();
-        final var huntingTimer = new HuntingTimer("Tengen Ms. Pac-Man Hunting Timer", rules.numHuntingPhases());
+        final HuntingTimer huntingTimer = new HuntingTimer("Tengen Ms. Pac-Man Hunting Timer", rules.numHuntingPhases());
 
-        final House house = HouseFactory.createArcadeHouse(TengenMsPacMan_GameVariantConfig.HOUSE_MIN_TILE);
-        entities.add(house);
-
-        createAndAddMsPacMan(entities, game.variantConfig().systems());
-        createAndAddGhosts(entities, worldMap.terrainLayer(), house);
-
-        entities.add(new MessageView());
+        addEntities(entities, game, worldMap);
 
         final GameLevel level = new GameLevel(levelNumber, worldMap, entities, huntingTimer);
+
         session.setLevel(level);
+        // For non-Arcade game levels, spend some extra time for the moving "game over" text animation
+        session.setGameOverStateTicks(mapCategory(session) == MapCategory.ARCADE
+            ? ARCADE_MAP_GAME_OVER_TICKS : NON_ARCADE_MAP_GAME_OVER_TICKS);
+
+        //TODO: remove setter and add to entity set
+        level.setBonusSymbolCode(0, rules.selectBonusSymbolCode(level.number(), 0));
+        level.setBonusSymbolCode(1, rules.selectBonusSymbolCode(level.number(), 1));
 
         huntingTimer.setPhaseChangeCallback(newPhaseIndex -> {
             if (newPhaseIndex > 0) {
@@ -231,16 +231,47 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
             }
         });
 
-        // For non-Arcade game levels, spend some extra time for the moving "game over" text animation
-        session.setGameOverStateTicks(mapCategory(session) == MapCategory.ARCADE
-            ? ARCADE_MAP_GAME_OVER_TICKS : NON_ARCADE_MAP_GAME_OVER_TICKS);
-
-
-        //TODO not sure about this:
-        level.setBonusSymbolCode(0, rules.selectBonusSymbolCode(level.number(), 0));
-        level.setBonusSymbolCode(1, rules.selectBonusSymbolCode(level.number(), 1));
-
         return level;
+    }
+
+    private void addEntities(GameLevelEntitySet entities, GameContext game, WorldMap worldMap) {
+        final TerrainLayer terrain = worldMap.terrainLayer();
+
+        final House house = HouseFactory.createArcadeHouse(TengenMsPacMan_GameVariantConfig.HOUSE_MIN_TILE);
+
+        final Pac msPacMan = TengenMsPacMan_ActorFactory.instance().createMsPacMan();
+
+
+        final var factory = TengenMsPacMan_ActorFactory.instance();
+
+        final Ghost redGhost    = factory.createRedGhost();
+        final Ghost pinkGhost   = factory.createPinkGhost();
+        final Ghost cyanGhost   = factory.createCyanGhost();
+        final Ghost orangeGhost = factory.createOrangeGhost();
+
+
+        entities.add(house);
+        entities.add(msPacMan);
+
+        entities.add(redGhost);
+        entities.add(pinkGhost);
+        entities.add(cyanGhost);
+        entities.add(orangeGhost);
+
+        entities.add(new MessageView());
+
+        // Configure entities
+
+        final GameSystems systems = game.variantConfig().systems();
+        msPacMan.autoSteering().setSteering(new RuleGuidedPacSteering(
+            systems.worldNavigator(), systems.pacWorldMovementPolicy()
+        ));
+
+        redGhost.worldInfo()   .init(terrain, house, WorldMapPropertyName.POS_GHOST_1_RED);
+        pinkGhost.worldInfo()  .init(terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK);
+        cyanGhost.worldInfo()  .init(terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN);
+        orangeGhost.worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE);
+
     }
 
     @Override
@@ -375,31 +406,4 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
     // private
 
-    private void createAndAddMsPacMan(GameLevelEntitySet entities, GameSystems systems) {
-        final Pac msPacMan = TengenMsPacMan_ActorFactory.instance().createMsPacMan();
-        entities.add(msPacMan);
-
-        msPacMan.autoSteering().setSteering(new RuleGuidedPacSteering(
-            systems.worldNavigator(), systems.pacWorldMovementPolicy()
-        ));
-    }
-
-    private void createAndAddGhosts(GameLevelEntitySet entities, TerrainLayer terrain, House house) {
-        final var factory = TengenMsPacMan_ActorFactory.instance();
-
-        final Ghost redGhost    = factory.createRedGhost();
-        final Ghost pinkGhost   = factory.createPinkGhost();
-        final Ghost cyanGhost   = factory.createCyanGhost();
-        final Ghost orangeGhost = factory.createOrangeGhost();
-
-        redGhost.worldInfo()   .init(terrain, house, WorldMapPropertyName.POS_GHOST_1_RED);
-        pinkGhost.worldInfo()  .init(terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK);
-        cyanGhost.worldInfo()  .init(terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN);
-        orangeGhost.worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE);
-
-        entities.add(redGhost);
-        entities.add(pinkGhost);
-        entities.add(cyanGhost);
-        entities.add(orangeGhost);
-    }
 }

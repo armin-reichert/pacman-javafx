@@ -66,7 +66,6 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         createAndSetMsPacMan(entities, game.variantConfig().systems());
         createAndSetGhosts(entities, worldMap.terrainLayer(), house);
 
-        entities.add(new LivesCounter());
         entities.add(new MessageView());
 
         final HuntingTimer huntingTimer = new HuntingTimer("Arcade Ms. Pac-Man Hunting Timer", game.variantConfig().rules().numHuntingPhases());
