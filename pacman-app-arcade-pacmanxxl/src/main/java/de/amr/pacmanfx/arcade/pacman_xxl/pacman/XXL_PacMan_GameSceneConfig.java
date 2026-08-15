@@ -40,7 +40,7 @@ class XXL_PacMan_GameSceneConfig extends AbstractGameSceneConfig {
 
     @Override
     protected Named determineSceneID(GameViewModel viewModel, GameContext game) {
-        final State<GameContext> state = game.session().gameState();
+        final State<GameContext> state = game.state();
 
         if (state instanceof CutScenesTestState testState) {
             return AbstractGameSceneConfig.cutSceneID(testState.testedCutSceneNumber);

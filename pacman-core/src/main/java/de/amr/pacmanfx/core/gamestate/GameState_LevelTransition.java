@@ -15,13 +15,13 @@ public final class GameState_LevelTransition extends GameState {
     @Override
     public void onEnter(GameContext game) {
         timer().restartSeconds(2);
-        game.variantConfig().gamePlay().startNextLevel(game);
+        game.variant().gamePlay().startNextLevel(game);
     }
 
     @Override
     public void onUpdate(GameContext game) {
         if (timer().hasExpired()) {
-            game.session().gameFlow().enterState(game, CommonGameStateID.GAME_OR_LEVEL_STARTING);
+            game.variant().gameFlow().enterState(game, CommonGameStateID.GAME_OR_LEVEL_STARTING);
         }
     }
 }

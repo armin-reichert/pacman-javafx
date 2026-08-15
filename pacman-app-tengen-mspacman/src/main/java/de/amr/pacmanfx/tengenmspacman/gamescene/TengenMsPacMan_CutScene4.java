@@ -104,7 +104,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
             playMusic();
         }
         else if (tick == TICK_EXPIRES) {
-            game.session().gameFlow().enterState(game, TengenMsPacMan_GameState.GAME_PREPARATION.state());
+            game.variant().gameFlow().enterState(game, TengenMsPacMan_GameState.GAME_PREPARATION.state());
 
         }
         TengenMsPacMan_ClapperboardStateSystem.update(clapperboard);
@@ -138,7 +138,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
     }
 
     private void letActorsMove(GameContext game, long tick) {
-        final MovementSystem motor = game.variantConfig().systems().motor();
+        final MovementSystem motor = game.variant().systems().motor();
         motor.move(pacMan);
         motor.move(msPacMan);
         for (int i = 0; i < juniors.size(); ++i) {
@@ -147,7 +147,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
     }
 
     private void playCutScene(GameContext game, long tick) {
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variant().systems();
         final WorldNavigationSystem navigator = systems.worldNavigator();
         final SpriteAnimSystem animSystem = systems.spriteAnim();
 
@@ -222,7 +222,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
     }
 
     private void spawnJunior(GameContext game, long tick) {
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variant().systems();
         final var factory = TengenMsPacMan_ActorFactory.instance();
         final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().uiConfig().renderConfig();
         final WorldNavigationSystem navigator = systems.worldNavigator();
@@ -258,7 +258,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
     }
 
     private void updateJunior(GameContext game, long tick, int index) {
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variant().systems();
         final MovementSystem motor = systems.motor();
         final WorldNavigationSystem navigator = systems.worldNavigator();
 

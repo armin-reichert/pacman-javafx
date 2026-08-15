@@ -176,7 +176,7 @@ public final class ArcadeHouseGateKeeper {
         // check Pac-Man starving ticks
         final GameLevel level = game.session().assertLevel();
         final Pac pac = level.entities().pac();
-        final PacDigestionSystem digestionSystem = game.variantConfig().systems().pacDigestion();
+        final PacDigestionSystem digestionSystem = game.variant().systems().pacDigestion();
         if (pac.digestion().starvingTicks() >= pacStarvingLimit) {
             digestionSystem.endStarving(pac);
             return Optional.of(String.format("%s reached starving limit (%d ticks)", pac.name(), pacStarvingLimit));
@@ -215,7 +215,7 @@ public final class ArcadeHouseGateKeeper {
     public void unlockGhostIfPossible(GameContext game) {
         requireNonNull(game);
 
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variant().systems();
 
         final GameLevel level = game.session().assertLevel();
         final House house = level.entities().house();

@@ -53,7 +53,7 @@ public abstract class AbstractGameScene
     }
 
     public GameFlowController gameFlow() {
-        return game().session().gameFlow();
+        return game().variant().gameFlow();
     }
 
     // --- Interface "GameScene"
@@ -90,7 +90,7 @@ public abstract class AbstractGameScene
 
     @Override
     public GameState gameState() {
-        return game().session().gameState();
+        return game().state();
     }
 
     @Override

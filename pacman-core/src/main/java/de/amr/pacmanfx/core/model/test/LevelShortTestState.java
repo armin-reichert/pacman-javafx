@@ -27,16 +27,16 @@ public class LevelShortTestState extends GameState {
 
     @Override
     public void onEnter(GameContext game) {
-        final GamePlay gamePlay = game.variantConfig().gamePlay();
+        final GamePlay gamePlay = game.variant().gamePlay();
         final GameSession session = game.session();
 
         //coinMechanism.setNumCoins(1);
 
-        lastTestedLevelNumber = game.variantConfig().rules().lastLevelNumber() == Integer.MAX_VALUE
+        lastTestedLevelNumber = game.variant().rules().lastLevelNumber() == Integer.MAX_VALUE
             ? 25
-            : game.variantConfig().rules().lastLevelNumber();
+            : game.variant().rules().lastLevelNumber();
 
-        gamePlay.buildNormalLevel(game, 1, game.variantConfig().initialLifeCount());
+        gamePlay.buildNormalLevel(game, 1, game.variant().initialLifeCount());
         gamePlay.startLevel(game);
 
         final GameLevel level = session.assertLevel();
@@ -50,9 +50,9 @@ public class LevelShortTestState extends GameState {
 
     @Override
     public void onUpdate(GameContext game) {
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variant().systems();
         final GameSession session = game.session();
-        final GamePlay gamePlay = game.variantConfig().gamePlay();
+        final GamePlay gamePlay = game.variant().gamePlay();
         final GameLevel level = session.assertLevel();
 
         final float START = 1.0f;
@@ -95,7 +95,7 @@ public class LevelShortTestState extends GameState {
         }
         else if (timer().atSecond(START + 10)) {
             if (level.number() == lastTestedLevelNumber) {
-                game.session().gameFlow().restartState(game, CommonGameStateID.BOOT);
+                game.variant().gameFlow().restartState(game, CommonGameStateID.BOOT);
             } else {
                 waitForTimeout();
                 gamePlay.startNextLevel(game);
@@ -107,7 +107,7 @@ public class LevelShortTestState extends GameState {
 
     @Override
     public void onExit(GameContext game) {
-        final LevelCounterSystem levelCounterSystem = game.variantConfig().systems().levelCounterSystem();
+        final LevelCounterSystem levelCounterSystem = game.variant().systems().levelCounterSystem();
         levelCounterSystem.clearCounter(game.session().levelCounter());
     }
 }

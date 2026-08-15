@@ -26,7 +26,7 @@ public class GhostHouseAccessSystem {
      * and start blinking when Pac-Man's power starts fading. After that, they return to their normal color.
      */
     public void stayInHouse(GameContext game, Ghost ghost, float speed) {
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variant().systems();
 
         final House house = ghost.worldInfo().house();
         final PositionComp position = ghost.pos();
@@ -61,7 +61,7 @@ public class GhostHouseAccessSystem {
      * The ghost speed is slower than outside, but I do not know the exact value.
      */
     public boolean leaveHouse(GameContext game, Ghost ghost, float speed) {
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variant().systems();
 
         final PositionComp position = ghost.pos();
         final House house = ghost.worldInfo().house();
@@ -104,7 +104,7 @@ public class GhostHouseAccessSystem {
      * then moves up again (if the house center is his revival position), or moves sidewards towards his revival position.
      */
     public void enterHouse(GameContext game, Ghost ghost, float speed) {
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variant().systems();
 
         final PositionComp position = ghost.pos();
         final House house = ghost.worldInfo().house();
@@ -139,7 +139,7 @@ public class GhostHouseAccessSystem {
     //TODO extract state change
     public void reachHouse(GameContext game, Ghost ghost, float speed) {
         final GameSession session = game.session();
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variant().systems();
         final WorldMovementPolicy policy = systems.ghostWorldMovementPolicy();
         final GameLevel level = session.assertLevel();
 

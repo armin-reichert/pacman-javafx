@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.core;
 
 import de.amr.pacmanfx.core.event.base.GameEventManager;
+import de.amr.pacmanfx.core.gamestate.GameState;
 
 import static java.util.Objects.requireNonNull;
 
@@ -15,7 +16,7 @@ public class GameContext {
 
     private final CoinMechanism coinMechanism;
 
-    private final GameVariantConfig variantConfig;
+    private final GameVariantConfig variant;
 
     private final GameEventManager eventManager;
 
@@ -23,11 +24,11 @@ public class GameContext {
 
     public GameContext(
         CoinMechanism coinMechanism,
-        GameVariantConfig variantConfig,
+        GameVariantConfig variant,
         GameEventManager eventManager)
     {
         this.coinMechanism = requireNonNull(coinMechanism);
-        this.variantConfig = requireNonNull(variantConfig);
+        this.variant = requireNonNull(variant);
         this.eventManager = requireNonNull(eventManager);
     }
 
@@ -39,8 +40,8 @@ public class GameContext {
         return session;
     }
 
-    public GameVariantConfig variantConfig() {
-        return variantConfig;
+    public GameVariantConfig variant() {
+        return variant;
     }
 
     public CoinMechanism coinMechanism() {
@@ -49,5 +50,9 @@ public class GameContext {
 
     public GameEventManager eventManager() {
         return eventManager;
+    }
+
+    public GameState state() {
+        return variant.gameFlow().state();
     }
 }

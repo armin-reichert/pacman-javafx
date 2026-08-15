@@ -10,9 +10,7 @@ import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.gameplay.ArcadeHouseGateKeeper;
 import de.amr.pacmanfx.core.gameplay.FrameState;
-import de.amr.pacmanfx.core.gameplay.GameFlowController;
 import de.amr.pacmanfx.core.gameplay.hunt.HuntingStep;
-import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.HUDState;
@@ -26,8 +24,6 @@ import static java.util.Objects.requireNonNull;
 public class GameSession {
 
     public interface GameSessionValueKey {}
-
-    private final GameFlowController gameFlow;
 
     private FrameState frameState;
 
@@ -59,12 +55,10 @@ public class GameSession {
 
     private boolean cutScenesEnabled;
 
-    public GameSession(String variantName, GameFlowController gameFlow, GameCheats cheats) {
+    public GameSession(String variantName, GameCheats cheats) {
         requireNonNull(variantName);
-        requireNonNull(gameFlow);
         requireNonNull(cheats);
 
-        this.gameFlow = gameFlow;
         this.cheats = cheats;
         this.score = new Score();
         this.highScore = ScoreSystem.createPersistentScore(ScoreSystem.highScoreFile(variantName));
@@ -80,14 +74,6 @@ public class GameSession {
                 highScore.data().setEnabled(false);
             }
         });
-    }
-
-    public GameFlowController gameFlow() {
-        return gameFlow;
-    }
-
-    public GameState gameState() {
-        return gameFlow.state();
     }
 
     public void setLevel(GameLevel level) {

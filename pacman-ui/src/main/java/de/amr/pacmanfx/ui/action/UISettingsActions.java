@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
@@ -110,7 +109,7 @@ public class UISettingsActions {
                     app.ui().shortMessage(app.ui().translations().translate(is3DEnabled
                         ? "flash.use_3D_scene" : "flash.use_2D_scene"));
                 }
-                if (isLevelPlaying(game.session())) {
+                if (isLevelPlaying(game.state())) {
                     app.ui().gameScenes().forceGameSceneUpdate();
                 }
             }
@@ -126,8 +125,7 @@ public class UISettingsActions {
                     || gameScenes.currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D);
             }
 
-            private boolean isLevelPlaying(GameSession session) {
-                final GameState gameState = session.gameState();
+            private boolean isLevelPlaying(GameState gameState) {
                 return CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(gameState);
             }
         };

@@ -89,7 +89,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
         final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().uiConfig().renderConfig();
         final SpriteAnimationContainer container = app().ui().sprites().animations();
 
-        final GameSystems sys = game().variantConfig().systems();
+        final GameSystems sys = game().variant().systems();
 
         createMarquee();
         MarqueeSystem.instance().start(marquee);
@@ -187,7 +187,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
             }
 
             boolean letGhostWalkIn(ArcadeMsPacMan_IntroScene scene) {
-                final GameSystems sys = scene.game().variantConfig().systems();
+                final GameSystems sys = scene.game().variant().systems();
 
                 final Ghost ghost = scene.ghosts.get(scene.ghostPresented.ordinal());
                 if (ghost.worldNavigation().moveDir() == Direction.LEFT) {
@@ -222,7 +222,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
         MS_PACMAN_MARCHING_IN {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                final GameSystems sys = scene.game().variantConfig().systems();
+                final GameSystems sys = scene.game().variant().systems();
                 final Pac msPacMan = scene.msPacMan;
 
                 MarqueeSystem.instance().update(scene.marquee);

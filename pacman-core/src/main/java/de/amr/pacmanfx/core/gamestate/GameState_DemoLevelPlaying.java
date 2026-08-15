@@ -31,15 +31,15 @@ public final class GameState_DemoLevelPlaying extends GameState {
     @Override
     public void onEnter(GameContext game) {
         final GameSession session = game.session();
-        session.setLevel(game.variantConfig().gamePlay().buildDemoLevel(game));
+        session.setLevel(game.variant().gamePlay().buildDemoLevel(game));
         session.hud().showCredit().hideLivesCounter();
         game.eventManager().publishGameEvent(new LevelCreatedEvent(session.assertLevel()));
     }
 
     @Override
     public void onUpdate(GameContext game) {
-        final GameSystems systems = game.variantConfig().systems();
-        final GamePlay gamePlay = game.variantConfig().gamePlay();
+        final GameSystems systems = game.variant().systems();
+        final GamePlay gamePlay = game.variant().gamePlay();
         final GameSession session = game.session();
         final GameLevel level = session.assertLevel();
         final Pac pac = level.entities().pac();
@@ -52,7 +52,7 @@ public final class GameState_DemoLevelPlaying extends GameState {
             gamePlay.prepareLevelForPlaying(game);
             gamePlay.showLevelMessage(game, level, GameLevelMessageType.GAME_OVER);
 
-            final LevelCounterSystem levelCounterSystem = game.variantConfig().systems().levelCounterSystem();
+            final LevelCounterSystem levelCounterSystem = game.variant().systems().levelCounterSystem();
             levelCounterSystem.updateCounter(session.levelCounter(), level.number(), level.bonusSymbolCode(0));
 
             Logger.info("Demo level {} started", level.number());
@@ -82,12 +82,12 @@ public final class GameState_DemoLevelPlaying extends GameState {
         }
         else if (tick > huntingStartTick) {
             gamePlay.hunt(game, level);
-            session.gameFlow().enterState(game, computeNextState(game, level));
+            game.variant().gameFlow().enterState(game, computeNextState(game, level));
         }
     }
 
     private CommonGameStateID computeNextState(GameContext game, GameLevel level) {
-        if (game.variantConfig().rules().isLevelCompleted(level)) {
+        if (game.variant().rules().isLevelCompleted(level)) {
             return CommonGameStateID.GAME_INTRO;
         }
         else if (game.session().thisFrame().huntingStep().pacKilled()) {

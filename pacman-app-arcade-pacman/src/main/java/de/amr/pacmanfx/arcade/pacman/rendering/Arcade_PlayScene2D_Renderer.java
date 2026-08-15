@@ -66,7 +66,7 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
             return;
         }
 
-        final GameRules rules = scene.game().variantConfig().rules();
+        final GameRules rules = scene.game().variant().rules();
         final GameSession session = scene.game().session();
 
         // Level creation happens by handling a game event after the play scene has been activated. Therefore,

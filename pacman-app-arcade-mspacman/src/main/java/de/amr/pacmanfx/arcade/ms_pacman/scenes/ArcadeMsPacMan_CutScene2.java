@@ -51,7 +51,7 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene2D {
 
     @Override
     public void onTick(GameContext game) {
-        final GameSystems sys = game.variantConfig().systems();
+        final GameSystems sys = game.variant().systems();
 
         switch (state) {
             case SceneState.CLAPPERBOARD -> updateStateClapperboard(sys);

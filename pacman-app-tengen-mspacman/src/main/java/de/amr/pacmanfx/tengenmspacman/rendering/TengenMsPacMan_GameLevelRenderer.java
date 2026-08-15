@@ -76,7 +76,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
     @Override
     public void drawLevel(GameContext game, GameLevel level, RenderInfo info) {
         final WorldMap worldMap = level.worldMap();
-        applyLevelSettings(game.variantConfig().rules(), level, info);
+        applyLevelSettings(game.variant().rules(), level, info);
         if (info.getBoolean(CommonRenderInfoKey.MAP_BRIGHT)) {
             final int flashingIndex = info.get(CommonRenderInfoKey.MAZE_FLASHING_INDEX, Integer.class);
             configureHighlightedMapRenderInfo(info, worldMap, flashingIndex);

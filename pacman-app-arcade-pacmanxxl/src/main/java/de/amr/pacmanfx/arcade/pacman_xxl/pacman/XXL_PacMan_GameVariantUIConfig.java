@@ -7,10 +7,8 @@ import de.amr.basics.Named;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameVariantUIConfig;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
-import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
-import de.amr.pacmanfx.core.gameplay.GameFlowController;
-import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
+import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.DefaultFactory3D;
@@ -31,19 +29,6 @@ import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.mediaPlayer;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
 
 public final class XXL_PacMan_GameVariantUIConfig implements GameVariantUIConfig {
-
-    /**
-     * Used by cartridge.
-     *
-     * @return the game flow controller for this variant
-     */
-    public static GameFlowController createGameFlow() {
-        final var gameFlow = new GameFlowController("Arcade Pac-Man XXL Game Flow");
-        for (Arcade_GameState gameState : Arcade_GameState.values()) {
-            gameFlow.addState(gameState.state());
-        }
-        return gameFlow;
-    }
 
     private static final ResourceManager XXL_RM = () -> XXL_PacMan_GameVariantUIConfig.class;
     private static final ResourceManager ARCADE_PACMAN_RM = () -> ArcadePacMan_GameVariantUIConfig.class;

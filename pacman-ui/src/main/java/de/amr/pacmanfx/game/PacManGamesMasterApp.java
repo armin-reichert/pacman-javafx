@@ -99,14 +99,14 @@ public final class PacManGamesMasterApp implements GameAppContext, GameLifecycle
         ui.viewModel().maze3D.init(gameVariant.uiConfig().worldSettings().maze());
 
         game = createGameContext(gameVariant);
-        createSession(gameVariant);
+        createSession();
         game.eventManager().addGameEventSubscriber(ui);
         gameVariant.config().gameFlow().addStateChangeListener(changeEventConverter);
     }
 
-    private void createSession(GameVariant gameVariant) {
+    private void createSession() {
         final String variantName = gameVariantManager.currentVariantName();
-        final var session = new GameSession(variantName, gameVariant.config().gameFlow(), new GameCheats());
+        final var session = new GameSession(variantName, new GameCheats());
         session.hud().creditProperty().bind(gameBox.coinMechanism().numCoinsProperty());
         game.setSession(session);
     }
@@ -205,10 +205,10 @@ public final class PacManGamesMasterApp implements GameAppContext, GameLifecycle
 
     @Override
     public void startPlaying() {
-        createSession(gameVariantManager.currentGameVariant());
+        createSession();
         ui.window().mainScene().connect(game.session());
         ui.views().selectGamePlayView();
-        game.variantConfig().gamePlay().onSessionStart(game);
+        game.variant().gamePlay().onSessionStart(game);
         GameSimulation.start(this);
     }
 

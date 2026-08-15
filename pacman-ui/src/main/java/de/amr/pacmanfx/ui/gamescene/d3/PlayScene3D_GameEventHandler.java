@@ -144,7 +144,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     @Override
     default void onGameStarted(GameStartedEvent event) {
         final GameSession session = game().session();
-        final GameState state = game().session().gameState();
+        final GameState state = game().state();
 
         final boolean silent = session.isAttractMode() || state.id() instanceof TestStateID;
 
@@ -171,7 +171,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         final GameLevel level = event.level();
         final GameSession session = game().session();
         final GameLevel3D level3D = assertLevel3D();
-        final State<GameContext> newState = session.gameState();
+        final State<GameContext> newState = game().state();
 
         level3D.replaceLevelCounter3D(session.levelCounter());
 
@@ -231,7 +231,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         final GameLevel3D level3D = assertLevel3D();
 
         optSoundEffects().ifPresent(GameSoundEffects::stopSiren);
-        if (!game().variantConfig().rules().isLevelCompleted(level)) {
+        if (!game().variant().rules().isLevelCompleted(level)) {
             optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
             Pac3DAnimationSystem.setPowerMode(pac, true);
             level3D.animationManager().startWallFlashing();
@@ -285,7 +285,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         final GameLevel level = session().assertLevel();
         final GameLevel3D level3D = assertLevel3D();
 
-        session().gameState().waitForTimeout();
+        game().state().waitForTimeout();
 
         optSoundEffects().ifPresent(GameSoundEffects::stopAll);
 
@@ -297,7 +297,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         Pac3DAnimationSystem.playDyingAnimation(
             level.entities().pac(),
             () -> optSoundEffects().ifPresent(GameSoundEffects::playPacDeadSound),
-            session().gameState()::triggerTimeout
+            game().state()::triggerTimeout
         );
     }
 
@@ -312,7 +312,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         final GameLevel level = session().assertLevel();
         final House house = level.entities().house();
         final boolean cutSceneFollows = !session().isAttractMode()
-            && game().variantConfig().rules().cutSceneAfterLevel(level.number()).isPresent();
+            && game().variant().rules().cutSceneAfterLevel(level.number()).isPresent();
 
         gameScene().scoreOpacity.set(0);
         House3DSystem.hideDoors(house);
@@ -347,11 +347,11 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         final Optional<ManagedAnimation> levelEndAnimation = animationRegistry.optAnimation(animationID);
 
         if (levelEndAnimation.isEmpty()) {
-            Ufx.pauseSecThen(2, () -> session().gameState().triggerTimeout()).play();
+            Ufx.pauseSecThen(2, () -> game().state().triggerTimeout()).play();
             return;
         }
 
-        session().gameState().waitForTimeout();
+        game().state().waitForTimeout();
 
         final PerspectiveID perspectiveBeforeAnimation = settings3D.cameraPerspectiveIdProperty.get();
 
@@ -370,7 +370,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
             levelEndAnimation.get().delegate(),
             restoreCameraPerspective
         );
-        seq.setOnFinished(_ -> session().gameState().triggerTimeout());
+        seq.setOnFinished(_ -> game().state().triggerTimeout());
         seq.play();
     }
 

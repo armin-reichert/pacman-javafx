@@ -36,9 +36,9 @@ public class DS_GameInfo extends GameDashboardSection {
     @Override
     public void setGameApp(GameAppContext app) {
 
-        addDynamicInfo("Game State",  () -> app.game().session().gameState().name());
+        addDynamicInfo("Game State",  () -> app.game().state().name());
 
-        addDynamicInfo("State Timer", () -> stateTimerInfo(app.game().session().gameState()));
+        addDynamicInfo("State Timer", () -> stateTimerInfo(app.game().state()));
 
         addDynamicInfo("Game Scene", fnGameSceneInfo(app,
             gameScene -> gameScene.getClass().getSimpleName())
@@ -93,7 +93,7 @@ public class DS_GameInfo extends GameDashboardSection {
     }
 
     private GameRules rules(GameAppContext app) {
-        return app.game().variantConfig().rules();
+        return app.game().variant().rules();
     }
 
     private Supplier<String> supplyLevelSpeedInfo(
@@ -101,7 +101,7 @@ public class DS_GameInfo extends GameDashboardSection {
         BiFunction<GameLevel, ActorSpeedRules, String> fnInfo) {
         return () -> {
             final GameContext game = appContext.game();
-            final ActorSpeedRules speedRules = game.variantConfig().rules().actorSpeedRules();
+            final ActorSpeedRules speedRules = game.variant().rules().actorSpeedRules();
             return game.session().optLevel()
                 .map(level -> fnInfo.apply(level, speedRules)).orElse(NO_INFO);
         };

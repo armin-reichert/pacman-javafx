@@ -86,7 +86,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene2D {
             return;
         }
 
-        final GameSystems sys = game.variantConfig().systems();
+        final GameSystems sys = game.variant().systems();
 
         switch (sceneTick) {
             case TICK_ANIMATION_START        -> startTheShow();

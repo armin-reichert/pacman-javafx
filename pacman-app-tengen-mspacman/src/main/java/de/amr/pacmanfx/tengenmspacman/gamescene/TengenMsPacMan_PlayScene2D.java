@@ -125,7 +125,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
 
     @Override
     public void onActivate() {
-        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().variantConfig().gamePlay();
+        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().variant().gamePlay();
         final GameSession session = game().session();
         final HUDState hud = session.hud();
         hud.showScore().showLevelCounter().showLivesCounter().show();
@@ -270,7 +270,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
     }
 
     private void updateHUD(GameSession session, GameLevel level) {
-        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().variantConfig().gamePlay();
+        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().variant().gamePlay();
         final HUDState hud = session.hud();
         final LivesCounter livesCounter = session.livesCounter();
 
@@ -298,7 +298,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
         final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().uiConfig().renderConfig();
         final SpriteAnimationContainer animationContainer = app().ui().sprites().animations();
 
-        final SpriteAnimSystem animSystem = app().game().variantConfig().systems().spriteAnim();
+        final SpriteAnimSystem animSystem = app().game().variant().systems().spriteAnim();
 
         final Pac pac = level.entities().pac();
         if (animSystem.hasNoAnimations(pac)) {
@@ -320,7 +320,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
     }
 
     private void resetPacAnimation(SpriteAnimSystem animSystem, GameSession session, Pac pac) {
-        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().variantConfig().gamePlay();
+        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().variant().gamePlay();
 
         animSystem.select(pac, gamePlay.isBoosterOn(session)
             ? TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER

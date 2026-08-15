@@ -59,7 +59,7 @@ public interface Arcade_PlayScene2D_GameEventHandler extends DefaultGameEventLis
 
     @Override
     default void onGameContinued(GameContinuedEvent e) {
-        final SpriteAnimSystem animSystem = game().variantConfig().systems().spriteAnim();
+        final SpriteAnimSystem animSystem = game().variant().systems().spriteAnim();
         //TODO make animation systems from animation manager class
         game().session().optLevel().ifPresent(level -> ActorAnimationManager.resetActorAnimations(animSystem, level));
     }
@@ -68,7 +68,7 @@ public interface Arcade_PlayScene2D_GameEventHandler extends DefaultGameEventLis
     default void onGameStarted(GameStartedEvent e) {
         final GameContext game = e.game();
         final GameSession session = game.session();
-        final boolean silent = session.isAttractMode() || session.gameState().id() instanceof TestStateID;
+        final boolean silent = session.isAttractMode() || game.state().id() instanceof TestStateID;
         if (!silent) {
             optSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
         }
@@ -81,11 +81,11 @@ public interface Arcade_PlayScene2D_GameEventHandler extends DefaultGameEventLis
 
         if (CommonGameStateID.GAME_LEVEL_COMPLETE.hasSameNameAs(newState)) {
             final GameLevel level = game().session().assertLevel();
-            final int numFlashes = game().variantConfig().rules().numLevelFlashes(level.number());
+            final int numFlashes = game().variant().rules().numLevelFlashes(level.number());
 
             optSoundEffects().ifPresent(GameSoundEffects::stopAll);
 
-            final var completedAnimation = new LevelCompletedAnimation(level, () -> game().session().gameState().triggerTimeout());
+            final var completedAnimation = new LevelCompletedAnimation(level, () -> game().state().triggerTimeout());
             playScene().setLevelCompletedAnimation(completedAnimation);
             completedAnimation.play(numFlashes);
         }
@@ -108,7 +108,7 @@ public interface Arcade_PlayScene2D_GameEventHandler extends DefaultGameEventLis
     @Override
     default void onPacDead(PacDeadEvent e) {
         // Trigger end of game state PACMAN_DYING after dying animation has finished
-        game().session().gameState().triggerTimeout();
+        game().state().triggerTimeout();
     }
 
     @Override

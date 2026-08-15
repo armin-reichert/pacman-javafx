@@ -149,7 +149,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
     }
 
     private void startChasingPacMan(GameContext game) {
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variant().systems();
 
         blinking.start();
 
@@ -172,7 +172,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
     }
 
     private void chasePacMan(long tick) {
-        final GameSystems systems = game().variantConfig().systems();
+        final GameSystems systems = game().variant().systems();
         final MovementSystem motor = systems.motor();
         final GhostSpriteAnimationSystem ghostSpriteAnimationSystem = systems.ghostSpriteAnimation();
 
@@ -201,7 +201,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
     }
 
     private void turnCardsStopPacMan(GameContext game) {
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variant().systems();
 
         systems.worldNavigator().setSpeed(pacMan, 0);
         systems.spriteAnim().stopSelected(pacMan);
@@ -223,7 +223,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
     }
 
     private void chaseGhosts(GameContext game, long tick) {
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variant().systems();
 
         blinking.triggerPulse();
         systems.motor().move(pacMan);
@@ -242,7 +242,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
     }
 
     private void eatGhostAndStopChasing(GameContext game, Ghost victim, long tick) {
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variant().systems();
 
         systems.ghostState().changeState(victim, EATEN);
         systems.spriteAnim().selectAndSetFrame(victim, CommonSpriteAnimationID.GHOST_POINTS, numGhostsEaten++);
@@ -339,7 +339,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
 
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
-                final GameSystems systems = scene.game().variantConfig().systems();
+                final GameSystems systems = scene.game().variant().systems();
 
                 final long tick = timer.tickCount();
                 if (tick == TICK_PAC_MAN_APPEARS) {
@@ -362,7 +362,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
         CHASING_GHOSTS {
             @Override
             public void onEnter(ArcadePacMan_IntroScene scene) {
-                final GameSystems systems = scene.game().variantConfig().systems();
+                final GameSystems systems = scene.game().variant().systems();
 
                 timer.restartTicks(TICK_CHASING_GHOSTS_END);
 

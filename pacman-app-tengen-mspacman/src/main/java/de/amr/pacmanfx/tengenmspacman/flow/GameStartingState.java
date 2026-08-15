@@ -27,10 +27,10 @@ public class GameStartingState extends GameState {
 
     @Override
     public void onEnter(GameContext game) {
-        final var gamePlay = (TengenMsPacMan_GamePlay) game.variantConfig().gamePlay();
+        final var gamePlay = (TengenMsPacMan_GamePlay) game.variant().gamePlay();
         final GameSession session = game.session();
 
-        gamePlay.buildNormalLevel(game, gamePlay.startLevelNumber(session), game.variantConfig().initialLifeCount());
+        gamePlay.buildNormalLevel(game, gamePlay.startLevelNumber(session), game.variant().initialLifeCount());
         ScoreSystem.enableScore(session.highScore(), true);
         game.eventManager().publishGameEvent(new GameStartedEvent(game));
     }
@@ -42,7 +42,7 @@ public class GameStartingState extends GameState {
         final long tick = timer().tickCount();
 
         if (tick == TICK_SHOW_READY) {
-            game.variantConfig().gamePlay().startLevel(game);
+            game.variant().gamePlay().startLevel(game);
             // Note: This event is very important because it triggers the creation of the actor animations!
             game.eventManager().publishGameEvent(new LevelStartedEvent(level));
         }
@@ -52,7 +52,7 @@ public class GameStartingState extends GameState {
         }
         else if (tick == TICK_START_PLAYING) {
             session.setPlaying(true);
-            session.gameFlow().enterState(game, CommonGameStateID.GAME_LEVEL_PLAYING);
+            game.variant().gameFlow().enterState(game, CommonGameStateID.GAME_LEVEL_PLAYING);
         }
     }
 }

@@ -2,6 +2,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl.app;
 
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_GameSystems;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_WorldMapManager;
+import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.XXL_MsPacMan_GameFlow;
 import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.XXL_MsPacMan_GamePlay;
 import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.XXL_MsPacMan_GameRules;
 import de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman.XXL_MsPacMan_GameVariantUIConfig;
@@ -22,7 +23,7 @@ public class XXL_MsPacMan_Cartridge {
         GameVariantID.ARCADE_MS_PACMAN_XXL,
         ArcadeMsPacMan_GameSystems::new,
         XXL_MsPacMan_GamePlay::new,
-        XXL_MsPacMan_GameVariantUIConfig::createGameFlow,
+        XXL_MsPacMan_GameFlow::new,
         XXL_MsPacMan_GameRules::new,
         XXL_WorldMapManager::instance,
         XXL_MsPacMan_GameVariantUIConfig::new

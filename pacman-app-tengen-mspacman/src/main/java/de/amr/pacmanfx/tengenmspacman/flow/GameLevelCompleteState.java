@@ -23,7 +23,7 @@ public class GameLevelCompleteState extends GameState {
     public void onEnter(GameContext game) {
         requireNonNull(game);
 
-        game.variantConfig().gamePlay().onLevelCompleted(game, game.session().assertLevel());
+        game.variant().gamePlay().onLevelCompleted(game, game.session().assertLevel());
         waitForTimeout(); // Wait for UI to trigger timeout
     }
 
@@ -32,7 +32,7 @@ public class GameLevelCompleteState extends GameState {
         requireNonNull(game);
 
         final GameSession session = game.session();
-        final GameFlowController flow = session.gameFlow();
+        final GameFlowController flow = game.variant().gameFlow();
 
         if (session.isAttractMode()) {
             flow.enterState(game, TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME);
@@ -53,7 +53,7 @@ public class GameLevelCompleteState extends GameState {
         }
 
         final GameLevel level = session.assertLevel();
-        final boolean cutSceneFollows = game.variantConfig().rules().cutSceneAfterLevel(level.number()).isPresent();
+        final boolean cutSceneFollows = game.variant().rules().cutSceneAfterLevel(level.number()).isPresent();
         if (cutSceneFollows && session.cutScenesEnabled()) {
             return CommonGameStateID.GAME_LEVEL_INTERMISSION;
         }

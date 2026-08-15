@@ -36,17 +36,17 @@ public class LevelMediumTestState extends GameState {
 
     @Override
     public void onEnter(GameContext game) {
-        final GamePlay gamePlay = game.variantConfig().gamePlay();
+        final GamePlay gamePlay = game.variant().gamePlay();
         final GameEventManager eventManager = game.eventManager();
         final GameSession session = game.session();
 
-        lastTestedLevelNumber = game.variantConfig().rules().lastLevelNumber() == Integer.MAX_VALUE
+        lastTestedLevelNumber = game.variant().rules().lastLevelNumber() == Integer.MAX_VALUE
             ? 25
-            : game.variantConfig().rules().lastLevelNumber();
+            : game.variant().rules().lastLevelNumber();
 
         timer().restartSeconds(TEST_DURATION_SEC);
 
-        gamePlay.buildNormalLevel(game, 1, game.variantConfig().initialLifeCount());
+        gamePlay.buildNormalLevel(game, 1, game.variant().initialLifeCount());
         gamePlay.startLevel(game);
         configureLevelForTest(game);
 
@@ -63,37 +63,37 @@ public class LevelMediumTestState extends GameState {
             if (level.number() == lastTestedLevelNumber) {
                 // All levels tested, return to intro page
                 eventManager.publishGameEvent(new StopAllSoundsEvent());
-                game.session().gameFlow().enterState(game, CommonGameStateID.GAME_INTRO);
+                game.variant().gameFlow().enterState(game, CommonGameStateID.GAME_INTRO);
             }
             else {
                 // Test next level
-                game.variantConfig().gamePlay().startNextLevel(game);
+                game.variant().gamePlay().startNextLevel(game);
                 configureLevelForTest(game);
                 timer().restartSeconds(TEST_DURATION_SEC);
             }
         }
         else {
-            game.variantConfig().gamePlay().hunt(game, level);
-            if (game.variantConfig().rules().isLevelCompleted(level)) {
-                game.session().gameFlow().enterState(game, CommonGameStateID.GAME_INTRO);
+            game.variant().gamePlay().hunt(game, level);
+            if (game.variant().rules().isLevelCompleted(level)) {
+                game.variant().gameFlow().enterState(game, CommonGameStateID.GAME_INTRO);
             }
             else if (game.session().thisFrame().huntingStep().pacKilled()) {
                 triggerTimeout();
             }
             else if (game.session().thisFrame().huntingStep().hasGhostBeenKilled()) {
-                game.session().gameFlow().enterState(game, CommonGameStateID.GAME_LEVEL_EATING_GHOST);
+                game.variant().gameFlow().enterState(game, CommonGameStateID.GAME_LEVEL_EATING_GHOST);
             }
         }
     }
 
     @Override
     public void onExit(GameContext game) {
-        final LevelCounterSystem levelCounterSystem = game.variantConfig().systems().levelCounterSystem();
+        final LevelCounterSystem levelCounterSystem = game.variant().systems().levelCounterSystem();
         levelCounterSystem.clearCounter(game.session().levelCounter());
     }
 
     private void configureLevelForTest(GameContext game) {
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variant().systems();
         final GameSession session = game.session();
         final GameLevel level = session.assertLevel();
         final Pac pac = level.entities().pac();

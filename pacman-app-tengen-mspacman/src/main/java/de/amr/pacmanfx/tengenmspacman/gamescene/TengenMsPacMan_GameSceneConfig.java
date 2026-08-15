@@ -47,7 +47,7 @@ public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
 
     @Override
     protected Named determineSceneID(GameViewModel viewModel, GameContext game) {
-        final GameState state = game.session().gameState();
+        final GameState state = game.state();
 
         if (state instanceof CutScenesTestState testState) {
             return AbstractGameSceneConfig.cutSceneID(testState.testedCutSceneNumber);

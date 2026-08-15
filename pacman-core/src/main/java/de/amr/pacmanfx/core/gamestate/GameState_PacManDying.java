@@ -39,7 +39,7 @@ public final class GameState_PacManDying extends GameState {
     public void onEnter(GameContext game) {
         requireNonNull(game);
 
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variant().systems();
         final GameSession session = game.session();
         final GameLevel level = session.assertLevel();
 
@@ -63,7 +63,7 @@ public final class GameState_PacManDying extends GameState {
 
     @Override
     public void onUpdate(GameContext game) {
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variant().systems();
         final GameSession session = game.session();
         final GameLevel level = session.assertLevel();
         final LivesCounter livesCounter = session.livesCounter();
@@ -72,11 +72,11 @@ public final class GameState_PacManDying extends GameState {
 
         if (timer().hasExpired()) {
             if (session.isAttractMode()) {
-                session.gameFlow().enterState(game, CommonGameStateID.GAME_OVER);
+                game.variant().gameFlow().enterState(game, CommonGameStateID.GAME_OVER);
             } else {
                 LivesCounterSystem.subtractLife(livesCounter);
                 final boolean gameOver = livesCounter.data().numLives() == 0;
-                session.gameFlow().enterState(game,
+                game.variant().gameFlow().enterState(game,
                     gameOver ? CommonGameStateID.GAME_OVER : CommonGameStateID.GAME_OR_LEVEL_STARTING);
             }
             return;

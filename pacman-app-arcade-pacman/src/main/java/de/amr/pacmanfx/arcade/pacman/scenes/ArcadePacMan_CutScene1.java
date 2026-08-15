@@ -56,7 +56,7 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene2D {
             return;
         }
 
-        final GameSystems sys = game.variantConfig().systems();
+        final GameSystems sys = game.variant().systems();
 
         if (sceneTick == ANIMATION_START_TICK) {
             app().ui().sounds().play(PacManGameSoundID.INTERMISSION_1, 2);

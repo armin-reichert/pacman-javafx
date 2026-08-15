@@ -60,14 +60,6 @@ public final class XXL_MsPacMan_GameVariantUIConfig implements GameVariantUIConf
         mediaPlayer(PacManGameSoundID.PAC_MAN_POWER,         ARCADE_RM.url("sound/ScaredGhost.mp3"))
     );
 
-    public static GameFlowController createGameFlow() {
-        final var gameFlow = new GameFlowController("Arcade Ms. Pac-Man Game Flow");
-        for (Arcade_GameState gameState : Arcade_GameState.values()) {
-            gameFlow.addState(gameState.state());
-        }
-        return gameFlow;
-    }
-
     private final TranslationManager translations;
     private final ArcadeMsPacMan_Factory3D factory3D;
     private final XXL_MsPacMan_GameSceneConfig gameSceneConfig;
