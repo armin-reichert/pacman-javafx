@@ -149,7 +149,7 @@ public class GameSceneManager {
         if (pac.power().isActive()) {
             variantConfig.optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
         }
-        playScene3D.fadeInAnimation().playFromStart();
+        playScene3D.fadeIn();
 
         Logger.info("3D scene {} entered from 2D game scene {}", playScene3D.getClass().getSimpleName(), currentGameScene.getClass().getSimpleName());
     }

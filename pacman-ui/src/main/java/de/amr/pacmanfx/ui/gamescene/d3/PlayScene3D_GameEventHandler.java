@@ -186,7 +186,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         level.entities().pac().requireComp(Pac3DViewComp.class).root().setVisible(true);
 
         gameScene().replaceActionBindings(session, level);
-        gameScene().fadeInAnimation().playFromStart();
+        gameScene().fadeIn();
     }
 
     @Override
@@ -273,7 +273,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 
     private void onHuntingStart(GameLevel3D level3D) {
         final GameLevel level = level3D.level();
-        gameScene().initPac(level, level.entities().pac());
+        gameScene().initPac3DProperties(level, level.entities().pac());
 
         level3D.animationManager().startEnergizerPumping();
         level3D.animationManager().startParticlesAnimation();
