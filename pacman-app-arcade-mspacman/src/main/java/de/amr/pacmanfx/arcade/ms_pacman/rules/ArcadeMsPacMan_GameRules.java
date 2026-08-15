@@ -8,12 +8,22 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.arcade.pacman.rules.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.core.Validations;
 
+import java.util.List;
+
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
 
 public class ArcadeMsPacMan_GameRules extends ArcadePacMan_GameRules {
 
     public ArcadeMsPacMan_GameRules() {
         actorSpeedRules = new ArcadeMsPacMan_ActorSpeedRules();
+    }
+
+    @Override
+    public List<Integer> bonusSymbols(int levelNumber) {
+        return List.of(
+            computeNextBonusSymbolCode(levelNumber),
+            computeNextBonusSymbolCode(levelNumber)
+        );
     }
 
     /**
@@ -44,9 +54,9 @@ public class ArcadeMsPacMan_GameRules extends ArcadePacMan_GameRules {
      *
      * See also <a href="https://umlautllama.com/projects/pacdocs/mspac/mspac.asm">Ms. Pac-Man disassembly</a>
      */
-    @Override
-    public int selectBonusSymbolCode(int levelNumber, int bonusIndex) {
+    private int computeNextBonusSymbolCode(int levelNumber) {
         if (levelNumber <= 7) return (levelNumber - 1);
+
         int coin = randomInt(0, 320);
         if (coin <  50) return 0; // 5/32 probability
         if (coin < 100) return 1; // 5/32

@@ -26,6 +26,7 @@ import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.HUDState;
+import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.core.model.rules.HuntingTimer;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.TerrainTile;
@@ -119,8 +120,8 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
         session.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
 
-        level.setBonusSymbolCode(0, game.variantConfig().rules().selectBonusSymbolCode(level.number(), 0));
-        level.setBonusSymbolCode(1, game.variantConfig().rules().selectBonusSymbolCode(level.number(), 1));
+        final GameRules rules = game.variantConfig().rules();
+        level.setBonusSymbolCodes(rules.bonusSymbols(levelNumber));
 
         // On each phase start (except the initial phase), the ghosts reverse their move direction
         huntingTimer.setPhaseChangeCallback(newPhaseIndex -> {
@@ -220,14 +221,14 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         final GameSession session = game.session();
         final GameLevel level = session.assertLevel();
 
-        session.setLevelStartTimeMillis(System.currentTimeMillis());
         prepareLevelForPlaying(game);
-        showLevelMessage(game, level, GameLevelMessageType.READY);
+        session.setLevelStartTimeMillis(System.currentTimeMillis());
         session.score().data().setEnabled(true);
+        session.cheats().update(game);
 
         LevelCounterSystem.update(session.levelCounter(), level.number(), level.bonusSymbolCode(0));
 
-        game.session().cheats().update(game);
+        showLevelMessage(game, level, GameLevelMessageType.READY);
     }
 
     // Playing level

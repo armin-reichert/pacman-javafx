@@ -86,15 +86,16 @@ public class GameOverState extends GameState {
         }
 
         if (timer().hasExpired()) {
+            if (session.isAttractMode()) {
+                session.gameFlow().enterState(game, TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME);
+                return;
+            }
+
             final var gamePlay = (TengenMsPacMan_GamePlay) game.variantConfig().gamePlay();
-
-            final Named nextStateID = session.isAttractMode()
-                ? TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME
-                : gamePlay.canContinueOnGameOver(session)
-                    ? CommonGameStateID.GAME_PREPARATION
-                    : CommonGameStateID.GAME_INTRO;
-
-            session.gameFlow().enterState(game, nextStateID);
+            final boolean continueGame = gamePlay.checkGameContinuesOnGameOver(session);
+            session.gameFlow().enterState(game, continueGame
+                ? CommonGameStateID.GAME_PREPARATION
+                : CommonGameStateID.GAME_INTRO);
 
             return;
         }

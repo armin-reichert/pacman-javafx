@@ -13,6 +13,7 @@ import de.amr.pacmanfx.core.model.rules.ActorSpeedRules;
 import de.amr.pacmanfx.core.model.rules.CollisionStrategy;
 import de.amr.pacmanfx.core.model.rules.GameRules;
 
+import java.util.List;
 import java.util.Map;
 import java.util.OptionalInt;
 
@@ -114,11 +115,17 @@ public class ArcadePacMan_GameRules implements GameRules {
         return 3;
     }
 
+    /** Each level has a bonus symbol appearing twice during the level.
+     * From level 13 on, the same symbol ("key") appears.
+     * <p>Klingt komisch? Is aber so!</p>
+     */
     @Override
-    public int selectBonusSymbolCode(int levelNumber, int bonusIndex) {
-        // Each level has a single bonus symbol appearing twice during the level.
-        // From level 13 on, the same symbol (code=7, "key") appears.
-        // Klingt komisch? Is aber so!
+    public List<Integer> bonusSymbols(int levelNumber) {
+        final int symbol = bonusSymbolCode(levelNumber);
+        return List.of(symbol, symbol);
+    }
+
+    private int bonusSymbolCode(int levelNumber) {
         return switch (levelNumber) {
             case 1 -> 0;      // cherries
             case 2 -> 1;      // strawberry

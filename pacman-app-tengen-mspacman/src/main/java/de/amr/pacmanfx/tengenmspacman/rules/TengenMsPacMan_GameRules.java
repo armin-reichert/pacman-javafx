@@ -15,6 +15,7 @@ import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 
+import java.util.List;
 import java.util.Map;
 import java.util.OptionalInt;
 
@@ -87,15 +88,24 @@ public class TengenMsPacMan_GameRules implements GameRules {
         return 3;
     }
 
+    @Override
+    public List<Integer> bonusSymbols(int levelNumber) {
+        return List.of(
+            computeNextBonusSymbolCode(levelNumber),
+            computeNextBonusSymbolCode(levelNumber)
+        );
+    }
+
     // TODO: I have no idea yet how Tengen Ms. Pac-Man exactly implemented this.
     //       What I know is that the "strange" maps use an extended set of bonus symbols.
-    @Override
-    public int selectBonusSymbolCode(int levelNumber, int bonusIndex) {
+    public int computeNextBonusSymbolCode(int levelNumber) {
         final int lastSymbolCode = mapCategory() == MapCategory.STRANGE
             ? BonusSymbol.FLOWER.ordinal()
             : BonusSymbol.BANANA.ordinal();
 
-        return levelNumber - 1 <= lastSymbolCode ? levelNumber - 1 : randomInt(0, lastSymbolCode + 1);
+        return levelNumber - 1 <= lastSymbolCode
+            ? levelNumber - 1
+            : randomInt(0, lastSymbolCode + 1);
     }
 
     @Override

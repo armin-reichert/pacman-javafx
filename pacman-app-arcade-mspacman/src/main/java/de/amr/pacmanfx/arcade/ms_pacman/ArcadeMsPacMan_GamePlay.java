@@ -20,6 +20,8 @@ import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelEntitySet;
+import de.amr.pacmanfx.core.level.GameLevelMessageType;
+import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.core.model.rules.HuntingTimer;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -79,30 +81,38 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
             }
         });
 
-        level.setBonusSymbolCode(0, game.variantConfig().rules().selectBonusSymbolCode(level.number(), 0));
-        level.setBonusSymbolCode(1, game.variantConfig().rules().selectBonusSymbolCode(level.number(), 1));
+        final GameRules rules = game.variantConfig().rules();
+        level.setBonusSymbolCodes(rules.bonusSymbols(levelNumber));
 
         /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
          * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
         LevelCounterSystem.enable(session.levelCounter(), levelNumber < 8);
-
 
         return level;
     }
 
     @Override
     public void startLevel(GameContext game) {
-        super.startLevel(game);
+        requireNonNull(game);
 
         final GameSession session = game.session();
         final GameLevel level = session.assertLevel();
 
+        prepareLevelForPlaying(game);
+
+        session.setLevelStartTimeMillis(System.currentTimeMillis());
+        session.score().data().setEnabled(true);
+        session.cheats().update(game);
+
+        //TODO we need different level counter system implementations!
         final LevelCounter levelCounter = session.levelCounter();
         LevelCounterSystem.update(session.levelCounter(), level.number(), level.bonusSymbolCode(0));
         if (LevelCounterSystem.isFull(levelCounter)) {
             LevelCounterSystem.enable(levelCounter, false);
             Logger.info("Level counter is full and gets disabled!");
         }
+
+        showLevelMessage(game, level, GameLevelMessageType.READY);
     }
 
     protected void createAndSetMsPacMan(GameLevelEntitySet entities, GameSystems systems) {

@@ -102,7 +102,7 @@ public final class TengenMsPacMan_Actions {
                 final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) app.game().variantConfig().gamePlay();
                 final GameSession session = app.game().session();
                 session.optLevel().ifPresent(gameLevel -> {
-                    gamePlay.activateBooster(app.game(), gameLevel.entities().pac(), !gamePlay.isBoosterOn(session));
+                    gamePlay.setBoosterOn(app.game(), gameLevel.entities().pac(), !gamePlay.isBoosterOn(session));
                     if (gamePlay.isBoosterOn(session)) {
                         app.ui().shortMessage("Booster ON!"); //TODO localize
                     }

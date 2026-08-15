@@ -6,6 +6,7 @@ package de.amr.pacmanfx.core.model.rules;
 
 import de.amr.pacmanfx.core.level.GameLevel;
 
+import java.util.List;
 import java.util.OptionalInt;
 
 public interface GameRules {
@@ -30,7 +31,7 @@ public interface GameRules {
         return 0;
     }
 
-    int selectBonusSymbolCode(int levelNumber, int bonusIndex);
+    List<Integer> bonusSymbols(int levelNumber);
 
     float eatenBonusDisplaySeconds();
 

@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.core.level;
 
 import de.amr.basics.timer.Pulse;
-import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.model.rules.HuntingTimerStrategy;
 import de.amr.pacmanfx.core.model.world.map.FoodState;
@@ -28,7 +27,7 @@ public class GameLevel {
     private final GameLevelEntitySet entities;
     private final Pulse heartbeat;
     private final List<Ghost> ghostKillChain = new ArrayList<>();
-    private final int[] bonusSymbolCodes = new int[2];
+    private final List<Integer> bonusSymbolCodes = new ArrayList<>();
 
     private final HuntingTimerStrategy huntingTimerStrategy;
 
@@ -128,23 +127,21 @@ public class GameLevel {
         ++currentBonusIndex;
     }
 
+    public void setBonusSymbolCodes(List<Integer> codes) {
+        requireNonNull(codes);
+        bonusSymbolCodes.clear();
+        bonusSymbolCodes.addAll(codes);
+    }
+
     /**
      * @param i the bonus index (0 for the first bonus spawned in the level, ...)
      * @return the bonus symbol code of the bonus with the given index
      */
     public int bonusSymbolCode(int i) {
-        return bonusSymbolCodes[i];
-    }
-
-    /**
-     * @param i the bonus index (0 for the first bonus spawned in the level, ...)
-     * @param symbolCode the bonus symbol code
-     */
-    public void setBonusSymbolCode(int i, int symbolCode) {
-        if (0 <= i && i < bonusSymbolCodes.length) {
-            bonusSymbolCodes[i] = symbolCode;
-        } else {
-            throw new IllegalArgumentException("Cannot set bonus symbol at index " + i);
+        if (0 <= i && i < bonusSymbolCodes.size()) {
+            return bonusSymbolCodes.get(i);
         }
+        throw new IndexOutOfBoundsException("Bonus index %d not in range 0..%d"
+            .formatted(i, bonusSymbolCodes.size() - 1));
     }
 }
