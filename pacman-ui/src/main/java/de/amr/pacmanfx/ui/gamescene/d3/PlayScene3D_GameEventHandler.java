@@ -223,7 +223,6 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         pauseSecThen(PELLET_EATING_DELAY_SEC, () -> level3D.getChildren().remove(pellet3D.root())).play();
     }
 
-
     @Override
     default void onPacGetsPower(PacGetsPowerEvent e) {
         final Pac pac = e.pac();

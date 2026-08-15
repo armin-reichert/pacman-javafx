@@ -283,6 +283,8 @@ public class PlayScene3D extends AbstractGameScene
         GameLevel3DUpdateController.update3DSceneEntities(game, level3D);
         updateHUD3D(game);
 
+        ensureAnimationsRunning();
+
         perspectiveManager.updatePerspective(level);
 
         optSoundEffects().ifPresent(soundEffects -> {
@@ -371,6 +373,13 @@ public class PlayScene3D extends AbstractGameScene
     private void disposeContextMenu() {
         if (contextMenu != null) {
             contextMenu.dispose();
+        }
+    }
+
+    private void ensureAnimationsRunning() {
+        if (game().state().hasSameNameAs(CommonGameStateID.DEMO_LEVEL_PLAYING) ||
+            game().state().hasSameNameAs(CommonGameStateID.GAME_LEVEL_PLAYING)) {
+            level3D.animationManager().startEnergizerPumping();
         }
     }
 }
