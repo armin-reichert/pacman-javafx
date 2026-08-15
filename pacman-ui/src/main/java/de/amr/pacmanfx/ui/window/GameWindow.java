@@ -86,7 +86,7 @@ public class GameWindow {
                 case EDITOR -> optCurrentViewTitle(ui).orElse(("Map Editor"));
             },
             connected,
-            appContext.gameVariants().variantNameProperty(),
+            appContext.gameVariants().selectedVariantNameProperty(),
             appContext.clock().updatesDisabledProperty(),
             ui.viewModel().debugModeOnProperty,
             ui.viewModel().common3D.view3DEnabledProperty,

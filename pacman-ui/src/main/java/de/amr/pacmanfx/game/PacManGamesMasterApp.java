@@ -36,6 +36,8 @@ public final class PacManGamesMasterApp implements GameAppContext {
 
     private final CommonGameActions actions;
 
+    private final GameSimulation simulation;
+
     private GameUI ui;
 
     private GameContext game;
@@ -44,6 +46,7 @@ public final class PacManGamesMasterApp implements GameAppContext {
 
     public PacManGamesMasterApp(GameBox gameBox) {
         this.gameBox = requireNonNull(gameBox);
+        simulation = new GameSimulation(this, gameBox.clock());
         changeEventConverter = new StateChangeEventConverter();
         actions = new CommonGameActions();
     }
@@ -53,25 +56,6 @@ public final class PacManGamesMasterApp implements GameAppContext {
         createVariantManager(ui);
 
         ui.setApp(this);
-    }
-
-    private void createVariantManager(GameUI ui) {
-        gameVariantManager = new DefaultGameVariantManager(
-            gameBox.cartridgeRepository(),
-            ui.viewModel()
-        );
-        gameVariantManager.variantNameProperty().addListener((_, oldVariantName, newVariantName) -> {
-            Logger.info("Game variant name: {} -> {}", oldVariantName, newVariantName);
-
-            if (oldVariantName != null) {
-                Logger.info("<<< Exit Game variant '{}'", oldVariantName);
-                exitGameVariant(gameVariantManager.gameVariantByName(oldVariantName));
-            }
-            if (newVariantName != null) {
-                Logger.info(">>> Enter game variant '{}'", newVariantName);
-                enterGameVariant(gameVariantManager.gameVariantByName(newVariantName));
-            }
-        });
     }
 
     public void showGameVariant(GameVariantID variantID) {
@@ -155,7 +139,7 @@ public final class PacManGamesMasterApp implements GameAppContext {
         ui.window().mainScene().connect(game.session());
         ui.views().selectGamePlayView();
         game.variant().gamePlay().startSession(game);
-        GameSimulation.start(this);
+        simulation.start();
     }
 
     public void suspendGame() {
@@ -164,7 +148,7 @@ public final class PacManGamesMasterApp implements GameAppContext {
             ui.gameScenes().currentGameSceneProperty().set(null);
         });
         ui.sounds().stopAll();
-        GameSimulation.stop(this);
+        simulation.stop();
     }
 
     public void terminate() {
@@ -175,6 +159,25 @@ public final class PacManGamesMasterApp implements GameAppContext {
     }
 
     // Private area, no trespassing!
+
+    private void createVariantManager(GameUI ui) {
+        gameVariantManager = new DefaultGameVariantManager(
+            gameBox.cartridgeRepository(),
+            ui.viewModel()
+        );
+        gameVariantManager.selectedVariantNameProperty().addListener((_, oldVariantName, newVariantName) -> {
+            Logger.info("Game variant name: {} -> {}", oldVariantName, newVariantName);
+
+            if (oldVariantName != null) {
+                Logger.info("<<< Exit Game variant '{}'", oldVariantName);
+                exitGameVariant(gameVariantManager.gameVariantByName(oldVariantName));
+            }
+            if (newVariantName != null) {
+                Logger.info(">>> Enter game variant '{}'", newVariantName);
+                enterGameVariant(gameVariantManager.gameVariantByName(newVariantName));
+            }
+        });
+    }
 
     private void createSession() {
         final String variantName = gameVariantManager.currentVariantName();

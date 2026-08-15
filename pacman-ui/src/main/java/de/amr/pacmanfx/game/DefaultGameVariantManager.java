@@ -20,7 +20,7 @@ public class DefaultGameVariantManager implements GameVariantManager {
 
     private final Map<String, GameVariant> variantsByName = new HashMap<>();
 
-    private final StringProperty variantName = new SimpleStringProperty();
+    private final StringProperty selectedVariantName = new SimpleStringProperty();
 
     private final GameViewModel viewModel;
 
@@ -29,19 +29,20 @@ public class DefaultGameVariantManager implements GameVariantManager {
         this.viewModel = requireNonNull(viewModel);
     }
 
-    public StringProperty variantNameProperty() {
-        return variantName;
+    @Override
+    public StringProperty selectedVariantNameProperty() {
+        return selectedVariantName;
     }
 
     @Override
     public void addVariantNameListener(ChangeListener<String> listener) {
         requireNonNull(listener);
-        variantName.addListener(listener);
+        selectedVariantName.addListener(listener);
     }
 
     @Override
     public String currentVariantName() {
-        return variantName.get();
+        return selectedVariantName.get();
     }
 
     @Override
@@ -66,10 +67,10 @@ public class DefaultGameVariantManager implements GameVariantManager {
     public void selectVariant(String gameVariantName) {
         requireNonNull(gameVariantName);
         if (cartridgeRepository.containsCartridgeWithName(gameVariantName)) {
-            this.variantName.set(gameVariantName);
-        } else throw new IllegalArgumentException("Game with name '" + gameVariantName + "' not found");
+            selectedVariantName.set(gameVariantName);
+        }
+        else throw new IllegalArgumentException("Game with name '" + gameVariantName + "' not found");
     }
-
 
     private GameVariant createGameVariant(String variantName, boolean testStatesIncluded) {
         final Cartridge cartridge = cartridgeRepository.cartridgeByName(variantName);
