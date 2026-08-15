@@ -12,8 +12,6 @@ import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.model.test.CutScenesTestState;
 import de.amr.pacmanfx.core.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.core.model.test.LevelShortTestState;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 
 import java.util.Optional;
 
@@ -24,7 +22,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameFlowController extends StateMachine<GameContext> {
 
-    private final BooleanProperty cutScenesEnabled = new SimpleBooleanProperty(true);
+    private boolean cutScenesEnabled;
 
     public GameFlowController(String name) {
         setName(name);
@@ -55,10 +53,10 @@ public class GameFlowController extends StateMachine<GameContext> {
     }
 
     public boolean cutScenesEnabled() {
-        return cutScenesEnabled.get();
+        return cutScenesEnabled;
     }
 
     public void setCutScenesEnabled(boolean enabled) {
-        cutScenesEnabled.set(enabled);
+        cutScenesEnabled = enabled;
     }
 }
