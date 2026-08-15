@@ -21,24 +21,16 @@ import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.uilib.PacMan3DModel;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import org.tinylog.Logger;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
 /**
- * The Pac-Man games collection.
+ * The Pac-Man games master app.
  */
-public final class PacManGameCollection implements GameAppContext, GameLifecycle {
+public final class PacManGamesMasterApp implements GameAppContext, GameLifecycle {
 
     private final GameBox gameBox;
-    private final GameVariantManagerImpl gameVariantManager;
 
     private final StateChangeEventConverter changeEventConverter;
 
@@ -48,16 +40,38 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
 
     private GameContext game;
 
-    public PacManGameCollection(GameBox gameBox) {
+    private DefaultGameVariantManager gameVariantManager;
+
+    public PacManGamesMasterApp(GameBox gameBox) {
         this.gameBox = requireNonNull(gameBox);
-        gameVariantManager = new GameVariantManagerImpl();
         changeEventConverter = new StateChangeEventConverter();
         actions = new CommonGameActions();
     }
 
     public void setUI(GameUI ui) {
         this.ui = requireNonNull(ui);
+        createVariantManager(ui);
+
         ui.setApp(this);
+    }
+
+    private void createVariantManager(GameUI ui) {
+        gameVariantManager = new DefaultGameVariantManager(
+            gameBox.cartridgeRepository(),
+            ui.viewModel()
+        );
+        gameVariantManager.variantNameProperty().addListener((_, oldVariantName, newVariantName) -> {
+            Logger.info("Game variant name: {} -> {}", oldVariantName, newVariantName);
+
+            if (oldVariantName != null) {
+                Logger.info("<<< Exit Game variant '{}'", oldVariantName);
+                exitGameVariant(gameVariantManager.gameVariantByName(oldVariantName));
+            }
+            if (newVariantName != null) {
+                Logger.info(">>> Enter game variant '{}'", newVariantName);
+                enterGameVariant(gameVariantManager.gameVariantByName(newVariantName));
+            }
+        });
     }
 
     public void showGameVariant(GameVariantID variantID) {
@@ -90,13 +104,13 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
     private void createSession(GameVariant gameVariant) {
         final String variantName = gameVariantManager.currentVariantName();
         final var session = new GameSession(variantName, gameVariant.config().gameFlow(), new GameCheats());
-        session.hud().creditProperty().bind(gameBox().coinMechanism().numCoinsProperty());
+        session.hud().creditProperty().bind(gameBox.coinMechanism().numCoinsProperty());
         game.setSession(session);
     }
 
     private GameContext createGameContext(GameVariant gameVariant) {
         return new GameContext(
-            gameBox().coinMechanism(),
+            gameBox.coinMechanism(),
             gameVariant.config(),
             new DefaultGameEventManager()
         );
@@ -140,17 +154,17 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
 
     @Override
     public GameClock clock() {
-        return gameBox().clock();
+        return gameBox.clock();
     }
 
     @Override
     public Input input() {
-        return gameBox().input();
+        return gameBox.input();
     }
 
     @Override
     public DirectoryWatchdog watchdog() {
-        return gameBox().watchdog();
+        return gameBox.watchdog();
     }
 
     @Override
@@ -206,15 +220,11 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
     public void terminate() {
         suspendPlaying();
         ui.terminate();
-        gameBox().dispose();
+        gameBox.dispose();
         Logger.info("Application terminated. There is no way back!");
     }
 
     // Private area, no trespassing!
-
-    private GameBox gameBox() {
-        return gameBox;
-    }
 
     private void startBackgroundServices() {
         watchdog().startWatching();
@@ -238,80 +248,4 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
         }
     }
 
-    //TODO make static, the extract to top-level
-    public /*static*/ class GameVariantManagerImpl implements GameVariantManager, ChangeListener<String> {
-
-        private final Map<String, GameVariant> variantsByName = new HashMap<>();
-
-        private final StringProperty variantName = new SimpleStringProperty();
-
-        public GameVariantManagerImpl() {
-            variantName.addListener(this);
-        }
-
-        public StringProperty variantNameProperty() {
-            return variantName;
-        }
-
-        @Override
-        public void addVariantNameListener(ChangeListener<String> listener) {
-            requireNonNull(listener);
-            variantName.addListener(listener);
-        }
-
-        @Override
-        public String currentVariantName() {
-            return variantName.get();
-        }
-
-        @Override
-        public GameVariant currentGameVariant() {
-            return gameVariantByName(currentVariantName());
-        }
-
-        @Override
-        public GameVariant gameVariantByName(String gameVariantName) {
-            requireNonNull(gameVariantName);
-            final boolean testStatesIncluded = ui().viewModel().testStatesIncludedProperty.get();
-            return variantsByName.computeIfAbsent(gameVariantName, name -> createGameVariant(name, testStatesIncluded));
-        }
-
-        @Override
-        public boolean isVariantRegistered(String variantName) {
-            requireNonNull(variantName);
-            return variantsByName.containsKey(variantName);
-        }
-
-        @Override
-        public void selectVariant(String gameVariantName) {
-            requireNonNull(gameVariantName);
-            if (gameBox.cartridgeRepository().containsCartridgeWithName(gameVariantName)) {
-                this.variantName.set(gameVariantName);
-            }
-            else throw new IllegalArgumentException("Game with name '" + gameVariantName + "' not found");
-        }
-
-        @Override
-        public void changed(ObservableValue<? extends String> observable, String oldVariantName, String newVariantName) {
-            Logger.info("Game variant name: {} -> {}", oldVariantName, newVariantName);
-
-            if (oldVariantName != null) {
-                Logger.info("<<< Exit Game variant '{}'", oldVariantName);
-                exitGameVariant(gameVariantByName(oldVariantName));
-            }
-            if (newVariantName != null) {
-                Logger.info(">>> Enter game variant '{}'", newVariantName);
-                enterGameVariant(gameVariantByName(newVariantName));
-            }
-        }
-
-        private GameVariant createGameVariant(String variantName, boolean testStatesIncluded) {
-            final Cartridge cartridge = gameBox.cartridgeRepository().cartridgeByName(variantName);
-            final var gameVariant = new GameVariant(cartridge);
-            if (testStatesIncluded) {
-                gameVariant.config().gameFlow().addTestStates();
-            }
-            return gameVariant;
-        }
-    }
 }

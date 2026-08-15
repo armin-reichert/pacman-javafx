@@ -18,7 +18,7 @@ import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.game.CartridgeRepository;
 import de.amr.pacmanfx.game.GameBox;
-import de.amr.pacmanfx.game.PacManGameCollection;
+import de.amr.pacmanfx.game.PacManGamesMasterApp;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.app.TengenMsPacMan_Cartridge;
 import de.amr.pacmanfx.tengenmspacman.dashboard.TengenDashboardFactory;
@@ -35,7 +35,7 @@ public class PacManAllGamesNoBuilderApp extends Application {
     static final float HEIGHT_FRACTION = 0.8f; // Use 80% of screen height
 
     private GameBox gameBox;
-    private PacManGameCollection game;
+    private PacManGamesMasterApp game;
     private boolean includeTests;
 
     @Override
@@ -61,7 +61,7 @@ public class PacManAllGamesNoBuilderApp extends Application {
 
     @Override
     public void start(Stage stage) {
-        game = new PacManGameCollection(gameBox);
+        game = new PacManGamesMasterApp(gameBox);
 
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         final GameUI ui = new GameUI(

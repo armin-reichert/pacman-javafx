@@ -10,7 +10,7 @@ import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.views.playview.MiniPlaySceneView;
-import de.amr.pacmanfx.ui.vm.GameUISettingsVM;
+import de.amr.pacmanfx.ui.vm.GameViewModel;
 import javafx.scene.Camera;
 import javafx.scene.SubScene;
 import javafx.scene.control.CheckBox;
@@ -39,7 +39,7 @@ public class DS_3DSettings extends GameDashboardSection {
 
     @Override
     public void setGameApp(GameAppContext app) {
-        final GameUISettingsVM vm = app.ui().viewModel();
+        final GameViewModel vm = app.ui().viewModel();
 
         cbUsePlayScene3D = checkBox("3D Play Scene");
 
@@ -109,7 +109,7 @@ public class DS_3DSettings extends GameDashboardSection {
     public void update(GameAppContext app) {
         super.update(app);
 
-        final GameUISettingsVM vm = app.ui().viewModel();
+        final GameViewModel vm = app.ui().viewModel();
         final MiniPlaySceneView miniView = app.ui().views().gamePlayView().miniPlaySceneView();
 
         comboPerspectives.setValue(vm.common3D.cameraPerspectiveIdProperty.get());

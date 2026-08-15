@@ -22,7 +22,7 @@ import de.amr.pacmanfx.ui.gamescene.d3.animation.HideGhost3DRiseNumberBoxAnimati
 import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Pellet3DSettings;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
-import de.amr.pacmanfx.ui.vm.GameUISettingsVM;
+import de.amr.pacmanfx.ui.vm.GameViewModel;
 import de.amr.pacmanfx.uilib.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.entities3D.bonus.anim.Bonus3DAnimationID;
@@ -75,7 +75,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     private GameLevel3DAnimationManager animationManager;
 
-    public GameLevel3D(GameContext game, GameLevel level, AnimationRegistry registry, GameUISettingsVM viewModel, GameVariantUIConfig gameVariantConfig) {
+    public GameLevel3D(GameContext game, GameLevel level, AnimationRegistry registry, GameViewModel viewModel, GameVariantUIConfig gameVariantConfig) {
         requireNonNull(game);
 
         this.level = requireNonNull(level);
@@ -189,7 +189,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     // Private area, no trespassing!
 
-    private void createMaze3D(GameUISettingsVM viewModel) {
+    private void createMaze3D(GameViewModel viewModel) {
         final WorldMapColorSchemeImpl colorScheme = gameVariantConfig.renderConfig().colorScheme(level.worldMap(), gameVariantConfig.worldSettings());
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final House house = level.entities().house();
@@ -259,7 +259,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         return view3D;
     }
 
-    private void createPac3D(GameUISettingsVM viewModel) {
+    private void createPac3D(GameViewModel viewModel) {
         final Pac pac = level.entities().pac();
         final PacSettings settings = gameVariantConfig.worldSettings().pac();
         gameVariantConfig.factory3D().createPac3D(pac, settings);
@@ -267,7 +267,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         pac.requireComp(Pac3DViewComp.class).drawModeProperty().bind(viewModel.common3D.drawModeProperty);
     }
 
-    private void createGhosts3D(GameUISettingsVM viewModel) {
+    private void createGhosts3D(GameViewModel viewModel) {
         final List<GhostSettings> settings = gameVariantConfig.worldSettings().ghosts();
         level.entities().ghosts().forEach(ghost -> {
             final var ghostSettings = settings.get(ghost.personality().ordinal());

@@ -25,7 +25,7 @@ import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveManager;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.vm.Game3DSettingsVM;
-import de.amr.pacmanfx.ui.vm.GameUISettingsVM;
+import de.amr.pacmanfx.ui.vm.GameViewModel;
 import de.amr.pacmanfx.uilib.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
@@ -84,7 +84,7 @@ public class PlayScene3D extends AbstractGameScene
 
         textPicker = new RandomTextPicker(app.ui().translations().textBundle(), "game.over");
 
-        final GameUISettingsVM viewModel = app.ui().viewModel();
+        final GameViewModel viewModel = app.ui().viewModel();
 
         perspectiveManager = new PerspectiveManager(camera);
 
@@ -187,7 +187,7 @@ public class PlayScene3D extends AbstractGameScene
 
         final GameVariantConfig variantConfig = app().currentGameVariantConfig();
         final GameVariantUIConfig variantUIConfig = app().currentGameVariantUIConfig();
-        final GameUISettingsVM viewModel = app().ui().viewModel();
+        final GameViewModel viewModel = app().ui().viewModel();
         final GameSession session = game.session();
 
         if (level3D != null) {

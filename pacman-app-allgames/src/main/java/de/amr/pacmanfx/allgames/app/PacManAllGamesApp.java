@@ -17,7 +17,7 @@ import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.game.CartridgeRepository;
 import de.amr.pacmanfx.game.GameBox;
 import de.amr.pacmanfx.game.GameBuilder;
-import de.amr.pacmanfx.game.PacManGameCollection;
+import de.amr.pacmanfx.game.PacManGamesMasterApp;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.app.TengenMsPacMan_Cartridge;
 import de.amr.pacmanfx.tengenmspacman.dashboard.TengenDashboardFactory;
@@ -28,7 +28,7 @@ import javafx.stage.Stage;
 public class PacManAllGamesApp extends Application {
 
     private GameBox gameBox;
-    private PacManGameCollection game;
+    private PacManGamesMasterApp game;
     private boolean includeTests;
 
     @Override

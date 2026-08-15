@@ -28,7 +28,7 @@ import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
 import de.amr.pacmanfx.ui.views.dashboard.GameDashboard;
 import de.amr.pacmanfx.ui.views.dashboard.GameDashboardSection;
 import de.amr.pacmanfx.ui.views.help.HelpView;
-import de.amr.pacmanfx.ui.vm.GameUISettingsVM;
+import de.amr.pacmanfx.ui.vm.GameViewModel;
 import de.amr.pacmanfx.ui.window.GameMainScene;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.controls.FontAwesomeIcon;
@@ -111,7 +111,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     @Override
     public void setApp(GameAppContext app) {
         this.app = requireNonNull(app);
-        final GameUISettingsVM settings = app.ui().viewModel();
+        final GameViewModel settings = app.ui().viewModel();
 
         rootPane.setOnContextMenuRequested(this);
         app.ui().window().mainScene().addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {

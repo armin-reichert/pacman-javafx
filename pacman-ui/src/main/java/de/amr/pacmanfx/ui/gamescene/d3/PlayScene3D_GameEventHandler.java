@@ -33,7 +33,7 @@ import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.vm.Game3DSettingsVM;
-import de.amr.pacmanfx.ui.vm.GameUISettingsVM;
+import de.amr.pacmanfx.ui.vm.GameViewModel;
 import de.amr.pacmanfx.ui.vm.Maze3DSettingsVM;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
@@ -308,7 +308,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     }
 
     private void onLevelComplete() {
-        final GameUISettingsVM viewModel = app().ui().viewModel();
+        final GameViewModel viewModel = app().ui().viewModel();
         final GameLevel level = session().assertLevel();
         final House house = level.entities().house();
         final boolean cutSceneFollows = !session().isAttractMode()

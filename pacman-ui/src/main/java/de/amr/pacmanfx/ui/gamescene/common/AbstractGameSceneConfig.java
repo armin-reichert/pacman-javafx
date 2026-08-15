@@ -8,7 +8,7 @@ import de.amr.basics.Named;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.vm.GameUISettingsVM;
+import de.amr.pacmanfx.ui.vm.GameViewModel;
 import org.tinylog.Logger;
 
 import java.util.HashMap;
@@ -36,7 +36,7 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
 
     protected abstract GameScene createGameScene(GameAppContext appContext, Named Identifier);
 
-    protected abstract Named determineSceneID(GameUISettingsVM viewModel, GameContext game);
+    protected abstract Named determineSceneID(GameViewModel viewModel, GameContext game);
 
     @Override
     public void dispose() {
