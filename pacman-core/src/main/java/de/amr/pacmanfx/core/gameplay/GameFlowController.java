@@ -12,6 +12,7 @@ import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.model.test.CutScenesTestState;
 import de.amr.pacmanfx.core.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.core.model.test.LevelShortTestState;
+import org.tinylog.Logger;
 
 import java.util.Optional;
 
@@ -22,14 +23,21 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameFlowController extends StateMachine<GameContext> {
 
+    private boolean testStatesAdded = false;
+
     public GameFlowController(String name) {
         setName(name);
     }
 
     public void addTestStates() {
-        addState(new LevelShortTestState());
-        addState(new LevelMediumTestState());
-        addState(new CutScenesTestState());
+        if (!testStatesAdded) {
+            addState(new LevelShortTestState());
+            addState(new LevelMediumTestState());
+            addState(new CutScenesTestState());
+            testStatesAdded = true;
+        } else {
+            Logger.warn("Test states have already been added to this state machine ({})", name);
+        }
     }
 
     @Override
