@@ -48,10 +48,15 @@ public final class GameState_DemoLevelPlaying extends GameState {
         if (tick == 1) {
             session.score().data().setEnabled(false);
             session.highScore().data().setEnabled(false);
+
             gamePlay.prepareLevelForPlaying(game);
             gamePlay.showLevelMessage(game, level, GameLevelMessageType.GAME_OVER);
-            LevelCounterSystem.update(session.levelCounter(), level.number(), level.bonusSymbolCode(0));
+
+            final LevelCounterSystem levelCounterSystem = game.variantConfig().systems().levelCounterSystem();
+            levelCounterSystem.update(session.levelCounter(), level.number(), level.bonusSymbolCode(0));
+
             Logger.info("Demo level {} started", level.number());
+
             // Note: This event is very important because it triggers the creation of the actor animations!
             game.eventManager().publishGameEvent(new LevelStartedEvent(level));
         }

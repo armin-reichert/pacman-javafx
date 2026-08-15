@@ -226,7 +226,8 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         session.score().data().setEnabled(true);
         session.cheats().update(game);
 
-        LevelCounterSystem.update(session.levelCounter(), level.number(), level.bonusSymbolCode(0));
+        final LevelCounterSystem levelCounterSystem = game.variantConfig().systems().levelCounterSystem();
+        levelCounterSystem.update(session.levelCounter(), level.number(), level.bonusSymbolCode(0));
 
         showLevelMessage(game, level, GameLevelMessageType.READY);
     }

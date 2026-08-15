@@ -333,10 +333,11 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
 
         //TODO we need different level counter system implementations!
+        final LevelCounterSystem levelCounterSystem = game.variantConfig().systems().levelCounterSystem();
         final LevelCounter levelCounter = session.levelCounter();
-        LevelCounterSystem.update(levelCounter, level.number(), level.bonusSymbolCode(0));
-        if (LevelCounterSystem.isFull(levelCounter)) {
-            LevelCounterSystem.enable(levelCounter, false);
+        levelCounterSystem.update(levelCounter, level.number(), level.bonusSymbolCode(0));
+        if (levelCounterSystem.isFull(levelCounter)) {
+            levelCounterSystem.enable(levelCounter, false);
             Logger.info("Level counter is full and gets disabled!");
         }
 

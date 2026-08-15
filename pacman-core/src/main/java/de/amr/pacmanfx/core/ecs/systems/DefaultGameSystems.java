@@ -11,6 +11,7 @@ import de.amr.pacmanfx.core.entities.ghost.system.GhostHouseAccessSystem;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostSpriteAnimationSystem;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostStateSystem;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostWorldMovementPolicy;
+import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.entities.pac.system.*;
 import de.amr.pacmanfx.core.gameplay.hunt.*;
 import de.amr.pacmanfx.core.model.GhostPersonality;
@@ -44,10 +45,13 @@ public class DefaultGameSystems implements GameSystems {
     protected WorldMovementPolicy bonusWorldMovementPolicy;
     protected BonusMoveAndJumpSystem bonusMoveAndJumpSystem;
 
+    protected LevelCounterSystem levelCounterSystem;
+
     public DefaultGameSystems() {
         createPacSystems();
         createGhostSystems();
         createBonusSystems();
+        createLevelCounterSystem();
     }
 
     protected void createPacSystems() {
@@ -76,6 +80,10 @@ public class DefaultGameSystems implements GameSystems {
         bonusWorldMovementPolicy = new BonusWorldMovementPolicy();
         bonusMoveAndJumpSystem = new BonusMoveAndJumpSystem(navigator, bonusWorldMovementPolicy);
         bonusStateSystem = new BonusStateSystem(navigator, bonusMoveAndJumpSystem);
+    }
+
+    protected void createLevelCounterSystem() {
+        levelCounterSystem = new LevelCounterSystem();
     }
 
     /**
@@ -185,6 +193,7 @@ public class DefaultGameSystems implements GameSystems {
         return ghostSpriteAnimation;
     }
 
+    @Override
     public BonusStateSystem bonusState() {
         return bonusStateSystem;
     }
@@ -194,7 +203,13 @@ public class DefaultGameSystems implements GameSystems {
         return bonusWorldMovementPolicy;
     }
 
+    @Override
     public BonusMoveAndJumpSystem bonusMoveAndJump() {
         return bonusMoveAndJumpSystem;
+    }
+
+    @Override
+    public LevelCounterSystem levelCounterSystem() {
+        return levelCounterSystem;
     }
 }

@@ -73,12 +73,13 @@ public abstract class CommonGamePlay implements GamePlay {
 
         initScores(session);
 
+        final LevelCounterSystem levelCounterSystem = game.variantConfig().systems().levelCounterSystem();
         final LevelCounter levelCounter = game.session().levelCounter();
-        LevelCounterSystem.enable(levelCounter, true);
-        LevelCounterSystem.setCapacity(levelCounter, 7);
-        LevelCounterSystem.clear(levelCounter);
+        levelCounterSystem.enable(levelCounter, true);
+        levelCounterSystem.setCapacity(levelCounter, 7);
+        levelCounterSystem.clear(levelCounter);
 
-        session.setGateKeeper(new ArcadeHouseGateKeeper()); // TODO not needed by Tengen
+        session.setGateKeeper(new ArcadeHouseGateKeeper()); // TODO Tengen Ms. Pac-Man does this differently
         session.gateKeeper().reset();
 
         session.setLevel(null);

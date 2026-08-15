@@ -86,7 +86,8 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
 
         /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
          * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
-        LevelCounterSystem.enable(session.levelCounter(), levelNumber < 8);
+        final LevelCounterSystem levelCounterSystem = game.variantConfig().systems().levelCounterSystem();
+        levelCounterSystem.enable(session.levelCounter(), levelNumber < 8);
 
         return level;
     }
@@ -105,10 +106,11 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         session.cheats().update(game);
 
         //TODO we need different level counter system implementations!
+        final LevelCounterSystem levelCounterSystem = game.variantConfig().systems().levelCounterSystem();
         final LevelCounter levelCounter = session.levelCounter();
-        LevelCounterSystem.update(session.levelCounter(), level.number(), level.bonusSymbolCode(0));
-        if (LevelCounterSystem.isFull(levelCounter)) {
-            LevelCounterSystem.enable(levelCounter, false);
+        levelCounterSystem.update(session.levelCounter(), level.number(), level.bonusSymbolCode(0));
+        if (levelCounterSystem.isFull(levelCounter)) {
+            levelCounterSystem.enable(levelCounter, false);
             Logger.info("Level counter is full and gets disabled!");
         }
 
@@ -168,7 +170,9 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
 
         session.gateKeeper().setLevelNumber(1);
         ScoreSystem.setLevelNumber(session.score(), 1);
-        LevelCounterSystem.enable(session.levelCounter(), true);
+
+        final LevelCounterSystem levelCounterSystem = game.variantConfig().systems().levelCounterSystem();
+        levelCounterSystem.enable(session.levelCounter(), true);
 
         return level;
     }
