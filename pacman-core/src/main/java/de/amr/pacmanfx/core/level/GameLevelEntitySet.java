@@ -26,14 +26,21 @@ public class GameLevelEntitySet {
     private final List<Ghost> ghosts = new ArrayList<>();
     private Bonus theBonus;
     private House theHouse;
+    private MessageView theMessageView;
 
     public void add(GameEntity entity) {
         requireNonNull(entity);
         switch (entity) {
-            case Ghost ghost -> ghosts.add(ghost);
+            case Ghost ghost -> {
+                if (ghosts.contains(ghost)) {
+                    throw new IllegalArgumentException("Ghost %s already added to entity set!".formatted(ghost.name()));
+                }
+                ghosts.add(ghost);
+            }
             case Pac   pac ->   thePac = pac;
             case Bonus bonus -> theBonus = bonus;
             case House house -> theHouse = house;
+            case MessageView messageView -> theMessageView = messageView;
             default -> entities.add(entity);
         }
     }
@@ -45,6 +52,7 @@ public class GameLevelEntitySet {
             case Pac   _ -> thePac = null;
             case Bonus _ -> theBonus = null;
             case House _ -> theHouse = null;
+            case MessageView _ -> theMessageView = null;
             default -> entities.remove(entity);
         }
     }
@@ -68,7 +76,7 @@ public class GameLevelEntitySet {
      */
     public Ghost ghost(GhostPersonality personality) {
         requireNonNull(personality);
-        return ghosts().get(personality.ordinal());
+        return ghosts.stream().filter(ghost -> ghost.personality() == personality).findAny().orElseThrow();
     }
 
     public Stream<Ghost> ghostsInAnyOfStates(Collection<GhostState> states) {
@@ -85,6 +93,6 @@ public class GameLevelEntitySet {
     }
 
     public MessageView messageView() {
-        return entities.theOne(MessageView.class);
+        return theMessageView;
     }
 }

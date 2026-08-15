@@ -61,8 +61,6 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         final House house = HouseFactory.createArcadeHouse(houseMinTile);
         entities.add(house);
 
-        entities.add(house);
-
         createAndSetMsPacMan(entities, game.variantConfig().systems());
         createAndSetGhosts(entities, worldMap.terrainLayer(), house);
 
