@@ -16,6 +16,7 @@ import de.amr.pacmanfx.core.event.GameEvent;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.gameplay.GameFlowController;
+import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.GhostPersonality;
@@ -110,40 +111,43 @@ public class TestEatingFood {
         testGame.variantConfig().gamePlay().buildNormalLevel(testGame, 1, 3);
     }
 
-    private void eatNextPellet(GameLevel level) {
+    private void eatNextPellet(GamePlay gamePlay, GameLevel level) {
         final FoodLayer foodLayer = level.worldMap().foodLayer();
         foodLayer.tiles()
             .filter(level.food()::hasFoodAtTile)
             .filter(not(foodLayer::isEnergizerTile))
-            .findFirst().ifPresent(pelletTile -> {
-                level.food().markFoodEatenAt(pelletTile);
-                testGame.variantConfig().gamePlay().onEatPellet(testGame, level, pelletTile);
+            .findFirst()
+            .ifPresent(tile -> {
+                level.food().markFoodEatenAt(tile);
+                gamePlay.onEatPellet(testGame, level, tile);
             });
     }
 
-    private void eatNextEnergizer(GameLevel level) {
+    private void eatNextEnergizer(GamePlay gamePlay, GameLevel level) {
         final FoodLayer foodLayer = level.worldMap().foodLayer();
         foodLayer.energizerTiles().stream()
             .filter(level.food()::hasFoodAtTile)
-            .findFirst().ifPresent(tile -> {
+            .findFirst()
+            .ifPresent(tile -> {
                 level.food().markFoodEatenAt(tile);
-                testGame.variantConfig().gamePlay().onEatEnergizer(testGame, level, tile);
+                gamePlay.onEatEnergizer(testGame, level, tile);
             });
     }
 
     @Test
     @DisplayName("Test Food Counting")
     public void testFoodCounting() {
+        final GamePlay gamePlay = testGame.variantConfig().gamePlay();
         testGame.session().optLevel().ifPresent(level -> {
             int eaten = level.food().eatenFoodCount();
             int uneaten = level.food().remainingFoodCount();
-            eatNextPellet(level);
+            eatNextPellet(gamePlay, level);
             assertEquals(eaten + 1, level.food().eatenFoodCount());
             assertEquals(uneaten - 1, level.food().remainingFoodCount());
 
             eaten = level.food().eatenFoodCount();
             uneaten = level.food().remainingFoodCount();
-            eatNextEnergizer(level);
+            eatNextEnergizer(gamePlay, level);
             assertEquals(eaten + 1, level.food().eatenFoodCount());
             assertEquals(uneaten - 1, level.food().remainingFoodCount());
         });
@@ -152,11 +156,12 @@ public class TestEatingFood {
     @Test
     @DisplayName("Test Level Completion")
     public void testLevelCompletion() {
+        final GamePlay gamePlay = testGame.variantConfig().gamePlay();
         testGame.session().optLevel().ifPresent(level -> {
             while (level.food().remainingFoodCount() > 0) {
                 assertFalse(testGame.variantConfig().rules().isLevelCompleted(level));
-                eatNextPellet(level);
-                eatNextEnergizer(level);
+                eatNextPellet(gamePlay, level);
+                eatNextEnergizer(gamePlay, level);
             }
             assertTrue(testGame.variantConfig().rules().isLevelCompleted(level));
         });
@@ -165,6 +170,7 @@ public class TestEatingFood {
     @Test
     @DisplayName("Test Cruise Elroy Mode")
     public void testCruiseElroyMode() {
+        final GamePlay gamePlay = testGame.variantConfig().gamePlay();
         testGame.session().optLevel().ifPresent(level -> {
             final Ghost blinky = level.entities().ghost(GhostPersonality.RED_GHOST_SHADOW);
             final ElroyComp elroy = blinky.requireComp(ElroyComp.class);
@@ -173,22 +179,22 @@ public class TestEatingFood {
 
             while (level.food().remainingFoodCount() > data.numDotsLeftElroy1()) {
                 assertEquals(ElroyComp.Boost.NONE, elroy.boost());
-                eatNextPellet(level);
+                eatNextPellet(gamePlay, level);
             }
             assertEquals(ElroyComp.Boost.MEDIUM, elroy.boost());
             while (level.food().remainingFoodCount() > data.numDotsLeftElroy2()) {
                 assertEquals(ElroyComp.Boost.MEDIUM, elroy.boost());
-                eatNextPellet(level);
+                eatNextPellet(gamePlay, level);
             }
             assertEquals(ElroyComp.Boost.LARGE, elroy.boost());
             while (level.food().remainingFoodCount() > foodLayer.energizerTiles().size()) {
                 assertEquals(ElroyComp.Boost.LARGE, elroy.boost());
-                eatNextPellet(level);
+                eatNextPellet(gamePlay, level);
             }
             assertEquals(ElroyComp.Boost.LARGE, elroy.boost());
             while (level.food().remainingFoodCount() > 0) {
                 assertEquals(ElroyComp.Boost.LARGE, elroy.boost());
-                eatNextEnergizer(level);
+                eatNextEnergizer(gamePlay, level);
             }
             assertEquals(ElroyComp.Boost.LARGE, elroy.boost());
         });
@@ -197,11 +203,12 @@ public class TestEatingFood {
     @Test
     @DisplayName("Test Resting")
     public void testResting() {
+        final GamePlay gamePlay = testGame.variantConfig().gamePlay();
         testGame.session().optLevel().ifPresent(level -> {
             final Pac pac = level.entities().pac();
-            eatNextPellet(level);
+            eatNextPellet(gamePlay, level);
             assertEquals(1, pac.digestion().restingTicks());
-            eatNextEnergizer(level);
+            eatNextEnergizer(gamePlay, level);
             assertEquals(3, pac.digestion().restingTicks());
         });
     }
