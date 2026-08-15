@@ -32,7 +32,7 @@ public class GameFlowActions {
         actionStartGame = new GameAction("start_game") {
             @Override
             public void execute(GameAppContext app) {
-                app.lifecycle().startPlaying();
+                app.startGame();
             }
         };
 
@@ -61,7 +61,7 @@ public class GameFlowActions {
                     gameState.onExit(game);
                 }
 
-                app.lifecycle().suspendPlaying();
+                app.suspendGame();
                 app.clock().start();
                 game.variant().gameFlow().restartState(game, CommonGameStateID.GAME_INTRO);
             }

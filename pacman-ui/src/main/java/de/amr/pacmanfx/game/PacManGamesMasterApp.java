@@ -28,7 +28,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * The Pac-Man games master app.
  */
-public final class PacManGamesMasterApp implements GameAppContext, GameLifecycle {
+public final class PacManGamesMasterApp implements GameAppContext {
 
     private final GameBox gameBox;
 
@@ -140,11 +140,6 @@ public final class PacManGamesMasterApp implements GameAppContext, GameLifecycle
     // GameAppContext
 
     @Override
-    public GameLifecycle lifecycle() {
-        return this;
-    }
-
-    @Override
     public GameVariantManager gameVariants() {
         return gameVariantManager;
     }
@@ -204,8 +199,7 @@ public final class PacManGamesMasterApp implements GameAppContext, GameLifecycle
 
     // GameLifecycle
 
-    @Override
-    public void startPlaying() {
+    public void startGame() {
         createSession();
         ui.window().mainScene().connect(game.session());
         ui.views().selectGamePlayView();
@@ -213,8 +207,7 @@ public final class PacManGamesMasterApp implements GameAppContext, GameLifecycle
         GameSimulation.start(this);
     }
 
-    @Override
-    public void suspendPlaying() {
+    public void suspendGame() {
         ui.gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
             ui.views().gamePlayView().disembedGameScene(gameScene);
             ui.gameScenes().currentGameSceneProperty().set(null);
@@ -223,9 +216,8 @@ public final class PacManGamesMasterApp implements GameAppContext, GameLifecycle
         GameSimulation.stop(this);
     }
 
-    @Override
     public void terminate() {
-        suspendPlaying();
+        suspendGame();
         ui.terminate();
         gameBox.dispose();
         Logger.info("Application terminated. There is no way back!");

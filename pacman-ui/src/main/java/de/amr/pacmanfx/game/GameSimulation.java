@@ -50,7 +50,7 @@ public final class GameSimulation {
     }
 
     private static void handleFatalError(GameAppContext appContext, Throwable reason) {
-        appContext.lifecycle().suspendPlaying();
+        appContext.suspendGame();
         final String errorMessage = appContext.ui().translations().translate("error.oh_no_my_program");
         appContext.ui().shortMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
         Logger.error(reason, "*** KA-TAS-TROOPHE! SOMETHING VERY BAD HAPPENED!");

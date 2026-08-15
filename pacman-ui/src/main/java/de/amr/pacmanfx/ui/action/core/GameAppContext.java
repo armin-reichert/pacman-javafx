@@ -7,7 +7,6 @@ package de.amr.pacmanfx.ui.action.core;
 import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.game.GameLifecycle;
 import de.amr.pacmanfx.core.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantManager;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
@@ -17,7 +16,11 @@ import de.amr.pacmanfx.ui.input.Input;
 
 public interface GameAppContext {
 
-    GameLifecycle lifecycle();
+    void startGame();
+
+    void suspendGame();
+
+    void terminate();
 
     GameContext game();
 
@@ -42,5 +45,4 @@ public interface GameAppContext {
     GameClock clock();
 
     DirectoryWatchdog watchdog();
-
 }
