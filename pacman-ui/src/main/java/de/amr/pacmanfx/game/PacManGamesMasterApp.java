@@ -88,55 +88,6 @@ public final class PacManGamesMasterApp implements GameAppContext {
         Platform.runLater(this::startBackgroundServices);
     }
 
-    public void enterGameVariant(GameVariant gameVariant) {
-        requireNonNull(gameVariant);
-
-        //TODO rethink this
-        final GameVariantUIConfig uiConfig = gameVariant.uiConfig();
-        uiConfig.init();
-        uiConfig.loadSounds(ui.sounds());
-        uiConfig.connectApp(this);
-
-        ui.viewModel().maze3D.init(gameVariant.uiConfig().worldSettings().maze());
-
-        game = createGameContext(gameVariant);
-        createSession();
-        game.eventManager().addGameEventSubscriber(ui);
-        gameVariant.config().gameFlow().addStateChangeListener(changeEventConverter);
-    }
-
-    private void createSession() {
-        final String variantName = gameVariantManager.currentVariantName();
-        final var session = new GameSession(variantName, new GameCheats());
-        session.hud().creditProperty().bind(gameBox.coinMechanism().numCoinsProperty());
-        game.setSession(session);
-    }
-
-    private GameContext createGameContext(GameVariant gameVariant) {
-        return new GameContext(
-            gameBox.coinMechanism(),
-            gameVariant.config(),
-            new DefaultGameEventManager()
-        );
-    }
-
-    public void exitGameVariant(GameVariant gameVariant) {
-        requireNonNull(gameVariant);
-
-        gameVariant.config().gameFlow().removeStateChangeListener(changeEventConverter);
-        gameVariant.uiConfig().unloadSounds(ui.sounds());
-        gameVariant.uiConfig().dispose();
-
-        ui.sounds().dispose();
-
-        game.eventManager().removeGameEventSubscriber(ui);
-        game = null;
-    }
-
-    public void setGame(GameContext game) {
-        this.game = game;
-    }
-
     // GameAppContext
 
     @Override
@@ -225,6 +176,13 @@ public final class PacManGamesMasterApp implements GameAppContext {
 
     // Private area, no trespassing!
 
+    private void createSession() {
+        final String variantName = gameVariantManager.currentVariantName();
+        final var session = new GameSession(variantName, new GameCheats());
+        session.hud().creditProperty().bind(gameBox.coinMechanism().numCoinsProperty());
+        game.setSession(session);
+    }
+
     private void startBackgroundServices() {
         watchdog().startWatching();
         Logger.info("Custom map directory is getting watched!");
@@ -233,6 +191,40 @@ public final class PacManGamesMasterApp implements GameAppContext {
 
         //noinspection ResultOfMethodCallIgnored
         PacMan3DModel.instance(); // loads 3D assets as side effect of accessing the singleton
+    }
+
+    private void enterGameVariant(GameVariant gameVariant) {
+        requireNonNull(gameVariant);
+
+        //TODO rethink this
+        final GameVariantUIConfig uiConfig = gameVariant.uiConfig();
+        uiConfig.init();
+        uiConfig.loadSounds(ui.sounds());
+        uiConfig.connectApp(this);
+
+        ui.viewModel().maze3D.init(gameVariant.uiConfig().worldSettings().maze());
+
+        game = new GameContext(
+            gameBox.coinMechanism(),
+            gameVariant.config(),
+            new DefaultGameEventManager()
+        );
+        createSession();
+        game.eventManager().addGameEventSubscriber(ui);
+        gameVariant.config().gameFlow().addStateChangeListener(changeEventConverter);
+    }
+
+    private void exitGameVariant(GameVariant gameVariant) {
+        requireNonNull(gameVariant);
+
+        gameVariant.config().gameFlow().removeStateChangeListener(changeEventConverter);
+        gameVariant.uiConfig().unloadSounds(ui.sounds());
+        gameVariant.uiConfig().dispose();
+
+        ui.sounds().dispose();
+
+        game.eventManager().removeGameEventSubscriber(ui);
+        game = null;
     }
 
     /**
@@ -246,5 +238,4 @@ public final class PacManGamesMasterApp implements GameAppContext {
             game.eventManager().publishGameEvent(new GameStateChangeEvent(oldState, newState));
         }
     }
-
 }
