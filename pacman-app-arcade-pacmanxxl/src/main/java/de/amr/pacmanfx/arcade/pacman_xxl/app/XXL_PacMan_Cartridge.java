@@ -23,7 +23,7 @@ public class XXL_PacMan_Cartridge {
         GameVariantID.ARCADE_PACMAN_XXL,
         DefaultGameSystems::new,
         XXL_PacMan_GamePlay::new,
-        XXL_MsPacMan_GameVariantUIConfig::createGameFlow,
+        XXL_PacMan_GameVariantUIConfig::createGameFlow,
         XXL_PacMan_GameRules::new,
         XXL_WorldMapManager::instance,
         XXL_PacMan_GameVariantUIConfig::new
