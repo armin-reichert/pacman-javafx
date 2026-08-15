@@ -15,7 +15,7 @@ import de.amr.pacmanfx.core.level.GameLevelMessageType;
 
 public interface GamePlay {
 
-    void onSessionStart(GameContext game);
+    void startSession(GameContext game);
 
     void prepareLevelForPlaying(GameContext game);
 

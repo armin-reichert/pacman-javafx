@@ -66,21 +66,23 @@ public class ArcadeMsPacMan_GameVariantUIConfig implements GameVariantUIConfig {
         return gameFlow;
     }
 
-    private final TranslationManager translations;
+    private final Factory3D factory3D = new ArcadeMsPacMan_Factory3D();
+    private final GameSceneConfig gameSceneConfig  = new ArcadeMsPacMan_GameSceneConfig();
+    private final TranslationManager translations = () -> ResourceBundle.getBundle("de.amr.pacmanfx.arcade.ms_pacman.localized_texts");
+
     private AssetMap assets;
-    private final Factory3D factory3D;
-    private final GameSceneConfig gameSceneConfig;
 
     private ArcadeMsPacMan_RenderConfig renderConfig;
     private GameSoundEffects soundEffects;
 
     private final Map<Named, Object> extensions = new HashMap<>();
 
-    public ArcadeMsPacMan_GameVariantUIConfig() {
+    @Override
+    public void init() {
         loadAssets();
-        gameSceneConfig = new ArcadeMsPacMan_GameSceneConfig();
-        translations = () -> ResourceBundle.getBundle("de.amr.pacmanfx.arcade.ms_pacman.localized_texts");
-        factory3D = new ArcadeMsPacMan_Factory3D();
+        renderConfig = new ArcadeMsPacMan_RenderConfig(assets);
+        renderConfig.addAssets();
+        assets.freeze();
         extensions.put(Arcade_GameExtensions.ACTIONS, new Arcade_Actions());
     }
 
@@ -126,11 +128,7 @@ public class ArcadeMsPacMan_GameVariantUIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public void initApp(GameAppContext app) {
-        renderConfig = new ArcadeMsPacMan_RenderConfig(assets);
-        renderConfig.addAssets();
-        assets.freeze();
-    }
+    public void connectApp(GameAppContext app) {}
 
     @Override
     public void dispose() {

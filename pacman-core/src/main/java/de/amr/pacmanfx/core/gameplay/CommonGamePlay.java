@@ -20,6 +20,7 @@ import de.amr.pacmanfx.core.entities.ghost.system.GhostStateSystem;
 import de.amr.pacmanfx.core.entities.livescounter.system.LivesCounterSystem;
 import de.amr.pacmanfx.core.entities.pac.comp.PacPowerComp;
 import de.amr.pacmanfx.core.entities.pac.system.PacDigestionSystem;
+import de.amr.pacmanfx.core.entities.score.comp.ScoreDataComp;
 import de.amr.pacmanfx.core.entities.score.comp.ScorePersistencyComp;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
@@ -61,7 +62,7 @@ public abstract class CommonGamePlay implements GamePlay {
     private static final Set<GhostState> GHOST_TURNBACK_STATES = Set.of(GhostState.FRIGHTENED, GhostState.HUNTING_PAC);
 
     @Override
-    public void onSessionStart(GameContext game) {
+    public void startSession(GameContext game) {
         requireNonNull(game);
         final GameSession session = game.session();
 
@@ -72,6 +73,7 @@ public abstract class CommonGamePlay implements GamePlay {
         gateKeeper.reset();
         session.setGateKeeper(gateKeeper);
 
+        session.setCutScenesEnabled(true);
         session.setLevel(null);
         session.setPlaying(false);
 
@@ -175,7 +177,7 @@ public abstract class CommonGamePlay implements GamePlay {
         level.heartbeat().triggerPulse();
         level.huntingTimerStrategy().update(game.variant().rules(), level.number());
         if (gateKeeper != null) {
-            gateKeeper.unlockGhostIfPossible(game);
+            gateKeeper.unlockGhostIfPossible(game, level);
         }
 
         updateEntities(game, level);
@@ -471,17 +473,15 @@ public abstract class CommonGamePlay implements GamePlay {
         requireValidLevelNumber(levelNumber);
 
         final GameSession session = game.session();
+        final ScoreDataComp scoreData = session.score().data();
 
-        if (!session.score().data().isEnabled()) {
+        if (!scoreData.isEnabled()) {
             return;
         }
-        final int oldScore = session.score().data().points();
-        final int newScore = oldScore + points;
 
-        if (game.variant().rules().scoringRules().isExtraLifeAwarded(oldScore, newScore)) {
-            LivesCounterSystem.addLife(session.livesCounter());
-            game.eventManager().publishGameEvent(new SpecialScoreEvent(newScore));
-        }
+        final int oldScore = scoreData.points();
+        final int newScore = oldScore + points;
+        ScoreSystem.setPoints(session.score(), newScore);
 
         final Score highScore = session.highScore();
         if (highScore != null && highScore.data().isEnabled() && newScore > highScore.data().points()) {
@@ -489,7 +489,11 @@ public abstract class CommonGamePlay implements GamePlay {
             ScoreSystem.setLevelNumber(highScore, levelNumber);
             ScoreSystem.setDate(highScore, LocalDate.now());
         }
-        ScoreSystem.setPoints(session.score(), newScore);
+
+        if (game.variant().rules().scoringRules().isExtraLifeAwarded(oldScore, newScore)) {
+            LivesCounterSystem.addLife(session.livesCounter());
+            game.eventManager().publishGameEvent(new SpecialScoreEvent(newScore));
+        }
     }
 
     // private

@@ -19,8 +19,10 @@ import java.util.Optional;
 
 public interface GameVariantUIConfig extends Disposable {
 
-    //TODO remove app parameter
-    void initApp(GameAppContext app);
+    void init();
+
+    //TODO remove
+    void connectApp(GameAppContext app);
 
     void loadSounds(SoundManager soundManager);
 

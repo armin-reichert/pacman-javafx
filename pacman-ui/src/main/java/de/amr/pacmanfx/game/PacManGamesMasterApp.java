@@ -93,8 +93,9 @@ public final class PacManGamesMasterApp implements GameAppContext, GameLifecycle
 
         //TODO rethink this
         final GameVariantUIConfig uiConfig = gameVariant.uiConfig();
-        uiConfig.initApp(this);
+        uiConfig.init();
         uiConfig.loadSounds(ui.sounds());
+        uiConfig.connectApp(this);
 
         ui.viewModel().maze3D.init(gameVariant.uiConfig().worldSettings().maze());
 
@@ -208,7 +209,7 @@ public final class PacManGamesMasterApp implements GameAppContext, GameLifecycle
         createSession();
         ui.window().mainScene().connect(game.session());
         ui.views().selectGamePlayView();
-        game.variant().gamePlay().onSessionStart(game);
+        game.variant().gamePlay().startSession(game);
         GameSimulation.start(this);
     }
 

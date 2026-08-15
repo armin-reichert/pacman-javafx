@@ -9,10 +9,8 @@ import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_Factory3D;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameVariantUIConfig;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
-import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
-import de.amr.pacmanfx.core.gameplay.GameFlowController;
-import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
+import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
@@ -30,7 +28,6 @@ import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry;
 import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.audioClip;
 import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.mediaPlayer;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
-import static java.util.Objects.requireNonNull;
 
 public final class XXL_MsPacMan_GameVariantUIConfig implements GameVariantUIConfig {
 
@@ -60,24 +57,22 @@ public final class XXL_MsPacMan_GameVariantUIConfig implements GameVariantUIConf
         mediaPlayer(PacManGameSoundID.PAC_MAN_POWER,         ARCADE_RM.url("sound/ScaredGhost.mp3"))
     );
 
-    private final TranslationManager translations;
-    private final ArcadeMsPacMan_Factory3D factory3D;
-    private final XXL_MsPacMan_GameSceneConfig gameSceneConfig;
-    private final XXL_MsPacMan_RenderConfig renderConfig;
-    private final Map<Named, Object> extensions = new HashMap<>();
+    private final TranslationManager translations = () -> ResourceBundle.getBundle(XXL_PKG + "localized_texts_ms_pacman");
+    private final ArcadeMsPacMan_Factory3D factory3D = new ArcadeMsPacMan_Factory3D();
+    private final XXL_MsPacMan_GameSceneConfig gameSceneConfig = new XXL_MsPacMan_GameSceneConfig();
 
+    private XXL_MsPacMan_RenderConfig renderConfig;
     private AssetMap assets;
     private GameSoundEffects soundEffects;
 
+    private final Map<Named, Object> extensions = new HashMap<>();
 
-    public XXL_MsPacMan_GameVariantUIConfig() {
+    @Override
+    public void init() {
         loadAssets();
         renderConfig = new XXL_MsPacMan_RenderConfig(assets);
         renderConfig.addAssets();
         assets.freeze();
-        gameSceneConfig = new XXL_MsPacMan_GameSceneConfig();
-        translations = () -> ResourceBundle.getBundle(XXL_PKG + "localized_texts_ms_pacman");
-        factory3D = new ArcadeMsPacMan_Factory3D();
         extensions.put(Arcade_GameExtensions.ACTIONS, new Arcade_Actions());
     }
 
@@ -110,9 +105,7 @@ public final class XXL_MsPacMan_GameVariantUIConfig implements GameVariantUIConf
     }
 
     @Override
-    public void initApp(GameAppContext app) {
-        requireNonNull(app);
-    }
+    public void connectApp(GameAppContext app) {}
 
     @Override
     public void dispose() {

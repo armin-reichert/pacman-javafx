@@ -85,8 +85,8 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     // Game start
 
     @Override
-    public void onSessionStart(GameContext game) {
-        super.onSessionStart(game);
+    public void startSession(GameContext game) {
+        super.startSession(game);
 
         final GameSession session = game.session();
 

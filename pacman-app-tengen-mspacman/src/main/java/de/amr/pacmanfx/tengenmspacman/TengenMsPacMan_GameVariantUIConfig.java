@@ -115,23 +115,21 @@ public class TengenMsPacMan_GameVariantUIConfig implements GameVariantUIConfig {
 
     // Non-static members
 
-    private final ResourceBundle textBundle;
-    private final TengenMsPacMan_Factory3D factory3D;
-    private final TengenMsPacMan_GameSceneConfig gameSceneConfig;
-    private final TengenMsPacMan_RenderConfig renderConfig;
-    private final Map<Named, Object> extensions = new HashMap<>();
+    private final ResourceBundle textBundle = ResourceBundle.getBundle("de.amr.pacmanfx.tengenmspacman.localized_texts");
+    private final TengenMsPacMan_Factory3D factory3D = new TengenMsPacMan_Factory3D();
+    private final TengenMsPacMan_GameSceneConfig gameSceneConfig = new TengenMsPacMan_GameSceneConfig();
 
+    private TengenMsPacMan_RenderConfig renderConfig;
     private GameSoundEffects soundEffects;
     private AssetMap assets;
 
-    public TengenMsPacMan_GameVariantUIConfig() {
+    private final Map<Named, Object> extensions = new HashMap<>();
+
+    public void init() {
         loadAssets();
         renderConfig = new TengenMsPacMan_RenderConfig(assets);
         renderConfig.addAssets();
         assets.freeze();
-        gameSceneConfig = new TengenMsPacMan_GameSceneConfig();
-        textBundle = ResourceBundle.getBundle("de.amr.pacmanfx.tengenmspacman.localized_texts");
-        factory3D = new TengenMsPacMan_Factory3D();
     }
 
     @Override
@@ -170,7 +168,7 @@ public class TengenMsPacMan_GameVariantUIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public void initApp(GameAppContext app) {
+    public void connectApp(GameAppContext app) {
         //TODO get rid of this crap and of app dependency!
         extensions.put(TengenMsPacMan_GameExtension.UI_SETTINGS, new TengenMsPacMan_UISettings(null));
         extensions.put(TengenMsPacMan_GameExtension.ACTIONS, new TengenMsPacMan_Actions(

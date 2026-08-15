@@ -55,23 +55,22 @@ public final class XXL_PacMan_GameVariantUIConfig implements GameVariantUIConfig
         mediaPlayer  (PacManGameSoundID.PAC_MAN_POWER,         ARCADE_PACMAN_RM.url("sound/ghost-turn-to-blue.mp3"))
     );
 
-    private final ResourceBundle textBundle;
-    private final Factory3D factory3D;
-    private final XXL_PacMan_GameSceneConfig gameSceneConfig;
-    private final XXL_PacMan_RenderConfig renderConfig;
-    private GameSoundEffects soundEffects;
+    private final ResourceBundle textBundle = ResourceBundle.getBundle(XXL_PKG + "localized_texts_pacman");
+    private final Factory3D factory3D = new DefaultFactory3D();
+    private final XXL_PacMan_GameSceneConfig gameSceneConfig = new XXL_PacMan_GameSceneConfig();
 
+    private XXL_PacMan_RenderConfig renderConfig;
+    private GameSoundEffects soundEffects;
     private AssetMap assets;
+
     private final Map<Named, Object> extensions = new HashMap<>();
 
-    public XXL_PacMan_GameVariantUIConfig() {
+    @Override
+    public void init() {
         loadAssets();
         renderConfig = new XXL_PacMan_RenderConfig(assets);
         renderConfig.addAssets();
         assets.freeze();
-        gameSceneConfig = new XXL_PacMan_GameSceneConfig();
-        textBundle = ResourceBundle.getBundle(XXL_PKG + "localized_texts_pacman");
-        factory3D = new DefaultFactory3D();
         extensions.put(Arcade_GameExtensions.ACTIONS, new Arcade_Actions());
     }
 
@@ -104,7 +103,7 @@ public final class XXL_PacMan_GameVariantUIConfig implements GameVariantUIConfig
     }
 
     @Override
-    public void initApp(GameAppContext ignore) {
+    public void connectApp(GameAppContext ignore) {
     }
 
     @Override
