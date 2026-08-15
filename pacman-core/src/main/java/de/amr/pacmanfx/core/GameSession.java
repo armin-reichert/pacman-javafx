@@ -57,6 +57,8 @@ public class GameSession {
 
     private long levelStartTimeMillis;
 
+    private boolean cutScenesEnabled;
+
     public GameSession(String variantName, GameFlowController gameFlow, GameCheats cheats) {
         requireNonNull(variantName);
         requireNonNull(gameFlow);
@@ -130,6 +132,14 @@ public class GameSession {
 
     public void setPlaying(boolean playing) {
         this.playing = playing;
+    }
+
+    public boolean cutScenesEnabled() {
+        return cutScenesEnabled;
+    }
+
+    public void setCutScenesEnabled(boolean enabled) {
+        cutScenesEnabled = enabled;
     }
 
     public Score score() {

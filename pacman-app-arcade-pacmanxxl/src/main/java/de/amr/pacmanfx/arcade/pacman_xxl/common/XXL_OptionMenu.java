@@ -105,7 +105,7 @@ public class XXL_OptionMenu extends OptionMenu {
         // Init entries
         meGameVariantID.setValue(variantID);
         meView3DEnabled.setValue(ui.viewModel().common3D.view3DEnabledProperty.get());
-        meCutScenesEnabled.setValue(game.session().gameFlow().cutScenesEnabled());
+        meCutScenesEnabled.setValue(game.session().cutScenesEnabled());
         meMapOrder.setValue(mapSelector.selectionMode());
         meMapOrder.setEnabled(!mapSelector.customMaps().isEmpty());
 
@@ -166,7 +166,7 @@ public class XXL_OptionMenu extends OptionMenu {
     }
 
     private void onCutScenesEnabledSettingsChange(ObservableValue<? extends Boolean> obs,  Boolean oldValue, Boolean newValue) {
-        app.game().session().gameFlow().setCutScenesEnabled(newValue);
+        app.game().session().setCutScenesEnabled(newValue);
     }
 
     private OptionMenuEntry<GameVariantID> createGameVariantIDEntry() {

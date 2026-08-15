@@ -22,8 +22,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameFlowController extends StateMachine<GameContext> {
 
-    private boolean cutScenesEnabled;
-
     public GameFlowController(String name) {
         setName(name);
     }
@@ -50,13 +48,5 @@ public class GameFlowController extends StateMachine<GameContext> {
 
     public Optional<State<GameContext>> optState(Named stateID) {
         return super.optState(stateID.name());
-    }
-
-    public boolean cutScenesEnabled() {
-        return cutScenesEnabled;
-    }
-
-    public void setCutScenesEnabled(boolean enabled) {
-        cutScenesEnabled = enabled;
     }
 }
