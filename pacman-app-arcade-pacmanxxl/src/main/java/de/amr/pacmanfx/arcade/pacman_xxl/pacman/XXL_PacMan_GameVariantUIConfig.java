@@ -74,19 +74,18 @@ public final class XXL_PacMan_GameVariantUIConfig implements GameVariantUIConfig
     private final ResourceBundle textBundle;
     private final AssetMap assets;
     private final Factory3D factory3D;
+    private final XXL_PacMan_GameSceneConfig gameSceneConfig;
 
-    private XXL_PacMan_GameSceneConfig gameSceneConfig;
     private XXL_PacMan_RenderConfig renderConfig;
-
     private GameSoundEffects soundEffects;
 
     private final Map<Named, Object> extensions = new HashMap<>();
 
     public XXL_PacMan_GameVariantUIConfig() {
+        gameSceneConfig = new XXL_PacMan_GameSceneConfig();
         textBundle = ResourceBundle.getBundle(XXL_PKG + "localized_texts_pacman");
         assets = new AssetMap();
         factory3D = new DefaultFactory3D();
-
         extensions.put(Arcade_GameExtensions.ACTIONS, new Arcade_Actions());
     }
 
@@ -100,11 +99,7 @@ public final class XXL_PacMan_GameVariantUIConfig implements GameVariantUIConfig
     }
 
     @Override
-    public void init(GameAppContext app, SoundManager soundManager) {
-        requireNonNull(app);
-
-        gameSceneConfig = new XXL_PacMan_GameSceneConfig();
-
+    public void init(GameAppContext ignore, SoundManager soundManager) {
         loadSounds(soundManager);
 
         assets.addAsset("app_icon", XXL_RM.loadImage(XXL_PATH + "graphics/icons/pacman.png"));

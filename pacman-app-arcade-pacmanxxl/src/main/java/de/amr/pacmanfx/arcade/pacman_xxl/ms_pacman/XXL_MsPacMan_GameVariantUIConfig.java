@@ -71,15 +71,15 @@ public final class XXL_MsPacMan_GameVariantUIConfig implements GameVariantUIConf
     private final TranslationManager translations;
     private final AssetMap assets;
     private final ArcadeMsPacMan_Factory3D factory3D;
+    private final XXL_MsPacMan_GameSceneConfig gameSceneConfig;
 
-    private XXL_MsPacMan_GameSceneConfig gameSceneConfig;
     private XXL_MsPacMan_RenderConfig renderConfig;
-
     private GameSoundEffects soundEffects;
 
     private final Map<Named, Object> extensions = new HashMap<>();
 
     public XXL_MsPacMan_GameVariantUIConfig() {
+        gameSceneConfig = new XXL_MsPacMan_GameSceneConfig();
         translations = () -> ResourceBundle.getBundle(XXL_PKG + "localized_texts_ms_pacman");
         assets = new AssetMap();
         factory3D = new ArcadeMsPacMan_Factory3D();
@@ -101,8 +101,6 @@ public final class XXL_MsPacMan_GameVariantUIConfig implements GameVariantUIConf
     public void init(GameAppContext app, SoundManager soundManager) {
         requireNonNull(app);
         requireNonNull(soundManager);
-
-        gameSceneConfig = new XXL_MsPacMan_GameSceneConfig();
 
         loadSounds(soundManager);
 

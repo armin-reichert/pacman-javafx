@@ -70,15 +70,15 @@ public class ArcadeMsPacMan_GameVariantUIConfig implements GameVariantUIConfig {
     private final TranslationManager translations;
     private final AssetMap assets;
     private final Factory3D factory3D;
+    private final GameSceneConfig gameSceneConfig;
 
-    private GameSceneConfig gameSceneConfig;
     private ArcadeMsPacMan_RenderConfig renderConfig;
-
     private GameSoundEffects soundEffects;
 
     private final Map<Named, Object> extensions = new HashMap<>();
 
     public ArcadeMsPacMan_GameVariantUIConfig() {
+        gameSceneConfig = new ArcadeMsPacMan_GameSceneConfig();
         translations = () -> ResourceBundle.getBundle("de.amr.pacmanfx.arcade.ms_pacman.localized_texts");
         assets = new AssetMap();
         factory3D = new ArcadeMsPacMan_Factory3D();
@@ -97,10 +97,6 @@ public class ArcadeMsPacMan_GameVariantUIConfig implements GameVariantUIConfig {
 
     @Override
     public void init(GameAppContext app, SoundManager soundManager) {
-        requireNonNull(app);
-
-        gameSceneConfig = new ArcadeMsPacMan_GameSceneConfig();
-
         loadSounds(soundManager);
 
         assets.addAsset("app_icon",    RM.loadImage("graphics/icons/mspacman.png"));

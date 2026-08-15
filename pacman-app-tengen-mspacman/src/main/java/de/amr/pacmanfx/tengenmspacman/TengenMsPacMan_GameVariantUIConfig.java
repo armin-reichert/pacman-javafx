@@ -34,7 +34,6 @@ import java.util.*;
 
 import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.audioClip;
 import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.mediaPlayer;
-import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_GameVariantUIConfig implements GameVariantUIConfig {
 
@@ -119,15 +118,15 @@ public class TengenMsPacMan_GameVariantUIConfig implements GameVariantUIConfig {
     private final ResourceBundle textBundle;
     private final AssetMap assets;
     private final TengenMsPacMan_Factory3D factory3D;
+    private final TengenMsPacMan_GameSceneConfig gameSceneConfig;
 
-    private TengenMsPacMan_GameSceneConfig gameSceneConfig;
     private TengenMsPacMan_RenderConfig renderConfig;
-
     private GameSoundEffects soundEffects;
 
     private final Map<Named, Object> extensions = new HashMap<>();
 
     public TengenMsPacMan_GameVariantUIConfig() {
+        gameSceneConfig = new TengenMsPacMan_GameSceneConfig();
         textBundle = ResourceBundle.getBundle("de.amr.pacmanfx.tengenmspacman.localized_texts");
         assets = new AssetMap();
         factory3D = new TengenMsPacMan_Factory3D();
@@ -144,10 +143,6 @@ public class TengenMsPacMan_GameVariantUIConfig implements GameVariantUIConfig {
 
     @Override
     public void init(GameAppContext app, SoundManager soundManager) {
-        requireNonNull(app);
-        
-        gameSceneConfig = new TengenMsPacMan_GameSceneConfig();
-
         loadSounds(soundManager);
         
         assets.addAsset("app_icon",                RM.loadImage("graphics/icons/mspacman.png"));
@@ -161,7 +156,8 @@ public class TengenMsPacMan_GameVariantUIConfig implements GameVariantUIConfig {
 
         assets.freeze();
 
-        extensions.put(TengenMsPacMan_GameExtension.UI_SETTINGS, new TengenMsPacMan_UISettings(app));
+        //TODO get rid of this crap and of app dependency!
+        extensions.put(TengenMsPacMan_GameExtension.UI_SETTINGS, new TengenMsPacMan_UISettings(null));
         extensions.put(TengenMsPacMan_GameExtension.ACTIONS, new TengenMsPacMan_Actions(
             app.input().joypad(), app.commonActions())
         );
