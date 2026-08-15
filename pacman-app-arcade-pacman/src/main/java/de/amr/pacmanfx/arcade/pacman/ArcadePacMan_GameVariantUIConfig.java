@@ -78,7 +78,6 @@ public class ArcadePacMan_GameVariantUIConfig implements GameVariantUIConfig {
     private ArcadePacMan_RenderConfig renderConfig;
     private GameSceneConfig gameSceneConfig;
 
-    private SoundManager sounds;
     private GameSoundEffects soundEffects;
 
     private final Map<Named, Object> extensions = new HashMap<>();
@@ -103,13 +102,12 @@ public class ArcadePacMan_GameVariantUIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public void init(GameAppContext appContext) {
-        requireNonNull(appContext);
+    public void init(GameAppContext app, SoundManager soundManager) {
+        requireNonNull(app);
 
         gameSceneConfig = new ArcadePacMan_GameSceneConfig();
 
-        sounds = appContext.ui().sounds();
-        loadSounds();
+        loadSounds(soundManager);
 
         assets.addAsset("app_icon", RM.loadImage("graphics/icons/pacman.png"));
         assets.addAsset("color.game_over_message", ARCADE_RED);
@@ -131,9 +129,7 @@ public class ArcadePacMan_GameVariantUIConfig implements GameVariantUIConfig {
         assets.dispose();
 
         Logger.info("Unload sounds");
-        if (sounds != null) {
-            unloadSounds();
-        }
+        //TODO unloadSounds(soundManager)
     }
 
     @Override
@@ -173,11 +169,11 @@ public class ArcadePacMan_GameVariantUIConfig implements GameVariantUIConfig {
 
     // private
 
-    private void loadSounds() {
+    private void loadSounds(SoundManager soundManager) {
         for (SoundManager.SoundEntry entry : SOUND_ENTRIES) {
-            sounds.add(entry);
+            soundManager.add(entry);
         }
-        soundEffects = new GameSoundEffects(sounds);
+        soundEffects = new GameSoundEffects(soundManager);
         soundEffects.setMunchingSoundDelay((byte) 9);
         soundEffects.registerSirens(
             RM.url("sound/siren_1.mp3"),
@@ -188,9 +184,9 @@ public class ArcadePacMan_GameVariantUIConfig implements GameVariantUIConfig {
         soundEffects.setSirenVolume(0.33f);
     }
 
-    private void unloadSounds() {
+    private void unloadSounds(SoundManager soundManager) {
         for (SoundManager.SoundEntry entry : SOUND_ENTRIES) {
-            sounds.remove(entry);
+            soundManager.remove(entry);
         }
         soundEffects.dispose();
     }
