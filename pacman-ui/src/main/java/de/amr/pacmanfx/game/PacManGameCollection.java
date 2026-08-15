@@ -37,6 +37,7 @@ import static java.util.Objects.requireNonNull;
  */
 public final class PacManGameCollection implements GameAppContext, GameLifecycle {
 
+    private final GameBox gameBox;
     private final GameVariantManagerImpl gameVariantManager;
 
     private final StateChangeEventConverter changeEventConverter;
@@ -47,7 +48,8 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
 
     private GameContext game;
 
-    public PacManGameCollection() {
+    public PacManGameCollection(GameBox gameBox) {
+        this.gameBox = requireNonNull(gameBox);
         gameVariantManager = new GameVariantManagerImpl();
         changeEventConverter = new StateChangeEventConverter();
         actions = new CommonGameActions();
@@ -211,7 +213,7 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
     // Private area, no trespassing!
 
     private GameBox gameBox() {
-        return GameBox.instance();
+        return gameBox;
     }
 
     private void startBackgroundServices() {
@@ -236,7 +238,8 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
         }
     }
 
-    private class GameVariantManagerImpl implements GameVariantManager, ChangeListener<String> {
+    //TODO make static, the extract to top-level
+    public /*static*/ class GameVariantManagerImpl implements GameVariantManager, ChangeListener<String> {
 
         private final Map<String, GameVariant> variantsByName = new HashMap<>();
 
@@ -282,7 +285,7 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
         @Override
         public void selectVariant(String gameVariantName) {
             requireNonNull(gameVariantName);
-            if (gameBox().containsCartridgeWithName(gameVariantName)) {
+            if (gameBox.cartridgeRepository().containsCartridgeWithName(gameVariantName)) {
                 this.variantName.set(gameVariantName);
             }
             else throw new IllegalArgumentException("Game with name '" + gameVariantName + "' not found");
@@ -303,7 +306,7 @@ public final class PacManGameCollection implements GameAppContext, GameLifecycle
         }
 
         private GameVariant createGameVariant(String variantName, boolean testStatesIncluded) {
-            final Cartridge cartridge = gameBox().cartridgeByName(variantName);
+            final Cartridge cartridge = gameBox.cartridgeRepository().cartridgeByName(variantName);
             final var gameVariant = new GameVariant(cartridge);
             if (testStatesIncluded) {
                 gameVariant.config().gameFlow().addTestStates();

@@ -4,6 +4,8 @@
 
 package de.amr.pacmanfx.tengenmspacman.app;
 
+import de.amr.pacmanfx.game.CartridgeRepository;
+import de.amr.pacmanfx.game.GameBox;
 import de.amr.pacmanfx.game.GameBuilder;
 import de.amr.pacmanfx.game.PacManGameCollection;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
@@ -16,7 +18,13 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantConfig.NE
 
 public class TengenMsPacMan_App extends Application {
 
+    private GameBox gameBox;
     private PacManGameCollection game;
+
+    @Override
+    public void init() throws Exception {
+        gameBox = new GameBox(new CartridgeRepository());
+    }
 
     @Override
     public void start(Stage stage) {
@@ -26,7 +34,7 @@ public class TengenMsPacMan_App extends Application {
             .startPage(TengenMsPacMan_StartPage::new)
             .window(stage)
             .screenArea(NES_SCREEN_ASPECT_RATIO, 0.8)
-            .build()
+            .build(gameBox)
             .orElse(null);
 
         if (game != null) {

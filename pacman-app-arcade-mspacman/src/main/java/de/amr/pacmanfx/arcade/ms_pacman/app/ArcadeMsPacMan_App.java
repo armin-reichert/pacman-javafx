@@ -6,6 +6,8 @@ package de.amr.pacmanfx.arcade.ms_pacman.app;
 
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
 import de.amr.pacmanfx.core.GameVariantID;
+import de.amr.pacmanfx.game.CartridgeRepository;
+import de.amr.pacmanfx.game.GameBox;
 import de.amr.pacmanfx.game.GameBuilder;
 import de.amr.pacmanfx.game.PacManGameCollection;
 import javafx.application.Application;
@@ -13,7 +15,14 @@ import javafx.stage.Stage;
 
 public class ArcadeMsPacMan_App extends Application {
 
+    private GameBox gameBox;
+
     private PacManGameCollection game;
+
+    @Override
+    public void init() throws Exception {
+        gameBox = new GameBox(new CartridgeRepository());
+    }
 
     @Override
     public void start(Stage stage) {
@@ -22,7 +31,7 @@ public class ArcadeMsPacMan_App extends Application {
             .startPage(ArcadeMsPacMan_StartPage::new)
             .window(stage)
             .screenArea(1.2, 0.8)
-            .build()
+            .build(gameBox)
             .orElse(null);
 
         if (game != null) {

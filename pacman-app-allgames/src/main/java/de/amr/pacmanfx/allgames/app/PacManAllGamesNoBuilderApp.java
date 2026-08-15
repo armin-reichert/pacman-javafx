@@ -15,6 +15,7 @@ import de.amr.pacmanfx.arcade.pacman_xxl.app.XXL_PacMan_Cartridge;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_StartPage;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_WorldMapManager;
 import de.amr.pacmanfx.core.GameVariantID;
+import de.amr.pacmanfx.game.CartridgeRepository;
 import de.amr.pacmanfx.game.GameBox;
 import de.amr.pacmanfx.game.PacManGameCollection;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
@@ -31,17 +32,15 @@ public class PacManAllGamesNoBuilderApp extends Application {
     static final float ASPECT_RATIO    = 1.6f; // 16:10
     static final float HEIGHT_FRACTION = 0.8f; // Use 80% of screen height
 
+    private GameBox gameBox;
     private PacManGameCollection game;
     private boolean includeTests;
 
     @Override
     public void init() {
         includeTests = Boolean.parseBoolean(getParameters().getNamed().get("include_tests"));
-    }
-
-    @Override
-    public void start(Stage stage) {
-        GameBox.instance().insertCartridges(
+        gameBox = new GameBox(new CartridgeRepository());
+        gameBox.cartridgeRepository().insertCartridges(
             ArcadePacMan_Cartridge.CARTRIDGE,
             ArcadeMsPacMan_Cartridge.CARTRIDGE,
             TengenMsPacMan_Cartridge.CARTRIDGE,
@@ -50,7 +49,11 @@ public class PacManAllGamesNoBuilderApp extends Application {
             null,
             XXL_MsPacMan_Cartridge.CARTRIDGE
         );
-        game = new PacManGameCollection();
+    }
+
+    @Override
+    public void start(Stage stage) {
+        game = new PacManGameCollection(gameBox);
 
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         final GameUI ui = new GameUI(

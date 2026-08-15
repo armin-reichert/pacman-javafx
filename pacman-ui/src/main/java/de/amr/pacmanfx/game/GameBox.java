@@ -14,9 +14,6 @@ import de.amr.pacmanfx.uilib.GameClockImpl;
 import org.tinylog.Logger;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 
@@ -28,22 +25,14 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameBox implements Disposable {
 
-    // The lazy thread-safe singleton holder pattern
-    private static class SingletonHolder {
-        static final GameBox SINGLETON = new GameBox();
-    }
-
-    public static GameBox instance() {
-        return SingletonHolder.SINGLETON;
-    }
-
-    private final Set<Cartridge> cartridges = new HashSet<>(6);
+    private final CartridgeRepository cartridgeRepository;
     private final Input input = new Input();
     private final CoinMechanism coinMechanism = new CoinMechanism(99);
     private final GameClock clock = new GameClockImpl();
     private final DirectoryWatchdog watchdog;
 
-    private GameBox() {
+    public GameBox(CartridgeRepository cartridgeRepository) {
+        this.cartridgeRepository = requireNonNull(cartridgeRepository);
         final boolean ok = validateUserDirs();
         if (!ok) {
             throw new IllegalStateException("GameBox: User directory validation failed");
@@ -56,6 +45,10 @@ public class GameBox implements Disposable {
     public void dispose() {
         clock.stop();
         watchdog.dispose();
+    }
+
+    public CartridgeRepository cartridgeRepository() {
+        return cartridgeRepository;
     }
 
     public CoinMechanism coinMechanism() {
@@ -74,42 +67,7 @@ public class GameBox implements Disposable {
         return watchdog;
     }
 
-    public void insertCartridges(Cartridge... cartridgesToInsert) {
-        for (var cartridge : cartridgesToInsert) {
-            if (cartridge == null) {
-                Logger.error("NULL cartridge detected! Are you kidding me?");
-            } else {
-                final boolean added = cartridges.add(cartridge);
-                if (added) {
-                    Logger.info("Cartridge {} inserted into machine", cartridge.id().name());
-                } else {
-                    Logger.info("Cartridge {} already inserted", cartridge.id().name());
-                }
-            }
-        }
-    }
-
-    public Cartridge cartridgeByName(String name) {
-        requireNonNull(name);
-        return findCartridgeByName(name).orElseThrow(
-            () -> {
-                final String errorMessage = "No cartridge for game variant %s has been inserted!".formatted(name);
-                Logger.error(errorMessage);
-                return new IllegalArgumentException(errorMessage);
-            }
-        );
-    }
-
-    public boolean containsCartridgeWithName(String name) {
-        requireNonNull(name);
-        return findCartridgeByName(name).isPresent();
-    }
-
     // other stuff
-
-    private Optional<Cartridge> findCartridgeByName(String name) {
-        return cartridges.stream().filter(cartridge -> cartridge.id().name().equals(name)).findFirst();
-    }
 
     private boolean validateUserDirs() {
         return dirExistsAndIsWritable(GameConstants.USER_HOME_DIR, "Game root directory")
