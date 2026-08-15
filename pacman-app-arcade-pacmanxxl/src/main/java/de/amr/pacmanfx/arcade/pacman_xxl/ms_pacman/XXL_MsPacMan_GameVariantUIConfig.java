@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman;
 
 import de.amr.basics.Named;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_Factory3D;
-import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameVariantConfig;
+import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameVariantUIConfig;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
@@ -32,10 +32,10 @@ import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.mediaPlayer;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
 import static java.util.Objects.requireNonNull;
 
-public final class XXL_MsPacMan_GameVariantConfig implements GameVariantUIConfig {
+public final class XXL_MsPacMan_GameVariantUIConfig implements GameVariantUIConfig {
 
-    private static final ResourceManager XXL_RM = () -> XXL_MsPacMan_GameVariantConfig.class;
-    private static final ResourceManager ARCADE_RM = () -> ArcadeMsPacMan_GameVariantConfig.class;
+    private static final ResourceManager XXL_RM = () -> XXL_MsPacMan_GameVariantUIConfig.class;
+    private static final ResourceManager ARCADE_RM = () -> ArcadeMsPacMan_GameVariantUIConfig.class;
     private static final String XXL_PATH = "/de/amr/pacmanfx/arcade/pacman_xxl/";
     private static final String XXL_PKG = "de.amr.pacmanfx.arcade.pacman_xxl.";
 
@@ -80,7 +80,7 @@ public final class XXL_MsPacMan_GameVariantConfig implements GameVariantUIConfig
 
     private final Map<Named, Object> extensions = new HashMap<>();
 
-    public XXL_MsPacMan_GameVariantConfig() {
+    public XXL_MsPacMan_GameVariantUIConfig() {
         translations = () -> ResourceBundle.getBundle(XXL_PKG + "localized_texts_ms_pacman");
         assets = new AssetMap();
         factory3D = new ArcadeMsPacMan_Factory3D();

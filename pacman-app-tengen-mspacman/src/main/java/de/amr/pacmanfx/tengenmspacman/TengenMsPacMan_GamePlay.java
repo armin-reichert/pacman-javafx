@@ -63,11 +63,11 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final int startLevel = session.value(TengenMsPacMan_GamePlayOptions.START_LEVEL_NUMBER, Integer.class);
         final int numContinues = session.value(TengenMsPacMan_GamePlayOptions.NUM_CONTINUES, Integer.class);
 
-        return boosterMode == TengenMsPacMan_GameVariantConfig.DEFAULT_PAC_BOOSTER
-            && difficulty == TengenMsPacMan_GameVariantConfig.DEFAULT_DIFFICULTY
-            && mapCategory == TengenMsPacMan_GameVariantConfig.DEFAULT_MAP_CATEGORY
-            && startLevel == TengenMsPacMan_GameVariantConfig.DEFAULT_START_LEVEL
-            && numContinues == TengenMsPacMan_GameVariantConfig.DEFAULT_NUM_CONTINUES;
+        return boosterMode == TengenMsPacMan_GameVariantUIConfig.DEFAULT_PAC_BOOSTER
+            && difficulty == TengenMsPacMan_GameVariantUIConfig.DEFAULT_DIFFICULTY
+            && mapCategory == TengenMsPacMan_GameVariantUIConfig.DEFAULT_MAP_CATEGORY
+            && startLevel == TengenMsPacMan_GameVariantUIConfig.DEFAULT_START_LEVEL
+            && numContinues == TengenMsPacMan_GameVariantUIConfig.DEFAULT_NUM_CONTINUES;
     }
 
     public void setBoosterOn(GameContext game, Pac pac, boolean boosterOn) {
@@ -201,11 +201,11 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         session.hud().hide();
         setBoosterOn(session, false);
 
-        setBoosterMode(session,      TengenMsPacMan_GameVariantConfig.DEFAULT_PAC_BOOSTER);
-        setDifficulty(game,          TengenMsPacMan_GameVariantConfig.DEFAULT_DIFFICULTY);
-        setMapCategory(session,      TengenMsPacMan_GameVariantConfig.DEFAULT_MAP_CATEGORY);
-        setStartLevelNumber(session, TengenMsPacMan_GameVariantConfig.DEFAULT_START_LEVEL);
-        setNumContinues(session,     TengenMsPacMan_GameVariantConfig.DEFAULT_NUM_CONTINUES);
+        setBoosterMode(session,      TengenMsPacMan_GameVariantUIConfig.DEFAULT_PAC_BOOSTER);
+        setDifficulty(game,          TengenMsPacMan_GameVariantUIConfig.DEFAULT_DIFFICULTY);
+        setMapCategory(session,      TengenMsPacMan_GameVariantUIConfig.DEFAULT_MAP_CATEGORY);
+        setStartLevelNumber(session, TengenMsPacMan_GameVariantUIConfig.DEFAULT_START_LEVEL);
+        setNumContinues(session,     TengenMsPacMan_GameVariantUIConfig.DEFAULT_NUM_CONTINUES);
     }
 
     // Level building and level start
@@ -252,7 +252,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     }
 
     private void addEntities(GameLevelEntitySet entities, GameContext game, WorldMap worldMap) {
-        final House house = HouseFactory.createArcadeHouse(TengenMsPacMan_GameVariantConfig.HOUSE_MIN_TILE);
+        final House house = HouseFactory.createArcadeHouse(TengenMsPacMan_GameVariantUIConfig.HOUSE_MIN_TILE);
 
         final var actorFactory  = TengenMsPacMan_ActorFactory.instance();
         final Pac msPacMan      = actorFactory.createMsPacMan();

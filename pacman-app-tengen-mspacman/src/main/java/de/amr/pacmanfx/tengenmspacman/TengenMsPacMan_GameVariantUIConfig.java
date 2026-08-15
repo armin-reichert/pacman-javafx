@@ -36,7 +36,7 @@ import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.audioClip;
 import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.mediaPlayer;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_GameVariantConfig implements GameVariantUIConfig {
+public class TengenMsPacMan_GameVariantUIConfig implements GameVariantUIConfig {
 
     public static final int DEFAULT_START_LEVEL = 1;
     public static final int DEFAULT_NUM_CONTINUES = 4;
@@ -83,7 +83,7 @@ public class TengenMsPacMan_GameVariantConfig implements GameVariantUIConfig {
     );
 
     private static final WorldSettings WORLD_SETTINGS = TengenJsonConfigLoader.load(
-        TengenMsPacMan_GameVariantConfig.class.getResource("/de/amr/pacmanfx/tengenmspacman/world.json"), WorldSettings.class);
+        TengenMsPacMan_GameVariantUIConfig.class.getResource("/de/amr/pacmanfx/tengenmspacman/world.json"), WorldSettings.class);
 
     /** Path inside resources folder where map files (.world) are stored. */
     public static final String MAPS_FOLDER = "/de/amr/pacmanfx/tengenmspacman/maps/";
@@ -128,7 +128,7 @@ public class TengenMsPacMan_GameVariantConfig implements GameVariantUIConfig {
 
     private final Map<Named, Object> extensions = new HashMap<>();
 
-    public TengenMsPacMan_GameVariantConfig() {
+    public TengenMsPacMan_GameVariantUIConfig() {
         textBundle = ResourceBundle.getBundle("de.amr.pacmanfx.tengenmspacman.localized_texts");
         assets = new AssetMap();
         factory3D = new TengenMsPacMan_Factory3D();

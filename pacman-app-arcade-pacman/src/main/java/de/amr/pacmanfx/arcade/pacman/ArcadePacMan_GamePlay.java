@@ -148,7 +148,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         final TerrainLayer terrain = worldMap.terrainLayer();
 
         final Vector2i houseMinTile = terrain.getTilePropertyOrDefault(
-            WorldMapPropertyName.POS_HOUSE_MIN_TILE, ArcadePacMan_GameVariantConfig.ARCADE_MAP_HOUSE_MIN_TILE);
+            WorldMapPropertyName.POS_HOUSE_MIN_TILE, ArcadePacMan_GameVariantUIConfig.ARCADE_MAP_HOUSE_MIN_TILE);
         terrain.propertyMap().put(WorldMapPropertyName.POS_HOUSE_MIN_TILE,  String.valueOf(houseMinTile));
 
         final var actorFactory = ArcadePacMan_ActorFactory.instance();
@@ -270,7 +270,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         final int value = game.variantConfig().rules().scoringRules().pointsForBonus(symbolCode);
         final float edibleSec = randomFloat(9, 10);
         final Vector2i tile = level.worldMap().terrainLayer().getTilePropertyOrDefault(
-            WorldMapPropertyName.POS_BONUS, ArcadePacMan_GameVariantConfig.DEFAULT_BONUS_TILE);
+            WorldMapPropertyName.POS_BONUS, ArcadePacMan_GameVariantUIConfig.DEFAULT_BONUS_TILE);
 
         final Bonus bonus = Bonus.createStaticBonus(symbolCode, value);
         level.entities().optBonus().ifPresent(oldBonus -> level.entities().remove(oldBonus));

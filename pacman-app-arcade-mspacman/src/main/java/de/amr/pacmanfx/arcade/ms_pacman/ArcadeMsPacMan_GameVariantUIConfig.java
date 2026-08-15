@@ -31,9 +31,9 @@ import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.mediaPlayer;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
 import static java.util.Objects.requireNonNull;
 
-public class ArcadeMsPacMan_GameVariantConfig implements GameVariantUIConfig {
+public class ArcadeMsPacMan_GameVariantUIConfig implements GameVariantUIConfig {
 
-    private static final ResourceManager RM = () -> ArcadeMsPacMan_GameVariantConfig.class;
+    private static final ResourceManager RM = () -> ArcadeMsPacMan_GameVariantUIConfig.class;
 
     private static final List<SoundManager.SoundEntry> SOUND_ENTRIES = Arrays.asList(
         mediaPlayer(PacManGameSoundID.BONUS_ACTIVE, RM.url("sound/Fruit_Bounce.mp3")),
@@ -79,7 +79,7 @@ public class ArcadeMsPacMan_GameVariantConfig implements GameVariantUIConfig {
 
     private final Map<Named, Object> extensions = new HashMap<>();
 
-    public ArcadeMsPacMan_GameVariantConfig() {
+    public ArcadeMsPacMan_GameVariantUIConfig() {
         translations = () -> ResourceBundle.getBundle("de.amr.pacmanfx.arcade.ms_pacman.localized_texts");
         assets = new AssetMap();
         factory3D = new ArcadeMsPacMan_Factory3D();

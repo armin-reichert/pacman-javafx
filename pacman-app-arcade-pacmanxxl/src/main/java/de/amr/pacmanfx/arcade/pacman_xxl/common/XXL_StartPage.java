@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
 import de.amr.basics.json.JsonLoader;
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.arcade.pacman_xxl.pacman.XXL_PacMan_GameVariantConfig;
+import de.amr.pacmanfx.arcade.pacman_xxl.pacman.XXL_PacMan_GameVariantUIConfig;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -32,7 +32,7 @@ import static java.util.Objects.requireNonNull;
 public class XXL_StartPage implements StartPage {
 
     static final String ROOT_PATH = "/de/amr/pacmanfx/arcade/pacman_xxl/";
-    static final ResourceManager RM = () -> XXL_PacMan_GameVariantConfig.class;
+    static final ResourceManager RM = () -> XXL_PacMan_GameVariantUIConfig.class;
 
     static final String XXL_OPTION_MENU_JSON = "/de/amr/pacmanfx/arcade/pacman_xxl/option-menu.json";
 
