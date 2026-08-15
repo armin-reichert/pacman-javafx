@@ -72,46 +72,56 @@ public class ArcadePacMan_GameVariantUIConfig implements GameVariantUIConfig {
     );
 
     private final TranslationManager translations;
-    private AssetMap assets;
     private final Factory3D factory3D;
-
-    private ArcadePacMan_RenderConfig renderConfig;
-    private GameSceneConfig gameSceneConfig;
-
-    private GameSoundEffects soundEffects;
-
+    private final GameSceneConfig gameSceneConfig;
+    private final ArcadePacMan_RenderConfig renderConfig;
     private final Map<Named, Object> extensions = new HashMap<>();
+
+    private AssetMap assets;
+    private GameSoundEffects soundEffects;
 
     public ArcadePacMan_GameVariantUIConfig() {
         loadAssets();
+        renderConfig = new ArcadePacMan_RenderConfig(assets);
+        renderConfig.addAssets();
+        assets.freeze();
+        gameSceneConfig = new ArcadePacMan_GameSceneConfig();
         translations = () -> ResourceBundle.getBundle("de.amr.pacmanfx.arcade.pacman.localized_texts");
         factory3D = new ArcadePacMan_Factory3D();
         extensions.put(Arcade_GameExtensions.ACTIONS, new Arcade_Actions());
     }
 
-    private void loadAssets() {
-        assets = new AssetMap();
-        assets.addAsset("app_icon", RM.loadImage("graphics/icons/pacman.png"));
-        assets.addAsset("color.game_over_message", ARCADE_RED);
+    @Override
+    public void loadSounds(SoundManager soundManager) {
+        for (SoundManager.SoundEntry entry : SOUND_ENTRIES) {
+            soundManager.add(entry);
+        }
+        soundEffects = new GameSoundEffects(soundManager);
+        soundEffects.setMunchingSoundDelay((byte) 9);
+        soundEffects.registerSirens(
+            RM.url("sound/siren_1.mp3"),
+            RM.url("sound/siren_2.mp3"),
+            RM.url("sound/siren_3.mp3"),
+            RM.url("sound/siren_4.mp3")
+        );
+        soundEffects.setSirenVolume(0.33f);
     }
 
+    @Override
     public void unloadSounds(SoundManager soundManager) {
+        Logger.info("Unload sounds");
         for (SoundManager.SoundEntry entry : SOUND_ENTRIES) {
             soundManager.remove(entry);
         }
-        soundEffects.dispose();
+        if (soundEffects != null) {
+            soundEffects.dispose();
+            soundEffects = null;
+        }
     }
 
-    // GameVariantConfig interface
-
     @Override
-    public void init(GameAppContext app, SoundManager soundManager) {
+    public void initApp(GameAppContext app) {
         requireNonNull(app);
-        gameSceneConfig = new ArcadePacMan_GameSceneConfig();
-        loadSounds(soundManager);
-        renderConfig = new ArcadePacMan_RenderConfig(assets);
-        renderConfig.addAssets();
-        assets.freeze();
     }
 
     @Override
@@ -121,11 +131,11 @@ public class ArcadePacMan_GameVariantUIConfig implements GameVariantUIConfig {
         Logger.info("Dispose game scene configuration");
         gameSceneConfig.dispose();
 
-        Logger.info("Dispose assets");
-        assets.dispose();
-
-        Logger.info("Unload sounds");
-        //TODO unloadSounds(soundManager)
+        if (assets != null) {
+            Logger.info("Dispose assets");
+            assets.dispose();
+            assets = null;
+        }
     }
 
     @Override
@@ -174,18 +184,9 @@ public class ArcadePacMan_GameVariantUIConfig implements GameVariantUIConfig {
 
     // private
 
-    private void loadSounds(SoundManager soundManager) {
-        for (SoundManager.SoundEntry entry : SOUND_ENTRIES) {
-            soundManager.add(entry);
-        }
-        soundEffects = new GameSoundEffects(soundManager);
-        soundEffects.setMunchingSoundDelay((byte) 9);
-        soundEffects.registerSirens(
-            RM.url("sound/siren_1.mp3"),
-            RM.url("sound/siren_2.mp3"),
-            RM.url("sound/siren_3.mp3"),
-            RM.url("sound/siren_4.mp3")
-        );
-        soundEffects.setSirenVolume(0.33f);
+    private void loadAssets() {
+        assets = new AssetMap();
+        assets.addAsset("app_icon", RM.loadImage("graphics/icons/pacman.png"));
+        assets.addAsset("color.game_over_message", ARCADE_RED);
     }
 }

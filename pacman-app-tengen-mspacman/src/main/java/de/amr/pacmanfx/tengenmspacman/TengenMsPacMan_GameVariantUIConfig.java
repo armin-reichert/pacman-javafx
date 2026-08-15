@@ -116,45 +116,61 @@ public class TengenMsPacMan_GameVariantUIConfig implements GameVariantUIConfig {
     // Non-static members
 
     private final ResourceBundle textBundle;
-    private AssetMap assets;
     private final TengenMsPacMan_Factory3D factory3D;
     private final TengenMsPacMan_GameSceneConfig gameSceneConfig;
-
-    private TengenMsPacMan_RenderConfig renderConfig;
-    private GameSoundEffects soundEffects;
-
+    private final TengenMsPacMan_RenderConfig renderConfig;
     private final Map<Named, Object> extensions = new HashMap<>();
+
+    private GameSoundEffects soundEffects;
+    private AssetMap assets;
 
     public TengenMsPacMan_GameVariantUIConfig() {
         loadAssets();
+        renderConfig = new TengenMsPacMan_RenderConfig(assets);
+        renderConfig.addAssets();
+        assets.freeze();
         gameSceneConfig = new TengenMsPacMan_GameSceneConfig();
         textBundle = ResourceBundle.getBundle("de.amr.pacmanfx.tengenmspacman.localized_texts");
         factory3D = new TengenMsPacMan_Factory3D();
     }
 
-    private void loadAssets()  {
-        assets = new AssetMap();
-        assets.addAsset("app_icon",                RM.loadImage("graphics/icons/mspacman.png"));
-        assets.addAsset("startpage.image1",        RM.loadImage("graphics/flyer-page-1.png"));
-        assets.addAsset("startpage.image2",        RM.loadImage("graphics/flyer-page-2.png"));
-        assets.addAsset("color.game_over_message", NES_Palette.color(0x11));
-        assets.addAsset("color.ready_message",     NES_Palette.color(0x28));
-    }
-
-    public void unloadSounds(SoundManager soundManager) {
+    @Override
+    public void loadSounds(SoundManager soundManager) {
         for (SoundManager.SoundEntry entry : SOUND_ENTRIES) {
-            soundManager.remove(entry);
+            soundManager.add(entry);
         }
-        soundEffects.dispose();
+
+        //TODO fix the sound file instead
+        final MediaPlayer bounceSound = soundManager.mediaPlayer(PacManGameSoundID.BONUS_ACTIVE);
+        if (bounceSound != null) {
+            bounceSound.setRate(0.25);
+        }
+
+        soundEffects = new GameSoundEffects(soundManager);
+        soundEffects.setMunchingSoundDelay((byte) 0);
+        soundEffects.registerSirens(
+            RM.url("sound/ms-siren1.wav"),
+            RM.url("sound/ms-siren2.wav"), // TODO
+            RM.url("sound/ms-siren2.wav"), // TODO
+            RM.url("sound/ms-siren2.wav")  // TODO
+        );
+        soundEffects.setSirenVolume(1.0f);
     }
 
     @Override
-    public void init(GameAppContext app, SoundManager soundManager) {
-        loadSounds(soundManager);
-        renderConfig = new TengenMsPacMan_RenderConfig(assets);
-        renderConfig.addAssets();
-        assets.freeze();
+    public void unloadSounds(SoundManager soundManager) {
+        Logger.info("Unload sounds");
+        for (SoundManager.SoundEntry entry : SOUND_ENTRIES) {
+            soundManager.remove(entry);
+        }
+        if (soundEffects != null) {
+            soundEffects.dispose();
+            soundEffects = null;
+        }
+    }
 
+    @Override
+    public void initApp(GameAppContext app) {
         //TODO get rid of this crap and of app dependency!
         extensions.put(TengenMsPacMan_GameExtension.UI_SETTINGS, new TengenMsPacMan_UISettings(null));
         extensions.put(TengenMsPacMan_GameExtension.ACTIONS, new TengenMsPacMan_Actions(
@@ -169,11 +185,11 @@ public class TengenMsPacMan_GameVariantUIConfig implements GameVariantUIConfig {
         Logger.info("Dispose game scene configuration");
         gameSceneConfig.dispose();
 
-        Logger.info("Dispose assets");
-        assets.dispose();
-
-        Logger.info("Unload sounds");
-        //TODO
+        if (assets != null) {
+            Logger.info("Dispose assets");
+            assets.dispose();
+            assets = null;
+        }
     }
 
     @Override
@@ -220,27 +236,13 @@ public class TengenMsPacMan_GameVariantUIConfig implements GameVariantUIConfig {
         return WORLD_SETTINGS;
     }
 
-    // Helpers
-
-    private void loadSounds(SoundManager soundManager) {
-        for (SoundManager.SoundEntry entry : SOUND_ENTRIES) {
-            soundManager.add(entry);
-        }
-
-        //TODO fix the sound file instead
-        final MediaPlayer bounceSound = soundManager.mediaPlayer(PacManGameSoundID.BONUS_ACTIVE);
-        if (bounceSound != null) {
-            bounceSound.setRate(0.25);
-        }
-
-        soundEffects = new GameSoundEffects(soundManager);
-        soundEffects.setMunchingSoundDelay((byte) 0);
-        soundEffects.registerSirens(
-            RM.url("sound/ms-siren1.wav"),
-            RM.url("sound/ms-siren2.wav"), // TODO
-            RM.url("sound/ms-siren2.wav"), // TODO
-            RM.url("sound/ms-siren2.wav")  // TODO
-        );
-        soundEffects.setSirenVolume(1.0f);
+    private void loadAssets()  {
+        assets = new AssetMap();
+        assets.addAsset("app_icon",                RM.loadImage("graphics/icons/mspacman.png"));
+        assets.addAsset("startpage.image1",        RM.loadImage("graphics/flyer-page-1.png"));
+        assets.addAsset("startpage.image2",        RM.loadImage("graphics/flyer-page-2.png"));
+        assets.addAsset("color.game_over_message", NES_Palette.color(0x11));
+        assets.addAsset("color.ready_message",     NES_Palette.color(0x28));
     }
+
 }

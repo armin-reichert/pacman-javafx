@@ -92,7 +92,10 @@ public final class PacManGamesMasterApp implements GameAppContext, GameLifecycle
         requireNonNull(gameVariant);
 
         //TODO rethink this
-        gameVariant.uiConfig().init(this, ui.sounds());
+        final GameVariantUIConfig uiConfig = gameVariant.uiConfig();
+        uiConfig.initApp(this);
+        uiConfig.loadSounds(ui.sounds());
+
         ui.viewModel().maze3D.init(gameVariant.uiConfig().worldSettings().maze());
 
         game = createGameContext(gameVariant);

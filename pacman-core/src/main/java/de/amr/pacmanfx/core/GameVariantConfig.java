@@ -8,6 +8,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 import org.tinylog.Logger;
 
 public class GameVariantConfig {
+
     private final GameSystems systems;
     private final GamePlay gamePlay;
     private final GameFlowController gameFlow;

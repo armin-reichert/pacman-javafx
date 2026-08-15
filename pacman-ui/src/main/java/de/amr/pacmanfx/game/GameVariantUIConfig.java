@@ -20,12 +20,9 @@ import java.util.Optional;
 public interface GameVariantUIConfig extends Disposable {
 
     //TODO remove app parameter
-    /**
-     * Called when the corresponding game variant gets the current one, e.g. by selecting its start page.
-     *
-     * @param app the global context
-     */
-    void init(GameAppContext app, SoundManager soundManager);
+    void initApp(GameAppContext app);
+
+    void loadSounds(SoundManager soundManager);
 
     void unloadSounds(SoundManager soundManager);
 

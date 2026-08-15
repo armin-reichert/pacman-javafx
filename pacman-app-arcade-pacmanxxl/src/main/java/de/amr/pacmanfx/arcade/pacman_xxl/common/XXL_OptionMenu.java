@@ -182,7 +182,8 @@ public class XXL_OptionMenu extends OptionMenu {
                     final GameContext game = app.game();
                     final GameVariant newGameVariant = app.gameVariants().gameVariantByName(newVariantID.name());
                     final GameVariantUIConfig uiConfig = newGameVariant.uiConfig();
-                    uiConfig.init(app, app.ui().sounds());
+                    uiConfig.initApp(app);
+                    uiConfig.loadSounds(app.ui().sounds());
                     chaseAnimation.init(game, uiConfig.renderConfig(), canvas, app.ui().sprites().animations());
                 }
             }

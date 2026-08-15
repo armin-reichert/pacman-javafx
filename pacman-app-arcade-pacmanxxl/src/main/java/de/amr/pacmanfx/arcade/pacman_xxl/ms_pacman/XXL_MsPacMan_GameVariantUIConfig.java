@@ -69,47 +69,57 @@ public final class XXL_MsPacMan_GameVariantUIConfig implements GameVariantUIConf
     }
 
     private final TranslationManager translations;
-    private AssetMap assets;
     private final ArcadeMsPacMan_Factory3D factory3D;
     private final XXL_MsPacMan_GameSceneConfig gameSceneConfig;
+    private final XXL_MsPacMan_RenderConfig renderConfig;
+    private final Map<Named, Object> extensions = new HashMap<>();
 
-    private XXL_MsPacMan_RenderConfig renderConfig;
+    private AssetMap assets;
     private GameSoundEffects soundEffects;
 
-    private final Map<Named, Object> extensions = new HashMap<>();
 
     public XXL_MsPacMan_GameVariantUIConfig() {
         loadAssets();
+        renderConfig = new XXL_MsPacMan_RenderConfig(assets);
+        renderConfig.addAssets();
+        assets.freeze();
         gameSceneConfig = new XXL_MsPacMan_GameSceneConfig();
         translations = () -> ResourceBundle.getBundle(XXL_PKG + "localized_texts_ms_pacman");
         factory3D = new ArcadeMsPacMan_Factory3D();
         extensions.put(Arcade_GameExtensions.ACTIONS, new Arcade_Actions());
     }
 
-    private void loadAssets() {
-        assets = new AssetMap();
-        assets.addAsset("app_icon", XXL_RM.loadImage(XXL_PATH + "graphics/icons/mspacman.png"));
-        assets.addAsset("logo.midway", ARCADE_RM.loadImage("graphics/midway_logo.png"));
-        assets.addAsset("color.game_over_message", ARCADE_RED);
-    }
-
     @Override
-    public <T> T getExtensionValue(Named id, Class<T> type) {
-        final Object value = extensions.get(id);
-        if (type.isInstance(value)) {
-            return type.cast(value);
+    public void loadSounds(SoundManager soundManager) {
+        for (SoundEntry entry : SOUND_ENTRIES) {
+            soundManager.add(entry);
         }
-        throw new IllegalArgumentException("Extension value " + value + " of type " + type.getName() + " not found");
+        soundEffects = new GameSoundEffects(soundManager);
+        soundEffects.setMunchingSoundDelay((byte) 0);
+        soundEffects.registerSirens(
+            ARCADE_RM.url("sound/GhostNoise1.wav"),
+            ARCADE_RM.url("sound/GhostNoise2.wav"),
+            ARCADE_RM.url("sound/GhostNoise3.wav"),
+            ARCADE_RM.url("sound/GhostNoise4.wav")
+        );
+        soundEffects.setSirenVolume(0.33f);
     }
 
     @Override
-    public void init(GameAppContext app, SoundManager soundManager) {
+    public void unloadSounds(SoundManager soundManager) {
+        Logger.info("Unload sounds");
+        for (SoundEntry entry : SOUND_ENTRIES) {
+            soundManager.remove(entry);
+        }
+        if (soundEffects != null) {
+            soundEffects.dispose();
+            soundEffects = null;
+        }
+    }
+
+    @Override
+    public void initApp(GameAppContext app) {
         requireNonNull(app);
-        requireNonNull(soundManager);
-        loadSounds(soundManager);
-        renderConfig = new XXL_MsPacMan_RenderConfig(assets);
-        renderConfig.addAssets(); //TODO check
-        assets.freeze();
     }
 
     @Override
@@ -119,23 +129,25 @@ public final class XXL_MsPacMan_GameVariantUIConfig implements GameVariantUIConf
         Logger.info("Dispose game scene configuration");
         gameSceneConfig.dispose();
 
-        Logger.info("Dispose assets");
-        assets.dispose();
-    }
-
-
-    @Override
-    public void unloadSounds(SoundManager soundManager) {
-        Logger.info("Unload sounds");
-        for (SoundEntry entry : SOUND_ENTRIES) {
-            soundManager.remove(entry);
+        if (assets != null) {
+            Logger.info("Dispose assets");
+            assets.dispose();
+            assets = null;
         }
-        soundEffects.dispose();
     }
 
     @Override
     public AssetMap assets() {
         return assets;
+    }
+
+    @Override
+    public <T> T getExtensionValue(Named id, Class<T> type) {
+        final Object value = extensions.get(id);
+        if (type.isInstance(value)) {
+            return type.cast(value);
+        }
+        throw new IllegalArgumentException("Extension value " + value + " of type " + type.getName() + " not found");
     }
 
     @Override
@@ -170,19 +182,10 @@ public final class XXL_MsPacMan_GameVariantUIConfig implements GameVariantUIConf
 
     // private
 
-    private void loadSounds(SoundManager soundManager) {
-        for (SoundEntry entry : SOUND_ENTRIES) {
-            soundManager.add(entry);
-        }
-        soundEffects = new GameSoundEffects(soundManager);
-        soundEffects.setMunchingSoundDelay((byte) 0);
-        soundEffects.registerSirens(
-            ARCADE_RM.url("sound/GhostNoise1.wav"),
-            ARCADE_RM.url("sound/GhostNoise2.wav"),
-            ARCADE_RM.url("sound/GhostNoise3.wav"),
-            ARCADE_RM.url("sound/GhostNoise4.wav")
-        );
-        soundEffects.setSirenVolume(0.33f);
+    private void loadAssets() {
+        assets = new AssetMap();
+        assets.addAsset("app_icon", XXL_RM.loadImage(XXL_PATH + "graphics/icons/mspacman.png"));
+        assets.addAsset("logo.midway", ARCADE_RM.loadImage("graphics/midway_logo.png"));
+        assets.addAsset("color.game_over_message", ARCADE_RED);
     }
-
 }
