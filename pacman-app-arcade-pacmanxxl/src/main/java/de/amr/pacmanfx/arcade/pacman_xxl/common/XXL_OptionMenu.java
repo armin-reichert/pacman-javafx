@@ -176,10 +176,11 @@ public class XXL_OptionMenu extends OptionMenu {
             ARCADE_PACMAN_XXL)
         {
             @Override
-            public void onValueChanged(GameVariantID oldVariant, GameVariantID newVariant) {
+            public void onValueChanged(GameVariantID oldVariantID, GameVariantID newVariantID) {
                 if (app != null) {
                     final GameContext game = app.game();
-                    final GameVariantRenderConfig renderConfig = app.gameVariants().gameVariantByName(newVariant.name()).uiConfig().renderConfig();
+                    final GameVariant newGameVariant = app.gameVariants().gameVariantByName(newVariantID.name());
+                    final GameVariantRenderConfig renderConfig = newGameVariant.uiConfig().renderConfig();
                     chaseAnimation.init(game, renderConfig, canvas, app.ui().sprites().animations());
                 }
             }

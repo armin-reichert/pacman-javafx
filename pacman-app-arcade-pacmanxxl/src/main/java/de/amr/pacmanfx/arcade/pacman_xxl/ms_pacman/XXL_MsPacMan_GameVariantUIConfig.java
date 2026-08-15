@@ -123,9 +123,16 @@ public final class XXL_MsPacMan_GameVariantUIConfig implements GameVariantUIConf
 
         Logger.info("Dispose assets");
         assets.dispose();
+    }
 
+
+    @Override
+    public void unloadSounds(SoundManager soundManager) {
         Logger.info("Unload sounds");
-        //TODO
+        for (SoundEntry entry : SOUND_ENTRIES) {
+            soundManager.remove(entry);
+        }
+        soundEffects.dispose();
     }
 
     @Override
@@ -180,10 +187,4 @@ public final class XXL_MsPacMan_GameVariantUIConfig implements GameVariantUIConf
         soundEffects.setSirenVolume(0.33f);
     }
 
-    private void unloadSounds(SoundManager soundManager) {
-        for (SoundEntry entry : SOUND_ENTRIES) {
-            soundManager.remove(entry);
-        }
-        soundEffects.dispose();
-    }
 }

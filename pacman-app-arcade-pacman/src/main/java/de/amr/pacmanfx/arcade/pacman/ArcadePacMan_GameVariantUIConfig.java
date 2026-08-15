@@ -90,6 +90,13 @@ public class ArcadePacMan_GameVariantUIConfig implements GameVariantUIConfig {
         extensions.put(Arcade_GameExtensions.ACTIONS, new Arcade_Actions());
     }
 
+    public void unloadSounds(SoundManager soundManager) {
+        for (SoundManager.SoundEntry entry : SOUND_ENTRIES) {
+            soundManager.remove(entry);
+        }
+        soundEffects.dispose();
+    }
+
     // GameVariantConfig interface
 
     @Override
@@ -182,12 +189,5 @@ public class ArcadePacMan_GameVariantUIConfig implements GameVariantUIConfig {
             RM.url("sound/siren_4.mp3")
         );
         soundEffects.setSirenVolume(0.33f);
-    }
-
-    private void unloadSounds(SoundManager soundManager) {
-        for (SoundManager.SoundEntry entry : SOUND_ENTRIES) {
-            soundManager.remove(entry);
-        }
-        soundEffects.dispose();
     }
 }

@@ -120,9 +120,15 @@ public final class XXL_PacMan_GameVariantUIConfig implements GameVariantUIConfig
 
         Logger.info("Dispose assets");
         assets.dispose();
+    }
 
+    @Override
+    public void unloadSounds(SoundManager soundManager) {
         Logger.info("Unload sounds");
-        //TODO
+        for (SoundManager.SoundEntry entry : SOUND_ENTRIES) {
+            soundManager.remove(entry);
+        }
+        soundEffects.dispose();
     }
 
     @Override
@@ -175,12 +181,5 @@ public final class XXL_PacMan_GameVariantUIConfig implements GameVariantUIConfig
             ARCADE_PACMAN_RM.url("sound/siren_4.mp3")
         );
         soundEffects.setSirenVolume(0.33f);
-    }
-
-    private void unloadSounds(SoundManager soundManager) {
-        for (SoundManager.SoundEntry entry : SOUND_ENTRIES) {
-            soundManager.remove(entry);
-        }
-        soundEffects.dispose();
     }
 }

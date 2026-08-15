@@ -86,13 +86,11 @@ public class ArcadeMsPacMan_GameVariantUIConfig implements GameVariantUIConfig {
         extensions.put(Arcade_GameExtensions.ACTIONS, new Arcade_Actions());
     }
 
-    @Override
-    public <T> T getExtensionValue(Named id, Class<T> type) {
-        final Object value = extensions.get(id);
-        if (type.isInstance(value)) {
-            return type.cast(value);
+    public void unloadSounds(SoundManager soundManager) {
+        for (SoundManager.SoundEntry entry : SOUND_ENTRIES) {
+            soundManager.remove(entry);
         }
-        throw new IllegalArgumentException("Extension value " + value + " of type " + type.getName() + " not found");
+        soundEffects.dispose();
     }
 
     @Override
@@ -131,6 +129,15 @@ public class ArcadeMsPacMan_GameVariantUIConfig implements GameVariantUIConfig {
     @Override
     public AssetMap assets() {
         return assets;
+    }
+
+    @Override
+    public <T> T getExtensionValue(Named id, Class<T> type) {
+        final Object value = extensions.get(id);
+        if (type.isInstance(value)) {
+            return type.cast(value);
+        }
+        throw new IllegalArgumentException("Extension value " + value + " of type " + type.getName() + " not found");
     }
 
     @Override
@@ -191,12 +198,5 @@ public class ArcadeMsPacMan_GameVariantUIConfig implements GameVariantUIConfig {
             RM.url("sound/GhostNoise3.wav"),
             RM.url("sound/GhostNoise4.wav")
         );
-    }
-
-    private void unloadSounds(SoundManager soundManager) {
-        for (SoundManager.SoundEntry entry : SOUND_ENTRIES) {
-            soundManager.remove(entry);
-        }
-        soundEffects.dispose();
     }
 }

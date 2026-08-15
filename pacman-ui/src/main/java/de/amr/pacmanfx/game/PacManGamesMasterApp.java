@@ -120,8 +120,11 @@ public final class PacManGamesMasterApp implements GameAppContext, GameLifecycle
         requireNonNull(gameVariant);
 
         gameVariant.config().gameFlow().removeStateChangeListener(changeEventConverter);
+        gameVariant.uiConfig().unloadSounds(ui.sounds());
         gameVariant.uiConfig().dispose();
+
         ui.sounds().dispose();
+
         game.eventManager().removeGameEventSubscriber(ui);
         game = null;
     }

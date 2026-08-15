@@ -27,6 +27,8 @@ public interface GameVariantUIConfig extends Disposable {
      */
     void init(GameAppContext app, SoundManager soundManager);
 
+    void unloadSounds(SoundManager soundManager);
+
     /**
      * @return the game scene configuration mapping game states to scenes.
      */

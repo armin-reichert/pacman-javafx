@@ -132,14 +132,13 @@ public class TengenMsPacMan_GameVariantUIConfig implements GameVariantUIConfig {
         factory3D = new TengenMsPacMan_Factory3D();
     }
 
-    @Override
-    public <T> T getExtensionValue(Named id, Class<T> type) {
-        final Object value = extensions.get(id);
-        if (type.isInstance(value)) {
-            return type.cast(value);
+    public void unloadSounds(SoundManager soundManager) {
+        for (SoundManager.SoundEntry entry : SOUND_ENTRIES) {
+            soundManager.remove(entry);
         }
-        throw new IllegalArgumentException("Extension value " + value + " of type " + type.getName() + " not found");
+        soundEffects.dispose();
     }
+
 
     @Override
     public void init(GameAppContext app, SoundManager soundManager) {
@@ -180,6 +179,15 @@ public class TengenMsPacMan_GameVariantUIConfig implements GameVariantUIConfig {
     @Override
     public AssetMap assets() {
         return assets;
+    }
+
+    @Override
+    public <T> T getExtensionValue(Named id, Class<T> type) {
+        final Object value = extensions.get(id);
+        if (type.isInstance(value)) {
+            return type.cast(value);
+        }
+        throw new IllegalArgumentException("Extension value " + value + " of type " + type.getName() + " not found");
     }
 
     @Override
@@ -234,12 +242,5 @@ public class TengenMsPacMan_GameVariantUIConfig implements GameVariantUIConfig {
             RM.url("sound/ms-siren2.wav")  // TODO
         );
         soundEffects.setSirenVolume(1.0f);
-    }
-
-    private void unloadSounds(SoundManager soundManager) {
-        for (SoundManager.SoundEntry entry : SOUND_ENTRIES) {
-            soundManager.remove(entry);
-        }
-        soundEffects.dispose();
     }
 }
