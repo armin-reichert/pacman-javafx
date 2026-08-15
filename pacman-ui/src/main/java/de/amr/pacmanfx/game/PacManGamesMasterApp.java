@@ -12,6 +12,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventManager;
+import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.event.gameplay.GameStateChangeEvent;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.ui.GameUI;
@@ -30,9 +31,25 @@ import static java.util.Objects.requireNonNull;
  */
 public final class PacManGamesMasterApp implements GameAppContext {
 
-    private final GameBox gameBox;
+    /**
+     * A state change event from the current game flow state machine is converted
+     * into a game event and published such that UI components (views, game scenes) can handle them.
+     */
+    private static class StateChangeEventConverter implements StateChangeListener<GameContext> {
 
-    private final StateChangeEventConverter changeEventConverter;
+        private final GameEventManager eventManager;
+
+        public StateChangeEventConverter(GameEventManager eventManager) {
+            this.eventManager = requireNonNull(eventManager);
+        }
+
+        @Override
+        public void onStateChange(State<GameContext> oldState, State<GameContext> newState) {
+            eventManager.publishGameEvent(new GameStateChangeEvent(oldState, newState));
+        }
+    }
+
+    private final GameBox gameBox;
 
     private final CommonGameActions actions;
 
@@ -42,12 +59,13 @@ public final class PacManGamesMasterApp implements GameAppContext {
 
     private GameContext game;
 
+    private StateChangeEventConverter changeEventConverter;
+
     private DefaultGameVariantManager gameVariantManager;
 
     public PacManGamesMasterApp(GameBox gameBox) {
         this.gameBox = requireNonNull(gameBox);
         simulation = new GameSimulation(this, gameBox.clock());
-        changeEventConverter = new StateChangeEventConverter();
         actions = new CommonGameActions();
     }
 
@@ -213,7 +231,10 @@ public final class PacManGamesMasterApp implements GameAppContext {
             new DefaultGameEventManager()
         );
         createSession();
+
+        changeEventConverter = new StateChangeEventConverter(game.eventManager());
         game.eventManager().addGameEventSubscriber(ui);
+
         gameVariant.config().gameFlow().addStateChangeListener(changeEventConverter);
     }
 
@@ -228,17 +249,5 @@ public final class PacManGamesMasterApp implements GameAppContext {
 
         game.eventManager().removeGameEventSubscriber(ui);
         game = null;
-    }
-
-    /**
-     * A state change event from the current game flow state machine is converted
-     * into a game event and published such that UI components (views, game scenes) can handle them.
-     */
-    private class StateChangeEventConverter implements StateChangeListener<GameContext> {
-
-        @Override
-        public void onStateChange(State<GameContext> oldState, State<GameContext> newState) {
-            game.eventManager().publishGameEvent(new GameStateChangeEvent(oldState, newState));
-        }
     }
 }
