@@ -4,12 +4,14 @@
 
 package de.amr.pacmanfx.tengenmspacman.app;
 
+import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.game.CartridgeRepository;
 import de.amr.pacmanfx.game.GameBox;
 import de.amr.pacmanfx.game.GameBuilder;
 import de.amr.pacmanfx.game.PacManGameCollection;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.dashboard.TengenDashboardFactory;
+import de.amr.pacmanfx.uilib.TimelineGameClock;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -22,8 +24,12 @@ public class TengenMsPacMan_App extends Application {
     private PacManGameCollection game;
 
     @Override
-    public void init() throws Exception {
-        gameBox = new GameBox(new CartridgeRepository());
+    public void init() {
+        gameBox = new GameBox(
+            new CartridgeRepository(),
+            new CoinMechanism(0), // Not used
+            new TimelineGameClock()
+        );
     }
 
     @Override

@@ -14,6 +14,7 @@ import de.amr.pacmanfx.arcade.pacman_xxl.app.XXL_MsPacMan_Cartridge;
 import de.amr.pacmanfx.arcade.pacman_xxl.app.XXL_PacMan_Cartridge;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_StartPage;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_WorldMapManager;
+import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.game.CartridgeRepository;
 import de.amr.pacmanfx.game.GameBox;
@@ -24,6 +25,7 @@ import de.amr.pacmanfx.tengenmspacman.dashboard.TengenDashboardFactory;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
+import de.amr.pacmanfx.uilib.TimelineGameClock;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -39,7 +41,13 @@ public class PacManAllGamesNoBuilderApp extends Application {
     @Override
     public void init() {
         includeTests = Boolean.parseBoolean(getParameters().getNamed().get("include_tests"));
-        gameBox = new GameBox(new CartridgeRepository());
+
+        gameBox = new GameBox(
+            new CartridgeRepository(),
+            new CoinMechanism(99),
+            new TimelineGameClock()
+        );
+
         gameBox.cartridgeRepository().insertCartridges(
             ArcadePacMan_Cartridge.CARTRIDGE,
             ArcadeMsPacMan_Cartridge.CARTRIDGE,

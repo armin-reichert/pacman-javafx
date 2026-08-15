@@ -5,11 +5,13 @@
 package de.amr.pacmanfx.arcade.ms_pacman.app;
 
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_StartPage;
+import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.game.CartridgeRepository;
 import de.amr.pacmanfx.game.GameBox;
 import de.amr.pacmanfx.game.GameBuilder;
 import de.amr.pacmanfx.game.PacManGameCollection;
+import de.amr.pacmanfx.uilib.TimelineGameClock;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -20,8 +22,12 @@ public class ArcadeMsPacMan_App extends Application {
     private PacManGameCollection game;
 
     @Override
-    public void init() throws Exception {
-        gameBox = new GameBox(new CartridgeRepository());
+    public void init() {
+        gameBox = new GameBox(
+            new CartridgeRepository(),
+            new CoinMechanism(99),
+            new TimelineGameClock()
+        );
     }
 
     @Override
