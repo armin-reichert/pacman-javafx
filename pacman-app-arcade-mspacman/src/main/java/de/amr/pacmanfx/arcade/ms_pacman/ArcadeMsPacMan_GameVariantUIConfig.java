@@ -68,7 +68,7 @@ public class ArcadeMsPacMan_GameVariantUIConfig implements GameVariantUIConfig {
     }
 
     private final TranslationManager translations;
-    private final AssetMap assets;
+    private AssetMap assets;
     private final Factory3D factory3D;
     private final GameSceneConfig gameSceneConfig;
 
@@ -78,12 +78,19 @@ public class ArcadeMsPacMan_GameVariantUIConfig implements GameVariantUIConfig {
     private final Map<Named, Object> extensions = new HashMap<>();
 
     public ArcadeMsPacMan_GameVariantUIConfig() {
+        loadAssets();
         gameSceneConfig = new ArcadeMsPacMan_GameSceneConfig();
         translations = () -> ResourceBundle.getBundle("de.amr.pacmanfx.arcade.ms_pacman.localized_texts");
-        assets = new AssetMap();
         factory3D = new ArcadeMsPacMan_Factory3D();
 
         extensions.put(Arcade_GameExtensions.ACTIONS, new Arcade_Actions());
+    }
+
+    private void loadAssets() {
+        assets = new AssetMap();
+        assets.addAsset("app_icon",    RM.loadImage("graphics/icons/mspacman.png"));
+        assets.addAsset("logo.midway", RM.loadImage("graphics/midway_logo.png"));
+        assets.addAsset("color.game_over_message", ARCADE_RED);
     }
 
     public void unloadSounds(SoundManager soundManager) {
@@ -96,14 +103,8 @@ public class ArcadeMsPacMan_GameVariantUIConfig implements GameVariantUIConfig {
     @Override
     public void init(GameAppContext app, SoundManager soundManager) {
         loadSounds(soundManager);
-
-        assets.addAsset("app_icon",    RM.loadImage("graphics/icons/mspacman.png"));
-        assets.addAsset("logo.midway", RM.loadImage("graphics/midway_logo.png"));
-        assets.addAsset("color.game_over_message", ARCADE_RED);
-
         renderConfig = new ArcadeMsPacMan_RenderConfig(assets);
         renderConfig.addAssets();
-
         assets.freeze();
     }
 

@@ -11,6 +11,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
 import de.amr.pacmanfx.game.GameVariant;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
+import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenu;
@@ -180,8 +181,9 @@ public class XXL_OptionMenu extends OptionMenu {
                 if (app != null) {
                     final GameContext game = app.game();
                     final GameVariant newGameVariant = app.gameVariants().gameVariantByName(newVariantID.name());
-                    final GameVariantRenderConfig renderConfig = newGameVariant.uiConfig().renderConfig();
-                    chaseAnimation.init(game, renderConfig, canvas, app.ui().sprites().animations());
+                    final GameVariantUIConfig uiConfig = newGameVariant.uiConfig();
+                    uiConfig.init(app, app.ui().sounds());
+                    chaseAnimation.init(game, uiConfig.renderConfig(), canvas, app.ui().sprites().animations());
                 }
             }
         };

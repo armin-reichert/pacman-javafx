@@ -72,7 +72,7 @@ public class ArcadePacMan_GameVariantUIConfig implements GameVariantUIConfig {
     );
 
     private final TranslationManager translations;
-    private final AssetMap assets;
+    private AssetMap assets;
     private final Factory3D factory3D;
 
     private ArcadePacMan_RenderConfig renderConfig;
@@ -83,11 +83,16 @@ public class ArcadePacMan_GameVariantUIConfig implements GameVariantUIConfig {
     private final Map<Named, Object> extensions = new HashMap<>();
 
     public ArcadePacMan_GameVariantUIConfig() {
+        loadAssets();
         translations = () -> ResourceBundle.getBundle("de.amr.pacmanfx.arcade.pacman.localized_texts");
-        assets = new AssetMap();
         factory3D = new ArcadePacMan_Factory3D();
-
         extensions.put(Arcade_GameExtensions.ACTIONS, new Arcade_Actions());
+    }
+
+    private void loadAssets() {
+        assets = new AssetMap();
+        assets.addAsset("app_icon", RM.loadImage("graphics/icons/pacman.png"));
+        assets.addAsset("color.game_over_message", ARCADE_RED);
     }
 
     public void unloadSounds(SoundManager soundManager) {
@@ -100,28 +105,12 @@ public class ArcadePacMan_GameVariantUIConfig implements GameVariantUIConfig {
     // GameVariantConfig interface
 
     @Override
-    public <T> T getExtensionValue(Named id, Class<T> type) {
-        final Object value = extensions.get(id);
-        if (type.isInstance(value)) {
-            return type.cast(value);
-        }
-        throw new IllegalArgumentException("Extension value " + value + " of type " + type.getName() + " not found");
-    }
-
-    @Override
     public void init(GameAppContext app, SoundManager soundManager) {
         requireNonNull(app);
-
         gameSceneConfig = new ArcadePacMan_GameSceneConfig();
-
         loadSounds(soundManager);
-
-        assets.addAsset("app_icon", RM.loadImage("graphics/icons/pacman.png"));
-        assets.addAsset("color.game_over_message", ARCADE_RED);
-
         renderConfig = new ArcadePacMan_RenderConfig(assets);
         renderConfig.addAssets();
-
         assets.freeze();
     }
 
@@ -142,6 +131,15 @@ public class ArcadePacMan_GameVariantUIConfig implements GameVariantUIConfig {
     @Override
     public AssetMap assets() {
         return assets;
+    }
+
+    @Override
+    public <T> T getExtensionValue(Named id, Class<T> type) {
+        final Object value = extensions.get(id);
+        if (type.isInstance(value)) {
+            return type.cast(value);
+        }
+        throw new IllegalArgumentException("Extension value " + value + " of type " + type.getName() + " not found");
     }
 
     @Override

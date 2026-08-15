@@ -116,7 +116,7 @@ public class TengenMsPacMan_GameVariantUIConfig implements GameVariantUIConfig {
     // Non-static members
 
     private final ResourceBundle textBundle;
-    private final AssetMap assets;
+    private AssetMap assets;
     private final TengenMsPacMan_Factory3D factory3D;
     private final TengenMsPacMan_GameSceneConfig gameSceneConfig;
 
@@ -126,10 +126,19 @@ public class TengenMsPacMan_GameVariantUIConfig implements GameVariantUIConfig {
     private final Map<Named, Object> extensions = new HashMap<>();
 
     public TengenMsPacMan_GameVariantUIConfig() {
+        loadAssets();
         gameSceneConfig = new TengenMsPacMan_GameSceneConfig();
         textBundle = ResourceBundle.getBundle("de.amr.pacmanfx.tengenmspacman.localized_texts");
-        assets = new AssetMap();
         factory3D = new TengenMsPacMan_Factory3D();
+    }
+
+    private void loadAssets()  {
+        assets = new AssetMap();
+        assets.addAsset("app_icon",                RM.loadImage("graphics/icons/mspacman.png"));
+        assets.addAsset("startpage.image1",        RM.loadImage("graphics/flyer-page-1.png"));
+        assets.addAsset("startpage.image2",        RM.loadImage("graphics/flyer-page-2.png"));
+        assets.addAsset("color.game_over_message", NES_Palette.color(0x11));
+        assets.addAsset("color.ready_message",     NES_Palette.color(0x28));
     }
 
     public void unloadSounds(SoundManager soundManager) {
@@ -139,20 +148,11 @@ public class TengenMsPacMan_GameVariantUIConfig implements GameVariantUIConfig {
         soundEffects.dispose();
     }
 
-
     @Override
     public void init(GameAppContext app, SoundManager soundManager) {
         loadSounds(soundManager);
-        
-        assets.addAsset("app_icon",                RM.loadImage("graphics/icons/mspacman.png"));
-        assets.addAsset("startpage.image1",        RM.loadImage("graphics/flyer-page-1.png"));
-        assets.addAsset("startpage.image2",        RM.loadImage("graphics/flyer-page-2.png"));
-        assets.addAsset("color.game_over_message", NES_Palette.color(0x11));
-        assets.addAsset("color.ready_message",     NES_Palette.color(0x28));
-
         renderConfig = new TengenMsPacMan_RenderConfig(assets);
         renderConfig.addAssets();
-
         assets.freeze();
 
         //TODO get rid of this crap and of app dependency!

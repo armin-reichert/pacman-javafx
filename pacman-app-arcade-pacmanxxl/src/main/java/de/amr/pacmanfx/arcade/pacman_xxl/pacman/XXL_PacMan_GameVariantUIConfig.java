@@ -29,7 +29,6 @@ import java.util.*;
 import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.audioClip;
 import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.mediaPlayer;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
-import static java.util.Objects.requireNonNull;
 
 public final class XXL_PacMan_GameVariantUIConfig implements GameVariantUIConfig {
 
@@ -71,10 +70,10 @@ public final class XXL_PacMan_GameVariantUIConfig implements GameVariantUIConfig
         mediaPlayer  (PacManGameSoundID.PAC_MAN_POWER,         ARCADE_PACMAN_RM.url("sound/ghost-turn-to-blue.mp3"))
     );
 
-    private final ResourceBundle textBundle;
-    private final AssetMap assets;
-    private final Factory3D factory3D;
-    private final XXL_PacMan_GameSceneConfig gameSceneConfig;
+    private ResourceBundle textBundle;
+    private AssetMap assets;
+    private Factory3D factory3D;
+    private XXL_PacMan_GameSceneConfig gameSceneConfig;
 
     private XXL_PacMan_RenderConfig renderConfig;
     private GameSoundEffects soundEffects;
@@ -82,11 +81,17 @@ public final class XXL_PacMan_GameVariantUIConfig implements GameVariantUIConfig
     private final Map<Named, Object> extensions = new HashMap<>();
 
     public XXL_PacMan_GameVariantUIConfig() {
+        loadAssets();
         gameSceneConfig = new XXL_PacMan_GameSceneConfig();
         textBundle = ResourceBundle.getBundle(XXL_PKG + "localized_texts_pacman");
-        assets = new AssetMap();
         factory3D = new DefaultFactory3D();
         extensions.put(Arcade_GameExtensions.ACTIONS, new Arcade_Actions());
+    }
+
+    private void loadAssets() {
+        assets = new AssetMap();
+        assets.addAsset("app_icon", XXL_RM.loadImage(XXL_PATH + "graphics/icons/pacman.png"));
+        assets.addAsset("color.game_over_message", ARCADE_RED);
     }
 
     @Override
@@ -101,13 +106,8 @@ public final class XXL_PacMan_GameVariantUIConfig implements GameVariantUIConfig
     @Override
     public void init(GameAppContext ignore, SoundManager soundManager) {
         loadSounds(soundManager);
-
-        assets.addAsset("app_icon", XXL_RM.loadImage(XXL_PATH + "graphics/icons/pacman.png"));
-        assets.addAsset("color.game_over_message", ARCADE_RED);
-
         renderConfig = new XXL_PacMan_RenderConfig(assets);
         renderConfig.addAssets();
-
         assets.freeze();
     }
 

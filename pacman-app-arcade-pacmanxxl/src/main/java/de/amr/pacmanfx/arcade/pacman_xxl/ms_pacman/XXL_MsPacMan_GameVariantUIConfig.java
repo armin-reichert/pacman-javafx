@@ -69,7 +69,7 @@ public final class XXL_MsPacMan_GameVariantUIConfig implements GameVariantUIConf
     }
 
     private final TranslationManager translations;
-    private final AssetMap assets;
+    private AssetMap assets;
     private final ArcadeMsPacMan_Factory3D factory3D;
     private final XXL_MsPacMan_GameSceneConfig gameSceneConfig;
 
@@ -79,12 +79,18 @@ public final class XXL_MsPacMan_GameVariantUIConfig implements GameVariantUIConf
     private final Map<Named, Object> extensions = new HashMap<>();
 
     public XXL_MsPacMan_GameVariantUIConfig() {
+        loadAssets();
         gameSceneConfig = new XXL_MsPacMan_GameSceneConfig();
         translations = () -> ResourceBundle.getBundle(XXL_PKG + "localized_texts_ms_pacman");
-        assets = new AssetMap();
         factory3D = new ArcadeMsPacMan_Factory3D();
-
         extensions.put(Arcade_GameExtensions.ACTIONS, new Arcade_Actions());
+    }
+
+    private void loadAssets() {
+        assets = new AssetMap();
+        assets.addAsset("app_icon", XXL_RM.loadImage(XXL_PATH + "graphics/icons/mspacman.png"));
+        assets.addAsset("logo.midway", ARCADE_RM.loadImage("graphics/midway_logo.png"));
+        assets.addAsset("color.game_over_message", ARCADE_RED);
     }
 
     @Override
@@ -96,21 +102,13 @@ public final class XXL_MsPacMan_GameVariantUIConfig implements GameVariantUIConf
         throw new IllegalArgumentException("Extension value " + value + " of type " + type.getName() + " not found");
     }
 
-
     @Override
     public void init(GameAppContext app, SoundManager soundManager) {
         requireNonNull(app);
         requireNonNull(soundManager);
-
         loadSounds(soundManager);
-
-        assets.addAsset("app_icon", XXL_RM.loadImage(XXL_PATH + "graphics/icons/mspacman.png"));
-        assets.addAsset("logo.midway", ARCADE_RM.loadImage("graphics/midway_logo.png"));
-        assets.addAsset("color.game_over_message", ARCADE_RED);
-
         renderConfig = new XXL_MsPacMan_RenderConfig(assets);
-        renderConfig.addAssets();
-
+        renderConfig.addAssets(); //TODO check
         assets.freeze();
     }
 
