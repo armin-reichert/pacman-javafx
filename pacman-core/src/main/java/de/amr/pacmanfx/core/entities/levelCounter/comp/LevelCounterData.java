@@ -13,12 +13,13 @@ public class LevelCounterData implements GameEntityComponent {
 
     private final List<Integer> symbolCodes = new ArrayList<>();
 
+    private LevelCounterBehavior behavior;
+
     private boolean enabled;
 
     private int capacity;
 
-    public LevelCounterData() {
-    }
+    public LevelCounterData() {}
 
     @Override
     public void reset() {
@@ -39,6 +40,14 @@ public class LevelCounterData implements GameEntityComponent {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public LevelCounterBehavior behavior() {
+        return behavior;
+    }
+
+    public void setBehavior(LevelCounterBehavior behavior) {
+        this.behavior = behavior;
     }
 
     public List<Integer> symbolCodes() {

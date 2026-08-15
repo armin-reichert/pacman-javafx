@@ -108,6 +108,6 @@ public class LevelShortTestState extends GameState {
     @Override
     public void onExit(GameContext game) {
         final LevelCounterSystem levelCounterSystem = game.variantConfig().systems().levelCounterSystem();
-        levelCounterSystem.clear(game.session().levelCounter());
+        levelCounterSystem.clearCounter(game.session().levelCounter());
     }
 }

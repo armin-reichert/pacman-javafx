@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.core.gameplay;
 
 import de.amr.basics.math.Direction;
-import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.basics.timer.TickTimer;
@@ -18,7 +17,6 @@ import de.amr.pacmanfx.core.entities.bonus.comp.BonusState;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostSpriteAnimationComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostStateSystem;
-import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.entities.livescounter.system.LivesCounterSystem;
 import de.amr.pacmanfx.core.entities.pac.comp.PacPowerComp;
 import de.amr.pacmanfx.core.entities.pac.system.PacDigestionSystem;
@@ -52,9 +50,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
-import static de.amr.basics.math.Vector2f.vec2_float;
 import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -71,19 +67,16 @@ public abstract class CommonGamePlay implements GamePlay {
 
         game.variantConfig().worldMapManager().loadMapPrototypes();
 
-        initScores(session);
-
-        final LevelCounterSystem levelCounterSystem = game.variantConfig().systems().levelCounterSystem();
-        final LevelCounter levelCounter = game.session().levelCounter();
-        levelCounterSystem.enable(levelCounter, true);
-        levelCounterSystem.setCapacity(levelCounter, 7);
-        levelCounterSystem.clear(levelCounter);
-
-        session.setGateKeeper(new ArcadeHouseGateKeeper()); // TODO Tengen Ms. Pac-Man does this differently
-        session.gateKeeper().reset();
+        //TODO we use the Arcade house gate keeper logic for all game variants which is not 100% correct
+        final ArcadeHouseGateKeeper gateKeeper = new ArcadeHouseGateKeeper();
+        gateKeeper.reset();
+        session.setGateKeeper(gateKeeper);
 
         session.setLevel(null);
         session.setPlaying(false);
+
+        initScores(session);
+        configureLevelCounter(game, session.levelCounter());
 
         session.gameFlow().restartState(game, CommonGameStateID.BOOT);
     }

@@ -15,12 +15,12 @@ import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusState;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
+import de.amr.pacmanfx.core.entities.levelCounter.comp.LevelCounterBehavior;
 import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelEntitySet;
-import de.amr.pacmanfx.core.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.core.model.rules.HuntingTimer;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
@@ -43,6 +43,15 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE);
 
     private static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
+
+    @Override
+    public void configureLevelCounter(GameContext game, LevelCounter levelCounter) {
+        final LevelCounterSystem system = game.variantConfig().systems().levelCounterSystem();
+        system.setCounterBehavior(levelCounter, LevelCounterBehavior.DISABLE_WHEN_FULL);
+        system.setCounterCapacity(levelCounter, 7);
+        system.clearCounter(levelCounter);
+        system.enableCounter(levelCounter, true);
+    }
 
     @Override
     public GameLevel createLevel(GameContext game, int levelNumber) {
@@ -87,34 +96,9 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
          * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
         final LevelCounterSystem levelCounterSystem = game.variantConfig().systems().levelCounterSystem();
-        levelCounterSystem.enable(session.levelCounter(), levelNumber < 8);
+        levelCounterSystem.enableCounter(session.levelCounter(), levelNumber < 8);
 
         return level;
-    }
-
-    @Override
-    public void startLevel(GameContext game) {
-        requireNonNull(game);
-
-        final GameSession session = game.session();
-        final GameLevel level = session.assertLevel();
-
-        prepareLevelForPlaying(game);
-
-        session.setLevelStartTimeMillis(System.currentTimeMillis());
-        session.score().data().setEnabled(true);
-        session.cheats().update(game);
-
-        //TODO we need different level counter system implementations!
-        final LevelCounterSystem levelCounterSystem = game.variantConfig().systems().levelCounterSystem();
-        final LevelCounter levelCounter = session.levelCounter();
-        levelCounterSystem.update(session.levelCounter(), level.number(), level.bonusSymbolCode(0));
-        if (levelCounterSystem.isFull(levelCounter)) {
-            levelCounterSystem.enable(levelCounter, false);
-            Logger.info("Level counter is full and gets disabled!");
-        }
-
-        showLevelMessage(game, level, GameLevelMessageType.READY);
     }
 
     protected void createAndSetMsPacMan(GameLevelEntitySet entities, GameSystems systems) {
@@ -172,7 +156,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         ScoreSystem.setLevelNumber(session.score(), 1);
 
         final LevelCounterSystem levelCounterSystem = game.variantConfig().systems().levelCounterSystem();
-        levelCounterSystem.enable(session.levelCounter(), true);
+        levelCounterSystem.enableCounter(session.levelCounter(), true);
 
         return level;
     }

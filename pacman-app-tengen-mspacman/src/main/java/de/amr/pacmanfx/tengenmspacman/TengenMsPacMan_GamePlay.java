@@ -15,6 +15,7 @@ import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusState;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
+import de.amr.pacmanfx.core.entities.levelCounter.comp.LevelCounterBehavior;
 import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
@@ -210,6 +211,15 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     // Level building and level start
 
     @Override
+    public void configureLevelCounter(GameContext game, LevelCounter levelCounter) {
+        final LevelCounterSystem system = game.variantConfig().systems().levelCounterSystem();
+        system.setCounterBehavior(levelCounter, LevelCounterBehavior.DISABLE_WHEN_FULL);
+        system.setCounterCapacity(levelCounter, 7);
+        system.clearCounter(levelCounter);
+        system.enableCounter(levelCounter, true);
+    }
+
+    @Override
     public GameLevel createLevel(GameContext game, int levelNumber) {
         final GameLevelEntitySet entities = new GameLevelEntitySet();
 
@@ -331,15 +341,8 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         session.score().data().setEnabled(true);
         session.cheats().update(game);
 
-
-        //TODO we need different level counter system implementations!
         final LevelCounterSystem levelCounterSystem = game.variantConfig().systems().levelCounterSystem();
-        final LevelCounter levelCounter = session.levelCounter();
-        levelCounterSystem.update(levelCounter, level.number(), level.bonusSymbolCode(0));
-        if (levelCounterSystem.isFull(levelCounter)) {
-            levelCounterSystem.enable(levelCounter, false);
-            Logger.info("Level counter is full and gets disabled!");
-        }
+        levelCounterSystem.updateCounter(session.levelCounter(), level.number(), level.bonusSymbolCode(0));
 
         showLevelMessage(game, level, GameLevelMessageType.READY);
 

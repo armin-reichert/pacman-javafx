@@ -53,7 +53,7 @@ public final class GameState_DemoLevelPlaying extends GameState {
             gamePlay.showLevelMessage(game, level, GameLevelMessageType.GAME_OVER);
 
             final LevelCounterSystem levelCounterSystem = game.variantConfig().systems().levelCounterSystem();
-            levelCounterSystem.update(session.levelCounter(), level.number(), level.bonusSymbolCode(0));
+            levelCounterSystem.updateCounter(session.levelCounter(), level.number(), level.bonusSymbolCode(0));
 
             Logger.info("Demo level {} started", level.number());
 

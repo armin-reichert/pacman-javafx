@@ -9,18 +9,17 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.Bonus;
 import de.amr.pacmanfx.core.entities.Ghost;
+import de.amr.pacmanfx.core.entities.LevelCounter;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
 
 public interface GamePlay {
 
-    // Game start
-
     void onSessionStart(GameContext game);
 
     void prepareLevelForPlaying(GameContext game);
 
-    // Level building and level start
+    void configureLevelCounter(GameContext game, LevelCounter levelCounter);
 
     GameLevel createLevel(GameContext game, int levelNumber);
 

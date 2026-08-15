@@ -15,6 +15,7 @@ import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.ghost.comp.ElroyComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
+import de.amr.pacmanfx.core.entities.levelCounter.comp.LevelCounterBehavior;
 import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
@@ -99,6 +100,15 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     }
 
     // Level building and level start
+
+    @Override
+    public void configureLevelCounter(GameContext game, LevelCounter levelCounter) {
+        final LevelCounterSystem system = game.variantConfig().systems().levelCounterSystem();
+        system.setCounterBehavior(levelCounter, LevelCounterBehavior.SHIFT_WHEN_FULL);
+        system.setCounterCapacity(levelCounter, 7);
+        system.clearCounter(levelCounter);
+        system.enableCounter(levelCounter, true);
+    }
 
     @Override
     public GameLevel createLevel(GameContext game, int levelNumber) {
@@ -227,7 +237,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         session.cheats().update(game);
 
         final LevelCounterSystem levelCounterSystem = game.variantConfig().systems().levelCounterSystem();
-        levelCounterSystem.update(session.levelCounter(), level.number(), level.bonusSymbolCode(0));
+        levelCounterSystem.updateCounter(session.levelCounter(), level.number(), level.bonusSymbolCode(0));
 
         showLevelMessage(game, level, GameLevelMessageType.READY);
     }

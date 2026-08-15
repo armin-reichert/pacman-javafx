@@ -56,7 +56,7 @@ public class XXL_PacMan_GamePlay extends ArcadePacMan_GamePlay {
         ScoreSystem.setLevelNumber(session.score(), levelNumber);
 
         final LevelCounterSystem levelCounterSystem = game.variantConfig().systems().levelCounterSystem();
-        levelCounterSystem.enable(session.levelCounter(), false);
+        levelCounterSystem.enableCounter(session.levelCounter(), false);
 
         return level;
     }

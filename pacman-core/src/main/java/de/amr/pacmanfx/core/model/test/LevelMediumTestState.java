@@ -89,7 +89,7 @@ public class LevelMediumTestState extends GameState {
     @Override
     public void onExit(GameContext game) {
         final LevelCounterSystem levelCounterSystem = game.variantConfig().systems().levelCounterSystem();
-        levelCounterSystem.clear(game.session().levelCounter());
+        levelCounterSystem.clearCounter(game.session().levelCounter());
     }
 
     private void configureLevelForTest(GameContext game) {
