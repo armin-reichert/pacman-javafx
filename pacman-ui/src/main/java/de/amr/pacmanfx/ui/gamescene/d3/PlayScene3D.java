@@ -58,23 +58,19 @@ public class PlayScene3D extends AbstractGameScene
 
     private final PerspectiveManager perspectiveManager;
     private final Set<ActionKeyBinding> actionBindings;
-
     private final AnimationRegistry registry = new AnimationRegistry();
-
     private final SubScene subScene;
     private final Group subSceneRoot;
-    private final PerspectiveCamera camera = new PerspectiveCamera(true);
+    private final PerspectiveCamera camera;
     private final Group level3DParent = new Group();
+    private final RandomTextPicker textPicker;
+    private final ChangeListener<DrawMode> drawModeChangeListener;
+    private final ManagedAnimation fadeInAnimation = new PlaySceneFadeInAnimation(Duration.seconds(3), this);
+
     private GameLevel3D level3D;
     private ScoresView scoresView;
     private PlaySceneContextMenu contextMenu;
     private AmbientLight ambientLight;
-
-    private final RandomTextPicker textPicker;
-
-    private final ChangeListener<DrawMode> drawModeChangeListener;
-
-    private final ManagedAnimation fadeInAnimation = new PlaySceneFadeInAnimation(Duration.seconds(3), this);
 
     /**
      * Creates a new 3D play scene with default camera, sub-scene, axes, and perspective manager.
@@ -82,10 +78,11 @@ public class PlayScene3D extends AbstractGameScene
     public PlayScene3D(GameAppContext app) {
         super(app);
 
-        textPicker = new RandomTextPicker(app.ui().translations().textBundle(), "game.over");
-
         final GameViewModel viewModel = app.ui().viewModel();
 
+        textPicker = new RandomTextPicker(app.ui().translations().textBundle(), "game.over");
+
+        camera = new PerspectiveCamera(true);
         perspectiveManager = new PerspectiveManager(camera);
 
         final var coordinateSystem = new CoordinateSystem();
