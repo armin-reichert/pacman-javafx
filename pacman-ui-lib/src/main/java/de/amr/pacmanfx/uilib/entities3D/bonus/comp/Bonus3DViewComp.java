@@ -1,6 +1,6 @@
 package de.amr.pacmanfx.uilib.entities3D.bonus.comp;
 
-import de.amr.pacmanfx.core.ecs.GameEntityComponent;
+import de.amr.pacmanfx.core.ecs.EntityComponent;
 import de.amr.pacmanfx.uilib.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.entities3D.bonus.anim.BonusEatenAnimation3D;
 import de.amr.pacmanfx.uilib.entities3D.bonus.anim.BonusRollingTransform;
@@ -15,7 +15,7 @@ import javafx.scene.transform.Translate;
 
 import static java.util.Objects.requireNonNull;
 
-public class Bonus3DViewComp implements GameEntityComponent, DisposableGraphicsObject {
+public class Bonus3DViewComp implements EntityComponent, DisposableGraphicsObject {
 
     private final Group root;
     private final Box shape3D;

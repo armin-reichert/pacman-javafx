@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.uilib.entities3D.messageview.comp;
 
-import de.amr.pacmanfx.core.ecs.GameEntityComponent;
+import de.amr.pacmanfx.core.ecs.EntityComponent;
 import de.amr.pacmanfx.uilib.DisposableGraphicsObject;
 import javafx.scene.Group;
 import javafx.scene.image.ImageView;
@@ -12,7 +12,7 @@ import javafx.scene.transform.Rotate;
 
 import static java.util.Objects.requireNonNull;
 
-public class MessageView3DComp implements GameEntityComponent, DisposableGraphicsObject {
+public class MessageView3DComp implements EntityComponent, DisposableGraphicsObject {
 
     private final Group root = new Group();
     private ImageView imageView;

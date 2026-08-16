@@ -6,7 +6,7 @@ package de.amr.pacmanfx.core.entities.ghost.comp;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.ecs.GameEntityComponent;
+import de.amr.pacmanfx.core.ecs.EntityComponent;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 
@@ -15,7 +15,7 @@ import java.util.Set;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.halfTileRightOf;
 import static java.util.Objects.requireNonNull;
 
-public class GhostWorldInfoComp implements GameEntityComponent {
+public class GhostWorldInfoComp implements EntityComponent {
 
     private House house;
 

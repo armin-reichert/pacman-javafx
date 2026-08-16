@@ -4,9 +4,9 @@
 
 package de.amr.pacmanfx.core.entities.messageview.comp;
 
-import de.amr.pacmanfx.core.ecs.GameEntityComponent;
+import de.amr.pacmanfx.core.ecs.EntityComponent;
 
-public class MessageViewData implements GameEntityComponent {
+public class MessageViewData implements EntityComponent {
 
     private String text;
 

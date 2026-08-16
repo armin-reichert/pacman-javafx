@@ -4,9 +4,9 @@
 
 package de.amr.pacmanfx.core.ecs.comp;
 
-import de.amr.pacmanfx.core.ecs.GameEntityComponent;
+import de.amr.pacmanfx.core.ecs.EntityComponent;
 
-public class VisibilityComp implements GameEntityComponent {
+public class VisibilityComp implements EntityComponent {
 
     private final boolean defaultVisibility;
 

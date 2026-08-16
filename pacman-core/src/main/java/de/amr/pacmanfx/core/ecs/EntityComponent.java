@@ -4,6 +4,6 @@
 
 package de.amr.pacmanfx.core.ecs;
 
-public interface GameEntityComponent {
+public interface EntityComponent {
     void reset();
 }

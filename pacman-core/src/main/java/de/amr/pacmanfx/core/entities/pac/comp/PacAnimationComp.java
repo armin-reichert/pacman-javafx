@@ -1,8 +1,8 @@
 package de.amr.pacmanfx.core.entities.pac.comp;
 
-import de.amr.pacmanfx.core.ecs.GameEntityComponent;
+import de.amr.pacmanfx.core.ecs.EntityComponent;
 
-public class PacAnimationComp implements GameEntityComponent {
+public class PacAnimationComp implements EntityComponent {
 
     private boolean readyForDying;
     private boolean startDying;

@@ -5,9 +5,9 @@
 package de.amr.pacmanfx.core.entities.pac.comp;
 
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.core.ecs.GameEntityComponent;
+import de.amr.pacmanfx.core.ecs.EntityComponent;
 
-public class PacPowerComp implements GameEntityComponent {
+public class PacPowerComp implements EntityComponent {
 
     private boolean active;
 

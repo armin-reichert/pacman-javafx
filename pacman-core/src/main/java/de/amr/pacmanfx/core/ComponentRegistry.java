@@ -1,6 +1,8 @@
-package de.amr.pacmanfx.core;
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
 
-import de.amr.pacmanfx.core.ecs.GameEntityComponent;
+package de.amr.pacmanfx.core;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -9,15 +11,15 @@ import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
-public class ComponentRegistry {
+public class ComponentRegistry<C> {
 
-    private final Map<Class<? extends GameEntityComponent>, GameEntityComponent> components = new LinkedHashMap<>(7);
+    private final Map<Class<? extends C>, C> components = new LinkedHashMap<>(7);
 
-    public Collection<GameEntityComponent> components() {
+    public Collection<C> components() {
         return components.values();
     }
 
-    public final <T extends GameEntityComponent> void setComp(Class<T> type, T component) {
+    public final <T extends C> void setComp(Class<T> type, T component) {
         requireNonNull(type);
         requireNonNull(component);
         if (components.containsKey(type)) {
@@ -26,23 +28,23 @@ public class ComponentRegistry {
         components.put(type, component);
     }
 
-    public final <T extends GameEntityComponent> T requireComp(Class<T> type) {
+    public final <T extends C> T requireComp(Class<T> type) {
         requireNonNull(type);
-        final GameEntityComponent component = components.get(type);
+        final C component = components.get(type);
         if (component == null) {
             throw new IllegalArgumentException("No component found for class %s".formatted(type.getSimpleName()));
         }
         return type.cast(component);
     }
 
-    public final <T extends GameEntityComponent> boolean hasComp(Class<T> type) {
+    public final <T extends C> boolean hasComp(Class<T> type) {
         requireNonNull(type);
         return components.get(type) != null;
     }
 
-    public final <T extends GameEntityComponent> Optional<T> optComp(Class<T> type) {
+    public final <T extends C> Optional<T> optComp(Class<T> type) {
         requireNonNull(type);
-        final GameEntityComponent component = components.get(type);
+        final C component = components.get(type);
         return Optional.ofNullable(component).map(type::cast);
     }
 }

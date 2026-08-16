@@ -5,9 +5,9 @@
 package de.amr.pacmanfx.core.entities.livescounter.comp;
 
 
-import de.amr.pacmanfx.core.ecs.GameEntityComponent;
+import de.amr.pacmanfx.core.ecs.EntityComponent;
 
-public class LivesCounterData implements GameEntityComponent {
+public class LivesCounterData implements EntityComponent {
 
     private int numLives;
 

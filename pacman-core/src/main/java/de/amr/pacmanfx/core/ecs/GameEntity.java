@@ -22,7 +22,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameEntity implements Disposable {
 
-    private final ComponentRegistry componentRegistry = new ComponentRegistry();
+    private final ComponentRegistry<EntityComponent> componentRegistry = new ComponentRegistry<>();
 
     protected String name;
 
@@ -32,19 +32,19 @@ public class GameEntity implements Disposable {
         setComp(VisibilityComp.class, new VisibilityComp(false));
     }
 
-    public final <T extends GameEntityComponent> void setComp(Class<T> type, T component) {
+    public final <T extends EntityComponent> void setComp(Class<T> type, T component) {
         componentRegistry.setComp(type, component);
     }
 
-    public final <T extends GameEntityComponent> T requireComp(Class<T> type) {
+    public final <T extends EntityComponent> T requireComp(Class<T> type) {
         return componentRegistry.requireComp(type);
     }
 
-    public final <T extends GameEntityComponent> boolean hasComp(Class<T> type) {
+    public final <T extends EntityComponent> boolean hasComp(Class<T> type) {
         return componentRegistry.hasComp(type);
     }
 
-    public final <T extends GameEntityComponent> Optional<T> optComp(Class<T> type) {
+    public final <T extends EntityComponent> Optional<T> optComp(Class<T> type) {
         return componentRegistry.optComp(type);
     }
 
@@ -77,7 +77,7 @@ public class GameEntity implements Disposable {
      * Resets all components (position, visibility etc.) to their default values.
      */
     public void reset() {
-        componentRegistry.components().forEach(GameEntityComponent::reset);
+        componentRegistry.components().forEach(EntityComponent::reset);
     }
 
     public final void show() {
@@ -94,7 +94,7 @@ public class GameEntity implements Disposable {
 
     @Override
     public void dispose() {
-        for (GameEntityComponent comp : componentRegistry.components()) {
+        for (EntityComponent comp : componentRegistry.components()) {
             if (comp instanceof Disposable disposable) {
                 disposable.dispose();
             }
