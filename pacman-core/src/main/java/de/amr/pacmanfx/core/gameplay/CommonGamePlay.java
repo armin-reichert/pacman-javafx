@@ -156,9 +156,12 @@ public abstract class CommonGamePlay implements GamePlay {
 
     @Override
     public void updateEntities(GameContext game, GameLevel level) {
-        updatePac(game, level, level.entities().pac());
+        final Pac pac = level.entities().pac();
+        updatePac(game, level, pac);
         updateGhosts(game, level);
         game.variantConfig().systems().bonusState().update(game);
+
+        checkPacPower(game, level, pac);
     }
 
     @Override
@@ -236,45 +239,48 @@ public abstract class CommonGamePlay implements GamePlay {
         }
     }
 
-    private void checkPacPower(GameContext game, GameLevel level, Pac pac) {
-        final GameSystems systems = game.variantConfig().systems();
-
-        final PacPowerComp power = pac.power();
-        if (power.isFading()) {
-            game.eventManager().publishGameEvent(new PacPowerFadesEvent(pac));
-        }
-        else if (power.isOver()) {
-            power.reset();
-            level.entities().ghostsInState(GhostState.FRIGHTENED).forEach(ghost ->
-                systems.ghostState().changeState(ghost, GhostState.HUNTING_PAC));
-            level.clearGhostKillChain();
-            level.huntingTimerStrategy().start();
-            game.eventManager().publishGameEvent(new PacLostPowerEvent(pac));
-        }
-    }
-
     private void updatePac(GameContext game, GameLevel level, Pac pac) {
         final GameSystems systems = game.variantConfig().systems();
         final GameRules rules = game.variantConfig().rules();
+        final GameSession session = game.session();
+
+        systems.pacAutoSteering().update(session, pac);
+
+        final ActorSpeedRules speedRules = rules.actorSpeedRules();
+        final float speed = pac.power().isActive()
+            ? speedRules.pacSpeedWhenHasPower(game, level)
+            : speedRules.pacSpeed(game, level);
+
+        systems.worldNavigator().setSpeed(pac, speed);
+        systems.worldNavigator().tryMovingOrTeleporting(pac, level, systems.pacWorldMovementPolicy());
 
         systems.pacDigestion().update(pac);
         systems.pacPower().update(pac, rules.pacPowerFadingSeconds(level.number()));
         systems.pacState().update(pac);
-        navigatePac(game, level, pac);
         systems.pacAnimation().update(pac);
-        checkPacPower(game, level, pac);
     }
 
-    private void navigatePac(GameContext game, GameLevel level, Pac pac) {
+    private void checkPacPower(GameContext game, GameLevel level, Pac pac) {
         final GameSystems systems = game.variantConfig().systems();
-        final GameSession session = game.session();
-        final ActorSpeedRules speedRules = game.variantConfig().rules().actorSpeedRules();
-        final float speed = pac.power().isActive()
-            ? speedRules.pacSpeedWhenHasPower(game, level) : speedRules.pacSpeed(game, level);
+        final PacPowerComp power = pac.power();
 
-        systems.pacAutoSteering().update(session, pac);
-        systems.worldNavigator().setSpeed(pac, speed);
-        systems.worldNavigator().tryMovingOrTeleporting(pac, level, systems.pacWorldMovementPolicy());
+        if (power.starts()) {
+            Logger.info("Pac power started. Power ticks remaining: {}", power.ticksRemaining());
+        }
+        else if (power.isFadingStart() && !power.ends()) {
+            Logger.info("Pac power started fading. Power ticks remaining: {}", power.ticksRemaining());
+            game.eventManager().publishGameEvent(new PacPowerFadesEvent(pac));
+        }
+        else if (power.ends()) {
+            //TODO move into event handler!
+            level.entities().ghostsInState(GhostState.FRIGHTENED).forEach(ghost ->
+                systems.ghostState().changeState(ghost, GhostState.HUNTING_PAC));
+            level.clearGhostKillChain();
+            level.huntingTimerStrategy().start();
+
+            Logger.info("Pac power ended. Power ticks remaining: {}", power.ticksRemaining());
+            game.eventManager().publishGameEvent(new PacLostPowerEvent(pac));
+        }
     }
 
     private void evalCollisions(GameContext game, GameLevel level, HuntingStep huntingStep) {

@@ -23,24 +23,32 @@ public final class PacPowerSystem {
     public void update(Pac pac, float fadingSeconds) {
         final PacPowerComp power = pac.power();
         final TickTimer timer = power.timer();
-        if (timer.isRunning()) {
-            final long fadingTicks = TickTimer.secToTicks(fadingSeconds);
-            final boolean fading = timer.remainingTicks() <= fadingTicks;
-            final boolean fadingStart = timer.durationTicks() < fadingTicks
-                ? timer.tickCount() == 1
-                : timer.remainingTicks() == fadingTicks;
 
-            //TODO This is redundant and should be removed
-            power.setActive(true);
-            power.setFadingStart(fadingStart);
-            power.setFading(fading);
-
-            timer.doTick();
-        }
-        else {
-            power.setActive(false);
+        if (!timer.isRunning()) {
+            power.setStarts(false);
             power.setFadingStart(false);
             power.setFading(false);
+            power.setEnds(false);
+        }
+        else {
+            final boolean powerStarts = timer.tickCount() == 0;
+
+            final long fadingTicks = TickTimer.secToTicks(fadingSeconds);
+
+            final boolean powerStartsFading = timer.durationTicks() > fadingTicks
+                ? timer.remainingTicks() == fadingTicks
+                : timer.tickCount() == 0;
+
+            final boolean powerFading = timer.remainingTicks() <= fadingTicks;
+
+            final boolean powerEnds = powerFading && timer.remainingTicks() == 0;
+
+            power.setStarts(powerStarts);
+            power.setFadingStart(powerStartsFading);
+            power.setFading(powerFading);
+            power.setEnds(powerEnds);
+
+            timer.doTick();
         }
     }
 }

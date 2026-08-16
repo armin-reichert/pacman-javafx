@@ -9,11 +9,13 @@ import de.amr.pacmanfx.core.ecs.GameEntityComponent;
 
 public class PacPowerComp implements GameEntityComponent {
 
-    private boolean active;
-
     private boolean fading;
 
     private boolean fadingStart;
+
+    private boolean starts;
+
+    private boolean ends;
 
     private final TickTimer timer = new TickTimer("PacPower-Timer");
 
@@ -28,11 +30,7 @@ public class PacPowerComp implements GameEntityComponent {
     }
 
     public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
+        return timer.isRunning();
     }
 
     public boolean isFading() {
@@ -51,8 +49,20 @@ public class PacPowerComp implements GameEntityComponent {
         this.fadingStart = fadingStart;
     }
 
-    public boolean isOver() {
-        return !active;
+    public boolean starts() {
+        return starts;
+    }
+
+    public void setStarts(boolean starts) {
+        this.starts = starts;
+    }
+
+    public boolean ends() {
+        return ends;
+    }
+
+    public void setEnds(boolean ends) {
+        this.ends = ends;
     }
 
     public long ticksRemaining() {
@@ -65,8 +75,10 @@ public class PacPowerComp implements GameEntityComponent {
 
     @Override
     public String toString() {
-        return "PacPower{" +
-            "timer=" + timer +
+        return "PacPowerComp{" +
+            "fading=" + fading +
+            ", fadingStart=" + fadingStart +
+            ", timer=" + timer +
             '}';
     }
 }
