@@ -10,6 +10,7 @@ import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.Bonus;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.LevelCounter;
+import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
 
@@ -40,6 +41,12 @@ public interface GamePlay {
     void hunt(GameContext game, GameLevel level);
 
     void updateEntities(GameContext game, GameLevel level);
+
+    void onPacPowerStarts(GameContext game, GameLevel level, Pac pac, long ticks);
+
+    void onPacPowerEnds(GameContext game, GameLevel level, Pac pac);
+
+    void onPacPowerStartsFading(GameContext game, GameLevel level, Pac pac);
 
     void onEatPellet(GameContext game, GameLevel level, Vector2i tile);
 

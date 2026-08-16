@@ -7,4 +7,4 @@ package de.amr.pacmanfx.core.event.pac;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.event.GameEvent;
 
-public record PacGetsPowerEvent(Pac pac) implements GameEvent {}
+public record PacPowerStartsEvent(Pac pac) implements GameEvent {}

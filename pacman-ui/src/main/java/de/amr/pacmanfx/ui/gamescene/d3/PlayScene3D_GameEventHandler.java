@@ -18,8 +18,8 @@ import de.amr.pacmanfx.core.event.bonus.BonusExpiredEvent;
 import de.amr.pacmanfx.core.event.gameplay.*;
 import de.amr.pacmanfx.core.event.ghost.GhostEatenEvent;
 import de.amr.pacmanfx.core.event.pac.PacEatsFoodEvent;
-import de.amr.pacmanfx.core.event.pac.PacGetsPowerEvent;
-import de.amr.pacmanfx.core.event.pac.PacLostPowerEvent;
+import de.amr.pacmanfx.core.event.pac.PacPowerStartsEvent;
+import de.amr.pacmanfx.core.event.pac.PacPowerEndsEvent;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -225,7 +225,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 
 
     @Override
-    default void onPacGetsPower(PacGetsPowerEvent e) {
+    default void onPacPowerStarts(PacPowerStartsEvent e) {
         final Pac pac = e.pac();
         final GameLevel level = game().session().assertLevel();
         final GameLevel3D level3D = assertLevel3D();
@@ -239,7 +239,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     }
 
     @Override
-    default void onPacLostPower(PacLostPowerEvent e) {
+    default void onPacPowerEnds(PacPowerEndsEvent e) {
         final Pac pac = e.pac();
         final GameLevel3D level3D = assertLevel3D();
 

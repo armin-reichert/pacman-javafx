@@ -155,12 +155,12 @@ public interface TengenMsPacMan_PlayScene2DGameEventHandler extends DefaultGameE
     }
 
     @Override
-    default void onPacGetsPower(PacGetsPowerEvent e) {
+    default void onPacPowerStarts(PacPowerStartsEvent e) {
         gameScene().optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
     }
 
     @Override
-    default void onPacLostPower(PacLostPowerEvent e) {
+    default void onPacPowerEnds(PacPowerEndsEvent e) {
         gameScene().optSoundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
     }
 

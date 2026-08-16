@@ -29,8 +29,8 @@ import de.amr.pacmanfx.core.event.gameplay.LevelStartedEvent;
 import de.amr.pacmanfx.core.event.gameplay.SpecialScoreEvent;
 import de.amr.pacmanfx.core.event.ghost.GhostEatenEvent;
 import de.amr.pacmanfx.core.event.pac.PacEatsFoodEvent;
-import de.amr.pacmanfx.core.event.pac.PacGetsPowerEvent;
-import de.amr.pacmanfx.core.event.pac.PacLostPowerEvent;
+import de.amr.pacmanfx.core.event.pac.PacPowerStartsEvent;
+import de.amr.pacmanfx.core.event.pac.PacPowerEndsEvent;
 import de.amr.pacmanfx.core.event.pac.PacPowerStartsFadingEvent;
 import de.amr.pacmanfx.core.gameplay.hunt.HuntingStep;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
@@ -161,7 +161,7 @@ public abstract class CommonGamePlay implements GamePlay {
         updateGhosts(game, level);
         game.variantConfig().systems().bonusState().update(game);
 
-        checkPacPower(game, level, pac);
+        checkRemainingPacPower(game, level, pac);
     }
 
     @Override
@@ -228,14 +228,61 @@ public abstract class CommonGamePlay implements GamePlay {
         final GameSystems systems = game.variantConfig().systems();
         final GameRules rules = game.variantConfig().rules();
 
+        // Ghosts make turnback also in case pac power time is zero!
         level.entities().ghostsInAnyOfStates(GHOST_TURNBACK_STATES).forEach(systems.worldNavigator()::requestTurnBack);
 
-        if (rules.pacPowerSeconds(level.number()) > 0) {
-            level.huntingTimerStrategy().stop();
-            level.entities().ghostsInState(GhostState.HUNTING_PAC)
-                .forEach(ghost -> systems.ghostState().changeState(ghost, GhostState.FRIGHTENED));
-            systems.pacPower().start(pac, TickTimer.secToTicks(rules.pacPowerSeconds(level.number())));
-            game.eventManager().publishGameEvent(new PacGetsPowerEvent(pac));
+        final long powerTicks = TickTimer.secToTicks(rules.pacPowerSeconds(level.number()));
+        if (powerTicks > 0) {
+            //TODO move to game event handler!
+            onPacPowerStarts(game, level, pac, powerTicks);
+            game.eventManager().publishGameEvent(new PacPowerStartsEvent(pac));
+        }
+    }
+
+    @Override
+    public void onPacPowerStarts(GameContext game, GameLevel level, Pac pac, long ticks) {
+        final GameSystems systems = game.variantConfig().systems();
+
+        Logger.info("Pac power started. Power ticks: {}", ticks);
+
+        level.huntingTimerStrategy().stop();
+
+        level.entities()
+            .ghostsInState(GhostState.HUNTING_PAC)
+            .forEach(ghost -> systems.ghostState().changeState(ghost, GhostState.FRIGHTENED));
+
+        systems.pacPower().start(pac, ticks);
+    }
+
+    @Override
+    public void onPacPowerStartsFading(GameContext game, GameLevel level, Pac pac) {
+        Logger.info("Pac power started fading. Power ticks remaining: {}", pac.power().ticksRemaining());
+    }
+
+    @Override
+    public void onPacPowerEnds(GameContext game, GameLevel level, Pac pac) {
+        final GameSystems systems = game.variantConfig().systems();
+
+        level.clearGhostKillChain();
+
+        level.entities().ghostsInState(GhostState.FRIGHTENED).forEach(ghost ->
+            systems.ghostState().changeState(ghost, GhostState.HUNTING_PAC));
+
+        level.huntingTimerStrategy().start();
+
+        Logger.info("Pac power ended, hunting resumed. Power ticks remaining: {}", pac.power().ticksRemaining());
+    }
+
+    private void checkRemainingPacPower(GameContext game, GameLevel level, Pac pac) {
+        final PacPowerComp power = pac.power();
+        if (power.ends()) {
+            //TODO move into event handler!
+            onPacPowerEnds(game, level, pac);
+            game.eventManager().publishGameEvent(new PacPowerEndsEvent(pac));
+        }
+        else if (power.isFadingStart()) {
+            onPacPowerStartsFading(game, level, pac);
+            game.eventManager().publishGameEvent(new PacPowerStartsFadingEvent(pac));
         }
     }
 
@@ -258,29 +305,6 @@ public abstract class CommonGamePlay implements GamePlay {
         systems.pacPower().update(pac, rules.pacPowerFadingSeconds(level.number()));
         systems.pacState().update(pac);
         systems.pacAnimation().update(pac);
-    }
-
-    private void checkPacPower(GameContext game, GameLevel level, Pac pac) {
-        final GameSystems systems = game.variantConfig().systems();
-        final PacPowerComp power = pac.power();
-
-        if (power.starts()) {
-            Logger.info("Pac power started. Power ticks remaining: {}", power.ticksRemaining());
-        }
-        else if (power.isFadingStart() && !power.ends()) {
-            Logger.info("Pac power started fading. Power ticks remaining: {}", power.ticksRemaining());
-            game.eventManager().publishGameEvent(new PacPowerStartsFadingEvent(pac));
-        }
-        else if (power.ends()) {
-            //TODO move into event handler!
-            level.entities().ghostsInState(GhostState.FRIGHTENED).forEach(ghost ->
-                systems.ghostState().changeState(ghost, GhostState.HUNTING_PAC));
-            level.clearGhostKillChain();
-            level.huntingTimerStrategy().start();
-
-            Logger.info("Pac power ended. Power ticks remaining: {}", power.ticksRemaining());
-            game.eventManager().publishGameEvent(new PacLostPowerEvent(pac));
-        }
     }
 
     private void evalCollisions(GameContext game, GameLevel level, HuntingStep huntingStep) {

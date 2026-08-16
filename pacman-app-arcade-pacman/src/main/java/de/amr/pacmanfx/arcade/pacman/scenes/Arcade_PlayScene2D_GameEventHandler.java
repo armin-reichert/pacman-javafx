@@ -123,12 +123,12 @@ public interface Arcade_PlayScene2D_GameEventHandler extends DefaultGameEventLis
     }
 
     @Override
-    default void onPacGetsPower(PacGetsPowerEvent e) {
+    default void onPacPowerStarts(PacPowerStartsEvent e) {
         optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
     }
 
     @Override
-    default void onPacLostPower(PacLostPowerEvent e) {
+    default void onPacPowerEnds(PacPowerEndsEvent e) {
         optSoundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
     }
 

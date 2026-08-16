@@ -40,8 +40,8 @@ public interface DefaultGameEventListener extends GameEventListener {
             case PacDeadEvent e                  -> onPacDead(e);
             case PacDyingEvent e                 -> onPacDying(e);
             case PacEatsFoodEvent e              -> onPacEatsFood(e);
-            case PacGetsPowerEvent e             -> onPacGetsPower(e);
-            case PacLostPowerEvent e             -> onPacLostPower(e);
+            case PacPowerStartsEvent e             -> onPacPowerStarts(e);
+            case PacPowerEndsEvent e             -> onPacPowerEnds(e);
             case PacPowerStartsFadingEvent e     -> onPacPowerStartsFading(e);
             case SpecialScoreEvent e             -> onSpecialScore(e);
             case StopAllSoundsEvent e            -> onStopAllSounds(e);
@@ -71,8 +71,8 @@ public interface DefaultGameEventListener extends GameEventListener {
     default void onPacDead(PacDeadEvent e) {}
     default void onPacDying(PacDyingEvent e) {}
     default void onPacEatsFood(PacEatsFoodEvent e) {}
-    default void onPacGetsPower(PacGetsPowerEvent e) {}
-    default void onPacLostPower(PacLostPowerEvent e) {}
+    default void onPacPowerStarts(PacPowerStartsEvent e) {}
+    default void onPacPowerEnds(PacPowerEndsEvent e) {}
     default void onPacPowerStartsFading(PacPowerStartsFadingEvent e) {}
     default void onStopAllSounds(StopAllSoundsEvent e) {}
     default void onTestStarted(TestStartedEvent e) {}
