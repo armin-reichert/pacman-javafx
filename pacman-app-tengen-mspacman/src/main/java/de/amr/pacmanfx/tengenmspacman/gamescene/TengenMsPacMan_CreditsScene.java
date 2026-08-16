@@ -48,9 +48,9 @@ public class TengenMsPacMan_CreditsScene extends AbstractGameScene {
 
     @Override
     public void onTick(GameContext game) {
-        final TickTimer stateTimer = gameState().timer();
+        final TickTimer stateTimer = game().state().timer();
         if (stateTimer.tickCount() == DISPLAY_TICKS) {
-            gameState().triggerTimeout();
+            game().state().triggerTimeout();
             return;
         }
         if (stateTimer.tickCount() == DISPLAY_TICKS / 2) {

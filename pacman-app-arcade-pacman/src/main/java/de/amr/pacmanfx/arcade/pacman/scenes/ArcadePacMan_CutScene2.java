@@ -117,7 +117,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene {
 
     private void endTheShow() {
         blinky.hide();
-        gameState().triggerTimeout();
+        game().state().triggerTimeout();
     }
 
     private void dressRaptures(GameSystems sys) {

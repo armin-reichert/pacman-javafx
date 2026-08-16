@@ -86,7 +86,7 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene {
 
     @Override
     public void onTick(GameContext game) {
-        final long tick = gameState().timer().tickCount();
+        final long tick = game().state().timer().tickCount();
 
         if (tick == TICK_CLAP) {
             clapperboard.show();
@@ -95,7 +95,7 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene {
             playMusic();
         }
         else if (tick == TICK_EXPIRES) {
-            gameState().triggerTimeout();
+            game().state().triggerTimeout();
         }
 
         TengenMsPacMan_ClapperboardStateSystem.update(clapperboard);

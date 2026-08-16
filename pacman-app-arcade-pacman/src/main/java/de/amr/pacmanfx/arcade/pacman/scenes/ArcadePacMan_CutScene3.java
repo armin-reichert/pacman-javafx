@@ -63,7 +63,7 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene {
         switch (sceneTick) {
             case TICK_ANIMATION_START      -> startAnimation(sys);
             case TICK_BLINKY_RUNNING_NAKED -> startBlinkyRunningNaked(sys);
-            case TICK_ANIMATION_ENDS       -> gameState().triggerTimeout();
+            case TICK_ANIMATION_ENDS       -> game().state().triggerTimeout();
         }
 
         sys.motor().move(pacMan);

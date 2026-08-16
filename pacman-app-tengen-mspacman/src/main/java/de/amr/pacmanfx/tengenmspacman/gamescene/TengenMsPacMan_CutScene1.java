@@ -111,7 +111,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene {
 
     @Override
     public void onTick(GameContext game) {
-        final int tick = (int) gameState().timer().tickCount();
+        final int tick = (int) game().state().timer().tickCount();
         switch (tick) {
             case TICK_CLAP -> {
                 getReady(game());
@@ -120,7 +120,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene {
                 playMusic();
             }
             case TICK_EXPIRES -> {
-                gameState().triggerTimeout();
+                game().state().triggerTimeout();
                 return;
             }
         }

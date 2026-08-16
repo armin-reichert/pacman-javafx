@@ -53,7 +53,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
         @Override
         public void draw(AbstractGameScene scene, long tick) {
             final GameSession session = scene.game().session();
-            final GameState gameState = scene.gameState();
+            final GameState gameState = scene.game().state();
             final TengenMsPacMan_PlayScene2D playScene = (TengenMsPacMan_PlayScene2D) scene;
 
             drawTileGrid(NES_SCREEN_WIDTH, playScene.canvasHeightUnscaled(), Color.LIGHTGRAY);

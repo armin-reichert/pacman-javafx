@@ -127,7 +127,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene {
             case DELIVER_JUNIOR -> transition(SceneState.END)
                 .ifPresentOrElse(this::changeState, this::updateDeliverJuniorState);
 
-            case END -> gameState().triggerTimeout();
+            case END -> game().state().triggerTimeout();
 
             default -> throw new IllegalStateException("Illegal scene state: " + sceneState);
         }

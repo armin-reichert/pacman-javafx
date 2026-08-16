@@ -99,7 +99,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
 
     @Override
     public void onTick(GameContext game) {
-        final long tick = gameState().timer().tickCount();
+        final long tick = game().state().timer().tickCount();
         if (tick == TICK_CLAP) {
             clapperboard.show();
             TengenMsPacMan_ClapperboardStateSystem.startFlapAnimation(clapperboard);

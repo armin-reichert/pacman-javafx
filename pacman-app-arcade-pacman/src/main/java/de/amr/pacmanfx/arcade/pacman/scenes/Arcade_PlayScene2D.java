@@ -49,7 +49,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene
         final GameSession session = game.session();
         session.optLevel().ifPresent(level -> {
             ActorAnimationManager.ensureActorAnimationsCreated(app(), level);
-            updateLivesCounter(gameState(), session, level.entities().pac());
+            updateLivesCounter(game().state(), session, level.entities().pac());
             optSoundEffects().ifPresent(sfx -> sfx.playAmbientGameLevelSound(game(), level));
         });
     }

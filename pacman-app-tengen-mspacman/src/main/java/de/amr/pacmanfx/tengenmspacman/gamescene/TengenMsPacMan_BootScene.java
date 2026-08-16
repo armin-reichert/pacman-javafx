@@ -9,7 +9,6 @@ import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.MovementComp;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.entities.Ghost;
-import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConfig;
@@ -56,8 +55,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
     public void onTick(GameContext game) {
         final GameSystems sys = game.variant().systems();
 
-        final GameState gameState = gameState();
-        final int stateTick = (int) gameState.timer().tickCount();
+        final int stateTick = (int) game().state().timer().tickCount();
         switch (stateTick) {
             case   1 -> gray(false);
             case   7 -> gray(true);
@@ -85,7 +83,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
             case 204 -> gray(true);
             case 214 -> gray(false);
             case 220 -> {
-                gameState.triggerTimeout();
+                game().state().triggerTimeout();
                 return;
             }
         }

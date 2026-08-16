@@ -14,7 +14,6 @@ import de.amr.pacmanfx.core.event.base.DefaultGameEventListener;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.event.gameplay.CreditAddedEvent;
 import de.amr.pacmanfx.core.gameplay.GameFlowController;
-import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.Rendering2DSupport;
@@ -127,11 +126,6 @@ public abstract class AbstractGameScene implements GameScene, DefaultGameEventLi
     @Override
     public GameContext game() {
         return app.game();
-    }
-
-    @Override
-    public GameState gameState() {
-        return game().state();
     }
 
     @Override
