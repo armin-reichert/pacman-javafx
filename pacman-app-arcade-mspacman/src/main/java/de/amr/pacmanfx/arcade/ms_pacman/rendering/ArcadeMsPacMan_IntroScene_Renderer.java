@@ -43,9 +43,9 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer implements 
         super(canvas);
 
         copyrightImage = renderConfig.assets().image("logo.midway");
-        marqueeRenderer = scene.configureRenderer(new MarqueeRenderer(canvas));
-        copyrightRenderer = scene.configureRenderer(new CopyrightRenderer(canvas));
-        actorRenderer = scene.configureRenderer(renderConfig.createActorRenderer(animSystem, canvas));
+        marqueeRenderer = scene.rendering2D().configureRenderer(new MarqueeRenderer(canvas));
+        copyrightRenderer = scene.rendering2D().configureRenderer(new CopyrightRenderer(canvas));
+        actorRenderer = scene.rendering2D().configureRenderer(renderConfig.createActorRenderer(animSystem, canvas));
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
     }
 

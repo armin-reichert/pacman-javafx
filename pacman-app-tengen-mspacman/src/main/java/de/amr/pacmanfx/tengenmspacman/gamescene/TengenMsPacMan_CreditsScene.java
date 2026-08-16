@@ -28,8 +28,8 @@ public class TengenMsPacMan_CreditsScene extends AbstractGameScene2D {
 
     public TengenMsPacMan_CreditsScene(GameAppContext appContext) {
         super(appContext);
-        unscaledWidthProperty().set(NES_SCREEN_WIDTH);
-        unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
+        rendering2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
+        rendering2D().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
     }
 
     @Override

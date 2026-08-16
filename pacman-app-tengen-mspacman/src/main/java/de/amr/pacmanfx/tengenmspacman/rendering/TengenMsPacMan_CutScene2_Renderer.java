@@ -20,7 +20,7 @@ public class TengenMsPacMan_CutScene2_Renderer extends BaseRenderer implements G
     public TengenMsPacMan_CutScene2_Renderer(
         GameVariantRenderConfig renderConfig, AbstractGameScene2D scene, SpriteAnimSystem animSystem, Canvas canvas) {
         super(canvas);
-        actorRenderer = scene.configureRenderer((TengenMsPacMan_ActorRenderer) renderConfig.createActorRenderer(animSystem, canvas));
+        actorRenderer = scene.rendering2D().configureRenderer((TengenMsPacMan_ActorRenderer) renderConfig.createActorRenderer(animSystem, canvas));
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
     }
 

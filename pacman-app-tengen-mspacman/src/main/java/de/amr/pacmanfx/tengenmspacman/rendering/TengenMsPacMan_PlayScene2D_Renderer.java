@@ -84,9 +84,9 @@ public class TengenMsPacMan_PlayScene2D_Renderer
         GameVariantRenderConfig renderConfig, AbstractGameScene2D scene, SpriteAnimSystem animSystem, Canvas canvas) {
         super(canvas);
         this.animSystem = requireNonNull(animSystem);
-        levelRenderer = scene.configureRenderer((TengenMsPacMan_GameLevelRenderer) renderConfig.createGameLevelRenderer(animSystem, canvas));
-        actorRenderer = scene.configureRenderer((TengenMsPacMan_ActorRenderer)     renderConfig.createActorRenderer(animSystem, canvas));
-        debugRenderer = scene.configureRenderer(new PlaySceneDebugInfoRenderer(canvas));
+        levelRenderer = scene.rendering2D().configureRenderer((TengenMsPacMan_GameLevelRenderer) renderConfig.createGameLevelRenderer(animSystem, canvas));
+        actorRenderer = scene.rendering2D().configureRenderer((TengenMsPacMan_ActorRenderer)     renderConfig.createActorRenderer(animSystem, canvas));
+        debugRenderer = scene.rendering2D().configureRenderer(new PlaySceneDebugInfoRenderer(canvas));
     }
 
     @Override

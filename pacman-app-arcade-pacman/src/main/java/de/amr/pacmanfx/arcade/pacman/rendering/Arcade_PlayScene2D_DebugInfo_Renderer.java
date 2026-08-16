@@ -45,7 +45,7 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
 
     @Override
     public void draw(AbstractGameScene2D scene, long tick) {
-        drawTileGrid(scene.unscaledWidth(), scene.unscaledHeight(), Color.LIGHTGRAY);
+        drawTileGrid(scene.rendering2D().unscaledWidth(), scene.rendering2D().unscaledHeight(), Color.LIGHTGRAY);
 
         final GameSession session = scene.game().session();
         session.optLevel().ifPresent(level -> {

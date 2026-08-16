@@ -112,7 +112,7 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
             case TengenMsPacMan_CutScene4    ignored -> new TengenMsPacMan_CutScene4_Renderer(this, gameScene2D, animSystem, canvas);
             default -> throw new IllegalStateException("Unexpected value: " + gameScene2D);
         };
-        return gameScene2D.configureRenderer(renderer);
+        return gameScene2D.rendering2D().configureRenderer(renderer);
     }
 
     @Override
@@ -122,7 +122,7 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
 
     @Override
     public TengenMsPacMan_HeadsUpDisplay_Renderer createHUDRenderer(AbstractGameScene2D gameScene2D, SpriteAnimSystem animSystem, Canvas canvas) {
-        return gameScene2D.configureRenderer(new TengenMsPacMan_HeadsUpDisplay_Renderer(canvas));
+        return gameScene2D.rendering2D().configureRenderer(new TengenMsPacMan_HeadsUpDisplay_Renderer(canvas));
     }
 
     @Override

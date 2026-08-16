@@ -81,8 +81,10 @@ public class TengenMsPacMan_CreditsScene_Renderer extends BaseRenderer implement
         if (!(scene instanceof TengenMsPacMan_CreditsScene creditsScene)) {
             return;
         }
-        drawHorizontalBar(NES_Palette.color(0x20), NES_Palette.color(0x13), scene.unscaledWidth(), TS, 20);
-        drawHorizontalBar(NES_Palette.color(0x20), NES_Palette.color(0x13), scene.unscaledWidth(), TS, 212);
+
+        final int width = scene.rendering2D().unscaledWidth();
+        drawHorizontalBar(NES_Palette.color(0x20), NES_Palette.color(0x13), width, TS, 20);
+        drawHorizontalBar(NES_Palette.color(0x20), NES_Palette.color(0x13), width, TS, 212);
 
         ctx.setFont(arcadeFont8());
         switch (creditsScene.displayMode) {

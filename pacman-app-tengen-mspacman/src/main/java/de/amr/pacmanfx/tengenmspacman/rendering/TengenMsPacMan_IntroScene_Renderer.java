@@ -53,8 +53,8 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
         requireNonNull(renderConfig);
         requireNonNull(scene);
 
-        marqueeRenderer = scene.configureRenderer(new MarqueeRenderer(canvas));
-        actorRenderer = scene.configureRenderer(renderConfig.createActorRenderer(animSystem, canvas));
+        marqueeRenderer = scene.rendering2D().configureRenderer(new MarqueeRenderer(canvas));
+        actorRenderer = scene.rendering2D().configureRenderer(renderConfig.createActorRenderer(animSystem, canvas));
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
 
         uiSettings = scene.app().currentGameVariantUIConfig().getExtensionValue(

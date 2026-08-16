@@ -43,9 +43,9 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Ga
     {
         super(canvas);
 
-        actorRenderer = scene.configureRenderer((ArcadePacMan_ActorRenderer) renderConfig.createActorRenderer(animSystem, canvas));
+        actorRenderer = scene.rendering2D().configureRenderer((ArcadePacMan_ActorRenderer) renderConfig.createActorRenderer(animSystem, canvas));
 
-        debugRenderer = scene.configureRenderer(new BaseDebugInfoRenderer(canvas) {
+        debugRenderer = scene.rendering2D().configureRenderer(new BaseDebugInfoRenderer(canvas) {
             @Override
             public void draw(AbstractGameScene2D scene, long tick) {
                 ArcadePacMan_IntroScene introScene = (ArcadePacMan_IntroScene) scene;

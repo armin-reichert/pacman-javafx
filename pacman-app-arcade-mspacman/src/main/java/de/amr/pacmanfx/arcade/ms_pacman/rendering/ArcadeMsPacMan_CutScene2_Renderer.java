@@ -25,7 +25,7 @@ public class ArcadeMsPacMan_CutScene2_Renderer extends BaseRenderer implements G
 
         super(canvas);
 
-        actorRenderer = scene.configureRenderer((ArcadeMsPacMan_ActorRenderer) renderConfig.createActorRenderer(animSystem, canvas));
+        actorRenderer = scene.rendering2D().configureRenderer((ArcadeMsPacMan_ActorRenderer) renderConfig.createActorRenderer(animSystem, canvas));
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
     }
 

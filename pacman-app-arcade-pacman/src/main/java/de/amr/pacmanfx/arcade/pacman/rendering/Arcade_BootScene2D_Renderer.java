@@ -5,7 +5,6 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
 import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
@@ -62,18 +61,18 @@ public class Arcade_BootScene2D_Renderer extends BaseRenderer implements GameSce
             case HEX_CODES -> {
                 if (tick % 4 == 0) {
                     clearCanvas();
-                    drawRandomHexDigits(bootScene, scene.unscaledWidth(), scene.unscaledHeight());
+                    drawRandomHexDigits(bootScene, scene.rendering2D().unscaledWidth(), scene.rendering2D().unscaledHeight());
                 }
             }
             case RANDOM_SPRITE_FRAGMENTS -> {
                 if (tick % 4 == 0) {
                     clearCanvas();
-                    drawRandomSpriteFragments(scene.unscaledWidth(), scene.unscaledHeight());
+                    drawRandomSpriteFragments(scene.rendering2D().unscaledWidth(), scene.rendering2D().unscaledHeight());
                 }
             }
             case GRID -> {
                 clearCanvas();
-                drawGrid(scene.unscaledWidth(), scene.unscaledHeight());
+                drawGrid(scene.rendering2D().unscaledWidth(), scene.rendering2D().unscaledHeight());
             }
         }
         if (scene.app().ui().viewModel().debugModeOnProperty.get()) {

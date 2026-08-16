@@ -108,7 +108,7 @@ public interface TengenMsPacMan_PlayScene2DGameEventHandler extends DefaultGameE
                 // Compute exact message size and wrap position at right border
                 final Font font = Font.font(BaseRenderer.ARCADE_FONT.getFamily(), TS);
                 final double width = textWidth(GAME_OVER_MESSAGE_TEXT, font);
-                final double wrapX = gameScene().unscaledWidth() + 0.5 * width;
+                final double wrapX = gameScene().rendering2D().unscaledWidth() + 0.5 * width;
                 messageAnimation.setWidth(width);
                 messageAnimation.setWrapX(wrapX);
                 Logger.info("Message animation bounds computed: width={}, wrapX={}", width, wrapX);

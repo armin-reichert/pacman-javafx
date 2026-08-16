@@ -20,11 +20,15 @@ public class ArcadeMsPacMan_CutScene1_Renderer extends BaseRenderer implements G
     private final ArcadeMsPacMan_ActorRenderer actorRenderer;
     private final BaseDebugInfoRenderer debugRenderer;
 
-    public ArcadeMsPacMan_CutScene1_Renderer(GameVariantRenderConfig renderConfig, AbstractGameScene2D scene,
-                                             SpriteAnimSystem animSystem, Canvas canvas) {
+    public ArcadeMsPacMan_CutScene1_Renderer(
+        GameVariantRenderConfig renderConfig,
+        AbstractGameScene2D scene,
+        SpriteAnimSystem animSystem,
+        Canvas canvas) {
+
         super(canvas);
 
-        actorRenderer = scene.configureRenderer((ArcadeMsPacMan_ActorRenderer) renderConfig.createActorRenderer(animSystem, canvas));
+        actorRenderer = scene.rendering2D().configureRenderer((ArcadeMsPacMan_ActorRenderer) renderConfig.createActorRenderer(animSystem, canvas));
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
     }
 

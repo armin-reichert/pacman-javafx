@@ -71,7 +71,7 @@ public class XXL_MsPacMan_RenderConfig implements GameVariantRenderConfig {
             case ArcadeMsPacMan_CutScene3 ignored -> new ArcadeMsPacMan_CutScene3_Renderer(this, gameScene2D, animSystem, canvas);
             default -> throw new IllegalStateException("Unexpected value: " + gameScene2D);
         };
-        return gameScene2D.configureRenderer(renderer);
+        return gameScene2D.rendering2D().configureRenderer(renderer);
     }
 
     @Override
@@ -83,7 +83,7 @@ public class XXL_MsPacMan_RenderConfig implements GameVariantRenderConfig {
     public HeadsUpDisplay_Renderer createHUDRenderer(AbstractGameScene2D gameScene2D, SpriteAnimSystem animSystem, Canvas canvas) {
         final var hudRenderer = new ArcadeMsPacMan_HeadsUpDisplayRenderer(canvas);
         hudRenderer.setImageSmoothing(true);
-        gameScene2D.configureRenderer(hudRenderer);
+        gameScene2D.rendering2D().configureRenderer(hudRenderer);
         return hudRenderer;
     }
 

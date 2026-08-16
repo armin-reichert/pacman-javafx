@@ -45,7 +45,7 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
         ctx.setFont(debugTextFont);
         ctx.fillText(stateText, 0, scaled(3 * WorldMap.TS));
 
-        drawTileGrid(scene.unscaledWidth(), scene.unscaledHeight(), Color.LIGHTGRAY);
+        drawTileGrid(scene.rendering2D().unscaledWidth(), scene.rendering2D().unscaledHeight(), Color.LIGHTGRAY);
     }
 
     public void drawMovingActorInfo(SpriteAnimSystem animSystem, GameEntity actor) {

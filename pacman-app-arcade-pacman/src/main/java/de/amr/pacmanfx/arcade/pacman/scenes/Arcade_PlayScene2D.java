@@ -110,8 +110,8 @@ public class Arcade_PlayScene2D extends AbstractGameScene2D
     @Override
     public void acceptGameLevel(GameSession session, GameLevel level) {
         final Vector2i terrainSize = level.worldMap().terrainLayer().sizeInPixel();
-        unscaledWidthProperty().set(terrainSize.x());
-        unscaledHeightProperty().set(terrainSize.y());
+        rendering2D().unscaledWidthProperty().set(terrainSize.x());
+        rendering2D().unscaledHeightProperty().set(terrainSize.y());
         if (session.isAttractMode()) {
             acceptDemoLevel();
         } else {

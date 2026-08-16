@@ -11,6 +11,6 @@ public interface GameScene2D_Renderer extends Renderer {
     void draw(AbstractGameScene2D scene, long tick);
 
     static BaseDebugInfoRenderer createDefaultSceneDebugRenderer(AbstractGameScene2D scene, Canvas canvas) {
-        return scene.configureRenderer(new BaseDebugInfoRenderer(canvas));
+        return scene.rendering2D().configureRenderer(new BaseDebugInfoRenderer(canvas));
     }
 }

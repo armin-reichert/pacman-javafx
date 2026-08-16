@@ -149,9 +149,10 @@ public class DS_3DSettings extends GameDashboardSection {
         if (gameScene == null) return NO_INFO;
 
         if (gameScene instanceof AbstractGameScene2D gameScene2D) {
+            final var r2D = gameScene2D.rendering2D();
             return "%dx%d (scaled: %.0fx%.0f)".formatted(
-                gameScene2D.unscaledWidth(), gameScene2D.unscaledHeight(),
-                gameScene2D.scaledWidth(), gameScene2D.scaledHeight());
+                r2D.unscaledWidth(), r2D.unscaledHeight(),
+                r2D.scaledWidth(),   r2D.scaledHeight());
         }
 
         if (level != null) {

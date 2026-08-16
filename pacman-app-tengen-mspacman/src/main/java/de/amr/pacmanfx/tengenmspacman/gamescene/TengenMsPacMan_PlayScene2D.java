@@ -32,7 +32,6 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SubScene;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ToggleGroup;
@@ -68,7 +67,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
         super(appContext);
 
         dynamicCamera = new PlayScene2DCamera();
-        dynamicCamera.scalingProperty().bind(scalingProperty());
+        dynamicCamera.scalingProperty().bind(rendering2D().scalingProperty());
 
         rootPane.backgroundProperty().bind(appContext.ui().viewModel().common2D.canvasBackgroundColorProperty.map(Background::fill));
 
@@ -82,13 +81,24 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
         subScene.cameraProperty().bind(uiSettings.playSceneDisplay.map(mode -> mode == SCROLLING ? dynamicCamera : fixedCamera));
         subScene.cameraProperty().addListener((_, _, _) -> updateScaling());
 
-        scalingProperty().addListener((_, _, _) -> game().session().optLevel()
+        rendering2D().scalingProperty().addListener((_, _, _) -> game().session().optLevel()
             .ifPresent(level -> dynamicCamera.updateRange(level.worldMap().terrainLayer()))
         );
 
-        unscaledWidthProperty().set(NES_SCREEN_WIDTH);
+        rendering2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         // Default height. Varies with map size.
-        unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
+        rendering2D().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
+
+        rendering2D().canvasProperty().addListener((_, oldCanvas, newCanvas) -> {
+            if (oldCanvas != null) {
+                oldCanvas.widthProperty().unbind();
+                oldCanvas.heightProperty().unbind();
+                rootPane.getChildren().remove(oldCanvas);
+            }
+            newCanvas.widthProperty() .bind(rendering2D().scalingProperty().multiply(NES_SCREEN_WIDTH));
+            newCanvas.heightProperty().bind(rendering2D().scalingProperty().multiply(canvasHeightUnscaled));
+            rootPane.getChildren().add(newCanvas);
+        });
     }
 
     @Override
@@ -113,14 +123,6 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
         final GameSession session = game().session();
         session.hud().showLevelCounter().showLivesCounter().show();
         session.optLevel().ifPresent(level -> acceptGameLevel(session, level));
-    }
-
-    @Override
-    public void setCanvas(Canvas canvas) {
-        super.setCanvas(canvas);
-        canvas.widthProperty() .bind(scalingProperty().multiply(NES_SCREEN_WIDTH));
-        canvas.heightProperty().bind(scalingProperty().multiply(canvasHeightUnscaled));
-        rootPane.getChildren().setAll(canvas);
     }
 
     @Override
@@ -211,8 +213,8 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final Vector2i size = terrain.sizeInPixel();
 
-        unscaledWidthProperty().set(size.x());
-        unscaledHeightProperty().set(size.y());
+        rendering2D().unscaledWidthProperty().set(size.x());
+        rendering2D().unscaledHeightProperty().set(size.y());
 
         dynamicCamera.enterTrackingMode();
         dynamicCamera.updateRange(terrain);
@@ -261,12 +263,12 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
         final var uiSettings = tengenUISettings();
         final SceneDisplay displayMode = uiSettings.playSceneDisplay.get();
 
-        scalingProperty().set(switch (displayMode) {
+        rendering2D().scalingProperty().set(switch (displayMode) {
             case SCALED_TO_FIT -> subScene.getHeight() / canvasHeightUnscaled.get();
             case SCROLLING -> subScene.getHeight() / NES_SCREEN_HEIGHT;
         });
         Logger.debug("Tengen 2D play scene sub-scene: w={0.00} h={0.00} scaling={0.00}",
-            subScene.getWidth(), subScene.getHeight(), scaling());
+            subScene.getWidth(), subScene.getHeight(), rendering2D().scaling());
     }
 
     private void updateHUD(GameSession session, GameLevel level) {

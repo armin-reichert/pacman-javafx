@@ -109,7 +109,7 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
             case ArcadeMsPacMan_CutScene3 ignored  -> new ArcadeMsPacMan_CutScene3_Renderer(this, gameScene2D, animSystem, canvas);
             default -> throw new IllegalStateException("Illegal game scene: " + gameScene2D);
         };
-        return gameScene2D.configureRenderer(renderer);
+        return gameScene2D.rendering2D().configureRenderer(renderer);
     }
 
     @Override
@@ -127,7 +127,7 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
 
         final var renderer = new ArcadeMsPacMan_HeadsUpDisplayRenderer(canvas);
         renderer.setImageSmoothing(true);
-        gameScene2D.configureRenderer(renderer);
+        gameScene2D.rendering2D().configureRenderer(renderer);
 
         return renderer;
     }
