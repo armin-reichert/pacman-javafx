@@ -33,7 +33,7 @@ public sealed interface GameEvent permits
     PacEatsFoodEvent,
     PacGetsPowerEvent,
     PacLostPowerEvent,
-    PacPowerFadesEvent,
+    PacPowerStartsFadingEvent,
     SpecialScoreEvent,
     StopAllSoundsEvent,
     GenericChangeEvent,

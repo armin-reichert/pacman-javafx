@@ -31,7 +31,7 @@ import de.amr.pacmanfx.core.event.ghost.GhostEatenEvent;
 import de.amr.pacmanfx.core.event.pac.PacEatsFoodEvent;
 import de.amr.pacmanfx.core.event.pac.PacGetsPowerEvent;
 import de.amr.pacmanfx.core.event.pac.PacLostPowerEvent;
-import de.amr.pacmanfx.core.event.pac.PacPowerFadesEvent;
+import de.amr.pacmanfx.core.event.pac.PacPowerStartsFadingEvent;
 import de.amr.pacmanfx.core.gameplay.hunt.HuntingStep;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -269,7 +269,7 @@ public abstract class CommonGamePlay implements GamePlay {
         }
         else if (power.isFadingStart() && !power.ends()) {
             Logger.info("Pac power started fading. Power ticks remaining: {}", power.ticksRemaining());
-            game.eventManager().publishGameEvent(new PacPowerFadesEvent(pac));
+            game.eventManager().publishGameEvent(new PacPowerStartsFadingEvent(pac));
         }
         else if (power.ends()) {
             //TODO move into event handler!
