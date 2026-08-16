@@ -116,14 +116,14 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene2D {
     public void onInput() {
         final GameSession session = game().session();
 
-        if (input().joypad().isButtonPressed(JoypadButton.DOWN)) {
+        if (app().input().joypad().isButtonPressed(JoypadButton.DOWN)) {
             selectedOption.set(selectedOption() + 1 < NUM_OPTIONS ? selectedOption() + 1 : 0);
         }
-        else if (input().joypad().isButtonPressed(JoypadButton.UP)) {
+        else if (app().input().joypad().isButtonPressed(JoypadButton.UP)) {
             selectedOption.set(selectedOption() == 0 ? NUM_OPTIONS - 1 : selectedOption() - 1);
         }
         // Button "A" on the joypad is located right of "B": select next value
-        else if (input().joypad().isButtonPressed(JoypadButton.A) || input().keyboard().isKeyPressed(KeyCode.RIGHT)) {
+        else if (app().input().joypad().isButtonPressed(JoypadButton.A) || app().input().keyboard().isKeyPressed(KeyCode.RIGHT)) {
             switch (selectedOption()) {
                 case OPTION_PAC_BOOSTER    -> setNextPacBoosterValue(session);
                 case OPTION_DIFFICULTY     -> setNextDifficultyValue(session);
@@ -132,7 +132,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene2D {
             }
         }
         // Button "B" is left of "A": select previous value
-        else if (input().joypad().isButtonPressed(JoypadButton.B) || input().keyboard().isKeyPressed(KeyCode.LEFT)) {
+        else if (app().input().joypad().isButtonPressed(JoypadButton.B) || app().input().keyboard().isKeyPressed(KeyCode.LEFT)) {
             switch (selectedOption()) {
                 case OPTION_PAC_BOOSTER    -> setPrevPacBoosterValue(session);
                 case OPTION_DIFFICULTY     -> setPrevDifficultyValue(session);

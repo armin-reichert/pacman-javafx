@@ -20,8 +20,6 @@ import java.util.Optional;
 
 public interface GameScene extends QuitHandler, Disposable {
 
-    Input input();
-
     GameAppContext app();
 
     GameContext game();

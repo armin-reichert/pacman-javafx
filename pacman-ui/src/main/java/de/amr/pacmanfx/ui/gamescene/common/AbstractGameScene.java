@@ -94,11 +94,6 @@ public abstract class AbstractGameScene
     }
 
     @Override
-    public Input input() {
-        return app.input();
-    }
-
-    @Override
     public Optional<SubScene> optSubSceneFX() {
         return Optional.empty();
     }

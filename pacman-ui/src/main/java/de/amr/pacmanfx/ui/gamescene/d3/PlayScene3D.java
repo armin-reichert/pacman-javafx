@@ -156,7 +156,7 @@ public class PlayScene3D extends AbstractGameScene
 
     @Override
     public void onInput() {
-        final Keyboard keyboard = input().keyboard();
+        final Keyboard keyboard = app().input().keyboard();
         final Optional<GameAction> matchingAction = actionBindings().executeMatchingAction(app());
         if (matchingAction.isEmpty()) {
             // Handle CTRL-PLUS, CTRL_MINUS and CTRL-0

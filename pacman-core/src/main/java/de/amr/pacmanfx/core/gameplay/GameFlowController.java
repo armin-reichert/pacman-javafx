@@ -41,6 +41,11 @@ public class GameFlowController extends StateMachine<GameContext> {
     }
 
     @Override
+    public void update(GameContext game) {
+        super.update(game);
+    }
+
+    @Override
     public GameState state() {
         return (GameState) super.state();
     }
