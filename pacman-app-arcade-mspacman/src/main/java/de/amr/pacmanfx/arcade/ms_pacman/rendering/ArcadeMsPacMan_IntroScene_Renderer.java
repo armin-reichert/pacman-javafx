@@ -8,9 +8,10 @@ import de.amr.pacmanfx.arcade.ms_pacman.scenes.ArcadeMsPacMan_IntroScene;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
-import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
+import de.amr.pacmanfx.ui.gamescene.d2.Rendering2DSupport;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
@@ -36,21 +37,24 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer implements 
 
     public ArcadeMsPacMan_IntroScene_Renderer(
         GameVariantRenderConfig renderConfig,
-        AbstractGameScene scene,
+        GameScene gameScene,
         SpriteAnimSystem animSystem,
         Canvas canvas) {
 
         super(canvas);
 
+        final Rendering2DSupport r2D = gameScene.componentsRegistry().requireComp(Rendering2DSupport.class);
+
         copyrightImage = renderConfig.assets().image("logo.midway");
-        marqueeRenderer = scene.rendering2D().configureRenderer(new MarqueeRenderer(canvas));
-        copyrightRenderer = scene.rendering2D().configureRenderer(new CopyrightRenderer(canvas));
-        actorRenderer = scene.rendering2D().configureRenderer(renderConfig.createActorRenderer(animSystem, canvas));
-        debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
+
+        marqueeRenderer   = r2D.configureRenderer(new MarqueeRenderer(canvas));
+        copyrightRenderer = r2D.configureRenderer(new CopyrightRenderer(canvas));
+        actorRenderer     = r2D.configureRenderer(renderConfig.createActorRenderer(animSystem, canvas));
+        debugRenderer     = GameScene2D_Renderer.createDefaultSceneDebugRenderer(gameScene, canvas);
     }
 
     @Override
-    public void draw(AbstractGameScene scene, long tick) {
+    public void draw(GameScene scene, long tick) {
         clearCanvas();
 
         final ArcadeMsPacMan_IntroScene introScene = (ArcadeMsPacMan_IntroScene) scene;

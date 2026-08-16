@@ -14,9 +14,10 @@ import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_IntroScene;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_IntroScene.SceneState;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
-import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
+import de.amr.pacmanfx.ui.gamescene.d2.Rendering2DSupport;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
@@ -48,16 +49,17 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
     private final TengenMsPacMan_UISettings uiSettings;
 
     public TengenMsPacMan_IntroScene_Renderer(
-        GameVariantRenderConfig renderConfig, AbstractGameScene scene, SpriteAnimSystem animSystem, Canvas canvas) {
+        GameVariantRenderConfig renderConfig, GameScene gameScene, SpriteAnimSystem animSystem, Canvas canvas) {
         super(canvas);
         requireNonNull(renderConfig);
-        requireNonNull(scene);
+        requireNonNull(gameScene);
 
-        marqueeRenderer = scene.rendering2D().configureRenderer(new MarqueeRenderer(canvas));
-        actorRenderer = scene.rendering2D().configureRenderer(renderConfig.createActorRenderer(animSystem, canvas));
-        debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
+        final Rendering2DSupport r2D = gameScene.componentsRegistry().requireComp(Rendering2DSupport.class);
+        marqueeRenderer = r2D.configureRenderer(new MarqueeRenderer(canvas));
+        actorRenderer   = r2D.configureRenderer(renderConfig.createActorRenderer(animSystem, canvas));
+        debugRenderer   = GameScene2D_Renderer.createDefaultSceneDebugRenderer(gameScene, canvas);
 
-        uiSettings = scene.app().currentGameVariantUIConfig().getExtensionValue(
+        uiSettings = gameScene.app().currentGameVariantUIConfig().getExtensionValue(
             TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
     }
 
@@ -72,7 +74,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
     }
 
     @Override
-    public void draw(AbstractGameScene scene, long globalTick) {
+    public void draw(GameScene scene, long globalTick) {
         clearCanvas();
 
         final TengenMsPacMan_IntroScene intro = (TengenMsPacMan_IntroScene) scene;

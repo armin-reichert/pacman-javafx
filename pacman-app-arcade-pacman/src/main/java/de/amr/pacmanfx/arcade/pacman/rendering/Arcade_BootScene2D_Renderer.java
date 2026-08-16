@@ -5,9 +5,10 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
-import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
+import de.amr.pacmanfx.ui.gamescene.d2.Rendering2DSupport;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
@@ -36,9 +37,7 @@ public class Arcade_BootScene2D_Renderer extends BaseRenderer implements GameSce
     private final Rectangle2D spriteRegion;
     private final BaseDebugInfoRenderer debugRenderer;
 
-    public Arcade_BootScene2D_Renderer(
-        AbstractGameScene scene, Canvas canvas, SpriteSheet<?> spriteSheet, Rectangle2D spriteRegion) {
-
+    public Arcade_BootScene2D_Renderer(GameScene scene, Canvas canvas, SpriteSheet<?> spriteSheet, Rectangle2D spriteRegion) {
         super(canvas);
 
         this.spriteSheet = requireNonNull(spriteSheet);
@@ -54,25 +53,26 @@ public class Arcade_BootScene2D_Renderer extends BaseRenderer implements GameSce
     }
 
     @Override
-    public void draw(AbstractGameScene scene, long tick) {
+    public void draw(GameScene scene, long tick) {
         final Arcade_BootScene2D bootScene = (Arcade_BootScene2D) scene;
+        final Rendering2DSupport r2D = scene.componentsRegistry().requireComp(Rendering2DSupport.class);
         switch (bootScene.sceneState) {
             case BLANK -> clearCanvas();
             case HEX_CODES -> {
                 if (tick % 4 == 0) {
                     clearCanvas();
-                    drawRandomHexDigits(bootScene, scene.rendering2D().unscaledWidth(), scene.rendering2D().unscaledHeight());
+                    drawRandomHexDigits(bootScene, r2D.unscaledWidth(), r2D.unscaledHeight());
                 }
             }
             case RANDOM_SPRITE_FRAGMENTS -> {
                 if (tick % 4 == 0) {
                     clearCanvas();
-                    drawRandomSpriteFragments(scene.rendering2D().unscaledWidth(), scene.rendering2D().unscaledHeight());
+                    drawRandomSpriteFragments(r2D.unscaledWidth(), r2D.unscaledHeight());
                 }
             }
             case GRID -> {
                 clearCanvas();
-                drawGrid(scene.rendering2D().unscaledWidth(), scene.rendering2D().unscaledHeight());
+                drawGrid(r2D.unscaledWidth(), r2D.unscaledHeight());
             }
         }
         if (scene.app().ui().viewModel().debugModeOnProperty.get()) {

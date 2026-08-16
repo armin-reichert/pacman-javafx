@@ -5,9 +5,10 @@
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CreditsScene;
-import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
+import de.amr.pacmanfx.ui.gamescene.d2.Rendering2DSupport;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 
@@ -65,7 +66,7 @@ public class TengenMsPacMan_CreditsScene_Renderer extends BaseRenderer implement
     private final BaseDebugInfoRenderer debugRenderer;
     private final Pen pen = new Pen();
 
-    public TengenMsPacMan_CreditsScene_Renderer(AbstractGameScene scene, Canvas canvas) {
+    public TengenMsPacMan_CreditsScene_Renderer(GameScene scene, Canvas canvas) {
         super(canvas);
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
     }
@@ -76,13 +77,14 @@ public class TengenMsPacMan_CreditsScene_Renderer extends BaseRenderer implement
     }
 
     @Override
-    public void draw(AbstractGameScene scene, long tick) {
+    public void draw(GameScene gameScene, long tick) {
         clearCanvas();
-        if (!(scene instanceof TengenMsPacMan_CreditsScene creditsScene)) {
+        if (!(gameScene instanceof TengenMsPacMan_CreditsScene creditsScene)) {
             return;
         }
+        final Rendering2DSupport r2D = gameScene.componentsRegistry().requireComp(Rendering2DSupport.class);
 
-        final int width = scene.rendering2D().unscaledWidth();
+        final int width = r2D.unscaledWidth();
         drawHorizontalBar(NES_Palette.color(0x20), NES_Palette.color(0x13), width, TS, 20);
         drawHorizontalBar(NES_Palette.color(0x20), NES_Palette.color(0x13), width, TS, 212);
 
@@ -101,8 +103,8 @@ public class TengenMsPacMan_CreditsScene_Renderer extends BaseRenderer implement
             }
         }
 
-        if (scene.app().ui().viewModel().debugModeOnProperty.get()) {
-            debugRenderer.draw(scene, tick);
+        if (gameScene.app().ui().viewModel().debugModeOnProperty.get()) {
+            debugRenderer.draw(gameScene, tick);
         }
     }
 }

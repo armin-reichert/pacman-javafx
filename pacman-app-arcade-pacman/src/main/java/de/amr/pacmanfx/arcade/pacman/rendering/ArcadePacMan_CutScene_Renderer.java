@@ -5,9 +5,10 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
-import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
+import de.amr.pacmanfx.ui.gamescene.d2.Rendering2DSupport;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
@@ -21,12 +22,13 @@ public abstract class ArcadePacMan_CutScene_Renderer extends BaseRenderer implem
     protected final ActorRenderer actorRenderer;
     protected BaseDebugInfoRenderer debugRenderer;
 
-    public ArcadePacMan_CutScene_Renderer(AbstractGameScene scene, SpriteAnimSystem animSystem, Canvas canvas) {
+    public ArcadePacMan_CutScene_Renderer(GameScene gameScene, SpriteAnimSystem animSystem, Canvas canvas) {
         super(canvas);
+        final Rendering2DSupport r2D = gameScene.componentsRegistry().requireComp(Rendering2DSupport.class);
         this.animSystem = requireNonNull(animSystem);
-        final GameVariantRenderConfig renderConfig = scene.app().gameVariants().currentGameVariant().uiConfig().renderConfig();
-        actorRenderer = scene.rendering2D().configureRenderer(renderConfig.createActorRenderer(animSystem, canvas));
-        debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
+        final GameVariantRenderConfig renderConfig = gameScene.app().gameVariants().currentGameVariant().uiConfig().renderConfig();
+        actorRenderer = r2D.configureRenderer(renderConfig.createActorRenderer(animSystem, canvas));
+        debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(gameScene, canvas);
     }
 
     @Override
@@ -35,7 +37,7 @@ public abstract class ArcadePacMan_CutScene_Renderer extends BaseRenderer implem
     }
 
     @Override
-    public void draw(AbstractGameScene scene, long tick) {
+    public void draw(GameScene scene, long tick) {
         clearCanvas();
         drawSceneContent(scene);
         if (scene.app().ui().viewModel().debugModeOnProperty.get()) {
@@ -43,5 +45,5 @@ public abstract class ArcadePacMan_CutScene_Renderer extends BaseRenderer implem
         }
     }
 
-    protected abstract void drawSceneContent(AbstractGameScene scene);
+    protected abstract void drawSceneContent(GameScene scene);
 }

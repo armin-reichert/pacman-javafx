@@ -12,10 +12,11 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
-import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
+import de.amr.pacmanfx.ui.gamescene.d2.Rendering2DSupport;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.scene.canvas.Canvas;
@@ -43,15 +44,17 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
     private final BaseDebugInfoRenderer debugRenderer;
     private final List<GameEntity> actorsInZOrder = new ArrayList<>();
 
-    public Arcade_PlayScene2D_Renderer(AbstractGameScene scene, SpriteAnimSystem animSystem, Canvas canvas, SpriteSheet<?> spriteSheet) {
+    public Arcade_PlayScene2D_Renderer(GameScene scene, SpriteAnimSystem animSystem, Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(canvas);
         requireNonNull(scene);
         this.spriteSheet = requireNonNull(spriteSheet);
 
+        final Rendering2DSupport r2D = scene.componentsRegistry().requireComp(Rendering2DSupport.class);
+
         final GameVariantRenderConfig renderConfig = scene.app().gameVariants().currentGameVariant().uiConfig().renderConfig();
-        levelRenderer = scene.rendering2D().configureRenderer(renderConfig.createGameLevelRenderer(animSystem, canvas));
-        actorRenderer = scene.rendering2D().configureRenderer(renderConfig.createActorRenderer(animSystem, canvas));
-        debugRenderer = scene.rendering2D().configureRenderer(new Arcade_PlayScene2D_DebugInfo_Renderer(animSystem, canvas));
+        levelRenderer = r2D.configureRenderer(renderConfig.createGameLevelRenderer(animSystem, canvas));
+        actorRenderer = r2D.configureRenderer(renderConfig.createActorRenderer(animSystem, canvas));
+        debugRenderer = r2D.configureRenderer(new Arcade_PlayScene2D_DebugInfo_Renderer(animSystem, canvas));
     }
 
     @Override
@@ -60,7 +63,7 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
     }
 
     @Override
-    public void draw(AbstractGameScene scene, long tick) {
+    public void draw(GameScene scene, long tick) {
         clearCanvas();
         if (!(scene instanceof Arcade_PlayScene2D playScene)) {
             return;

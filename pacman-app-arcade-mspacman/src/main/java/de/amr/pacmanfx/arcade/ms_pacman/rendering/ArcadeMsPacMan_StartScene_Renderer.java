@@ -5,9 +5,10 @@
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
-import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
+import de.amr.pacmanfx.ui.gamescene.d2.Rendering2DSupport;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
@@ -24,12 +25,14 @@ public class ArcadeMsPacMan_StartScene_Renderer extends BaseRenderer implements 
 
     private final Image copyrightImage;
 
-    public ArcadeMsPacMan_StartScene_Renderer(GameVariantRenderConfig renderConfig, AbstractGameScene scene, Canvas canvas) {
+    public ArcadeMsPacMan_StartScene_Renderer(GameVariantRenderConfig renderConfig, GameScene gameScene, Canvas canvas) {
         super(canvas);
 
+        final Rendering2DSupport r2D = gameScene.componentsRegistry().requireComp(Rendering2DSupport.class);
+
         copyrightImage = renderConfig.assets().image("logo.midway");
-        copyrightRenderer = scene.rendering2D().configureRenderer(new CopyrightRenderer(canvas));
-        debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
+        copyrightRenderer = r2D.configureRenderer(new CopyrightRenderer(canvas));
+        debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(gameScene, canvas);
     }
 
     @Override
@@ -38,7 +41,7 @@ public class ArcadeMsPacMan_StartScene_Renderer extends BaseRenderer implements 
     }
 
     @Override
-    public void draw(AbstractGameScene scene, long tick) {
+    public void draw(GameScene scene, long tick) {
         final double STS = scaled(TS);
 
         clearCanvas();

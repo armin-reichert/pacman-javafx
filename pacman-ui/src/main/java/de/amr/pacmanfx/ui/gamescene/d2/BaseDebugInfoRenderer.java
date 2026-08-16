@@ -13,7 +13,7 @@ import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -34,7 +34,7 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
     }
 
     @Override
-    public void draw(AbstractGameScene scene, long tick) {
+    public void draw(GameScene scene, long tick) {
         final GameState gameState = scene.game().state();
         final String stateText = "Game State: '%s' (Tick %d of %s)".formatted(
             gameState.name(),
@@ -46,7 +46,8 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
         ctx.setFont(debugTextFont);
         ctx.fillText(stateText, 0, scaled(3 * WorldMap.TS));
 
-        drawTileGrid(scene.rendering2D().unscaledWidth(), scene.rendering2D().unscaledHeight(), Color.LIGHTGRAY);
+        final Rendering2DSupport r2D = scene.componentsRegistry().requireComp(Rendering2DSupport.class);
+        drawTileGrid(r2D.unscaledWidth(), r2D.unscaledHeight(), Color.LIGHTGRAY);
     }
 
     public void drawMovingActorInfo(SpriteAnimSystem animSystem, GameEntity actor) {

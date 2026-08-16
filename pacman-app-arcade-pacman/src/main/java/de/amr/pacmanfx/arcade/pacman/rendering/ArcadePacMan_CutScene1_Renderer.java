@@ -5,19 +5,22 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_CutScene1;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
-import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
+import de.amr.pacmanfx.ui.gamescene.d2.Rendering2DSupport;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 
 public class ArcadePacMan_CutScene1_Renderer extends ArcadePacMan_CutScene_Renderer {
 
-    public ArcadePacMan_CutScene1_Renderer(AbstractGameScene scene, SpriteAnimSystem animSystem, Canvas canvas) {
-        super(scene, animSystem, canvas);
-        debugRenderer = scene.rendering2D().configureRenderer(new BaseDebugInfoRenderer(canvas) {
+    public ArcadePacMan_CutScene1_Renderer(GameScene gameScene, SpriteAnimSystem animSystem, Canvas canvas) {
+        super(gameScene, animSystem, canvas);
+
+        final Rendering2DSupport r2D = gameScene.componentsRegistry().requireComp(Rendering2DSupport.class);
+        debugRenderer = r2D.configureRenderer(new BaseDebugInfoRenderer(canvas) {
             @Override
-            public void draw(AbstractGameScene scene, long tick) {
+            public void draw(GameScene scene, long tick) {
                 super.draw(scene, tick);
                 if (scene instanceof ArcadePacMan_CutScene1 cutScene1) {
                     final String text = cutScene1.sceneTick < ArcadePacMan_CutScene1.ANIMATION_START_TICK
@@ -30,7 +33,7 @@ public class ArcadePacMan_CutScene1_Renderer extends ArcadePacMan_CutScene_Rende
     }
 
     @Override
-    protected void drawSceneContent(AbstractGameScene scene) {
+    protected void drawSceneContent(GameScene scene) {
         if (scene instanceof ArcadePacMan_CutScene1 cutScene) {
             actorRenderer.drawActor(cutScene.blinky);
             actorRenderer.drawActor(cutScene.pacMan);
