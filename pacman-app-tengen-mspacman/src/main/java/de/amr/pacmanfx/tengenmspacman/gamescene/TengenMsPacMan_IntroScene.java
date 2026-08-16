@@ -86,8 +86,9 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
         final var actions = app().currentGameVariantUIConfig().getExtensionValue(
             TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
 
-        actionBindings().selectAnyMatchingBinding(actions.actionEnterStartScreen(), actions.localBindings());
-        actionBindings().selectAnyMatchingBinding(actions.actionToggleJoypadBindingsDisplayed(), actions.localBindings());
+        final var bindingsMap = actionBindingsSupport().bindingsMap();
+        bindingsMap.selectAnyMatchingBinding(actions.actionEnterStartScreen(), actions.localBindings());
+        bindingsMap.selectAnyMatchingBinding(actions.actionToggleJoypadBindingsDisplayed(), actions.localBindings());
 
         final List<GhostSettings> ghostSettings = variantConfig.worldSettings().ghosts();
         ghostColors = Stream.of(

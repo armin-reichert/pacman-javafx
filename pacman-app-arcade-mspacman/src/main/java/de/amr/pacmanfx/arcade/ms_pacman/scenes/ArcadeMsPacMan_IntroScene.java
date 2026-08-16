@@ -68,8 +68,9 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
         final Arcade_Actions actions = app().gameVariants().currentGameVariant().uiConfig()
             .getExtensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
-        actionBindings().registerAllBindings(actions.gameStartActionBindings());
-        actionBindings().registerAllBindings(app().commonActions().sceneTestActions().bindings());
+        final var bindingsMap = actionBindingsSupport().bindingsMap();
+        bindingsMap.registerAllBindings(actions.gameStartActionBindings());
+        bindingsMap.registerAllBindings(app().commonActions().sceneTestActions().bindings());
 
         sceneFlow.restartState(this, SceneState.STARTING);
     }
@@ -77,7 +78,6 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
     @Override
     public void onDeactivate() {
         app().ui().sounds().voice().stop();
-        actionBindings().dispose();
     }
 
     @Override

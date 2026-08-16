@@ -41,7 +41,6 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
 
     @Override
     public void onActivate() {
-        actionBindings().dispose();
         movingText = new GameEntity();
         movingText.setComp(MovementComp.class, new MovementComp());
         movingText.pos().set(tilesPx(9), rendering2D().unscaledHeight()); // lower border of screen

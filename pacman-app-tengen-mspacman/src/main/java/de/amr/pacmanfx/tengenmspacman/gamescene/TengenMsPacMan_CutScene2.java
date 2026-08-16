@@ -70,7 +70,10 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene {
 
         // Quit cut scene when "START" button on "joypad" is pressed
         final Joypad joypad = app().input().joypad();
-        actionBindings().bindActionToKeyCombination(app().commonActions().gameFlowActions().actionLetGameStateExpire(),
+
+        final var bindingsMap = actionBindingsSupport().bindingsMap();
+        bindingsMap.bindActionToKeyCombination(
+            app().commonActions().gameFlowActions().actionLetGameStateExpire(),
             joypad.keyForButton(JoypadButton.START));
 
         createActors();

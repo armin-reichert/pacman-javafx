@@ -112,22 +112,23 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     public void replaceActionBindings(GameSession session, GameLevel level) {
-        actionBindings().dispose();
+        final var bindingsMap = actionBindingsSupport().bindingsMap();
+        bindingsMap.dispose();
 
         final var actions = app().currentGameVariantUIConfig().getExtensionValue(
             TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
 
         if (session.isAttractMode()) {
             // In demo level, allow going back to options screen
-            actionBindings().selectAnyMatchingBinding(actions.actionQuitDemoLevel(), actions.localBindings());
+            bindingsMap.selectAnyMatchingBinding(actions.actionQuitDemoLevel(), actions.localBindings());
         } else {
-            actionBindings().registerAllBindings(actions.steeringBindings());
-            actionBindings().selectAnyMatchingBinding(actions.actionTogglePacBooster(), actions.localBindings());
-            actionBindings().registerAllBindings(app().commonActions().cheatActions().bindings());
+            bindingsMap.registerAllBindings(actions.steeringBindings());
+            bindingsMap.selectAnyMatchingBinding(actions.actionTogglePacBooster(), actions.localBindings());
+            bindingsMap.registerAllBindings(app().commonActions().cheatActions().bindings());
         }
         bindActions();
 
-        Logger.info(actionBindings());
+        Logger.info(actionBindingsSupport());
     }
 
     @Override

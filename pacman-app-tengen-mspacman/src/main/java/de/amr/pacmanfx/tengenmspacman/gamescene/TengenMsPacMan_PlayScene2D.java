@@ -225,7 +225,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene
             acceptNormalLevel();
         }
 
-        Logger.info(actionBindings());
+        Logger.info(actionBindingsSupport());
         Logger.info("Scene {} accepted game level #{}", getClass().getSimpleName(), level.number());
     }
 
@@ -245,18 +245,21 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene
         final var actions = tengenActions();
 
         // Pac-Man is steered using keys simulating the NES "Joypad" buttons ("START", "SELECT", "B", "A" etc.)
-        actionBindings().registerAllBindings(actions.steeringBindings());
-        actionBindings().registerAllBindings(app().commonActions().cheatActions().bindings());
-        actionBindings().selectAnyMatchingBinding(actions.actionTogglePlaySceneDisplayMode(), actions.localBindings());
-        actionBindings().selectAnyMatchingBinding(actions.actionTogglePacBooster(), actions.localBindings());
+        final var bindingsMap = actionBindingsSupport().bindingsMap();
+        bindingsMap.registerAllBindings(actions.steeringBindings());
+        bindingsMap.registerAllBindings(app().commonActions().cheatActions().bindings());
+        bindingsMap.selectAnyMatchingBinding(actions.actionTogglePlaySceneDisplayMode(), actions.localBindings());
+        bindingsMap.selectAnyMatchingBinding(actions.actionTogglePacBooster(), actions.localBindings());
     }
 
     private void acceptDemoLevel() {
         app().ui().sounds().setEnabled(false); //TODO needed?
 
         final var actions = tengenActions();
-        actionBindings().selectAnyMatchingBinding(actions.actionTogglePlaySceneDisplayMode(), actions.localBindings());
-        actionBindings().selectAnyMatchingBinding(actions.actionQuitDemoLevel(), actions.localBindings());
+
+        final var bindingsMap = actionBindingsSupport().bindingsMap();
+        bindingsMap.selectAnyMatchingBinding(actions.actionTogglePlaySceneDisplayMode(), actions.localBindings());
+        bindingsMap.selectAnyMatchingBinding(actions.actionQuitDemoLevel(), actions.localBindings());
     }
 
     private void updateScaling() {

@@ -16,8 +16,6 @@ import de.amr.pacmanfx.core.event.gameplay.CreditAddedEvent;
 import de.amr.pacmanfx.core.gameplay.GameFlowController;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
-import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.Rendering2DSupport;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -39,8 +37,6 @@ public abstract class AbstractGameScene implements GameScene, DefaultGameEventLi
 
     private final ComponentRegistry<GameSceneComponent> componentRegistry = new ComponentRegistry<>();
 
-    private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Action Bindings for " + getClass().getSimpleName());
-
     protected AbstractGameScene(GameAppContext app) {
         this.app = requireNonNull(app);
     }
@@ -54,8 +50,17 @@ public abstract class AbstractGameScene implements GameScene, DefaultGameEventLi
         return componentRegistry.requireComp(Rendering2DSupport.class);
     }
 
+    public ActionBindingsSupport actionBindingsSupport() {
+        ActionBindingsSupport actionBindings = componentRegistry.optComp(ActionBindingsSupport.class).orElse(null);
+        if (actionBindings == null) {
+            componentRegistry.setComp(ActionBindingsSupport.class, new ActionBindingsSupport());
+            Logger.info("Added ActionBindingsSupport to " + getClass().getSimpleName());
+        }
+        return componentRegistry.requireComp(ActionBindingsSupport.class);
+    }
+
     @Override
-    public ComponentRegistry<GameSceneComponent> componentRegistry() {
+    public ComponentRegistry<GameSceneComponent> componentsRegistry() {
         return componentRegistry;
     }
 
@@ -97,7 +102,7 @@ public abstract class AbstractGameScene implements GameScene, DefaultGameEventLi
 
     @Override
     public void dispose() {
-        rendering2D().dispose();
+        componentRegistry.dispose();
     }
 
     // --- Interface "GameScene"
@@ -105,21 +110,13 @@ public abstract class AbstractGameScene implements GameScene, DefaultGameEventLi
     @Override
     public final void activate() {
         onActivate();
-        Logger.trace("Game scene {} activated", getClass().getSimpleName());
-        Logger.info(actionBindings);
     }
 
     @Override
     public final void deactivate() {
         onDeactivate();
-        actionBindings.dispose();
+        componentRegistry.optComp(ActionBindingsSupport.class).ifPresent(comp -> comp.bindingsMap().dispose());
         optSoundEffects().ifPresent(GameSoundEffects::stopAll);
-        Logger.trace("Game scene {} deactivated", getClass().getSimpleName());
-    }
-
-    @Override
-    public ActionBindingsRegistry actionBindings() {
-        return actionBindings;
     }
 
     @Override
@@ -154,7 +151,11 @@ public abstract class AbstractGameScene implements GameScene, DefaultGameEventLi
 
     @Override
     public void onInput() {
-        actionBindings().executeMatchingAction(app());
+        if (componentRegistry.hasComp(ActionBindingsSupport.class)) {
+            componentRegistry.requireComp(ActionBindingsSupport.class)
+                .bindingsMap()
+                .executeMatchingAction(app());
+        }
     }
 
     @Override

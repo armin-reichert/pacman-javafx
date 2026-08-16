@@ -19,6 +19,7 @@ import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounter3DViewSystem;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.gamescene.common.ActionBindingsSupport;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.PlaySceneFadeInAnimation;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.DronePerspective;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
@@ -117,7 +118,8 @@ public class PlayScene3D extends AbstractGameScene
 
     @Override
     public void dispose() {
-        actionBindings().dispose();
+        super.dispose();
+
         perspectiveManager.dispose();
         disposeContextMenu();
         if (level3D != null) {
@@ -151,21 +153,23 @@ public class PlayScene3D extends AbstractGameScene
         perspectiveManager.activeIDProperty().unbind();
         app().ui().viewModel().common3D.drawModeProperty.removeListener(drawModeChangeListener);
         disposeContextMenu();
-        actionBindings().dispose();
     }
 
     @Override
     public void onInput() {
         final Keyboard keyboard = app().input().keyboard();
-        final Optional<GameAction> matchingAction = actionBindings().executeMatchingAction(app());
-        if (matchingAction.isEmpty()) {
-            // Handle CTRL-PLUS, CTRL_MINUS and CTRL-0
-            perspectiveManager.optPerspective(PerspectiveID.DRONE).ifPresent(perspective -> {
-                if (perspective instanceof DronePerspective dronePerspective) {
-                    dronePerspective.handleKeyPressed(keyboard);
-                }
-            });
-        }
+        componentsRegistry().optComp(ActionBindingsSupport.class).ifPresent(comp -> {
+            final Optional<GameAction> matchingAction = comp.bindingsMap().executeMatchingAction(app());
+            if (matchingAction.isEmpty()) {
+                // Handle CTRL-PLUS, CTRL_MINUS and CTRL-0
+                perspectiveManager.optPerspective(PerspectiveID.DRONE).ifPresent(perspective -> {
+                    if (perspective instanceof DronePerspective dronePerspective) {
+                        dronePerspective.handleKeyPressed(keyboard);
+                    }
+                });
+            }
+
+        });
     }
 
     @Override
@@ -325,7 +329,8 @@ public class PlayScene3D extends AbstractGameScene
     protected void addAdditional3DLevelElements(GameLevel3D level3D) {}
 
     protected void bindActions() {
-        actionBindings().registerAllBindings(actionBindings);
+        componentsRegistry().optComp(ActionBindingsSupport.class)
+            .ifPresent(comp -> comp.bindingsMap().registerAllBindings(actionBindings));
     }
 
     private void replaceScoresView(String leftTitle, String rightTitle) {

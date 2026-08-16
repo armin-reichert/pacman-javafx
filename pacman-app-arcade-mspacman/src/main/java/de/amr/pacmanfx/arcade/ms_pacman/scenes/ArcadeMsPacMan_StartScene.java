@@ -21,14 +21,14 @@ public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
         final Arcade_Actions actions = app().currentGameVariantUIConfig()
             .getExtensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
+        final var bindingsMap = actionBindingsSupport().bindingsMap();
         // Insert coin + start game actions
-        actionBindings().registerAllBindings(actions.gameStartActionBindings());
+        bindingsMap.registerAllBindings(actions.gameStartActionBindings());
     }
 
     @Override
     public void onDeactivate() {
         app().ui().sounds().voice().stop();
-        actionBindings().dispose();
     }
 
     @Override

@@ -22,13 +22,14 @@ public class ArcadePacMan_StartScene extends AbstractGameScene {
     public void onActivate() {
         final Arcade_Actions actions = app().currentGameVariantUIConfig()
             .getExtensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
-        actionBindings().registerAllBindings(actions.gameStartActionBindings());
+
+        final var bindingsMap = actionBindingsSupport().bindingsMap();
+        bindingsMap.registerAllBindings(actions.gameStartActionBindings());
     }
 
     @Override
     public void onDeactivate() {
         app().ui().sounds().voice().stop();
-        actionBindings().dispose();
     }
 
     @Override

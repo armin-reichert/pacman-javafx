@@ -120,9 +120,12 @@ public class Arcade_PlayScene2D extends AbstractGameScene
     }
 
     private void acceptNormalLevel(GameLevel level) {
-        actionBindings().registerAllBindings(app().commonActions().steeringActions().bindings());
-        actionBindings().registerAllBindings(app().commonActions().cheatActions().bindings());
-        Logger.info(actionBindings());
+        final var bindingsMap = actionBindingsSupport().bindingsMap();
+        bindingsMap.registerAllBindings(app().commonActions().steeringActions().bindings());
+        bindingsMap.registerAllBindings(app().commonActions().cheatActions().bindings());
+
+        Logger.info(bindingsMap);
+
         app().ui().sounds().setEnabled(true);
         Logger.info("Game scene {} accepted game level #{}", getClass().getSimpleName(), level.number());
     }
@@ -131,8 +134,10 @@ public class Arcade_PlayScene2D extends AbstractGameScene
         final Arcade_Actions actions = app().currentGameVariantUIConfig()
             .getExtensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
-        actionBindings().registerAllBindings(actions.gameStartActionBindings());
-        Logger.info(actionBindings());
+        final var bindingsMap = actionBindingsSupport().bindingsMap();
+        bindingsMap.registerAllBindings(actions.gameStartActionBindings());
+        Logger.info(bindingsMap);
+
         app().ui().sounds().setEnabled(false);
         Logger.info("Game scene {} accepted demo level", getClass().getSimpleName());
     }

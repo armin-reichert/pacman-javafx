@@ -20,18 +20,20 @@ public class Arcade_PlayScene3D extends PlayScene3D {
 
     @Override
     public void replaceActionBindings(GameSession session, GameLevel level) {
-        actionBindings().dispose();
+        final var bindingsMap = actionBindingsSupport().bindingsMap();
+
+        bindingsMap.dispose();
 
         final Arcade_Actions actions = app().currentGameVariantUIConfig()
             .getExtensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         if (session.isAttractMode()) {
-            actionBindings().registerAllBindings(actions.gameStartActionBindings());
+            bindingsMap.registerAllBindings(actions.gameStartActionBindings());
         } else {
-            actionBindings().registerAllBindings(app().commonActions().steeringActions().bindings());
-            actionBindings().registerAllBindings(app().commonActions().cheatActions().bindings());
+            bindingsMap.registerAllBindings(app().commonActions().steeringActions().bindings());
+            bindingsMap.registerAllBindings(app().commonActions().cheatActions().bindings());
         }
         bindActions();
-        Logger.info(actionBindings());
+        Logger.info(actionBindingsSupport());
     }
 }
