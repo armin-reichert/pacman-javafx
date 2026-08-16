@@ -24,7 +24,7 @@ import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_GhostSAM;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_PacSAM;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.GlobalAssets;
-import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
@@ -99,7 +99,7 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public GameScene2D_Renderer createGameSceneRenderer(AbstractGameScene2D gameScene2D, SpriteAnimSystem animSystem,  Canvas canvas) {
+    public GameScene2D_Renderer createGameSceneRenderer(AbstractGameScene gameScene2D, SpriteAnimSystem animSystem, Canvas canvas) {
         final GameScene2D_Renderer renderer = switch (gameScene2D) {
             case TengenMsPacMan_BootScene    ignored -> new TengenMsPacMan_BootScene_Renderer(this, gameScene2D, animSystem, canvas);
             case TengenMsPacMan_IntroScene   ignored -> new TengenMsPacMan_IntroScene_Renderer(this, gameScene2D, animSystem, canvas);
@@ -121,7 +121,7 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public TengenMsPacMan_HeadsUpDisplay_Renderer createHUDRenderer(AbstractGameScene2D gameScene2D, SpriteAnimSystem animSystem, Canvas canvas) {
+    public TengenMsPacMan_HeadsUpDisplay_Renderer createHUDRenderer(AbstractGameScene gameScene2D, SpriteAnimSystem animSystem, Canvas canvas) {
         return gameScene2D.rendering2D().configureRenderer(new TengenMsPacMan_HeadsUpDisplay_Renderer(canvas));
     }
 

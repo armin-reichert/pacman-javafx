@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CreditsScene;
-import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
@@ -65,7 +65,7 @@ public class TengenMsPacMan_CreditsScene_Renderer extends BaseRenderer implement
     private final BaseDebugInfoRenderer debugRenderer;
     private final Pen pen = new Pen();
 
-    public TengenMsPacMan_CreditsScene_Renderer(AbstractGameScene2D scene, Canvas canvas) {
+    public TengenMsPacMan_CreditsScene_Renderer(AbstractGameScene scene, Canvas canvas) {
         super(canvas);
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
     }
@@ -76,7 +76,7 @@ public class TengenMsPacMan_CreditsScene_Renderer extends BaseRenderer implement
     }
 
     @Override
-    public void draw(AbstractGameScene2D scene, long tick) {
+    public void draw(AbstractGameScene scene, long tick) {
         clearCanvas();
         if (!(scene instanceof TengenMsPacMan_CreditsScene creditsScene)) {
             return;

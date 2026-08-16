@@ -28,7 +28,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 
 import java.util.Arrays;
 import java.util.List;
@@ -41,7 +41,7 @@ import static de.amr.pacmanfx.core.entities.ghost.comp.GhostState.FRIGHTENED;
 /**
  * The ghosts are presented one by one, then Pac-Man is chased by the ghosts, turns the cards and hunts the ghosts himself.
  */
-public class ArcadePacMan_IntroScene extends AbstractGameScene2D {
+public class ArcadePacMan_IntroScene extends AbstractGameScene {
 
     public static final int NUM_GHOSTS = 4;
 

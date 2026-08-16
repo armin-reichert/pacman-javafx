@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.ArcadeMsPacMan_CutScene1;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
-import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
@@ -22,7 +22,7 @@ public class ArcadeMsPacMan_CutScene1_Renderer extends BaseRenderer implements G
 
     public ArcadeMsPacMan_CutScene1_Renderer(
         GameVariantRenderConfig renderConfig,
-        AbstractGameScene2D scene,
+        AbstractGameScene scene,
         SpriteAnimSystem animSystem,
         Canvas canvas) {
 
@@ -33,7 +33,7 @@ public class ArcadeMsPacMan_CutScene1_Renderer extends BaseRenderer implements G
     }
 
     @Override
-    public void draw(AbstractGameScene2D scene, long tick) {
+    public void draw(AbstractGameScene scene, long tick) {
         clearCanvas();
 
         if (scene instanceof ArcadeMsPacMan_CutScene1 cutScene) {

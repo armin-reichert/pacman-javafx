@@ -15,7 +15,7 @@ import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.rules.HuntingTimerStrategy;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -44,7 +44,7 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
     }
 
     @Override
-    public void draw(AbstractGameScene2D scene, long tick) {
+    public void draw(AbstractGameScene scene, long tick) {
         drawTileGrid(scene.rendering2D().unscaledWidth(), scene.rendering2D().unscaledHeight(), Color.LIGHTGRAY);
 
         final GameSession session = scene.game().session();

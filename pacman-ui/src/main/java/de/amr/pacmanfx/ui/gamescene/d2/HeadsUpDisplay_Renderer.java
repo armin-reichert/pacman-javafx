@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.ui.gamescene.d2;
 
 import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 
 public interface HeadsUpDisplay_Renderer extends Renderer {
@@ -12,8 +13,8 @@ public interface HeadsUpDisplay_Renderer extends Renderer {
      * Draws the Head-Up Display (score, live counter, level counter, coins inserted)
      *
      * @param session the running game session
-     * @param scene 2D scene
+     * @param gameScene 2D scene
      * @param tick current tick of the game machine clock
      */
-    void draw(GameSession session, AbstractGameScene2D scene, long tick);
+    void draw(GameSession session, AbstractGameScene gameScene, long tick);
 }

@@ -18,7 +18,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorSchemeImpl;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
-import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
@@ -79,23 +79,23 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public GameScene2D_Renderer createGameSceneRenderer(AbstractGameScene2D gameScene2D, SpriteAnimSystem animSystem, Canvas canvas) {
-        requireNonNull(gameScene2D);
+    public GameScene2D_Renderer createGameSceneRenderer(AbstractGameScene gameScene, SpriteAnimSystem animSystem, Canvas canvas) {
+        requireNonNull(gameScene);
         requireNonNull(animSystem);
         requireNonNull(canvas);
 
-        final GameScene2D_Renderer renderer = switch (gameScene2D) {
-            case Arcade_BootScene2D ignored      -> new Arcade_BootScene2D_Renderer(gameScene2D, canvas,
+        final GameScene2D_Renderer renderer = switch (gameScene) {
+            case Arcade_BootScene2D ignored      -> new Arcade_BootScene2D_Renderer(gameScene, canvas,
                 spriteSheet(), BOOT_SCENE_SPRITES);
-            case ArcadePacMan_IntroScene ignored -> new ArcadePacMan_IntroScene_Renderer(this, gameScene2D, animSystem, canvas);
-            case ArcadePacMan_StartScene ignored -> new ArcadePacMan_StartScene_Renderer(gameScene2D, canvas);
-            case Arcade_PlayScene2D ignored      -> new Arcade_PlayScene2D_Renderer(gameScene2D, animSystem, canvas, spriteSheet());
-            case ArcadePacMan_CutScene1 ignored  -> new ArcadePacMan_CutScene1_Renderer(gameScene2D, animSystem, canvas);
-            case ArcadePacMan_CutScene2 ignored  -> new ArcadePacMan_CutScene2_Renderer(gameScene2D, animSystem, canvas);
-            case ArcadePacMan_CutScene3 ignored  -> new ArcadePacMan_CutScene3_Renderer(gameScene2D, animSystem, canvas);
-            default -> throw new IllegalStateException("Illegal game scene: " + gameScene2D);
+            case ArcadePacMan_IntroScene ignored -> new ArcadePacMan_IntroScene_Renderer(this, gameScene, animSystem, canvas);
+            case ArcadePacMan_StartScene ignored -> new ArcadePacMan_StartScene_Renderer(gameScene, canvas);
+            case Arcade_PlayScene2D ignored      -> new Arcade_PlayScene2D_Renderer(gameScene, animSystem, canvas, spriteSheet());
+            case ArcadePacMan_CutScene1 ignored  -> new ArcadePacMan_CutScene1_Renderer(gameScene, animSystem, canvas);
+            case ArcadePacMan_CutScene2 ignored  -> new ArcadePacMan_CutScene2_Renderer(gameScene, animSystem, canvas);
+            case ArcadePacMan_CutScene3 ignored  -> new ArcadePacMan_CutScene3_Renderer(gameScene, animSystem, canvas);
+            default -> throw new IllegalStateException("Illegal game scene: " + gameScene);
         };
-        return gameScene2D.rendering2D().configureRenderer(renderer);
+        return gameScene.rendering2D().configureRenderer(renderer);
     }
 
     @Override
@@ -105,7 +105,7 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public HeadsUpDisplay_Renderer createHUDRenderer(AbstractGameScene2D gameScene2D, SpriteAnimSystem animSystem, Canvas canvas) {
+    public HeadsUpDisplay_Renderer createHUDRenderer(AbstractGameScene gameScene2D, SpriteAnimSystem animSystem, Canvas canvas) {
         requireNonNull(gameScene2D);
         requireNonNull(animSystem);
         requireNonNull(canvas);

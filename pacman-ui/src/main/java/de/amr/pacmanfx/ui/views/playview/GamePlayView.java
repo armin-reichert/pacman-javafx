@@ -15,11 +15,7 @@ import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
-import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
-import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
+import de.amr.pacmanfx.ui.gamescene.common.*;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.settings.ui.DashboardSectionSettings;
@@ -254,7 +250,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
         // Render current 2D game scene
         final GameScene gameScene = app.ui().gameScenes().optCurrentGameScene().orElse(null);
-        if (gameScene instanceof AbstractGameScene2D gameScene2D) {
+        if (gameScene instanceof AbstractGameScene gameScene2D) {
             if (sceneRenderer != null) {
                 sceneRenderer.draw(gameScene2D, tick);
             }
@@ -300,7 +296,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         }
     }
 
-    public void updateGameSceneRenderers(AbstractGameScene2D gameScene2D) {
+    public void updateGameSceneRenderers(AbstractGameScene gameScene2D) {
         final GameVariantRenderConfig renderConfig = app.gameVariants().currentGameVariant().uiConfig().renderConfig();
         final Canvas canvas = gameScene2D.rendering2D().canvas();
         if (canvas != null) {
@@ -329,7 +325,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
         if (gameScene.optSubSceneFX().isPresent()) {
             embedGameSceneWithSubSceneFX(gameScene, gameScene.optSubSceneFX().get());
-        } else if (gameScene instanceof AbstractGameScene2D gameScene2D) {
+        } else if (gameScene instanceof AbstractGameScene gameScene2D) {
             embedGameScene2D(config.gameSceneConfig(), gameScene2D);
         } else {
             Logger.error("Cannot embed play scene of class {}", gameScene.getClass().getName());
@@ -351,7 +347,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
             subSceneFX.heightProperty().unbind();
         });
 
-        if (gameScene instanceof AbstractGameScene2D gameScene2D) {
+        if (gameScene instanceof AbstractGameScene gameScene2D) {
             gameSceneFrame.canvas().widthProperty().unbind();
             gameSceneFrame.canvas().heightProperty().unbind();
             gameSceneFrame.unscaledWidthProperty().unbind();
@@ -428,7 +424,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         subSceneFX.widthProperty().bind(mainScene.widthProperty());
         subSceneFX.heightProperty().bind(mainScene.heightProperty());
 
-        if (gameScene instanceof AbstractGameScene2D gameScene2D) {
+        if (gameScene instanceof AbstractGameScene gameScene2D) {
             // use the canvas of the decorated pane for 2D scene even though the decoration is not used
             gameScene2D.rendering2D().setCanvas(gameSceneFrame().canvas());
             updateGameSceneRenderers(gameScene2D);
@@ -437,7 +433,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     }
 
     // 2D scenes without camera which are shown at full size
-    private void embedGameScene2D(GameSceneConfig gameSceneConfig, AbstractGameScene2D gameScene2D) {
+    private void embedGameScene2D(GameSceneConfig gameSceneConfig, AbstractGameScene gameScene2D) {
         final GameMainScene mainScene = app.ui().window().mainScene();
         final GamePlayView playView = app.ui().views().gamePlayView();
         final DecorationPane frame = playView.gameSceneFrame();

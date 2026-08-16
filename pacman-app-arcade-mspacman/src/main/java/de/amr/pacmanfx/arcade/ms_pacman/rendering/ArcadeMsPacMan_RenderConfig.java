@@ -23,7 +23,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMapColorSchemeImpl;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
-import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
@@ -96,7 +96,7 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public GameScene2D_Renderer createGameSceneRenderer(AbstractGameScene2D gameScene2D, SpriteAnimSystem animSystem, Canvas canvas) {
+    public GameScene2D_Renderer createGameSceneRenderer(AbstractGameScene gameScene2D, SpriteAnimSystem animSystem, Canvas canvas) {
         requireNonNull(canvas);
         requireNonNull(gameScene2D);
         final GameScene2D_Renderer renderer = switch (gameScene2D) {
@@ -120,7 +120,7 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public HeadsUpDisplay_Renderer createHUDRenderer(AbstractGameScene2D gameScene2D, SpriteAnimSystem animSystem, Canvas canvas) {
+    public HeadsUpDisplay_Renderer createHUDRenderer(AbstractGameScene gameScene2D, SpriteAnimSystem animSystem, Canvas canvas) {
         requireNonNull(gameScene2D);
         requireNonNull(animSystem);
         requireNonNull(canvas);

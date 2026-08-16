@@ -13,6 +13,7 @@ import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -33,7 +34,7 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
     }
 
     @Override
-    public void draw(AbstractGameScene2D scene, long tick) {
+    public void draw(AbstractGameScene scene, long tick) {
         final GameState gameState = scene.gameState();
         final String stateText = "Game State: '%s' (Tick %d of %s)".formatted(
             gameState.name(),

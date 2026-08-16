@@ -8,9 +8,9 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 
-public class ArcadeMsPacMan_StartScene extends AbstractGameScene2D {
+public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
 
     public ArcadeMsPacMan_StartScene(GameAppContext appContext) {
         super(appContext);

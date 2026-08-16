@@ -5,7 +5,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
-import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
@@ -37,7 +37,7 @@ public class Arcade_BootScene2D_Renderer extends BaseRenderer implements GameSce
     private final BaseDebugInfoRenderer debugRenderer;
 
     public Arcade_BootScene2D_Renderer(
-        AbstractGameScene2D scene, Canvas canvas, SpriteSheet<?> spriteSheet, Rectangle2D spriteRegion) {
+        AbstractGameScene scene, Canvas canvas, SpriteSheet<?> spriteSheet, Rectangle2D spriteRegion) {
 
         super(canvas);
 
@@ -54,7 +54,7 @@ public class Arcade_BootScene2D_Renderer extends BaseRenderer implements GameSce
     }
 
     @Override
-    public void draw(AbstractGameScene2D scene, long tick) {
+    public void draw(AbstractGameScene scene, long tick) {
         final Arcade_BootScene2D bootScene = (Arcade_BootScene2D) scene;
         switch (bootScene.sceneState) {
             case BLANK -> clearCanvas();

@@ -12,7 +12,6 @@ import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounter3DViewSystem;
-import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
 import de.amr.pacmanfx.ui.gamescene.d3.PlayScene3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import javafx.beans.property.ObjectProperty;
@@ -155,7 +154,7 @@ public class GameSceneManager {
     }
 
     private void switchPlaySceneTo2D(GameScene currentGameScene, GameScene nextGameScene) {
-        if (!(nextGameScene instanceof AbstractGameScene2D playScene2D)) {
+        if (!(nextGameScene instanceof AbstractGameScene playScene2D)) {
             throw new IllegalArgumentException("Expected GameScene2D, but scene has class %s"
                 .formatted(nextGameScene.getClass().getSimpleName()));
         }
@@ -169,8 +168,8 @@ public class GameSceneManager {
             throw new IllegalStateException("WTF is going on here, switch between NULL scenes?");
         }
         return switch (currentGameScene) {
-            case AbstractGameScene2D _ when nextGameScene instanceof PlayScene3D         -> GameSceneSwitchType.FROM_2D_TO_3D;
-            case PlayScene3D         _ when nextGameScene instanceof AbstractGameScene2D -> GameSceneSwitchType.FROM_3D_TO_2D;
+            case AbstractGameScene _ when nextGameScene instanceof PlayScene3D         -> GameSceneSwitchType.FROM_2D_TO_3D;
+            case PlayScene3D         _ when nextGameScene instanceof AbstractGameScene -> GameSceneSwitchType.FROM_3D_TO_2D;
             case null, default                                                           -> GameSceneSwitchType.NONE;
         };
     }

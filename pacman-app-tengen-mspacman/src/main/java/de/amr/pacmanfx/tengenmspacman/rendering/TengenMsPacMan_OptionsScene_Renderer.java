@@ -14,7 +14,7 @@ import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_OptionsScene;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
@@ -41,7 +41,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
 
     private final BaseDebugInfoRenderer debugRenderer;
 
-    public TengenMsPacMan_OptionsScene_Renderer(AbstractGameScene2D scene, Canvas canvas) {
+    public TengenMsPacMan_OptionsScene_Renderer(AbstractGameScene scene, Canvas canvas) {
         super(canvas);
         requireNonNull(scene);
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
@@ -58,7 +58,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
     }
 
     @Override
-    public void draw(AbstractGameScene2D gameScene2D, long tick) {
+    public void draw(AbstractGameScene gameScene2D, long tick) {
         final GameAppContext app = gameScene2D.app();
 
         final TengenMsPacMan_UISettings uiSettings = app.currentGameVariantUIConfig().getExtensionValue(

@@ -9,6 +9,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
@@ -21,9 +22,8 @@ import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.marquee.system.MarqueeSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
+import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
@@ -32,7 +32,7 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.uilib.entities3D.ghost.comp.GhostSettings;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
@@ -43,7 +43,7 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantUIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantUIConfig.NES_SCREEN_WIDTH;
 
-public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
+public class TengenMsPacMan_IntroScene extends AbstractGameScene {
 
     // Anchor point for everything
     public static final int MARQUEE_X = 60, MARQUEE_Y = 64;

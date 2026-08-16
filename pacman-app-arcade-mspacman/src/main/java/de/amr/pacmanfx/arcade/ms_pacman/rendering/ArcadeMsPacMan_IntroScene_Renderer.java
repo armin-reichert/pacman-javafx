@@ -8,7 +8,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.scenes.ArcadeMsPacMan_IntroScene;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
-import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
@@ -36,7 +36,7 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer implements 
 
     public ArcadeMsPacMan_IntroScene_Renderer(
         GameVariantRenderConfig renderConfig,
-        AbstractGameScene2D scene,
+        AbstractGameScene scene,
         SpriteAnimSystem animSystem,
         Canvas canvas) {
 
@@ -50,7 +50,7 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer implements 
     }
 
     @Override
-    public void draw(AbstractGameScene2D scene, long tick) {
+    public void draw(AbstractGameScene scene, long tick) {
         clearCanvas();
 
         final ArcadeMsPacMan_IntroScene introScene = (ArcadeMsPacMan_IntroScene) scene;

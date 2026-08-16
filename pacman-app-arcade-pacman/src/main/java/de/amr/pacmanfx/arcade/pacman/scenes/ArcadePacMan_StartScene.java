@@ -7,12 +7,12 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 
 /**
  * Scene shown after credit has been added and where game can be started.
  */
-public class ArcadePacMan_StartScene extends AbstractGameScene2D {
+public class ArcadePacMan_StartScene extends AbstractGameScene {
 
     public ArcadePacMan_StartScene(GameAppContext appContext) {
         super(appContext);

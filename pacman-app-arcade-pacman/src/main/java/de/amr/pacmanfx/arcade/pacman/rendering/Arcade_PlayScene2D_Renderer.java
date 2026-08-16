@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
-import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
@@ -43,7 +43,7 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
     private final BaseDebugInfoRenderer debugRenderer;
     private final List<GameEntity> actorsInZOrder = new ArrayList<>();
 
-    public Arcade_PlayScene2D_Renderer(AbstractGameScene2D scene, SpriteAnimSystem animSystem, Canvas canvas, SpriteSheet<?> spriteSheet) {
+    public Arcade_PlayScene2D_Renderer(AbstractGameScene scene, SpriteAnimSystem animSystem, Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(canvas);
         requireNonNull(scene);
         this.spriteSheet = requireNonNull(spriteSheet);
@@ -60,7 +60,7 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
     }
 
     @Override
-    public void draw(AbstractGameScene2D scene, long tick) {
+    public void draw(AbstractGameScene scene, long tick) {
         clearCanvas();
         if (!(scene instanceof Arcade_PlayScene2D playScene)) {
             return;

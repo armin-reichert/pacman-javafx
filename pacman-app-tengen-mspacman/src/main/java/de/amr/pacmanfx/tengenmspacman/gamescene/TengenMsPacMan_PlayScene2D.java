@@ -7,6 +7,7 @@ package de.amr.pacmanfx.tengenmspacman.gamescene;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
@@ -16,7 +17,6 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.HUDState;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
-import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
@@ -25,7 +25,7 @@ import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.beans.property.DoubleProperty;
@@ -50,7 +50,7 @@ import static de.amr.pacmanfx.ui.views.ContextMenuSupport.*;
 /**
  * Tengen Ms. Pac-Man play scene, uses vertical scrolling by default to accommodate to NES screen size.
  */
-public class TengenMsPacMan_PlayScene2D extends AbstractGameScene2D
+public class TengenMsPacMan_PlayScene2D extends AbstractGameScene
     implements TengenMsPacMan_PlayScene2DGameEventHandler
 {
     private final DoubleProperty canvasHeightUnscaled = new SimpleDoubleProperty(NES_SCREEN_HEIGHT);

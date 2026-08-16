@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
-import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
@@ -39,7 +39,7 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Ga
     private final RectShort energizerSprite;
 
     public ArcadePacMan_IntroScene_Renderer(
-        GameVariantRenderConfig renderConfig, AbstractGameScene2D scene, SpriteAnimSystem animSystem, Canvas canvas)
+        GameVariantRenderConfig renderConfig, AbstractGameScene scene, SpriteAnimSystem animSystem, Canvas canvas)
     {
         super(canvas);
 
@@ -47,7 +47,7 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Ga
 
         debugRenderer = scene.rendering2D().configureRenderer(new BaseDebugInfoRenderer(canvas) {
             @Override
-            public void draw(AbstractGameScene2D scene, long tick) {
+            public void draw(AbstractGameScene scene, long tick) {
                 ArcadePacMan_IntroScene introScene = (ArcadePacMan_IntroScene) scene;
                 super.draw(scene, tick);
                 ctx.fillText("Scene timer %d".formatted(introScene.flow.state().timer().tickCount()), 0, scaled(5 * WorldMap.TS));
@@ -69,7 +69,7 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Ga
     }
 
     @Override
-    public void draw(AbstractGameScene2D scene, long tick) {
+    public void draw(AbstractGameScene scene, long tick) {
         final var introScene = (ArcadePacMan_IntroScene) scene;
         clearCanvas();
         drawGhostGallery(introScene);

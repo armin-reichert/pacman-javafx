@@ -14,7 +14,7 @@ import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_IntroScene;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_IntroScene.SceneState;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
-import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
@@ -48,7 +48,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
     private final TengenMsPacMan_UISettings uiSettings;
 
     public TengenMsPacMan_IntroScene_Renderer(
-        GameVariantRenderConfig renderConfig, AbstractGameScene2D scene, SpriteAnimSystem animSystem, Canvas canvas) {
+        GameVariantRenderConfig renderConfig, AbstractGameScene scene, SpriteAnimSystem animSystem, Canvas canvas) {
         super(canvas);
         requireNonNull(renderConfig);
         requireNonNull(scene);
@@ -72,7 +72,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
     }
 
     @Override
-    public void draw(AbstractGameScene2D scene, long globalTick) {
+    public void draw(AbstractGameScene scene, long globalTick) {
         clearCanvas();
 
         final TengenMsPacMan_IntroScene intro = (TengenMsPacMan_IntroScene) scene;
