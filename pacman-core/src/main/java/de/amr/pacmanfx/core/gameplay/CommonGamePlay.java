@@ -258,7 +258,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final GameRules rules = game.variantConfig().rules();
 
         systems.pacDigestion().update(pac);
-        systems.pacPower().update(rules, level, pac);
+        systems.pacPower().update(pac, rules.pacPowerFadingSeconds(level.number()));
         systems.pacState().update(pac);
         navigatePac(game, level, pac);
         systems.pacAnimation().update(pac);
