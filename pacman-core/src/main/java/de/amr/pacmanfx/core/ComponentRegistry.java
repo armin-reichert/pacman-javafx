@@ -4,6 +4,8 @@
 
 package de.amr.pacmanfx.core;
 
+import de.amr.basics.Disposable;
+
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -11,12 +13,25 @@ import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
-public class ComponentRegistry<C> {
+public class ComponentRegistry<C> implements Disposable {
 
     private final Map<Class<? extends C>, C> components = new LinkedHashMap<>(7);
 
+    public ComponentRegistry() {
+    }
+
     public Collection<C> components() {
         return components.values();
+    }
+
+    @Override
+    public void dispose() {
+        for (C component : components.values()) {
+            if (component instanceof Disposable) {
+                ((Disposable) component).dispose();
+            }
+        }
+        components.clear();
     }
 
     public final <T extends C> void setComp(Class<T> type, T component) {

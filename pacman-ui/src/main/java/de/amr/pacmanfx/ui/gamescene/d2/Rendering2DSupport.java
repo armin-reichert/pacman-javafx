@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui.gamescene.d2;
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.ui.gamescene.common.GameSceneComponent;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
@@ -14,7 +15,7 @@ import javafx.scene.paint.Color;
 
 import static java.util.Objects.requireNonNull;
 
-public class Rendering2DSupport implements Disposable {
+public class Rendering2DSupport implements GameSceneComponent, Disposable {
 
     private final IntegerProperty unscaledWidth = new SimpleIntegerProperty(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.x());
 

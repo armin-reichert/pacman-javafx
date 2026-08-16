@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.gamescene.common;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.core.ComponentRegistry;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
@@ -36,20 +37,26 @@ public abstract class AbstractGameScene implements GameScene, DefaultGameEventLi
 
     private final GameAppContext app;
 
-    private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Action Bindings for " + getClass().getSimpleName());
+    private final ComponentRegistry<GameSceneComponent> componentRegistry = new ComponentRegistry<>();
 
-    private Rendering2DSupport rendering2D;
+    private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Action Bindings for " + getClass().getSimpleName());
 
     protected AbstractGameScene(GameAppContext app) {
         this.app = requireNonNull(app);
     }
 
     public Rendering2DSupport rendering2D() {
-        if (rendering2D == null) {
-            rendering2D = new Rendering2DSupport();
-            Logger.info("Added 2D rendering support for game scene of class {}", getClass().getSimpleName());
+        Rendering2DSupport r2D = componentRegistry.optComp(Rendering2DSupport.class).orElse(null);
+        if (r2D == null) {
+            componentRegistry.setComp(Rendering2DSupport.class, new Rendering2DSupport());
+            Logger.info("Added Rendering2DSupport to " + getClass().getSimpleName());
         }
-        return rendering2D;
+        return componentRegistry.requireComp(Rendering2DSupport.class);
+    }
+
+    @Override
+    public ComponentRegistry<GameSceneComponent> componentRegistry() {
+        return componentRegistry;
     }
 
     /**
@@ -75,11 +82,9 @@ public abstract class AbstractGameScene implements GameScene, DefaultGameEventLi
      * but it gets called when the 3D->2D scene switch happens.
      */
     public void acceptGameLevel(GameSession session, GameLevel level) {
-        if (rendering2D != null) {
-            final Vector2i size = level.worldMap().terrainLayer().sizeInPixel();
-            rendering2D.unscaledWidthProperty().set(size.x());
-            rendering2D.unscaledHeightProperty().set(size.y());
-        }
+        final Vector2i size = level.worldMap().terrainLayer().sizeInPixel();
+        rendering2D().unscaledWidthProperty().set(size.x());
+        rendering2D().unscaledHeightProperty().set(size.y());
     }
 
     /**
@@ -92,10 +97,7 @@ public abstract class AbstractGameScene implements GameScene, DefaultGameEventLi
 
     @Override
     public void dispose() {
-        if (rendering2D != null) {
-            rendering2D.dispose();
-            rendering2D = null;
-        }
+        rendering2D().dispose();
     }
 
     // --- Interface "GameScene"
