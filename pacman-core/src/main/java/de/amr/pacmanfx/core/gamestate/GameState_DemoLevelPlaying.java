@@ -52,9 +52,6 @@ public final class GameState_DemoLevelPlaying extends GameState {
             gamePlay.prepareLevelForPlaying(game);
             gamePlay.showLevelMessage(game, level, GameLevelMessageType.GAME_OVER);
 
-            final LevelCounterSystem levelCounterSystem = game.variant().systems().levelCounterSystem();
-            levelCounterSystem.updateCounter(session.levelCounter(), level.number(), level.bonusSymbolCode(0));
-
             Logger.info("Demo level {} started", level.number());
 
             // Note: This event is very important because it triggers the creation of the actor animations!
