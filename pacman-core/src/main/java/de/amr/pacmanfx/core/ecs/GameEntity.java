@@ -5,12 +5,11 @@
 package de.amr.pacmanfx.core.ecs;
 
 import de.amr.basics.Disposable;
+import de.amr.pacmanfx.core.ComponentRegistry;
 import de.amr.pacmanfx.core.ecs.comp.MovementComp;
 import de.amr.pacmanfx.core.ecs.comp.PositionComp;
 import de.amr.pacmanfx.core.ecs.comp.VisibilityComp;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
@@ -23,7 +22,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameEntity implements Disposable {
 
-    private final Map<Class<? extends GameEntityComponent>, GameEntityComponent> components = new LinkedHashMap<>(7);
+    private final ComponentRegistry componentRegistry = new ComponentRegistry();
 
     protected String name;
 
@@ -34,32 +33,19 @@ public class GameEntity implements Disposable {
     }
 
     public final <T extends GameEntityComponent> void setComp(Class<T> type, T component) {
-        requireNonNull(type);
-        requireNonNull(component);
-        if (components.containsKey(type)) {
-            throw new IllegalArgumentException("Component for class: " + type.getSimpleName() + " is already registered!");
-        }
-        components.put(type, component);
+        componentRegistry.setComp(type, component);
     }
 
     public final <T extends GameEntityComponent> T requireComp(Class<T> type) {
-        requireNonNull(type);
-        final GameEntityComponent component = components.get(type);
-        if (component == null) {
-            throw new IllegalArgumentException("No component found for class %s".formatted(type.getSimpleName()));
-        }
-        return type.cast(component);
+        return componentRegistry.requireComp(type);
     }
 
     public final <T extends GameEntityComponent> boolean hasComp(Class<T> type) {
-        requireNonNull(type);
-        return components.get(type) != null;
+        return componentRegistry.hasComp(type);
     }
 
     public final <T extends GameEntityComponent> Optional<T> optComp(Class<T> type) {
-        requireNonNull(type);
-        final GameEntityComponent component = components.get(type);
-        return Optional.ofNullable(component).map(type::cast);
+        return componentRegistry.optComp(type);
     }
 
     // Typed access
@@ -91,7 +77,7 @@ public class GameEntity implements Disposable {
      * Resets all components (position, visibility etc.) to their default values.
      */
     public void reset() {
-        components.values().forEach(GameEntityComponent::reset);
+        componentRegistry.components().forEach(GameEntityComponent::reset);
     }
 
     public final void show() {
@@ -108,7 +94,7 @@ public class GameEntity implements Disposable {
 
     @Override
     public void dispose() {
-        for (GameEntityComponent comp : components.values()) {
+        for (GameEntityComponent comp : componentRegistry.components()) {
             if (comp instanceof Disposable disposable) {
                 disposable.dispose();
             }
@@ -121,7 +107,7 @@ public class GameEntity implements Disposable {
         b.append("{name=").append(name);
         b.append(", components=[");
         boolean first = true;
-        for (var component : components.values()) {
+        for (var component : componentRegistry.components()) {
             if (!first) b.append(", ");
             b.append(component);
             first = false;

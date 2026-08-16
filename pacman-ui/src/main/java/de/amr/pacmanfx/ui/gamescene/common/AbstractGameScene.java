@@ -32,8 +32,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Abstract base class for all game scenes (2D and 3D).
  */
-public abstract class AbstractGameScene
-    implements GameScene, DefaultGameEventListener, Disposable {
+public abstract class AbstractGameScene implements GameScene, DefaultGameEventListener, Disposable {
 
     private final GameAppContext app;
 
@@ -95,6 +94,7 @@ public abstract class AbstractGameScene
     public void dispose() {
         if (rendering2D != null) {
             rendering2D.dispose();
+            rendering2D = null;
         }
     }
 
@@ -184,5 +184,4 @@ public abstract class AbstractGameScene
     public void onStopAllSounds(StopAllSoundsEvent event) {
         optSoundEffects().ifPresent(GameSoundEffects::stopAll);
     }
-
 }
