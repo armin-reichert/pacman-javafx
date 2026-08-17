@@ -32,21 +32,28 @@ public class DS_ActorInfo extends GameDashboardSection {
     }
 
     @Override
-    public void setGameApp(GameAppContext appContext) {
-        addDynamicInfo("Pac Name",  supplyPacText(appContext, (_, pac) -> pac.name()));
-        addDynamicInfo("Lives",     supplyLivesCount(appContext));
-        addDynamicInfo("Movement",  supplyPacText(appContext, this::actorMovementText));
-        addDynamicInfo("Tile",      supplyPacText(appContext, this::actorLocationText));
-        addDynamicInfo("Power",     supplyPacPowerText(appContext));
-        addDynamicInfo("Animation", supplyPacAnimationText(appContext));
+    public void setGameApp(GameAppContext app) {
+        addDynamicInfo("Pac Name",  supplyPacStateAndName(app));
+        addDynamicInfo("Lives",     supplyLivesCount(app));
+        addDynamicInfo("Movement",  supplyPacText(app, this::actorMovementText));
+        addDynamicInfo("Tile",      supplyPacText(app, this::actorLocationText));
+        addDynamicInfo("Power",     supplyPacPowerText(app));
+        addDynamicInfo("Animation", supplyPacAnimationText(app));
         emptyRow();
-        addGhostInfo(appContext, GhostPersonality.RED_GHOST_SHADOW);
+        addGhostInfo(app, GhostPersonality.RED_GHOST_SHADOW);
         emptyRow();
-        addGhostInfo(appContext, GhostPersonality.PINK_GHOST_SPEEDY);
+        addGhostInfo(app, GhostPersonality.PINK_GHOST_SPEEDY);
         emptyRow();
-        addGhostInfo(appContext, GhostPersonality.CYAN_GHOST_BASHFUL);
+        addGhostInfo(app, GhostPersonality.CYAN_GHOST_BASHFUL);
         emptyRow();
-        addGhostInfo(appContext, GhostPersonality.ORANGE_GHOST_POKEY);
+        addGhostInfo(app, GhostPersonality.ORANGE_GHOST_POKEY);
+    }
+
+    private Supplier<String> supplyPacStateAndName(GameAppContext app) {
+        return () -> app.game().session().optLevel()
+            .map(level -> level.entities().pac())
+            .map(pac -> "%s (%s)".formatted(pac.name(), pac.state().enumValue()))
+            .orElse(NO_INFO);
     }
 
     private Supplier<String> supplyLivesCount(GameAppContext appContext) {
