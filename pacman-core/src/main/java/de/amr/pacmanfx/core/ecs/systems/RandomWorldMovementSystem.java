@@ -34,7 +34,7 @@ public class RandomWorldMovementSystem {
          </cite>
      */
     public void roam(WorldNavigationComp navigation, WorldMovementPolicy worldMovementPolicy, GameLevel level, Ghost ghost, float speed) {
-        final Vector2i tile = WorldNavigationSystem.computeTile(ghost);
+        final Vector2i tile = ghost.pos().tile();
         final boolean teleporting = level.worldMap().terrainLayer().isTileInPortalSpace(tile);
 
         final boolean stuck = !navigation.info().moved;

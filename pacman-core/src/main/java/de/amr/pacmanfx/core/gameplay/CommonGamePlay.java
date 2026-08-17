@@ -11,7 +11,6 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
-import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusState;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostSpriteAnimationComp;
@@ -30,8 +29,8 @@ import de.amr.pacmanfx.core.event.gameplay.LevelStartedEvent;
 import de.amr.pacmanfx.core.event.gameplay.SpecialScoreEvent;
 import de.amr.pacmanfx.core.event.ghost.GhostEatenEvent;
 import de.amr.pacmanfx.core.event.pac.PacEatsFoodEvent;
-import de.amr.pacmanfx.core.event.pac.PacPowerStartsEvent;
 import de.amr.pacmanfx.core.event.pac.PacPowerEndsEvent;
+import de.amr.pacmanfx.core.event.pac.PacPowerStartsEvent;
 import de.amr.pacmanfx.core.event.pac.PacPowerStartsFadingEvent;
 import de.amr.pacmanfx.core.gameplay.hunt.HuntingStep;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
@@ -242,7 +241,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
     @Override
     public void onPacPowerStarts(GameContext game, GameLevel level, Pac pac, long ticks) {
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variant().systems();
 
         Logger.info("Pac power started. Power ticks: {}", ticks);
 
@@ -292,11 +291,10 @@ public abstract class CommonGamePlay implements GamePlay {
         final GameRules rules = game.variant().rules();
 
         systems.pacDigestion().update(pac);
-        systems.pacPower().update(rules, level, pac);
+        systems.pacPower().update(pac, rules.pacPowerFadingSeconds(level.number()));
         systems.pacState().update(pac);
         navigatePac(game, level, pac);
         systems.pacAnimation().update(pac);
-        checkPacPower(game, level, pac);
     }
 
     private void navigatePac(GameContext game, GameLevel level, Pac pac) {
@@ -311,7 +309,7 @@ public abstract class CommonGamePlay implements GamePlay {
         systems.worldNavigator().tryMovingOrTeleporting(pac, level, systems.pacWorldMovementPolicy());
 
         systems.pacDigestion().update(pac);
-        systems.pacPower().update(pac, rules.pacPowerFadingSeconds(level.number()));
+        systems.pacPower().update(pac, game.variant().rules().pacPowerFadingSeconds(level.number()));
         systems.pacState().update(pac);
         systems.pacAnimation().update(pac);
     }
@@ -381,7 +379,7 @@ public abstract class CommonGamePlay implements GamePlay {
     // If collision happened while teleporting (horizontally), move collided actors into visible world
     private void fixPacPositionIfKilledInsidePortal(GameLevel level) {
         final Pac pac = level.entities().pac();
-        final Vector2i pacTile = WorldNavigationSystem.computeTile(pac);
+        final Vector2i pacTile = pac.pos().tile();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
         terrain.hPortalContainingTile(pacTile).ifPresent(hPortal -> {
@@ -562,7 +560,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
     private void detectFoodCollision(GameLevel level, HuntingStep huntingStep) {
         final Pac pac = level.entities().pac();
-        final Vector2i pacTile = WorldNavigationSystem.computeTile(pac);
+        final Vector2i pacTile = pac.pos().tile();
         if (level.food().hasFoodAtTile(pacTile)) {
             huntingStep.setFoodFoundTile(pacTile);
             huntingStep.setEnergizerFound(level.worldMap().foodLayer().isEnergizerTile(pacTile));

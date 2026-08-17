@@ -8,7 +8,6 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
-import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.Bonus;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
@@ -38,7 +37,7 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
     public void drawActor(GameEntity actor) {
         requireNonNull(actor);
         if (!actor.isVisible()) return;
-        drawSpriteCentered(computeSprite(animSystem, actor), WorldNavigationSystem.computeCenter(actor));
+        drawSpriteCentered(computeSprite(animSystem, actor), actor.pos().bodyCenter());
     }
 
     private RectShort computeSprite(SpriteAnimSystem animSystem, GameEntity actor) {

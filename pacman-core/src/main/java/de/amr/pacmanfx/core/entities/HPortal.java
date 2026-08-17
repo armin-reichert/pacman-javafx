@@ -49,8 +49,8 @@ public record HPortal(Vector2i leftBorderEntryTile, Vector2i rightBorderEntryTil
 
         final WorldNavigationComp worldNavigation = actor.requireComp(WorldNavigationComp.class);
 
-        final Vector2i actorTile = WorldNavigationSystem.computeTile(actor);
-        final float offsetX = WorldNavigationSystem.computeTileOffset(actor).x();
+        final Vector2i actorTile = actor.pos().tile();
+        final float offsetX = actor.pos().offset().x();
 
         if (actorTile.y() != leftBorderEntryTile().y()) {
             return false;

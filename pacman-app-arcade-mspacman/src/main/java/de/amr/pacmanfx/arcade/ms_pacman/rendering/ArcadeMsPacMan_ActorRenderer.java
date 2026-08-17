@@ -9,7 +9,6 @@ import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.clapperboard.ClapperboardAnimationSystem;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
-import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
@@ -40,7 +39,7 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     public void drawActor(GameEntity actor) {
         requireNonNull(actor);
         if (!actor.isVisible()) return;
-        final Vector2f center = WorldNavigationSystem.computeCenter(actor);
+        final Vector2f center = actor.pos().bodyCenter();
         switch (actor) {
             case Pac pac                   -> drawSpriteCentered(computePacSprite(pac),     center);
             case Ghost ghost               -> drawSpriteCentered(computeGhostSprite(ghost), center);
@@ -90,7 +89,7 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     private void drawClapperBoard(Clapperboard clapperboard) {
         if (!clapperboard.isVisible()) return;
         ClapperboardAnimationSystem.sprite(clapperboard).ifPresent(sprite -> {
-            drawSpriteCentered(sprite, WorldNavigationSystem.computeCenter(clapperboard));
+            drawSpriteCentered(sprite, clapperboard.pos().bodyCenter());
 
             // Draw number and title
             final String number = String.valueOf(clapperboard.inscription().number());

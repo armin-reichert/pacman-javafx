@@ -7,18 +7,17 @@ package de.amr.pacmanfx.ui.views.dashboard;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameConstants;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.MovementComp;
 import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
-import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 
 import java.util.function.BiFunction;
@@ -81,8 +80,8 @@ public class DS_ActorInfo extends GameDashboardSection {
 
         final WorldNavigationComp worldNavigation = actor.requireComp(WorldNavigationComp.class);
 
-        final Vector2i tile = WorldNavigationSystem.computeTile(actor);
-        final Vector2f tileOffset = WorldNavigationSystem.computeTileOffset(actor);
+        final Vector2i tile = actor.pos().tile();
+        final Vector2f tileOffset = actor.pos().offset();
 
         return "(%2d,%2d)+(%2.0f,%2.0f)%s".formatted(
             tile.x(), tile.y(),

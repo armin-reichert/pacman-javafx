@@ -6,7 +6,6 @@ package de.amr.pacmanfx.uilib.entities3D.ghost_old;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -21,7 +20,7 @@ public class Ghost3DTransformController {
 
     public void update(Ghost3DWrapperToBeRemoved ghost3D, GameContext game) {
         final Ghost ghost = ghost3D.ghost();
-        final Vector2f center = WorldNavigationSystem.computeCenter(ghost);
+        final Vector2f center = ghost.pos().bodyCenter();
 
         ghost3D.root().setTranslateX(center.x());
         ghost3D.root().setTranslateY(center.y());

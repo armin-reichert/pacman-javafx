@@ -76,7 +76,7 @@ public class BonusMoveAndJumpSystem {
     private void wanderMaze(GameLevel level, Bonus bonus) {
         final BonusMoveAndJumpComp moveAndJumpComp = bonus.requireComp(BonusMoveAndJumpComp.class);
         moveAndJumpComp.routeNavigation().steer(bonus, level);
-        final Vector2i tile = WorldNavigationSystem.computeTile(bonus);
+        final Vector2i tile = bonus.pos().tile();
         boolean exitPortalReached = moveAndJumpComp.routeNavigation().isRouteTraversed()
             || level.worldMap().terrainLayer().isTileInPortalSpace(tile);
         if (!exitPortalReached) {

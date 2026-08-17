@@ -6,7 +6,6 @@ package de.amr.pacmanfx.uilib.entities3D.ghost.system;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.entities.Ghost;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DAnimationComp;
 import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DViewComp;
 
@@ -15,7 +14,7 @@ public class Ghost3DMovementSystem {
     public static void update(Ghost ghost) {
         final Ghost3DViewComp view3D = ghost.requireComp(Ghost3DViewComp.class);
 
-        final Vector2f center = ghost.pos().center(WorldMap.TS);
+        final Vector2f center = ghost.pos().bodyCenter();
         final double height = view3D.root().getBoundsInParent().getDepth();
         final int angle = switch (ghost.worldNavigation().wishDir()) {
             case LEFT  -> 0;

@@ -4,9 +4,7 @@
 package de.amr.pacmanfx.core.model.rules;
 
 import de.amr.basics.math.Vector2f;
-import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
@@ -18,9 +16,7 @@ public enum CollisionStrategy {
         public boolean collide(GameEntity either, GameEntity other) {
             requireNonNull(either, "Actor to check for collision must not be null");
             requireNonNull(other, "Actor to check for collision must not be null");
-            final Vector2i eitherTile = WorldNavigationSystem.computeTile(either);
-            final Vector2i otherTile = WorldNavigationSystem.computeTile(other);
-            return eitherTile.equals(otherTile);
+            return either.pos().tile().equals(other.pos().tile());
         }
     },
 
@@ -30,8 +26,8 @@ public enum CollisionStrategy {
         public boolean collide(GameEntity either, GameEntity other) {
             requireNonNull(either, "Actor to check for collision must not be null");
             requireNonNull(other, "Actor to check for collision must not be null");
-            final Vector2f eitherCenter = WorldNavigationSystem.computeCenter(either);
-            final Vector2f otherCenter = WorldNavigationSystem.computeCenter(other);
+            final Vector2f eitherCenter = either.pos().bodyCenter();
+            final Vector2f otherCenter = other.pos().bodyCenter();
             float dist = eitherCenter.euclideanDist(otherCenter);
             if (dist < COLLISION_SENSITIVITY_PIXELS) {
                 Logger.info("Collision detected (dist={}): {} collides with {}", dist, either, other);

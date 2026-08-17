@@ -11,6 +11,7 @@ import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameVariantUIConfig;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
+import de.amr.pacmanfx.core.ecs.systems.PositionSystem;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusState;
@@ -258,7 +259,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
             }
         }
 
-        final Vector2i houseEntry = WorldMap.computeTileAt(house.floorplan().entryPosition());
+        final Vector2i houseEntry = PositionSystem.computeTileAt(house.floorplan().entryPosition());
         final Vector2i backyard = houseEntry.plus(0, house.sizeInTiles().y() + 1);
         final List<Vector2i> route = Stream.of(entryTile, houseEntry, backyard, houseEntry, exitTile).toList();
 

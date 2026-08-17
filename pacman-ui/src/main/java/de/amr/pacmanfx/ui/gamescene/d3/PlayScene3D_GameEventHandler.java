@@ -9,8 +9,11 @@ import de.amr.basics.math.RandomNumberSupport;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
-import de.amr.pacmanfx.core.entities.*;
+import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.entities.Bonus;
+import de.amr.pacmanfx.core.entities.Ghost;
+import de.amr.pacmanfx.core.entities.House;
+import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventListener;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
 import de.amr.pacmanfx.core.event.bonus.BonusEatenEvent;
@@ -18,15 +21,14 @@ import de.amr.pacmanfx.core.event.bonus.BonusExpiredEvent;
 import de.amr.pacmanfx.core.event.gameplay.*;
 import de.amr.pacmanfx.core.event.ghost.GhostEatenEvent;
 import de.amr.pacmanfx.core.event.pac.PacEatsFoodEvent;
-import de.amr.pacmanfx.core.event.pac.PacPowerStartsEvent;
 import de.amr.pacmanfx.core.event.pac.PacPowerEndsEvent;
+import de.amr.pacmanfx.core.event.pac.PacPowerStartsEvent;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
@@ -198,7 +200,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
             level3D.pellets3D().map(Pellet3D::root).forEach(shape -> level3D.getChildren().remove(shape));
         }
         else {
-            final Vector2i tile = WorldNavigationSystem.computeTile(event.pac());
+            final Vector2i tile = event.pac().pos().tile();
             if (event.energizer()) {
                 level3D.energizer3DAt(tile).ifPresent(energizer3D -> {
                     level3D.animationManager().stopPumping(energizer3D);

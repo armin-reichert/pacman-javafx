@@ -7,7 +7,6 @@ package de.amr.pacmanfx.core.entities;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.house.comp.HouseFloorplanComp;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 
@@ -61,7 +60,7 @@ public class House extends GameEntity {
      */
     public boolean isVisitedBy(GameEntity actor) {
         requireNonNull(actor);
-        final Vector2i actorTile = WorldNavigationSystem.computeTile(actor);
+        final Vector2i actorTile = actor.pos().tile();
         return contains(actorTile);
     }
 

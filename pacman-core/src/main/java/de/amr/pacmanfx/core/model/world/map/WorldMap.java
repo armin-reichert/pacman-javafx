@@ -40,25 +40,6 @@ public class WorldMap {
      */
     public static float tilesPx(double numTiles) { return (float) numTiles * TS; }
 
-    /**
-     * @param position a position
-     * @return tile containing given position
-     */
-    public static Vector2i computeTileAt(Vector2f position) {
-        requireNonNull(position);
-        return computeTileAt(position.x(), position.y());
-    }
-
-    /**
-     * @param x x position
-     * @param y y position
-     * @return tile containing given position
-     */
-    public static Vector2i computeTileAt(float x, float y) {
-        float tx = x >= 0 ? x / TS : (x - TS) / TS;
-        float ty = y >= 0 ? y / TS : (y - TS) / TS;
-        return new Vector2i((int) tx, (int) ty);
-    }
 
     /**
      * @param tileX tile x coordinate

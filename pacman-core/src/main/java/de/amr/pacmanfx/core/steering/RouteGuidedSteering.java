@@ -58,7 +58,7 @@ public class RouteGuidedSteering implements Steering {
             //TODO Use navigator method
             navigation.setTargetTile(route.get(targetIndex));
         }
-        else if (WorldNavigationSystem.computeTile(gameEntity).equals(route.get(targetIndex))) {
+        else if (gameEntity.pos().tile().equals(route.get(targetIndex))) {
             selectNextTargetTile(level, gameEntity);
         }
         else {

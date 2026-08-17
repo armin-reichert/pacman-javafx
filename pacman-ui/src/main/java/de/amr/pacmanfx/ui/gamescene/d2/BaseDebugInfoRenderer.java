@@ -9,7 +9,6 @@ import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
 import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
-import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -93,7 +92,7 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
         final WorldNavigationComp worldNavigation = actor.requireComp(WorldNavigationComp.class);
 
         ctx.save();
-        Vector2f center = WorldNavigationSystem.computeCenter(actor);
+        Vector2f center = actor.pos().bodyCenter();
         Vector2f arrowHead = center.plus(worldNavigation.wishDir().vector().scaled(12f)).scaled(scaling());
         Vector2f guyCenter = center.scaled(scaling());
         double radius = scaled(2), diameter = 2 * radius;

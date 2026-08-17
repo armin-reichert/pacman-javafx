@@ -10,6 +10,7 @@ import de.amr.pacmanfx.core.GameException;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
+import de.amr.pacmanfx.core.ecs.systems.PositionSystem;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.*;
@@ -375,7 +376,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         }
 
         final House house = level.entities().house();
-        final Vector2i houseEntry = WorldMap.computeTileAt(house.floorplan().entryPosition());
+        final Vector2i houseEntry = PositionSystem.computeTileAt(house.floorplan().entryPosition());
         final Vector2i houseEntryOpposite = houseEntry.plus(0, house.sizeInTiles().y() + 1);
 
         final List<HPortal> portals = terrain.horizontalPortals();

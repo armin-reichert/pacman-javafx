@@ -12,7 +12,6 @@ import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 
-import static de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem.computeTile;
 import static de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem.tilesAheadWithOverflowBug;
 import static java.util.Objects.requireNonNull;
 
@@ -43,8 +42,9 @@ public class BashfulHuntingStrategy implements GhostHuntingStrategy {
     //    The target tile for the "bashful" (cyan) ghost is the position where the arrow ends.
     private Vector2i computeChasingTargetTile(GameLevel level) {
         final Pac pac = level.entities().pac();
+        final Ghost redGhost = level.entities().ghost(GhostPersonality.RED_GHOST_SHADOW);
         final Vector2i pacAhead2 = tilesAheadWithOverflowBug(pac, 2);
-        final Vector2i redGhostTile = computeTile(level.entities().ghost(GhostPersonality.RED_GHOST_SHADOW));
+        final Vector2i redGhostTile = redGhost.pos().tile();
         final Vector2i arrow = pacAhead2.minus(redGhostTile).scaled(2);
         return redGhostTile.plus(arrow);
     }

@@ -2,14 +2,13 @@ package de.amr.pacmanfx.ui.gamescene.d3;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounter3DViewSystem;
 import de.amr.pacmanfx.uilib.entities3D.bonus.system.Bonus3DMovementSystem;
 import de.amr.pacmanfx.uilib.entities3D.bonus.system.Bonus3DViewSystem;
@@ -65,7 +64,7 @@ public class GameLevel3DUpdateController {
         final House house = level.entities().house();
 
         boolean accessRequested = level.entities().ghostsInAnyOfStates(GHOST_STATES_WITH_ACCESS_TO_HOUSE)
-            .filter(ghost -> house.isDoorAt(WorldNavigationSystem.computeTile(ghost)))
+            .filter(ghost -> house.isDoorAt(ghost.pos().tile()))
             .anyMatch(GameEntity::isVisible);
 
         boolean ghostNearHouseDoor = level.entities().ghostsInAnyOfStates(GHOST_STATES_REQUIRING_HOUSE_LIGHTING)

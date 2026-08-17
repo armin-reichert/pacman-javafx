@@ -59,7 +59,7 @@ public abstract class ArcadeMsPacMan_RandomizedHuntingStrategy implements GhostH
     
     protected void moveRandomlyThroughWorld(GameLevel level, Ghost ghost, float speed, WorldMovementPolicy worldMovementPolicy) {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        final Vector2i tile = WorldNavigationSystem.computeTile(ghost);
+        final Vector2i tile = ghost.pos().tile();
 
         final boolean teleporting = terrain.isTileInPortalSpace(tile);
         if (teleporting) {
@@ -80,7 +80,7 @@ public abstract class ArcadeMsPacMan_RandomizedHuntingStrategy implements GhostH
     }
 
     private void selectRandomWishDir(Ghost ghost, GameLevel level, WorldMovementPolicy worldMovementPolicy) {
-        final Vector2i ghostTile = WorldNavigationSystem.computeTile(ghost);
+        final Vector2i ghostTile = ghost.pos().tile();
 
         for (final Direction dir : Direction.shuffled()) {
             final Vector2i neighbor = ghostTile.plus(dir.vector());

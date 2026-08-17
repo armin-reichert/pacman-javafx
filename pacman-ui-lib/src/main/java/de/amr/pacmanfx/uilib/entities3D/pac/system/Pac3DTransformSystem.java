@@ -6,7 +6,6 @@ package de.amr.pacmanfx.uilib.entities3D.pac.system;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
-import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.pac.comp.PacState;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -33,7 +32,7 @@ public class Pac3DTransformSystem {
         requireNonNull(level);
 
         final Pac3DViewComp view3D = pac.requireComp(Pac3DViewComp.class);
-        final Vector2f center = WorldNavigationSystem.computeCenter(pac);
+        final Vector2f center = pac.pos().bodyCenter();
 
         if (pac.state().enumValue() == PacState.ACTIVE) {
             updateVisibility(pac, center, level.worldMap());

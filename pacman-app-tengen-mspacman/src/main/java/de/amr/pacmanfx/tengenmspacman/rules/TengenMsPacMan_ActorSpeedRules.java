@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.rules;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
@@ -14,7 +14,6 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.rules.ActorSpeedRules;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
-import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
 import de.amr.pacmanfx.tengenmspacman.model.BoosterMode;
 import de.amr.pacmanfx.tengenmspacman.model.Difficulty;
@@ -71,7 +70,7 @@ public class TengenMsPacMan_ActorSpeedRules implements ActorSpeedRules {
         final House house = level.entities().house();
         final int levelNumber = level.number();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        final Vector2i ghostTile = WorldNavigationSystem.computeTile(ghost);
+        final Vector2i ghostTile = ghost.pos().tile();
         final GhostState state = ghost.ghostStateEnum();
         final boolean insideHouse = house.isVisitedBy(ghost);
         final boolean tunnelSlowdown = terrain.isTunnel(ghostTile);

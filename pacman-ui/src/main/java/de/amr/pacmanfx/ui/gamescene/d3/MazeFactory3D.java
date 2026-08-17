@@ -4,6 +4,7 @@ import de.amr.basics.StopWatch;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
+import de.amr.pacmanfx.core.ecs.systems.PositionSystem;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -91,7 +92,7 @@ public class MazeFactory3D {
         // render all obstacles found in map except the house placeholder obstacle
         for (Obstacle obstacle : terrain.obstacles()) {
             final Vector2f startPoint = obstacle.startPoint().toVector2f();
-            if (house == null || !house.contains(WorldMap.computeTileAt(startPoint))) {
+            if (house == null || !house.contains(PositionSystem.computeTileAt(startPoint))) {
                 renderer3D.renderObstacle3D(obstacle, isWorldBorder(terrain, obstacle), wallThickness, 4);
             }
         }

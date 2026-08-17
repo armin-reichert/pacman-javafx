@@ -4,11 +4,11 @@
 
 module de.amr.pacmanfx.core {
 
-    requires de.amr.basics;
     requires org.tinylog.api;
     requires javafx.base;
-    requires java.desktop;
-    requires java.security.jgss;
+    requires javafx.graphics;
+    requires de.amr.basics;
+    requires java.management;
 
     exports de.amr.pacmanfx.core.event;
     exports de.amr.pacmanfx.core.model;

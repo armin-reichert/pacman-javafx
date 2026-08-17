@@ -5,7 +5,9 @@
 package de.amr.pacmanfx.core.ecs.comp;
 
 import de.amr.basics.math.Vector2f;
+import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.ecs.EntityComponent;
+import de.amr.pacmanfx.core.ecs.systems.PositionSystem;
 
 import static java.util.Objects.requireNonNull;
 
@@ -57,13 +59,22 @@ public final class PositionComp implements EntityComponent {
         y -= dy;
     }
 
-    public Vector2f center(int tileSize) {
-        final float halfTileSize = 0.5f * tileSize;
-        return new Vector2f(x + halfTileSize, y + halfTileSize);
-    }
-
     public Vector2f asVector2f() {
         return new Vector2f(x, y);
+    }
+
+    public Vector2i tile() {
+        //TODO efficiency
+        return PositionSystem.computeTileAt(bodyCenter());
+    }
+
+    public Vector2f offset() {
+        return PositionSystem.computeTileOffset(bodyCenter());
+    }
+
+    public Vector2f bodyCenter() {
+        //TODO efficiency
+        return PositionSystem.boundingBoxCenter(asVector2f());
     }
 
     @Override

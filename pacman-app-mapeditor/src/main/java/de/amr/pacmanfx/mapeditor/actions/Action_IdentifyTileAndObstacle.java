@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.core.ecs.systems.PositionSystem;
 import de.amr.pacmanfx.core.model.world.map.FoodTile;
 import de.amr.pacmanfx.core.model.world.map.TerrainTile;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -15,7 +16,6 @@ import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.HTS;
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.computeTileAt;
 import static java.util.Objects.requireNonNull;
 
 public class Action_IdentifyTileAndObstacle extends EditorUIAction<String> {
@@ -72,7 +72,7 @@ public class Action_IdentifyTileAndObstacle extends EditorUIAction<String> {
 
     private String identifyObstacleStartingAtTile(WorldMap worldMap) {
         Obstacle obstacleStartingAtTile = worldMap.terrainLayer().obstacles().stream()
-            .filter(obstacle -> computeTileAt(obstacle.startPoint().minus(HTS, 0).toVector2f()).equals(tile))
+            .filter(obstacle -> PositionSystem.computeTileAt(obstacle.startPoint().minus(HTS, 0).toVector2f()).equals(tile))
             .findFirst().orElse(null);
         if (obstacleStartingAtTile == null) return null;
         String encoding = obstacleStartingAtTile.encoding();
