@@ -43,10 +43,10 @@ public class PositionSystem {
 
     /**
      * @param p point in the plane (left upper corner of bounding box of size one square tile)
-     * @return the bounding box, a rectangle of size one tile with left upper corner at the given position
+     * @return the bounding box, a rectangle of size 1/2 tile with left upper corner at the given position
      */
     public static Rectangle2D boundingBox(Vector2f p) {
-        return new Rectangle2D(p.x(), p.y(), TILE_SIZE, TILE_SIZE);
+        return new Rectangle2D(p.x() + 2, p.y() + 2, HALF_TILE_SIZE, HALF_TILE_SIZE);
     }
 
     public static Vector2f boundingBoxCenter(Vector2f p) {

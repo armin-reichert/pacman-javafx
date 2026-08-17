@@ -57,6 +57,12 @@ public final class Ufx {
         return copy;
     }
 
+    public static <T extends Enum<T>> T succ(T value, Class<T> enumType) {
+        final T[] values = enumType.getEnumConstants();
+        int succ = value.ordinal() + 1 == values.length ? 0 : value.ordinal() + 1;
+        return values[succ];
+    }
+
     /**
      * Computes the size of a screen section that occupies a given fraction of the available
      * screen height while maintaining a fixed aspect ratio.

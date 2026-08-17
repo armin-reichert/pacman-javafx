@@ -8,12 +8,14 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
 import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
+import de.amr.pacmanfx.core.ecs.systems.PositionSystem;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -77,6 +79,12 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
                 drawDirectionIndicator(actor);
             }
         }
+
+        final Rectangle2D box = PositionSystem.boundingBox(actor.pos().asVector2f());
+        ctx.save();
+        ctx.setFill(Color.GRAY);
+        ctx.fillRect(scaled(box.getMinX()), scaled(box.getMinY()), scaled(box.getWidth()), scaled(box.getHeight()));
+        ctx.restore();
     }
 
     private void drawAnimationInfo(SpriteAnimSystem animSystem, GameEntity actor, Object selectedID) {

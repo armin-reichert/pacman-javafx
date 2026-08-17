@@ -123,6 +123,7 @@ public class DS_GameInfo extends GameDashboardSection {
         return switch (collisionStrategy) {
             case SAME_TILE -> "Same Tile";
             case CENTER_DISTANCE -> "Distance-based";
+            case BOX_INTERSECTION -> "Box Intersection";
         };
     }
 

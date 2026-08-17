@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.action;
 
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.model.rules.ActorCollisionRules;
 import de.amr.pacmanfx.core.model.rules.CollisionStrategy;
@@ -11,12 +12,12 @@ import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import javafx.scene.input.KeyCode;
+import javafx.util.Duration;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import static de.amr.basics.util.Ufx.toggleProperty;
 import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
 
 /**
@@ -55,13 +56,10 @@ public final class CommonGameActions {
             public void execute(GameAppContext app) {
                 final GameContext game = app.game();
                 final ActorCollisionRules collisionRules = game.variant().rules().actorCollisionRules();
-                toggleProperty(collisionRules.collisionStrategyProperty(), CollisionStrategy.SAME_TILE, CollisionStrategy.CENTER_DISTANCE);
                 final CollisionStrategy strategy = collisionRules.getCollisionStrategy();
-                if (strategy == CollisionStrategy.SAME_TILE) {
-                    app.ui().shortMessage("Using original Arcade collision strategy (same tile)");
-                } else {
-                    app.ui().shortMessage("Using safe collision strategy");
-                }
+                final CollisionStrategy nextStrategy = Ufx.succ(strategy, CollisionStrategy.class);
+                collisionRules.collisionStrategyProperty().set(nextStrategy);
+                app.ui().shortMessage(Duration.seconds(2.5), "Using collision strategy '%s'".formatted(nextStrategy));
             }
         };
 
