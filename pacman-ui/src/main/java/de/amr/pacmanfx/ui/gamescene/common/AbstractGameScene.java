@@ -167,7 +167,7 @@ public abstract class AbstractGameScene implements GameScene, DefaultGameEventLi
     @Override
     public void handleQuit(GameAppContext ac) {
         Logger.info("Game scene {} quit", getClass().getSimpleName());
-        onDeactivate();
+        deactivate();
     }
 
     // --- Interface DefaultGameEventListener
