@@ -85,8 +85,8 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     // Game start
 
     @Override
-    public void onSessionStart(GameContext game) {
-        super.onSessionStart(game);
+    public void startSession(GameContext game) {
+        super.startSession(game);
 
         final GameSession session = game.session();
 
@@ -103,7 +103,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
     @Override
     public void configureLevelCounter(GameContext game, LevelCounter levelCounter) {
-        final LevelCounterSystem system = game.variantConfig().systems().levelCounterSystem();
+        final LevelCounterSystem system = game.variant().systems().levelCounterSystem();
         system.setCounterBehavior(levelCounter, LevelCounterBehavior.SHIFT_WHEN_FULL);
         system.setCounterCapacity(levelCounter, 7);
         system.clearCounter(levelCounter);
@@ -118,19 +118,19 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         final GameLevelEntitySet entities = new GameLevelEntitySet();
 
         final GameSession session = game.session();
-        final WorldNavigationSystem navigator = game.variantConfig().systems().worldNavigator();
-        final WorldMap worldMap = game.variantConfig().worldMapManager().supplyWorldMap(levelNumber);
+        final WorldNavigationSystem navigator = game.variant().systems().worldNavigator();
+        final WorldMap worldMap = game.variant().worldMapManager().supplyWorldMap(levelNumber);
 
         addEntities(entities, game, worldMap);
 
-        final HuntingTimer huntingTimer = new HuntingTimer("Arcade Pac-Man Hunting Timer", game.variantConfig().rules().numHuntingPhases());
+        final HuntingTimer huntingTimer = new HuntingTimer("Arcade Pac-Man Hunting Timer", game.variant().rules().numHuntingPhases());
 
         final GameLevel level = new GameLevel(levelNumber, worldMap, entities, huntingTimer);
         session.setLevel(level);
 
         session.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
 
-        final GameRules rules = game.variantConfig().rules();
+        final GameRules rules = game.variant().rules();
         level.setBonusSymbolCodes(rules.bonusSymbols(levelNumber));
 
         // On each phase start (except the initial phase), the ghosts reverse their move direction
@@ -174,7 +174,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
         // Configure entities
 
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variant().systems();
         pacMan.autoSteering().setSteering(new RuleGuidedPacSteering(
             systems.worldNavigator(), systems.pacWorldMovementPolicy()
         ));
@@ -204,8 +204,8 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
         // Overwrite autosteering for demo level by fixed route steering
         pac.autoSteering().setSteering(new RouteGuidedSteering(
-            game.variantConfig().systems().worldNavigator(),
-            game.variantConfig().systems().pacWorldMovementPolicy(),
+            game.variant().systems().worldNavigator(),
+            game.variant().systems().pacWorldMovementPolicy(),
             DEMO_LEVEL_ROUTE
         ));
 
@@ -236,7 +236,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         session.score().data().setEnabled(true);
         session.cheats().update(game);
 
-        final LevelCounterSystem levelCounterSystem = game.variantConfig().systems().levelCounterSystem();
+        final LevelCounterSystem levelCounterSystem = game.variant().systems().levelCounterSystem();
         levelCounterSystem.updateCounter(session.levelCounter(), level.number(), level.bonusSymbolCode(0));
 
         showLevelMessage(game, level, GameLevelMessageType.READY);
@@ -261,13 +261,13 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         requireNonNull(game);
         requireNonNull(level);
 
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variant().systems();
         final GameEventManager eventManager = game.eventManager();
 
         level.selectNextBonus();
 
         final int symbolCode = level.bonusSymbolCode(level.currentBonusIndex());
-        final int value = game.variantConfig().rules().scoringRules().pointsForBonus(symbolCode);
+        final int value = game.variant().rules().scoringRules().pointsForBonus(symbolCode);
         final float edibleSec = randomFloat(9, 10);
         final Vector2i tile = level.worldMap().terrainLayer().getTilePropertyOrDefault(
             WorldMapPropertyName.POS_BONUS, ArcadePacMan_GameVariantUIConfig.DEFAULT_BONUS_TILE);

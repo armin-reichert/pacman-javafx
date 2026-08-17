@@ -4,11 +4,11 @@
 
 package de.amr.pacmanfx.core.entities.clapperboard.comp;
 
-import de.amr.pacmanfx.core.ecs.GameEntityComponent;
+import de.amr.pacmanfx.core.ecs.EntityComponent;
 
 import static java.util.Objects.requireNonNull;
 
-public class ClapperboardInscriptionComp implements GameEntityComponent {
+public class ClapperboardInscriptionComp implements EntityComponent {
     private String number;
     private String text;
 

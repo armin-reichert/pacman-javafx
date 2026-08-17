@@ -12,47 +12,53 @@ import javafx.application.Platform;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
+import static java.util.Objects.requireNonNull;
+
 public final class GameSimulation {
 
-    private GameSimulation() {}
+    private final GameAppContext app;
+    private final GameClock clock;
 
-    public static void start(GameAppContext appContext) {
-        final GameClock clock = appContext.clock();
-        clock.setUpdateAction(() -> simulate(appContext));
-        clock.setPermanentAction(() -> renderCurrentView(appContext));
-        clock.setErrorHandler(x -> handleFatalError(appContext, x));
+    public GameSimulation(GameAppContext app, GameClock clock) {
+        this.app = requireNonNull(app);
+        this.clock = requireNonNull(clock);
+    }
+
+    public void start() {
+        clock.setUpdateAction(this::simulate);
+        clock.setPermanentAction(this::renderCurrentView);
+        clock.setErrorHandler(this::handleFatalError);
         clock.start();
     }
 
-    public static void stop(GameAppContext appContext) {
-        appContext.clock().stop();
-        appContext.clock().setTargetFrameRate(GameConstants.SIMULATION_FPS);
+    public void stop() {
+        clock.stop();
+        clock.setTargetFrameRate(GameConstants.SIMULATION_FPS);
     }
 
     // private
 
-    private static void simulate(GameAppContext app) {
+    private void simulate() {
         final GameContext game = app.game();
-        game.session().newFrameState(app.clock().currentTick());
-        game.session().gameFlow().update(game);
-
+        game.session().newFrameState(clock.currentTick());
+        game.variant().gameFlow().update(game);
         app.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(game));
     }
 
-    private static void renderCurrentView(GameAppContext appContext) {
+    private void renderCurrentView() {
         Platform.runLater(() -> {
             try {
-                appContext.ui().views().assertCurrentView().render();
+                app.ui().views().assertCurrentView().render();
             } catch (Exception x) {
                 Logger.error(x);
             }
         });
     }
 
-    private static void handleFatalError(GameAppContext appContext, Throwable reason) {
-        appContext.lifecycle().suspendPlaying();
-        final String errorMessage = appContext.ui().translations().translate("error.oh_no_my_program");
-        appContext.ui().shortMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
+    private void handleFatalError(Throwable reason) {
+        app.suspendGame();
+        final String errorMessage = app.ui().translations().translate("error.oh_no_my_program");
+        app.ui().shortMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
         Logger.error(reason, "*** KA-TAS-TROOPHE! SOMETHING VERY BAD HAPPENED!");
     }
 }

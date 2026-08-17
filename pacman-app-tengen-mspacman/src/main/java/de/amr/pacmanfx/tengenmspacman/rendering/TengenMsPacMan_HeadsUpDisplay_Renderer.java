@@ -18,7 +18,7 @@ import de.amr.pacmanfx.tengenmspacman.model.Difficulty;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
-import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
@@ -56,16 +56,16 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
     }
 
     @Override
-    public void draw(GameSession session, AbstractGameScene2D scene, long tick) {
+    public void draw(GameSession session, AbstractGameScene gameScene, long tick) {
         requireNonNull(session);
-        requireNonNull(scene);
+        requireNonNull(gameScene);
 
         final HUDState hud = session.hud();
 
         if (!hud.isVisible()) return;
 
         ctx.save();
-        ctx.translate(0, scaled(computeOffsetY(scene)));
+        ctx.translate(0, scaled(computeOffsetY(gameScene)));
 
         if (hud.isScoreShown()) {
             // blink frequency = 1Hz (30 ticks on, 30 ticks off)
@@ -80,7 +80,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
             drawHighScore(highScore, arcadeFont8(), color);
         }
 
-        final int counterY = scene.unscaledHeight() - TS;
+        final int counterY = gameScene.rendering2D().unscaledHeight() - TS;
 
         if (hud.isLivesCounterShown()) {
             drawLivesCounter(session, counterY);
@@ -101,7 +101,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
         ctx.restore();
     }
 
-    private double computeOffsetY(AbstractGameScene2D scene) {
+    private double computeOffsetY(AbstractGameScene scene) {
         return switch (scene) {
             case TengenMsPacMan_CutScene1 ignored -> -2 * TS;
             case TengenMsPacMan_CutScene2 ignored -> -2 * TS;

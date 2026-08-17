@@ -108,7 +108,7 @@ public class TestEatingFood {
 
     @BeforeEach
     public void createGameLevel() {
-        testGame.variantConfig().gamePlay().buildNormalLevel(testGame, 1, 3);
+        testGame.variant().gamePlay().buildNormalLevel(testGame, 1, 3);
     }
 
     private void eatNextPellet(GamePlay gamePlay, GameLevel level) {
@@ -137,7 +137,7 @@ public class TestEatingFood {
     @Test
     @DisplayName("Test Food Counting")
     public void testFoodCounting() {
-        final GamePlay gamePlay = testGame.variantConfig().gamePlay();
+        final GamePlay gamePlay = testGame.variant().gamePlay();
         testGame.session().optLevel().ifPresent(level -> {
             int eaten = level.food().eatenFoodCount();
             int uneaten = level.food().remainingFoodCount();
@@ -156,21 +156,21 @@ public class TestEatingFood {
     @Test
     @DisplayName("Test Level Completion")
     public void testLevelCompletion() {
-        final GamePlay gamePlay = testGame.variantConfig().gamePlay();
+        final GamePlay gamePlay = testGame.variant().gamePlay();
         testGame.session().optLevel().ifPresent(level -> {
             while (level.food().remainingFoodCount() > 0) {
-                assertFalse(testGame.variantConfig().rules().isLevelCompleted(level));
+                assertFalse(testGame.variant().rules().isLevelCompleted(level));
                 eatNextPellet(gamePlay, level);
                 eatNextEnergizer(gamePlay, level);
             }
-            assertTrue(testGame.variantConfig().rules().isLevelCompleted(level));
+            assertTrue(testGame.variant().rules().isLevelCompleted(level));
         });
     }
 
     @Test
     @DisplayName("Test Cruise Elroy Mode")
     public void testCruiseElroyMode() {
-        final GamePlay gamePlay = testGame.variantConfig().gamePlay();
+        final GamePlay gamePlay = testGame.variant().gamePlay();
         testGame.session().optLevel().ifPresent(level -> {
             final Ghost blinky = level.entities().ghost(GhostPersonality.RED_GHOST_SHADOW);
             final ElroyComp elroy = blinky.requireComp(ElroyComp.class);
@@ -203,7 +203,7 @@ public class TestEatingFood {
     @Test
     @DisplayName("Test Resting")
     public void testResting() {
-        final GamePlay gamePlay = testGame.variantConfig().gamePlay();
+        final GamePlay gamePlay = testGame.variant().gamePlay();
         testGame.session().optLevel().ifPresent(level -> {
             final Pac pac = level.entities().pac();
             eatNextPellet(gamePlay, level);

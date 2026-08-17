@@ -32,7 +32,7 @@ public class ArcadeGameState_GameOver extends GameState {
             throw new RuntimeException(e);
         }
 
-        game.variantConfig().gamePlay().showLevelMessage(game, level, GameLevelMessageType.GAME_OVER);
+        game.variant().gamePlay().showLevelMessage(game, level, GameLevelMessageType.GAME_OVER);
 
         // In case, entering game over state was forced by user:
         LivesCounterSystem.setNumLives(session.livesCounter(), 0);
@@ -49,7 +49,7 @@ public class ArcadeGameState_GameOver extends GameState {
         if (timer().hasExpired()) {
             session.hud().clearMessage();
             session.cheats().clear();
-            session.gameFlow().enterState(game, game.coinMechanism().isEmpty()
+            game.variant().gameFlow().enterState(game, game.coinMechanism().isEmpty()
                 ? CommonGameStateID.GAME_INTRO
                 : CommonGameStateID.GAME_PREPARATION);
         }

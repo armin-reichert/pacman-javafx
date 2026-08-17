@@ -22,7 +22,7 @@ import de.amr.pacmanfx.core.entities.stork.Stork;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import org.tinylog.Logger;
 
@@ -39,7 +39,7 @@ import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
  * bundle, which falls to the ground in front of Pac-Man and Ms. Pac-Man, and finally opens up to reveal a tiny Pac-Man.
  * (Played after rounds 9, 13, and 17)
  */
-public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
+public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene {
 
     private static final int GROUND_Y = TS * 24;
 
@@ -118,7 +118,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
     }
 
     private void updateSceneState() {
-        final GameSystems sys = game().variantConfig().systems();
+        final GameSystems sys = game().variant().systems();
 
         switch (sceneState) {
             case CLAPPERBOARD -> transition(SceneState.DELIVER_JUNIOR)
@@ -127,7 +127,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
             case DELIVER_JUNIOR -> transition(SceneState.END)
                 .ifPresentOrElse(this::changeState, this::updateDeliverJuniorState);
 
-            case END -> gameState().triggerTimeout();
+            case END -> game().state().triggerTimeout();
 
             default -> throw new IllegalStateException("Illegal scene state: " + sceneState);
         }
@@ -189,7 +189,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene2D {
     }
 
     private void updateDeliverJuniorState() {
-        final MovementSystem motor = game().variantConfig().systems().motor();
+        final MovementSystem motor = game().variant().systems().motor();
 
         // release bag from beak when stork reaches tile 20
         if (stork.pos().x() <= 20 * WorldMap.TS && !stork.isBagReleasedFromBeak()) {

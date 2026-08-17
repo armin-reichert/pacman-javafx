@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.entities3D.livescounter.comp;
 
 
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.core.ecs.GameEntityComponent;
+import de.amr.pacmanfx.core.ecs.EntityComponent;
 import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.NodePositionTracker;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
@@ -25,7 +25,7 @@ import java.util.List;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static java.util.Objects.requireNonNull;
 
-public class LivesCounter3DViewComp implements GameEntityComponent, DisposableGraphicsObject {
+public class LivesCounter3DViewComp implements EntityComponent, DisposableGraphicsObject {
 
     private final ObjectProperty<Color> pillarColor = new SimpleObjectProperty<>(Color.grayRgb(200));
     private final ObjectProperty<PhongMaterial> pillarMaterial = new SimpleObjectProperty<>(new PhongMaterial());

@@ -9,6 +9,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
@@ -21,9 +22,8 @@ import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.marquee.system.MarqueeSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
+import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
@@ -32,7 +32,7 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.uilib.entities3D.ghost.comp.GhostSettings;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
@@ -43,7 +43,7 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantUIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantUIConfig.NES_SCREEN_WIDTH;
 
-public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
+public class TengenMsPacMan_IntroScene extends AbstractGameScene {
 
     // Anchor point for everything
     public static final int MARQUEE_X = 60, MARQUEE_Y = 64;
@@ -70,8 +70,8 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
 
     public TengenMsPacMan_IntroScene(GameAppContext appContext) {
         super(appContext);
-        unscaledWidthProperty().set(NES_SCREEN_WIDTH);
-        unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
+        rendering2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
+        rendering2D().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
         flow = new StateMachine<>(List.of(SceneState.values()));
     }
 
@@ -86,8 +86,9 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
         final var actions = app().currentGameVariantUIConfig().getExtensionValue(
             TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
 
-        actionBindings().selectAnyMatchingBinding(actions.actionEnterStartScreen(), actions.localBindings());
-        actionBindings().selectAnyMatchingBinding(actions.actionToggleJoypadBindingsDisplayed(), actions.localBindings());
+        final var bindingsMap = actionBindingsSupport().bindingsMap();
+        bindingsMap.selectAnyMatchingBinding(actions.actionEnterStartScreen(), actions.localBindings());
+        bindingsMap.selectAnyMatchingBinding(actions.actionToggleJoypadBindingsDisplayed(), actions.localBindings());
 
         final List<GhostSettings> ghostSettings = variantConfig.worldSettings().ghosts();
         ghostColors = Stream.of(
@@ -153,7 +154,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
         SHOWING_MARQUEE {
             @Override
             public void onEnter(TengenMsPacMan_IntroScene scene) {
-                GameSystems sys = scene.game().variantConfig().systems();
+                GameSystems sys = scene.game().variant().systems();
 
                 final GameVariantRenderConfig renderConfig = scene.app().gameVariants().currentGameVariant().uiConfig().renderConfig();
                 final SpriteAnimationContainer spriteAnimations = scene.app().ui().sprites().animations();
@@ -228,7 +229,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
             }
 
             boolean letGhostMarchIn(TengenMsPacMan_IntroScene scene) {
-                final GameSystems systems = scene.game().variantConfig().systems();
+                final GameSystems systems = scene.game().variant().systems();
                 final MovementSystem motor = systems.motor();
                 final WorldNavigationSystem navigator = systems.worldNavigator();
 
@@ -273,8 +274,8 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
                 final GameContext game = scene.game();
-                final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game.variantConfig().gamePlay();
-                final GameSystems systems = game.variantConfig().systems();
+                final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game.variant().gamePlay();
+                final GameSystems systems = game.variant().systems();
                 final GameSession session = game.session();
 
                 MarqueeSystem.instance().update(scene.marquee);
@@ -288,9 +289,9 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene2D {
                     // start demo level or show options
                     if (gamePlay.allOptionsHaveDefaultValue(session)) {
                         gamePlay.setCanStartNewGame(session, false); // TODO check this
-                        session.gameFlow().restartState(game, TengenMsPacMan_GameState.GAME_OR_LEVEL_STARTING.state());
+                        game.variant().gameFlow().restartState(game, TengenMsPacMan_GameState.GAME_OR_LEVEL_STARTING.state());
                     } else {
-                        session.gameFlow().enterState(game, TengenMsPacMan_GameState.GAME_PREPARATION.state());
+                        game.variant().gameFlow().enterState(game, TengenMsPacMan_GameState.GAME_PREPARATION.state());
                     }
                 }
             }

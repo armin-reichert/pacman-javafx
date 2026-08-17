@@ -1,38 +1,21 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.ui.gamescene.d2;
 
-import de.amr.basics.math.Vector2i;
+import de.amr.basics.Disposable;
 import de.amr.pacmanfx.core.Validations;
-import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.gamescene.common.GameSceneComponent;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
-
-import java.util.Optional;
 
 import static java.util.Objects.requireNonNull;
 
-/**
- * Base class for all 2D game scenes.
- * <p>
- * A {@code GameScene2D} manages the rendering surface ({@link Canvas}),
- * unscaled scene dimensions, scaling, and background color. Subclasses
- * implement scene-specific activation, deactivation, and rendering logic.
- * <p>
- * The scene is reusable: {@link #onActivate()} and {@link #onDeactivate()}
- * must establish and release all bindings, listeners, and resources created
- * by the subclass.
- */
-public abstract class AbstractGameScene2D extends AbstractGameScene {
+public class Rendering2DSupport implements GameSceneComponent, Disposable {
 
     private final IntegerProperty unscaledWidth = new SimpleIntegerProperty(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.x());
 
@@ -42,26 +25,7 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
 
     private final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>(Color.BLACK);
 
-    private Canvas canvas;
-
-    public AbstractGameScene2D(GameAppContext appContext) {
-        super(appContext);
-    }
-
-    @Override
-    public void onBeforeEmbedded() {
-        //TODO remove this hook method
-    }
-
-    @Override
-    public void onScroll(ScrollEvent scrollEvent) {
-        // Used only by very few subclasses
-    }
-
-    @Override
-    public Optional<ContextMenu> optContextMenu() {
-        return Optional.empty();
-    }
+    private final ObjectProperty<Canvas> canvas =  new SimpleObjectProperty<>();
 
     @Override
     public void dispose() {
@@ -86,24 +50,22 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
     }
 
     /**
-     * Hook called when entering this 2D scene from a 3D scene.
-     * Subclasses may override to adjust state or transitions.
-     */
-    public void onEnteredFrom3DScene() {}
-
-    /**
      * Assigns the canvas inside which this scene is drawn.
      *
      * @param canvas the JavaFX canvas, must not be {@code null}
      */
     public void setCanvas(Canvas canvas) {
-        this.canvas = requireNonNull(canvas);
+        canvasProperty().set(requireNonNull(canvas));
     }
 
     /**
      * @return the canvas used for rendering this scene
      */
     public Canvas canvas() {
+        return canvasProperty().get();
+    }
+
+    public ObjectProperty<Canvas> canvasProperty() {
         return canvas;
     }
 
@@ -181,13 +143,5 @@ public abstract class AbstractGameScene2D extends AbstractGameScene {
         return scaledWidth() / scaledHeight();
     }
 
-    /**
-     * If a 3D-variant of this game scene is active when the game level gets created, this method has not yet been called,
-     * but it gets called when the 3D->2D scene switch happens.
-     */
-    public void acceptGameLevel(GameSession session, GameLevel level) {
-        final Vector2i size = level.worldMap().terrainLayer().sizeInPixel();
-        unscaledWidthProperty().set(size.x());
-        unscaledHeightProperty().set(size.y());
-    }
+
 }

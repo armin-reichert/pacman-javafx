@@ -11,6 +11,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
 import de.amr.pacmanfx.game.GameVariant;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
+import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenu;
@@ -90,7 +91,7 @@ public class XXL_OptionMenu extends OptionMenu {
         final GameVariantID variantID = GameVariantID.valueOf(app.gameVariants().currentVariantName());
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final GameContext game = app.game();
-        final WorldMapManager worldMapSelector = game.variantConfig().worldMapManager();
+        final WorldMapManager worldMapSelector = game.variant().worldMapManager();
 
         if (!(worldMapSelector instanceof XXL_WorldMapManager mapSelector)) {
             final String message = "Expected XXL map selector but found %s".formatted(
@@ -105,7 +106,7 @@ public class XXL_OptionMenu extends OptionMenu {
         // Init entries
         meGameVariantID.setValue(variantID);
         meView3DEnabled.setValue(ui.viewModel().common3D.view3DEnabledProperty.get());
-        meCutScenesEnabled.setValue(game.session().gameFlow().cutScenesEnabled());
+        meCutScenesEnabled.setValue(game.session().cutScenesEnabled());
         meMapOrder.setValue(mapSelector.selectionMode());
         meMapOrder.setEnabled(!mapSelector.customMaps().isEmpty());
 
@@ -166,7 +167,7 @@ public class XXL_OptionMenu extends OptionMenu {
     }
 
     private void onCutScenesEnabledSettingsChange(ObservableValue<? extends Boolean> obs,  Boolean oldValue, Boolean newValue) {
-        app.game().session().gameFlow().setCutScenesEnabled(newValue);
+        app.game().session().setCutScenesEnabled(newValue);
     }
 
     private OptionMenuEntry<GameVariantID> createGameVariantIDEntry() {
@@ -176,11 +177,15 @@ public class XXL_OptionMenu extends OptionMenu {
             ARCADE_PACMAN_XXL)
         {
             @Override
-            public void onValueChanged(GameVariantID oldVariant, GameVariantID newVariant) {
+            public void onValueChanged(GameVariantID oldVariantID, GameVariantID newVariantID) {
                 if (app != null) {
                     final GameContext game = app.game();
-                    final GameVariantRenderConfig renderConfig = app.gameVariants().gameVariantByName(newVariant.name()).uiConfig().renderConfig();
-                    chaseAnimation.init(game, renderConfig, canvas, app.ui().sprites().animations());
+                    final GameVariant newGameVariant = app.gameVariants().gameVariantByName(newVariantID.name());
+                    final GameVariantUIConfig uiConfig = newGameVariant.uiConfig();
+                    uiConfig.init();
+                    uiConfig.loadSounds(app.ui().sounds());
+                    uiConfig.connectApp(app);
+                    chaseAnimation.init(game, uiConfig.renderConfig(), canvas, app.ui().sprites().animations());
                 }
             }
         };

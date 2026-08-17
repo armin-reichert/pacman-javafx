@@ -21,7 +21,7 @@ import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import java.util.List;
@@ -35,7 +35,7 @@ import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
  * upwards, causing Inky and Pinky to collide and vanish. Finally, Pac-Man and Ms. Pac-Man face each other at the top of
  * the screen and a big pink heart appears above them. (Played after round 2)
  */
-public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
+public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene {
 
     static final int UPPER_Y  = WorldMap.TS * 12;
     static final int MIDDLE_Y = WorldMap.TS * 18;
@@ -66,7 +66,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
 
     @Override
     public void onTick(GameContext game) {
-        final GameSystems sys = game.variantConfig().systems();
+        final GameSystems sys = game.variant().systems();
 
         switch (sceneState) {
             case CLAPPERBOARD -> updateStateClapperboard(sys);
@@ -261,7 +261,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene2D {
 
     private void updateStateInHeaven() {
         if (sceneTimer.hasExpired()) {
-            gameState().triggerTimeout();
+            game().state().triggerTimeout();
         }
     }
 }

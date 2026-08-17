@@ -38,7 +38,7 @@ public class SteeringActions {
         @Override
         public void execute(GameAppContext app) {
             final GameContext game = app.game();
-            final WorldNavigationSystem navigator = game.variantConfig().systems().worldNavigator();
+            final WorldNavigationSystem navigator = game.variant().systems().worldNavigator();
             game.session().optLevel().ifPresent(level -> navigator.setWishDir(level.entities().pac(), dir));
         }
 

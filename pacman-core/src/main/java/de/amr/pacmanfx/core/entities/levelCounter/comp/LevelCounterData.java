@@ -4,12 +4,12 @@
 
 package de.amr.pacmanfx.core.entities.levelCounter.comp;
 
-import de.amr.pacmanfx.core.ecs.GameEntityComponent;
+import de.amr.pacmanfx.core.ecs.EntityComponent;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class LevelCounterData implements GameEntityComponent {
+public class LevelCounterData implements EntityComponent {
 
     private final List<Integer> symbolCodes = new ArrayList<>();
 

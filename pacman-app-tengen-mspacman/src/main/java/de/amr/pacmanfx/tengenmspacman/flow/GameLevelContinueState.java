@@ -22,7 +22,7 @@ public class GameLevelContinueState extends GameState {
     @Override
     public void onEnter(GameContext game) {
         final GameLevel level = game.session().assertLevel();
-        game.variantConfig().gamePlay().prepareLevelForPlaying(game);
+        game.variant().gamePlay().prepareLevelForPlaying(game);
         level.entities().pac().show();
         level.entities().ghosts().forEach(GameEntity::show);
        game.eventManager().publishGameEvent(new GameContinuedEvent());
@@ -32,7 +32,7 @@ public class GameLevelContinueState extends GameState {
     public void onUpdate(GameContext game) {
         final long tick = timer().tickCount();
         if (tick == TICK_RESUME_HUNTING) {
-            game.session().gameFlow().enterState(game, CommonGameStateID.GAME_LEVEL_PLAYING);
+            game.variant().gameFlow().enterState(game, CommonGameStateID.GAME_LEVEL_PLAYING);
         }
     }
 }

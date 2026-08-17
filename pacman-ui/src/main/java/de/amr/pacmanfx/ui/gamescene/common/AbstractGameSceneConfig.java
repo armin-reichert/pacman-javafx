@@ -8,7 +8,7 @@ import de.amr.basics.Named;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.vm.GameUISettingsVM;
+import de.amr.pacmanfx.ui.vm.GameViewModel;
 import org.tinylog.Logger;
 
 import java.util.HashMap;
@@ -36,7 +36,7 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
 
     protected abstract GameScene createGameScene(GameAppContext appContext, Named Identifier);
 
-    protected abstract Named determineSceneID(GameUISettingsVM viewModel, GameContext game);
+    protected abstract Named determineSceneID(GameViewModel viewModel, GameContext game);
 
     @Override
     public void dispose() {
@@ -48,7 +48,7 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
     @Override
     public Named resolveCutSceneID(GameContext game) {
         final GameLevel level = game.session().assertLevel();
-        final OptionalInt cutSceneNumber = game.variantConfig().rules().cutSceneAfterLevel(level.number());
+        final OptionalInt cutSceneNumber = game.variant().rules().cutSceneAfterLevel(level.number());
         if (cutSceneNumber.isEmpty()) {
             throw new IllegalStateException("Cannot determine cut scene following level %d".formatted(level.number()));
         }

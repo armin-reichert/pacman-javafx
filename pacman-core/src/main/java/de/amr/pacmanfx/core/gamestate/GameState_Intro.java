@@ -22,7 +22,7 @@ public final class GameState_Intro extends GameState {
     @Override
     public void onUpdate(GameContext game) {
         if (timer().hasExpired()) {
-            game.session().gameFlow().enterState(game, CommonGameStateID.GAME_OR_LEVEL_STARTING);
+            game.variant().gameFlow().enterState(game, CommonGameStateID.GAME_OR_LEVEL_STARTING);
         }
     }
 }

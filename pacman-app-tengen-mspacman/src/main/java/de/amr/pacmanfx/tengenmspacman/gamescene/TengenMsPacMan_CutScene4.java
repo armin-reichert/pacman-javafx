@@ -23,7 +23,7 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.input.JoypadButton;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
@@ -40,7 +40,7 @@ import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantUIConfig.*;
 
-public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
+public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
 
     public static final int TICK_CLAP = 2;
     public static final int TICK_EXPIRES = 1512;
@@ -61,8 +61,8 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
 
     public TengenMsPacMan_CutScene4(GameAppContext app) {
         super(app);
-        unscaledWidthProperty().set(NES_SCREEN_WIDTH);
-        unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
+        rendering2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
+        rendering2D().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
     }
 
     public Pac pacMan() {
@@ -85,7 +85,9 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
     public void onActivate() {
         // Quit cut scene when "START" button on "joypad" is pressed
         final GameAction quitAction = app().commonActions().gameFlowActions().actionLetGameStateExpire();
-        actionBindings().bindActionToKeyCombination(quitAction, input().joypad().keyForButton(JoypadButton.START));
+
+        final var bindingsMap = actionBindingsSupport().bindingsMap();
+        bindingsMap.bindActionToKeyCombination(quitAction, app().input().joypad().keyForButton(JoypadButton.START));
 
         createActors();
     }
@@ -97,14 +99,14 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
 
     @Override
     public void onTick(GameContext game) {
-        final long tick = gameState().timer().tickCount();
+        final long tick = game().state().timer().tickCount();
         if (tick == TICK_CLAP) {
             clapperboard.show();
             TengenMsPacMan_ClapperboardStateSystem.startFlapAnimation(clapperboard);
             playMusic();
         }
         else if (tick == TICK_EXPIRES) {
-            game.session().gameFlow().enterState(game, TengenMsPacMan_GameState.GAME_PREPARATION.state());
+            game.variant().gameFlow().enterState(game, TengenMsPacMan_GameState.GAME_PREPARATION.state());
 
         }
         TengenMsPacMan_ClapperboardStateSystem.update(clapperboard);
@@ -138,7 +140,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
     }
 
     private void letActorsMove(GameContext game, long tick) {
-        final MovementSystem motor = game.variantConfig().systems().motor();
+        final MovementSystem motor = game.variant().systems().motor();
         motor.move(pacMan);
         motor.move(msPacMan);
         for (int i = 0; i < juniors.size(); ++i) {
@@ -147,7 +149,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
     }
 
     private void playCutScene(GameContext game, long tick) {
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variant().systems();
         final WorldNavigationSystem navigator = systems.worldNavigator();
         final SpriteAnimSystem animSystem = systems.spriteAnim();
 
@@ -222,7 +224,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
     }
 
     private void spawnJunior(GameContext game, long tick) {
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variant().systems();
         final var factory = TengenMsPacMan_ActorFactory.instance();
         final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().uiConfig().renderConfig();
         final WorldNavigationSystem navigator = systems.worldNavigator();
@@ -231,7 +233,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
 
         final Pac junior = factory.createPacMan();
         double randomX = 8 * TS + (8 * TS) * Math.random();
-        junior.pos().set((float) randomX, unscaledHeight() - 4 * TS);
+        junior.pos().set((float) randomX, rendering2D().unscaledHeight() - 4 * TS);
         junior.show();
 
         navigator.setMoveDir(junior, Direction.UP);
@@ -258,7 +260,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
     }
 
     private void updateJunior(GameContext game, long tick, int index) {
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variant().systems();
         final MovementSystem motor = systems.motor();
         final WorldNavigationSystem navigator = systems.worldNavigator();
 
@@ -269,11 +271,11 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
             computeNewMoveDir(navigator, junior);
         }
         motor.move(junior);
-        if (junior.pos().x() > unscaledWidth()) {
+        if (junior.pos().x() > rendering2D().unscaledWidth()) {
             junior.pos().setX(0);
         }
         if (junior.pos().x() < 0) {
-            junior.pos().setX(unscaledWidth());
+            junior.pos().setX(rendering2D().unscaledWidth());
         }
     }
 
@@ -293,7 +295,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene2D {
         Vector2i tile = WorldNavigationSystem.computeTile(junior);
         Vector2f pos1 = tile.plus(dir1.vector()).scaled(TS).toVector2f();
         Vector2f pos2 = tile.plus(dir2.vector()).scaled(TS).toVector2f();
-        Vector2f center = new Vector2f(0.5f * unscaledWidth(), 0.5f * unscaledHeight());
+        Vector2f center = new Vector2f(0.5f * rendering2D().unscaledWidth(), 0.5f * rendering2D().unscaledHeight());
         return Double.compare(pos1.euclideanDist(center), pos2.euclideanDist(center));
     }
 }

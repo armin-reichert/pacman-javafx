@@ -15,7 +15,7 @@ import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.clapperboard.system.ClapperboardStateSystem;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import java.util.List;
@@ -29,7 +29,7 @@ import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
  * Pac-Man and Ms. Pac-Man chase each other across the screen over and over. After three turns, they both rapidly run
  * from left to right and right to left. (Played after round 5)
  */
-public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene2D {
+public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene {
 
     static final int UPPER_Y  = TS * 12;
     static final int MIDDLE_Y = TS * 18;
@@ -51,7 +51,7 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene2D {
 
     @Override
     public void onTick(GameContext game) {
-        final GameSystems sys = game.variantConfig().systems();
+        final GameSystems sys = game.variant().systems();
 
         switch (state) {
             case SceneState.CLAPPERBOARD -> updateStateClapperboard(sys);
@@ -162,7 +162,7 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene2D {
             sys.worldNavigator().setSpeed(msPacMan, 4.0f);
         }
         else if (sceneTimer.atSecond(23)) {
-            gameState().triggerTimeout();
+            game().state().triggerTimeout();
         }
         else {
             List.of(pacMan, msPacMan).forEach(sys.motor()::move);

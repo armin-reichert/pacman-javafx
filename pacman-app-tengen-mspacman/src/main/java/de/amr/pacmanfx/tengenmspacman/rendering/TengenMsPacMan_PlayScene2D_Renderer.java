@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
 import de.amr.pacmanfx.core.entities.House;
@@ -10,15 +11,15 @@ import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantUIConfig.MapConfigKey;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_PlayScene2D;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
-import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
+import de.amr.pacmanfx.ui.gamescene.d2.Rendering2DSupport;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
 import de.amr.pacmanfx.uilib.rendering.RenderInfo;
@@ -51,9 +52,9 @@ public class TengenMsPacMan_PlayScene2D_Renderer
         }
 
         @Override
-        public void draw(AbstractGameScene2D scene, long tick) {
+        public void draw(GameScene scene, long tick) {
             final GameSession session = scene.game().session();
-            final GameState gameState = scene.gameState();
+            final GameState gameState = scene.game().state();
             final TengenMsPacMan_PlayScene2D playScene = (TengenMsPacMan_PlayScene2D) scene;
 
             drawTileGrid(NES_SCREEN_WIDTH, playScene.canvasHeightUnscaled(), Color.LIGHTGRAY);
@@ -81,12 +82,14 @@ public class TengenMsPacMan_PlayScene2D_Renderer
     private final List<GameEntity> actorsInZOrder = new ArrayList<>();
 
     public TengenMsPacMan_PlayScene2D_Renderer(
-        GameVariantRenderConfig renderConfig, AbstractGameScene2D scene, SpriteAnimSystem animSystem, Canvas canvas) {
+        GameVariantRenderConfig renderConfig, GameScene gameScene, SpriteAnimSystem animSystem, Canvas canvas) {
         super(canvas);
+
+        final Rendering2DSupport r2D = gameScene.componentsRegistry().requireComp(Rendering2DSupport.class);
         this.animSystem = requireNonNull(animSystem);
-        levelRenderer = scene.configureRenderer((TengenMsPacMan_GameLevelRenderer) renderConfig.createGameLevelRenderer(animSystem, canvas));
-        actorRenderer = scene.configureRenderer((TengenMsPacMan_ActorRenderer)     renderConfig.createActorRenderer(animSystem, canvas));
-        debugRenderer = scene.configureRenderer(new PlaySceneDebugInfoRenderer(canvas));
+        levelRenderer = r2D.configureRenderer((TengenMsPacMan_GameLevelRenderer) renderConfig.createGameLevelRenderer(animSystem, canvas));
+        actorRenderer = r2D.configureRenderer((TengenMsPacMan_ActorRenderer)     renderConfig.createActorRenderer(animSystem, canvas));
+        debugRenderer = r2D.configureRenderer(new PlaySceneDebugInfoRenderer(canvas));
     }
 
     @Override
@@ -100,7 +103,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
     }
 
     @Override
-    public void draw(AbstractGameScene2D scene, long tick) {
+    public void draw(GameScene scene, long tick) {
         clearCanvas();
         if (!(scene instanceof TengenMsPacMan_PlayScene2D playScene2D)) {
             return;

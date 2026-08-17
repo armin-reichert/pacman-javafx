@@ -14,7 +14,7 @@ import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_OptionsScene;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
@@ -41,7 +41,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
 
     private final BaseDebugInfoRenderer debugRenderer;
 
-    public TengenMsPacMan_OptionsScene_Renderer(AbstractGameScene2D scene, Canvas canvas) {
+    public TengenMsPacMan_OptionsScene_Renderer(GameScene scene, Canvas canvas) {
         super(canvas);
         requireNonNull(scene);
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
@@ -58,18 +58,18 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
     }
 
     @Override
-    public void draw(AbstractGameScene2D gameScene2D, long tick) {
-        final GameAppContext app = gameScene2D.app();
+    public void draw(GameScene gameScene, long tick) {
+        final GameAppContext app = gameScene.app();
 
         final TengenMsPacMan_UISettings uiSettings = app.currentGameVariantUIConfig().getExtensionValue(
             TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
 
 
-        final GameContext game = gameScene2D.game();
+        final GameContext game = gameScene.game();
         final GameSession session = game.session();
 
-        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game.variantConfig().gamePlay();
-        final var scene = (TengenMsPacMan_OptionsScene) gameScene2D;
+        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game.variant().gamePlay();
+        final var scene = (TengenMsPacMan_OptionsScene) gameScene;
 
         clearCanvas();
         if (scene.initialDelay > 0) return;
@@ -77,10 +77,10 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
         ctx.setFont(arcadeFont8());
 
         if (uiSettings.joypadBindingsDisplayed.get()) {
-            drawJoypadKeyBinding(gameScene2D.app().input().joypad().currentKeyBinding());
+            drawJoypadKeyBinding(gameScene.app().input().joypad().currentKeyBinding());
         }
 
-        drawHorizontalBar(NES_Palette.color(0x20), NES_Palette.color(0x21), scene.unscaledWidth(), TS, 20);
+        drawHorizontalBar(NES_Palette.color(0x20), NES_Palette.color(0x21), scene.rendering2D().unscaledWidth(), TS, 20);
 
         float y = 48;
         fillText("MS PAC-MAN OPTIONS", NES_YELLOW, COL_LABEL + 3 * TS, 48);
@@ -149,10 +149,10 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
         y += tilesPx(1);
         fillText("PRESS START TO START GAME",   NES_YELLOW, tilesPx(3), y);
 
-        drawHorizontalBar(NES_Palette.color(0x20), NES_Palette.color(0x21), scene.unscaledWidth(), TS, 212);
+        drawHorizontalBar(NES_Palette.color(0x20), NES_Palette.color(0x21), scene.rendering2D().unscaledWidth(), TS, 212);
 
-        if (gameScene2D.app().ui().viewModel().debugModeOnProperty.get()) {
-            debugRenderer.draw(gameScene2D, tick);
+        if (gameScene.app().ui().viewModel().debugModeOnProperty.get()) {
+            debugRenderer.draw(gameScene, tick);
         }
     }
 

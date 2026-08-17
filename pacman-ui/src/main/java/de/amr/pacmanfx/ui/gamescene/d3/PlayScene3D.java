@@ -19,13 +19,14 @@ import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounter3DViewSystem;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.gamescene.common.ActionBindingsSupport;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.PlaySceneFadeInAnimation;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.DronePerspective;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveManager;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.vm.Game3DSettingsVM;
-import de.amr.pacmanfx.ui.vm.GameUISettingsVM;
+import de.amr.pacmanfx.ui.vm.GameViewModel;
 import de.amr.pacmanfx.uilib.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
@@ -58,23 +59,19 @@ public class PlayScene3D extends AbstractGameScene
 
     private final PerspectiveManager perspectiveManager;
     private final Set<ActionKeyBinding> actionBindings;
-
     private final AnimationRegistry registry = new AnimationRegistry();
-
     private final SubScene subScene;
     private final Group subSceneRoot;
-    private final PerspectiveCamera camera = new PerspectiveCamera(true);
+    private final PerspectiveCamera camera;
     private final Group level3DParent = new Group();
+    private final RandomTextPicker textPicker;
+    private final ChangeListener<DrawMode> drawModeChangeListener;
+    private final ManagedAnimation fadeInAnimation = new PlaySceneFadeInAnimation(Duration.seconds(3), this);
+
     private GameLevel3D level3D;
     private ScoresView scoresView;
     private PlaySceneContextMenu contextMenu;
     private AmbientLight ambientLight;
-
-    private final RandomTextPicker textPicker;
-
-    private final ChangeListener<DrawMode> drawModeChangeListener;
-
-    private final ManagedAnimation fadeInAnimation = new PlaySceneFadeInAnimation(Duration.seconds(3), this);
 
     /**
      * Creates a new 3D play scene with default camera, sub-scene, axes, and perspective manager.
@@ -82,10 +79,11 @@ public class PlayScene3D extends AbstractGameScene
     public PlayScene3D(GameAppContext app) {
         super(app);
 
+        final GameViewModel viewModel = app.ui().viewModel();
+
         textPicker = new RandomTextPicker(app.ui().translations().textBundle(), "game.over");
 
-        final GameUISettingsVM viewModel = app.ui().viewModel();
-
+        camera = new PerspectiveCamera(true);
         perspectiveManager = new PerspectiveManager(camera);
 
         final var coordinateSystem = new CoordinateSystem();
@@ -118,102 +116,10 @@ public class PlayScene3D extends AbstractGameScene
         return this;
     }
 
-    public SubScene subScene() {
-        return subScene;
-    }
-
-    public PerspectiveManager perspectiveManager() {
-        return perspectiveManager;
-    }
-
-    public Optional<GameLevel3D> optGameLevel3D() {
-        return Optional.ofNullable(level3D);
-    }
-
-    public Optional<ScoresView> optScoresView() {
-        return Optional.ofNullable(scoresView);
-    }
-
-    public ManagedAnimation fadeInAnimation() {
-        return fadeInAnimation;
-    }
-
-    public void replaceActionBindings(GameSession session, GameLevel level) {
-        // No-op — override in subclasses if variant needs different bindings
-    }
-
-    public void updateHUD3D(GameContext game) {
-        requireNonNull(game);
-
-        final GameSession session = game.session();
-
-        // If score is disabled, show "GAME OVER" text instead
-        final Score score = session.score();
-        if (score.data().isEnabled()) {
-            scoresView.showScore(score.data().points(), score.data().levelNumber());
-        } else {
-            scoresView.showTextForScore(
-                app().ui().translations().translate("score.game_over"),
-                app().gameVariants().currentGameVariant().uiConfig().assets().color("color.game_over_message"));
-        }
-
-        // High score is always visible
-        final Score highScore = session.highScore();
-        scoresView.showHighScore(highScore.data().points(), highScore.data().levelNumber());
-    }
-
-    public void initPac(GameLevel level, Pac pac) {
-        requireNonNull(pac);
-        requireNonNull(level);
-
-        Pac3DTransformSystem.init(pac, level);
-        Pac3DAnimationSystem.stopAll(pac);
-        Pac3DAnimationSystem.setPowerMode(pac, false);
-    }
-
-    public void initFood3D(GameLevel level, boolean startEnergizerPumping) {
-        level3D.pellets3D().forEach(pellet3D -> pellet3D.root().setVisible(!level.food().hasEatenFoodAtTile(pellet3D.tile())));
-
-        if (startEnergizerPumping) {
-            level3D.animationManager().startEnergizerPumping();
-        }
-        level3D.energizers3D()
-            .forEach(energizer3D -> energizer3D.root().setVisible(!level.food().hasEatenFoodAtTile(energizer3D.tile())));
-    }
-
-    public void replaceGameLevel3D(GameContext game, GameLevel level) {
-        requireNonNull(game);
-        requireNonNull(level);
-
-        final GameVariantConfig variantConfig = app().currentGameVariantConfig();
-        final GameVariantUIConfig variantUIConfig = app().currentGameVariantUIConfig();
-        final GameUISettingsVM viewModel = app().ui().viewModel();
-        final GameSession session = game.session();
-
-        if (level3D != null) {
-            Logger.info("Old 3D game level is disposed...");
-            level3D.dispose();
-        }
-
-        // Create a new 3D game level representation
-        level3D = new GameLevel3D(game(), level, registry, viewModel, variantUIConfig);
-        addAdditional3DLevelElements(level3D);
-        level3D.replaceLevelCounter3D(session.levelCounter());
-        level3D.setAnimationManager(
-            new GameLevel3DAnimationManager(registry, level3D, variantConfig, variantUIConfig));
-
-        level3DParent.getChildren().setAll(level3D);
-
-        //TODO check this
-        final Pac pac = level.entities().pac();
-        initPac(level, pac);
-
-        LivesCounter3DViewSystem.startTracking(session.livesCounter(), pac);
-    }
-
     @Override
     public void dispose() {
-        actionBindings().dispose();
+        super.dispose();
+
         perspectiveManager.dispose();
         disposeContextMenu();
         if (level3D != null) {
@@ -247,21 +153,23 @@ public class PlayScene3D extends AbstractGameScene
         perspectiveManager.activeIDProperty().unbind();
         app().ui().viewModel().common3D.drawModeProperty.removeListener(drawModeChangeListener);
         disposeContextMenu();
-        actionBindings().dispose();
     }
 
     @Override
     public void onInput() {
-        final Keyboard keyboard = input().keyboard();
-        final Optional<GameAction> matchingAction = actionBindings().executeMatchingAction(app());
-        if (matchingAction.isEmpty()) {
-            // Handle CTRL-PLUS, CTRL_MINUS and CTRL-0
-            perspectiveManager.optPerspective(PerspectiveID.DRONE).ifPresent(perspective -> {
-                if (perspective instanceof DronePerspective dronePerspective) {
-                    dronePerspective.handleKeyPressed(keyboard);
-                }
-            });
-        }
+        final Keyboard keyboard = app().input().keyboard();
+        componentsRegistry().optComp(ActionBindingsSupport.class).ifPresent(comp -> {
+            final Optional<GameAction> matchingAction = comp.bindingsMap().executeMatchingAction(app());
+            if (matchingAction.isEmpty()) {
+                // Handle CTRL-PLUS, CTRL_MINUS and CTRL-0
+                perspectiveManager.optPerspective(PerspectiveID.DRONE).ifPresent(perspective -> {
+                    if (perspective instanceof DronePerspective dronePerspective) {
+                        dronePerspective.handleKeyPressed(keyboard);
+                    }
+                });
+            }
+
+        });
     }
 
     @Override
@@ -282,6 +190,8 @@ public class PlayScene3D extends AbstractGameScene
 
         GameLevel3DUpdateController.update3DSceneEntities(game, level3D);
         updateHUD3D(game);
+
+        ensureAnimationsRunning();
 
         perspectiveManager.updatePerspective(level);
 
@@ -320,6 +230,98 @@ public class PlayScene3D extends AbstractGameScene
 
     // Other stuff
 
+    public SubScene subScene() {
+        return subScene;
+    }
+
+    public PerspectiveManager perspectiveManager() {
+        return perspectiveManager;
+    }
+
+    public Optional<GameLevel3D> optGameLevel3D() {
+        return Optional.ofNullable(level3D);
+    }
+
+    public Optional<ScoresView> optScoresView() {
+        return Optional.ofNullable(scoresView);
+    }
+
+    public void fadeIn() {
+        fadeInAnimation.playFromStart();
+    }
+
+    public void replaceActionBindings(GameSession session, GameLevel level) {
+        // No-op — override in subclasses if variant needs different bindings
+    }
+
+    public void updateHUD3D(GameContext game) {
+        requireNonNull(game);
+
+        final GameSession session = game.session();
+
+        // If score is disabled, show "GAME OVER" text instead
+        final Score score = session.score();
+        if (score.data().isEnabled()) {
+            scoresView.showScore(score.data().points(), score.data().levelNumber());
+        } else {
+            scoresView.showTextForScore(
+                app().ui().translations().translate("score.game_over"),
+                app().gameVariants().currentGameVariant().uiConfig().assets().color("color.game_over_message"));
+        }
+
+        // High score is always visible
+        final Score highScore = session.highScore();
+        scoresView.showHighScore(highScore.data().points(), highScore.data().levelNumber());
+    }
+
+    public void initPac3DProperties(GameLevel level, Pac pac) {
+        requireNonNull(pac);
+        requireNonNull(level);
+
+        Pac3DTransformSystem.init(pac, level);
+        Pac3DAnimationSystem.stopAll(pac);
+        Pac3DAnimationSystem.setPowerMode(pac, false);
+    }
+
+    public void initFood3D(GameLevel level, boolean startEnergizerPumping) {
+        level3D.pellets3D().forEach(pellet3D -> pellet3D.root().setVisible(!level.food().hasEatenFoodAtTile(pellet3D.tile())));
+
+        if (startEnergizerPumping) {
+            level3D.animationManager().startEnergizerPumping();
+        }
+        level3D.energizers3D()
+            .forEach(energizer3D -> energizer3D.root().setVisible(!level.food().hasEatenFoodAtTile(energizer3D.tile())));
+    }
+
+    public void replaceGameLevel3D(GameContext game, GameLevel level) {
+        requireNonNull(game);
+        requireNonNull(level);
+
+        final GameVariantConfig config     = app().currentGameVariantConfig();
+        final GameVariantUIConfig uiConfig = app().currentGameVariantUIConfig();
+        final GameViewModel viewModel      = app().ui().viewModel();
+        final GameSession session          = game.session();
+
+        if (level3D != null) {
+            Logger.info("Old 3D game level is disposed...");
+            level3D.dispose();
+        }
+
+        // Create a new 3D game level representation
+        level3D = new GameLevel3D(game, registry, viewModel, uiConfig);
+        addAdditional3DLevelElements(level3D);
+        level3D.replaceLevelCounter3D(session.levelCounter());
+        level3D.setAnimationManager(new GameLevel3DAnimationManager(registry, level3D, config, uiConfig));
+
+        level3DParent.getChildren().setAll(level3D);
+
+        //TODO check this
+        final Pac pac = level.entities().pac();
+        initPac3DProperties(level, pac);
+
+        LivesCounter3DViewSystem.startTracking(session.livesCounter(), pac);
+    }
+
     /**
      * Can be overridden by 3D scenes that e.g. decorate the 3D level with additional stuff as done by the
      * Tengen Ms. Pac-Man game that displays the level number, game difficulty, map category, booster mode etc.
@@ -327,7 +329,8 @@ public class PlayScene3D extends AbstractGameScene
     protected void addAdditional3DLevelElements(GameLevel3D level3D) {}
 
     protected void bindActions() {
-        actionBindings().registerAllBindings(actionBindings);
+        componentsRegistry().optComp(ActionBindingsSupport.class)
+            .ifPresent(comp -> comp.bindingsMap().registerAllBindings(actionBindings));
     }
 
     private void replaceScoresView(String leftTitle, String rightTitle) {
@@ -371,6 +374,13 @@ public class PlayScene3D extends AbstractGameScene
     private void disposeContextMenu() {
         if (contextMenu != null) {
             contextMenu.dispose();
+        }
+    }
+
+    private void ensureAnimationsRunning() {
+        if (game().state().hasSameNameAs(CommonGameStateID.DEMO_LEVEL_PLAYING) ||
+            game().state().hasSameNameAs(CommonGameStateID.GAME_LEVEL_PLAYING)) {
+            level3D.animationManager().startEnergizerPumping();
         }
     }
 }

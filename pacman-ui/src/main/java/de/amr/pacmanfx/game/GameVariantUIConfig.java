@@ -11,6 +11,7 @@ import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
+import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 
@@ -18,12 +19,14 @@ import java.util.Optional;
 
 public interface GameVariantUIConfig extends Disposable {
 
-    /**
-     * Called when the corresponding game variant gets the current one, e.g. by selecting its start page.
-     *
-     * @param appContext the global context
-     */
-    void init(GameAppContext appContext);
+    void init();
+
+    //TODO remove
+    void connectApp(GameAppContext app);
+
+    void loadSounds(SoundManager soundManager);
+
+    void unloadSounds(SoundManager soundManager);
 
     /**
      * @return the game scene configuration mapping game states to scenes.

@@ -5,10 +5,10 @@
 package de.amr.pacmanfx.core.entities.bonus.comp;
 
 import de.amr.basics.timer.Pulse;
-import de.amr.pacmanfx.core.ecs.GameEntityComponent;
+import de.amr.pacmanfx.core.ecs.EntityComponent;
 import de.amr.pacmanfx.core.steering.RouteGuidedSteering;
 
-public class BonusMoveAndJumpComp implements GameEntityComponent {
+public class BonusMoveAndJumpComp implements EntityComponent {
 
     private static final int PULSE_CHANGE_TICKS = 10;
 

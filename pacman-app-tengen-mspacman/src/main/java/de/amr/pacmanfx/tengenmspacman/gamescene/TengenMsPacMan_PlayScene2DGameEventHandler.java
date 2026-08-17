@@ -64,12 +64,12 @@ public interface TengenMsPacMan_PlayScene2DGameEventHandler extends DefaultGameE
 
     @Override
     default void onGameContinued(GameContinuedEvent e) {
-        final GameSystems systems = game().variantConfig().systems();
+        final GameSystems systems = game().variant().systems();
         final GameSession session = game().session();
         session.optLevel().ifPresent(level -> {
             gameScene().resetActorAnimations(systems.spriteAnim(), session, level);
             gameScene().dynamicCamera().playIntroSequence();
-            if (game().variantConfig().gamePlay() instanceof TengenMsPacMan_GamePlay tengenGame) {
+            if (game().variant().gamePlay() instanceof TengenMsPacMan_GamePlay tengenGame) {
                 tengenGame.showLevelMessage(game(), level, GameLevelMessageType.READY);
             }
         });
@@ -79,7 +79,7 @@ public interface TengenMsPacMan_PlayScene2DGameEventHandler extends DefaultGameE
     default void onGameStarted(GameStartedEvent e) {
         final GameContext game = e.game();
         final GameSession session = game.session();
-        final boolean silent = session.isAttractMode() || session.gameState().id() instanceof TestStateID;
+        final boolean silent = session.isAttractMode() || game.state().id() instanceof TestStateID;
         if (!silent) {
             optSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
         }
@@ -91,7 +91,7 @@ public interface TengenMsPacMan_PlayScene2DGameEventHandler extends DefaultGameE
         final GameSession session = game().session();
         if (e.newState() == TengenMsPacMan_GameState.GAME_LEVEL_COMPLETE.state()) {
             final GameLevel level = session.assertLevel();
-            final int numFlashes = game().variantConfig().rules().numLevelFlashes(level.number());
+            final int numFlashes = game().variant().rules().numLevelFlashes(level.number());
             optSoundEffects().ifPresent(GameSoundEffects::stopAll);
             gameScene().playLevelCompleteAnimation(level, numFlashes);
         }
@@ -108,7 +108,7 @@ public interface TengenMsPacMan_PlayScene2DGameEventHandler extends DefaultGameE
                 // Compute exact message size and wrap position at right border
                 final Font font = Font.font(BaseRenderer.ARCADE_FONT.getFamily(), TS);
                 final double width = textWidth(GAME_OVER_MESSAGE_TEXT, font);
-                final double wrapX = gameScene().unscaledWidth() + 0.5 * width;
+                final double wrapX = gameScene().rendering2D().unscaledWidth() + 0.5 * width;
                 messageAnimation.setWidth(width);
                 messageAnimation.setWrapX(wrapX);
                 Logger.info("Message animation bounds computed: width={}, wrapX={}", width, wrapX);
@@ -133,13 +133,13 @@ public interface TengenMsPacMan_PlayScene2DGameEventHandler extends DefaultGameE
     default void onLevelStarted(LevelStartedEvent e) {
         final GameSession session = game().session();
         session.optLevel().ifPresent(
-            level -> gameScene().resetActorAnimations(game().variantConfig().systems().spriteAnim(), session, level));
+            level -> gameScene().resetActorAnimations(game().variant().systems().spriteAnim(), session, level));
         gameScene().dynamicCamera().playIntroSequence();
     }
 
     @Override
     default void onPacDead(PacDeadEvent e) {
-        game().session().gameState().triggerTimeout();
+        game().state().triggerTimeout();
     }
 
     @Override

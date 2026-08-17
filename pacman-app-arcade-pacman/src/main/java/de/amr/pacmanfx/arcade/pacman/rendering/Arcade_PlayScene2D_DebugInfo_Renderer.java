@@ -15,8 +15,9 @@ import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.rules.HuntingTimerStrategy;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
+import de.amr.pacmanfx.ui.gamescene.d2.Rendering2DSupport;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
@@ -44,10 +45,12 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
     }
 
     @Override
-    public void draw(AbstractGameScene2D scene, long tick) {
-        drawTileGrid(scene.unscaledWidth(), scene.unscaledHeight(), Color.LIGHTGRAY);
+    public void draw(GameScene gameScene, long tick) {
+        final Rendering2DSupport r2D = gameScene.componentsRegistry().requireComp(Rendering2DSupport.class);
 
-        final GameSession session = scene.game().session();
+        drawTileGrid(r2D.unscaledWidth(), r2D.unscaledHeight(), Color.LIGHTGRAY);
+
+        final GameSession session = gameScene.game().session();
         session.optLevel().ifPresent(level -> {
             // We assume all ghosts have the same set of special terrain tiles
             level.entities().ghost(GhostPersonality.RED_GHOST_SHADOW).worldInfo().specialTerrainTiles().forEach(tile -> {
@@ -78,7 +81,7 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
                     }
             });
 
-            final GameState state = scene.gameState();
+            final GameState state = gameScene.game().state();
             final String gameStateText = state.name() + " (Tick %d)".formatted(state.timer().tickCount());
             String huntingPhaseText = "";
             if (CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(state)) {

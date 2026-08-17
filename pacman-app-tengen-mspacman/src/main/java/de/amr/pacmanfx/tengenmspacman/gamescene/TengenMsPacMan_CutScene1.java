@@ -22,7 +22,7 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.input.JoypadButton;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
@@ -39,7 +39,7 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantUIConfig.
  * upwards, causing Inky and Pinky to collide and vanish. Finally, Pac-Man and Ms. Pac-Man face each other at the top of
  * the screen and a big pink heart appears above them.
  */
-public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
+public class TengenMsPacMan_CutScene1 extends AbstractGameScene {
 
     public static final int TICK_CLAP = 2;
     public static final int TICK_EXPIRES = 775;
@@ -65,8 +65,8 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
 
     public TengenMsPacMan_CutScene1(GameAppContext app) {
         super(app);
-        unscaledWidthProperty().set(NES_SCREEN_WIDTH);
-        unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
+        rendering2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
+        rendering2D().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
     }
 
     public Clapperboard clapperboard() {
@@ -97,7 +97,10 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
     public void onActivate() {
         // Quit cut scene when "START" button on "joypad" is pressed
         final GameAction quitAction = app().commonActions().gameFlowActions().actionLetGameStateExpire();
-        actionBindings().bindActionToKeyCombination(quitAction, input().joypad().keyForButton(JoypadButton.START));
+
+        final var bindingsMap = actionBindingsSupport().bindingsMap();
+        bindingsMap.bindActionToKeyCombination(quitAction, app().input().joypad().keyForButton(JoypadButton.START));
+
         createActors(game());
     }
 
@@ -108,7 +111,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
 
     @Override
     public void onTick(GameContext game) {
-        final int tick = (int) gameState().timer().tickCount();
+        final int tick = (int) game().state().timer().tickCount();
         switch (tick) {
             case TICK_CLAP -> {
                 getReady(game());
@@ -117,7 +120,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
                 playMusic();
             }
             case TICK_EXPIRES -> {
-                gameState().triggerTimeout();
+                game().state().triggerTimeout();
                 return;
             }
         }
@@ -142,7 +145,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
     }
 
     private void getReady(GameContext game) {
-        final WorldNavigationSystem navigator = game.variantConfig().systems().worldNavigator();
+        final WorldNavigationSystem navigator = game.variant().systems().worldNavigator();
 
         clapperboard.pos().set(3 * WorldMap.TS, 10 * WorldMap.TS);
 
@@ -176,7 +179,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
     }
 
     private void letActorsMove(GameContext game) {
-        List.of(pacMan, msPacMan, inky, pinky).forEach(game.variantConfig().systems().motor()::move);
+        List.of(pacMan, msPacMan, inky, pinky).forEach(game.variant().systems().motor()::move);
         if (collided) {
             if (inky.pos().y() > MIDDLE_LANE) {
                 inky.pos().setY(MIDDLE_LANE);
@@ -188,8 +191,8 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene2D {
     }
 
     private void playCutScene(GameContext game, int tick) {
-        final WorldNavigationSystem navigator = game.variantConfig().systems().worldNavigator();
-        final SpriteAnimSystem animSystem = game.variantConfig().systems().spriteAnim();
+        final WorldNavigationSystem navigator = game.variant().systems().worldNavigator();
+        final SpriteAnimSystem animSystem = game.variant().systems().spriteAnim();
 
         letActorsMove(game);
 

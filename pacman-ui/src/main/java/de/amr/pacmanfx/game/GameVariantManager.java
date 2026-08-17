@@ -9,7 +9,7 @@ import javafx.beans.value.ChangeListener;
 
 public interface GameVariantManager {
 
-    StringProperty variantNameProperty();
+    StringProperty selectedVariantNameProperty();
 
     GameVariant currentGameVariant();
 

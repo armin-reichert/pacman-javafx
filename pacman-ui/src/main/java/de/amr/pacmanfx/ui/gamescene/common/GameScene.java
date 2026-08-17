@@ -5,12 +5,10 @@
 package de.amr.pacmanfx.ui.gamescene.common;
 
 import de.amr.basics.Disposable;
+import de.amr.pacmanfx.core.ComponentRegistry;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.gamestate.GameState;
-import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.action.core.QuitHandler;
-import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import javafx.scene.SubScene;
 import javafx.scene.control.ContextMenu;
@@ -20,15 +18,11 @@ import java.util.Optional;
 
 public interface GameScene extends QuitHandler, Disposable {
 
-    Input input();
-
     GameAppContext app();
 
+    ComponentRegistry<GameSceneComponent> componentsRegistry();
+
     GameContext game();
-
-    GameState gameState();
-
-    ActionBindingsRegistry actionBindings();
 
     /**
      * Activates the scene and assigns keyboard bindings.

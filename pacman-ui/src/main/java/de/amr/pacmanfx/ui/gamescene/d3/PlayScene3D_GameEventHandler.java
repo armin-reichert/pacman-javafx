@@ -33,7 +33,7 @@ import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.vm.Game3DSettingsVM;
-import de.amr.pacmanfx.ui.vm.GameUISettingsVM;
+import de.amr.pacmanfx.ui.vm.GameViewModel;
 import de.amr.pacmanfx.ui.vm.Maze3DSettingsVM;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
@@ -144,7 +144,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     @Override
     default void onGameStarted(GameStartedEvent event) {
         final GameSession session = game().session();
-        final GameState state = game().session().gameState();
+        final GameState state = game().state();
 
         final boolean silent = session.isAttractMode() || state.id() instanceof TestStateID;
 
@@ -171,7 +171,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         final GameLevel level = event.level();
         final GameSession session = game().session();
         final GameLevel3D level3D = assertLevel3D();
-        final State<GameContext> newState = session.gameState();
+        final State<GameContext> newState = game().state();
 
         level3D.replaceLevelCounter3D(session.levelCounter());
 
@@ -186,7 +186,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         level.entities().pac().requireComp(Pac3DViewComp.class).root().setVisible(true);
 
         gameScene().replaceActionBindings(session, level);
-        gameScene().fadeInAnimation().playFromStart();
+        gameScene().fadeIn();
     }
 
     @Override
@@ -223,7 +223,6 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         pauseSecThen(PELLET_EATING_DELAY_SEC, () -> level3D.getChildren().remove(pellet3D.root())).play();
     }
 
-
     @Override
     default void onPacPowerStarts(PacPowerStartsEvent e) {
         final Pac pac = e.pac();
@@ -231,7 +230,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         final GameLevel3D level3D = assertLevel3D();
 
         optSoundEffects().ifPresent(GameSoundEffects::stopSiren);
-        if (!game().variantConfig().rules().isLevelCompleted(level)) {
+        if (!game().variant().rules().isLevelCompleted(level)) {
             optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
             Pac3DAnimationSystem.setPowerMode(pac, true);
             level3D.animationManager().startWallFlashing();
@@ -274,7 +273,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 
     private void onHuntingStart(GameLevel3D level3D) {
         final GameLevel level = level3D.level();
-        gameScene().initPac(level, level.entities().pac());
+        gameScene().initPac3DProperties(level, level.entities().pac());
 
         level3D.animationManager().startEnergizerPumping();
         level3D.animationManager().startParticlesAnimation();
@@ -285,7 +284,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         final GameLevel level = session().assertLevel();
         final GameLevel3D level3D = assertLevel3D();
 
-        session().gameState().waitForTimeout();
+        game().state().waitForTimeout();
 
         optSoundEffects().ifPresent(GameSoundEffects::stopAll);
 
@@ -297,7 +296,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         Pac3DAnimationSystem.playDyingAnimation(
             level.entities().pac(),
             () -> optSoundEffects().ifPresent(GameSoundEffects::playPacDeadSound),
-            session().gameState()::triggerTimeout
+            game().state()::triggerTimeout
         );
     }
 
@@ -308,11 +307,11 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     }
 
     private void onLevelComplete() {
-        final GameUISettingsVM viewModel = app().ui().viewModel();
+        final GameViewModel viewModel = app().ui().viewModel();
         final GameLevel level = session().assertLevel();
         final House house = level.entities().house();
         final boolean cutSceneFollows = !session().isAttractMode()
-            && game().variantConfig().rules().cutSceneAfterLevel(level.number()).isPresent();
+            && game().variant().rules().cutSceneAfterLevel(level.number()).isPresent();
 
         gameScene().scoreOpacity.set(0);
         House3DSystem.hideDoors(house);
@@ -347,11 +346,11 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         final Optional<ManagedAnimation> levelEndAnimation = animationRegistry.optAnimation(animationID);
 
         if (levelEndAnimation.isEmpty()) {
-            Ufx.pauseSecThen(2, () -> session().gameState().triggerTimeout()).play();
+            Ufx.pauseSecThen(2, () -> game().state().triggerTimeout()).play();
             return;
         }
 
-        session().gameState().waitForTimeout();
+        game().state().waitForTimeout();
 
         final PerspectiveID perspectiveBeforeAnimation = settings3D.cameraPerspectiveIdProperty.get();
 
@@ -370,7 +369,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
             levelEndAnimation.get().delegate(),
             restoreCameraPerspective
         );
-        seq.setOnFinished(_ -> session().gameState().triggerTimeout());
+        seq.setOnFinished(_ -> game().state().triggerTimeout());
         seq.play();
     }
 

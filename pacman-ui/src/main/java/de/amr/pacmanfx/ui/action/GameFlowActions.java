@@ -32,7 +32,7 @@ public class GameFlowActions {
         actionStartGame = new GameAction("start_game") {
             @Override
             public void execute(GameAppContext app) {
-                app.lifecycle().startPlaying();
+                app.startGame();
             }
         };
 
@@ -47,7 +47,7 @@ public class GameFlowActions {
         actionLetGameStateExpire = new GameAction("let_game_state_expire") {
             @Override
             public void execute(GameAppContext app) {
-                app.game().session().gameState().triggerTimeout();
+                app.game().state().triggerTimeout();
             }
         };
 
@@ -55,15 +55,15 @@ public class GameFlowActions {
             @Override
             public void execute(GameAppContext app) {
                 final GameContext game = app.game();
-                final GameState gameState = game.session().gameState();
+                final GameState gameState = game.state();
 
                 if (gameState.id() instanceof TestStateID) {
                     gameState.onExit(game);
                 }
 
-                app.lifecycle().suspendPlaying();
+                app.suspendGame();
                 app.clock().start();
-                game.session().gameFlow().restartState(game, CommonGameStateID.GAME_INTRO);
+                game.variant().gameFlow().restartState(game, CommonGameStateID.GAME_INTRO);
             }
         };
 

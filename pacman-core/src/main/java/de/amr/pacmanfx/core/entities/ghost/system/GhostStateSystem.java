@@ -36,14 +36,14 @@ public class GhostStateSystem {
         requireNonNull(game);
         requireNonNull(ghost);
 
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variant().systems();
         final Pac pac = level.entities().pac();
         final GhostStateComp state = ghost.requireComp(GhostStateComp.class);
 
         state.setFlashing(pac.power().isFading());
         state.setThreatenedByPac(isGhostThreatenedByPac(level, ghost, pac));
 
-        final float speed = game.variantConfig().rules().actorSpeedRules().ghostSpeed(game, ghost);
+        final float speed = game.variant().rules().actorSpeedRules().ghostSpeed(game, ghost);
 
         switch (ghost.ghostStateEnum()) {
             case LOCKED -> houseAccessSystem.stayInHouse(game, ghost, speed);

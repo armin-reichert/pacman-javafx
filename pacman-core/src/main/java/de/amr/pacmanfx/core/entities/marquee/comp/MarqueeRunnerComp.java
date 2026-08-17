@@ -6,9 +6,9 @@ package de.amr.pacmanfx.core.entities.marquee.comp;
 
 
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.core.ecs.GameEntityComponent;
+import de.amr.pacmanfx.core.ecs.EntityComponent;
 
-public class MarqueeRunnerComp implements GameEntityComponent {
+public class MarqueeRunnerComp implements EntityComponent {
 
     private final TickTimer runner = new TickTimer("Marquee-Timer");
 

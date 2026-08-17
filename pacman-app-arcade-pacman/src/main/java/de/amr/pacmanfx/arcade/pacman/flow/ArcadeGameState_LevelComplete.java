@@ -20,15 +20,15 @@ public class ArcadeGameState_LevelComplete extends GameState {
     @Override
     public void onEnter(GameContext game) {
         final GameSession session = game.session();
-        game.variantConfig().gamePlay().onLevelCompleted(game, session.assertLevel());
+        game.variant().gamePlay().onLevelCompleted(game, session.assertLevel());
         waitForTimeout(); // UI triggers timeout
     }
 
     @Override
     public void onUpdate(GameContext game) {
-        final GameFlowController flow = game.session().gameFlow();
+        final GameFlowController flow = game.variant().gameFlow();
         if (timer().hasExpired()) {
-            flow.enterState(game, computeNextState(game, flow.cutScenesEnabled()));
+            flow.enterState(game, computeNextState(game, game.session().cutScenesEnabled()));
         }
     }
 
@@ -39,7 +39,7 @@ public class ArcadeGameState_LevelComplete extends GameState {
             // just in case: if demo level was completed, go back to intro scene
             return CommonGameStateID.GAME_INTRO;
         }
-        final boolean cutSceneFollows = game.variantConfig().rules().cutSceneAfterLevel(level.number()).isPresent();
+        final boolean cutSceneFollows = game.variant().rules().cutSceneAfterLevel(level.number()).isPresent();
         if (cutSceneFollows && cutScenesEnabled) {
             return CommonGameStateID.GAME_LEVEL_INTERMISSION;
         }

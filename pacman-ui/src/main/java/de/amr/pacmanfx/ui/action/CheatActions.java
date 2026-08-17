@@ -74,7 +74,7 @@ public final class CheatActions {
 
             @Override
             public boolean isEnabled(GameAppContext app) {
-                final GameState gameState = app.game().session().gameState();
+                final GameState gameState = app.game().state();
                 return normalLevel(app).isPresent() && CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(gameState);
             }
         };
@@ -94,14 +94,14 @@ public final class CheatActions {
 
                 if (!killableGhosts.isEmpty()) {
                     level.clearGhostKillChain(); // start again with lowest number for killing ghost
-                    killableGhosts.forEach(ghost -> game.variantConfig().gamePlay().onEatGhost(game, level, ghost));
-                    session.gameFlow().enterState(game, CommonGameStateID.GAME_LEVEL_EATING_GHOST);
+                    killableGhosts.forEach(ghost -> game.variant().gamePlay().onEatGhost(game, level, ghost));
+                    game.variant().gameFlow().enterState(game, CommonGameStateID.GAME_LEVEL_EATING_GHOST);
                 }
             }
 
             @Override
             public boolean isEnabled(GameAppContext app) {
-                final GameState gameState = app.game().session().gameState();
+                final GameState gameState = app.game().state();
                 return normalLevel(app).isPresent() && CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(gameState);
             }
         };
@@ -110,16 +110,16 @@ public final class CheatActions {
             @Override
             public void execute(GameAppContext app) {
                 app.game().session().cheats().notifyCheatUsed();
-                app.game().session().gameFlow().enterState(app.game(), CommonGameStateID.GAME_LEVEL_COMPLETE);
+                app.game().variant().gameFlow().enterState(app.game(), CommonGameStateID.GAME_LEVEL_COMPLETE);
             }
 
             @Override
             public boolean isEnabled(GameAppContext app) {
-                final GameState state = app.game().session().gameState();
+                final GameState state = app.game().state();
                 final GameLevel level = normalLevel(app).orElse(null);
                 return level != null
                     && CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(state)
-                    && level.number() < app.game().variantConfig().rules().lastLevelNumber();
+                    && level.number() < app.game().variant().rules().lastLevelNumber();
             }
         };
 

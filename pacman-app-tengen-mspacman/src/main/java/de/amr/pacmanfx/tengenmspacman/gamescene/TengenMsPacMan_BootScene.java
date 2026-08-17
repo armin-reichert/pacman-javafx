@@ -9,12 +9,11 @@ import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.MovementComp;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.entities.Ghost;
-import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
@@ -24,7 +23,7 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantUIConfig.
 /**
  * Shows moving and color changing "TENGEN PRESENTS" text and ghost running through scene.
  */
-public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
+public class TengenMsPacMan_BootScene extends AbstractGameScene {
 
     private static final float GHOST_Y = tilesPx(21.5f);
 
@@ -35,16 +34,15 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
 
     public TengenMsPacMan_BootScene(GameAppContext appContext) {
         super(appContext);
-        unscaledWidthProperty().set(NES_SCREEN_WIDTH);
-        unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
+        rendering2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
+        rendering2D().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
     }
 
     @Override
     public void onActivate() {
-        actionBindings().dispose();
         movingText = new GameEntity();
         movingText.setComp(MovementComp.class, new MovementComp());
-        movingText.pos().set(tilesPx(9), unscaledHeight()); // lower border of screen
+        movingText.pos().set(tilesPx(9), rendering2D().unscaledHeight()); // lower border of screen
         ghost = app().gameVariants().currentGameVariant().uiConfig().renderConfig().createAnimatedGhost(
             game(),
             app().ui().sprites().animations(),
@@ -55,10 +53,9 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
 
     @Override
     public void onTick(GameContext game) {
-        final GameSystems sys = game.variantConfig().systems();
+        final GameSystems sys = game.variant().systems();
 
-        final GameState gameState = gameState();
-        final int stateTick = (int) gameState.timer().tickCount();
+        final int stateTick = (int) game().state().timer().tickCount();
         switch (stateTick) {
             case   1 -> gray(false);
             case   7 -> gray(true);
@@ -72,7 +69,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
                 sys.motor().setVelocity(movingText, 0, 0);
             }
             case 113 -> {
-                ghost.pos().set(unscaledWidth() - WorldMap.TS, GHOST_Y);
+                ghost.pos().set(rendering2D().unscaledWidth() - WorldMap.TS, GHOST_Y);
                 ghost.show();
                 sys.worldNavigator().setMoveDir(ghost, Direction.LEFT);
                 sys.worldNavigator().setWishDir(ghost, Direction.LEFT);
@@ -86,7 +83,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene2D {
             case 204 -> gray(true);
             case 214 -> gray(false);
             case 220 -> {
-                gameState.triggerTimeout();
+                game().state().triggerTimeout();
                 return;
             }
         }

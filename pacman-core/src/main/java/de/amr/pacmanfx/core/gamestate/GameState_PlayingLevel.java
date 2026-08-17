@@ -24,7 +24,7 @@ public final class GameState_PlayingLevel extends GameState {
 
     @Override
     public void onEnter(GameContext game) {
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variant().systems();
         final GameSession session = game.session();
         final GameLevel level = game.session().assertLevel();
         final Pac pac = level.entities().pac();
@@ -48,21 +48,21 @@ public final class GameState_PlayingLevel extends GameState {
         final GameSession session = game.session();
         final GameLevel level = session.assertLevel();
 
-        game.variantConfig().gamePlay().hunt(game, level);
+        game.variant().gamePlay().hunt(game, level);
 
         final HuntingStep huntingStep = game.session().thisFrame().huntingStep();
         logHuntingStepResult(huntingStep);
 
         session.cheats().update(game);
 
-        if (game.variantConfig().rules().isLevelCompleted(level)) {
-            session.gameFlow().enterState(game, CommonGameStateID.GAME_LEVEL_COMPLETE);
+        if (game.variant().rules().isLevelCompleted(level)) {
+            game.variant().gameFlow().enterState(game, CommonGameStateID.GAME_LEVEL_COMPLETE);
         }
         else if (huntingStep.pacKilled()) {
-            session.gameFlow().enterState(game, CommonGameStateID.GAME_LEVEL_PACMAN_DYING);
+            game.variant().gameFlow().enterState(game, CommonGameStateID.GAME_LEVEL_PACMAN_DYING);
         }
         else if (huntingStep.hasGhostBeenKilled()) {
-            session.gameFlow().enterState(game, CommonGameStateID.GAME_LEVEL_EATING_GHOST);
+            game.variant().gameFlow().enterState(game, CommonGameStateID.GAME_LEVEL_EATING_GHOST);
         }
     }
 

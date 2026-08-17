@@ -4,9 +4,9 @@
 
 package de.amr.pacmanfx.core.ecs.comp;
 
-import de.amr.pacmanfx.core.ecs.GameEntityComponent;
+import de.amr.pacmanfx.core.ecs.EntityComponent;
 
-public class MovementComp implements GameEntityComponent {
+public class MovementComp implements EntityComponent {
 
     private float vx;
     private float vy;

@@ -7,13 +7,13 @@ package de.amr.pacmanfx.core.entities.house.comp;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.ecs.GameEntityComponent;
+import de.amr.pacmanfx.core.ecs.EntityComponent;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 
 import java.util.EnumMap;
 import java.util.Map;
 
-public class HouseFloorplanComp implements GameEntityComponent {
+public class HouseFloorplanComp implements EntityComponent {
 
     private byte[][] content;
 

@@ -15,20 +15,17 @@ import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
-import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
-import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
+import de.amr.pacmanfx.ui.gamescene.common.*;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
+import de.amr.pacmanfx.ui.gamescene.d2.Rendering2DSupport;
 import de.amr.pacmanfx.ui.settings.ui.DashboardSectionSettings;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
 import de.amr.pacmanfx.ui.views.dashboard.GameDashboard;
 import de.amr.pacmanfx.ui.views.dashboard.GameDashboardSection;
 import de.amr.pacmanfx.ui.views.help.HelpView;
-import de.amr.pacmanfx.ui.vm.GameUISettingsVM;
+import de.amr.pacmanfx.ui.vm.GameViewModel;
 import de.amr.pacmanfx.ui.window.GameMainScene;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.controls.FontAwesomeIcon;
@@ -41,6 +38,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseButton;
@@ -111,7 +109,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     @Override
     public void setApp(GameAppContext app) {
         this.app = requireNonNull(app);
-        final GameUISettingsVM settings = app.ui().viewModel();
+        final GameViewModel settings = app.ui().viewModel();
 
         rootPane.setOnContextMenuRequested(this);
         app.ui().window().mainScene().addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
@@ -227,7 +225,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
     @Override
     public void onExit() {
-        app.lifecycle().suspendPlaying();
+        app.suspendGame();
         app.ui().sounds().stopAll();
         app.ui().sounds().voice().stop();
         actionBindings.dispose();
@@ -253,7 +251,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
         // Render current 2D game scene
         final GameScene gameScene = app.ui().gameScenes().optCurrentGameScene().orElse(null);
-        if (gameScene instanceof AbstractGameScene2D gameScene2D) {
+        if (gameScene instanceof AbstractGameScene gameScene2D) {
             if (sceneRenderer != null) {
                 sceneRenderer.draw(gameScene2D, tick);
             }
@@ -299,13 +297,15 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         }
     }
 
-    public void updateGameSceneRenderers(AbstractGameScene2D gameScene2D) {
+    public void updateGameSceneRenderers(GameScene gameScene2D) {
+        final Rendering2DSupport r2D = gameScene2D.componentsRegistry().requireComp(Rendering2DSupport.class);
         final GameVariantRenderConfig renderConfig = app.gameVariants().currentGameVariant().uiConfig().renderConfig();
-        if (gameScene2D.canvas() != null) {
-            final SpriteAnimSystem animSystem = app.game().variantConfig().systems().spriteAnim();
-            sceneRenderer = renderConfig.createGameSceneRenderer(gameScene2D, animSystem, gameScene2D.canvas());
+        final Canvas canvas = r2D.canvas();
+        if (canvas != null) {
+            final SpriteAnimSystem animSystem = app.game().variant().systems().spriteAnim();
+            sceneRenderer = renderConfig.createGameSceneRenderer(gameScene2D, animSystem, canvas);
             setFontSmoothing(app.ui().viewModel().common2D.fontSmoothingOnProperty.get());
-            hudRenderer = renderConfig.createHUDRenderer(gameScene2D, animSystem, gameScene2D.canvas()); // may return null!
+            hudRenderer = renderConfig.createHUDRenderer(gameScene2D, animSystem, canvas); // may return null!
         } else {
             Logger.error("Cannot create game scene and HUD renderer: no canvas has been assigned");
         }
@@ -325,12 +325,16 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
         contextMenu.hide();
 
+
+        //TODO FIXME(We must discriminate 3D, 2D+subscene, 2D without subscene) here!
         if (gameScene.optSubSceneFX().isPresent()) {
             embedGameSceneWithSubSceneFX(gameScene, gameScene.optSubSceneFX().get());
-        } else if (gameScene instanceof AbstractGameScene2D gameScene2D) {
-            embedGameScene2D(config.gameSceneConfig(), gameScene2D);
         } else {
-            Logger.error("Cannot embed play scene of class {}", gameScene.getClass().getName());
+            //TODO fixme
+            if (!gameScene.componentsRegistry().hasComp(Rendering2DSupport.class)) {
+                gameScene.componentsRegistry().setComp(Rendering2DSupport.class, new Rendering2DSupport());
+            }
+            embedGameScene2D(config.gameSceneConfig(), gameScene);
         }
 
         gameScene.activate();
@@ -349,14 +353,17 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
             subSceneFX.heightProperty().unbind();
         });
 
-        if (gameScene instanceof AbstractGameScene2D gameScene2D) {
+        if (gameScene.componentsRegistry().hasComp(Rendering2DSupport.class)) {
+            final Rendering2DSupport r2D = gameScene.componentsRegistry().requireComp(Rendering2DSupport.class);
+
             gameSceneFrame.canvas().widthProperty().unbind();
             gameSceneFrame.canvas().heightProperty().unbind();
             gameSceneFrame.unscaledWidthProperty().unbind();
             gameSceneFrame.unscaledHeightProperty().unbind();
             gameSceneFrame.backgroundProperty().unbind();
-            gameScene2D.backgroundColorProperty().unbind();
-            gameScene2D.scalingProperty().unbind();
+
+            r2D.backgroundColorProperty().unbind();
+            r2D.scalingProperty().unbind();
         }
 
         Logger.info("Game scene {} DISEMBEDDED from play view!", gameScene.getClass().getSimpleName());
@@ -407,7 +414,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
     private void showMiniPlayView(GameContext game, GameLevel level) {
         final GameVariantRenderConfig renderConfig = app.gameVariants().currentGameVariant().uiConfig().renderConfig();
-        final SpriteAnimSystem animSystem = game.variantConfig().systems().spriteAnim();
+        final SpriteAnimSystem animSystem = game.variant().systems().spriteAnim();
         miniPlaySceneView.setRenderConfig(animSystem, renderConfig);
         miniPlaySceneView.setWorldSizeInPixel(level.worldMap().terrainLayer().sizeInPixel());
         miniPlaySceneView.slideIn();
@@ -425,33 +432,36 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         subSceneFX.widthProperty().bind(mainScene.widthProperty());
         subSceneFX.heightProperty().bind(mainScene.heightProperty());
 
-        if (gameScene instanceof AbstractGameScene2D gameScene2D) {
+        if (gameScene.componentsRegistry().hasComp(Rendering2DSupport.class)) {
+            final Rendering2DSupport r2D = gameScene.componentsRegistry().requireComp(Rendering2DSupport.class);
             // use the canvas of the decorated pane for 2D scene even though the decoration is not used
-            gameScene2D.setCanvas(gameSceneFrame().canvas());
-            updateGameSceneRenderers(gameScene2D);
+            r2D.setCanvas(gameSceneFrame().canvas());
+            updateGameSceneRenderers(gameScene);
         }
         setGameSceneContent(subSceneFX);
     }
 
     // 2D scenes without camera which are shown at full size
-    private void embedGameScene2D(GameSceneConfig gameSceneConfig, AbstractGameScene2D gameScene2D) {
+    private void embedGameScene2D(GameSceneConfig gameSceneConfig, GameScene gameScene) {
         final GameMainScene mainScene = app.ui().window().mainScene();
         final GamePlayView playView = app.ui().views().gamePlayView();
         final DecorationPane frame = playView.gameSceneFrame();
 
-        gameScene2D.backgroundColorProperty().bind(app.ui().viewModel().common2D.canvasBackgroundColorProperty);
+        final Rendering2DSupport r2D = gameScene.componentsRegistry().requireComp(Rendering2DSupport.class);
 
-        final boolean decorated = gameSceneConfig.sceneDecorationRequested(gameScene2D);
+        r2D.backgroundColorProperty().bind(app.ui().viewModel().common2D.canvasBackgroundColorProperty);
+
+        final boolean decorated = gameSceneConfig.sceneDecorationRequested(gameScene);
         if (decorated) {
             frame.newCanvas(); //TODO check why creating a new canvas is needed
-            frame.backgroundProperty().bind(gameScene2D.backgroundColorProperty().map(Ufx::paintBackground));
+            frame.backgroundProperty().bind(r2D.backgroundColorProperty().map(Ufx::paintBackground));
 
             // set unscaled decoration pane size to game scene (=world map) size
-            frame.unscaledWidthProperty().bind(gameScene2D.unscaledWidthProperty());
-            frame.unscaledHeightProperty().bind(gameScene2D.unscaledHeightProperty());
+            frame.unscaledWidthProperty().bind(r2D.unscaledWidthProperty());
+            frame.unscaledHeightProperty().bind(r2D.unscaledHeightProperty());
 
             // Limit scaling
-            gameScene2D.scalingProperty().bind(frame.scalingProperty().map(
+            r2D.scalingProperty().bind(frame.scalingProperty().map(
                 scaling -> Math.min(scaling.doubleValue(), GamePlayView.MAX_GAME_SCENE_SCALING)));
 
             frame.stretchTo(mainScene.getWidth(), mainScene.getHeight());
@@ -463,16 +473,16 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
             frame.canvas().heightProperty().bind(mainScene.heightProperty());
 
             frame.canvas().widthProperty().bind(mainScene.heightProperty()
-                .map(h -> h.doubleValue() * gameScene2D.aspectRatio()));
+                .map(h -> h.doubleValue() * r2D.aspectRatio()));
 
 
-            gameScene2D.scalingProperty().bind(mainScene.heightProperty().divide(gameScene2D.unscaledHeight()));
+            r2D.scalingProperty().bind(mainScene.heightProperty().divide(r2D.unscaledHeight()));
 
             playView.setGameSceneContent(frame.canvas());
         }
 
-        gameScene2D.setCanvas(frame.canvas());
-        playView.updateGameSceneRenderers(gameScene2D);
+        r2D.setCanvas(frame.canvas());
+        playView.updateGameSceneRenderers(gameScene);
         frame.clearCanvas();
     }
 }

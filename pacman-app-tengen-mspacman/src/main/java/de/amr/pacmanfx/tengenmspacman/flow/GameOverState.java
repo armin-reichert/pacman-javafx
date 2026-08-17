@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.tengenmspacman.flow;
 
-import de.amr.basics.Named;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
@@ -42,7 +41,7 @@ public class GameOverState extends GameState {
     public void onEnter(GameContext game) {
         final GameSession session = game.session();
         final GameLevel level = session.assertLevel();
-        final GamePlay gamePlay = game.variantConfig().gamePlay();
+        final GamePlay gamePlay = game.variant().gamePlay();
 
         countdownAfter = 0;
 
@@ -65,7 +64,7 @@ public class GameOverState extends GameState {
             startGameOverMessageAnimation(
                 session,
                 level.entities().house(),
-                game.variantConfig().systems().motor()
+                game.variant().systems().motor()
             );
         }
         else {
@@ -87,13 +86,13 @@ public class GameOverState extends GameState {
 
         if (timer().hasExpired()) {
             if (session.isAttractMode()) {
-                session.gameFlow().enterState(game, TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME);
+                game.variant().gameFlow().enterState(game, TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME);
                 return;
             }
 
-            final var gamePlay = (TengenMsPacMan_GamePlay) game.variantConfig().gamePlay();
+            final var gamePlay = (TengenMsPacMan_GamePlay) game.variant().gamePlay();
             final boolean continueGame = gamePlay.checkGameContinuesOnGameOver(session);
-            session.gameFlow().enterState(game, continueGame
+            game.variant().gameFlow().enterState(game, continueGame
                 ? CommonGameStateID.GAME_PREPARATION
                 : CommonGameStateID.GAME_INTRO);
 
@@ -105,7 +104,7 @@ public class GameOverState extends GameState {
                 countdownAfter = COUNTDOWN_AFTER_ANIMATION;
                 Logger.info("Start countdown after animation: {} ticks", countdownAfter);
             } else {
-                animation.update(game.variantConfig().systems().motor());
+                animation.update(game.variant().systems().motor());
             }
         });
     }

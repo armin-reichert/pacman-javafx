@@ -28,7 +28,7 @@ import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
-import de.amr.pacmanfx.ui.vm.GameUISettingsVM;
+import de.amr.pacmanfx.ui.vm.GameViewModel;
 import de.amr.pacmanfx.ui.window.GameWindow;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.stage.Stage;
@@ -62,13 +62,13 @@ public class GameUI implements GameEventListener {
     private final TranslationManager translations;
     private final SoundManager sounds;
     private final SpriteAnimationManager sprites;
-    private final GameUISettingsVM viewModel;
+    private final GameViewModel viewModel;
     private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Global Action Bindings");
 
     private GameAppContext app;
 
     public GameUI(Stage stage, int width, int height, GameUISettings settings, DashboardFactory dashboardFactory) {
-        viewModel = new GameUISettingsVM();
+        viewModel = new GameViewModel();
         viewModel.init(settings);
 
         sprites = new SpriteAnimationManager();
@@ -107,7 +107,7 @@ public class GameUI implements GameEventListener {
         return sprites;
     }
 
-    public GameUISettingsVM viewModel() {
+    public GameViewModel viewModel() {
         return viewModel;
     }
 

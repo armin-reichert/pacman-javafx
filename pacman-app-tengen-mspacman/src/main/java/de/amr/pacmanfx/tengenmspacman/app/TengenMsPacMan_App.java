@@ -8,7 +8,7 @@ import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.game.CartridgeRepository;
 import de.amr.pacmanfx.game.GameBox;
 import de.amr.pacmanfx.game.GameBuilder;
-import de.amr.pacmanfx.game.PacManGameCollection;
+import de.amr.pacmanfx.game.PacManGamesMasterApp;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_StartPage;
 import de.amr.pacmanfx.tengenmspacman.dashboard.TengenDashboardFactory;
 import de.amr.pacmanfx.uilib.TimelineGameClock;
@@ -21,7 +21,7 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantUIConfig.
 public class TengenMsPacMan_App extends Application {
 
     private GameBox gameBox;
-    private PacManGameCollection game;
+    private PacManGamesMasterApp game;
 
     @Override
     public void init() {

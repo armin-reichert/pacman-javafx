@@ -25,7 +25,7 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.input.JoypadButton;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
@@ -40,7 +40,7 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantUIConfig.
  * bundle, which falls to the ground in front of Pac-Man and Ms. Pac-Man, and finally opens up to reveal a tiny Pac-Man.
  * (Played after rounds 9, 13, and 17)
  */
-public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
+public class TengenMsPacMan_CutScene3 extends AbstractGameScene {
 
     public static final int TICK_CLAP = 2;
     public static final int TICK_EXPIRES = 660;
@@ -58,8 +58,8 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
 
     public TengenMsPacMan_CutScene3(GameAppContext app) {
         super(app);
-        unscaledWidthProperty().set(NES_SCREEN_WIDTH);
-        unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
+        rendering2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
+        rendering2D().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
     }
 
     public Clapperboard clapperboard() {
@@ -90,7 +90,9 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
     public void onActivate() {
         // Quit cut scene when "START" button on "joypad" is pressed
         final GameAction quitAction = app().commonActions().gameFlowActions().actionLetGameStateExpire();
-        actionBindings().bindActionToKeyCombination(quitAction, input().joypad().keyForButton(JoypadButton.START));
+
+        final var bindingsMap = actionBindingsSupport().bindingsMap();
+        bindingsMap.bindActionToKeyCombination(quitAction, app().input().joypad().keyForButton(JoypadButton.START));
 
         createActors();
         darkness = false;
@@ -133,7 +135,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
 
     @Override
     public void onTick(GameContext game) {
-        final long tick = gameState().timer().tickCount();
+        final long tick = game().state().timer().tickCount();
 
         if (tick == TICK_CLAP) {
             clapperboard.show();
@@ -141,7 +143,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
             playMusic();
         }
         else if (tick == TICK_EXPIRES) {
-            gameState().triggerTimeout();
+            game().state().triggerTimeout();
             return;
         }
 
@@ -165,7 +167,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene2D {
     }
     
     private void playCutScene(GameContext game, long tick) {
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variant().systems();
         final MovementSystem motor = systems.motor();
         final WorldNavigationSystem navigator = systems.worldNavigator();
         final SpriteAnimSystem animSystem = systems.spriteAnim();

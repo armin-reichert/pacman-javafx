@@ -78,7 +78,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         session.setValue(TengenMsPacMan_GamePlayOptions.BOOSTER_ON, boosterOn);
 
         //TODO this is currently broken! Sprite is reset when Ms. Pac-Man moves!
-        final SpriteAnimSystem animSystem = game.variantConfig().systems().spriteAnim();
+        final SpriteAnimSystem animSystem = game.variant().systems().spriteAnim();
         animSystem.select(pac, boosterOn ? TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER : CommonSpriteAnimationID.PAC_MUNCHING);
     }
 
@@ -111,7 +111,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         game.session().setValue(TengenMsPacMan_GamePlayOptions.DIFFICULTY, difficulty);
 
         //TODO this should also move into session!
-        final var speedRules = (TengenMsPacMan_ActorSpeedRules) game.variantConfig().rules().actorSpeedRules();
+        final var speedRules = (TengenMsPacMan_ActorSpeedRules) game.variant().rules().actorSpeedRules();
         speedRules.setDifficulty(difficulty);
     }
 
@@ -194,8 +194,8 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     // Game start
 
     @Override
-    public void onSessionStart(GameContext game) {
-        super.onSessionStart(game);
+    public void startSession(GameContext game) {
+        super.startSession(game);
 
         final GameSession session = game.session();
         session.hud().hide();
@@ -212,7 +212,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
     @Override
     public void configureLevelCounter(GameContext game, LevelCounter levelCounter) {
-        final LevelCounterSystem system = game.variantConfig().systems().levelCounterSystem();
+        final LevelCounterSystem system = game.variant().systems().levelCounterSystem();
         system.setCounterBehavior(levelCounter, LevelCounterBehavior.DISABLE_WHEN_FULL);
         system.setCounterCapacity(levelCounter, 7);
         system.clearCounter(levelCounter);
@@ -224,10 +224,10 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final GameLevelEntitySet entities = new GameLevelEntitySet();
 
         final GameSession session = game.session();
-        final WorldNavigationSystem navigator = game.variantConfig().systems().worldNavigator();
+        final WorldNavigationSystem navigator = game.variant().systems().worldNavigator();
 
-        final WorldMap worldMap = game.variantConfig().worldMapManager().supplyWorldMap(levelNumber, mapCategory(session));
-        final TengenMsPacMan_GameRules rules = (TengenMsPacMan_GameRules) game.variantConfig().rules();
+        final WorldMap worldMap = game.variant().worldMapManager().supplyWorldMap(levelNumber, mapCategory(session));
+        final TengenMsPacMan_GameRules rules = (TengenMsPacMan_GameRules) game.variant().rules();
         final HuntingTimer huntingTimer = new HuntingTimer("Tengen Ms. Pac-Man Hunting Timer", rules.numHuntingPhases());
 
         addEntities(entities, game, worldMap);
@@ -271,7 +271,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
         // Configure entities
 
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variant().systems();
         msPacMan.autoSteering().setSteering(new RuleGuidedPacSteering(
             systems.worldNavigator(), systems.pacWorldMovementPolicy()
         ));
@@ -297,7 +297,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         requireNonNull(game);
 
         final GameSession session = game.session();
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variant().systems();
 
         final GameLevel demoLevel = createLevel(game, 1);
 
@@ -341,7 +341,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         session.score().data().setEnabled(true);
         session.cheats().update(game);
 
-        final LevelCounterSystem levelCounterSystem = game.variantConfig().systems().levelCounterSystem();
+        final LevelCounterSystem levelCounterSystem = game.variant().systems().levelCounterSystem();
         levelCounterSystem.updateCounter(session.levelCounter(), level.number(), level.bonusSymbolCode(0));
 
         showLevelMessage(game, level, GameLevelMessageType.READY);
@@ -359,7 +359,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
     @Override
     public void activateNextBonus(GameContext game, GameLevel level) {
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variant().systems();
         final GameEventManager eventManager = game.eventManager();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
@@ -394,8 +394,8 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         level.selectNextBonus();
 
         final int symbolCode = level.bonusSymbolCode(level.currentBonusIndex());
-        final int value = game.variantConfig().rules().scoringRules().pointsForBonus(symbolCode);
-        final float speed = game.variantConfig().rules().actorSpeedRules().bonusSpeed(game, level);
+        final int value = game.variant().rules().scoringRules().pointsForBonus(symbolCode);
+        final float speed = game.variant().rules().actorSpeedRules().bonusSpeed(game, level);
 
         final Bonus bonus = Bonus.createMovingBonus(symbolCode, value);
         level.entities().optBonus().ifPresent(oldBonus -> level.entities().remove(oldBonus));

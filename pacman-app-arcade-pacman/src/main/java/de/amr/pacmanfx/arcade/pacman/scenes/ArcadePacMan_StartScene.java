@@ -7,12 +7,12 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 
 /**
  * Scene shown after credit has been added and where game can be started.
  */
-public class ArcadePacMan_StartScene extends AbstractGameScene2D {
+public class ArcadePacMan_StartScene extends AbstractGameScene {
 
     public ArcadePacMan_StartScene(GameAppContext appContext) {
         super(appContext);
@@ -22,13 +22,14 @@ public class ArcadePacMan_StartScene extends AbstractGameScene2D {
     public void onActivate() {
         final Arcade_Actions actions = app().currentGameVariantUIConfig()
             .getExtensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
-        actionBindings().registerAllBindings(actions.gameStartActionBindings());
+
+        final var bindingsMap = actionBindingsSupport().bindingsMap();
+        bindingsMap.registerAllBindings(actions.gameStartActionBindings());
     }
 
     @Override
     public void onDeactivate() {
         app().ui().sounds().voice().stop();
-        actionBindings().dispose();
     }
 
     @Override

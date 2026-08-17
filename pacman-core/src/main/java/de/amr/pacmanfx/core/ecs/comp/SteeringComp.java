@@ -4,10 +4,10 @@
 
 package de.amr.pacmanfx.core.ecs.comp;
 
-import de.amr.pacmanfx.core.ecs.GameEntityComponent;
+import de.amr.pacmanfx.core.ecs.EntityComponent;
 import de.amr.pacmanfx.core.steering.Steering;
 
-public class SteeringComp implements GameEntityComponent {
+public class SteeringComp implements EntityComponent {
 
     private Steering steering;
 

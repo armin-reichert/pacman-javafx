@@ -5,9 +5,9 @@
 package de.amr.pacmanfx.uilib.entities3D.pac.comp;
 
 
-import de.amr.pacmanfx.core.ecs.GameEntityComponent;
+import de.amr.pacmanfx.core.ecs.EntityComponent;
 
-public class Pac3DTransformComp implements GameEntityComponent {
+public class Pac3DTransformComp implements EntityComponent {
 
     @Override
     public void reset() {}

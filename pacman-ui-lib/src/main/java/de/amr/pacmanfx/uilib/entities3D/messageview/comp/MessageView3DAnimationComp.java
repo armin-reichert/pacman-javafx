@@ -5,11 +5,11 @@
 package de.amr.pacmanfx.uilib.entities3D.messageview.comp;
 
 import de.amr.basics.Disposable;
-import de.amr.pacmanfx.core.ecs.GameEntityComponent;
+import de.amr.pacmanfx.core.ecs.EntityComponent;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 
-public class MessageView3DAnimationComp implements GameEntityComponent, Disposable {
+public class MessageView3DAnimationComp implements EntityComponent, Disposable {
 
     private final AnimationRegistry registry;
     private final ManagedAnimation moveInOut;

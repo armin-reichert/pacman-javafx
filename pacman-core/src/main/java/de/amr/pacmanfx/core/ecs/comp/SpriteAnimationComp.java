@@ -1,9 +1,9 @@
 package de.amr.pacmanfx.core.ecs.comp;
 
 import de.amr.basics.spriteanim.SpriteAnimationAccessor;
-import de.amr.pacmanfx.core.ecs.GameEntityComponent;
+import de.amr.pacmanfx.core.ecs.EntityComponent;
 
-public class SpriteAnimationComp implements GameEntityComponent {
+public class SpriteAnimationComp implements EntityComponent {
 
     private SpriteAnimationAccessor animation = SpriteAnimationAccessor.emptyAnimation();
 

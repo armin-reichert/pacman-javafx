@@ -28,8 +28,8 @@ public class XXL_MsPacMan_GamePlay extends ArcadeMsPacMan_GamePlay {
         requireNonNull(game);
 
         final GameSession session = game.session();
-        final GameSystems systems = game.variantConfig().systems();
-        final XXL_WorldMapManager worldMapManager = (XXL_WorldMapManager) game.variantConfig().worldMapManager();
+        final GameSystems systems = game.variant().systems();
+        final XXL_WorldMapManager worldMapManager = (XXL_WorldMapManager) game.variant().worldMapManager();
 
         worldMapManager.setSelectionMode(WorldMapSelectionMode.NO_CUSTOM_MAPS);
 
@@ -54,7 +54,7 @@ public class XXL_MsPacMan_GamePlay extends ArcadeMsPacMan_GamePlay {
 
         ScoreSystem.setLevelNumber(session.score(), levelNumber);
 
-        final LevelCounterSystem levelCounterSystem = game.variantConfig().systems().levelCounterSystem();
+        final LevelCounterSystem levelCounterSystem = game.variant().systems().levelCounterSystem();
         levelCounterSystem.enableCounter(session.levelCounter(), false);
 
         return level;

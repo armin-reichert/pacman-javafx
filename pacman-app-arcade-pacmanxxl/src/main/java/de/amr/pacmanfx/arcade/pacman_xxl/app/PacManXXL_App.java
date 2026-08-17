@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.game.CartridgeRepository;
 import de.amr.pacmanfx.game.GameBox;
 import de.amr.pacmanfx.game.GameBuilder;
-import de.amr.pacmanfx.game.PacManGameCollection;
+import de.amr.pacmanfx.game.PacManGamesMasterApp;
 import de.amr.pacmanfx.uilib.TimelineGameClock;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -19,7 +19,7 @@ import javafx.stage.Stage;
 public class PacManXXL_App extends Application {
 
     private GameBox gameBox;
-    private PacManGameCollection game;
+    private PacManGamesMasterApp game;
 
     @Override
     public void init() {

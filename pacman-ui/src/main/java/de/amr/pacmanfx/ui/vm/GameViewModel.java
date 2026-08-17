@@ -8,7 +8,7 @@ import de.amr.pacmanfx.ui.settings.ui.GameUISettings;
 import javafx.beans.property.*;
 import javafx.util.Duration;
 
-public class GameUISettingsVM {
+public class GameViewModel {
 
     public final ObjectProperty<Duration> flashMessageDurationProperty;
     public final BooleanProperty testStatesIncludedProperty;
@@ -22,7 +22,7 @@ public class GameUISettingsVM {
     public final Game3DSettingsVM common3D;
     public final Maze3DSettingsVM maze3D;
 
-    public GameUISettingsVM() {
+    public GameViewModel() {
         flashMessageDurationProperty = new SimpleObjectProperty<>();
         testStatesIncludedProperty = new SimpleBooleanProperty();
         debugModeOnProperty = new SimpleBooleanProperty();

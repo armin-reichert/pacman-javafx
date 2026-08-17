@@ -5,11 +5,11 @@
 package de.amr.pacmanfx.core.ecs.comp;
 
 import de.amr.basics.math.Vector2f;
-import de.amr.pacmanfx.core.ecs.GameEntityComponent;
+import de.amr.pacmanfx.core.ecs.EntityComponent;
 
 import static java.util.Objects.requireNonNull;
 
-public final class PositionComp implements GameEntityComponent {
+public final class PositionComp implements EntityComponent {
 
     private float x;
     private float y;

@@ -43,7 +43,7 @@ public class Ghost3DAppearanceController {
         switch (appearance) {
             case NORMAL -> lookNormal(ghost3D);
             case FRIGHTENED -> lookFrightened(ghost3D);
-            case FLASHING -> lookFlashing(ghost3D, game.variantConfig().rules().numLevelFlashes(level.number()));
+            case FLASHING -> lookFlashing(ghost3D, game.variant().rules().numLevelFlashes(level.number()));
             case EYES -> lookEyesOnly(ghost3D);
             case EATEN -> lookEaten(ghost3D);
         }

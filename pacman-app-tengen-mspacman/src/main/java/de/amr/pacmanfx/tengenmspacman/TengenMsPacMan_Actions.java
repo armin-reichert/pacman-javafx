@@ -45,14 +45,14 @@ public final class TengenMsPacMan_Actions {
         actionEnterStartScreen = new GameAction("enter_start_screen") {
             @Override
             public void execute(GameAppContext app) {
-                app.game().session().gameFlow().enterState(app.game(), CommonGameStateID.GAME_PREPARATION);
+                app.game().variant().gameFlow().enterState(app.game(), CommonGameStateID.GAME_PREPARATION);
             }
         };
 
         actionQuitDemoLevel = new GameAction("quit_demo_level") {
             @Override
             public void execute(GameAppContext app) {
-                app.game().session().gameFlow().enterState(app.game(), CommonGameStateID.GAME_PREPARATION);
+                app.game().variant().gameFlow().enterState(app.game(), CommonGameStateID.GAME_PREPARATION);
             }
 
             @Override
@@ -64,7 +64,7 @@ public final class TengenMsPacMan_Actions {
         actionStartPlaying = new GameAction("start_playing") {
             @Override
             public void execute(GameAppContext app) {
-                app.game().session().gameFlow().enterState(app.game(), CommonGameStateID.GAME_OR_LEVEL_STARTING);
+                app.game().variant().gameFlow().enterState(app.game(), CommonGameStateID.GAME_OR_LEVEL_STARTING);
             }
         };
 
@@ -99,7 +99,7 @@ public final class TengenMsPacMan_Actions {
         actionTogglePacBooster = new GameAction("toggle_pac_booster") {
             @Override
             public void execute(GameAppContext app) {
-                final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) app.game().variantConfig().gamePlay();
+                final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) app.game().variant().gamePlay();
                 final GameSession session = app.game().session();
                 session.optLevel().ifPresent(gameLevel -> {
                     gamePlay.setBoosterOn(app.game(), gameLevel.entities().pac(), !gamePlay.isBoosterOn(session));
@@ -111,7 +111,7 @@ public final class TengenMsPacMan_Actions {
 
             @Override
             public boolean isEnabled(GameAppContext app) {
-                final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) app.game().variantConfig().gamePlay();
+                final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) app.game().variant().gamePlay();
                 final GameSession session = app.game().session();
                 return gamePlay.boosterMode(session) == BoosterMode.ACTIVATE_WITH_A_OR_B && session.optLevel().isPresent();
             }

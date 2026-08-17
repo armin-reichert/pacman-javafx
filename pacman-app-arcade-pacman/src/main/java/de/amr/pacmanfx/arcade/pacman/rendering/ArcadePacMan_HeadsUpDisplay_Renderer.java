@@ -8,7 +8,7 @@ import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.core.model.HUDState;
-import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
@@ -44,9 +44,9 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer
     }
 
     @Override
-    public void draw(GameSession session, AbstractGameScene2D scene, long tick) {
+    public void draw(GameSession session, AbstractGameScene gameScene, long tick) {
         requireNonNull(session);
-        requireNonNull(scene);
+        requireNonNull(gameScene);
 
         final HUDState hud = session.hud();
 
@@ -65,8 +65,8 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer
 
         if (hud.isLevelCounterShown()) {
             final RectShort[] bonusSymbolSprites = spriteSheet().findSprites(SpriteID.BONUS_SYMBOLS);
-            final float y = scene.unscaledHeight() - tilesPx(2) + 2;
-            float x = scene.unscaledWidth() - tilesPx(4);
+            final float y = gameScene.rendering2D().unscaledHeight() - tilesPx(2) + 2;
+            float x = gameScene.rendering2D().unscaledWidth() - tilesPx(4);
             for (int symbolCode : session.levelCounter().data().symbolCodes()) {
                 drawSprite(bonusSymbolSprites[symbolCode], x, y, true);
                 x -= tilesPx(2); // symbols are drawn from right to left
@@ -76,7 +76,7 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer
         if (hud.isLivesCounterShown()) {
             final RectShort livesCounterSprite = spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL);
             final float x = tilesPx(2);
-            final float y = scene.unscaledHeight() - tilesPx(2);
+            final float y = gameScene.rendering2D().unscaledHeight() - tilesPx(2);
             for (int i = 0; i < hud.visibleLifeCount(); ++i) {
                 drawSprite(livesCounterSprite, x + i * tilesPx(2), y, true);
             }
@@ -90,7 +90,7 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer
         }
 
         if (hud.isCreditShown()) {
-            fillText(CREDIT_TEXT_PATTERN.formatted(hud.credit()), ARCADE_WHITE, arcadeFont8(), tilesPx(2), scene.unscaledHeight());
+            fillText(CREDIT_TEXT_PATTERN.formatted(hud.credit()), ARCADE_WHITE, arcadeFont8(), tilesPx(2), gameScene.rendering2D().unscaledHeight());
         }
     }
 

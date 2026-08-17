@@ -4,11 +4,11 @@
 
 package de.amr.pacmanfx.core.entities.pac.comp;
 
-import de.amr.pacmanfx.core.ecs.GameEntityComponent;
+import de.amr.pacmanfx.core.ecs.EntityComponent;
 
 import java.util.Objects;
 
-public class PacStateComp implements GameEntityComponent {
+public class PacStateComp implements EntityComponent {
 
     private PacState state;
 

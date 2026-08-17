@@ -30,7 +30,7 @@ public final class GameState_EatingGhost extends GameState {
 
     @Override
     public void onUpdate(GameContext game) {
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variant().systems();
         final GhostStateSystem ghostStateSystem = systems.ghostState();
         final SpriteAnimSystem spriteAnimSystem = systems.spriteAnim();
         final GameLevel level = game.session().assertLevel();
@@ -46,7 +46,7 @@ public final class GameState_EatingGhost extends GameState {
             level.entities().ghostsInState(GhostState.EATEN).forEach(
                 ghost -> ghostStateSystem.changeState(ghost, GhostState.RETURNING_HOME));
             level.entities().ghosts().forEach(spriteAnimSystem::playSelected);
-            game.session().gameFlow().resumePreviousState(game);
+            game.variant().gameFlow().resumePreviousState(game);
         }
     }
 }

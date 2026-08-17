@@ -177,7 +177,7 @@ public class MiniPlaySceneView {
     }
 
     private void drawGameLevel(GameContext game, GameLevel level) {
-        final GameRules rules = game.variantConfig().rules();
+        final GameRules rules = game.variant().rules();
         final var info = new RenderInfo();
         info.putAll(Map.of(
             CommonRenderInfoKey.ENERGIZER_VISIBLE, level.heartbeat().state() == Pulse.State.ON,

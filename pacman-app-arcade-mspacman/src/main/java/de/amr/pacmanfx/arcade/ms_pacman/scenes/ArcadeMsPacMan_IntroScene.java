@@ -26,7 +26,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 
 import java.util.List;
 
@@ -38,7 +38,7 @@ import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
  * <p>
  * The ghosts and Ms. Pac-Man are introduced on a billboard and are marching in one after another.
  */
-public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
+public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
 
     public static final int TITLE_X          = WorldMap.TS * 10;
     public static final int TITLE_Y          = WorldMap.TS * 8;
@@ -68,8 +68,9 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
         final Arcade_Actions actions = app().gameVariants().currentGameVariant().uiConfig()
             .getExtensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
-        actionBindings().registerAllBindings(actions.gameStartActionBindings());
-        actionBindings().registerAllBindings(app().commonActions().sceneTestActions().bindings());
+        final var bindingsMap = actionBindingsSupport().bindingsMap();
+        bindingsMap.registerAllBindings(actions.gameStartActionBindings());
+        bindingsMap.registerAllBindings(app().commonActions().sceneTestActions().bindings());
 
         sceneFlow.restartState(this, SceneState.STARTING);
     }
@@ -77,7 +78,6 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
     @Override
     public void onDeactivate() {
         app().ui().sounds().voice().stop();
-        actionBindings().dispose();
     }
 
     @Override
@@ -89,7 +89,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
         final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().uiConfig().renderConfig();
         final SpriteAnimationContainer container = app().ui().sprites().animations();
 
-        final GameSystems sys = game().variantConfig().systems();
+        final GameSystems sys = game().variant().systems();
 
         createMarquee();
         MarqueeSystem.instance().start(marquee);
@@ -187,7 +187,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
             }
 
             boolean letGhostWalkIn(ArcadeMsPacMan_IntroScene scene) {
-                final GameSystems sys = scene.game().variantConfig().systems();
+                final GameSystems sys = scene.game().variant().systems();
 
                 final Ghost ghost = scene.ghosts.get(scene.ghostPresented.ordinal());
                 if (ghost.worldNavigation().moveDir() == Direction.LEFT) {
@@ -222,7 +222,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene2D {
         MS_PACMAN_MARCHING_IN {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                final GameSystems sys = scene.game().variantConfig().systems();
+                final GameSystems sys = scene.game().variant().systems();
                 final Pac msPacMan = scene.msPacMan;
 
                 MarqueeSystem.instance().update(scene.marquee);

@@ -36,13 +36,13 @@ public final class Arcade_Actions {
                 app.ui().sounds().setEnabled(true);
                 coinMechanism.insertCoin();
                 app.game().eventManager().publishGameEvent(new CreditAddedEvent(1));
-                app.game().session().gameFlow().enterState(app.game(), CommonGameStateID.GAME_PREPARATION);
+                app.game().variant().gameFlow().enterState(app.game(), CommonGameStateID.GAME_PREPARATION);
             }
 
             @Override
             public boolean isEnabled(GameAppContext app) {
                 final GameSession session = app.game().session();
-                final GameState gameState = session.gameState();
+                final GameState gameState = app.game().state();
                 if (app.game().coinMechanism().isFull()) {
                     return false;
                 }
@@ -59,7 +59,7 @@ public final class Arcade_Actions {
             @Override
             public void execute(GameAppContext app) {
                 app.ui().sounds().voice().stop();
-                app.game().session().gameFlow().enterState(app.game(), Arcade_GameState.GAME_OR_LEVEL_STARTING.state());
+                app.game().variant().gameFlow().enterState(app.game(), Arcade_GameState.GAME_OR_LEVEL_STARTING.state());
             }
 
             @Override
@@ -67,7 +67,7 @@ public final class Arcade_Actions {
                 if (app.game().coinMechanism().isEmpty()) {
                     return false;
                 }
-                final GameState state = app.game().session().gameState();
+                final GameState state = app.game().state();
                 return (CommonGameStateID.GAME_INTRO.hasSameNameAs(state)
                     || CommonGameStateID.GAME_PREPARATION.hasSameNameAs(state));
             }

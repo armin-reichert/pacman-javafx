@@ -29,7 +29,7 @@ public class HelpInfo {
     public static HelpInfo build(GameAppContext app) {
         final GameContext game = app.game();
         final GameSession session = game.session();
-        final GameState state = session.gameState();
+        final GameState state = game.state();
         final boolean demoLevel = session.isAttractMode();
 
         final HelpInfo helpInfo = new HelpInfo(app);

@@ -46,7 +46,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
 
     @Override
     public void configureLevelCounter(GameContext game, LevelCounter levelCounter) {
-        final LevelCounterSystem system = game.variantConfig().systems().levelCounterSystem();
+        final LevelCounterSystem system = game.variant().systems().levelCounterSystem();
         system.setCounterBehavior(levelCounter, LevelCounterBehavior.DISABLE_WHEN_FULL);
         system.setCounterCapacity(levelCounter, 7);
         system.clearCounter(levelCounter);
@@ -61,8 +61,8 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         final GameLevelEntitySet entities = new GameLevelEntitySet();
 
         final GameSession session = game.session();
-        final WorldNavigationSystem navigator = game.variantConfig().systems().worldNavigator();
-        final WorldMap worldMap = game.variantConfig().worldMapManager().supplyWorldMap(levelNumber);
+        final WorldNavigationSystem navigator = game.variant().systems().worldNavigator();
+        final WorldMap worldMap = game.variant().worldMapManager().supplyWorldMap(levelNumber);
         final TerrainLayer terrain = worldMap.terrainLayer();
 
         final Vector2i houseMinTile = terrain.getTilePropertyOrDefault(
@@ -72,12 +72,12 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         final House house = HouseFactory.createArcadeHouse(houseMinTile);
         entities.add(house);
 
-        createAndSetMsPacMan(entities, game.variantConfig().systems());
+        createAndSetMsPacMan(entities, game.variant().systems());
         createAndSetGhosts(entities, worldMap.terrainLayer(), house);
 
         entities.add(new MessageView());
 
-        final HuntingTimer huntingTimer = new HuntingTimer("Arcade Ms. Pac-Man Hunting Timer", game.variantConfig().rules().numHuntingPhases());
+        final HuntingTimer huntingTimer = new HuntingTimer("Arcade Ms. Pac-Man Hunting Timer", game.variant().rules().numHuntingPhases());
 
         final GameLevel level = new GameLevel(levelNumber, worldMap, entities, huntingTimer);
 
@@ -90,12 +90,12 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
             }
         });
 
-        final GameRules rules = game.variantConfig().rules();
+        final GameRules rules = game.variant().rules();
         level.setBonusSymbolCodes(rules.bonusSymbols(levelNumber));
 
         /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
          * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
-        final LevelCounterSystem levelCounterSystem = game.variantConfig().systems().levelCounterSystem();
+        final LevelCounterSystem levelCounterSystem = game.variant().systems().levelCounterSystem();
         levelCounterSystem.enableCounter(session.levelCounter(), levelNumber < 8);
 
         return level;
@@ -135,7 +135,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         requireNonNull(game);
 
         final GameSession session = game.session();
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variant().systems();
 
         final GameLevel level = createLevel(game, 1);
 
@@ -155,7 +155,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         session.gateKeeper().setLevelNumber(1);
         ScoreSystem.setLevelNumber(session.score(), 1);
 
-        final LevelCounterSystem levelCounterSystem = game.variantConfig().systems().levelCounterSystem();
+        final LevelCounterSystem levelCounterSystem = game.variant().systems().levelCounterSystem();
         levelCounterSystem.enableCounter(session.levelCounter(), true);
 
         return level;
@@ -177,7 +177,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         requireNonNull(game);
         requireNonNull(level);
 
-        final GameSystems sys = game.variantConfig().systems();
+        final GameSystems sys = game.variant().systems();
 
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
@@ -195,7 +195,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         level.selectNextBonus();
 
         final int symbolCode = level.bonusSymbolCode(level.currentBonusIndex());
-        final int value = game.variantConfig().rules().scoringRules().pointsForBonus(symbolCode);
+        final int value = game.variant().rules().scoringRules().pointsForBonus(symbolCode);
 
         Bonus bonus;
         if (terrain.horizontalPortals().isEmpty()) {
@@ -206,7 +206,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         } else {
             bonus = Bonus.createMovingBonus(symbolCode, value);
             computeBonusRoute(game, bonus, terrain, house);
-            final float speed = game.variantConfig().rules().actorSpeedRules().bonusSpeed(game, level);
+            final float speed = game.variant().rules().actorSpeedRules().bonusSpeed(game, level);
             sys.bonusState().showEdibleAndStartWandering(bonus, speed);
         }
 
@@ -262,7 +262,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         final Vector2i backyard = houseEntry.plus(0, house.sizeInTiles().y() + 1);
         final List<Vector2i> route = Stream.of(entryTile, houseEntry, backyard, houseEntry, exitTile).toList();
 
-        game.variantConfig().systems().bonusMoveAndJump().setRoute(bonus, route, leftToRight);
+        game.variant().systems().bonusMoveAndJump().setRoute(bonus, route, leftToRight);
         Logger.info("Moving bonus route: {} (crossing {})", route, leftToRight ? "left to right" : "right to left");
     }
 }

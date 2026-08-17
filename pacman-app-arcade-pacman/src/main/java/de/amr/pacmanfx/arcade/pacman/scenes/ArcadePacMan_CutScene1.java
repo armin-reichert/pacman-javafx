@@ -16,7 +16,7 @@ import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 /**
@@ -24,7 +24,7 @@ import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
  * Red ghost chases Pac-Man from right to left over the screen,
  * then a frightened ghost is chased by a big Pac-Man from left to right.
  */
-public class ArcadePacMan_CutScene1 extends AbstractGameScene2D {
+public class ArcadePacMan_CutScene1 extends AbstractGameScene {
 
     public static final short ANIMATION_START_TICK = 120;
 
@@ -56,7 +56,7 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene2D {
             return;
         }
 
-        final GameSystems sys = game.variantConfig().systems();
+        final GameSystems sys = game.variant().systems();
 
         if (sceneTick == ANIMATION_START_TICK) {
             app().ui().sounds().play(PacManGameSoundID.INTERMISSION_1, 2);
@@ -69,7 +69,7 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene2D {
             startBigPacManChasingBlinky(sys);
         }
         else if (sceneTick == ANIMATION_START_TICK + 632) {
-            gameState().triggerTimeout();
+            game().state().triggerTimeout();
         }
         if (sceneTick >= ANIMATION_START_TICK) {
             sys.motor().move(pacMan);

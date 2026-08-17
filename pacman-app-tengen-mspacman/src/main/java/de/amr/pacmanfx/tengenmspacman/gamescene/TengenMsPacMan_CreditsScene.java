@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.d2.AbstractGameScene2D;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantUIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantUIConfig.NES_SCREEN_WIDTH;
@@ -17,7 +17,7 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantUIConfig.
 /**
  * Gives credit to the people that helped in making the game, original and remake authors.
  */
-public class TengenMsPacMan_CreditsScene extends AbstractGameScene2D {
+public class TengenMsPacMan_CreditsScene extends AbstractGameScene {
 
     public static final int DISPLAY_TICKS = 16 * 60;
 
@@ -28,8 +28,8 @@ public class TengenMsPacMan_CreditsScene extends AbstractGameScene2D {
 
     public TengenMsPacMan_CreditsScene(GameAppContext appContext) {
         super(appContext);
-        unscaledWidthProperty().set(NES_SCREEN_WIDTH);
-        unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
+        rendering2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
+        rendering2D().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
     }
 
     @Override
@@ -37,7 +37,8 @@ public class TengenMsPacMan_CreditsScene extends AbstractGameScene2D {
         final var actions = app().currentGameVariantUIConfig().getExtensionValue(
             TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
 
-        actionBindings().selectAnyMatchingBinding(actions.actionEnterStartScreen(), actions.localBindings());
+        final var bindingsMap = actionBindingsSupport().bindingsMap();
+        bindingsMap.selectAnyMatchingBinding(actions.actionEnterStartScreen(), actions.localBindings());
 
         fadeProgress = 0;
         displayMode = DisplayMode.ORIGINAL_AUTHORS;
@@ -47,9 +48,9 @@ public class TengenMsPacMan_CreditsScene extends AbstractGameScene2D {
 
     @Override
     public void onTick(GameContext game) {
-        final TickTimer stateTimer = gameState().timer();
+        final TickTimer stateTimer = game().state().timer();
         if (stateTimer.tickCount() == DISPLAY_TICKS) {
-            gameState().triggerTimeout();
+            game().state().triggerTimeout();
             return;
         }
         if (stateTimer.tickCount() == DISPLAY_TICKS / 2) {

@@ -28,17 +28,17 @@ public class ArcadeGameState_LevelContinue extends GameState {
         final GameSession session = game.session();
         final GameLevel level = session.assertLevel();
 
-        game.variantConfig().gamePlay().prepareLevelForPlaying(game);
+        game.variant().gamePlay().prepareLevelForPlaying(game);
         level.entities().pac().show();
         level.entities().ghosts().forEach(GameEntity::show);
 
-        game.variantConfig().gamePlay().showLevelMessage(game, level, GameLevelMessageType.READY);
+        game.variant().gamePlay().showLevelMessage(game, level, GameLevelMessageType.READY);
         session.hud().hideCredit().showLivesCounter();
     }
 
     @Override
     public void onUpdate(GameContext game) {
-        final GameFlowController gameFlow = game.session().gameFlow();
+        final GameFlowController gameFlow = game.variant().gameFlow();
         final long tick = timer().tickCount();
 
         if (tick == TICK_CONTINUE_LEVEL) {
