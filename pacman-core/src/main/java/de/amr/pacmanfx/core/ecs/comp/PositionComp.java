@@ -68,8 +68,8 @@ public final class PositionComp implements EntityComponent {
         return PositionSystem.computeTileAt(bodyCenter());
     }
 
-    public Vector2f offset() {
-        return PositionSystem.computeTileOffset(bodyCenter());
+    public Vector2i offset() {
+        return PositionSystem.computeTileOffset(asVector2f());
     }
 
     public Vector2f bodyCenter() {

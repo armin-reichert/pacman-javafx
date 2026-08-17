@@ -266,7 +266,7 @@ public class WorldNavigationSystem {
         }
 
         if (turn) {
-            final Vector2f tileOffset = PositionSystem.computeTileOffset(actor.pos().asVector2f());
+            final Vector2i tileOffset = PositionSystem.computeTileOffset(actor.pos().asVector2f());
             final float offset = dir.isHorizontal() ? tileOffset.y() : tileOffset.x();
             final boolean atTurnPosition = Math.abs(offset) <= 1;
             if (atTurnPosition) {

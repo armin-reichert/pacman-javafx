@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui.views.dashboard;
 
-import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameSession;
@@ -88,9 +87,9 @@ public class DS_ActorInfo extends GameDashboardSection {
         final WorldNavigationComp worldNavigation = actor.requireComp(WorldNavigationComp.class);
 
         final Vector2i tile = actor.pos().tile();
-        final Vector2f tileOffset = actor.pos().offset();
+        final Vector2i tileOffset = actor.pos().offset();
 
-        return "(%2d,%2d)+(%2.0f,%2.0f)%s".formatted(
+        return "(%2d,%2d)+(%2d,%2d)%s".formatted(
             tile.x(), tile.y(),
             tileOffset.x(), tileOffset.y(),
             worldNavigation.isNewTileEntered() ? " NEW" : "");
