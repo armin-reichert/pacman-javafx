@@ -15,7 +15,7 @@ import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationManager;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
@@ -30,7 +30,7 @@ import static de.amr.pacmanfx.ui.views.ContextMenuSupport.*;
 /**
  * 2D play scene for Arcade game variants.
  */
-public class Arcade_PlayScene2D extends AbstractGameScene
+public class Arcade_PlayScene2D extends GameScene
     implements Arcade_PlayScene2D_GameEventHandler
 {
     private LevelCompletedAnimation levelCompletedAnimation;

@@ -13,7 +13,7 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.model.test.CutScenesTestState;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.vm.GameViewModel;
@@ -25,7 +25,7 @@ public class XXL_MsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
     public XXL_MsPacMan_GameSceneConfig() {}
 
     @Override
-    protected AbstractGameScene createGameScene(GameAppContext appContext, Named sceneID) {
+    protected GameScene createGameScene(GameAppContext appContext, Named sceneID) {
         requireNonNull(sceneID);
         return switch (sceneID) {
             case CommonGameSceneID.BOOT_SCENE -> new Arcade_BootScene2D(appContext);

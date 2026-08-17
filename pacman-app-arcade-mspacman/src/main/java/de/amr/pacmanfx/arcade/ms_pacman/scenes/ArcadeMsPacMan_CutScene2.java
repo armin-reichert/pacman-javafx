@@ -15,7 +15,7 @@ import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.clapperboard.system.ClapperboardStateSystem;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import java.util.List;
@@ -29,7 +29,7 @@ import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
  * Pac-Man and Ms. Pac-Man chase each other across the screen over and over. After three turns, they both rapidly run
  * from left to right and right to left. (Played after round 5)
  */
-public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene {
+public class ArcadeMsPacMan_CutScene2 extends GameScene {
 
     static final int UPPER_Y  = TS * 12;
     static final int MIDDLE_Y = TS * 18;

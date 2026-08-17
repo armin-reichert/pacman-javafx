@@ -16,7 +16,7 @@ import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 /**
@@ -24,7 +24,7 @@ import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
  * Red ghost chases Pac-Man from right to left over the screen,
  * then a frightened ghost is chased by a big Pac-Man from left to right.
  */
-public class ArcadePacMan_CutScene1 extends AbstractGameScene {
+public class ArcadePacMan_CutScene1 extends GameScene {
 
     public static final short ANIMATION_START_TICK = 120;
 

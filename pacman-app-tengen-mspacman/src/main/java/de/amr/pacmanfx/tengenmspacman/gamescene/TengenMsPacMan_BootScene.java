@@ -13,7 +13,7 @@ import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
@@ -23,7 +23,7 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantUIConfig.
 /**
  * Shows moving and color changing "TENGEN PRESENTS" text and ghost running through scene.
  */
-public class TengenMsPacMan_BootScene extends AbstractGameScene {
+public class TengenMsPacMan_BootScene extends GameScene {
 
     private static final float GHOST_Y = tilesPx(21.5f);
 

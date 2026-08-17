@@ -154,7 +154,7 @@ public class GameSceneManager {
     }
 
     private void switchPlaySceneTo2D(GameScene currentGameScene, GameScene nextGameScene) {
-        if (!(nextGameScene instanceof AbstractGameScene playScene2D)) {
+        if (!(nextGameScene instanceof GameScene playScene2D)) {
             throw new IllegalArgumentException("Expected GameScene2D, but scene has class %s"
                 .formatted(nextGameScene.getClass().getSimpleName()));
         }
@@ -168,8 +168,8 @@ public class GameSceneManager {
             throw new IllegalStateException("WTF is going on here, switch between NULL scenes?");
         }
         return switch (currentGameScene) {
-            case AbstractGameScene _ when nextGameScene instanceof PlayScene3D         -> GameSceneSwitchType.FROM_2D_TO_3D;
-            case PlayScene3D         _ when nextGameScene instanceof AbstractGameScene -> GameSceneSwitchType.FROM_3D_TO_2D;
+            case GameScene _ when nextGameScene instanceof PlayScene3D         -> GameSceneSwitchType.FROM_2D_TO_3D;
+            case PlayScene3D         _ when nextGameScene instanceof GameScene -> GameSceneSwitchType.FROM_3D_TO_2D;
             case null, default                                                           -> GameSceneSwitchType.NONE;
         };
     }

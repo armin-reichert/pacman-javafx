@@ -251,7 +251,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
         // Render current 2D game scene
         final GameScene gameScene = app.ui().gameScenes().optCurrentGameScene().orElse(null);
-        if (gameScene instanceof AbstractGameScene gameScene2D) {
+        if (gameScene instanceof GameScene gameScene2D) {
             if (sceneRenderer != null) {
                 sceneRenderer.draw(gameScene2D, tick);
             }

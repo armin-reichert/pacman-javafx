@@ -18,7 +18,7 @@ import de.amr.pacmanfx.tengenmspacman.model.Difficulty;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
-import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
@@ -56,7 +56,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
     }
 
     @Override
-    public void draw(GameSession session, AbstractGameScene gameScene, long tick) {
+    public void draw(GameSession session, GameScene gameScene, long tick) {
         requireNonNull(session);
         requireNonNull(gameScene);
 
@@ -101,7 +101,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
         ctx.restore();
     }
 
-    private double computeOffsetY(AbstractGameScene scene) {
+    private double computeOffsetY(GameScene scene) {
         return switch (scene) {
             case TengenMsPacMan_CutScene1 ignored -> -2 * TS;
             case TengenMsPacMan_CutScene2 ignored -> -2 * TS;

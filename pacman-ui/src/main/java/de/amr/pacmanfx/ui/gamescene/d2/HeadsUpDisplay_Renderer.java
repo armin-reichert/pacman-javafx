@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.gamescene.d2;
 
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 
 public interface HeadsUpDisplay_Renderer extends Renderer {
@@ -16,5 +16,5 @@ public interface HeadsUpDisplay_Renderer extends Renderer {
      * @param gameScene 2D scene
      * @param tick current tick of the game machine clock
      */
-    void draw(GameSession session, AbstractGameScene gameScene, long tick);
+    void draw(GameSession session, GameScene gameScene, long tick);
 }

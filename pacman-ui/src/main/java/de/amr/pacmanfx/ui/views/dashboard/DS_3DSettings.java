@@ -6,8 +6,8 @@ package de.amr.pacmanfx.ui.views.dashboard;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.GameSceneController;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.views.playview.MiniPlaySceneView;
 import de.amr.pacmanfx.ui.vm.GameViewModel;
@@ -124,7 +124,7 @@ public class DS_3DSettings extends GameDashboardSection {
     }
 
     private static SubScene currentSubSceneFX(GameAppContext app) {
-        return app.ui().gameScenes().optCurrentGameScene().flatMap(GameScene::optSubSceneFX).orElse(null);
+        return app.ui().gameScenes().optCurrentGameScene().flatMap(GameSceneController::optSubSceneFX).orElse(null);
     }
 
     private static String subSceneSizeInfo(SubScene subScene) {
@@ -145,10 +145,10 @@ public class DS_3DSettings extends GameDashboardSection {
             camera.getTranslateZ());
     }
 
-    private static String sceneSizeInfo(GameScene gameScene, GameLevel level) {
+    private static String sceneSizeInfo(GameSceneController gameScene, GameLevel level) {
         if (gameScene == null) return NO_INFO;
 
-        if (gameScene instanceof AbstractGameScene gameScene2D) {
+        if (gameScene instanceof GameScene gameScene2D) {
             final var r2D = gameScene2D.rendering2D();
             return "%dx%d (scaled: %.0fx%.0f)".formatted(
                 r2D.unscaledWidth(), r2D.unscaledHeight(),
