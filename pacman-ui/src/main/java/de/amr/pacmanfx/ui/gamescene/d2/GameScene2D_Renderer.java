@@ -12,7 +12,7 @@ public interface GameScene2D_Renderer extends Renderer {
     void draw(GameScene gameScene, long tick);
 
     static BaseDebugInfoRenderer createDefaultSceneDebugRenderer(GameScene gameScene, Canvas canvas) {
-        final Rendering2DSupport r2D = gameScene.componentsRegistry().requireComp(Rendering2DSupport.class);
+        final Rendering2DSupport r2D = gameScene.componentsRegistry().reqComp(Rendering2DSupport.class);
         return r2D.configureRenderer(new BaseDebugInfoRenderer(canvas));
     }
 }

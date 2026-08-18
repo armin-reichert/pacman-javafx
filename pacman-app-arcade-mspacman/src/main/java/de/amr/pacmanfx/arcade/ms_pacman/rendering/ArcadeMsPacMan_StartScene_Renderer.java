@@ -28,7 +28,7 @@ public class ArcadeMsPacMan_StartScene_Renderer extends BaseRenderer implements 
     public ArcadeMsPacMan_StartScene_Renderer(GameVariantRenderConfig renderConfig, GameScene gameScene, Canvas canvas) {
         super(canvas);
 
-        final Rendering2DSupport r2D = gameScene.componentsRegistry().requireComp(Rendering2DSupport.class);
+        final Rendering2DSupport r2D = gameScene.componentsRegistry().reqComp(Rendering2DSupport.class);
 
         copyrightImage = renderConfig.assets().image("logo.midway");
         copyrightRenderer = r2D.configureRenderer(new CopyrightRenderer(canvas));

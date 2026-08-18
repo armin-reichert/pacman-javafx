@@ -43,7 +43,7 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer implements 
 
         super(canvas);
 
-        final Rendering2DSupport r2D = gameScene.componentsRegistry().requireComp(Rendering2DSupport.class);
+        final Rendering2DSupport r2D = gameScene.componentsRegistry().reqComp(Rendering2DSupport.class);
 
         copyrightImage = renderConfig.assets().image("logo.midway");
 

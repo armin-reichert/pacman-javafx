@@ -55,7 +55,7 @@ public class Arcade_BootScene2D_Renderer extends BaseRenderer implements GameSce
     @Override
     public void draw(GameScene scene, long tick) {
         final Arcade_BootScene2D bootScene = (Arcade_BootScene2D) scene;
-        final Rendering2DSupport r2D = scene.componentsRegistry().requireComp(Rendering2DSupport.class);
+        final Rendering2DSupport r2D = scene.componentsRegistry().reqComp(Rendering2DSupport.class);
         switch (bootScene.sceneState) {
             case BLANK -> clearCanvas();
             case HEX_CODES -> {

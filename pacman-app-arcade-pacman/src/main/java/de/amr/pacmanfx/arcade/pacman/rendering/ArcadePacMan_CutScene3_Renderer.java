@@ -17,7 +17,7 @@ public class ArcadePacMan_CutScene3_Renderer extends ArcadePacMan_CutScene_Rende
     public ArcadePacMan_CutScene3_Renderer(GameScene gameScene, SpriteAnimSystem animSystem, Canvas canvas) {
         super(gameScene, animSystem, canvas);
 
-        final Rendering2DSupport r2D = gameScene.componentsRegistry().requireComp(Rendering2DSupport.class);
+        final Rendering2DSupport r2D = gameScene.componentsRegistry().reqComp(Rendering2DSupport.class);
 
         debugRenderer = r2D.configureRenderer(new BaseDebugInfoRenderer(canvas) {
             @Override

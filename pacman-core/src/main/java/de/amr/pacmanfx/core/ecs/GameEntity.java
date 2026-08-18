@@ -37,7 +37,7 @@ public class GameEntity implements Disposable {
     }
 
     public final <T extends EntityComponent> T requireComp(Class<T> type) {
-        return componentRegistry.requireComp(type);
+        return componentRegistry.reqComp(type);
     }
 
     public final <T extends EntityComponent> boolean hasComp(Class<T> type) {

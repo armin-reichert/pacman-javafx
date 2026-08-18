@@ -298,7 +298,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     }
 
     public void updateGameSceneRenderers(GameScene gameScene2D) {
-        final Rendering2DSupport r2D = gameScene2D.componentsRegistry().requireComp(Rendering2DSupport.class);
+        final Rendering2DSupport r2D = gameScene2D.componentsRegistry().reqComp(Rendering2DSupport.class);
         final GameVariantRenderConfig renderConfig = app.gameVariants().currentGameVariant().uiConfig().renderConfig();
         final Canvas canvas = r2D.canvas();
         if (canvas != null) {
@@ -354,7 +354,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         });
 
         if (gameScene.componentsRegistry().hasComp(Rendering2DSupport.class)) {
-            final Rendering2DSupport r2D = gameScene.componentsRegistry().requireComp(Rendering2DSupport.class);
+            final Rendering2DSupport r2D = gameScene.componentsRegistry().reqComp(Rendering2DSupport.class);
 
             gameSceneFrame.canvas().widthProperty().unbind();
             gameSceneFrame.canvas().heightProperty().unbind();
@@ -433,7 +433,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         subSceneFX.heightProperty().bind(mainScene.heightProperty());
 
         if (gameScene.componentsRegistry().hasComp(Rendering2DSupport.class)) {
-            final Rendering2DSupport r2D = gameScene.componentsRegistry().requireComp(Rendering2DSupport.class);
+            final Rendering2DSupport r2D = gameScene.componentsRegistry().reqComp(Rendering2DSupport.class);
             // use the canvas of the decorated pane for 2D scene even though the decoration is not used
             r2D.setCanvas(gameSceneFrame().canvas());
             updateGameSceneRenderers(gameScene);
@@ -447,7 +447,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         final GamePlayView playView = app.ui().views().gamePlayView();
         final DecorationPane frame = playView.gameSceneFrame();
 
-        final Rendering2DSupport r2D = gameScene.componentsRegistry().requireComp(Rendering2DSupport.class);
+        final Rendering2DSupport r2D = gameScene.componentsRegistry().reqComp(Rendering2DSupport.class);
 
         r2D.backgroundColorProperty().bind(app.ui().viewModel().common2D.canvasBackgroundColorProperty);
 

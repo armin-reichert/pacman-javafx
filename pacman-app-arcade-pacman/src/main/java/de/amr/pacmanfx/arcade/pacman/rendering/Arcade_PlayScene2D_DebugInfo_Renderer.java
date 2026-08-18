@@ -46,7 +46,7 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
 
     @Override
     public void draw(GameScene gameScene, long tick) {
-        final Rendering2DSupport r2D = gameScene.componentsRegistry().requireComp(Rendering2DSupport.class);
+        final Rendering2DSupport r2D = gameScene.componentsRegistry().reqComp(Rendering2DSupport.class);
 
         drawTileGrid(r2D.unscaledWidth(), r2D.unscaledHeight(), Color.LIGHTGRAY);
 

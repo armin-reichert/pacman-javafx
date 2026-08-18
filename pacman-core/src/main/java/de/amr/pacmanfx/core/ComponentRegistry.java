@@ -6,60 +6,93 @@ package de.amr.pacmanfx.core;
 
 import de.amr.basics.Disposable;
 
-import java.util.Collection;
 import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.List;
 import java.util.Optional;
+import java.util.SequencedCollection;
 
 import static java.util.Objects.requireNonNull;
 
+/**
+ * A component registry.
+ *
+ * @param <C> the component base type e.g. {@link de.amr.pacmanfx.core.ecs.EntityComponent}
+ */
 public class ComponentRegistry<C> implements Disposable {
 
-    private final Map<Class<? extends C>, C> components = new LinkedHashMap<>(7);
+    private final LinkedHashMap<Class<? extends C>, C> componentMap = new LinkedHashMap<>(10);
 
     public ComponentRegistry() {
     }
 
-    public Collection<C> components() {
-        return components.values();
+    public SequencedCollection<C> components() {
+        return List.copyOf(componentMap.sequencedValues());
     }
 
     @Override
     public void dispose() {
-        for (C component : components.values()) {
+        for (C component : componentMap.values()) {
             if (component instanceof Disposable) {
                 ((Disposable) component).dispose();
             }
         }
-        components.clear();
+        componentMap.clear();
     }
 
+    /**
+     * Sets the entity component of the given type. Throws an exception if there is already such a component registered.
+     *
+     * @param type the component type
+     * @param component the component to be registered
+     * @param <T> component type
+     */
     public final <T extends C> void setComp(Class<T> type, T component) {
         requireNonNull(type);
         requireNonNull(component);
-        if (components.containsKey(type)) {
+        if (componentMap.containsKey(type)) {
             throw new IllegalArgumentException("Component for class: " + type.getSimpleName() + " is already registered!");
         }
-        components.put(type, component);
+        componentMap.put(type, component);
     }
 
-    public final <T extends C> T requireComp(Class<T> type) {
+    /**
+     * Returns the entity component of the given type. Throws an exception if there is none.
+     *
+     * @param type the component type
+     * @return the entity component registered for the given type
+     * @param <T> component type
+     */
+    public final <T extends C> T reqComp(Class<T> type) {
         requireNonNull(type);
-        final C component = components.get(type);
+        final C component = componentMap.get(type);
         if (component == null) {
             throw new IllegalArgumentException("No component found for class %s".formatted(type.getSimpleName()));
         }
         return type.cast(component);
     }
 
+    /**
+     * Checks for the optional entity component of the given type. Returns {@code false} if no such component exists.
+     *
+     * @param type the component type
+     * @return {@code true} if a component for this type is registered
+     * @param <T> component type
+     */
     public final <T extends C> boolean hasComp(Class<T> type) {
         requireNonNull(type);
-        return components.get(type) != null;
+        return componentMap.get(type) != null;
     }
 
+    /**
+     * Returns the optional entity component of the given type. Returns empty if no such component exists.
+     *
+     * @param type the component type
+     * @return the entity component registered for the given type
+     * @param <T> component type
+     */
     public final <T extends C> Optional<T> optComp(Class<T> type) {
         requireNonNull(type);
-        final C component = components.get(type);
+        final C component = componentMap.get(type);
         return Optional.ofNullable(component).map(type::cast);
     }
 }

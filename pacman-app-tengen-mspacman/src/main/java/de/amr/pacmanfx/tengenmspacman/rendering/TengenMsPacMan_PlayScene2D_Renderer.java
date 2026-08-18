@@ -85,7 +85,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
         GameVariantRenderConfig renderConfig, GameScene gameScene, SpriteAnimSystem animSystem, Canvas canvas) {
         super(canvas);
 
-        final Rendering2DSupport r2D = gameScene.componentsRegistry().requireComp(Rendering2DSupport.class);
+        final Rendering2DSupport r2D = gameScene.componentsRegistry().reqComp(Rendering2DSupport.class);
         this.animSystem = requireNonNull(animSystem);
         levelRenderer = r2D.configureRenderer((TengenMsPacMan_GameLevelRenderer) renderConfig.createGameLevelRenderer(animSystem, canvas));
         actorRenderer = r2D.configureRenderer((TengenMsPacMan_ActorRenderer)     renderConfig.createActorRenderer(animSystem, canvas));

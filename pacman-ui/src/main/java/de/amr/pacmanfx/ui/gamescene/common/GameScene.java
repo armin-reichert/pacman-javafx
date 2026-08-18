@@ -46,7 +46,7 @@ public class GameScene implements GameSceneController, DefaultGameEventListener,
             componentRegistry.setComp(Rendering2DSupport.class, new Rendering2DSupport());
             Logger.info("Added Rendering2DSupport to " + getClass().getSimpleName());
         }
-        return componentRegistry.requireComp(Rendering2DSupport.class);
+        return componentRegistry.reqComp(Rendering2DSupport.class);
     }
 
     public ActionBindingsSupport actionBindingsSupport() {
@@ -55,7 +55,7 @@ public class GameScene implements GameSceneController, DefaultGameEventListener,
             componentRegistry.setComp(ActionBindingsSupport.class, new ActionBindingsSupport());
             Logger.info("Added ActionBindingsSupport to " + getClass().getSimpleName());
         }
-        return componentRegistry.requireComp(ActionBindingsSupport.class);
+        return componentRegistry.reqComp(ActionBindingsSupport.class);
     }
 
     public ComponentRegistry<GameSceneComponent> componentsRegistry() {
@@ -143,7 +143,7 @@ public class GameScene implements GameSceneController, DefaultGameEventListener,
     @Override
     public void onInput() {
         if (componentRegistry.hasComp(ActionBindingsSupport.class)) {
-            componentRegistry.requireComp(ActionBindingsSupport.class)
+            componentRegistry.reqComp(ActionBindingsSupport.class)
                 .bindingsMap()
                 .executeMatchingAction(app());
         }

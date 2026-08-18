@@ -30,7 +30,7 @@ public class DS_GameSceneKeys extends GameDashboardSection {
         if (gameScene.componentsRegistry().hasComp(ActionBindingsSupport.class)) {
             final ActionBindingsRegistry registry = gameScene
                 .componentsRegistry()
-                .requireComp(ActionBindingsSupport.class)
+                .reqComp(ActionBindingsSupport.class)
                 .bindingsMap();
 
             if (registry.actionBindings().isEmpty()) {

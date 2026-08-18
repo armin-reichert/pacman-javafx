@@ -101,7 +101,7 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
         requireNonNull(canvas);
         requireNonNull(gameScene);
 
-        final Rendering2DSupport r2D = gameScene.componentsRegistry().requireComp(Rendering2DSupport.class);
+        final Rendering2DSupport r2D = gameScene.componentsRegistry().reqComp(Rendering2DSupport.class);
 
         final GameScene2D_Renderer renderer = switch (gameScene) {
             case Arcade_BootScene2D ignored        -> new Arcade_BootScene2D_Renderer(gameScene, canvas, spriteSheet(), BOOT_SCENE_SPRITES);
@@ -129,7 +129,7 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
         requireNonNull(animSystem);
         requireNonNull(canvas);
 
-        final Rendering2DSupport r2D = gameScene.componentsRegistry().requireComp(Rendering2DSupport.class);
+        final Rendering2DSupport r2D = gameScene.componentsRegistry().reqComp(Rendering2DSupport.class);
         final var renderer = new ArcadeMsPacMan_HeadsUpDisplayRenderer(canvas);
         renderer.setImageSmoothing(true);
         r2D.configureRenderer(renderer);

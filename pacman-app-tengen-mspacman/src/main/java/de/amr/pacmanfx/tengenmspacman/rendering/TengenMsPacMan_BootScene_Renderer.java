@@ -25,7 +25,7 @@ public class TengenMsPacMan_BootScene_Renderer extends BaseRenderer implements G
         GameVariantRenderConfig renderConfig, GameScene gameScene, SpriteAnimSystem animSystem, Canvas canvas) {
         super(canvas);
 
-        final Rendering2DSupport r2D = gameScene.componentsRegistry().requireComp(Rendering2DSupport.class);
+        final Rendering2DSupport r2D = gameScene.componentsRegistry().reqComp(Rendering2DSupport.class);
         actorRenderer = r2D.configureRenderer((TengenMsPacMan_ActorRenderer) renderConfig.createActorRenderer(animSystem, canvas));
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(gameScene, canvas);
     }
