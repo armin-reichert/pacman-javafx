@@ -277,7 +277,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         level.entities().add(bonus);
 
         bonus.pos().set(WorldMap.halfTileRightOf(tile));
-        systems.bonusState().showEdibleForSeconds(bonus, edibleSec);
+        systems.bonusState().showEdibleForSeconds(bonus, edibleSec, systems.bonusMoveAndJump(), systems.worldNavigator());
 
         eventManager.publishGameEvent(new BonusActivatedEvent(bonus));
     }

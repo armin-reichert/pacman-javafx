@@ -79,7 +79,7 @@ public class DefaultGameSystems implements GameSystems {
     protected void createBonusSystems() {
         bonusWorldMovementPolicy = new BonusWorldMovementPolicy();
         bonusMoveAndJumpSystem = new BonusMoveAndJumpSystem(navigator, bonusWorldMovementPolicy);
-        bonusStateSystem = new BonusStateSystem(navigator, bonusMoveAndJumpSystem);
+        bonusStateSystem = new BonusStateSystem();
     }
 
     protected void createLevelCounterSystem() {

@@ -178,7 +178,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         requireNonNull(game);
         requireNonNull(level);
 
-        final GameSystems sys = game.variant().systems();
+        final GameSystems systems = game.variant().systems();
 
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
@@ -203,12 +203,12 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
             bonus = Bonus.createStaticBonus(symbolCode, value);
             final Vector2i bonusTile = terrain.getTilePropertyOrDefault(WorldMapPropertyName.POS_BONUS, new Vector2i(13, 20));
             bonus.pos().set(WorldMap.halfTileRightOf(bonusTile));
-            sys.bonusState().showEdibleForSeconds(bonus, randomFloat(9, 10));
+            systems.bonusState().showEdibleForSeconds(bonus, randomFloat(9, 10), systems.bonusMoveAndJump(), systems.worldNavigator());
         } else {
             bonus = Bonus.createMovingBonus(symbolCode, value);
             computeBonusRoute(game, bonus, terrain, house);
             final float speed = game.variant().rules().actorSpeedRules().bonusSpeed(game, level);
-            sys.bonusState().showEdibleAndStartWandering(bonus, speed);
+            systems.bonusState().showEdibleAndStartWandering(bonus, speed, systems.worldNavigator(),systems.bonusMoveAndJump());
         }
 
         level.entities().optBonus().ifPresent(oldBonus -> level.entities().remove(oldBonus));

@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.core.entities.bonus.system;
 
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.Bonus;
@@ -13,35 +12,28 @@ import de.amr.pacmanfx.core.entities.bonus.comp.BonusState;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusStateComp;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.event.bonus.BonusExpiredEvent;
-import de.amr.pacmanfx.core.gameplay.FrameState;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.GameSession;
-import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
+//TODO implement navigation logic and movement changes elsewhere
 public class BonusStateSystem {
 
-    private final WorldNavigationSystem navigator;
-    private final BonusMoveAndJumpSystem moveAndJumpSystem;
+    public BonusStateSystem() {}
 
-    public BonusStateSystem(WorldNavigationSystem navigator, BonusMoveAndJumpSystem moveAndJumpSystem) {
-        this.navigator = requireNonNull(navigator);
-        this.moveAndJumpSystem = requireNonNull(moveAndJumpSystem);
-    }
+    public void update(
+        GameLevel level,
+        Bonus bonus,
+        GameEventManager eventManager,
+        MovementSystem motor,
+        BonusMoveAndJumpSystem moveAndJumpSystem, //TODO remove
+        WorldNavigationSystem worldNavigationSystem
+    ) {
+        requireNonNull(level);
+        requireNonNull(bonus);
+        requireNonNull(eventManager);
+        requireNonNull(motor);
 
-    public void update(GameContext game) {
-        requireNonNull(game);
-
-        final GameSession session = game.session();
-        final GameLevel level = session.assertLevel();
-        final MovementSystem motor = game.variant().systems().motor();
-
-        level.entities().optBonus().ifPresent(bonus ->
-            update(motor, game.eventManager(), level, bonus, session.thisFrame()));
-    }
-
-    private void update(MovementSystem motor, GameEventManager eventManager, GameLevel level, Bonus bonus, FrameState frame) {
         final BonusStateComp state = bonus.state();
         final BonusMoveAndJumpComp moveAndJumpComp = bonus.optMoveAndJump().orElse(null);
 
@@ -59,25 +51,27 @@ public class BonusStateSystem {
                     state.setEdibleStateExpired(state.timer().hasExpired());
                 }
                 if (state.edibleStateExpired()) {
-                    setInactive(bonus);
+                    setInactive(bonus, moveAndJumpSystem, worldNavigationSystem);
                     eventManager.publishGameEvent(new BonusExpiredEvent(bonus));
                 }
             }
 
             case EATEN -> {
                 if (state.timer().hasExpired()) {
-                    setInactive(bonus);
+                    setInactive(bonus, moveAndJumpSystem, worldNavigationSystem);
                     eventManager.publishGameEvent(new BonusExpiredEvent(bonus));
                 }
             }
 
             case INACTIVE -> {}
         }
-
-        Logger.debug("Bonus {} updated at tick {}", bonus.hashCode(), frame.tick());
     }
 
-    public void setInactive(Bonus bonus) {
+    public void setInactive(
+        Bonus bonus,
+        BonusMoveAndJumpSystem moveAndJumpSystem, //TODO remove
+        WorldNavigationSystem navigationSystem //TODO remove
+    ) {
         bonus.hide();
 
         final BonusStateComp state = bonus.state();
@@ -85,13 +79,18 @@ public class BonusStateSystem {
         state.timer().restartIndefinitely();
 
         if (bonus.optMovement().isPresent()) {
-            navigator.setSpeed(bonus, 0);
+            navigationSystem.setSpeed(bonus, 0);
         }
 
         bonus.optMoveAndJump().ifPresent(moveAndJumpSystem::reset);
     }
 
-    public void showEdibleForSeconds(Bonus bonus, float seconds) {
+    public void showEdibleForSeconds(
+        Bonus bonus,
+        float seconds,
+        BonusMoveAndJumpSystem moveAndJumpSystem, //TODO remove
+        WorldNavigationSystem navigationSystem //TODO remove
+    ) {
         requireNonNull(bonus);
 
         bonus.show();
@@ -101,7 +100,12 @@ public class BonusStateSystem {
         state.timer().restartSeconds(seconds);
     }
 
-    public void showEdibleAndStartWandering(Bonus bonus, float speed) {
+    public void showEdibleAndStartWandering(
+        Bonus bonus,
+        float speed,
+        WorldNavigationSystem navigationSystem, //TODO remove
+        BonusMoveAndJumpSystem moveAndJumpSystem //TODO remove
+    ) {
         requireNonNull(bonus);
 
         bonus.show();
@@ -111,16 +115,20 @@ public class BonusStateSystem {
         state.timer().restartIndefinitely();
 
         if (bonus.optMoveAndJump().isPresent()) {
-            navigator.setSpeed(bonus, speed);
+            navigationSystem.setSpeed(bonus, speed);
         }
-        navigator.clearTargetTile(bonus);
+        navigationSystem.clearTargetTile(bonus);
         bonus.optMoveAndJump().ifPresent(moveAndJump -> {
             moveAndJumpSystem.start(moveAndJump);
-            navigator.setSpeed(bonus, speed);
+            navigationSystem.setSpeed(bonus, speed);
         });
     }
 
-    public void showEatenForSeconds(Bonus bonus, float seconds) {
+    public void showEatenForSeconds(
+        Bonus bonus,
+        float seconds,
+        WorldNavigationSystem navigationSystem //TODO remove
+    ) {
         requireNonNull(bonus);
 
         bonus.show();
@@ -130,7 +138,7 @@ public class BonusStateSystem {
         state.timer().restartSeconds(seconds);
 
         if (bonus.optMovement().isPresent()) {
-            navigator.setSpeed(bonus, 0);
+            navigationSystem.setSpeed(bonus, 0);
         }
     }
 }

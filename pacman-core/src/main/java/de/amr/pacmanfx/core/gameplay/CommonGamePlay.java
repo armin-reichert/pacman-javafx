@@ -157,10 +157,22 @@ public abstract class CommonGamePlay implements GamePlay {
 
     @Override
     public void updateEntities(GameContext game, GameLevel level) {
+        final GameSystems systems = game.variant().systems();
+
         final Pac pac = level.entities().pac();
         updatePac(game, level, pac);
         updateGhosts(game, level);
-        game.variant().systems().bonusState().update(game);
+        level.entities().optBonus().ifPresent(bonus -> {
+            game.variant().systems().bonusState().update(
+                level,
+                bonus,
+                game.eventManager(),
+                systems.motor(),
+                systems.bonusMoveAndJump(),
+                systems.worldNavigator()
+            );
+            //TODO call other bonus systems here, remove last 2 arguments in above call
+        });
 
         checkRemainingPacPower(game, level, pac);
     }
@@ -424,8 +436,12 @@ public abstract class CommonGamePlay implements GamePlay {
         requireNonNull(level);
         requireNonNull(bonus);
 
-        game.variant().systems().bonusState().showEatenForSeconds(bonus,
-            game.variant().rules().eatenBonusDisplaySeconds());
+        final GameSystems systems = game.variant().systems();
+        systems.bonusState().showEatenForSeconds(
+            bonus,
+            game.variant().rules().eatenBonusDisplaySeconds(),
+           systems.worldNavigator()
+        );
 
         scorePoints(game, bonus.data().points(), level.number());
         Logger.info("Scored {} points for eating bonus {}", bonus.data().points(), bonus);
@@ -489,7 +505,11 @@ public abstract class CommonGamePlay implements GamePlay {
         });
 
         level.entities().optBonus().ifPresent(bonus -> {
-            systems.bonusState().setInactive(bonus);
+            systems.bonusState().setInactive(
+                bonus,
+                systems.bonusMoveAndJump(),
+                systems.worldNavigator()
+                );
             level.entities().remove(bonus);
         });
     }
