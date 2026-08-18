@@ -44,7 +44,7 @@ public final class GameState_EatingGhost extends GameState {
         if (timer().hasExpired()) {
             level.entities().pac().show();
             level.entities().ghostsInState(GhostState.EATEN).forEach(
-                ghost -> ghostStateSystem.changeState(ghost, GhostState.RETURNING_HOME));
+                ghost -> ghostStateSystem.changeGhostState(ghost, GhostState.RETURNING_HOME));
             level.entities().ghosts().forEach(spriteAnimSystem::playSelected);
             game.variant().gameFlow().resumePreviousState(game);
         }

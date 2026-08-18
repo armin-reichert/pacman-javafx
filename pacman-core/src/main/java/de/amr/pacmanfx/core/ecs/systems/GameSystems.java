@@ -26,7 +26,7 @@ public interface GameSystems {
 
     WorldNavigationSystem worldNavigator();
 
-    RandomWorldMovementSystem roamingNavigator();
+    RoamingSystem roaming();
 
     WorldMovementPolicy pacWorldMovementPolicy();
 

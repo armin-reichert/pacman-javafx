@@ -12,6 +12,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.entities.*;
+import de.amr.pacmanfx.core.entities.bonus.comp.BonusMoveAndJumpComp;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusState;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.livescounter.system.LivesCounterSystem;
@@ -99,7 +100,7 @@ public abstract class CommonGamePlay implements GamePlay {
             final Direction direction = house.floorplan().ghostStartDirection(ghost.personality());
             systems.worldNavigator().setMoveDir(ghost, direction);
             systems.worldNavigator().setWishDir(ghost, direction);
-            systems.ghostState().changeState(ghost, GhostState.LOCKED);
+            systems.ghostState().changeGhostState(ghost, GhostState.LOCKED);
             systems.spriteAnimController().resetSelected(ghost);
         });
 
@@ -219,7 +220,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
         level.entities()
             .ghostsInState(GhostState.HUNTING_PAC)
-            .forEach(ghost -> systems.ghostState().changeState(ghost, GhostState.FRIGHTENED));
+            .forEach(ghost -> systems.ghostState().changeGhostState(ghost, GhostState.FRIGHTENED));
 
         systems.pacPower().start(pac, ticks);
     }
@@ -236,7 +237,7 @@ public abstract class CommonGamePlay implements GamePlay {
         level.clearGhostKillChain();
 
         level.entities().ghostsInState(GhostState.FRIGHTENED).forEach(ghost ->
-            systems.ghostState().changeState(ghost, GhostState.HUNTING_PAC));
+            systems.ghostState().changeGhostState(ghost, GhostState.HUNTING_PAC));
 
         level.huntingTimerStrategy().start();
 
@@ -388,7 +389,7 @@ public abstract class CommonGamePlay implements GamePlay {
         scorePoints(game, points, level.number());
         Logger.info("Scored {} points for killing {}", points, eatenGhost.name());
 
-        systems.ghostState().changeState(eatenGhost, GhostState.EATEN);
+        systems.ghostState().changeGhostState(eatenGhost, GhostState.EATEN);
 
         // Animation index is 0-based, animation frame 0 shows points for *first* killed ghost...
         systems.spriteAnimController().selectAndSetFrame(eatenGhost, CommonSpriteAnimationID.GHOST_POINTS, killedBefore);
@@ -431,7 +432,9 @@ public abstract class CommonGamePlay implements GamePlay {
 
         level.entities().optBonus().ifPresent(bonus -> {
             systems.bonusState().setBonusInactive(bonus);
-            systems.bonusMoveAndJump().setBonusInactive(bonus);
+            if (bonus.hasComp(BonusMoveAndJumpComp.class)) {
+                systems.bonusMoveAndJump().setBonusInactive(bonus);
+            }
             level.entities().remove(bonus);
         });
     }

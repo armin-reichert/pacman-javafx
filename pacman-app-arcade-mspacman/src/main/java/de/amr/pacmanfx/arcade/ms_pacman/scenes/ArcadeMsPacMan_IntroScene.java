@@ -125,7 +125,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
             sys.spriteAnimController().select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);
             sys.spriteAnimController().playSelected(ghost);
 
-            sys.ghostState().changeState(ghost, GhostState.HUNTING_PAC);
+            sys.ghostState().changeGhostState(ghost, GhostState.HUNTING_PAC);
         }
 
         ghostPresented = GhostPersonality.RED_GHOST_SHADOW;

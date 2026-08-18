@@ -9,6 +9,7 @@ import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Pac;
+import de.amr.pacmanfx.core.entities.bonus.comp.BonusMoveAndJumpComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.ElroyComp;
 import de.amr.pacmanfx.core.entities.livescounter.system.LivesCounterSystem;
 import de.amr.pacmanfx.core.entities.pac.comp.PacState;
@@ -54,7 +55,9 @@ public final class GameState_PacManDying extends GameState {
 
         level.entities().optBonus().ifPresent(bonus -> {
             systems.bonusState().setBonusInactive(bonus);
-            systems.bonusMoveAndJump().setBonusInactive(bonus);
+            if (bonus.hasComp(BonusMoveAndJumpComp.class)) {
+                systems.bonusMoveAndJump().setBonusInactive(bonus);
+            }
         });
 
         systems.worldNavigator().setSpeed(pac, 0);
@@ -100,7 +103,9 @@ public final class GameState_PacManDying extends GameState {
 
             level.entities().optBonus().ifPresent(bonus -> {
                 systems.bonusState().setBonusInactive(bonus);
-                systems.bonusMoveAndJump().setBonusInactive(bonus);
+                if (bonus.hasComp(BonusMoveAndJumpComp.class)) {
+                    systems.bonusMoveAndJump().setBonusInactive(bonus);
+                }
                 level.entities().remove(bonus);
             });
         }

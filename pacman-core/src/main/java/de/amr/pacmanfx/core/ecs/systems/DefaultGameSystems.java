@@ -25,7 +25,7 @@ public class DefaultGameSystems implements GameSystems {
 
     protected MovementSystem motor =  new MovementSystem();
     protected WorldNavigationSystem navigator = new WorldNavigationSystem();
-    protected RandomWorldMovementSystem roamingNavigator = new RandomWorldMovementSystem(navigator);
+    protected RoamingSystem roamingNavigator = new RoamingSystem(navigator);
 
 
     protected WorldMovementPolicy pacWorldMovementPolicy;
@@ -139,7 +139,7 @@ public class DefaultGameSystems implements GameSystems {
     }
 
     @Override
-    public RandomWorldMovementSystem roamingNavigator() {
+    public RoamingSystem roaming() {
         return roamingNavigator;
     }
 

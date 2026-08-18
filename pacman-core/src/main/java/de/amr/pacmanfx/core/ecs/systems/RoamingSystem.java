@@ -16,11 +16,11 @@ import org.tinylog.Logger;
 import static de.amr.basics.math.Direction.*;
 import static java.util.Objects.requireNonNull;
 
-public class RandomWorldMovementSystem {
+public class RoamingSystem {
 
     private final WorldNavigationSystem navigator;
 
-    public RandomWorldMovementSystem(WorldNavigationSystem navigator) {
+    public RoamingSystem(WorldNavigationSystem navigator) {
         this.navigator = requireNonNull(navigator);
     }
 
@@ -33,13 +33,10 @@ public class RandomWorldMovementSystem {
              Roam if you want to, without anything but the love we feel!
          </cite>
      */
-    public void roam(
-        MovementSystem motor,
+    public void roam(GameLevel level, Ghost ghost,
         WorldNavigationComp navigation,
         WorldMovementPolicy worldMovementPolicy,
-        GameLevel level,
-        Ghost ghost,
-        float speed)
+        MovementSystem motor, float speed)
     {
         final Vector2i tile = ghost.pos().tile();
         final boolean teleporting = level.worldMap().terrainLayer().isTileInPortalSpace(tile);

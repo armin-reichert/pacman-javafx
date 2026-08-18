@@ -167,7 +167,7 @@ public class ArcadePacMan_IntroScene extends GameScene {
             systems.worldNavigator().setWishDir(ghost, Direction.LEFT);
             systems.worldNavigator().setSpeed(ghost, CHASING_SPEED);
 
-            systems.ghostState().changeState(ghost, GhostState.HUNTING_PAC);
+            systems.ghostState().changeGhostState(ghost, GhostState.HUNTING_PAC);
         }
     }
 
@@ -211,7 +211,7 @@ public class ArcadePacMan_IntroScene extends GameScene {
             systems.worldNavigator().setWishDir(ghost, Direction.RIGHT);
             systems.worldNavigator().setSpeed(ghost, GHOST_FRIGHTENED_SPEED);
 
-            systems.ghostState().changeState(ghost, FRIGHTENED);
+            systems.ghostState().changeGhostState(ghost, FRIGHTENED);
             ghost.spriteAnimation().animation().select(CommonSpriteAnimationID.GHOST_FRIGHTENED);
             ghost.spriteAnimation().animation().playSelected();
         }
@@ -244,7 +244,7 @@ public class ArcadePacMan_IntroScene extends GameScene {
     private void eatGhostAndStopChasing(GameContext game, Ghost victim, long tick) {
         final GameSystems systems = game.variant().systems();
 
-        systems.ghostState().changeState(victim, EATEN);
+        systems.ghostState().changeGhostState(victim, EATEN);
         systems.spriteAnimController().selectAndSetFrame(victim, CommonSpriteAnimationID.GHOST_POINTS, numGhostsEaten++);
 
         pacMan.hide();
