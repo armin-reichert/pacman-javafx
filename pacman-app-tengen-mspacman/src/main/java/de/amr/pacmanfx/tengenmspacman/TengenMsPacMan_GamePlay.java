@@ -404,7 +404,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
             houseEntry,
             leftToRight ? exitPortal.rightBorderEntryTile().plus(1, 0) : exitPortal.leftBorderEntryTile().minus(1, 0)
         );
-        systems.bonusMoveAndJump().startWandering(bonus, new BonusRouteInfo(leftToRight, waypoints), speed, systems.worldNavigator());
+        systems.bonusMoveAndJump().startWandering(bonus, new BonusRouteInfo(leftToRight, waypoints), speed);
 
         eventManager.publishGameEvent(new BonusActivatedEvent(bonus));
     }

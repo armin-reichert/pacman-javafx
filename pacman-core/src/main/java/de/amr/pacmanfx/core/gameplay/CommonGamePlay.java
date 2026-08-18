@@ -431,7 +431,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
         level.entities().optBonus().ifPresent(bonus -> {
             systems.bonusState().setBonusInactive(bonus);
-            systems.bonusMoveAndJump().setBonusInactive(bonus, systems.worldNavigator());
+            systems.bonusMoveAndJump().setBonusInactive(bonus);
             level.entities().remove(bonus);
         });
     }

@@ -24,11 +24,11 @@ import static java.util.Objects.requireNonNull;
 
 public class BonusMoveAndJumpSystem {
 
-    private final WorldNavigationSystem navigator;
+    private final WorldNavigationSystem worldNavigationSystem;
     private final WorldMovementPolicy worldMovementPolicy;
 
     public BonusMoveAndJumpSystem(WorldNavigationSystem navigator, WorldMovementPolicy worldMovementPolicy) {
-        this.navigator = requireNonNull(navigator);
+        this.worldNavigationSystem = requireNonNull(navigator);
         this.worldMovementPolicy = requireNonNull(worldMovementPolicy);
     }
 
@@ -50,14 +50,14 @@ public class BonusMoveAndJumpSystem {
         }
     }
 
-    public void setBonusInactive(Bonus bonus, WorldNavigationSystem worldNavigationSystem) {
+    public void setBonusInactive(Bonus bonus) {
         if (bonus.optMovement().isPresent()) {
             worldNavigationSystem.setSpeed(bonus, 0);
         }
         bonus.optMoveAndJump().ifPresent(moveAndJump -> moveAndJump.pulse().reset());
     }
 
-    public void startWandering(Bonus bonus, BonusRouteInfo routeInfo, float speed, WorldNavigationSystem worldNavigationSystem) {
+    public void startWandering(Bonus bonus, BonusRouteInfo routeInfo, float speed) {
         bonus.optMoveAndJump().ifPresent(moveAndJump -> {
             setRoute(bonus, routeInfo);
             worldNavigationSystem.clearTargetTile(bonus);
@@ -77,11 +77,11 @@ public class BonusMoveAndJumpSystem {
 
         final var route = new ArrayList<>(routeInfo.waypoints());
         final Direction initialDir = routeInfo.leftToRight() ? Direction.RIGHT : Direction.LEFT;
-        navigator.placeAtTile(bonus, route.removeFirst());
-        navigator.setMoveDir(bonus, initialDir);
-        navigator.setWishDir(bonus, initialDir);
+        worldNavigationSystem.placeAtTile(bonus, route.removeFirst());
+        worldNavigationSystem.setMoveDir(bonus, initialDir);
+        worldNavigationSystem.setWishDir(bonus, initialDir);
 
-        final var steering = new RouteGuidedSteering(navigator, worldMovementPolicy, route);
+        final var steering = new RouteGuidedSteering(worldNavigationSystem, worldMovementPolicy, route);
         bonus.reqComp(BonusMoveAndJumpComp.class).setRouteNavigation(steering);
     }
 
@@ -95,8 +95,8 @@ public class BonusMoveAndJumpSystem {
             || level.worldMap().terrainLayer().isTileInPortalSpace(tile);
 
         if (!exitPortalReached) {
-            navigator.navigateTowardsTarget(bonus, level, worldMovementPolicy);
-            navigator.tryMovingOrTeleporting(motor, bonus, level, worldMovementPolicy);
+            worldNavigationSystem.navigateTowardsTarget(bonus, level, worldMovementPolicy);
+            worldNavigationSystem.tryMovingOrTeleporting(motor, bonus, level, worldMovementPolicy);
         }
         moveAndJump.setTargetReached(exitPortalReached);
     }
