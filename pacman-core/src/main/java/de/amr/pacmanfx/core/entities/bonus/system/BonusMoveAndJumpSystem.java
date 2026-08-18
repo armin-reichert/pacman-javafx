@@ -85,20 +85,19 @@ public class BonusMoveAndJumpSystem {
     }
 
     private void setRoute(Bonus bonus, BonusRouteInfo routeInfo) {
-        final BonusMoveAndJumpComp moveAndJump = bonus.reqComp(BonusMoveAndJumpComp.class);
-
         if (routeInfo.waypoints().isEmpty()) {
             Logger.error("Bonus route must not be empty");
             return;
         }
 
-        final var route = new ArrayList<>(routeInfo.waypoints());
-
         final Direction initialDir = routeInfo.leftToRight() ? Direction.RIGHT : Direction.LEFT;
-        navigationSystem.placeAtTile(bonus, route.removeFirst());
         navigationSystem.setMoveDir(bonus, initialDir);
         navigationSystem.setWishDir(bonus, initialDir);
 
-        moveAndJump.setRouteNavigation(new RouteGuidedSteering(navigationSystem, movementPolicy, route));
+        final var waypoints = new ArrayList<>(routeInfo.waypoints());
+        navigationSystem.placeAtTile(bonus, waypoints.removeFirst());
+
+        final BonusMoveAndJumpComp moveAndJump = bonus.reqComp(BonusMoveAndJumpComp.class);
+        moveAndJump.setRouteNavigation(new RouteGuidedSteering(navigationSystem, movementPolicy, waypoints));
     }
 }
