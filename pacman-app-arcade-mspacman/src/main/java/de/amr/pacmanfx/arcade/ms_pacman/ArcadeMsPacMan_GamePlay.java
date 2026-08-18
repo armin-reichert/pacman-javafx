@@ -206,9 +206,10 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
             systems.bonusState().showEdibleForSeconds(bonus, randomFloat(9, 10));
         } else {
             bonus = Bonus.createMovingBonus(symbolCode, value);
-            computeBonusRoute(game, bonus, terrain, house);
             final float speed = game.variant().rules().actorSpeedRules().bonusSpeed(game, level);
+            final RouteInfo routeInfo = computeBonusRoute(terrain, house);
             systems.bonusState().showEdible(bonus);
+            systems.bonusMoveAndJump().setRoute(bonus, routeInfo.waypoints(), routeInfo.leftToRight());
             systems.bonusMoveAndJump().startWandering(bonus, speed, systems.worldNavigator());
         }
 
@@ -226,11 +227,11 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
 
     // ------------------------------------------------
 
-    private void computeBonusRoute(GameContext game, Bonus bonus, TerrainLayer terrain, House house) {
+    private RouteInfo computeBonusRoute(TerrainLayer terrain, House house) {
         final List<HPortal> portals = terrain.horizontalPortals();
         if (portals.isEmpty()) {
             Logger.error("Moving bonus cannot be activated, game level does not contain any portals");
-            return;
+            return new RouteInfo(false, List.of());
         }
 
         Vector2i entryTile = terrain.getTileProperty(WorldMapPropertyName.POS_BONUS);
@@ -262,9 +263,12 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
 
         final Vector2i houseEntry = PositionSystem.computeTileAt(house.floorplan().entryPosition());
         final Vector2i backyard = houseEntry.plus(0, house.sizeInTiles().y() + 1);
-        final List<Vector2i> route = Stream.of(entryTile, houseEntry, backyard, houseEntry, exitTile).toList();
+        final List<Vector2i> waypoints = Stream.of(entryTile, houseEntry, backyard, houseEntry, exitTile).toList();
 
-        game.variant().systems().bonusMoveAndJump().setRoute(bonus, route, leftToRight);
-        Logger.info("Moving bonus route: {} (crossing {})", route, leftToRight ? "left to right" : "right to left");
+        Logger.info("Moving bonus route: {} (crossing {})", waypoints, leftToRight ? "left to right" : "right to left");
+
+        return new RouteInfo(leftToRight, waypoints);
     }
+
+    private record RouteInfo(boolean leftToRight, List<Vector2i> waypoints) {}
 }

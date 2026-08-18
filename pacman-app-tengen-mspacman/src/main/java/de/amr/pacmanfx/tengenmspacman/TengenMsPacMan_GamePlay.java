@@ -383,15 +383,6 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final HPortal entryPortal = portals.get(randomInt(0, portals.size()));
         final HPortal exitPortal  = portals.get(randomInt(0, portals.size()));
 
-        final boolean leftToRight = randomBoolean();
-        final List<Vector2i> route = List.of(
-            leftToRight ? entryPortal.leftBorderEntryTile() : entryPortal.rightBorderEntryTile(),
-            houseEntry,
-            houseEntryOpposite,
-            houseEntry,
-            leftToRight ? exitPortal.rightBorderEntryTile().plus(1, 0) : exitPortal.leftBorderEntryTile().minus(1, 0)
-        );
-
         level.selectNextBonus();
 
         final int symbolCode = level.bonusSymbolCode(level.currentBonusIndex());
@@ -403,7 +394,17 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         level.entities().add(bonus);
 
         systems.bonusState().showEdible(bonus);
+
+        final boolean leftToRight = randomBoolean();
+        final List<Vector2i> route = List.of(
+            leftToRight ? entryPortal.leftBorderEntryTile() : entryPortal.rightBorderEntryTile(),
+            houseEntry,
+            houseEntryOpposite,
+            houseEntry,
+            leftToRight ? exitPortal.rightBorderEntryTile().plus(1, 0) : exitPortal.leftBorderEntryTile().minus(1, 0)
+        );
         systems.bonusMoveAndJump().setRoute(bonus, route, leftToRight);
+
         systems.bonusMoveAndJump().startWandering(bonus, speed, systems.worldNavigator());
 
         eventManager.publishGameEvent(new BonusActivatedEvent(bonus));
