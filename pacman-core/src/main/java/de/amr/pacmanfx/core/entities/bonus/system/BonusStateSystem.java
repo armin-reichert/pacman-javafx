@@ -74,28 +74,14 @@ public class BonusStateSystem {
         state.timer().restartSeconds(seconds);
     }
 
-    public void showEdibleAndStartWandering(
-        Bonus bonus,
-        float speed,
-        WorldNavigationSystem navigationSystem, //TODO remove
-        BonusMoveAndJumpSystem moveAndJumpSystem //TODO remove
-    ) {
+    public void showEdible(Bonus bonus) {
         requireNonNull(bonus);
-
-        bonus.show();
 
         final BonusStateComp state = bonus.state();
         state.setBonusState(BonusState.EDIBLE);
         state.timer().restartIndefinitely();
 
-        if (bonus.optMoveAndJump().isPresent()) {
-            navigationSystem.setSpeed(bonus, speed);
-        }
-        navigationSystem.clearTargetTile(bonus);
-        bonus.optMoveAndJump().ifPresent(moveAndJump -> {
-            moveAndJumpSystem.start(moveAndJump);
-            navigationSystem.setSpeed(bonus, speed);
-        });
+        bonus.show();
     }
 
     public void showEatenForSeconds(

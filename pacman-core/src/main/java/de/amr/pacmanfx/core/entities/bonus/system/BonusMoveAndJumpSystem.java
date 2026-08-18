@@ -61,14 +61,17 @@ public class BonusMoveAndJumpSystem {
         bonus.optMoveAndJump().ifPresent(moveAndJumpSystem::reset);
     }
 
+    public void startWandering(Bonus bonus, float speed, WorldNavigationSystem worldNavigationSystem) {
+        bonus.optMoveAndJump().ifPresent(moveAndJump -> {
+            worldNavigationSystem.clearTargetTile(bonus);
+            worldNavigationSystem.setSpeed(bonus, speed);
+            moveAndJump.pulse().restart();
+        });
+    }
+
     public void reset(BonusMoveAndJumpComp animation) {
         requireNonNull(animation);
         animation.pulse().reset();
-    }
-
-    public void start(BonusMoveAndJumpComp animation) {
-        requireNonNull(animation);
-        animation.pulse().restart();
     }
 
     public void stop(BonusMoveAndJumpComp animation) {
