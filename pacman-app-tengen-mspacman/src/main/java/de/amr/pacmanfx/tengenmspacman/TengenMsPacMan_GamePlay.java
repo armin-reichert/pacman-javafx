@@ -403,7 +403,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         level.entities().add(bonus);
 
         systems.bonusMoveAndJump().setRoute(bonus, route, leftToRight);
-        systems.bonusState().showEdibleAndStartWandering(bonus, speed);
+        systems.bonusState().showEdibleAndStartWandering(bonus, speed, systems.worldNavigator(), systems.bonusMoveAndJump());
 
         eventManager.publishGameEvent(new BonusActivatedEvent(bonus));
     }
