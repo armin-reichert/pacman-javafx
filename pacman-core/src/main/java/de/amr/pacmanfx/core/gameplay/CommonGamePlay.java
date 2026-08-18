@@ -308,6 +308,7 @@ public abstract class CommonGamePlay implements GamePlay {
         systems.worldNavigator().setSpeed(pac, speed);
         systems.worldNavigator().tryMovingOrTeleporting(pac, level, systems.pacWorldMovementPolicy());
 
+        systems.pacAutoSteering().update(session, pac);
         systems.pacDigestion().update(pac);
         systems.pacPower().update(pac, game.variant().rules().pacPowerFadingSeconds(level.number()));
         systems.pacState().update(pac);
