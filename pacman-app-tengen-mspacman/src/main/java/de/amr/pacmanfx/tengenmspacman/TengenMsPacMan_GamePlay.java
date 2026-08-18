@@ -50,10 +50,8 @@ import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
-    private static final int ARCADE_MAP_GAME_OVER_TICKS = 420;
-
-    private static final int NON_ARCADE_MAP_GAME_OVER_TICKS = 600;
-
+    public static final int ARCADE_MAP_GAME_OVER_TICKS = 420;
+    public static final int NON_ARCADE_MAP_GAME_OVER_TICKS = 600;
     public static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
 
     public TengenMsPacMan_GamePlay() {}
@@ -404,7 +402,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
             houseEntry,
             leftToRight ? exitPortal.rightBorderEntryTile().plus(1, 0) : exitPortal.leftBorderEntryTile().minus(1, 0)
         );
-        systems.bonusMoveAndJump().startWandering(bonus, new BonusRouteInfo(leftToRight, waypoints), speed);
+        systems.bonusMoveAndJump().startFollowingRoute(bonus, new BonusRouteInfo(leftToRight, waypoints), speed);
 
         eventManager.publishGameEvent(new BonusActivatedEvent(bonus));
     }

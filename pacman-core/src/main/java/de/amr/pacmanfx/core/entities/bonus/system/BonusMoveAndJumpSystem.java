@@ -24,68 +24,29 @@ import static java.util.Objects.requireNonNull;
 
 public class BonusMoveAndJumpSystem {
 
-    private final WorldNavigationSystem worldNavigationSystem;
-    private final WorldMovementPolicy worldMovementPolicy;
+    private final WorldNavigationSystem navigationSystem;
+    private final WorldMovementPolicy movementPolicy;
 
-    public BonusMoveAndJumpSystem(WorldNavigationSystem navigator, WorldMovementPolicy worldMovementPolicy) {
-        this.worldNavigationSystem = requireNonNull(navigator);
-        this.worldMovementPolicy = requireNonNull(worldMovementPolicy);
-    }
-
-    public void update(GameLevel level, Bonus bonus, MovementSystem motor) {
-        requireNonNull(level);
-        requireNonNull(bonus);
-        requireNonNull(motor);
-
-        switch (bonus.state().bonusState()) {
-            case INACTIVE -> {
-            }
-
-            case EDIBLE -> {
-                wanderMaze(motor, level, bonus);
-                jump(bonus);
-            }
-
-            case EATEN -> {}
-        }
+    public BonusMoveAndJumpSystem(WorldNavigationSystem navigationSystem, WorldMovementPolicy movementPolicy) {
+        this.navigationSystem = requireNonNull(navigationSystem);
+        this.movementPolicy = requireNonNull(movementPolicy);
     }
 
     public void setBonusInactive(Bonus bonus) {
-        if (bonus.optMovement().isPresent()) {
-            worldNavigationSystem.setSpeed(bonus, 0);
-        }
-        bonus.optMoveAndJump().ifPresent(moveAndJump -> moveAndJump.pulse().reset());
+        final BonusMoveAndJumpComp moveAndJump = bonus.reqComp(BonusMoveAndJumpComp.class);
+        navigationSystem.setSpeed(bonus, 0);
+        moveAndJump.pulse().reset();
     }
 
-    public void startWandering(Bonus bonus, BonusRouteInfo routeInfo, float speed) {
-        bonus.optMoveAndJump().ifPresent(moveAndJump -> {
-            setRoute(bonus, routeInfo);
-            worldNavigationSystem.clearTargetTile(bonus);
-            worldNavigationSystem.setSpeed(bonus, speed);
-            moveAndJump.pulse().restart();
-        });
+    public void startFollowingRoute(Bonus bonus, BonusRouteInfo routeInfo, float speed) {
+        final BonusMoveAndJumpComp moveAndJump = bonus.reqComp(BonusMoveAndJumpComp.class);
+        setRoute(bonus, routeInfo);
+        navigationSystem.clearTargetTile(bonus);
+        navigationSystem.setSpeed(bonus, speed);
+        moveAndJump.pulse().restart();
     }
 
-    private void setRoute(Bonus bonus, BonusRouteInfo routeInfo) {
-        requireNonNull(bonus);
-        requireNonNull(routeInfo);
-
-        if (routeInfo.waypoints().isEmpty()) {
-            Logger.error("Bonus route must not be empty");
-            return;
-        }
-
-        final var route = new ArrayList<>(routeInfo.waypoints());
-        final Direction initialDir = routeInfo.leftToRight() ? Direction.RIGHT : Direction.LEFT;
-        worldNavigationSystem.placeAtTile(bonus, route.removeFirst());
-        worldNavigationSystem.setMoveDir(bonus, initialDir);
-        worldNavigationSystem.setWishDir(bonus, initialDir);
-
-        final var steering = new RouteGuidedSteering(worldNavigationSystem, worldMovementPolicy, route);
-        bonus.reqComp(BonusMoveAndJumpComp.class).setRouteNavigation(steering);
-    }
-
-    private void wanderMaze(MovementSystem motor, GameLevel level, Bonus bonus) {
+    public void followRoute(MovementSystem motor, GameLevel level, Bonus bonus) {
         final BonusMoveAndJumpComp moveAndJump = bonus.reqComp(BonusMoveAndJumpComp.class);
 
         moveAndJump.routeNavigation().steer(bonus, level);
@@ -95,13 +56,13 @@ public class BonusMoveAndJumpSystem {
             || level.worldMap().terrainLayer().isTileInPortalSpace(tile);
 
         if (!exitPortalReached) {
-            worldNavigationSystem.navigateTowardsTarget(bonus, level, worldMovementPolicy);
-            worldNavigationSystem.tryMovingOrTeleporting(motor, bonus, level, worldMovementPolicy);
+            navigationSystem.navigateTowardsTarget(bonus, level, movementPolicy);
+            navigationSystem.tryMovingOrTeleporting(motor, bonus, level, movementPolicy);
         }
         moveAndJump.setTargetReached(exitPortalReached);
     }
 
-    private void jump(Bonus bonus) {
+    public void jump(Bonus bonus) {
         final WorldNavigationComp worldNavigation = bonus.reqComp(WorldNavigationComp.class);
         final BonusMoveAndJumpComp moveAndJump = bonus.reqComp(BonusMoveAndJumpComp.class);
 
@@ -112,5 +73,26 @@ public class BonusMoveAndJumpSystem {
             float dy = pulse.state() == Pulse.State.ON ? -jumpDelta : jumpDelta;
             bonus.pos().setY(bonus.pos().y() + dy);
         }
+    }
+
+    private void setRoute(Bonus bonus, BonusRouteInfo routeInfo) {
+        requireNonNull(bonus);
+        requireNonNull(routeInfo);
+
+        final BonusMoveAndJumpComp moveAndJump = bonus.reqComp(BonusMoveAndJumpComp.class);
+
+        if (routeInfo.waypoints().isEmpty()) {
+            Logger.error("Bonus route must not be empty");
+            return;
+        }
+
+        final var route = new ArrayList<>(routeInfo.waypoints());
+
+        final Direction initialDir = routeInfo.leftToRight() ? Direction.RIGHT : Direction.LEFT;
+        navigationSystem.placeAtTile(bonus, route.removeFirst());
+        navigationSystem.setMoveDir(bonus, initialDir);
+        navigationSystem.setWishDir(bonus, initialDir);
+
+        moveAndJump.setRouteNavigation(new RouteGuidedSteering(navigationSystem, movementPolicy, route));
     }
 }

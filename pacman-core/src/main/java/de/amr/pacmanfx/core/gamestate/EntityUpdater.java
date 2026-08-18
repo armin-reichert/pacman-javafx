@@ -62,8 +62,15 @@ public class EntityUpdater {
     public void updateBonus(GameContext game, GameLevel level, Bonus bonus) {
         final GameSystems systems = game.variant().systems();
         systems.bonusState().update(level, bonus, game.eventManager(), systems.motor());
-        if (bonus.hasComp(BonusMoveAndJumpComp.class)) {
-            systems.bonusMoveAndJump().update(level, bonus, systems.motor());
+        switch (bonus.state().bonusState()) {
+            case INACTIVE -> {}
+            case EDIBLE -> {
+                if (bonus.hasComp(BonusMoveAndJumpComp.class)) {
+                    systems.bonusMoveAndJump().followRoute(systems.motor(), level, bonus);
+                    systems.bonusMoveAndJump().jump(bonus);
+                }
+            }
+            case EATEN -> {}
         }
     }
 }
