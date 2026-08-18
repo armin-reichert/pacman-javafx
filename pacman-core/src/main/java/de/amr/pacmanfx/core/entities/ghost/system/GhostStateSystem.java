@@ -44,10 +44,10 @@ public class GhostStateSystem {
         final float speed = game.variant().rules().actorSpeedRules().ghostSpeed(game, ghost);
 
         switch (ghost.ghostStateEnum()) {
-            case LOCKED -> houseAccessSystem.stayInHouse(game, ghost, speed);
+            case LOCKED -> houseAccessSystem.stayInHouse(ghost, systems.worldNavigator(), systems.motor(), speed);
 
             case LEAVING_HOUSE -> {
-                boolean leftHouse = houseAccessSystem.leaveHouse(game, ghost, speed);
+                boolean leftHouse = houseAccessSystem.leaveHouse(ghost, systems.worldNavigator(), systems.motor(), speed);
                 if (leftHouse) {
                     final GhostState newState = ghost.state().isThreatenedByPac() ? GhostState.FRIGHTENED : GhostState.HUNTING_PAC;
                     changeState(ghost, newState);
@@ -67,9 +67,12 @@ public class GhostStateSystem {
                 level, ghost, speed
             );
 
-            case RETURNING_HOME -> houseAccessSystem.reachHouse(game, ghost, speed);
+            case RETURNING_HOME -> houseAccessSystem.reachHouse(level, ghost, systems.worldNavigator(),
+                systems.ghostWorldMovementPolicy(), systems.motor(), speed)
+                .ifPresent(newState -> changeState(ghost, newState));
 
-            case ENTERING_HOUSE -> houseAccessSystem.enterHouse(game, ghost, speed);
+            case ENTERING_HOUSE -> houseAccessSystem.enterHouse(ghost, systems.worldNavigator(), systems.motor(), speed)
+                .ifPresent(newState -> changeState(ghost, newState));
 
             case EATEN -> {}
         }
