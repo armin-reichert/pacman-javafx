@@ -10,18 +10,20 @@ import de.amr.pacmanfx.core.steering.RouteGuidedSteering;
 
 public class BonusMoveAndJumpComp implements EntityComponent {
 
-    private static final int PULSE_CHANGE_TICKS = 10;
+    private static final int JUMP_PULSE_TICKS = 10;
 
-    private final Pulse pulse;
+    private final Pulse jumpPulse;
+
     private RouteGuidedSteering routeNavigation;
+
     private boolean targetReached;
 
     public BonusMoveAndJumpComp() {
-        pulse = new Pulse(PULSE_CHANGE_TICKS, Pulse.State.OFF);
+        jumpPulse = new Pulse(JUMP_PULSE_TICKS, Pulse.State.OFF);
     }
 
-    public Pulse pulse() {
-        return pulse;
+    public Pulse jumpPulse() {
+        return jumpPulse;
     }
 
     public void setRouteNavigation(RouteGuidedSteering routeNavigation) {

@@ -36,7 +36,7 @@ public class BonusMoveAndJumpSystem {
         requireNonNull(bonus);
         final BonusMoveAndJumpComp moveAndJump = bonus.reqComp(BonusMoveAndJumpComp.class);
         navigationSystem.setSpeed(bonus, 0);
-        moveAndJump.pulse().reset();
+        moveAndJump.jumpPulse().reset();
     }
 
     public void startWandering(Bonus bonus, BonusRouteInfo routeInfo, float speed) {
@@ -46,7 +46,7 @@ public class BonusMoveAndJumpSystem {
         setRoute(bonus, routeInfo);
         navigationSystem.clearTargetTile(bonus);
         navigationSystem.setSpeed(bonus, speed);
-        moveAndJump.pulse().restart();
+        moveAndJump.jumpPulse().restart();
     }
 
     public void wander(GameLevel level, Bonus bonus, MovementSystem motor) {
@@ -75,7 +75,7 @@ public class BonusMoveAndJumpSystem {
         final WorldNavigationComp worldNavigation = bonus.reqComp(WorldNavigationComp.class);
         final BonusMoveAndJumpComp moveAndJump = bonus.reqComp(BonusMoveAndJumpComp.class);
 
-        final Pulse pulse = moveAndJump.pulse();
+        final Pulse pulse = moveAndJump.jumpPulse();
         pulse.triggerPulse();
         if (pulse.isTriggered()) {
             float jumpDelta = worldNavigation.moveDir().isVertical() ? 3.0f : 2.0f;
