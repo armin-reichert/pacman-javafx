@@ -153,16 +153,6 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     @Override
-    public void updateEntities(GameContext game, GameLevel level) {
-        //TODO remove this method and call entity update outside
-        final GameSystems systems = game.variant().systems();
-        systems.entityUpdater().updateEntities(game, level);
-
-        //TODO How to handle this correctly?
-        checkRemainingPacPower(game, level, level.entities().pac());
-    }
-
-    @Override
     public void hunt(GameContext game, GameLevel level) {
         requireNonNull(game);
         requireNonNull(level);
@@ -179,7 +169,12 @@ public abstract class CommonGamePlay implements GamePlay {
             gateKeeper.unlockGhostIfPossible(game, level);
         }
 
-        updateEntities(game, level);
+        //TODO remove this method and call entity update outside
+        final GameSystems systems = game.variant().systems();
+        systems.entityUpdater().updateEntities(game, level);
+
+        //TODO How to handle this correctly?
+        checkRemainingPacPower(game, level, level.entities().pac());
 
         final CollisionStrategy strategy = game.variant().rules().actorCollisionRules().getCollisionStrategy();
         final HuntingStep huntingStep = session.thisFrame().huntingStep();
