@@ -30,9 +30,6 @@ public class LevelCounter3DAnimationComp implements EntityComponent, Disposable 
     }
 
     @Override
-    public void reset() {}
-
-    @Override
     public void dispose() {
         if (spinningAnimation != null) {
             spinningAnimation.dispose();

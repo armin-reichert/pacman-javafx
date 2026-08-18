@@ -126,10 +126,6 @@ public class House3DViewComp implements EntityComponent, DisposableGraphicsObjec
 
     }
 
-    @Override
-    public void reset() {
-    }
-
     public Group root() {
         return root;
     }

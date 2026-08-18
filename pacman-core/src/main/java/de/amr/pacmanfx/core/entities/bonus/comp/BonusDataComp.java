@@ -7,7 +7,4 @@ package de.amr.pacmanfx.core.entities.bonus.comp;
 import de.amr.pacmanfx.core.ecs.EntityComponent;
 
 public record BonusDataComp(int symbolCode, int points) implements EntityComponent {
-
-    @Override
-    public void reset() {}
 }

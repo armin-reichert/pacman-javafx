@@ -14,7 +14,4 @@ public class SpriteAnimationComp implements EntityComponent {
     public SpriteAnimationAccessor animation() {
         return animation;
     }
-
-    @Override
-    public void reset() {}
 }

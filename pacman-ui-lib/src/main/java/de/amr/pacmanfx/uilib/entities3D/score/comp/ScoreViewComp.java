@@ -25,8 +25,4 @@ public class ScoreViewComp implements EntityComponent {
     public Text textDisplay() {
         return textDisplay;
     }
-
-    @Override
-    public void reset() {
-    }
 }

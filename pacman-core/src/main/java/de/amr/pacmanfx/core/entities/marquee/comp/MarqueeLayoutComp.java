@@ -77,10 +77,6 @@ public class MarqueeLayoutComp implements EntityComponent {
         return corners;
     }
 
-    @Override
-    public void reset() {
-    }
-
     private MarqueeCorners computeCornerIndices() {
         final int bh = numBulbsHorizontally;
         final int bv = numBulbsVertically;

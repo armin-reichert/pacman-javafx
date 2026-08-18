@@ -35,8 +35,4 @@ public class House3DAnimationComp implements EntityComponent, Disposable {
     public void dispose() {
         doorsMeltingAnimation.dispose();
     }
-
-    @Override
-    public void reset() {
-    }
 }

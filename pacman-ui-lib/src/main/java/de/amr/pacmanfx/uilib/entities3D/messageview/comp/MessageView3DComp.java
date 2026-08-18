@@ -23,10 +23,6 @@ public class MessageView3DComp implements EntityComponent, DisposableGraphicsObj
         root.setRotate(90);
     }
 
-    @Override
-    public void reset() {
-    }
-
     public Group root() {
         return root;
     }

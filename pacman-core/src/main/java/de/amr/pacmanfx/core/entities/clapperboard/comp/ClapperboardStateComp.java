@@ -13,10 +13,6 @@ public class ClapperboardStateComp implements EntityComponent {
     private int tick;
     private boolean running;
 
-    @Override
-    public void reset() {
-    }
-
     public ClapperboardState state() {
         return state;
     }

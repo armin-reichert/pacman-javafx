@@ -29,7 +29,4 @@ public class ScorePersistencyComp implements EntityComponent {
     public File file() {
         return file;
     }
-
-    @Override
-    public void reset() {}
 }

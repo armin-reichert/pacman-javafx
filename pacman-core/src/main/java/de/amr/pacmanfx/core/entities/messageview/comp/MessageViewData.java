@@ -20,9 +20,4 @@ public class MessageViewData implements EntityComponent {
     public void setText(String text) {
         this.text = text;
     }
-
-    @Override
-    public void reset() {
-
-    }
 }

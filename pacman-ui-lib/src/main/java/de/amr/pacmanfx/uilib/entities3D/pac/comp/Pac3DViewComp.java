@@ -66,8 +66,4 @@ public class Pac3DViewComp implements EntityComponent {
     public void setCenter(Vector3f center) {
         this.center = center;
     }
-
-    @Override
-    public void reset() {
-    }
 }

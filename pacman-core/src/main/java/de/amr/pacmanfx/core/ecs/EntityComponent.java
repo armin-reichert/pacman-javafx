@@ -5,5 +5,5 @@
 package de.amr.pacmanfx.core.ecs;
 
 public interface EntityComponent {
-    void reset();
+    default void reset() {}
 }

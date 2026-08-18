@@ -76,7 +76,4 @@ public class GhostWorldInfoComp implements EntityComponent {
     public Vector2f startPosition() {
         return startPosition;
     }
-
-    @Override
-    public void reset() {}
 }

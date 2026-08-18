@@ -50,7 +50,4 @@ public class Pac3DAnimationComp implements EntityComponent {
         this.dying = dying;
         registry.register(Pac3DAnimationID.DYING,   dying);
     }
-
-    @Override
-    public void reset() {}
 }

@@ -145,8 +145,4 @@ public class LivesCounter3DViewComp implements EntityComponent, DisposableGraphi
 
         cleanupGroup(root, true);
     }
-
-    @Override
-    public void reset() {
-    }
 }

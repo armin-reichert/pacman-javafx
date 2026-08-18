@@ -35,7 +35,4 @@ public class MessageView3DAnimationComp implements EntityComponent, Disposable {
             registry.unregister(MessageView3DAnimationID.MESSAGE_MOVING);
         }
     }
-
-    @Override
-    public void reset() {}
 }

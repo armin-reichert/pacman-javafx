@@ -125,7 +125,4 @@ public class Bonus3DViewComp implements EntityComponent, DisposableGraphicsObjec
     public PhongMaterial pointsTexture() {
         return pointsTexture;
     }
-
-    @Override
-    public void reset() {}
 }

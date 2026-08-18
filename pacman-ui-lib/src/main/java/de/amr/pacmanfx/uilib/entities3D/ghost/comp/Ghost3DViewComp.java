@@ -42,9 +42,6 @@ public class Ghost3DViewComp implements EntityComponent {
         buildTree(settings, dressMesh, pupilsMesh, eyeballsMesh);
     }
 
-    @Override
-    public void reset() {}
-
     public ObjectProperty<DrawMode> drawModeProperty() {
         return drawMode;
     }

@@ -14,8 +14,4 @@ public class GhostSpriteAnimationComp implements EntityComponent {
     public void setAnimationID(CommonSpriteAnimationID animationID) {
         this.animationID = animationID;
     }
-
-    @Override
-    public void reset() {
-    }
 }

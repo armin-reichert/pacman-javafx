@@ -23,9 +23,6 @@ public class LevelCounter3DViewComp implements EntityComponent, DisposableGraphi
     }
 
     @Override
-    public void reset() {}
-
-    @Override
     public void dispose() {
         cleanupGroup(root, true);
     }

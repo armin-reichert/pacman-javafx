@@ -26,8 +26,4 @@ public class MarqueeVisualComp implements EntityComponent {
     public void setBulbOffColor(String bulbOffColor) {
         this.bulbOffColor = bulbOffColor;
     }
-
-    @Override
-    public void reset() {
-    }
 }

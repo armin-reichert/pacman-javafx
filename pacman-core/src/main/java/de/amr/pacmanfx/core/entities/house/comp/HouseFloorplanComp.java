@@ -99,8 +99,4 @@ public class HouseFloorplanComp implements EntityComponent {
     public Vector2i ghostRevivalTile(GhostPersonality personality) {
         return  ghostRevivalTileMap.get(personality);
     }
-
-    @Override
-    public void reset() {
-    }
 }

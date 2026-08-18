@@ -27,7 +27,4 @@ public class ClapperboardInscriptionComp implements EntityComponent {
     public void setText(String text) {
         this.text = requireNonNull(text);
     }
-
-    @Override
-    public void reset() {}
 }
