@@ -32,7 +32,7 @@ public class HipSwayingAnimation3D extends ManagedAnimation implements Pac3DMove
         super("Ms. Pac-Man Hip Swaying");
         this.pac = requireNonNull(pac);
         setAnimationFactory(() -> {
-            final Pac3DViewComp view3D = pac.requireComp(Pac3DViewComp.class);
+            final Pac3DViewComp view3D = pac.reqComp(Pac3DViewComp.class);
             var rt = new RotateTransition(SWING_TIME, view3D.root());
             rt.setAxis(Rotate.Z_AXIS);
             rt.setCycleCount(Animation.INDEFINITE);
@@ -102,7 +102,7 @@ public class HipSwayingAnimation3D extends ManagedAnimation implements Pac3DMove
     }
 
     private void resetPacRotation() {
-        final Node root = pac.requireComp(Pac3DViewComp.class).root();
+        final Node root = pac.reqComp(Pac3DViewComp.class).root();
         root.setRotationAxis(Rotate.Z_AXIS);
         root.setRotate(0);
     }

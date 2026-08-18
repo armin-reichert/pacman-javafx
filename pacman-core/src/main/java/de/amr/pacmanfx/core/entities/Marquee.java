@@ -18,14 +18,14 @@ public final class Marquee extends GameEntity {
     }
 
     public MarqueeRunnerComp runner() {
-        return requireComp(MarqueeRunnerComp.class);
+        return reqComp(MarqueeRunnerComp.class);
     }
 
     public MarqueeLayoutComp layout() {
-        return requireComp(MarqueeLayoutComp.class);
+        return reqComp(MarqueeLayoutComp.class);
     }
 
     public MarqueeVisualComp visualization() {
-        return requireComp(MarqueeVisualComp.class);
+        return reqComp(MarqueeVisualComp.class);
     }
 }

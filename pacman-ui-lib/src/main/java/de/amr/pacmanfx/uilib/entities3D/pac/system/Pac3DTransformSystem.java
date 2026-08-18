@@ -18,7 +18,7 @@ import static java.util.Objects.requireNonNull;
 public class Pac3DTransformSystem {
 
     public static void init(Pac pac, GameLevel level) {
-        final Pac3DViewComp view3D = pac.requireComp(Pac3DViewComp.class);
+        final Pac3DViewComp view3D = pac.reqComp(Pac3DViewComp.class);
 
         view3D.root().setScaleX(1.0);
         view3D.root().setScaleY(1.0);
@@ -31,7 +31,7 @@ public class Pac3DTransformSystem {
         requireNonNull(pac);
         requireNonNull(level);
 
-        final Pac3DViewComp view3D = pac.requireComp(Pac3DViewComp.class);
+        final Pac3DViewComp view3D = pac.reqComp(Pac3DViewComp.class);
         final Vector2f center = pac.pos().bodyCenter();
 
         if (pac.state().enumValue() == PacState.ACTIVE) {
@@ -45,7 +45,7 @@ public class Pac3DTransformSystem {
     }
 
     private static void updateVisibility(Pac pac, Vector2f center, WorldMap worldMap) {
-        final Pac3DViewComp view3D = pac.requireComp(Pac3DViewComp.class);
+        final Pac3DViewComp view3D = pac.reqComp(Pac3DViewComp.class);
         final boolean outside = center.x() < WorldMap.HTS
             || center.x() > WorldMap.TS * worldMap.numCols() - WorldMap.HTS;
         view3D.root().setVisible(pac.isVisible() && !outside);

@@ -45,7 +45,7 @@ public class ScoreSystem {
     }
 
     public static void load(Score score) throws IOException {
-        final ScorePersistencyComp persistency = score.requireComp(ScorePersistencyComp.class);
+        final ScorePersistencyComp persistency = score.reqComp(ScorePersistencyComp.class);
 
         if (!persistency.file().exists()) {
             save(score); // create default file
@@ -88,7 +88,7 @@ public class ScoreSystem {
      */
     public static void save(Score score) throws IOException {
         final ScoreDataComp data = score.data();
-        final ScorePersistencyComp persistency = score.requireComp(ScorePersistencyComp.class);
+        final ScorePersistencyComp persistency = score.reqComp(ScorePersistencyComp.class);
 
         final File parent = persistency.file().getParentFile();
         if (parent != null && !parent.exists()) {

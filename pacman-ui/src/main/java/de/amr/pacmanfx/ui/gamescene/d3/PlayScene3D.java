@@ -345,13 +345,13 @@ public class PlayScene3D extends GameScene
         if (!leftScore.hasComp(ScoreViewComp.class)) {
             leftScore.setComp(ScoreViewComp.class, new ScoreViewComp());
         }
-        leftScore.requireComp(ScoreViewComp.class).titleDisplay().setText(leftTitle);
+        leftScore.reqComp(ScoreViewComp.class).titleDisplay().setText(leftTitle);
 
         final Score rightScore = session.highScore();
         if (!rightScore.hasComp(ScoreViewComp.class)) {
             rightScore.setComp(ScoreViewComp.class, new ScoreViewComp());
         }
-        rightScore.requireComp(ScoreViewComp.class).titleDisplay().setText(rightTitle);
+        rightScore.reqComp(ScoreViewComp.class).titleDisplay().setText(rightTitle);
 
         scoresView = new ScoresView(leftScore, rightScore);
         scoresView.setFont(GlobalAssets.PredefinedFont.ARCADE8.font());

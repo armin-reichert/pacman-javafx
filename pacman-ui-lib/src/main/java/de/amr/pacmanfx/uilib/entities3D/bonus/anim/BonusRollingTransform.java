@@ -17,7 +17,7 @@ public class BonusRollingTransform {
 
     public void update(GameEntity bonus) {
         bonus.optComp(WorldNavigationComp.class).ifPresent(worldNavigation -> {
-            final Bonus3DViewComp comp3D = bonus.requireComp(Bonus3DViewComp.class);
+            final Bonus3DViewComp comp3D = bonus.reqComp(Bonus3DViewComp.class);
             final Direction moveDir = worldNavigation.moveDir();
 
             switch (moveDir) {

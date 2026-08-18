@@ -19,11 +19,11 @@ public class Stork extends GameEntity {
     }
 
     public MovementComp movement() {
-        return requireComp(MovementComp.class);
+        return reqComp(MovementComp.class);
     }
 
     public SpriteAnimationComp spriteAnim() {
-        return requireComp(SpriteAnimationComp.class);
+        return reqComp(SpriteAnimationComp.class);
     }
 
     public void setBagReleasedFromBeak(boolean released) {

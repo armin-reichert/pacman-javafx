@@ -152,9 +152,9 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
     public void setDrawMode(DrawMode drawMode) {
         requireNonNull(drawMode);
-        Ufx.setDrawMode(level.entities().pac().requireComp(Pac3DViewComp.class).root(), drawMode);
+        Ufx.setDrawMode(level.entities().pac().reqComp(Pac3DViewComp.class).root(), drawMode);
         for (var ghost : level.entities().ghosts()) {
-            Ufx.setDrawMode(ghost.requireComp(Ghost3DViewComp.class).root(), drawMode);
+            Ufx.setDrawMode(ghost.reqComp(Ghost3DViewComp.class).root(), drawMode);
         }
         Ufx.setDrawMode(maze3D.root(), drawMode);
     }
@@ -172,7 +172,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final int killIndex = level.indexInGhostKilledChain(ghost);
         final Node numberBoxNode = factory3D.createNumberBox3D(uiConfig, killIndex);
 
-        final Ghost3DViewComp ghost3DView = ghost.requireComp(Ghost3DViewComp.class);
+        final Ghost3DViewComp ghost3DView = ghost.reqComp(Ghost3DViewComp.class);
         numberBoxNode.setTranslateX(ghost3DView.root().getTranslateX());
         numberBoxNode.setTranslateY(ghost3DView.root().getTranslateY());
         numberBoxNode.setTranslateZ(ghost3DView.root().getTranslateZ());
@@ -264,7 +264,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final PacSettings settings = uiConfig.worldSettings().pac();
         uiConfig.factory3D().createPac3D(pac, settings);
 
-        pac.requireComp(Pac3DViewComp.class).drawModeProperty().bind(viewModel.common3D.drawModeProperty);
+        pac.reqComp(Pac3DViewComp.class).drawModeProperty().bind(viewModel.common3D.drawModeProperty);
     }
 
     private void createGhosts3D(GameViewModel viewModel) {
@@ -272,7 +272,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         level.entities().ghosts().forEach(ghost -> {
             final var ghostSettings = settings.get(ghost.personality().ordinal());
             uiConfig.factory3D().createGhost3D(ghost, ghostSettings);
-            ghost.requireComp(Ghost3DViewComp.class).drawModeProperty().bind(viewModel.common3D.drawModeProperty);
+            ghost.reqComp(Ghost3DViewComp.class).drawModeProperty().bind(viewModel.common3D.drawModeProperty);
         });
     }
 
@@ -301,7 +301,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     public void replaceLevelCounter3D(LevelCounter levelCounter) {
-        final LevelCounter3DViewComp view3D = levelCounter.requireComp(LevelCounter3DViewComp.class);
+        final LevelCounter3DViewComp view3D = levelCounter.reqComp(LevelCounter3DViewComp.class);
 
         final Group oldRoot = view3D.root();
         if (oldRoot != null) {
@@ -320,13 +320,13 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     private void arrangeLayout(GameSession session) {
 
         final LivesCounter livesCounter = session.livesCounter();
-        final LivesCounter3DViewComp livesCounter3D = livesCounter.requireComp(LivesCounter3DViewComp.class);
+        final LivesCounter3DViewComp livesCounter3D = livesCounter.reqComp(LivesCounter3DViewComp.class);
 
         final Pac pac = level.entities().pac();
-        final Pac3DViewComp pac3D = pac.requireComp(Pac3DViewComp.class);
+        final Pac3DViewComp pac3D = pac.reqComp(Pac3DViewComp.class);
 
         final House house = level.entities().house();
-        final House3DViewComp house3D = house.requireComp(House3DViewComp.class);
+        final House3DViewComp house3D = house.reqComp(House3DViewComp.class);
 
         getChildren().add(livesCounter3D.root());
 
@@ -334,7 +334,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         getChildren().add(pac3D.powerLight());
 
         for (Ghost ghost: level.entities().ghosts()) {
-            final Ghost3DViewComp ghost3D = ghost.requireComp(Ghost3DViewComp.class);
+            final Ghost3DViewComp ghost3D = ghost.reqComp(Ghost3DViewComp.class);
             getChildren().add(ghost3D.root());
         }
 

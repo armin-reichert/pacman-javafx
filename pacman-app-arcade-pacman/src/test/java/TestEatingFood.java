@@ -173,7 +173,7 @@ public class TestEatingFood {
         final GamePlay gamePlay = testGame.variant().gamePlay();
         testGame.session().optLevel().ifPresent(level -> {
             final Ghost blinky = level.entities().ghost(GhostPersonality.RED_GHOST_SHADOW);
-            final ElroyComp elroy = blinky.requireComp(ElroyComp.class);
+            final ElroyComp elroy = blinky.reqComp(ElroyComp.class);
             final FoodLayer foodLayer = level.worldMap().foodLayer();
             final LevelData data = ArcadePacMan_GameRules.levelData(level.number());
 

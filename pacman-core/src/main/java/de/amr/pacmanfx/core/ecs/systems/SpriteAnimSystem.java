@@ -16,11 +16,11 @@ import static java.util.Objects.requireNonNull;
 public class SpriteAnimSystem {
 
     public void setAnimations(GameEntity actor, SpriteAnimationAccessor animations) {
-        actor.requireComp(SpriteAnimationComp.class).setAnimations(animations);
+        actor.reqComp(SpriteAnimationComp.class).setAnimations(animations);
     }
 
     private SpriteAnimationAccessor spriteAnim(GameEntity actor) {
-        return actor.requireComp(SpriteAnimationComp.class).animation();
+        return actor.reqComp(SpriteAnimationComp.class).animation();
     }
 
     public boolean hasNoAnimations(GameEntity actor) {

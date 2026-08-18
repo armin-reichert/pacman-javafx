@@ -22,10 +22,10 @@ public class Clapperboard extends GameEntity {
     }
 
     public ClapperboardInscriptionComp inscription() {
-        return requireComp(ClapperboardInscriptionComp.class);
+        return reqComp(ClapperboardInscriptionComp.class);
     }
 
     public ClapperboardStateComp state() {
-        return requireComp(ClapperboardStateComp.class);
+        return reqComp(ClapperboardStateComp.class);
     }
 }

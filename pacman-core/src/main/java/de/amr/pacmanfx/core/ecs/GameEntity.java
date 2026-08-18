@@ -36,7 +36,7 @@ public class GameEntity implements Disposable {
         componentRegistry.setComp(type, component);
     }
 
-    public final <T extends EntityComponent> T requireComp(Class<T> type) {
+    public final <T extends EntityComponent> T reqComp(Class<T> type) {
         return componentRegistry.reqComp(type);
     }
 
@@ -51,11 +51,11 @@ public class GameEntity implements Disposable {
     // Typed access
 
     public final PositionComp pos() {
-        return requireComp(PositionComp.class);
+        return reqComp(PositionComp.class);
     }
 
     public final VisibilityComp visibility() {
-        return requireComp(VisibilityComp.class);
+        return reqComp(VisibilityComp.class);
     }
 
     public final Optional<MovementComp> optMovement() {

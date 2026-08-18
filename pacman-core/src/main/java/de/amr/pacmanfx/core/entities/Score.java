@@ -17,7 +17,7 @@ public class Score extends GameEntity {
     }
 
     public ScoreDataComp data() {
-        return requireComp(ScoreDataComp.class);
+        return reqComp(ScoreDataComp.class);
     }
 
     public Optional<ScorePersistencyComp> optPersistency() {
@@ -25,6 +25,6 @@ public class Score extends GameEntity {
     }
 
     public ScorePersistencyComp requirePersistency() {
-        return requireComp(ScorePersistencyComp.class);
+        return reqComp(ScorePersistencyComp.class);
     }
 }

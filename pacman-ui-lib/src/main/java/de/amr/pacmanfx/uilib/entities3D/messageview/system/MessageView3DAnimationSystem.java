@@ -16,20 +16,20 @@ public class MessageView3DAnimationSystem {
         requireNonNull(messageView);
 
         // Place message view at hidden position
-        final MessageView3DComp view3D = messageView.requireComp(MessageView3DComp.class);
+        final MessageView3DComp view3D = messageView.reqComp(MessageView3DComp.class);
         view3D.root().setVisible(true);
         view3D.root().setTranslateX(centerX - 0.5 * view3D.imageView().getFitWidth());
         view3D.root().setTranslateY(centerY);
         view3D.root().setTranslateZ(MessageView3DAnimationComp.hiddenZPosition(view3D));
 
-        final MessageView3DAnimationComp anim3D = messageView.requireComp(MessageView3DAnimationComp.class);
+        final MessageView3DAnimationComp anim3D = messageView.reqComp(MessageView3DAnimationComp.class);
         anim3D.moveInOut().playFromStart();
     }
 
     public static void hideMessageView(MessageView messageView) {
         if (messageView != null) {
             messageView.hide();
-            messageView.requireComp(MessageView3DComp.class).root().setVisible(false);
+            messageView.reqComp(MessageView3DComp.class).root().setVisible(false);
         }
     }
 }

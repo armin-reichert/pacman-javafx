@@ -45,18 +45,18 @@ public final class Bonus extends GameEntity {
             setComp(MovementComp.class, new MovementComp());
             setComp(WorldNavigationComp.class, new WorldNavigationComp());
             setComp(BonusMoveAndJumpComp.class, new BonusMoveAndJumpComp());
-            requireComp(WorldNavigationComp.class).setCanTeleport(false);
+            reqComp(WorldNavigationComp.class).setCanTeleport(false);
         }
     }
 
     // Component access
 
     public BonusDataComp data() {
-        return requireComp(BonusDataComp.class);
+        return reqComp(BonusDataComp.class);
     }
 
     public BonusStateComp state() {
-        return requireComp(BonusStateComp.class);
+        return reqComp(BonusStateComp.class);
     }
 
     public BonusState bonusState() {

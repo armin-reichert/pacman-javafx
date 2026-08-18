@@ -14,6 +14,6 @@ public class LivesCounter extends GameEntity {
     }
 
     public LivesCounterData data() {
-        return requireComp(LivesCounterData.class);
+        return reqComp(LivesCounterData.class);
     }
 }

@@ -49,27 +49,27 @@ public final class Ghost extends GameEntity {
     // Typed component accessors
 
     public MovementComp movement() {
-        return requireComp(MovementComp.class);
+        return reqComp(MovementComp.class);
     }
 
     public WorldNavigationComp worldNavigation() {
-        return requireComp(WorldNavigationComp.class);
+        return reqComp(WorldNavigationComp.class);
     }
 
     public GhostWorldInfoComp worldInfo() {
-        return requireComp(GhostWorldInfoComp.class);
+        return reqComp(GhostWorldInfoComp.class);
     }
 
     public GhostStateComp state() {
-        return requireComp(GhostStateComp.class);
+        return reqComp(GhostStateComp.class);
     }
 
     public GhostSpriteAnimationComp ghostAnimation() {
-        return requireComp(GhostSpriteAnimationComp.class);
+        return reqComp(GhostSpriteAnimationComp.class);
     }
 
     public SpriteAnimationComp spriteAnimation() {
-        return requireComp(SpriteAnimationComp.class);
+        return reqComp(SpriteAnimationComp.class);
     }
 
     @Override

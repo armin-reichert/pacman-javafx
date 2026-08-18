@@ -147,7 +147,7 @@ public class DefaultFactory3D implements Factory3D {
             ghost.setComp(Ghost3DViewComp.class, new Ghost3DViewComp());
             ghost.setComp(Ghost3DAnimationComp.class, new Ghost3DAnimationComp());
         }
-        return ghost.requireComp(Ghost3DViewComp.class);
+        return ghost.reqComp(Ghost3DViewComp.class);
     }
 
 }

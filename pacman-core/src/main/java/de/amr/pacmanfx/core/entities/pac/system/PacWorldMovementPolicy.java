@@ -18,7 +18,7 @@ public class PacWorldMovementPolicy implements WorldMovementPolicy {
 
     @Override
     public boolean canTurnBack(GameEntity actor) {
-        final WorldNavigationComp worldNavigation = actor.requireComp(WorldNavigationComp.class);
+        final WorldNavigationComp worldNavigation = actor.reqComp(WorldNavigationComp.class);
         return worldNavigation.isNewTileEntered();
     }
 

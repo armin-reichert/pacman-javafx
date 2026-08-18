@@ -185,7 +185,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         }
 
         //TODO: workaround, check cause for invisible Pac-Man 3D after cut scene
-        level.entities().pac().requireComp(Pac3DViewComp.class).root().setVisible(true);
+        level.entities().pac().reqComp(Pac3DViewComp.class).root().setVisible(true);
 
         gameScene().replaceActionBindings(session, level);
         gameScene().fadeIn();

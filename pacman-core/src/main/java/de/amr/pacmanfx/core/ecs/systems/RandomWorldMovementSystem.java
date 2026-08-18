@@ -49,7 +49,7 @@ public class RandomWorldMovementSystem {
 
     // try a random direction towards an accessible tile, do not turn back unless there is no other way
     private Direction computeRoamingDirection(GameLevel level, GameEntity actor, WorldMovementPolicy policy, Vector2i currentTile) {
-        final WorldNavigationComp navigation = actor.requireComp(WorldNavigationComp.class);
+        final WorldNavigationComp navigation = actor.reqComp(WorldNavigationComp.class);
 
         final Direction oppositeDir = navigation.moveDir().opposite();
         Direction selectedDir = choosePseudoRandomDirection();

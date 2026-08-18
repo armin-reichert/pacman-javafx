@@ -24,7 +24,7 @@ public class GhostDressAnimation3D extends ManagedAnimation {
     public GhostDressAnimation3D(Ghost ghost) {
         super("Ghost Dress Animation (%s)".formatted(ghost.name()));
         setAnimationFactory(() -> {
-            final Ghost3DViewComp view3D = ghost.requireComp(Ghost3DViewComp.class);
+            final Ghost3DViewComp view3D = ghost.reqComp(Ghost3DViewComp.class);
             final var dressRotation = new RotateTransition(Duration.seconds(FULL_CYCLE_SEC / 2), view3D.dressGroup());
             dressRotation.setAxis(Rotate.Y_AXIS); // TODO: Check which Y axis
             dressRotation.setFromAngle(-DRESS_MOVEMENT_ANGLE);

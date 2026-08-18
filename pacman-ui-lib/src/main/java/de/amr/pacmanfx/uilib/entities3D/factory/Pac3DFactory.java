@@ -29,14 +29,14 @@ public class Pac3DFactory {
 
     public static void createPacManView3D(Pac pac, PacSettings config) {
         ensurePacHas3DView(pac);
-        final Pac3DViewComp view3D = pac.requireComp(Pac3DViewComp.class);
+        final Pac3DViewComp view3D = pac.reqComp(Pac3DViewComp.class);
         view3D.setBodyAndJaw(createPacBody(config, true), createPacBody(config, false));
         configurePowerLight(view3D, config.colors().headColor().desaturate());
     }
 
     public static void createMsPacManView3D(Pac msPacMan, PacSettings config) {
         ensurePacHas3DView(msPacMan);
-        final Pac3DViewComp view3D = msPacMan.requireComp(Pac3DViewComp.class);
+        final Pac3DViewComp view3D = msPacMan.reqComp(Pac3DViewComp.class);
         view3D.setBodyAndJaw(createPacBody(config, true), createPacBody(config, false));
         view3D.bodyGroup().getChildren().add(createFemalePacBodyParts(config));
         configurePowerLight(view3D, config.colors().headColor().desaturate());

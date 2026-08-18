@@ -14,6 +14,6 @@ public class MessageView extends GameEntity {
     }
 
     public MessageViewData data() {
-        return requireComp(MessageViewData.class);
+        return reqComp(MessageViewData.class);
     }
 }

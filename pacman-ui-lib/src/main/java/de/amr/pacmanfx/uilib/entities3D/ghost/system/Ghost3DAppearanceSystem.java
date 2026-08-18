@@ -27,8 +27,8 @@ public class Ghost3DAppearanceSystem {
     }
 
     private static void setAppearance(Ghost ghost, GhostAppearance appearance) {
-        final Ghost3DViewComp view3D = ghost.requireComp(Ghost3DViewComp.class);
-        final Ghost3DAnimationComp animation3D = ghost.requireComp(Ghost3DAnimationComp.class);
+        final Ghost3DViewComp view3D = ghost.reqComp(Ghost3DViewComp.class);
+        final Ghost3DAnimationComp animation3D = ghost.reqComp(Ghost3DAnimationComp.class);
 
         view3D.setAppearance(appearance);
         switch (appearance) {

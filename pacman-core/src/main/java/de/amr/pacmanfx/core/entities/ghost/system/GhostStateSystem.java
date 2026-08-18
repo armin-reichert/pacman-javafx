@@ -38,7 +38,7 @@ public class GhostStateSystem {
 
         final GameSystems systems = game.variant().systems();
         final Pac pac = level.entities().pac();
-        final GhostStateComp state = ghost.requireComp(GhostStateComp.class);
+        final GhostStateComp state = ghost.reqComp(GhostStateComp.class);
 
         state.setFlashing(pac.power().isFading());
         state.setThreatenedByPac(isGhostThreatenedByPac(level, ghost, pac));
@@ -80,7 +80,7 @@ public class GhostStateSystem {
     public void changeState(Ghost ghost, GhostState newState) {
         requireNonNull(ghost);
         requireNonNull(newState);
-        ghost.requireComp(GhostStateComp.class).setGhostStateEnum(newState);
+        ghost.reqComp(GhostStateComp.class).setGhostStateEnum(newState);
     }
     
     private boolean isGhostThreatenedByPac(GameLevel level, Ghost ghost, Pac pac) {

@@ -23,11 +23,11 @@ public class ScoresView {
 
         gridPane.setHgap(5 * WorldMap.TS);
 
-        final ScoreViewComp leftScoreView = leftScore.requireComp(ScoreViewComp.class);
+        final ScoreViewComp leftScoreView = leftScore.reqComp(ScoreViewComp.class);
         gridPane.add(leftScoreView.titleDisplay(),  0, 0);
         gridPane.add(leftScoreView.textDisplay(),   0, 1);
 
-        final ScoreViewComp rightScoreView = rightScore.requireComp(ScoreViewComp.class);
+        final ScoreViewComp rightScoreView = rightScore.reqComp(ScoreViewComp.class);
         gridPane.add(rightScoreView.titleDisplay(), 1, 0);
         gridPane.add(rightScoreView.textDisplay(),  1, 1);
 
@@ -38,11 +38,11 @@ public class ScoresView {
     }
 
     public void setFont(Font font) {
-        final ScoreViewComp leftScoreView = leftScore.requireComp(ScoreViewComp.class);
+        final ScoreViewComp leftScoreView = leftScore.reqComp(ScoreViewComp.class);
         leftScoreView.titleDisplay().setFont(font);
         leftScoreView.textDisplay().setFont(font);
 
-        final ScoreViewComp rightScoreView = rightScore.requireComp(ScoreViewComp.class);
+        final ScoreViewComp rightScoreView = rightScore.reqComp(ScoreViewComp.class);
         rightScoreView.titleDisplay().setFont(font);
         rightScoreView.textDisplay().setFont(font);
     }
@@ -52,19 +52,19 @@ public class ScoresView {
     }
 
     public void showScore(int score, int levelNumber) {
-        final ScoreViewComp leftScoreView = leftScore.requireComp(ScoreViewComp.class);
+        final ScoreViewComp leftScoreView = leftScore.reqComp(ScoreViewComp.class);
         leftScoreView.textDisplay().setFill(Color.YELLOW);
         leftScoreView.textDisplay().setText(String.format("%7d L%d", score, levelNumber));
     }
 
     public void showHighScore(int highScore, int highScoreLevelNumber) {
-        final ScoreViewComp rightScoreView = rightScore.requireComp(ScoreViewComp.class);
+        final ScoreViewComp rightScoreView = rightScore.reqComp(ScoreViewComp.class);
         rightScoreView.textDisplay().setFill(Color.YELLOW);
         rightScoreView.textDisplay().setText(String.format("%7d L%d", highScore, highScoreLevelNumber));
     }
 
     public void showTextForScore(String text, Color color) {
-        final ScoreViewComp leftScoreView = leftScore.requireComp(ScoreViewComp.class);
+        final ScoreViewComp leftScoreView = leftScore.reqComp(ScoreViewComp.class);
         leftScoreView.textDisplay().setFill(color);
         leftScoreView.textDisplay().setText(text);
     }

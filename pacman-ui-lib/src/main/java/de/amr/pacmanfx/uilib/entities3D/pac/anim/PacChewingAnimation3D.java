@@ -21,7 +21,7 @@ public class PacChewingAnimation3D extends ManagedAnimation {
         super("Pac-Man Chewing");
         this.pac = pac;
 
-        final Pac3DViewComp view3D = pac.requireComp(Pac3DViewComp.class);
+        final Pac3DViewComp view3D = pac.reqComp(Pac3DViewComp.class);
         final Node jaw = view3D.jaw();
         setAnimationFactory(() -> {
             final var mouthClosed = new KeyValue[]{

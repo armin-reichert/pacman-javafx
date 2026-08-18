@@ -70,11 +70,11 @@ public class BonusMoveAndJumpSystem {
         navigator.setWishDir(bonus, initialDir);
 
         final var steering = new RouteGuidedSteering(navigator, worldMovementPolicy, route);
-        bonus.requireComp(BonusMoveAndJumpComp.class).setRouteNavigation(steering);
+        bonus.reqComp(BonusMoveAndJumpComp.class).setRouteNavigation(steering);
     }
 
     private void wanderMaze(GameLevel level, Bonus bonus) {
-        final BonusMoveAndJumpComp moveAndJumpComp = bonus.requireComp(BonusMoveAndJumpComp.class);
+        final BonusMoveAndJumpComp moveAndJumpComp = bonus.reqComp(BonusMoveAndJumpComp.class);
         moveAndJumpComp.routeNavigation().steer(bonus, level);
         final Vector2i tile = bonus.pos().tile();
         boolean exitPortalReached = moveAndJumpComp.routeNavigation().isRouteTraversed()
@@ -87,8 +87,8 @@ public class BonusMoveAndJumpSystem {
     }
 
     private void jump(Bonus bonus) {
-        final WorldNavigationComp navigationComp   = bonus.requireComp(WorldNavigationComp.class);
-        final BonusMoveAndJumpComp moveAndJumpComp = bonus.requireComp(BonusMoveAndJumpComp.class);
+        final WorldNavigationComp navigationComp   = bonus.reqComp(WorldNavigationComp.class);
+        final BonusMoveAndJumpComp moveAndJumpComp = bonus.reqComp(BonusMoveAndJumpComp.class);
         moveAndJumpComp.pulse().triggerPulse();
         if (moveAndJumpComp.pulse().pulseTriggered()) {
             float jumpDelta = navigationComp.moveDir().isVertical() ? 3.0f : 2.0f;

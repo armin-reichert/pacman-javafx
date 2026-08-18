@@ -122,7 +122,7 @@ public class MazeFactory3D {
         }
 
         // apply color scheme
-        final var view3D = house.requireComp(House3DViewComp.class);
+        final var view3D = house.reqComp(House3DViewComp.class);
         view3D.setWallBaseColor(Color.valueOf(colorScheme.wallFill()));
         view3D.wallBaseHeightProperty().set(config3D.baseHeight());
         view3D.setWallTopColor(Color.valueOf(colorScheme.wallStroke()));

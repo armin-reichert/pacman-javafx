@@ -49,7 +49,7 @@ public class RouteGuidedSteering implements Steering {
         requireNonNull(gameEntity);
         requireNonNull(level);
 
-        final WorldNavigationComp navigation = gameEntity.requireComp(WorldNavigationComp.class);
+        final WorldNavigationComp navigation = gameEntity.reqComp(WorldNavigationComp.class);
 
         if (targetIndex == route.size()) {
             routeTraversed = true;
@@ -67,7 +67,7 @@ public class RouteGuidedSteering implements Steering {
     }
 
     private void selectNextTargetTile(GameLevel level, GameEntity actor) {
-        final WorldNavigationComp navigation = actor.requireComp(WorldNavigationComp.class);
+        final WorldNavigationComp navigation = actor.reqComp(WorldNavigationComp.class);
         ++targetIndex;
         if (targetIndex < route.size()) {
             //TODO Use navigator method instead

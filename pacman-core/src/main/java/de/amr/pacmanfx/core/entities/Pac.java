@@ -36,40 +36,40 @@ public final class Pac extends GameEntity {
     }
 
     public MovementComp movement() {
-        return requireComp(MovementComp.class);
+        return reqComp(MovementComp.class);
     }
 
     public WorldNavigationComp worldNavigation() {
-        return requireComp(WorldNavigationComp.class);
+        return reqComp(WorldNavigationComp.class);
     }
 
     public SteeringComp autoSteering() {
-        return requireComp(SteeringComp.class);
+        return reqComp(SteeringComp.class);
     }
 
     public PacDigestionComp digestion() {
-        return requireComp(PacDigestionComp.class);
+        return reqComp(PacDigestionComp.class);
     }
 
     public PacPowerComp power() {
-        return requireComp(PacPowerComp.class);
+        return reqComp(PacPowerComp.class);
     }
 
     public PacCheatsComp cheats() {
-        return requireComp(PacCheatsComp.class);
+        return reqComp(PacCheatsComp.class);
     }
 
     public PacStateComp state() {
-        return requireComp(PacStateComp.class);
+        return reqComp(PacStateComp.class);
     }
 
     public PacAnimationComp animation() {
-        return requireComp(PacAnimationComp.class);
+        return reqComp(PacAnimationComp.class);
     }
 
     //TODO integrate with Pac animation comp
     public SpriteAnimationComp spriteAnim() {
-        return requireComp(SpriteAnimationComp.class);
+        return reqComp(SpriteAnimationComp.class);
     }
 
     @Override

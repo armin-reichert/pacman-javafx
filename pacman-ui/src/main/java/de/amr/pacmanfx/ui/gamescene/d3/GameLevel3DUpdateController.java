@@ -76,7 +76,7 @@ public class GameLevel3DUpdateController {
     }
 
     private static boolean ghostIsNearHouseDoor(House house, Ghost ghost) {
-        final House3DViewComp view3D = house.requireComp(House3DViewComp.class);
+        final House3DViewComp view3D = house.reqComp(House3DViewComp.class);
         final Vector2f houseEntryPos = house.floorplan().entryPosition();
         return ghost.pos().asVector2f().euclideanDist(houseEntryPos) <= view3D.doorSensitivity();
     }

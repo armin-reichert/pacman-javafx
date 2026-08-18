@@ -30,10 +30,10 @@ public class LevelCounter3DViewSystem {
         root.setTranslateY(tilesPx(2));
         root.setTranslateZ(-gameVariantConfig.worldSettings().levelCounter().elevation());
 
-        final LevelCounter3DViewComp view3D = levelCounter.requireComp(LevelCounter3DViewComp.class);
+        final LevelCounter3DViewComp view3D = levelCounter.reqComp(LevelCounter3DViewComp.class);
         view3D.setRoot(root);
 
-        final LevelCounter3DAnimationComp anim3D = levelCounter.requireComp(LevelCounter3DAnimationComp.class);
+        final LevelCounter3DAnimationComp anim3D = levelCounter.reqComp(LevelCounter3DAnimationComp.class);
         anim3D.spinningAnimation().invalidate(); // stops animation if present
         anim3D.spinningAnimation().playFromStart();
     }

@@ -287,7 +287,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
             final Ghost redGhost = level.entities().ghost(GhostPersonality.RED_GHOST_SHADOW);
             if (!redGhost.hasComp(ElroyComp.class)) return;
             if (prisoner.personality() == GhostPersonality.ORANGE_GHOST_POKEY) {
-                final ElroyComp elroy = redGhost.requireComp(ElroyComp.class);
+                final ElroyComp elroy = redGhost.reqComp(ElroyComp.class);
                 if (elroy.boost() != ElroyComp.Boost.NONE && !elroy.enabled()) {
                     elroy.setEnabled(true);
                     Logger.debug("Re-enabled {}'s Cruise Elroy mode because {} is released:", redGhost.name(), prisoner.name());
@@ -301,7 +301,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         if (!redGhost.hasComp(ElroyComp.class)) {
             return;
         }
-        final ElroyComp elroy = redGhost.requireComp(ElroyComp.class);
+        final ElroyComp elroy = redGhost.reqComp(ElroyComp.class);
         final LevelData data = ArcadePacMan_GameRules.levelData(level.number());
         final int remainingFoodCount = level.food().remainingFoodCount();
         if (remainingFoodCount == data.numDotsLeftElroy1()) {

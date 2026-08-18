@@ -74,7 +74,7 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
         }
 
         if (actor.hasComp(WorldNavigationComp.class)) {
-            final WorldNavigationComp worldNavigation = actor.requireComp(WorldNavigationComp.class);
+            final WorldNavigationComp worldNavigation = actor.reqComp(WorldNavigationComp.class);
             if (worldNavigation.wishDir() != null) {
                 drawDirectionIndicator(actor);
             }
@@ -97,7 +97,7 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
     }
 
     private void drawDirectionIndicator(GameEntity actor) {
-        final WorldNavigationComp worldNavigation = actor.requireComp(WorldNavigationComp.class);
+        final WorldNavigationComp worldNavigation = actor.reqComp(WorldNavigationComp.class);
 
         ctx.save();
         Vector2f center = actor.pos().bodyCenter();

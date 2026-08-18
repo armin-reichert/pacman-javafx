@@ -63,7 +63,7 @@ public class Arcade_ActorSpeedRules implements ActorSpeedRules {
         final int levelNumber = level.number();
         final LevelData data = ArcadePacMan_GameRules.levelData(levelNumber);
         if (ghost.hasComp(ElroyComp.class)) {
-            return switch (ghost.requireComp(ElroyComp.class).boost()) {
+            return switch (ghost.reqComp(ElroyComp.class).boost()) {
                 case NONE -> data.pctGhostSpeed()  * BASE_SPEED_ONE_PERCENT;
                 case MEDIUM -> data.pctElroy1Speed() * BASE_SPEED_ONE_PERCENT;
                 case LARGE -> data.pctElroy2Speed() * BASE_SPEED_ONE_PERCENT;

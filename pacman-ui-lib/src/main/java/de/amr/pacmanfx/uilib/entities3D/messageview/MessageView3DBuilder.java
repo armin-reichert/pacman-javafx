@@ -29,7 +29,7 @@ public class MessageView3DBuilder {
         if (!messageView.hasComp(MessageView3DComp.class)) {
             messageView.setComp(MessageView3DComp.class, new MessageView3DComp());
         }
-        return messageView.requireComp(MessageView3DComp.class);
+        return messageView.reqComp(MessageView3DComp.class);
     }
 
     public static MessageView3DAnimationComp ensureAnim3DExists(MessageView messageView, AnimationRegistry registry) {
@@ -37,7 +37,7 @@ public class MessageView3DBuilder {
             final MessageView3DComp view3D = ensureView3DExists(messageView);
             messageView.setComp(MessageView3DAnimationComp.class, new MessageView3DAnimationComp(registry, view3D));
         }
-        return messageView.requireComp(MessageView3DAnimationComp.class);
+        return messageView.reqComp(MessageView3DAnimationComp.class);
     }
 
     private Color borderColor = Color.BLUE;

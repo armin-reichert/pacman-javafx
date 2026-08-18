@@ -192,7 +192,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
     private void initScores(GameSession session) {
         session.score().reset();
-        final File highScoreFile = session.highScore().requireComp(ScorePersistencyComp.class).file();
+        final File highScoreFile = session.highScore().reqComp(ScorePersistencyComp.class).file();
         try {
             ScoreSystem.load(session.highScore());
             ScoreSystem.enableScore(session.highScore(), true);
