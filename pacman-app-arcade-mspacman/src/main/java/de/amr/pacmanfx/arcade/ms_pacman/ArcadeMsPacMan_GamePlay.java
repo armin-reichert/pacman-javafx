@@ -203,7 +203,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
             bonus = Bonus.createStaticBonus(symbolCode, value);
             final Vector2i bonusTile = terrain.getTilePropertyOrDefault(WorldMapPropertyName.POS_BONUS, new Vector2i(13, 20));
             bonus.pos().set(WorldMap.halfTileRightOf(bonusTile));
-            systems.bonusState().showEdibleForSeconds(bonus, randomFloat(9, 10), systems.bonusMoveAndJump(), systems.worldNavigator());
+            systems.bonusState().showEdibleForSeconds(bonus, randomFloat(9, 10));
         } else {
             bonus = Bonus.createMovingBonus(symbolCode, value);
             computeBonusRoute(game, bonus, terrain, house);

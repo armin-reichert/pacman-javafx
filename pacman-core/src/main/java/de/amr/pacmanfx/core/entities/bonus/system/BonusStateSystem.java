@@ -85,12 +85,7 @@ public class BonusStateSystem {
         bonus.optMoveAndJump().ifPresent(moveAndJumpSystem::reset);
     }
 
-    public void showEdibleForSeconds(
-        Bonus bonus,
-        float seconds,
-        BonusMoveAndJumpSystem moveAndJumpSystem, //TODO remove
-        WorldNavigationSystem navigationSystem //TODO remove
-    ) {
+    public void showEdibleForSeconds(Bonus bonus, float seconds) {
         requireNonNull(bonus);
 
         bonus.show();
