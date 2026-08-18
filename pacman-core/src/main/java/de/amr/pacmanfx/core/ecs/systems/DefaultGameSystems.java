@@ -14,9 +14,12 @@ import de.amr.pacmanfx.core.entities.ghost.system.GhostWorldMovementPolicy;
 import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.entities.pac.system.*;
 import de.amr.pacmanfx.core.gameplay.hunt.*;
+import de.amr.pacmanfx.core.gamestate.EntityUpdater;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 
 public class DefaultGameSystems implements GameSystems {
+
+    private final EntityUpdater entityUpdater = new EntityUpdater();
 
     protected MovementSystem motor =  new MovementSystem();
     protected WorldNavigationSystem navigator = new WorldNavigationSystem();
@@ -84,6 +87,11 @@ public class DefaultGameSystems implements GameSystems {
 
     protected void createLevelCounterSystem() {
         levelCounterSystem = new LevelCounterSystem();
+    }
+
+    @Override
+    public EntityUpdater entityUpdater() {
+        return entityUpdater;
     }
 
     /**

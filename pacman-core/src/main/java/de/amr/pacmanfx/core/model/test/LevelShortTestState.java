@@ -101,17 +101,7 @@ public class LevelShortTestState extends GameState {
                 gamePlay.startNextLevel(game);
             }
         } else {
-            level.entities().optBonus().ifPresent(bonus -> {
-                game.variant().systems().bonusState().update(
-                    level,
-                    bonus,
-                    game.eventManager(),
-                    systems.motor(),
-                    systems.bonusMoveAndJump(),
-                    systems.worldNavigator()
-                );
-                //TODO call other bonus systems here
-            });
+            level.entities().optBonus().ifPresent(bonus -> systems.entityUpdater().updateBonus(game, level, bonus));
         }
     }
 

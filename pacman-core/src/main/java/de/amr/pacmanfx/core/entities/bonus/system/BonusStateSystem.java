@@ -16,73 +16,52 @@ import de.amr.pacmanfx.core.level.GameLevel;
 
 import static java.util.Objects.requireNonNull;
 
-//TODO implement navigation logic and movement changes elsewhere
 public class BonusStateSystem {
 
     public BonusStateSystem() {}
 
-    public void update(
-        GameLevel level,
-        Bonus bonus,
-        GameEventManager eventManager,
-        MovementSystem motor,
-        BonusMoveAndJumpSystem moveAndJumpSystem, //TODO remove
-        WorldNavigationSystem worldNavigationSystem
-    ) {
+    public void update(GameLevel level, Bonus bonus, GameEventManager eventManager, MovementSystem motor) {
         requireNonNull(level);
         requireNonNull(bonus);
         requireNonNull(eventManager);
         requireNonNull(motor);
 
         final BonusStateComp state = bonus.state();
-        final BonusMoveAndJumpComp moveAndJumpComp = bonus.optMoveAndJump().orElse(null);
 
         state.timer().doTick();
 
         switch (state.bonusState()) {
+            case INACTIVE -> {}
 
             case EDIBLE -> {
-                if (moveAndJumpComp != null) {
-                    moveAndJumpSystem.update(motor, level, bonus);
-                    state.setEdibleStateExpired(moveAndJumpComp.targetReached() || state.timer().hasExpired());
+                boolean edibleStateOver = state.timer().hasExpired();
+                final BonusMoveAndJumpComp moveAndJump = bonus.optMoveAndJump().orElse(null);
+                if (moveAndJump != null) {
+                    edibleStateOver = edibleStateOver || moveAndJump.targetReached();
                 }
-                else {
-                    // Fixed position bonus expires using timer. Animated bonus expires when entering portal.
-                    state.setEdibleStateExpired(state.timer().hasExpired());
-                }
-                if (state.edibleStateExpired()) {
-                    setInactive(bonus, moveAndJumpSystem, worldNavigationSystem);
+                if (edibleStateOver) {
+                    state.setEdibleStateExpired(edibleStateOver);
+                    setBonusInactive(bonus);
                     eventManager.publishGameEvent(new BonusExpiredEvent(bonus));
                 }
             }
 
             case EATEN -> {
-                if (state.timer().hasExpired()) {
-                    setInactive(bonus, moveAndJumpSystem, worldNavigationSystem);
+                boolean eatenStateOver = state.timer().hasExpired();
+                if (eatenStateOver) {
+                    setBonusInactive(bonus);
                     eventManager.publishGameEvent(new BonusExpiredEvent(bonus));
                 }
             }
-
-            case INACTIVE -> {}
         }
     }
 
-    public void setInactive(
-        Bonus bonus,
-        BonusMoveAndJumpSystem moveAndJumpSystem, //TODO remove
-        WorldNavigationSystem navigationSystem //TODO remove
-    ) {
+    public void setBonusInactive(Bonus bonus) {
         bonus.hide();
 
         final BonusStateComp state = bonus.state();
         state.setBonusState(BonusState.INACTIVE);
         state.timer().restartIndefinitely();
-
-        if (bonus.optMovement().isPresent()) {
-            navigationSystem.setSpeed(bonus, 0);
-        }
-
-        bonus.optMoveAndJump().ifPresent(moveAndJumpSystem::reset);
     }
 
     public void showEdibleForSeconds(Bonus bonus, float seconds) {

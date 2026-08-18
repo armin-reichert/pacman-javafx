@@ -52,8 +52,10 @@ public final class GameState_PacManDying extends GameState {
         level.entities().ghosts().forEach(ghost ->
             ghost.optComp(ElroyComp.class).ifPresent(elroy -> elroy.setEnabled(false)));
 
-        level.entities().optBonus().ifPresent(bonus ->
-            systems.bonusState().setInactive(bonus, systems.bonusMoveAndJump(), systems.worldNavigator()));
+        level.entities().optBonus().ifPresent(bonus -> {
+            systems.bonusState().setBonusInactive(bonus);
+            systems.bonusMoveAndJump().setBonusInactive(bonus, systems.bonusMoveAndJump(), systems.worldNavigator());
+        });
 
         systems.worldNavigator().setSpeed(pac, 0);
         systems.pacPower().reset(pac);
@@ -96,7 +98,8 @@ public final class GameState_PacManDying extends GameState {
         else if (tick == timing.hidePacTick()) {
             pac.hide();
             level.entities().optBonus().ifPresent(bonus -> {
-                systems.bonusState().setInactive(bonus, systems.bonusMoveAndJump(), systems.worldNavigator());
+                systems.bonusState().setBonusInactive(bonus);
+                systems.bonusMoveAndJump().setBonusInactive(bonus, systems.bonusMoveAndJump(), systems.worldNavigator());
                 level.entities().remove(bonus);
             });
         }

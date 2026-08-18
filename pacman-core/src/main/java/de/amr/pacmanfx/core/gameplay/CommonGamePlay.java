@@ -13,9 +13,7 @@ import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusState;
-import de.amr.pacmanfx.core.entities.ghost.comp.GhostSpriteAnimationComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
-import de.amr.pacmanfx.core.entities.ghost.system.GhostStateSystem;
 import de.amr.pacmanfx.core.entities.livescounter.system.LivesCounterSystem;
 import de.amr.pacmanfx.core.entities.pac.comp.PacPowerComp;
 import de.amr.pacmanfx.core.entities.pac.system.PacDigestionSystem;
@@ -37,7 +35,6 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessage;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
-import de.amr.pacmanfx.core.model.rules.ActorSpeedRules;
 import de.amr.pacmanfx.core.model.rules.CollisionStrategy;
 import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
@@ -157,24 +154,12 @@ public abstract class CommonGamePlay implements GamePlay {
 
     @Override
     public void updateEntities(GameContext game, GameLevel level) {
+        //TODO remove this method and call entity update outside
         final GameSystems systems = game.variant().systems();
+        systems.entityUpdater().updateEntities(game, level);
 
-        final Pac pac = level.entities().pac();
-        updatePac(game, level, pac);
-        updateGhosts(game, level);
-        level.entities().optBonus().ifPresent(bonus -> {
-            game.variant().systems().bonusState().update(
-                level,
-                bonus,
-                game.eventManager(),
-                systems.motor(),
-                systems.bonusMoveAndJump(),
-                systems.worldNavigator()
-            );
-            //TODO call other bonus systems here, remove last 2 arguments in above call
-        });
-
-        checkRemainingPacPower(game, level, pac);
+        //TODO How to handle this correctly?
+        checkRemainingPacPower(game, level, level.entities().pac());
     }
 
     @Override
@@ -213,28 +198,6 @@ public abstract class CommonGamePlay implements GamePlay {
         }
     }
 
-    private void updateGhosts(GameContext game, GameLevel level) {
-        if (game.state().id().equals(CommonGameStateID.GAME_LEVEL_EATING_GHOST)) {
-            level.entities().ghostsInAnyOfStates(GhostStateSystem.UPDATED_GHOST_STATES_WHILE_EATEN)
-                .forEach(ghost -> updateGhost(game, level, ghost));
-        } else {
-            level.entities().ghosts().forEach(ghost -> updateGhost(game, level, ghost));
-        }
-    }
-
-    private void updateGhost(GameContext game, GameLevel level, Ghost ghost) {
-        final GameSystems systems = game.variant().systems();
-
-        systems.ghostState().update(game, level, ghost);
-        systems.ghostSpriteAnimation().update(ghost, level.entities().pac());
-
-        //TODO should this be here?
-        final GhostSpriteAnimationComp ghostAnimation = ghost.ghostAnimation();
-        if (ghostAnimation.ghostAnimationID() != null) {
-            systems.spriteAnim().select(ghost, ghostAnimation.ghostAnimationID());
-            systems.spriteAnim().playSelected(ghost);
-        }
-    }
 
     private void startPacPower(GameContext game, GameLevel level, Pac pac) {
         final GameSystems systems = game.variant().systems();
@@ -285,39 +248,6 @@ public abstract class CommonGamePlay implements GamePlay {
         Logger.info("Pac power ended, hunting resumed. Power ticks remaining: {}", pac.power().ticksRemaining());
     }
 
-    private void checkRemainingPacPower(GameContext game, GameLevel level, Pac pac) {
-        final PacPowerComp power = pac.power();
-        if (power.ends()) {
-            //TODO move into event handler!
-            onPacPowerEnds(game, level, pac);
-            game.eventManager().publishGameEvent(new PacPowerEndsEvent(pac));
-        }
-        else if (power.isFadingStart()) {
-            onPacPowerStartsFading(game, level, pac);
-            game.eventManager().publishGameEvent(new PacPowerStartsFadingEvent(pac));
-        }
-    }
-
-    private void updatePac(GameContext game, GameLevel level, Pac pac) {
-        final GameSystems systems = game.variant().systems();
-        final GameRules rules = game.variant().rules();
-        final GameSession session = game.session();
-
-        final ActorSpeedRules speedRules = game.variant().rules().actorSpeedRules();
-        final float speed = pac.power().isActive()
-            ? speedRules.pacSpeedWhenHasPower(game, level)
-            : speedRules.pacSpeed(game, level);
-
-        systems.worldNavigator().setSpeed(pac, speed);
-        systems.worldNavigator().tryMovingOrTeleporting(
-            systems.motor(), pac, level, systems.pacWorldMovementPolicy());
-
-        systems.pacAutoSteering().update(session, pac);
-        systems.pacDigestion().update(pac);
-        systems.pacPower().update(pac, rules.pacPowerFadingSeconds(level.number()));
-        systems.pacState().update(pac);
-        systems.pacAnimation().update(pac);
-    }
 
     private void evalCollisions(GameContext game, GameLevel level, HuntingStep huntingStep) {
         checkFoodFound(game, level);
@@ -505,11 +435,8 @@ public abstract class CommonGamePlay implements GamePlay {
         });
 
         level.entities().optBonus().ifPresent(bonus -> {
-            systems.bonusState().setInactive(
-                bonus,
-                systems.bonusMoveAndJump(),
-                systems.worldNavigator()
-                );
+            systems.bonusState().setBonusInactive(bonus);
+            systems.bonusMoveAndJump().setBonusInactive(bonus, systems.bonusMoveAndJump(), systems.worldNavigator());
             level.entities().remove(bonus);
         });
     }
@@ -546,6 +473,19 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     // private
+
+    private void checkRemainingPacPower(GameContext game, GameLevel level, Pac pac) {
+        final PacPowerComp power = pac.power();
+        if (power.ends()) {
+            //TODO move into event handler!
+            onPacPowerEnds(game, level, pac);
+            game.eventManager().publishGameEvent(new PacPowerEndsEvent(pac));
+        }
+        else if (power.isFadingStart()) {
+            onPacPowerStartsFading(game, level, pac);
+            game.eventManager().publishGameEvent(new PacPowerStartsFadingEvent(pac));
+        }
+    }
 
     private void detectCollisions(CollisionStrategy strategy, GameLevel level, HuntingStep huntingStep) {
         detectFoodCollision(level, huntingStep);

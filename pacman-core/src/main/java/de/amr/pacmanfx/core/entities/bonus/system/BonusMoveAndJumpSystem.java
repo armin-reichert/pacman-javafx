@@ -32,13 +32,33 @@ public class BonusMoveAndJumpSystem {
         this.worldMovementPolicy = requireNonNull(worldMovementPolicy);
     }
 
-    public void update(MovementSystem motor, GameLevel level, Bonus bonus) {
-        requireNonNull(motor);
+    public void update(GameLevel level, Bonus bonus, MovementSystem motor) {
         requireNonNull(level);
         requireNonNull(bonus);
+        requireNonNull(motor);
 
-        wanderMaze(motor, level, bonus);
-        jump(bonus);
+        switch (bonus.state().bonusState()) {
+            case INACTIVE -> {
+            }
+
+            case EDIBLE -> {
+                wanderMaze(motor, level, bonus);
+                jump(bonus);
+            }
+
+            case EATEN -> {}
+        }
+    }
+
+    public void setBonusInactive(
+        Bonus bonus,
+        BonusMoveAndJumpSystem moveAndJumpSystem,
+        WorldNavigationSystem worldNavigationSystem)
+    {
+        if (bonus.optMovement().isPresent()) {
+            worldNavigationSystem.setSpeed(bonus, 0);
+        }
+        bonus.optMoveAndJump().ifPresent(moveAndJumpSystem::reset);
     }
 
     public void reset(BonusMoveAndJumpComp animation) {
@@ -76,25 +96,30 @@ public class BonusMoveAndJumpSystem {
     }
 
     private void wanderMaze(MovementSystem motor, GameLevel level, Bonus bonus) {
-        final BonusMoveAndJumpComp moveAndJumpComp = bonus.reqComp(BonusMoveAndJumpComp.class);
-        moveAndJumpComp.routeNavigation().steer(bonus, level);
+        final BonusMoveAndJumpComp moveAndJump = bonus.reqComp(BonusMoveAndJumpComp.class);
+
+        moveAndJump.routeNavigation().steer(bonus, level);
+
         final Vector2i tile = bonus.pos().tile();
-        boolean exitPortalReached = moveAndJumpComp.routeNavigation().isRouteTraversed()
+        final boolean exitPortalReached = moveAndJump.routeNavigation().isRouteTraversed()
             || level.worldMap().terrainLayer().isTileInPortalSpace(tile);
+
         if (!exitPortalReached) {
             navigator.navigateTowardsTarget(bonus, level, worldMovementPolicy);
             navigator.tryMovingOrTeleporting(motor, bonus, level, worldMovementPolicy);
         }
-        moveAndJumpComp.setTargetReached(exitPortalReached);
+        moveAndJump.setTargetReached(exitPortalReached);
     }
 
     private void jump(Bonus bonus) {
-        final WorldNavigationComp navigationComp   = bonus.reqComp(WorldNavigationComp.class);
-        final BonusMoveAndJumpComp moveAndJumpComp = bonus.reqComp(BonusMoveAndJumpComp.class);
-        moveAndJumpComp.pulse().triggerPulse();
-        if (moveAndJumpComp.pulse().pulseTriggered()) {
-            float jumpDelta = navigationComp.moveDir().isVertical() ? 3.0f : 2.0f;
-            float dy = moveAndJumpComp.pulse().state() == Pulse.State.ON ? -jumpDelta : jumpDelta;
+        final WorldNavigationComp worldNavigation = bonus.reqComp(WorldNavigationComp.class);
+        final BonusMoveAndJumpComp moveAndJump = bonus.reqComp(BonusMoveAndJumpComp.class);
+
+        final Pulse pulse = moveAndJump.pulse();
+        pulse.triggerPulse();
+        if (pulse.pulseTriggered()) {
+            float jumpDelta = worldNavigation.moveDir().isVertical() ? 3.0f : 2.0f;
+            float dy = pulse.state() == Pulse.State.ON ? -jumpDelta : jumpDelta;
             bonus.pos().setY(bonus.pos().y() + dy);
         }
     }
