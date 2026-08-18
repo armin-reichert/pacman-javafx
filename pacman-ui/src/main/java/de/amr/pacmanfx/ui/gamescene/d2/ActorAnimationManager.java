@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.gamescene.d2;
 
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
+import de.amr.pacmanfx.core.SpriteAnimController;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
@@ -20,7 +20,7 @@ public class ActorAnimationManager {
         final GameVariantRenderConfig renderConfig = appContext.gameVariants().currentGameVariant().uiConfig().renderConfig();
         final SpriteAnimationContainer animationContainer = appContext.ui().sprites().animations();
 
-        final SpriteAnimSystem animSystem = appContext.game().variant().systems().spriteAnim();
+        final SpriteAnimController animSystem = appContext.game().variant().systems().spriteAnimController();
 
         final Pac pac = level.entities().pac();
         if (animSystem.hasNoAnimations(pac)) {
@@ -38,17 +38,17 @@ public class ActorAnimationManager {
     }
 
     // Called from game event handler
-    public static void resetActorAnimations(SpriteAnimSystem animSystem, GameLevel level) {
+    public static void resetActorAnimations(SpriteAnimController animSystem, GameLevel level) {
         resetPacAnimation(animSystem, level.entities().pac());
         level.entities().ghosts().forEach(ghost -> resetGhostAnimation(animSystem, ghost));
     }
 
-    public static void resetPacAnimation(SpriteAnimSystem animSystem, Pac pac) {
+    public static void resetPacAnimation(SpriteAnimController animSystem, Pac pac) {
         animSystem.select(pac, CommonSpriteAnimationID.PAC_MUNCHING);
         animSystem.resetSelected(pac);
     }
 
-    public static void resetGhostAnimation(SpriteAnimSystem animSystem, Ghost ghost) {
+    public static void resetGhostAnimation(SpriteAnimController animSystem, Ghost ghost) {
         animSystem.select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);
         animSystem.resetSelected(ghost);
     }

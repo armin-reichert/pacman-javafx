@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.core.ecs.systems;
 
+import de.amr.pacmanfx.core.SpriteAnimController;
 import de.amr.pacmanfx.core.entities.bonus.system.BonusMoveAndJumpSystem;
 import de.amr.pacmanfx.core.entities.bonus.system.BonusStateSystem;
 import de.amr.pacmanfx.core.entities.bonus.system.BonusWorldMovementPolicy;
@@ -20,12 +21,12 @@ import de.amr.pacmanfx.core.model.GhostPersonality;
 public class DefaultGameSystems implements GameSystems {
 
     private final EntityUpdater entityUpdater = new EntityUpdater();
+    private final SpriteAnimController spriteAnimController = new SpriteAnimController();
 
     protected MovementSystem motor =  new MovementSystem();
     protected WorldNavigationSystem navigator = new WorldNavigationSystem();
     protected RandomWorldMovementSystem roamingNavigator = new RandomWorldMovementSystem(navigator);
 
-    protected SpriteAnimSystem spriteAnim = new SpriteAnimSystem();
 
     protected WorldMovementPolicy pacWorldMovementPolicy;
     protected PacAutoSteeringSystem pacAutoSteering;
@@ -63,7 +64,7 @@ public class DefaultGameSystems implements GameSystems {
         pacWorldMovementPolicy = new PacWorldMovementPolicy();
         pacAutoSteering = new PacAutoSteeringSystem();
         pacState = new PacStateSystem();
-        pacAnimation = new PacAnimationSystem(spriteAnim);
+        pacAnimation = new PacAnimationSystem(spriteAnimController);
     }
 
     protected void createGhostSystems() {
@@ -123,8 +124,8 @@ public class DefaultGameSystems implements GameSystems {
     }
 
     @Override
-    public SpriteAnimSystem spriteAnim() {
-        return spriteAnim;
+    public SpriteAnimController spriteAnimController() {
+        return spriteAnimController;
     }
 
     @Override

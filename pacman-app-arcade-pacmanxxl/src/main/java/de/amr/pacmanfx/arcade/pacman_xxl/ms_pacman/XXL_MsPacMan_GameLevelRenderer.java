@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman;
 
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_GameLevelRenderer;
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
+import de.amr.pacmanfx.core.SpriteAnimController;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorSchemeImpl;
@@ -20,7 +20,7 @@ public class XXL_MsPacMan_GameLevelRenderer extends ArcadeMsPacMan_GameLevelRend
 
     private final GenericMapRenderer mapRenderer;
 
-    public XXL_MsPacMan_GameLevelRenderer(SpriteAnimSystem animSystem, Canvas canvas) {
+    public XXL_MsPacMan_GameLevelRenderer(SpriteAnimController animSystem, Canvas canvas) {
         super(animSystem, canvas, null);
 
         mapRenderer = new GenericMapRenderer(canvas);

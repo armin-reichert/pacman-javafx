@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.MovementComp;
 import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
+import de.amr.pacmanfx.core.SpriteAnimController;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Pac;
@@ -68,7 +68,7 @@ public class DS_ActorInfo extends GameDashboardSection {
         addDynamicInfo("Movement",  supplyGhostText(appContext, this::actorMovementText,  personality));
         addDynamicInfo("Tile",      supplyGhostText(appContext, this::actorLocationText,  personality));
         addDynamicInfo("Animation", supplyGhostText(appContext,
-            (_, ghost) -> ghostAnimationText(appContext.game().variant().systems().spriteAnim(), ghost),
+            (_, ghost) -> ghostAnimationText(appContext.game().variant().systems().spriteAnimController(), ghost),
             personality));
     }
 
@@ -128,7 +128,7 @@ public class DS_ActorInfo extends GameDashboardSection {
 
     private Supplier<String> supplyPacAnimationText(GameAppContext app) {
         return () -> app.game().session().optLevel().map(level -> {
-            final SpriteAnimSystem animSystem = app.game().variant().systems().spriteAnim();
+            final SpriteAnimController animSystem = app.game().variant().systems().spriteAnimController();
             final Pac pac = level.entities().pac();
             if (animSystem.selectedAnimationID(pac) != null) {
                 return "%s:%d".formatted(animSystem.selectedAnimationID(pac), animSystem.currentFrame(pac));
@@ -153,7 +153,7 @@ public class DS_ActorInfo extends GameDashboardSection {
         return "%s (%s)".formatted(ghost.name(), ghostStateText(level, ghost));
     }
 
-    private String ghostAnimationText(SpriteAnimSystem animSystem, Ghost ghost) {
+    private String ghostAnimationText(SpriteAnimController animSystem, Ghost ghost) {
         return animSystem.selectedAnimationID(ghost) != null
             ? "%s:%d".formatted(animSystem.selectedAnimationID(ghost), animSystem.currentFrame(ghost))
             : NO_INFO;

@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.core.ecs.systems;
 
+import de.amr.pacmanfx.core.SpriteAnimController;
 import de.amr.pacmanfx.core.entities.bonus.system.BonusMoveAndJumpSystem;
 import de.amr.pacmanfx.core.entities.bonus.system.BonusStateSystem;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostHouseAccessSystem;
@@ -19,7 +20,7 @@ public interface GameSystems {
 
     EntityUpdater entityUpdater();
 
-    SpriteAnimSystem spriteAnim();
+    SpriteAnimController spriteAnimController();
 
     MovementSystem motor();
 

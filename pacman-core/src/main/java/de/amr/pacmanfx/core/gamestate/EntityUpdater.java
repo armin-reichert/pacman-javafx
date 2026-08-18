@@ -7,7 +7,6 @@ import de.amr.pacmanfx.core.entities.Bonus;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusMoveAndJumpComp;
-import de.amr.pacmanfx.core.entities.ghost.comp.GhostSpriteAnimationComp;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostStateSystem;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.rules.ActorSpeedRules;
@@ -56,14 +55,8 @@ public class EntityUpdater {
         final GameSystems systems = game.variant().systems();
 
         systems.ghostState().update(game, level, ghost);
-        systems.ghostSpriteAnimation().update(ghost, level.entities().pac());
-
-        //TODO: move into animation system!
-        final GhostSpriteAnimationComp ghostAnimation = ghost.ghostAnimation();
-        if (ghostAnimation.ghostAnimationID() != null) {
-            systems.spriteAnim().select(ghost, ghostAnimation.ghostAnimationID());
-            systems.spriteAnim().playSelected(ghost);
-        }
+        systems.ghostSpriteAnimation().update(
+            ghost, level.entities().pac(), systems.spriteAnimController());
     }
 
     public void updateBonus(GameContext game, GameLevel level, Bonus bonus) {

@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
 import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.ecs.systems.PositionSystem;
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
+import de.amr.pacmanfx.core.SpriteAnimController;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -51,7 +51,7 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
         drawTileGrid(r2D.unscaledWidth(), r2D.unscaledHeight(), Color.LIGHTGRAY);
     }
 
-    public void drawMovingActorInfo(SpriteAnimSystem animSystem, GameEntity actor) {
+    public void drawMovingActorInfo(SpriteAnimController animSystem, GameEntity actor) {
         if (!actor.isVisible()) {
             return;
         }
@@ -87,7 +87,7 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
         ctx.restore();
     }
 
-    private void drawAnimationInfo(SpriteAnimSystem animSystem, GameEntity actor, Object selectedID) {
+    private void drawAnimationInfo(SpriteAnimController animSystem, GameEntity actor, Object selectedID) {
         ctx.save();
         String text = "[%s:%d]".formatted(selectedID, animSystem.currentFrame(actor));
         double x = scaled(actor.pos().x() - 4), y = scaled(actor.pos().y() - 4);

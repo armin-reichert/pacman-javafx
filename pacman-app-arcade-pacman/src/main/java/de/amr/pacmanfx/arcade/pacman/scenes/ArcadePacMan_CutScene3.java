@@ -80,8 +80,8 @@ public class ArcadePacMan_CutScene3 extends GameScene {
         sys.worldNavigator().setMoveDir(blinky, Direction.RIGHT);
         sys.worldNavigator().setWishDir(blinky, Direction.RIGHT);
 
-        sys.spriteAnim().select(blinky, CommonSpriteAnimationID.BLINKY_NAKED);
-        sys.spriteAnim().playSelected(blinky);
+        sys.spriteAnimController().select(blinky, CommonSpriteAnimationID.BLINKY_NAKED);
+        sys.spriteAnimController().playSelected(blinky);
     }
 
     private void startBlinkyChasingPacMan(GameSystems sys) {
@@ -91,8 +91,8 @@ public class ArcadePacMan_CutScene3 extends GameScene {
         sys.worldNavigator().setMoveDir(pacMan, Direction.LEFT);
         sys.worldNavigator().setSpeed(pacMan, 1.25f);
 
-        sys.spriteAnim().select(pacMan, CommonSpriteAnimationID.PAC_MUNCHING);
-        sys.spriteAnim().playSelected(pacMan);
+        sys.spriteAnimController().select(pacMan, CommonSpriteAnimationID.PAC_MUNCHING);
+        sys.spriteAnimController().playSelected(pacMan);
 
         blinky.show();
 
@@ -101,7 +101,7 @@ public class ArcadePacMan_CutScene3 extends GameScene {
         sys.worldNavigator().setWishDir(blinky, Direction.LEFT);
         sys.worldNavigator().setSpeed(blinky, 1.25f);
 
-        sys.spriteAnim().select(blinky, CommonSpriteAnimationID.BLINKY_PATCHED);
-        sys.spriteAnim().playSelected(blinky);
+        sys.spriteAnimController().select(blinky, CommonSpriteAnimationID.BLINKY_PATCHED);
+        sys.spriteAnimController().playSelected(blinky);
     }
 }

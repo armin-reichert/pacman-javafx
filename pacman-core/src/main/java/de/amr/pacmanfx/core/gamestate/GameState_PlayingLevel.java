@@ -36,8 +36,8 @@ public final class GameState_PlayingLevel extends GameState {
         level.heartbeat().setStartState(Pulse.State.ON);
         level.heartbeat().restart();
 
-        systems.spriteAnim().playSelected(pac);
-        level.entities().ghosts().forEach(systems.spriteAnim()::playSelected);
+        systems.spriteAnimController().playSelected(pac);
+        level.entities().ghosts().forEach(systems.spriteAnimController()::playSelected);
 
         // This call fires a game event!
         level.huntingTimerStrategy().startFirstPhase(game, level.number());

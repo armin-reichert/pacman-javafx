@@ -14,7 +14,7 @@ import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_PlayScene2D_Renderer;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
+import de.amr.pacmanfx.core.SpriteAnimController;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.model.GhostPersonality;
@@ -97,7 +97,7 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public GameScene2D_Renderer createGameSceneRenderer(GameScene gameScene, SpriteAnimSystem animSystem, Canvas canvas) {
+    public GameScene2D_Renderer createGameSceneRenderer(GameScene gameScene, SpriteAnimController animSystem, Canvas canvas) {
         requireNonNull(canvas);
         requireNonNull(gameScene);
 
@@ -117,14 +117,14 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public ArcadeMsPacMan_GameLevelRenderer createGameLevelRenderer(SpriteAnimSystem animSystem, Canvas canvas) {
+    public ArcadeMsPacMan_GameLevelRenderer createGameLevelRenderer(SpriteAnimController animSystem, Canvas canvas) {
         requireNonNull(animSystem);
         requireNonNull(canvas);
         return new ArcadeMsPacMan_GameLevelRenderer(animSystem, canvas, assets);
     }
 
     @Override
-    public HeadsUpDisplay_Renderer createHUDRenderer(GameScene gameScene, SpriteAnimSystem animSystem, Canvas canvas) {
+    public HeadsUpDisplay_Renderer createHUDRenderer(GameScene gameScene, SpriteAnimController animSystem, Canvas canvas) {
         requireNonNull(gameScene);
         requireNonNull(animSystem);
         requireNonNull(canvas);
@@ -138,7 +138,7 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public ActorRenderer createActorRenderer(SpriteAnimSystem animSystem, Canvas canvas) {
+    public ActorRenderer createActorRenderer(SpriteAnimController animSystem, Canvas canvas) {
         requireNonNull(canvas);
 
         final var renderer = new ArcadeMsPacMan_ActorRenderer(animSystem, canvas);
@@ -161,7 +161,7 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
     @Override
     public Ghost createAnimatedGhost(GameContext game, SpriteAnimationContainer container, GhostPersonality personality) {
         final var factory = new ArcadeMsPacMan_ActorFactory();
-        final SpriteAnimSystem animSystem = game.variant().systems().spriteAnim();
+        final SpriteAnimController animSystem = game.variant().systems().spriteAnimController();
 
         final Ghost ghost = switch (personality) {
             case RED_GHOST_SHADOW   -> factory.createRedGhost();

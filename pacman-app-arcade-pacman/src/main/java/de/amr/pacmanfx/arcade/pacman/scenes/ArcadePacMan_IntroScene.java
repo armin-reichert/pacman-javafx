@@ -196,7 +196,7 @@ public class ArcadePacMan_IntroScene extends GameScene {
         }
 
         for (Ghost ghost : ghosts) {
-            ghostSpriteAnimationSystem.update(ghost, pacMan);
+            ghostSpriteAnimationSystem.update(ghost, pacMan, systems.spriteAnimController());
         }
     }
 
@@ -204,7 +204,7 @@ public class ArcadePacMan_IntroScene extends GameScene {
         final GameSystems systems = game.variant().systems();
 
         systems.worldNavigator().setSpeed(pacMan, 0);
-        systems.spriteAnim().stopSelected(pacMan);
+        systems.spriteAnimController().stopSelected(pacMan);
 
         for (Ghost ghost : ghosts) {
             systems.worldNavigator().setMoveDir(ghost, Direction.RIGHT);
@@ -245,14 +245,14 @@ public class ArcadePacMan_IntroScene extends GameScene {
         final GameSystems systems = game.variant().systems();
 
         systems.ghostState().changeState(victim, EATEN);
-        systems.spriteAnim().selectAndSetFrame(victim, CommonSpriteAnimationID.GHOST_POINTS, numGhostsEaten++);
+        systems.spriteAnimController().selectAndSetFrame(victim, CommonSpriteAnimationID.GHOST_POINTS, numGhostsEaten++);
 
         pacMan.hide();
         systems.worldNavigator().setSpeed(pacMan, 0);
 
         for (Ghost ghost : ghosts) {
             systems.worldNavigator().setSpeed(ghost, 0);
-            systems.spriteAnim().stopSelected(ghost);
+            systems.spriteAnimController().stopSelected(ghost);
         }
 
         lastGhostEatenTick = tick;

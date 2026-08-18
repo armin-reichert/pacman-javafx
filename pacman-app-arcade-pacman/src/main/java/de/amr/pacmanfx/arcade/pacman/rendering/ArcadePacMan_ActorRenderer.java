@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
+import de.amr.pacmanfx.core.SpriteAnimController;
 import de.amr.pacmanfx.core.entities.Bonus;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
@@ -21,9 +21,9 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRenderer, ActorRenderer {
 
-    private final SpriteAnimSystem animSystem;
+    private final SpriteAnimController animSystem;
 
-    public ArcadePacMan_ActorRenderer(SpriteAnimSystem animSystem, Canvas canvas) {
+    public ArcadePacMan_ActorRenderer(SpriteAnimController animSystem, Canvas canvas) {
         super(canvas);
         this.animSystem = requireNonNull(animSystem);
     }
@@ -40,7 +40,7 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
         drawSpriteCentered(computeSprite(animSystem, actor), actor.pos().bodyCenter());
     }
 
-    private RectShort computeSprite(SpriteAnimSystem animSystem, GameEntity actor) {
+    private RectShort computeSprite(SpriteAnimController animSystem, GameEntity actor) {
         return switch (actor) {
             case Pac pac -> computePacSprite(animSystem, pac);
             case Ghost ghost -> computeGhostSprite(animSystem, ghost);
@@ -49,7 +49,7 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
         };
     }
 
-    private RectShort computePacSprite(SpriteAnimSystem animSystem, Pac pac) {
+    private RectShort computePacSprite(SpriteAnimController animSystem, Pac pac) {
         if (animSystem.isSelected(pac, CommonSpriteAnimationID.PAC_MUNCHING)) {
             final Direction dir = pac.worldNavigation().moveDir();
             final RectShort[] sprites = spriteSheet().pacMunchingSprites(dir);
@@ -60,7 +60,7 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
         }
     }
 
-    private RectShort computeGhostSprite(SpriteAnimSystem animSystem, Ghost ghost) {
+    private RectShort computeGhostSprite(SpriteAnimController animSystem, Ghost ghost) {
         if (animSystem.isSelected(ghost, CommonSpriteAnimationID.GHOST_NORMAL)) {
             final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.worldNavigation().wishDir());
             return spriteOrDefault(sprites, animSystem.currentFrame(ghost));

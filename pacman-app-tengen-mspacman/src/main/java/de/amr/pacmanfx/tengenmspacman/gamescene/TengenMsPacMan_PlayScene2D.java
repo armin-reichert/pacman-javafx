@@ -8,7 +8,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
+import de.amr.pacmanfx.core.SpriteAnimController;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.LivesCounter;
@@ -303,7 +303,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene
         final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().uiConfig().renderConfig();
         final SpriteAnimationContainer animationContainer = app().ui().sprites().animations();
 
-        final SpriteAnimSystem animSystem = app().game().variant().systems().spriteAnim();
+        final SpriteAnimController animSystem = app().game().variant().systems().spriteAnimController();
 
         final Pac pac = level.entities().pac();
         if (animSystem.hasNoAnimations(pac)) {
@@ -319,12 +319,12 @@ public class TengenMsPacMan_PlayScene2D extends GameScene
         });
     }
 
-    void resetActorAnimations(SpriteAnimSystem animSystem, GameSession session, GameLevel level) {
+    void resetActorAnimations(SpriteAnimController animSystem, GameSession session, GameLevel level) {
         resetPacAnimation(animSystem, session, level.entities().pac());
         level.entities().ghosts().forEach(ghost -> resetGhostAnimation(animSystem, ghost));
     }
 
-    private void resetPacAnimation(SpriteAnimSystem animSystem, GameSession session, Pac pac) {
+    private void resetPacAnimation(SpriteAnimController animSystem, GameSession session, Pac pac) {
         final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().variant().gamePlay();
 
         animSystem.select(pac, gamePlay.isBoosterOn(session)
@@ -333,7 +333,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene
         animSystem.resetSelected(pac);
     }
 
-    private void resetGhostAnimation(SpriteAnimSystem animSystem, Ghost ghost) {
+    private void resetGhostAnimation(SpriteAnimController animSystem, Ghost ghost) {
         animSystem.select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);
         animSystem.resetSelected(ghost);
     }

@@ -13,7 +13,7 @@ import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
+import de.amr.pacmanfx.core.SpriteAnimController;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
@@ -98,7 +98,7 @@ public class ArcadePacMan_CutScene2 extends GameScene {
             case TICK_DRESS_STRETCHED_LARGE  -> setDressState(STRETCHED_LARGE);
             case TICK_BLINKY_STOPS_MOVING    -> blinkyStopsMoving(sys);
             case TICK_DRESS_RAPTURES         -> dressRaptures(sys);
-            case TICK_BLINK_INSPECTS_DAMAGE  -> blinkyInspectsDamagedDress(sys.spriteAnim());
+            case TICK_BLINK_INSPECTS_DAMAGE  -> blinkyInspectsDamagedDress(sys.spriteAnimController());
             case TICK_ANIMATION_ENDS         -> endTheShow();
         }
 
@@ -106,7 +106,7 @@ public class ArcadePacMan_CutScene2 extends GameScene {
         sys.motor().move(blinky);
     }
 
-    private void blinkyInspectsDamagedDress(SpriteAnimSystem animSystem) {
+    private void blinkyInspectsDamagedDress(SpriteAnimController animSystem) {
         animSystem.advanceFrame(blinky);
     }
 
@@ -122,13 +122,13 @@ public class ArcadePacMan_CutScene2 extends GameScene {
 
     private void dressRaptures(GameSystems sys) {
         blinky.pos().sub(4, 0);
-        sys.spriteAnim().select(blinky, CommonSpriteAnimationID.BLINKY_DAMAGED);
+        sys.spriteAnimController().select(blinky, CommonSpriteAnimationID.BLINKY_DAMAGED);
         setDressState(NailDressState.RAPTURED);
     }
 
     private void blinkyStopsMoving(GameSystems sys) {
         sys.worldNavigator().setSpeed(blinky, 0);
-        sys.spriteAnim().stopSelected(blinky);
+        sys.spriteAnimController().stopSelected(blinky);
     }
 
     private void blinkyGetsCaughtOnNail(GameSystems sys) {
@@ -145,8 +145,8 @@ public class ArcadePacMan_CutScene2 extends GameScene {
         sys.worldNavigator().setWishDir(blinky, Direction.LEFT);
         sys.worldNavigator().setSpeed(blinky, 1.25f);
 
-        sys.spriteAnim().select(blinky, CommonSpriteAnimationID.GHOST_NORMAL);
-        sys.spriteAnim().playSelected(blinky);
+        sys.spriteAnimController().select(blinky, CommonSpriteAnimationID.GHOST_NORMAL);
+        sys.spriteAnimController().playSelected(blinky);
     }
 
     private void pacManStartsRunning(GameSystems sys) {
@@ -156,8 +156,8 @@ public class ArcadePacMan_CutScene2 extends GameScene {
         sys.worldNavigator().setMoveDir(pacMan, Direction.LEFT);
         sys.worldNavigator().setSpeed(pacMan, 1.15f);
 
-        sys.spriteAnim().select(pacMan, CommonSpriteAnimationID.PAC_MUNCHING);
-        sys.spriteAnim().playSelected(pacMan);
+        sys.spriteAnimController().select(pacMan, CommonSpriteAnimationID.PAC_MUNCHING);
+        sys.spriteAnimController().playSelected(pacMan);
     }
 
     private void setDressState(NailDressState state) {

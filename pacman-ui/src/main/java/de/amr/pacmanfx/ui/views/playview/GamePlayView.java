@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.views.playview;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
+import de.amr.pacmanfx.core.SpriteAnimController;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
@@ -302,7 +302,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         final GameVariantRenderConfig renderConfig = app.gameVariants().currentGameVariant().uiConfig().renderConfig();
         final Canvas canvas = r2D.canvas();
         if (canvas != null) {
-            final SpriteAnimSystem animSystem = app.game().variant().systems().spriteAnim();
+            final SpriteAnimController animSystem = app.game().variant().systems().spriteAnimController();
             sceneRenderer = renderConfig.createGameSceneRenderer(gameScene2D, animSystem, canvas);
             setFontSmoothing(app.ui().viewModel().common2D.fontSmoothingOnProperty.get());
             hudRenderer = renderConfig.createHUDRenderer(gameScene2D, animSystem, canvas); // may return null!
@@ -414,7 +414,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
     private void showMiniPlayView(GameContext game, GameLevel level) {
         final GameVariantRenderConfig renderConfig = app.gameVariants().currentGameVariant().uiConfig().renderConfig();
-        final SpriteAnimSystem animSystem = game.variant().systems().spriteAnim();
+        final SpriteAnimController animSystem = game.variant().systems().spriteAnimController();
         miniPlaySceneView.setRenderConfig(animSystem, renderConfig);
         miniPlaySceneView.setWorldSizeInPixel(level.worldMap().terrainLayer().sizeInPixel());
         miniPlaySceneView.slideIn();

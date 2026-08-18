@@ -67,7 +67,7 @@ public interface TengenMsPacMan_PlayScene2DGameEventHandler extends DefaultGameE
         final GameSystems systems = game().variant().systems();
         final GameSession session = game().session();
         session.optLevel().ifPresent(level -> {
-            gameScene().resetActorAnimations(systems.spriteAnim(), session, level);
+            gameScene().resetActorAnimations(systems.spriteAnimController(), session, level);
             gameScene().dynamicCamera().playIntroSequence();
             if (game().variant().gamePlay() instanceof TengenMsPacMan_GamePlay tengenGame) {
                 tengenGame.showLevelMessage(game(), level, GameLevelMessageType.READY);
@@ -133,7 +133,7 @@ public interface TengenMsPacMan_PlayScene2DGameEventHandler extends DefaultGameE
     default void onLevelStarted(LevelStartedEvent e) {
         final GameSession session = game().session();
         session.optLevel().ifPresent(
-            level -> gameScene().resetActorAnimations(game().variant().systems().spriteAnim(), session, level));
+            level -> gameScene().resetActorAnimations(game().variant().systems().spriteAnimController(), session, level));
         gameScene().dynamicCamera().playIntroSequence();
     }
 

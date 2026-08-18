@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.PositionSystem;
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
+import de.amr.pacmanfx.core.SpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusState;
@@ -79,7 +79,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         session.setValue(TengenMsPacMan_GamePlayOptions.BOOSTER_ON, boosterOn);
 
         //TODO this is currently broken! Sprite is reset when Ms. Pac-Man moves!
-        final SpriteAnimSystem animSystem = game.variant().systems().spriteAnim();
+        final SpriteAnimController animSystem = game.variant().systems().spriteAnimController();
         animSystem.select(pac, boosterOn ? TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER : CommonSpriteAnimationID.PAC_MUNCHING);
     }
 

@@ -97,6 +97,7 @@ public final class GameState_PacManDying extends GameState {
         }
         else if (tick == timing.hidePacTick()) {
             pac.hide();
+
             level.entities().optBonus().ifPresent(bonus -> {
                 systems.bonusState().setBonusInactive(bonus);
                 systems.bonusMoveAndJump().setBonusInactive(bonus, systems.bonusMoveAndJump(), systems.worldNavigator());

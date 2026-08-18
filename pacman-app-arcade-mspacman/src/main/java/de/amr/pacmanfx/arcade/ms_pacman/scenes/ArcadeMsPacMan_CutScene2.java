@@ -102,13 +102,13 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene {
     private void enterStateChasing(GameSystems sys) {
         sys.worldNavigator().setMoveDir(pacMan, Direction.RIGHT);
 
-        sys.spriteAnim().select(pacMan, CommonSpriteAnimationID.MR_PAC_MAN_MUNCHING);
-        sys.spriteAnim().playSelected(pacMan);
+        sys.spriteAnimController().select(pacMan, CommonSpriteAnimationID.MR_PAC_MAN_MUNCHING);
+        sys.spriteAnimController().playSelected(pacMan);
 
         sys.worldNavigator().setMoveDir(msPacMan, Direction.RIGHT);
 
-        sys.spriteAnim().select(msPacMan, CommonSpriteAnimationID.PAC_MUNCHING);
-        sys.spriteAnim().playSelected(msPacMan);
+        sys.spriteAnimController().select(msPacMan, CommonSpriteAnimationID.PAC_MUNCHING);
+        sys.spriteAnimController().playSelected(msPacMan);
 
         setSceneState(SceneState.CHASING, TickTimer.INDEFINITE);
     }

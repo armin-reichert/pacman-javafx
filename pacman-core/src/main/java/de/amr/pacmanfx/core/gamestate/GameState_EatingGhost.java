@@ -6,7 +6,7 @@ package de.amr.pacmanfx.core.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
+import de.amr.pacmanfx.core.SpriteAnimController;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostStateSystem;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -32,7 +32,7 @@ public final class GameState_EatingGhost extends GameState {
     public void onUpdate(GameContext game) {
         final GameSystems systems = game.variant().systems();
         final GhostStateSystem ghostStateSystem = systems.ghostState();
-        final SpriteAnimSystem spriteAnimSystem = systems.spriteAnim();
+        final SpriteAnimController spriteAnimSystem = systems.spriteAnimController();
         final GameLevel level = game.session().assertLevel();
 
         level.heartbeat().triggerPulse();

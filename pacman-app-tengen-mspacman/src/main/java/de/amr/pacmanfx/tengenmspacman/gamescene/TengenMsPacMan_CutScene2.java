@@ -7,7 +7,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
+import de.amr.pacmanfx.core.SpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.Clapperboard;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
@@ -126,7 +126,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene {
 
     private void playCutScene(GameContext game, long tick) {
         final WorldNavigationSystem navigator = game.variant().systems().worldNavigator();
-        final SpriteAnimSystem animSystem = game.variant().systems().spriteAnim();
+        final SpriteAnimController animSystem = game.variant().systems().spriteAnimController();
 
         letActorsMove(game);
 

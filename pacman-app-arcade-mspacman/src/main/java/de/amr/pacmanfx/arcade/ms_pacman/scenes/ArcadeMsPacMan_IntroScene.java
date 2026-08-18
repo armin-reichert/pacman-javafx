@@ -103,9 +103,9 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
         sys.worldNavigator().setMoveDir(msPacMan, Direction.LEFT);
         sys.worldNavigator().setSpeed(msPacMan, ACTOR_SPEED);
 
-        sys.spriteAnim().setAnimations(msPacMan, renderConfig.createPacAnimations(container));
-        sys.spriteAnim().select(msPacMan, CommonSpriteAnimationID.PAC_MUNCHING);
-        sys.spriteAnim().playSelected(msPacMan);
+        sys.spriteAnimController().setAnimations(msPacMan, renderConfig.createPacAnimations(container));
+        sys.spriteAnimController().select(msPacMan, CommonSpriteAnimationID.PAC_MUNCHING);
+        sys.spriteAnimController().playSelected(msPacMan);
 
         ghosts = List.of(
             renderConfig.createAnimatedGhost(game(), container, GhostPersonality.RED_GHOST_SHADOW),
@@ -122,8 +122,8 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
             sys.worldNavigator().setWishDir(ghost, Direction.LEFT);
             sys.worldNavigator().setSpeed(ghost, ACTOR_SPEED);
 
-            sys.spriteAnim().select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);
-            sys.spriteAnim().playSelected(ghost);
+            sys.spriteAnimController().select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);
+            sys.spriteAnimController().playSelected(ghost);
 
             sys.ghostState().changeState(ghost, GhostState.HUNTING_PAC);
         }
@@ -207,8 +207,8 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
                     }
                     else if (ghost.pos().y() <= endPositionY) {
                         sys.worldNavigator().setSpeed(ghost, 0);
-                        sys.spriteAnim().stopSelected(ghost);
-                        sys.spriteAnim().resetSelected(ghost);
+                        sys.spriteAnimController().stopSelected(ghost);
+                        sys.spriteAnimController().resetSelected(ghost);
                         return true;
                     }
                     else {
@@ -230,7 +230,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
                 sys.motor().move(msPacMan);
                 if (msPacMan.pos().x() <= STOP_X_MS_PACMAN) {
                     sys.worldNavigator().setSpeed(msPacMan, 0);
-                    sys.spriteAnim().resetSelected(msPacMan);
+                    sys.spriteAnimController().resetSelected(msPacMan);
                     scene.sceneFlow.enterState(scene, READY_TO_PLAY);
                 }
             }

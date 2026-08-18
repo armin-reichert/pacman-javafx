@@ -11,7 +11,7 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.*;
 import de.amr.pacmanfx.arcade.pacman.scenes.*;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
+import de.amr.pacmanfx.core.SpriteAnimController;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.model.GhostPersonality;
@@ -57,12 +57,12 @@ public class XXL_PacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public XXL_PacMan_GameLevelRenderer createGameLevelRenderer(SpriteAnimSystem animSystem, Canvas canvas) {
+    public XXL_PacMan_GameLevelRenderer createGameLevelRenderer(SpriteAnimController animSystem, Canvas canvas) {
         return new XXL_PacMan_GameLevelRenderer(canvas);
     }
 
     @Override
-    public GameScene2D_Renderer createGameSceneRenderer(GameScene gameScene, SpriteAnimSystem animSystem, Canvas canvas) {
+    public GameScene2D_Renderer createGameSceneRenderer(GameScene gameScene, SpriteAnimController animSystem, Canvas canvas) {
         final Rendering2DSupport r2D = gameScene.componentsRegistry().reqComp(Rendering2DSupport.class);
         final GameScene2D_Renderer renderer = switch (gameScene) {
             case Arcade_BootScene2D ignored -> new Arcade_BootScene2D_Renderer(gameScene, canvas, spriteSheet(), BOOT_SCENE_SPRITES);
@@ -78,7 +78,7 @@ public class XXL_PacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public HeadsUpDisplay_Renderer createHUDRenderer(GameScene gameScene, SpriteAnimSystem animSystem, Canvas canvas) {
+    public HeadsUpDisplay_Renderer createHUDRenderer(GameScene gameScene, SpriteAnimController animSystem, Canvas canvas) {
         final Rendering2DSupport r2D = gameScene.componentsRegistry().reqComp(Rendering2DSupport.class);
         final var hudRenderer = new ArcadePacMan_HeadsUpDisplay_Renderer(canvas);
         hudRenderer.setImageSmoothing(true);
@@ -87,7 +87,7 @@ public class XXL_PacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public ActorRenderer createActorRenderer(SpriteAnimSystem animSystem, Canvas canvas) {
+    public ActorRenderer createActorRenderer(SpriteAnimController animSystem, Canvas canvas) {
         final var actorRenderer = new ArcadePacMan_ActorRenderer(animSystem, canvas);
         actorRenderer.setImageSmoothing(true);
         return actorRenderer;
@@ -103,7 +103,7 @@ public class XXL_PacMan_RenderConfig implements GameVariantRenderConfig {
             case ORANGE_GHOST_POKEY -> factory.createOrangeGhost();
         };
 
-        final SpriteAnimSystem animSystem = game.variant().systems().spriteAnim();
+        final SpriteAnimController animSystem = game.variant().systems().spriteAnimController();
         animSystem.setAnimations(ghost, createGhostAnimations(container, personality));
         animSystem.select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);
 

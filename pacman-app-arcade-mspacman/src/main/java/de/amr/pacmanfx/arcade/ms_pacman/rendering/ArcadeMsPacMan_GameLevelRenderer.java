@@ -7,7 +7,7 @@ import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
+import de.amr.pacmanfx.core.SpriteAnimController;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessage;
@@ -31,10 +31,10 @@ import static java.util.function.Predicate.not;
 
 public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements SpriteRenderer, GameLevelRenderer {
 
-    protected final SpriteAnimSystem animSystem;
+    protected final SpriteAnimController animSystem;
     protected final AssetMap assets;
 
-    public ArcadeMsPacMan_GameLevelRenderer(SpriteAnimSystem animSystem, Canvas canvas, AssetMap assets) {
+    public ArcadeMsPacMan_GameLevelRenderer(SpriteAnimController animSystem, Canvas canvas, AssetMap assets) {
         super(canvas);
         this.animSystem = requireNonNull(animSystem);
         this.assets = assets; // may be NULL e.g. in Ms. Pac-Man XXL where maze is drawn without images

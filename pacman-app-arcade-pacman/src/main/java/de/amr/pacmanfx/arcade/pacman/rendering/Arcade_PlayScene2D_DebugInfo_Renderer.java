@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
+import de.amr.pacmanfx.core.SpriteAnimController;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
@@ -32,15 +32,15 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
 
     private static final List<Direction> CLOCK_ORDER = List.of(Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT);
 
-    private final SpriteAnimSystem animSystem;
+    private final SpriteAnimController animSystem;
     private final List<GameEntity> actorsInZOrder = new ArrayList<>();
 
-    public Arcade_PlayScene2D_DebugInfo_Renderer(SpriteAnimSystem animSystem, Canvas canvas) {
+    public Arcade_PlayScene2D_DebugInfo_Renderer(SpriteAnimController animSystem, Canvas canvas) {
         super(canvas);
         this.animSystem = requireNonNull(animSystem);
     }
 
-    public SpriteAnimSystem animSystem() {
+    public SpriteAnimController animSystem() {
         return animSystem;
     }
 

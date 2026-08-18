@@ -100,7 +100,7 @@ public abstract class CommonGamePlay implements GamePlay {
             systems.worldNavigator().setMoveDir(ghost, direction);
             systems.worldNavigator().setWishDir(ghost, direction);
             systems.ghostState().changeState(ghost, GhostState.LOCKED);
-            systems.spriteAnim().resetSelected(ghost);
+            systems.spriteAnimController().resetSelected(ghost);
         });
 
         // Blinking energizers are visible when state is ON
@@ -391,8 +391,8 @@ public abstract class CommonGamePlay implements GamePlay {
         systems.ghostState().changeState(eatenGhost, GhostState.EATEN);
 
         // Animation index is 0-based, animation frame 0 shows points for *first* killed ghost...
-        systems.spriteAnim().selectAndSetFrame(eatenGhost, CommonSpriteAnimationID.GHOST_POINTS, killedBefore);
-        level.entities().ghosts().forEach(systems.spriteAnim()::stopSelected);
+        systems.spriteAnimController().selectAndSetFrame(eatenGhost, CommonSpriteAnimationID.GHOST_POINTS, killedBefore);
+        level.entities().ghosts().forEach(systems.spriteAnimController()::stopSelected);
 
         level.addToGhostKillChain(eatenGhost);
         level.entities().pac().hide();
@@ -419,14 +419,14 @@ public abstract class CommonGamePlay implements GamePlay {
         pac.power().reset();
 
         systems.worldNavigator().setSpeed(pac, 0);
-        systems.spriteAnim().stopSelected(pac);
-        systems.spriteAnim().select(pac, CommonSpriteAnimationID.PAC_FULL);
+        systems.spriteAnimController().stopSelected(pac);
+        systems.spriteAnimController().select(pac, CommonSpriteAnimationID.PAC_FULL);
 
         level.entities().ghosts().forEach(ghost -> {
             systems.worldNavigator().setSpeed(ghost, 0);
             //TODO check in emulator if ghost animation is reset to normal
-            systems.spriteAnim().stopSelected(ghost);
-            systems.spriteAnim().select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);
+            systems.spriteAnimController().stopSelected(ghost);
+            systems.spriteAnimController().select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);
         });
 
         level.entities().optBonus().ifPresent(bonus -> {

@@ -11,7 +11,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
+import de.amr.pacmanfx.core.SpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.Bag;
 import de.amr.pacmanfx.core.entities.Clapperboard;
@@ -153,7 +153,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene {
     private void enterDeliverJuniorState(GameSystems sys, SceneState newState) {
         final MovementSystem motor = sys.motor();
         final WorldNavigationSystem worldNavigator = sys.worldNavigator();
-        final SpriteAnimSystem animSystem = sys.spriteAnim();
+        final SpriteAnimController animSystem = sys.spriteAnimController();
         
         pacMan.pos().set(TS * 3, GROUND_Y - 4);
         pacMan.show();

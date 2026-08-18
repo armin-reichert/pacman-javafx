@@ -171,9 +171,9 @@ public class TengenMsPacMan_IntroScene extends GameScene {
                 sys.worldNavigator().setMoveDir(scene.msPacMan, Direction.LEFT);
                 sys.worldNavigator().setSpeed(scene.msPacMan, SPEED);
 
-                sys.spriteAnim().setAnimations(scene.msPacMan, renderConfig.createPacAnimations(spriteAnimations));
-                sys.spriteAnim().select(scene.msPacMan, CommonSpriteAnimationID.PAC_MUNCHING);
-                sys.spriteAnim().playSelected(scene.msPacMan);
+                sys.spriteAnimController().setAnimations(scene.msPacMan, renderConfig.createPacAnimations(spriteAnimations));
+                sys.spriteAnimController().select(scene.msPacMan, CommonSpriteAnimationID.PAC_MUNCHING);
+                sys.spriteAnimController().playSelected(scene.msPacMan);
 
                 scene.ghosts = List.of(
                     renderConfig.createAnimatedGhost(scene.game(), spriteAnimations, GhostPersonality.RED_GHOST_SHADOW),
@@ -190,7 +190,7 @@ public class TengenMsPacMan_IntroScene extends GameScene {
                     sys.worldNavigator().setWishDir(ghost, Direction.LEFT);
                     sys.worldNavigator().setSpeed(ghost, SPEED);
 
-                    sys.spriteAnim().playSelected(ghost);
+                    sys.spriteAnimController().playSelected(ghost);
 
                     sys.ghostState().changeState(ghost, GhostState.HUNTING_PAC);
                 }
@@ -283,7 +283,7 @@ public class TengenMsPacMan_IntroScene extends GameScene {
                 systems.motor().move(scene.msPacMan);
                 if (scene.msPacMan.pos().x() <= MS_PAC_MAN_STOP_X) {
                     systems.worldNavigator().setSpeed(scene.msPacMan, 0);
-                    systems.spriteAnim().resetSelected(scene.msPacMan);
+                    systems.spriteAnimController().resetSelected(scene.msPacMan);
                 }
                 if (timer.atSecond(8)) {
                     // start demo level or show options

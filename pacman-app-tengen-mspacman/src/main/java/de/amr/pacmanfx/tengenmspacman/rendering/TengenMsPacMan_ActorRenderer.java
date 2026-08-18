@@ -9,7 +9,7 @@ import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
+import de.amr.pacmanfx.core.SpriteAnimController;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.stork.Stork;
 import de.amr.pacmanfx.tengenmspacman.entities.clapperboard.TengenMsPacMan_ClapperboardAnimationSystem;
@@ -26,9 +26,9 @@ import static java.util.Objects.requireNonNull;
 public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements SpriteRenderer, ActorRenderer {
 
     private final TengenMsPacMan_RenderConfig renderConfig;
-    private final SpriteAnimSystem animSystem;
+    private final SpriteAnimController animSystem;
 
-    public TengenMsPacMan_ActorRenderer(TengenMsPacMan_RenderConfig renderConfig, SpriteAnimSystem animSystem, Canvas canvas) {
+    public TengenMsPacMan_ActorRenderer(TengenMsPacMan_RenderConfig renderConfig, SpriteAnimController animSystem, Canvas canvas) {
         super(canvas);
         this.renderConfig = requireNonNull(renderConfig);
         this.animSystem = requireNonNull(animSystem);

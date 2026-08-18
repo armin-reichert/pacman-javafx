@@ -81,8 +81,8 @@ public class ArcadePacMan_CutScene1 extends GameScene {
         sys.worldNavigator().placeAtTile(pacMan, -3, 18, 0, 6.5f);
         sys.worldNavigator().setMoveDir(pacMan, Direction.RIGHT);
 
-        sys.spriteAnim().select(pacMan, ArcadePacMan_PacSAM.AnimationID.ANIM_BIG_PAC_MAN);
-        sys.spriteAnim().playSelected(pacMan);
+        sys.spriteAnimController().select(pacMan, ArcadePacMan_PacSAM.AnimationID.ANIM_BIG_PAC_MAN);
+        sys.spriteAnimController().playSelected(pacMan);
     }
 
     private void startBlinkyEscapingPacMan(GameSystems sys) {
@@ -91,8 +91,8 @@ public class ArcadePacMan_CutScene1 extends GameScene {
         sys.worldNavigator().setWishDir(blinky, Direction.RIGHT);
         sys.worldNavigator().setSpeed(blinky, 0.75f);
 
-        sys.spriteAnim().select(blinky, CommonSpriteAnimationID.GHOST_FRIGHTENED);
-        sys.spriteAnim().playSelected(blinky);
+        sys.spriteAnimController().select(blinky, CommonSpriteAnimationID.GHOST_FRIGHTENED);
+        sys.spriteAnimController().playSelected(blinky);
     }
 
     private void startBlinkyChasingPacMan(GameSystems sys) {
@@ -102,8 +102,8 @@ public class ArcadePacMan_CutScene1 extends GameScene {
         sys.worldNavigator().setMoveDir(pacMan, Direction.LEFT);
         sys.worldNavigator().setSpeed(pacMan, 1.25f);
 
-        sys.spriteAnim().select(pacMan, CommonSpriteAnimationID.PAC_MUNCHING);
-        sys.spriteAnim().playSelected(pacMan);
+        sys.spriteAnimController().select(pacMan, CommonSpriteAnimationID.PAC_MUNCHING);
+        sys.spriteAnimController().playSelected(pacMan);
 
         blinky.show();
 
@@ -112,7 +112,7 @@ public class ArcadePacMan_CutScene1 extends GameScene {
         sys.worldNavigator().setWishDir(blinky, Direction.LEFT);
         sys.worldNavigator().setSpeed(blinky, 1.3f);
 
-        sys.spriteAnim().select(blinky, CommonSpriteAnimationID.GHOST_NORMAL);
-        sys.spriteAnim().playSelected(blinky);
+        sys.spriteAnimController().select(blinky, CommonSpriteAnimationID.GHOST_NORMAL);
+        sys.spriteAnimController().playSelected(blinky);
     }
 }

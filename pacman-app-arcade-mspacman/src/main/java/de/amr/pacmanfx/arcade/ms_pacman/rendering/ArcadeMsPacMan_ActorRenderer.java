@@ -8,7 +8,7 @@ import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.clapperboard.ClapperboardAnimationSystem;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
+import de.amr.pacmanfx.core.SpriteAnimController;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
@@ -23,9 +23,9 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements SpriteRenderer, ActorRenderer {
 
-    private final SpriteAnimSystem animSystem;
+    private final SpriteAnimController animSystem;
 
-    public ArcadeMsPacMan_ActorRenderer(SpriteAnimSystem animSystem, Canvas canvas) {
+    public ArcadeMsPacMan_ActorRenderer(SpriteAnimController animSystem, Canvas canvas) {
         super(canvas);
         this.animSystem = requireNonNull(animSystem);
     }

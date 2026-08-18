@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.core.entities.ghost.system;
 
+import de.amr.pacmanfx.core.SpriteAnimController;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
@@ -11,10 +12,9 @@ import de.amr.pacmanfx.core.entities.ghost.comp.GhostStateComp;
 
 public class GhostSpriteAnimationSystem {
 
-    public GhostSpriteAnimationSystem() {
-    }
+    public GhostSpriteAnimationSystem() {}
 
-    public void update(Ghost ghost, Pac pac) {
+    public void update(Ghost ghost, Pac pac, SpriteAnimController spriteAnimController) {
         final CommonSpriteAnimationID animationID = switch (ghost.ghostStateEnum()) {
             case LOCKED, LEAVING_HOUSE -> threatenedOrNormalAnimation(ghost, pac);
             case HUNTING_PAC    -> CommonSpriteAnimationID.GHOST_NORMAL;
@@ -22,7 +22,9 @@ public class GhostSpriteAnimationSystem {
             case EATEN, RETURNING_HOME, ENTERING_HOUSE -> CommonSpriteAnimationID.GHOST_EYES;
         };
         ghost.ghostAnimation().setAnimationID(animationID);
-        ghost.spriteAnimation().animation().playSelected();
+
+        spriteAnimController.select(ghost, animationID);
+        spriteAnimController.playSelected(ghost);
     }
 
     private CommonSpriteAnimationID threatenedOrNormalAnimation(Ghost ghost, Pac pac) {

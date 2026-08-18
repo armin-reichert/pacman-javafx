@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.fsm.State;
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
+import de.amr.pacmanfx.core.SpriteAnimController;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
@@ -49,7 +49,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
     private final TengenMsPacMan_UISettings uiSettings;
 
     public TengenMsPacMan_IntroScene_Renderer(
-        GameVariantRenderConfig renderConfig, GameScene gameScene, SpriteAnimSystem animSystem, Canvas canvas) {
+        GameVariantRenderConfig renderConfig, GameScene gameScene, SpriteAnimController animSystem, Canvas canvas) {
         super(canvas);
         requireNonNull(renderConfig);
         requireNonNull(gameScene);

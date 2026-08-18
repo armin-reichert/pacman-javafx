@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
+import de.amr.pacmanfx.core.SpriteAnimController;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_BootScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
@@ -22,7 +22,7 @@ public class TengenMsPacMan_BootScene_Renderer extends BaseRenderer implements G
     private final BaseDebugInfoRenderer debugRenderer;
 
     public TengenMsPacMan_BootScene_Renderer(
-        GameVariantRenderConfig renderConfig, GameScene gameScene, SpriteAnimSystem animSystem, Canvas canvas) {
+        GameVariantRenderConfig renderConfig, GameScene gameScene, SpriteAnimController animSystem, Canvas canvas) {
         super(canvas);
 
         final Rendering2DSupport r2D = gameScene.componentsRegistry().reqComp(Rendering2DSupport.class);

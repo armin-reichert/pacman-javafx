@@ -10,7 +10,6 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.entities.Pac;
-import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
 import de.amr.pacmanfx.core.event.gameplay.LevelStartedEvent;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
@@ -71,8 +70,8 @@ public final class GameState_DemoLevelPlaying extends GameState {
             level.heartbeat().setStartState(Pulse.State.ON);
             level.heartbeat().restart();
 
-            systems.spriteAnim().playSelected(pac);
-            level.entities().ghosts().forEach(systems.spriteAnim()::playSelected);
+            systems.spriteAnimController().playSelected(pac);
+            level.entities().ghosts().forEach(systems.spriteAnimController()::playSelected);
 
             // This call fires a game event!
             level.huntingTimerStrategy().startFirstPhase(game, level.number());

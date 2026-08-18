@@ -1,14 +1,14 @@
 package de.amr.pacmanfx.core.entities.pac.system;
 
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimSystem;
+import de.amr.pacmanfx.core.SpriteAnimController;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Pac;
 
 public class PacAnimationSystem {
 
-    private final SpriteAnimSystem spriteAnimSystem;
+    private final SpriteAnimController spriteAnimSystem;
 
-    public PacAnimationSystem(SpriteAnimSystem spriteAnimSystem) {
+    public PacAnimationSystem(SpriteAnimController spriteAnimSystem) {
         this.spriteAnimSystem = spriteAnimSystem;
     }
 
