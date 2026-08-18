@@ -289,17 +289,8 @@ public abstract class CommonGamePlay implements GamePlay {
     private void updatePac(GameContext game, GameLevel level, Pac pac) {
         final GameSystems systems = game.variant().systems();
         final GameRules rules = game.variant().rules();
-
-        systems.pacDigestion().update(pac);
-        systems.pacPower().update(pac, rules.pacPowerFadingSeconds(level.number()));
-        systems.pacState().update(pac);
-        navigatePac(game, level, pac);
-        systems.pacAnimation().update(pac);
-    }
-
-    private void navigatePac(GameContext game, GameLevel level, Pac pac) {
-        final GameSystems systems = game.variant().systems();
         final GameSession session = game.session();
+
         final ActorSpeedRules speedRules = game.variant().rules().actorSpeedRules();
         final float speed = pac.power().isActive()
             ? speedRules.pacSpeedWhenHasPower(game, level)
@@ -310,7 +301,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
         systems.pacAutoSteering().update(session, pac);
         systems.pacDigestion().update(pac);
-        systems.pacPower().update(pac, game.variant().rules().pacPowerFadingSeconds(level.number()));
+        systems.pacPower().update(pac, rules.pacPowerFadingSeconds(level.number()));
         systems.pacState().update(pac);
         systems.pacAnimation().update(pac);
     }
