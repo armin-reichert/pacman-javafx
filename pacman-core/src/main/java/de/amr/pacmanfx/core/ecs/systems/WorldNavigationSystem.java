@@ -28,32 +28,29 @@ public class WorldNavigationSystem {
      */
     public static Vector2i tilesAhead(GameEntity actor, int numTiles) {
         requireNonNull(actor);
+
         final WorldNavigationComp worldNavigation = actor.reqComp(WorldNavigationComp.class);
-        return actor.pos().tile().plus(worldNavigation.moveDir().vector().scaled(numTiles));
+        final Vector2i translateVector = worldNavigation.moveDir().vector().scaled(numTiles);
+        return actor.pos().tile().plus(translateVector);
     }
 
     /**
+     * Simulates the overflow bug in the original Arcade game: 
+     * In case the actor looks UP, additional {@code numTiles} tiles are added towards LEFT.
+     * 
      * @param numTiles number of tiles
      * @return the tile located the given number of tiles towards the current move direction of the actor.
-     * Overflow bug: In case the actor looks UP, additional {@code numTiles} tiles are added towards LEFT.
      */
     public static Vector2i tilesAheadWithOverflowBug(GameEntity actor, int numTiles) {
         requireNonNull(actor);
 
         final WorldNavigationComp worldNavigation = actor.reqComp(WorldNavigationComp.class);
-
-        Vector2i ahead = tilesAhead(actor, numTiles);
-        if (worldNavigation.moveDir() == UP) {
-            ahead = ahead.minus(numTiles, 0);
-        }
-        return ahead;
+        return worldNavigation.moveDir() == UP
+            ? tilesAhead(actor, numTiles).minus(numTiles, 0)
+            : tilesAhead(actor, numTiles);
     }
 
-    private final MovementSystem motor;
-
-    public WorldNavigationSystem(MovementSystem motor) {
-        this.motor = requireNonNull(motor);
-    }
+    public WorldNavigationSystem() {}
 
     /**
      * Sets the move direction and updates the velocity vector.
@@ -69,7 +66,7 @@ public class WorldNavigationSystem {
         navigation.setMoveDir(dir);
 
         float speed = movement.speed();
-        motor.setVelocity(actor, dir.vector().x() * speed, dir.vector().y() * speed);
+        movement.setVelocity(dir.vector().x() * speed, dir.vector().y() * speed);
     }
 
     /**
@@ -146,7 +143,7 @@ public class WorldNavigationSystem {
             throw new IllegalArgumentException("Speed must not be negative but is: " + speed);
         }
         final Vector2i moveDirVec = navigation.moveDir().vector();
-        motor.setVelocity(actor, moveDirVec.x() * speed, moveDirVec.y() * speed);
+        actor.optMovement().ifPresent(movement -> movement.setVelocity(moveDirVec.x() * speed, moveDirVec.y() * speed));
     }
 
     public void navigateTowardsTarget(GameEntity actor, GameLevel level, WorldMovementPolicy  movementPolicy) {
@@ -183,7 +180,13 @@ public class WorldNavigationSystem {
         setWishDir(actor, candidateDir != null ? candidateDir : navigation.moveDir().opposite());
     }
 
-    public void tryMovingTowardsTargetTile(GameEntity actor, GameLevel level, Vector2i targetTile, WorldMovementPolicy  movementPolicy) {
+    public void tryMovingTowardsTargetTile(
+        MovementSystem motor,
+        GameEntity actor,
+        GameLevel level,
+        Vector2i targetTile,
+        WorldMovementPolicy movementPolicy)
+    {
         requireNonNull(actor);
         requireNonNull(level);
         requireNonNull(targetTile);
@@ -193,7 +196,7 @@ public class WorldNavigationSystem {
         navigation.setTargetTile(targetTile);
         navigateTowardsTarget(actor, level, movementPolicy);
 
-        tryMovingOrTeleporting(actor, level, movementPolicy);
+        tryMovingOrTeleporting(motor, actor, level, movementPolicy);
     }
 
     /**
@@ -202,7 +205,12 @@ public class WorldNavigationSystem {
      * First checks if the actor can be teleported, then if the actor can move to its wish direction. If this is not
      * possible, it keeps moving to its current move direction.
      */
-    public void tryMovingOrTeleporting(GameEntity actor, GameLevel level, WorldMovementPolicy movementPolicy) {
+    public void tryMovingOrTeleporting(
+        MovementSystem motor,
+        GameEntity actor,
+        GameLevel level,
+        WorldMovementPolicy movementPolicy)
+    {
         requireNonNull(actor);
         requireNonNull(level);
 
@@ -227,11 +235,11 @@ public class WorldNavigationSystem {
             setWishDir(actor, navigation.moveDir().opposite());
             navigation.setTurnBackRequested(false);
         }
-        tryMovingTowards(actor, level, movementPolicy, actor.pos().tile(), navigation.wishDir());
+        tryMovingTowards(motor, actor, level, movementPolicy, actor.pos().tile(), navigation.wishDir());
         if (navigation.info().moved) {
             setMoveDir(actor, navigation.wishDir());
         } else {
-            tryMovingTowards(actor, level, movementPolicy, actor.pos().tile(), navigation.moveDir());
+            tryMovingTowards(motor, actor, level, movementPolicy, actor.pos().tile(), navigation.moveDir());
         }
     }
 
@@ -248,7 +256,14 @@ public class WorldNavigationSystem {
         return false; // no vertical teleporting yet
     }
 
-    private void tryMovingTowards(GameEntity actor, GameLevel level, WorldMovementPolicy movementPolicy, Vector2i tileBeforeMoving, Direction dir) {
+    private void tryMovingTowards(
+        MovementSystem motor,
+        GameEntity actor,
+        GameLevel level,
+        WorldMovementPolicy movementPolicy,
+        Vector2i tileBeforeMoving,
+        Direction dir)
+    {
         final MovementComp movement = actor.reqComp(MovementComp.class);
         final WorldNavigationComp navigation = actor.reqComp(WorldNavigationComp.class);
 

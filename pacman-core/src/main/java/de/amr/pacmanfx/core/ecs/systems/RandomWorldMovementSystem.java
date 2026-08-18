@@ -33,7 +33,14 @@ public class RandomWorldMovementSystem {
              Roam if you want to, without anything but the love we feel!
          </cite>
      */
-    public void roam(WorldNavigationComp navigation, WorldMovementPolicy worldMovementPolicy, GameLevel level, Ghost ghost, float speed) {
+    public void roam(
+        MovementSystem motor,
+        WorldNavigationComp navigation,
+        WorldMovementPolicy worldMovementPolicy,
+        GameLevel level,
+        Ghost ghost,
+        float speed)
+    {
         final Vector2i tile = ghost.pos().tile();
         final boolean teleporting = level.worldMap().terrainLayer().isTileInPortalSpace(tile);
 
@@ -44,7 +51,7 @@ public class RandomWorldMovementSystem {
             Logger.debug("Ghost {} takes random wish direction {}", ghost.name(), dir);
         }
         navigator.setSpeed(ghost, speed);
-        navigator.tryMovingOrTeleporting(ghost, level, worldMovementPolicy);
+        navigator.tryMovingOrTeleporting(motor, ghost, level, worldMovementPolicy);
     }
 
     // try a random direction towards an accessible tile, do not turn back unless there is no other way

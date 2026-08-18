@@ -5,9 +5,7 @@
 package de.amr.pacmanfx.core.entities.ghost.system;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
-import de.amr.pacmanfx.core.ecs.systems.RandomWorldMovementSystem;
 import de.amr.pacmanfx.core.ecs.systems.WorldMovementPolicy;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
@@ -59,15 +57,15 @@ public class GhostStateSystem {
             case HUNTING_PAC -> {
                 final GhostHuntingStrategy huntingStrategy = systems.ghostHuntingStrategy(ghost.personality());
                 final WorldMovementPolicy worldMovementPolicy = systems.ghostWorldMovementPolicy();
-                huntingStrategy.hunt(level, ghost, speed, worldMovementPolicy);
+                huntingStrategy.hunt(level, ghost, systems.motor(), speed, worldMovementPolicy);
             }
 
-            case FRIGHTENED -> {
-                final RandomWorldMovementSystem roamingSystem = systems.roamingNavigator();
-                WorldMovementPolicy worldMovementPolicy = systems.ghostWorldMovementPolicy();
-                WorldNavigationComp navigation = ghost.worldNavigation();
-                roamingSystem.roam(navigation, worldMovementPolicy, level, ghost, speed);
-            }
+            case FRIGHTENED -> systems.roamingNavigator().roam(
+                systems.motor(),
+                ghost.worldNavigation(),
+                systems.ghostWorldMovementPolicy(),
+                level, ghost, speed
+            );
 
             case RETURNING_HOME -> houseAccessSystem.reachHouse(game, ghost, speed);
 

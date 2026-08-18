@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.core.entities.bonus.system;
 
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.Bonus;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusMoveAndJumpComp;
@@ -34,11 +35,13 @@ public class BonusStateSystem {
 
         final GameSession session = game.session();
         final GameLevel level = session.assertLevel();
+        final MovementSystem motor = game.variant().systems().motor();
 
-        level.entities().optBonus().ifPresent(bonus -> update(game.eventManager(), level, bonus, session.thisFrame()));
+        level.entities().optBonus().ifPresent(bonus ->
+            update(motor, game.eventManager(), level, bonus, session.thisFrame()));
     }
 
-    private void update(GameEventManager eventManager, GameLevel level, Bonus bonus, FrameState frame) {
+    private void update(MovementSystem motor, GameEventManager eventManager, GameLevel level, Bonus bonus, FrameState frame) {
         final BonusStateComp state = bonus.state();
         final BonusMoveAndJumpComp moveAndJumpComp = bonus.optMoveAndJump().orElse(null);
 
@@ -48,7 +51,7 @@ public class BonusStateSystem {
 
             case EDIBLE -> {
                 if (moveAndJumpComp != null) {
-                    moveAndJumpSystem.update(level, bonus);
+                    moveAndJumpSystem.update(motor, level, bonus);
                     state.setEdibleStateExpired(moveAndJumpComp.targetReached() || state.timer().hasExpired());
                 }
                 else {

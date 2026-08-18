@@ -19,7 +19,7 @@ import de.amr.pacmanfx.core.model.GhostPersonality;
 public class DefaultGameSystems implements GameSystems {
 
     protected MovementSystem motor =  new MovementSystem();
-    protected WorldNavigationSystem navigator = new WorldNavigationSystem(motor);
+    protected WorldNavigationSystem navigator = new WorldNavigationSystem();
     protected RandomWorldMovementSystem roamingNavigator = new RandomWorldMovementSystem(navigator);
 
     protected SpriteAnimSystem spriteAnim = new SpriteAnimSystem();

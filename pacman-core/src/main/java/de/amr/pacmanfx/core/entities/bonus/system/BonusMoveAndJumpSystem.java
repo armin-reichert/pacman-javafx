@@ -8,6 +8,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
+import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
 import de.amr.pacmanfx.core.ecs.systems.WorldMovementPolicy;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.Bonus;
@@ -31,11 +32,12 @@ public class BonusMoveAndJumpSystem {
         this.worldMovementPolicy = requireNonNull(worldMovementPolicy);
     }
 
-    public void update(GameLevel level, Bonus bonus) {
+    public void update(MovementSystem motor, GameLevel level, Bonus bonus) {
+        requireNonNull(motor);
         requireNonNull(level);
         requireNonNull(bonus);
 
-        wanderMaze(level, bonus);
+        wanderMaze(motor, level, bonus);
         jump(bonus);
     }
 
@@ -73,7 +75,7 @@ public class BonusMoveAndJumpSystem {
         bonus.reqComp(BonusMoveAndJumpComp.class).setRouteNavigation(steering);
     }
 
-    private void wanderMaze(GameLevel level, Bonus bonus) {
+    private void wanderMaze(MovementSystem motor, GameLevel level, Bonus bonus) {
         final BonusMoveAndJumpComp moveAndJumpComp = bonus.reqComp(BonusMoveAndJumpComp.class);
         moveAndJumpComp.routeNavigation().steer(bonus, level);
         final Vector2i tile = bonus.pos().tile();
@@ -81,7 +83,7 @@ public class BonusMoveAndJumpSystem {
             || level.worldMap().terrainLayer().isTileInPortalSpace(tile);
         if (!exitPortalReached) {
             navigator.navigateTowardsTarget(bonus, level, worldMovementPolicy);
-            navigator.tryMovingOrTeleporting(bonus, level, worldMovementPolicy);
+            navigator.tryMovingOrTeleporting(motor, bonus, level, worldMovementPolicy);
         }
         moveAndJumpComp.setTargetReached(exitPortalReached);
     }

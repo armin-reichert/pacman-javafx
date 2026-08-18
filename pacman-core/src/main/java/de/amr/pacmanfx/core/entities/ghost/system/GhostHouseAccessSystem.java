@@ -161,7 +161,7 @@ public class GhostHouseAccessSystem {
             ghost.worldNavigation().setTargetTile(house.floorplan().leftDoorTile());
             systems.worldNavigator().setSpeed(ghost, speed);
             systems.worldNavigator().navigateTowardsTarget(ghost, level, policy);
-            systems.worldNavigator().tryMovingOrTeleporting(ghost, level, policy);
+            systems.worldNavigator().tryMovingOrTeleporting(systems.motor(), ghost, level, policy);
         }
     }
 }

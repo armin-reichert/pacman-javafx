@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.core.ecs.comp;
 
+import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.ecs.EntityComponent;
 
 public class MovementComp implements EntityComponent {
@@ -41,6 +42,11 @@ public class MovementComp implements EntityComponent {
     public final void setVelocity(double vx, double vy) {
         this.vx = (float) vx;
         this.vy = (float) vy;
+    }
+
+    public final void setVelocity(Vector2f v) {
+        vx = v.x();
+        vy = v.y();
     }
 
     public float speed() {
