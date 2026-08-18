@@ -33,12 +33,15 @@ public class BonusMoveAndJumpSystem {
     }
 
     public void setBonusInactive(Bonus bonus) {
+        requireNonNull(bonus);
         final BonusMoveAndJumpComp moveAndJump = bonus.reqComp(BonusMoveAndJumpComp.class);
         navigationSystem.setSpeed(bonus, 0);
         moveAndJump.pulse().reset();
     }
 
-    public void startFollowingRoute(Bonus bonus, BonusRouteInfo routeInfo, float speed) {
+    public void startWandering(Bonus bonus, BonusRouteInfo routeInfo, float speed) {
+        requireNonNull(bonus);
+        requireNonNull(routeInfo);
         final BonusMoveAndJumpComp moveAndJump = bonus.reqComp(BonusMoveAndJumpComp.class);
         setRoute(bonus, routeInfo);
         navigationSystem.clearTargetTile(bonus);
@@ -46,7 +49,11 @@ public class BonusMoveAndJumpSystem {
         moveAndJump.pulse().restart();
     }
 
-    public void followRoute(MovementSystem motor, GameLevel level, Bonus bonus) {
+    public void wander(GameLevel level, Bonus bonus, MovementSystem motor) {
+        requireNonNull(level);
+        requireNonNull(bonus);
+        requireNonNull(motor);
+
         final BonusMoveAndJumpComp moveAndJump = bonus.reqComp(BonusMoveAndJumpComp.class);
 
         moveAndJump.routeNavigation().steer(bonus, level);
@@ -63,6 +70,8 @@ public class BonusMoveAndJumpSystem {
     }
 
     public void jump(Bonus bonus) {
+        requireNonNull(bonus);
+
         final WorldNavigationComp worldNavigation = bonus.reqComp(WorldNavigationComp.class);
         final BonusMoveAndJumpComp moveAndJump = bonus.reqComp(BonusMoveAndJumpComp.class);
 
@@ -76,9 +85,6 @@ public class BonusMoveAndJumpSystem {
     }
 
     private void setRoute(Bonus bonus, BonusRouteInfo routeInfo) {
-        requireNonNull(bonus);
-        requireNonNull(routeInfo);
-
         final BonusMoveAndJumpComp moveAndJump = bonus.reqComp(BonusMoveAndJumpComp.class);
 
         if (routeInfo.waypoints().isEmpty()) {

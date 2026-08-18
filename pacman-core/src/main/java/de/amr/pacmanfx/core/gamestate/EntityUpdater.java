@@ -63,14 +63,13 @@ public class EntityUpdater {
         final GameSystems systems = game.variant().systems();
         systems.bonusState().update(level, bonus, game.eventManager(), systems.motor());
         switch (bonus.state().bonusState()) {
-            case INACTIVE -> {}
+            case INACTIVE, EATEN -> {}
             case EDIBLE -> {
                 if (bonus.hasComp(BonusMoveAndJumpComp.class)) {
-                    systems.bonusMoveAndJump().followRoute(systems.motor(), level, bonus);
+                    systems.bonusMoveAndJump().wander(level, bonus, systems.motor());
                     systems.bonusMoveAndJump().jump(bonus);
                 }
             }
-            case EATEN -> {}
         }
     }
 }
