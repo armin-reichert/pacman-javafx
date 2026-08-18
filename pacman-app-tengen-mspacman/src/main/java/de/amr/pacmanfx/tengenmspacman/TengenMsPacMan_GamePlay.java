@@ -8,12 +8,13 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameException;
 import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.SpriteAnimController;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.PositionSystem;
-import de.amr.pacmanfx.core.SpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.*;
+import de.amr.pacmanfx.core.entities.bonus.comp.BonusRouteInfo;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusState;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.levelCounter.comp.LevelCounterBehavior;
@@ -396,16 +397,14 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         systems.bonusState().showEdible(bonus);
 
         final boolean leftToRight = randomBoolean();
-        final List<Vector2i> route = List.of(
+        final List<Vector2i> waypoints = List.of(
             leftToRight ? entryPortal.leftBorderEntryTile() : entryPortal.rightBorderEntryTile(),
             houseEntry,
             houseEntryOpposite,
             houseEntry,
             leftToRight ? exitPortal.rightBorderEntryTile().plus(1, 0) : exitPortal.leftBorderEntryTile().minus(1, 0)
         );
-        systems.bonusMoveAndJump().setRoute(bonus, route, leftToRight);
-
-        systems.bonusMoveAndJump().startWandering(bonus, speed, systems.worldNavigator());
+        systems.bonusMoveAndJump().startWandering(bonus, new BonusRouteInfo(leftToRight, waypoints), speed, systems.worldNavigator());
 
         eventManager.publishGameEvent(new BonusActivatedEvent(bonus));
     }

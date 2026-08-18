@@ -13,12 +13,12 @@ import de.amr.pacmanfx.core.ecs.systems.WorldMovementPolicy;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.Bonus;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusMoveAndJumpComp;
+import de.amr.pacmanfx.core.entities.bonus.comp.BonusRouteInfo;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.steering.RouteGuidedSteering;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import static java.util.Objects.requireNonNull;
 
@@ -57,25 +57,26 @@ public class BonusMoveAndJumpSystem {
         bonus.optMoveAndJump().ifPresent(moveAndJump -> moveAndJump.pulse().reset());
     }
 
-    public void startWandering(Bonus bonus, float speed, WorldNavigationSystem worldNavigationSystem) {
+    public void startWandering(Bonus bonus, BonusRouteInfo routeInfo, float speed, WorldNavigationSystem worldNavigationSystem) {
         bonus.optMoveAndJump().ifPresent(moveAndJump -> {
+            setRoute(bonus, routeInfo);
             worldNavigationSystem.clearTargetTile(bonus);
             worldNavigationSystem.setSpeed(bonus, speed);
             moveAndJump.pulse().restart();
         });
     }
 
-    public void setRoute(Bonus bonus, List<Vector2i> waypoints, boolean fromLeftToRight) {
+    private void setRoute(Bonus bonus, BonusRouteInfo routeInfo) {
         requireNonNull(bonus);
-        requireNonNull(waypoints);
+        requireNonNull(routeInfo);
 
-        if (waypoints.isEmpty()) {
+        if (routeInfo.waypoints().isEmpty()) {
             Logger.error("Bonus route must not be empty");
             return;
         }
 
-        final var route = new ArrayList<>(waypoints);
-        final Direction initialDir = fromLeftToRight ? Direction.RIGHT : Direction.LEFT;
+        final var route = new ArrayList<>(routeInfo.waypoints());
+        final Direction initialDir = routeInfo.leftToRight() ? Direction.RIGHT : Direction.LEFT;
         navigator.placeAtTile(bonus, route.removeFirst());
         navigator.setMoveDir(bonus, initialDir);
         navigator.setWishDir(bonus, initialDir);

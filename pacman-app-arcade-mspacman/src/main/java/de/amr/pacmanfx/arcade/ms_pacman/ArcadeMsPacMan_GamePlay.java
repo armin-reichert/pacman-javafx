@@ -14,6 +14,7 @@ import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.PositionSystem;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.*;
+import de.amr.pacmanfx.core.entities.bonus.comp.BonusRouteInfo;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusState;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.levelCounter.comp.LevelCounterBehavior;
@@ -207,10 +208,8 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         } else {
             bonus = Bonus.createMovingBonus(symbolCode, value);
             final float speed = game.variant().rules().actorSpeedRules().bonusSpeed(game, level);
-            final RouteInfo routeInfo = computeBonusRoute(terrain, house);
             systems.bonusState().showEdible(bonus);
-            systems.bonusMoveAndJump().setRoute(bonus, routeInfo.waypoints(), routeInfo.leftToRight());
-            systems.bonusMoveAndJump().startWandering(bonus, speed, systems.worldNavigator());
+            systems.bonusMoveAndJump().startWandering(bonus, computeBonusRoute(terrain, house), speed, systems.worldNavigator());
         }
 
         level.entities().optBonus().ifPresent(oldBonus -> level.entities().remove(oldBonus));
@@ -227,11 +226,11 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
 
     // ------------------------------------------------
 
-    private RouteInfo computeBonusRoute(TerrainLayer terrain, House house) {
+    private BonusRouteInfo computeBonusRoute(TerrainLayer terrain, House house) {
         final List<HPortal> portals = terrain.horizontalPortals();
         if (portals.isEmpty()) {
             Logger.error("Moving bonus cannot be activated, game level does not contain any portals");
-            return new RouteInfo(false, List.of());
+            return new BonusRouteInfo(false, List.of());
         }
 
         Vector2i entryTile = terrain.getTileProperty(WorldMapPropertyName.POS_BONUS);
@@ -267,8 +266,6 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
 
         Logger.info("Moving bonus route: {} (crossing {})", waypoints, leftToRight ? "left to right" : "right to left");
 
-        return new RouteInfo(leftToRight, waypoints);
+        return new BonusRouteInfo(leftToRight, waypoints);
     }
-
-    private record RouteInfo(boolean leftToRight, List<Vector2i> waypoints) {}
 }
