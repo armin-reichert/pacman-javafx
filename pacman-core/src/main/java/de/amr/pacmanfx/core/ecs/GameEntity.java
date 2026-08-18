@@ -20,9 +20,7 @@ import static java.util.Objects.requireNonNull;
  * Each game entity by default contains the components "position" and "visibility".
  * </p>
  */
-public class GameEntity implements Disposable {
-
-    private final ComponentRegistry<EntityComponent> componentRegistry = new ComponentRegistry<>();
+public class GameEntity extends ComponentRegistry<EntityComponent> implements Disposable {
 
     protected String name;
 
@@ -30,22 +28,6 @@ public class GameEntity implements Disposable {
         name = getClass().getSimpleName() + "#" + Integer.toHexString(hashCode()); // default name
         setComp(PositionComp.class, new PositionComp());
         setComp(VisibilityComp.class, new VisibilityComp(false));
-    }
-
-    public final <T extends EntityComponent> void setComp(Class<T> type, T component) {
-        componentRegistry.setComp(type, component);
-    }
-
-    public final <T extends EntityComponent> T reqComp(Class<T> type) {
-        return componentRegistry.reqComp(type);
-    }
-
-    public final <T extends EntityComponent> boolean hasComp(Class<T> type) {
-        return componentRegistry.hasComp(type);
-    }
-
-    public final <T extends EntityComponent> Optional<T> optComp(Class<T> type) {
-        return componentRegistry.optComp(type);
     }
 
     // Typed access
@@ -77,7 +59,7 @@ public class GameEntity implements Disposable {
      * Resets all components (position, visibility etc.) to their default values.
      */
     public void reset() {
-        componentRegistry.components().forEach(EntityComponent::reset);
+        componentsNoCopy().forEach(EntityComponent::reset);
     }
 
     public final void show() {
@@ -93,21 +75,12 @@ public class GameEntity implements Disposable {
     }
 
     @Override
-    public void dispose() {
-        for (EntityComponent comp : componentRegistry.components()) {
-            if (comp instanceof Disposable disposable) {
-                disposable.dispose();
-            }
-        }
-    }
-
-    @Override
     public String toString() {
         final StringBuilder b = new StringBuilder();
         b.append("{name=").append(name);
         b.append(", components=[");
         boolean first = true;
-        for (var component : componentRegistry.components()) {
+        for (var component : componentsNoCopy()) {
             if (!first) b.append(", ");
             b.append(component);
             first = false;

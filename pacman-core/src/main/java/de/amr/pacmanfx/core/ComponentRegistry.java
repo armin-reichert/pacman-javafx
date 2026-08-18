@@ -25,13 +25,20 @@ public class ComponentRegistry<C> implements Disposable {
     public ComponentRegistry() {
     }
 
+    protected SequencedCollection<C> componentsNoCopy() {
+        return componentMap.sequencedValues();
+    }
+
+    /**
+     * @return a copy of the set of registered components in insertion-order
+     */
     public SequencedCollection<C> components() {
         return List.copyOf(componentMap.sequencedValues());
     }
 
     @Override
     public void dispose() {
-        for (C component : componentMap.values()) {
+        for (C component : componentsNoCopy()) {
             if (component instanceof Disposable) {
                 ((Disposable) component).dispose();
             }
@@ -64,10 +71,10 @@ public class ComponentRegistry<C> implements Disposable {
      */
     public final <T extends C> T reqComp(Class<T> type) {
         requireNonNull(type);
-        final C component = componentMap.get(type);
-        if (component == null) {
+        if (!componentMap.containsKey(type)) {
             throw new IllegalArgumentException("No component found for class %s".formatted(type.getSimpleName()));
         }
+        final C component = componentMap.get(type);
         return type.cast(component);
     }
 
@@ -80,7 +87,7 @@ public class ComponentRegistry<C> implements Disposable {
      */
     public final <T extends C> boolean hasComp(Class<T> type) {
         requireNonNull(type);
-        return componentMap.get(type) != null;
+        return componentMap.containsKey(type);
     }
 
     /**
