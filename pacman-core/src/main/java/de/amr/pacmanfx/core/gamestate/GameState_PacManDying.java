@@ -54,7 +54,7 @@ public final class GameState_PacManDying extends GameState {
 
         level.entities().optBonus().ifPresent(bonus -> {
             systems.bonusState().setBonusInactive(bonus);
-            systems.bonusMoveAndJump().setBonusInactive(bonus, systems.bonusMoveAndJump(), systems.worldNavigator());
+            systems.bonusMoveAndJump().setBonusInactive(bonus, systems.worldNavigator());
         });
 
         systems.worldNavigator().setSpeed(pac, 0);
@@ -100,7 +100,7 @@ public final class GameState_PacManDying extends GameState {
 
             level.entities().optBonus().ifPresent(bonus -> {
                 systems.bonusState().setBonusInactive(bonus);
-                systems.bonusMoveAndJump().setBonusInactive(bonus, systems.bonusMoveAndJump(), systems.worldNavigator());
+                systems.bonusMoveAndJump().setBonusInactive(bonus, systems.worldNavigator());
                 level.entities().remove(bonus);
             });
         }

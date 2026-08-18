@@ -50,15 +50,11 @@ public class BonusMoveAndJumpSystem {
         }
     }
 
-    public void setBonusInactive(
-        Bonus bonus,
-        BonusMoveAndJumpSystem moveAndJumpSystem,
-        WorldNavigationSystem worldNavigationSystem)
-    {
+    public void setBonusInactive(Bonus bonus, WorldNavigationSystem worldNavigationSystem) {
         if (bonus.optMovement().isPresent()) {
             worldNavigationSystem.setSpeed(bonus, 0);
         }
-        bonus.optMoveAndJump().ifPresent(moveAndJumpSystem::reset);
+        bonus.optMoveAndJump().ifPresent(moveAndJump -> moveAndJump.pulse().reset());
     }
 
     public void startWandering(Bonus bonus, float speed, WorldNavigationSystem worldNavigationSystem) {
@@ -67,16 +63,6 @@ public class BonusMoveAndJumpSystem {
             worldNavigationSystem.setSpeed(bonus, speed);
             moveAndJump.pulse().restart();
         });
-    }
-
-    public void reset(BonusMoveAndJumpComp animation) {
-        requireNonNull(animation);
-        animation.pulse().reset();
-    }
-
-    public void stop(BonusMoveAndJumpComp animation) {
-        requireNonNull(animation);
-        animation.pulse().stop();
     }
 
     public void setRoute(Bonus bonus, List<Vector2i> waypoints, boolean fromLeftToRight) {
