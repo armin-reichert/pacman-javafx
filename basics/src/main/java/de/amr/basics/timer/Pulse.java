@@ -21,7 +21,7 @@ public class Pulse {
     private State state;
     private long pulseCount;
     private boolean running;
-    private boolean pulseTriggered;
+    private boolean triggered;
 
     public Pulse(int halfPeriod, State startState) {
         this.halfPeriod = halfPeriod;
@@ -41,12 +41,12 @@ public class Pulse {
     }
 
     public void triggerPulse() {
-        pulseTriggered = false;
+        triggered = false;
         if (running) {
             ++pulseCount;
             if (pulseCount % halfPeriod == 0) {
                 state = state.inverse();
-                pulseTriggered = true;
+                triggered = true;
             }
         }
     }
@@ -55,8 +55,8 @@ public class Pulse {
         return state;
     }
 
-    public boolean pulseTriggered() {
-        return pulseTriggered;
+    public boolean isTriggered() {
+        return triggered;
     }
 
     public void setStartState(State startState) {

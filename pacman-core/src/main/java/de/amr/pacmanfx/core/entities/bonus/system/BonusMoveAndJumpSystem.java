@@ -107,7 +107,7 @@ public class BonusMoveAndJumpSystem {
 
         final Pulse pulse = moveAndJump.pulse();
         pulse.triggerPulse();
-        if (pulse.pulseTriggered()) {
+        if (pulse.isTriggered()) {
             float jumpDelta = worldNavigation.moveDir().isVertical() ? 3.0f : 2.0f;
             float dy = pulse.state() == Pulse.State.ON ? -jumpDelta : jumpDelta;
             bonus.pos().setY(bonus.pos().y() + dy);
