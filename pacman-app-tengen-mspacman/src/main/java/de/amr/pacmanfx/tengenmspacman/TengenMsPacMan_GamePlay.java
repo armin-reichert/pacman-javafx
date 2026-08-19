@@ -52,7 +52,6 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
     public static final int ARCADE_MAP_GAME_OVER_TICKS = 420;
     public static final int NON_ARCADE_MAP_GAME_OVER_TICKS = 600;
-    public static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
 
     public TengenMsPacMan_GamePlay() {}
 
@@ -320,12 +319,6 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         ScoreSystem.setLevelNumber(session.score(), 1);
 
         return demoLevel;
-    }
-
-    @Override
-    public boolean isPacSafeInDemoLevel(GameSession session, GameLevel demoLevel) {
-        float runningMillis = System.currentTimeMillis() - session.levelStartTimeMillis();
-        return runningMillis <= DEMO_LEVEL_MIN_DURATION_MILLIS;
     }
 
     @Override

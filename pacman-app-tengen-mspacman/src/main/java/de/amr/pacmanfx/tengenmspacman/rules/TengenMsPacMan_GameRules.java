@@ -17,6 +17,7 @@ import javafx.beans.property.SimpleObjectProperty;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.OptionalInt;
 
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
@@ -36,6 +37,8 @@ public class TengenMsPacMan_GameRules implements GameRules {
 
     public static final int FIRST_LEVEL = 1;
     public static final int LAST_LEVEL_NUMBER = 32;
+
+    public static final float DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
     private static final Map<Integer, Integer> CUT_SCENE_NUMBER_AFTER_LEVEL_NUMBER = Map.of(
         2, 1,
@@ -86,6 +89,11 @@ public class TengenMsPacMan_GameRules implements GameRules {
     @Override
     public int numLevelFlashes(int levelNumber) {
         return 3;
+    }
+
+    @Override
+    public Optional<Float> demoLevelMinDurationSec() {
+        return Optional.of(DEMO_LEVEL_MIN_DURATION_SEC);
     }
 
     @Override

@@ -250,12 +250,12 @@ public abstract class CommonGamePlay implements GamePlay {
         if (huntingStep.foundEdibleBonus()) {
             onEatBonus(game, level, huntingStep.edibleBonus());
         }
-        evalPacKilled(game.session(), huntingStep);
+        checkIfPacGetsKilled(game.session(), game.variant().rules(), huntingStep);
         if (huntingStep.pacKilled()) {
             fixPacPositionIfKilledInsidePortal(level);
         }
         else {
-            evalGhostsKilled(game, level, huntingStep);
+            checkIfGhostsGetKilled(game, level, huntingStep);
         }
     }
 
@@ -284,19 +284,28 @@ public abstract class CommonGamePlay implements GamePlay {
         }
     }
 
-    private void evalPacKilled(GameSession session, HuntingStep result) {
-        final GameLevel level = session.assertLevel();
-        if (session.isAttractMode() && isPacSafeInDemoLevel(session, level)
-            || level.entities().pac().cheats().isImmune()) {
+    private void checkIfPacGetsKilled(GameSession session, GameRules rules, HuntingStep huntingStep) {
+        // Check for optional attract mode safe period
+        if (session.isAttractMode()) {
+            if (rules.demoLevelMinDurationSec().isPresent()) {
+                final long minDurationMillis = (long) (rules.demoLevelMinDurationSec().get() * 1000);
+                final long levelDurationMillis = System.currentTimeMillis() - session.levelStartTimeMillis();
+                if (levelDurationMillis <= minDurationMillis) {
+                    return;
+                }
+            }
+        }
+        else if (session.assertLevel().entities().pac().cheats().isImmune()) {
             return;
         }
-        result.setPacKilled(
-            result.ghostsCollidingWithPac().stream()
-                .anyMatch(ghost -> ghost.ghostStateEnum() == GhostState.HUNTING_PAC)
-        );
+
+        final boolean pacMeetsKiller = huntingStep.ghostsCollidingWithPac().stream()
+            .anyMatch(ghost -> ghost.ghostStateEnum() == GhostState.HUNTING_PAC);
+
+        huntingStep.setPacKilled(pacMeetsKiller);
     }
 
-    private void evalGhostsKilled(GameContext game, GameLevel level, HuntingStep result) {
+    private void checkIfGhostsGetKilled(GameContext game, GameLevel level, HuntingStep result) {
         if (result.detectedPacGhostCollision()) {
             // Frightened ghosts get killed when colliding with Pac
             result.ghostsCollidingWithPac().stream()

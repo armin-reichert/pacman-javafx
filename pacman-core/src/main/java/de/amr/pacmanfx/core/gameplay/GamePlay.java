@@ -6,7 +6,6 @@ package de.amr.pacmanfx.core.gameplay;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.Bonus;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.LevelCounter;
@@ -27,8 +26,6 @@ public interface GamePlay {
     GameLevel buildDemoLevel(GameContext game);
 
     void buildNormalLevel(GameContext game, int levelNumber, int numLives);
-
-    boolean isPacSafeInDemoLevel(GameSession session, GameLevel demoLevel);
 
     void startLevel(GameContext game);
 

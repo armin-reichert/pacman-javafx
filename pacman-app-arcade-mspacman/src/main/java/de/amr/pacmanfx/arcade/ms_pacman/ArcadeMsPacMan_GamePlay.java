@@ -44,8 +44,6 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
     private static final Set<GhostState> TURNBACK_STATES = Set.of(
         GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE);
 
-    private static final int DEMO_LEVEL_MIN_DURATION_MILLIS = 20_000;
-
     @Override
     public void configureLevelCounter(GameContext game, LevelCounter levelCounter) {
         final LevelCounterSystem system = game.variant().systems().levelCounterSystem();
@@ -216,12 +214,6 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         level.entities().add(bonus);
 
         game.eventManager().publishGameEvent(new BonusActivatedEvent(bonus));
-    }
-
-    @Override
-    public boolean isPacSafeInDemoLevel(GameSession session, GameLevel demoLevel) {
-        float runningMillis = System.currentTimeMillis() - session.levelStartTimeMillis();
-        return runningMillis <= DEMO_LEVEL_MIN_DURATION_MILLIS;
     }
 
     // ------------------------------------------------

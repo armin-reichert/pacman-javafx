@@ -7,6 +7,7 @@ package de.amr.pacmanfx.core.model.rules;
 import de.amr.pacmanfx.core.level.GameLevel;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.OptionalInt;
 
 public interface GameRules {
@@ -22,6 +23,13 @@ public interface GameRules {
     int lastLevelNumber();
 
     int numLevelFlashes(int levelNumber);
+
+    /**
+     * @return minimum duration of demo level (in seconds) or {@code Optional#empty()} if unlimited
+     */
+    default Optional<Float> demoLevelMinDurationSec() {
+        return Optional.empty(); // no limit
+    }
 
     default int restingTicksForPellet() {
         return 0;

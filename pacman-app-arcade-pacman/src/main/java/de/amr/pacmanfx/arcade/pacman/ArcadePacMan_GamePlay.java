@@ -220,11 +220,6 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     }
 
     @Override
-    public boolean isPacSafeInDemoLevel(GameSession session, GameLevel demoLevel) {
-        return false;
-    }
-
-    @Override
     public void startLevel(GameContext game) {
         requireNonNull(game);
 

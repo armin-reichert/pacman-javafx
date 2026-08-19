@@ -9,13 +9,21 @@ import de.amr.pacmanfx.arcade.pacman.rules.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.core.Validations;
 
 import java.util.List;
+import java.util.Optional;
 
 import static de.amr.basics.math.RandomNumberSupport.randomInt;
 
 public class ArcadeMsPacMan_GameRules extends ArcadePacMan_GameRules {
 
+    public static final float DEMO_LEVEL_MIN_DURATION_SEC = 20;
+
     public ArcadeMsPacMan_GameRules() {
         actorSpeedRules = new ArcadeMsPacMan_ActorSpeedRules();
+    }
+
+    @Override
+    public Optional<Float> demoLevelMinDurationSec() {
+        return Optional.of(DEMO_LEVEL_MIN_DURATION_SEC);
     }
 
     @Override
