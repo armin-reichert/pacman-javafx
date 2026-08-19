@@ -83,27 +83,18 @@ public abstract class CommonGamePlay implements GamePlay {
 
     @Override
     public void prepareLevelForPlaying(GameContext game) {
-        final GameSystems systems = game.variant().systems();
         final GameLevel level = game.session().assertLevel();
-        final House house = level.entities().house();
-        final TerrainLayer terrain = level.worldMap().terrainLayer();
-        final Pac pac = level.entities().pac();
+        final GameSystems systems = game.variant().systems();
 
-        pac.reset(); // initially invisible!
-        pac.pos().set(terrain.pacStartPosition());
-        systems.pacPower().reset(pac);
-        systems.worldNavigator().setMoveDir(pac, Direction.LEFT);
-        systems.worldNavigator().setWishDir(pac, Direction.LEFT);
+        preparePacForPlaying(
+            level.entities().pac(),
+            level.worldMap().terrainLayer(),
+            systems);
 
-        level.entities().ghosts().forEach(ghost -> {
-            ghost.reset(); // initially invisible!
-            ghost.pos().set(ghost.worldInfo().startPosition());
-            final Direction direction = house.floorplan().ghostStartDirection(ghost.personality());
-            systems.worldNavigator().setMoveDir(ghost, direction);
-            systems.worldNavigator().setWishDir(ghost, direction);
-            systems.ghostState().changeGhostState(ghost, GhostState.LOCKED);
-            systems.spriteAnimController().resetSelected(ghost);
-        });
+        prepareGhostsForPlaying(
+            level.entities().ghosts(),
+            level.entities().house(),
+            systems);
 
         // Blinking energizers are visible when state is ON
         level.heartbeat().setStartState(Pulse.State.ON);
@@ -111,21 +102,20 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     @Override
-    public void buildNormalLevel(GameContext game, int levelNumber, int numLives) {
+    public GameLevel buildNormalLevel(GameContext game, int levelNumber, int numLives) {
         requireNonNull(game);
         requireValidLevelNumber(levelNumber);
-        final GameSession session = game.session();
 
         final GameLevel level = createLevel(game, levelNumber);
 
+        final GameSession session = game.session();
         session.setLevel(level);
         session.setAttractMode(false);
-
         session.livesCounter().data().setNumLives(numLives);
         ScoreSystem.setLevelNumber(session.score(), levelNumber);
         session.gateKeeper().setLevelNumber(levelNumber);
 
-        game.eventManager().publishGameEvent(new LevelCreatedEvent(level));
+        return level;
     }
 
     @Override
@@ -139,7 +129,9 @@ public abstract class CommonGamePlay implements GamePlay {
         final int lastLevelNumber = game.variant().rules().lastLevelNumber();
 
         if (oldLevel.number() < lastLevelNumber) {
-            buildNormalLevel(game, oldLevel.number() + 1, session.livesCounter().data().numLives());
+            final GameLevel newLevel = buildNormalLevel(game, oldLevel.number() + 1, session.livesCounter().data().numLives());
+            game.eventManager().publishGameEvent(new LevelCreatedEvent(newLevel));
+
             startLevel(game);
             // Note: This event is very important because it triggers the creation of the actor animations!
             eventManager.publishGameEvent(new LevelStartedEvent(oldLevel));
@@ -184,33 +176,6 @@ public abstract class CommonGamePlay implements GamePlay {
         evalCollisions(game, level, huntingStep);
     }
 
-    private void initScores(GameSession session) {
-        session.score().reset();
-        final File highScoreFile = session.highScore().reqComp(ScorePersistencyComp.class).file();
-        try {
-            ScoreSystem.load(session.highScore());
-            ScoreSystem.enableScore(session.highScore(), true);
-        } catch (IOException x) {
-            Logger.error(x, "Error loading high-score file {}", highScoreFile.getAbsolutePath());
-        }
-    }
-
-
-    private void startPacPower(GameContext game, GameLevel level, Pac pac) {
-        final GameSystems systems = game.variant().systems();
-        final GameRules rules = game.variant().rules();
-
-        // Ghosts make turnback also in case pac power time is zero!
-        level.entities().ghostsInAnyOfStates(GHOST_TURNBACK_STATES).forEach(systems.worldNavigator()::requestTurnBack);
-
-        final long powerTicks = TickTimer.secToTicks(rules.pacPowerSeconds(level.number()));
-        if (powerTicks > 0) {
-            //TODO move to game event handler!
-            onPacPowerStarts(game, level, pac, powerTicks);
-            game.eventManager().publishGameEvent(new PacPowerStartsEvent(pac));
-        }
-    }
-
     @Override
     public void onPacPowerStarts(GameContext game, GameLevel level, Pac pac, long ticks) {
         final GameSystems systems = game.variant().systems();
@@ -243,95 +208,6 @@ public abstract class CommonGamePlay implements GamePlay {
         level.huntingTimerStrategy().start();
 
         Logger.info("Pac power ended, hunting resumed. Power ticks remaining: {}", pac.power().ticksRemaining());
-    }
-
-
-    private void evalCollisions(GameContext game, GameLevel level, HuntingStep huntingStep) {
-        checkFoodFound(game, level);
-        if (huntingStep.foundEdibleBonus()) {
-            onEatBonus(game, level, huntingStep.edibleBonus());
-        }
-        checkIfPacGetsKilled(game.session(), game.variant().rules(), huntingStep);
-        if (huntingStep.pacKilled()) {
-            fixPacPositionIfKilledInsidePortal(level);
-        }
-        else {
-            checkIfGhostsGetKilled(game, level, huntingStep);
-        }
-    }
-
-    private void checkFoodFound(GameContext game, GameLevel level) {
-        final GameSystems systems = game.variant().systems();
-        final HuntingStep huntingResult = game.session().thisFrame().huntingStep();
-        final Pac pac = level.entities().pac();
-        final PacDigestionSystem digestionSystem = systems.pacDigestion();
-
-        if (huntingResult.foodFound()) {
-            digestionSystem.endStarving(pac);
-            final Vector2i foodTile = huntingResult.foodFoundTile();
-            level.food().markFoodEatenAt(foodTile);
-            if (huntingResult.energizerFound()) {
-                onEatEnergizer(game, level, foodTile);
-            } else {
-                onEatPellet(game, level, foodTile);
-            }
-            if (game.variant().rules().scoringRules().isBonusAwarded(level)) {
-                activateNextBonus(game, level);
-            }
-            game.eventManager().publishGameEvent(new PacEatsFoodEvent(pac, huntingResult.energizerFound(), false));
-        }
-        else {
-            digestionSystem.starve(pac);
-        }
-    }
-
-    private void checkIfPacGetsKilled(GameSession session, GameRules rules, HuntingStep huntingStep) {
-        // Check for optional attract mode safe period
-        if (session.isAttractMode()) {
-            if (rules.demoLevelMinDurationSec().isPresent()) {
-                final long minDurationMillis = (long) (rules.demoLevelMinDurationSec().get() * 1000);
-                final long levelDurationMillis = System.currentTimeMillis() - session.levelStartTimeMillis();
-                if (levelDurationMillis <= minDurationMillis) {
-                    return;
-                }
-            }
-        }
-        else if (session.assertLevel().entities().pac().cheats().isImmune()) {
-            return;
-        }
-
-        final boolean pacMeetsKiller = huntingStep.ghostsCollidingWithPac().stream()
-            .anyMatch(ghost -> ghost.ghostStateEnum() == GhostState.HUNTING_PAC);
-
-        huntingStep.setPacKilled(pacMeetsKiller);
-    }
-
-    private void checkIfGhostsGetKilled(GameContext game, GameLevel level, HuntingStep result) {
-        if (result.detectedPacGhostCollision()) {
-            // Frightened ghosts get killed when colliding with Pac
-            result.ghostsCollidingWithPac().stream()
-                .filter(ghost -> ghost.ghostStateEnum() == GhostState.FRIGHTENED)
-                .forEach(result.ghostsKilled()::add);
-            // More than one ghost might have been killed in this step
-            result.ghostsKilled().forEach(ghost -> onEatGhost(game, level, ghost));
-        }
-    }
-
-    // If collision happened while teleporting (horizontally), move collided actors into visible world
-    private void fixPacPositionIfKilledInsidePortal(GameLevel level) {
-        final Pac pac = level.entities().pac();
-        final Vector2i pacTile = pac.pos().tile();
-        final TerrainLayer terrain = level.worldMap().terrainLayer();
-
-        terrain.hPortalContainingTile(pacTile).ifPresent(hPortal -> {
-            if (pac.worldNavigation().moveDir() == Direction.LEFT) {
-                pac.pos().setX(hPortal.rightBorderEntryTile().x() * WorldMap.TS + WorldMap.HTS);
-            } else if (pac.worldNavigation().moveDir() == Direction.RIGHT) {
-                pac.pos().setX(hPortal.leftBorderEntryTile().x() * WorldMap.TS - WorldMap.HTS);
-            }
-            // Not sure if colliding ghosts should also be moved back to visible area
-            Logger.info("Detected collision while teleporting, moved Pac-Man back into world");
-        });
     }
 
     @Override
@@ -478,6 +354,140 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     // private
+
+    private void preparePacForPlaying(Pac pac, TerrainLayer terrain, GameSystems systems) {
+        pac.reset(); // initially invisible!
+        pac.pos().set(terrain.pacStartPosition());
+        systems.pacPower().reset(pac);
+        systems.worldNavigator().setMoveDir(pac, Direction.LEFT);
+        systems.worldNavigator().setWishDir(pac, Direction.LEFT);
+    }
+
+    private void prepareGhostsForPlaying(List<Ghost> ghosts, House house, GameSystems systems) {
+        ghosts.forEach(ghost -> {
+            ghost.reset(); // initially invisible!
+            ghost.pos().set(ghost.worldInfo().startPosition());
+            final Direction direction = house.floorplan().ghostStartDirection(ghost.personality());
+            systems.worldNavigator().setMoveDir(ghost, direction);
+            systems.worldNavigator().setWishDir(ghost, direction);
+            systems.ghostState().changeGhostState(ghost, GhostState.LOCKED);
+            systems.spriteAnimController().resetSelected(ghost);
+        });
+    }
+
+    private void initScores(GameSession session) {
+        session.score().reset();
+        final File highScoreFile = session.highScore().reqComp(ScorePersistencyComp.class).file();
+        try {
+            ScoreSystem.load(session.highScore());
+            ScoreSystem.enableScore(session.highScore(), true);
+        } catch (IOException x) {
+            Logger.error(x, "Error loading high-score file {}", highScoreFile.getAbsolutePath());
+        }
+    }
+
+    private void startPacPower(GameContext game, GameLevel level, Pac pac) {
+        final GameSystems systems = game.variant().systems();
+        final GameRules rules = game.variant().rules();
+
+        // Ghosts make turnback also in case pac power time is zero!
+        level.entities().ghostsInAnyOfStates(GHOST_TURNBACK_STATES).forEach(systems.worldNavigator()::requestTurnBack);
+
+        final long powerTicks = TickTimer.secToTicks(rules.pacPowerSeconds(level.number()));
+        if (powerTicks > 0) {
+            //TODO move to game event handler!
+            onPacPowerStarts(game, level, pac, powerTicks);
+            game.eventManager().publishGameEvent(new PacPowerStartsEvent(pac));
+        }
+    }
+
+    private void evalCollisions(GameContext game, GameLevel level, HuntingStep huntingStep) {
+        checkFoodFound(game, level);
+        if (huntingStep.foundEdibleBonus()) {
+            onEatBonus(game, level, huntingStep.edibleBonus());
+        }
+        checkIfPacGetsKilled(game.session(), game.variant().rules(), huntingStep);
+        if (huntingStep.pacKilled()) {
+            fixPacPositionIfKilledInsidePortal(level);
+        }
+        else {
+            checkIfGhostsGetKilled(game, level, huntingStep);
+        }
+    }
+
+    private void checkFoodFound(GameContext game, GameLevel level) {
+        final GameSystems systems = game.variant().systems();
+        final HuntingStep huntingResult = game.session().thisFrame().huntingStep();
+        final Pac pac = level.entities().pac();
+        final PacDigestionSystem digestionSystem = systems.pacDigestion();
+
+        if (huntingResult.foodFound()) {
+            digestionSystem.endStarving(pac);
+            final Vector2i foodTile = huntingResult.foodFoundTile();
+            level.food().markFoodEatenAt(foodTile);
+            if (huntingResult.energizerFound()) {
+                onEatEnergizer(game, level, foodTile);
+            } else {
+                onEatPellet(game, level, foodTile);
+            }
+            if (game.variant().rules().scoringRules().isBonusAwarded(level)) {
+                activateNextBonus(game, level);
+            }
+            game.eventManager().publishGameEvent(new PacEatsFoodEvent(pac, huntingResult.energizerFound(), false));
+        }
+        else {
+            digestionSystem.starve(pac);
+        }
+    }
+
+    private void checkIfPacGetsKilled(GameSession session, GameRules rules, HuntingStep huntingStep) {
+        // Check for optional attract mode safe period
+        if (session.isAttractMode()) {
+            if (rules.demoLevelMinDurationSec().isPresent()) {
+                final long minDurationMillis = (long) (rules.demoLevelMinDurationSec().get() * 1000);
+                final long levelDurationMillis = System.currentTimeMillis() - session.levelStartTimeMillis();
+                if (levelDurationMillis <= minDurationMillis) {
+                    return;
+                }
+            }
+        }
+        else if (session.assertLevel().entities().pac().cheats().isImmune()) {
+            return;
+        }
+
+        final boolean pacMeetsKiller = huntingStep.ghostsCollidingWithPac().stream()
+            .anyMatch(ghost -> ghost.ghostStateEnum() == GhostState.HUNTING_PAC);
+
+        huntingStep.setPacKilled(pacMeetsKiller);
+    }
+
+    private void checkIfGhostsGetKilled(GameContext game, GameLevel level, HuntingStep result) {
+        if (result.detectedPacGhostCollision()) {
+            // Frightened ghosts get killed when colliding with Pac
+            result.ghostsCollidingWithPac().stream()
+                .filter(ghost -> ghost.ghostStateEnum() == GhostState.FRIGHTENED)
+                .forEach(result.ghostsKilled()::add);
+            // More than one ghost might have been killed in this step
+            result.ghostsKilled().forEach(ghost -> onEatGhost(game, level, ghost));
+        }
+    }
+
+    // If collision happened while teleporting (horizontally), move collided actors into visible world
+    private void fixPacPositionIfKilledInsidePortal(GameLevel level) {
+        final Pac pac = level.entities().pac();
+        final Vector2i pacTile = pac.pos().tile();
+        final TerrainLayer terrain = level.worldMap().terrainLayer();
+
+        terrain.hPortalContainingTile(pacTile).ifPresent(hPortal -> {
+            if (pac.worldNavigation().moveDir() == Direction.LEFT) {
+                pac.pos().setX(hPortal.rightBorderEntryTile().x() * WorldMap.TS + WorldMap.HTS);
+            } else if (pac.worldNavigation().moveDir() == Direction.RIGHT) {
+                pac.pos().setX(hPortal.leftBorderEntryTile().x() * WorldMap.TS - WorldMap.HTS);
+            }
+            // Not sure if colliding ghosts should also be moved back to visible area
+            Logger.info("Detected collision while teleporting, moved Pac-Man back into world");
+        });
+    }
 
     private void checkRemainingPacPower(GameContext game, GameLevel level, Pac pac) {
         final PacPowerComp power = pac.power();

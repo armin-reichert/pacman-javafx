@@ -8,6 +8,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.event.gameplay.GameStartedEvent;
+import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
 import de.amr.pacmanfx.core.event.gameplay.LevelStartedEvent;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
@@ -26,7 +27,8 @@ public class ArcadeGameState_GameStarting extends GameState {
 
     @Override
     public void onEnter(GameContext game) {
-        game.variant().gamePlay().buildNormalLevel(game, 1, game.variant().initialLifeCount());
+        final GameLevel newLevel = game.variant().gamePlay().buildNormalLevel(game, 1, game.variant().initialLifeCount());
+        game.eventManager().publishGameEvent(new LevelCreatedEvent(newLevel));
 
         game.session().hud().hideCredit().showLivesCounter();
         ScoreSystem.enableScore(game.session().highScore(), true);

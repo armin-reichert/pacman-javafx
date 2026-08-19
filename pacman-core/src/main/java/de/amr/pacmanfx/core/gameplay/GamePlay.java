@@ -25,7 +25,7 @@ public interface GamePlay {
 
     GameLevel buildDemoLevel(GameContext game);
 
-    void buildNormalLevel(GameContext game, int levelNumber, int numLives);
+    GameLevel buildNormalLevel(GameContext game, int levelNumber, int numLives);
 
     void startLevel(GameContext game);
 

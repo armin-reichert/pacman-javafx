@@ -21,9 +21,6 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
-import de.amr.pacmanfx.game.CartridgeRepository;
-import de.amr.pacmanfx.game.GameBox;
-import de.amr.pacmanfx.uilib.TimelineGameClock;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -34,15 +31,16 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class TestEatingFood {
 
-    static GameFlowController createArcadeGameFlow() {
-        final var flow = new GameFlowController("Arcade Pac-Man Game Flow");
-        for (Arcade_GameState gameState : Arcade_GameState.values()) {
-            flow.addState(gameState.state());
+    private static class TestGameFlowController extends GameFlowController {
+        public TestGameFlowController() {
+            super("Arcade Pac-Man Testcase Game Flow");
+            for (Arcade_GameState gameState : Arcade_GameState.values()) {
+                addState(gameState.state());
+            }
         }
-        return flow;
     }
 
-    static final GameEventManager NULL_EVENT_MANAGER = new GameEventManager() {
+    private static final GameEventManager NULL_EVENT_MANAGER = new GameEventManager() {
         @Override
         public void addGameEventSubscriber(GameEventListener listener) {}
 
@@ -53,62 +51,26 @@ public class TestEatingFood {
         public void publishGameEvent(GameEvent event) {}
     };
 
-    static class TestGameContext extends GameContext {
-
-        private final GameSession testSession;
-
-        public TestGameContext(GameBox gameBox, GameVariantConfig config)
-        {
-            super(gameBox.coinMechanism(), config, NULL_EVENT_MANAGER);
-            testSession = new GameSession(
-                GameVariantID.ARCADE_PACMAN.name(),
-                config.gameFlow(),
-                new GameCheats()
-            );
-        }
-
-        @Override
-        public void setSession(GameSession session) {}
-
-        @Override
-        public GameSession session() {
-            return testSession;
-        }
-
-        @Override
-        public CoinMechanism coinMechanism() {
-            return testGameBox.coinMechanism();
-        }
-
-        @Override
-        public GameEventManager eventManager() {
-            return NULL_EVENT_MANAGER;
-        }
-    }
-
-    private static GameBox testGameBox;
-    private static TestGameContext testGame;
-
-    @BeforeAll
-    static void setup() {
-        final var testConfig = new GameVariantConfig(
+    private static final GameContext GAME = new GameContext(
+        new CoinMechanism(99),
+        new GameVariantConfig(
             new DefaultGameSystems(),
             new ArcadePacMan_GamePlay(),
-            createArcadeGameFlow(),
+            new TestGameFlowController(),
             new ArcadePacMan_GameRules(),
             new ArcadePacMan_WorldMapManager()
-        );
-        testGameBox = new GameBox(
-            new CartridgeRepository(),
-            new CoinMechanism(99),
-            new TimelineGameClock()
-        );
-        testGame = new TestGameContext(testGameBox, testConfig);
+        ),
+        NULL_EVENT_MANAGER
+    );
+
+    @BeforeAll
+    static void beforeAll() {
+        GAME.setSession(new GameSession(GameVariantID.ARCADE_PACMAN.name(), new GameCheats()));
     }
 
     @BeforeEach
     public void createGameLevel() {
-        testGame.variant().gamePlay().buildNormalLevel(testGame, 1, 3);
+        GAME.variant().gamePlay().buildNormalLevel(GAME, 1, 3);
     }
 
     private void eatNextPellet(GamePlay gamePlay, GameLevel level) {
@@ -119,7 +81,7 @@ public class TestEatingFood {
             .findFirst()
             .ifPresent(tile -> {
                 level.food().markFoodEatenAt(tile);
-                gamePlay.onEatPellet(testGame, level, tile);
+                gamePlay.onEatPellet(GAME, level, tile);
             });
     }
 
@@ -130,15 +92,15 @@ public class TestEatingFood {
             .findFirst()
             .ifPresent(tile -> {
                 level.food().markFoodEatenAt(tile);
-                gamePlay.onEatEnergizer(testGame, level, tile);
+                gamePlay.onEatEnergizer(GAME, level, tile);
             });
     }
 
     @Test
     @DisplayName("Test Food Counting")
     public void testFoodCounting() {
-        final GamePlay gamePlay = testGame.variant().gamePlay();
-        testGame.session().optLevel().ifPresent(level -> {
+        final GamePlay gamePlay = GAME.variant().gamePlay();
+        GAME.session().optLevel().ifPresent(level -> {
             int eaten = level.food().eatenFoodCount();
             int uneaten = level.food().remainingFoodCount();
             eatNextPellet(gamePlay, level);
@@ -156,22 +118,22 @@ public class TestEatingFood {
     @Test
     @DisplayName("Test Level Completion")
     public void testLevelCompletion() {
-        final GamePlay gamePlay = testGame.variant().gamePlay();
-        testGame.session().optLevel().ifPresent(level -> {
+        final GamePlay gamePlay = GAME.variant().gamePlay();
+        GAME.session().optLevel().ifPresent(level -> {
             while (level.food().remainingFoodCount() > 0) {
-                assertFalse(testGame.variant().rules().isLevelCompleted(level));
+                assertFalse(GAME.variant().rules().isLevelCompleted(level));
                 eatNextPellet(gamePlay, level);
                 eatNextEnergizer(gamePlay, level);
             }
-            assertTrue(testGame.variant().rules().isLevelCompleted(level));
+            assertTrue(GAME.variant().rules().isLevelCompleted(level));
         });
     }
 
     @Test
     @DisplayName("Test Cruise Elroy Mode")
     public void testCruiseElroyMode() {
-        final GamePlay gamePlay = testGame.variant().gamePlay();
-        testGame.session().optLevel().ifPresent(level -> {
+        final GamePlay gamePlay = GAME.variant().gamePlay();
+        GAME.session().optLevel().ifPresent(level -> {
             final Ghost blinky = level.entities().ghost(GhostPersonality.RED_GHOST_SHADOW);
             final ElroyComp elroy = blinky.reqComp(ElroyComp.class);
             final FoodLayer foodLayer = level.worldMap().foodLayer();
@@ -203,8 +165,8 @@ public class TestEatingFood {
     @Test
     @DisplayName("Test Resting")
     public void testResting() {
-        final GamePlay gamePlay = testGame.variant().gamePlay();
-        testGame.session().optLevel().ifPresent(level -> {
+        final GamePlay gamePlay = GAME.variant().gamePlay();
+        GAME.session().optLevel().ifPresent(level -> {
             final Pac pac = level.entities().pac();
             eatNextPellet(gamePlay, level);
             assertEquals(1, pac.digestion().restingTicks());
