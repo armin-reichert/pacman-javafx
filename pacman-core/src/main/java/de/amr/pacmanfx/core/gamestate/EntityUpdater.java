@@ -10,13 +10,13 @@ import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.entities.Bonus;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
-import de.amr.pacmanfx.core.entities.bonus.comp.BonusMoveAndJumpComp;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusStateComp;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostStateSystem;
-import de.amr.pacmanfx.core.event.bonus.BonusExpiredEvent;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.rules.ActorSpeedRules;
 import de.amr.pacmanfx.core.model.rules.GameRules;
+
+import java.util.List;
 
 // Preliminary central place for calling entity updates
 public class EntityUpdater {
@@ -31,6 +31,10 @@ public class EntityUpdater {
         final GameSystems systems = game.variant().systems();
         final GameRules rules = game.variant().rules();
         final GameSession session = game.session();
+
+        if (game.state().id().equals(CommonGameStateID.GAME_LEVEL_EATING_GHOST)) {
+            return; // Pac-Man is invisible and frozen
+        }
 
         final ActorSpeedRules speedRules = game.variant().rules().actorSpeedRules();
         final float speed = pac.power().isActive()
@@ -49,20 +53,22 @@ public class EntityUpdater {
     }
 
     public void updateGhosts(GameContext game, GameLevel level) {
-        if (game.state().id().equals(CommonGameStateID.GAME_LEVEL_EATING_GHOST)) {
-            level.entities().ghostsInAnyOfStates(GhostStateSystem.UPDATED_GHOST_STATES_WHILE_EATEN)
-                .forEach(ghost -> updateGhost(game, level, ghost));
-        } else {
-            level.entities().ghosts().forEach(ghost -> updateGhost(game, level, ghost));
-        }
-    }
+        final boolean ghostEatenState = game.state().id().equals(CommonGameStateID.GAME_LEVEL_EATING_GHOST);
+        final List<Ghost> updatedGhosts = ghostEatenState
+            ? level.entities().ghostsInAnyOfStates(GhostStateSystem.UPDATED_GHOST_STATES_WHILE_EATEN).toList()
+            : level.entities().ghosts();
 
-    private void updateGhost(GameContext game, GameLevel level, Ghost ghost) {
         final GameSystems systems = game.variant().systems();
-
-        systems.ghostState().update(game, level, ghost);
-        systems.ghostSpriteAnimation().update(
-            ghost, level.entities().pac(), systems.spriteAnimController());
+        updatedGhosts.forEach(ghost -> {
+            systems.ghostState().update(game, level, ghost);
+            systems.ghostSpriteAnimation().update(
+                ghost,
+                level.entities().pac(),
+                systems.spriteAnimController(),
+                ghostEatenState,
+                game.session().assertLevel().indexInGhostKilledChain(ghost)
+            );
+        });
     }
 
     public void updateBonus(GameContext game, GameLevel level, Bonus bonus) {

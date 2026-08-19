@@ -64,7 +64,7 @@ public final class Ghost extends GameEntity {
         return reqComp(GhostStateComp.class);
     }
 
-    public GhostSpriteAnimationComp ghostAnimation() {
+    public GhostSpriteAnimationComp ghostSpriteAnimation() {
         return reqComp(GhostSpriteAnimationComp.class);
     }
 

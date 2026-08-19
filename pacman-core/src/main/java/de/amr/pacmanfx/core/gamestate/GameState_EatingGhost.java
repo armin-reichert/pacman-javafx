@@ -17,7 +17,7 @@ import de.amr.pacmanfx.core.level.GameLevel;
  */
 public final class GameState_EatingGhost extends GameState {
 
-    private static final int FREEZE_TICKS = 60;
+    public static final int FREEZE_TICKS = 60;
 
     public GameState_EatingGhost() {
         super(CommonGameStateID.GAME_LEVEL_EATING_GHOST);
@@ -37,9 +37,7 @@ public final class GameState_EatingGhost extends GameState {
 
         level.heartbeat().triggerPulse();
 
-        level.entities().ghosts().stream()
-            .filter(ghost -> GhostStateSystem.UPDATED_GHOST_STATES_WHILE_EATEN.contains(ghost.ghostStateEnum()))
-            .forEach(ghost -> ghostStateSystem.update(game, level, ghost));
+        systems.entityUpdater().updateEntities(game, level);
 
         if (timer().hasExpired()) {
             level.entities().pac().show();

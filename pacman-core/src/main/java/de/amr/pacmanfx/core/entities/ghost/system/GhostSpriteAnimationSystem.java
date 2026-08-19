@@ -14,16 +14,21 @@ public class GhostSpriteAnimationSystem {
 
     public GhostSpriteAnimationSystem() {}
 
-    public void update(Ghost ghost, Pac pac, SpriteAnimController spriteAnimController) {
-        final CommonSpriteAnimationID animationID = switch (ghost.ghostStateEnum()) {
-            case LOCKED, LEAVING_HOUSE -> threatenedOrNormalAnimation(ghost, pac);
-            case HUNTING_PAC    -> CommonSpriteAnimationID.GHOST_NORMAL;
-            case FRIGHTENED     -> frightenedOrFlashingAnimation(pac);
-            case EATEN, RETURNING_HOME, ENTERING_HOUSE -> CommonSpriteAnimationID.GHOST_EYES;
-        };
-        ghost.ghostAnimation().setAnimationID(animationID);
-
-        spriteAnimController.select(ghost, animationID);
+    public void update(Ghost ghost, Pac pac, SpriteAnimController spriteAnimController, boolean shownAsPoints, int pointsIndex) {
+        if (shownAsPoints) {
+            ghost.ghostSpriteAnimation().setAnimationID(CommonSpriteAnimationID.GHOST_POINTS);
+            ghost.spriteAnimation().animation().setAnimationFrame(CommonSpriteAnimationID.GHOST_POINTS, pointsIndex);
+        }
+        else {
+            final CommonSpriteAnimationID animationID = switch (ghost.ghostStateEnum()) {
+                case LOCKED, LEAVING_HOUSE -> threatenedOrNormalAnimation(ghost, pac);
+                case HUNTING_PAC    -> CommonSpriteAnimationID.GHOST_NORMAL;
+                case FRIGHTENED     -> frightenedOrFlashingAnimation(pac);
+                case EATEN, RETURNING_HOME, ENTERING_HOUSE -> CommonSpriteAnimationID.GHOST_EYES;
+            };
+            ghost.ghostSpriteAnimation().setAnimationID(animationID);
+        }
+        spriteAnimController.select(ghost, ghost.ghostSpriteAnimation().ghostAnimationID());
         spriteAnimController.playSelected(ghost);
     }
 
