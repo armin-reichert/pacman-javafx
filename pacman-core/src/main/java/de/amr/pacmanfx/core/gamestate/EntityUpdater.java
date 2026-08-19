@@ -11,7 +11,9 @@ import de.amr.pacmanfx.core.entities.Bonus;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusMoveAndJumpComp;
+import de.amr.pacmanfx.core.entities.bonus.comp.BonusStateComp;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostStateSystem;
+import de.amr.pacmanfx.core.event.bonus.BonusExpiredEvent;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.rules.ActorSpeedRules;
 import de.amr.pacmanfx.core.model.rules.GameRules;
@@ -65,13 +67,34 @@ public class EntityUpdater {
 
     public void updateBonus(GameContext game, GameLevel level, Bonus bonus) {
         final GameSystems systems = game.variant().systems();
-        systems.bonusState().update(level, bonus, game.eventManager(), systems.motor());
-        switch (bonus.state().bonusState()) {
-            case INACTIVE, EATEN -> {}
+
+        final BonusStateComp state = bonus.state();
+
+        state.timer().doTick();
+
+        switch (state.bonusState()) {
+
+            case INACTIVE -> {}
+
             case EDIBLE -> {
                 if (bonus.hasComp(BonusMoveAndJumpComp.class)) {
                     systems.bonusMoveAndJump().wander(level, bonus, systems.motor());
                     systems.bonusMoveAndJump().jump(bonus);
+                }
+                boolean timedOut = state.timer().hasExpired();
+                boolean targetReached = bonus.optMoveAndJump().map(BonusMoveAndJumpComp::targetReached).orElse(true);
+                if (timedOut || targetReached) {
+                    state.setEdibleStateExpired(timedOut);
+                    systems.bonusState().setBonusInactive(bonus);
+                    game.eventManager().publishGameEvent(new BonusExpiredEvent(bonus));
+                }
+            }
+
+            case EATEN -> {
+                final boolean timedOut = state.timer().hasExpired();
+                if (timedOut) {
+                    systems.bonusState().setBonusInactive(bonus);
+                    game.eventManager().publishGameEvent(new BonusExpiredEvent(bonus));
                 }
             }
         }
