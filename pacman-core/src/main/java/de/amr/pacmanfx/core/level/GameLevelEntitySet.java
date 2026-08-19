@@ -10,20 +10,17 @@ import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
 public class GameLevelEntitySet {
 
-    private final QuerySet<GameEntity> entities = new QuerySet<>();
+    private final QuerySet<GameEntity> otherEntities = new QuerySet<>();
 
     private Pac thePac;
-    private final List<Ghost> ghosts = new ArrayList<>();
+    private final EnumMap<GhostPersonality, Ghost> theGhosts = new EnumMap<>(GhostPersonality.class);
     private Bonus theBonus;
     private House theHouse;
     private MessageView theMessageView;
@@ -32,28 +29,28 @@ public class GameLevelEntitySet {
         requireNonNull(entity);
         switch (entity) {
             case Ghost ghost -> {
-                if (ghosts.contains(ghost)) {
+                if (theGhosts.containsKey(ghost.personality())) {
                     throw new IllegalArgumentException("Ghost %s already added to entity set!".formatted(ghost.name()));
                 }
-                ghosts.add(ghost);
+                theGhosts.put(ghost.personality(), ghost);
             }
             case Pac   pac ->   thePac = pac;
             case Bonus bonus -> theBonus = bonus;
             case House house -> theHouse = house;
             case MessageView messageView -> theMessageView = messageView;
-            default -> entities.add(entity);
+            default -> otherEntities.add(entity);
         }
     }
 
     public void remove(GameEntity entity) {
         requireNonNull(entity);
         switch (entity) {
-            case Ghost _ -> ghosts.remove(entity);
+            case Ghost ghost -> theGhosts.remove(ghost.personality());
             case Pac   _ -> thePac = null;
             case Bonus _ -> theBonus = null;
             case House _ -> theHouse = null;
             case MessageView _ -> theMessageView = null;
-            default -> entities.remove(entity);
+            default -> otherEntities.remove(entity);
         }
     }
 
@@ -62,7 +59,7 @@ public class GameLevelEntitySet {
     }
 
     public List<Ghost> ghosts() {
-        return ghosts;
+        return Stream.of(GhostPersonality.values()).map(this::ghost).toList();
     }
 
     public Stream<Ghost> ghostsInState(GhostState state) {
@@ -76,7 +73,7 @@ public class GameLevelEntitySet {
      */
     public Ghost ghost(GhostPersonality personality) {
         requireNonNull(personality);
-        return ghosts.stream().filter(ghost -> ghost.personality() == personality).findAny().orElseThrow();
+        return theGhosts.get(personality);
     }
 
     public Stream<Ghost> ghostsInAnyOfStates(Collection<GhostState> states) {
