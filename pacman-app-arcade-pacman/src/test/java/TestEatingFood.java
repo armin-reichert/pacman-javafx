@@ -15,7 +15,7 @@ import de.amr.pacmanfx.core.entities.ghost.comp.ElroyComp;
 import de.amr.pacmanfx.core.event.GameEvent;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
-import de.amr.pacmanfx.core.gameplay.GameFlowController;
+import de.amr.pacmanfx.core.gamestate.GameFlowController;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GameCheats;

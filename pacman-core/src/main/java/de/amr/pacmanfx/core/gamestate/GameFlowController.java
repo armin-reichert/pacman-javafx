@@ -2,13 +2,12 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core.gameplay;
+package de.amr.pacmanfx.core.gamestate;
 
 import de.amr.basics.Named;
 import de.amr.basics.fsm.State;
 import de.amr.basics.fsm.StateMachine;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.model.test.CutScenesTestState;
 import de.amr.pacmanfx.core.model.test.LevelMediumTestState;
 import de.amr.pacmanfx.core.model.test.LevelShortTestState;
