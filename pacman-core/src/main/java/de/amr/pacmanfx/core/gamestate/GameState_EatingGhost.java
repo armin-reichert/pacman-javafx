@@ -6,7 +6,6 @@ package de.amr.pacmanfx.core.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
-import de.amr.pacmanfx.core.SpriteAnimController;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostStateSystem;
@@ -41,23 +40,24 @@ public final class GameState_EatingGhost extends GameState {
     @Override
     public void onUpdate(GameContext game) {
         final GameSystems systems = game.variant().systems();
-        final GhostStateSystem ghostStateSystem = systems.ghostState();
-        final SpriteAnimController spriteAnimSystem = systems.spriteAnimController();
         final GameLevel level = game.session().assertLevel();
 
         level.heartbeat().triggerPulse();
-
         systems.entityUpdater().updateEntities(game, level);
 
         if (timer().hasExpired()) {
-            level.entities().pac().show();
-
-            level.entities().ghostsInState(GhostState.EATEN).forEach(
-                ghost -> ghostStateSystem.changeGhostState(ghost, GhostState.RETURNING_HOME));
-
-            level.entities().ghosts().forEach(spriteAnimSystem::playSelected);
-
             game.variant().gameFlow().resumePreviousState(game);
         }
+    }
+
+    @Override
+    public void onExit(GameContext game) {
+        final GameSystems systems = game.variant().systems();
+        final GameLevel level = game.session().assertLevel();
+        final GhostStateSystem ghostStateSystem = systems.ghostState();
+
+        level.entities().pac().show();
+        level.entities().ghostsInState(GhostState.EATEN).forEach(
+            ghost -> ghostStateSystem.changeGhostState(ghost, GhostState.RETURNING_HOME));
     }
 }
