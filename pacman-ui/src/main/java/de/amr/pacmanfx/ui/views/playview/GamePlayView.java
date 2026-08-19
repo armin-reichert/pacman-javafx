@@ -249,16 +249,16 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         final GameSession session = game.session();
         final long tick = app.clock().currentTick();
 
-        // Render current 2D game scene
-        final GameScene gameScene = app.ui().gameScenes().optCurrentGameScene().orElse(null);
-        if (gameScene instanceof GameScene gameScene2D) {
-            if (sceneRenderer != null) {
-                sceneRenderer.draw(gameScene2D, tick);
+        app.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
+            if (gameScene.rendering2D() != null) {
+                if (sceneRenderer != null) {
+                    sceneRenderer.draw(gameScene, tick);
+                }
+                if (hudRenderer != null) {
+                    hudRenderer.draw(session, gameScene, tick);
+                }
             }
-            if (hudRenderer != null) {
-                hudRenderer.draw(session, gameScene2D, tick);
-            }
-        }
+        });
 
         // Render mini view content
         miniPlaySceneView.draw();

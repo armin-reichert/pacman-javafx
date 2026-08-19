@@ -20,6 +20,7 @@ import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounter3DViewSystem;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.common.ActionBindingsSupport;
+import de.amr.pacmanfx.ui.gamescene.d2.Rendering2DSupport;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.PlaySceneFadeInAnimation;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.DronePerspective;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
@@ -105,6 +106,11 @@ public class PlayScene3D extends GameScene
             }
         };
     }
+
+    public Rendering2DSupport rendering2D() {
+        return null; // Do not create on-demand
+    }
+
 
     @Override
     public RandomTextPicker textPicker() {
