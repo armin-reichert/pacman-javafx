@@ -4,20 +4,20 @@
 
 package de.amr.pacmanfx.core.level;
 
-import de.amr.basics.QuerySet;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
 public class GameLevelEntitySet {
-
-    private final QuerySet<GameEntity> otherEntities = new QuerySet<>();
 
     private Pac thePac;
     private final EnumMap<GhostPersonality, Ghost> theGhosts = new EnumMap<>(GhostPersonality.class);
@@ -34,11 +34,31 @@ public class GameLevelEntitySet {
                 }
                 theGhosts.put(ghost.personality(), ghost);
             }
-            case Pac   pac ->   thePac = pac;
-            case Bonus bonus -> theBonus = bonus;
-            case House house -> theHouse = house;
-            case MessageView messageView -> theMessageView = messageView;
-            default -> otherEntities.add(entity);
+            case Pac pac -> {
+                if (thePac != null) {
+                    throw new IllegalArgumentException("Pac %s already added to entity set!".formatted(pac.name()));
+                }
+                thePac = pac;
+            }
+            case Bonus bonus -> {
+                if (theBonus != null) {
+                    throw new IllegalArgumentException("Bonus %s already added to entity set!".formatted(bonus.name()));
+                }
+                theBonus = bonus;
+            }
+            case House house -> {
+                if (theHouse != null) {
+                    throw new IllegalArgumentException("House %s already added to entity set!".formatted(house.name()));
+                }
+                theHouse = house;
+            }
+            case MessageView messageView -> {
+                if (theMessageView != null) {
+                    throw new IllegalArgumentException("MessageView %s already added to entity set!".formatted(messageView.name()));
+                }
+                theMessageView = messageView;
+            }
+            default -> throw new IllegalArgumentException("Unknown entity type!");
         }
     }
 
@@ -50,7 +70,7 @@ public class GameLevelEntitySet {
             case Bonus _ -> theBonus = null;
             case House _ -> theHouse = null;
             case MessageView _ -> theMessageView = null;
-            default -> otherEntities.remove(entity);
+            default -> throw new IllegalArgumentException("Unknown entity type!");
         }
     }
 
@@ -59,12 +79,12 @@ public class GameLevelEntitySet {
     }
 
     public List<Ghost> ghosts() {
-        return Stream.of(GhostPersonality.values()).map(this::ghost).toList();
+        return List.copyOf(theGhosts.values());
     }
 
     public Stream<Ghost> ghostsInState(GhostState state) {
         requireNonNull(state);
-        return ghosts().stream().filter(ghost -> state.equals(ghost.ghostStateEnum()));
+        return theGhosts.values().stream().filter(ghost -> state.equals(ghost.ghostStateEnum()));
     }
 
     /**
@@ -73,12 +93,15 @@ public class GameLevelEntitySet {
      */
     public Ghost ghost(GhostPersonality personality) {
         requireNonNull(personality);
+        if (!theGhosts.containsKey(personality)) {
+            throw new IllegalArgumentException("Ghost %s not added to entity set!".formatted(personality.name()));
+        }
         return theGhosts.get(personality);
     }
 
     public Stream<Ghost> ghostsInAnyOfStates(Collection<GhostState> states) {
         requireNonNull(states);
-        return ghosts().stream().filter(ghost -> states.contains(ghost.ghostStateEnum()));
+        return theGhosts.values().stream().filter(ghost -> states.contains(ghost.ghostStateEnum()));
     }
 
     public Optional<Bonus> optBonus() {
