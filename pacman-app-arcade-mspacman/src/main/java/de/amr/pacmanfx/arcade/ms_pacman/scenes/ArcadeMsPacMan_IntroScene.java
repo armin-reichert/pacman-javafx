@@ -101,7 +101,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
         msPacMan.show();
 
         sys.worldNavigator().setMoveDir(msPacMan, Direction.LEFT);
-        sys.worldNavigator().setSpeed(msPacMan, ACTOR_SPEED);
+        sys.worldNavigator().setMoveDirSpeed(msPacMan, ACTOR_SPEED);
 
         sys.spriteAnimController().setAnimations(msPacMan, renderConfig.createPacAnimations(container));
         sys.spriteAnimController().select(msPacMan, CommonSpriteAnimationID.PAC_MUNCHING);
@@ -120,7 +120,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
 
             sys.worldNavigator().setMoveDir(ghost, Direction.LEFT);
             sys.worldNavigator().setWishDir(ghost, Direction.LEFT);
-            sys.worldNavigator().setSpeed(ghost, ACTOR_SPEED);
+            sys.worldNavigator().setMoveDirSpeed(ghost, ACTOR_SPEED);
 
             sys.spriteAnimController().select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);
             sys.spriteAnimController().playSelected(ghost);
@@ -206,7 +206,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
                         scene.numTicksBeforeRising--;
                     }
                     else if (ghost.pos().y() <= endPositionY) {
-                        sys.worldNavigator().setSpeed(ghost, 0);
+                        sys.worldNavigator().setMoveDirSpeed(ghost, 0);
                         sys.spriteAnimController().stopSelected(ghost);
                         sys.spriteAnimController().resetSelected(ghost);
                         return true;
@@ -229,7 +229,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
 
                 sys.motor().move(msPacMan);
                 if (msPacMan.pos().x() <= STOP_X_MS_PACMAN) {
-                    sys.worldNavigator().setSpeed(msPacMan, 0);
+                    sys.worldNavigator().setMoveDirSpeed(msPacMan, 0);
                     sys.spriteAnimController().resetSelected(msPacMan);
                     scene.sceneFlow.enterState(scene, READY_TO_PLAY);
                 }

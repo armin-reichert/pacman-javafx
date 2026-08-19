@@ -169,7 +169,7 @@ public class TengenMsPacMan_IntroScene extends GameScene {
                 scene.msPacMan.show();
 
                 sys.worldNavigator().setMoveDir(scene.msPacMan, Direction.LEFT);
-                sys.worldNavigator().setSpeed(scene.msPacMan, SPEED);
+                sys.worldNavigator().setMoveDirSpeed(scene.msPacMan, SPEED);
 
                 sys.spriteAnimController().setAnimations(scene.msPacMan, renderConfig.createPacAnimations(spriteAnimations));
                 sys.spriteAnimController().select(scene.msPacMan, CommonSpriteAnimationID.PAC_MUNCHING);
@@ -188,7 +188,7 @@ public class TengenMsPacMan_IntroScene extends GameScene {
 
                     sys.worldNavigator().setMoveDir(ghost, Direction.LEFT);
                     sys.worldNavigator().setWishDir(ghost, Direction.LEFT);
-                    sys.worldNavigator().setSpeed(ghost, SPEED);
+                    sys.worldNavigator().setMoveDirSpeed(ghost, SPEED);
 
                     sys.spriteAnimController().playSelected(ghost);
 
@@ -251,7 +251,7 @@ public class TengenMsPacMan_IntroScene extends GameScene {
                         scene.waitBeforeRising--;
                     }
                     else if (ghost.pos().y() <= endPositionY) {
-                        navigator.setSpeed(ghost, 0);
+                        navigator.setMoveDirSpeed(ghost, 0);
                         navigator.setMoveDir(ghost, Direction.RIGHT);
                         navigator.setWishDir(ghost, Direction.RIGHT);
                         return true;
@@ -282,7 +282,7 @@ public class TengenMsPacMan_IntroScene extends GameScene {
 
                 systems.motor().move(scene.msPacMan);
                 if (scene.msPacMan.pos().x() <= MS_PAC_MAN_STOP_X) {
-                    systems.worldNavigator().setSpeed(scene.msPacMan, 0);
+                    systems.worldNavigator().setMoveDirSpeed(scene.msPacMan, 0);
                     systems.spriteAnimController().resetSelected(scene.msPacMan);
                 }
                 if (timer.atSecond(8)) {

@@ -157,7 +157,7 @@ public class ArcadePacMan_IntroScene extends GameScene {
         pacMan.show();
 
         systems.worldNavigator().setMoveDir(pacMan, Direction.LEFT);
-        systems.worldNavigator().setSpeed(pacMan, CHASING_SPEED);
+        systems.worldNavigator().setMoveDirSpeed(pacMan, CHASING_SPEED);
 
         for (Ghost ghost : ghosts) {
             ghost.pos().set(pacMan.pos().x() + 16 * ghost.personality().ordinal() + 18, pacMan.pos().y());
@@ -165,7 +165,7 @@ public class ArcadePacMan_IntroScene extends GameScene {
 
             systems.worldNavigator().setMoveDir(ghost, Direction.LEFT);
             systems.worldNavigator().setWishDir(ghost, Direction.LEFT);
-            systems.worldNavigator().setSpeed(ghost, CHASING_SPEED);
+            systems.worldNavigator().setMoveDirSpeed(ghost, CHASING_SPEED);
 
             systems.ghostState().changeGhostState(ghost, GhostState.HUNTING_PAC);
         }
@@ -203,13 +203,13 @@ public class ArcadePacMan_IntroScene extends GameScene {
     private void turnCardsStopPacMan(GameContext game) {
         final GameSystems systems = game.variant().systems();
 
-        systems.worldNavigator().setSpeed(pacMan, 0);
+        systems.worldNavigator().setMoveDirSpeed(pacMan, 0);
         systems.spriteAnimController().stopSelected(pacMan);
 
         for (Ghost ghost : ghosts) {
             systems.worldNavigator().setMoveDir(ghost, Direction.RIGHT);
             systems.worldNavigator().setWishDir(ghost, Direction.RIGHT);
-            systems.worldNavigator().setSpeed(ghost, GHOST_FRIGHTENED_SPEED);
+            systems.worldNavigator().setMoveDirSpeed(ghost, GHOST_FRIGHTENED_SPEED);
 
             systems.ghostState().changeGhostState(ghost, FRIGHTENED);
             ghost.spriteAnimation().animation().select(CommonSpriteAnimationID.GHOST_FRIGHTENED);
@@ -218,7 +218,7 @@ public class ArcadePacMan_IntroScene extends GameScene {
     }
 
     private void turnCardsRestartPacMan(GameSystems sys) {
-        sys.worldNavigator().setSpeed(pacMan, CHASING_SPEED);
+        sys.worldNavigator().setMoveDirSpeed(pacMan, CHASING_SPEED);
         pacMan.spriteAnim().animation().playSelected();
     }
 
@@ -248,10 +248,10 @@ public class ArcadePacMan_IntroScene extends GameScene {
         systems.spriteAnimController().selectAndSetFrame(victim, CommonSpriteAnimationID.GHOST_POINTS, numGhostsEaten++);
 
         pacMan.hide();
-        systems.worldNavigator().setSpeed(pacMan, 0);
+        systems.worldNavigator().setMoveDirSpeed(pacMan, 0);
 
         for (Ghost ghost : ghosts) {
-            systems.worldNavigator().setSpeed(ghost, 0);
+            systems.worldNavigator().setMoveDirSpeed(ghost, 0);
             systems.spriteAnimController().stopSelected(ghost);
         }
 
@@ -260,14 +260,14 @@ public class ArcadePacMan_IntroScene extends GameScene {
 
     private void continueChasing(GameSystems sys) {
         pacMan.show();
-        sys.worldNavigator().setSpeed(pacMan, CHASING_SPEED);
+        sys.worldNavigator().setMoveDirSpeed(pacMan, CHASING_SPEED);
 
         for (Ghost ghost : ghosts) {
             if (ghost.ghostStateEnum() == EATEN) {
                 ghost.hide();
             } else {
                 ghost.show();
-                sys.worldNavigator().setSpeed(ghost, GHOST_FRIGHTENED_SPEED);
+                sys.worldNavigator().setMoveDirSpeed(ghost, GHOST_FRIGHTENED_SPEED);
                 ghost.spriteAnimation().animation().playSelected();
             }
         }
@@ -370,7 +370,7 @@ public class ArcadePacMan_IntroScene extends GameScene {
                 scene.numGhostsEaten = 0;
 
                 systems.worldNavigator().setMoveDir(scene.pacMan, Direction.RIGHT);
-                systems.worldNavigator().setSpeed(scene.pacMan, CHASING_SPEED);
+                systems.worldNavigator().setMoveDirSpeed(scene.pacMan, CHASING_SPEED);
             }
 
             @Override

@@ -43,12 +43,12 @@ public class GhostHouseAccessSystem {
                 worldNavigationSystem.setWishDir(ghost, UP);
             }
             position.setY(Math.clamp(position.y(), minY, maxY));
-            worldNavigationSystem.setSpeed(ghost, speed);
+            worldNavigationSystem.setMoveDirSpeed(ghost, speed);
             motor.move(ghost);
         }
         else {
             // locked outside of house: standing still
-            worldNavigationSystem.setSpeed(ghost, 0);
+            worldNavigationSystem.setMoveDirSpeed(ghost, 0);
         }
     }
 
@@ -89,7 +89,7 @@ public class GhostHouseAccessSystem {
                 worldNavigationSystem.setWishDir(ghost, centerX < houseCenterX ? RIGHT : LEFT);
             }
 
-            worldNavigationSystem.setSpeed(ghost, speed);
+            worldNavigationSystem.setMoveDirSpeed(ghost, speed);
             motor.move(ghost);
 
             return false;
@@ -130,7 +130,7 @@ public class GhostHouseAccessSystem {
             worldNavigationSystem.setMoveDir(ghost, RIGHT);
             worldNavigationSystem.setWishDir(ghost, RIGHT);
         }
-        worldNavigationSystem.setSpeed(ghost, speed);
+        worldNavigationSystem.setMoveDirSpeed(ghost, speed);
 
         motor.move(ghost);
 
@@ -161,7 +161,7 @@ public class GhostHouseAccessSystem {
         //ghostStateSystem.changeState(ghost, GhostState.ENTERING_HOUSE);
         //TODO use system method
         ghost.worldNavigation().setTargetTile(house.floorplan().leftDoorTile());
-        worldNavigationSystem.setSpeed(ghost, speed);
+        worldNavigationSystem.setMoveDirSpeed(ghost, speed);
         worldNavigationSystem.navigateTowardsTarget(ghost, level, movementPolicy);
         worldNavigationSystem.tryMovingOrTeleporting(motor, ghost, level, movementPolicy);
 

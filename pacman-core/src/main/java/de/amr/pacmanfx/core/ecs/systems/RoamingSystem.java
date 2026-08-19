@@ -47,7 +47,7 @@ public class RoamingSystem {
             navigator.setWishDir(ghost, dir);
             Logger.debug("Ghost {} takes random wish direction {}", ghost.name(), dir);
         }
-        navigator.setSpeed(ghost, speed);
+        navigator.setMoveDirSpeed(ghost, speed);
         navigator.tryMovingOrTeleporting(motor, ghost, level, worldMovementPolicy);
     }
 

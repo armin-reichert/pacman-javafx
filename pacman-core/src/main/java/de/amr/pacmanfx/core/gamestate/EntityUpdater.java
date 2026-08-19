@@ -35,7 +35,7 @@ public class EntityUpdater {
             ? speedRules.pacSpeedWhenHasPower(game, level)
             : speedRules.pacSpeed(game, level);
 
-        systems.worldNavigator().setSpeed(pac, speed);
+        systems.worldNavigator().setMoveDirSpeed(pac, speed);
         systems.worldNavigator().tryMovingOrTeleporting(
             systems.motor(), pac, level, systems.pacWorldMovementPolicy());
 

@@ -33,7 +33,7 @@ public class BashfulHuntingStrategy implements GhostHuntingStrategy {
             ? computeChasingTargetTile(level)
             : computeScatterTile(level.worldMap(), ghost);
 
-        navigator.setSpeed(ghost, speed);
+        navigator.setMoveDirSpeed(ghost, speed);
         navigator.tryMovingTowardsTargetTile(motor, ghost, level, targetTile, worldMovementPolicy);
     }
 

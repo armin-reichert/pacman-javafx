@@ -118,48 +118,48 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene {
             pacMan.pos().set(TS * (-2), UPPER_Y);
             pacMan.show();
             sys.worldNavigator().setMoveDir(pacMan, Direction.RIGHT);
-            sys.worldNavigator().setSpeed(pacMan, 2.0f);
+            sys.worldNavigator().setMoveDirSpeed(pacMan, 2.0f);
 
             msPacMan.pos().set(TS * (-8), UPPER_Y);
             msPacMan.show();
             sys.worldNavigator().setMoveDir(msPacMan, Direction.RIGHT);
-            sys.worldNavigator().setSpeed(msPacMan, 2.0f);
+            sys.worldNavigator().setMoveDirSpeed(msPacMan, 2.0f);
         }
         else if (sceneTimer.atSecond(9)) {
             pacMan.pos().set(TS * 36, LOWER_Y);
             sys.worldNavigator().setMoveDir(pacMan, Direction.LEFT);
-            sys.worldNavigator().setSpeed(pacMan, 2.0f);
+            sys.worldNavigator().setMoveDirSpeed(pacMan, 2.0f);
 
             msPacMan.pos().set(TS * 30, LOWER_Y);
             sys.worldNavigator().setMoveDir(msPacMan, Direction.LEFT);
-            sys.worldNavigator().setSpeed(msPacMan, 2.0f);
+            sys.worldNavigator().setMoveDirSpeed(msPacMan, 2.0f);
         }
         else if (sceneTimer.atSecond(13.5)) {
             pacMan.pos().set(TS * (-2), MIDDLE_Y);
             sys.worldNavigator().setMoveDir(pacMan, Direction.RIGHT);
-            sys.worldNavigator().setSpeed(pacMan, 2.0f);
+            sys.worldNavigator().setMoveDirSpeed(pacMan, 2.0f);
 
             msPacMan.pos().set(TS * (-8), MIDDLE_Y);
             sys.worldNavigator().setMoveDir(msPacMan, Direction.RIGHT);
-            sys.worldNavigator().setSpeed(msPacMan, 2.0f);
+            sys.worldNavigator().setMoveDirSpeed(msPacMan, 2.0f);
         }
         else if (sceneTimer.atSecond(17.5)) {
             pacMan.pos().set(TS * 42, UPPER_Y);
             sys.worldNavigator().setMoveDir(pacMan, Direction.LEFT);
-            sys.worldNavigator().setSpeed(pacMan, 4.0f);
+            sys.worldNavigator().setMoveDirSpeed(pacMan, 4.0f);
 
             msPacMan.pos().set(TS * 30, UPPER_Y);
             sys.worldNavigator().setMoveDir(msPacMan, Direction.LEFT);
-            sys.worldNavigator().setSpeed(msPacMan, 4.0f);
+            sys.worldNavigator().setMoveDirSpeed(msPacMan, 4.0f);
         }
         else if (sceneTimer.atSecond(18.5)) {
             pacMan.pos().set(TS * (-2), LOWER_Y);
             sys.worldNavigator().setMoveDir(pacMan, Direction.RIGHT);
-            sys.worldNavigator().setSpeed(pacMan, 4.0f);
+            sys.worldNavigator().setMoveDirSpeed(pacMan, 4.0f);
 
             msPacMan.pos().set(TS * (-14), LOWER_Y);
             sys.worldNavigator().setMoveDir(msPacMan, Direction.RIGHT);
-            sys.worldNavigator().setSpeed(msPacMan, 4.0f);
+            sys.worldNavigator().setMoveDirSpeed(msPacMan, 4.0f);
         }
         else if (sceneTimer.atSecond(23)) {
             game().state().triggerTimeout();

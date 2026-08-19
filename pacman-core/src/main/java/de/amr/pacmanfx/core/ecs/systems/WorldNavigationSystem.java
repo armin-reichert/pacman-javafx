@@ -106,13 +106,16 @@ public class WorldNavigationSystem {
         requireNonNull(actor);
 
         final PositionComp position = actor.pos();
-        final WorldNavigationComp navigation = actor.reqComp(WorldNavigationComp.class);
+        final WorldNavigationComp worldNavigation = actor.reqComp(WorldNavigationComp.class);
 
-        final Vector2i prevTile = actor.pos().tile();
+        final Vector2i currentTile = actor.pos().tile();
+
         position.setX(tx * WorldMap.TS + ox);
         position.setY(ty * WorldMap.TS + oy);
 
-        navigation.setNewTileEntered(!actor.pos().tile().equals(prevTile));
+        final Vector2i newTile = actor.pos().tile();
+
+        worldNavigation.setNewTileEntered(!newTile.equals(currentTile));
     }
 
     /**
@@ -128,22 +131,26 @@ public class WorldNavigationSystem {
     /**
      * Places this actor centered over the given tile.
      *
+     * @param actor an actor
      * @param tile tile where actor is placed
      */
     public void placeAtTile(GameEntity actor, Vector2i tile) {
+        requireNonNull(tile);
         placeAtTile(actor, tile.x(), tile.y());
     }
 
-    public void setSpeed(GameEntity actor, float speed) {
+    /**
+     * Changes the velocity of the motor towards the current move direction of the given actor.
+     *
+     * @param actor an actor
+     * @param speed the speed value
+     */
+    public void setMoveDirSpeed(GameEntity actor, float speed) {
         requireNonNull(actor);
 
-        final WorldNavigationComp navigation = actor.reqComp(WorldNavigationComp.class);
-
-        if (speed < 0) {
-            throw new IllegalArgumentException("Speed must not be negative but is: " + speed);
-        }
-        final Vector2i moveDirVec = navigation.moveDir().vector();
-        actor.optMovement().ifPresent(movement -> movement.setVelocity(moveDirVec.x() * speed, moveDirVec.y() * speed));
+        final MovementComp motor = actor.reqComp(MovementComp.class);
+        final Direction moveDir = actor.reqComp(WorldNavigationComp.class).moveDir();
+        motor.setVelocity(moveDir.vector().scaled(speed));
     }
 
     public void navigateTowardsTarget(GameEntity actor, GameLevel level, WorldMovementPolicy  movementPolicy) {

@@ -160,7 +160,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
             pacMan.show();
 
             navigator.setMoveDir(pacMan, Direction.RIGHT);
-            navigator.setSpeed(pacMan, 1f);
+            navigator.setMoveDirSpeed(pacMan, 1f);
 
             animSystem.select(pacMan, TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
             animSystem.playSelected(pacMan);
@@ -169,17 +169,17 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
             msPacMan.show();
 
             navigator.setMoveDir(msPacMan, Direction.LEFT);
-            navigator.setSpeed(msPacMan, 1f);
+            navigator.setMoveDirSpeed(msPacMan, 1f);
 
             animSystem.select(msPacMan, CommonSpriteAnimationID.PAC_MUNCHING);
             animSystem.playSelected(msPacMan);
         }
         else if (tick == 230) {
-            navigator.setSpeed(pacMan, 0);
+            navigator.setMoveDirSpeed(pacMan, 0);
             animSystem.stopSelected(pacMan);
             animSystem.resetSelected(pacMan);
 
-            navigator.setSpeed(msPacMan, 0);
+            navigator.setMoveDirSpeed(msPacMan, 0);
             animSystem.stopSelected(msPacMan);
             animSystem.resetSelected(msPacMan);
         }
@@ -206,9 +206,9 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
             animSystem.playSelected(msPacMan);
         }
         else if (tick == 650) {
-            navigator.setSpeed(pacMan, 1.5f); // TODO not sure
+            navigator.setMoveDirSpeed(pacMan, 1.5f); // TODO not sure
             navigator.setMoveDir(pacMan, Direction.UP);
-            navigator.setSpeed(msPacMan, 1.5f); // TODO not sure
+            navigator.setMoveDirSpeed(msPacMan, 1.5f); // TODO not sure
             navigator.setMoveDir(msPacMan, Direction.UP);
         }
         else if (tick == 720) {
@@ -237,7 +237,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
         junior.show();
 
         navigator.setMoveDir(junior, Direction.UP);
-        navigator.setSpeed(junior, 2);
+        navigator.setMoveDirSpeed(junior, 2);
 
         animSystem.setAnimations(junior, renderConfig.createPacAnimations(spriteAnimations));
         animSystem.select(junior, TengenMsPacMan_AnimationID.ANIM_JUNIOR);

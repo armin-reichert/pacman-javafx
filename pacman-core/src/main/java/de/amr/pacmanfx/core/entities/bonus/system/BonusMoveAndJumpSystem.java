@@ -35,7 +35,7 @@ public class BonusMoveAndJumpSystem {
     public void setBonusInactive(Bonus bonus) {
         requireNonNull(bonus);
         final BonusMoveAndJumpComp moveAndJump = bonus.reqComp(BonusMoveAndJumpComp.class);
-        navigationSystem.setSpeed(bonus, 0);
+        navigationSystem.setMoveDirSpeed(bonus, 0);
         moveAndJump.jumpPulse().reset();
     }
 
@@ -45,7 +45,7 @@ public class BonusMoveAndJumpSystem {
         final BonusMoveAndJumpComp moveAndJump = bonus.reqComp(BonusMoveAndJumpComp.class);
         setRoute(bonus, routeInfo);
         navigationSystem.clearTargetTile(bonus);
-        navigationSystem.setSpeed(bonus, speed);
+        navigationSystem.setMoveDirSpeed(bonus, speed);
         moveAndJump.jumpPulse().restart();
     }
 

@@ -84,9 +84,7 @@ public class BonusStateSystem {
         bonus.show();
     }
 
-    public void showEatenForSeconds(
-        Bonus bonus,
-        float seconds,
+    public void showEatenForSeconds(Bonus bonus, float seconds,
         WorldNavigationSystem navigationSystem //TODO remove
     ) {
         requireNonNull(bonus);
@@ -96,9 +94,5 @@ public class BonusStateSystem {
         final BonusStateComp state = bonus.state();
         state.setBonusState(BonusState.EATEN);
         state.timer().restartSeconds(seconds);
-
-        if (bonus.optMovement().isPresent()) {
-            navigationSystem.setSpeed(bonus, 0);
-        }
     }
 }

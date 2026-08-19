@@ -102,7 +102,7 @@ class XXL_ChaseAnimation {
 
         sys.worldNavigator().setMoveDir(pac, Direction.LEFT);
         sys.worldNavigator().setWishDir(pac, Direction.LEFT);
-        sys.worldNavigator().setSpeed(pac, PAC_FLEEING_SPEED);
+        sys.worldNavigator().setMoveDirSpeed(pac, PAC_FLEEING_SPEED);
 
         sys.spriteAnimController().setAnimations(pac, renderConfig.createPacAnimations(container));
         sys.spriteAnimController().select(pac, CommonSpriteAnimationID.PAC_MUNCHING);
@@ -120,7 +120,7 @@ class XXL_ChaseAnimation {
 
             sys.worldNavigator().setMoveDir(ghost, Direction.LEFT);
             sys.worldNavigator().setWishDir(ghost, Direction.LEFT);
-            sys.worldNavigator().setSpeed(ghost, GHOST_CHASE_SPEED);
+            sys.worldNavigator().setMoveDirSpeed(ghost, GHOST_CHASE_SPEED);
 
             sys.spriteAnimController().select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);
             sys.spriteAnimController().playSelected(ghost);
@@ -159,7 +159,7 @@ class XXL_ChaseAnimation {
 
                 sys.worldNavigator().setMoveDir(ghost, Direction.LEFT);
                 sys.worldNavigator().setWishDir(ghost, Direction.LEFT);
-                sys.worldNavigator().setSpeed(ghost, 1.05f);
+                sys.worldNavigator().setMoveDirSpeed(ghost, 1.05f);
 
                 sys.spriteAnimController().select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);
                 sys.spriteAnimController().playSelected(ghost);
@@ -207,7 +207,7 @@ class XXL_ChaseAnimation {
 
                 sys.worldNavigator().setMoveDir(ghost, Direction.RIGHT);
                 sys.worldNavigator().setWishDir(ghost, Direction.RIGHT);
-                sys.worldNavigator().setSpeed(ghost, 0.58f);
+                sys.worldNavigator().setMoveDirSpeed(ghost, 0.58f);
 
                 sys.spriteAnimController().select(ghost, CommonSpriteAnimationID.GHOST_FRIGHTENED);
                 sys.spriteAnimController().playSelected(ghost);

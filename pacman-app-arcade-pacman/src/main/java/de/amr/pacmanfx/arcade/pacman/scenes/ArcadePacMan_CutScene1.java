@@ -89,7 +89,7 @@ public class ArcadePacMan_CutScene1 extends GameScene {
         sys.worldNavigator().placeAtTile(blinky, -2, 20, 4, 0);
         sys.worldNavigator().setMoveDir(blinky, Direction.RIGHT);
         sys.worldNavigator().setWishDir(blinky, Direction.RIGHT);
-        sys.worldNavigator().setSpeed(blinky, 0.75f);
+        sys.worldNavigator().setMoveDirSpeed(blinky, 0.75f);
 
         sys.spriteAnimController().select(blinky, CommonSpriteAnimationID.GHOST_FRIGHTENED);
         sys.spriteAnimController().playSelected(blinky);
@@ -100,7 +100,7 @@ public class ArcadePacMan_CutScene1 extends GameScene {
 
         sys.worldNavigator().placeAtTile(pacMan, 29, 20);
         sys.worldNavigator().setMoveDir(pacMan, Direction.LEFT);
-        sys.worldNavigator().setSpeed(pacMan, 1.25f);
+        sys.worldNavigator().setMoveDirSpeed(pacMan, 1.25f);
 
         sys.spriteAnimController().select(pacMan, CommonSpriteAnimationID.PAC_MUNCHING);
         sys.spriteAnimController().playSelected(pacMan);
@@ -110,7 +110,7 @@ public class ArcadePacMan_CutScene1 extends GameScene {
         sys.worldNavigator().placeAtTile(blinky, 32, 20);
         sys.worldNavigator().setMoveDir(blinky, Direction.LEFT);
         sys.worldNavigator().setWishDir(blinky, Direction.LEFT);
-        sys.worldNavigator().setSpeed(blinky, 1.3f);
+        sys.worldNavigator().setMoveDirSpeed(blinky, 1.3f);
 
         sys.spriteAnimController().select(blinky, CommonSpriteAnimationID.GHOST_NORMAL);
         sys.spriteAnimController().playSelected(blinky);

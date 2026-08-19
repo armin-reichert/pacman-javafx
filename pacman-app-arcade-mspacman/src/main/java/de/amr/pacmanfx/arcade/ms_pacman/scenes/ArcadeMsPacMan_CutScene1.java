@@ -127,7 +127,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene {
         pacMan.show();
 
         sys.worldNavigator().setMoveDir(pacMan, Direction.RIGHT);
-        sys.worldNavigator().setSpeed(pacMan, SPEED_PAC_CHASING);
+        sys.worldNavigator().setMoveDirSpeed(pacMan, SPEED_PAC_CHASING);
 
         sys.spriteAnimController().select(pacMan, CommonSpriteAnimationID.MR_PAC_MAN_MUNCHING);
         sys.spriteAnimController().playSelected(pacMan);
@@ -135,7 +135,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene {
         inky.pos().set(pacMan.pos().x() - 6 * WorldMap.TS, pacMan.pos().y());
         inky.show();
 
-        sys.worldNavigator().setSpeed(inky, SPEED_GHOST_CHASING);
+        sys.worldNavigator().setMoveDirSpeed(inky, SPEED_GHOST_CHASING);
         sys.worldNavigator().setMoveDir(inky, Direction.RIGHT);
         sys.worldNavigator().setWishDir(inky, Direction.RIGHT);
 
@@ -146,7 +146,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene {
         msPacMan.show();
 
         sys.worldNavigator().setMoveDir(msPacMan, Direction.LEFT);
-        sys.worldNavigator().setSpeed(msPacMan, SPEED_PAC_CHASING);
+        sys.worldNavigator().setMoveDirSpeed(msPacMan, SPEED_PAC_CHASING);
 
         sys.spriteAnimController().select(msPacMan, CommonSpriteAnimationID.PAC_MUNCHING);
         sys.spriteAnimController().playSelected(msPacMan);
@@ -156,7 +156,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene {
 
         sys.worldNavigator().setMoveDir(pinky, Direction.LEFT);
         sys.worldNavigator().setWishDir(pinky, Direction.LEFT);
-        sys.worldNavigator().setSpeed(pinky, SPEED_GHOST_CHASING);
+        sys.worldNavigator().setMoveDirSpeed(pinky, SPEED_GHOST_CHASING);
 
         sys.spriteAnimController().select(pinky, CommonSpriteAnimationID.GHOST_NORMAL);
         sys.spriteAnimController().playSelected(pinky);
@@ -200,23 +200,23 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene {
         // Pac-Man and Ms. Pac-Man meet?
         else if (pacMan.worldNavigation().moveDir() == Direction.LEFT && pacMan.pos().x() - msPacMan.pos().x() < WorldMap.TS * 2) {
             sys.worldNavigator().setMoveDir(pacMan, Direction.UP);
-            sys.worldNavigator().setSpeed(pacMan, SPEED_RISING);
+            sys.worldNavigator().setMoveDirSpeed(pacMan, SPEED_RISING);
             sys.worldNavigator().setMoveDir(msPacMan, Direction.UP);
-            sys.worldNavigator().setSpeed(msPacMan, SPEED_RISING);
+            sys.worldNavigator().setMoveDirSpeed(msPacMan, SPEED_RISING);
         }
 
         // Inky and Pinky collide?
         else if (inky.worldNavigation().moveDir() == Direction.LEFT && inky.pos().x() - pinky.pos().x() < WorldMap.TS * 2) {
             sys.worldNavigator().setMoveDir(inky, Direction.RIGHT);
             sys.worldNavigator().setWishDir(inky, Direction.RIGHT);
-            sys.worldNavigator().setSpeed(inky, SPEED_GHOST_AFTER_COLLISION);
+            sys.worldNavigator().setMoveDirSpeed(inky, SPEED_GHOST_AFTER_COLLISION);
 
             sys.motor().setVelocityY(inky, inky.movement().velocityY() - 2.0f);
             sys.motor().setAcceleration(inky, 0, 0.4f);
 
             sys.worldNavigator().setMoveDir(pinky, Direction.LEFT);
             sys.worldNavigator().setWishDir(pinky, Direction.LEFT);
-            sys.worldNavigator().setSpeed(pinky, SPEED_GHOST_AFTER_COLLISION);
+            sys.worldNavigator().setMoveDirSpeed(pinky, SPEED_GHOST_AFTER_COLLISION);
 
             sys.motor().setVelocityY(pinky, pinky.movement().velocityY() - 2.0f);
             sys.motor().setAcceleration(pinky, 0, 0.4f);
@@ -238,13 +238,13 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene {
     }
 
     private void enterStateInHeaven(GameSystems sys) {
-        sys.worldNavigator().setSpeed(pacMan, 0);
+        sys.worldNavigator().setMoveDirSpeed(pacMan, 0);
         sys.worldNavigator().setMoveDir(pacMan, Direction.LEFT);
 
         sys.spriteAnimController().stopSelected(pacMan);
         sys.spriteAnimController().resetSelected(pacMan);
 
-        sys.worldNavigator().setSpeed(msPacMan, 0);
+        sys.worldNavigator().setMoveDirSpeed(msPacMan, 0);
         sys.worldNavigator().setMoveDir(msPacMan, Direction.RIGHT);
 
         sys.spriteAnimController().stopSelected(msPacMan);

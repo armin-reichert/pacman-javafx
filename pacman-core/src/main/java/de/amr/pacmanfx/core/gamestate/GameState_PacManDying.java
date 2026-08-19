@@ -60,7 +60,7 @@ public final class GameState_PacManDying extends GameState {
             }
         });
 
-        systems.worldNavigator().setSpeed(pac, 0);
+        systems.worldNavigator().setMoveDirSpeed(pac, 0);
         systems.pacPower().reset(pac);
         systems.pacState().setState(pac, PacState.DEAD);
         systems.pacAnimation().stop(pac);

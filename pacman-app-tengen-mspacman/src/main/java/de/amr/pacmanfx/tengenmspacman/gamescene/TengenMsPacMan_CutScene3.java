@@ -179,7 +179,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene {
             pacMan.pos().set(WorldMap.TS * 3, GROUND_Y - 4);
 
             navigator.setMoveDir(pacMan, Direction.RIGHT);
-            navigator.setSpeed(pacMan, 0);
+            navigator.setMoveDirSpeed(pacMan, 0);
 
             animSystem.select(pacMan, TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
             animSystem.stopSelected(pacMan);
@@ -188,7 +188,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene {
             msPacMan.show();
 
             navigator.setMoveDir(msPacMan, Direction.RIGHT);
-            navigator.setSpeed(msPacMan, 0);
+            navigator.setMoveDirSpeed(msPacMan, 0);
 
             animSystem.select(msPacMan, CommonSpriteAnimationID.PAC_MUNCHING);
             animSystem.stopSelected(msPacMan);

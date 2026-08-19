@@ -377,6 +377,7 @@ public abstract class CommonGamePlay implements GamePlay {
             game.variant().rules().eatenBonusDisplaySeconds(),
            systems.worldNavigator()
         );
+        systems.worldNavigator().setMoveDirSpeed(bonus, 0);
 
         scorePoints(game, bonus.data().points(), level.number());
         Logger.info("Scored {} points for eating bonus {}", bonus.data().points(), bonus);
@@ -428,12 +429,12 @@ public abstract class CommonGamePlay implements GamePlay {
         final Pac pac = level.entities().pac();
         pac.power().reset();
 
-        systems.worldNavigator().setSpeed(pac, 0);
+        systems.worldNavigator().setMoveDirSpeed(pac, 0);
         systems.spriteAnimController().stopSelected(pac);
         systems.spriteAnimController().select(pac, CommonSpriteAnimationID.PAC_FULL);
 
         level.entities().ghosts().forEach(ghost -> {
-            systems.worldNavigator().setSpeed(ghost, 0);
+            systems.worldNavigator().setMoveDirSpeed(ghost, 0);
             //TODO check in emulator if ghost animation is reset to normal
             systems.spriteAnimController().stopSelected(ghost);
             systems.spriteAnimController().select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);

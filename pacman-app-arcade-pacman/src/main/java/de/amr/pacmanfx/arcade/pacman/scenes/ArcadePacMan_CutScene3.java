@@ -89,7 +89,7 @@ public class ArcadePacMan_CutScene3 extends GameScene {
 
         sys.worldNavigator().placeAtTile(pacMan, 29, 20);
         sys.worldNavigator().setMoveDir(pacMan, Direction.LEFT);
-        sys.worldNavigator().setSpeed(pacMan, 1.25f);
+        sys.worldNavigator().setMoveDirSpeed(pacMan, 1.25f);
 
         sys.spriteAnimController().select(pacMan, CommonSpriteAnimationID.PAC_MUNCHING);
         sys.spriteAnimController().playSelected(pacMan);
@@ -99,7 +99,7 @@ public class ArcadePacMan_CutScene3 extends GameScene {
         sys.worldNavigator().placeAtTile(blinky, 35, 20);
         sys.worldNavigator().setMoveDir(blinky, Direction.LEFT);
         sys.worldNavigator().setWishDir(blinky, Direction.LEFT);
-        sys.worldNavigator().setSpeed(blinky, 1.25f);
+        sys.worldNavigator().setMoveDirSpeed(blinky, 1.25f);
 
         sys.spriteAnimController().select(blinky, CommonSpriteAnimationID.BLINKY_PATCHED);
         sys.spriteAnimController().playSelected(blinky);
