@@ -10,12 +10,12 @@ import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostStateComp;
 
-public class GhostSpriteAnimationSystem {
+public class GhostAnimationSelectionSystem {
 
-    public GhostSpriteAnimationSystem() {}
+    public GhostAnimationSelectionSystem() {}
 
     public void update(Ghost ghost, Pac pac, SpriteAnimController spriteAnimController) {
-        final CommonSpriteAnimationID animationID = switch (ghost.ghostStateEnum()) {
+        final CommonSpriteAnimationID id = switch (ghost.ghostStateEnum()) {
             case LOCKED, LEAVING_HOUSE -> threatenedOrNormalAnimation(ghost, pac);
             case HUNTING_PAC -> CommonSpriteAnimationID.GHOST_NORMAL;
             case FRIGHTENED -> frightenedOrFlashingAnimation(pac);
@@ -23,11 +23,11 @@ public class GhostSpriteAnimationSystem {
             case EATEN -> CommonSpriteAnimationID.GHOST_POINTS;
         };
 
-        ghost.ghostSpriteAnimation().setAnimationID(animationID);
-        spriteAnimController.select(ghost, animationID);
-        if (animationID == CommonSpriteAnimationID.GHOST_POINTS) {
+        ghost.animationSelection().setAnimationID(id);
+        spriteAnimController.select(ghost, id);
+        if (id == CommonSpriteAnimationID.GHOST_POINTS) {
             spriteAnimController.selectAndSetFrame(ghost,
-                CommonSpriteAnimationID.GHOST_POINTS, ghost.ghostSpriteAnimation().pointsIndex());
+                CommonSpriteAnimationID.GHOST_POINTS, ghost.animationSelection().frame());
         }
         spriteAnimController.playSelected(ghost);
     }

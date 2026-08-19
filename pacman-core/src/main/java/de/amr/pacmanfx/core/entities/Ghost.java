@@ -8,7 +8,7 @@ import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.MovementComp;
 import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
 import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
-import de.amr.pacmanfx.core.entities.ghost.comp.GhostSpriteAnimationComp;
+import de.amr.pacmanfx.core.entities.ghost.comp.GhostAnimationSelectionComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostStateComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostWorldInfoComp;
@@ -31,7 +31,7 @@ public final class Ghost extends GameEntity {
         setComp(WorldNavigationComp.class, new WorldNavigationComp());
         setComp(GhostWorldInfoComp.class, new GhostWorldInfoComp());
         setComp(GhostStateComp.class, new GhostStateComp());
-        setComp(GhostSpriteAnimationComp.class, new GhostSpriteAnimationComp());
+        setComp(GhostAnimationSelectionComp.class, new GhostAnimationSelectionComp());
         setComp(SpriteAnimationComp.class, new SpriteAnimationComp());
 
         //TODO where does this belong?
@@ -64,8 +64,8 @@ public final class Ghost extends GameEntity {
         return reqComp(GhostStateComp.class);
     }
 
-    public GhostSpriteAnimationComp ghostSpriteAnimation() {
-        return reqComp(GhostSpriteAnimationComp.class);
+    public GhostAnimationSelectionComp animationSelection() {
+        return reqComp(GhostAnimationSelectionComp.class);
     }
 
     public SpriteAnimationComp spriteAnimation() {

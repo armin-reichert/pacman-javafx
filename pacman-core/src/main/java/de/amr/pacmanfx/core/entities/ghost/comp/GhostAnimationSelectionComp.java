@@ -3,19 +3,24 @@ package de.amr.pacmanfx.core.entities.ghost.comp;
 import de.amr.pacmanfx.core.ecs.EntityComponent;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 
-public class GhostSpriteAnimationComp implements EntityComponent {
-
-    private int pointsIndex;
+public class GhostAnimationSelectionComp implements EntityComponent {
 
     private CommonSpriteAnimationID animationID;
 
-    public GhostSpriteAnimationComp() {
+    private int frame;
+
+    public GhostAnimationSelectionComp() {
         reset();
     }
 
     @Override
     public void reset() {
-        pointsIndex = -1;
+        frame = -1;
+    }
+
+    public void select(CommonSpriteAnimationID id, int frame) {
+        this.animationID = id;
+        this.frame = frame;
     }
 
     public CommonSpriteAnimationID animationID() {
@@ -26,11 +31,7 @@ public class GhostSpriteAnimationComp implements EntityComponent {
         this.animationID = animationID;
     }
 
-    public int pointsIndex() {
-        return pointsIndex;
-    }
-
-    public void setPointsIndex(int pointsIndex) {
-        this.pointsIndex = pointsIndex;
+    public int frame() {
+        return frame;
     }
 }
