@@ -20,7 +20,6 @@ import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
-import de.amr.pacmanfx.core.gameplay.ArcadeHouseGateKeeper;
 import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelEntitySet;
@@ -94,9 +93,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         hudState.creditProperty().bind(game.coinMechanism().numCoinsProperty());
         hudState.hide();
 
-        session.levelCounter().data().setCapacity(7);
-
-        configureGateKeeper(session.gateKeeper());
+        session.gateKeeper().setGhostReleasedCallback(this::onGhostReleasedFromHouse);
     }
 
     // Level building and level start
@@ -277,12 +274,11 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         eventManager.publishGameEvent(new BonusActivatedEvent(bonus));
     }
 
-    protected void configureGateKeeper(ArcadeHouseGateKeeper gateKeeper) {
-        gateKeeper.setGhostReleasedCallback((level, prisoner) -> {
-            final Ghost redGhost = level.entities().ghost(GhostPersonality.RED_GHOST_SHADOW);
-            if (!redGhost.hasComp(ElroyComp.class)) return;
+    private void onGhostReleasedFromHouse(GameLevel level, Ghost prisoner) {
+        final Ghost redGhost = level.entities().ghost(GhostPersonality.RED_GHOST_SHADOW);
+        // Disabled elroy mode of Blinky is re-enabled when Clyde is released from house
+        redGhost.optComp(ElroyComp.class).ifPresent(elroy -> {
             if (prisoner.personality() == GhostPersonality.ORANGE_GHOST_POKEY) {
-                final ElroyComp elroy = redGhost.reqComp(ElroyComp.class);
                 if (elroy.boost() != ElroyComp.Boost.NONE && !elroy.enabled()) {
                     elroy.setEnabled(true);
                     Logger.debug("Re-enabled {}'s Cruise Elroy mode because {} is released:", redGhost.name(), prisoner.name());

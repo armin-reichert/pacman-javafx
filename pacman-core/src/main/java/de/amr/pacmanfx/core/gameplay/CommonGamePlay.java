@@ -68,13 +68,14 @@ public abstract class CommonGamePlay implements GamePlay {
         //TODO we use the Arcade house gate keeper logic for all game variants which is not 100% correct
         final ArcadeHouseGateKeeper gateKeeper = new ArcadeHouseGateKeeper();
         gateKeeper.reset();
-        session.setGateKeeper(gateKeeper);
 
+        session.setGateKeeper(gateKeeper);
         session.setCutScenesEnabled(true);
         session.setLevel(null);
         session.setPlaying(false);
 
         initScores(session);
+
         configureLevelCounter(game, session.levelCounter());
 
         game.variant().gameFlow().restartState(game, CommonGameStateID.BOOT);

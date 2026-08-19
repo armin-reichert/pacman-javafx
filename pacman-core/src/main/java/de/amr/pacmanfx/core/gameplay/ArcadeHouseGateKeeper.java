@@ -125,10 +125,8 @@ public final class ArcadeHouseGateKeeper {
     private int          globalCounterValue;
     private boolean      globalCounterEnabled;
 
-    public ArcadeHouseGateKeeper() {}
-
-    public void setGhostReleasedCallback(BiConsumer<GameLevel, Ghost> callback) {
-        this.ghostReleasedCallback = requireNonNull(callback);
+    public ArcadeHouseGateKeeper() {
+        reset();
     }
 
     public void reset() {
@@ -137,6 +135,10 @@ public final class ArcadeHouseGateKeeper {
         Arrays.fill(ghostCounters, 0);
         globalCounterValue = 0;
         globalCounterEnabled = false;
+    }
+
+    public void setGhostReleasedCallback(BiConsumer<GameLevel, Ghost> callback) {
+        ghostReleasedCallback = requireNonNull(callback);
     }
 
     public void setLevelNumber(int levelNumber) {
