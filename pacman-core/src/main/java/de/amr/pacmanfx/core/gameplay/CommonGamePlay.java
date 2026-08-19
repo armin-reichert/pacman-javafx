@@ -372,11 +372,7 @@ public abstract class CommonGamePlay implements GamePlay {
         requireNonNull(bonus);
 
         final GameSystems systems = game.variant().systems();
-        systems.bonusState().showEatenForSeconds(
-            bonus,
-            game.variant().rules().eatenBonusDisplaySeconds(),
-           systems.worldNavigator()
-        );
+        systems.bonusState().showEatenForSeconds(bonus, game.variant().rules().eatenBonusDisplaySeconds());
         systems.worldNavigator().setMoveDirSpeed(bonus, 0);
 
         scorePoints(game, bonus.data().points(), level.number());

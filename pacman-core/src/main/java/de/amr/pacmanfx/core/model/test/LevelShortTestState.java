@@ -74,7 +74,7 @@ public class LevelShortTestState extends GameState {
         }
         else if (timer().atSecond(START + 5)) {
             level.entities().optBonus().ifPresent(bonus -> {
-                systems.bonusState().showEatenForSeconds(bonus, 2, systems.worldNavigator());
+                systems.bonusState().showEatenForSeconds(bonus, 2);
                 systems.worldNavigator().setMoveDirSpeed(bonus, 0);
                 game.eventManager().publishGameEvent(new BonusEatenEvent(bonus));
             });
@@ -84,7 +84,7 @@ public class LevelShortTestState extends GameState {
         }
         else if (timer().atSecond(START + 8)) {
             level.entities().optBonus().ifPresent(bonus -> {
-                systems.bonusState().showEatenForSeconds(bonus, 2, systems.worldNavigator());
+                systems.bonusState().showEatenForSeconds(bonus, 2);
                 systems.worldNavigator().setMoveDirSpeed(bonus, 0);
                 game.eventManager().publishGameEvent(new BonusEatenEvent(bonus));
             });
