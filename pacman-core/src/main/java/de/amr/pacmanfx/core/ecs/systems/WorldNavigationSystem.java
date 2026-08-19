@@ -203,7 +203,7 @@ public class WorldNavigationSystem {
         navigation.setTargetTile(targetTile);
         navigateTowardsTarget(actor, level, movementPolicy);
 
-        tryMovingOrTeleporting(motor, actor, level, movementPolicy);
+        tryMovingOrTeleporting(level, actor, motor, movementPolicy);
     }
 
     /**
@@ -213,9 +213,9 @@ public class WorldNavigationSystem {
      * possible, it keeps moving to its current move direction.
      */
     public void tryMovingOrTeleporting(
-        MovementSystem motor,
-        GameEntity actor,
         GameLevel level,
+        GameEntity actor,
+        MovementSystem motor,
         WorldMovementPolicy movementPolicy)
     {
         requireNonNull(actor);

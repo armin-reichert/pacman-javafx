@@ -7,6 +7,7 @@ package de.amr.pacmanfx.core.gamestate;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
+import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
 import de.amr.pacmanfx.core.entities.Bonus;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
@@ -32,18 +33,19 @@ public class EntityUpdater {
         final GameRules rules = game.variant().rules();
         final GameSession session = game.session();
 
-        if (game.state().id().equals(CommonGameStateID.GAME_LEVEL_EATING_GHOST)) {
+        if (game.state().id() == CommonGameStateID.GAME_LEVEL_EATING_GHOST) {
             return; // Pac-Man is invisible and frozen
         }
 
-        final ActorSpeedRules speedRules = game.variant().rules().actorSpeedRules();
+        final ActorSpeedRules speedRules = rules.actorSpeedRules();
         final float speed = pac.power().isActive()
             ? speedRules.pacSpeedWhenHasPower(game, level)
             : speedRules.pacSpeed(game, level);
 
+        final MovementSystem motor = systems.motor();
         systems.worldNavigator().setMoveDirSpeed(pac, speed);
         systems.worldNavigator().tryMovingOrTeleporting(
-            systems.motor(), pac, level, systems.pacWorldMovementPolicy());
+            level, pac, motor, systems.pacWorldMovementPolicy());
 
         systems.pacAutoSteering().update(session, pac);
         systems.pacDigestion().update(pac);

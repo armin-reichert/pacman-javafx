@@ -48,7 +48,7 @@ public class RoamingSystem {
             Logger.debug("Ghost {} takes random wish direction {}", ghost.name(), dir);
         }
         navigator.setMoveDirSpeed(ghost, speed);
-        navigator.tryMovingOrTeleporting(motor, ghost, level, worldMovementPolicy);
+        navigator.tryMovingOrTeleporting(level, ghost, motor, worldMovementPolicy);
     }
 
     // try a random direction towards an accessible tile, do not turn back unless there is no other way

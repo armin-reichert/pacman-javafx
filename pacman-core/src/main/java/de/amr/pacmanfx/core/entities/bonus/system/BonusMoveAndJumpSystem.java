@@ -71,7 +71,7 @@ public class BonusMoveAndJumpSystem {
 
         if (!exitPortalReached) {
             navigationSystem.navigateTowardsTarget(bonus, level, movementPolicy);
-            navigationSystem.tryMovingOrTeleporting(motor, bonus, level, movementPolicy);
+            navigationSystem.tryMovingOrTeleporting(level, bonus, motor, movementPolicy);
         }
         moveAndJump.setTargetReached(exitPortalReached);
     }
