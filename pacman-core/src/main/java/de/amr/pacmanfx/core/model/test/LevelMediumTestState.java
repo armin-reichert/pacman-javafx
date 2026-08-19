@@ -76,14 +76,14 @@ public class LevelMediumTestState extends GameState {
             }
         }
         else {
-            game.variant().gamePlay().hunt(game, level);
+            game.variant().gamePlay().updateGamePlay(game, level);
             if (game.variant().rules().isLevelCompleted(level)) {
                 game.variant().gameFlow().enterState(game, CommonGameStateID.GAME_INTRO);
             }
-            else if (game.session().thisFrame().huntingStep().pacKilled()) {
+            else if (game.session().thisFrame().gamePlayStep().pacKilled()) {
                 triggerTimeout();
             }
-            else if (game.session().thisFrame().huntingStep().hasGhostBeenKilled()) {
+            else if (game.session().thisFrame().gamePlayStep().hasGhostBeenKilled()) {
                 game.variant().gameFlow().enterState(game, CommonGameStateID.GAME_LEVEL_EATING_GHOST);
             }
         }

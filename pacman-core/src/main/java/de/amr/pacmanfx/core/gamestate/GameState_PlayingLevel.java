@@ -8,10 +8,11 @@ import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.entities.Pac;
-import de.amr.pacmanfx.core.gameplay.hunt.HuntingStep;
+import de.amr.pacmanfx.core.gameplay.hunt.GamePlayStep;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.model.rules.GameRules;
 import org.tinylog.Logger;
 
 import java.util.List;
@@ -47,26 +48,31 @@ public final class GameState_PlayingLevel extends GameState {
     public void onUpdate(GameContext game) {
         final GameSession session = game.session();
         final GameLevel level = session.assertLevel();
+        final GameSystems systems = game.variant().systems();
+        final GameRules rules = game.variant().rules();
+        final GameFlowController gameFlow = game.variant().gameFlow();
 
-        game.variant().gamePlay().hunt(game, level);
+        systems.entityUpdater().updateEntities(game, level);
 
-        final HuntingStep huntingStep = game.session().thisFrame().huntingStep();
-        logHuntingStepResult(huntingStep);
+        game.variant().gamePlay().updateGamePlay(game, level);
+
+        final GamePlayStep step = session.thisFrame().gamePlayStep();
+        logGamePlayStep(step);
 
         session.cheats().update(game);
 
-        if (game.variant().rules().isLevelCompleted(level)) {
-            game.variant().gameFlow().enterState(game, CommonGameStateID.GAME_LEVEL_COMPLETE);
+        if (rules.isLevelCompleted(level)) {
+            gameFlow.enterState(game, CommonGameStateID.GAME_LEVEL_COMPLETE);
         }
-        else if (huntingStep.pacKilled()) {
-            game.variant().gameFlow().enterState(game, CommonGameStateID.GAME_LEVEL_PACMAN_DYING);
+        else if (step.pacKilled()) {
+            gameFlow.enterState(game, CommonGameStateID.GAME_LEVEL_PACMAN_DYING);
         }
-        else if (huntingStep.hasGhostBeenKilled()) {
-            game.variant().gameFlow().enterState(game, CommonGameStateID.GAME_LEVEL_EATING_GHOST);
+        else if (step.hasGhostBeenKilled()) {
+            gameFlow.enterState(game, CommonGameStateID.GAME_LEVEL_EATING_GHOST);
         }
     }
 
-    private void logHuntingStepResult(HuntingStep result) {
+    private void logGamePlayStep(GamePlayStep result) {
         final List<String> report = result.asText();
         if (!report.isEmpty()) {
             Logger.info("Hunting Step:");

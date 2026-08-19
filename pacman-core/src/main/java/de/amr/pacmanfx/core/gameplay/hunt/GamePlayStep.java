@@ -13,7 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public final class HuntingStep {
+public final class GamePlayStep {
 
     private Vector2i foodFoundTile;
     private boolean energizerFound;
@@ -22,7 +22,7 @@ public final class HuntingStep {
     private final List<Ghost> ghostsKilled = new ArrayList<>();
     private final Set<Ghost> ghostsCollidingWithPac = new HashSet<>(4);
 
-    public HuntingStep() {}
+    public GamePlayStep() {}
 
     public Vector2i foodFoundTile() {
         return foodFoundTile;

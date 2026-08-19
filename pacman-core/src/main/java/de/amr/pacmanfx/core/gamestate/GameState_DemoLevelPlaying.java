@@ -77,7 +77,7 @@ public final class GameState_DemoLevelPlaying extends GameState {
             level.huntingTimerStrategy().startFirstPhase(game, level.number());
         }
         else if (tick > huntingStartTick) {
-            gamePlay.hunt(game, level);
+            gamePlay.updateGamePlay(game, level);
             game.variant().gameFlow().enterState(game, computeNextState(game, level));
         }
     }
@@ -86,10 +86,10 @@ public final class GameState_DemoLevelPlaying extends GameState {
         if (game.variant().rules().isLevelCompleted(level)) {
             return CommonGameStateID.GAME_INTRO;
         }
-        else if (game.session().thisFrame().huntingStep().pacKilled()) {
+        else if (game.session().thisFrame().gamePlayStep().pacKilled()) {
             return CommonGameStateID.GAME_LEVEL_PACMAN_DYING;
         }
-        else if (game.session().thisFrame().huntingStep().hasGhostBeenKilled()) {
+        else if (game.session().thisFrame().gamePlayStep().hasGhostBeenKilled()) {
             return CommonGameStateID.GAME_LEVEL_EATING_GHOST;
         }
         return CommonGameStateID.DEMO_LEVEL_PLAYING;

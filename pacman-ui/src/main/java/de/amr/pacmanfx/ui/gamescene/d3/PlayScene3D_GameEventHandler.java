@@ -304,7 +304,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 
     private void onGhostsKilled() {
         final GameLevel3D level3D = assertLevel3D();
-        final List<Ghost> ghostsKilled = game().session().thisFrame().huntingStep().ghostsKilled();
+        final List<Ghost> ghostsKilled = game().session().thisFrame().gamePlayStep().ghostsKilled();
         ghostsKilled.forEach(level3D::addKilledGhostNumberBox);
     }
 

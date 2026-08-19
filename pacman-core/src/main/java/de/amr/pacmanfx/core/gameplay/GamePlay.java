@@ -35,7 +35,7 @@ public interface GamePlay {
 
     // Playing level
 
-    void hunt(GameContext game, GameLevel level);
+    void updateGamePlay(GameContext game, GameLevel level);
 
     void onPacPowerStarts(GameContext game, GameLevel level, Pac pac, long ticks);
 
