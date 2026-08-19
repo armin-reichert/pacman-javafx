@@ -61,13 +61,7 @@ public class EntityUpdater {
         final GameSystems systems = game.variant().systems();
         updatedGhosts.forEach(ghost -> {
             systems.ghostState().update(game, level, ghost);
-            systems.ghostSpriteAnimation().update(
-                ghost,
-                level.entities().pac(),
-                systems.spriteAnimController(),
-                ghostEatenState,
-                game.session().assertLevel().indexInGhostKilledChain(ghost)
-            );
+            systems.ghostSpriteAnimation().update(ghost, level.entities().pac(), systems.spriteAnimController());
         });
     }
 

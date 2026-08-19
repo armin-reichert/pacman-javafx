@@ -7,6 +7,8 @@ package de.amr.pacmanfx.core.gamestate;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.SpriteAnimController;
+import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
+import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostStateSystem;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -25,7 +27,17 @@ public final class GameState_EatingGhost extends GameState {
 
     @Override
     public void onEnter(GameContext game) {
+        final GameLevel level = game.session().assertLevel();
+
         timer().restartTicks(FREEZE_TICKS);
+
+        level.entities().ghostsInState(GhostState.EATEN).forEach(ghost -> {
+            final int index = level.indexInGhostKilledChain(ghost);
+            if (index != -1) {
+                ghost.ghostSpriteAnimation().setAnimationID(CommonSpriteAnimationID.GHOST_POINTS);
+                ghost.ghostSpriteAnimation().setPointsIndex(index);
+            }
+        });
     }
 
     @Override
@@ -41,9 +53,12 @@ public final class GameState_EatingGhost extends GameState {
 
         if (timer().hasExpired()) {
             level.entities().pac().show();
+
             level.entities().ghostsInState(GhostState.EATEN).forEach(
                 ghost -> ghostStateSystem.changeGhostState(ghost, GhostState.RETURNING_HOME));
+
             level.entities().ghosts().forEach(spriteAnimSystem::playSelected);
+
             game.variant().gameFlow().resumePreviousState(game);
         }
     }

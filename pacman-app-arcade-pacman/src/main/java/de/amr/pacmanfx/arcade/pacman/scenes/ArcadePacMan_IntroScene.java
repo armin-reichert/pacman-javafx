@@ -196,7 +196,7 @@ public class ArcadePacMan_IntroScene extends GameScene {
         }
 
         for (Ghost ghost : ghosts) {
-            ghostSpriteAnimationSystem.update(ghost, pacMan, systems.spriteAnimController(), false, 0);
+            ghostSpriteAnimationSystem.update(ghost, pacMan, systems.spriteAnimController());
         }
     }
 
