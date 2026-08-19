@@ -69,34 +69,13 @@ public class EntityUpdater {
         final GameSystems systems = game.variant().systems();
 
         final BonusStateComp state = bonus.state();
-
-        state.timer().doTick();
-
         switch (state.bonusState()) {
-
             case INACTIVE -> {}
-
             case EDIBLE -> {
-                if (bonus.hasComp(BonusMoveAndJumpComp.class)) {
-                    systems.bonusMoveAndJump().wander(level, bonus, systems.motor());
-                    systems.bonusMoveAndJump().jump(bonus);
-                }
-                boolean timedOut = state.timer().hasExpired();
-                boolean targetReached = bonus.optMoveAndJump().map(BonusMoveAndJumpComp::targetReached).orElse(true);
-                if (timedOut || targetReached) {
-                    state.setEdibleStateExpired(timedOut);
-                    systems.bonusState().setBonusInactive(bonus);
-                    game.eventManager().publishGameEvent(new BonusExpiredEvent(bonus));
-                }
+                systems.bonusState().update(game, bonus);
+                systems.bonusMoveAndJump().update(level, bonus, systems.motor());
             }
-
-            case EATEN -> {
-                final boolean timedOut = state.timer().hasExpired();
-                if (timedOut) {
-                    systems.bonusState().setBonusInactive(bonus);
-                    game.eventManager().publishGameEvent(new BonusExpiredEvent(bonus));
-                }
-            }
+            case EATEN -> systems.bonusState().update(game, bonus);
         }
     }
 }

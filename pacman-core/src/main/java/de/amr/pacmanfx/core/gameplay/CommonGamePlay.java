@@ -10,6 +10,7 @@ import de.amr.basics.timer.Pulse;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusMoveAndJumpComp;
@@ -250,7 +251,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
         final GameSystems systems = game.variant().systems();
         systems.bonusState().showEatenForSeconds(bonus, game.variant().rules().eatenBonusDisplaySeconds());
-        systems.worldNavigator().setMoveDirSpeed(bonus, 0);
+        bonus.optComp(WorldNavigationComp.class).ifPresent(_ -> systems.worldNavigator().setMoveDirSpeed(bonus, 0));
 
         scorePoints(game, bonus.data().points(), level.number());
         Logger.info("Scored {} points for eating bonus {}", bonus.data().points(), bonus);

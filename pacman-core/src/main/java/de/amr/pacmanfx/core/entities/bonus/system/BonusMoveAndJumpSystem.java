@@ -49,7 +49,14 @@ public class BonusMoveAndJumpSystem {
         moveAndJump.jumpPulse().restart();
     }
 
-    public void wander(GameLevel level, Bonus bonus, MovementSystem motor) {
+    public void update(GameLevel level, Bonus bonus, MovementSystem motor) {
+        if (bonus.hasComp(BonusMoveAndJumpComp.class)) {
+            wander(level, bonus, motor);
+            jump(bonus);
+        }
+    }
+
+    private void wander(GameLevel level, Bonus bonus, MovementSystem motor) {
         requireNonNull(level);
         requireNonNull(bonus);
         requireNonNull(motor);
@@ -69,7 +76,7 @@ public class BonusMoveAndJumpSystem {
         moveAndJump.setTargetReached(exitPortalReached);
     }
 
-    public void jump(Bonus bonus) {
+    private void jump(Bonus bonus) {
         requireNonNull(bonus);
 
         final WorldNavigationComp worldNavigation = bonus.reqComp(WorldNavigationComp.class);

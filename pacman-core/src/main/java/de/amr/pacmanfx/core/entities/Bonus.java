@@ -12,8 +12,6 @@ import de.amr.pacmanfx.core.entities.bonus.comp.BonusMoveAndJumpComp;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusState;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusStateComp;
 
-import java.util.Optional;
-
 import static de.amr.pacmanfx.core.Validations.requireNonNegativeInt;
 
 /**
@@ -43,9 +41,12 @@ public final class Bonus extends GameEntity {
 
         if (moving) {
             setComp(MovementComp.class, new MovementComp());
-            setComp(WorldNavigationComp.class, new WorldNavigationComp());
+
+            final WorldNavigationComp worldNavigation = new WorldNavigationComp();
+            worldNavigation.setCanTeleport(false);
+            setComp(WorldNavigationComp.class, worldNavigation);
+
             setComp(BonusMoveAndJumpComp.class, new BonusMoveAndJumpComp());
-            reqComp(WorldNavigationComp.class).setCanTeleport(false);
         }
     }
 
@@ -62,9 +63,4 @@ public final class Bonus extends GameEntity {
     public BonusState bonusState() {
         return state().bonusState();
     }
-
-    public Optional<BonusMoveAndJumpComp> optMoveAndJump() {
-        return optComp(BonusMoveAndJumpComp.class);
-    }
-
 }
