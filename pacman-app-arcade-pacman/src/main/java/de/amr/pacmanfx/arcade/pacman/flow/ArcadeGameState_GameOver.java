@@ -49,7 +49,7 @@ public class ArcadeGameState_GameOver extends GameState {
         if (timer().hasExpired()) {
             session.hud().clearMessage();
             session.cheats().clear();
-            game.variant().gameFlow().enterState(game, game.coinMechanism().isEmpty()
+            game.variant().gameFlow().enterGameState(game, game.coinMechanism().isEmpty()
                 ? CommonGameStateID.GAME_INTRO
                 : CommonGameStateID.GAME_PREPARATION);
         }

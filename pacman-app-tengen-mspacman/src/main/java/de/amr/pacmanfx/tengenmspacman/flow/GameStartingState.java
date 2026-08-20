@@ -55,7 +55,7 @@ public class GameStartingState extends GameState {
         }
         else if (tick == TICK_START_PLAYING) {
             session.setPlaying(true);
-            game.variant().gameFlow().enterState(game, CommonGameStateID.GAME_LEVEL_PLAYING);
+            game.variant().gameFlow().enterGameState(game, CommonGameStateID.GAME_LEVEL_PLAYING);
         }
     }
 }

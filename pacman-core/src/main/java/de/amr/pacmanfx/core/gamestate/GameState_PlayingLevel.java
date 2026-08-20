@@ -62,13 +62,13 @@ public final class GameState_PlayingLevel extends GameState {
         session.cheats().update(game);
 
         if (rules.isLevelCompleted(level)) {
-            gameFlow.enterState(game, CommonGameStateID.GAME_LEVEL_COMPLETE);
+            gameFlow.enterGameState(game, CommonGameStateID.GAME_LEVEL_COMPLETE);
         }
         else if (step.pacKilled()) {
-            gameFlow.enterState(game, CommonGameStateID.GAME_LEVEL_PACMAN_DYING);
+            gameFlow.enterGameState(game, CommonGameStateID.GAME_LEVEL_PACMAN_DYING);
         }
         else if (step.hasGhostBeenKilled()) {
-            gameFlow.enterState(game, CommonGameStateID.GAME_LEVEL_EATING_GHOST);
+            gameFlow.enterGameState(game, CommonGameStateID.GAME_LEVEL_EATING_GHOST);
         }
     }
 

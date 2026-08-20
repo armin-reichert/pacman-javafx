@@ -21,7 +21,7 @@ public class ArcadeGameState_GameOrLevelStarting extends GameState {
 
     @Override
     public void onUpdate(GameContext game) {
-        game.variant().gameFlow().enterState(game, computeNextState(game));
+        game.variant().gameFlow().enterGameState(game, computeNextState(game));
     }
 
     private CommonGameStateID computeNextState(GameContext game) {

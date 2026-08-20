@@ -4,6 +4,10 @@
 
 package de.amr.pacmanfx.game;
 
+import de.amr.pacmanfx.core.gamestate.GameFlowController;
+import de.amr.pacmanfx.core.model.test.CutScenesTestState;
+import de.amr.pacmanfx.core.model.test.LevelMediumTestState;
+import de.amr.pacmanfx.core.model.test.LevelShortTestState;
 import de.amr.pacmanfx.ui.vm.GameViewModel;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -67,8 +71,8 @@ public class DefaultGameVariantManager implements GameVariantManager {
     public void selectVariant(String name) {
         requireNonNull(name);
         if (!variantsByName.containsKey(name)) {
-            final boolean testStatesIncluded = viewModel.testStatesIncludedProperty.get();
-            final GameVariant gameVariant = createGameVariant(name, testStatesIncluded);
+            final boolean includeInteractiveTests = viewModel.testStatesIncludedProperty.get();
+            final GameVariant gameVariant = createGameVariant(name, includeInteractiveTests);
             variantsByName.put(name, gameVariant);
         }
         variantsByName.get(name).config().worldMapManager().loadMapPrototypes();
@@ -76,12 +80,18 @@ public class DefaultGameVariantManager implements GameVariantManager {
         selectedVariantName.set(name);
     }
 
-    private GameVariant createGameVariant(String variantName, boolean testStatesIncluded) {
+    private GameVariant createGameVariant(String variantName, boolean includeInteractiveTests) {
         final Cartridge cartridge = cartridgeRepository.cartridgeByName(variantName);
         final var gameVariant = new GameVariant(cartridge);
-        if (testStatesIncluded) {
-            gameVariant.config().gameFlow().addTestStates();
+        if (includeInteractiveTests) {
+            addInteractiveTestStates(gameVariant.config().gameFlow());
         }
         return gameVariant;
+    }
+
+    public void addInteractiveTestStates(GameFlowController gameFlow) {
+        gameFlow.addState(new LevelShortTestState());
+        gameFlow.addState(new LevelMediumTestState());
+        gameFlow.addState(new CutScenesTestState());
     }
 }

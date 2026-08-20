@@ -77,7 +77,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
         configureLevelCounter(game, session.levelCounter());
 
-        game.variant().gameFlow().restartState(game, CommonGameStateID.BOOT);
+        game.variant().gameFlow().restartGameState(game, CommonGameStateID.BOOT);
     }
 
     @Override

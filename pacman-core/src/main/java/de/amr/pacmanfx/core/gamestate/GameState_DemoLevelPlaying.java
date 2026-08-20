@@ -90,7 +90,7 @@ public final class GameState_DemoLevelPlaying extends GameState {
         updater.updateEntities(game, level);
         gamePlay.updateGamePlay(game, level);
         computeNextState(game, level)
-            .ifPresent(nextState -> game.variant().gameFlow().enterState(game, nextState));
+            .ifPresent(nextState -> game.variant().gameFlow().enterGameState(game, nextState));
     }
 
     private void prepareLevel(GameContext game) {

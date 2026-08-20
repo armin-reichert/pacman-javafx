@@ -100,7 +100,7 @@ public class LevelShortTestState extends GameState {
         }
         else if (timer().atSecond(START + 10)) {
             if (level.number() == lastTestedLevelNumber) {
-                game.variant().gameFlow().restartState(game, CommonGameStateID.BOOT);
+                game.variant().gameFlow().restartGameState(game, CommonGameStateID.BOOT);
             } else {
                 timer().resetToIndefiniteDuration();
                 gamePlay.startNextLevel(game);

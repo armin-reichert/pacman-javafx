@@ -95,7 +95,7 @@ public final class CheatActions {
                 if (!killableGhosts.isEmpty()) {
                     level.clearGhostKillChain(); // start again with lowest number for killing ghost
                     killableGhosts.forEach(ghost -> game.variant().gamePlay().onEatGhost(game, level, ghost));
-                    game.variant().gameFlow().enterState(game, CommonGameStateID.GAME_LEVEL_EATING_GHOST);
+                    game.variant().gameFlow().enterGameState(game, CommonGameStateID.GAME_LEVEL_EATING_GHOST);
                 }
             }
 
@@ -110,7 +110,7 @@ public final class CheatActions {
             @Override
             public void execute(GameAppContext app) {
                 app.game().session().cheats().notifyCheatUsed();
-                app.game().variant().gameFlow().enterState(app.game(), CommonGameStateID.GAME_LEVEL_COMPLETE);
+                app.game().variant().gameFlow().enterGameState(app.game(), CommonGameStateID.GAME_LEVEL_COMPLETE);
             }
 
             @Override

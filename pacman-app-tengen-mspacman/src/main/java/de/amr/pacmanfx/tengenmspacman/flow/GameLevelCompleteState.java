@@ -35,12 +35,12 @@ public class GameLevelCompleteState extends GameState {
         final GameFlowController flow = game.variant().gameFlow();
 
         if (session.isAttractMode()) {
-            flow.enterState(game, TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME);
+            flow.enterGameState(game, TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME);
             return;
         }
 
         if (timer().hasExpired()) {
-            flow.enterState(game, computeNextState(game));
+            flow.enterGameState(game, computeNextState(game));
         }
     }
 

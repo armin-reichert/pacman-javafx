@@ -21,7 +21,7 @@ public final class GameState_LevelTransition extends GameState {
     @Override
     public void onUpdate(GameContext game) {
         if (timer().hasExpired()) {
-            game.variant().gameFlow().enterState(game, CommonGameStateID.GAME_OR_LEVEL_STARTING);
+            game.variant().gameFlow().enterGameState(game, CommonGameStateID.GAME_OR_LEVEL_STARTING);
         }
     }
 }
