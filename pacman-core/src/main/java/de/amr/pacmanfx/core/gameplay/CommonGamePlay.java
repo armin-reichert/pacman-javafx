@@ -32,7 +32,6 @@ import de.amr.pacmanfx.core.event.pac.PacPowerEndsEvent;
 import de.amr.pacmanfx.core.event.pac.PacPowerStartsEvent;
 import de.amr.pacmanfx.core.event.pac.PacPowerStartsFadingEvent;
 import de.amr.pacmanfx.core.gameplay.hunt.GamePlayStep;
-import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessage;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
@@ -56,24 +55,6 @@ import static java.util.Objects.requireNonNull;
 public abstract class CommonGamePlay implements GamePlay {
 
     private static final Set<GhostState> GHOST_TURNBACK_STATES = Set.of(GhostState.FRIGHTENED, GhostState.HUNTING_PAC);
-
-    @Override
-    public void startSession(GameContext game) {
-        requireNonNull(game);
-        final GameSession session = game.session();
-
-        //TODO We use the Arcade house gate keeper logic for all game variants which is not 100% correct
-        final ArcadeHouseGateKeeper gateKeeper = new ArcadeHouseGateKeeper();
-
-        session.setGateKeeper(gateKeeper);
-        session.setCutScenesEnabled(true);
-        session.setLevel(null);
-        session.setPlaying(false);
-        initScores(session);
-        configureLevelCounter(game, session.levelCounter());
-
-        game.variant().gameFlow().restartGameState(game, CommonGameStateID.BOOT);
-    }
 
     @Override
     public void prepareLevelForPlaying(GameContext game) {
@@ -361,7 +342,7 @@ public abstract class CommonGamePlay implements GamePlay {
         });
     }
 
-    private void initScores(GameSession session) {
+    protected void initScores(GameSession session) {
         session.score().reset();
         final File highScoreFile = session.highScore().reqComp(ScorePersistencyComp.class).file();
         try {

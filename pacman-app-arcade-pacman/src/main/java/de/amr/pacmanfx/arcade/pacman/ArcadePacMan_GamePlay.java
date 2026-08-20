@@ -20,7 +20,9 @@ import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
+import de.amr.pacmanfx.core.gameplay.ArcadeHouseGateKeeper;
 import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
+import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
@@ -85,15 +87,24 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
     @Override
     public void startSession(GameContext game) {
-        super.startSession(game);
-
+        requireNonNull(game);
         final GameSession session = game.session();
+
+        final ArcadeHouseGateKeeper gateKeeper = new ArcadeHouseGateKeeper();
+        gateKeeper.setGhostReleasedCallback(this::onGhostReleasedFromHouse);
+        session.setGateKeeper(gateKeeper);
 
         final HUDState hudState = session.hud();
         hudState.creditProperty().bind(game.coinMechanism().numCoinsProperty());
         hudState.hide();
 
-        session.gateKeeper().setGhostReleasedCallback(this::onGhostReleasedFromHouse);
+        session.setCutScenesEnabled(true);
+        session.setLevel(null);
+        session.setPlaying(false);
+        initScores(session);
+        configureLevelCounter(game, session.levelCounter());
+
+        game.variant().gameFlow().restartGameState(game, CommonGameStateID.BOOT);
     }
 
     // Level building and level start

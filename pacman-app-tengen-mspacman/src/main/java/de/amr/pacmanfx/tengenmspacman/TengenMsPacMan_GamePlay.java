@@ -22,11 +22,14 @@ import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
+import de.amr.pacmanfx.core.gameplay.ArcadeHouseGateKeeper;
 import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
+import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 import de.amr.pacmanfx.core.level.GameLevelMessage;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
+import de.amr.pacmanfx.core.model.HUDState;
 import de.amr.pacmanfx.core.model.rules.HuntingTimer;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -54,6 +57,8 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     public static final int NON_ARCADE_MAP_GAME_OVER_TICKS = 600;
 
     public TengenMsPacMan_GamePlay() {}
+
+    // Tengen Ms. Pac-Man specific methods
 
     public boolean allOptionsHaveDefaultValue(GameSession session) {
         final BoosterMode boosterMode = session.value(TengenMsPacMan_GamePlayOptions.BOOSTER_MODE, BoosterMode.class);
@@ -190,13 +195,13 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         session.setValue(TengenMsPacMan_GamePlayOptions.CAN_START_GAME, canStartNewGame);
     }
 
-    // Game start
+    // GamePlay interface
 
     @Override
     public void startSession(GameContext game) {
-        super.startSession(game);
-
+        requireNonNull(game);
         final GameSession session = game.session();
+
         session.hud().hide();
         setBoosterOn(session, false);
 
@@ -205,6 +210,22 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         setMapCategory(session,      TengenMsPacMan_GameVariantUIConfig.DEFAULT_MAP_CATEGORY);
         setStartLevelNumber(session, TengenMsPacMan_GameVariantUIConfig.DEFAULT_START_LEVEL);
         setNumContinues(session,     TengenMsPacMan_GameVariantUIConfig.DEFAULT_NUM_CONTINUES);
+
+        //TODO We just use the Arcade logic here, no idea how it has been implemented in NES Tengen Ms. Pac-Man
+        final ArcadeHouseGateKeeper gateKeeper = new ArcadeHouseGateKeeper();
+        session.setGateKeeper(gateKeeper);
+
+        final HUDState hudState = session.hud();
+//        hudState.creditProperty().bind(game.coinMechanism().numCoinsProperty());
+        hudState.hide();
+
+        session.setCutScenesEnabled(true);
+        session.setLevel(null);
+        session.setPlaying(false);
+        initScores(session);
+        configureLevelCounter(game, session.levelCounter());
+
+        game.variant().gameFlow().restartGameState(game, CommonGameStateID.BOOT);
     }
 
     // Level building and level start
