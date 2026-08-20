@@ -34,9 +34,11 @@ public class BonusMoveAndJumpSystem {
 
     public void setBonusInactive(Bonus bonus) {
         requireNonNull(bonus);
-        final BonusMoveAndJumpComp moveAndJump = bonus.reqComp(BonusMoveAndJumpComp.class);
-        navigationSystem.setMoveDirSpeed(bonus, 0);
-        moveAndJump.jumpPulse().reset();
+
+        bonus.optComp(BonusMoveAndJumpComp.class).ifPresent(moveAndJump -> {
+            moveAndJump.jumpPulse().reset();
+            navigationSystem.setMoveDirSpeed(bonus, 0);
+        });
     }
 
     public void startWandering(Bonus bonus, BonusRouteInfo routeInfo, float speed) {

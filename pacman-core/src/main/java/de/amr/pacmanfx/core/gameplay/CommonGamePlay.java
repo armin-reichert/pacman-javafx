@@ -156,7 +156,7 @@ public abstract class CommonGamePlay implements GamePlay {
         //TODO enable this later again
         //final boolean doubleChecked = model.rules().actorCollisionRules().isCollisionDoubleChecked();
 
-        level.heartbeat().triggerPulse();
+//        level.heartbeat().triggerPulse();
         level.huntingTimerStrategy().update(game.variant().rules(), level.number());
         if (gateKeeper != null) {
             gateKeeper.unlockGhostIfPossible(game, level);

@@ -42,7 +42,7 @@ public final class GameState_EatingGhost extends GameState {
         final GameSystems systems = game.variant().systems();
         final GameLevel level = game.session().assertLevel();
 
-        level.heartbeat().triggerPulse();
+        //level.heartbeat().triggerPulse();
         systems.entityUpdater().updateEntities(game, level);
 
         if (timer().hasExpired()) {

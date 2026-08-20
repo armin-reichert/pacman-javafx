@@ -13,6 +13,7 @@ import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusStateComp;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostStateSystem;
+import de.amr.pacmanfx.core.entities.pac.comp.PacState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.rules.ActorSpeedRules;
 import de.amr.pacmanfx.core.model.rules.GameRules;
@@ -26,6 +27,11 @@ public class EntityUpdater {
         updatePac(game, level, level.entities().pac());
         updateGhosts(game, level);
         level.entities().optBonus().ifPresent(bonus -> updateBonus(game, level, bonus));
+        updateLevelHeartbeat(level);
+    }
+
+    public void updateLevelHeartbeat(GameLevel level) {
+        level.heartbeat().triggerPulse();
     }
 
     public void updatePac(GameContext game, GameLevel level, Pac pac) {
@@ -37,19 +43,23 @@ public class EntityUpdater {
             return; // Pac-Man is invisible and frozen
         }
 
-        final ActorSpeedRules speedRules = rules.actorSpeedRules();
-        final float speed = pac.power().isActive()
-            ? speedRules.pacSpeedWhenHasPower(game, level)
-            : speedRules.pacSpeed(game, level);
+        if (pac.getPacState() != PacState.DEAD) {
+            final ActorSpeedRules speedRules = rules.actorSpeedRules();
+            final float speed = pac.power().isActive()
+                ? speedRules.pacSpeedWhenHasPower(game, level)
+                : speedRules.pacSpeed(game, level);
 
-        final MovementSystem motor = systems.motor();
-        systems.worldNavigator().setMoveDirSpeed(pac, speed);
-        systems.worldNavigator().tryMovingOrTeleporting(
-            level, pac, motor, systems.pacWorldMovementPolicy());
+            final MovementSystem motor = systems.motor();
+            systems.worldNavigator().setMoveDirSpeed(pac, speed);
+            systems.worldNavigator().tryMovingOrTeleporting(
+                level, pac, motor, systems.pacWorldMovementPolicy());
 
-        systems.pacAutoSteering().update(session, pac);
-        systems.pacDigestion().update(pac);
-        systems.pacPower().update(pac, rules.pacPowerFadingSeconds(level.number()));
+            systems.pacAutoSteering().update(session, pac);
+
+            systems.pacDigestion().update(pac);
+            systems.pacPower().update(pac, rules.pacPowerFadingSeconds(level.number()));
+        }
+
         systems.pacState().update(pac);
         systems.pacAnimation().update(pac);
     }
