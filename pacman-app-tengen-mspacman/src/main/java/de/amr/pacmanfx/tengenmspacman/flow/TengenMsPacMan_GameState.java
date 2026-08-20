@@ -17,7 +17,7 @@ public enum TengenMsPacMan_GameState {
     GAME_PREPARATION            (new GameState_PreparingGamePlay()),
     SHOWING_HALL_OF_FAME        (new ShowingHallOfFameState() ),
     GAME_OR_LEVEL_STARTING      (new GameOrLevelStartingState()),
-    DEMO_LEVEL_PLAYING          (new GameState_DemoLevelPlaying(120)),
+    DEMO_LEVEL_PLAYING          (new GameState_DemoLevelPlaying()),
     GAME_STARTING               (new GameStartingState()),
     GAME_LEVEL_CONTINUE         (new GameLevelContinueState()),
     GAME_LEVEL_PLAYING          (new GameState_PlayingLevel()),

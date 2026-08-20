@@ -14,7 +14,7 @@ public enum Arcade_GameState {
     GAME_INTRO                 (new GameState_Intro()),
     GAME_PREPARATION           (new GameState_PreparingGamePlay()),
     GAME_OR_LEVEL_STARTING     (new ArcadeGameState_GameOrLevelStarting()),
-    DEMO_LEVEL_PLAYING         (new GameState_DemoLevelPlaying(120)),
+    DEMO_LEVEL_PLAYING         (new GameState_DemoLevelPlaying()),
     GAME_STARTING              (new ArcadeGameState_GameStarting()),
     GAME_LEVEL_CONTINUE        (new ArcadeGameState_LevelContinue()),
     GAME_LEVEL_PLAYING         (new GameState_PlayingLevel()),

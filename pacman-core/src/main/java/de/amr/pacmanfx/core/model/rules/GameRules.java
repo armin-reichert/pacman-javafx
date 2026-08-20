@@ -65,4 +65,6 @@ public interface GameRules {
      * @return Duration (number of ticks) of phase.
      */
     long huntingPhaseDuration(int levelNumber, int phaseIndex);
+
+    int demoLevelHuntingStartTick();
 }

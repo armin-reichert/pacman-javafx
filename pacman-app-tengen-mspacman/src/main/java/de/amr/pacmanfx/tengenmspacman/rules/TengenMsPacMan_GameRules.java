@@ -97,6 +97,11 @@ public class TengenMsPacMan_GameRules implements GameRules {
     }
 
     @Override
+    public int demoLevelHuntingStartTick() {
+        return 120;
+    }
+
+    @Override
     public List<Integer> bonusSymbols(int levelNumber) {
         return List.of(
             computeNextBonusSymbolCode(levelNumber),

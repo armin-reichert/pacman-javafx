@@ -52,6 +52,13 @@ public class ArcadePacMan_GameRules implements GameRules {
         return LEVEL_DATA_TABLE[rowIndex];
     }
 
+    private static final int NUM_HUNTING_PHASES = 8;
+
+    // Ticks of scatter (index 0, 2, 4, 6) and chasing (1, 3, 5, 7) phases, -1 = forever
+    private static final int[] HUNTING_TICKS_SEQ_1 = { 420, 1200, 420, 1200, 300,  1200, 300, -1 };
+    private static final int[] HUNTING_TICKS_SEQ_2 = { 420, 1200, 420, 1200, 300, 61980,   1, -1 };
+    private static final int[] HUNTING_TICKS_SEQ_3 = { 300, 1200, 300, 1200, 300, 62262,   1, -1 };
+
     private static final Map<Integer, Integer> CUT_SCENE_NUMBER_AFTER_LEVEL_NUMBER = Map.of(
          2, 1, // after level number 2, play cut scene number 1
          5, 2,
@@ -59,7 +66,6 @@ public class ArcadePacMan_GameRules implements GameRules {
         13, 3,
         17, 3
     );
-
 
     protected ActorCollisionRules actorCollisionRules;
 
@@ -88,6 +94,11 @@ public class ArcadePacMan_GameRules implements GameRules {
     @Override
     public ArcadePacMan_ScoringRules scoringRules() {
         return scoringRules;
+    }
+
+    @Override
+    public int demoLevelHuntingStartTick() {
+        return 120;
     }
 
     @Override
@@ -157,13 +168,6 @@ public class ArcadePacMan_GameRules implements GameRules {
     }
 
     // Hunting
-
-    private static final int NUM_HUNTING_PHASES = 8;
-
-    // Ticks of scatter (index 0, 2, 4, 6) and chasing (1, 3, 5, 7) phases, -1 = forever
-    private static final int[] HUNTING_TICKS_SEQ_1 = { 420, 1200, 420, 1200, 300,  1200, 300, -1 };
-    private static final int[] HUNTING_TICKS_SEQ_2 = { 420, 1200, 420, 1200, 300, 61980,   1, -1 };
-    private static final int[] HUNTING_TICKS_SEQ_3 = { 300, 1200, 300, 1200, 300, 62262,   1, -1 };
 
     @Override
     public int numHuntingPhases() {
