@@ -8,8 +8,8 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
-import de.amr.pacmanfx.core.entities.ghost.system.GhostStateSystem;
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 
 /**
  * When a ghost has been eaten by Pac-Man, the game play freezes for a second, the ghost is displayed by the
@@ -28,22 +28,20 @@ public final class GameState_EatingGhost extends GameState {
         final GameLevel level = game.session().level();
 
         timer().restartTicks(FREEZE_TICKS);
-
-        level.entities().ghostsInState(GhostState.EATEN).forEach(ghost -> {
-            final int frame = level.indexInGhostKilledChain(ghost);
-            if (frame != -1) {
-                ghost.animationSelection().select(CommonSpriteAnimationID.GHOST_POINTS, frame);
+        level.entities().ghostsInState(GhostState.EATEN).forEach(eatenGhost -> {
+            final int animationFrame = level.indexInGhostKilledChain(eatenGhost);
+            if (animationFrame != -1) {
+                eatenGhost.animationSelection().select(CommonSpriteAnimationID.GHOST_POINTS, animationFrame);
             }
         });
     }
 
     @Override
     public void onUpdate(GameContext game) {
-        final GameSystems systems = game.variant().systems();
+        final EntityUpdater updater = game.variant().systems().entityUpdater();
         final GameLevel level = game.session().level();
 
-        systems.entityUpdater().updateEntities(game, level);
-
+        updater.updateEntities(game, level);
         if (timer().hasExpired()) {
             game.variant().gameFlow().resumePreviousState(game);
         }
@@ -52,11 +50,10 @@ public final class GameState_EatingGhost extends GameState {
     @Override
     public void onExit(GameContext game) {
         final GameSystems systems = game.variant().systems();
-        final GameLevel level = game.session().level();
-        final GhostStateSystem ghostStateSystem = systems.ghostState();
+        final GameLevelEntitySet entities = game.session().level().entities();
 
-        level.entities().pac().show();
-        level.entities().ghostsInState(GhostState.EATEN).forEach(
-            ghost -> ghostStateSystem.changeGhostState(ghost, GhostState.RETURNING_HOME));
+        entities.pac().show();
+        entities.ghostsInState(GhostState.EATEN).forEach(eatenGhost ->
+            systems.ghostState().changeGhostState(eatenGhost, GhostState.RETURNING_HOME));
     }
 }

@@ -104,6 +104,10 @@ public class GameLevel {
         return ghostKillChain.contains(ghost);
     }
 
+    /**
+     * @param ghost a ghost
+     * @return the index (0..3) in the ghost kill chain of an energizer or {@code -1}
+     */
     public int indexInGhostKilledChain(Ghost ghost) {
         requireNonNull(ghost);
         return ghostKillChain.indexOf(ghost);
