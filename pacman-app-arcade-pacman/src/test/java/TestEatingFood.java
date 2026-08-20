@@ -8,7 +8,7 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_WorldMapManager;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.arcade.pacman.rules.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.core.*;
-import de.amr.pacmanfx.core.ecs.systems.DefaultGameSystems;
+import de.amr.pacmanfx.core.DefaultGameSystems;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.ghost.comp.ElroyComp;

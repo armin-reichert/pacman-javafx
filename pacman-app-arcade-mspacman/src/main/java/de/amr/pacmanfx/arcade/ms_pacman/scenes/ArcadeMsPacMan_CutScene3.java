@@ -9,7 +9,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.entities.bag.BagSpriteAniMap;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.stork.StorkSpriteAniMap;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.ecs.systems.GameSystems;
+import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
 import de.amr.pacmanfx.core.SpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;

@@ -1,6 +1,5 @@
 package de.amr.pacmanfx.core;
 
-import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.gamestate.GameFlowController;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.model.rules.GameRules;
