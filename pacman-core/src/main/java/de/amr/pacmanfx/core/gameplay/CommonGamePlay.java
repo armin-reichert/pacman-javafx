@@ -64,8 +64,6 @@ public abstract class CommonGamePlay implements GamePlay {
         requireNonNull(game);
         final GameSession session = game.session();
 
-        game.variant().worldMapManager().loadMapPrototypes();
-
         //TODO we use the Arcade house gate keeper logic for all game variants which is not 100% correct
         final ArcadeHouseGateKeeper gateKeeper = new ArcadeHouseGateKeeper();
         gateKeeper.reset();

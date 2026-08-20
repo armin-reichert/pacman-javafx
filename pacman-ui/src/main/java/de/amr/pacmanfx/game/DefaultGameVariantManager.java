@@ -8,6 +8,7 @@ import de.amr.pacmanfx.ui.vm.GameViewModel;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
+import org.tinylog.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,10 +52,9 @@ public class DefaultGameVariantManager implements GameVariantManager {
     }
 
     @Override
-    public GameVariant gameVariantByName(String gameVariantName) {
-        requireNonNull(gameVariantName);
-        final boolean testStatesIncluded = viewModel.testStatesIncludedProperty.get();
-        return variantsByName.computeIfAbsent(gameVariantName, name -> createGameVariant(name, testStatesIncluded));
+    public GameVariant gameVariantByName(String name) {
+        requireNonNull(name);
+        return variantsByName.get(name);
     }
 
     @Override
@@ -64,12 +64,16 @@ public class DefaultGameVariantManager implements GameVariantManager {
     }
 
     @Override
-    public void selectVariant(String gameVariantName) {
-        requireNonNull(gameVariantName);
-        if (cartridgeRepository.containsCartridgeWithName(gameVariantName)) {
-            selectedVariantName.set(gameVariantName);
+    public void selectVariant(String name) {
+        requireNonNull(name);
+        if (!variantsByName.containsKey(name)) {
+            final boolean testStatesIncluded = viewModel.testStatesIncludedProperty.get();
+            final GameVariant gameVariant = createGameVariant(name, testStatesIncluded);
+            variantsByName.put(name, gameVariant);
         }
-        else throw new IllegalArgumentException("Game with name '" + gameVariantName + "' not found");
+        variantsByName.get(name).config().worldMapManager().loadMapPrototypes();
+        Logger.info("Loaded world maps for game variant {}", name);
+        selectedVariantName.set(name);
     }
 
     private GameVariant createGameVariant(String variantName, boolean testStatesIncluded) {

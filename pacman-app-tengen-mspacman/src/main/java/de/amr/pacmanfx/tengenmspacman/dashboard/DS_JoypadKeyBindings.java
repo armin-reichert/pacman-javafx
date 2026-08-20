@@ -3,8 +3,6 @@
  */
 package de.amr.pacmanfx.tengenmspacman.dashboard;
 
-import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.game.GameVariant;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.JoypadButton;
@@ -45,10 +43,7 @@ public class DS_JoypadKeyBindings extends GameDashboardSection {
                 buttonKey(joypad, JoypadButton.LEFT),
                 buttonKey(joypad, JoypadButton.RIGHT))
         );
-
-        // Take dashboard title from Tengen Ms. Pac-Man text bundle
-        final GameVariant tengenGameVariant = appContext.gameVariants().gameVariantByName(GameVariantID.TENGEN_MS_PACMAN.name());
-        setText(tengenGameVariant.uiConfig().translations().translate("infobox.joypad.title"));
+        setText(appContext.ui().translations().translate("infobox.joypad.title"));
     }
 
     private static String buttonKey(Joypad joypad, JoypadButton button) {
