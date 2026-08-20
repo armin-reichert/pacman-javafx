@@ -142,7 +142,7 @@ public class GhostHouseAccessSystem {
         GameLevel level,
         Ghost ghost,
         WorldNavigationSystem worldNavigationSystem,
-        WorldMovementPolicy movementPolicy,
+        WorldMovementPolicy<Ghost> movementPolicy,
         MovementSystem motor,
         float speed)
     {

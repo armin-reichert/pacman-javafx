@@ -5,10 +5,13 @@
 package de.amr.pacmanfx.core.ecs.systems;
 
 import de.amr.pacmanfx.core.SpriteAnimController;
+import de.amr.pacmanfx.core.entities.Bonus;
+import de.amr.pacmanfx.core.entities.Ghost;
+import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.bonus.system.BonusMoveAndJumpSystem;
 import de.amr.pacmanfx.core.entities.bonus.system.BonusStateSystem;
-import de.amr.pacmanfx.core.entities.ghost.system.GhostHouseAccessSystem;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostAnimationSelectionSystem;
+import de.amr.pacmanfx.core.entities.ghost.system.GhostHouseAccessSystem;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostStateSystem;
 import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.entities.pac.system.*;
@@ -28,7 +31,7 @@ public interface GameSystems {
 
     RoamingSystem roaming();
 
-    WorldMovementPolicy pacWorldMovementPolicy();
+    WorldMovementPolicy<Pac> pacWorldMovementPolicy();
 
     PacAutoSteeringSystem pacAutoSteering();
 
@@ -46,13 +49,13 @@ public interface GameSystems {
 
     GhostHouseAccessSystem ghostHouseAccess();
 
-    WorldMovementPolicy ghostWorldMovementPolicy();
+    WorldMovementPolicy<Ghost> ghostWorldMovementPolicy();
 
     GhostHuntingStrategy ghostHuntingStrategy(GhostPersonality personality);
 
     BonusStateSystem bonusState();
 
-    WorldMovementPolicy bonusWorldMovementPolicy();
+    WorldMovementPolicy<Bonus> bonusWorldMovementPolicy();
 
     BonusMoveAndJumpSystem bonusMoveAndJump();
 

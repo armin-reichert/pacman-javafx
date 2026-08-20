@@ -25,9 +25,9 @@ import static java.util.Objects.requireNonNull;
 public class BonusMoveAndJumpSystem {
 
     private final WorldNavigationSystem navigationSystem;
-    private final WorldMovementPolicy movementPolicy;
+    private final WorldMovementPolicy<Bonus> movementPolicy;
 
-    public BonusMoveAndJumpSystem(WorldNavigationSystem navigationSystem, WorldMovementPolicy movementPolicy) {
+    public BonusMoveAndJumpSystem(WorldNavigationSystem navigationSystem, WorldMovementPolicy<Bonus> movementPolicy) {
         this.navigationSystem = requireNonNull(navigationSystem);
         this.movementPolicy = requireNonNull(movementPolicy);
     }

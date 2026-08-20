@@ -5,23 +5,23 @@
 package de.amr.pacmanfx.core.entities.bonus.system;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.WorldMovementPolicy;
+import de.amr.pacmanfx.core.entities.Bonus;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 
 import static java.util.Objects.requireNonNull;
 
-public class BonusWorldMovementPolicy implements WorldMovementPolicy {
+public class BonusWorldMovementPolicy implements WorldMovementPolicy<Bonus> {
 
     @Override
-    public boolean canTurnBack(GameEntity actor) {
+    public boolean canTurnBack(Bonus bonus) {
         return false;
     }
 
     @Override
-    public boolean canAccessTile(GameLevel level, GameEntity actor, Vector2i tile) {
+    public boolean canAccessTile(GameLevel level, Bonus bonus, Vector2i tile) {
         requireNonNull(level);
         requireNonNull(tile);
 

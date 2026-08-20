@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.core.entities.ghost.system;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.WorldMovementPolicy;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
@@ -21,20 +20,17 @@ import static de.amr.basics.math.Direction.UP;
 import static de.amr.pacmanfx.core.Validations.isOneOf;
 import static java.util.Objects.requireNonNull;
 
-public class GhostWorldMovementPolicy implements WorldMovementPolicy {
+public class GhostWorldMovementPolicy implements WorldMovementPolicy<Ghost> {
 
     private static final Set<GhostState> DOOR_PASSING_STATES = Set.of(GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE);
     private static final Set<GhostState> TURN_BACK_STATES = Set.of(GhostState.HUNTING_PAC, GhostState.FRIGHTENED);
 
     @Override
-    public boolean canAccessTile(GameLevel level, GameEntity actor, Vector2i tile) {
+    public boolean canAccessTile(GameLevel level, Ghost ghost, Vector2i tile) {
         requireNonNull(level);
-        requireNonNull(actor);
+        requireNonNull(ghost);
         requireNonNull(tile);
 
-        if (!(actor instanceof Ghost ghost)) {
-            throw new IllegalArgumentException("Actor is no ghost");
-        }
         final TerrainLayer terrainLayer = level.worldMap().terrainLayer();
 
         // Portal tiles are the only tiles outside the world map that can be accessed
@@ -42,8 +38,8 @@ public class GhostWorldMovementPolicy implements WorldMovementPolicy {
             return terrainLayer.isTileInPortalSpace(tile);
         }
 
-        final GhostWorldInfoComp worldPlacement = actor.reqComp(GhostWorldInfoComp.class);
-        final Vector2i myTile = actor.pos().tile();
+        final GhostWorldInfoComp worldPlacement = ghost.reqComp(GhostWorldInfoComp.class);
+        final Vector2i myTile = ghost.pos().tile();
 
         // Hunting ghosts cannot enter some tiles in Pac-Man game from below
         // TODO: this is game-specific and does not belong here
@@ -52,7 +48,7 @@ public class GhostWorldMovementPolicy implements WorldMovementPolicy {
             && terrainLayer.content(tile) == TerrainTile.ONE_WAY_DOWN.$
             && tile.equals(myTile.plus(UP.vector()))
         ) {
-            Logger.debug("Hunting {} cannot move up to special tile {}", actor.name(), tile);
+            Logger.debug("Hunting {} cannot move up to special tile {}", ghost.name(), tile);
             return false;
         }
         if (worldPlacement.house() != null && worldPlacement.house().isDoorAt(tile)) {
@@ -62,10 +58,7 @@ public class GhostWorldMovementPolicy implements WorldMovementPolicy {
     }
 
     @Override
-    public boolean canTurnBack(GameEntity actor) {
-        if (actor instanceof Ghost ghost) {
-            return ghost.worldNavigation().isNewTileEntered() && isOneOf(ghost.ghostStateEnum(), TURN_BACK_STATES);
-        }
-        return false;
+    public boolean canTurnBack(Ghost ghost) {
+        return ghost.worldNavigation().isNewTileEntered() && isOneOf(ghost.ghostStateEnum(), TURN_BACK_STATES);
     }
 }

@@ -9,7 +9,6 @@ import de.amr.basics.math.RandomNumberSupport;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
-import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.level.GameLevel;
 import org.tinylog.Logger;
 
@@ -33,33 +32,35 @@ public class RoamingSystem {
              Roam if you want to, without anything but the love we feel!
          </cite>
      */
-    public void roam(GameLevel level, Ghost ghost,
+    public <E extends GameEntity> void roam(GameLevel level, E gameEntity,
         WorldNavigationComp navigation,
-        WorldMovementPolicy worldMovementPolicy,
+        WorldMovementPolicy<E> worldMovementPolicy,
         MovementSystem motor, float speed)
     {
-        final Vector2i tile = ghost.pos().tile();
+        final Vector2i tile = gameEntity.pos().tile();
         final boolean teleporting = level.worldMap().terrainLayer().isTileInPortalSpace(tile);
 
         final boolean stuck = !navigation.info().moved;
         if ((navigation.isNewTileEntered() || stuck) && !teleporting) {
-            final Direction dir = computeRoamingDirection(level, ghost, worldMovementPolicy, tile);
-            navigator.setWishDir(ghost, dir);
-            Logger.debug("Ghost {} takes random wish direction {}", ghost.name(), dir);
+            final Direction dir = computeRoamingDirection(level, gameEntity, worldMovementPolicy, tile);
+            navigator.setWishDir(gameEntity, dir);
+            Logger.debug("Ghost {} takes random wish direction {}", gameEntity.name(), dir);
         }
-        navigator.setMoveDirSpeed(ghost, speed);
-        navigator.tryMovingOrTeleporting(level, ghost, motor, worldMovementPolicy);
+        navigator.setMoveDirSpeed(gameEntity, speed);
+        navigator.tryMovingOrTeleporting(level, gameEntity, motor, worldMovementPolicy);
     }
 
     // try a random direction towards an accessible tile, do not turn back unless there is no other way
-    private Direction computeRoamingDirection(GameLevel level, GameEntity actor, WorldMovementPolicy policy, Vector2i currentTile) {
-        final WorldNavigationComp navigation = actor.reqComp(WorldNavigationComp.class);
+    private <E extends GameEntity> Direction computeRoamingDirection(
+        GameLevel level, E gameEntity, WorldMovementPolicy<E> policy, Vector2i currentTile) {
+
+        final WorldNavigationComp navigation = gameEntity.reqComp(WorldNavigationComp.class);
 
         final Direction oppositeDir = navigation.moveDir().opposite();
         Direction selectedDir = choosePseudoRandomDirection();
         int tries = 0;
         while (selectedDir == oppositeDir
-            || !policy.canAccessTile(level, actor, currentTile.plus(selectedDir.vector())))
+            || !policy.canAccessTile(level, gameEntity, currentTile.plus(selectedDir.vector())))
         {
             selectedDir = selectedDir.nextClockwise();
             if (++tries > 4) {

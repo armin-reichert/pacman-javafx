@@ -153,7 +153,7 @@ public class WorldNavigationSystem {
         motor.setVelocity(moveDir.vector().scaled(speed));
     }
 
-    public void navigateTowardsTarget(GameEntity actor, GameLevel level, WorldMovementPolicy  movementPolicy) {
+    public <E extends GameEntity> void navigateTowardsTarget(E actor, GameLevel level, WorldMovementPolicy<E>  movementPolicy) {
         requireNonNull(actor);
         requireNonNull(level);
         requireNonNull(movementPolicy);
@@ -187,12 +187,12 @@ public class WorldNavigationSystem {
         setWishDir(actor, candidateDir != null ? candidateDir : navigation.moveDir().opposite());
     }
 
-    public void tryMovingTowardsTargetTile(
+    public <E extends GameEntity> void tryMovingTowardsTargetTile(
         MovementSystem motor,
-        GameEntity actor,
+        E actor,
         GameLevel level,
         Vector2i targetTile,
-        WorldMovementPolicy movementPolicy)
+        WorldMovementPolicy<E> movementPolicy)
     {
         requireNonNull(actor);
         requireNonNull(level);
@@ -212,11 +212,11 @@ public class WorldNavigationSystem {
      * First checks if the actor can be teleported, then if the actor can move to its wish direction. If this is not
      * possible, it keeps moving to its current move direction.
      */
-    public void tryMovingOrTeleporting(
+    public <E extends GameEntity> void tryMovingOrTeleporting(
         GameLevel level,
-        GameEntity actor,
+        E actor,
         MovementSystem motor,
-        WorldMovementPolicy movementPolicy)
+        WorldMovementPolicy<E> movementPolicy)
     {
         requireNonNull(actor);
         requireNonNull(level);
@@ -263,11 +263,11 @@ public class WorldNavigationSystem {
         return false; // no vertical teleporting yet
     }
 
-    private void tryMovingTowards(
+    private <E extends GameEntity> void tryMovingTowards(
         MovementSystem motor,
-        GameEntity actor,
+        E actor,
         GameLevel level,
-        WorldMovementPolicy movementPolicy,
+        WorldMovementPolicy<E> movementPolicy,
         Vector2i tileBeforeMoving,
         Direction dir)
     {

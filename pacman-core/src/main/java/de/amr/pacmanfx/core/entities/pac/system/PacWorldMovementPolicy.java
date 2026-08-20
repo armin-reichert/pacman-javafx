@@ -5,27 +5,27 @@
 package de.amr.pacmanfx.core.entities.pac.system;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.ecs.systems.WorldMovementPolicy;
 import de.amr.pacmanfx.core.entities.House;
+import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 
 import static java.util.Objects.requireNonNull;
 
-public class PacWorldMovementPolicy implements WorldMovementPolicy {
+public class PacWorldMovementPolicy implements WorldMovementPolicy<Pac> {
 
     @Override
-    public boolean canTurnBack(GameEntity actor) {
-        final WorldNavigationComp worldNavigation = actor.reqComp(WorldNavigationComp.class);
+    public boolean canTurnBack(Pac pac) {
+        final WorldNavigationComp worldNavigation = pac.reqComp(WorldNavigationComp.class);
         return worldNavigation.isNewTileEntered();
     }
 
     @Override
-    public boolean canAccessTile(GameLevel level, GameEntity actor, Vector2i tile) {
+    public boolean canAccessTile(GameLevel level, Pac pac, Vector2i tile) {
         requireNonNull(level);
-        requireNonNull(actor);
+        requireNonNull(pac);
         requireNonNull(tile);
 
         final TerrainLayer terrain = level.worldMap().terrainLayer();

@@ -5,6 +5,8 @@
 package de.amr.pacmanfx.core.ecs.systems;
 
 import de.amr.pacmanfx.core.SpriteAnimController;
+import de.amr.pacmanfx.core.entities.Bonus;
+import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.bonus.system.BonusMoveAndJumpSystem;
 import de.amr.pacmanfx.core.entities.bonus.system.BonusStateSystem;
 import de.amr.pacmanfx.core.entities.bonus.system.BonusWorldMovementPolicy;
@@ -28,7 +30,7 @@ public class DefaultGameSystems implements GameSystems {
     protected RoamingSystem roamingNavigator = new RoamingSystem(navigator);
 
 
-    protected WorldMovementPolicy pacWorldMovementPolicy;
+    protected WorldMovementPolicy<Pac> pacWorldMovementPolicy;
     protected PacAutoSteeringSystem pacAutoSteering;
     protected PacStateSystem pacState;
     protected PacPowerSystem pacPower;
@@ -46,7 +48,7 @@ public class DefaultGameSystems implements GameSystems {
     protected GhostHuntingStrategy pinkGhostSpeedyHuntingStrategy;
 
     protected BonusStateSystem bonusStateSystem;
-    protected WorldMovementPolicy bonusWorldMovementPolicy;
+    protected WorldMovementPolicy<Bonus> bonusWorldMovementPolicy;
     protected BonusMoveAndJumpSystem bonusMoveAndJumpSystem;
 
     protected LevelCounterSystem levelCounterSystem;
@@ -163,7 +165,7 @@ public class DefaultGameSystems implements GameSystems {
         return pacDigestion;
     }
 
-    public WorldMovementPolicy pacWorldMovementPolicy() {
+    public WorldMovementPolicy<Pac> pacWorldMovementPolicy() {
         return pacWorldMovementPolicy;
     }
 
@@ -208,7 +210,7 @@ public class DefaultGameSystems implements GameSystems {
     }
 
     @Override
-    public WorldMovementPolicy bonusWorldMovementPolicy() {
+    public WorldMovementPolicy<Bonus> bonusWorldMovementPolicy() {
         return bonusWorldMovementPolicy;
     }
 

@@ -8,9 +8,9 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.level.GameLevel;
 
-public interface WorldMovementPolicy {
+public interface WorldMovementPolicy<E extends GameEntity> {
 
-    boolean canAccessTile(GameLevel level, GameEntity actor, Vector2i tile);
+    boolean canAccessTile(GameLevel level, E entity, Vector2i tile);
 
-    boolean canTurnBack(GameEntity actor);
+    boolean canTurnBack(E entity);
 }

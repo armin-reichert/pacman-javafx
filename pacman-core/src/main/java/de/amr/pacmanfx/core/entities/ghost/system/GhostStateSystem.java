@@ -37,7 +37,7 @@ public class GhostStateSystem {
 
         final MovementSystem motor = systems.motor();
         final WorldNavigationSystem navigator = systems.worldNavigator();
-        final WorldMovementPolicy movementPolicy = systems.ghostWorldMovementPolicy();
+        final WorldMovementPolicy<Ghost> movementPolicy = systems.ghostWorldMovementPolicy();
         final GhostHuntingStrategy huntingStrategy = systems.ghostHuntingStrategy(ghost.personality());
         final RoamingSystem roamingSystem = systems.roaming();
 
