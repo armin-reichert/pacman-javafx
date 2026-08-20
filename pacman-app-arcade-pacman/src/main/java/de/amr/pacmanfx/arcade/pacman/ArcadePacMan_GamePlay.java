@@ -250,13 +250,21 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     @Override
     public void onEatPellet(GameContext game, GameLevel level, Vector2i tile) {
         super.onEatPellet(game, level, tile);
-        checkCruiseElroyActivation(level);
+        updateCruiseElroy(
+            level.entities().ghost(GhostPersonality.RED_GHOST_SHADOW),
+            ArcadePacMan_GameRules.levelData(level.number()),
+            level.food().remainingFoodCount()
+        );
     }
 
     @Override
     public void onEatEnergizer(GameContext game, GameLevel level, Vector2i tile) {
         super.onEatEnergizer(game, level, tile);
-        checkCruiseElroyActivation(level);
+        updateCruiseElroy(
+            level.entities().ghost(GhostPersonality.RED_GHOST_SHADOW),
+            ArcadePacMan_GameRules.levelData(level.number()),
+            level.food().remainingFoodCount()
+        );
     }
 
     @Override
@@ -298,18 +306,13 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         });
     }
 
-    private void checkCruiseElroyActivation(GameLevel level) {
-        final Ghost redGhost = level.entities().ghost(GhostPersonality.RED_GHOST_SHADOW);
-        if (!redGhost.hasComp(ElroyComp.class)) {
-            return;
-        }
-        final ElroyComp elroy = redGhost.reqComp(ElroyComp.class);
-        final LevelData data = ArcadePacMan_GameRules.levelData(level.number());
-        final int remainingFoodCount = level.food().remainingFoodCount();
-        if (remainingFoodCount == data.numDotsLeftElroy1()) {
-            elroy.setBoost(ElroyComp.Boost.MEDIUM);
-        } else if (remainingFoodCount == data.numDotsLeftElroy2()) {
-            elroy.setBoost(ElroyComp.Boost.LARGE);
-        }
+    private void updateCruiseElroy(Ghost redGhost, LevelData levelData, int remainingFoodCount) {
+        redGhost.optComp(ElroyComp.class).ifPresent(elroy -> {
+            if (remainingFoodCount == levelData.numDotsLeftElroy1()) {
+                elroy.setBoost(ElroyComp.Boost.MEDIUM);
+            } else if (remainingFoodCount == levelData.numDotsLeftElroy2()) {
+                elroy.setBoost(ElroyComp.Boost.LARGE);
+            }
+        });
     }
 }
