@@ -19,7 +19,7 @@ public class CutScenesTestState extends GameState {
     @Override
     public void onEnter(GameContext game) {
         testedCutSceneNumber = 1;
-        waitForTimeout();
+        timer().resetToIndefiniteDuration();
     }
 
     @Override
@@ -27,7 +27,7 @@ public class CutScenesTestState extends GameState {
         if (timer().hasExpired()) {
             if (testedCutSceneNumber < game.variant().rules().lastCutSceneNumber()) {
                 testedCutSceneNumber += 1;
-                waitForTimeout();
+                timer().resetToIndefiniteDuration();
                 //TODO find another solution and get rid of this event type
                 game.eventManager().publishGameEvent(new GenericChangeEvent("Cut Scene Test"));
             } else {

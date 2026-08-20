@@ -25,7 +25,7 @@ public final class GameState_EatingGhost extends GameState {
 
     @Override
     public void onEnter(GameContext game) {
-        final GameLevel level = game.session().assertLevel();
+        final GameLevel level = game.session().level();
 
         timer().restartTicks(FREEZE_TICKS);
 
@@ -40,7 +40,7 @@ public final class GameState_EatingGhost extends GameState {
     @Override
     public void onUpdate(GameContext game) {
         final GameSystems systems = game.variant().systems();
-        final GameLevel level = game.session().assertLevel();
+        final GameLevel level = game.session().level();
 
         //level.heartbeat().triggerPulse();
         systems.entityUpdater().updateEntities(game, level);
@@ -53,7 +53,7 @@ public final class GameState_EatingGhost extends GameState {
     @Override
     public void onExit(GameContext game) {
         final GameSystems systems = game.variant().systems();
-        final GameLevel level = game.session().assertLevel();
+        final GameLevel level = game.session().level();
         final GhostStateSystem ghostStateSystem = systems.ghostState();
 
         level.entities().pac().show();

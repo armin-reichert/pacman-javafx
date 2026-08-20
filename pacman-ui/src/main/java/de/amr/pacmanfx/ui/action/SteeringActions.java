@@ -47,7 +47,7 @@ public class SteeringActions {
             final GameSession session = app.game().session();
             return session.optLevel().isPresent()
                 && !session.isAttractMode()
-                && !session.assertLevel().entities().pac().cheats().isUsingAutopilot();
+                && !session.level().entities().pac().cheats().isUsingAutopilot();
         }
     }
 

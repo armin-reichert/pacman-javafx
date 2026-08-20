@@ -84,8 +84,14 @@ public class GameSession {
         return Optional.ofNullable(level);
     }
 
-    public GameLevel assertLevel() {
-        return optLevel().orElseThrow();
+    /**
+     * @return the current game level. If there is no current game level, throws an exception!
+     */
+    public GameLevel level() {
+        if (level != null) {
+            return level;
+        }
+        throw new IllegalStateException("No game level exists at this time");
     }
 
     public void setGateKeeper(ArcadeHouseGateKeeper gateKeeper) {

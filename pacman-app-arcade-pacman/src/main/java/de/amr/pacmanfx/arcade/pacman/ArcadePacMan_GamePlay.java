@@ -221,7 +221,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         requireNonNull(game);
 
         final GameSession session = game.session();
-        final GameLevel level = session.assertLevel();
+        final GameLevel level = session.level();
 
         prepareLevelForPlaying(game);
         session.setLevelStartTimeMillis(System.currentTimeMillis());

@@ -41,7 +41,7 @@ public class GameStartingState extends GameState {
     @Override
     public void onUpdate(GameContext game) {
         final GameSession session = game.session();
-        final GameLevel level = session.assertLevel();
+        final GameLevel level = session.level();
         final long tick = timer().tickCount();
 
         if (tick == TICK_SHOW_READY) {

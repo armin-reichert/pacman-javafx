@@ -153,7 +153,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
             x -= tilesPx(2);
         }
         if (session.hud().isLevelNumberVisible()) {
-            final int levelNumber = session.assertLevel().number();
+            final int levelNumber = session.level().number();
             drawLevelNumberBox(levelNumber, LEVEL_COUNTER_POS_LEFT, y); // left box
             drawLevelNumberBox(levelNumber, LEVEL_COUNTER_POS_RIGHT, y); // right box
         }

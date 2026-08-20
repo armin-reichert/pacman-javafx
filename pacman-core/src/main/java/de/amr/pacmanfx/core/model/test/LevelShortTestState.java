@@ -42,11 +42,11 @@ public class LevelShortTestState extends GameState {
 
         gamePlay.startLevel(game);
 
-        final GameLevel level = session.assertLevel();
+        final GameLevel level = session.level();
         level.entities().pac().show();
         level.entities().ghosts().forEach(GameEntity::show);
 
-        waitForTimeout();
+        timer().resetToIndefiniteDuration();
         // Note: This event is very important because it triggers the creation of the actor animations!
         game.eventManager().publishGameEvent(new LevelStartedEvent(level));
     }
@@ -56,7 +56,7 @@ public class LevelShortTestState extends GameState {
         final GameSystems systems = game.variant().systems();
         final GameSession session = game.session();
         final GamePlay gamePlay = game.variant().gamePlay();
-        final GameLevel level = session.assertLevel();
+        final GameLevel level = session.level();
 
         final float START = 1.0f;
 
@@ -102,7 +102,7 @@ public class LevelShortTestState extends GameState {
             if (level.number() == lastTestedLevelNumber) {
                 game.variant().gameFlow().restartState(game, CommonGameStateID.BOOT);
             } else {
-                waitForTimeout();
+                timer().resetToIndefiniteDuration();
                 gamePlay.startNextLevel(game);
             }
         } else {

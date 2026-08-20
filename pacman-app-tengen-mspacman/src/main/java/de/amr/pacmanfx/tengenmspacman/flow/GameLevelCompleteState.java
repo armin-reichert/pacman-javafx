@@ -23,8 +23,8 @@ public class GameLevelCompleteState extends GameState {
     public void onEnter(GameContext game) {
         requireNonNull(game);
 
-        game.variant().gamePlay().onLevelCompleted(game, game.session().assertLevel());
-        waitForTimeout(); // Wait for UI to trigger timeout
+        game.variant().gamePlay().onLevelCompleted(game, game.session().level());
+        timer().resetToIndefiniteDuration();
     }
 
     @Override
@@ -52,7 +52,7 @@ public class GameLevelCompleteState extends GameState {
             return CommonGameStateID.GAME_INTRO;
         }
 
-        final GameLevel level = session.assertLevel();
+        final GameLevel level = session.level();
         final boolean cutSceneFollows = game.variant().rules().cutSceneAfterLevel(level.number()).isPresent();
         if (cutSceneFollows && session.cutScenesEnabled()) {
             return CommonGameStateID.GAME_LEVEL_INTERMISSION;

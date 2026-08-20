@@ -21,7 +21,7 @@ public class ArcadeGameState_LevelIntermission extends GameState {
     public void onEnter(GameContext game) {
         final HUDState hudState = game.session().hud();
         hudState.hideCredit().hideScore().showLevelCounter().hideLivesCounter().show();
-        waitForTimeout();
+        timer().resetToIndefiniteDuration();
     }
 
     @Override

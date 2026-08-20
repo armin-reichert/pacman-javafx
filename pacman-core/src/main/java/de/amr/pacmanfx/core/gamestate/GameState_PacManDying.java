@@ -10,7 +10,6 @@ import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Pac;
-import de.amr.pacmanfx.core.entities.ghost.comp.ElroyComp;
 import de.amr.pacmanfx.core.entities.livescounter.system.LivesCounterSystem;
 import de.amr.pacmanfx.core.entities.pac.comp.PacState;
 import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
@@ -40,9 +39,9 @@ public final class GameState_PacManDying extends GameState {
         requireNonNull(game);
 
         final GameSystems systems = game.variant().systems();
-        final GameSession session = game.session();
-        final GameLevel level = session.assertLevel();
 
+        final GameSession session = game.session();
+        final GameLevel level = session.level();
         final Pac pac = level.entities().pac();
 
         session.gateKeeper().resetCounterAndSetEnabled(true);
@@ -50,19 +49,17 @@ public final class GameState_PacManDying extends GameState {
         level.huntingTimerStrategy().stop();
 
         // Note: this works also if the bonus has no Elroy component!
-        level.entities().ghosts().forEach(ghost ->
-            systems.ghostState().setElroyEnabled(ghost, false));
+        level.entities().ghosts().forEach(ghost -> systems.ghostState().setElroyEnabled(ghost, false));
 
         // Note: this works also if the bonus has no movement component!
-        level.entities().optBonus().ifPresent(bonus ->
-            systems.bonusMoveAndJump().setBonusInactive(bonus));
+        level.entities().optBonus().ifPresent(bonus -> systems.bonusMoveAndJump().setBonusInactive(bonus));
 
         systems.worldNavigator().setMoveDirSpeed(pac, 0);
         systems.pacPower().reset(pac);
         systems.pacState().setState(pac, PacState.DEAD);
         systems.pacAnimation().stop(pac);
 
-        waitForTimeout();
+        timer().resetToIndefiniteDuration();
         game.eventManager().publishGameEvent(new StopAllSoundsEvent());
     }
 
@@ -71,7 +68,7 @@ public final class GameState_PacManDying extends GameState {
         final GameSystems systems = game.variant().systems();
         final GameFlowController gameFlow = game.variant().gameFlow();
         final GameSession session = game.session();
-        final GameLevel level = session.assertLevel();
+        final GameLevel level = session.level();
         final LivesCounter livesCounter = session.livesCounter();
         final Pac pac = level.entities().pac();
         final long tick = timer().tickCount();

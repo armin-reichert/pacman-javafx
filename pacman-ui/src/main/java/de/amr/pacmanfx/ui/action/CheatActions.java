@@ -66,7 +66,7 @@ public final class CheatActions {
             @Override
             public void execute(GameAppContext app) {
                 final GameSession session = app.game().session();
-                final GameLevel level = session.assertLevel();
+                final GameLevel level = session.level();
                 level.food().eatPellets();
                 session.cheats().notifyCheatUsed();
                 app.game().eventManager().publishGameEvent(new PacEatsFoodEvent(level.entities().pac(), false, true));
@@ -84,7 +84,7 @@ public final class CheatActions {
             public void execute(GameAppContext app) {
                 final GameContext game = app.game();
                 final GameSession session = game.session();
-                final GameLevel level = session.assertLevel();
+                final GameLevel level = session.level();
                 
                 session.cheats().notifyCheatUsed();
 

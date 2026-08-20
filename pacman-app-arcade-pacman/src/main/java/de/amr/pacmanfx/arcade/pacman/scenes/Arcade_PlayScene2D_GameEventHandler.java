@@ -80,7 +80,7 @@ public interface Arcade_PlayScene2D_GameEventHandler extends DefaultGameEventLis
         final GameState newState = (GameState) e.newState();
 
         if (CommonGameStateID.GAME_LEVEL_COMPLETE.hasSameNameAs(newState)) {
-            final GameLevel level = game().session().assertLevel();
+            final GameLevel level = game().session().level();
             final int numFlashes = game().variant().rules().numLevelFlashes(level.number());
 
             optSoundEffects().ifPresent(GameSoundEffects::stopAll);

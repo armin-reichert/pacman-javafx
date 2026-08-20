@@ -47,7 +47,7 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
 
     @Override
     public Named resolveCutSceneID(GameContext game) {
-        final GameLevel level = game.session().assertLevel();
+        final GameLevel level = game.session().level();
         final OptionalInt cutSceneNumber = game.variant().rules().cutSceneAfterLevel(level.number());
         if (cutSceneNumber.isEmpty()) {
             throw new IllegalStateException("Cannot determine cut scene following level %d".formatted(level.number()));

@@ -7,7 +7,7 @@ import de.amr.pacmanfx.core.GameSession;
 public class PacAutoSteeringSystem {
 
     public void update(GameSession session, Pac pac) {
-        final GameLevel level = session.assertLevel();
+        final GameLevel level = session.level();
         if (pac.cheats().isUsingAutopilot() || session.isAttractMode()) {
             pac.autoSteering().steering().steer(pac, level);
         }

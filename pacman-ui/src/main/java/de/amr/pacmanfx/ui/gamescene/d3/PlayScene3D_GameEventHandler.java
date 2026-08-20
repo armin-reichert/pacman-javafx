@@ -92,7 +92,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
             return;
         }
         if (gameState.id() instanceof TestStateID) {
-            handleTestState(app().ui().viewModel().common3D, game().session().assertLevel());
+            handleTestState(app().ui().viewModel().common3D, game().session().level());
         }
         else if (CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(newState)) {
             onHuntingStart(assertLevel3D());
@@ -228,7 +228,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     @Override
     default void onPacPowerStarts(PacPowerStartsEvent e) {
         final Pac pac = e.pac();
-        final GameLevel level = game().session().assertLevel();
+        final GameLevel level = game().session().level();
         final GameLevel3D level3D = assertLevel3D();
 
         optSoundEffects().ifPresent(GameSoundEffects::stopSiren);
@@ -283,10 +283,10 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     }
 
     private void onPacManDying(AnimationRegistry animationRegistry) {
-        final GameLevel level = session().assertLevel();
+        final GameLevel level = session().level();
         final GameLevel3D level3D = assertLevel3D();
 
-        game().state().waitForTimeout();
+        game().state().timer().resetToIndefiniteDuration();
 
         optSoundEffects().ifPresent(GameSoundEffects::stopAll);
 
@@ -310,7 +310,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 
     private void onLevelComplete() {
         final GameViewModel viewModel = app().ui().viewModel();
-        final GameLevel level = session().assertLevel();
+        final GameLevel level = session().level();
         final House house = level.entities().house();
         final boolean cutSceneFollows = !session().isAttractMode()
             && game().variant().rules().cutSceneAfterLevel(level.number()).isPresent();
@@ -352,7 +352,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
             return;
         }
 
-        game().state().waitForTimeout();
+        game().state().timer().resetToIndefiniteDuration();
 
         final PerspectiveID perspectiveBeforeAnimation = settings3D.cameraPerspectiveIdProperty.get();
 
@@ -377,7 +377,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 
     private void onGameOver() {
         final GameSession session = game().session();
-        final GameLevel level = session.assertLevel();
+        final GameLevel level = session.level();
         final GameLevel3D level3D = assertLevel3D();
 
         if (!session.isAttractMode() && RandomNumberSupport.chance(0.25)) {

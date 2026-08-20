@@ -39,7 +39,7 @@ public class ArcadeGameState_GameStarting extends GameState {
     @Override
     public void onUpdate(GameContext game) {
         final GameSession session = game.session();
-        final GameLevel level = session.assertLevel();
+        final GameLevel level = session.level();
         final long tick = timer().tickCount();
 
         if (tick == TICK_NEW_GAME_START_LEVEL) {

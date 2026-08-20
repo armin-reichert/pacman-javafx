@@ -32,7 +32,7 @@ public final class GameState_DemoLevelPlaying extends GameState {
         final GameSession session = game.session();
         session.setLevel(game.variant().gamePlay().buildDemoLevel(game));
         session.hud().showCredit().hideLivesCounter();
-        game.eventManager().publishGameEvent(new LevelCreatedEvent(session.assertLevel()));
+        game.eventManager().publishGameEvent(new LevelCreatedEvent(session.level()));
     }
 
     @Override
@@ -40,7 +40,7 @@ public final class GameState_DemoLevelPlaying extends GameState {
         final GameSystems systems = game.variant().systems();
         final GamePlay gamePlay = game.variant().gamePlay();
         final GameSession session = game.session();
-        final GameLevel level = session.assertLevel();
+        final GameLevel level = session.level();
         final Pac pac = level.entities().pac();
         final long tick = timer().tickCount();
 

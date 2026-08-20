@@ -33,7 +33,7 @@ public class Ghost3DTransformController {
             case DOWN  -> 270;
         });
 
-        final GameLevel level = game.session().assertLevel();
+        final GameLevel level = game.session().level();
         final boolean outside = center.x() < WorldMap.HTS
             || center.x() > WorldMap.TS * level.worldMap().numCols() - WorldMap.HTS;
         ghost3D.root().setVisible(ghost.isVisible() && !outside);

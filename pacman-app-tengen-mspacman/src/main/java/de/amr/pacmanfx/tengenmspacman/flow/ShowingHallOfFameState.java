@@ -20,7 +20,7 @@ public class ShowingHallOfFameState extends GameState {
 
     @Override
     public void onEnter(GameContext game) {
-        waitForTimeout();
+        timer().resetToIndefiniteDuration();
     }
 
     @Override

@@ -53,7 +53,7 @@ public class GameCheats {
 
     public void update(GameContext game) {
         final GameSession session = game.session();
-        final GameLevel level = session.assertLevel();
+        final GameLevel level = session.level();
         if (session.isAttractMode() || !game.session().isPlaying()) {
             return;
         }

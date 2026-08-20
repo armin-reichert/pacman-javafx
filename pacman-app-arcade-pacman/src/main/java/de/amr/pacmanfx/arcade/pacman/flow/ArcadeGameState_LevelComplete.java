@@ -20,8 +20,8 @@ public class ArcadeGameState_LevelComplete extends GameState {
     @Override
     public void onEnter(GameContext game) {
         final GameSession session = game.session();
-        game.variant().gamePlay().onLevelCompleted(game, session.assertLevel());
-        waitForTimeout(); // UI triggers timeout
+        game.variant().gamePlay().onLevelCompleted(game, session.level());
+        timer().resetToIndefiniteDuration();
     }
 
     @Override
@@ -34,7 +34,7 @@ public class ArcadeGameState_LevelComplete extends GameState {
 
     private CommonGameStateID computeNextState(GameContext game, boolean cutScenesEnabled) {
         final GameSession session = game.session();
-        final GameLevel level = session.assertLevel();
+        final GameLevel level = session.level();
         if (session.isAttractMode()) {
             // just in case: if demo level was completed, go back to intro scene
             return CommonGameStateID.GAME_INTRO;

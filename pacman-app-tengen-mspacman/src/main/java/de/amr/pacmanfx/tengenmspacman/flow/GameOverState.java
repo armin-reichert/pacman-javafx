@@ -40,7 +40,7 @@ public class GameOverState extends GameState {
     @Override
     public void onEnter(GameContext game) {
         final GameSession session = game.session();
-        final GameLevel level = session.assertLevel();
+        final GameLevel level = session.level();
         final GamePlay gamePlay = game.variant().gamePlay();
 
         countdownAfter = 0;

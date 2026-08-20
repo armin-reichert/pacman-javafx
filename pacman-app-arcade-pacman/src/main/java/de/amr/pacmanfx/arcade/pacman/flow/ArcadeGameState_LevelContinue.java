@@ -26,7 +26,7 @@ public class ArcadeGameState_LevelContinue extends GameState {
     @Override
     public void onEnter(GameContext game) {
         final GameSession session = game.session();
-        final GameLevel level = session.assertLevel();
+        final GameLevel level = session.level();
 
         game.variant().gamePlay().prepareLevelForPlaying(game);
         level.entities().pac().show();

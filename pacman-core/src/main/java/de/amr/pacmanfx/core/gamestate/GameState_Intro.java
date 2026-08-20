@@ -16,7 +16,7 @@ public final class GameState_Intro extends GameState {
     public void onEnter(GameContext game) {
         game.session().hud().showLevelCounter().hideLivesCounter().showCredit().showScore().show();
         game.session().setLevel(null);
-        waitForTimeout();
+        timer().resetToIndefiniteDuration();
     }
 
     @Override

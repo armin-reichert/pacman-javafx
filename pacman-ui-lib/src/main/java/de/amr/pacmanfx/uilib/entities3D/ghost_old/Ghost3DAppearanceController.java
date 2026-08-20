@@ -22,7 +22,7 @@ public class Ghost3DAppearanceController {
     }
 
     public void update(Ghost3DWrapperToBeRemoved ghost3D, GameContext game) {
-        final GameLevel level = game.session().assertLevel();
+        final GameLevel level = game.session().level();
         final Pac pac = level.entities().pac();
         final Ghost ghost = ghost3D.ghost();
 

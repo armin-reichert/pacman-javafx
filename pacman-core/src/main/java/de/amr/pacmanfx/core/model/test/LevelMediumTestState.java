@@ -54,12 +54,12 @@ public class LevelMediumTestState extends GameState {
         configureLevelForTest(game);
 
         // Note: This event is very important because it triggers the creation of the actor animations!
-        eventManager.publishGameEvent(new LevelStartedEvent(session.assertLevel()));
+        eventManager.publishGameEvent(new LevelStartedEvent(session.level()));
     }
 
     @Override
     public void onUpdate(GameContext game) {
-        final GameLevel level = game.session().assertLevel();
+        final GameLevel level = game.session().level();
         final GameEventManager eventManager = game.eventManager();
 
         if (timer().hasExpired()) {
@@ -98,7 +98,7 @@ public class LevelMediumTestState extends GameState {
     private void configureLevelForTest(GameContext game) {
         final GameSystems systems = game.variant().systems();
         final GameSession session = game.session();
-        final GameLevel level = session.assertLevel();
+        final GameLevel level = session.level();
         final Pac pac = level.entities().pac();
 
         pac.show();

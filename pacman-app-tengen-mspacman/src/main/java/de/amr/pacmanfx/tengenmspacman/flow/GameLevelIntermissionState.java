@@ -24,7 +24,7 @@ public class GameLevelIntermissionState extends GameState {
     @Override
     public void onEnter(GameContext game) {
         final GameSession session = game.session();
-        final GameLevel level = session.assertLevel();
+        final GameLevel level = session.level();
         final OptionalInt cutSceneNumber = game.variant().rules().cutSceneAfterLevel(level.number());
         final boolean isLastCutScene = cutSceneNumber.isPresent()
             && cutSceneNumber.getAsInt() == game.variant().rules().lastCutSceneNumber();
@@ -39,7 +39,7 @@ public class GameLevelIntermissionState extends GameState {
                 .hideLivesCounter()
                 .show();
         }
-        waitForTimeout();
+        timer().resetToIndefiniteDuration();
     }
 
     @Override

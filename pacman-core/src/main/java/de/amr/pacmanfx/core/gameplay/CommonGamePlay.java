@@ -82,7 +82,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
     @Override
     public void prepareLevelForPlaying(GameContext game) {
-        final GameLevel level = game.session().assertLevel();
+        final GameLevel level = game.session().level();
         final GameSystems systems = game.variant().systems();
 
         preparePacForPlaying(
@@ -124,7 +124,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final GameSession session = game.session();
         final GameEventManager eventManager = game.eventManager();
 
-        final GameLevel oldLevel = game.session().assertLevel();
+        final GameLevel oldLevel = game.session().level();
         final int lastLevelNumber = game.variant().rules().lastLevelNumber();
 
         if (oldLevel.number() < lastLevelNumber) {
@@ -446,7 +446,7 @@ public abstract class CommonGamePlay implements GamePlay {
                 }
             }
         }
-        else if (session.assertLevel().entities().pac().cheats().isImmune()) {
+        else if (session.level().entities().pac().cheats().isImmune()) {
             return;
         }
 

@@ -78,7 +78,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     public GameLevel3D(GameContext game, AnimationRegistry registry, GameViewModel viewModel, GameVariantUIConfig uiConfig) {
         requireNonNull(game);
 
-        this.level = game.session().assertLevel();
+        this.level = game.session().level();
         this.uiConfig = requireNonNull(uiConfig);
 
         createMaze3D(viewModel);

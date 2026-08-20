@@ -27,7 +27,7 @@ public final class GameState_PlayingLevel extends GameState {
     public void onEnter(GameContext game) {
         final GameSystems systems = game.variant().systems();
         final GameSession session = game.session();
-        final GameLevel level = game.session().assertLevel();
+        final GameLevel level = game.session().level();
         final Pac pac = level.entities().pac();
 
         session.hud().optMessage()
@@ -47,7 +47,7 @@ public final class GameState_PlayingLevel extends GameState {
     @Override
     public void onUpdate(GameContext game) {
         final GameSession session = game.session();
-        final GameLevel level = session.assertLevel();
+        final GameLevel level = session.level();
         final GameSystems systems = game.variant().systems();
         final GameRules rules = game.variant().rules();
         final GameFlowController gameFlow = game.variant().gameFlow();
