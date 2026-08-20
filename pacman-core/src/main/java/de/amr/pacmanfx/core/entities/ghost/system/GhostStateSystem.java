@@ -8,6 +8,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.*;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
+import de.amr.pacmanfx.core.entities.ghost.comp.ElroyComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.gameplay.hunt.GhostHuntingStrategy;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -82,7 +83,13 @@ public class GhostStateSystem {
 
         ghost.state().setGhostStateEnum(newState);
     }
-    
+
+    public void setElroyEnabled(Ghost ghost, boolean enabled) {
+        requireNonNull(ghost);
+
+        ghost.optComp(ElroyComp.class).ifPresent(elroy -> elroy.setEnabled(enabled));
+    }
+
     private boolean isGhostThreatenedByPac(GameLevel level, Ghost ghost, Pac pac) {
         return pac.power().isActive() && !level.isInGhostKilledChain(ghost);
     }

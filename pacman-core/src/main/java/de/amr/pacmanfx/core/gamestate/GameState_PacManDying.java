@@ -49,8 +49,9 @@ public final class GameState_PacManDying extends GameState {
 
         level.huntingTimerStrategy().stop();
 
+        // Note: this works also if the bonus has no Elroy component!
         level.entities().ghosts().forEach(ghost ->
-            ghost.optComp(ElroyComp.class).ifPresent(elroy -> elroy.setEnabled(false)));
+            systems.ghostState().setElroyEnabled(ghost, false));
 
         // Note: this works also if the bonus has no movement component!
         level.entities().optBonus().ifPresent(bonus ->
