@@ -38,7 +38,7 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer implements 
     public ArcadeMsPacMan_IntroScene_Renderer(
         GameVariantRenderConfig renderConfig,
         GameScene gameScene,
-        SpriteAnimController animSystem,
+        SpriteAnimController animController,
         Canvas canvas) {
 
         super(canvas);
@@ -49,7 +49,7 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer implements 
 
         marqueeRenderer   = r2D.configureRenderer(new MarqueeRenderer(canvas));
         copyrightRenderer = r2D.configureRenderer(new CopyrightRenderer(canvas));
-        actorRenderer     = r2D.configureRenderer(renderConfig.createActorRenderer(animSystem, canvas));
+        actorRenderer     = r2D.configureRenderer(renderConfig.createActorRenderer(animController, canvas));
         debugRenderer     = GameScene2D_Renderer.createDefaultSceneDebugRenderer(gameScene, canvas);
     }
 

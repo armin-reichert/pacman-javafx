@@ -24,14 +24,14 @@ public class ArcadeMsPacMan_CutScene1_Renderer extends BaseRenderer implements G
     public ArcadeMsPacMan_CutScene1_Renderer(
         GameVariantRenderConfig renderConfig,
         GameScene gameScene,
-        SpriteAnimController animSystem,
+        SpriteAnimController animController,
         Canvas canvas) {
 
         super(canvas);
 
         final Rendering2DSupport r2D = gameScene.componentsRegistry().reqComp(Rendering2DSupport.class);
 
-        actorRenderer = r2D.configureRenderer((ArcadeMsPacMan_ActorRenderer) renderConfig.createActorRenderer(animSystem, canvas));
+        actorRenderer = r2D.configureRenderer((ArcadeMsPacMan_ActorRenderer) renderConfig.createActorRenderer(animController, canvas));
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(gameScene, canvas);
     }
 

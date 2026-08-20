@@ -31,12 +31,12 @@ import static java.util.function.Predicate.not;
 
 public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements SpriteRenderer, GameLevelRenderer {
 
-    protected final SpriteAnimController animSystem;
+    protected final SpriteAnimController animController;
     protected final AssetMap assets;
 
-    public ArcadeMsPacMan_GameLevelRenderer(SpriteAnimController animSystem, Canvas canvas, AssetMap assets) {
+    public ArcadeMsPacMan_GameLevelRenderer(SpriteAnimController animController, Canvas canvas, AssetMap assets) {
         super(canvas);
-        this.animSystem = requireNonNull(animSystem);
+        this.animController = requireNonNull(animController);
         this.assets = assets; // may be NULL e.g. in Ms. Pac-Man XXL where maze is drawn without images
     }
 
