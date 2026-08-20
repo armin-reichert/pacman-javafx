@@ -14,7 +14,6 @@ import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.ecs.systems.GameSystems;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusMoveAndJumpComp;
-import de.amr.pacmanfx.core.entities.bonus.comp.BonusState;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.livescounter.system.LivesCounterSystem;
 import de.amr.pacmanfx.core.entities.pac.comp.PacPowerComp;
@@ -37,7 +36,6 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessage;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
-import de.amr.pacmanfx.core.model.rules.CollisionStrategy;
 import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -64,17 +62,14 @@ public abstract class CommonGamePlay implements GamePlay {
         requireNonNull(game);
         final GameSession session = game.session();
 
-        //TODO we use the Arcade house gate keeper logic for all game variants which is not 100% correct
+        //TODO We use the Arcade house gate keeper logic for all game variants which is not 100% correct
         final ArcadeHouseGateKeeper gateKeeper = new ArcadeHouseGateKeeper();
-        gateKeeper.reset();
 
         session.setGateKeeper(gateKeeper);
         session.setCutScenesEnabled(true);
         session.setLevel(null);
         session.setPlaying(false);
-
         initScores(session);
-
         configureLevelCounter(game, session.levelCounter());
 
         game.variant().gameFlow().restartGameState(game, CommonGameStateID.BOOT);
@@ -105,9 +100,10 @@ public abstract class CommonGamePlay implements GamePlay {
         requireNonNull(game);
         requireValidLevelNumber(levelNumber);
 
+        final GameSession session = game.session();
+
         final GameLevel level = createLevel(game, levelNumber);
 
-        final GameSession session = game.session();
         session.setLevel(level);
         session.setAttractMode(false);
         session.livesCounter().data().setNumLives(numLives);
@@ -150,23 +146,19 @@ public abstract class CommonGamePlay implements GamePlay {
         requireNonNull(game);
         requireNonNull(level);
 
+        final GameRules rules = game.variant().rules();
         final GameSession session = game.session();
-        final ArcadeHouseGateKeeper gateKeeper = session.gateKeeper();
-
-        //TODO enable this later again
-        //final boolean doubleChecked = model.rules().actorCollisionRules().isCollisionDoubleChecked();
-
-        level.huntingTimerStrategy().update(game.variant().rules(), level.number());
-        if (gateKeeper != null) {
-            gateKeeper.unlockGhostIfPossible(game, level);
-        }
-
-        //TODO How to handle this correctly?
-        checkRemainingPacPower(game, level, level.entities().pac());
-
-        final CollisionStrategy strategy = game.variant().rules().actorCollisionRules().getCollisionStrategy();
         final GamePlayStep gamePlayStep = session.thisFrame().gamePlayStep();
-        detectCollisions(strategy, level, gamePlayStep);
+
+        final ActorCollisionHandler collisionHandler = new ActorCollisionHandler(gamePlayStep);
+        collisionHandler.setStrategy(rules.actorCollisionRules().getCollisionStrategy());
+        collisionHandler.setDoubleChecked(rules.actorCollisionRules().isCollisionDoubleChecked());
+
+        level.huntingTimerStrategy().update(rules, level.number());
+        session.gateKeeper().unlockGhostIfPossible(game, level);
+        updateRemainingPacPower(game, level, level.entities().pac());
+
+        collisionHandler.detectCollisions(level);
         evalCollisions(game, level, gamePlayStep);
     }
 
@@ -395,31 +387,30 @@ public abstract class CommonGamePlay implements GamePlay {
         }
     }
 
-    private void evalCollisions(GameContext game, GameLevel level, GamePlayStep gamePlayStep) {
-        checkFoodFound(game, level);
-        if (gamePlayStep.foundEdibleBonus()) {
-            onEatBonus(game, level, gamePlayStep.edibleBonus());
+    private void evalCollisions(GameContext game, GameLevel level, GamePlayStep step) {
+        checkFoodFound(game, level, step);
+        if (step.foundEdibleBonus()) {
+            onEatBonus(game, level, step.edibleBonus());
         }
-        checkIfPacGetsKilled(game.session(), game.variant().rules(), gamePlayStep);
-        if (gamePlayStep.pacKilled()) {
+        checkIfPacGetsKilled(game.session(), game.variant().rules(), step);
+        if (step.pacKilled()) {
             fixPacPositionIfKilledInsidePortal(level);
         }
         else {
-            checkIfGhostsGetKilled(game, level, gamePlayStep);
+            checkIfGhostsGetKilled(game, level, step);
         }
     }
 
-    private void checkFoodFound(GameContext game, GameLevel level) {
+    private void checkFoodFound(GameContext game, GameLevel level, GamePlayStep step) {
         final GameSystems systems = game.variant().systems();
-        final GamePlayStep huntingResult = game.session().thisFrame().gamePlayStep();
         final Pac pac = level.entities().pac();
         final PacDigestionSystem digestionSystem = systems.pacDigestion();
 
-        if (huntingResult.foodFound()) {
+        if (step.foodFound()) {
             digestionSystem.endStarving(pac);
-            final Vector2i foodTile = huntingResult.foodFoundTile();
+            final Vector2i foodTile = step.foodFoundTile();
             level.food().markFoodEatenAt(foodTile);
-            if (huntingResult.energizerFound()) {
+            if (step.energizerFound()) {
                 onEatEnergizer(game, level, foodTile);
             } else {
                 onEatPellet(game, level, foodTile);
@@ -427,14 +418,14 @@ public abstract class CommonGamePlay implements GamePlay {
             if (game.variant().rules().scoringRules().isBonusAwarded(level)) {
                 activateNextBonus(game, level);
             }
-            game.eventManager().publishGameEvent(new PacEatsFoodEvent(pac, huntingResult.energizerFound(), false));
+            game.eventManager().publishGameEvent(new PacEatsFoodEvent(pac, step.energizerFound(), false));
         }
         else {
             digestionSystem.starve(pac);
         }
     }
 
-    private void checkIfPacGetsKilled(GameSession session, GameRules rules, GamePlayStep gamePlayStep) {
+    private void checkIfPacGetsKilled(GameSession session, GameRules rules, GamePlayStep step) {
         // Check for optional attract mode safe period
         if (session.isAttractMode()) {
             if (rules.demoLevelMinDurationSec().isPresent()) {
@@ -449,20 +440,20 @@ public abstract class CommonGamePlay implements GamePlay {
             return;
         }
 
-        final boolean pacMeetsKiller = gamePlayStep.ghostsCollidingWithPac().stream()
+        final boolean pacMeetsKiller = step.ghostsCollidingWithPac().stream()
             .anyMatch(ghost -> ghost.ghostStateEnum() == GhostState.HUNTING_PAC);
 
-        gamePlayStep.setPacKilled(pacMeetsKiller);
+        step.setPacKilled(pacMeetsKiller);
     }
 
-    private void checkIfGhostsGetKilled(GameContext game, GameLevel level, GamePlayStep result) {
-        if (result.detectedPacGhostCollision()) {
+    private void checkIfGhostsGetKilled(GameContext game, GameLevel level, GamePlayStep step) {
+        if (step.detectedPacGhostCollision()) {
             // Frightened ghosts get killed when colliding with Pac
-            result.ghostsCollidingWithPac().stream()
+            step.ghostsCollidingWithPac().stream()
                 .filter(ghost -> ghost.ghostStateEnum() == GhostState.FRIGHTENED)
-                .forEach(result.ghostsKilled()::add);
+                .forEach(step.ghostsKilled()::add);
             // More than one ghost might have been killed in this step
-            result.ghostsKilled().forEach(ghost -> onEatGhost(game, level, ghost));
+            step.ghostsKilled().forEach(ghost -> onEatGhost(game, level, ghost));
         }
     }
 
@@ -483,7 +474,7 @@ public abstract class CommonGamePlay implements GamePlay {
         });
     }
 
-    private void checkRemainingPacPower(GameContext game, GameLevel level, Pac pac) {
+    private void updateRemainingPacPower(GameContext game, GameLevel level, Pac pac) {
         final PacPowerComp power = pac.power();
         if (power.ends()) {
             //TODO move into event handler!
@@ -493,39 +484,6 @@ public abstract class CommonGamePlay implements GamePlay {
         else if (power.isFadingStart()) {
             onPacPowerStartsFading(game, level, pac);
             game.eventManager().publishGameEvent(new PacPowerStartsFadingEvent(pac));
-        }
-    }
-
-    private void detectCollisions(CollisionStrategy strategy, GameLevel level, GamePlayStep gamePlayStep) {
-        detectFoodCollision(level, gamePlayStep);
-        detectEdibleBonusCollision(strategy, level, gamePlayStep);
-        detectPacGhostCollision(strategy, level, gamePlayStep);
-    }
-
-    private void detectPacGhostCollision(CollisionStrategy strategy, GameLevel level, GamePlayStep gamePlayStep) {
-        final Pac pac = level.entities().pac();
-        final List<Ghost> ghosts = level.entities().ghosts();
-        gamePlayStep.ghostsCollidingWithPac().clear();
-        ghosts.stream()
-            .filter(ghost -> strategy.collide(pac, ghost))
-            .forEach(gamePlayStep.ghostsCollidingWithPac()::add);
-    }
-
-    private void detectEdibleBonusCollision(CollisionStrategy strategy, GameLevel level, GamePlayStep gamePlayStep) {
-        final Pac pac = level.entities().pac();
-        final Bonus bonus = level.entities().optBonus().orElse(null);
-        gamePlayStep.setEdibleBonus(null);
-        if (bonus != null && bonus.bonusState() == BonusState.EDIBLE && strategy.collide(pac, bonus)) {
-            gamePlayStep.setEdibleBonus(bonus);
-        }
-    }
-
-    private void detectFoodCollision(GameLevel level, GamePlayStep gamePlayStep) {
-        final Pac pac = level.entities().pac();
-        final Vector2i pacTile = pac.pos().tile();
-        if (level.food().hasFoodAtTile(pacTile)) {
-            gamePlayStep.setFoodFoundTile(pacTile);
-            gamePlayStep.setEnergizerFound(level.worldMap().foodLayer().isEnergizerTile(pacTile));
         }
     }
 }
