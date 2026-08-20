@@ -9,7 +9,6 @@ import de.amr.pacmanfx.core.ecs.comp.MovementComp;
 import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
 import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostAnimationSelectionComp;
-import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostStateComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostWorldInfoComp;
 import de.amr.pacmanfx.core.model.GhostPersonality;
@@ -42,10 +41,6 @@ public final class Ghost extends GameEntity {
         return personality;
     }
 
-    public GhostState ghostStateEnum() {
-        return state().ghostStateEnum();
-    }
-
     // Typed component accessors
 
     public MovementComp movement() {
@@ -76,7 +71,7 @@ public final class Ghost extends GameEntity {
     public String toString() {
         return "Ghost{" +
             "personality=" + personality +
-            ", state=" + ghostStateEnum() +
+            ", state=" + state().enumValue() +
             ", " + super.toString() +
             '}';
     }

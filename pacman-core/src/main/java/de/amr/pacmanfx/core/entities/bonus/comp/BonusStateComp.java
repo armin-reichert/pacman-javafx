@@ -13,19 +13,19 @@ public class BonusStateComp implements EntityComponent {
 
     private boolean edibleStateExpired;
 
-    private BonusState bonusState;
+    private BonusState enumValue;
 
     private final TickTimer timer;
 
     public BonusStateComp() {
         this.timer = new TickTimer("Bonus-Timer");    }
 
-    public void setBonusState(BonusState bonusState) {
-        this.bonusState = Objects.requireNonNull(bonusState);
+    public void setEnumValue(BonusState enumValue) {
+        this.enumValue = Objects.requireNonNull(enumValue);
     }
 
-    public BonusState bonusState() {
-        return bonusState;
+    public BonusState enumValue() {
+        return enumValue;
     }
 
     public TickTimer timer() {
@@ -43,6 +43,6 @@ public class BonusStateComp implements EntityComponent {
     @Override
     public void reset() {
         edibleStateExpired = false;
-        bonusState = BonusState.INACTIVE;
+        enumValue = BonusState.INACTIVE;
     }
 }

@@ -26,7 +26,7 @@ public final class Pac extends GameEntity {
 
         setComp(MovementComp.class, new MovementComp());
         setComp(WorldNavigationComp.class, new WorldNavigationComp());
-        setComp(SteeringComp.class, new SteeringComp());
+        setComp(SteeringComp.class, new SteeringComp<Pac>());
         setComp(PacDigestionComp.class, new PacDigestionComp());
         setComp(PacPowerComp.class, new PacPowerComp());
         setComp(PacCheatsComp.class, new PacCheatsComp());
@@ -43,8 +43,9 @@ public final class Pac extends GameEntity {
         return reqComp(WorldNavigationComp.class);
     }
 
-    public SteeringComp autoSteering() {
-        return reqComp(SteeringComp.class);
+    @SuppressWarnings("unchecked")
+    public SteeringComp<Pac> autoSteering() {
+        return (SteeringComp<Pac>) reqComp(SteeringComp.class);
     }
 
     public PacDigestionComp digestion() {

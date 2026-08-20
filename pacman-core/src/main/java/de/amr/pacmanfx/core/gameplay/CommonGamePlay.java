@@ -422,7 +422,7 @@ public abstract class CommonGamePlay implements GamePlay {
         }
 
         final boolean pacMeetsKiller = step.ghostsCollidingWithPac().stream()
-            .anyMatch(ghost -> ghost.ghostStateEnum() == GhostState.HUNTING_PAC);
+            .anyMatch(ghost -> ghost.state().enumValue() == GhostState.HUNTING_PAC);
 
         step.setPacKilled(pacMeetsKiller);
     }
@@ -431,7 +431,7 @@ public abstract class CommonGamePlay implements GamePlay {
         if (step.detectedPacGhostCollision()) {
             // Frightened ghosts get killed when colliding with Pac
             step.ghostsCollidingWithPac().stream()
-                .filter(ghost -> ghost.ghostStateEnum() == GhostState.FRIGHTENED)
+                .filter(ghost -> ghost.state().enumValue() == GhostState.FRIGHTENED)
                 .forEach(step.ghostsKilled()::add);
             // More than one ghost might have been killed in this step
             step.ghostsKilled().forEach(ghost -> onEatGhost(game, level, ghost));

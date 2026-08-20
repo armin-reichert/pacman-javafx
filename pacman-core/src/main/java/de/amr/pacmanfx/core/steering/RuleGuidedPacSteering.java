@@ -6,7 +6,6 @@ package de.amr.pacmanfx.core.steering;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameConstants;
-import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.ecs.systems.WorldMovementPolicy;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
@@ -33,7 +32,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Pac-Man steering based on a set of rules.
  */
-public class RuleGuidedPacSteering implements Steering {
+public class RuleGuidedPacSteering implements Steering<Pac> {
 
     private static class CollectedData {
 
@@ -75,16 +74,16 @@ public class RuleGuidedPacSteering implements Steering {
     }
 
     private final WorldNavigationSystem navigator;
-    private final WorldMovementPolicy worldMovementPolicy;
+    private final WorldMovementPolicy<Pac> worldMovementPolicy;
 
-    public RuleGuidedPacSteering(WorldNavigationSystem navigator, WorldMovementPolicy worldMovementPolicy) {
+    public RuleGuidedPacSteering(WorldNavigationSystem navigator, WorldMovementPolicy<Pac> worldMovementPolicy) {
         this.navigator = requireNonNull(navigator);
         this.worldMovementPolicy = requireNonNull(worldMovementPolicy);
     }
 
     @Override
-    public void steer(GameEntity gameEntity, GameLevel level) {
-        final WorldNavigationComp worldNavigation = gameEntity.reqComp(WorldNavigationComp.class);
+    public void steer(Pac pac, GameLevel level) {
+        final WorldNavigationComp worldNavigation = pac.reqComp(WorldNavigationComp.class);
 
         if (worldNavigation.info().moved && !worldNavigation.isNewTileEntered()) {
             return;

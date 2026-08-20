@@ -89,7 +89,8 @@ public final class CheatActions {
                 session.cheats().notifyCheatUsed();
 
                 final List<Ghost> killableGhosts = level.entities().ghosts().stream()
-                    .filter(ghost -> GhostState.FRIGHTENED == ghost.ghostStateEnum() || GhostState.HUNTING_PAC == ghost.ghostStateEnum())
+                    .filter(ghost -> GhostState.FRIGHTENED == ghost.state().enumValue()
+                        || GhostState.HUNTING_PAC == ghost.state().enumValue())
                     .toList();
 
                 if (!killableGhosts.isEmpty()) {

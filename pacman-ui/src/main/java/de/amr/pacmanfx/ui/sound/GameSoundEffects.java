@@ -255,7 +255,7 @@ public class GameSoundEffects implements Disposable {
      */
     public void playGhostSounds(Pac pac, Collection<Ghost> ghosts) {
         boolean ghostReturning = pac.getPacState() != PacState.DEAD && ghosts.stream().anyMatch(g ->
-                g.ghostStateEnum() == GhostState.RETURNING_HOME || g.ghostStateEnum() == GhostState.ENTERING_HOUSE);
+                g.state().enumValue() == GhostState.RETURNING_HOME || g.state().enumValue() == GhostState.ENTERING_HOUSE);
         if (ghostReturning) {
             playGhostReturningToHouseSound();
         } else {

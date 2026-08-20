@@ -84,7 +84,7 @@ public final class GamePlayStep {
         var lines = new ArrayList<String>();
         for (Ghost ghost : ghostsCollidingWithPac()) {
             final Vector2i ghostTile = ghost.pos().tile();
-            lines.add("%s collided with Pac at tile %s, state after collision: %s".formatted(ghost.name(), ghostTile, ghost.ghostStateEnum()));
+            lines.add("%s collided with Pac at tile %s, state after collision: %s".formatted(ghost.name(), ghostTile, ghost.state().enumValue()));
         }
         if (energizerFound()) {
             lines.add("Energizer found at " + foodFoundTile());

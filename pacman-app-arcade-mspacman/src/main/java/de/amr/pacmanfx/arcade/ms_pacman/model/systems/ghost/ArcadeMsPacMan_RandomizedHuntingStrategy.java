@@ -35,7 +35,7 @@ public abstract class ArcadeMsPacMan_RandomizedHuntingStrategy implements GhostH
     protected abstract Vector2i computeChasingTargetTile(GameLevel level);
 
     @Override
-    public void hunt(GameLevel level, Ghost ghost, MovementSystem motor, float speed, WorldMovementPolicy worldMovementPolicy) {
+    public void hunt(GameLevel level, Ghost ghost, MovementSystem motor, float speed, WorldMovementPolicy<Ghost> worldMovementPolicy) {
         requireNonNull(level);
         requireNonNull(ghost);
 
@@ -47,7 +47,9 @@ public abstract class ArcadeMsPacMan_RandomizedHuntingStrategy implements GhostH
         }
     }
 
-    protected void normalHunt(MovementSystem motor, GameLevel level, Ghost ghost, float speed, WorldMovementPolicy worldMovementPolicy) {
+    protected void normalHunt(
+        MovementSystem motor, GameLevel level, Ghost ghost, float speed, WorldMovementPolicy<Ghost> worldMovementPolicy) {
+
         final boolean chaseOverride = ghost.hasComp(ElroyComp.class) && ghost.reqComp(ElroyComp.class).enabled();
         final boolean chase = level.huntingTimerStrategy().isChasing() || chaseOverride;
         final Vector2i targetTile = chase
@@ -58,7 +60,9 @@ public abstract class ArcadeMsPacMan_RandomizedHuntingStrategy implements GhostH
         navigator.tryMovingTowardsTargetTile(motor, ghost, level, targetTile, worldMovementPolicy);
     }
     
-    protected void moveRandomlyThroughWorld(MovementSystem motor, GameLevel level, Ghost ghost, float speed, WorldMovementPolicy worldMovementPolicy) {
+    protected void moveRandomlyThroughWorld(
+        MovementSystem motor, GameLevel level, Ghost ghost, float speed, WorldMovementPolicy<Ghost> worldMovementPolicy) {
+
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final Vector2i tile = ghost.pos().tile();
 
@@ -80,7 +84,7 @@ public abstract class ArcadeMsPacMan_RandomizedHuntingStrategy implements GhostH
         navigator.tryMovingOrTeleporting(level, ghost, motor, worldMovementPolicy);
     }
 
-    private void selectRandomWishDir(Ghost ghost, GameLevel level, WorldMovementPolicy worldMovementPolicy) {
+    private void selectRandomWishDir(Ghost ghost, GameLevel level, WorldMovementPolicy<Ghost> worldMovementPolicy) {
         final Vector2i ghostTile = ghost.pos().tile();
 
         for (final Direction dir : Direction.shuffled()) {

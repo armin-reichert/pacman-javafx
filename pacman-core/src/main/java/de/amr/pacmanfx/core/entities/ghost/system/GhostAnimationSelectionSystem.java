@@ -15,7 +15,7 @@ public class GhostAnimationSelectionSystem {
     public GhostAnimationSelectionSystem() {}
 
     public void update(Ghost ghost, Pac pac, SpriteAnimController spriteAnimController) {
-        final CommonSpriteAnimationID id = switch (ghost.ghostStateEnum()) {
+        final CommonSpriteAnimationID id = switch (ghost.state().enumValue()) {
             case LOCKED, LEAVING_HOUSE -> threatenedOrNormalAnimation(ghost, pac);
             case HUNTING_PAC -> CommonSpriteAnimationID.GHOST_NORMAL;
             case FRIGHTENED -> frightenedOrFlashingAnimation(pac);

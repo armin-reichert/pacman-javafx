@@ -107,6 +107,6 @@ public class BonusMoveAndJumpSystem {
         navigationSystem.placeAtTile(bonus, waypoints.removeFirst());
 
         final BonusMoveAndJumpComp moveAndJump = bonus.reqComp(BonusMoveAndJumpComp.class);
-        moveAndJump.setRouteNavigation(new RouteGuidedSteering(navigationSystem, movementPolicy, waypoints));
+        moveAndJump.setRouteNavigation(new RouteGuidedSteering<>(navigationSystem, movementPolicy, waypoints));
     }
 }

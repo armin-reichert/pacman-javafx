@@ -5,11 +5,12 @@
 package de.amr.pacmanfx.core.ecs.comp;
 
 import de.amr.pacmanfx.core.ecs.EntityComponent;
+import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.steering.Steering;
 
-public class SteeringComp implements EntityComponent {
+public class SteeringComp<E extends GameEntity> implements EntityComponent {
 
-    private Steering steering;
+    private Steering<E> steering;
 
     public SteeringComp() {}
 
@@ -20,11 +21,11 @@ public class SteeringComp implements EntityComponent {
         }
     }
 
-    public Steering steering() {
+    public Steering<E> steering() {
         return steering;
     }
 
-    public void setSteering(Steering steering) {
+    public void setSteering(Steering<E> steering) {
         this.steering = steering;
     }
 }

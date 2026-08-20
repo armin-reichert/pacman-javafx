@@ -22,7 +22,7 @@ public class BonusStateSystem {
 
         state.timer().doTick();
 
-        switch (state.bonusState()) {
+        switch (state.enumValue()) {
 
             case INACTIVE -> {}
 
@@ -55,7 +55,7 @@ public class BonusStateSystem {
 
         final BonusStateComp state = bonus.state();
 
-        state.setBonusState(BonusState.INACTIVE);
+        state.setEnumValue(BonusState.INACTIVE);
         state.timer().restartIndefinitely();
 
         bonus.hide();
@@ -73,7 +73,7 @@ public class BonusStateSystem {
         requireNonNull(bonus);
 
         final BonusStateComp state = bonus.state();
-        state.setBonusState(BonusState.EDIBLE);
+        state.setEnumValue(BonusState.EDIBLE);
         if (optionalSec == null) {
             state.timer().restartIndefinitely();
         } else {
@@ -87,7 +87,7 @@ public class BonusStateSystem {
         requireNonNull(bonus);
 
         final BonusStateComp state = bonus.state();
-        state.setBonusState(BonusState.EATEN);
+        state.setEnumValue(BonusState.EATEN);
         state.timer().restartSeconds(seconds);
 
         bonus.show();

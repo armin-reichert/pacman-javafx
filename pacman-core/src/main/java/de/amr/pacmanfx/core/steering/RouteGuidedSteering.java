@@ -18,16 +18,16 @@ import static java.util.Objects.requireNonNull;
 /**
  * Steers an actor such that it follows a given route.
  */
-public class RouteGuidedSteering implements Steering {
+public class RouteGuidedSteering<E extends GameEntity> implements Steering<E> {
 
     private final WorldNavigationSystem navigator;
-    private final WorldMovementPolicy worldMovementPolicy;
+    private final WorldMovementPolicy<E> worldMovementPolicy;
 
     private final List<Vector2i> route;
     private int targetIndex;
     private boolean routeTraversed;
 
-    public RouteGuidedSteering(WorldNavigationSystem navigator, WorldMovementPolicy worldMovementPolicy, List<Vector2i> route) {
+    public RouteGuidedSteering(WorldNavigationSystem navigator, WorldMovementPolicy<E> worldMovementPolicy, List<Vector2i> route) {
         this.navigator = requireNonNull(navigator);
         this.worldMovementPolicy = requireNonNull(worldMovementPolicy);
         this.route = requireNonNull(route);
@@ -45,7 +45,7 @@ public class RouteGuidedSteering implements Steering {
     }
 
     @Override
-    public void steer(GameEntity gameEntity, GameLevel level) {
+    public void steer(E gameEntity, GameLevel level) {
         requireNonNull(gameEntity);
         requireNonNull(level);
 
@@ -66,7 +66,7 @@ public class RouteGuidedSteering implements Steering {
         }
     }
 
-    private void selectNextTargetTile(GameLevel level, GameEntity actor) {
+    private void selectNextTargetTile(GameLevel level, E actor) {
         final WorldNavigationComp navigation = actor.reqComp(WorldNavigationComp.class);
         ++targetIndex;
         if (targetIndex < route.size()) {

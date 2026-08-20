@@ -211,7 +211,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         pac.cheats().setUsingAutopilot(true);
 
         // Overwrite autosteering for demo level by fixed route steering
-        pac.autoSteering().setSteering(new RouteGuidedSteering(
+        pac.autoSteering().setSteering(new RouteGuidedSteering<>(
             game.variant().systems().worldNavigator(),
             game.variant().systems().pacWorldMovementPolicy(),
             DEMO_LEVEL_ROUTE

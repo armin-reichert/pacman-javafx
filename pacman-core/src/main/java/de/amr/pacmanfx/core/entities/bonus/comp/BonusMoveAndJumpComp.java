@@ -6,6 +6,7 @@ package de.amr.pacmanfx.core.entities.bonus.comp;
 
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.ecs.EntityComponent;
+import de.amr.pacmanfx.core.entities.Bonus;
 import de.amr.pacmanfx.core.steering.RouteGuidedSteering;
 
 public class BonusMoveAndJumpComp implements EntityComponent {
@@ -14,7 +15,7 @@ public class BonusMoveAndJumpComp implements EntityComponent {
 
     private final Pulse jumpPulse;
 
-    private RouteGuidedSteering routeNavigation;
+    private RouteGuidedSteering<Bonus> routeNavigation;
 
     private boolean targetReached;
 
@@ -26,11 +27,11 @@ public class BonusMoveAndJumpComp implements EntityComponent {
         return jumpPulse;
     }
 
-    public void setRouteNavigation(RouteGuidedSteering routeNavigation) {
+    public void setRouteNavigation(RouteGuidedSteering<Bonus> routeNavigation) {
         this.routeNavigation = routeNavigation;
     }
 
-    public RouteGuidedSteering routeNavigation() {
+    public RouteGuidedSteering<Bonus> routeNavigation() {
         return routeNavigation;
     }
 

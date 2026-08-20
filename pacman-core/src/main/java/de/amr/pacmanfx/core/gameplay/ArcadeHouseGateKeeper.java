@@ -191,7 +191,7 @@ public final class ArcadeHouseGateKeeper {
         final House house = level.entities().house();
 
         if (globalCounterEnabled) {
-            if (level.entities().ghost(GhostPersonality.ORANGE_GHOST_POKEY).ghostStateEnum() == GhostState.LOCKED && globalCounterValue == 32) {
+            if (level.entities().ghost(GhostPersonality.ORANGE_GHOST_POKEY).state().enumValue() == GhostState.LOCKED && globalCounterValue == 32) {
                 Logger.info("{} inside house when global counter reached {}",
                     level.entities().ghost(GhostPersonality.ORANGE_GHOST_POKEY).name(), globalCounterValue);
                 resetCounterAndSetEnabled(false);
@@ -216,7 +216,7 @@ public final class ArcadeHouseGateKeeper {
         final House house = level.entities().house();
         final Ghost blinky = level.entities().ghost(GhostPersonality.RED_GHOST_SHADOW);
 
-        if (blinky.ghostStateEnum() == GhostState.LOCKED) {
+        if (blinky.state().enumValue() == GhostState.LOCKED) {
             if (house.isVisitedBy(blinky)) {
                 // Leave house immediately again after being eaten
                 systems.worldNavigator().setMoveDir(blinky, Direction.UP);
@@ -232,7 +232,7 @@ public final class ArcadeHouseGateKeeper {
         }
         Stream.of(GhostPersonality.PINK_GHOST_SPEEDY, GhostPersonality.CYAN_GHOST_BASHFUL, GhostPersonality.ORANGE_GHOST_POKEY)
             .map(level.entities()::ghost)
-            .filter(ghost -> ghost.ghostStateEnum() == GhostState.LOCKED)
+            .filter(ghost -> ghost.state().enumValue() == GhostState.LOCKED)
             .findFirst()
             .ifPresent(prisoner -> checkReleaseOfGhost(level, prisoner, pacDigestionSystem).ifPresent(_ -> {
                 systems.worldNavigator().setMoveDir(prisoner, Direction.UP);

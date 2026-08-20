@@ -12,7 +12,7 @@ public class GhostStateComp implements EntityComponent {
 
     public static final GhostState DEFAULT_STATE = GhostState.LOCKED;
 
-    private GhostState ghostStateEnum;
+    private GhostState enumValue;
 
     private boolean flashing;
 
@@ -22,12 +22,12 @@ public class GhostStateComp implements EntityComponent {
         reset();
     }
 
-    public GhostState ghostStateEnum() {
-        return ghostStateEnum;
+    public GhostState enumValue() {
+        return enumValue;
     }
 
-    public void setGhostStateEnum(GhostState ghostStateEnum) {
-        this.ghostStateEnum = requireNonNull(ghostStateEnum);
+    public void setEnumValue(GhostState enumValue) {
+        this.enumValue = requireNonNull(enumValue);
     }
 
     public boolean flashing() {
@@ -48,7 +48,7 @@ public class GhostStateComp implements EntityComponent {
 
     @Override
     public void reset() {
-        ghostStateEnum = DEFAULT_STATE;
+        enumValue = DEFAULT_STATE;
         flashing = false;
         threatenedByPac = false;
     }

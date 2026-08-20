@@ -81,7 +81,7 @@ public class EntityUpdater {
         final GameSystems systems = game.variant().systems();
 
         final BonusStateComp state = bonus.state();
-        switch (state.bonusState()) {
+        switch (state.enumValue()) {
             case INACTIVE -> {}
             case EDIBLE -> {
                 systems.bonusState().update(game, bonus);

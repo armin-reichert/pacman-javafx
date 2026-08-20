@@ -236,7 +236,7 @@ public class ArcadePacMan_IntroScene extends GameScene {
 
     private Optional<Ghost> edibleGhost() {
         return Stream.of(ghosts)
-            .filter(ghost -> ghost.ghostStateEnum() == FRIGHTENED)
+            .filter(ghost -> ghost.state().enumValue() == FRIGHTENED)
             .filter(ghost -> CollisionStrategy.SAME_TILE.collide(ghost, pacMan))
             .findFirst();
     }
@@ -263,7 +263,7 @@ public class ArcadePacMan_IntroScene extends GameScene {
         sys.worldNavigator().setMoveDirSpeed(pacMan, CHASING_SPEED);
 
         for (Ghost ghost : ghosts) {
-            if (ghost.ghostStateEnum() == EATEN) {
+            if (ghost.state().enumValue() == EATEN) {
                 ghost.hide();
             } else {
                 ghost.show();

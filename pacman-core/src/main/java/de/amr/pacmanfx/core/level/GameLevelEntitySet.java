@@ -84,7 +84,7 @@ public class GameLevelEntitySet {
 
     public Stream<Ghost> ghostsInState(GhostState state) {
         requireNonNull(state);
-        return theGhosts.values().stream().filter(ghost -> state.equals(ghost.ghostStateEnum()));
+        return theGhosts.values().stream().filter(ghost -> state.equals(ghost.state().enumValue()));
     }
 
     /**
@@ -101,7 +101,7 @@ public class GameLevelEntitySet {
 
     public Stream<Ghost> ghostsInAnyOfStates(Collection<GhostState> states) {
         requireNonNull(states);
-        return theGhosts.values().stream().filter(ghost -> states.contains(ghost.ghostStateEnum()));
+        return theGhosts.values().stream().filter(ghost -> states.contains(ghost.state().enumValue()));
     }
 
     public Optional<Bonus> optBonus() {

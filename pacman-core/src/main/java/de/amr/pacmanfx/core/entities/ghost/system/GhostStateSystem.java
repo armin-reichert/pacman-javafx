@@ -48,7 +48,7 @@ public class GhostStateSystem {
         ghost.state().setFlashing(pac.power().isFading());
         ghost.state().setThreatenedByPac(isGhostThreatenedByPac(level, ghost, pac));
 
-        switch (ghost.ghostStateEnum()) {
+        switch (ghost.state().enumValue()) {
 
             case LOCKED -> houseAccessSystem.stayInHouse(ghost, navigator, motor, speed);
 
@@ -81,7 +81,7 @@ public class GhostStateSystem {
         requireNonNull(ghost);
         requireNonNull(newState);
 
-        ghost.state().setGhostStateEnum(newState);
+        ghost.state().setEnumValue(newState);
     }
 
     public void setElroyEnabled(Ghost ghost, boolean enabled) {

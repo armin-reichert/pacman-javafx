@@ -61,6 +61,6 @@ public final class Bonus extends GameEntity {
     }
 
     public BonusState bonusState() {
-        return state().bonusState();
+        return state().enumValue();
     }
 }
