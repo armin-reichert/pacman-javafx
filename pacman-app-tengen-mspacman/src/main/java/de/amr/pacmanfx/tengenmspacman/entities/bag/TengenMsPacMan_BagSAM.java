@@ -4,26 +4,19 @@
 
 package de.amr.pacmanfx.tengenmspacman.entities.bag;
 
-
-import de.amr.basics.Named;
-import de.amr.basics.spriteanim.SpriteAnimation;
+import de.amr.basics.spriteanim.LazySAM;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
-import de.amr.pacmanfx.uilib.rendering.SpritesheetAnimationMap;
 
-public class BagSAM extends SpritesheetAnimationMap<SpriteID> {
+public class TengenMsPacMan_BagSAM extends LazySAM {
 
-    public BagSAM(SpriteAnimationContainer container) {
-        super(TengenMsPacMan_SpriteSheet.instance());
-        factory = id -> createAnimation(id, container);
-    }
+    private final TengenMsPacMan_SpriteSheet spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
-    private SpriteAnimation createAnimation(Named animationID, SpriteAnimationContainer container) {
-
-        return switch (animationID) {
+    public TengenMsPacMan_BagSAM(SpriteAnimationContainer container) {
+        factory = id -> switch (id) {
             case CommonSpriteAnimationID.BAG -> new SpriteAnimationBuilder()
                 .singleSprite(spriteSheet.findSprite(SpriteID.BLUE_BAG))
                 .initiallyStopped()
@@ -34,7 +27,7 @@ public class BagSAM extends SpritesheetAnimationMap<SpriteID> {
                 .initiallyStopped()
                 .build(container);
 
-            default -> throw new IllegalArgumentException("Illegal animation ID: " + animationID);
+            default -> throw new IllegalArgumentException("Illegal animation ID: " + id);
         };
     }
 }

@@ -6,16 +6,17 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.basics.Named;
 import de.amr.basics.math.Direction;
+import de.amr.basics.spriteanim.LazySAM;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
-import de.amr.pacmanfx.uilib.rendering.SpritesheetAnimationMap;
 
-public class ArcadeMsPacMan_PacSAM extends SpritesheetAnimationMap<SpriteID> {
+public class ArcadeMsPacMan_PacSAM extends LazySAM {
+
+    private final ArcadeMsPacMan_SpriteSheet spriteSheet = ArcadeMsPacMan_SpriteSheet.instance();
 
     public ArcadeMsPacMan_PacSAM(SpriteAnimationContainer container) {
-        super(ArcadeMsPacMan_SpriteSheet.instance());
         factory = id -> createAnimation(id, container);
     }
 
@@ -27,12 +28,12 @@ public class ArcadeMsPacMan_PacSAM extends SpritesheetAnimationMap<SpriteID> {
                 .build(container);
 
             case CommonSpriteAnimationID.PAC_MUNCHING -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet().msPacManMunchingSprites(Direction.LEFT))
+                .sprites(spriteSheet.msPacManMunchingSprites(Direction.LEFT))
                 .repeated()
                 .build(container);
 
             case CommonSpriteAnimationID.PAC_DYING -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet().findSprites(SpriteID.MS_PACMAN_DYING))
+                .sprites(spriteSheet.findSprites(SpriteID.MS_PACMAN_DYING))
                 .frameTicks(8)
                 .build(container);
 
@@ -44,10 +45,5 @@ public class ArcadeMsPacMan_PacSAM extends SpritesheetAnimationMap<SpriteID> {
 
             default -> throw new IllegalArgumentException("Illegal animation ID: " + animationID);
         };
-    }
-
-    @Override
-    public ArcadeMsPacMan_SpriteSheet spriteSheet() {
-        return (ArcadeMsPacMan_SpriteSheet) super.spriteSheet();
     }
 }

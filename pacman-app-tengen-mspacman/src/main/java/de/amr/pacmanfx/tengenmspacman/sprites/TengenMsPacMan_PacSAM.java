@@ -3,29 +3,23 @@
  */
 package de.amr.pacmanfx.tengenmspacman.sprites;
 
-import de.amr.basics.Named;
 import de.amr.basics.math.RectShort;
-import de.amr.basics.spriteanim.SpriteAnimation;
+import de.amr.basics.spriteanim.LazySAM;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
-import de.amr.pacmanfx.uilib.rendering.SpritesheetAnimationMap;
 
 import java.util.Arrays;
 
 import static de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID.*;
 
-public class TengenMsPacMan_PacSAM extends SpritesheetAnimationMap<SpriteID> {
+public class TengenMsPacMan_PacSAM extends LazySAM {
+
+    private final TengenMsPacMan_SpriteSheet spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
     public TengenMsPacMan_PacSAM(SpriteAnimationContainer container) {
-        super(TengenMsPacMan_SpriteSheet.instance());
-        factory = id -> createAnimation(id, container);
-    }
-
-    private SpriteAnimation createAnimation(Named animationID, SpriteAnimationContainer container) {
-
-        return switch (animationID) {
+        factory = id -> switch (id) {
             case CommonSpriteAnimationID.PAC_FULL -> new SpriteAnimationBuilder()
                 .singleSprite(spriteSheet.findSprite(SpriteID.MS_PAC_FULL))
                 .build(container);
@@ -85,13 +79,8 @@ public class TengenMsPacMan_PacSAM extends SpritesheetAnimationMap<SpriteID> {
                 .initiallyStopped()
                 .build(container);
 
-            default -> throw new IllegalArgumentException("Illegal animation ID " + animationID);
+            default -> throw new IllegalArgumentException("Illegal animation ID " + id);
         };
-    }
-
-    @Override
-    public TengenMsPacMan_SpriteSheet spriteSheet() {
-        return (TengenMsPacMan_SpriteSheet) super.spriteSheet();
     }
 
     //TODO rethink this

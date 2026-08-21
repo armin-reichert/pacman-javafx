@@ -4,30 +4,27 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.entities.stork;
 
-import de.amr.basics.Named;
-import de.amr.basics.spriteanim.SpriteAnimation;
+import de.amr.basics.spriteanim.LazySAM;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
-import de.amr.pacmanfx.uilib.rendering.SpritesheetAnimationMap;
 
-public class StorkSAM extends SpritesheetAnimationMap<SpriteID> {
+public class StorkSAM extends LazySAM {
+
+    private final ArcadeMsPacMan_SpriteSheet spriteSheet = ArcadeMsPacMan_SpriteSheet.instance();
 
     public StorkSAM(SpriteAnimationContainer container) {
-        super(ArcadeMsPacMan_SpriteSheet.instance());
-        factory = id -> createAnimation(id, container);
-    }
-
-    private SpriteAnimation createAnimation(Named animationID, SpriteAnimationContainer container) {
-        if (animationID.equals(CommonSpriteAnimationID.STORK_FLYING)) {
-            return new SpriteAnimationBuilder()
-                .sprites(spriteSheet.findSprites(SpriteID.STORK))
-                .frameTicks(8)
-                .repeated()
-                .build(container);
-        }
-        throw new IllegalArgumentException("Illegal animation ID: " + animationID);
+        factory = id -> {
+            if (id == CommonSpriteAnimationID.STORK_FLYING) {
+                return new SpriteAnimationBuilder()
+                    .sprites(spriteSheet.findSprites(SpriteID.STORK))
+                    .frameTicks(8)
+                    .repeated()
+                    .build(container);
+            }
+            throw new IllegalArgumentException("Illegal animation ID: " + id);
+        };
     }
 }

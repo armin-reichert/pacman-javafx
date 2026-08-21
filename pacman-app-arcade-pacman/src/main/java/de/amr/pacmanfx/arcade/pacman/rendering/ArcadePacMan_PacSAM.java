@@ -5,25 +5,26 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.Named;
 import de.amr.basics.math.Direction;
+import de.amr.basics.spriteanim.LazySAM;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
-import de.amr.pacmanfx.uilib.rendering.SpritesheetAnimationMap;
 
-public class ArcadePacMan_PacSAM extends SpritesheetAnimationMap<SpriteID> {
+public class ArcadePacMan_PacSAM extends LazySAM {
 
     public enum AnimationID implements Named {
         ANIM_BIG_PAC_MAN,
     }
 
+    private final ArcadePacMan_SpriteSheet spriteSheet;
+
     public ArcadePacMan_PacSAM(SpriteAnimationContainer container, ArcadePacMan_SpriteSheet spriteSheet) {
-        super(spriteSheet);
+        this.spriteSheet = spriteSheet;
         factory = id -> createAnimation(id, container);
     }
 
     private SpriteAnimation createAnimation(Named animationID, SpriteAnimationContainer container) {
-
         return switch (animationID) {
             case CommonSpriteAnimationID.PAC_FULL -> new SpriteAnimationBuilder()
                 .singleSprite(spriteSheet.findSprite(SpriteID.PACMAN_FULL))
@@ -32,7 +33,7 @@ public class ArcadePacMan_PacSAM extends SpritesheetAnimationMap<SpriteID> {
 
             // Renderer draws sprites depending on Pac-Man move direction!
             case CommonSpriteAnimationID.PAC_MUNCHING -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet().pacMunchingSprites(Direction.LEFT))
+                .sprites(spriteSheet.pacMunchingSprites(Direction.LEFT))
                 .repeated()
                 .build(container);
 
@@ -49,10 +50,5 @@ public class ArcadePacMan_PacSAM extends SpritesheetAnimationMap<SpriteID> {
 
             default -> throw new IllegalArgumentException("Illegal animation ID: " + animationID);
         };
-    }
-
-    @Override
-    public ArcadePacMan_SpriteSheet spriteSheet() {
-        return (ArcadePacMan_SpriteSheet) super.spriteSheet();
     }
 }

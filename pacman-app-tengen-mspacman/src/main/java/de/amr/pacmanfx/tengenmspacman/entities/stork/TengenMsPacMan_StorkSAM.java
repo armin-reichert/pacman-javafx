@@ -6,20 +6,20 @@ package de.amr.pacmanfx.tengenmspacman.entities.stork;
 
 
 import de.amr.basics.Named;
+import de.amr.basics.spriteanim.LazySAM;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
-import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
-import de.amr.pacmanfx.uilib.rendering.SpritesheetAnimationMap;
 
 import static de.amr.pacmanfx.tengenmspacman.sprites.SpriteID.STORK;
 
-public class TengenMsPacMan_StorkSAM extends SpritesheetAnimationMap<SpriteID> {
+public class TengenMsPacMan_StorkSAM extends LazySAM {
+
+    private final TengenMsPacMan_SpriteSheet spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
     public TengenMsPacMan_StorkSAM(SpriteAnimationContainer container) {
-        super(TengenMsPacMan_SpriteSheet.instance());
         factory = id -> createAnimation(id, container);
     }
 

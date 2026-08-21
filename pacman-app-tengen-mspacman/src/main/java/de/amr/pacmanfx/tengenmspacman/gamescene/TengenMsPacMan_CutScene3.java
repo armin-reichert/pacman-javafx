@@ -18,7 +18,7 @@ import de.amr.pacmanfx.core.entities.stork.Stork;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.entities.bag.BagAnimationSystem;
-import de.amr.pacmanfx.tengenmspacman.entities.bag.BagSAM;
+import de.amr.pacmanfx.tengenmspacman.entities.bag.TengenMsPacMan_BagSAM;
 import de.amr.pacmanfx.tengenmspacman.entities.clapperboard.TengenMsPacMan_ClapperboardStateSystem;
 import de.amr.pacmanfx.tengenmspacman.entities.stork.TengenMsPacMan_StorkSAM;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
@@ -117,7 +117,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene {
         stork.spriteAnim().setAnimations(new TengenMsPacMan_StorkSAM(animationContainer));
 
         bag = new Bag();
-        bag.spriteAnim().setAnimations(new BagSAM(animationContainer));
+        bag.spriteAnim().setAnimations(new TengenMsPacMan_BagSAM(animationContainer));
     }
     
     private void playMusic() {
