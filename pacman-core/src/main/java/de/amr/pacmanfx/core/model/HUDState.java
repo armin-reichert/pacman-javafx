@@ -6,17 +6,13 @@ package de.amr.pacmanfx.core.model;
 
 import de.amr.pacmanfx.core.level.GameLevelMessage;
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 
 import java.util.Optional;
 
 public class HUDState {
 
     public final BooleanProperty visible = new SimpleBooleanProperty(true);
-
-    public final IntegerProperty credit = new SimpleIntegerProperty(0);
 
     public final BooleanProperty creditShown = new SimpleBooleanProperty(false);
 
@@ -114,20 +110,6 @@ public class HUDState {
     public HUDState hideScore() {
         scoreShown.set(false);
         return this;
-    }
-
-    // credit
-
-    public int credit() {
-        return credit.get();
-    }
-
-    public void setCredit(int credit) {
-        creditProperty().set(credit);
-    }
-
-    public IntegerProperty creditProperty() {
-        return credit;
     }
 
     // Messages appearing over level ("READY", "GAME OVER")

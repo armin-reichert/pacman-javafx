@@ -35,11 +35,9 @@ public final class PacManGamesMasterApp implements GameAppContext {
      * A state change event from the current game flow state machine is converted
      * into a game event and published such that UI components (views, game scenes) can handle them.
      */
-    private static class StateChangeEventConverter implements StateChangeListener<GameContext> {
+    private record StateChangeEventMapper(GameEventManager eventManager) implements StateChangeListener<GameContext> {
 
-        private final GameEventManager eventManager;
-
-        public StateChangeEventConverter(GameEventManager eventManager) {
+        private StateChangeEventMapper(GameEventManager eventManager) {
             this.eventManager = requireNonNull(eventManager);
         }
 
@@ -59,7 +57,7 @@ public final class PacManGamesMasterApp implements GameAppContext {
 
     private GameContext game;
 
-    private StateChangeEventConverter changeEventConverter;
+    private StateChangeEventMapper stateChangeEventMapper;
 
     private DefaultGameVariantManager gameVariantManager;
 
@@ -198,10 +196,7 @@ public final class PacManGamesMasterApp implements GameAppContext {
     }
 
     private void createSession() {
-        final String variantName = gameVariantManager.currentVariantName();
-        final var session = new GameSession(variantName, new GameCheats());
-        session.hud().creditProperty().bind(gameBox.coinMechanism().numCoinsProperty());
-        game.setSession(session);
+        game.setSession(new GameSession(gameVariantManager.currentVariantName(), new GameCheats()));
     }
 
     private void startBackgroundServices() {
@@ -232,16 +227,16 @@ public final class PacManGamesMasterApp implements GameAppContext {
         );
         createSession();
 
-        changeEventConverter = new StateChangeEventConverter(game.eventManager());
+        stateChangeEventMapper = new StateChangeEventMapper(game.eventManager());
         game.eventManager().addGameEventSubscriber(ui);
 
-        gameVariant.config().gameFlow().addStateChangeListener(changeEventConverter);
+        gameVariant.config().gameFlow().addStateChangeListener(stateChangeEventMapper);
     }
 
     private void exitGameVariant(GameVariant gameVariant) {
         requireNonNull(gameVariant);
 
-        gameVariant.config().gameFlow().removeStateChangeListener(changeEventConverter);
+        gameVariant.config().gameFlow().removeStateChangeListener(stateChangeEventMapper);
         gameVariant.uiConfig().unloadSounds(ui.sounds());
         gameVariant.uiConfig().dispose();
 

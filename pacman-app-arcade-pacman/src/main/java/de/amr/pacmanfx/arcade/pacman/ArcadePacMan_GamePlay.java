@@ -95,7 +95,6 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         session.setGateKeeper(gateKeeper);
 
         final HUDState hudState = session.hud();
-        hudState.creditProperty().bind(game.coinMechanism().numCoinsProperty());
         hudState.hide();
 
         session.setCutScenesEnabled(true);

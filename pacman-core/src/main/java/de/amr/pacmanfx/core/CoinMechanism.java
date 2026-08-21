@@ -37,12 +37,8 @@ public class CoinMechanism {
         return enabled;
     }
 
-    public IntegerProperty numCoinsProperty() {
-        return numCoins;
-    }
-
     public int numCoins() {
-        return numCoinsProperty().get();
+        return numCoins.get();
     }
 
     public int maxCoins() {
@@ -59,7 +55,7 @@ public class CoinMechanism {
 
     public void setNumCoins(int n) {
         if (n >= 0 && n <= maxCoins) {
-            numCoinsProperty().set(n);
+            numCoins.set(n);
         } else {
             Logger.error("Cannot set number of coins to {}", n);
         }

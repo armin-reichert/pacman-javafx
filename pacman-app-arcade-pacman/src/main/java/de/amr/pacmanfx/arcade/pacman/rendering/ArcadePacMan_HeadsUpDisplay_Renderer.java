@@ -90,7 +90,8 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer
         }
 
         if (hud.isCreditShown()) {
-            fillText(CREDIT_TEXT_PATTERN.formatted(hud.credit()), ARCADE_WHITE, arcadeFont8(), tilesPx(2), gameScene.rendering2D().unscaledHeight());
+            final int credit = gameScene.game().coinMechanism().numCoins();
+            fillText(CREDIT_TEXT_PATTERN.formatted(credit), ARCADE_WHITE, arcadeFont8(), tilesPx(2), gameScene.rendering2D().unscaledHeight());
         }
     }
 

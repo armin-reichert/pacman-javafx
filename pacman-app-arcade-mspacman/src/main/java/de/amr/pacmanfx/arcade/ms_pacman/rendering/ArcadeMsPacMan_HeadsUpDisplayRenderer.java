@@ -43,9 +43,9 @@ public class ArcadeMsPacMan_HeadsUpDisplayRenderer extends BaseRenderer implemen
     }
 
     @Override
-    public void draw(GameSession session, GameScene scene, long tick) {
+    public void draw(GameSession session, GameScene gameScene, long tick) {
         requireNonNull(session);
-        requireNonNull(scene);
+        requireNonNull(gameScene);
 
         final HUDState hud = session.hud();
 
@@ -64,8 +64,8 @@ public class ArcadeMsPacMan_HeadsUpDisplayRenderer extends BaseRenderer implemen
 
         if (hud.isLevelCounterShown()) {
             final RectShort[] bonusSymbols = spriteSheet().findSprites(SpriteID.BONUS_SYMBOLS);
-            float x = scene.rendering2D().unscaledWidth() - tilesPx(4);
-            final float y = scene.rendering2D().unscaledHeight() - tilesPx(2) + 2;
+            float x = gameScene.rendering2D().unscaledWidth() - tilesPx(4);
+            final float y = gameScene.rendering2D().unscaledHeight() - tilesPx(2) + 2;
             final List<Integer> symbolCodes = session.levelCounter()
                 .data().symbolCodes();
             for (int symbolCode : symbolCodes) {
@@ -77,7 +77,7 @@ public class ArcadeMsPacMan_HeadsUpDisplayRenderer extends BaseRenderer implemen
         if (hud.isLivesCounterShown()) {
             final RectShort sprite = spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL);
             final float x = tilesPx(2);
-            final float y = scene.rendering2D().unscaledHeight() - tilesPx(2);
+            final float y = gameScene.rendering2D().unscaledHeight() - tilesPx(2);
             for (int i = 0; i < hud.visibleLifeCount(); ++i) {
                 drawSprite(sprite, x + i * tilesPx(2), y, true);
             }
@@ -91,8 +91,9 @@ public class ArcadeMsPacMan_HeadsUpDisplayRenderer extends BaseRenderer implemen
         }
 
         if (hud.isCreditShown()) {
-            fillText("CREDIT %2d".formatted(hud.credit()), ARCADE_WHITE, arcadeFont8(), tilesPx(2),
-                scene.rendering2D().unscaledHeight());
+            final int credit = gameScene.game().coinMechanism().numCoins();
+            fillText("CREDIT %2d".formatted(credit), ARCADE_WHITE, arcadeFont8(), tilesPx(2),
+                gameScene.rendering2D().unscaledHeight());
         }
     }
 
