@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.gamescene;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
-import de.amr.basics.spriteanim.SpriteAnimationContainer;
+import de.amr.basics.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
@@ -124,7 +124,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
     private void createActors() {
         final var actorFactory = TengenMsPacMan_ActorFactory.instance();
         final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().uiConfig().renderConfig();
-        final SpriteAnimationContainer animationContainer = app().ui().sprites().animations();
+        final SpriteAnimContainer animationContainer = app().ui().spriteAnimManager().animContainer();
 
         clapperboard = new Clapperboard("4", "THE END");
         clapperboard.pos().set(tilesPx(3), tilesPx(10));
@@ -229,7 +229,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
         final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().uiConfig().renderConfig();
         final WorldNavigationSystem navigator = systems.worldNavigator();
         final SpriteAnimController animSystem = systems.spriteAnimController();
-        final SpriteAnimationContainer spriteAnimations = app().ui().sprites().animations();
+        final SpriteAnimContainer spriteAnimations = app().ui().spriteAnimManager().animContainer();
 
         final Pac junior = factory.createPacMan();
         double randomX = 8 * TS + (8 * TS) * Math.random();

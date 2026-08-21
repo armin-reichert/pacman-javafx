@@ -5,9 +5,9 @@ package de.amr.pacmanfx.tengenmspacman.gamescene;
 
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.MovementComp;
-import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -43,9 +43,10 @@ public class TengenMsPacMan_BootScene extends GameScene {
         movingText = new GameEntity();
         movingText.setComp(MovementComp.class, new MovementComp());
         movingText.pos().set(tilesPx(9), rendering2D().unscaledHeight()); // lower border of screen
-        ghost = app().gameVariants().currentGameVariant().uiConfig().renderConfig().createAnimatedGhost(
-            game(),
-            app().ui().sprites().animations(),
+
+        ghost = app().currentGameVariantUIConfig().renderConfig().createAnimatedGhost(
+            game().variant().systems().spriteAnimController(),
+            app().ui().spriteAnimManager().animContainer(),
             GhostPersonality.RED_GHOST_SHADOW);
 
         game().session().hud().hide();
@@ -57,9 +58,9 @@ public class TengenMsPacMan_BootScene extends GameScene {
 
         final int stateTick = (int) game().state().timer().tickCount();
         switch (stateTick) {
-            case   1 -> gray(false);
-            case   7 -> gray(true);
-            case  12 -> gray(false);
+            case   1 -> blackBackground();
+            case   7 -> grayBackground();
+            case  12 -> blackBackground();
             case  21 -> {
                 movingText.show();
                 sys.motor().setVelocity(movingText, 0, -WorldMap.HTS);
@@ -80,8 +81,8 @@ public class TengenMsPacMan_BootScene extends GameScene {
                 movingText.hide();
                 ghost.hide();
             }
-            case 204 -> gray(true);
-            case 214 -> gray(false);
+            case 204 -> grayBackground();
+            case 214 -> blackBackground();
             case 220 -> {
                 game().state().triggerTimeout();
                 return;
@@ -92,5 +93,11 @@ public class TengenMsPacMan_BootScene extends GameScene {
         sys.motor().move(movingText);
     }
 
-    private void gray(boolean b)  { gray = b; }
+    private void blackBackground() {
+        gray = false;
+
+    }
+    private void grayBackground() {
+        gray = true;
+    }
 }

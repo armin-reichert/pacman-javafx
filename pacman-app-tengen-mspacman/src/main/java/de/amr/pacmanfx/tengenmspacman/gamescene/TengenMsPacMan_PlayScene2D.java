@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.tengenmspacman.gamescene;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.basics.spriteanim.SpriteAnimationContainer;
+import de.amr.basics.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimController;
@@ -301,7 +301,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene
 
     private void ensureActorAnimationsCreated(GameSession session, GameLevel level) {
         final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().uiConfig().renderConfig();
-        final SpriteAnimationContainer animationContainer = app().ui().sprites().animations();
+        final SpriteAnimContainer animationContainer = app().ui().spriteAnimManager().animContainer();
 
         final SpriteAnimController animSystem = app().game().variant().systems().spriteAnimController();
 

@@ -6,13 +6,14 @@ package de.amr.pacmanfx.tengenmspacman.gamescene;
 import de.amr.basics.fsm.State;
 import de.amr.basics.fsm.StateMachine;
 import de.amr.basics.math.Direction;
-import de.amr.basics.spriteanim.SpriteAnimationContainer;
+import de.amr.basics.spriteanim.SpriteAnimContainer;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
+import de.amr.pacmanfx.core.ecs.systems.SpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
@@ -154,45 +155,46 @@ public class TengenMsPacMan_IntroScene extends GameScene {
         SHOWING_MARQUEE {
             @Override
             public void onEnter(TengenMsPacMan_IntroScene scene) {
-                GameSystems sys = scene.game().variant().systems();
-
-                final GameVariantRenderConfig renderConfig = scene.app().gameVariants().currentGameVariant().uiConfig().renderConfig();
-                final SpriteAnimationContainer spriteAnimations = scene.app().ui().sprites().animations();
+                final var actorFactory = TengenMsPacMan_ActorFactory.instance();
+                final GameVariantRenderConfig renderConfig = scene.app().currentGameVariantUIConfig().renderConfig();
+                final SpriteAnimContainer animContainer = scene.app().ui().spriteAnimManager().animContainer();
+                final GameSystems systems = scene.game().variant().systems();
+                final SpriteAnimController animController = systems.spriteAnimController();
+                final WorldNavigationSystem worldNavigationSystem = systems.worldNavigator();
 
                 timer.restartTicks(TickTimer.INDEFINITE);
+
                 MarqueeSystem.instance().start(scene.marquee);
 
-                final var factory = TengenMsPacMan_ActorFactory.instance();
-
-                scene.msPacMan = factory.createMsPacMan();
+                scene.msPacMan = actorFactory.createMsPacMan();
                 scene.msPacMan.pos().set(WorldMap.TS * 33, ACTOR_Y);
                 scene.msPacMan.show();
 
-                sys.worldNavigator().setMoveDir(scene.msPacMan, Direction.LEFT);
-                sys.worldNavigator().setMoveDirSpeed(scene.msPacMan, SPEED);
+                worldNavigationSystem.setMoveDir(scene.msPacMan, Direction.LEFT);
+                worldNavigationSystem.setMoveDirSpeed(scene.msPacMan, SPEED);
 
-                sys.spriteAnimController().setAnimations(scene.msPacMan, renderConfig.createPacAnimations(spriteAnimations));
-                sys.spriteAnimController().select(scene.msPacMan, CommonSpriteAnimationID.PAC_MUNCHING);
-                sys.spriteAnimController().playSelected(scene.msPacMan);
+                animController.setAnimations(scene.msPacMan, renderConfig.createPacAnimations(animContainer));
+                animController.select(scene.msPacMan, CommonSpriteAnimationID.PAC_MUNCHING);
+                animController.playSelected(scene.msPacMan);
 
                 scene.ghosts = List.of(
-                    renderConfig.createAnimatedGhost(scene.game(), spriteAnimations, GhostPersonality.RED_GHOST_SHADOW),
-                    renderConfig.createAnimatedGhost(scene.game(), spriteAnimations, GhostPersonality.CYAN_GHOST_BASHFUL),
-                    renderConfig.createAnimatedGhost(scene.game(), spriteAnimations, GhostPersonality.PINK_GHOST_SPEEDY),
-                    renderConfig.createAnimatedGhost(scene.game(), spriteAnimations, GhostPersonality.ORANGE_GHOST_POKEY)
+                    renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.RED_GHOST_SHADOW),
+                    renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.CYAN_GHOST_BASHFUL),
+                    renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.PINK_GHOST_SPEEDY),
+                    renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.ORANGE_GHOST_POKEY)
                 );
 
                 for (Ghost ghost : scene.ghosts) {
                     ghost.pos().set(WorldMap.TS * 33, ACTOR_Y);
                     ghost.show();
 
-                    sys.worldNavigator().setMoveDir(ghost, Direction.LEFT);
-                    sys.worldNavigator().setWishDir(ghost, Direction.LEFT);
-                    sys.worldNavigator().setMoveDirSpeed(ghost, SPEED);
+                    worldNavigationSystem.setMoveDir(ghost, Direction.LEFT);
+                    worldNavigationSystem.setWishDir(ghost, Direction.LEFT);
+                    worldNavigationSystem.setMoveDirSpeed(ghost, SPEED);
 
-                    sys.spriteAnimController().playSelected(ghost);
+                    animController.playSelected(ghost);
 
-                    sys.ghostState().changeGhostState(ghost, GhostState.HUNTING_PAC);
+                    systems.ghostState().changeGhostState(ghost, GhostState.HUNTING_PAC);
                 }
                 scene.ghostIndex = 0;
             }

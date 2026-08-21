@@ -6,7 +6,7 @@ package de.amr.pacmanfx.core.ecs.systems;
 
 import de.amr.basics.Named;
 import de.amr.basics.math.RectShort;
-import de.amr.basics.spriteanim.SpriteAnimationFacade;
+import de.amr.basics.spriteanim.SpriteAnimFacade;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
 
@@ -16,12 +16,10 @@ public final class SpriteAnimController {
 
     public SpriteAnimController() {}
 
-    public void setAnimations(GameEntity actor, SpriteAnimationFacade animations) {
+    public void setAnimations(GameEntity actor, SpriteAnimFacade animations) {
+        requireNonNull(actor);
+        requireNonNull(animations);
         actor.reqComp(SpriteAnimationComp.class).setSpriteAnimations(animations);
-    }
-
-    private SpriteAnimationFacade spriteAnim(GameEntity actor) {
-        return actor.reqComp(SpriteAnimationComp.class).spriteAnimations();
     }
 
     public boolean hasNoAnimations(GameEntity actor) {
@@ -48,6 +46,7 @@ public final class SpriteAnimController {
     }
 
     public void setAnimationFrame(GameEntity actor, Named animationID, int frameIndex) {
+        requireNonNull(animationID);
         spriteAnim(actor).setAnimationFrame(animationID, frameIndex);
     }
 
@@ -80,5 +79,10 @@ public final class SpriteAnimController {
 
     public void resetSelected(GameEntity actor) {
         spriteAnim(actor).resetSelected();
+    }
+
+    private SpriteAnimFacade spriteAnim(GameEntity actor) {
+        requireNonNull(actor);
+        return actor.reqComp(SpriteAnimationComp.class).spriteAnimations();
     }
 }

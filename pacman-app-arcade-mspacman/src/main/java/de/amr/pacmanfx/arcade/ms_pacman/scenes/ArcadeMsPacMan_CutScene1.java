@@ -4,14 +4,15 @@
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.basics.math.Direction;
-import de.amr.basics.spriteanim.SpriteAnimationContainer;
+import de.amr.basics.spriteanim.SpriteAnimContainer;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.Heart;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.ecs.systems.SpriteAnimController;
 import de.amr.pacmanfx.core.entities.Clapperboard;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
@@ -79,24 +80,27 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene {
     }
 
     private void initScene() {
-        final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().uiConfig().renderConfig();
-        final SpriteAnimationContainer animationContainer = app().ui().sprites().animations();
-        final var factory = new ArcadeMsPacMan_ActorFactory();
+        final var actorFactory = new ArcadeMsPacMan_ActorFactory();
+        final GameVariantRenderConfig renderConfig = app().currentGameVariantUIConfig().renderConfig();
+        final SpriteAnimContainer animContainer = app().ui().spriteAnimManager().animContainer();
 
-        pacMan = factory.createPacMan();
-        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animationContainer));
+        final SpriteAnimController animController = app().game().variant().systems().spriteAnimController();
 
-        msPacMan = factory.createMsPacMan();
-        msPacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animationContainer));
+        pacMan = actorFactory.createPacMan();
+        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animContainer));
 
-        inky = renderConfig.createAnimatedGhost(game(), animationContainer, GhostPersonality.CYAN_GHOST_BASHFUL);
+        msPacMan = actorFactory.createMsPacMan();
+        msPacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animContainer));
 
-        pinky = renderConfig.createAnimatedGhost(game(), animationContainer, GhostPersonality.PINK_GHOST_SPEEDY);
+        inky = renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.CYAN_GHOST_BASHFUL);
+
+        pinky = renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.PINK_GHOST_SPEEDY);
 
         heart = new Heart();
 
         clapperboard = new Clapperboard("1", "THEY MEET");
         clapperboard.pos().set(tilesPx(3), tilesPx(10));
+
         ClapperboardStateSystem.startFlapAnimation(clapperboard);
     }
 

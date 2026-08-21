@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.tengenmspacman.gamescene;
 
 import de.amr.basics.math.Direction;
-import de.amr.basics.spriteanim.SpriteAnimationContainer;
+import de.amr.basics.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
@@ -111,16 +111,16 @@ public class TengenMsPacMan_CutScene1 extends GameScene {
 
     @Override
     public void onTick(GameContext game) {
-        final int tick = (int) game().state().timer().tickCount();
+        final int tick = (int) game.state().timer().tickCount();
         switch (tick) {
             case TICK_CLAP -> {
-                getReady(game());
+                getReady(game.variant().systems().worldNavigator());
                 clapperboard.show();
                 TengenMsPacMan_ClapperboardStateSystem.startFlapAnimation(clapperboard);
                 playMusic();
             }
             case TICK_EXPIRES -> {
-                game().state().triggerTimeout();
+                game.state().triggerTimeout();
                 return;
             }
         }
@@ -131,22 +131,26 @@ public class TengenMsPacMan_CutScene1 extends GameScene {
 
     private void createActors(GameContext game) {
         final var actorFactory = TengenMsPacMan_ActorFactory.instance();
-        final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().uiConfig().renderConfig();
-        final SpriteAnimationContainer animationContainer = app().ui().sprites().animations();
+        final GameVariantRenderConfig renderConfig = app().currentGameVariantUIConfig().renderConfig();
+        final SpriteAnimContainer animationContainer = app().ui().spriteAnimManager().animContainer();
+        final SpriteAnimController animController = game.variant().systems().spriteAnimController();
 
         clapperboard = new Clapperboard("1", "THEY MEET");
+
         msPacMan = actorFactory.createMsPacMan();
         msPacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animationContainer));
+
         pacMan = actorFactory.createPacMan();
         pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animationContainer));
-        inky = renderConfig.createAnimatedGhost(game, animationContainer, GhostPersonality.CYAN_GHOST_BASHFUL);
-        pinky = renderConfig.createAnimatedGhost(game, animationContainer, GhostPersonality.PINK_GHOST_SPEEDY);
+
+        inky = renderConfig.createAnimatedGhost(animController, animationContainer, GhostPersonality.CYAN_GHOST_BASHFUL);
+
+        pinky = renderConfig.createAnimatedGhost(animController, animationContainer, GhostPersonality.PINK_GHOST_SPEEDY);
+
         heart = new Heart();
     }
 
-    private void getReady(GameContext game) {
-        final WorldNavigationSystem navigator = game.variant().systems().worldNavigator();
-
+    private void getReady(WorldNavigationSystem navigator) {
         clapperboard.pos().set(3 * WorldMap.TS, 10 * WorldMap.TS);
 
         msPacMan.pos().set(RIGHT_BORDER, LOWER_LANE);

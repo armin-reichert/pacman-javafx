@@ -103,7 +103,7 @@ public class GameUI implements GameEventListener {
         return sounds;
     }
 
-    public SpriteAnimationManager sprites() {
+    public SpriteAnimationManager spriteAnimManager() {
         return sprites;
     }
 
@@ -124,7 +124,7 @@ public class GameUI implements GameEventListener {
 
     public void terminate() {
         sprites.stopAnimationTimer();
-        sprites.animations().clear();
+        sprites.animContainer().clear();
         window.mainScene().flashMessageManager().stopAnimationTimer();
     }
 

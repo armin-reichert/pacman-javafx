@@ -11,14 +11,14 @@ import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 
-public class SpriteAnimationContainer {
+public class SpriteAnimContainer {
 
     private final Set<SpriteAnimation> active = new HashSet<>();
     private final Set<SpriteAnimation> pendingAdd = new HashSet<>();
     private final Set<SpriteAnimation> pendingRemove = new HashSet<>();
     private boolean clearRequest;
 
-    public SpriteAnimationContainer() {}
+    public SpriteAnimContainer() {}
 
     public Iterable<SpriteAnimation> activeAnimations() {
         if (clearRequest) {

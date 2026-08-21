@@ -1,17 +1,17 @@
 package de.amr.pacmanfx.core.ecs.comp;
 
-import de.amr.basics.spriteanim.SpriteAnimationFacade;
+import de.amr.basics.spriteanim.SpriteAnimFacade;
 import de.amr.pacmanfx.core.ecs.EntityComponent;
 
 public class SpriteAnimationComp implements EntityComponent {
 
-    private SpriteAnimationFacade facade = SpriteAnimationFacade.EMPTY_SPRITE_ANIMATION_FACADE;
+    private SpriteAnimFacade facade = SpriteAnimFacade.EMPTY_SPRITE_ANIMATION_FACADE;
 
-    public void setSpriteAnimations(SpriteAnimationFacade facade) {
+    public void setSpriteAnimations(SpriteAnimFacade facade) {
         this.facade = facade;
     }
 
-    public SpriteAnimationFacade spriteAnimations() {
+    public SpriteAnimFacade spriteAnimations() {
         return facade;
     }
 }

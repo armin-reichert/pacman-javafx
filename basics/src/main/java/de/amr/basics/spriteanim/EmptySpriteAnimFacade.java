@@ -10,7 +10,7 @@ import de.amr.basics.math.RectShort;
 /**
  * Null object for sprite animation facade interface.
  */
-public class EmptySpriteAnimationFacade implements SpriteAnimationFacade {
+public class EmptySpriteAnimFacade implements SpriteAnimFacade {
 
     @Override
     public Object animation(Named animationID) {
@@ -24,7 +24,7 @@ public class EmptySpriteAnimationFacade implements SpriteAnimationFacade {
 
     @Override
     public boolean isSelected(Named animationID) {
-        return SpriteAnimationFacade.super.isSelected(animationID);
+        return SpriteAnimFacade.super.isSelected(animationID);
     }
 
     @Override

@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.gamescene.d2;
 
 import de.amr.basics.spriteanim.SpriteAnimation;
-import de.amr.basics.spriteanim.SpriteAnimationContainer;
+import de.amr.basics.spriteanim.SpriteAnimContainer;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -13,7 +13,7 @@ import javafx.util.Duration;
 
 public class SpriteAnimationManager {
 
-    private final SpriteAnimationContainer animations;
+    private final SpriteAnimContainer animations;
     private final Animation timer;
 
     public SpriteAnimationManager() {
@@ -21,7 +21,7 @@ public class SpriteAnimationManager {
     }
 
     public SpriteAnimationManager(int fps) {
-        animations = new SpriteAnimationContainer();
+        animations = new SpriteAnimContainer();
         timer = new Timeline(new KeyFrame(Duration.seconds(1.0 / fps), _ -> {
             for (SpriteAnimation animation : animations.activeAnimations()) {
                 animation.tick();
@@ -30,7 +30,7 @@ public class SpriteAnimationManager {
         timer.setCycleCount(Animation.INDEFINITE);
     }
 
-    public SpriteAnimationContainer animations() {
+    public SpriteAnimContainer animContainer() {
         return animations;
     }
 

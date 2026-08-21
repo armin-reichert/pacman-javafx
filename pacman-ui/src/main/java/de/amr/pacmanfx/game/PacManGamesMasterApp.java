@@ -203,7 +203,7 @@ public final class PacManGamesMasterApp implements GameAppContext {
         watchdog().startWatching();
         Logger.info("Custom map directory is getting watched!");
         ui.window().mainScene().flashMessageManager().startAnimationTimer();
-        ui.sprites().startAnimationTimer();
+        ui.spriteAnimManager().startAnimationTimer();
 
         //noinspection ResultOfMethodCallIgnored
         PacMan3DModel.instance(); // loads 3D assets as side effect of accessing the singleton

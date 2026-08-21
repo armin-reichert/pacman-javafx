@@ -113,7 +113,7 @@ public class XXL_OptionMenu extends OptionMenu {
         logMenuState();
 
         soundEnabledProperty().bind(ui.sounds().muteProperty().not());
-        chaseAnimation.init(game, renderConfig, canvas, ui.sprites().animations());
+        chaseAnimation.init(game, renderConfig, canvas, ui.spriteAnimManager().animContainer());
     }
 
     public void bind() {
@@ -185,7 +185,7 @@ public class XXL_OptionMenu extends OptionMenu {
                     uiConfig.init();
                     uiConfig.loadSounds(app.ui().sounds());
                     uiConfig.connectApp(app);
-                    chaseAnimation.init(game, uiConfig.renderConfig(), canvas, app.ui().sprites().animations());
+                    chaseAnimation.init(game, uiConfig.renderConfig(), canvas, app.ui().spriteAnimManager().animContainer());
                 }
             }
         };

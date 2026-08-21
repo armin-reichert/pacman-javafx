@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.sprites;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.spriteanim.LazySAM;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
-import de.amr.basics.spriteanim.SpriteAnimationContainer;
+import de.amr.basics.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
@@ -18,7 +18,7 @@ public class TengenMsPacMan_PacSAM extends LazySAM {
 
     private final TengenMsPacMan_SpriteSheet spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
-    public TengenMsPacMan_PacSAM(SpriteAnimationContainer container) {
+    public TengenMsPacMan_PacSAM(SpriteAnimContainer container) {
         factory = id -> switch (id) {
             case CommonSpriteAnimationID.PAC_FULL -> new SpriteAnimationBuilder()
                 .singleSprite(spriteSheet.findSprite(SpriteID.MS_PAC_FULL))

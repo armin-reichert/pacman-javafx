@@ -4,9 +4,8 @@
 
 package de.amr.pacmanfx.game;
 
-import de.amr.basics.spriteanim.SpriteAnimationFacade;
-import de.amr.basics.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.core.GameContext;
+import de.amr.basics.spriteanim.SpriteAnimFacade;
+import de.amr.basics.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimController;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.model.GhostPersonality;
@@ -41,11 +40,11 @@ public interface GameVariantRenderConfig {
 
     ActorRenderer createActorRenderer(SpriteAnimController animSystem, Canvas canvas);
 
-    Ghost createAnimatedGhost(GameContext game, SpriteAnimationContainer container, GhostPersonality personality);
+    Ghost createAnimatedGhost(SpriteAnimController animController, SpriteAnimContainer container, GhostPersonality personality);
 
-    SpriteAnimationFacade createGhostAnimations(SpriteAnimationContainer container, GhostPersonality personality);
+    SpriteAnimFacade createGhostAnimations(SpriteAnimContainer container, GhostPersonality personality);
 
-    SpriteAnimationFacade createPacAnimations(SpriteAnimationContainer container);
+    SpriteAnimFacade createPacAnimations(SpriteAnimContainer container);
 
     Image killedGhostPointsImage(int killedGhostIndex);
 

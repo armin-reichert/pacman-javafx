@@ -7,13 +7,14 @@ package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 import de.amr.basics.fsm.State;
 import de.amr.basics.fsm.StateMachine;
 import de.amr.basics.math.Direction;
-import de.amr.basics.spriteanim.SpriteAnimationContainer;
+import de.amr.basics.spriteanim.SpriteAnimContainer;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.ecs.systems.SpriteAnimController;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Marquee;
@@ -86,50 +87,56 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
     }
 
     private void initScene() {
-        final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().uiConfig().renderConfig();
-        final SpriteAnimationContainer container = app().ui().sprites().animations();
+        final var actorFactory = new ArcadeMsPacMan_ActorFactory();
+        final GameSystems systems = game().variant().systems();
 
-        final GameSystems sys = game().variant().systems();
+        final GameVariantRenderConfig renderConfig = app().currentGameVariantUIConfig().renderConfig();
+        final SpriteAnimContainer animContainer = app().ui().spriteAnimManager().animContainer();
+        final SpriteAnimController animController = systems.spriteAnimController();
 
         createMarquee();
-        MarqueeSystem.instance().start(marquee);
 
-        final var factory = new ArcadeMsPacMan_ActorFactory();
-
-        msPacMan = factory.createMsPacMan();
+        msPacMan = actorFactory.createMsPacMan();
         msPacMan.pos().set(WorldMap.TS * 31, WorldMap.TS * 20);
         msPacMan.show();
 
-        sys.worldNavigator().setMoveDir(msPacMan, Direction.LEFT);
-        sys.worldNavigator().setMoveDirSpeed(msPacMan, ACTOR_SPEED);
+        systems.worldNavigator().setMoveDir(msPacMan, Direction.LEFT);
+        systems.worldNavigator().setMoveDirSpeed(msPacMan, ACTOR_SPEED);
 
-        sys.spriteAnimController().setAnimations(msPacMan, renderConfig.createPacAnimations(container));
-        sys.spriteAnimController().select(msPacMan, CommonSpriteAnimationID.PAC_MUNCHING);
-        sys.spriteAnimController().playSelected(msPacMan);
+        animController.setAnimations(msPacMan, renderConfig.createPacAnimations(animContainer));
 
         ghosts = List.of(
-            renderConfig.createAnimatedGhost(game(), container, GhostPersonality.RED_GHOST_SHADOW),
-            renderConfig.createAnimatedGhost(game(), container, GhostPersonality.PINK_GHOST_SPEEDY),
-            renderConfig.createAnimatedGhost(game(), container, GhostPersonality.CYAN_GHOST_BASHFUL),
-            renderConfig.createAnimatedGhost(game(), container, GhostPersonality.ORANGE_GHOST_POKEY)
+            renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.RED_GHOST_SHADOW),
+            renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.PINK_GHOST_SPEEDY),
+            renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.CYAN_GHOST_BASHFUL),
+            renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.ORANGE_GHOST_POKEY)
         );
 
         for (Ghost ghost : ghosts) {
             ghost.pos().set(WorldMap.TS * 33.5f, WorldMap.TS * 20);
             ghost.show();
 
-            sys.worldNavigator().setMoveDir(ghost, Direction.LEFT);
-            sys.worldNavigator().setWishDir(ghost, Direction.LEFT);
-            sys.worldNavigator().setMoveDirSpeed(ghost, ACTOR_SPEED);
+            systems.worldNavigator().setMoveDir(ghost, Direction.LEFT);
+            systems.worldNavigator().setWishDir(ghost, Direction.LEFT);
+            systems.worldNavigator().setMoveDirSpeed(ghost, ACTOR_SPEED);
 
-            sys.spriteAnimController().select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);
-            sys.spriteAnimController().playSelected(ghost);
-
-            sys.ghostState().changeGhostState(ghost, GhostState.HUNTING_PAC);
+            systems.ghostState().changeGhostState(ghost, GhostState.HUNTING_PAC);
         }
 
         ghostPresented = GhostPersonality.RED_GHOST_SHADOW;
         numTicksBeforeRising = 0;
+
+        // Start animations
+
+        animController.select(msPacMan, CommonSpriteAnimationID.PAC_MUNCHING);
+        animController.playSelected(msPacMan);
+
+        for (Ghost ghost : ghosts) {
+            animController.select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);
+            animController.playSelected(ghost);
+        }
+
+        MarqueeSystem.instance().start(marquee);
 
         app().ui().sounds().voice().playAfterSec(1, GlobalAssets.VoiceID.EXPLAIN_GAME_START.media());
     }

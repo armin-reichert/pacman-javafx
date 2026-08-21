@@ -9,7 +9,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
 
-import static de.amr.basics.spriteanim.SpriteAnimationFacade.singleSpriteAnimationFacade;
+import static de.amr.basics.spriteanim.SpriteAnimFacade.singleSpriteAnimationFacade;
 
 public class Heart extends GameEntity {
 

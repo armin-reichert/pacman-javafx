@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.basics.math.Direction;
-import de.amr.basics.spriteanim.SpriteAnimationContainer;
+import de.amr.basics.spriteanim.SpriteAnimContainer;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
@@ -63,7 +63,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene {
 
     private void initScene() {
         final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().uiConfig().renderConfig();
-        final SpriteAnimationContainer animationContainer = app().ui().sprites().animations();
+        final SpriteAnimContainer animationContainer = app().ui().spriteAnimManager().animContainer();
 
         final var factory = new ArcadeMsPacMan_ActorFactory();
 

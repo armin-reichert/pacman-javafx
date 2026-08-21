@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 import de.amr.basics.fsm.State;
 import de.amr.basics.fsm.StateMachine;
 import de.amr.basics.math.Direction;
-import de.amr.basics.spriteanim.SpriteAnimationContainer;
+import de.amr.basics.spriteanim.SpriteAnimContainer;
 import de.amr.basics.timer.Pulse;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
@@ -16,6 +16,7 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
+import de.amr.pacmanfx.core.ecs.systems.SpriteAnimController;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
@@ -119,8 +120,9 @@ public class ArcadePacMan_IntroScene extends GameScene {
     }
 
     private void initScene() {
-        final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().uiConfig().renderConfig();
-        final SpriteAnimationContainer animationContainer = app().ui().sprites().animations();
+        final GameVariantRenderConfig renderConfig = app().currentGameVariantUIConfig().renderConfig();
+        final SpriteAnimContainer animationContainer = app().ui().spriteAnimManager().animContainer();
+        final SpriteAnimController animController = app().game().variant().systems().spriteAnimController();
 
         blinking = new Pulse(10, Pulse.State.ON);
 
@@ -131,10 +133,10 @@ public class ArcadePacMan_IntroScene extends GameScene {
         pacMan.spriteAnim().spriteAnimations().select(CommonSpriteAnimationID.PAC_MUNCHING);
         pacMan.spriteAnim().spriteAnimations().playSelected();
 
-        ghosts[0] = renderConfig.createAnimatedGhost(game(), animationContainer, GhostPersonality.RED_GHOST_SHADOW);
-        ghosts[1] = renderConfig.createAnimatedGhost(game(), animationContainer, GhostPersonality.PINK_GHOST_SPEEDY);
-        ghosts[2] = renderConfig.createAnimatedGhost(game(), animationContainer, GhostPersonality.CYAN_GHOST_BASHFUL);
-        ghosts[3] = renderConfig.createAnimatedGhost(game(), animationContainer, GhostPersonality.ORANGE_GHOST_POKEY);
+        ghosts[0] = renderConfig.createAnimatedGhost(animController, animationContainer, GhostPersonality.RED_GHOST_SHADOW);
+        ghosts[1] = renderConfig.createAnimatedGhost(animController, animationContainer, GhostPersonality.PINK_GHOST_SPEEDY);
+        ghosts[2] = renderConfig.createAnimatedGhost(animController, animationContainer, GhostPersonality.CYAN_GHOST_BASHFUL);
+        ghosts[3] = renderConfig.createAnimatedGhost(animController, animationContainer, GhostPersonality.ORANGE_GHOST_POKEY);
 
         Arrays.fill(ghostImageVisible, false);
         Arrays.fill(ghostNicknameVisible, false);

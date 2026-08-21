@@ -4,12 +4,14 @@
 package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
 import de.amr.basics.math.Direction;
-import de.amr.basics.spriteanim.SpriteAnimationContainer;
+import de.amr.basics.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
+import de.amr.pacmanfx.core.ecs.systems.SpriteAnimController;
+import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
@@ -81,49 +83,51 @@ class XXL_ChaseAnimation {
         timeline.stop();
     }
 
-    public void init(GameContext game, GameVariantRenderConfig renderConfig, Canvas canvas, SpriteAnimationContainer container) {
+    public void init(GameContext game, GameVariantRenderConfig renderConfig, Canvas canvas, SpriteAnimContainer animContainer) {
         requireNonNull(game);
         requireNonNull(renderConfig);
         requireNonNull(canvas);
-        requireNonNull(container);
+        requireNonNull(animContainer);
 
-        final GameSystems sys = game.variant().systems();
+        final ArcadePacMan_ActorFactory actorFactory = ArcadePacMan_ActorFactory.instance();
+        final GameSystems systems = game.variant().systems();
+        final SpriteAnimController animController = systems.spriteAnimController();
+        final WorldNavigationSystem worldNavigationSystem = systems.worldNavigator();
 
-        timeline.getKeyFrames().setAll(new KeyFrame(FRAME_TIME, _ -> update(sys)));
+        timeline.getKeyFrames().setAll(new KeyFrame(FRAME_TIME, _ -> update(systems)));
 
-        actorRenderer = renderConfig.createActorRenderer(sys.spriteAnimController(), canvas);
+        actorRenderer = renderConfig.createActorRenderer(animController, canvas);
         actorRenderer.scalingProperty().bind(scalingProperty());
 
-        final ArcadePacMan_ActorFactory factory = ArcadePacMan_ActorFactory.instance();
-
-        pac = factory.createPacMan();
+        pac = actorFactory.createPacMan();
         pac.pos().setX(numTilesX * WorldMap.TS);
         pac.show();
 
-        sys.worldNavigator().setMoveDir(pac, Direction.LEFT);
-        sys.worldNavigator().setWishDir(pac, Direction.LEFT);
-        sys.worldNavigator().setMoveDirSpeed(pac, PAC_FLEEING_SPEED);
+        worldNavigationSystem.setMoveDir(pac, Direction.LEFT);
+        worldNavigationSystem.setWishDir(pac, Direction.LEFT);
+        worldNavigationSystem.setMoveDirSpeed(pac, PAC_FLEEING_SPEED);
 
-        sys.spriteAnimController().setAnimations(pac, renderConfig.createPacAnimations(container));
-        sys.spriteAnimController().select(pac, CommonSpriteAnimationID.PAC_MUNCHING);
-        sys.spriteAnimController().playSelected(pac);
+        animController.setAnimations(pac, renderConfig.createPacAnimations(animContainer));
+        animController.select(pac, CommonSpriteAnimationID.PAC_MUNCHING);
+        animController.playSelected(pac);
 
         ghosts = List.of(
-            renderConfig.createAnimatedGhost(game, container, GhostPersonality.RED_GHOST_SHADOW),
-            renderConfig.createAnimatedGhost(game, container, GhostPersonality.PINK_GHOST_SPEEDY),
-            renderConfig.createAnimatedGhost(game, container, GhostPersonality.CYAN_GHOST_BASHFUL),
-            renderConfig.createAnimatedGhost(game, container, GhostPersonality.ORANGE_GHOST_POKEY)
+            renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.RED_GHOST_SHADOW),
+            renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.PINK_GHOST_SPEEDY),
+            renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.CYAN_GHOST_BASHFUL),
+            renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.ORANGE_GHOST_POKEY)
         );
+
         for (Ghost ghost : ghosts) {
             ghost.pos().setX((numTilesX + 4) * WorldMap.TS + ghost.personality().ordinal() * GHOST_DISTANCE);
             ghost.show();
 
-            sys.worldNavigator().setMoveDir(ghost, Direction.LEFT);
-            sys.worldNavigator().setWishDir(ghost, Direction.LEFT);
-            sys.worldNavigator().setMoveDirSpeed(ghost, GHOST_CHASE_SPEED);
+            worldNavigationSystem.setMoveDir(ghost, Direction.LEFT);
+            worldNavigationSystem.setWishDir(ghost, Direction.LEFT);
+            worldNavigationSystem.setMoveDirSpeed(ghost, GHOST_CHASE_SPEED);
 
-            sys.spriteAnimController().select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);
-            sys.spriteAnimController().playSelected(ghost);
+            animController.select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);
+            animController.playSelected(ghost);
         }
 
         collisions.clear();
@@ -131,10 +135,10 @@ class XXL_ChaseAnimation {
         state = ChasingState.GHOSTS_CHASING_PAC;
     }
 
-    private void update(GameSystems sys) {
+    private void update(GameSystems systems) {
         switch (state) {
-            case GHOSTS_CHASING_PAC -> ghostsChasePacMan(sys);
-            case PAC_CHASING_GHOSTS -> pacManChasesGhosts(sys);
+            case GHOSTS_CHASING_PAC -> ghostsChasePacMan(systems);
+            case PAC_CHASING_GHOSTS -> pacManChasesGhosts(systems);
         }
     }
 
@@ -145,24 +149,28 @@ class XXL_ChaseAnimation {
         }
     }
 
-    private void pacManChasesGhosts(GameSystems sys) {
-        moveActors(sys.motor());
+    private void pacManChasesGhosts(GameSystems systems) {
+        final WorldNavigationSystem worldNavigationSystem = systems.worldNavigator();
+        final SpriteAnimController animController = systems.spriteAnimController();
+
+        moveActors(systems.motor());
+
         // If ghosts and Pac leave screen at right border, ghosts start chasing Pac moving left
         if (pac.pos().x() > (numTilesX + 14) * WorldMap.TS) {
-            sys.worldNavigator().setMoveDir(pac, Direction.LEFT);
-            sys.worldNavigator().setWishDir(pac, Direction.LEFT);
+            worldNavigationSystem.setMoveDir(pac, Direction.LEFT);
+            worldNavigationSystem.setWishDir(pac, Direction.LEFT);
             pac.pos().setX(numTilesX * WorldMap.TS);
 
             for (Ghost ghost : ghosts) {
                 ghost.pos().setX((numTilesX + 4) * WorldMap.TS + ghost.personality().ordinal() * 2 * WorldMap.TS);
                 ghost.show();
 
-                sys.worldNavigator().setMoveDir(ghost, Direction.LEFT);
-                sys.worldNavigator().setWishDir(ghost, Direction.LEFT);
-                sys.worldNavigator().setMoveDirSpeed(ghost, 1.05f);
+                worldNavigationSystem.setMoveDir(ghost, Direction.LEFT);
+                worldNavigationSystem.setWishDir(ghost, Direction.LEFT);
+                worldNavigationSystem.setMoveDirSpeed(ghost, 1.05f);
 
-                sys.spriteAnimController().select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);
-                sys.spriteAnimController().playSelected(ghost);
+                animController.select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);
+                animController.playSelected(ghost);
             }
 
             state = ChasingState.GHOSTS_CHASING_PAC;
@@ -182,7 +190,7 @@ class XXL_ChaseAnimation {
                 if (colliding(pac, ghost) && collisions.stream().noneMatch(collision -> collision.ghost() == ghost)) {
                     final var collision = new Collision(ghost, System.currentTimeMillis());
                     collisions.add(collision);
-                    sys.spriteAnimController().selectAndSetFrame(ghost, CommonSpriteAnimationID.GHOST_POINTS, i);
+                    animController.selectAndSetFrame(ghost, CommonSpriteAnimationID.GHOST_POINTS, i);
                     break;
                 }
             }
@@ -193,24 +201,27 @@ class XXL_ChaseAnimation {
         return Math.abs(either.pos().x() - other.pos().x()) < 1;
     }
 
-    private void ghostsChasePacMan(GameSystems sys) {
-        moveActors(sys.motor());
+    private void ghostsChasePacMan(GameSystems systems) {
+        final WorldNavigationSystem worldNavigationSystem = systems.worldNavigator();
+        final SpriteAnimController animController = systems.spriteAnimController();
+
+        moveActors(systems.motor());
 
         if (ghosts.getLast().pos().x() < -4 * WorldMap.TS) { // ghosts left screen on the left side
             pac.pos().setX(-(numTilesX - 6) * WorldMap.TS);
-            sys.worldNavigator().setMoveDir(pac, Direction.RIGHT);
-            sys.worldNavigator().setWishDir(pac, Direction.RIGHT);
+            worldNavigationSystem.setMoveDir(pac, Direction.RIGHT);
+            worldNavigationSystem.setWishDir(pac, Direction.RIGHT);
 
             for (Ghost ghost : ghosts) {
                 ghost.show();
                 ghost.pos().setX(pac.pos().x() + 22 * WorldMap.TS + ghost.personality().ordinal() * GHOST_DISTANCE);
 
-                sys.worldNavigator().setMoveDir(ghost, Direction.RIGHT);
-                sys.worldNavigator().setWishDir(ghost, Direction.RIGHT);
-                sys.worldNavigator().setMoveDirSpeed(ghost, 0.58f);
+                worldNavigationSystem.setMoveDir(ghost, Direction.RIGHT);
+                worldNavigationSystem.setWishDir(ghost, Direction.RIGHT);
+                worldNavigationSystem.setMoveDirSpeed(ghost, 0.58f);
 
-                sys.spriteAnimController().select(ghost, CommonSpriteAnimationID.GHOST_FRIGHTENED);
-                sys.spriteAnimController().playSelected(ghost);
+                animController.select(ghost, CommonSpriteAnimationID.GHOST_FRIGHTENED);
+                animController.playSelected(ghost);
             }
 
             // Let Pac-Man chase the ghosts from left to right side of the screen

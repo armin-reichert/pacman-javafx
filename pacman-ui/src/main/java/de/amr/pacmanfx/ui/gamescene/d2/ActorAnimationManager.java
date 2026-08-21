@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.gamescene.d2;
 
-import de.amr.basics.spriteanim.SpriteAnimationContainer;
+import de.amr.basics.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimController;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
@@ -18,7 +18,7 @@ public class ActorAnimationManager {
 
     public static void ensureActorAnimationsCreated(GameAppContext appContext, GameLevel level) {
         final GameVariantRenderConfig renderConfig = appContext.gameVariants().currentGameVariant().uiConfig().renderConfig();
-        final SpriteAnimationContainer animationContainer = appContext.ui().sprites().animations();
+        final SpriteAnimContainer animationContainer = appContext.ui().spriteAnimManager().animContainer();
 
         final SpriteAnimController animSystem = appContext.game().variant().systems().spriteAnimController();
 

@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
-import de.amr.basics.spriteanim.SpriteAnimationContainer;
+import de.amr.basics.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
@@ -63,19 +63,20 @@ public class ArcadePacMan_CutScene2 extends GameScene {
     @Override
     public void onActivate() {
         final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().uiConfig().renderConfig();
-        final SpriteAnimationContainer animationContainer = app().ui().sprites().animations();
+        final SpriteAnimContainer animContainer = app().ui().spriteAnimManager().animContainer();
+        final SpriteAnimController animController = app().game().variant().systems().spriteAnimController();
         final ArcadePacMan_SpriteSheet spriteSheet = ArcadePacMan_SpriteSheet.instance();
         final var factory = ArcadePacMan_ActorFactory.instance();
 
         pacMan = factory.createPacMan();
-        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animationContainer));
+        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animContainer));
 
-        blinky = renderConfig.createAnimatedGhost(game(), animationContainer, GhostPersonality.RED_GHOST_SHADOW);
+        blinky = renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.RED_GHOST_SHADOW);
 
         nailDressAnimation = new SpriteAnimationBuilder()
             .sprites(spriteSheet.findSprites(SpriteID.RED_GHOST_STRETCHED))
             .initiallyStopped()
-            .build(animationContainer);
+            .build(animContainer);
 
         sceneTick = -1;
     }

@@ -8,7 +8,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.LazySAM;
 import de.amr.basics.spriteanim.SpriteAnimation;
 import de.amr.basics.spriteanim.SpriteAnimationBuilder;
-import de.amr.basics.spriteanim.SpriteAnimationContainer;
+import de.amr.basics.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 
 public class ArcadePacMan_PacSAM extends LazySAM {
@@ -19,12 +19,12 @@ public class ArcadePacMan_PacSAM extends LazySAM {
 
     private final ArcadePacMan_SpriteSheet spriteSheet;
 
-    public ArcadePacMan_PacSAM(SpriteAnimationContainer container, ArcadePacMan_SpriteSheet spriteSheet) {
+    public ArcadePacMan_PacSAM(SpriteAnimContainer container, ArcadePacMan_SpriteSheet spriteSheet) {
         this.spriteSheet = spriteSheet;
         factory = id -> createAnimation(id, container);
     }
 
-    private SpriteAnimation createAnimation(Named animationID, SpriteAnimationContainer container) {
+    private SpriteAnimation createAnimation(Named animationID, SpriteAnimContainer container) {
         return switch (animationID) {
             case CommonSpriteAnimationID.PAC_FULL -> new SpriteAnimationBuilder()
                 .singleSprite(spriteSheet.findSprite(SpriteID.PACMAN_FULL))
