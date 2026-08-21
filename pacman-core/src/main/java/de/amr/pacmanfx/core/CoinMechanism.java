@@ -5,14 +5,12 @@
 package de.amr.pacmanfx.core;
 
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import org.tinylog.Logger;
 
 public class CoinMechanism {
 
-    private final IntegerProperty numCoins = new SimpleIntegerProperty(0);
+    private int numCoins;
 
     private final BooleanProperty enabled = new SimpleBooleanProperty(true);
 
@@ -37,8 +35,16 @@ public class CoinMechanism {
         return enabled;
     }
 
+    public void setNumCoins(int n) {
+        if (n >= 0 && n <= maxCoins) {
+            numCoins = n;
+        } else {
+            Logger.error("Cannot set number of coins to {}", n);
+        }
+    }
+
     public int numCoins() {
-        return numCoins.get();
+        return numCoins;
     }
 
     public int maxCoins() {
@@ -46,30 +52,22 @@ public class CoinMechanism {
     }
 
     public boolean isFull() {
-        return numCoins() == maxCoins;
+        return numCoins == maxCoins;
     }
 
     public boolean isEmpty() {
-        return numCoins() == 0;
-    }
-
-    public void setNumCoins(int n) {
-        if (n >= 0 && n <= maxCoins) {
-            numCoins.set(n);
-        } else {
-            Logger.error("Cannot set number of coins to {}", n);
-        }
+        return numCoins == 0;
     }
 
     public void insertCoin() {
-        if (numCoins() + 1 <= maxCoins) {
-            setNumCoins(numCoins() + 1);
+        if (numCoins + 1 <= maxCoins) {
+            ++numCoins;
         }
     }
 
     public void consumeCoin() {
-        if (numCoins() > 0) {
-            setNumCoins(numCoins() - 1);
+        if (numCoins > 0) {
+            --numCoins;
         }
     }
 }
