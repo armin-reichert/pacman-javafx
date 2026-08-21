@@ -66,9 +66,9 @@ public class ArcadeMsPacMan_GhostSAM extends SpritesheetAnimationMap<SpriteID> {
     }
 
     @Override
-    public void setAnimationFrame(Named animationID, int frameIndex) {
-        super.setAnimationFrame(animationID, frameIndex);
-        if (CommonSpriteAnimationID.GHOST_POINTS.equals(animationID)) {
+    public void setAnimationFrame(Named name, int frameIndex) {
+        super.setAnimationFrame(name, frameIndex);
+        if (CommonSpriteAnimationID.GHOST_POINTS.equals(name)) {
             animation(CommonSpriteAnimationID.GHOST_POINTS).setFrame(frameIndex);
         }
     }

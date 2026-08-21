@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_IntroScene;
-import de.amr.pacmanfx.core.SpriteAnimController;
+import de.amr.pacmanfx.core.ecs.systems.SpriteAnimController;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;

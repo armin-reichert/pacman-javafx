@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.fsm.State;
-import de.amr.pacmanfx.core.SpriteAnimController;
+import de.amr.pacmanfx.core.ecs.systems.SpriteAnimController;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;

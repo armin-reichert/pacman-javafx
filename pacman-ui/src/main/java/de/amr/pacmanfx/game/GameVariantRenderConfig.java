@@ -4,10 +4,10 @@
 
 package de.amr.pacmanfx.game;
 
-import de.amr.basics.spriteanim.SpriteAnimationAccessor;
+import de.amr.basics.spriteanim.SpriteAnimationFacade;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.SpriteAnimController;
+import de.amr.pacmanfx.core.ecs.systems.SpriteAnimController;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -43,9 +43,9 @@ public interface GameVariantRenderConfig {
 
     Ghost createAnimatedGhost(GameContext game, SpriteAnimationContainer container, GhostPersonality personality);
 
-    SpriteAnimationAccessor createGhostAnimations(SpriteAnimationContainer container, GhostPersonality personality);
+    SpriteAnimationFacade createGhostAnimations(SpriteAnimationContainer container, GhostPersonality personality);
 
-    SpriteAnimationAccessor createPacAnimations(SpriteAnimationContainer container);
+    SpriteAnimationFacade createPacAnimations(SpriteAnimationContainer container);
 
     Image killedGhostPointsImage(int killedGhostIndex);
 

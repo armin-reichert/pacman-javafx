@@ -2,11 +2,11 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core;
+package de.amr.pacmanfx.core.ecs.systems;
 
 import de.amr.basics.Named;
 import de.amr.basics.math.RectShort;
-import de.amr.basics.spriteanim.SpriteAnimationAccessor;
+import de.amr.basics.spriteanim.SpriteAnimationFacade;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
 
@@ -14,14 +14,13 @@ import static java.util.Objects.requireNonNull;
 
 public final class SpriteAnimController {
 
-    public SpriteAnimController() {
-    }
+    public SpriteAnimController() {}
 
-    public void setAnimations(GameEntity actor, SpriteAnimationAccessor animations) {
+    public void setAnimations(GameEntity actor, SpriteAnimationFacade animations) {
         actor.reqComp(SpriteAnimationComp.class).setAnimations(animations);
     }
 
-    private SpriteAnimationAccessor spriteAnim(GameEntity actor) {
+    private SpriteAnimationFacade spriteAnim(GameEntity actor) {
         return actor.reqComp(SpriteAnimationComp.class).animation();
     }
 

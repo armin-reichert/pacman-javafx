@@ -12,15 +12,15 @@ import static java.util.Objects.requireNonNull;
 /**
  * Facade for accessing animations.
  */
-public interface SpriteAnimationAccessor {
+public interface SpriteAnimationFacade {
 
-    SpriteAnimationAccessor EMPTY_SPRITE_ANIMATION_ACCESSOR = new EmptySpriteAnimationMap();
+    SpriteAnimationFacade EMPTY_SPRITE_ANIMATION_ACCESSOR = new EmptySpriteAnimationMap();
 
-    static SpriteAnimationAccessor emptyAnimation() {
+    static SpriteAnimationFacade emptyAnimation() {
         return EMPTY_SPRITE_ANIMATION_ACCESSOR;
     }
 
-    static SpriteAnimationAccessor singleSpriteAnimationMap(RectShort sprite) {
+    static SpriteAnimationFacade singleSpriteAnimationMap(RectShort sprite) {
         return new SingletonSpriteAnimationMap(sprite);
     }
 

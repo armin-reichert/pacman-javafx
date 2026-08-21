@@ -5,12 +5,12 @@
 package de.amr.pacmanfx.uilib.rendering;
 
 import de.amr.basics.Named;
-import de.amr.basics.spriteanim.LazySpriteAnimationMap;
+import de.amr.basics.spriteanim.LazySAM;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
 import static java.util.Objects.requireNonNull;
 
-public class SpritesheetAnimationMap<ID extends Named> extends LazySpriteAnimationMap {
+public class SpritesheetAnimationMap<ID extends Named> extends LazySAM {
 
     protected final SpriteSheet<ID> spriteSheet;
 

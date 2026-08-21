@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.SpriteAnimController;
+import de.amr.pacmanfx.core.ecs.systems.SpriteAnimController;
 import de.amr.pacmanfx.core.event.TestStartedEvent;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventListener;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;

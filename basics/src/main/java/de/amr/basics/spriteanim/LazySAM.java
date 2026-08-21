@@ -17,32 +17,34 @@ import static java.util.Objects.requireNonNull;
 /**
  * A sprite animation container implementing the sprite animation accessor facade.
  */
-public class LazySpriteAnimationMap implements SpriteAnimationAccessor {
+public class LazySAM implements SpriteAnimationFacade {
 
-    private Map<Named, SpriteAnimation> animationsByID;
-    protected Named selectedAnimationID;
+    private Map<Named, SpriteAnimation> animationsByName;
+
+    protected Named selectedName;
+
     protected Function<Named, SpriteAnimation> factory;
 
-    protected LazySpriteAnimationMap() {}
+    protected LazySAM() {}
 
-    private void createMapIfNotExisting() {
-        if (animationsByID == null) {
-            animationsByID = new HashMap<>();
+    private void ensureMapCreated() {
+        if (animationsByName == null) {
+            animationsByName = new HashMap<>();
         }
     }
 
     public void setFactory(Function<Named, SpriteAnimation> factory) {
-        this.factory = factory;
+        this.factory = requireNonNull(factory);
     }
 
-    public boolean isSelected(Named id) {
-        requireNonNull(id);
-        return id.equals(selectedAnimationID);
+    public boolean isSelected(Named name) {
+        requireNonNull(name);
+        return name.equals(selectedName);
     }
 
     @Override
-    public void select(Named animationID) {
-        selectedAnimationID = animationID;
+    public void select(Named name) {
+        selectedName = requireNonNull(name);
     }
 
     @Override
@@ -52,41 +54,45 @@ public class LazySpriteAnimationMap implements SpriteAnimationAccessor {
     }
 
     @Override
-    public SpriteAnimation animation(Named animationID) {
-        createMapIfNotExisting();
-        if (!animationsByID.containsKey(animationID)) {
-            final SpriteAnimation anim = factory.apply(animationID);
-            animationsByID.put(animationID, anim);
+    public SpriteAnimation animation(Named name) {
+        ensureMapCreated();
+        if (!animationsByName.containsKey(name)) {
+            final SpriteAnimation anim = factory.apply(name);
+            if (anim == null) {
+                throw new IllegalStateException("Animation with name '%s' could not be created".formatted(name));
+            }
+            animationsByName.put(name, anim);
         }
-        return animationsByID.get(animationID);
+        return animationsByName.get(name);
     }
 
     public void setAnimation(Named animationID, SpriteAnimation animation) {
         requireNonNull(animationID);
         requireNonNull(animation);
-        createMapIfNotExisting();
-        animationsByID.put(animationID, animation);
+        ensureMapCreated();
+        animationsByName.put(animationID, animation);
     }
 
     public SpriteAnimation currentAnimation() {
-        return selectedAnimationID != null ? animation(selectedAnimationID) : null;
+        return selectedName != null ? animation(selectedName) : null;
     }
 
     @Override
     public Named selectedAnimationID() {
-        return selectedAnimationID;
+        return selectedName;
     }
 
     @Override
-    public void setAnimationFrame(Named animationID, int frameIndex) {
-        if (!animationID.equals(selectedAnimationID)) {
-            selectedAnimationID = animationID;
+    public void setAnimationFrame(Named name, int frameIndex) {
+        requireNonNull(name);
+        if (!name.equals(selectedName)) {
+            selectedName = name;
         }
         final SpriteAnimation anim = currentAnimation();
         if (anim != null) {
             anim.setFrame(frameIndex);
         } else {
-            Logger.warn("Cannot set animation to frame {}: no animation with ID {} exists", frameIndex, animationID);
+            Logger.warn("Cannot set animation to frame {}: no animation with name '{}' exists", frameIndex, name);
         }
     }
 

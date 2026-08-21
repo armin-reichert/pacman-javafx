@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman;
 
 import de.amr.basics.math.RectShort;
-import de.amr.basics.spriteanim.LazySpriteAnimationMap;
+import de.amr.basics.spriteanim.LazySAM;
 import de.amr.basics.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.*;
@@ -15,7 +15,7 @@ import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_PlayScene2D_Renderer;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.SpriteAnimController;
+import de.amr.pacmanfx.core.ecs.systems.SpriteAnimController;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.model.GhostPersonality;
@@ -116,12 +116,12 @@ public class XXL_MsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public LazySpriteAnimationMap createGhostAnimations(SpriteAnimationContainer container, GhostPersonality personality) {
+    public LazySAM createGhostAnimations(SpriteAnimationContainer container, GhostPersonality personality) {
         return new ArcadeMsPacMan_GhostSAM(container, personality);
     }
 
     @Override
-    public LazySpriteAnimationMap createPacAnimations(SpriteAnimationContainer container) {
+    public LazySAM createPacAnimations(SpriteAnimationContainer container) {
         return new ArcadeMsPacMan_PacSAM(container);
     }
 

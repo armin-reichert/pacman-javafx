@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
-import de.amr.pacmanfx.core.SpriteAnimController;
+import de.amr.pacmanfx.core.ecs.systems.SpriteAnimController;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene4;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
