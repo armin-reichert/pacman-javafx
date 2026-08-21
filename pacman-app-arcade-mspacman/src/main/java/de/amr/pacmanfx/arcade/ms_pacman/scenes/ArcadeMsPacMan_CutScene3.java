@@ -77,17 +77,17 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene {
         final var factory = new ArcadeMsPacMan_ActorFactory();
 
         pacMan = factory.createPacMan();
-        pacMan.spriteAnim().setAnimations(renderConfig.createPacAnimations(animationContainer));
+        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animationContainer));
 
         msPacMan = factory.createMsPacMan();
-        msPacMan.spriteAnim().setAnimations(renderConfig.createPacAnimations(animationContainer));
+        msPacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animationContainer));
 
         stork = new Stork();
         stork.setBagReleasedFromBeak(false);
-        stork.spriteAnim().setAnimations(new ArcadeMsPacMan_StorkSAM(animationContainer));
+        stork.spriteAnim().setSpriteAnimations(new ArcadeMsPacMan_StorkSAM(animationContainer));
 
         bag = new Bag();
-        bag.spriteAnim().setAnimations(new ArcadeMsPacMan_BagSAM(animationContainer));
+        bag.spriteAnim().setSpriteAnimations(new ArcadeMsPacMan_BagSAM(animationContainer));
         closeBag();
 
         clapperboard = new Clapperboard("3", "JUNIOR");
@@ -219,11 +219,11 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene {
 
     private void closeBag() {
         bag.setOpen(false);
-        bag.spriteAnim().animation().select(CommonSpriteAnimationID.BAG);
+        bag.spriteAnim().spriteAnimations().select(CommonSpriteAnimationID.BAG);
     }
 
     private void openBag() {
         bag.setOpen(true);
-        bag.spriteAnim().animation().select(CommonSpriteAnimationID.JUNIOR);
+        bag.spriteAnim().spriteAnimations().select(CommonSpriteAnimationID.JUNIOR);
     }
 }

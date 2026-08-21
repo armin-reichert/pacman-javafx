@@ -120,21 +120,21 @@ public class ArcadePacMan_IntroScene extends GameScene {
 
     private void initScene() {
         final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().uiConfig().renderConfig();
-        final SpriteAnimationContainer spriteAnimations = app().ui().sprites().animations();
+        final SpriteAnimationContainer animationContainer = app().ui().sprites().animations();
 
         blinking = new Pulse(10, Pulse.State.ON);
 
         final var factory = ArcadePacMan_ActorFactory.instance();
 
         pacMan = factory.createPacMan();
-        pacMan.spriteAnim().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
-        pacMan.spriteAnim().animation().select(CommonSpriteAnimationID.PAC_MUNCHING);
-        pacMan.spriteAnim().animation().playSelected();
+        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animationContainer));
+        pacMan.spriteAnim().spriteAnimations().select(CommonSpriteAnimationID.PAC_MUNCHING);
+        pacMan.spriteAnim().spriteAnimations().playSelected();
 
-        ghosts[0] = renderConfig.createAnimatedGhost(game(), spriteAnimations, GhostPersonality.RED_GHOST_SHADOW);
-        ghosts[1] = renderConfig.createAnimatedGhost(game(), spriteAnimations, GhostPersonality.PINK_GHOST_SPEEDY);
-        ghosts[2] = renderConfig.createAnimatedGhost(game(), spriteAnimations, GhostPersonality.CYAN_GHOST_BASHFUL);
-        ghosts[3] = renderConfig.createAnimatedGhost(game(), spriteAnimations, GhostPersonality.ORANGE_GHOST_POKEY);
+        ghosts[0] = renderConfig.createAnimatedGhost(game(), animationContainer, GhostPersonality.RED_GHOST_SHADOW);
+        ghosts[1] = renderConfig.createAnimatedGhost(game(), animationContainer, GhostPersonality.PINK_GHOST_SPEEDY);
+        ghosts[2] = renderConfig.createAnimatedGhost(game(), animationContainer, GhostPersonality.CYAN_GHOST_BASHFUL);
+        ghosts[3] = renderConfig.createAnimatedGhost(game(), animationContainer, GhostPersonality.ORANGE_GHOST_POKEY);
 
         Arrays.fill(ghostImageVisible, false);
         Arrays.fill(ghostNicknameVisible, false);
@@ -212,14 +212,14 @@ public class ArcadePacMan_IntroScene extends GameScene {
             systems.worldNavigator().setMoveDirSpeed(ghost, GHOST_FRIGHTENED_SPEED);
 
             systems.ghostState().changeGhostState(ghost, FRIGHTENED);
-            ghost.spriteAnimation().animation().select(CommonSpriteAnimationID.GHOST_FRIGHTENED);
-            ghost.spriteAnimation().animation().playSelected();
+            ghost.spriteAnimation().spriteAnimations().select(CommonSpriteAnimationID.GHOST_FRIGHTENED);
+            ghost.spriteAnimation().spriteAnimations().playSelected();
         }
     }
 
     private void turnCardsRestartPacMan(GameSystems sys) {
         sys.worldNavigator().setMoveDirSpeed(pacMan, CHASING_SPEED);
-        pacMan.spriteAnim().animation().playSelected();
+        pacMan.spriteAnim().spriteAnimations().playSelected();
     }
 
     private void chaseGhosts(GameContext game, long tick) {
@@ -268,7 +268,7 @@ public class ArcadePacMan_IntroScene extends GameScene {
             } else {
                 ghost.show();
                 sys.worldNavigator().setMoveDirSpeed(ghost, GHOST_FRIGHTENED_SPEED);
-                ghost.spriteAnimation().animation().playSelected();
+                ghost.spriteAnimation().spriteAnimations().playSelected();
             }
         }
     }

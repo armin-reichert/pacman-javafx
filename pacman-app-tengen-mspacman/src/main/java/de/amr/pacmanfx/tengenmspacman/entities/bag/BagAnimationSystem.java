@@ -11,6 +11,6 @@ import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 public final class BagAnimationSystem {
 
     public static void update(Bag bag) {
-        bag.spriteAnim().animation().select(bag.isOpen() ? CommonSpriteAnimationID.JUNIOR : CommonSpriteAnimationID.BAG);
+        bag.spriteAnim().spriteAnimations().select(bag.isOpen() ? CommonSpriteAnimationID.JUNIOR : CommonSpriteAnimationID.BAG);
     }
 }

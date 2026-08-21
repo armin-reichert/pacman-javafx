@@ -14,18 +14,14 @@ import static java.util.Objects.requireNonNull;
  */
 public interface SpriteAnimationFacade {
 
-    SpriteAnimationFacade EMPTY_SPRITE_ANIMATION_ACCESSOR = new EmptySpriteAnimationMap();
+    SpriteAnimationFacade EMPTY_SPRITE_ANIMATION_FACADE = new EmptySpriteAnimationFacade();
 
-    static SpriteAnimationFacade emptyAnimation() {
-        return EMPTY_SPRITE_ANIMATION_ACCESSOR;
-    }
-
-    static SpriteAnimationFacade singleSpriteAnimationMap(RectShort sprite) {
-        return new SingletonSpriteAnimationMap(sprite);
+    static SpriteAnimationFacade singleSpriteAnimationFacade(RectShort sprite) {
+        return new SingletonSpriteAnimationFacade(sprite);
     }
 
     default boolean isEmpty() {
-        return this == EMPTY_SPRITE_ANIMATION_ACCESSOR;
+        return this == EMPTY_SPRITE_ANIMATION_FACADE;
     }
 
     Object animation(Named animationID);

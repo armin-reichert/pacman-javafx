@@ -40,13 +40,13 @@ public class ArcadePacMan_CutScene3 extends GameScene {
     @Override
     public void onActivate() {
         final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().uiConfig().renderConfig();
-        final SpriteAnimationContainer container = app().ui().sprites().animations();
+        final SpriteAnimationContainer animationContainer = app().ui().sprites().animations();
         final var factory = ArcadePacMan_ActorFactory.instance();
 
         pacMan = factory.createPacMan();
-        pacMan.spriteAnim().setAnimations(renderConfig.createPacAnimations(container));
+        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animationContainer));
 
-        blinky = renderConfig.createAnimatedGhost(game(), container, GhostPersonality.RED_GHOST_SHADOW);
+        blinky = renderConfig.createAnimatedGhost(game(), animationContainer, GhostPersonality.RED_GHOST_SHADOW);
 
         sceneTick = -1;
     }

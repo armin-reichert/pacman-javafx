@@ -80,18 +80,18 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene {
 
     private void initScene() {
         final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().uiConfig().renderConfig();
-        final SpriteAnimationContainer spriteAnimations = app().ui().sprites().animations();
+        final SpriteAnimationContainer animationContainer = app().ui().sprites().animations();
         final var factory = new ArcadeMsPacMan_ActorFactory();
 
         pacMan = factory.createPacMan();
-        pacMan.spriteAnim().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animationContainer));
 
         msPacMan = factory.createMsPacMan();
-        msPacMan.spriteAnim().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        msPacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animationContainer));
 
-        inky = renderConfig.createAnimatedGhost(game(), spriteAnimations, GhostPersonality.CYAN_GHOST_BASHFUL);
+        inky = renderConfig.createAnimatedGhost(game(), animationContainer, GhostPersonality.CYAN_GHOST_BASHFUL);
 
-        pinky = renderConfig.createAnimatedGhost(game(), spriteAnimations, GhostPersonality.PINK_GHOST_SPEEDY);
+        pinky = renderConfig.createAnimatedGhost(game(), animationContainer, GhostPersonality.PINK_GHOST_SPEEDY);
 
         heart = new Heart();
 

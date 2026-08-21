@@ -13,9 +13,9 @@ import static java.util.Objects.requireNonNull;
  *
  * @param sprite the singleton sprite
  */
-record SingletonSpriteAnimationMap(RectShort sprite) implements SpriteAnimationFacade {
+record SingletonSpriteAnimationFacade(RectShort sprite) implements SpriteAnimationFacade {
 
-    public SingletonSpriteAnimationMap(RectShort sprite) {
+    public SingletonSpriteAnimationFacade(RectShort sprite) {
         this.sprite = requireNonNull(sprite);
     }
 

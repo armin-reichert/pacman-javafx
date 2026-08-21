@@ -136,9 +136,9 @@ public class TengenMsPacMan_CutScene1 extends GameScene {
 
         clapperboard = new Clapperboard("1", "THEY MEET");
         msPacMan = actorFactory.createMsPacMan();
-        msPacMan.spriteAnim().setAnimations(renderConfig.createPacAnimations(animationContainer));
+        msPacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animationContainer));
         pacMan = actorFactory.createPacMan();
-        pacMan.spriteAnim().setAnimations(renderConfig.createPacAnimations(animationContainer));
+        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animationContainer));
         inky = renderConfig.createAnimatedGhost(game, animationContainer, GhostPersonality.CYAN_GHOST_BASHFUL);
         pinky = renderConfig.createAnimatedGhost(game, animationContainer, GhostPersonality.PINK_GHOST_SPEEDY);
         heart = new Heart();

@@ -124,16 +124,16 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
     private void createActors() {
         final var actorFactory = TengenMsPacMan_ActorFactory.instance();
         final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().uiConfig().renderConfig();
-        final SpriteAnimationContainer spriteAnimations = app().ui().sprites().animations();
+        final SpriteAnimationContainer animationContainer = app().ui().sprites().animations();
 
         clapperboard = new Clapperboard("4", "THE END");
         clapperboard.pos().set(tilesPx(3), tilesPx(10));
 
         msPacMan = actorFactory.createMsPacMan();
-        msPacMan.spriteAnim().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        msPacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animationContainer));
 
         pacMan = actorFactory.createPacMan();
-        pacMan.spriteAnim().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animationContainer));
 
         juniors = new ArrayList<>();
         juniorSpawnTicks = new ArrayList<>();

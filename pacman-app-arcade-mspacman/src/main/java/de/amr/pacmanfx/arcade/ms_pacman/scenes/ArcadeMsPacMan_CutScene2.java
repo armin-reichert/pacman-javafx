@@ -63,15 +63,15 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene {
 
     private void initScene() {
         final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().uiConfig().renderConfig();
-        final SpriteAnimationContainer spriteAnimations = app().ui().sprites().animations();
+        final SpriteAnimationContainer animationContainer = app().ui().sprites().animations();
 
         final var factory = new ArcadeMsPacMan_ActorFactory();
 
         pacMan = factory.createPacMan();
-        pacMan.spriteAnim().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animationContainer));
 
         msPacMan = factory.createMsPacMan();
-        msPacMan.spriteAnim().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        msPacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animationContainer));
 
         clapperboard = new Clapperboard("2", "THE CHASE");
         clapperboard.pos().set(tilesPx(3), tilesPx(10));

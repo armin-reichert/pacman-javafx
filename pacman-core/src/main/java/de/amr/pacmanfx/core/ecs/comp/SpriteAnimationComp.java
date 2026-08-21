@@ -5,13 +5,13 @@ import de.amr.pacmanfx.core.ecs.EntityComponent;
 
 public class SpriteAnimationComp implements EntityComponent {
 
-    private SpriteAnimationFacade animation = SpriteAnimationFacade.emptyAnimation();
+    private SpriteAnimationFacade facade = SpriteAnimationFacade.EMPTY_SPRITE_ANIMATION_FACADE;
 
-    public void setAnimations(SpriteAnimationFacade delegate) {
-        this.animation = delegate;
+    public void setSpriteAnimations(SpriteAnimationFacade facade) {
+        this.facade = facade;
     }
 
-    public SpriteAnimationFacade animation() {
-        return animation;
+    public SpriteAnimationFacade spriteAnimations() {
+        return facade;
     }
 }

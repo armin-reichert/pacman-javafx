@@ -113,15 +113,15 @@ public class TengenMsPacMan_CutScene2 extends GameScene {
     private void createActors() {
         final var actorFactory = TengenMsPacMan_ActorFactory.instance();
         final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().uiConfig().renderConfig();
-        final SpriteAnimationContainer spriteAnimations = app().ui().sprites().animations();
+        final SpriteAnimationContainer animationContainer = app().ui().sprites().animations();
 
         clapperboard = new Clapperboard("2", "THE CHASE");
 
         msPacMan = actorFactory.createMsPacMan();
-        msPacMan.spriteAnim().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        msPacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animationContainer));
 
         pacMan = actorFactory.createPacMan();
-        pacMan.spriteAnim().setAnimations(renderConfig.createPacAnimations(spriteAnimations));
+        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animationContainer));
     }
 
     private void playCutScene(GameContext game, long tick) {

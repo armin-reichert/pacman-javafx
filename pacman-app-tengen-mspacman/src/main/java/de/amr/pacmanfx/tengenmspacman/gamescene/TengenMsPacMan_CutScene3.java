@@ -108,16 +108,16 @@ public class TengenMsPacMan_CutScene3 extends GameScene {
         final var factory = TengenMsPacMan_ActorFactory.instance();
 
         msPacMan = factory.createMsPacMan();
-        msPacMan.spriteAnim().setAnimations(renderConfig.createPacAnimations(animationContainer));
+        msPacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animationContainer));
 
         pacMan = factory.createPacMan();
-        pacMan.spriteAnim().setAnimations(renderConfig.createPacAnimations(animationContainer));
+        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animationContainer));
 
         stork = new Stork();
-        stork.spriteAnim().setAnimations(new TengenMsPacMan_StorkSAM(animationContainer));
+        stork.spriteAnim().setSpriteAnimations(new TengenMsPacMan_StorkSAM(animationContainer));
 
         bag = new Bag();
-        bag.spriteAnim().setAnimations(new TengenMsPacMan_BagSAM(animationContainer));
+        bag.spriteAnim().setSpriteAnimations(new TengenMsPacMan_BagSAM(animationContainer));
     }
     
     private void playMusic() {

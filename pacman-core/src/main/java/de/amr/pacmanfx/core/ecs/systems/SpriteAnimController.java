@@ -17,11 +17,11 @@ public final class SpriteAnimController {
     public SpriteAnimController() {}
 
     public void setAnimations(GameEntity actor, SpriteAnimationFacade animations) {
-        actor.reqComp(SpriteAnimationComp.class).setAnimations(animations);
+        actor.reqComp(SpriteAnimationComp.class).setSpriteAnimations(animations);
     }
 
     private SpriteAnimationFacade spriteAnim(GameEntity actor) {
-        return actor.reqComp(SpriteAnimationComp.class).animation();
+        return actor.reqComp(SpriteAnimationComp.class).spriteAnimations();
     }
 
     public boolean hasNoAnimations(GameEntity actor) {
