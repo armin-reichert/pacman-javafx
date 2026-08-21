@@ -12,23 +12,12 @@ public class CoinMechanism {
 
     private int numCoins;
 
-    private boolean enabled;
-
     public CoinMechanism(int maxCoins) {
         if (maxCoins < 0) {
             throw new IllegalArgumentException("maxCoins < 0");
         }
         this.maxCoins = maxCoins;
         numCoins = 0;
-        enabled = true;
-    }
-
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
     }
 
     public void setNumCoins(int n) {
