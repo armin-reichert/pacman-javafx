@@ -13,11 +13,11 @@ import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.BLUE_BAG;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.JUNIOR_PAC;
 
-public class BagSAM extends LazySAM {
+public class ArcadeMsPacMan_BagSAM extends LazySAM {
 
     private final ArcadeMsPacMan_SpriteSheet spriteSheet =  ArcadeMsPacMan_SpriteSheet.instance();
 
-    public BagSAM(SpriteAnimationContainer container) {
+    public ArcadeMsPacMan_BagSAM(SpriteAnimationContainer container) {
         factory = id -> switch (id) {
             case CommonSpriteAnimationID.JUNIOR -> new SpriteAnimationBuilder()
                 .singleSprite(spriteSheet.findSprite(JUNIOR_PAC))
