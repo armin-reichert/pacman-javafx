@@ -203,7 +203,7 @@ public final class PacManGamesMasterApp implements GameAppContext {
         watchdog().startWatching();
         Logger.info("Custom map directory is getting watched!");
         ui.window().mainScene().flashMessageManager().startAnimationTimer();
-        ui.spriteAnimManager().startAnimationTimer();
+        ui.spriteAnimTimer().start();
 
         //noinspection ResultOfMethodCallIgnored
         PacMan3DModel.instance(); // loads 3D assets as side effect of accessing the singleton
@@ -219,6 +219,9 @@ public final class PacManGamesMasterApp implements GameAppContext {
         uiConfig.connectApp(this);
 
         ui.viewModel().maze3D.init(gameVariant.uiConfig().worldSettings().maze());
+
+        ui.spriteAnimTimer().attachAnimContainer(gameVariant.spriteAnimContainer());
+        ui.spriteAnimTimer().start();
 
         game = new GameContext(
             gameBox.coinMechanism(),
@@ -240,6 +243,8 @@ public final class PacManGamesMasterApp implements GameAppContext {
         gameVariant.uiConfig().unloadSounds(ui.sounds());
         gameVariant.uiConfig().dispose();
 
+        gameVariant.spriteAnimContainer().clear();
+        ui.spriteAnimTimer().detachAnimationContainer();
         ui.sounds().dispose();
 
         game.eventManager().removeGameEventSubscriber(ui);

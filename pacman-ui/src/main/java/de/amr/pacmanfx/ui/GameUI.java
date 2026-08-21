@@ -18,7 +18,7 @@ import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
-import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationManager;
+import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationTimer;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.settings.ui.GameUISettings;
 import de.amr.pacmanfx.ui.sound.SoundManager;
@@ -61,7 +61,7 @@ public class GameUI implements GameEventListener {
     private final GameSceneManager gameScenes;
     private final TranslationManager translations;
     private final SoundManager sounds;
-    private final SpriteAnimationManager sprites;
+    private final SpriteAnimationTimer spriteAnimationTimer;
     private final GameViewModel viewModel;
     private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Global Action Bindings");
 
@@ -71,7 +71,7 @@ public class GameUI implements GameEventListener {
         viewModel = new GameViewModel();
         viewModel.init(settings);
 
-        sprites = new SpriteAnimationManager();
+        spriteAnimationTimer = new SpriteAnimationTimer();
         window = new GameWindow(stage, width, height);
         gameScenes = new GameSceneManager();
         translations = new CommonTranslationManager();
@@ -103,8 +103,8 @@ public class GameUI implements GameEventListener {
         return sounds;
     }
 
-    public SpriteAnimationManager spriteAnimManager() {
-        return sprites;
+    public SpriteAnimationTimer spriteAnimTimer() {
+        return spriteAnimationTimer;
     }
 
     public GameViewModel viewModel() {
@@ -123,8 +123,7 @@ public class GameUI implements GameEventListener {
     }
 
     public void terminate() {
-        sprites.stopAnimationTimer();
-        sprites.animContainer().clear();
+        spriteAnimationTimer.stop();
         window.mainScene().flashMessageManager().stopAnimationTimer();
     }
 
@@ -176,17 +175,12 @@ public class GameUI implements GameEventListener {
             default -> {}
         }
         gameScenes.updateGameSceneAndForceReload(forceGameSceneReload);
-        gameScenes.optCurrentGameScene().ifPresent(gameScene -> {
-            if (gameScene instanceof GameEventListener eventHandler) {
-                eventHandler.onGameEvent(gameEvent);
-            }
-        });
+        gameScenes.optCurrentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(gameEvent));
     }
 
     // private
 
-    private GameViewManager createGameViews()
-    {
+    private GameViewManager createGameViews() {
         final GameViewManager views = new GameViewManager();
         views.registerView(GameViewID.START_PAGES, new StartPagesView());
         views.registerView(GameViewID.GAMEPLAY, new GamePlayView());

@@ -19,6 +19,7 @@ import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.game.GameVariant;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
@@ -62,9 +63,10 @@ public class ArcadePacMan_CutScene2 extends GameScene {
 
     @Override
     public void onActivate() {
-        final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().uiConfig().renderConfig();
-        final SpriteAnimContainer animContainer = app().ui().spriteAnimManager().animContainer();
-        final SpriteAnimController animController = app().game().variant().systems().spriteAnimController();
+        final GameVariant variant = app().gameVariants().currentGameVariant();
+        final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
+        final SpriteAnimContainer animContainer    = variant.spriteAnimContainer();
+        final SpriteAnimController animController  = variant.config().systems().spriteAnimController();
         final ArcadePacMan_SpriteSheet spriteSheet = ArcadePacMan_SpriteSheet.instance();
         final var factory = ArcadePacMan_ActorFactory.instance();
 

@@ -17,6 +17,7 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.HUDState;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
+import de.amr.pacmanfx.game.GameVariant;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
@@ -300,21 +301,21 @@ public class TengenMsPacMan_PlayScene2D extends GameScene
     }
 
     private void ensureActorAnimationsCreated(GameSession session, GameLevel level) {
-        final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().uiConfig().renderConfig();
-        final SpriteAnimContainer animationContainer = app().ui().spriteAnimManager().animContainer();
-
-        final SpriteAnimController animSystem = app().game().variant().systems().spriteAnimController();
+        final GameVariant variant = app().gameVariants().currentGameVariant();
+        final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
+        final SpriteAnimContainer animContainer    = variant.spriteAnimContainer();
+        final SpriteAnimController animController  = variant.config().systems().spriteAnimController();
 
         final Pac pac = level.entities().pac();
-        if (animSystem.hasNoAnimations(pac)) {
-            animSystem.setAnimations(pac, renderConfig.createPacAnimations(animationContainer));
-            resetPacAnimation(animSystem, session, pac);
+        if (animController.hasNoAnimations(pac)) {
+            animController.setAnimations(pac, renderConfig.createPacAnimations(animContainer));
+            resetPacAnimation(animController, session, pac);
         }
 
         level.entities().ghosts().forEach(ghost -> {
-            if (animSystem.hasNoAnimations(ghost)) {
-                animSystem.setAnimations(ghost, renderConfig.createGhostAnimations(animationContainer, ghost.personality()));
-                resetGhostAnimation(animSystem, ghost);
+            if (animController.hasNoAnimations(ghost)) {
+                animController.setAnimations(ghost, renderConfig.createGhostAnimations(animContainer, ghost.personality()));
+                resetGhostAnimation(animController, ghost);
             }
         });
     }

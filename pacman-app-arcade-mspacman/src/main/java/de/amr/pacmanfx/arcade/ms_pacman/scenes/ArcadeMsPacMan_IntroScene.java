@@ -15,6 +15,7 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.SpriteAnimController;
+import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Marquee;
@@ -24,6 +25,7 @@ import de.amr.pacmanfx.core.entities.marquee.system.MarqueeSystem;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.game.GameVariant;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -88,11 +90,12 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
 
     private void initScene() {
         final var actorFactory = new ArcadeMsPacMan_ActorFactory();
-        final GameSystems systems = game().variant().systems();
-
-        final GameVariantRenderConfig renderConfig = app().currentGameVariantUIConfig().renderConfig();
-        final SpriteAnimContainer animContainer = app().ui().spriteAnimManager().animContainer();
-        final SpriteAnimController animController = systems.spriteAnimController();
+        final GameVariant variant = app().gameVariants().currentGameVariant();
+        final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
+        final SpriteAnimContainer animContainer    = variant.spriteAnimContainer();
+        final SpriteAnimController animController  = variant.config().systems().spriteAnimController();
+        final GameSystems systems                  = variant.config().systems();
+        final WorldNavigationSystem worldNavigationSystem = systems.worldNavigator();
 
         createMarquee();
 
@@ -116,9 +119,9 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
             ghost.pos().set(WorldMap.TS * 33.5f, WorldMap.TS * 20);
             ghost.show();
 
-            systems.worldNavigator().setMoveDir(ghost, Direction.LEFT);
-            systems.worldNavigator().setWishDir(ghost, Direction.LEFT);
-            systems.worldNavigator().setMoveDirSpeed(ghost, ACTOR_SPEED);
+            worldNavigationSystem.setMoveDir(ghost, Direction.LEFT);
+            worldNavigationSystem.setWishDir(ghost, Direction.LEFT);
+            worldNavigationSystem.setMoveDirSpeed(ghost, ACTOR_SPEED);
 
             systems.ghostState().changeGhostState(ghost, GhostState.HUNTING_PAC);
         }

@@ -4,8 +4,10 @@
 
 package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
+import de.amr.basics.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameVariantID;
+import de.amr.pacmanfx.core.ecs.systems.SpriteAnimController;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
@@ -14,6 +16,7 @@ import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationTimer;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenuEntry;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenuSettings;
@@ -37,6 +40,10 @@ public class XXL_OptionMenu extends OptionMenu {
     private final OptionMenuEntry<WorldMapSelectionMode> meMapOrder;
 
     private final XXL_ChaseAnimation chaseAnimation;
+
+    private final SpriteAnimationTimer animationTimer = new SpriteAnimationTimer();
+    private final SpriteAnimContainer animContainer = new SpriteAnimContainer();
+    private final SpriteAnimController animController = new SpriteAnimController();
 
     private GameAppContext app;
 
@@ -63,9 +70,11 @@ public class XXL_OptionMenu extends OptionMenu {
         addEntry(meCutScenesEnabled);
         addEntry(meMapOrder);
 
-        chaseAnimation = new XXL_ChaseAnimation(settings.numTilesX());
+        chaseAnimation = new XXL_ChaseAnimation(settings.numTilesX(), animContainer, animController);
         chaseAnimation.setY((settings.numTilesY() - 12) * WorldMap.TS);
         chaseAnimation.scalingProperty().bind(scalingProperty());
+
+        animationTimer.attachAnimContainer(animContainer);
     }
 
     @Override
@@ -113,7 +122,8 @@ public class XXL_OptionMenu extends OptionMenu {
         logMenuState();
 
         soundEnabledProperty().bind(ui.sounds().muteProperty().not());
-        chaseAnimation.init(game, renderConfig, canvas, ui.spriteAnimManager().animContainer());
+
+        chaseAnimation.init(game, renderConfig, canvas);
     }
 
     public void bind() {
@@ -132,11 +142,13 @@ public class XXL_OptionMenu extends OptionMenu {
     }
 
     public void startAnimation() {
-        chaseAnimation.start();
+        chaseAnimation.startChaseSimulation();
+        animationTimer.start();
     }
 
     public void stopAnimation() {
-        chaseAnimation.stop();
+        chaseAnimation.stopChaseSimulation();
+        animationTimer.stop();
     }
 
     public OptionMenuEntry<GameVariantID> meGameVariantID() {
@@ -170,6 +182,23 @@ public class XXL_OptionMenu extends OptionMenu {
         app.game().session().setCutScenesEnabled(newValue);
     }
 
+    private void changeGameVariant(GameContext game, GameVariant newVariant) {
+        requireNonNull(game);
+        requireNonNull(newVariant);
+
+        stopAnimation();
+        animContainer.clear();
+
+        final GameVariantUIConfig uiConfig = newVariant.uiConfig();
+        uiConfig.init();
+        uiConfig.loadSounds(app.ui().sounds());
+        uiConfig.connectApp(app);
+
+        chaseAnimation.init(game, uiConfig.renderConfig(), canvas);
+
+        startAnimation();
+    }
+
     private OptionMenuEntry<GameVariantID> createGameVariantIDEntry() {
         final var entry = new OptionMenuEntry<>(
             "GAME VARIANT",
@@ -179,13 +208,8 @@ public class XXL_OptionMenu extends OptionMenu {
             @Override
             public void onValueChanged(GameVariantID oldVariantID, GameVariantID newVariantID) {
                 if (app != null) {
-                    final GameContext game = app.game();
                     final GameVariant newGameVariant = app.gameVariants().gameVariantByName(newVariantID.name());
-                    final GameVariantUIConfig uiConfig = newGameVariant.uiConfig();
-                    uiConfig.init();
-                    uiConfig.loadSounds(app.ui().sounds());
-                    uiConfig.connectApp(app);
-                    chaseAnimation.init(game, uiConfig.renderConfig(), canvas, app.ui().spriteAnimManager().animContainer());
+                    changeGameVariant(app.game(), newGameVariant);
                 }
             }
         };

@@ -4,12 +4,15 @@
 
 package de.amr.pacmanfx.game;
 
+import de.amr.basics.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.core.GameVariantConfig;
 
 public class GameVariant {
 
     private final GameVariantConfig config;
     private final GameVariantUIConfig uiConfig;
+
+    private final SpriteAnimContainer spriteAnimContainer = new SpriteAnimContainer();
 
     public GameVariant(Cartridge cartridge) {
         config = new GameVariantConfig(
@@ -28,5 +31,9 @@ public class GameVariant {
 
     public GameVariantUIConfig uiConfig() {
         return uiConfig;
+    }
+
+    public SpriteAnimContainer spriteAnimContainer() {
+        return spriteAnimContainer;
     }
 }

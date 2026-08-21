@@ -23,6 +23,7 @@ import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.marquee.system.MarqueeSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.game.GameVariant;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
@@ -156,10 +157,12 @@ public class TengenMsPacMan_IntroScene extends GameScene {
             @Override
             public void onEnter(TengenMsPacMan_IntroScene scene) {
                 final var actorFactory = TengenMsPacMan_ActorFactory.instance();
-                final GameVariantRenderConfig renderConfig = scene.app().currentGameVariantUIConfig().renderConfig();
-                final SpriteAnimContainer animContainer = scene.app().ui().spriteAnimManager().animContainer();
-                final GameSystems systems = scene.game().variant().systems();
-                final SpriteAnimController animController = systems.spriteAnimController();
+                final GameVariant variant = scene.app().gameVariants().currentGameVariant();
+                final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
+                final SpriteAnimContainer animContainer    = variant.spriteAnimContainer();
+                final SpriteAnimController animController  = variant.config().systems().spriteAnimController();
+
+                final GameSystems systems = variant.config().systems();
                 final WorldNavigationSystem worldNavigationSystem = systems.worldNavigator();
 
                 timer.restartTicks(TickTimer.INDEFINITE);

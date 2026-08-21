@@ -20,6 +20,7 @@ import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.clapperboard.system.ClapperboardStateSystem;
 import de.amr.pacmanfx.core.entities.stork.Stork;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.game.GameVariant;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
@@ -71,23 +72,23 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene {
     }
 
     private void initScene() {
-        final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().uiConfig().renderConfig();
-        final SpriteAnimContainer animationContainer = app().ui().spriteAnimManager().animContainer();
+        final GameVariant variant = app().gameVariants().currentGameVariant();
+        final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
+        final SpriteAnimContainer animContainer    = variant.spriteAnimContainer();
+        final var actorFactory = new ArcadeMsPacMan_ActorFactory();
 
-        final var factory = new ArcadeMsPacMan_ActorFactory();
+        pacMan = actorFactory.createPacMan();
+        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animContainer));
 
-        pacMan = factory.createPacMan();
-        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animationContainer));
-
-        msPacMan = factory.createMsPacMan();
-        msPacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animationContainer));
+        msPacMan = actorFactory.createMsPacMan();
+        msPacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animContainer));
 
         stork = new Stork();
         stork.setBagReleasedFromBeak(false);
-        stork.spriteAnim().setSpriteAnimations(new ArcadeMsPacMan_StorkSAM(animationContainer));
+        stork.spriteAnim().setSpriteAnimations(new ArcadeMsPacMan_StorkSAM(animContainer));
 
         bag = new Bag();
-        bag.spriteAnim().setSpriteAnimations(new ArcadeMsPacMan_BagSAM(animationContainer));
+        bag.spriteAnim().setSpriteAnimations(new ArcadeMsPacMan_BagSAM(animContainer));
         closeBag();
 
         clapperboard = new Clapperboard("3", "JUNIOR");

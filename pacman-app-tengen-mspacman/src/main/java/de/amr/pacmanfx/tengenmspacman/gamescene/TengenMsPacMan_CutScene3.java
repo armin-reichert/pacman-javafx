@@ -16,6 +16,7 @@ import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.stork.Stork;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.game.GameVariant;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.entities.bag.BagAnimationSystem;
 import de.amr.pacmanfx.tengenmspacman.entities.bag.TengenMsPacMan_BagSAM;
@@ -99,8 +100,9 @@ public class TengenMsPacMan_CutScene3 extends GameScene {
     }
     
     private void createActors() {
-        final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().uiConfig().renderConfig();
-        final SpriteAnimContainer animationContainer = app().ui().spriteAnimManager().animContainer();
+        final GameVariant variant = app().gameVariants().currentGameVariant();
+        final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
+        final SpriteAnimContainer animContainer    = variant.spriteAnimContainer();
 
         clapperboard = new Clapperboard("3", "JUNIOR");
         clapperboard.pos().set(3 * WorldMap.TS, 10 * WorldMap.TS);
@@ -108,16 +110,16 @@ public class TengenMsPacMan_CutScene3 extends GameScene {
         final var factory = TengenMsPacMan_ActorFactory.instance();
 
         msPacMan = factory.createMsPacMan();
-        msPacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animationContainer));
+        msPacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animContainer));
 
         pacMan = factory.createPacMan();
-        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animationContainer));
+        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animContainer));
 
         stork = new Stork();
-        stork.spriteAnim().setSpriteAnimations(new TengenMsPacMan_StorkSAM(animationContainer));
+        stork.spriteAnim().setSpriteAnimations(new TengenMsPacMan_StorkSAM(animContainer));
 
         bag = new Bag();
-        bag.spriteAnim().setSpriteAnimations(new TengenMsPacMan_BagSAM(animationContainer));
+        bag.spriteAnim().setSpriteAnimations(new TengenMsPacMan_BagSAM(animContainer));
     }
     
     private void playMusic() {

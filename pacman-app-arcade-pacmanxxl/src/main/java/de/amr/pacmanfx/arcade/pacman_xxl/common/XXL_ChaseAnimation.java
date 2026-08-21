@@ -27,7 +27,6 @@ import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.util.Duration;
-import org.tinylog.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +48,7 @@ class XXL_ChaseAnimation {
     private static final float GHOST_CHASE_SPEED = 1.05f;
 
     private final int numTilesX;
-    private final Timeline timeline;
+    private final Timeline chaseSimulation;
     private final FloatProperty scaling = new SimpleFloatProperty(1);
     private float y;
     private Pac pac;
@@ -60,11 +59,17 @@ class XXL_ChaseAnimation {
     record Collision(Ghost ghost, long time) {}
     private final List<Collision> collisions = new ArrayList<>();
 
-    public XXL_ChaseAnimation(int numTilesX) {
+    private final SpriteAnimContainer animContainer;
+    private final SpriteAnimController animController;
+
+    public XXL_ChaseAnimation(int numTilesX, SpriteAnimContainer animContainer, SpriteAnimController animController) {
         this.numTilesX = numTilesX;
-        timeline = new Timeline();
-        timeline.setCycleCount(Animation.INDEFINITE);
-        timeline.statusProperty().addListener((_,_,newStatus) -> Logger.debug("Chase animation {}", newStatus));
+
+        this.animContainer = requireNonNull(animContainer);
+        this.animController = requireNonNull(animController);
+
+        chaseSimulation = new Timeline();
+        chaseSimulation.setCycleCount(Animation.INDEFINITE);
     }
 
     public FloatProperty scalingProperty() {
@@ -75,15 +80,15 @@ class XXL_ChaseAnimation {
         this.y = y;
     }
 
-    public void start() {
-        timeline.play();
+    public void startChaseSimulation() {
+        chaseSimulation.play();
     }
 
-    public void stop() {
-        timeline.stop();
+    public void stopChaseSimulation() {
+        chaseSimulation.stop();
     }
 
-    public void init(GameContext game, GameVariantRenderConfig renderConfig, Canvas canvas, SpriteAnimContainer animContainer) {
+    public void init(GameContext game, GameVariantRenderConfig renderConfig, Canvas canvas) {
         requireNonNull(game);
         requireNonNull(renderConfig);
         requireNonNull(canvas);
@@ -91,10 +96,9 @@ class XXL_ChaseAnimation {
 
         final ArcadePacMan_ActorFactory actorFactory = ArcadePacMan_ActorFactory.instance();
         final GameSystems systems = game.variant().systems();
-        final SpriteAnimController animController = systems.spriteAnimController();
         final WorldNavigationSystem worldNavigationSystem = systems.worldNavigator();
 
-        timeline.getKeyFrames().setAll(new KeyFrame(FRAME_TIME, _ -> update(systems)));
+        chaseSimulation.getKeyFrames().setAll(new KeyFrame(FRAME_TIME, _ -> update(systems)));
 
         actorRenderer = renderConfig.createActorRenderer(animController, canvas);
         actorRenderer.scalingProperty().bind(scalingProperty());
@@ -131,7 +135,6 @@ class XXL_ChaseAnimation {
         }
 
         collisions.clear();
-
         state = ChasingState.GHOSTS_CHASING_PAC;
     }
 
@@ -151,7 +154,6 @@ class XXL_ChaseAnimation {
 
     private void pacManChasesGhosts(GameSystems systems) {
         final WorldNavigationSystem worldNavigationSystem = systems.worldNavigator();
-        final SpriteAnimController animController = systems.spriteAnimController();
 
         moveActors(systems.motor());
 
@@ -203,7 +205,6 @@ class XXL_ChaseAnimation {
 
     private void ghostsChasePacMan(GameSystems systems) {
         final WorldNavigationSystem worldNavigationSystem = systems.worldNavigator();
-        final SpriteAnimController animController = systems.spriteAnimController();
 
         moveActors(systems.motor());
 

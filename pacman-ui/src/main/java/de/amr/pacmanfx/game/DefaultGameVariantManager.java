@@ -75,8 +75,11 @@ public class DefaultGameVariantManager implements GameVariantManager {
             final GameVariant gameVariant = createGameVariant(name, includeInteractiveTests);
             variantsByName.put(name, gameVariant);
         }
-        variantsByName.get(name).config().worldMapManager().loadMapPrototypes();
+        final GameVariant variant = variantsByName.get(name);
+
+        variant.config().worldMapManager().loadMapPrototypes();
         Logger.info("Loaded world maps for game variant {}", name);
+
         selectedVariantName.set(name);
     }
 

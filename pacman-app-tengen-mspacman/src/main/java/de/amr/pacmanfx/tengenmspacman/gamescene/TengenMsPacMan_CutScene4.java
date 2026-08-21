@@ -15,6 +15,7 @@ import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.Clapperboard;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Pac;
+import de.amr.pacmanfx.game.GameVariant;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
 import de.amr.pacmanfx.tengenmspacman.entities.clapperboard.TengenMsPacMan_ClapperboardStateSystem;
@@ -123,17 +124,18 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
 
     private void createActors() {
         final var actorFactory = TengenMsPacMan_ActorFactory.instance();
-        final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().uiConfig().renderConfig();
-        final SpriteAnimContainer animationContainer = app().ui().spriteAnimManager().animContainer();
+        final GameVariant variant = app().gameVariants().currentGameVariant();
+        final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
+        final SpriteAnimContainer animContainer    = variant.spriteAnimContainer();
 
         clapperboard = new Clapperboard("4", "THE END");
         clapperboard.pos().set(tilesPx(3), tilesPx(10));
 
         msPacMan = actorFactory.createMsPacMan();
-        msPacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animationContainer));
+        msPacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animContainer));
 
         pacMan = actorFactory.createPacMan();
-        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animationContainer));
+        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animContainer));
 
         juniors = new ArrayList<>();
         juniorSpawnTicks = new ArrayList<>();
@@ -216,31 +218,31 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
             msPacMan.hide();
         }
         else if (TICKS_JUNIOR_SPAWNED.contains((int) tick)) {
-            spawnJunior(game, tick);
+            spawnJunior(tick);
         }
         else if (tick == 1500) {
             optSoundEffects().ifPresent(GameSoundEffects::stopAll);
         }
     }
 
-    private void spawnJunior(GameContext game, long tick) {
-        final GameSystems systems = game.variant().systems();
+    private void spawnJunior(long tick) {
         final var factory = TengenMsPacMan_ActorFactory.instance();
-        final GameVariantRenderConfig renderConfig = app().gameVariants().currentGameVariant().uiConfig().renderConfig();
-        final WorldNavigationSystem navigator = systems.worldNavigator();
-        final SpriteAnimController animSystem = systems.spriteAnimController();
-        final SpriteAnimContainer spriteAnimations = app().ui().spriteAnimManager().animContainer();
+        final GameVariant variant = app().gameVariants().currentGameVariant();
+        final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
+        final SpriteAnimContainer animContainer    = variant.spriteAnimContainer();
+        final SpriteAnimController animController  = variant.config().systems().spriteAnimController();
+        final WorldNavigationSystem worldNavigationSystem = variant.config().systems().worldNavigator();
 
         final Pac junior = factory.createPacMan();
         double randomX = 8 * TS + (8 * TS) * Math.random();
         junior.pos().set((float) randomX, rendering2D().unscaledHeight() - 4 * TS);
         junior.show();
 
-        navigator.setMoveDir(junior, Direction.UP);
-        navigator.setMoveDirSpeed(junior, 2);
+        worldNavigationSystem.setMoveDir(junior, Direction.UP);
+        worldNavigationSystem.setMoveDirSpeed(junior, 2);
 
-        animSystem.setAnimations(junior, renderConfig.createPacAnimations(spriteAnimations));
-        animSystem.select(junior, TengenMsPacMan_AnimationID.ANIM_JUNIOR);
+        animController.setAnimations(junior, renderConfig.createPacAnimations(animContainer));
+        animController.select(junior, TengenMsPacMan_AnimationID.ANIM_JUNIOR);
 
         juniors.add(junior);
         juniorSpawnTicks.add(tick);
