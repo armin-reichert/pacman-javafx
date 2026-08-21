@@ -18,6 +18,7 @@ import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
+import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationTimer;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -59,17 +60,15 @@ class XXL_ChaseAnimation {
     record Collision(Ghost ghost, long time) {}
     private final List<Collision> collisions = new ArrayList<>();
 
-    private final SpriteAnimContainer animContainer;
-    private final SpriteAnimController animController;
+    private final SpriteAnimationTimer animationTimer = new SpriteAnimationTimer();
+    private final SpriteAnimContainer animContainer = new SpriteAnimContainer();
+    private final SpriteAnimController animController = new SpriteAnimController();
 
-    public XXL_ChaseAnimation(int numTilesX, SpriteAnimContainer animContainer, SpriteAnimController animController) {
+    public XXL_ChaseAnimation(int numTilesX) {
         this.numTilesX = numTilesX;
-
-        this.animContainer = requireNonNull(animContainer);
-        this.animController = requireNonNull(animController);
-
         chaseSimulation = new Timeline();
         chaseSimulation.setCycleCount(Animation.INDEFINITE);
+        animationTimer.attachAnimContainer(animContainer);
     }
 
     public FloatProperty scalingProperty() {
@@ -82,13 +81,15 @@ class XXL_ChaseAnimation {
 
     public void startChaseSimulation() {
         chaseSimulation.play();
+        animationTimer.start();
     }
 
     public void stopChaseSimulation() {
         chaseSimulation.stop();
+        animationTimer.stop();
     }
 
-    public void init(GameContext game, GameVariantRenderConfig renderConfig, Canvas canvas) {
+    public void displayGameVariant(GameContext game, GameVariantRenderConfig renderConfig, Canvas canvas) {
         requireNonNull(game);
         requireNonNull(renderConfig);
         requireNonNull(canvas);

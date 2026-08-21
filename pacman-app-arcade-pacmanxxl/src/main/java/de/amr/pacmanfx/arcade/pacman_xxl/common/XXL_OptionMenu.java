@@ -4,10 +4,8 @@
 
 package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
-import de.amr.basics.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimController;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
@@ -16,7 +14,6 @@ import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationTimer;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenuEntry;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenuSettings;
@@ -40,10 +37,6 @@ public class XXL_OptionMenu extends OptionMenu {
     private final OptionMenuEntry<WorldMapSelectionMode> meMapOrder;
 
     private final XXL_ChaseAnimation chaseAnimation;
-
-    private final SpriteAnimationTimer animationTimer = new SpriteAnimationTimer();
-    private final SpriteAnimContainer animContainer = new SpriteAnimContainer();
-    private final SpriteAnimController animController = new SpriteAnimController();
 
     private GameAppContext app;
 
@@ -70,11 +63,9 @@ public class XXL_OptionMenu extends OptionMenu {
         addEntry(meCutScenesEnabled);
         addEntry(meMapOrder);
 
-        chaseAnimation = new XXL_ChaseAnimation(settings.numTilesX(), animContainer, animController);
+        chaseAnimation = new XXL_ChaseAnimation(settings.numTilesX());
         chaseAnimation.setY((settings.numTilesY() - 12) * WorldMap.TS);
         chaseAnimation.scalingProperty().bind(scalingProperty());
-
-        animationTimer.attachAnimContainer(animContainer);
     }
 
     @Override
@@ -123,7 +114,7 @@ public class XXL_OptionMenu extends OptionMenu {
 
         soundEnabledProperty().bind(ui.sounds().muteProperty().not());
 
-        chaseAnimation.init(game, renderConfig, canvas);
+        chaseAnimation.displayGameVariant(game, renderConfig, canvas);
     }
 
     public void bind() {
@@ -143,12 +134,10 @@ public class XXL_OptionMenu extends OptionMenu {
 
     public void startAnimation() {
         chaseAnimation.startChaseSimulation();
-        animationTimer.start();
     }
 
     public void stopAnimation() {
         chaseAnimation.stopChaseSimulation();
-        animationTimer.stop();
     }
 
     public OptionMenuEntry<GameVariantID> meGameVariantID() {
@@ -187,14 +176,13 @@ public class XXL_OptionMenu extends OptionMenu {
         requireNonNull(newVariant);
 
         stopAnimation();
-        animContainer.clear();
 
         final GameVariantUIConfig uiConfig = newVariant.uiConfig();
         uiConfig.init();
         uiConfig.loadSounds(app.ui().sounds());
         uiConfig.connectApp(app);
 
-        chaseAnimation.init(game, uiConfig.renderConfig(), canvas);
+        chaseAnimation.displayGameVariant(game, uiConfig.renderConfig(), canvas);
 
         startAnimation();
     }
