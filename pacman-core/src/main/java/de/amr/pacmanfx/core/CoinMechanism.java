@@ -4,35 +4,31 @@
 
 package de.amr.pacmanfx.core;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import org.tinylog.Logger;
 
 public class CoinMechanism {
 
+    private final int maxCoins;
+
     private int numCoins;
 
-    private final BooleanProperty enabled = new SimpleBooleanProperty(true);
-
-    private final int maxCoins;
+    private boolean enabled;
 
     public CoinMechanism(int maxCoins) {
         if (maxCoins < 0) {
             throw new IllegalArgumentException("maxCoins < 0");
         }
         this.maxCoins = maxCoins;
+        numCoins = 0;
+        enabled = true;
     }
 
     public boolean isEnabled() {
-        return enabled.get();
+        return enabled;
     }
 
     public void setEnabled(boolean enabled) {
-        enabledProperty().set(enabled);
-    }
-
-    public BooleanProperty enabledProperty() {
-        return enabled;
+        this.enabled = enabled;
     }
 
     public void setNumCoins(int n) {
