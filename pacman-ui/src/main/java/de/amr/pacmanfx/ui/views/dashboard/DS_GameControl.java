@@ -12,6 +12,8 @@ import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.model.test.CutScenesTestState;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
@@ -35,6 +37,8 @@ public class DS_GameControl extends GameDashboardSection {
     private Button[] buttonGroupCutScenesTest;
     private CheckBox cbCollisionCheckedTwice;
 
+    private final IntegerProperty credit = new SimpleIntegerProperty();
+
     public DS_GameControl() {
         super(DashboardID.GAME_CONTROL);
     }
@@ -44,11 +48,16 @@ public class DS_GameControl extends GameDashboardSection {
         final CoinMechanism coinMechanism = app.game().coinMechanism();
         final CommonGameActions actions = app.commonActions();
 
-        spinnerCredit            = intSpinner("Credit", 0, coinMechanism.maxCoins(), coinMechanism.numCoinsProperty());
+        spinnerCredit = intSpinner("Credit", 0, coinMechanism.maxCoins(), credit);
+
         choiceBoxInitialLives    = choiceBox("Initial Lives", new Integer[] {3, 5});
+
         buttonGroupLevelActions  = buttonList("Game Level", List.of(/*"Start",*/ "Quit", "Next"));
+
         buttonGroupCutScenesTest = buttonList("Cut Scenes Test", List.of("Start", "Quit"));
+
         addDynamicInfo("Collision Mode", fnRulesInfo(app, rules -> rules.actorCollisionRules().getCollisionStrategy().name()));
+
         cbCollisionCheckedTwice  = checkBox("Collision Check 2x");
 
         setAction(choiceBoxInitialLives,
@@ -68,6 +77,9 @@ public class DS_GameControl extends GameDashboardSection {
         cbCollisionCheckedTwice.setOnAction(_ ->
             app.game().variant().rules().actorCollisionRules().collisionDoubleCheckedProperty()
                 .set(cbCollisionCheckedTwice.isSelected()));
+
+        spinnerCredit.getValueFactory().valueProperty().bindBidirectional(credit.asObject());
+        credit.addListener((_, _, newValue) -> app.game().coinMechanism().setNumCoins(newValue.intValue()));
     }
 
     @Override
@@ -83,6 +95,7 @@ public class DS_GameControl extends GameDashboardSection {
 
         final boolean creditDisabled = !state.nameIsOneOf(CommonGameStateID.GAME_INTRO, CommonGameStateID.GAME_PREPARATION);
         spinnerCredit.setDisable(creditDisabled);
+        credit.set(app.game().coinMechanism().numCoins());
 
         final boolean booting = CommonGameStateID.BOOT.hasSameNameAs(state);
         //buttonGroupLevelActions[GAME_LEVEL_START].setDisable(booting || !canStartLevel(app, state));

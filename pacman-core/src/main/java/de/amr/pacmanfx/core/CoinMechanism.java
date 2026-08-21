@@ -57,7 +57,7 @@ public class CoinMechanism {
         return numCoins() == 0;
     }
 
-    private void setNumCoins(int n) {
+    public void setNumCoins(int n) {
         if (n >= 0 && n <= maxCoins) {
             numCoinsProperty().set(n);
         } else {

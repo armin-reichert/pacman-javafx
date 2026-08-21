@@ -23,7 +23,7 @@ public class ShadowHuntingStrategy implements GhostHuntingStrategy {
     }
 
     @Override
-    public void hunt(GameLevel level, Ghost ghost, MovementSystem motor, float speed, WorldMovementPolicy worldMovementPolicy) {
+    public void hunt(GameLevel level, Ghost ghost, MovementSystem motor, float speed, WorldMovementPolicy<Ghost> worldMovementPolicy) {
         requireNonNull(level);
         requireNonNull(ghost);
 
