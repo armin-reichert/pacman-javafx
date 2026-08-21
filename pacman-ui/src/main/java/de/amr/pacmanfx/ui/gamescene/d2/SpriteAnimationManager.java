@@ -11,10 +11,14 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 
+/**
+ * Drives all sprite animations in the game. Provides a container where sprite animations are registered. Only active
+ * animations stored in this container are animated.
+ */
 public class SpriteAnimationManager {
 
     private final SpriteAnimContainer animations;
-    private final Animation timer;
+    private final Animation animationTimer;
 
     public SpriteAnimationManager() {
         this(60);
@@ -22,12 +26,14 @@ public class SpriteAnimationManager {
 
     public SpriteAnimationManager(int fps) {
         animations = new SpriteAnimContainer();
-        timer = new Timeline(new KeyFrame(Duration.seconds(1.0 / fps), _ -> {
+        final Duration frameDuration = Duration.seconds(1.0 / fps);
+        final var timerTick = new KeyFrame(frameDuration, _ -> {
             for (SpriteAnimation animation : animations.activeAnimations()) {
                 animation.tick();
             }
-        }));
-        timer.setCycleCount(Animation.INDEFINITE);
+        });
+        animationTimer = new Timeline(timerTick);
+        animationTimer.setCycleCount(Animation.INDEFINITE);
     }
 
     public SpriteAnimContainer animContainer() {
@@ -35,10 +41,10 @@ public class SpriteAnimationManager {
     }
 
     public void startAnimationTimer() {
-        timer.playFromStart();
+        animationTimer.playFromStart();
     }
 
     public void stopAnimationTimer() {
-        timer.stop();
+        animationTimer.stop();
     }
 }
