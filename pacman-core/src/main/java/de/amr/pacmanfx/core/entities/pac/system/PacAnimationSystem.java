@@ -14,7 +14,7 @@ public class PacAnimationSystem {
 
     public void update(Pac pac) {
         switch (pac.getPacState()) {
-            case ACTIVE -> {
+            case ALIVE -> {
                 if (pac.state().isMoving()) {
                     spriteAnimSystem.select(pac, CommonSpriteAnimationID.PAC_MUNCHING);
                     spriteAnimSystem.playSelected(pac);

@@ -16,13 +16,13 @@ public class PacStateSystem {
     public void setState(Pac pac, PacState pacState) {
         requireNonNull(pac);
         requireNonNull(pacState);
-        pac.state().setState(pacState);
+        pac.state().setEnumValue(pacState);
     }
 
     public void update(Pac pac) {
         final PacStateComp state = pac.state();
         switch (state.enumValue()) {
-            case ACTIVE -> state.setMoving(!isStandingStill(pac));
+            case ALIVE -> state.setMoving(!isStandingStill(pac));
             case DEAD -> state.setMoving(false);
         }
     }

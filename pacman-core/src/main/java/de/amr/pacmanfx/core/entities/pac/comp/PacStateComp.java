@@ -10,18 +10,18 @@ import java.util.Objects;
 
 public class PacStateComp implements EntityComponent {
 
-    private PacState state;
+    private PacState enumValue;
 
     private boolean moving;
 
     private boolean male;
 
     public PacState enumValue() {
-        return state;
+        return enumValue;
     }
 
-    public void setState(PacState state) {
-        this.state = Objects.requireNonNull(state);
+    public void setEnumValue(PacState enumValue) {
+        this.enumValue = Objects.requireNonNull(enumValue);
     }
 
     public boolean isMoving() {
@@ -42,7 +42,7 @@ public class PacStateComp implements EntityComponent {
 
     @Override
     public void reset() {
-        state = PacState.ACTIVE;
+        enumValue = PacState.ALIVE;
         moving = false;
     }
 }

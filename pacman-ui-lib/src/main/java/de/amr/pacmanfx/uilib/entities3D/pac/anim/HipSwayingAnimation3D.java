@@ -93,7 +93,7 @@ public class HipSwayingAnimation3D extends ManagedAnimation implements Pac3DMove
     @Override
     public void update() {
         final PacStateComp state = pac.state();
-        final boolean animate = state.enumValue() == PacState.ACTIVE && state.isMoving();
+        final boolean animate = state.enumValue() == PacState.ALIVE && state.isMoving();
         if (animate) {
             playOrContinue();
         } else {
