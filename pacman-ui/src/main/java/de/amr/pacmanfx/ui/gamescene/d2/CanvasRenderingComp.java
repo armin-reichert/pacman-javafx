@@ -17,17 +17,23 @@ import static java.util.Objects.requireNonNull;
 
 public class CanvasRenderingComp implements GameSceneComponent, Disposable {
 
-    private final IntegerProperty unscaledWidth = new SimpleIntegerProperty(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.x());
+    private final IntegerProperty unscaledWidth = new SimpleIntegerProperty();
 
-    private final IntegerProperty unscaledHeight = new SimpleIntegerProperty(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.y());
+    private final IntegerProperty unscaledHeight = new SimpleIntegerProperty();
 
     private final DoubleProperty scaling = new SimpleDoubleProperty(1.0);
 
     private final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>(Color.BLACK);
 
-    private final ObjectProperty<Canvas> canvas =  new SimpleObjectProperty<>();
+    private final ObjectProperty<Canvas> canvas = new SimpleObjectProperty<>();
 
     public CanvasRenderingComp() {
+        this(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.x(), WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.y());
+    }
+
+    public CanvasRenderingComp(int width, int height) {
+        setUnscaledWidth(width);
+        setUnscaledHeight(height);
     }
 
     @Override
@@ -91,6 +97,10 @@ public class CanvasRenderingComp implements GameSceneComponent, Disposable {
         backgroundColorProperty().set(color);
     }
 
+    public void setUnscaledWidth(int value) {
+        unscaledWidth.set(value);
+    }
+
     /** @return the unscaled scene width property */
     public IntegerProperty unscaledWidthProperty() {
         return unscaledWidth;
@@ -99,6 +109,10 @@ public class CanvasRenderingComp implements GameSceneComponent, Disposable {
     /** @return the unscaled scene width in pixels */
     public int unscaledWidth() {
         return unscaledWidthProperty().get();
+    }
+
+    public void setUnscaledHeight(int value) {
+        unscaledHeight.set(value);
     }
 
     /** @return the unscaled scene height property */
