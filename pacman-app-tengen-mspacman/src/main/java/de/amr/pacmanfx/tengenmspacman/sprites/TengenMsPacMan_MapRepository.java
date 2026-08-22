@@ -178,9 +178,7 @@ public class TengenMsPacMan_MapRepository {
         int flashCount,
         boolean randomFlashColors) {
 
-        final RectShort mazeSprite = mapID == NonArcadeMapsSpriteSheet.MapID.MAP32_ANIMATED
-            ? NonArcadeMapsSpriteSheet.instance().findSpriteSequence(mapID)[0]
-            : NonArcadeMapsSpriteSheet.instance().findSprite(mapID);
+        final RectShort mazeSprite = NonArcadeMapsSpriteSheet.instance().findSprite(mapID);
 
         final NES_WorldMapColorScheme original = colorSchemeOfNonArcadeMap(mapID);
         final NES_WorldMapColorScheme requested = optionalRandomColorScheme == null ? original : optionalRandomColorScheme;

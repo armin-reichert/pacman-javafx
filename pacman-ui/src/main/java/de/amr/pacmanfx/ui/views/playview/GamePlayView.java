@@ -250,14 +250,19 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         final long tick = app.clock().currentTick();
 
         app.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
-            if (gameScene.rendering2D() != null) {
-                if (sceneRenderer != null) {
-                    sceneRenderer.draw(gameScene, tick);
+            try {
+                if (gameScene.rendering2D() != null) {
+                    if (sceneRenderer != null) {
+                        sceneRenderer.draw(gameScene, tick);
+                    }
+                    if (hudRenderer != null) {
+                        hudRenderer.draw(session, gameScene, tick);
+                    }
                 }
-                if (hudRenderer != null) {
-                    hudRenderer.draw(session, gameScene, tick);
-                }
+            } catch (Exception x) {
+                Logger.error(x, "Exception during rendering!");
             }
+
         });
 
         // Render mini view content

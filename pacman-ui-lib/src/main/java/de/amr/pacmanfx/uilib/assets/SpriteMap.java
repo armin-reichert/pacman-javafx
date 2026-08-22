@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.uilib.assets;
 
 import de.amr.basics.Named;
@@ -12,40 +13,16 @@ import java.util.Map;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Map of sprite IDs to sprite data. Values are either:
- * <ul>
- * <li>Single sprites: {@link RectShort}</li>
- * <li>Sprite sequences: {@link RectShort[]}</li>
- * </ul>
+ * Map of sprite IDs to sprite data.
  */
 public class SpriteMap {
 
-    private final Map<Named, Object> map;
+    private final Map<Named, Object> map = new HashMap<>();
 
-    public SpriteMap() {
-        map = new HashMap<>();
-    }
+    public SpriteMap() {}
 
     public boolean isEmpty() {
         return map.isEmpty();
-    }
-
-    private Object get(Named id) {
-        requireNonNull(id);
-        Object value = map.get(id);
-        if (value == null) {
-            throw new IllegalArgumentException("Sprite map value is null for id '%s'".formatted(id));
-        }
-        return value;
-    }
-
-    public final RectShort sprite(Named id) {
-        requireNonNull(id);
-        Object value = get(id);
-        if (!(value instanceof RectShort))    {
-            throw new IllegalArgumentException("Sprite ID '%s' does not reference a sprite".formatted(id));
-        }
-        return (RectShort) value;
     }
 
     public final RectShort[] spriteSequence(Named id) {
@@ -63,13 +40,17 @@ public class SpriteMap {
             throw new IllegalArgumentException("Sprite list is null! WTF?");
         }
         for (int i = 0; i < sprites.length; ++i) {
-            requireNonNull(sprites[i], "Sprite list for ID '%s' contains null value at index %d! WTF?"
-                .formatted(id, i));
+            requireNonNull(sprites[i],
+                "Sprite list for ID '%s' contains null value at index %d! WTF?".formatted(id, i));
         }
-        if (sprites.length == 1) {
-            map.put(id, sprites[0]);
-        } else {
-            map.put(id, sprites.clone());
+        map.put(id, sprites.clone());
+    }
+
+    private Object get(Named id) {
+        requireNonNull(id);
+        if (!map.containsKey(id)) {
+            throw new IllegalArgumentException("Np sprite map value exists for id '%s'".formatted(id));
         }
+        return map.get(id);
     }
 }

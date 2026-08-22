@@ -22,19 +22,15 @@ public interface SpriteSheet {
     SpriteMap spriteMap();
 
     /**
-     * @param id a sprite ID
-     * @return the rectangular area in the sprite sheet where this sprite is located
-     */
-    default RectShort findSprite(Named id) {
-        return spriteMap().sprite(id);
-    }
-
-    /**
      * @param id a sprite sequence ID
      * @return array of rectangular sprite sheet areas where sprites are located
      */
     default RectShort[] findSpriteSequence(Named id) {
         return spriteMap().spriteSequence(id);
+    }
+
+    default RectShort findSprite(Named id) {
+        return findSpriteSequence(id)[0];
     }
 
     /**
