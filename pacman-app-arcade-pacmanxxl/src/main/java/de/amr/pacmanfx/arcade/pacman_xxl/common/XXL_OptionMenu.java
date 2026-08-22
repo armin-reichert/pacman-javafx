@@ -10,9 +10,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
 import de.amr.pacmanfx.game.GameVariant;
-import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
-import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenuEntry;
@@ -53,10 +51,10 @@ public class XXL_OptionMenu extends OptionMenu {
         defineAction(1, KeyCode.E, "OPEN EDITOR");
         defineAction(2, KeyCode.ENTER, "START");
 
-        meGameVariantID = createGameVariantIDEntry();
-        meView3DEnabled = createView3DEnabledEntry();
+        meGameVariantID    = createGameVariantIDEntry();
+        meView3DEnabled    = createView3DEnabledEntry();
         meCutScenesEnabled = createCutScenesEnabledEntry();
-        meMapOrder = createMapOrderEntry();
+        meMapOrder         = createMapOrderEntry();
 
         addEntry(meGameVariantID);
         addEntry(meView3DEnabled);
@@ -76,45 +74,40 @@ public class XXL_OptionMenu extends OptionMenu {
 
     @Override
     public void logMenuState() {
-        Logger.info("Option Menu: ({}, {}, {}, {})",
+        Logger.info("Option Menu: {}, {}, Cutscenes {}, {}",
             meGameVariantID.value(),
             meView3DEnabled.value() ? "3D" : "2D",
-            "Cut Scenes " + (meCutScenesEnabled.value() ? "ON" : "OFF"),
-            meMapOrder.value());
+            meCutScenesEnabled.value() ? "ON" : "OFF",
+            meMapOrder.value()
+        );
     }
 
     public void init(GameAppContext app) {
         this.app = requireNonNull(app);
 
-        final GameUI ui = app.ui();
+        final String variantName = app.gameVariants().currentVariantName();
         final GameVariant variant = app.gameVariants().currentGameVariant();
-        final GameVariantID variantID = GameVariantID.valueOf(app.gameVariants().currentVariantName());
-        final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
-        final GameContext game = app.game();
-        final WorldMapManager worldMapSelector = game.variant().worldMapManager();
 
-        if (!(worldMapSelector instanceof XXL_WorldMapManager mapSelector)) {
-            final String message = "Expected XXL map selector but found %s".formatted(
-                worldMapSelector.getClass().getSimpleName());
-            Logger.error(message);
+        final WorldMapManager mapManager = variant.config().worldMapManager();
+        if (!(mapManager instanceof XXL_WorldMapManager xxlMapManager)) {
+            final String message = "Expected XXL map manager but found %s".formatted(mapManager.getClass().getSimpleName());
             throw new IllegalStateException(message);
         }
-        mapSelector.loadMapPrototypes();
-
-        scaling = createScalingValue(ui.window().stage().heightProperty());
+        xxlMapManager.loadMapPrototypes();
 
         // Init entries
-        meGameVariantID.setValue(variantID);
-        meView3DEnabled.setValue(ui.viewModel().common3D.view3DEnabledProperty.get());
-        meCutScenesEnabled.setValue(game.session().cutScenesEnabled());
-        meMapOrder.setValue(mapSelector.selectionMode());
-        meMapOrder.setEnabled(!mapSelector.customMaps().isEmpty());
+        meGameVariantID.setValue(GameVariantID.valueOf(variantName));
+        meView3DEnabled.setValue(app.ui().viewModel().common3D.view3DEnabledProperty.get());
+        meCutScenesEnabled.setValue(app.game().session().cutScenesEnabled());
+        meMapOrder.setValue(xxlMapManager.selectionMode());
+        meMapOrder.setEnabled(!xxlMapManager.customMaps().isEmpty());
 
         logMenuState();
 
-        soundEnabledProperty().bind(ui.sounds().muteProperty().not());
+        soundEnabledProperty().bind(app.ui().sounds().muteProperty().not());
 
-        chaseAnimation.displayGameVariant(game, renderConfig, canvas);
+        scaling = computeScalingValue(app.ui().window().stage().heightProperty());
+        chaseAnimation.displayGameVariant(app.game(), variant.uiConfig().renderConfig(), canvas);
     }
 
     public void bind() {
@@ -150,7 +143,7 @@ public class XXL_OptionMenu extends OptionMenu {
 
     // Private
 
-    private ObservableValue<Double> createScalingValue(ReadOnlyDoubleProperty stageHeightProperty) {
+    private ObservableValue<Double> computeScalingValue(ReadOnlyDoubleProperty stageHeightProperty) {
         return stageHeightProperty.map(Number::doubleValue).map(h -> {
             final double menuHeightPixels = Math.clamp(h * settings.relHeight(), settings.minHeight(), settings.maxHeight());
             final double scaling = menuHeightPixels / (TS * settings.numTilesY());
@@ -159,8 +152,8 @@ public class XXL_OptionMenu extends OptionMenu {
         });
     }
 
-    private void onGameVariantNameChanged(ObservableValue<? extends GameVariantID> observable, GameVariantID oldVariantID, GameVariantID newVariantID) {
-        app.gameVariants().selectVariant(newVariantID.name());
+    private void onGameVariantNameChanged(ObservableValue<? extends GameVariantID> observable, GameVariantID oldID, GameVariantID newID) {
+        app.gameVariants().selectVariant(newID.name());
     }
 
     private void onPlay3DSettingsChange(ObservableValue<? extends Boolean> obs,  Boolean oldValue, Boolean newValue) {
@@ -183,7 +176,6 @@ public class XXL_OptionMenu extends OptionMenu {
         uiConfig.connectApp(app);
 
         chaseAnimation.displayGameVariant(game, uiConfig.renderConfig(), canvas);
-
         startAnimation();
     }
 
