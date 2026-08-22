@@ -22,7 +22,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
-import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
@@ -31,15 +30,15 @@ import static java.util.Objects.requireNonNull;
  */
 public class XXL_StartPage implements StartPage {
 
-    static final String ROOT_PATH = "/de/amr/pacmanfx/arcade/pacman_xxl/";
     static final ResourceManager RM = () -> XXL_PacMan_GameVariantUIConfig.class;
 
-    static final String XXL_OPTION_MENU_JSON = "/de/amr/pacmanfx/arcade/pacman_xxl/option-menu.json";
+    static final String ROOT_PATH = "/de/amr/pacmanfx/arcade/pacman_xxl/";
+    static final String OPTION_MENU_SETTINGS_PATH = ROOT_PATH + "option-menu.json";
 
-    static final Image WALLPAPER_IMAGE = RM.loadImage(ROOT_PATH + "graphics/screenshot.png");
+    static final Image WALLPAPER_IMAGE   = RM.loadImage(ROOT_PATH + "graphics/screenshot.png");
     static final Media VARIANT_NARRATION = RM.loadMedia(ROOT_PATH + "sound/game-description.mp3");
 
-    private final StackPane rootPane;
+    private final StackPane rootPane = new StackPane();
     private final XXL_OptionMenu menu;
     private final String title;
 
@@ -49,17 +48,18 @@ public class XXL_StartPage implements StartPage {
         title = "Pac-Man XXL games"; // TODO localize
 
         final OptionMenuSettings menuSettings = JsonLoader.load(
-            getClass().getResource(XXL_OPTION_MENU_JSON),
+            getClass().getResource(OPTION_MENU_SETTINGS_PATH),
             OptionMenuSettings.class
         );
         menu = new XXL_OptionMenu(menuSettings);
 
-        rootPane = new StackPane(menu.rootPane());
+        rootPane.getChildren().add(menu.rootPane());
+
         rootPane.setBackground(Ufx.createWallpaper(WALLPAPER_IMAGE));
 
+        // Requesting focus is important e.g. when quitting the game scene and returning to the menu!
         rootPane.focusedProperty().addListener((_, _, hasFocus) -> {
             if (hasFocus) {
-                // This is important such that quitting the game scene and returning to the menu will work!
                 Platform.runLater(menu::requestFocus);
             }
         });
@@ -89,7 +89,6 @@ public class XXL_StartPage implements StartPage {
             pauseProgressTimer();
             final WorldMapSelectionMode mode = menu.selectedMapSelectionMode();
             XXL_WorldMapManager.instance().setSelectionMode(mode);
-            Logger.info("Using map selection mode: {}", mode);
             app.startGame();
         }
         else if (keyboard.isKeyPressed(KeyCode.S)) {
@@ -105,11 +104,15 @@ public class XXL_StartPage implements StartPage {
             case ARCADE_PACMAN_XXL, ARCADE_MS_PACMAN_XXL -> app.gameVariants().selectVariant(selectedGameVariantID.name());
             default -> throw new IllegalStateException("Unexpected game variant in XXL menu: " + selectedGameVariantID);
         }
-        app.ui().sounds().voice().playAfterSec(1, VARIANT_NARRATION);
+
         menu.init(app);
         menu.bind();
         menu.startAnimation();
-        Platform.runLater(menu::requestFocus);
+
+        Platform.runLater(() -> {
+            menu.requestFocus();
+            startTalking();
+        });
     }
 
     @Override
@@ -134,6 +137,10 @@ public class XXL_StartPage implements StartPage {
 
     private void pauseProgressTimer() {
         app.ui().views().assertView(GameViewID.START_PAGES, StartPagesView.class).rootPane().pauseProgress();
+    }
+
+    private void startTalking() {
+        app.ui().sounds().voice().playAfterSec(0.5, VARIANT_NARRATION);
     }
 
     private void stopTalking() {
