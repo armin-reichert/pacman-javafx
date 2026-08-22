@@ -80,7 +80,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
             drawHighScore(highScore, arcadeFont8(), color);
         }
 
-        final int counterY = gameScene.rendering2D().unscaledHeight() - TS;
+        final int counterY = gameScene.canvasRendering().unscaledHeight() - TS;
 
         if (hud.isLivesCounterShown()) {
             drawLivesCounter(session, counterY);

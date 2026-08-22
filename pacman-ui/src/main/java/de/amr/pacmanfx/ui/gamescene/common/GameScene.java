@@ -16,7 +16,7 @@ import de.amr.pacmanfx.core.event.gameplay.CreditAddedEvent;
 import de.amr.pacmanfx.core.gamestate.GameFlowController;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.d2.Rendering2DSupport;
+import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import javafx.scene.SubScene;
 import javafx.scene.control.ContextMenu;
@@ -40,13 +40,13 @@ public class GameScene implements GameSceneController, DefaultGameEventListener,
         this.app = requireNonNull(app);
     }
 
-    public Rendering2DSupport rendering2D() {
-        Rendering2DSupport r2D = componentRegistry.optComp(Rendering2DSupport.class).orElse(null);
+    public CanvasRenderingComp canvasRendering() {
+        CanvasRenderingComp r2D = componentRegistry.optComp(CanvasRenderingComp.class).orElse(null);
         if (r2D == null) {
-            componentRegistry.setComp(Rendering2DSupport.class, new Rendering2DSupport());
+            componentRegistry.setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
             Logger.info("Added Rendering2DSupport to " + getClass().getSimpleName());
         }
-        return componentRegistry.reqComp(Rendering2DSupport.class);
+        return componentRegistry.reqComp(CanvasRenderingComp.class);
     }
 
     public ActionBindingsSupport actionBindingsSupport() {
@@ -94,8 +94,8 @@ public class GameScene implements GameSceneController, DefaultGameEventListener,
      */
     public void acceptGameLevel(GameSession session, GameLevel level) {
         final Vector2i size = level.worldMap().terrainLayer().sizeInPixel();
-        rendering2D().unscaledWidthProperty().set(size.x());
-        rendering2D().unscaledHeightProperty().set(size.y());
+        canvasRendering().unscaledWidthProperty().set(size.x());
+        canvasRendering().unscaledHeightProperty().set(size.y());
     }
 
     /**

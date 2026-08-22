@@ -28,8 +28,8 @@ public class TengenMsPacMan_CreditsScene extends GameScene {
 
     public TengenMsPacMan_CreditsScene(GameAppContext appContext) {
         super(appContext);
-        rendering2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
-        rendering2D().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
+        canvasRendering().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
+        canvasRendering().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
     }
 
     @Override

@@ -25,7 +25,7 @@ import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
-import de.amr.pacmanfx.ui.gamescene.d2.Rendering2DSupport;
+import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -196,8 +196,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final Vector2i size = terrain.sizeInPixel();
 
-        rendering2D().unscaledWidthProperty().set(size.x());
-        rendering2D().unscaledHeightProperty().set(size.y());
+        canvasRendering().unscaledWidthProperty().set(size.x());
+        canvasRendering().unscaledHeightProperty().set(size.y());
 
         dynamicCamera.enterTrackingMode();
         dynamicCamera.updateRange(terrain);
@@ -224,23 +224,23 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
             oldCanvas.heightProperty().unbind();
             rootPane.getChildren().remove(oldCanvas);
         }
-        newCanvas.widthProperty() .bind(rendering2D().scalingProperty().multiply(NES_SCREEN_WIDTH));
-        newCanvas.heightProperty().bind(rendering2D().scalingProperty().multiply(canvasHeightUnscaled));
+        newCanvas.widthProperty() .bind(canvasRendering().scalingProperty().multiply(NES_SCREEN_WIDTH));
+        newCanvas.heightProperty().bind(canvasRendering().scalingProperty().multiply(canvasHeightUnscaled));
         rootPane.getChildren().add(newCanvas);
     };
 
     private void resetRendering2D() {
         // Remove component, will be recreated on-demand!
-        componentsRegistry().removeComp(Rendering2DSupport.class);
+        componentsRegistry().removeComp(CanvasRenderingComp.class);
 
-        rendering2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
+        canvasRendering().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         // Default height. Varies with map size.
-        rendering2D().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
+        canvasRendering().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
 
-        rendering2D().scalingProperty().addListener(scalingListener);
-        rendering2D().canvasProperty().addListener(canvasListener);
+        canvasRendering().scalingProperty().addListener(scalingListener);
+        canvasRendering().canvasProperty().addListener(canvasListener);
 
-        dynamicCamera.scalingProperty().bind(rendering2D().scalingProperty());
+        dynamicCamera.scalingProperty().bind(canvasRendering().scalingProperty());
     }
 
     private TengenMsPacMan_Actions actions() {
@@ -282,12 +282,12 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
         final var uiSettings = uiSettings();
         final SceneDisplay displayMode = uiSettings.playSceneDisplay.get();
 
-        rendering2D().scalingProperty().set(switch (displayMode) {
+        canvasRendering().scalingProperty().set(switch (displayMode) {
             case SCALED_TO_FIT -> subScene.getHeight() / canvasHeightUnscaled.get();
             case SCROLLING -> subScene.getHeight() / NES_SCREEN_HEIGHT;
         });
         Logger.debug("Tengen 2D play scene sub-scene: w={0.00} h={0.00} scaling={0.00}",
-            subScene.getWidth(), subScene.getHeight(), rendering2D().scaling());
+            subScene.getWidth(), subScene.getHeight(), canvasRendering().scaling());
     }
 
     private void updateHUD(GameSession session, GameLevel level) {

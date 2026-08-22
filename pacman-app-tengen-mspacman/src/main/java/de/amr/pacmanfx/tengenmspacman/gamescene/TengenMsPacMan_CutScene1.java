@@ -66,8 +66,8 @@ public class TengenMsPacMan_CutScene1 extends GameScene {
 
     public TengenMsPacMan_CutScene1(GameAppContext app) {
         super(app);
-        rendering2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
-        rendering2D().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
+        canvasRendering().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
+        canvasRendering().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
     }
 
     public Clapperboard clapperboard() {

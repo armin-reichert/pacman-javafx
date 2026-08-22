@@ -8,7 +8,7 @@ import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CreditsScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
-import de.amr.pacmanfx.ui.gamescene.d2.Rendering2DSupport;
+import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 
@@ -82,7 +82,7 @@ public class TengenMsPacMan_CreditsScene_Renderer extends BaseRenderer implement
         if (!(gameScene instanceof TengenMsPacMan_CreditsScene creditsScene)) {
             return;
         }
-        final Rendering2DSupport r2D = gameScene.componentsRegistry().reqComp(Rendering2DSupport.class);
+        final CanvasRenderingComp r2D = gameScene.componentsRegistry().reqComp(CanvasRenderingComp.class);
 
         final int width = r2D.unscaledWidth();
         drawHorizontalBar(NES_Palette.color(0x20), NES_Palette.color(0x13), width, TS, 20);

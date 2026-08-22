@@ -7,7 +7,7 @@ import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_CutScene3;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
-import de.amr.pacmanfx.ui.gamescene.d2.Rendering2DSupport;
+import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
@@ -17,7 +17,7 @@ public class ArcadePacMan_CutScene3_Renderer extends ArcadePacMan_CutScene_Rende
     public ArcadePacMan_CutScene3_Renderer(GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas) {
         super(gameScene, animSystem, canvas);
 
-        final Rendering2DSupport r2D = gameScene.componentsRegistry().reqComp(Rendering2DSupport.class);
+        final CanvasRenderingComp r2D = gameScene.componentsRegistry().reqComp(CanvasRenderingComp.class);
 
         debugRenderer = r2D.configureRenderer(new BaseDebugInfoRenderer(canvas) {
             @Override

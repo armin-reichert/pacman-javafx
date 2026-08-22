@@ -62,8 +62,8 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
 
     public TengenMsPacMan_CutScene4(GameAppContext app) {
         super(app);
-        rendering2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
-        rendering2D().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
+        canvasRendering().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
+        canvasRendering().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
     }
 
     public Pac pacMan() {
@@ -235,7 +235,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
 
         final Pac junior = factory.createPacMan();
         double randomX = 8 * TS + (8 * TS) * Math.random();
-        junior.pos().set((float) randomX, rendering2D().unscaledHeight() - 4 * TS);
+        junior.pos().set((float) randomX, canvasRendering().unscaledHeight() - 4 * TS);
         junior.show();
 
         worldNavigationSystem.setMoveDir(junior, Direction.UP);
@@ -273,11 +273,11 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
             computeNewMoveDir(navigator, junior);
         }
         motor.move(junior);
-        if (junior.pos().x() > rendering2D().unscaledWidth()) {
+        if (junior.pos().x() > canvasRendering().unscaledWidth()) {
             junior.pos().setX(0);
         }
         if (junior.pos().x() < 0) {
-            junior.pos().setX(rendering2D().unscaledWidth());
+            junior.pos().setX(canvasRendering().unscaledWidth());
         }
     }
 
@@ -297,7 +297,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
         Vector2i tile = junior.pos().tile();
         Vector2f pos1 = tile.plus(dir1.vector()).scaled(TS).toVector2f();
         Vector2f pos2 = tile.plus(dir2.vector()).scaled(TS).toVector2f();
-        Vector2f center = new Vector2f(0.5f * rendering2D().unscaledWidth(), 0.5f * rendering2D().unscaledHeight());
+        Vector2f center = new Vector2f(0.5f * canvasRendering().unscaledWidth(), 0.5f * canvasRendering().unscaledHeight());
         return Double.compare(pos1.euclideanDist(center), pos2.euclideanDist(center));
     }
 }

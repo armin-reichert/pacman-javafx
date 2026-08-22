@@ -25,7 +25,7 @@ import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
-import de.amr.pacmanfx.ui.gamescene.d2.Rendering2DSupport;
+import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
@@ -100,7 +100,7 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
         requireNonNull(canvas);
         requireNonNull(gameScene);
 
-        final Rendering2DSupport r2D = gameScene.componentsRegistry().reqComp(Rendering2DSupport.class);
+        final CanvasRenderingComp r2D = gameScene.componentsRegistry().reqComp(CanvasRenderingComp.class);
 
         final GameScene2D_Renderer renderer = switch (gameScene) {
             case Arcade_BootScene2D ignored        -> new Arcade_BootScene2D_Renderer(gameScene, canvas, spriteSheet(), BOOT_SCENE_SPRITES);
@@ -128,7 +128,7 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
         requireNonNull(animSystem);
         requireNonNull(canvas);
 
-        final Rendering2DSupport r2D = gameScene.componentsRegistry().reqComp(Rendering2DSupport.class);
+        final CanvasRenderingComp r2D = gameScene.componentsRegistry().reqComp(CanvasRenderingComp.class);
         final var renderer = new ArcadeMsPacMan_HeadsUpDisplayRenderer(canvas);
         renderer.setImageSmoothing(true);
         r2D.configureRenderer(renderer);

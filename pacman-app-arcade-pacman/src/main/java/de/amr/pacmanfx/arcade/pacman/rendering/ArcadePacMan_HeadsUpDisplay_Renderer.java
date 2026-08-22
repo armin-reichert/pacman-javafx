@@ -65,8 +65,8 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer
 
         if (hud.isLevelCounterShown()) {
             final RectShort[] bonusSymbolSprites = spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS);
-            final float y = gameScene.rendering2D().unscaledHeight() - tilesPx(2) + 2;
-            float x = gameScene.rendering2D().unscaledWidth() - tilesPx(4);
+            final float y = gameScene.canvasRendering().unscaledHeight() - tilesPx(2) + 2;
+            float x = gameScene.canvasRendering().unscaledWidth() - tilesPx(4);
             for (int symbolCode : session.levelCounter().data().symbolCodes()) {
                 drawSprite(bonusSymbolSprites[symbolCode], x, y, true);
                 x -= tilesPx(2); // symbols are drawn from right to left
@@ -76,7 +76,7 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer
         if (hud.isLivesCounterShown()) {
             final RectShort livesCounterSprite = spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL);
             final float x = tilesPx(2);
-            final float y = gameScene.rendering2D().unscaledHeight() - tilesPx(2);
+            final float y = gameScene.canvasRendering().unscaledHeight() - tilesPx(2);
             for (int i = 0; i < hud.visibleLifeCount(); ++i) {
                 drawSprite(livesCounterSprite, x + i * tilesPx(2), y, true);
             }
@@ -91,7 +91,7 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer
 
         if (hud.isCreditShown()) {
             final int credit = gameScene.game().coinMechanism().numCoins();
-            fillText(CREDIT_TEXT_PATTERN.formatted(credit), ARCADE_WHITE, arcadeFont8(), tilesPx(2), gameScene.rendering2D().unscaledHeight());
+            fillText(CREDIT_TEXT_PATTERN.formatted(credit), ARCADE_WHITE, arcadeFont8(), tilesPx(2), gameScene.canvasRendering().unscaledHeight());
         }
     }
 

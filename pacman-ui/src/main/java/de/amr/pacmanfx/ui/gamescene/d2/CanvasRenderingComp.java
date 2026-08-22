@@ -15,7 +15,7 @@ import javafx.scene.paint.Color;
 
 import static java.util.Objects.requireNonNull;
 
-public class Rendering2DSupport implements GameSceneComponent, Disposable {
+public class CanvasRenderingComp implements GameSceneComponent, Disposable {
 
     private final IntegerProperty unscaledWidth = new SimpleIntegerProperty(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.x());
 
@@ -26,6 +26,9 @@ public class Rendering2DSupport implements GameSceneComponent, Disposable {
     private final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>(Color.BLACK);
 
     private final ObjectProperty<Canvas> canvas =  new SimpleObjectProperty<>();
+
+    public CanvasRenderingComp() {
+    }
 
     @Override
     public void dispose() {
