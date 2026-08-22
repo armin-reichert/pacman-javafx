@@ -29,8 +29,10 @@ import de.amr.pacmanfx.ui.gamescene.d2.Rendering2DSupport;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SubScene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.ToggleGroup;
@@ -213,27 +215,28 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
 
     // private area, do NOT enter!
 
+    private final ChangeListener<? super Number> scalingListener = (_, _, _) ->
+        game().session().optLevel()
+            .ifPresent(level -> dynamicCamera().updateRange(level.worldMap().terrainLayer()));
+
+    private final ChangeListener<? super Canvas> canvasListener = (_, oldCanvas, newCanvas) -> {
+        if (oldCanvas != null) {
+            oldCanvas.widthProperty().unbind();
+            oldCanvas.heightProperty().unbind();
+            rootPane.getChildren().remove(oldCanvas);
+        }
+        newCanvas.widthProperty() .bind(rendering2D().scalingProperty().multiply(NES_SCREEN_WIDTH));
+        newCanvas.heightProperty().bind(rendering2D().scalingProperty().multiply(canvasHeightUnscaled));
+        rootPane.getChildren().add(newCanvas);
+    };
+
     private void resetRendering2D() {
         componentsRegistry().removeComp(Rendering2DSupport.class);
-
-        rendering2D().scalingProperty().addListener((_, _, _) -> game().session().optLevel()
-            .ifPresent(level -> dynamicCamera.updateRange(level.worldMap().terrainLayer()))
-        );
-
         rendering2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         // Default height. Varies with map size.
         rendering2D().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
-
-        rendering2D().canvasProperty().addListener((_, oldCanvas, newCanvas) -> {
-            if (oldCanvas != null) {
-                oldCanvas.widthProperty().unbind();
-                oldCanvas.heightProperty().unbind();
-                rootPane.getChildren().remove(oldCanvas);
-            }
-            newCanvas.widthProperty() .bind(rendering2D().scalingProperty().multiply(NES_SCREEN_WIDTH));
-            newCanvas.heightProperty().bind(rendering2D().scalingProperty().multiply(canvasHeightUnscaled));
-            rootPane.getChildren().add(newCanvas);
-        });
+        rendering2D().scalingProperty().addListener(scalingListener);
+        rendering2D().canvasProperty().addListener(canvasListener);
     }
 
     private TengenMsPacMan_Actions actions() {
