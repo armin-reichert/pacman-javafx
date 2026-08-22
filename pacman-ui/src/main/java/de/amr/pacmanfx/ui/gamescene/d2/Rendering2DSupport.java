@@ -142,6 +142,4 @@ public class Rendering2DSupport implements GameSceneComponent, Disposable {
     public double aspectRatio() {
         return scaledWidth() / scaledHeight();
     }
-
-
 }

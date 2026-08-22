@@ -67,7 +67,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
         super(appContext);
 
         dynamicCamera = new PlayScene2DCamera();
-        dynamicCamera.scalingProperty().bind(rendering2D().scalingProperty());
 
         rootPane.backgroundProperty().bind(appContext.ui().viewModel().common2D.canvasBackgroundColorProperty.map(Background::fill));
 
@@ -231,12 +230,17 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
     };
 
     private void resetRendering2D() {
+        // Remove component, will be recreated on-demand!
         componentsRegistry().removeComp(Rendering2DSupport.class);
+
         rendering2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         // Default height. Varies with map size.
         rendering2D().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
+
         rendering2D().scalingProperty().addListener(scalingListener);
         rendering2D().canvasProperty().addListener(canvasListener);
+
+        dynamicCamera.scalingProperty().bind(rendering2D().scalingProperty());
     }
 
     private TengenMsPacMan_Actions actions() {
