@@ -35,6 +35,13 @@ public class DefaultGameVariantManager implements GameVariantManager {
     }
 
     @Override
+    public void registerGameVariant(String variantName) {
+        final boolean includeInteractiveTests = viewModel.testStatesIncludedProperty.get();
+        final GameVariant gameVariant = createGameVariant(variantName, includeInteractiveTests);
+        variantsByName.put(variantName, gameVariant);
+    }
+
+    @Override
     public StringProperty selectedVariantNameProperty() {
         return selectedVariantName;
     }
@@ -56,9 +63,9 @@ public class DefaultGameVariantManager implements GameVariantManager {
     }
 
     @Override
-    public GameVariant gameVariantByName(String name) {
-        requireNonNull(name);
-        return variantsByName.get(name);
+    public GameVariant gameVariantByName(String variantName) {
+        requireNonNull(variantName);
+        return variantsByName.get(variantName);
     }
 
     @Override
@@ -68,33 +75,25 @@ public class DefaultGameVariantManager implements GameVariantManager {
     }
 
     @Override
-    public void selectVariant(String name) {
-        requireNonNull(name);
-        if (!variantsByName.containsKey(name)) {
-            final boolean includeInteractiveTests = viewModel.testStatesIncludedProperty.get();
-            final GameVariant gameVariant = createGameVariant(name, includeInteractiveTests);
-            variantsByName.put(name, gameVariant);
+    public void selectVariant(String variantName) {
+        if (!isVariantRegistered(variantName)) {
+            registerGameVariant(variantName);
         }
-        final GameVariant variant = variantsByName.get(name);
-
-        variant.config().worldMapManager().loadMapPrototypes();
-        Logger.info("Loaded world maps for game variant {}", name);
-
-        selectedVariantName.set(name);
+        final GameVariant variant = variantsByName.get(variantName);
+        selectedVariantName.set(variantName);
     }
 
     private GameVariant createGameVariant(String variantName, boolean includeInteractiveTests) {
         final Cartridge cartridge = cartridgeRepository.cartridgeByName(variantName);
-        final var gameVariant = new GameVariant(cartridge);
+        final var variant = new GameVariant(cartridge);
         if (includeInteractiveTests) {
-            addInteractiveTestStates(gameVariant.config().gameFlow());
+            final GameFlowController gameFlow = variant.config().gameFlow();
+            gameFlow.addState(new LevelShortTestState());
+            gameFlow.addState(new LevelMediumTestState());
+            gameFlow.addState(new CutScenesTestState());
         }
-        return gameVariant;
-    }
-
-    public void addInteractiveTestStates(GameFlowController gameFlow) {
-        gameFlow.addState(new LevelShortTestState());
-        gameFlow.addState(new LevelMediumTestState());
-        gameFlow.addState(new CutScenesTestState());
+        variant.config().worldMapManager().loadMapPrototypes();
+        Logger.info("Loaded world maps for game variant {}", variantName);
+        return variant;
     }
 }

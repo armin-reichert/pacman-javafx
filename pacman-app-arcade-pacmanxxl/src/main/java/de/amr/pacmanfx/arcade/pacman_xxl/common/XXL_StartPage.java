@@ -73,6 +73,9 @@ public class XXL_StartPage implements StartPage {
     @Override
     public void setGameApp(GameAppContext app) {
         this.app = requireNonNull(app);
+        // Ensure both game variants are available
+        app.gameVariants().registerGameVariant(GameVariantID.ARCADE_PACMAN_XXL.name());
+        app.gameVariants().registerGameVariant(GameVariantID.ARCADE_MS_PACMAN_XXL.name());
     }
 
     @Override
@@ -97,11 +100,6 @@ public class XXL_StartPage implements StartPage {
 
     @Override
     public void onEnter() {
-
-        //TODO Hack to ensure both game variants are available
-        app.gameVariants().selectVariant(GameVariantID.ARCADE_PACMAN_XXL.name());
-        app.gameVariants().selectVariant(GameVariantID.ARCADE_MS_PACMAN_XXL.name());
-
         final GameVariantID selectedGameVariantID = menu.meGameVariantID().value();
         switch (selectedGameVariantID) {
             case ARCADE_PACMAN_XXL, ARCADE_MS_PACMAN_XXL -> app.gameVariants().selectVariant(selectedGameVariantID.name());
