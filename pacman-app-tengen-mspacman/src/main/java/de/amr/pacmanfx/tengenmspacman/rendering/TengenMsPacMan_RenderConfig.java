@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.math.RectShort;
 import de.amr.basics.spriteanim.SpriteAnimContainer;
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimController;
+import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.model.GhostPersonality;
@@ -99,7 +99,7 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public GameScene2D_Renderer createGameSceneRenderer(GameScene gameScene, SpriteAnimController animSystem, Canvas canvas) {
+    public GameScene2D_Renderer createGameSceneRenderer(GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas) {
         final Rendering2DSupport r2D = gameScene.componentsRegistry().reqComp(Rendering2DSupport.class);
         final GameScene2D_Renderer renderer = switch (gameScene) {
             case TengenMsPacMan_BootScene    ignored -> new TengenMsPacMan_BootScene_Renderer(this, gameScene, animSystem, canvas);
@@ -117,23 +117,23 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public TengenMsPacMan_GameLevelRenderer createGameLevelRenderer(SpriteAnimController animSystem, Canvas canvas) {
+    public TengenMsPacMan_GameLevelRenderer createGameLevelRenderer(ActorSpriteAnimController animSystem, Canvas canvas) {
         return new TengenMsPacMan_GameLevelRenderer(assets, canvas);
     }
 
     @Override
-    public TengenMsPacMan_HeadsUpDisplay_Renderer createHUDRenderer(GameScene gameScene, SpriteAnimController animSystem, Canvas canvas) {
+    public TengenMsPacMan_HeadsUpDisplay_Renderer createHUDRenderer(GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas) {
         final Rendering2DSupport r2D = gameScene.componentsRegistry().reqComp(Rendering2DSupport.class);
         return r2D.configureRenderer(new TengenMsPacMan_HeadsUpDisplay_Renderer(canvas));
     }
 
     @Override
-    public TengenMsPacMan_ActorRenderer createActorRenderer(SpriteAnimController animSystem, Canvas canvas) {
+    public TengenMsPacMan_ActorRenderer createActorRenderer(ActorSpriteAnimController animSystem, Canvas canvas) {
         return new TengenMsPacMan_ActorRenderer(this, animSystem, canvas);
     }
 
     @Override
-    public Ghost createAnimatedGhost(SpriteAnimController animController, SpriteAnimContainer container, GhostPersonality personality) {
+    public Ghost createAnimatedGhost(ActorSpriteAnimController animController, SpriteAnimContainer container, GhostPersonality personality) {
         final var factory = TengenMsPacMan_ActorFactory.instance();
         final Ghost ghost = switch (personality) {
             case RED_GHOST_SHADOW -> factory.createRedGhost();

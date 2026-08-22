@@ -7,7 +7,7 @@ import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimController;
+import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.rules.GameRules;
@@ -44,7 +44,7 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
     private final BaseDebugInfoRenderer debugRenderer;
     private final List<GameEntity> actorsInZOrder = new ArrayList<>();
 
-    public Arcade_PlayScene2D_Renderer(GameScene scene, SpriteAnimController animSystem, Canvas canvas, SpriteSheet<?> spriteSheet) {
+    public Arcade_PlayScene2D_Renderer(GameScene scene, ActorSpriteAnimController animSystem, Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(canvas);
         requireNonNull(scene);
         this.spriteSheet = requireNonNull(spriteSheet);

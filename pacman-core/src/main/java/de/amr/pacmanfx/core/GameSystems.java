@@ -23,7 +23,7 @@ public interface GameSystems {
 
     EntityUpdater entityUpdater();
 
-    SpriteAnimController spriteAnimController();
+    ActorSpriteAnimController spriteAnimController();
 
     MovementSystem motor();
 

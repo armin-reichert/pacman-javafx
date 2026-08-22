@@ -12,9 +12,9 @@ import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
 
 import static java.util.Objects.requireNonNull;
 
-public final class SpriteAnimController {
+public final class ActorSpriteAnimController {
 
-    public SpriteAnimController() {}
+    public ActorSpriteAnimController() {}
 
     public void setAnimations(GameEntity actor, SpriteAnimFacade animations) {
         requireNonNull(actor);

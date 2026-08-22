@@ -8,7 +8,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.basics.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimController;
+import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.LivesCounter;
@@ -304,7 +304,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene
         final GameVariant variant = app().gameVariants().currentGameVariant();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimContainer animContainer    = variant.spriteAnimContainer();
-        final SpriteAnimController animController  = variant.config().systems().spriteAnimController();
+        final ActorSpriteAnimController animController  = variant.config().systems().spriteAnimController();
 
         final Pac pac = level.entities().pac();
         if (animController.hasNoAnimations(pac)) {
@@ -320,12 +320,12 @@ public class TengenMsPacMan_PlayScene2D extends GameScene
         });
     }
 
-    void resetActorAnimations(SpriteAnimController animSystem, GameSession session, GameLevel level) {
+    void resetActorAnimations(ActorSpriteAnimController animSystem, GameSession session, GameLevel level) {
         resetPacAnimation(animSystem, session, level.entities().pac());
         level.entities().ghosts().forEach(ghost -> resetGhostAnimation(animSystem, ghost));
     }
 
-    private void resetPacAnimation(SpriteAnimController animSystem, GameSession session, Pac pac) {
+    private void resetPacAnimation(ActorSpriteAnimController animSystem, GameSession session, Pac pac) {
         final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().variant().gamePlay();
 
         animSystem.select(pac, gamePlay.isBoosterOn(session)
@@ -334,7 +334,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene
         animSystem.resetSelected(pac);
     }
 
-    private void resetGhostAnimation(SpriteAnimController animSystem, Ghost ghost) {
+    private void resetGhostAnimation(ActorSpriteAnimController animSystem, Ghost ghost) {
         animSystem.select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);
         animSystem.resetSelected(ghost);
     }

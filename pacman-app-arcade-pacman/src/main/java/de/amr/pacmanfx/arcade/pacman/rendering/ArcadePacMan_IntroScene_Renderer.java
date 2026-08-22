@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_IntroScene;
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimController;
+import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -39,7 +39,7 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Ga
     private final BaseDebugInfoRenderer debugRenderer;
     private final RectShort energizerSprite;
 
-    public ArcadePacMan_IntroScene_Renderer(GameVariantRenderConfig renderConfig, GameScene scene, SpriteAnimController animSystem, Canvas canvas) {
+    public ArcadePacMan_IntroScene_Renderer(GameVariantRenderConfig renderConfig, GameScene scene, ActorSpriteAnimController animSystem, Canvas canvas) {
         super(canvas);
 
         final Rendering2DSupport r2D = scene.componentsRegistry().reqComp(Rendering2DSupport.class);

@@ -5,7 +5,7 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimController;
+import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -73,7 +73,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
         }
     }
 
-    private final SpriteAnimController animSystem;
+    private final ActorSpriteAnimController animSystem;
 
     private final RenderInfo renderInfo = new RenderInfo();
     private final TengenMsPacMan_GameLevelRenderer levelRenderer;
@@ -82,7 +82,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
     private final List<GameEntity> actorsInZOrder = new ArrayList<>();
 
     public TengenMsPacMan_PlayScene2D_Renderer(
-        GameVariantRenderConfig renderConfig, GameScene gameScene, SpriteAnimController animSystem, Canvas canvas) {
+        GameVariantRenderConfig renderConfig, GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas) {
         super(canvas);
 
         final Rendering2DSupport r2D = gameScene.componentsRegistry().reqComp(Rendering2DSupport.class);

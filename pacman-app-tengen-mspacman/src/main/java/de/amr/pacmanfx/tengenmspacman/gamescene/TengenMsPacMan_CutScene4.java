@@ -10,7 +10,7 @@ import de.amr.basics.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimController;
+import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.Clapperboard;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
@@ -153,7 +153,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
     private void playCutScene(GameContext game, long tick) {
         final GameSystems systems = game.variant().systems();
         final WorldNavigationSystem navigator = systems.worldNavigator();
-        final SpriteAnimController animSystem = systems.spriteAnimController();
+        final ActorSpriteAnimController animSystem = systems.spriteAnimController();
 
         letActorsMove(game, tick);
 
@@ -230,7 +230,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
         final GameVariant variant = app().gameVariants().currentGameVariant();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimContainer animContainer    = variant.spriteAnimContainer();
-        final SpriteAnimController animController  = variant.config().systems().spriteAnimController();
+        final ActorSpriteAnimController animController  = variant.config().systems().spriteAnimController();
         final WorldNavigationSystem worldNavigationSystem = variant.config().systems().worldNavigator();
 
         final Pac junior = factory.createPacMan();

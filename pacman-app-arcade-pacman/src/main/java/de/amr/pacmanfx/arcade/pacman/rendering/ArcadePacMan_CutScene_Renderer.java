@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimController;
+import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
@@ -18,11 +18,11 @@ import static java.util.Objects.requireNonNull;
 
 public abstract class ArcadePacMan_CutScene_Renderer extends BaseRenderer implements GameScene2D_Renderer, SpriteRenderer {
 
-    protected final SpriteAnimController animSystem;
+    protected final ActorSpriteAnimController animSystem;
     protected final ActorRenderer actorRenderer;
     protected BaseDebugInfoRenderer debugRenderer;
 
-    public ArcadePacMan_CutScene_Renderer(GameScene gameScene, SpriteAnimController animSystem, Canvas canvas) {
+    public ArcadePacMan_CutScene_Renderer(GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas) {
         super(canvas);
         final Rendering2DSupport r2D = gameScene.componentsRegistry().reqComp(Rendering2DSupport.class);
         this.animSystem = requireNonNull(animSystem);

@@ -6,7 +6,7 @@ package de.amr.pacmanfx.game;
 
 import de.amr.basics.spriteanim.SpriteAnimFacade;
 import de.amr.basics.spriteanim.SpriteAnimContainer;
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimController;
+import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -32,15 +32,15 @@ public interface GameVariantRenderConfig {
 
     WorldMapColorSchemeImpl colorScheme(WorldMap worldMap, WorldSettings worldSettings);
 
-    GameLevelRenderer createGameLevelRenderer(SpriteAnimController animSystem, Canvas canvas);
+    GameLevelRenderer createGameLevelRenderer(ActorSpriteAnimController animSystem, Canvas canvas);
 
-    GameScene2D_Renderer createGameSceneRenderer(GameScene gameScene, SpriteAnimController animSystem, Canvas canvas);
+    GameScene2D_Renderer createGameSceneRenderer(GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas);
 
-    HeadsUpDisplay_Renderer createHUDRenderer(GameScene gameScene, SpriteAnimController animSystem, Canvas canvas);
+    HeadsUpDisplay_Renderer createHUDRenderer(GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas);
 
-    ActorRenderer createActorRenderer(SpriteAnimController animSystem, Canvas canvas);
+    ActorRenderer createActorRenderer(ActorSpriteAnimController animSystem, Canvas canvas);
 
-    Ghost createAnimatedGhost(SpriteAnimController animController, SpriteAnimContainer container, GhostPersonality personality);
+    Ghost createAnimatedGhost(ActorSpriteAnimController animController, SpriteAnimContainer container, GhostPersonality personality);
 
     SpriteAnimFacade createGhostAnimations(SpriteAnimContainer container, GhostPersonality personality);
 

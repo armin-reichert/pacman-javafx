@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.views.playview;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimController;
+import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.rules.GameRules;
@@ -104,7 +104,7 @@ public class MiniPlaySceneView {
         worldSize.set(size);
     }
 
-    public void setRenderConfig(SpriteAnimController animSystem, GameVariantRenderConfig renderConfig) {
+    public void setRenderConfig(ActorSpriteAnimController animSystem, GameVariantRenderConfig renderConfig) {
         canvasRenderer = new BaseRenderer(canvas);
 
         levelRenderer = renderConfig.createGameLevelRenderer(animSystem, canvas);

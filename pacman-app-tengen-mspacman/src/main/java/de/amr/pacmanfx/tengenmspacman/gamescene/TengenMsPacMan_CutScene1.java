@@ -7,7 +7,7 @@ package de.amr.pacmanfx.tengenmspacman.gamescene;
 import de.amr.basics.math.Direction;
 import de.amr.basics.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimController;
+import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.Clapperboard;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
@@ -135,7 +135,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene {
         final GameVariant variant = app().gameVariants().currentGameVariant();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimContainer animContainer    = variant.spriteAnimContainer();
-        final SpriteAnimController animController  = variant.config().systems().spriteAnimController();
+        final ActorSpriteAnimController animController  = variant.config().systems().spriteAnimController();
 
         clapperboard = new Clapperboard("1", "THEY MEET");
 
@@ -198,7 +198,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene {
 
     private void playCutScene(GameContext game, int tick) {
         final WorldNavigationSystem navigator = game.variant().systems().worldNavigator();
-        final SpriteAnimController animSystem = game.variant().systems().spriteAnimController();
+        final ActorSpriteAnimController animSystem = game.variant().systems().spriteAnimController();
 
         letActorsMove(game);
 

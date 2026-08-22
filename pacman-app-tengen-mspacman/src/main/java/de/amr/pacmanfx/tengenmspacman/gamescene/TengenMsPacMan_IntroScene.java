@@ -13,7 +13,7 @@ import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimController;
+import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
@@ -160,7 +160,7 @@ public class TengenMsPacMan_IntroScene extends GameScene {
                 final GameVariant variant = scene.app().gameVariants().currentGameVariant();
                 final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
                 final SpriteAnimContainer animContainer    = variant.spriteAnimContainer();
-                final SpriteAnimController animController  = variant.config().systems().spriteAnimController();
+                final ActorSpriteAnimController animController  = variant.config().systems().spriteAnimController();
 
                 final GameSystems systems = variant.config().systems();
                 final WorldNavigationSystem worldNavigationSystem = systems.worldNavigator();

@@ -23,7 +23,7 @@ import de.amr.pacmanfx.core.model.GhostPersonality;
 public class DefaultGameSystems implements GameSystems {
 
     private final EntityUpdater entityUpdater = new EntityUpdater();
-    private final SpriteAnimController spriteAnimController = new SpriteAnimController();
+    private final ActorSpriteAnimController spriteAnimController = new ActorSpriteAnimController();
 
     protected MovementSystem motor =  new MovementSystem();
     protected WorldNavigationSystem navigator = new WorldNavigationSystem();
@@ -126,7 +126,7 @@ public class DefaultGameSystems implements GameSystems {
     }
 
     @Override
-    public SpriteAnimController spriteAnimController() {
+    public ActorSpriteAnimController spriteAnimController() {
         return spriteAnimController;
     }
 

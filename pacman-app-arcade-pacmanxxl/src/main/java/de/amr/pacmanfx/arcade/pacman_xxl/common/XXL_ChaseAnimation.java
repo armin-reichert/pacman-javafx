@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimController;
+import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
@@ -62,7 +62,7 @@ class XXL_ChaseAnimation {
 
     private final SpriteAnimationTimer animationTimer = new SpriteAnimationTimer();
     private final SpriteAnimContainer animContainer = new SpriteAnimContainer();
-    private final SpriteAnimController animController = new SpriteAnimController();
+    private final ActorSpriteAnimController animController = new ActorSpriteAnimController();
 
     public XXL_ChaseAnimation(int numTilesX) {
         this.numTilesX = numTilesX;

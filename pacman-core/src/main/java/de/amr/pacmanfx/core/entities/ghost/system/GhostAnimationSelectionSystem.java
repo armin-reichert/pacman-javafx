@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.core.entities.ghost.system;
 
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimController;
+import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
@@ -14,7 +14,7 @@ public class GhostAnimationSelectionSystem {
 
     public GhostAnimationSelectionSystem() {}
 
-    public void update(Ghost ghost, Pac pac, SpriteAnimController spriteAnimController) {
+    public void update(Ghost ghost, Pac pac, ActorSpriteAnimController spriteAnimController) {
         final CommonSpriteAnimationID id = switch (ghost.state().enumValue()) {
             case LOCKED, LEAVING_HOUSE -> threatenedOrNormalAnimation(ghost, pac);
             case HUNTING_PAC -> CommonSpriteAnimationID.GHOST_NORMAL;

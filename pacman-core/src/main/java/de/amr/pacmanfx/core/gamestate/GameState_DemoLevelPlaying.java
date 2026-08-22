@@ -7,7 +7,7 @@ package de.amr.pacmanfx.core.gamestate;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimController;
+import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
 import de.amr.pacmanfx.core.event.gameplay.LevelStartedEvent;
@@ -68,7 +68,7 @@ public final class GameState_DemoLevelPlaying extends GameState {
         heartbeat.restart();
     }
 
-    private void startActorAnimations(GameLevel level, SpriteAnimController animController) {
+    private void startActorAnimations(GameLevel level, ActorSpriteAnimController animController) {
         final GameLevelEntitySet entities = level.entities();
         animController.playSelected(entities.pac());
         entities.ghosts().forEach(animController::playSelected);

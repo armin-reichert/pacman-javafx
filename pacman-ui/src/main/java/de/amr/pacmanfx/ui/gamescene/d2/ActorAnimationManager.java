@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.gamescene.d2;
 
 import de.amr.basics.spriteanim.SpriteAnimContainer;
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimController;
+import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
@@ -21,7 +21,7 @@ public class ActorAnimationManager {
         final GameVariant variant = app.gameVariants().currentGameVariant();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimContainer animationContainer = variant.spriteAnimContainer();
-        final SpriteAnimController animSystem = variant.config().systems().spriteAnimController();
+        final ActorSpriteAnimController animSystem = variant.config().systems().spriteAnimController();
 
         final Pac pac = level.entities().pac();
         if (animSystem.hasNoAnimations(pac)) {
@@ -39,17 +39,17 @@ public class ActorAnimationManager {
     }
 
     // Called from game event handler
-    public static void resetActorAnimations(SpriteAnimController animSystem, GameLevel level) {
+    public static void resetActorAnimations(ActorSpriteAnimController animSystem, GameLevel level) {
         resetPacAnimation(animSystem, level.entities().pac());
         level.entities().ghosts().forEach(ghost -> resetGhostAnimation(animSystem, ghost));
     }
 
-    public static void resetPacAnimation(SpriteAnimController animSystem, Pac pac) {
+    public static void resetPacAnimation(ActorSpriteAnimController animSystem, Pac pac) {
         animSystem.select(pac, CommonSpriteAnimationID.PAC_MUNCHING);
         animSystem.resetSelected(pac);
     }
 
-    public static void resetGhostAnimation(SpriteAnimController animSystem, Ghost ghost) {
+    public static void resetGhostAnimation(ActorSpriteAnimController animSystem, Ghost ghost) {
         animSystem.select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);
         animSystem.resetSelected(ghost);
     }

@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_CutScene2;
-import de.amr.pacmanfx.core.ecs.systems.SpriteAnimController;
+import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.Rendering2DSupport;
@@ -14,7 +14,7 @@ import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 
 public class ArcadePacMan_CutScene2_Renderer extends ArcadePacMan_CutScene_Renderer {
 
-    public ArcadePacMan_CutScene2_Renderer(GameScene gameScene, SpriteAnimController animSystem, Canvas canvas) {
+    public ArcadePacMan_CutScene2_Renderer(GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas) {
         super(gameScene, animSystem, canvas);
 
         final Rendering2DSupport r2D = gameScene.componentsRegistry().reqComp(Rendering2DSupport.class);
