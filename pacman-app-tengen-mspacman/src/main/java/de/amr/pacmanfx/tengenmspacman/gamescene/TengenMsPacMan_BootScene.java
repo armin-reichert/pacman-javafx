@@ -47,7 +47,7 @@ public class TengenMsPacMan_BootScene extends GameScene {
 
         final GameVariant gameVariant = app().gameVariants().currentGameVariant();
         ghost = gameVariant.uiConfig().renderConfig().createAnimatedGhost(
-            gameVariant.config().systems().spriteAnimController(),
+            gameVariant.config().systems().actorSpriteAnimController(),
             gameVariant.spriteAnimContainer(),
             GhostPersonality.RED_GHOST_SHADOW);
 

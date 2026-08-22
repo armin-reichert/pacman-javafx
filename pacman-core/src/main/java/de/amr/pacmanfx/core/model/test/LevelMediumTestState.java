@@ -106,12 +106,12 @@ public class LevelMediumTestState extends GameState {
         pac.cheats().usingAutopilotProperty().unbind();
         pac.cheats().setUsingAutopilot(true);
 
-        systems.spriteAnimController().playSelected(pac);
+        systems.actorSpriteAnimController().playSelected(pac);
 
         final List<Ghost> ghosts = level.entities().ghosts();
         ghosts.forEach(ghost -> {
             ghost.show();
-            systems.spriteAnimController().playSelected(ghost);
+            systems.actorSpriteAnimController().playSelected(ghost);
         });
 
         session.hud().show();

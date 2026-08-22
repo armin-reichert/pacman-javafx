@@ -135,7 +135,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene {
         final GameVariant variant = app().gameVariants().currentGameVariant();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimContainer animContainer    = variant.spriteAnimContainer();
-        final ActorSpriteAnimController animController  = variant.config().systems().spriteAnimController();
+        final ActorSpriteAnimController animController  = variant.config().systems().actorSpriteAnimController();
 
         clapperboard = new Clapperboard("1", "THEY MEET");
 
@@ -198,7 +198,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene {
 
     private void playCutScene(GameContext game, int tick) {
         final WorldNavigationSystem navigator = game.variant().systems().worldNavigator();
-        final ActorSpriteAnimController animSystem = game.variant().systems().spriteAnimController();
+        final ActorSpriteAnimController animSystem = game.variant().systems().actorSpriteAnimController();
 
         letActorsMove(game);
 

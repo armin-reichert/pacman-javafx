@@ -44,7 +44,7 @@ public class ArcadePacMan_CutScene3 extends GameScene {
         final GameVariant variant = app().gameVariants().currentGameVariant();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimContainer animContainer    = variant.spriteAnimContainer();
-        final ActorSpriteAnimController animController  = variant.config().systems().spriteAnimController();
+        final ActorSpriteAnimController animController  = variant.config().systems().actorSpriteAnimController();
         final var actorFactory = ArcadePacMan_ActorFactory.instance();
 
         pacMan = actorFactory.createPacMan();
@@ -84,8 +84,8 @@ public class ArcadePacMan_CutScene3 extends GameScene {
         sys.worldNavigator().setMoveDir(blinky, Direction.RIGHT);
         sys.worldNavigator().setWishDir(blinky, Direction.RIGHT);
 
-        sys.spriteAnimController().select(blinky, CommonSpriteAnimationID.BLINKY_NAKED);
-        sys.spriteAnimController().playSelected(blinky);
+        sys.actorSpriteAnimController().select(blinky, CommonSpriteAnimationID.BLINKY_NAKED);
+        sys.actorSpriteAnimController().playSelected(blinky);
     }
 
     private void startBlinkyChasingPacMan(GameSystems sys) {
@@ -95,8 +95,8 @@ public class ArcadePacMan_CutScene3 extends GameScene {
         sys.worldNavigator().setMoveDir(pacMan, Direction.LEFT);
         sys.worldNavigator().setMoveDirSpeed(pacMan, 1.25f);
 
-        sys.spriteAnimController().select(pacMan, CommonSpriteAnimationID.PAC_MUNCHING);
-        sys.spriteAnimController().playSelected(pacMan);
+        sys.actorSpriteAnimController().select(pacMan, CommonSpriteAnimationID.PAC_MUNCHING);
+        sys.actorSpriteAnimController().playSelected(pacMan);
 
         blinky.show();
 
@@ -105,7 +105,7 @@ public class ArcadePacMan_CutScene3 extends GameScene {
         sys.worldNavigator().setWishDir(blinky, Direction.LEFT);
         sys.worldNavigator().setMoveDirSpeed(blinky, 1.25f);
 
-        sys.spriteAnimController().select(blinky, CommonSpriteAnimationID.BLINKY_PATCHED);
-        sys.spriteAnimController().playSelected(blinky);
+        sys.actorSpriteAnimController().select(blinky, CommonSpriteAnimationID.BLINKY_PATCHED);
+        sys.actorSpriteAnimController().playSelected(blinky);
     }
 }

@@ -61,7 +61,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
     public void draw(GameScene gameScene, long tick) {
         final GameAppContext app = gameScene.app();
 
-        final TengenMsPacMan_UISettings uiSettings = app.currentGameVariantUIConfig().getExtensionValue(
+        final TengenMsPacMan_UISettings uiSettings = app.currentGameVariantUIConfig().extensionValue(
             TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
 
 

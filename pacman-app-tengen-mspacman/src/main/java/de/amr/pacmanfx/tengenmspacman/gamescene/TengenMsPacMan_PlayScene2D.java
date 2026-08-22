@@ -5,18 +5,16 @@
 package de.amr.pacmanfx.tengenmspacman.gamescene;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
-import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
-import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.HUDState;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
+import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.game.GameVariant;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
@@ -24,7 +22,6 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
-import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
@@ -52,8 +49,7 @@ import static de.amr.pacmanfx.ui.views.ContextMenuSupport.*;
 /**
  * Tengen Ms. Pac-Man play scene, uses vertical scrolling by default to accommodate to NES screen size.
  */
-public class TengenMsPacMan_PlayScene2D extends GameScene
-    implements TengenMsPacMan_PlayScene2DGameEventHandler
+public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPacMan_PlayScene2D_GameEventHandler
 {
     private final DoubleProperty canvasHeightUnscaled = new SimpleDoubleProperty(NES_SCREEN_HEIGHT);
 
@@ -78,33 +74,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene
         subScene.fillProperty().bind(appContext.ui().viewModel().common2D.canvasBackgroundColorProperty);
         subScene.heightProperty().addListener((_, _, _) -> updateScaling());
 
-        final var uiSettings = tengenUISettings();
+        final var uiSettings = uiSettings();
 
         subScene.cameraProperty().bind(uiSettings.playSceneDisplay.map(mode -> mode == SCROLLING ? dynamicCamera : fixedCamera));
         subScene.cameraProperty().addListener((_, _, _) -> updateScaling());
-    }
-
-    private void resetRendering2D() {
-        componentsRegistry().removeComp(Rendering2DSupport.class);
-
-        rendering2D().scalingProperty().addListener((_, _, _) -> game().session().optLevel()
-            .ifPresent(level -> dynamicCamera.updateRange(level.worldMap().terrainLayer()))
-        );
-
-        rendering2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
-        // Default height. Varies with map size.
-        rendering2D().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
-
-        rendering2D().canvasProperty().addListener((_, oldCanvas, newCanvas) -> {
-            if (oldCanvas != null) {
-                oldCanvas.widthProperty().unbind();
-                oldCanvas.heightProperty().unbind();
-                rootPane.getChildren().remove(oldCanvas);
-            }
-            newCanvas.widthProperty() .bind(rendering2D().scalingProperty().multiply(NES_SCREEN_WIDTH));
-            newCanvas.heightProperty().bind(rendering2D().scalingProperty().multiply(canvasHeightUnscaled));
-            rootPane.getChildren().add(newCanvas);
-        });
     }
 
     @Override
@@ -184,7 +157,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene
 
     @Override
     public Optional<ContextMenu> optContextMenu() {
-        final var uiSettings = tengenUISettings();
+        final var uiSettings = uiSettings();
 
         final TranslationManager translations = app().ui().translations();
         final SceneDisplay displayMode = uiSettings.playSceneDisplay.get();
@@ -238,25 +211,52 @@ public class TengenMsPacMan_PlayScene2D extends GameScene
         Logger.info("Scene {} accepted game level #{}", getClass().getSimpleName(), level.number());
     }
 
-    private TengenMsPacMan_Actions tengenActions() {
-        return app().currentGameVariantUIConfig().getExtensionValue(
-            TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
+    // private area, do NOT enter!
+
+    private void resetRendering2D() {
+        componentsRegistry().removeComp(Rendering2DSupport.class);
+
+        rendering2D().scalingProperty().addListener((_, _, _) -> game().session().optLevel()
+            .ifPresent(level -> dynamicCamera.updateRange(level.worldMap().terrainLayer()))
+        );
+
+        rendering2D().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
+        // Default height. Varies with map size.
+        rendering2D().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
+
+        rendering2D().canvasProperty().addListener((_, oldCanvas, newCanvas) -> {
+            if (oldCanvas != null) {
+                oldCanvas.widthProperty().unbind();
+                oldCanvas.heightProperty().unbind();
+                rootPane.getChildren().remove(oldCanvas);
+            }
+            newCanvas.widthProperty() .bind(rendering2D().scalingProperty().multiply(NES_SCREEN_WIDTH));
+            newCanvas.heightProperty().bind(rendering2D().scalingProperty().multiply(canvasHeightUnscaled));
+            rootPane.getChildren().add(newCanvas);
+        });
     }
 
-    private TengenMsPacMan_UISettings tengenUISettings() {
-        return app().currentGameVariantUIConfig().getExtensionValue(
-            TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
+    private TengenMsPacMan_Actions actions() {
+        return app().currentGameVariantUIConfig()
+            .extensionValue(TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
+    }
+
+    private TengenMsPacMan_UISettings uiSettings() {
+        return app().currentGameVariantUIConfig()
+            .extensionValue(TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
     }
 
     private void acceptNormalLevel() {
         app().ui().sounds().setEnabled(true); //TODO needed?
 
-        final var actions = tengenActions();
+        final var actions = actions();
 
         // Pac-Man is steered using keys simulating the NES "Joypad" buttons ("START", "SELECT", "B", "A" etc.)
         final var bindingsMap = actionBindingsSupport().bindingsMap();
+
         bindingsMap.registerAllBindings(actions.steeringBindings());
         bindingsMap.registerAllBindings(app().commonActions().cheatActions().bindings());
+
         bindingsMap.selectAnyMatchingBinding(actions.actionTogglePlaySceneDisplayMode(), actions.localBindings());
         bindingsMap.selectAnyMatchingBinding(actions.actionTogglePacBooster(), actions.localBindings());
     }
@@ -264,7 +264,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene
     private void acceptDemoLevel() {
         app().ui().sounds().setEnabled(false); //TODO needed?
 
-        final var actions = tengenActions();
+        final var actions = actions();
 
         final var bindingsMap = actionBindingsSupport().bindingsMap();
         bindingsMap.selectAnyMatchingBinding(actions.actionTogglePlaySceneDisplayMode(), actions.localBindings());
@@ -272,7 +272,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene
     }
 
     private void updateScaling() {
-        final var uiSettings = tengenUISettings();
+        final var uiSettings = uiSettings();
         final SceneDisplay displayMode = uiSettings.playSceneDisplay.get();
 
         rendering2D().scalingProperty().set(switch (displayMode) {
@@ -312,7 +312,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene
         final GameVariant variant = app().gameVariants().currentGameVariant();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimContainer animContainer    = variant.spriteAnimContainer();
-        final ActorSpriteAnimController animController  = variant.config().systems().spriteAnimController();
+        final ActorSpriteAnimController animController  = variant.config().systems().actorSpriteAnimController();
 
         final Pac pac = level.entities().pac();
         if (animController.hasNoAnimations(pac)) {
@@ -326,24 +326,5 @@ public class TengenMsPacMan_PlayScene2D extends GameScene
                 resetGhostAnimation(animController, ghost);
             }
         });
-    }
-
-    void resetActorAnimations(ActorSpriteAnimController animSystem, GameSession session, GameLevel level) {
-        resetPacAnimation(animSystem, session, level.entities().pac());
-        level.entities().ghosts().forEach(ghost -> resetGhostAnimation(animSystem, ghost));
-    }
-
-    private void resetPacAnimation(ActorSpriteAnimController animSystem, GameSession session, Pac pac) {
-        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().variant().gamePlay();
-
-        animSystem.select(pac, gamePlay.isBoosterOn(session)
-            ? TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER
-            : CommonSpriteAnimationID.PAC_MUNCHING);
-        animSystem.resetSelected(pac);
-    }
-
-    private void resetGhostAnimation(ActorSpriteAnimController animSystem, Ghost ghost) {
-        animSystem.select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);
-        animSystem.resetSelected(ghost);
     }
 }

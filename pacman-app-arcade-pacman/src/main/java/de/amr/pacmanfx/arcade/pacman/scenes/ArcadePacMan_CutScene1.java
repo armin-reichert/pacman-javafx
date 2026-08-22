@@ -43,7 +43,7 @@ public class ArcadePacMan_CutScene1 extends GameScene {
         final GameVariant variant = app().gameVariants().currentGameVariant();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimContainer animContainer    = variant.spriteAnimContainer();
-        final ActorSpriteAnimController animController  = variant.config().systems().spriteAnimController();
+        final ActorSpriteAnimController animController  = variant.config().systems().actorSpriteAnimController();
         final var factory = ArcadePacMan_ActorFactory.instance();
 
         pacMan = factory.createPacMan();
@@ -85,8 +85,8 @@ public class ArcadePacMan_CutScene1 extends GameScene {
         sys.worldNavigator().placeAtTile(pacMan, -3, 18, 0, 6.5f);
         sys.worldNavigator().setMoveDir(pacMan, Direction.RIGHT);
 
-        sys.spriteAnimController().select(pacMan, ArcadePacMan_PacSAM.AnimationID.ANIM_BIG_PAC_MAN);
-        sys.spriteAnimController().playSelected(pacMan);
+        sys.actorSpriteAnimController().select(pacMan, ArcadePacMan_PacSAM.AnimationID.ANIM_BIG_PAC_MAN);
+        sys.actorSpriteAnimController().playSelected(pacMan);
     }
 
     private void startBlinkyEscapingPacMan(GameSystems sys) {
@@ -95,8 +95,8 @@ public class ArcadePacMan_CutScene1 extends GameScene {
         sys.worldNavigator().setWishDir(blinky, Direction.RIGHT);
         sys.worldNavigator().setMoveDirSpeed(blinky, 0.75f);
 
-        sys.spriteAnimController().select(blinky, CommonSpriteAnimationID.GHOST_FRIGHTENED);
-        sys.spriteAnimController().playSelected(blinky);
+        sys.actorSpriteAnimController().select(blinky, CommonSpriteAnimationID.GHOST_FRIGHTENED);
+        sys.actorSpriteAnimController().playSelected(blinky);
     }
 
     private void startBlinkyChasingPacMan(GameSystems sys) {
@@ -106,8 +106,8 @@ public class ArcadePacMan_CutScene1 extends GameScene {
         sys.worldNavigator().setMoveDir(pacMan, Direction.LEFT);
         sys.worldNavigator().setMoveDirSpeed(pacMan, 1.25f);
 
-        sys.spriteAnimController().select(pacMan, CommonSpriteAnimationID.PAC_MUNCHING);
-        sys.spriteAnimController().playSelected(pacMan);
+        sys.actorSpriteAnimController().select(pacMan, CommonSpriteAnimationID.PAC_MUNCHING);
+        sys.actorSpriteAnimController().playSelected(pacMan);
 
         blinky.show();
 
@@ -116,7 +116,7 @@ public class ArcadePacMan_CutScene1 extends GameScene {
         sys.worldNavigator().setWishDir(blinky, Direction.LEFT);
         sys.worldNavigator().setMoveDirSpeed(blinky, 1.3f);
 
-        sys.spriteAnimController().select(blinky, CommonSpriteAnimationID.GHOST_NORMAL);
-        sys.spriteAnimController().playSelected(blinky);
+        sys.actorSpriteAnimController().select(blinky, CommonSpriteAnimationID.GHOST_NORMAL);
+        sys.actorSpriteAnimController().playSelected(blinky);
     }
 }

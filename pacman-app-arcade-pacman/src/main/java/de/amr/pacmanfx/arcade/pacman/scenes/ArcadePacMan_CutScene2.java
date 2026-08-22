@@ -66,7 +66,7 @@ public class ArcadePacMan_CutScene2 extends GameScene {
         final GameVariant variant = app().gameVariants().currentGameVariant();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimContainer animContainer    = variant.spriteAnimContainer();
-        final ActorSpriteAnimController animController  = variant.config().systems().spriteAnimController();
+        final ActorSpriteAnimController animController  = variant.config().systems().actorSpriteAnimController();
         final ArcadePacMan_SpriteSheet spriteSheet = ArcadePacMan_SpriteSheet.instance();
         final var factory = ArcadePacMan_ActorFactory.instance();
 
@@ -101,7 +101,7 @@ public class ArcadePacMan_CutScene2 extends GameScene {
             case TICK_DRESS_STRETCHED_LARGE  -> setDressState(STRETCHED_LARGE);
             case TICK_BLINKY_STOPS_MOVING    -> blinkyStopsMoving(sys);
             case TICK_DRESS_RAPTURES         -> dressRaptures(sys);
-            case TICK_BLINK_INSPECTS_DAMAGE  -> blinkyInspectsDamagedDress(sys.spriteAnimController());
+            case TICK_BLINK_INSPECTS_DAMAGE  -> blinkyInspectsDamagedDress(sys.actorSpriteAnimController());
             case TICK_ANIMATION_ENDS         -> endTheShow();
         }
 
@@ -125,13 +125,13 @@ public class ArcadePacMan_CutScene2 extends GameScene {
 
     private void dressRaptures(GameSystems sys) {
         blinky.pos().sub(4, 0);
-        sys.spriteAnimController().select(blinky, CommonSpriteAnimationID.BLINKY_DAMAGED);
+        sys.actorSpriteAnimController().select(blinky, CommonSpriteAnimationID.BLINKY_DAMAGED);
         setDressState(NailDressState.RAPTURED);
     }
 
     private void blinkyStopsMoving(GameSystems sys) {
         sys.worldNavigator().setMoveDirSpeed(blinky, 0);
-        sys.spriteAnimController().stopSelected(blinky);
+        sys.actorSpriteAnimController().stopSelected(blinky);
     }
 
     private void blinkyGetsCaughtOnNail(GameSystems sys) {
@@ -148,8 +148,8 @@ public class ArcadePacMan_CutScene2 extends GameScene {
         sys.worldNavigator().setWishDir(blinky, Direction.LEFT);
         sys.worldNavigator().setMoveDirSpeed(blinky, 1.25f);
 
-        sys.spriteAnimController().select(blinky, CommonSpriteAnimationID.GHOST_NORMAL);
-        sys.spriteAnimController().playSelected(blinky);
+        sys.actorSpriteAnimController().select(blinky, CommonSpriteAnimationID.GHOST_NORMAL);
+        sys.actorSpriteAnimController().playSelected(blinky);
     }
 
     private void pacManStartsRunning(GameSystems sys) {
@@ -159,8 +159,8 @@ public class ArcadePacMan_CutScene2 extends GameScene {
         sys.worldNavigator().setMoveDir(pacMan, Direction.LEFT);
         sys.worldNavigator().setMoveDirSpeed(pacMan, 1.15f);
 
-        sys.spriteAnimController().select(pacMan, CommonSpriteAnimationID.PAC_MUNCHING);
-        sys.spriteAnimController().playSelected(pacMan);
+        sys.actorSpriteAnimController().select(pacMan, CommonSpriteAnimationID.PAC_MUNCHING);
+        sys.actorSpriteAnimController().playSelected(pacMan);
     }
 
     private void setDressState(NailDressState state) {

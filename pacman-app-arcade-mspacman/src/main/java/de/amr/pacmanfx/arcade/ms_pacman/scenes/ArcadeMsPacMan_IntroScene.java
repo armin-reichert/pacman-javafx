@@ -69,7 +69,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
     @Override
     public void onActivate() {
         final Arcade_Actions actions = app().gameVariants().currentGameVariant().uiConfig()
-            .getExtensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
+            .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         final var bindingsMap = actionBindingsSupport().bindingsMap();
         bindingsMap.registerAllBindings(actions.gameStartActionBindings());
@@ -93,7 +93,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
         final GameVariant variant = app().gameVariants().currentGameVariant();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimContainer animContainer    = variant.spriteAnimContainer();
-        final ActorSpriteAnimController animController  = variant.config().systems().spriteAnimController();
+        final ActorSpriteAnimController animController  = variant.config().systems().actorSpriteAnimController();
         final GameSystems systems                  = variant.config().systems();
         final WorldNavigationSystem worldNavigationSystem = systems.worldNavigator();
 
@@ -217,8 +217,8 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
                     }
                     else if (ghost.pos().y() <= endPositionY) {
                         sys.worldNavigator().setMoveDirSpeed(ghost, 0);
-                        sys.spriteAnimController().stopSelected(ghost);
-                        sys.spriteAnimController().resetSelected(ghost);
+                        sys.actorSpriteAnimController().stopSelected(ghost);
+                        sys.actorSpriteAnimController().resetSelected(ghost);
                         return true;
                     }
                     else {
@@ -240,7 +240,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
                 sys.motor().move(msPacMan);
                 if (msPacMan.pos().x() <= STOP_X_MS_PACMAN) {
                     sys.worldNavigator().setMoveDirSpeed(msPacMan, 0);
-                    sys.spriteAnimController().resetSelected(msPacMan);
+                    sys.actorSpriteAnimController().resetSelected(msPacMan);
                     scene.sceneFlow.enterState(scene, READY_TO_PLAY);
                 }
             }

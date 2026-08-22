@@ -7,6 +7,10 @@ package de.amr.pacmanfx.tengenmspacman.gamescene;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
+import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
+import de.amr.pacmanfx.core.entities.Ghost;
+import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventListener;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
 import de.amr.pacmanfx.core.event.bonus.BonusEatenEvent;
@@ -21,7 +25,7 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Extras;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
 import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.MessageAnimation;
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.text.Font;
@@ -33,19 +37,13 @@ import static de.amr.basics.util.Ufx.textWidth;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantUIConfig.GAME_OVER_MESSAGE_TEXT;
 
-public interface TengenMsPacMan_PlayScene2DGameEventHandler extends DefaultGameEventListener {
-
-    GameAppContext app();
-
-    default Optional<GameSoundEffects> optSoundEffects() {
-        return app().gameVariants().currentGameVariant().uiConfig().optSoundEffects();
-    }
-
-    default GameContext game() {
-        return app().game();
-    }
+public interface TengenMsPacMan_PlayScene2D_GameEventHandler extends DefaultGameEventListener {
 
     TengenMsPacMan_PlayScene2D gameScene();
+
+    default Optional<GameSoundEffects> optSoundEffects() {
+        return gameScene().app().gameVariants().currentGameVariant().uiConfig().optSoundEffects();
+    }
 
     @Override
     default void onBonusActivated(BonusActivatedEvent e) {
@@ -64,13 +62,14 @@ public interface TengenMsPacMan_PlayScene2DGameEventHandler extends DefaultGameE
 
     @Override
     default void onGameContinued(GameContinuedEvent e) {
-        final GameSystems systems = game().variant().systems();
-        final GameSession session = game().session();
+        final GameContext game = gameScene().game();
+        final GameSystems systems = game.variant().systems();
+        final GameSession session = game.session();
         session.optLevel().ifPresent(level -> {
-            gameScene().resetActorAnimations(systems.spriteAnimController(), session, level);
+            resetActorAnimations(systems.actorSpriteAnimController(), session, level);
             gameScene().dynamicCamera().playIntroSequence();
-            if (game().variant().gamePlay() instanceof TengenMsPacMan_GamePlay tengenGame) {
-                tengenGame.showLevelMessage(game(), level, GameLevelMessageType.READY);
+            if (game.variant().gamePlay() instanceof TengenMsPacMan_GamePlay tengenGame) {
+                tengenGame.showLevelMessage(game, level, GameLevelMessageType.READY);
             }
         });
     }
@@ -87,11 +86,12 @@ public interface TengenMsPacMan_PlayScene2DGameEventHandler extends DefaultGameE
 
     @Override
     default void onGameStateChange(GameStateChangeEvent e) {
+        final GameContext game = gameScene().game();
         Logger.info("Enter game state '{}'", e.newState().name());
-        final GameSession session = game().session();
+        final GameSession session = game.session();
         if (e.newState() == TengenMsPacMan_GameState.GAME_LEVEL_COMPLETE.state()) {
             final GameLevel level = session.level();
-            final int numFlashes = game().variant().rules().numLevelFlashes(level.number());
+            final int numFlashes = game.variant().rules().numLevelFlashes(level.number());
             optSoundEffects().ifPresent(GameSoundEffects::stopAll);
             gameScene().playLevelCompleteAnimation(level, numFlashes);
         }
@@ -126,20 +126,24 @@ public interface TengenMsPacMan_PlayScene2DGameEventHandler extends DefaultGameE
 
     @Override
     default void onLevelCreated(LevelCreatedEvent e) {
-        gameScene().acceptGameLevel(game().session(), e.level());
+        final GameContext game = gameScene().game();
+        gameScene().acceptGameLevel(game.session(), e.level());
     }
 
     @Override
     default void onLevelStarted(LevelStartedEvent e) {
-        final GameSession session = game().session();
-        session.optLevel().ifPresent(
-            level -> gameScene().resetActorAnimations(game().variant().systems().spriteAnimController(), session, level));
+        final GameContext game = gameScene().game();
+        final GameSession session = game.session();
+        final ActorSpriteAnimController animController = game.variant().systems().actorSpriteAnimController();
+
+        session.optLevel().ifPresent(level -> resetActorAnimations(animController, session, level));
         gameScene().dynamicCamera().playIntroSequence();
     }
 
     @Override
     default void onPacDead(PacDeadEvent e) {
-        game().state().triggerTimeout();
+        final GameContext game = gameScene().game();
+        game.state().triggerTimeout();
     }
 
     @Override
@@ -150,22 +154,41 @@ public interface TengenMsPacMan_PlayScene2DGameEventHandler extends DefaultGameE
 
     @Override
     default void onPacEatsFood(PacEatsFoodEvent e) {
-        final long tick = app().clock().currentTick();
-        gameScene().optSoundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(tick));
+        optSoundEffects().ifPresent(sfx -> sfx.playPacMunchingSound(e.tick()));
     }
 
     @Override
     default void onPacPowerStarts(PacPowerStartsEvent e) {
-        gameScene().optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
+        optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);
     }
 
     @Override
     default void onPacPowerEnds(PacPowerEndsEvent e) {
-        gameScene().optSoundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
+        optSoundEffects().ifPresent(GameSoundEffects::stopPacPowerSound);
     }
 
     @Override
     default void onSpecialScore(SpecialScoreEvent e) {
-        gameScene().optSoundEffects().ifPresent(GameSoundEffects::playExtraLifeSound);
+        optSoundEffects().ifPresent(GameSoundEffects::playExtraLifeSound);
+    }
+
+    //TODO This belongs into an animation system class
+
+    default void resetActorAnimations(ActorSpriteAnimController animSystem, GameSession session, GameLevel level) {
+        gameScene().resetPacAnimation(animSystem, session, level.entities().pac());
+        level.entities().ghosts().forEach(ghost -> gameScene().resetGhostAnimation(animSystem, ghost));
+    }
+
+    default void resetPacAnimation(ActorSpriteAnimController animSystem, GameSession session, Pac pac) {
+        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) gameScene().game().variant().gamePlay();
+        animSystem.select(pac, gamePlay.isBoosterOn(session)
+            ? TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER
+            : CommonSpriteAnimationID.PAC_MUNCHING);
+        animSystem.resetSelected(pac);
+    }
+
+    default void resetGhostAnimation(ActorSpriteAnimController animSystem, Ghost ghost) {
+        animSystem.select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);
+        animSystem.resetSelected(ghost);
     }
 }

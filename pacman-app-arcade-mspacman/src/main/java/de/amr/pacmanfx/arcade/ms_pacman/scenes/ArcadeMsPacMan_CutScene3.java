@@ -154,7 +154,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene {
     private void enterDeliverJuniorState(GameSystems sys, SceneState newState) {
         final MovementSystem motor = sys.motor();
         final WorldNavigationSystem worldNavigator = sys.worldNavigator();
-        final ActorSpriteAnimController animSystem = sys.spriteAnimController();
+        final ActorSpriteAnimController animSystem = sys.actorSpriteAnimController();
         
         pacMan.pos().set(TS * 3, GROUND_Y - 4);
         pacMan.show();

@@ -100,7 +100,7 @@ public class ArcadePacMan_IntroScene extends GameScene {
     @Override
     public void onActivate() {
         final Arcade_Actions actions = app().currentGameVariantUIConfig()
-            .getExtensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
+            .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         final var bindingsMap = actionBindingsSupport().bindingsMap();
         bindingsMap.registerAllBindings(actions.gameStartActionBindings()); // insert coin + start game actions
@@ -124,7 +124,7 @@ public class ArcadePacMan_IntroScene extends GameScene {
         final GameVariant variant = app().gameVariants().currentGameVariant();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimContainer animContainer    = variant.spriteAnimContainer();
-        final ActorSpriteAnimController animController  = variant.config().systems().spriteAnimController();
+        final ActorSpriteAnimController animController  = variant.config().systems().actorSpriteAnimController();
 
         blinking = new Pulse(10, Pulse.State.ON);
 
@@ -200,7 +200,7 @@ public class ArcadePacMan_IntroScene extends GameScene {
         }
 
         for (Ghost ghost : ghosts) {
-            ghostSpriteAnimationSystem.update(ghost, pacMan, systems.spriteAnimController());
+            ghostSpriteAnimationSystem.update(ghost, pacMan, systems.actorSpriteAnimController());
         }
     }
 
@@ -208,7 +208,7 @@ public class ArcadePacMan_IntroScene extends GameScene {
         final GameSystems systems = game.variant().systems();
 
         systems.worldNavigator().setMoveDirSpeed(pacMan, 0);
-        systems.spriteAnimController().stopSelected(pacMan);
+        systems.actorSpriteAnimController().stopSelected(pacMan);
 
         for (Ghost ghost : ghosts) {
             systems.worldNavigator().setMoveDir(ghost, Direction.RIGHT);
@@ -249,14 +249,14 @@ public class ArcadePacMan_IntroScene extends GameScene {
         final GameSystems systems = game.variant().systems();
 
         systems.ghostState().changeGhostState(victim, EATEN);
-        systems.spriteAnimController().selectAndSetFrame(victim, CommonSpriteAnimationID.GHOST_POINTS, numGhostsEaten++);
+        systems.actorSpriteAnimController().selectAndSetFrame(victim, CommonSpriteAnimationID.GHOST_POINTS, numGhostsEaten++);
 
         pacMan.hide();
         systems.worldNavigator().setMoveDirSpeed(pacMan, 0);
 
         for (Ghost ghost : ghosts) {
             systems.worldNavigator().setMoveDirSpeed(ghost, 0);
-            systems.spriteAnimController().stopSelected(ghost);
+            systems.actorSpriteAnimController().stopSelected(ghost);
         }
 
         lastGhostEatenTick = tick;

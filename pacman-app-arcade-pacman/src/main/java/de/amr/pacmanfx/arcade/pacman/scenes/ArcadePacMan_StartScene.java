@@ -21,7 +21,7 @@ public class ArcadePacMan_StartScene extends GameScene {
     @Override
     public void onActivate() {
         final Arcade_Actions actions = app().currentGameVariantUIConfig()
-            .getExtensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
+            .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         final var bindingsMap = actionBindingsSupport().bindingsMap();
         bindingsMap.registerAllBindings(actions.gameStartActionBindings());

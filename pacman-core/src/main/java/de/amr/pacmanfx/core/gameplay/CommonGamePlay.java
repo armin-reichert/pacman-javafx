@@ -242,8 +242,8 @@ public abstract class CommonGamePlay implements GamePlay {
         systems.ghostState().changeGhostState(eatenGhost, GhostState.EATEN);
 
         // Animation index is 0-based, animation frame 0 shows points for *first* killed ghost...
-        systems.spriteAnimController().selectAndSetFrame(eatenGhost, CommonSpriteAnimationID.GHOST_POINTS, killedBefore);
-        level.entities().ghosts().forEach(systems.spriteAnimController()::stopSelected);
+        systems.actorSpriteAnimController().selectAndSetFrame(eatenGhost, CommonSpriteAnimationID.GHOST_POINTS, killedBefore);
+        level.entities().ghosts().forEach(systems.actorSpriteAnimController()::stopSelected);
 
         level.addToGhostKillChain(eatenGhost);
         level.entities().pac().hide();
@@ -270,14 +270,14 @@ public abstract class CommonGamePlay implements GamePlay {
         pac.power().reset();
 
         systems.worldNavigator().setMoveDirSpeed(pac, 0);
-        systems.spriteAnimController().stopSelected(pac);
-        systems.spriteAnimController().select(pac, CommonSpriteAnimationID.PAC_FULL);
+        systems.actorSpriteAnimController().stopSelected(pac);
+        systems.actorSpriteAnimController().select(pac, CommonSpriteAnimationID.PAC_FULL);
 
         level.entities().ghosts().forEach(ghost -> {
             systems.worldNavigator().setMoveDirSpeed(ghost, 0);
             //TODO check in emulator if ghost animation is reset to normal
-            systems.spriteAnimController().stopSelected(ghost);
-            systems.spriteAnimController().select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);
+            systems.actorSpriteAnimController().stopSelected(ghost);
+            systems.actorSpriteAnimController().select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);
         });
 
         level.entities().optBonus().ifPresent(bonus -> {
@@ -338,7 +338,7 @@ public abstract class CommonGamePlay implements GamePlay {
             systems.worldNavigator().setMoveDir(ghost, direction);
             systems.worldNavigator().setWishDir(ghost, direction);
             systems.ghostState().changeGhostState(ghost, GhostState.LOCKED);
-            systems.spriteAnimController().resetSelected(ghost);
+            systems.actorSpriteAnimController().resetSelected(ghost);
         });
     }
 
@@ -399,7 +399,9 @@ public abstract class CommonGamePlay implements GamePlay {
             if (game.variant().rules().scoringRules().isBonusAwarded(level)) {
                 activateNextBonus(game, level);
             }
-            game.eventManager().publishGameEvent(new PacEatsFoodEvent(pac, step.energizerFound(), false));
+            game.eventManager().publishGameEvent(
+                new PacEatsFoodEvent(pac, step.energizerFound(), false, game.session().thisFrame().tick())
+            );
         }
         else {
             digestionSystem.starve(pac);

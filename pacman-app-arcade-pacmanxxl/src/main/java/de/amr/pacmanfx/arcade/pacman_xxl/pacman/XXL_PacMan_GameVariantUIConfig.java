@@ -126,7 +126,7 @@ public final class XXL_PacMan_GameVariantUIConfig implements GameVariantUIConfig
     }
 
     @Override
-    public <T> T getExtensionValue(Named id, Class<T> type) {
+    public <T> T extensionValue(Named id, Class<T> type) {
         final Object value = extensions.get(id);
         if (type.isInstance(value)) {
             return type.cast(value);

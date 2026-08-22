@@ -82,7 +82,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         session.setValue(TengenMsPacMan_GamePlayOptions.BOOSTER_ON, boosterOn);
 
         //TODO this is currently broken! Sprite is reset when Ms. Pac-Man moves!
-        final ActorSpriteAnimController animSystem = game.variant().systems().spriteAnimController();
+        final ActorSpriteAnimController animSystem = game.variant().systems().actorSpriteAnimController();
         animSystem.select(pac, boosterOn ? TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER : CommonSpriteAnimationID.PAC_MUNCHING);
     }
 

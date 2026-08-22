@@ -153,7 +153,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
     private void playCutScene(GameContext game, long tick) {
         final GameSystems systems = game.variant().systems();
         final WorldNavigationSystem navigator = systems.worldNavigator();
-        final ActorSpriteAnimController animSystem = systems.spriteAnimController();
+        final ActorSpriteAnimController animSystem = systems.actorSpriteAnimController();
 
         letActorsMove(game, tick);
 
@@ -230,7 +230,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
         final GameVariant variant = app().gameVariants().currentGameVariant();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimContainer animContainer    = variant.spriteAnimContainer();
-        final ActorSpriteAnimController animController  = variant.config().systems().spriteAnimController();
+        final ActorSpriteAnimController animController  = variant.config().systems().actorSpriteAnimController();
         final WorldNavigationSystem worldNavigationSystem = variant.config().systems().worldNavigator();
 
         final Pac junior = factory.createPacMan();

@@ -85,7 +85,7 @@ public class TengenMsPacMan_IntroScene extends GameScene {
 
         spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
-        final var actions = app().currentGameVariantUIConfig().getExtensionValue(
+        final var actions = app().currentGameVariantUIConfig().extensionValue(
             TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
 
         final var bindingsMap = actionBindingsSupport().bindingsMap();
@@ -160,7 +160,7 @@ public class TengenMsPacMan_IntroScene extends GameScene {
                 final GameVariant variant = scene.app().gameVariants().currentGameVariant();
                 final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
                 final SpriteAnimContainer animContainer    = variant.spriteAnimContainer();
-                final ActorSpriteAnimController animController  = variant.config().systems().spriteAnimController();
+                final ActorSpriteAnimController animController  = variant.config().systems().actorSpriteAnimController();
 
                 final GameSystems systems = variant.config().systems();
                 final WorldNavigationSystem worldNavigationSystem = systems.worldNavigator();
@@ -288,7 +288,7 @@ public class TengenMsPacMan_IntroScene extends GameScene {
                 systems.motor().move(scene.msPacMan);
                 if (scene.msPacMan.pos().x() <= MS_PAC_MAN_STOP_X) {
                     systems.worldNavigator().setMoveDirSpeed(scene.msPacMan, 0);
-                    systems.spriteAnimController().resetSelected(scene.msPacMan);
+                    systems.actorSpriteAnimController().resetSelected(scene.msPacMan);
                 }
                 if (timer.atSecond(8)) {
                     // start demo level or show options

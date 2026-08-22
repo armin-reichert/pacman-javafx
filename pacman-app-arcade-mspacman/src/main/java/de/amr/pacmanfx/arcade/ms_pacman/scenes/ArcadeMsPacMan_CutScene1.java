@@ -85,7 +85,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene {
         final GameVariant variant = app().gameVariants().currentGameVariant();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimContainer animContainer    = variant.spriteAnimContainer();
-        final ActorSpriteAnimController animController  = variant.config().systems().spriteAnimController();
+        final ActorSpriteAnimController animController  = variant.config().systems().actorSpriteAnimController();
 
         pacMan = actorFactory.createPacMan();
         pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animContainer));
@@ -134,8 +134,8 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene {
         sys.worldNavigator().setMoveDir(pacMan, Direction.RIGHT);
         sys.worldNavigator().setMoveDirSpeed(pacMan, SPEED_PAC_CHASING);
 
-        sys.spriteAnimController().select(pacMan, CommonSpriteAnimationID.MR_PAC_MAN_MUNCHING);
-        sys.spriteAnimController().playSelected(pacMan);
+        sys.actorSpriteAnimController().select(pacMan, CommonSpriteAnimationID.MR_PAC_MAN_MUNCHING);
+        sys.actorSpriteAnimController().playSelected(pacMan);
 
         inky.pos().set(pacMan.pos().x() - 6 * WorldMap.TS, pacMan.pos().y());
         inky.show();
@@ -144,8 +144,8 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene {
         sys.worldNavigator().setMoveDir(inky, Direction.RIGHT);
         sys.worldNavigator().setWishDir(inky, Direction.RIGHT);
 
-        sys.spriteAnimController().select(inky, CommonSpriteAnimationID.GHOST_NORMAL);
-        sys.spriteAnimController().playSelected(inky);
+        sys.actorSpriteAnimController().select(inky, CommonSpriteAnimationID.GHOST_NORMAL);
+        sys.actorSpriteAnimController().playSelected(inky);
 
         msPacMan.pos().set(WorldMap.TS * 30, LOWER_Y);
         msPacMan.show();
@@ -153,8 +153,8 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene {
         sys.worldNavigator().setMoveDir(msPacMan, Direction.LEFT);
         sys.worldNavigator().setMoveDirSpeed(msPacMan, SPEED_PAC_CHASING);
 
-        sys.spriteAnimController().select(msPacMan, CommonSpriteAnimationID.PAC_MUNCHING);
-        sys.spriteAnimController().playSelected(msPacMan);
+        sys.actorSpriteAnimController().select(msPacMan, CommonSpriteAnimationID.PAC_MUNCHING);
+        sys.actorSpriteAnimController().playSelected(msPacMan);
 
         pinky.pos().set(msPacMan.pos().x() + 6 * WorldMap.TS, msPacMan.pos().y());
         pinky.show();
@@ -163,8 +163,8 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene {
         sys.worldNavigator().setWishDir(pinky, Direction.LEFT);
         sys.worldNavigator().setMoveDirSpeed(pinky, SPEED_GHOST_CHASING);
 
-        sys.spriteAnimController().select(pinky, CommonSpriteAnimationID.GHOST_NORMAL);
-        sys.spriteAnimController().playSelected(pinky);
+        sys.actorSpriteAnimController().select(pinky, CommonSpriteAnimationID.GHOST_NORMAL);
+        sys.actorSpriteAnimController().playSelected(pinky);
 
         setState(SceneState.CHASED_BY_GHOSTS, TickTimer.INDEFINITE);
     }
@@ -246,14 +246,14 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene {
         sys.worldNavigator().setMoveDirSpeed(pacMan, 0);
         sys.worldNavigator().setMoveDir(pacMan, Direction.LEFT);
 
-        sys.spriteAnimController().stopSelected(pacMan);
-        sys.spriteAnimController().resetSelected(pacMan);
+        sys.actorSpriteAnimController().stopSelected(pacMan);
+        sys.actorSpriteAnimController().resetSelected(pacMan);
 
         sys.worldNavigator().setMoveDirSpeed(msPacMan, 0);
         sys.worldNavigator().setMoveDir(msPacMan, Direction.RIGHT);
 
-        sys.spriteAnimController().stopSelected(msPacMan);
-        sys.spriteAnimController().resetSelected(msPacMan);
+        sys.actorSpriteAnimController().stopSelected(msPacMan);
+        sys.actorSpriteAnimController().resetSelected(msPacMan);
 
         inky.hide();
         pinky.hide();

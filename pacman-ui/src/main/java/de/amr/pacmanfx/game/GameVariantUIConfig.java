@@ -63,5 +63,5 @@ public interface GameVariantUIConfig extends Disposable {
      */
     WorldSettings worldSettings();
 
-    <T> T getExtensionValue(Named id, Class<T> type);
+    <T> T extensionValue(Named id, Class<T> type);
 }

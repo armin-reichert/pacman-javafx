@@ -56,7 +56,7 @@ public final class GameState_DemoLevelPlaying extends GameState {
 
     private void startDemoLevel(GameContext game, GameLevel level) {
         startEnergizerBlinking(level);
-        startActorAnimations(level, game.variant().systems().spriteAnimController());
+        startActorAnimations(level, game.variant().systems().actorSpriteAnimController());
         clearReadyMessage(game.session().hud());
         // This call fires a game event!
         level.huntingTimerStrategy().startFirstPhase(game, level.number());

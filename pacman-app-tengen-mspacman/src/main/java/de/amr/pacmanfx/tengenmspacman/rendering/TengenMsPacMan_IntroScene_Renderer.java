@@ -59,7 +59,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
         actorRenderer   = r2D.configureRenderer(renderConfig.createActorRenderer(animSystem, canvas));
         debugRenderer   = GameScene2D_Renderer.createDefaultSceneDebugRenderer(gameScene, canvas);
 
-        uiSettings = gameScene.app().currentGameVariantUIConfig().getExtensionValue(
+        uiSettings = gameScene.app().currentGameVariantUIConfig().extensionValue(
             TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
     }
 

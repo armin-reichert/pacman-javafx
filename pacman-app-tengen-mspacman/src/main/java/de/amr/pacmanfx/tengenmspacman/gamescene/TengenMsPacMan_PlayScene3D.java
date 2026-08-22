@@ -115,7 +115,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         final var bindingsMap = actionBindingsSupport().bindingsMap();
         bindingsMap.dispose();
 
-        final var actions = app().currentGameVariantUIConfig().getExtensionValue(
+        final var actions = app().currentGameVariantUIConfig().extensionValue(
             TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
 
         if (session.isAttractMode()) {

@@ -307,7 +307,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         final GameVariantRenderConfig renderConfig = app.gameVariants().currentGameVariant().uiConfig().renderConfig();
         final Canvas canvas = r2D.canvas();
         if (canvas != null) {
-            final ActorSpriteAnimController animSystem = app.game().variant().systems().spriteAnimController();
+            final ActorSpriteAnimController animSystem = app.game().variant().systems().actorSpriteAnimController();
             sceneRenderer = renderConfig.createGameSceneRenderer(gameScene2D, animSystem, canvas);
             setFontSmoothing(app.ui().viewModel().common2D.fontSmoothingOnProperty.get());
             hudRenderer = renderConfig.createHUDRenderer(gameScene2D, animSystem, canvas); // may return null!
@@ -419,7 +419,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
     private void showMiniPlayView(GameContext game, GameLevel level) {
         final GameVariantRenderConfig renderConfig = app.gameVariants().currentGameVariant().uiConfig().renderConfig();
-        final ActorSpriteAnimController animSystem = game.variant().systems().spriteAnimController();
+        final ActorSpriteAnimController animSystem = game.variant().systems().actorSpriteAnimController();
         miniPlaySceneView.setRenderConfig(animSystem, renderConfig);
         miniPlaySceneView.setWorldSizeInPixel(level.worldMap().terrainLayer().sizeInPixel());
         miniPlaySceneView.slideIn();
