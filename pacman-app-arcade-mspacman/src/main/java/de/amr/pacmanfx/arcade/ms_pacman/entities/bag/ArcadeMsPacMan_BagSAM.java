@@ -18,7 +18,7 @@ public class ArcadeMsPacMan_BagSAM extends LazySAM {
     private final ArcadeMsPacMan_SpriteSheet spriteSheet =  ArcadeMsPacMan_SpriteSheet.instance();
 
     public ArcadeMsPacMan_BagSAM(SpriteAnimContainer container) {
-        factory = id -> switch (id) {
+        setFactory(id -> switch (id) {
             case CommonSpriteAnimationID.JUNIOR -> new SpriteAnimationBuilder()
                 .singleSprite(spriteSheet.findSprite(JUNIOR_PAC))
                 .build(container);
@@ -28,6 +28,6 @@ public class ArcadeMsPacMan_BagSAM extends LazySAM {
                 .build(container);
 
             default -> throw new IllegalArgumentException("Illegal animation ID: " + id);
-        };
+        });
     }
 }

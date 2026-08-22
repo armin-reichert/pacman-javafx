@@ -20,7 +20,7 @@ public class TengenMsPacMan_StorkSAM extends LazySAM {
     private final TengenMsPacMan_SpriteSheet spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
     public TengenMsPacMan_StorkSAM(SpriteAnimContainer container) {
-        factory = id -> createAnimation(id, container);
+        setFactory(id -> createAnimation(id, container));
     }
 
     private SpriteAnimation createAnimation(Named animationID, SpriteAnimContainer container) {

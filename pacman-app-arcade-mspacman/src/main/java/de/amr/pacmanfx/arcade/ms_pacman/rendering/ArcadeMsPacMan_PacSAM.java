@@ -17,7 +17,7 @@ public class ArcadeMsPacMan_PacSAM extends LazySAM {
     private final ArcadeMsPacMan_SpriteSheet spriteSheet = ArcadeMsPacMan_SpriteSheet.instance();
 
     public ArcadeMsPacMan_PacSAM(SpriteAnimContainer container) {
-        factory = id -> createAnimation(id, container);
+        setFactory(id -> createAnimation(id, container));
     }
 
     private SpriteAnimation createAnimation(Named animationID, SpriteAnimContainer container) {

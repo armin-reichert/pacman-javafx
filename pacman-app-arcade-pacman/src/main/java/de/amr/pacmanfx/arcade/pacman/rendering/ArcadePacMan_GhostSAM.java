@@ -22,7 +22,7 @@ public class ArcadePacMan_GhostSAM extends LazySAM {
 
     public ArcadePacMan_GhostSAM(SpriteAnimContainer container, GhostPersonality personality) {
         this.personality = Objects.requireNonNull(personality);
-        factory = id -> createAnimation(id, container);
+        setFactory(id -> createAnimation(id, container));
     }
 
     private SpriteAnimation createAnimation(Named animationID, SpriteAnimContainer container) {

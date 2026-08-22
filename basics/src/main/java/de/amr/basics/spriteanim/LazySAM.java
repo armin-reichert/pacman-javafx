@@ -22,9 +22,9 @@ public class LazySAM implements SpriteAnimFacade {
 
     private Map<Named, SpriteAnimation> animationsByName;
 
-    protected Named selectedName;
+    private Named selectedName;
 
-    protected Function<Named, SpriteAnimation> factory;
+    private Function<Named, SpriteAnimation> factory;
 
     protected LazySAM() {}
 
@@ -65,17 +65,6 @@ public class LazySAM implements SpriteAnimFacade {
             animationsByName.put(name, anim);
         }
         return animationsByName.get(name);
-    }
-
-    public void setAnimation(Named animationID, SpriteAnimation animation) {
-        requireNonNull(animationID);
-        requireNonNull(animation);
-        ensureMapCreated();
-        animationsByName.put(animationID, animation);
-    }
-
-    public SpriteAnimation currentAnimation() {
-        return selectedName != null ? animation(selectedName) : null;
     }
 
     @Override
@@ -131,5 +120,9 @@ public class LazySAM implements SpriteAnimFacade {
         if (anim != null) {
             anim.reset();
         }
+    }
+
+    private SpriteAnimation currentAnimation() {
+        return selectedName != null ? animation(selectedName) : null;
     }
 }

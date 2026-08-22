@@ -16,7 +16,7 @@ public class TengenMsPacMan_BagSAM extends LazySAM {
     private final TengenMsPacMan_SpriteSheet spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
     public TengenMsPacMan_BagSAM(SpriteAnimContainer container) {
-        factory = id -> switch (id) {
+        setFactory(id -> switch (id) {
             case CommonSpriteAnimationID.BAG -> new SpriteAnimationBuilder()
                 .singleSprite(spriteSheet.findSprite(SpriteID.BLUE_BAG))
                 .initiallyStopped()
@@ -28,6 +28,6 @@ public class TengenMsPacMan_BagSAM extends LazySAM {
                 .build(container);
 
             default -> throw new IllegalArgumentException("Illegal animation ID: " + id);
-        };
+        });
     }
 }
