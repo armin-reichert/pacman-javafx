@@ -16,7 +16,7 @@ import java.util.stream.IntStream;
 
 import static de.amr.basics.math.RectShort.sprite;
 
-public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
+public final class ArcadePacMan_SpriteSheet implements SpriteSheet {
 
     private static class LazyThreadSafeSingletonHolder {
         static final ArcadePacMan_SpriteSheet SINGLETON = new ArcadePacMan_SpriteSheet();

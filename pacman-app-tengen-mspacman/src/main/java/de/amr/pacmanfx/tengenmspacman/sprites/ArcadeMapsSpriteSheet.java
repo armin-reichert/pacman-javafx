@@ -15,7 +15,7 @@ import javafx.scene.image.Image;
 
 import static de.amr.basics.math.RectShort.sprite;
 
-public final class ArcadeMapsSpriteSheet implements SpriteSheet<ArcadeMapsSpriteSheet.MapID> {
+public final class ArcadeMapsSpriteSheet implements SpriteSheet {
 
     private static class LazyThreadSafeSingletonHolder {
         static final ArcadeMapsSpriteSheet SINGLETON = new ArcadeMapsSpriteSheet();

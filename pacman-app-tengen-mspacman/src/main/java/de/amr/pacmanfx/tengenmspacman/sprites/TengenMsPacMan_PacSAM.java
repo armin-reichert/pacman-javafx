@@ -84,7 +84,7 @@ public class TengenMsPacMan_PacSAM extends LazySAM {
     }
 
     //TODO rethink this
-    public static RectShort[] pacDyingSprites(SpriteSheet<SpriteID> spriteSheet) {
+    public static RectShort[] pacDyingSprites(SpriteSheet spriteSheet) {
         final var sprites = new RectShort[11];
         final RectShort mouthOpen = spriteSheet.findSpriteSequence(SpriteID.MS_PAC_MUNCHING)[0];
         Arrays.fill(sprites, mouthOpen);

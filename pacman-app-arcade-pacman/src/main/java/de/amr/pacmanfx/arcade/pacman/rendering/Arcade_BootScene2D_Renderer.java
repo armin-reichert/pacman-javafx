@@ -33,11 +33,11 @@ public class Arcade_BootScene2D_Renderer extends BaseRenderer implements GameSce
 
     public static final int GRID_SIZE = 16;
 
-    private final SpriteSheet<?> spriteSheet;
+    private final SpriteSheet spriteSheet;
     private final Rectangle2D spriteRegion;
     private final BaseDebugInfoRenderer debugRenderer;
 
-    public Arcade_BootScene2D_Renderer(GameScene scene, Canvas canvas, SpriteSheet<?> spriteSheet, Rectangle2D spriteRegion) {
+    public Arcade_BootScene2D_Renderer(GameScene scene, Canvas canvas, SpriteSheet spriteSheet, Rectangle2D spriteRegion) {
         super(canvas);
 
         this.spriteSheet = requireNonNull(spriteSheet);
@@ -48,7 +48,7 @@ public class Arcade_BootScene2D_Renderer extends BaseRenderer implements GameSce
     }
 
     @Override
-    public SpriteSheet<?> spriteSheet() {
+    public SpriteSheet spriteSheet() {
         return spriteSheet;
     }
 

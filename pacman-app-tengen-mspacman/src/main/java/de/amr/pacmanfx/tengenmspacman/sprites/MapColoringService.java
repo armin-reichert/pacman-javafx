@@ -35,7 +35,7 @@ public class MapColoringService {
     public ColorSchemedMapSprite recolorMapImage(
         MapCategory mapCategory,
         Object mapID,
-        SpriteSheet<?> spriteSheet,
+        SpriteSheet spriteSheet,
         RectShort mapSprite,
         NES_WorldMapColorScheme sourceColorScheme,
         NES_WorldMapColorScheme targetColorScheme)
@@ -50,7 +50,7 @@ public class MapColoringService {
 
     public List<ColorSchemedMapSprite> createFlashingMapImages(
         MapCategory mapCategory, Object mapID,
-        SpriteSheet<?> spriteSheet,
+        SpriteSheet spriteSheet,
         RectShort mapSprite,
         NES_WorldMapColorScheme sourceColorScheme,
         NES_WorldMapColorScheme targetColorScheme,
@@ -84,7 +84,7 @@ public class MapColoringService {
     public MapImageSet createMapImageSet(
         MapCategory mapCategory,
         Object mapID,
-        SpriteSheet<?> spriteSheet,
+        SpriteSheet spriteSheet,
         RectShort mapSprite,
         NES_WorldMapColorScheme sourceColorScheme,
         NES_WorldMapColorScheme targetColorScheme,
@@ -108,7 +108,7 @@ public class MapColoringService {
     private ColorSchemedMapSprite computeRecoloredMapImage(
         MapCategory mapCategory,
         Object mapID,
-        SpriteSheet<?> spriteSheet,
+        SpriteSheet spriteSheet,
         RectShort mapSprite,
         NES_WorldMapColorScheme sourceColorScheme,
         NES_WorldMapColorScheme targetColorScheme)

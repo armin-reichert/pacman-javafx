@@ -17,7 +17,7 @@ import java.util.stream.IntStream;
 import static de.amr.basics.math.RectShort.sprite;
 import static de.amr.pacmanfx.tengenmspacman.sprites.SpriteID.*;
 
-public final class TengenMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
+public final class TengenMsPacMan_SpriteSheet implements SpriteSheet {
 
     private static class LazyThreadSafeSingletonHolder {
         static final TengenMsPacMan_SpriteSheet SINGLETON = new TengenMsPacMan_SpriteSheet();

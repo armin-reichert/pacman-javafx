@@ -19,7 +19,7 @@ import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
  * <p>Each map ID corresponds to a sub‐image region laid out row by row
  * in the source image. Some mazes (32, 33, 34–37) are handled specially.
  */
-public final class NonArcadeMapsSpriteSheet implements SpriteSheet<NonArcadeMapsSpriteSheet.MapID> {
+public final class NonArcadeMapsSpriteSheet implements SpriteSheet {
 
     private static class LazyThreadSafeSingletonHolder {
         static final NonArcadeMapsSpriteSheet SINGLETON = new NonArcadeMapsSpriteSheet();

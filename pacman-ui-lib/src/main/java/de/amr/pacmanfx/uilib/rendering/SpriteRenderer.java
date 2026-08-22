@@ -17,7 +17,7 @@ public interface SpriteRenderer extends Renderer {
 
     record FacingSprite(RectShort sprite, Direction facingDirection) {}
 
-    SpriteSheet<?> spriteSheet();
+    SpriteSheet spriteSheet();
 
     /**
      * Draws a sprite (region inside sprite sheet) at the given position.

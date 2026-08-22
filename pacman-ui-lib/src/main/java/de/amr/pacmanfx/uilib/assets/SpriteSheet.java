@@ -11,10 +11,8 @@ import javafx.scene.image.WritableImage;
 
 /**
  * Sprite sheet interface.
- *
- * @param <ID> sprite ID type, for example some enumeration type.
  */
-public interface SpriteSheet<ID extends Named> {
+public interface SpriteSheet {
 
     /**
      * @return the sprite sheet image
@@ -64,7 +62,7 @@ public interface SpriteSheet<ID extends Named> {
      * @param id sprite ID
      * @return image cropped from sprite sheet for given sprite
      */
-    default Image image(ID id) {
+    default Image image(Named id) {
         return image(findSprite(id));
     }
 }

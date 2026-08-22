@@ -38,13 +38,13 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
         GhostPersonality.PINK_GHOST_SPEEDY,
         GhostPersonality.RED_GHOST_SHADOW);
 
-    private final SpriteSheet<?> spriteSheet;
+    private final SpriteSheet spriteSheet;
     private final GameLevelRenderer levelRenderer;
     private final ActorRenderer actorRenderer;
     private final BaseDebugInfoRenderer debugRenderer;
     private final List<GameEntity> actorsInZOrder = new ArrayList<>();
 
-    public Arcade_PlayScene2D_Renderer(GameScene scene, ActorSpriteAnimController animSystem, Canvas canvas, SpriteSheet<?> spriteSheet) {
+    public Arcade_PlayScene2D_Renderer(GameScene scene, ActorSpriteAnimController animSystem, Canvas canvas, SpriteSheet spriteSheet) {
         super(canvas);
         requireNonNull(scene);
         this.spriteSheet = requireNonNull(spriteSheet);
@@ -58,7 +58,7 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
     }
 
     @Override
-    public SpriteSheet<?> spriteSheet() {
+    public SpriteSheet spriteSheet() {
         return spriteSheet;
     }
 
