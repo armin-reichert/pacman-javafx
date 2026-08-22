@@ -16,7 +16,7 @@ public class TengenMsPacMan_ClapperboardAnimationSystem {
 
     public static Optional<RectShort> sprite(Clapperboard clapperboard) {
         final ClapperboardStateComp state = clapperboard.state();
-        final RectShort[] sprites = TengenMsPacMan_SpriteSheet.instance().findSprites(SpriteID.CLAPPERBOARD);
+        final RectShort[] sprites = TengenMsPacMan_SpriteSheet.instance().findSpriteSequence(SpriteID.CLAPPERBOARD);
         return switch (state.state()) {
             case WIDE_OPEN -> Optional.of(sprites[0]);
             case OPEN -> Optional.of(sprites[1]);

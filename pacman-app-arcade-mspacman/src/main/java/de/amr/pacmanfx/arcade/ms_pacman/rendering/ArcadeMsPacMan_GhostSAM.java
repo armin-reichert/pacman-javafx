@@ -37,13 +37,13 @@ public class ArcadeMsPacMan_GhostSAM extends LazySAM {
                 .build(container);
 
             case CommonSpriteAnimationID.GHOST_FRIGHTENED -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet.findSprites(GHOST_FRIGHTENED))
+                .sprites(spriteSheet.findSpriteSequence(GHOST_FRIGHTENED))
                 .frameTicks(8)
                 .repeated()
                 .build(container);
 
             case CommonSpriteAnimationID.GHOST_FLASHING -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet.findSprites(GHOST_FLASHING))
+                .sprites(spriteSheet.findSpriteSequence(GHOST_FLASHING))
                 .frameTicks(7)
                 .repeated()
                 .build(container);
@@ -53,7 +53,7 @@ public class ArcadeMsPacMan_GhostSAM extends LazySAM {
                 .build(container);
 
             case CommonSpriteAnimationID.GHOST_POINTS -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet.findSprites(GHOST_NUMBERS))
+                .sprites(spriteSheet.findSpriteSequence(GHOST_NUMBERS))
                 .initiallyStopped()
                 .build(container);
 

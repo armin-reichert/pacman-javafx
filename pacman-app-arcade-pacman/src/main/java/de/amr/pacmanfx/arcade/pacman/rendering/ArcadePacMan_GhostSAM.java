@@ -35,13 +35,13 @@ public class ArcadePacMan_GhostSAM extends LazySAM {
                 .build(container);
 
             case CommonSpriteAnimationID.GHOST_FRIGHTENED -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet.findSprites(SpriteID.GHOST_FRIGHTENED))
+                .sprites(spriteSheet.findSpriteSequence(SpriteID.GHOST_FRIGHTENED))
                 .frameTicks(8)
                 .repeated()
                 .build(container);
 
             case CommonSpriteAnimationID.GHOST_FLASHING -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet.findSprites(SpriteID.GHOST_FLASHING))
+                .sprites(spriteSheet.findSpriteSequence(SpriteID.GHOST_FLASHING))
                 .frameTicks(7)
                 .repeated()
                 .build(container);
@@ -51,24 +51,24 @@ public class ArcadePacMan_GhostSAM extends LazySAM {
                 .build(container);
 
             case CommonSpriteAnimationID.GHOST_POINTS -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet.findSprites(SpriteID.GHOST_NUMBERS))
+                .sprites(spriteSheet.findSpriteSequence(SpriteID.GHOST_NUMBERS))
                 .initiallyStopped()
                 .build(container);
 
             case CommonSpriteAnimationID.BLINKY_DAMAGED -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet.findSprites(SpriteID.RED_GHOST_DAMAGED))
+                .sprites(spriteSheet.findSpriteSequence(SpriteID.RED_GHOST_DAMAGED))
                 .initiallyStopped()
                 .build(container);
 
             case CommonSpriteAnimationID.BLINKY_PATCHED -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet.findSprites(SpriteID.RED_GHOST_PATCHED))
+                .sprites(spriteSheet.findSpriteSequence(SpriteID.RED_GHOST_PATCHED))
                 .frameTicks(4)
                 .repeated()
                 .initiallyStopped()
                 .build(container);
 
             case CommonSpriteAnimationID.BLINKY_NAKED -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet.findSprites(SpriteID.RED_GHOST_NAKED))
+                .sprites(spriteSheet.findSpriteSequence(SpriteID.RED_GHOST_NAKED))
                 .frameTicks(4)
                 .repeated()
                 .build(container);

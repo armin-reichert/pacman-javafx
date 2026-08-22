@@ -103,7 +103,7 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Ga
         for (byte p = 0; p < 4; ++p) {
             int offsetY = 3 * p * WorldMap.TS;
             if (introScene.ghostImageVisible[p]) {
-                RectShort sprite = spriteSheet().findSprites(GALLERY_GHOSTS)[p];
+                RectShort sprite = spriteSheet().findSpriteSequence(GALLERY_GHOSTS)[p];
                 drawSpriteCentered(sprite, WorldMap.TS * 5, y + offsetY - WorldMap.HTS);
             }
             if (introScene.ghostCharacterVisible[p]) {

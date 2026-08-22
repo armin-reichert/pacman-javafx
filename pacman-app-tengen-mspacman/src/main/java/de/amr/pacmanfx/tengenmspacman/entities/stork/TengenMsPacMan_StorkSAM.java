@@ -26,7 +26,7 @@ public class TengenMsPacMan_StorkSAM extends LazySAM {
     private SpriteAnimation createAnimation(Named animationID, SpriteAnimContainer container) {
         if (animationID.equals(CommonSpriteAnimationID.STORK_FLYING)) {
             return new SpriteAnimationBuilder()
-                .sprites(spriteSheet.findSprites(STORK))
+                .sprites(spriteSheet.findSpriteSequence(STORK))
                 .frameTicks(8)
                 .repeated()
                 .build(container);

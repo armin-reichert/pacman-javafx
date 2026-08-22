@@ -38,7 +38,8 @@ public final class ArcadeMapsSpriteSheet implements SpriteSheet<ArcadeMapsSprite
     }
 
     private Image image;
-    private final SpriteMap<MapID> spriteMap = new SpriteMap<>(MapID.class);
+
+    private final SpriteMap spriteMap = new SpriteMap();
 
     private ArcadeMapsSpriteSheet() {
         spriteMap.add(MapID.MAP1, spriteAtCell(0, 0));
@@ -50,8 +51,11 @@ public final class ArcadeMapsSpriteSheet implements SpriteSheet<ArcadeMapsSprite
         spriteMap.add(MapID.MAP7, spriteAtCell(2, 0));
         spriteMap.add(MapID.MAP8, spriteAtCell(2, 1));
         spriteMap.add(MapID.MAP9, spriteAtCell(2, 2));
+    }
 
-        spriteMap.checkCompleteness();
+    @Override
+    public SpriteMap spriteMap() {
+        return spriteMap;
     }
 
     @Override
@@ -60,15 +64,5 @@ public final class ArcadeMapsSpriteSheet implements SpriteSheet<ArcadeMapsSprite
             image = TengenMsPacMan_ResourceManager.instance().loadImage(TengenMsPacMan_GameVariantUIConfig.REL_PATH_ARCADE_MAPS_IMAGE);
         }
         return image;
-    }
-
-    @Override
-    public RectShort findSprite(MapID id) {
-        return spriteMap.sprite(id);
-    }
-
-    @Override
-    public RectShort[] findSprites(MapID id) {
-        return spriteMap.spriteSequence(id);
     }
 }

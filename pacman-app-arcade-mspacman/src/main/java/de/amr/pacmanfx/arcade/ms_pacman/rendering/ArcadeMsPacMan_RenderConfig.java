@@ -68,7 +68,7 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
 
     // Creates the maze image used in the flash animation at the end of each level
     private Image createBrightMazeImage(int index) {
-        final RectShort mazeSprite = spriteSheet().findSprites(SpriteID.EMPTY_MAPS)[index];
+        final RectShort mazeSprite = spriteSheet().findSpriteSequence(SpriteID.EMPTY_MAPS)[index];
         final Image mazeImage = spriteSheet().image(mazeSprite);
         final WorldMapColorSchemeImpl colorScheme = MAP_COLOR_SCHEMES[index];
         final Map<Color, Color> colorChanges = Map.of(
@@ -176,19 +176,19 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
 
     @Override
     public Image bonusSymbolImage(int symbolCode) {
-        final RectShort[] sprites = spriteSheet().findSprites(SpriteID.BONUS_SYMBOLS);
+        final RectShort[] sprites = spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS);
         return spriteSheet().image(sprites[symbolCode]);
     }
 
     @Override
     public Image bonusValueImage(int symbolCode) {
-        final RectShort[] sprites = spriteSheet().findSprites(SpriteID.BONUS_VALUES);
+        final RectShort[] sprites = spriteSheet().findSpriteSequence(SpriteID.BONUS_VALUES);
         return spriteSheet().image(sprites[symbolCode]);
     }
 
     @Override
     public Image killedGhostPointsImage(int killedGhostIndex) {
-        final RectShort[] numberSprites = spriteSheet().findSprites(SpriteID.GHOST_NUMBERS);
+        final RectShort[] numberSprites = spriteSheet().findSpriteSequence(SpriteID.GHOST_NUMBERS);
         return spriteSheet().image(numberSprites[killedGhostIndex]);
     }
 }

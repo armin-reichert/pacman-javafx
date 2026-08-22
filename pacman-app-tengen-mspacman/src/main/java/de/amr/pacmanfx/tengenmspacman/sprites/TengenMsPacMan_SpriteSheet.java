@@ -48,7 +48,8 @@ public final class TengenMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
         });
     }
 
-    private final SpriteMap<SpriteID> spriteMap = new SpriteMap<>(SpriteID.class);
+    private final SpriteMap spriteMap = new SpriteMap();
+
     private final Image image;
 
     private TengenMsPacMan_SpriteSheet() {
@@ -231,8 +232,11 @@ public final class TengenMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
             sprite(157, 355, 33, 16),
             sprite(198, 355, 33, 16)
         );
+    }
 
-        spriteMap.checkCompleteness();
+    @Override
+    public SpriteMap spriteMap() {
+        return spriteMap;
     }
 
     @Override
@@ -240,41 +244,31 @@ public final class TengenMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
         return image;
     }
 
-    @Override
-    public RectShort findSprite(SpriteID id) {
-        return spriteMap.sprite(id);
-    }
-
-    @Override
-    public RectShort[] findSprites(SpriteID id) {
-        return spriteMap.spriteSequence(id);
-    }
-
     public RectShort[] ghostNormalSprites(GhostPersonality personality, Direction dir) {
         return switch (personality) {
             case RED_GHOST_SHADOW -> switch (dir) {
-                case Direction.RIGHT -> findSprites(SpriteID.RED_GHOST_RIGHT);
-                case Direction.LEFT  -> findSprites(SpriteID.RED_GHOST_LEFT);
-                case Direction.UP    -> findSprites(SpriteID.RED_GHOST_UP);
-                case Direction.DOWN  -> findSprites(SpriteID.RED_GHOST_DOWN);
+                case Direction.RIGHT -> findSpriteSequence(SpriteID.RED_GHOST_RIGHT);
+                case Direction.LEFT  -> findSpriteSequence(SpriteID.RED_GHOST_LEFT);
+                case Direction.UP    -> findSpriteSequence(SpriteID.RED_GHOST_UP);
+                case Direction.DOWN  -> findSpriteSequence(SpriteID.RED_GHOST_DOWN);
             };
             case PINK_GHOST_SPEEDY   -> switch (dir) {
-                case Direction.RIGHT -> findSprites(SpriteID.PINK_GHOST_RIGHT);
-                case Direction.LEFT  -> findSprites(SpriteID.PINK_GHOST_LEFT);
-                case Direction.UP    -> findSprites(SpriteID.PINK_GHOST_UP);
-                case Direction.DOWN  -> findSprites(SpriteID.PINK_GHOST_DOWN);
+                case Direction.RIGHT -> findSpriteSequence(SpriteID.PINK_GHOST_RIGHT);
+                case Direction.LEFT  -> findSpriteSequence(SpriteID.PINK_GHOST_LEFT);
+                case Direction.UP    -> findSpriteSequence(SpriteID.PINK_GHOST_UP);
+                case Direction.DOWN  -> findSpriteSequence(SpriteID.PINK_GHOST_DOWN);
             };
             case CYAN_GHOST_BASHFUL  -> switch (dir) {
-                case Direction.RIGHT -> findSprites(SpriteID.CYAN_GHOST_RIGHT);
-                case Direction.LEFT  -> findSprites(SpriteID.CYAN_GHOST_LEFT);
-                case Direction.UP    -> findSprites(SpriteID.CYAN_GHOST_UP);
-                case Direction.DOWN  -> findSprites(SpriteID.CYAN_GHOST_DOWN);
+                case Direction.RIGHT -> findSpriteSequence(SpriteID.CYAN_GHOST_RIGHT);
+                case Direction.LEFT  -> findSpriteSequence(SpriteID.CYAN_GHOST_LEFT);
+                case Direction.UP    -> findSpriteSequence(SpriteID.CYAN_GHOST_UP);
+                case Direction.DOWN  -> findSpriteSequence(SpriteID.CYAN_GHOST_DOWN);
             };
             case ORANGE_GHOST_POKEY  -> switch (dir) {
-                case Direction.RIGHT -> findSprites(SpriteID.ORANGE_GHOST_RIGHT);
-                case Direction.LEFT  -> findSprites(SpriteID.ORANGE_GHOST_LEFT);
-                case Direction.UP    -> findSprites(SpriteID.ORANGE_GHOST_UP);
-                case Direction.DOWN  -> findSprites(SpriteID.ORANGE_GHOST_DOWN);
+                case Direction.RIGHT -> findSpriteSequence(SpriteID.ORANGE_GHOST_RIGHT);
+                case Direction.LEFT  -> findSpriteSequence(SpriteID.ORANGE_GHOST_LEFT);
+                case Direction.UP    -> findSpriteSequence(SpriteID.ORANGE_GHOST_UP);
+                case Direction.DOWN  -> findSpriteSequence(SpriteID.ORANGE_GHOST_DOWN);
             };
         };
     }

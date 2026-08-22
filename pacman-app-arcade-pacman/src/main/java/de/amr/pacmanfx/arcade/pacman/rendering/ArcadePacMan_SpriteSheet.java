@@ -33,7 +33,7 @@ public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
     // Map images are located left and sprites right of this x position
     private static final int HORIZONTAL_SPLIT_X = 456;
 
-    private final SpriteMap<SpriteID> spriteMap = new SpriteMap<>(SpriteID.class);
+    private final SpriteMap spriteMap = new SpriteMap();
     private final Image image;
 
     private ArcadePacMan_SpriteSheet() {
@@ -134,8 +134,11 @@ public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
             clipSprite(RASTER_SIZE * 8, RASTER_SIZE * 8, RASTER_SIZE * 2, RASTER_SIZE),
             clipSprite(RASTER_SIZE * 10, RASTER_SIZE * 8, RASTER_SIZE * 2, RASTER_SIZE)
         );
+    }
 
-        spriteMap.checkCompleteness();
+    @Override
+    public SpriteMap spriteMap() {
+        return spriteMap;
     }
 
     @Override
@@ -143,29 +146,19 @@ public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
         return image;
     }
 
-    @Override
-    public RectShort findSprite(SpriteID id) {
-        return spriteMap.sprite(id);
-    }
-
-    @Override
-    public RectShort[] findSprites(SpriteID id) {
-        return spriteMap.spriteSequence(id);
-    }
-
     // public
 
     public RectShort[] pacMunchingSprites(Direction dir) {
         return switch (dir) {
-            case RIGHT -> findSprites(SpriteID.PACMAN_MUNCHING_RIGHT);
-            case LEFT  -> findSprites(SpriteID.PACMAN_MUNCHING_LEFT);
-            case UP    -> findSprites(SpriteID.PACMAN_MUNCHING_UP);
-            case DOWN  -> findSprites(SpriteID.PACMAN_MUNCHING_DOWN);
+            case RIGHT -> findSpriteSequence(SpriteID.PACMAN_MUNCHING_RIGHT);
+            case LEFT  -> findSpriteSequence(SpriteID.PACMAN_MUNCHING_LEFT);
+            case UP    -> findSpriteSequence(SpriteID.PACMAN_MUNCHING_UP);
+            case DOWN  -> findSpriteSequence(SpriteID.PACMAN_MUNCHING_DOWN);
         };
     }
 
     public RectShort[] ghostNormalSprites(GhostPersonality personality, Direction dir) {
-        return findSprites(switch (personality) {
+        return findSpriteSequence(switch (personality) {
             case RED_GHOST_SHADOW -> switch (dir) {
                 case RIGHT -> SpriteID.RED_GHOST_RIGHT;
                 case LEFT ->  SpriteID.RED_GHOST_LEFT;

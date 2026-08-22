@@ -4,7 +4,6 @@
 package de.amr.pacmanfx.tengenmspacman.sprites;
 
 import de.amr.basics.Named;
-import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantUIConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ResourceManager;
 import de.amr.pacmanfx.uilib.assets.SpriteMap;
@@ -39,7 +38,8 @@ public final class NonArcadeMapsSpriteSheet implements SpriteSheet<NonArcadeMaps
         MAP34_MINI, MAP35_MINI, MAP36_MINI, MAP37_MINI
     }
 
-    private final SpriteMap<MapID> spriteMap = new SpriteMap<>(MapID.class);
+    private final SpriteMap spriteMap = new SpriteMap();
+
     private Image image;
 
     private NonArcadeMapsSpriteSheet() {
@@ -85,8 +85,11 @@ public final class NonArcadeMapsSpriteSheet implements SpriteSheet<NonArcadeMaps
         spriteMap.add(MapID.MAP35_MINI, sprite(    mapWidth, yPos[4], mapWidth, mapHeights[4][1]));
         spriteMap.add(MapID.MAP36_MINI, sprite(2 * mapWidth, yPos[4], mapWidth, mapHeights[4][2]));
         spriteMap.add(MapID.MAP37_MINI, sprite(3 * mapWidth, yPos[4], mapWidth, mapHeights[4][3]));
+    }
 
-        spriteMap.checkCompleteness();
+    @Override
+    public SpriteMap spriteMap() {
+        return spriteMap;
     }
 
     @Override
@@ -95,15 +98,5 @@ public final class NonArcadeMapsSpriteSheet implements SpriteSheet<NonArcadeMaps
             image = TengenMsPacMan_ResourceManager.instance().loadImage(TengenMsPacMan_GameVariantUIConfig.REL_PATH_NON_ARCADE_MAPS_IMAGE);
         }
         return image;
-    }
-
-    @Override
-    public RectShort findSprite(MapID id) {
-        return spriteMap.sprite(id);
-    }
-
-    @Override
-    public RectShort[] findSprites(MapID id) {
-        return spriteMap.spriteSequence(id);
     }
 }

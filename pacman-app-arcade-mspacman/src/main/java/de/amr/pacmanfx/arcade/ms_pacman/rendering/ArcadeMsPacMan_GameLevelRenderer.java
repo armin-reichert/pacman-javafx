@@ -70,16 +70,16 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
                 hideGhostHouseDoors(house);
             }
             else {
-                final RectShort emptyMazeSprite = spriteSheet().findSprites(SpriteID.EMPTY_MAPS)[colorMapIndex];
+                final RectShort emptyMazeSprite = spriteSheet().findSpriteSequence(SpriteID.EMPTY_MAPS)[colorMapIndex];
                 drawSprite(emptyMazeSprite, 0, emptySpaceOverMazePixels, false);
             }
         }
         else if (info.getBoolean(CommonRenderInfoKey.MAP_EMPTY)) {
-            final RectShort emptyMazeSprite = spriteSheet().findSprites(SpriteID.EMPTY_MAPS)[colorMapIndex];
+            final RectShort emptyMazeSprite = spriteSheet().findSpriteSequence(SpriteID.EMPTY_MAPS)[colorMapIndex];
             drawSprite(emptyMazeSprite, 0, emptySpaceOverMazePixels, false);
         }
         else {
-            final RectShort mapSprite = spriteSheet().findSprites(SpriteID.FULL_MAPS)[colorMapIndex];
+            final RectShort mapSprite = spriteSheet().findSpriteSequence(SpriteID.FULL_MAPS)[colorMapIndex];
             drawSprite(mapSprite, 0, emptySpaceOverMazePixels, false);
 
             final FoodLayer foodLayer = level.worldMap().foodLayer();

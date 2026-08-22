@@ -32,7 +32,7 @@ public final class ArcadeMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
     // Map images are located left and sprites right of this x position
     private static final int SPRITE_START_X = 456;
 
-    private final SpriteMap<SpriteID> spriteMap = new SpriteMap<>(SpriteID.class);
+    private final SpriteMap spriteMap = new SpriteMap();
     private final Image image;
 
     private ArcadeMsPacMan_SpriteSheet() {
@@ -100,8 +100,11 @@ public final class ArcadeMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
         spriteMap.add(HEART, tile(2, 10));
         spriteMap.add(BLUE_BAG, sprite(488, 199, 8, 8));
         spriteMap.add(JUNIOR_PAC, sprite(509, 200, 8, 8));
+    }
 
-        spriteMap.checkCompleteness();
+    @Override
+    public SpriteMap spriteMap() {
+        return spriteMap;
     }
 
     @Override
@@ -109,29 +112,19 @@ public final class ArcadeMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
         return image;
     }
 
-    @Override
-    public RectShort findSprite(SpriteID id) {
-        return spriteMap.sprite(id);
-    }
-
-    @Override
-    public RectShort[] findSprites(SpriteID id) {
-        return spriteMap.spriteSequence(id);
-    }
-
     // public
 
     public RectShort[] msPacManMunchingSprites(Direction dir) {
         return switch (dir) {
-            case RIGHT -> findSprites(SpriteID.MS_PACMAN_MUNCHING_RIGHT);
-            case LEFT  -> findSprites(SpriteID.MS_PACMAN_MUNCHING_LEFT);
-            case UP    -> findSprites(SpriteID.MS_PACMAN_MUNCHING_UP);
-            case DOWN  -> findSprites(SpriteID.MS_PACMAN_MUNCHING_DOWN);
+            case RIGHT -> findSpriteSequence(SpriteID.MS_PACMAN_MUNCHING_RIGHT);
+            case LEFT  -> findSpriteSequence(SpriteID.MS_PACMAN_MUNCHING_LEFT);
+            case UP    -> findSpriteSequence(SpriteID.MS_PACMAN_MUNCHING_UP);
+            case DOWN  -> findSpriteSequence(SpriteID.MS_PACMAN_MUNCHING_DOWN);
         };
     }
 
     public RectShort[] mrPacManMunchingSprites(Direction dir) {
-        return findSprites(switch (dir) {
+        return findSpriteSequence(switch (dir) {
             case RIGHT -> SpriteID.MR_PACMAN_MUNCHING_RIGHT;
             case LEFT  -> SpriteID.MR_PACMAN_MUNCHING_LEFT;
             case UP    -> SpriteID.MR_PACMAN_MUNCHING_UP;
@@ -140,7 +133,7 @@ public final class ArcadeMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
     }
 
     public RectShort[] ghostNormalSprites(GhostPersonality personality, Direction dir) {
-        return findSprites(switch (personality) {
+        return findSpriteSequence(switch (personality) {
             case RED_GHOST_SHADOW -> switch (dir) {
                 case RIGHT -> RED_GHOST_RIGHT;
                 case LEFT -> RED_GHOST_LEFT;

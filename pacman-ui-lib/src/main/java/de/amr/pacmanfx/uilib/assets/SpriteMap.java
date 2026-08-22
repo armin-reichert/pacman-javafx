@@ -3,10 +3,11 @@
  */
 package de.amr.pacmanfx.uilib.assets;
 
+import de.amr.basics.Named;
 import de.amr.basics.math.RectShort;
-import org.tinylog.Logger;
 
-import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
@@ -17,21 +18,19 @@ import static java.util.Objects.requireNonNull;
  * <li>Sprite sequences: {@link RectShort[]}</li>
  * </ul>
  */
-public class SpriteMap<SID extends Enum<SID>> {
+public class SpriteMap {
 
-    private final Class<SID> idEnumClass;
-    private final EnumMap<SID, Object> map;
+    private final Map<Named, Object> map;
 
-    public SpriteMap(Class<SID> idEnumClass) {
-        this.idEnumClass = requireNonNull(idEnumClass);
-        map = new EnumMap<>(idEnumClass);
+    public SpriteMap() {
+        map = new HashMap<>();
     }
 
     public boolean isEmpty() {
         return map.isEmpty();
     }
 
-    private Object get(SID id) {
+    private Object get(Named id) {
         requireNonNull(id);
         Object value = map.get(id);
         if (value == null) {
@@ -40,7 +39,7 @@ public class SpriteMap<SID extends Enum<SID>> {
         return value;
     }
 
-    public final RectShort sprite(SID id) {
+    public final RectShort sprite(Named id) {
         requireNonNull(id);
         Object value = get(id);
         if (!(value instanceof RectShort))    {
@@ -49,7 +48,7 @@ public class SpriteMap<SID extends Enum<SID>> {
         return (RectShort) value;
     }
 
-    public final RectShort[] spriteSequence(SID id) {
+    public final RectShort[] spriteSequence(Named id) {
         requireNonNull(id);
         Object value = get(id);
         if (!(value instanceof RectShort[])) {
@@ -58,7 +57,7 @@ public class SpriteMap<SID extends Enum<SID>> {
         return (RectShort[]) value;
     }
 
-    public final void add(SID id, RectShort... sprites) {
+    public final void add(Named id, RectShort... sprites) {
         requireNonNull(id);
         if (sprites.length == 0) {
             throw new IllegalArgumentException("Sprite list is null! WTF?");
@@ -71,14 +70,6 @@ public class SpriteMap<SID extends Enum<SID>> {
             map.put(id, sprites[0]);
         } else {
             map.put(id, sprites.clone());
-        }
-    }
-
-    public final void checkCompleteness() {
-        for (SID id : idEnumClass.getEnumConstants()) {
-            if (!map.containsKey(id)) {
-                Logger.warn("Found sprite ID without value: {}", id);
-            }
         }
     }
 }

@@ -64,7 +64,7 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer
         }
 
         if (hud.isLevelCounterShown()) {
-            final RectShort[] bonusSymbolSprites = spriteSheet().findSprites(SpriteID.BONUS_SYMBOLS);
+            final RectShort[] bonusSymbolSprites = spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS);
             final float y = gameScene.rendering2D().unscaledHeight() - tilesPx(2) + 2;
             float x = gameScene.rendering2D().unscaledWidth() - tilesPx(4);
             for (int symbolCode : session.levelCounter().data().symbolCodes()) {

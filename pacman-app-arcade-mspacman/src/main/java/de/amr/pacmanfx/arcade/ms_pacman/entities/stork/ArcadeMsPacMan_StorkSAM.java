@@ -19,7 +19,7 @@ public class ArcadeMsPacMan_StorkSAM extends LazySAM {
         setFactory(id -> {
             if (id == CommonSpriteAnimationID.STORK_FLYING) {
                 return new SpriteAnimationBuilder()
-                    .sprites(spriteSheet.findSprites(SpriteID.STORK))
+                    .sprites(spriteSheet.findSpriteSequence(SpriteID.STORK))
                     .frameTicks(8)
                     .repeated()
                     .build(container);

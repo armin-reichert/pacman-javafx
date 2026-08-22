@@ -86,7 +86,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     }
 
     private FacingSprite facingSprite(SpriteID spriteArrayID, int frame, Direction dir) {
-        return new FacingSprite(spriteOrDefault(spriteSheet().findSprites(spriteArrayID), frame), dir);
+        return new FacingSprite(spriteOrDefault(spriteSheet().findSpriteSequence(spriteArrayID), frame), dir);
     }
 
     // Dying animation is realized by providing a sprite facing to the corresponding direction for each animation frame
@@ -108,9 +108,9 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
 
     private RectShort computeBonusSprite(TengenMsPacMan_RenderConfig renderConfig, Bonus bonus) {
         return switch (bonus.bonusState()) {
-            case EDIBLE -> spriteOrDefault(spriteSheet().findSprites(SpriteID.BONUS_SYMBOLS), bonus.data().symbolCode());
+            case EDIBLE -> spriteOrDefault(spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS), bonus.data().symbolCode());
             // Note: sprite sheet has bonus values in different order!
-            case EATEN -> spriteOrDefault(spriteSheet().findSprites(SpriteID.BONUS_VALUES),
+            case EATEN -> spriteOrDefault(spriteSheet().findSpriteSequence(SpriteID.BONUS_VALUES),
                 renderConfig.bonusValueSpriteIndex(bonus.data().symbolCode()));
             case INACTIVE -> RectShort.NULL_RECTANGLE;
         };

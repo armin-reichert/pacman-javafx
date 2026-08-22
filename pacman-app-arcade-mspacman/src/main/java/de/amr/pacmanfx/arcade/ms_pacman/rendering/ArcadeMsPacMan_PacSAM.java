@@ -33,12 +33,12 @@ public class ArcadeMsPacMan_PacSAM extends LazySAM {
                 .build(container);
 
             case CommonSpriteAnimationID.PAC_DYING -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet.findSprites(SpriteID.MS_PACMAN_DYING))
+                .sprites(spriteSheet.findSpriteSequence(SpriteID.MS_PACMAN_DYING))
                 .frameTicks(8)
                 .build(container);
 
             case CommonSpriteAnimationID.MR_PAC_MAN_MUNCHING -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet.findSprites(SpriteID.MR_PACMAN_MUNCHING_LEFT))
+                .sprites(spriteSheet.findSpriteSequence(SpriteID.MR_PACMAN_MUNCHING_LEFT))
                 .frameTicks(2)
                 .repeated()
                 .build(container);

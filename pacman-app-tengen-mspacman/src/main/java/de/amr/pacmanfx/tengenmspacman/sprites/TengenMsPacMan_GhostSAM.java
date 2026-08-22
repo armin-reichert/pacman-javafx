@@ -39,13 +39,13 @@ public class TengenMsPacMan_GhostSAM extends LazySAM {
                 .build(container);
 
             case CommonSpriteAnimationID.GHOST_FRIGHTENED -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet.findSprites(SpriteID.GHOST_FRIGHTENED))
+                .sprites(spriteSheet.findSpriteSequence(SpriteID.GHOST_FRIGHTENED))
                 .frameTicks(FRIGHTENED_TICKS)
                 .repeated()
                 .build(container);
 
             case CommonSpriteAnimationID.GHOST_FLASHING -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet.findSprites(SpriteID.GHOST_FLASHING))
+                .sprites(spriteSheet.findSpriteSequence(SpriteID.GHOST_FLASHING))
                 .frameTicks(FLASHING_TICKS)
                 .repeated()
                 .build(container);
@@ -55,7 +55,7 @@ public class TengenMsPacMan_GhostSAM extends LazySAM {
                 .build(container);
 
             case CommonSpriteAnimationID.GHOST_POINTS -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet.findSprites(SpriteID.GHOST_NUMBERS))
+                .sprites(spriteSheet.findSpriteSequence(SpriteID.GHOST_NUMBERS))
                 .initiallyStopped()
                 .build(container);
 
