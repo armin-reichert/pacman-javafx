@@ -28,6 +28,7 @@ import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
+import de.amr.pacmanfx.ui.gamescene.d2.Rendering2DSupport;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -81,6 +82,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene
 
         subScene.cameraProperty().bind(uiSettings.playSceneDisplay.map(mode -> mode == SCROLLING ? dynamicCamera : fixedCamera));
         subScene.cameraProperty().addListener((_, _, _) -> updateScaling());
+    }
+
+    private void resetRendering2D() {
+        componentsRegistry().removeComp(Rendering2DSupport.class);
 
         rendering2D().scalingProperty().addListener((_, _, _) -> game().session().optLevel()
             .ifPresent(level -> dynamicCamera.updateRange(level.worldMap().terrainLayer()))
@@ -131,13 +136,16 @@ public class TengenMsPacMan_PlayScene2D extends GameScene
         final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().variant().gamePlay();
         final GameSession session = game().session();
         final HUDState hud = session.hud();
+
         hud.showScore().showLevelCounter().showLivesCounter().show();
+
         if (gamePlay.allOptionsHaveDefaultValue(session)) {
             hud.hideGameOptions();
         } else {
             hud.showGameOptions();
         }
 
+        resetRendering2D();
         updateScaling();
 
         dynamicCamera.enterManualMode();

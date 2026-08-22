@@ -62,6 +62,15 @@ public class ComponentRegistry<C> implements Disposable {
         componentMap.put(type, component);
     }
 
+    public final <T extends C> void removeComp(Class<T> type) {
+        if (hasComp(type)) {
+            var comp = componentMap.remove(type);
+            if (comp instanceof Disposable disposable) {
+                disposable.dispose();
+            }
+        }
+    }
+
     /**
      * Returns the entity component of the given type. Throws an exception if there is none.
      *
