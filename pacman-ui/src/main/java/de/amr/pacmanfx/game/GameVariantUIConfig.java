@@ -6,7 +6,6 @@ package de.amr.pacmanfx.game;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.Named;
-import de.amr.basics.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;

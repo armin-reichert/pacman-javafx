@@ -5,10 +5,10 @@ package de.amr.pacmanfx.tengenmspacman.sprites;
 
 import de.amr.basics.Named;
 import de.amr.basics.math.Direction;
-import de.amr.basics.spriteanim.LazySAM;
-import de.amr.basics.spriteanim.SpriteAnimation;
-import de.amr.basics.spriteanim.SpriteAnimationBuilder;
-import de.amr.basics.spriteanim.SpriteAnimContainer;
+import de.amr.pacmanfx.core.spriteanim.LazySAM;
+import de.amr.pacmanfx.core.spriteanim.SpriteAnimation;
+import de.amr.pacmanfx.core.spriteanim.SpriteAnimationBuilder;
+import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 

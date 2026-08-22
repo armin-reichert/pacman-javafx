@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.basics.spriteanim;
+package de.amr.pacmanfx.core.spriteanim;
 
 import org.tinylog.Logger;
 

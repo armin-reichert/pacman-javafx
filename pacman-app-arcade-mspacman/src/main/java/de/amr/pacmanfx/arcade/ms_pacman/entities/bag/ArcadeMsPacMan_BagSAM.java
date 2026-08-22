@@ -4,9 +4,9 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.entities.bag;
 
-import de.amr.basics.spriteanim.LazySAM;
-import de.amr.basics.spriteanim.SpriteAnimationBuilder;
-import de.amr.basics.spriteanim.SpriteAnimContainer;
+import de.amr.pacmanfx.core.spriteanim.LazySAM;
+import de.amr.pacmanfx.core.spriteanim.SpriteAnimationBuilder;
+import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 
