@@ -79,7 +79,8 @@ public class DefaultGameVariantManager implements GameVariantManager {
         if (!isVariantRegistered(variantName)) {
             registerGameVariant(variantName);
         }
-        final GameVariant variant = variantsByName.get(variantName);
+        gameVariantByName(variantName).config().worldMapManager().loadCustomMaps();
+        Logger.info("Loaded custom maps for game variant {}", variantName);
         selectedVariantName.set(variantName);
     }
 
