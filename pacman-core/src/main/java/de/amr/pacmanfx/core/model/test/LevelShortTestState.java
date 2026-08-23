@@ -4,8 +4,10 @@
 package de.amr.pacmanfx.core.model.test;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.entities.LevelCounter;
 import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.event.TestStartedEvent;
 import de.amr.pacmanfx.core.event.bonus.BonusEatenEvent;
@@ -16,7 +18,6 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
-import de.amr.pacmanfx.core.GameSession;
 
 public class LevelShortTestState extends GameState {
 
@@ -113,6 +114,7 @@ public class LevelShortTestState extends GameState {
     @Override
     public void onExit(GameContext game) {
         final LevelCounterSystem levelCounterSystem = game.variant().systems().levelCounterSystem();
-        levelCounterSystem.clearCounter(game.session().levelCounter());
+        final LevelCounter levelCounter = game.session().hudEntities().theOne(LevelCounter.class);
+        levelCounterSystem.clearCounter(levelCounter);
     }
 }

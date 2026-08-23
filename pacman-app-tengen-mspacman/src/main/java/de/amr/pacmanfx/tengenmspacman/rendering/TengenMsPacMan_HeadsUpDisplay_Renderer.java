@@ -5,6 +5,7 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.entities.LevelCounter;
 import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.core.model.HUDState;
@@ -132,7 +133,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
         for (int i = 0; i < session.hud().visibleLifeCount(); ++i) {
             drawSprite(symbolSprite, tilesPx(4 + i * 2), y, true);
         }
-        final LivesCounter livesCounter = session.livesCounter();
+        final LivesCounter livesCounter = session.hudEntities().theOne(LivesCounter.class);
         final int numLives = livesCounter.data().numLives();
         if (numLives > session.hud().maxLivesShown()) {
             fillText(
@@ -145,11 +146,11 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
     }
 
     private void drawLevelCounter(GameSession session, float y) {
+        final LevelCounter levelCounter = session.hudEntities().theOne(LevelCounter.class);
         final RectShort[] symbolSprites = spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS);
         float x = LEVEL_COUNTER_POS_RIGHT - tilesPx(2);
         // symbols are drawn from right to left!
-        final List<Integer> symbolCodes = session.levelCounter()
-            .data().symbolCodes();
+        final List<Integer> symbolCodes = levelCounter.data().symbolCodes();
         for (int symbolCode : symbolCodes) {
             if (0 <= symbolCode && symbolCode < symbolSprites.length) {
                 drawSprite(symbolSprites[symbolCode], x, y, true);

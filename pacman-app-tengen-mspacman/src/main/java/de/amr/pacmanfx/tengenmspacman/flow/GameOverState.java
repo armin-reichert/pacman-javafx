@@ -9,6 +9,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
 import de.amr.pacmanfx.core.entities.House;
+import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.livescounter.system.LivesCounterSystem;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
@@ -46,7 +47,8 @@ public class GameOverState extends GameState {
         countdownAfter = 0;
 
         // Needed if state entry was triggered by user interaction
-        LivesCounterSystem.setNumLives(session.livesCounter(), 0);
+        final LivesCounter livesCounter = session.hudEntities().theOne(LivesCounter.class);
+        LivesCounterSystem.setNumLives(livesCounter, 0);
         session.setPlaying(false);
         session.cheats().clear();
 

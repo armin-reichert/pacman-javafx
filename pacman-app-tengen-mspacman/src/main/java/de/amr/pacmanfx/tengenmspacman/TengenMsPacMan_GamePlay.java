@@ -8,9 +8,9 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameException;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
-import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.PositionSystem;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.*;
@@ -223,7 +223,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         session.setLevel(null);
         session.setPlaying(false);
         initScores(session);
-        configureLevelCounter(game, session.levelCounter());
+        configureLevelCounter(game, session.hudEntities().theOne(LevelCounter.class));
 
         game.variant().gameFlow().restartGameState(game, CommonGameStateID.BOOT);
     }
@@ -356,7 +356,8 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         session.cheats().update(game);
 
         final LevelCounterSystem levelCounterSystem = game.variant().systems().levelCounterSystem();
-        levelCounterSystem.updateCounter(session.levelCounter(), level.number(), level.bonusSymbolCode(0));
+        final LevelCounter levelCounter = session.hudEntities().theOne(LevelCounter.class);
+        levelCounterSystem.updateCounter(levelCounter, level.number(), level.bonusSymbolCode(0));
 
         showLevelMessage(game, level, GameLevelMessageType.READY);
 

@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.entities.Ghost;
+import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.livescounter.system.LivesCounterSystem;
 import de.amr.pacmanfx.core.event.pac.PacEatsFoodEvent;
@@ -49,10 +50,11 @@ public final class CheatActions {
             @Override
             public void execute(GameAppContext app) {
                 final GameSession session = app.game().session();
-                LivesCounterSystem.addLives(session.livesCounter(), 3);
+                final LivesCounter livesCounter = session.hudEntities().theOne(LivesCounter.class);
+                LivesCounterSystem.addLives(livesCounter, 3);
                 session.cheats().notifyCheatUsed();
                 final String msg = app.ui().translations().translate(
-                    "flash.cheat_add_lives", session.livesCounter().data().numLives());
+                    "flash.cheat_add_lives", livesCounter.data().numLives());
                 app.ui().shortMessage(msg);
             }
 

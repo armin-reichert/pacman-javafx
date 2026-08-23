@@ -4,6 +4,8 @@
 
 package de.amr.pacmanfx.core;
 
+import de.amr.basics.QuerySet;
+import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.entities.LevelCounter;
 import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Score;
@@ -29,6 +31,8 @@ public class GameSession {
 
     private GameLevel level;
 
+    private final QuerySet<GameEntity> hudEntities = new QuerySet<>();
+
     private ArcadeHouseGateKeeper gateKeeper;
 
     private boolean attractMode;
@@ -40,10 +44,6 @@ public class GameSession {
     private final Score score;
 
     private final Score highScore;
-
-    private final LevelCounter levelCounter;
-
-    private final LivesCounter livesCounter;
 
     private final GameCheats cheats;
 
@@ -62,12 +62,13 @@ public class GameSession {
         this.cheats = cheats;
         this.score = new Score();
         this.highScore = ScoreSystem.createPersistentScore(ScoreSystem.highScoreFile(variantName));
-        this.levelCounter = new LevelCounter();
-        this.livesCounter = new LivesCounter();
         this.hud = new HUDState();
         this.gateKeeper = new ArcadeHouseGateKeeper();
 
         newFrameState(0);
+
+        hudEntities.add(new LevelCounter());
+        hudEntities.add(new LivesCounter());
 
         cheats.cheatUsedProperty().addListener((_, _, cheated) -> {
             if (cheated) {
@@ -92,6 +93,10 @@ public class GameSession {
             return level;
         }
         throw new IllegalStateException("No game level exists at this time");
+    }
+
+    public QuerySet<GameEntity> hudEntities() {
+        return hudEntities;
     }
 
     public void setGateKeeper(ArcadeHouseGateKeeper gateKeeper) {
@@ -140,14 +145,6 @@ public class GameSession {
 
     public Score highScore() {
         return highScore;
-    }
-
-    public LevelCounter levelCounter() {
-        return levelCounter;
-    }
-
-    public LivesCounter livesCounter() {
-        return livesCounter;
     }
 
     public <T> T value(GameSessionValueKey key, Class<T> type) {

@@ -5,6 +5,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.entities.LevelCounter;
 import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.core.model.HUDState;
@@ -67,10 +68,11 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer
         }
 
         if (hud.isLevelCounterShown()) {
+            final LevelCounter levelCounter = session.hudEntities().theOne(LevelCounter.class);
             final RectShort[] bonusSymbolSprites = spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS);
             final float y = gameScene.reqCanvasRendering().unscaledHeight() - tilesPx(2) + 2;
             float x = gameScene.reqCanvasRendering().unscaledWidth() - tilesPx(4);
-            for (int symbolCode : session.levelCounter().data().symbolCodes()) {
+            for (int symbolCode : levelCounter.data().symbolCodes()) {
                 drawSprite(bonusSymbolSprites[symbolCode], x, y, true);
                 x -= tilesPx(2); // symbols are drawn from right to left
             }
@@ -83,7 +85,7 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer
             for (int i = 0; i < hud.visibleLifeCount(); ++i) {
                 drawSprite(livesCounterSprite, x + i * tilesPx(2), y, true);
             }
-            final LivesCounter livesCounter = session.livesCounter();
+            final LivesCounter livesCounter = session.hudEntities().theOne(LivesCounter.class);
             final int lifeCount = livesCounter.data().numLives();
             if (lifeCount > hud.maxLivesShown()) {
                 // Show text indicating that more lives are available than symbols displayed (cheating may cause this)

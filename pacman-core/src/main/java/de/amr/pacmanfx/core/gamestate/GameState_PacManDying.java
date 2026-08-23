@@ -69,7 +69,7 @@ public final class GameState_PacManDying extends GameState {
         final GameFlowController gameFlow = game.variant().gameFlow();
         final GameSession session = game.session();
         final GameLevel level = session.level();
-        final LivesCounter livesCounter = session.livesCounter();
+        final LivesCounter livesCounter = session.hudEntities().theOne(LivesCounter.class);
         final Pac pac = level.entities().pac();
         final long tick = timer().tickCount();
 

@@ -7,13 +7,14 @@ package de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GamePlay;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_WorldMapManager;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.entities.LevelCounter;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
-import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
 
 import static de.amr.basics.math.RandomNumbers.randomInt;
@@ -55,7 +56,8 @@ public class XXL_MsPacMan_GamePlay extends ArcadeMsPacMan_GamePlay {
         ScoreSystem.setLevelNumber(session.score(), levelNumber);
 
         final LevelCounterSystem levelCounterSystem = game.variant().systems().levelCounterSystem();
-        levelCounterSystem.enableCounter(session.levelCounter(), false);
+        final LevelCounter levelCounter = session.hudEntities().theOne(LevelCounter.class);
+        levelCounterSystem.enableCounter(levelCounter, false);
 
         return level;
     }

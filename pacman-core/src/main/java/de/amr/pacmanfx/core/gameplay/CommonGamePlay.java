@@ -87,7 +87,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
         session.setLevel(level);
         session.setAttractMode(false);
-        session.livesCounter().data().setNumLives(numLives);
+        session.hudEntities().theOne(LivesCounter.class).data().setNumLives(numLives);
         ScoreSystem.setLevelNumber(session.score(), levelNumber);
         session.gateKeeper().setLevelNumber(levelNumber);
 
@@ -105,7 +105,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final int lastLevelNumber = game.variant().rules().lastLevelNumber();
 
         if (oldLevel.number() < lastLevelNumber) {
-            final GameLevel newLevel = buildNormalLevel(game, oldLevel.number() + 1, session.livesCounter().data().numLives());
+            final GameLevel newLevel = buildNormalLevel(game, oldLevel.number() + 1, session.hudEntities().theOne(LivesCounter.class).data().numLives());
             game.eventManager().publishGameEvent(new LevelCreatedEvent(newLevel));
 
             startLevel(game);
@@ -315,7 +315,7 @@ public abstract class CommonGamePlay implements GamePlay {
         }
 
         if (game.variant().rules().scoringRules().isExtraLifeAwarded(oldScore, newScore)) {
-            LivesCounterSystem.addLife(session.livesCounter());
+            LivesCounterSystem.addLife(session.hudEntities().theOne(LivesCounter.class));
             game.eventManager().publishGameEvent(new SpecialScoreEvent(newScore));
         }
     }

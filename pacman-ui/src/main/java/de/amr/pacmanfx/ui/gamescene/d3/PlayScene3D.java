@@ -7,6 +7,8 @@ package de.amr.pacmanfx.ui.gamescene.d3;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameVariantConfig;
+import de.amr.pacmanfx.core.entities.LevelCounter;
+import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
@@ -310,7 +312,7 @@ public class PlayScene3D extends GameScene
         // Create a new 3D game level representation
         level3D = new GameLevel3D(game, registry, viewModel, uiConfig);
         addAdditional3DLevelElements(level3D);
-        level3D.replaceLevelCounter3D(session.levelCounter());
+        level3D.replaceLevelCounter3D(session.hudEntities().theOne(LevelCounter.class));
         level3D.setAnimationManager(new GameLevel3DAnimationManager(registry, level3D, config, uiConfig));
 
         level3DParent.getChildren().setAll(level3D.root());
@@ -319,7 +321,7 @@ public class PlayScene3D extends GameScene
         final Pac pac = level.entities().pac();
         initPac3DProperties(level, pac);
 
-        LivesCounter3DViewSystem.startTracking(session.livesCounter(), pac);
+        LivesCounter3DViewSystem.startTracking(session.hudEntities().theOne(LivesCounter.class), pac);
     }
 
     /**

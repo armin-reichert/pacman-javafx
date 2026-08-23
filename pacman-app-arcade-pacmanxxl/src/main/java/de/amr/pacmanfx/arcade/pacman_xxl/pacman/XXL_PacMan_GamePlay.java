@@ -9,6 +9,7 @@ import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GamePlay;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_WorldMapManager;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.entities.LevelCounter;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
@@ -56,7 +57,8 @@ public class XXL_PacMan_GamePlay extends ArcadePacMan_GamePlay {
         ScoreSystem.setLevelNumber(session.score(), levelNumber);
 
         final LevelCounterSystem levelCounterSystem = game.variant().systems().levelCounterSystem();
-        levelCounterSystem.enableCounter(session.levelCounter(), false);
+        final LevelCounter levelCounter = session.hudEntities().theOne(LevelCounter.class);
+        levelCounterSystem.enableCounter(levelCounter, false);
 
         return level;
     }
