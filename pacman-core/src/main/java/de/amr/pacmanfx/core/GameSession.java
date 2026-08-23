@@ -12,8 +12,8 @@ import de.amr.pacmanfx.core.entities.MessageView;
 import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.gameplay.ArcadeHouseGateKeeper;
-import de.amr.pacmanfx.core.gamestate.FrameState;
 import de.amr.pacmanfx.core.gameplay.hunt.GamePlayStep;
+import de.amr.pacmanfx.core.gamestate.FrameState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.model.HUDState;
@@ -42,10 +42,6 @@ public class GameSession {
 
     private final HUDState hud;
 
-    private final Score score;
-
-    private final Score highScore;
-
     private final GameCheats cheats;
 
     private final Map<GameSessionValueKey, Object> values = new HashMap<>();
@@ -61,8 +57,6 @@ public class GameSession {
         requireNonNull(cheats);
 
         this.cheats = cheats;
-        this.score = new Score();
-        this.highScore = ScoreSystem.createPersistentScore(ScoreSystem.highScoreFile(variantName));
         this.hud = new HUDState();
         this.gateKeeper = new ArcadeHouseGateKeeper();
 
@@ -71,10 +65,12 @@ public class GameSession {
         hudEntities.add(new LevelCounter());
         hudEntities.add(new LivesCounter());
         hudEntities.add(new MessageView());
+        hudEntities.add(new Score(Score.Type.GAME_SCORE));
+        hudEntities.add(ScoreSystem.createHighScore(ScoreSystem.highScoreFile(variantName)));
 
         cheats.cheatUsedProperty().addListener((_, _, cheated) -> {
             if (cheated) {
-                highScore.data().setEnabled(false);
+                highScore().data().setEnabled(false);
             }
         });
     }
@@ -141,12 +137,19 @@ public class GameSession {
         cutScenesEnabled = enabled;
     }
 
+    // Easier access to score and high-score entities
+
     public Score score() {
-        return score;
+        return hudEntities
+            .selectWhere(Score.class, score -> score.type() == Score.Type.GAME_SCORE)
+            .findFirst()
+            .orElseThrow();
     }
 
     public Score highScore() {
-        return highScore;
+        return hudEntities
+            .selectWhere(Score.class, score -> score.type() == Score.Type.HIGH_SCORE)
+            .findFirst().orElseThrow();
     }
 
     public <T> T value(GameSessionValueKey key, Class<T> type) {

@@ -10,10 +10,21 @@ import de.amr.pacmanfx.core.entities.score.comp.ScorePersistencyComp;
 
 import java.util.Optional;
 
+import static java.util.Objects.requireNonNull;
+
 public class Score extends GameEntity {
 
-    public Score() {
+    public enum Type { GAME_SCORE, HIGH_SCORE }
+
+    private final Type type;
+
+    public Score(Type type) {
+        this.type = requireNonNull(type);
         setComp(ScoreDataComp.class, new ScoreDataComp());
+    }
+
+    public Type type() {
+        return type;
     }
 
     public ScoreDataComp data() {

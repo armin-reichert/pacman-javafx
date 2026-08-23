@@ -124,9 +124,9 @@ public class ScoreSystem {
         score.data().setEnabled(enabled);
     }
 
-    public static Score createPersistentScore(File file) {
+    public static Score createHighScore(File file) {
         Objects.requireNonNull(file);
-        final Score score = new Score();
+        final Score score = new Score(Score.Type.HIGH_SCORE);
         final ScorePersistencyComp persistency = new ScorePersistencyComp();
         score.setComp(ScorePersistencyComp.class, persistency);
         persistency.setFile(file);
@@ -135,7 +135,7 @@ public class ScoreSystem {
 
     public static void saveHighScoreIfNeeded(Score currentHighScore) throws IOException {
         final File file = currentHighScore.requirePersistency().file();
-        final Score savedHighScore = createPersistentScore(file);
+        final Score savedHighScore = createHighScore(file);
         load(savedHighScore);
         if (savedHighScore.data().points() < currentHighScore.data().points()) {
             save(currentHighScore);
