@@ -24,12 +24,12 @@ public class GhostAnimationSelectionSystem {
         };
 
         ghost.animationSelection().setAnimationID(id);
+
         spriteAnimController.select(ghost, id);
-        if (id == CommonSpriteAnimationID.GHOST_POINTS) {
-            spriteAnimController.selectAndSetFrame(ghost,
-                CommonSpriteAnimationID.GHOST_POINTS, ghost.animationSelection().frame());
+        if (id != CommonSpriteAnimationID.GHOST_POINTS) {
+            // Points "animation" just displays selected image/frame
+            spriteAnimController.playSelected(ghost);
         }
-        spriteAnimController.playSelected(ghost);
     }
 
     private CommonSpriteAnimationID threatenedOrNormalAnimation(Ghost ghost, Pac pac) {

@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.core.gameplay;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.entities.Bonus;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.LevelCounter;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -35,7 +34,7 @@ public interface GamePlay {
 
     void updateGamePlay(GameContext game, GameLevel level);
 
-    void onEatGhost(GameContext game, GameLevel level, Ghost eatenGhost);
+    void pacEatsGhost(GameContext game, GameLevel level, Ghost eatenGhost);
 
     void activateNextBonus(GameContext game, GameLevel level);
 

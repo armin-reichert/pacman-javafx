@@ -98,7 +98,7 @@ public final class CheatActions {
 
                 if (!killableGhosts.isEmpty()) {
                     level.clearGhostKillChain(); // start again with lowest number for killing ghost
-                    killableGhosts.forEach(ghost -> game.variant().gamePlay().onEatGhost(game, level, ghost));
+                    killableGhosts.forEach(ghost -> game.variant().gamePlay().pacEatsGhost(game, level, ghost));
                     game.variant().gameFlow().enterGameState(game, CommonGameStateID.GAME_LEVEL_EATING_GHOST);
                 }
             }

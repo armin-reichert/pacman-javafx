@@ -11,6 +11,7 @@ import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.entities.Bonus;
 import de.amr.pacmanfx.core.entities.Pac;
+import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventListener;
 import de.amr.pacmanfx.core.event.bonus.BonusEatenEvent;
 import de.amr.pacmanfx.core.event.pac.PacEatsFoodEvent;
@@ -19,9 +20,13 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.rules.GameRules;
 import org.tinylog.Logger;
 
+import java.util.Set;
+
 import static java.util.Objects.requireNonNull;
 
 public class PacEatingEventHandler implements DefaultGameEventListener {
+
+    public static final Set<GhostState> GHOST_TURNBACK_STATES = Set.of(GhostState.FRIGHTENED, GhostState.HUNTING_PAC);
 
     private final GameContext game;
 
@@ -80,7 +85,7 @@ public class PacEatingEventHandler implements DefaultGameEventListener {
         level.clearGhostKillChain();
 
         // Ghosts turn back even if the Pac power time is zero and no event is published!
-        level.entities().ghostsInAnyOfStates(CommonGamePlay.GHOST_TURNBACK_STATES).forEach(systems().worldNavigator()::requestTurnBack);
+        level.entities().ghostsInAnyOfStates(GHOST_TURNBACK_STATES).forEach(systems().worldNavigator()::requestTurnBack);
 
         // Pac-Man "digests" and takes a 3 tick nap
         systems().pacDigestion().digestEnergizer(pac, rules);

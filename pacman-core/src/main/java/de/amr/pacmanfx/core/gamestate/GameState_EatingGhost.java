@@ -6,7 +6,6 @@ package de.amr.pacmanfx.core.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
-import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelEntitySet;
@@ -25,15 +24,7 @@ public final class GameState_EatingGhost extends GameState {
 
     @Override
     public void onEnter(GameContext game) {
-        final GameLevel level = game.session().level();
-
         timer().restartTicks(FREEZE_TICKS);
-        level.entities().ghostsInState(GhostState.EATEN).forEach(eatenGhost -> {
-            final int animationFrame = level.indexInKillChain(eatenGhost);
-            if (animationFrame != -1) {
-                eatenGhost.animationSelection().select(CommonSpriteAnimationID.GHOST_POINTS, animationFrame);
-            }
-        });
     }
 
     @Override

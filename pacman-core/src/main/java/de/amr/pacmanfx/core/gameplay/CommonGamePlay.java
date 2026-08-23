@@ -37,7 +37,6 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Set;
 
 import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
 import static java.util.Objects.requireNonNull;
@@ -46,8 +45,6 @@ import static java.util.Objects.requireNonNull;
  * Common game play functionality. Can be modified by game-variant specific subclasses.
  */
 public abstract class CommonGamePlay implements GamePlay {
-
-    public static final Set<GhostState> GHOST_TURNBACK_STATES = Set.of(GhostState.FRIGHTENED, GhostState.HUNTING_PAC);
 
     @Override
     public void prepareLevelForPlaying(GameContext game) {
@@ -162,24 +159,26 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     @Override
-    public void onEatGhost(GameContext game, GameLevel level, Ghost eatenGhost) {
+    public void pacEatsGhost(GameContext game, GameLevel level, Ghost eatenGhost) {
         requireNonNull(game);
         requireNonNull(level);
         requireNonNull(eatenGhost);
 
         final GameSystems systems = game.variant().systems();
 
+        // Eating ghost wins 200, 400, 800, 1600 points
         final int killedBefore = level.ghostKillChainSize();
         final int points = game.variant().rules().scoringRules().pointsForGhost(killedBefore);
-
         scorePoints(game, points, level.number());
-        Logger.info("Scored {} points for killing {}", points, eatenGhost.name());
+
+        // Stop all ghost animations
+        for (Ghost ghost : level.entities().ghosts()) {
+            systems.actorSpriteAnimController().stopSelected(ghost);
+        }
 
         systems.ghostState().changeGhostState(eatenGhost, GhostState.EATEN);
-
         // Animation index is 0-based, animation frame 0 shows points for *first* killed ghost...
         systems.actorSpriteAnimController().selectAndSetFrame(eatenGhost, CommonSpriteAnimationID.GHOST_POINTS, killedBefore);
-        level.entities().ghosts().forEach(systems.actorSpriteAnimController()::stopSelected);
 
         level.addToGhostKillChain(eatenGhost);
         level.entities().pac().hide();
@@ -312,7 +311,7 @@ public abstract class CommonGamePlay implements GamePlay {
                 .filter(ghost -> ghost.state().enumValue() == GhostState.FRIGHTENED)
                 .forEach(step.ghostsKilled()::add);
             // More than one ghost might have been killed in this step
-            step.ghostsKilled().forEach(ghost -> onEatGhost(game, level, ghost));
+            step.ghostsKilled().forEach(ghost -> pacEatsGhost(game, level, ghost));
         }
     }
 
