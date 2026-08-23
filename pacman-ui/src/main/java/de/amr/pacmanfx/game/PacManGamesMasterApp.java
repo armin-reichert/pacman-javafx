@@ -14,6 +14,7 @@ import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventManager;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.event.gameplay.GameStateChangeEvent;
+import de.amr.pacmanfx.core.gameplay.PacPowerEventHandler;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
@@ -221,6 +222,7 @@ public final class PacManGamesMasterApp implements GameAppContext {
         ui.viewModel().maze3D.init(gameVariant.uiConfig().worldSettings().maze());
 
         ui.spriteAnimTimer().attachAnimContainer(gameVariant.spriteAnimContainer());
+        //TODO do not start here
         ui.spriteAnimTimer().start();
 
         game = new GameContext(
@@ -231,7 +233,11 @@ public final class PacManGamesMasterApp implements GameAppContext {
         createSession();
 
         stateChangeEventMapper = new StateChangeEventMapper(game.eventManager());
+
+        // Just to be sure:
+        game.eventManager().clear();
         game.eventManager().addGameEventSubscriber(ui);
+        game.eventManager().addGameEventSubscriber(new PacPowerEventHandler(game));
 
         gameVariant.config().gameFlow().addStateChangeListener(stateChangeEventMapper);
     }
@@ -247,7 +253,7 @@ public final class PacManGamesMasterApp implements GameAppContext {
         ui.spriteAnimTimer().detachAnimationContainer();
         ui.soundManager().dispose();
 
-        game.eventManager().removeGameEventSubscriber(ui);
+        game.eventManager().clear();
         game = null;
     }
 }

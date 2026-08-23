@@ -33,6 +33,11 @@ public class DefaultGameEventManager implements GameEventManager {
     }
 
     @Override
+    public void clear() {
+        subscribers.clear();
+    }
+
+    @Override
     public void publishGameEvent(GameEvent event) {
         requireNonNull(event);
         if (Logger.isTraceEnabled()) {

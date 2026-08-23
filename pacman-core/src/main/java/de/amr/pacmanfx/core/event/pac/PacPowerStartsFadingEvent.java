@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.core.event.pac;
 
-import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.event.GameEvent;
 
-public record PacPowerStartsFadingEvent(GameEntity pac) implements GameEvent {}
+public record PacPowerStartsFadingEvent(Pac pac) implements GameEvent {}

@@ -128,6 +128,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final GameRules rules = game.variant().rules();
         final GameSession session = game.session();
         final GamePlayStep gamePlayStep = session.thisFrame().gamePlayStep();
+        final Pac pac = level.entities().pac();
 
         final ActorCollisionHandler collisionHandler = new ActorCollisionHandler(gamePlayStep);
         collisionHandler.setStrategy(rules.actorCollisionRules().getCollisionStrategy());
@@ -135,44 +136,16 @@ public abstract class CommonGamePlay implements GamePlay {
 
         level.huntingTimerStrategy().update(rules, level.number());
         session.gateKeeper().unlockGhostIfPossible(game, level);
-        updateRemainingPacPower(game, level, level.entities().pac());
+
+        if (pac.power().ends()) {
+            game.eventManager().publishGameEvent(new PacPowerEndsEvent(pac));
+        }
+        else if (pac.power().isFadingStart()) {
+            game.eventManager().publishGameEvent(new PacPowerStartsFadingEvent(pac));
+        }
 
         collisionHandler.detectCollisions(level);
         evalCollisions(game, level, gamePlayStep);
-    }
-
-    @Override
-    public void onPacPowerStarts(GameContext game, GameLevel level, Pac pac, long ticks) {
-        final GameSystems systems = game.variant().systems();
-
-        Logger.info("Pac power started. Power ticks: {}", ticks);
-
-        level.huntingTimerStrategy().stop();
-
-        level.entities()
-            .ghostsInState(GhostState.HUNTING_PAC)
-            .forEach(ghost -> systems.ghostState().changeGhostState(ghost, GhostState.FRIGHTENED));
-
-        systems.pacPower().start(pac, ticks);
-    }
-
-    @Override
-    public void onPacPowerStartsFading(GameContext game, GameLevel level, Pac pac) {
-        Logger.info("Pac power started fading. Power ticks remaining: {}", pac.power().ticksRemaining());
-    }
-
-    @Override
-    public void onPacPowerEnds(GameContext game, GameLevel level, Pac pac) {
-        final GameSystems systems = game.variant().systems();
-
-        level.clearGhostKillChain();
-
-        level.entities().ghostsInState(GhostState.FRIGHTENED).forEach(ghost ->
-            systems.ghostState().changeGhostState(ghost, GhostState.HUNTING_PAC));
-
-        level.huntingTimerStrategy().start();
-
-        Logger.info("Pac power ended, hunting resumed. Power ticks remaining: {}", pac.power().ticksRemaining());
     }
 
     @Override
@@ -201,20 +174,24 @@ public abstract class CommonGamePlay implements GamePlay {
         final GameRules rules = game.variant().rules();
         final Pac pac = level.entities().pac();
 
+        // Eating an energizer earns 50 points in Arcade Pac-Man
         scorePoints(game, rules.scoringRules().pointsForEnergizer(), level.number());
 
+        // The "gate keeper" of the ghost house has counters for the eaten food driving its behavior
         session.gateKeeper().registerFoodEaten(level);
+
+        // The "kill chain" starts: 200, 400, 800, 1600 points for ghosts eaten with same energizer power
         level.clearGhostKillChain();
-        // Ghosts make turnback also in case pac power time is zero!
+
+        // Ghosts turn back even if the Pac power time is zero and no event is published!
         level.entities().ghostsInAnyOfStates(GHOST_TURNBACK_STATES).forEach(systems.worldNavigator()::requestTurnBack);
 
+        // Pac-Man "digests" and takes a 3 tick nap
         systems.pacDigestion().digestEnergizer(pac, rules);
 
-        final long powerTicks = TickTimer.secToTicks(rules.pacPowerSeconds(level.number()));
-        if (powerTicks > 0) {
-            //TODO: move into event handler for the published event!
-            onPacPowerStarts(game, level, pac, powerTicks);
-            game.eventManager().publishGameEvent(new PacPowerStartsEvent(pac));
+        final long powerDurationTicks = TickTimer.secToTicks(rules.pacPowerSeconds(level.number()));
+        if (powerDurationTicks > 0) {
+            game.eventManager().publishGameEvent(new PacPowerStartsEvent(pac, powerDurationTicks));
         }
     }
 
@@ -439,18 +416,5 @@ public abstract class CommonGamePlay implements GamePlay {
             // Not sure if colliding ghosts should also be moved back to visible area
             Logger.info("Detected collision while teleporting, moved Pac-Man back into world");
         });
-    }
-
-    private void updateRemainingPacPower(GameContext game, GameLevel level, Pac pac) {
-        final PacPowerComp power = pac.power();
-        if (power.ends()) {
-            //TODO move into event handler!
-            onPacPowerEnds(game, level, pac);
-            game.eventManager().publishGameEvent(new PacPowerEndsEvent(pac));
-        }
-        else if (power.isFadingStart()) {
-            onPacPowerStartsFading(game, level, pac);
-            game.eventManager().publishGameEvent(new PacPowerStartsFadingEvent(pac));
-        }
     }
 }

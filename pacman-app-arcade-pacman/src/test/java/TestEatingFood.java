@@ -48,6 +48,9 @@ public class TestEatingFood {
         public void removeGameEventSubscriber(GameEventListener listener) {}
 
         @Override
+        public void clear() {}
+
+        @Override
         public void publishGameEvent(GameEvent event) {}
     };
 

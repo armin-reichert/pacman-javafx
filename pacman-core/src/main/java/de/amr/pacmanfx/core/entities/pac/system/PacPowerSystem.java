@@ -11,9 +11,9 @@ import org.tinylog.Logger;
 
 public final class PacPowerSystem {
 
-    public void start(Pac pac, long ticks) {
-        pac.power().timer().restartTicks(ticks);
-        Logger.debug("Power timer activated, {} ticks ({0.00} sec)", ticks, ticks / 60f);
+    public void start(Pac pac, long durationTicks) {
+        pac.power().timer().restartTicks(durationTicks);
+        Logger.debug("Power timer activated, {} ticks ({0.00} sec)", durationTicks, durationTicks / 60f);
     }
 
     public void reset(Pac pac) {

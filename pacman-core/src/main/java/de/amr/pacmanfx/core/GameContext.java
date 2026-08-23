@@ -22,11 +22,7 @@ public class GameContext {
 
     private GameSession session;
 
-    public GameContext(
-        CoinMechanism coinMechanism,
-        GameVariantConfig variant,
-        GameEventManager eventManager)
-    {
+    public GameContext(CoinMechanism coinMechanism, GameVariantConfig variant, GameEventManager eventManager) {
         this.coinMechanism = requireNonNull(coinMechanism);
         this.variant = requireNonNull(variant);
         this.eventManager = requireNonNull(eventManager);

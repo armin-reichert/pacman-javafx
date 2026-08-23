@@ -12,5 +12,7 @@ public interface GameEventManager {
 
     void removeGameEventSubscriber(GameEventListener listener);
 
+    void clear();
+
     void publishGameEvent(GameEvent event);
 }

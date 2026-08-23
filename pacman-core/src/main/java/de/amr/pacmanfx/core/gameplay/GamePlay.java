@@ -37,12 +37,6 @@ public interface GamePlay {
 
     void updateGamePlay(GameContext game, GameLevel level);
 
-    void onPacPowerStarts(GameContext game, GameLevel level, Pac pac, long ticks);
-
-    void onPacPowerEnds(GameContext game, GameLevel level, Pac pac);
-
-    void onPacPowerStartsFading(GameContext game, GameLevel level, Pac pac);
-
     void onEatPellet(GameContext game, GameLevel level, Vector2i tile);
 
     void onEatEnergizer(GameContext game, GameLevel level, Vector2i tile);
