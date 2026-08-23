@@ -57,7 +57,7 @@ public class GameScene implements GameSceneController, DefaultGameEventListener,
         return componentRegistry.reqComp(ActionBindingsSupport.class);
     }
 
-    public ComponentRegistry<GameSceneComponent> componentsRegistry() {
+    public ComponentRegistry<GameSceneComponent> components() {
         return componentRegistry;
     }
 

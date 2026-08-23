@@ -42,7 +42,7 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Ga
     public ArcadePacMan_IntroScene_Renderer(GameVariantRenderConfig renderConfig, GameScene scene, ActorSpriteAnimController animSystem, Canvas canvas) {
         super(canvas);
 
-        final CanvasRenderingComp r2D = scene.componentsRegistry().reqComp(CanvasRenderingComp.class);
+        final CanvasRenderingComp r2D = scene.components().reqComp(CanvasRenderingComp.class);
 
         actorRenderer = r2D.configureRenderer((ArcadePacMan_ActorRenderer) renderConfig.createActorRenderer(animSystem, canvas));
 

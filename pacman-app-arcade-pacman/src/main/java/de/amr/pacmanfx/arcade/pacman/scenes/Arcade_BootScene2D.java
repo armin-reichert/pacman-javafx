@@ -29,7 +29,7 @@ public class Arcade_BootScene2D extends GameScene {
 
     public Arcade_BootScene2D(GameAppContext app) {
         super(app);
-        componentsRegistry().setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
+        components().setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
 
         // Make some noise
         final var rnd = new java.security.SecureRandom();

@@ -164,7 +164,7 @@ public class PlayScene3D extends GameScene
     @Override
     public void onInput() {
         final Keyboard keyboard = app().input().keyboard();
-        componentsRegistry().optComp(ActionBindingsSupport.class).ifPresent(comp -> {
+        components().optComp(ActionBindingsSupport.class).ifPresent(comp -> {
             final Optional<GameAction> matchingAction = comp.bindingsMap().executeMatchingAction(app());
             if (matchingAction.isEmpty()) {
                 // Handle CTRL-PLUS, CTRL_MINUS and CTRL-0
@@ -335,7 +335,7 @@ public class PlayScene3D extends GameScene
     protected void addAdditional3DLevelElements(GameLevel3D level3D) {}
 
     protected void bindActions() {
-        componentsRegistry().optComp(ActionBindingsSupport.class)
+        components().optComp(ActionBindingsSupport.class)
             .ifPresent(comp -> comp.bindingsMap().registerAllBindings(actionBindings));
     }
 

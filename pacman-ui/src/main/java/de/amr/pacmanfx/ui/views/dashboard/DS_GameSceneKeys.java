@@ -27,9 +27,9 @@ public class DS_GameSceneKeys extends GameDashboardSection {
 
     private void updateInfo(GameAppContext app, GameScene gameScene) {
         clearSection();
-        if (gameScene.componentsRegistry().hasComp(ActionBindingsSupport.class)) {
+        if (gameScene.components().hasComp(ActionBindingsSupport.class)) {
             final ActionBindingsRegistry registry = gameScene
-                .componentsRegistry()
+                .components()
                 .reqComp(ActionBindingsSupport.class)
                 .bindingsMap();
 

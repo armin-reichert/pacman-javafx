@@ -63,18 +63,17 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
 
     private LevelCompletedAnimation levelCompletedAnimation;
 
-    public TengenMsPacMan_PlayScene2D(GameAppContext appContext) {
-        super(appContext);
-
-        componentsRegistry().setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
+    public TengenMsPacMan_PlayScene2D(GameAppContext app) {
+        super(app);
+        components().setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
 
         dynamicCamera = new PlayScene2DCamera();
 
-        rootPane.backgroundProperty().bind(appContext.ui().viewModel().common2D.canvasBackgroundColorProperty.map(Background::fill));
+        rootPane.backgroundProperty().bind(app.ui().viewModel().common2D.canvasBackgroundColorProperty.map(Background::fill));
 
         // Scene size gets bound to parent scene when embedded in game view, initial size doesn't matter.
         subScene = new SubScene(rootPane, 88, 88);
-        subScene.fillProperty().bind(appContext.ui().viewModel().common2D.canvasBackgroundColorProperty);
+        subScene.fillProperty().bind(app.ui().viewModel().common2D.canvasBackgroundColorProperty);
         subScene.heightProperty().addListener((_, _, _) -> updateScaling());
 
         final var uiSettings = uiSettings();
@@ -232,8 +231,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
     };
 
     private void resetRendering2D() {
-        // Remove component, will be recreated on-demand!
-        componentsRegistry().removeComp(CanvasRenderingComp.class);
+        // Replace component. TODO: Check why necessary
+        components().removeComp(CanvasRenderingComp.class);
+        components().setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
 
         reqCanvasRendering().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         // Default height. Varies with map size.

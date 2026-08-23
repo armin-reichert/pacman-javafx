@@ -49,9 +49,9 @@ public class TengenMsPacMan_CutScene2 extends GameScene {
     private Pac pacMan;
     private Pac msPacMan;
 
-    public TengenMsPacMan_CutScene2(GameAppContext appContext) {
-        super(appContext);
-        componentsRegistry().setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
+    public TengenMsPacMan_CutScene2(GameAppContext app) {
+        super(app);
+        components().setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
         reqCanvasRendering().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         reqCanvasRendering().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
     }

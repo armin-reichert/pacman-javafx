@@ -84,7 +84,7 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
         requireNonNull(animSystem);
         requireNonNull(canvas);
 
-        final CanvasRenderingComp r2D = gameScene.componentsRegistry().reqComp(CanvasRenderingComp.class);
+        final CanvasRenderingComp r2D = gameScene.components().reqComp(CanvasRenderingComp.class);
 
         final GameScene2D_Renderer renderer = switch (gameScene) {
             case Arcade_BootScene2D ignored      -> new Arcade_BootScene2D_Renderer(gameScene, canvas,
@@ -113,7 +113,7 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
         requireNonNull(animSystem);
         requireNonNull(canvas);
 
-        final CanvasRenderingComp r2D = gameScene.componentsRegistry().reqComp(CanvasRenderingComp.class);
+        final CanvasRenderingComp r2D = gameScene.components().reqComp(CanvasRenderingComp.class);
         final var renderer = new ArcadePacMan_HeadsUpDisplay_Renderer(canvas);
         renderer.setImageSmoothing(true);
         r2D.configureRenderer(renderer);

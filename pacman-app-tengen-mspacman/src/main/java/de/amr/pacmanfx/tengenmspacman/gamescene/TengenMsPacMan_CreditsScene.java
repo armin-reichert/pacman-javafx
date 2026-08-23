@@ -27,9 +27,9 @@ public class TengenMsPacMan_CreditsScene extends GameScene {
     public DisplayMode displayMode = DisplayMode.ORIGINAL_AUTHORS;
     public float fadeProgress = 0;
 
-    public TengenMsPacMan_CreditsScene(GameAppContext appContext) {
-        super(appContext);
-        componentsRegistry().setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
+    public TengenMsPacMan_CreditsScene(GameAppContext app) {
+        super(app);
+        components().setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
         reqCanvasRendering().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         reqCanvasRendering().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
     }

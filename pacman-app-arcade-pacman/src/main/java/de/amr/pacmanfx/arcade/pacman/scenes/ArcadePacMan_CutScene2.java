@@ -60,7 +60,7 @@ public class ArcadePacMan_CutScene2 extends GameScene {
 
     public ArcadePacMan_CutScene2(GameAppContext app) {
         super(app);
-        componentsRegistry().setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
+        components().setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
     }
 
     @Override

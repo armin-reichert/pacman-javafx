@@ -64,9 +64,9 @@ public class TengenMsPacMan_OptionsScene extends GameScene {
     private int idleTicks;
     public int initialDelay;
 
-    public TengenMsPacMan_OptionsScene(GameAppContext appContext) {
-        super(appContext);
-        componentsRegistry().setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
+    public TengenMsPacMan_OptionsScene(GameAppContext app) {
+        super(app);
+        components().setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
         reqCanvasRendering().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         reqCanvasRendering().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
     }

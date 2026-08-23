@@ -9,11 +9,13 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 
 public class ArcadeMsPacMan_StartScene extends GameScene {
 
-    public ArcadeMsPacMan_StartScene(GameAppContext appContext) {
-        super(appContext);
+    public ArcadeMsPacMan_StartScene(GameAppContext app) {
+        super(app);
+        components().setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
     }
 
     @Override

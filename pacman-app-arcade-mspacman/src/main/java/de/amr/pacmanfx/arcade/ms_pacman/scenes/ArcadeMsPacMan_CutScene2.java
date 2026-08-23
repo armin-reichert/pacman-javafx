@@ -17,6 +17,7 @@ import de.amr.pacmanfx.game.GameVariant;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import java.util.List;
@@ -40,8 +41,9 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene {
     public Pac msPacMan;
     public Clapperboard clapperboard;
 
-    public ArcadeMsPacMan_CutScene2(GameAppContext appContext) {
-        super(appContext);
+    public ArcadeMsPacMan_CutScene2(GameAppContext app) {
+        super(app);
+        components().setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
     }
 
     @Override

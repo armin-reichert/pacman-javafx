@@ -71,9 +71,9 @@ public class TengenMsPacMan_IntroScene extends GameScene {
     private int waitBeforeRising;
     public boolean dark;
 
-    public TengenMsPacMan_IntroScene(GameAppContext appContext) {
-        super(appContext);
-        componentsRegistry().setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
+    public TengenMsPacMan_IntroScene(GameAppContext app) {
+        super(app);
+        components().setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
         reqCanvasRendering().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         reqCanvasRendering().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
         flow = new StateMachine<>(List.of(SceneState.values()));

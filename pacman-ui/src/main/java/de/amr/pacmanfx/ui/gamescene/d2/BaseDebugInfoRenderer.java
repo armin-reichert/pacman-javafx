@@ -47,7 +47,7 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
         ctx.setFont(debugTextFont);
         ctx.fillText(stateText, 0, scaled(3 * WorldMap.TS));
 
-        final CanvasRenderingComp r2D = scene.componentsRegistry().reqComp(CanvasRenderingComp.class);
+        final CanvasRenderingComp r2D = scene.components().reqComp(CanvasRenderingComp.class);
         drawTileGrid(r2D.unscaledWidth(), r2D.unscaledHeight(), Color.LIGHTGRAY);
     }
 

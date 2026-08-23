@@ -49,7 +49,7 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
         requireNonNull(scene);
         this.spriteSheet = requireNonNull(spriteSheet);
 
-        final CanvasRenderingComp r2D = scene.componentsRegistry().reqComp(CanvasRenderingComp.class);
+        final CanvasRenderingComp r2D = scene.components().reqComp(CanvasRenderingComp.class);
 
         final GameVariantRenderConfig renderConfig = scene.app().gameVariants().currentGameVariant().uiConfig().renderConfig();
         levelRenderer = r2D.configureRenderer(renderConfig.createGameLevelRenderer(animSystem, canvas));
