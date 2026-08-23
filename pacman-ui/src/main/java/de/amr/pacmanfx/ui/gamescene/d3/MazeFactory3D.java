@@ -111,14 +111,13 @@ public class MazeFactory3D {
     }
 
     private void createHouse3D(House house, House3DSettings settings, WorldMapColorScheme colorScheme) {
-        if (!house.hasComp(House3DViewComp.class)) {
-            house.setComp(House3DViewComp.class, new House3DViewComp(
-                house.floorplan(),
-                settings.baseHeight(),
-                settings.wallThickness(),
-                settings.opacity()
-            ));
-        }
+        house.removeComp(House3DViewComp.class);
+        house.setComp(House3DViewComp.class, new House3DViewComp(
+            house.floorplan(),
+            settings.baseHeight(),
+            settings.wallThickness(),
+            settings.opacity()
+        ));
         final var house3D = house.reqComp(House3DViewComp.class);
 
         // apply color scheme
