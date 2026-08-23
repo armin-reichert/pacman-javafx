@@ -7,7 +7,7 @@ import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.core.model.world.map.WorldMapColorSchemeImpl;
+import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
 import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.scene.canvas.Canvas;
@@ -78,7 +78,7 @@ public class GenericMapRenderer extends BaseRenderer {
 
             // Color scheme is set by the map selector
             final FoodLayer foodLayer = worldMap.foodLayer();
-            final WorldMapColorSchemeImpl foodColorScheme = worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
+            final GenericWorldMapColorScheme foodColorScheme = worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
             final Color pelletColor = Color.valueOf(foodColorScheme.pellet());
             foodRenderer.setPelletColor(pelletColor);
             foodLayer.tiles()

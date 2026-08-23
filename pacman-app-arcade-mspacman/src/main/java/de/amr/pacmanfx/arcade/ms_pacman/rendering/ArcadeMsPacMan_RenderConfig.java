@@ -18,7 +18,7 @@ import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.core.model.world.map.WorldMapColorSchemeImpl;
+import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
@@ -44,13 +44,13 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
     private static final Rectangle2D BOOT_SCENE_SPRITES = new Rectangle2D(380, 0, 204, 208);
 
     /** Colors used by the six Ms. Pac-Man Arcade maps. */
-    private static final WorldMapColorSchemeImpl[] MAP_COLOR_SCHEMES = {
-        new WorldMapColorSchemeImpl("ffb7ae", "ff0000", "fcb5ff", "dedeff"),
-        new WorldMapColorSchemeImpl("47b7ff", "dedeff", "fcb5ff", "ffff00"),
-        new WorldMapColorSchemeImpl("de9751", "dedeff", "fcb5ff", "ff0000"),
-        new WorldMapColorSchemeImpl("2121ff", "ffb751", "fcb5ff", "dedeff"),
-        new WorldMapColorSchemeImpl("ffb7ff", "ffff00", "fcb5ff", "00ffff"),
-        new WorldMapColorSchemeImpl("ffb7ae", "ff0000", "fcb5ff", "dedeff")
+    private static final GenericWorldMapColorScheme[] MAP_COLOR_SCHEMES = {
+        new GenericWorldMapColorScheme("ffb7ae", "ff0000", "fcb5ff", "dedeff"),
+        new GenericWorldMapColorScheme("47b7ff", "dedeff", "fcb5ff", "ffff00"),
+        new GenericWorldMapColorScheme("de9751", "dedeff", "fcb5ff", "ff0000"),
+        new GenericWorldMapColorScheme("2121ff", "ffb751", "fcb5ff", "dedeff"),
+        new GenericWorldMapColorScheme("ffb7ff", "ffff00", "fcb5ff", "00ffff"),
+        new GenericWorldMapColorScheme("ffb7ae", "ff0000", "fcb5ff", "dedeff")
     };
 
     private final AssetMap assets;
@@ -70,7 +70,7 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
     private Image createBrightMazeImage(int index) {
         final RectShort mazeSprite = spriteSheet().findSpriteSequence(SpriteID.EMPTY_MAPS)[index];
         final Image mazeImage = spriteSheet().image(mazeSprite);
-        final WorldMapColorSchemeImpl colorScheme = MAP_COLOR_SCHEMES[index];
+        final GenericWorldMapColorScheme colorScheme = MAP_COLOR_SCHEMES[index];
         final Map<Color, Color> colorChanges = Map.of(
             Color.valueOf(colorScheme.wallStroke()), ARCADE_WHITE,
             Color.valueOf(colorScheme.door()), Color.TRANSPARENT
@@ -89,7 +89,7 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public WorldMapColorSchemeImpl colorScheme(WorldMap worldMap, WorldSettings worldSettings) {
+    public GenericWorldMapColorScheme colorScheme(WorldMap worldMap, WorldSettings worldSettings) {
         requireNonNull(worldMap);
         final int index = worldMap.getConfigValue(WorldMapConfigKey.COLOR_MAP_INDEX);
         return GlobalAssets.enhanceContrast(worldSettings, MAP_COLOR_SCHEMES[index]);

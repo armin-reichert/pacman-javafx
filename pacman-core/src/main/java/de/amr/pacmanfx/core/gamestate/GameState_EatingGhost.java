@@ -29,7 +29,7 @@ public final class GameState_EatingGhost extends GameState {
 
         timer().restartTicks(FREEZE_TICKS);
         level.entities().ghostsInState(GhostState.EATEN).forEach(eatenGhost -> {
-            final int animationFrame = level.indexInGhostKilledChain(eatenGhost);
+            final int animationFrame = level.indexInKillChain(eatenGhost);
             if (animationFrame != -1) {
                 eatenGhost.animationSelection().select(CommonSpriteAnimationID.GHOST_POINTS, animationFrame);
             }

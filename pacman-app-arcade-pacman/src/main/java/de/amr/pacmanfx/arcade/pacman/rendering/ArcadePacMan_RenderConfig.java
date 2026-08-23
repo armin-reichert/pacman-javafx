@@ -14,7 +14,7 @@ import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.core.model.world.map.WorldMapColorSchemeImpl;
+import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
@@ -36,7 +36,7 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
 
-    private static final WorldMapColorSchemeImpl WORLD_MAP_COLOR_SCHEME = new WorldMapColorSchemeImpl(
+    private static final GenericWorldMapColorScheme WORLD_MAP_COLOR_SCHEME = new GenericWorldMapColorScheme(
         ARCADE_BLACK.toString(), ARCADE_BLUE.toString(), ARCADE_PINK.toString(), ARCADE_ROSE.toString()
     );
 
@@ -73,7 +73,7 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public WorldMapColorSchemeImpl colorScheme(WorldMap worldMap, WorldSettings worldSettings) {
+    public GenericWorldMapColorScheme colorScheme(WorldMap worldMap, WorldSettings worldSettings) {
         requireNonNull(worldMap);
         return GlobalAssets.enhanceContrast(worldSettings, WORLD_MAP_COLOR_SCHEME);
     }

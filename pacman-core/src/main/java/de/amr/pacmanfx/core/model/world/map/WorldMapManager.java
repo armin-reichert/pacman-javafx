@@ -60,8 +60,8 @@ public interface WorldMapManager {
         return maps;
     }
 
-    static WorldMapColorSchemeImpl extractColorScheme(WorldMap worldMap) {
-        return new WorldMapColorSchemeImpl(
+    static GenericWorldMapColorScheme extractColorScheme(WorldMap worldMap) {
+        return new GenericWorldMapColorScheme(
             worldMap.terrainLayer().propertyMap().getOrDefault(WorldMapPropertyName.COLOR_WALL_FILL,   "000000"),
             worldMap.terrainLayer().propertyMap().getOrDefault(WorldMapPropertyName.COLOR_WALL_STROKE, "0000ff"),
             worldMap.terrainLayer().propertyMap().getOrDefault(WorldMapPropertyName.COLOR_DOOR,        "00ffff"),

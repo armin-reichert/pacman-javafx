@@ -7,15 +7,15 @@ package de.amr.pacmanfx.ui.gamescene.d3;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
+import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.core.model.world.map.WorldMapColorSchemeImpl;
-import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
+import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.entities3D.levelcounter.system.LevelCounter3DViewSystem;
 import de.amr.pacmanfx.ui.entities3D.livescounter.comp.LivesCounter3DViewComp;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.HideGhost3DRiseNumberBoxAnimation;
@@ -40,8 +40,8 @@ import de.amr.pacmanfx.uilib.entities3D.world.Energizer3D;
 import de.amr.pacmanfx.uilib.entities3D.world.NumberBox3D;
 import de.amr.pacmanfx.uilib.entities3D.world.Pellet3D;
 import javafx.scene.Group;
-import javafx.scene.Node;
 import javafx.scene.PointLight;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.DrawMode;
@@ -166,39 +166,32 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         }
     }
 
-    public void addKilledGhostNumberBox(Ghost ghost) {
-        final Factory3D factory3D = uiConfig.factory3D();
+    public void addKilledGhostNumberBox(Ghost ghost, GameVariantUIConfig uiConfig, int killIndex) {
+        final Image numberImage = uiConfig.renderConfig().killedGhostPointsImage(killIndex);
+        final NumberBox3D numberBox = new NumberBox3D(numberImage);
 
-        final int killIndex = level.indexInGhostKilledChain(ghost);
-        final Node numberBoxNode = factory3D.createNumberBox3D(uiConfig, killIndex);
 
         final Ghost3DViewComp ghost3DView = ghost.reqComp(Ghost3DViewComp.class);
-        numberBoxNode.setTranslateX(ghost3DView.root().getTranslateX());
-        numberBoxNode.setTranslateY(ghost3DView.root().getTranslateY());
-        numberBoxNode.setTranslateZ(ghost3DView.root().getTranslateZ());
-        getChildren().add(numberBoxNode);
+        numberBox.setTranslateX(ghost3DView.root().getTranslateX());
+        numberBox.setTranslateY(ghost3DView.root().getTranslateY());
+        numberBox.setTranslateZ(ghost3DView.root().getTranslateZ());
+        getChildren().add(numberBox);
 
-        //TODO move into animation system
-        if (numberBoxNode instanceof NumberBox3D numberBox3D) {
-            final double risingHeight = (killIndex + 1) * 12;
-            final var animation = new HideGhost3DRiseNumberBoxAnimation(ghost3DView, numberBox3D, risingHeight);
-            animation.delegate().setOnFinished(_ -> getChildren().remove(numberBoxNode));
-            animation.playFromStart();
-        }
+        //TODO move elsewhere (animation system)
+        final double risingHeight = (killIndex + 1) * 12;
+        final var animation = new HideGhost3DRiseNumberBoxAnimation(ghost3DView, numberBox, risingHeight);
+        animation.delegate().setOnFinished(_ -> getChildren().remove(numberBox));
+        animation.playFromStart();
     }
 
     // Private area, no trespassing!
 
     private void createMaze3D(GameViewModel viewModel) {
-        final WorldMapColorSchemeImpl colorScheme = uiConfig.renderConfig().colorScheme(level.worldMap(), uiConfig.worldSettings());
+        final GenericWorldMapColorScheme colorScheme = uiConfig.renderConfig().colorScheme(level.worldMap(), uiConfig.worldSettings());
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final House house = level.entities().house();
-        maze3D = uiConfig.factory3D().createMaze3D(
-            house,
-            terrain,
-            uiConfig.worldSettings(),
-            colorScheme
-        );
+
+        maze3D = uiConfig.factory3D().createMaze3D(house, terrain, uiConfig.worldSettings(), colorScheme);
 
         maze3D.drawModeProperty()      .bind(viewModel.common3D.drawModeProperty);
         maze3D.wallOpacityProperty()   .bind(viewModel.maze3D.wallOpacityProperty);
@@ -207,7 +200,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     }
 
     private void createFood3D() {
-        final WorldMapColorSchemeImpl colorScheme = uiConfig.renderConfig().colorScheme(level.worldMap(), uiConfig.worldSettings());
+        final GenericWorldMapColorScheme colorScheme = uiConfig.renderConfig().colorScheme(level.worldMap(), uiConfig.worldSettings());
         final FoodLayer foodLayer = level.worldMap().foodLayer();
 
         final PhongMaterial foodMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.pellet()));

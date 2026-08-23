@@ -8,8 +8,7 @@ import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
-import de.amr.pacmanfx.core.model.world.map.WorldMapColorSchemeImpl;
-import de.amr.pacmanfx.game.GameVariantUIConfig;
+import de.amr.pacmanfx.core.model.world.map.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Pellet3DSettings;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
@@ -19,11 +18,8 @@ import de.amr.pacmanfx.uilib.entities3D.ghost.comp.*;
 import de.amr.pacmanfx.uilib.entities3D.ghost_old.GhostStateColors;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.PacSettings;
 import de.amr.pacmanfx.uilib.entities3D.world.Energizer3D;
-import de.amr.pacmanfx.uilib.entities3D.world.NumberBox3D;
 import de.amr.pacmanfx.uilib.entities3D.world.Pellet3D;
 import javafx.scene.Group;
-import javafx.scene.Node;
-import javafx.scene.image.Image;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Sphere;
 import javafx.scene.shape.TriangleMesh;
@@ -55,10 +51,9 @@ public class DefaultFactory3D implements Factory3D {
         House house,
         TerrainLayer terrain,
         WorldSettings settings,
-        WorldMapColorSchemeImpl colorScheme) {
+        WorldMapColorScheme colorScheme) {
         return mazeFactory3D.createMaze3D(house, terrain, settings, colorScheme);
     }
-
 
     @Override
     public void createPac3D(Pac pac, PacSettings settings) {
@@ -132,16 +127,6 @@ public class DefaultFactory3D implements Factory3D {
         return new GhostAppearanceMaterialSet(normalMaterials, frightenedMaterials, flashingMaterials);
     }
 
-    @Override
-    public Node createNumberBox3D(GameVariantUIConfig gameVariant, int index) {
-        final Image numberImage = createNumberImage(gameVariant, index);
-        return new NumberBox3D(numberImage);
-    }
-
-    protected Image createNumberImage(GameVariantUIConfig gameVariant, int index) {
-        return gameVariant.renderConfig().killedGhostPointsImage(index);
-    }
-
     private static Ghost3DViewComp ensureGhostHas3DView(Ghost ghost) {
         if (!ghost.hasComp(Ghost3DViewComp.class)) {
             ghost.setComp(Ghost3DViewComp.class, new Ghost3DViewComp());
@@ -149,5 +134,4 @@ public class DefaultFactory3D implements Factory3D {
         }
         return ghost.reqComp(Ghost3DViewComp.class);
     }
-
 }

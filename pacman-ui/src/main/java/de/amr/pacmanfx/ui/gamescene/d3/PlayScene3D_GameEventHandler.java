@@ -11,7 +11,6 @@ import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.Bonus;
-import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventListener;
@@ -29,6 +28,7 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
@@ -54,7 +54,6 @@ import javafx.geometry.Point3D;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
-import java.util.List;
 import java.util.Optional;
 
 import static de.amr.basics.math.Vector2f.vec2_float;
@@ -98,11 +97,11 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
             onHuntingStart(assertLevel3D());
         }
         else if (CommonGameStateID.GAME_LEVEL_PACMAN_DYING.hasSameNameAs(newState)) {
-            final GameLevel3D level3D = assertLevel3D();
-            onPacManDying(level3D.animationManager().registry());
+            final AnimationRegistry animationRegistry = assertLevel3D().animationManager().registry();
+            onPacManDying(animationRegistry);
         }
         else if (CommonGameStateID.GAME_LEVEL_EATING_GHOST.hasSameNameAs(newState)) {
-            onGhostsKilled();
+            onGhostsKilled(assertLevel3D());
         }
         else if (CommonGameStateID.GAME_LEVEL_COMPLETE.hasSameNameAs(newState)) {
             onLevelComplete();
@@ -302,10 +301,12 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         );
     }
 
-    private void onGhostsKilled() {
-        final GameLevel3D level3D = assertLevel3D();
-        final List<Ghost> ghostsKilled = game().session().thisFrame().gamePlayStep().ghostsKilled();
-        ghostsKilled.forEach(level3D::addKilledGhostNumberBox);
+    private void onGhostsKilled(GameLevel3D level3D) {
+        final GameSession session = game().session();
+        final GameLevel level = session.level();
+        final GameVariantUIConfig uiConfig = app().currentGameVariantUIConfig();
+        session.thisFrame().gamePlayStep().ghostsKilled().forEach(
+            ghost -> level3D.addKilledGhostNumberBox(ghost, uiConfig, level.indexInKillChain(ghost)));
     }
 
     private void onLevelComplete() {

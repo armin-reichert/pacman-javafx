@@ -13,7 +13,7 @@ import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.model.world.map.WorldMapColorSchemeImpl;
+import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.GhostLightRelayAnimation;
@@ -87,7 +87,7 @@ public class GameLevel3DAnimationManager implements Disposable {
         final GameLevel level = level3D.level();
         final int numFlashes = variantConfig.rules().numLevelFlashes(level.number());
         final GameVariantRenderConfig renderConfig = variantUIConfig.renderConfig();
-        final WorldMapColorSchemeImpl mapColorScheme = renderConfig.colorScheme(level.worldMap(), variantUIConfig.worldSettings());
+        final GenericWorldMapColorScheme mapColorScheme = renderConfig.colorScheme(level.worldMap(), variantUIConfig.worldSettings());
 
         registry.register(AnimationID.WALL_COLOR_FLASHING,
             new WallColorFlashingAnimation(mapColorScheme, level3D.maze3D().materials().wallTopMaterial()));

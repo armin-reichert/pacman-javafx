@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorScheme;
-import de.amr.pacmanfx.core.model.world.map.WorldMapColorSchemeImpl;
+import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.gamescene.*;
@@ -88,12 +88,12 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public WorldMapColorSchemeImpl colorScheme(WorldMap worldMap, WorldSettings worldSettings) {
+    public GenericWorldMapColorScheme colorScheme(WorldMap worldMap, WorldSettings worldSettings) {
         requireNonNull(worldMap);
         requireNonNull(worldSettings);
 
         final WorldMapColorScheme spec = worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
-        final WorldMapColorSchemeImpl colorScheme = new WorldMapColorSchemeImpl(
+        final GenericWorldMapColorScheme colorScheme = new GenericWorldMapColorScheme(
             spec.wallFill(), spec.wallStroke(), spec.door(), spec.pellet());
         return GlobalAssets.enhanceContrast(worldSettings, colorScheme);
     }

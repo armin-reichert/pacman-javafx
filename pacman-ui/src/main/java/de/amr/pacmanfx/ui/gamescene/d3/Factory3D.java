@@ -9,8 +9,7 @@ import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
-import de.amr.pacmanfx.core.model.world.map.WorldMapColorSchemeImpl;
-import de.amr.pacmanfx.game.GameVariantUIConfig;
+import de.amr.pacmanfx.core.model.world.map.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Pellet3DSettings;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
@@ -31,7 +30,7 @@ public interface Factory3D extends Disposable {
      * @param colorScheme the map color scheme
      * @return a 3D maze representing the given terrain
      */
-    Maze3D createMaze3D(House house, TerrainLayer terrain, WorldSettings config, WorldMapColorSchemeImpl colorScheme);
+    Maze3D createMaze3D(House house, TerrainLayer terrain, WorldSettings config, WorldMapColorScheme colorScheme);
 
     /**
      * Creates the 3D representation of Pac for this game variant, including model,
@@ -72,6 +71,4 @@ public interface Factory3D extends Disposable {
      * @return 3D energizer representation
      */
     Energizer3D createEnergizer3D(Energizer3DSettings config, PhongMaterial material);
-
-    Node createNumberBox3D(GameVariantUIConfig gameVariant, int index);
 }

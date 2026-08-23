@@ -8,7 +8,7 @@ import de.amr.pacmanfx.core.ecs.systems.PositionSystem;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.core.model.world.map.WorldMapColorSchemeImpl;
+import de.amr.pacmanfx.core.model.world.map.WorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.obstacle.Obstacle;
 import de.amr.pacmanfx.ui.settings.world.Floor3DSettings;
 import de.amr.pacmanfx.ui.settings.world.House3DSettings;
@@ -36,7 +36,7 @@ public class MazeFactory3D {
         House house,
         TerrainLayer terrain,
         WorldSettings worldSettings,
-        WorldMapColorSchemeImpl colorScheme)
+        WorldMapColorScheme colorScheme)
     {
         requireNonNull(house);
         requireNonNull(terrain);
@@ -110,7 +110,7 @@ public class MazeFactory3D {
         }
     }
 
-    private void createHouse3D(House house, House3DSettings config3D, WorldMapColorSchemeImpl colorScheme) {
+    private void createHouse3D(House house, House3DSettings config3D, WorldMapColorScheme colorScheme) {
         if (!house.hasComp(House3DViewComp.class)) {
             final var view3D = new House3DViewComp(
                 house.floorplan(),
@@ -130,7 +130,7 @@ public class MazeFactory3D {
         view3D.setDoorSensitivity(config3D.sensitivity());
     }
 
-    private Maze3D.Materials createMazeMaterials(WorldMapColorSchemeImpl colorScheme) {
+    private Maze3D.Materials createMazeMaterials(WorldMapColorScheme colorScheme) {
         final PhongMaterial floorMaterial = new PhongMaterial();
         floorMaterial.setSpecularPower(FLOOR_SPECULAR_POWER);
 

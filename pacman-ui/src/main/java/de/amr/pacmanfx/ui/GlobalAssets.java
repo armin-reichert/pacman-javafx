@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui;
 
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.core.model.world.map.WorldMapColorSchemeImpl;
+import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.rendering.EggradientSamples;
@@ -77,10 +77,10 @@ public final class GlobalAssets {
         }
     }
 
-    public static WorldMapColorSchemeImpl enhanceContrast(WorldSettings worldSettings, WorldMapColorSchemeImpl colorScheme) {
+    public static GenericWorldMapColorScheme enhanceContrast(WorldSettings worldSettings, GenericWorldMapColorScheme colorScheme) {
         final Color wallFillColor = Color.valueOf(colorScheme.wallFill());
         if (wallFillColor.getBrightness() < 0.1) {
-            return new WorldMapColorSchemeImpl(
+            return new GenericWorldMapColorScheme(
                 worldSettings.maze().darkWallFillColor(),
                 colorScheme.wallStroke(),
                 colorScheme.door(),
