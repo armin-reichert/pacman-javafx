@@ -1,6 +1,6 @@
 package de.amr.pacmanfx.core.model;
 
-import de.amr.basics.math.RandomNumberSupport;
+import de.amr.basics.math.RandomNumbers;
 
 public enum GhostPersonality {
     /**
@@ -43,7 +43,7 @@ public enum GhostPersonality {
     ORANGE_GHOST_POKEY;
 
     public static GhostPersonality random() {
-        final int index = RandomNumberSupport.randomInt(0, values().length);
+        final int index = RandomNumbers.randomInt(0, values().length);
         return values()[index];
     }
 

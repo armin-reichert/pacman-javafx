@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.Validations;
 import java.util.List;
 import java.util.Optional;
 
-import static de.amr.basics.math.RandomNumberSupport.randomInt;
+import static de.amr.basics.math.RandomNumbers.randomInt;
 
 public class ArcadeMsPacMan_GameRules extends ArcadePacMan_GameRules {
 

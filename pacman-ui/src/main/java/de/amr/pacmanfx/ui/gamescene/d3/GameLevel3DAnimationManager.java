@@ -50,8 +50,8 @@ import javafx.util.Duration;
 
 import java.util.List;
 
-import static de.amr.basics.math.RandomNumberSupport.RANDOM_GENERATOR;
-import static de.amr.basics.math.RandomNumberSupport.randomInt;
+import static de.amr.basics.math.RandomNumbers.RANDOM_GENERATOR;
+import static de.amr.basics.math.RandomNumbers.randomInt;
 import static java.util.Objects.requireNonNull;
 
 public class GameLevel3DAnimationManager implements Disposable {

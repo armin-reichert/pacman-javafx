@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.tengenmspacman.sprites;
 
-import de.amr.basics.math.RandomNumberSupport;import de.amr.pacmanfx.core.model.world.map.WorldMapColorScheme;
+import de.amr.basics.math.RandomNumbers;import de.amr.pacmanfx.core.model.world.map.WorldMapColorScheme;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 
 /**
@@ -52,7 +52,7 @@ public enum NES_WorldMapColorScheme implements WorldMapColorScheme {
 
     public static NES_WorldMapColorScheme randomScheme() {
         // ignore first entry (black white)
-        return values()[RandomNumberSupport.randomInt(1, values().length)];
+        return values()[RandomNumbers.randomInt(1, values().length)];
     }
 
    @Override

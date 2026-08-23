@@ -34,7 +34,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiPredicate;
 
-import static de.amr.basics.math.RandomNumberSupport.randomInt;
+import static de.amr.basics.math.RandomNumbers.randomInt;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.HTS;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;

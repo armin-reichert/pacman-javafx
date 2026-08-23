@@ -47,8 +47,8 @@ import org.tinylog.Logger;
 import java.util.List;
 import java.util.Set;
 
-import static de.amr.basics.math.RandomNumberSupport.randomBoolean;
-import static de.amr.basics.math.RandomNumberSupport.randomInt;
+import static de.amr.basics.math.RandomNumbers.randomBoolean;
+import static de.amr.basics.math.RandomNumbers.randomInt;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_GamePlay extends CommonGamePlay {

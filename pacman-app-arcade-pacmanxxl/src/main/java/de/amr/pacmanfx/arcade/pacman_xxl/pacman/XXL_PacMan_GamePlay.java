@@ -17,7 +17,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
 
-import static de.amr.basics.math.RandomNumberSupport.randomInt;
+import static de.amr.basics.math.RandomNumbers.randomInt;
 import static java.util.Objects.requireNonNull;
 
 public class XXL_PacMan_GamePlay extends ArcadePacMan_GamePlay {

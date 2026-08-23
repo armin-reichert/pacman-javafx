@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.gamescene.d3;
 
 import de.amr.basics.fsm.State;
-import de.amr.basics.math.RandomNumberSupport;
+import de.amr.basics.math.RandomNumbers;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
@@ -380,7 +380,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         final GameLevel level = session.level();
         final GameLevel3D level3D = assertLevel3D();
 
-        if (!session.isAttractMode() && RandomNumberSupport.chance(0.25)) {
+        if (!session.isAttractMode() && RandomNumbers.chance(0.25)) {
             app().ui().shortMessage(Duration.seconds(2.5), textPicker().selectNextText());
         }
 

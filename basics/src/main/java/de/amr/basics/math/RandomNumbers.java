@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.basics.math;
 
 import java.util.random.RandomGenerator;
@@ -16,9 +17,9 @@ import static java.util.Objects.requireNonNull;
  * to ensure min ≤ max.
  * </p>
  */
-public final class RandomNumberSupport {
+public final class RandomNumbers {
 
-    private RandomNumberSupport() {}
+    private RandomNumbers() {}
 
     /** Shared thread-safe random generator instance. */
     public static final RandomGenerator RANDOM_GENERATOR = RandomGenerator.getDefault();
@@ -108,13 +109,44 @@ public final class RandomNumberSupport {
         return min + (maxExclusive - min) * RANDOM_GENERATOR.nextFloat();
     }
 
+    /**
+     * Returns a random element from the given byte array.
+     * <p>
+     * The array must not be {@code null} and must contain at least one element.
+     * A uniformly distributed random index in the interval [0, array.length) is selected.
+     * </p>
+     *
+     * @param array the array to select an element from (must not be {@code null})
+     * @return a randomly selected byte from the array
+     * @throws NullPointerException if {@code array} is {@code null}
+     * @throws IllegalArgumentException if {@code array.length == 0}
+     */
     public static byte randomByteArrayElement(byte[] array) {
         requireNonNull(array);
+        if (array.length == 0) {
+            throw new IllegalArgumentException("array must not be empty");
+        }
         return array[randomInt(0, array.length)];
     }
 
+    /**
+     * Returns a random element from the given array.
+     * <p>
+     * The array must not be {@code null} and must contain at least one element.
+     * A uniformly distributed random index in the interval [0, array.length) is selected.
+     * </p>
+     *
+     * @param <T>   the element type
+     * @param array the array to select an element from (must not be {@code null})
+     * @return a randomly selected element from the array
+     * @throws NullPointerException if {@code array} is {@code null}
+     * @throws IllegalArgumentException if {@code array.length == 0}
+     */
     public static <T> T randomArrayEntry(T[] array) {
         requireNonNull(array);
+        if (array.length == 0) {
+            throw new IllegalArgumentException("array must not be empty");
+        }
         return array[randomInt(0, array.length)];
     }
 }

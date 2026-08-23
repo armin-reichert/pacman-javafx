@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalInt;
 
-import static de.amr.basics.math.RandomNumberSupport.randomInt;
+import static de.amr.basics.math.RandomNumbers.randomInt;
 
 // TODO: In Tengen Ms. Pac-Man, the game rules vary depending on the map category!
 //       Should I use different rules instances which are switched on map category change or do I make the rules instance

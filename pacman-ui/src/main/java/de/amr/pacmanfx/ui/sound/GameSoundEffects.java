@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.sound;
 
 import de.amr.basics.Disposable;
-import de.amr.basics.math.RandomNumberSupport;
+import de.amr.basics.math.RandomNumbers;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.core.entities.Ghost;
@@ -117,7 +117,7 @@ public class GameSoundEffects implements Disposable {
     }
 
     public void playEnergizerExplosion() {
-        final int choice = RandomNumberSupport.randomInt(0, 2);
+        final int choice = RandomNumbers.randomInt(0, 2);
         soundManager.play(choice == 0 ? PacManGameSoundID.ENERGIZER_EXPLOSION_1 : PacManGameSoundID.ENERGIZER_EXPLOSION_2);
     }
 

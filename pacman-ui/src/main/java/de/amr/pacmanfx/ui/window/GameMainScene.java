@@ -18,7 +18,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
-import static de.amr.basics.math.RandomNumberSupport.randomArrayEntry;
+import static de.amr.basics.math.RandomNumbers.randomArrayEntry;
 import static java.util.Objects.requireNonNull;
 
 /**

@@ -7,7 +7,7 @@ import de.amr.pacmanfx.uilib.entities3D.animation.EnergizerParticle3D;
 import java.util.HashSet;
 import java.util.Set;
 
-import static de.amr.basics.math.RandomNumberSupport.randomInt;
+import static de.amr.basics.math.RandomNumbers.randomInt;
 import static java.util.Objects.requireNonNull;
 
 public class SwirlAnimation3D implements Disposable {

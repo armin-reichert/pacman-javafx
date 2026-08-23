@@ -11,7 +11,7 @@ import javafx.scene.paint.LinearGradient;
 
 import java.util.stream.Stream;
 
-import static de.amr.basics.math.RandomNumberSupport.randomInt;
+import static de.amr.basics.math.RandomNumbers.randomInt;
 
 /**
  * Samples taken from <a href="https://www.eggradients.com/">Eggradients website.</a>.

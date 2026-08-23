@@ -16,8 +16,8 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.basics.math.MathAdds.lerp;
-import static de.amr.basics.math.RandomNumberSupport.randomFloat;
-import static de.amr.basics.math.RandomNumberSupport.randomInt;
+import static de.amr.basics.math.RandomNumbers.randomFloat;
+import static de.amr.basics.math.RandomNumbers.randomInt;
 import static de.amr.basics.math.RectShort.sprite;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;

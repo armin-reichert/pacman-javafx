@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
+import de.amr.basics.math.RandomNumbers;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.gamestate.GameState_Booting;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -32,9 +33,8 @@ public class Arcade_BootScene2D extends GameScene {
         components().setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
 
         // Make some noise
-        final var rnd = new java.security.SecureRandom();
         for (int i = 0; i < noise.length; i++) {
-            final byte hexDigit = (byte) rnd.nextInt(16);
+            final byte hexDigit = (byte) RandomNumbers.randomInt(0, 16);
             noise[i] = Integer.toHexString(hexDigit);
         }
     }

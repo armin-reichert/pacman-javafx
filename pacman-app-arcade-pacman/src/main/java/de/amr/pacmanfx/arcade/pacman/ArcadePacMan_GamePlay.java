@@ -42,7 +42,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static de.amr.basics.math.RandomNumberSupport.randomFloat;
+import static de.amr.basics.math.RandomNumbers.randomFloat;
 import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tile;
 import static java.util.Objects.requireNonNull;

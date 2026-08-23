@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.core.ecs.systems;
 
 import de.amr.basics.math.Direction;
-import de.amr.basics.math.RandomNumberSupport;
+import de.amr.basics.math.RandomNumbers;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
@@ -71,7 +71,7 @@ public class RoamingSystem {
     }
 
     private Direction choosePseudoRandomDirection() {
-        final int rnd = RandomNumberSupport.randomInt(0, 1000);
+        final int rnd = RandomNumbers.randomInt(0, 1000);
         if (rnd < 163)             return UP;
         if (rnd < 163 + 252)       return RIGHT;
         if (rnd < 163 + 252 + 285) return DOWN;
