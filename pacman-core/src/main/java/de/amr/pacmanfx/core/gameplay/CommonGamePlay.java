@@ -124,10 +124,10 @@ public abstract class CommonGamePlay implements GamePlay {
 
         final GameRules rules = game.variant().rules();
         final GameSession session = game.session();
-        final GamePlayStep gamePlayStep = session.thisFrame().gamePlayStep();
+        final GamePlayStep step = session.thisFrame().gamePlayStep();
         final Pac pac = level.entities().pac();
 
-        final ActorCollisionHandler collisionHandler = new ActorCollisionHandler(gamePlayStep);
+        final ActorCollisionHandler collisionHandler = new ActorCollisionHandler(step);
         collisionHandler.setStrategy(rules.actorCollisionRules().getCollisionStrategy());
         collisionHandler.setDoubleChecked(rules.actorCollisionRules().isCollisionDoubleChecked());
 
@@ -142,7 +142,15 @@ public abstract class CommonGamePlay implements GamePlay {
         }
 
         collisionHandler.detectCollisions(level);
-        evalCollisions(game, level, gamePlayStep);
+
+        checkIfPacFoundEdibleItem(game, level, step);
+        checkIfPacGetsKilled(game.session(), game.variant().rules(), step);
+        if (step.pacKilled()) {
+            fixPacPositionIfKilledInsidePortal(level);
+        }
+        else {
+            checkIfGhostsGetKilled(game, level, step);
+        }
     }
 
     @Override
@@ -260,17 +268,6 @@ public abstract class CommonGamePlay implements GamePlay {
             ScoreSystem.enableScore(session.highScore(), true);
         } catch (IOException x) {
             Logger.error(x, "Error loading high-score file {}", highScoreFile.getAbsolutePath());
-        }
-    }
-
-    private void evalCollisions(GameContext game, GameLevel level, GamePlayStep step) {
-        checkIfPacFoundEdibleItem(game, level, step);
-        checkIfPacGetsKilled(game.session(), game.variant().rules(), step);
-        if (step.pacKilled()) {
-            fixPacPositionIfKilledInsidePortal(level);
-        }
-        else {
-            checkIfGhostsGetKilled(game, level, step);
         }
     }
 
