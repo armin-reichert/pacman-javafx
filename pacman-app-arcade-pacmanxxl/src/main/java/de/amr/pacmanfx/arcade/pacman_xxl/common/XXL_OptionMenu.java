@@ -104,7 +104,7 @@ public class XXL_OptionMenu extends OptionMenu {
 
         logMenuState();
 
-        soundEnabledProperty().bind(app.ui().sounds().muteProperty().not());
+        soundEnabledProperty().bind(app.ui().soundManager().muteProperty().not());
 
         scaling = computeScalingValue(app.ui().window().stage().heightProperty());
         chaseAnimation.displayGameVariant(app.game(), variant.uiConfig().renderConfig(), canvas);
@@ -172,7 +172,7 @@ public class XXL_OptionMenu extends OptionMenu {
 
         final GameVariantUIConfig uiConfig = newVariant.uiConfig();
         uiConfig.init();
-        uiConfig.loadSounds(app.ui().sounds());
+        uiConfig.loadSounds(app.ui().soundManager());
         uiConfig.connectApp(app);
 
         chaseAnimation.displayGameVariant(game, uiConfig.renderConfig(), canvas);

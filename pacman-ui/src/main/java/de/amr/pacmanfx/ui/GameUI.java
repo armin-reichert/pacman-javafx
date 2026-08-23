@@ -60,7 +60,7 @@ public class GameUI implements GameEventListener {
     private final GameViewManager views;
     private final GameSceneManager gameScenes;
     private final TranslationManager translations;
-    private final SoundManager sounds;
+    private final SoundManager soundManager;
     private final SpriteAnimationTimer spriteAnimationTimer;
     private final GameViewModel viewModel;
     private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Global Action Bindings");
@@ -79,8 +79,8 @@ public class GameUI implements GameEventListener {
         views = createGameViews();
         views.gamePlayView().populateDashboard(dashboardFactory, settings.dashboard(), translations);
 
-        sounds = new SoundManager();
-        sounds.muteProperty().bind(viewModel.mutedProperty);
+        soundManager = new SoundManager();
+        soundManager.muteProperty().bind(viewModel.mutedProperty);
     }
 
     public GameWindow window() {
@@ -99,8 +99,8 @@ public class GameUI implements GameEventListener {
         return translations;
     }
 
-    public SoundManager sounds() {
-        return sounds;
+    public SoundManager soundManager() {
+        return soundManager;
     }
 
     public SpriteAnimationTimer spriteAnimTimer() {

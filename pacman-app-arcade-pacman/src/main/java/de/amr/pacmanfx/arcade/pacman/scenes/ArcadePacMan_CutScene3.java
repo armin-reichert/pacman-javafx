@@ -77,7 +77,7 @@ public class ArcadePacMan_CutScene3 extends GameScene {
     }
 
     private void startAnimation(GameSystems sys) {
-        app().ui().sounds().play(PacManGameSoundID.INTERMISSION_3, 2);
+        soundManager().play(PacManGameSoundID.INTERMISSION_3, 2);
         startBlinkyChasingPacMan(sys);
     }
 

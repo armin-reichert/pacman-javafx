@@ -123,7 +123,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene {
     private void updateStateClapperboard(GameSystems sys) {
         ClapperboardStateSystem.update(clapperboard);
         if (sceneTimer.atSecond(1)) {
-            app().ui().sounds().play(PacManGameSoundID.INTERMISSION_1);
+            soundManager().play(PacManGameSoundID.INTERMISSION_1);
         } else if (sceneTimer.hasExpired()) {
             enterStateChasedByGhosts(sys);
         }

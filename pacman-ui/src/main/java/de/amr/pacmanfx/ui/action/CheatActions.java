@@ -265,7 +265,7 @@ public final class CheatActions {
         final Media voice = auto ? GlobalAssets.VoiceID.AUTOPILOT_ON.media() : GlobalAssets.VoiceID.AUTOPILOT_OFF.media();
 
         ui.shortMessage(message);
-        ui.sounds().voice().playAfterSec(1, voice);
+        ui.soundManager().voice().playAfterSec(1, voice);
     }
 
     private void setPacImmune(GameAppContext app, boolean immune) {
@@ -278,7 +278,7 @@ public final class CheatActions {
         final Media voice = immune ? GlobalAssets.VoiceID.IMMUNITY_ON.media() : GlobalAssets.VoiceID.IMMUNITY_OFF.media();
 
         ui.shortMessage(message);
-        ui.sounds().voice().playAfterSec(1, voice);
+        ui.soundManager().voice().playAfterSec(1, voice);
     }
 
     private Optional<GameLevel> normalLevel(GameAppContext app) {

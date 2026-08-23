@@ -147,7 +147,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene {
     private void updateClapperboardState() {
         ClapperboardStateSystem.update(clapperboard);
         if (sceneTick == SceneState.CLAPPERBOARD.start() + 60) {
-            app().ui().sounds().play(PacManGameSoundID.INTERMISSION_3);
+            soundManager().play(PacManGameSoundID.INTERMISSION_3);
         }
     }
 

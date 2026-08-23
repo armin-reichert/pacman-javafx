@@ -256,7 +256,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
     }
 
     private void acceptNormalLevel() {
-        app().ui().sounds().setEnabled(true); //TODO needed?
+        soundManager().setEnabled(true); //TODO needed?
 
         final var actions = actions();
 
@@ -271,7 +271,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
     }
 
     private void acceptDemoLevel() {
-        app().ui().sounds().setEnabled(false); //TODO needed?
+        soundManager().setEnabled(false); //TODO needed?
 
         final var actions = actions();
 

@@ -92,7 +92,7 @@ public class FlyerStartPage implements StartPage {
         }
         else if (keyboard.isKeyPressed(KeyCode.S)) {
             if (app != null) {
-                app.ui().sounds().voice().stop();
+                app.ui().soundManager().voice().stop();
                 app.ui().shortMessage(app.ui().translations().translate("flash.shut_up"));
             }
         }
@@ -115,13 +115,13 @@ public class FlyerStartPage implements StartPage {
     public void onEnter() {
         app.gameVariants().selectVariant(gameVariantName);
         flyer.selectPage(0);
-        app.ui().sounds().voice().playAfterSec(VOICE_DELAY_SEC, voiceMedia);
+        app.ui().soundManager().voice().playAfterSec(VOICE_DELAY_SEC, voiceMedia);
         Platform.runLater(startButton::requestFocus);
     }
 
     @Override
     public void onExit() {
-        app.ui().sounds().voice().stop();
+        app.ui().soundManager().voice().stop();
     }
 
     @Override

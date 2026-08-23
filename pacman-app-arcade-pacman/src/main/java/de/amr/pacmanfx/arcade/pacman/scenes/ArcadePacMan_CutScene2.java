@@ -116,7 +116,7 @@ public class ArcadePacMan_CutScene2 extends GameScene {
     }
 
     private void startTheShow() {
-        app().ui().sounds().play(PacManGameSoundID.INTERMISSION_2);
+        soundManager().play(PacManGameSoundID.INTERMISSION_2);
         setDressState(NailDressState.NAIL);
     }
 

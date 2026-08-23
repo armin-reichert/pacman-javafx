@@ -60,7 +60,7 @@ public class Arcade_PlayScene2D extends GameScene
     public void handleQuit(GameAppContext app) {
         onDeactivate();
         // Avoid game over sound being played
-        app.ui().sounds().setEnabled(false);
+        soundManager().setEnabled(false);
         gameFlow().enterGameState(game(), CommonGameStateID.GAME_OVER);
     }
 
@@ -131,7 +131,7 @@ public class Arcade_PlayScene2D extends GameScene
 
         Logger.info(bindingsMap);
 
-        app().ui().sounds().setEnabled(true);
+        soundManager().setEnabled(true);
         Logger.info("Game scene {} accepted game level #{}", getClass().getSimpleName(), level.number());
     }
 
@@ -143,7 +143,7 @@ public class Arcade_PlayScene2D extends GameScene
         bindingsMap.registerAllBindings(actions.gameStartActionBindings());
         Logger.info(bindingsMap);
 
-        app().ui().sounds().setEnabled(false);
+        soundManager().setEnabled(false);
         Logger.info("Game scene {} accepted demo level", getClass().getSimpleName());
     }
 

@@ -163,7 +163,7 @@ public final class PacManGamesMasterApp implements GameAppContext {
             ui.views().gamePlayView().disembedGameScene(gameScene);
             ui.gameScenes().currentGameSceneProperty().set(null);
         });
-        ui.sounds().stopAll();
+        ui.soundManager().stopAll();
         simulation.stop();
     }
 
@@ -215,7 +215,7 @@ public final class PacManGamesMasterApp implements GameAppContext {
         //TODO rethink this
         final GameVariantUIConfig uiConfig = gameVariant.uiConfig();
         uiConfig.init();
-        uiConfig.loadSounds(ui.sounds());
+        uiConfig.loadSounds(ui.soundManager());
         uiConfig.connectApp(this);
 
         ui.viewModel().maze3D.init(gameVariant.uiConfig().worldSettings().maze());
@@ -240,12 +240,12 @@ public final class PacManGamesMasterApp implements GameAppContext {
         requireNonNull(gameVariant);
 
         gameVariant.config().gameFlow().removeStateChangeListener(stateChangeEventMapper);
-        gameVariant.uiConfig().unloadSounds(ui.sounds());
+        gameVariant.uiConfig().unloadSounds(ui.soundManager());
         gameVariant.uiConfig().dispose();
 
         gameVariant.spriteAnimContainer().clear();
         ui.spriteAnimTimer().detachAnimationContainer();
-        ui.sounds().dispose();
+        ui.soundManager().dispose();
 
         game.eventManager().removeGameEventSubscriber(ui);
         game = null;

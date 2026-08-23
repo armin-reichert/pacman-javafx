@@ -82,7 +82,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
 
     @Override
     public void onDeactivate() {
-        app().ui().sounds().voice().stop();
+        soundManager().voice().stop();
     }
 
     @Override
@@ -143,7 +143,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
 
         MarqueeSystem.instance().start(marquee);
 
-        app().ui().sounds().voice().playAfterSec(1, GlobalAssets.VoiceID.EXPLAIN_GAME_START.media());
+        soundManager().voice().playAfterSec(1, GlobalAssets.VoiceID.EXPLAIN_GAME_START.media());
     }
 
     private void createMarquee() {

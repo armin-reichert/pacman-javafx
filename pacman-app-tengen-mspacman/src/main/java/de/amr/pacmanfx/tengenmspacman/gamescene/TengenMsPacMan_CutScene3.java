@@ -125,11 +125,11 @@ public class TengenMsPacMan_CutScene3 extends GameScene {
     }
     
     private void playMusic() {
-        app().ui().sounds().play(PacManGameSoundID.INTERMISSION_3);
+        soundManager().play(PacManGameSoundID.INTERMISSION_3);
     }
     
     private void stopMusic() {
-        app().ui().sounds().stop(PacManGameSoundID.INTERMISSION_3);
+        soundManager().stop(PacManGameSoundID.INTERMISSION_3);
     }
 
     @Override

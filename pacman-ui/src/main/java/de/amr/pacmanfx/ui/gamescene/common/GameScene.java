@@ -18,6 +18,7 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
+import de.amr.pacmanfx.ui.sound.SoundManager;
 import javafx.scene.SubScene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.input.ScrollEvent;
@@ -129,6 +130,11 @@ public class GameScene implements GameSceneController, DefaultGameEventListener,
     @Override
     public Optional<SubScene> optSubSceneFX() {
         return Optional.empty();
+    }
+
+    @Override
+    public SoundManager soundManager() {
+        return app.ui().soundManager();
     }
 
     @Override

@@ -114,7 +114,7 @@ public class ArcadePacMan_IntroScene extends GameScene {
     @Override
     public void onDeactivate() {
         blinking.stop();
-        app().ui().sounds().voice().stop();
+        soundManager().voice().stop();
     }
 
     @Override
@@ -151,7 +151,7 @@ public class ArcadePacMan_IntroScene extends GameScene {
         lastGhostEatenTick = 0;
         numGhostsEaten = 0;
 
-        app().ui().sounds().voice().playAfterSec(1, GlobalAssets.VoiceID.EXPLAIN_GAME_START.media());
+        soundManager().voice().playAfterSec(1, GlobalAssets.VoiceID.EXPLAIN_GAME_START.media());
     }
 
     private void startChasingPacMan(GameContext game) {

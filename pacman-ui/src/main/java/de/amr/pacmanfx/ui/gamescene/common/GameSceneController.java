@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui.gamescene.common;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.ui.action.core.QuitHandler;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
+import de.amr.pacmanfx.ui.sound.SoundManager;
 import javafx.scene.SubScene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.input.ScrollEvent;
@@ -55,6 +56,11 @@ public interface GameSceneController extends QuitHandler {
      * @return the JavaFX subscene used for this scene.
      */
     Optional<SubScene> optSubSceneFX();
+
+    /**
+     * @return the sound manager
+     */
+    SoundManager soundManager();
 
     /**
      * @return the sound effects used for this scene.

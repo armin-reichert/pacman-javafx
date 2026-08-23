@@ -30,9 +30,6 @@ public class ArcadeMsPacMan_StartScene extends GameScene {
 
     @Override
     public void onDeactivate() {
-        app().ui().sounds().voice().stop();
+        soundManager().voice().stop();
     }
-
-    @Override
-    public void onTick(GameContext game) {}
 }

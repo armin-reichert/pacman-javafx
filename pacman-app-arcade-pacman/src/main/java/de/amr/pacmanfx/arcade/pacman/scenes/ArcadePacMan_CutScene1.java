@@ -65,7 +65,7 @@ public class ArcadePacMan_CutScene1 extends GameScene {
         final GameSystems sys = game.variant().systems();
 
         if (sceneTick == ANIMATION_START_TICK) {
-            app().ui().sounds().play(PacManGameSoundID.INTERMISSION_1, 2);
+            soundManager().play(PacManGameSoundID.INTERMISSION_1, 2);
             startBlinkyChasingPacMan(sys);
         }
         else if (sceneTick == ANIMATION_START_TICK + 260) {

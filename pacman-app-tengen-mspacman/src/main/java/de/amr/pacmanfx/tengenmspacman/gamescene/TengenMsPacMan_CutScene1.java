@@ -179,11 +179,11 @@ public class TengenMsPacMan_CutScene1 extends GameScene {
     }
 
     private void playMusic() {
-        app().ui().sounds().play(PacManGameSoundID.INTERMISSION_1);
+        soundManager().play(PacManGameSoundID.INTERMISSION_1);
     }
 
     private void stopMusic() {
-        app().ui().sounds().stop(PacManGameSoundID.INTERMISSION_1);
+        soundManager().stop(PacManGameSoundID.INTERMISSION_1);
     }
 
     private void letActorsMove(GameContext game) {

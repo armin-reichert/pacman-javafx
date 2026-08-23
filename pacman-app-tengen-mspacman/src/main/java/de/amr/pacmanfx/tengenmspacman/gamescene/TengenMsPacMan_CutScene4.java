@@ -117,11 +117,11 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
     }
 
     private void playMusic() {
-        app().ui().sounds().play(PacManGameSoundID.INTERMISSION_4);
+        soundManager().play(PacManGameSoundID.INTERMISSION_4);
     }
 
     private void stopMusic() {
-        app().ui().sounds().stop(PacManGameSoundID.INTERMISSION_4);
+        soundManager().stop(PacManGameSoundID.INTERMISSION_4);
     }
 
     private void createActors() {
@@ -260,7 +260,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
             case 2 -> TengenMsPacManSoundID.INTERMISSION_4_JUNIOR_2;
             default -> throw new IllegalArgumentException();
         };
-        app().ui().sounds().playLoop(soundID);
+        soundManager().playLoop(soundID);
     }
 
     private void updateJunior(GameContext game, long tick, int index) {
