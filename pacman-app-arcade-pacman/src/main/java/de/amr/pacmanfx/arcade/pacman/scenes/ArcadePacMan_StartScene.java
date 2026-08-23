@@ -8,14 +8,16 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 
 /**
  * Scene shown after credit has been added and where game can be started.
  */
 public class ArcadePacMan_StartScene extends GameScene {
 
-    public ArcadePacMan_StartScene(GameAppContext appContext) {
-        super(appContext);
+    public ArcadePacMan_StartScene(GameAppContext app) {
+        super(app);
+        componentsRegistry().setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
     }
 
     @Override

@@ -48,8 +48,11 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer
         requireNonNull(session);
         requireNonNull(gameScene);
 
-        final HUDState hud = session.hud();
+        if (gameScene.optCanvasRendering().isEmpty()) {
+            return;
+        }
 
+        final HUDState hud = session.hud();
         if (!hud.isVisible()) return;
 
         if (hud.isScoreShown()) {
@@ -65,8 +68,8 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer
 
         if (hud.isLevelCounterShown()) {
             final RectShort[] bonusSymbolSprites = spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS);
-            final float y = gameScene.canvasRendering().unscaledHeight() - tilesPx(2) + 2;
-            float x = gameScene.canvasRendering().unscaledWidth() - tilesPx(4);
+            final float y = gameScene.reqCanvasRendering().unscaledHeight() - tilesPx(2) + 2;
+            float x = gameScene.reqCanvasRendering().unscaledWidth() - tilesPx(4);
             for (int symbolCode : session.levelCounter().data().symbolCodes()) {
                 drawSprite(bonusSymbolSprites[symbolCode], x, y, true);
                 x -= tilesPx(2); // symbols are drawn from right to left
@@ -76,7 +79,7 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer
         if (hud.isLivesCounterShown()) {
             final RectShort livesCounterSprite = spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL);
             final float x = tilesPx(2);
-            final float y = gameScene.canvasRendering().unscaledHeight() - tilesPx(2);
+            final float y = gameScene.reqCanvasRendering().unscaledHeight() - tilesPx(2);
             for (int i = 0; i < hud.visibleLifeCount(); ++i) {
                 drawSprite(livesCounterSprite, x + i * tilesPx(2), y, true);
             }
@@ -91,7 +94,8 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer
 
         if (hud.isCreditShown()) {
             final int credit = gameScene.game().coinMechanism().numCoins();
-            fillText(CREDIT_TEXT_PATTERN.formatted(credit), ARCADE_WHITE, arcadeFont8(), tilesPx(2), gameScene.canvasRendering().unscaledHeight());
+            fillText(CREDIT_TEXT_PATTERN.formatted(credit), ARCADE_WHITE, arcadeFont8(), tilesPx(2),
+                gameScene.reqCanvasRendering().unscaledHeight());
         }
     }
 

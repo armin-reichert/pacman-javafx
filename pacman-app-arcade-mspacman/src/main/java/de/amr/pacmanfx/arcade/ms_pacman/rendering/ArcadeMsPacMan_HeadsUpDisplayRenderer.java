@@ -63,37 +63,42 @@ public class ArcadeMsPacMan_HeadsUpDisplayRenderer extends BaseRenderer implemen
         }
 
         if (hud.isLevelCounterShown()) {
-            final RectShort[] bonusSymbols = spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS);
-            float x = gameScene.canvasRendering().unscaledWidth() - tilesPx(4);
-            final float y = gameScene.canvasRendering().unscaledHeight() - tilesPx(2) + 2;
-            final List<Integer> symbolCodes = session.levelCounter()
-                .data().symbolCodes();
-            for (int symbolCode : symbolCodes) {
-                drawSprite(bonusSymbols[symbolCode], x, y, true);
-                x -= tilesPx(2); // symbols are drawn from right to left
-            }
+            gameScene.optCanvasRendering().ifPresent(canvasRendering -> {
+                final RectShort[] bonusSymbols = spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS);
+                final List<Integer> symbolCodes = session.levelCounter().data().symbolCodes();
+
+                float x = canvasRendering.unscaledWidth() - tilesPx(4);
+                final float y = canvasRendering.unscaledHeight() - tilesPx(2) + 2;
+                for (int symbolCode : symbolCodes) {
+                    drawSprite(bonusSymbols[symbolCode], x, y, true);
+                    x -= tilesPx(2); // symbols are drawn from right to left
+                }
+            });
         }
 
         if (hud.isLivesCounterShown()) {
-            final RectShort sprite = spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL);
-            final float x = tilesPx(2);
-            final float y = gameScene.canvasRendering().unscaledHeight() - tilesPx(2);
-            for (int i = 0; i < hud.visibleLifeCount(); ++i) {
-                drawSprite(sprite, x + i * tilesPx(2), y, true);
-            }
-            final LivesCounter livesCounter = session.livesCounter();
-            final int lifeCount = livesCounter.data().numLives();
-            if (lifeCount > hud.maxLivesShown()) {
-                // show text indicating that more lives are available than symbols displayed (cheating may cause this)
-                Font hintFont = Font.font("Serif", FontWeight.BOLD, scaled(8));
-                fillText("%d".formatted(lifeCount), ARCADE_YELLOW, hintFont, x - 14, y + TS);
-            }
+            gameScene.optCanvasRendering().ifPresent(canvasRendering -> {
+                final RectShort sprite = spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL);
+                final float x = tilesPx(2);
+                final float y = canvasRendering.unscaledHeight() - tilesPx(2);
+                for (int i = 0; i < hud.visibleLifeCount(); ++i) {
+                    drawSprite(sprite, x + i * tilesPx(2), y, true);
+                }
+                final LivesCounter livesCounter = session.livesCounter();
+                final int lifeCount = livesCounter.data().numLives();
+                if (lifeCount > hud.maxLivesShown()) {
+                    // show text indicating that more lives are available than symbols displayed (cheating may cause this)
+                    Font hintFont = Font.font("Serif", FontWeight.BOLD, scaled(8));
+                    fillText("%d".formatted(lifeCount), ARCADE_YELLOW, hintFont, x - 14, y + TS);
+                }
+            });
         }
 
         if (hud.isCreditShown()) {
-            final int credit = gameScene.game().coinMechanism().numCoins();
-            fillText("CREDIT %2d".formatted(credit), ARCADE_WHITE, arcadeFont8(), tilesPx(2),
-                gameScene.canvasRendering().unscaledHeight());
+            gameScene.optCanvasRendering().ifPresent(canvasRendering -> {
+                final int credit = gameScene.game().coinMechanism().numCoins();
+                fillText("CREDIT %2d".formatted(credit), ARCADE_WHITE, arcadeFont8(), tilesPx(2), canvasRendering.unscaledHeight());
+            });
         }
     }
 

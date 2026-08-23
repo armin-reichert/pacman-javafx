@@ -145,14 +145,14 @@ public class DS_3DSettings extends GameDashboardSection {
             camera.getTranslateZ());
     }
 
-    private static String sceneSizeInfo(GameSceneController gameScene, GameLevel level) {
+    private static String sceneSizeInfo(GameScene gameScene, GameLevel level) {
         if (gameScene == null) return NO_INFO;
 
-        if (gameScene instanceof GameScene gameScene2D) {
-            final var r2D = gameScene2D.canvasRendering();
+        if (gameScene.optCanvasRendering().isPresent()) {
+            final var canvasRendering = gameScene.optCanvasRendering().get();
             return "%dx%d (scaled: %.0fx%.0f)".formatted(
-                r2D.unscaledWidth(), r2D.unscaledHeight(),
-                r2D.scaledWidth(),   r2D.scaledHeight());
+                canvasRendering.unscaledWidth(), canvasRendering.unscaledHeight(),
+                canvasRendering.scaledWidth(),   canvasRendering.scaledHeight());
         }
 
         if (level != null) {

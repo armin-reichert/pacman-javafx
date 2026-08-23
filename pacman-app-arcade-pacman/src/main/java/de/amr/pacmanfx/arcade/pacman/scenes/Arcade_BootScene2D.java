@@ -8,6 +8,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.gamestate.GameState_Booting;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 
 /**
  * The boot screen displays some strange hex codes, garbage from the graphics memory
@@ -26,8 +27,9 @@ public class Arcade_BootScene2D extends GameScene {
 
     public String[] noise = new String[28*36];
 
-    public Arcade_BootScene2D(GameAppContext appContext) {
-        super(appContext);
+    public Arcade_BootScene2D(GameAppContext app) {
+        super(app);
+        componentsRegistry().setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
 
         // Make some noise
         final var rnd = new java.security.SecureRandom();

@@ -31,6 +31,7 @@ import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 
 import java.util.Arrays;
 import java.util.List;
@@ -92,8 +93,9 @@ public class ArcadePacMan_IntroScene extends GameScene {
     private int ghostIndex;
     private long lastGhostEatenTick;
 
-    public ArcadePacMan_IntroScene(GameAppContext appContext) {
-        super(appContext);
+    public ArcadePacMan_IntroScene(GameAppContext app) {
+        super(app);
+        componentsRegistry().setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
         flow = new StateMachine<>(List.of(SceneState.values()));
     }
 

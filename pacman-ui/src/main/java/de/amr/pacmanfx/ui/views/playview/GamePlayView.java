@@ -251,14 +251,14 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
         app.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
             try {
-                if (gameScene.canvasRendering() != null) {
+                gameScene.optCanvasRendering().ifPresent(_ -> {
                     if (sceneRenderer != null) {
                         sceneRenderer.draw(gameScene, tick);
                     }
                     if (hudRenderer != null) {
                         hudRenderer.draw(session, gameScene, tick);
                     }
-                }
+                });
             } catch (Exception x) {
                 Logger.error(x, "Exception during rendering!");
             }
@@ -330,15 +330,10 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
         contextMenu.hide();
 
-
         //TODO FIXME(We must discriminate 3D, 2D+subscene, 2D without subscene) here!
         if (gameScene.optSubSceneFX().isPresent()) {
             embedGameSceneWithSubSceneFX(gameScene, gameScene.optSubSceneFX().get());
         } else {
-            //TODO fixme
-            if (!gameScene.componentsRegistry().hasComp(CanvasRenderingComp.class)) {
-                gameScene.componentsRegistry().setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
-            }
             embedGameScene2D(config.gameSceneConfig(), gameScene);
         }
 
@@ -451,6 +446,8 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         final GameMainScene mainScene = app.ui().window().mainScene();
         final GamePlayView playView = app.ui().views().gamePlayView();
         final DecorationPane frame = playView.gameSceneFrame();
+
+        Logger.info("Looking for canvas rendering in game scene {}", gameScene.getClass().getSimpleName());
 
         final CanvasRenderingComp r2D = gameScene.componentsRegistry().reqComp(CanvasRenderingComp.class);
 

@@ -17,6 +17,7 @@ import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationManager;
+import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.scene.control.CheckMenuItem;
@@ -37,6 +38,7 @@ public class Arcade_PlayScene2D extends GameScene
 
     public Arcade_PlayScene2D(GameAppContext app) {
         super(app);
+        componentsRegistry().setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
     }
 
     @Override
@@ -109,9 +111,12 @@ public class Arcade_PlayScene2D extends GameScene
 
     @Override
     public void acceptGameLevel(GameSession session, GameLevel level) {
-        final Vector2i terrainSize = level.worldMap().terrainLayer().sizeInPixel();
-        canvasRendering().unscaledWidthProperty().set(terrainSize.x());
-        canvasRendering().unscaledHeightProperty().set(terrainSize.y());
+        optCanvasRendering().ifPresent(canvasRendering -> {
+            final Vector2i terrainSize = level.worldMap().terrainLayer().sizeInPixel();
+            canvasRendering.unscaledWidthProperty().set(terrainSize.x());
+            canvasRendering.unscaledHeightProperty().set(terrainSize.y());
+        });
+
         if (session.isAttractMode()) {
             acceptDemoLevel();
         } else {

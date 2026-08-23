@@ -23,6 +23,7 @@ import de.amr.pacmanfx.game.GameVariant;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import static de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_CutScene2.NailDressState.*;
@@ -57,8 +58,9 @@ public class ArcadePacMan_CutScene2 extends GameScene {
     public Ghost blinky;
     public SpriteAnimation nailDressAnimation;
 
-    public ArcadePacMan_CutScene2(GameAppContext appContext) {
-        super(appContext);
+    public ArcadePacMan_CutScene2(GameAppContext app) {
+        super(app);
+        componentsRegistry().setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
     }
 
     @Override

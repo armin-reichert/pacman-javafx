@@ -18,6 +18,7 @@ import de.amr.pacmanfx.game.GameVariant;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 /**
@@ -35,8 +36,9 @@ public class ArcadePacMan_CutScene3 extends GameScene {
     public Pac pacMan;
     public Ghost blinky;
 
-    public ArcadePacMan_CutScene3(GameAppContext appContext) {
-        super(appContext);
+    public ArcadePacMan_CutScene3(GameAppContext app) {
+        super(app);
+        componentsRegistry().setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
     }
 
     @Override

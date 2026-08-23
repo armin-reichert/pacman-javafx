@@ -15,6 +15,7 @@ import de.amr.pacmanfx.game.GameVariant;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
@@ -33,17 +34,18 @@ public class TengenMsPacMan_BootScene extends GameScene {
     public Ghost ghost;
     public Color shadeOfBlue;
 
-    public TengenMsPacMan_BootScene(GameAppContext appContext) {
-        super(appContext);
-        canvasRendering().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
-        canvasRendering().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
+    public TengenMsPacMan_BootScene(GameAppContext app) {
+        super(app);
+        componentsRegistry().setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
+        reqCanvasRendering().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
+        reqCanvasRendering().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
     }
 
     @Override
     public void onActivate() {
         movingText = new GameEntity();
         movingText.setComp(MovementComp.class, new MovementComp());
-        movingText.pos().set(tilesPx(9), canvasRendering().unscaledHeight()); // lower border of screen
+        movingText.pos().set(tilesPx(9), reqCanvasRendering().unscaledHeight()); // lower border of screen
 
         final GameVariant gameVariant = app().gameVariants().currentGameVariant();
         ghost = gameVariant.uiConfig().renderConfig().createAnimatedGhost(
@@ -72,7 +74,7 @@ public class TengenMsPacMan_BootScene extends GameScene {
                 systems.motor().setVelocity(movingText, 0, 0);
             }
             case 113 -> {
-                ghost.pos().set(canvasRendering().unscaledWidth() - WorldMap.TS, GHOST_Y);
+                ghost.pos().set(reqCanvasRendering().unscaledWidth() - WorldMap.TS, GHOST_Y);
                 ghost.show();
                 systems.worldNavigator().setMoveDir(ghost, Direction.LEFT);
                 systems.worldNavigator().setWishDir(ghost, Direction.LEFT);

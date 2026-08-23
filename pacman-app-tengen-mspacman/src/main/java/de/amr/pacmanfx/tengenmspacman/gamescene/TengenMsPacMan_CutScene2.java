@@ -20,6 +20,7 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.JoypadButton;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
@@ -50,8 +51,9 @@ public class TengenMsPacMan_CutScene2 extends GameScene {
 
     public TengenMsPacMan_CutScene2(GameAppContext appContext) {
         super(appContext);
-        canvasRendering().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
-        canvasRendering().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
+        componentsRegistry().setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
+        reqCanvasRendering().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
+        reqCanvasRendering().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
     }
 
     public Clapperboard clapperboard() {

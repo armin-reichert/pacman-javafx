@@ -40,12 +40,11 @@ public class GameScene implements GameSceneController, DefaultGameEventListener,
         this.app = requireNonNull(app);
     }
 
-    public CanvasRenderingComp canvasRendering() {
-        CanvasRenderingComp r2D = componentRegistry.optComp(CanvasRenderingComp.class).orElse(null);
-        if (r2D == null) {
-            componentRegistry.setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
-            Logger.info("Added Rendering2DSupport to " + getClass().getSimpleName());
-        }
+    public Optional<CanvasRenderingComp> optCanvasRendering() {
+        return componentRegistry.optComp(CanvasRenderingComp.class);
+    }
+
+    public CanvasRenderingComp reqCanvasRendering() {
         return componentRegistry.reqComp(CanvasRenderingComp.class);
     }
 
@@ -93,9 +92,11 @@ public class GameScene implements GameSceneController, DefaultGameEventListener,
      * but it gets called when the 3D->2D scene switch happens.
      */
     public void acceptGameLevel(GameSession session, GameLevel level) {
-        final Vector2i size = level.worldMap().terrainLayer().sizeInPixel();
-        canvasRendering().unscaledWidthProperty().set(size.x());
-        canvasRendering().unscaledHeightProperty().set(size.y());
+        optCanvasRendering().ifPresent(canvasRendering -> {
+            final Vector2i size = level.worldMap().terrainLayer().sizeInPixel();
+            canvasRendering.unscaledWidthProperty().set(size.x());
+            canvasRendering.unscaledHeightProperty().set(size.y());
+        });
     }
 
     /**

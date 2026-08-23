@@ -60,6 +60,10 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
         requireNonNull(session);
         requireNonNull(gameScene);
 
+        if (gameScene.optCanvasRendering().isEmpty()) {
+            return;
+        }
+
         final HUDState hud = session.hud();
 
         if (!hud.isVisible()) return;
@@ -80,7 +84,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
             drawHighScore(highScore, arcadeFont8(), color);
         }
 
-        final int counterY = gameScene.canvasRendering().unscaledHeight() - TS;
+        final int counterY = gameScene.reqCanvasRendering().unscaledHeight() - TS;
 
         if (hud.isLivesCounterShown()) {
             drawLivesCounter(session, counterY);

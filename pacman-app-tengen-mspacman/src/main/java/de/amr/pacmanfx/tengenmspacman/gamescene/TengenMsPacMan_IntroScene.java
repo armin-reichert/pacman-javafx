@@ -35,6 +35,7 @@ import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.uilib.entities3D.ghost.comp.GhostSettings;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
@@ -72,8 +73,9 @@ public class TengenMsPacMan_IntroScene extends GameScene {
 
     public TengenMsPacMan_IntroScene(GameAppContext appContext) {
         super(appContext);
-        canvasRendering().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
-        canvasRendering().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
+        componentsRegistry().setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
+        reqCanvasRendering().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
+        reqCanvasRendering().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
         flow = new StateMachine<>(List.of(SceneState.values()));
     }
 

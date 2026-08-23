@@ -25,6 +25,7 @@ import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.input.JoypadButton;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
@@ -62,8 +63,9 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
 
     public TengenMsPacMan_CutScene4(GameAppContext app) {
         super(app);
-        canvasRendering().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
-        canvasRendering().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
+        componentsRegistry().setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
+        reqCanvasRendering().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
+        reqCanvasRendering().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
     }
 
     public Pac pacMan() {
@@ -235,7 +237,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
 
         final Pac junior = factory.createPacMan();
         double randomX = 8 * TS + (8 * TS) * Math.random();
-        junior.pos().set((float) randomX, canvasRendering().unscaledHeight() - 4 * TS);
+        junior.pos().set((float) randomX, reqCanvasRendering().unscaledHeight() - 4 * TS);
         junior.show();
 
         worldNavigationSystem.setMoveDir(junior, Direction.UP);
@@ -273,11 +275,11 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
             computeNewMoveDir(navigator, junior);
         }
         motor.move(junior);
-        if (junior.pos().x() > canvasRendering().unscaledWidth()) {
+        if (junior.pos().x() > reqCanvasRendering().unscaledWidth()) {
             junior.pos().setX(0);
         }
         if (junior.pos().x() < 0) {
-            junior.pos().setX(canvasRendering().unscaledWidth());
+            junior.pos().setX(reqCanvasRendering().unscaledWidth());
         }
     }
 
@@ -297,7 +299,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
         Vector2i tile = junior.pos().tile();
         Vector2f pos1 = tile.plus(dir1.vector()).scaled(TS).toVector2f();
         Vector2f pos2 = tile.plus(dir2.vector()).scaled(TS).toVector2f();
-        Vector2f center = new Vector2f(0.5f * canvasRendering().unscaledWidth(), 0.5f * canvasRendering().unscaledHeight());
+        Vector2f center = new Vector2f(0.5f * reqCanvasRendering().unscaledWidth(), 0.5f * reqCanvasRendering().unscaledHeight());
         return Double.compare(pos1.euclideanDist(center), pos2.euclideanDist(center));
     }
 }

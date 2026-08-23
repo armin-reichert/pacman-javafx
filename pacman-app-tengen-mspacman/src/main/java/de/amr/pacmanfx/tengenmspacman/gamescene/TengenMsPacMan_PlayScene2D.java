@@ -66,6 +66,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
     public TengenMsPacMan_PlayScene2D(GameAppContext appContext) {
         super(appContext);
 
+        componentsRegistry().setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
+
         dynamicCamera = new PlayScene2DCamera();
 
         rootPane.backgroundProperty().bind(appContext.ui().viewModel().common2D.canvasBackgroundColorProperty.map(Background::fill));
@@ -196,8 +198,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final Vector2i size = terrain.sizeInPixel();
 
-        canvasRendering().unscaledWidthProperty().set(size.x());
-        canvasRendering().unscaledHeightProperty().set(size.y());
+        reqCanvasRendering().unscaledWidthProperty().set(size.x());
+        reqCanvasRendering().unscaledHeightProperty().set(size.y());
 
         dynamicCamera.enterTrackingMode();
         dynamicCamera.updateRange(terrain);
@@ -224,8 +226,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
             oldCanvas.heightProperty().unbind();
             rootPane.getChildren().remove(oldCanvas);
         }
-        newCanvas.widthProperty() .bind(canvasRendering().scalingProperty().multiply(NES_SCREEN_WIDTH));
-        newCanvas.heightProperty().bind(canvasRendering().scalingProperty().multiply(canvasHeightUnscaled));
+        newCanvas.widthProperty() .bind(reqCanvasRendering().scalingProperty().multiply(NES_SCREEN_WIDTH));
+        newCanvas.heightProperty().bind(reqCanvasRendering().scalingProperty().multiply(canvasHeightUnscaled));
         rootPane.getChildren().add(newCanvas);
     };
 
@@ -233,14 +235,14 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
         // Remove component, will be recreated on-demand!
         componentsRegistry().removeComp(CanvasRenderingComp.class);
 
-        canvasRendering().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
+        reqCanvasRendering().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         // Default height. Varies with map size.
-        canvasRendering().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
+        reqCanvasRendering().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
 
-        canvasRendering().scalingProperty().addListener(scalingListener);
-        canvasRendering().canvasProperty().addListener(canvasListener);
+        reqCanvasRendering().scalingProperty().addListener(scalingListener);
+        reqCanvasRendering().canvasProperty().addListener(canvasListener);
 
-        dynamicCamera.scalingProperty().bind(canvasRendering().scalingProperty());
+        dynamicCamera.scalingProperty().bind(reqCanvasRendering().scalingProperty());
     }
 
     private TengenMsPacMan_Actions actions() {
@@ -282,12 +284,12 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
         final var uiSettings = uiSettings();
         final SceneDisplay displayMode = uiSettings.playSceneDisplay.get();
 
-        canvasRendering().scalingProperty().set(switch (displayMode) {
+        reqCanvasRendering().scalingProperty().set(switch (displayMode) {
             case SCALED_TO_FIT -> subScene.getHeight() / canvasHeightUnscaled.get();
             case SCROLLING -> subScene.getHeight() / NES_SCREEN_HEIGHT;
         });
         Logger.debug("Tengen 2D play scene sub-scene: w={0.00} h={0.00} scaling={0.00}",
-            subScene.getWidth(), subScene.getHeight(), canvasRendering().scaling());
+            subScene.getWidth(), subScene.getHeight(), reqCanvasRendering().scaling());
     }
 
     private void updateHUD(GameSession session, GameLevel level) {
