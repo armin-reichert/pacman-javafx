@@ -32,13 +32,11 @@ import de.amr.pacmanfx.core.level.GameLevelMessage;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.core.model.rules.ScoringRules;
-import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 import java.util.Set;
 
 import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
@@ -53,18 +51,28 @@ public abstract class CommonGamePlay implements GamePlay {
 
     @Override
     public void prepareLevelForPlaying(GameContext game) {
-        final GameLevel level = game.session().level();
         final GameSystems systems = game.variant().systems();
 
-        preparePacForPlaying(
-            level.entities().pac(),
-            level.worldMap().terrainLayer(),
-            systems);
+        final GameLevel level = game.session().level();
+        final WorldMap worldMap = level.worldMap();
+        final House house = level.entities().house();
+        final Pac pac = level.entities().pac();
 
-        prepareGhostsForPlaying(
-            level.entities().ghosts(),
-            level.entities().house(),
-            systems);
+        pac.reset(); // initially invisible!
+        pac.pos().set(worldMap.terrainLayer().pacStartPosition());
+        systems.pacPower().reset(pac);
+        systems.worldNavigator().setMoveDir(pac, Direction.LEFT);
+        systems.worldNavigator().setWishDir(pac, Direction.LEFT);
+
+        level.entities().ghosts().forEach(ghost -> {
+            ghost.reset(); // initially invisible!
+            ghost.pos().set(ghost.worldInfo().startPosition());
+            final Direction direction = house.floorplan().ghostStartDirection(ghost.personality());
+            systems.worldNavigator().setMoveDir(ghost, direction);
+            systems.worldNavigator().setWishDir(ghost, direction);
+            systems.ghostState().changeGhostState(ghost, GhostState.LOCKED);
+            systems.actorSpriteAnimController().resetSelected(ghost);
+        });
 
         // Blinking energizers are visible when state is ON
         level.heartbeat().setStartState(Pulse.State.ON);
@@ -239,26 +247,6 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     // private
-
-    private void preparePacForPlaying(Pac pac, TerrainLayer terrain, GameSystems systems) {
-        pac.reset(); // initially invisible!
-        pac.pos().set(terrain.pacStartPosition());
-        systems.pacPower().reset(pac);
-        systems.worldNavigator().setMoveDir(pac, Direction.LEFT);
-        systems.worldNavigator().setWishDir(pac, Direction.LEFT);
-    }
-
-    private void prepareGhostsForPlaying(List<Ghost> ghosts, House house, GameSystems systems) {
-        ghosts.forEach(ghost -> {
-            ghost.reset(); // initially invisible!
-            ghost.pos().set(ghost.worldInfo().startPosition());
-            final Direction direction = house.floorplan().ghostStartDirection(ghost.personality());
-            systems.worldNavigator().setMoveDir(ghost, direction);
-            systems.worldNavigator().setWishDir(ghost, direction);
-            systems.ghostState().changeGhostState(ghost, GhostState.LOCKED);
-            systems.actorSpriteAnimController().resetSelected(ghost);
-        });
-    }
 
     protected void initScores(GameSession session) {
         session.score().reset();
