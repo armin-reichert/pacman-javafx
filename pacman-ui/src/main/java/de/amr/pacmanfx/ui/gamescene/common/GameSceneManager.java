@@ -154,23 +154,29 @@ public class GameSceneManager {
     }
 
     private void switchPlaySceneTo2D(GameScene currentGameScene, GameScene nextGameScene) {
-        if (!(nextGameScene instanceof GameScene playScene2D)) {
-            throw new IllegalArgumentException("Expected GameScene2D, but scene has class %s"
-                .formatted(nextGameScene.getClass().getSimpleName()));
-        }
-        playScene2D.onEnteredFrom3DScene();
+        requireNonNull(currentGameScene);
+        requireNonNull(nextGameScene);
 
-        Logger.info("2D scene {} entered from 3D scene {}", playScene2D.getClass().getSimpleName(), currentGameScene.getClass().getSimpleName());
+        if (nextGameScene.optCanvasRendering().isPresent()) {
+            nextGameScene.onEnteredFrom3DScene();
+            Logger.info("2D scene {} entered from 3D scene {}",
+                nextGameScene.getClass().getSimpleName(), currentGameScene.getClass().getSimpleName());
+        }
+        else {
+            Logger.error("Scene {} has no canvas rendering support?", nextGameScene.getClass().getSimpleName());
+        }
     }
 
     private GameSceneSwitchType identifySwitchType(GameScene currentGameScene, GameScene nextGameScene) {
-        if (currentGameScene == null && nextGameScene == null) {
-            throw new IllegalStateException("WTF is going on here, switch between NULL scenes?");
+        requireNonNull(currentGameScene);
+        requireNonNull(nextGameScene);
+
+        final boolean src2D = currentGameScene.optCanvasRendering().isPresent();
+        final boolean tgt2D = nextGameScene.optCanvasRendering().isPresent();
+
+        if (src2D == tgt2D) {
+            return GameSceneSwitchType.NONE;
         }
-        return switch (currentGameScene) {
-            case GameScene _ when nextGameScene instanceof PlayScene3D         -> GameSceneSwitchType.FROM_2D_TO_3D;
-            case PlayScene3D         _ when nextGameScene instanceof GameScene -> GameSceneSwitchType.FROM_3D_TO_2D;
-            case null, default                                                           -> GameSceneSwitchType.NONE;
-        };
+        return src2D ? GameSceneSwitchType.FROM_2D_TO_3D : GameSceneSwitchType.FROM_3D_TO_2D;
     }
 }
