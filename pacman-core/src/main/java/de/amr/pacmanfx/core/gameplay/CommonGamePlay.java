@@ -196,15 +196,26 @@ public abstract class CommonGamePlay implements GamePlay {
         requireNonNull(level);
         requireNonNull(tile);
 
+        final GameSystems systems = game.variant().systems();
         final GameSession session = game.session();
         final GameRules rules = game.variant().rules();
         final Pac pac = level.entities().pac();
 
         scorePoints(game, rules.scoringRules().pointsForEnergizer(), level.number());
+
         session.gateKeeper().registerFoodEaten(level);
         level.clearGhostKillChain();
-        game.variant().systems().pacDigestion().digestEnergizer(pac, rules);
-        startPacPower(game, level, pac);
+        // Ghosts make turnback also in case pac power time is zero!
+        level.entities().ghostsInAnyOfStates(GHOST_TURNBACK_STATES).forEach(systems.worldNavigator()::requestTurnBack);
+
+        systems.pacDigestion().digestEnergizer(pac, rules);
+
+        final long powerTicks = TickTimer.secToTicks(rules.pacPowerSeconds(level.number()));
+        if (powerTicks > 0) {
+            //TODO: move into event handler for the published event!
+            onPacPowerStarts(game, level, pac, powerTicks);
+            game.eventManager().publishGameEvent(new PacPowerStartsEvent(pac));
+        }
     }
 
     @Override
@@ -338,21 +349,6 @@ public abstract class CommonGamePlay implements GamePlay {
             ScoreSystem.enableScore(session.highScore(), true);
         } catch (IOException x) {
             Logger.error(x, "Error loading high-score file {}", highScoreFile.getAbsolutePath());
-        }
-    }
-
-    private void startPacPower(GameContext game, GameLevel level, Pac pac) {
-        final GameSystems systems = game.variant().systems();
-        final GameRules rules = game.variant().rules();
-
-        // Ghosts make turnback also in case pac power time is zero!
-        level.entities().ghostsInAnyOfStates(GHOST_TURNBACK_STATES).forEach(systems.worldNavigator()::requestTurnBack);
-
-        final long powerTicks = TickTimer.secToTicks(rules.pacPowerSeconds(level.number()));
-        if (powerTicks > 0) {
-            //TODO move to game event handler!
-            onPacPowerStarts(game, level, pac, powerTicks);
-            game.eventManager().publishGameEvent(new PacPowerStartsEvent(pac));
         }
     }
 
