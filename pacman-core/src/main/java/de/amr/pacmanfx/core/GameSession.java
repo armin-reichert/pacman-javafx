@@ -8,6 +8,7 @@ import de.amr.basics.QuerySet;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.entities.LevelCounter;
 import de.amr.pacmanfx.core.entities.LivesCounter;
+import de.amr.pacmanfx.core.entities.MessageView;
 import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.gameplay.ArcadeHouseGateKeeper;
@@ -69,6 +70,7 @@ public class GameSession {
 
         hudEntities.add(new LevelCounter());
         hudEntities.add(new LivesCounter());
+        hudEntities.add(new MessageView());
 
         cheats.cheatUsedProperty().addListener((_, _, cheated) -> {
             if (cheated) {

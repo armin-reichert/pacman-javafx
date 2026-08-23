@@ -89,12 +89,14 @@ public class GameLevel3D implements DisposableGraphicsObject {
         final GameSession session = game.session();
         this.level = session.level();
 
+        final WorldMap worldMap = level.worldMap();
+        final House house = level.entities().house();
         final Pac pac = level.entities().pac();
         final List<Ghost> ghosts = level.entities().ghosts();
-        final House house = level.entities().house();
+
         final LevelCounter levelCounter = session.hudEntities().theOne(LevelCounter.class);
         final LivesCounter livesCounter = session.hudEntities().theOne(LivesCounter.class);
-        final WorldMap worldMap = level.worldMap();
+        final MessageView messageView   = session.hudEntities().theOne(MessageView.class);
 
         final WorldMapColorScheme colorScheme = uiConfig.renderConfig().colorScheme(level.worldMap(), uiConfig.worldSettings());
 
@@ -105,10 +107,9 @@ public class GameLevel3D implements DisposableGraphicsObject {
         createGhost3DViews(ghosts, uiConfig.worldSettings().ghosts());
         createLevelCounter3DView(levelCounter, animationRegistry);
         createLivesCounter3DView(livesCounter);
-        createMessage3DView(animationRegistry);
+        MessageView3DBuilder.createAnim3D(messageView, animationRegistry);
 
         composeLevel3D(pac, ghosts, livesCounter, house);
-
 
         root.setMouseTransparent(true); // this increases performance they say...
     }
@@ -322,10 +323,6 @@ public class GameLevel3D implements DisposableGraphicsObject {
 
         LevelCounter3DViewSystem.updateLevelCounter3D(uiConfig, levelCounter, level);
         root.getChildren().add(view3D.root());
-    }
-
-    private void createMessage3DView(AnimationRegistry registry) {
-        MessageView3DBuilder.ensureAnim3DExists(level.entities().messageView(), registry);
     }
 
     // Order matters for correct transparency!

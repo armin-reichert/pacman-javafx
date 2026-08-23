@@ -5,7 +5,10 @@
 package de.amr.pacmanfx.core.level;
 
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.entities.*;
+import de.amr.pacmanfx.core.entities.Bonus;
+import de.amr.pacmanfx.core.entities.Ghost;
+import de.amr.pacmanfx.core.entities.House;
+import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 
@@ -23,7 +26,6 @@ public class GameLevelEntitySet {
     private final EnumMap<GhostPersonality, Ghost> theGhosts = new EnumMap<>(GhostPersonality.class);
     private Bonus theBonus;
     private House theHouse;
-    private MessageView theMessageView;
 
     public void add(GameEntity entity) {
         requireNonNull(entity);
@@ -52,12 +54,6 @@ public class GameLevelEntitySet {
                 }
                 theHouse = house;
             }
-            case MessageView messageView -> {
-                if (theMessageView != null) {
-                    throw new IllegalArgumentException("MessageView %s already added to entity set!".formatted(messageView.name()));
-                }
-                theMessageView = messageView;
-            }
             default -> throw new IllegalArgumentException("Unknown entity type!");
         }
     }
@@ -69,7 +65,6 @@ public class GameLevelEntitySet {
             case Pac   _ -> thePac = null;
             case Bonus _ -> theBonus = null;
             case House _ -> theHouse = null;
-            case MessageView _ -> theMessageView = null;
             default -> throw new IllegalArgumentException("Unknown entity type!");
         }
     }
@@ -110,9 +105,5 @@ public class GameLevelEntitySet {
 
     public House house() {
         return theHouse;
-    }
-
-    public MessageView messageView() {
-        return theMessageView;
     }
 }

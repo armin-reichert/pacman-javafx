@@ -9,6 +9,7 @@ import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.entities3D.messageview.MessageView3DBuilder;
 import de.amr.pacmanfx.uilib.entities3D.messageview.comp.MessageView3DComp;
 import javafx.scene.Group;
+import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -30,7 +31,7 @@ public class MessageView3DDisplaySystem {
         Group parent,
         Vector2f center,
         Font font,
-        AnimationRegistry registry,
+        AnimationRegistry animationRegistry,
         LevelMessageType messageType,
         Object... args) {
 
@@ -38,15 +39,14 @@ public class MessageView3DDisplaySystem {
         requireNonNull(parent);
         requireNonNull(center);
         requireNonNull(font);
-        requireNonNull(registry);
+        requireNonNull(animationRegistry);
         requireNonNull(messageType);
 
-        final MessageView3DComp view3D = MessageView3DBuilder.ensureView3DExists(messageView);
-        if (!parent.getChildren().contains(view3D.root())) {
-            parent.getChildren().add(view3D.root());
+        MessageView3DBuilder.createAnim3D(messageView, animationRegistry);
+        final Node root = messageView.reqComp(MessageView3DComp.class).root();
+        if (!parent.getChildren().contains(root)) {
+            parent.getChildren().add(root);
         }
-
-        MessageView3DBuilder.ensureAnim3DExists(messageView, registry);
 
         switch (messageType) {
             case READY -> {

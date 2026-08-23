@@ -10,10 +10,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.entities.Bonus;
-import de.amr.pacmanfx.core.entities.House;
-import de.amr.pacmanfx.core.entities.LevelCounter;
-import de.amr.pacmanfx.core.entities.Pac;
+import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventListener;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
 import de.amr.pacmanfx.core.event.bonus.BonusEatenEvent;
@@ -92,7 +89,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
             return;
         }
         if (gameState.id() instanceof TestStateID) {
-            handleTestState(app().ui().viewModel().common3D, game().session().level());
+            handleTestState(app().ui().viewModel().common3D, session().level());
         }
         else if (CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(newState)) {
             onHuntingStart(assertLevel3D());
@@ -140,7 +137,8 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     @Override
     default void onGameContinued(GameContinuedEvent ignoredEvent) {
         final GameLevel3D level3D = assertLevel3D();
-        showMessage(level3D, LevelMessageType.READY);
+        final MessageView messageView = session().hudEntities().theOne(MessageView.class);
+        showMessage(level3D, messageView, LevelMessageType.READY);
     }
 
     @Override
@@ -155,7 +153,8 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         }
 
         final GameLevel3D level3D = assertLevel3D();
-        showMessage(level3D, LevelMessageType.READY);
+        final MessageView messageView = session().hudEntities().theOne(MessageView.class);
+        showMessage(level3D, messageView, LevelMessageType.READY);
     }
 
     @Override
@@ -181,7 +180,8 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         if (newState instanceof GameState gameState && gameState.id() instanceof TestStateID) {
             gameScene().replaceGameLevel3D(game(), level);
             level3D.animationManager().startEnergizerPumping();
-            showMessage(level3D, LevelMessageType.TEST, level.number());
+            final MessageView messageView = session().hudEntities().theOne(MessageView.class);
+            showMessage(level3D, messageView, LevelMessageType.TEST, level.number());
         }
 
         //TODO: workaround, check cause for invisible Pac-Man 3D after cut scene
@@ -256,7 +256,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 
     // Private state-specific handlers
 
-    private void showMessage(GameLevel3D level3D, LevelMessageType type, Object... args) {
+    private void showMessage(GameLevel3D level3D, MessageView messageView, LevelMessageType type, Object... args) {
         final GameLevel level = level3D.level();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final var center = switch (type) {
@@ -264,7 +264,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
             case TEST -> vec2_float(terrain.numCols() * WorldMap.HTS, (terrain.numRows() - 2) * WorldMap.TS);
         };
         MessageView3DDisplaySystem.showMessage(
-            level.entities().messageView(),
+            messageView,
             level3D.root(),
             center,
             GlobalAssets.PredefinedFont.ARCADE6.font(),
@@ -328,7 +328,8 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         level.entities().optBonus().ifPresent(bonus ->
             Bonus3DViewSystem.lookExpired(bonus, level3D.animationManager().registry()));
 
-        MessageView3DAnimationSystem.hideMessageView(level.entities().messageView());
+        final MessageView messageView = session().hudEntities().theOne(MessageView.class);
+        MessageView3DAnimationSystem.hideMessageView(messageView);
 
         playLevelEndAnimation(level3D.animationManager().registry(),
             viewModel.common3D, viewModel.maze3D,
@@ -394,9 +395,10 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     }
 
     private void handleTestState(Game3DSettingsVM globals3D, GameLevel level) {
+        final MessageView messageView = session().hudEntities().theOne(MessageView.class);
         gameScene().optGameLevel3D().ifPresent(level3D -> {
             gameScene().replaceGameLevel3D(game(), level);
-            showMessage(level3D, LevelMessageType.TEST, level.number());
+            showMessage(level3D, messageView, LevelMessageType.TEST, level.number());
             globals3D.cameraPerspectiveIdProperty.set(PerspectiveID.TOTAL);
         });
     }

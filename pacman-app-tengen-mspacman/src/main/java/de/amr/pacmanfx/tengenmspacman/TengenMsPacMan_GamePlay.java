@@ -287,7 +287,6 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         entities.add(pinkGhost);
         entities.add(cyanGhost);
         entities.add(orangeGhost);
-        entities.add(new MessageView());
 
         // Configure entities
 
