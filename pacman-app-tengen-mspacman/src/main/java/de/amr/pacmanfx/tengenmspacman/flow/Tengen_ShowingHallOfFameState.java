@@ -12,9 +12,9 @@ import de.amr.pacmanfx.core.gamestate.GameState;
  * Corresponds to the screen showing the people that have contributed to the game. Here, a second
  * screen with the contributors to the remake is shown too.
  */
-public class ShowingHallOfFameState extends GameState {
+public class Tengen_ShowingHallOfFameState extends GameState {
 
-    public ShowingHallOfFameState() {
+    public Tengen_ShowingHallOfFameState() {
         super(TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME);
     }
 

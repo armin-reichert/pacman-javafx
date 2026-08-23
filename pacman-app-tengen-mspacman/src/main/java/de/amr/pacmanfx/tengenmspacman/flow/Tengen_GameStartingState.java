@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.arcade.pacman.flow;
+package de.amr.pacmanfx.tengenmspacman.flow;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.GameEntity;
@@ -14,25 +14,27 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
 
-public class ArcadeGameState_GameStarting extends GameState {
+public class Tengen_GameStartingState extends GameState {
 
-    static final int TICK_NEW_GAME_START_LEVEL = 2;
-    static final int TICK_NEW_GAME_SHOW_GUYS = 60;
-    static final int TICK_NEW_GAME_START_PLAYING = 240;
+    static final short TICK_SHOW_READY = 10;
+    static final short TICK_SHOW_GUYS = 70;
+    static final short TICK_START_PLAYING = 250;
 
-    public ArcadeGameState_GameStarting() {
+    public Tengen_GameStartingState() {
         super(CommonGameStateID.GAME_STARTING);
     }
 
     @Override
     public void onEnter(GameContext game) {
-        final GameLevel newLevel = game.variant().gamePlay().buildNormalLevel(game, 1, game.variant().initialLifeCount());
+        final var gamePlay = (TengenMsPacMan_GamePlay) game.variant().gamePlay();
+        final GameSession session = game.session();
+
+        final GameLevel newLevel = gamePlay.buildNormalLevel(game, gamePlay.startLevelNumber(session), game.variant().initialLifeCount());
         game.eventManager().publishGameEvent(new LevelCreatedEvent(newLevel));
 
-        game.session().hud().hideCredit().showLivesCounter();
-        ScoreSystem.enableScore(game.session().highScore(), true);
-
+        ScoreSystem.enableScore(session.highScore(), true);
         game.eventManager().publishGameEvent(new GameStartedEvent(game));
     }
 
@@ -42,23 +44,18 @@ public class ArcadeGameState_GameStarting extends GameState {
         final GameLevel level = session.level();
         final long tick = timer().tickCount();
 
-        if (tick == TICK_NEW_GAME_START_LEVEL) {
+        if (tick == TICK_SHOW_READY) {
             game.variant().gamePlay().startLevel(game);
             // Note: This event is very important because it triggers the creation of the actor animations!
             game.eventManager().publishGameEvent(new LevelStartedEvent(level));
         }
-        else if (tick == TICK_NEW_GAME_SHOW_GUYS) {
+        else if (tick == TICK_SHOW_GUYS) {
             level.entities().pac().show();
             level.entities().ghosts().forEach(GameEntity::show);
         }
-        else if (tick == TICK_NEW_GAME_START_PLAYING) {
+        else if (tick == TICK_START_PLAYING) {
             session.setPlaying(true);
             game.variant().gameFlow().enterGameState(game, CommonGameStateID.GAME_LEVEL_PLAYING);
         }
-    }
-
-    @Override
-    public void onExit(GameContext game) {
-        game.coinMechanism().consumeCoin();
     }
 }

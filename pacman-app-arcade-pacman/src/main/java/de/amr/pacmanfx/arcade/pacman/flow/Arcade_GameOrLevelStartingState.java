@@ -8,9 +8,9 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 
-public class ArcadeGameState_GameOrLevelStarting extends GameState {
+public class Arcade_GameOrLevelStartingState extends GameState {
 
-    public ArcadeGameState_GameOrLevelStarting() {
+    public Arcade_GameOrLevelStartingState() {
         super(CommonGameStateID.GAME_OR_LEVEL_STARTING);
     }
 

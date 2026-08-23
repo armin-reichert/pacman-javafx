@@ -11,16 +11,16 @@ import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.GameSession;
 
-public class ArcadeGameState_LevelComplete extends GameState {
+public class Arcade_LevelCompleteState extends GameState {
 
-    public ArcadeGameState_LevelComplete() {
+    public Arcade_LevelCompleteState() {
         super(CommonGameStateID.GAME_LEVEL_COMPLETE);
     }
 
     @Override
     public void onEnter(GameContext game) {
         final GameSession session = game.session();
-        game.variant().gamePlay().onLevelCompleted(game, session.level());
+        game.variant().gamePlay().finishLevel(game, session.level());
         timer().resetToIndefiniteDuration();
     }
 

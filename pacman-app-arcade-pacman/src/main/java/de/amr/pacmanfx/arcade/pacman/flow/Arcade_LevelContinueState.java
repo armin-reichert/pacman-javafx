@@ -14,12 +14,12 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.GameSession;
 
-public class ArcadeGameState_LevelContinue extends GameState {
+public class Arcade_LevelContinueState extends GameState {
 
     static final int TICK_RESUME_HUNTING = 120;
     static final int TICK_CONTINUE_LEVEL = 60;
 
-    public ArcadeGameState_LevelContinue() {
+    public Arcade_LevelContinueState() {
         super(CommonGameStateID.GAME_LEVEL_CONTINUE);
     }
 

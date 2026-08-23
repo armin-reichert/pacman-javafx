@@ -97,7 +97,7 @@ public class LevelShortTestState extends GameState {
             level.entities().pac().hide();
             level.entities().ghosts().forEach(GameEntity::hide);
             level.heartbeat().stop();
-            gamePlay.onLevelCompleted(game, level);
+            gamePlay.finishLevel(game, level);
         }
         else if (timer().atSecond(START + 10)) {
             if (level.number() == lastTestedLevelNumber) {

@@ -19,7 +19,7 @@ import de.amr.pacmanfx.core.level.GameLevel;
 
 import static java.util.Objects.requireNonNull;
 
-public final class GameState_PacManDying extends GameState {
+public final class Common_PacManDyingState extends GameState {
 
     public record Timing(
         int hideGhostsTick,
@@ -29,7 +29,7 @@ public final class GameState_PacManDying extends GameState {
 
     private final Timing timing;
 
-    public GameState_PacManDying(Timing timing) {
+    public Common_PacManDyingState(Timing timing) {
         super(CommonGameStateID.GAME_LEVEL_PACMAN_DYING);
         this.timing = requireNonNull(timing);
     }

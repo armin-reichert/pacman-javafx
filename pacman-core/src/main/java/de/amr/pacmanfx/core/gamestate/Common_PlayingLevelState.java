@@ -17,9 +17,9 @@ import org.tinylog.Logger;
 
 import java.util.List;
 
-public final class GameState_PlayingLevel extends GameState {
+public final class Common_PlayingLevelState extends GameState {
 
-    public GameState_PlayingLevel() {
+    public Common_PlayingLevelState() {
         super(CommonGameStateID.GAME_LEVEL_PLAYING);
     }
 

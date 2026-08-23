@@ -16,9 +16,9 @@ import de.amr.pacmanfx.core.level.GameLevelMessageType;
 
 import java.io.IOException;
 
-public class ArcadeGameState_GameOver extends GameState {
+public class Arcade_GameOverState extends GameState {
 
-    public ArcadeGameState_GameOver() {
+    public Arcade_GameOverState() {
         super(CommonGameStateID.GAME_OVER);
     }
 

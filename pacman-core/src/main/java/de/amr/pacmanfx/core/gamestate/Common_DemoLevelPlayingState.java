@@ -19,9 +19,9 @@ import de.amr.pacmanfx.core.model.HUDState;
 
 import java.util.Optional;
 
-public final class GameState_DemoLevelPlaying extends GameState {
+public final class Common_DemoLevelPlayingState extends GameState {
 
-    public GameState_DemoLevelPlaying() {
+    public Common_DemoLevelPlayingState() {
         super(CommonGameStateID.DEMO_LEVEL_PLAYING);
     }
 

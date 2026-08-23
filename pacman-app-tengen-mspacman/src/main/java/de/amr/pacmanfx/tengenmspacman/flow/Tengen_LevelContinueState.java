@@ -11,11 +11,11 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
 
-public class GameLevelContinueState extends GameState {
+public class Tengen_LevelContinueState extends GameState {
 
     static final short TICK_RESUME_HUNTING = 240;
 
-    public GameLevelContinueState() {
+    public Tengen_LevelContinueState() {
         super(CommonGameStateID.GAME_LEVEL_CONTINUE);
     }
 

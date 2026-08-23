@@ -27,14 +27,14 @@ import org.tinylog.Logger;
 import java.io.IOException;
 import java.util.Optional;
 
-public class GameOverState extends GameState {
+public class Tengen_GameOverState extends GameState {
 
     public static final int GAME_OVER_MESSAGE_DELAY_SEC = 2;
     public static final int COUNTDOWN_AFTER_ANIMATION = 180;
 
     private long countdownAfter;
 
-    public GameOverState() {
+    public Tengen_GameOverState() {
         super(CommonGameStateID.GAME_OVER);
     }
 

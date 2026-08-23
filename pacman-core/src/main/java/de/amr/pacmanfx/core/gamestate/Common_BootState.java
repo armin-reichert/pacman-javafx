@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.GameContext;
 /**
  * Corresponds to the screen showing all these random symbols from the Arcade video memory.
  */
-public final class GameState_Booting extends GameState {
+public final class Common_BootState extends GameState {
 
     public interface Timing {
         int HEX_CODES      = 60;
@@ -18,7 +18,7 @@ public final class GameState_Booting extends GameState {
         int EXPIRATION     = 240;
     }
 
-    public GameState_Booting() {
+    public Common_BootState() {
         // "Das muss das Boot abkönnen! Jawohl, Herr Kaleu!"
         super(CommonGameStateID.BOOT);
     }

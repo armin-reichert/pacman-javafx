@@ -10,20 +10,20 @@ import de.amr.pacmanfx.core.gamestate.*;
  * The game states used by the Arcade game variants (Pc-Man, Ms. Pac-Man and their XXL versions).
  */
 public enum Arcade_GameState {
-    BOOT                       (new GameState_Booting()),
-    GAME_INTRO                 (new GameState_Intro()),
-    GAME_PREPARATION           (new GameState_PreparingGamePlay()),
-    GAME_OR_LEVEL_STARTING     (new ArcadeGameState_GameOrLevelStarting()),
-    DEMO_LEVEL_PLAYING         (new GameState_DemoLevelPlaying()),
-    GAME_STARTING              (new ArcadeGameState_GameStarting()),
-    GAME_LEVEL_CONTINUE        (new ArcadeGameState_LevelContinue()),
-    GAME_LEVEL_PLAYING         (new GameState_PlayingLevel()),
-    GAME_LEVEL_COMPLETE        (new ArcadeGameState_LevelComplete()),
-    GAME_LEVEL_TRANSITION      (new GameState_LevelTransition()),
-    GAME_LEVEL_EATING_GHOST    (new GameState_EatingGhost()),
-    GAME_LEVEL_PACMAN_DYING    (new GameState_PacManDying(new GameState_PacManDying.Timing(60, 90, 190, 210))),
-    GAME_OVER                  (new ArcadeGameState_GameOver()),
-    GAME_LEVEL_INTERMISSION    (new ArcadeGameState_LevelIntermission());
+    BOOT                       (new Common_BootState()),
+    GAME_INTRO                 (new Common_IntroState()),
+    GAME_PREPARATION           (new Common_PreparationState()),
+    GAME_OR_LEVEL_STARTING     (new Arcade_GameOrLevelStartingState()),
+    DEMO_LEVEL_PLAYING         (new Common_DemoLevelPlayingState()),
+    GAME_STARTING              (new Arcade_GameStartingState()),
+    GAME_LEVEL_CONTINUE        (new Arcade_LevelContinueState()),
+    GAME_LEVEL_PLAYING         (new Common_PlayingLevelState()),
+    GAME_LEVEL_COMPLETE        (new Arcade_LevelCompleteState()),
+    GAME_LEVEL_TRANSITION      (new Common_LevelTransitionState()),
+    GAME_LEVEL_EATING_GHOST    (new Common_EatingGhostState()),
+    GAME_LEVEL_PACMAN_DYING    (new Common_PacManDyingState(new Common_PacManDyingState.Timing(60, 90, 190, 210))),
+    GAME_OVER                  (new Arcade_GameOverState()),
+    GAME_LEVEL_INTERMISSION    (new Arcade_LevelIntermissionState());
 
     Arcade_GameState(GameState state) {
         this.state = state;

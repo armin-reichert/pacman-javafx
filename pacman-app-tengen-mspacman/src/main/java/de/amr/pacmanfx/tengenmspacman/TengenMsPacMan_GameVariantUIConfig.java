@@ -12,7 +12,7 @@ import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.config.TengenJsonConfigLoader;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
-import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
+import de.amr.pacmanfx.tengenmspacman.flow.Tengen_GameState;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_GameSceneConfig;
 import de.amr.pacmanfx.tengenmspacman.model.BoosterMode;
 import de.amr.pacmanfx.tengenmspacman.model.Difficulty;
@@ -48,7 +48,7 @@ public class TengenMsPacMan_GameVariantUIConfig implements GameVariantUIConfig {
 
     public static GameFlowController createGameFlow() {
         final var gameFlow = new GameFlowController("Tengen Ms. Pac-Man Game Flow");
-        for (TengenMsPacMan_GameState gameState : TengenMsPacMan_GameState.values()) {
+        for (Tengen_GameState gameState : Tengen_GameState.values()) {
             gameFlow.addState(gameState.state());
         }
         return gameFlow;

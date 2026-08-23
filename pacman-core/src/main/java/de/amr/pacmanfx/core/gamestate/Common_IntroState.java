@@ -6,16 +6,17 @@ package de.amr.pacmanfx.core.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
 
-public final class GameState_LevelTransition extends GameState {
+public final class Common_IntroState extends GameState {
 
-    public GameState_LevelTransition() {
-        super(CommonGameStateID.GAME_LEVEL_TRANSITION);
+    public Common_IntroState() {
+        super(CommonGameStateID.GAME_INTRO);
     }
 
     @Override
     public void onEnter(GameContext game) {
-        timer().restartSeconds(2);
-        game.variant().gamePlay().startNextLevel(game);
+        game.session().hud().showLevelCounter().hideLivesCounter().showCredit().showScore().show();
+        game.session().setLevel(null);
+        timer().resetToIndefiniteDuration();
     }
 
     @Override

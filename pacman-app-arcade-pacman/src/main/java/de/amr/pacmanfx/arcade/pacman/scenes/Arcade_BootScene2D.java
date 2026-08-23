@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.basics.math.RandomNumbers;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.gamestate.GameState_Booting;
+import de.amr.pacmanfx.core.gamestate.Common_BootState;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
@@ -48,9 +48,9 @@ public class Arcade_BootScene2D extends GameScene {
     @Override
     public void onTick(GameContext game) {
         switch ((int) game().state().timer().tickCount()) {
-            case GameState_Booting.Timing.HEX_CODES -> sceneState = SceneState.HEX_CODES;
-            case GameState_Booting.Timing.SPRITE_GARBAGE -> sceneState = SceneState.RANDOM_SPRITE_FRAGMENTS;
-            case GameState_Booting.Timing.GRID -> sceneState = SceneState.GRID;
+            case Common_BootState.Timing.HEX_CODES -> sceneState = SceneState.HEX_CODES;
+            case Common_BootState.Timing.SPRITE_GARBAGE -> sceneState = SceneState.RANDOM_SPRITE_FRAGMENTS;
+            case Common_BootState.Timing.GRID -> sceneState = SceneState.GRID;
         }
     }
 }

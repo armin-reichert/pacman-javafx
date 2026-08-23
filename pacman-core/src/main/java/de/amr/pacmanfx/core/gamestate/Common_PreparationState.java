@@ -7,9 +7,9 @@ package de.amr.pacmanfx.core.gamestate;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 
-public final class GameState_PreparingGamePlay extends GameState {
+public final class Common_PreparationState extends GameState {
 
-    public GameState_PreparingGamePlay() {
+    public Common_PreparationState() {
         super(CommonGameStateID.GAME_PREPARATION);
     }
 

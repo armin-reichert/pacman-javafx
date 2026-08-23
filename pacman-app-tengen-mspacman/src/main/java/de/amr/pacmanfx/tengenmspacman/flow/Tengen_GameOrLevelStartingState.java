@@ -13,9 +13,9 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
 import de.amr.pacmanfx.tengenmspacman.rules.TengenMsPacMan_GameRules;
 import org.tinylog.Logger;
 
-public class GameOrLevelStartingState extends GameState {
+public class Tengen_GameOrLevelStartingState extends GameState {
 
-    public GameOrLevelStartingState() {
+    public Tengen_GameOrLevelStartingState() {
         super(CommonGameStateID.GAME_OR_LEVEL_STARTING);
     }
 

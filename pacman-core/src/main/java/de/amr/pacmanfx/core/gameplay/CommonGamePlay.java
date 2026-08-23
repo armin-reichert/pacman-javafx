@@ -187,11 +187,14 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     @Override
-    public void onLevelCompleted(GameContext game, GameLevel level) {
+    public void finishLevel(GameContext game, GameLevel level) {
         requireNonNull(game);
         requireNonNull(level);
 
         final GameSystems systems = game.variant().systems();
+        final var animController = systems.actorSpriteAnimController();
+        final var navigator = systems.worldNavigator();
+        final Pac pac = level.entities().pac();
 
         level.huntingTimerStrategy().stop();
 
@@ -201,25 +204,21 @@ public abstract class CommonGamePlay implements GamePlay {
         // If level was ended by cheat, there might still be food remaining, so eat it:
         level.food().eatAll();
 
-        final Pac pac = level.entities().pac();
         pac.power().reset();
-
-        systems.worldNavigator().setMoveDirSpeed(pac, 0);
-        systems.actorSpriteAnimController().stopSelected(pac);
-        systems.actorSpriteAnimController().select(pac, CommonSpriteAnimationID.PAC_FULL);
+        navigator.setMoveDirSpeed(pac, 0);
+        animController.stopSelected(pac);
+        animController.select(pac, CommonSpriteAnimationID.PAC_FULL);
 
         level.entities().ghosts().forEach(ghost -> {
-            systems.worldNavigator().setMoveDirSpeed(ghost, 0);
-            //TODO check in emulator if ghost animation is reset to normal
-            systems.actorSpriteAnimController().stopSelected(ghost);
-            systems.actorSpriteAnimController().select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);
+            navigator.setMoveDirSpeed(ghost, 0);
+            //TODO check in emulator if ghost animation is reset to normal when level ends
+            animController.stopSelected(ghost);
+            animController.select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);
         });
 
         level.entities().optBonus().ifPresent(bonus -> {
             systems.bonusState().setBonusInactive(bonus);
-            if (bonus.hasComp(BonusMoveAndJumpComp.class)) {
-                systems.bonusMoveAndJump().setBonusInactive(bonus);
-            }
+            bonus.optComp(BonusMoveAndJumpComp.class).ifPresent(_-> systems.bonusMoveAndJump().setBonusInactive(bonus));
             level.entities().remove(bonus);
         });
     }

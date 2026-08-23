@@ -23,7 +23,7 @@ import de.amr.pacmanfx.core.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Extras;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
-import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
+import de.amr.pacmanfx.tengenmspacman.flow.Tengen_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.MessageAnimation;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -89,13 +89,13 @@ public interface TengenMsPacMan_PlayScene2D_GameEventHandler extends DefaultGame
         final GameContext game = gameScene().game();
         Logger.info("Enter game state '{}'", e.newState().name());
         final GameSession session = game.session();
-        if (e.newState() == TengenMsPacMan_GameState.GAME_LEVEL_COMPLETE.state()) {
+        if (e.newState() == Tengen_GameState.GAME_LEVEL_COMPLETE.state()) {
             final GameLevel level = session.level();
             final int numFlashes = game.variant().rules().numLevelFlashes(level.number());
             optSoundEffects().ifPresent(GameSoundEffects::stopAll);
             gameScene().playLevelCompleteAnimation(level, numFlashes);
         }
-        else if (e.newState() == TengenMsPacMan_GameState.GAME_OVER.state()) {
+        else if (e.newState() == Tengen_GameState.GAME_OVER.state()) {
             final TengenMsPacMan_PlayScene2D playScene2D = gameScene();
             final PlayScene2DCamera camera = playScene2D.dynamicCamera();
 

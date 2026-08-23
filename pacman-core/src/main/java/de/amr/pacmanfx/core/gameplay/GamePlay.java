@@ -38,7 +38,7 @@ public interface GamePlay {
 
     void activateNextBonus(GameContext game, GameLevel level);
 
-    void onLevelCompleted(GameContext game, GameLevel level);
+    void finishLevel(GameContext game, GameLevel level);
 
     // Scoring
 

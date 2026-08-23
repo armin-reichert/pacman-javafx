@@ -13,9 +13,9 @@ import de.amr.pacmanfx.core.GameSession;
 
 import static java.util.Objects.requireNonNull;
 
-public class GameLevelCompleteState extends GameState {
+public class Tengen_LevelCompleteState extends GameState {
 
-    public GameLevelCompleteState() {
+    public Tengen_LevelCompleteState() {
         super(CommonGameStateID.GAME_LEVEL_COMPLETE);
     }
 
@@ -23,7 +23,7 @@ public class GameLevelCompleteState extends GameState {
     public void onEnter(GameContext game) {
         requireNonNull(game);
 
-        game.variant().gamePlay().onLevelCompleted(game, game.session().level());
+        game.variant().gamePlay().finishLevel(game, game.session().level());
         timer().resetToIndefiniteDuration();
     }
 

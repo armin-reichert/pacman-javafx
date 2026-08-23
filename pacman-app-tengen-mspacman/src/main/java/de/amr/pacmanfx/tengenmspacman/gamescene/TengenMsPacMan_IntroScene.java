@@ -29,7 +29,7 @@ import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
-import de.amr.pacmanfx.tengenmspacman.flow.TengenMsPacMan_GameState;
+import de.amr.pacmanfx.tengenmspacman.flow.Tengen_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
@@ -296,9 +296,9 @@ public class TengenMsPacMan_IntroScene extends GameScene {
                     // start demo level or show options
                     if (gamePlay.allOptionsHaveDefaultValue(session)) {
                         gamePlay.setCanStartNewGame(session, false); // TODO check this
-                        game.variant().gameFlow().restartState(game, TengenMsPacMan_GameState.GAME_OR_LEVEL_STARTING.state());
+                        game.variant().gameFlow().restartState(game, Tengen_GameState.GAME_OR_LEVEL_STARTING.state());
                     } else {
-                        game.variant().gameFlow().enterState(game, TengenMsPacMan_GameState.GAME_PREPARATION.state());
+                        game.variant().gameFlow().enterState(game, Tengen_GameState.GAME_PREPARATION.state());
                     }
                 }
             }

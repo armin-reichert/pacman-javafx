@@ -15,9 +15,9 @@ import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 
 import java.util.OptionalInt;
 
-public class GameLevelIntermissionState extends GameState {
+public class Tengen_LevelIntermissionState extends GameState {
 
-    public GameLevelIntermissionState() {
+    public Tengen_LevelIntermissionState() {
         super(CommonGameStateID.GAME_LEVEL_INTERMISSION);
     }
 

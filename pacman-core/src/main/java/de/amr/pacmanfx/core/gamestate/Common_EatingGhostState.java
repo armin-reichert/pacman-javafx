@@ -14,11 +14,11 @@ import de.amr.pacmanfx.core.level.GameLevelEntitySet;
  * When a ghost has been eaten by Pac-Man, the game play freezes for a second, the ghost is displayed by the
  * points earned and only ghost returning to the house or entering and exiting the house are updated.
  */
-public final class GameState_EatingGhost extends GameState {
+public final class Common_EatingGhostState extends GameState {
 
     public static final int FREEZE_TICKS = 60;
 
-    public GameState_EatingGhost() {
+    public Common_EatingGhostState() {
         super(CommonGameStateID.GAME_LEVEL_EATING_GHOST);
     }
 
