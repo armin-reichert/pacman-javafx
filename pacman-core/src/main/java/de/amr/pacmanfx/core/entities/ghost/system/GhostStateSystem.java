@@ -13,6 +13,8 @@ import de.amr.pacmanfx.core.entities.ghost.comp.ElroyComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.gameplay.hunt.GhostHuntingStrategy;
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.model.GhostPersonality;
+import de.amr.pacmanfx.core.model.rules.GameRules;
 
 import java.util.Set;
 
@@ -89,6 +91,19 @@ public class GhostStateSystem {
         requireNonNull(ghost);
 
         ghost.optComp(ElroyComp.class).ifPresent(elroy -> elroy.setEnabled(enabled));
+    }
+
+    public void updateElroyState(GameContext game) {
+        final GameLevel level = game.session().level();
+        final Ghost ghost = level.entities().ghost(GhostPersonality.RED_GHOST_SHADOW);
+        final GameRules rules = game.variant().rules();
+        ghost.optComp(ElroyComp.class).ifPresent(elroy -> {
+            if (rules.ghostBecomesElroy1(level, ghost)) {
+                elroy.setBoost(ElroyComp.Boost.MEDIUM);
+            } else if (rules.ghostBecomesElroy2(level, ghost)) {
+                elroy.setBoost(ElroyComp.Boost.LARGE);
+            }
+        });
     }
 
     private boolean isGhostThreatenedByPac(GameLevel level, Ghost ghost, Pac pac) {

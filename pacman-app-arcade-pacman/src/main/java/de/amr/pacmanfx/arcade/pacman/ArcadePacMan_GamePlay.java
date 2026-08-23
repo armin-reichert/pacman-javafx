@@ -6,8 +6,6 @@ package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
-import de.amr.pacmanfx.arcade.pacman.model.LevelData;
-import de.amr.pacmanfx.arcade.pacman.rules.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;
@@ -246,26 +244,6 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     // Playing level
 
     @Override
-    public void onEatPellet(GameContext game, GameLevel level, Vector2i tile) {
-        super.onEatPellet(game, level, tile);
-        updateCruiseElroy(
-            level.entities().ghost(GhostPersonality.RED_GHOST_SHADOW),
-            ArcadePacMan_GameRules.levelData(level.number()),
-            level.food().remainingFoodCount()
-        );
-    }
-
-    @Override
-    public void onEatEnergizer(GameContext game, GameLevel level, Vector2i tile) {
-        super.onEatEnergizer(game, level, tile);
-        updateCruiseElroy(
-            level.entities().ghost(GhostPersonality.RED_GHOST_SHADOW),
-            ArcadePacMan_GameRules.levelData(level.number()),
-            level.food().remainingFoodCount()
-        );
-    }
-
-    @Override
     public void activateNextBonus(GameContext game, GameLevel level) {
         requireNonNull(game);
         requireNonNull(level);
@@ -300,16 +278,6 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
                     elroy.setEnabled(true);
                     Logger.debug("Re-enabled {}'s Cruise Elroy mode because {} is released:", redGhost.name(), prisoner.name());
                 }
-            }
-        });
-    }
-
-    private void updateCruiseElroy(Ghost redGhost, LevelData levelData, int remainingFoodCount) {
-        redGhost.optComp(ElroyComp.class).ifPresent(elroy -> {
-            if (remainingFoodCount == levelData.numDotsLeftElroy1()) {
-                elroy.setBoost(ElroyComp.Boost.MEDIUM);
-            } else if (remainingFoodCount == levelData.numDotsLeftElroy2()) {
-                elroy.setBoost(ElroyComp.Boost.LARGE);
             }
         });
     }

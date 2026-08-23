@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.core.model.rules;
 
+import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.level.GameLevel;
 
 import java.util.List;
@@ -67,4 +68,14 @@ public interface GameRules {
     long huntingPhaseDuration(int levelNumber, int phaseIndex);
 
     int demoLevelHuntingStartTick();
+
+    default boolean ghostBecomesElroy1(GameLevel level, Ghost ghost) {
+        return false;
+    }
+
+    default boolean ghostBecomesElroy2(GameLevel level, Ghost ghost) {
+        return false;
+    }
 }
+
+

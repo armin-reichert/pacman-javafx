@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.core.gameplay;
 
-import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.entities.Bonus;
 import de.amr.pacmanfx.core.entities.Ghost;
@@ -35,10 +34,6 @@ public interface GamePlay {
     // Playing level
 
     void updateGamePlay(GameContext game, GameLevel level);
-
-    void onEatPellet(GameContext game, GameLevel level, Vector2i tile);
-
-    void onEatEnergizer(GameContext game, GameLevel level, Vector2i tile);
 
     void onEatBonus(GameContext game, GameLevel level, Bonus bonus);
 

@@ -7,7 +7,6 @@ package de.amr.pacmanfx.core.gameplay;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
-import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;
@@ -27,7 +26,6 @@ import de.amr.pacmanfx.core.event.gameplay.SpecialScoreEvent;
 import de.amr.pacmanfx.core.event.ghost.GhostEatenEvent;
 import de.amr.pacmanfx.core.event.pac.PacEatsFoodEvent;
 import de.amr.pacmanfx.core.event.pac.PacPowerEndsEvent;
-import de.amr.pacmanfx.core.event.pac.PacPowerStartsEvent;
 import de.amr.pacmanfx.core.event.pac.PacPowerStartsFadingEvent;
 import de.amr.pacmanfx.core.gameplay.hunt.GamePlayStep;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -51,7 +49,7 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class CommonGamePlay implements GamePlay {
 
-    private static final Set<GhostState> GHOST_TURNBACK_STATES = Set.of(GhostState.FRIGHTENED, GhostState.HUNTING_PAC);
+    public static final Set<GhostState> GHOST_TURNBACK_STATES = Set.of(GhostState.FRIGHTENED, GhostState.HUNTING_PAC);
 
     @Override
     public void prepareLevelForPlaying(GameContext game) {
@@ -145,53 +143,6 @@ public abstract class CommonGamePlay implements GamePlay {
 
         collisionHandler.detectCollisions(level);
         evalCollisions(game, level, gamePlayStep);
-    }
-
-    @Override
-    public void onEatPellet(GameContext game, GameLevel level, Vector2i tile) {
-        requireNonNull(game);
-        requireNonNull(level);
-        requireNonNull(tile);
-
-        final GameSession session = game.session();
-        final GameRules rules = game.variant().rules();
-        final Pac pac = level.entities().pac();
-
-        scorePoints(game, rules.scoringRules().pointsForPellet(), level.number());
-        game.variant().systems().pacDigestion().digestPellet(pac, rules);
-        session.gateKeeper().registerFoodEaten(level);
-    }
-
-    @Override
-    public void onEatEnergizer(GameContext game, GameLevel level, Vector2i tile) {
-        requireNonNull(game);
-        requireNonNull(level);
-        requireNonNull(tile);
-
-        final GameSystems systems = game.variant().systems();
-        final GameSession session = game.session();
-        final GameRules rules = game.variant().rules();
-        final Pac pac = level.entities().pac();
-
-        // Eating an energizer earns 50 points in Arcade Pac-Man
-        scorePoints(game, rules.scoringRules().pointsForEnergizer(), level.number());
-
-        // The "gate keeper" of the ghost house has counters for the eaten food driving its behavior
-        session.gateKeeper().registerFoodEaten(level);
-
-        // The "kill chain" starts: 200, 400, 800, 1600 points for ghosts eaten with same energizer power
-        level.clearGhostKillChain();
-
-        // Ghosts turn back even if the Pac power time is zero and no event is published!
-        level.entities().ghostsInAnyOfStates(GHOST_TURNBACK_STATES).forEach(systems.worldNavigator()::requestTurnBack);
-
-        // Pac-Man "digests" and takes a 3 tick nap
-        systems.pacDigestion().digestEnergizer(pac, rules);
-
-        final long powerDurationTicks = TickTimer.secToTicks(rules.pacPowerSeconds(level.number()));
-        if (powerDurationTicks > 0) {
-            game.eventManager().publishGameEvent(new PacPowerStartsEvent(pac, powerDurationTicks));
-        }
     }
 
     @Override
@@ -343,24 +294,19 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     private void checkFoodFound(GameContext game, GameLevel level, GamePlayStep step) {
-        final GameSystems systems = game.variant().systems();
         final Pac pac = level.entities().pac();
+        final GameSystems systems = game.variant().systems();
         final PacDigestionSystem digestionSystem = systems.pacDigestion();
 
         if (step.foodFound()) {
             digestionSystem.endStarving(pac);
             final Vector2i foodTile = step.foodFoundTile();
             level.food().markFoodEatenAt(foodTile);
-            if (step.energizerFound()) {
-                onEatEnergizer(game, level, foodTile);
-            } else {
-                onEatPellet(game, level, foodTile);
-            }
             if (game.variant().rules().scoringRules().isBonusAwarded(level)) {
                 activateNextBonus(game, level);
             }
-            game.eventManager().publishGameEvent(
-                new PacEatsFoodEvent(pac, step.energizerFound(), false, game.session().thisFrame().tick())
+            game.eventManager().publishGameEvent(new PacEatsFoodEvent(pac,
+                step.energizerFound(), false, game.session().thisFrame().tick())
             );
         }
         else {

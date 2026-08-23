@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.rules;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ScoringRules;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
+import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.rules.ActorCollisionRules;
 import de.amr.pacmanfx.core.model.rules.ActorSpeedRules;
@@ -197,5 +198,17 @@ public class ArcadePacMan_GameRules implements GameRules {
     public float pacPowerFadingSeconds(int levelNumber) {
         //TODO not sure what is correct
         return levelData(levelNumber).numFlashes() * 0.5f;
+    }
+
+    @Override
+    public boolean ghostBecomesElroy1(GameLevel level, Ghost ghost) {
+        int remainingFoodCount = level.food().remainingFoodCount();
+        return remainingFoodCount == levelData(level.number()).numDotsLeftElroy1();
+    }
+
+    @Override
+    public boolean ghostBecomesElroy2(GameLevel level, Ghost ghost) {
+        int remainingFoodCount = level.food().remainingFoodCount();
+        return remainingFoodCount == levelData(level.number()).numDotsLeftElroy2();
     }
 }
