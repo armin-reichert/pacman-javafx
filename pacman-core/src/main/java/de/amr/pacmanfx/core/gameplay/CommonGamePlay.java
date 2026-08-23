@@ -31,6 +31,7 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessage;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.model.rules.GameRules;
+import de.amr.pacmanfx.core.model.rules.ScoringRules;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import org.tinylog.Logger;
@@ -277,17 +278,17 @@ public abstract class CommonGamePlay implements GamePlay {
         final Pac pac = level.entities().pac();
         final GameSystems systems = game.variant().systems();
         final PacDigestionSystem digestionSystem = systems.pacDigestion();
+        final ScoringRules scoringRules = game.variant().rules().scoringRules();
 
         if (step.foodFound()) {
             digestionSystem.endStarving(pac);
             final Vector2i foodTile = step.foodFoundTile();
             level.food().markFoodEatenAt(foodTile);
-            if (game.variant().rules().scoringRules().isBonusAwarded(level)) {
+            if (scoringRules.isBonusAwarded(level)) {
                 activateNextBonus(game, level);
             }
-            game.eventManager().publishGameEvent(new PacEatsFoodEvent(pac,
-                step.energizerFound(), false, game.session().thisFrame().tick())
-            );
+            game.eventManager().publishGameEvent(
+                new PacEatsFoodEvent(pac, step.energizerFound(), false, game.session().thisFrame().tick()));
         }
         else {
             digestionSystem.starve(pac);
@@ -333,17 +334,17 @@ public abstract class CommonGamePlay implements GamePlay {
     // If collision happened while teleporting (horizontally), move collided actors into visible world
     private void fixPacPositionIfKilledInsidePortal(GameLevel level) {
         final Pac pac = level.entities().pac();
-        final Vector2i pacTile = pac.pos().tile();
-        final TerrainLayer terrain = level.worldMap().terrainLayer();
 
-        terrain.hPortalContainingTile(pacTile).ifPresent(hPortal -> {
-            if (pac.worldNavigation().moveDir() == Direction.LEFT) {
-                pac.pos().setX(hPortal.rightBorderEntryTile().x() * WorldMap.TS + WorldMap.HTS);
-            } else if (pac.worldNavigation().moveDir() == Direction.RIGHT) {
-                pac.pos().setX(hPortal.leftBorderEntryTile().x() * WorldMap.TS - WorldMap.HTS);
+        level.worldMap().terrainLayer().hPortalContainingTile(pac.pos().tile()).ifPresent(hPortal -> {
+            final Direction moveDir = pac.worldNavigation().moveDir();
+            if (moveDir == Direction.LEFT) {
+                final float rightmostX = hPortal.rightBorderEntryTile().x() * WorldMap.TS;
+                pac.pos().setX(rightmostX);
+            } else if (moveDir == Direction.RIGHT) {
+                final float leftmostX = hPortal.leftBorderEntryTile().x() * WorldMap.TS;
+                pac.pos().setX(leftmostX);
             }
-            // Not sure if colliding ghosts should also be moved back to visible area
-            Logger.info("Detected collision while teleporting, moved Pac-Man back into world");
+            Logger.info("Detected Pac-Man collision while teleporting, moved Pac-Man back into world");
         });
     }
 }
