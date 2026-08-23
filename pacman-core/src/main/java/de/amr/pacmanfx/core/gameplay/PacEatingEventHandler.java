@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
 package de.amr.pacmanfx.core.gameplay;
 
 import de.amr.basics.timer.TickTimer;
@@ -17,7 +21,7 @@ import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
-public class FoodEventHandler implements DefaultGameEventListener {
+public class PacEatingEventHandler implements DefaultGameEventListener {
 
     private final GameContext game;
 
@@ -25,7 +29,7 @@ public class FoodEventHandler implements DefaultGameEventListener {
         return game.variant().systems();
     }
 
-    public FoodEventHandler(GameContext game) {
+    public PacEatingEventHandler(GameContext game) {
         this.game = requireNonNull(game);
     }
 

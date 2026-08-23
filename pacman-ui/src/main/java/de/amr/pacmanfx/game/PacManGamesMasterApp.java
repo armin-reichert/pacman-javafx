@@ -14,7 +14,7 @@ import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventManager;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.event.gameplay.GameStateChangeEvent;
-import de.amr.pacmanfx.core.gameplay.FoodEventHandler;
+import de.amr.pacmanfx.core.gameplay.PacEatingEventHandler;
 import de.amr.pacmanfx.core.gameplay.PacPowerEventHandler;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.ui.GameUI;
@@ -238,7 +238,7 @@ public final class PacManGamesMasterApp implements GameAppContext {
         // Just to be sure:
         game.eventManager().clear();
         game.eventManager().addGameEventSubscriber(ui);
-        game.eventManager().addGameEventSubscriber(new FoodEventHandler(game));
+        game.eventManager().addGameEventSubscriber(new PacEatingEventHandler(game));
         game.eventManager().addGameEventSubscriber(new PacPowerEventHandler(game));
 
         gameVariant.config().gameFlow().addStateChangeListener(stateChangeEventMapper);
