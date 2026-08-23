@@ -8,12 +8,13 @@ import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.ecs.systems.PositionSystem;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
-import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.core.model.world.map.WorldMapColorScheme;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.entities3D.levelcounter.system.LevelCounter3DViewSystem;
@@ -77,20 +78,37 @@ public class GameLevel3D implements DisposableGraphicsObject {
 
     private GameLevel3DAnimationManager animationManager;
 
-    public GameLevel3D(GameContext game, AnimationRegistry registry, GameViewModel viewModel, GameVariantUIConfig uiConfig) {
-        requireNonNull(game);
+    private final GameViewModel viewModel;
 
-        this.level = game.session().level();
+    public GameLevel3D(GameContext game, AnimationRegistry animationRegistry, GameViewModel viewModel, GameVariantUIConfig uiConfig) {
+        requireNonNull(game);
+        requireNonNull(animationRegistry);
+        this.viewModel = requireNonNull(viewModel);
         this.uiConfig = requireNonNull(uiConfig);
 
-        createMaze3D(viewModel);
-        createFood3D();
-        createPac3D(viewModel);
-        createGhosts3D(viewModel);
-        createLevelCounter3D(game.session().levelCounter(), registry);
-        createLivesCounter3D(game.session());
-        createMessageView3D(registry);
-        arrangeLayout(game.session());
+        final GameSession session = game.session();
+        this.level = session.level();
+
+        final Pac pac = level.entities().pac();
+        final List<Ghost> ghosts = level.entities().ghosts();
+        final House house = level.entities().house();
+        final LevelCounter levelCounter = session.levelCounter();
+        final LivesCounter livesCounter = session.livesCounter();
+        final WorldMap worldMap = level.worldMap();
+
+        final WorldMapColorScheme colorScheme = uiConfig.renderConfig().colorScheme(level.worldMap(), uiConfig.worldSettings());
+
+        createMaze3DView(worldMap, house, colorScheme);
+        createFood3DViews();
+        new HouseFactory3D().createHouse3D(house, uiConfig.worldSettings().house(), colorScheme);
+        createPac3DView(pac, uiConfig.worldSettings().pac());
+        createGhost3DViews(ghosts, uiConfig.worldSettings().ghosts());
+        createLevelCounter3DView(levelCounter, animationRegistry);
+        createLivesCounter3DView(livesCounter);
+        createMessage3DView(animationRegistry);
+
+        composeLevel3D(pac, ghosts, livesCounter, house);
+
 
         root.setMouseTransparent(true); // this increases performance they say...
     }
@@ -191,12 +209,12 @@ public class GameLevel3D implements DisposableGraphicsObject {
 
     // Private area, no trespassing!
 
-    private void createMaze3D(GameViewModel viewModel) {
-        final GenericWorldMapColorScheme colorScheme = uiConfig.renderConfig().colorScheme(level.worldMap(), uiConfig.worldSettings());
-        final TerrainLayer terrain = level.worldMap().terrainLayer();
-        final House house = level.entities().house();
-
-        maze3D = new MazeFactory3D().createMaze3D(house, terrain, uiConfig.worldSettings(), colorScheme);
+    private void createMaze3DView(WorldMap worldMap, House house, WorldMapColorScheme colorScheme) {
+        maze3D = new MazeFactory3D().createMaze3D(
+            p -> house.contains(PositionSystem.computeTileAt(p)),
+            worldMap.terrainLayer(),
+            uiConfig.worldSettings(),
+            colorScheme);
 
         maze3D.drawModeProperty()      .bind(viewModel.common3D.drawModeProperty);
         maze3D.wallOpacityProperty()   .bind(viewModel.maze3D.wallOpacityProperty);
@@ -204,7 +222,7 @@ public class GameLevel3D implements DisposableGraphicsObject {
         maze3D.floorColorProperty()    .bind(viewModel.maze3D.floorColorProperty);
     }
 
-    private void createFood3D() {
+    private void createFood3DViews() {
         final GenericWorldMapColorScheme colorScheme = uiConfig.renderConfig().colorScheme(level.worldMap(), uiConfig.worldSettings());
         final FoodLayer foodLayer = level.worldMap().foodLayer();
 
@@ -257,33 +275,29 @@ public class GameLevel3D implements DisposableGraphicsObject {
         return view3D;
     }
 
-    private void createPac3D(GameViewModel viewModel) {
-        final Pac pac = level.entities().pac();
-        final PacSettings settings = uiConfig.worldSettings().pac();
+    private void createPac3DView(Pac pac, PacSettings settings) {
         uiConfig.factory3D().createPac3D(pac, settings);
-
         pac.reqComp(Pac3DViewComp.class).drawModeProperty().bind(viewModel.common3D.drawModeProperty);
     }
 
-    private void createGhosts3D(GameViewModel viewModel) {
-        final List<GhostSettings> settings = uiConfig.worldSettings().ghosts();
-        level.entities().ghosts().forEach(ghost -> {
+    private void createGhost3DViews(List<Ghost> ghosts, List<GhostSettings> settings) {
+        ghosts.forEach(ghost -> {
             final var ghostSettings = settings.get(ghost.personality().ordinal());
             uiConfig.factory3D().createGhost3D(ghost, ghostSettings);
             ghost.reqComp(Ghost3DViewComp.class).drawModeProperty().bind(viewModel.common3D.drawModeProperty);
         });
     }
 
-    private void createLivesCounter3D(GameSession session) {
-        if (!session.livesCounter().hasComp(LivesCounter3DViewComp.class)) {
+    private void createLivesCounter3DView(LivesCounter livesCounter) {
+        if (!livesCounter.hasComp(LivesCounter3DViewComp.class)) {
             final LivesCounter3DViewComp view3D = new LivesCounter3DViewComp(uiConfig.factory3D(), uiConfig.worldSettings());
-            session.livesCounter().setComp(LivesCounter3DViewComp.class, view3D);
+            livesCounter.setComp(LivesCounter3DViewComp.class, view3D);
             view3D.root().setTranslateX(2 * WorldMap.TS);
             view3D.root().setTranslateY(2 * WorldMap.TS);
         }
     }
 
-    private void createLevelCounter3D(LevelCounter levelCounter, AnimationRegistry registry) {
+    private void createLevelCounter3DView(LevelCounter levelCounter, AnimationRegistry registry) {
         if (!levelCounter.hasComp(LevelCounter3DViewComp.class)) {
             final LevelCounter3DViewComp view3D = new LevelCounter3DViewComp();
             levelCounter.setComp(LevelCounter3DViewComp.class, view3D);
@@ -310,28 +324,25 @@ public class GameLevel3D implements DisposableGraphicsObject {
         root.getChildren().add(view3D.root());
     }
 
-    private void createMessageView3D(AnimationRegistry registry) {
+    private void createMessage3DView(AnimationRegistry registry) {
         MessageView3DBuilder.ensureAnim3DExists(level.entities().messageView(), registry);
     }
 
     // Order matters for correct transparency!
-    private void arrangeLayout(GameSession session) {
+    private void composeLevel3D(
+        Pac pac,
+        List<Ghost> ghosts,
+        LivesCounter livesCounter,
+        House house) {
 
-        final LivesCounter livesCounter = session.livesCounter();
         final LivesCounter3DViewComp livesCounter3D = livesCounter.reqComp(LivesCounter3DViewComp.class);
-
-        final Pac pac = level.entities().pac();
-        final Pac3DViewComp pac3D = pac.reqComp(Pac3DViewComp.class);
-
-        final House house = level.entities().house();
-        final House3DViewComp house3D = house.reqComp(House3DViewComp.class);
-
         root.getChildren().add(livesCounter3D.root());
 
+        final Pac3DViewComp pac3D = pac.reqComp(Pac3DViewComp.class);
         root.getChildren().add(pac3D.root());
         root.getChildren().add(pac3D.powerLight());
 
-        for (Ghost ghost: level.entities().ghosts()) {
+        for (Ghost ghost: ghosts) {
             final Ghost3DViewComp ghost3D = ghost.reqComp(Ghost3DViewComp.class);
             root.getChildren().add(ghost3D.root());
         }
@@ -347,9 +358,10 @@ public class GameLevel3D implements DisposableGraphicsObject {
         root.getChildren().add(maze3D.particlesGroup());
         root.getChildren().add(maze3D.root());
 
+        root.getChildren().add(ghostHunterLight);
+
+        final House3DViewComp house3D = house.reqComp(House3DViewComp.class);
         root.getChildren().add(house3D.root());
         root.getChildren().add(house3D.doors());
-
-        root.getChildren().add(ghostHunterLight);
     }
 }

@@ -4,17 +4,13 @@ import de.amr.basics.StopWatch;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.core.ecs.systems.PositionSystem;
-import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.obstacle.Obstacle;
 import de.amr.pacmanfx.ui.settings.world.Floor3DSettings;
-import de.amr.pacmanfx.ui.settings.world.House3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Maze3DSettings;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
-import de.amr.pacmanfx.uilib.entities3D.house.comp.House3DViewComp;
 import de.amr.pacmanfx.uilib.entities3D.world.TerrainRenderer3D;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
@@ -22,6 +18,7 @@ import javafx.scene.shape.Box;
 import org.tinylog.Logger;
 
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
 
 import static de.amr.basics.util.Ufx.coloredPhongMaterial;
 import static java.util.Objects.requireNonNull;
@@ -33,20 +30,19 @@ public class MazeFactory3D {
     public static final int WALL_TOP_SPECULAR_POWER = 128;
 
     public Maze3D createMaze3D(
-        House house,
+        Predicate<Vector2f> obstacleStartPointIgnored,
         TerrainLayer terrain,
         WorldSettings worldSettings,
         WorldMapColorScheme colorScheme)
     {
-        requireNonNull(house);
+        requireNonNull(obstacleStartPointIgnored);
         requireNonNull(terrain);
         requireNonNull(worldSettings);
         requireNonNull(colorScheme);
 
         final var maze3D = new Maze3D(terrain, createMazeMaterials(colorScheme));
-        createHouse3D(house, worldSettings.house(), colorScheme);
         buildFloor(maze3D, terrain, worldSettings.floor());
-        addObstacles(maze3D, house, terrain, worldSettings.maze());
+        addObstacles(maze3D, terrain, worldSettings.maze(), obstacleStartPointIgnored);
         bindWallBaseMaterialColor(maze3D, maze3D.materials().wallBaseMaterial(), Color.valueOf(colorScheme.wallStroke()));
 
         return maze3D;
@@ -73,7 +69,9 @@ public class MazeFactory3D {
         floorMaterial.specularColorProperty().bind(maze3D.floorColorProperty().map(Color::brighter));
     }
 
-    private void addObstacles(Maze3D maze3D, House house, TerrainLayer terrain, Maze3DSettings maze3DSettings) {
+    private void addObstacles(
+        Maze3D maze3D, TerrainLayer terrain, Maze3DSettings maze3DSettings,
+        Predicate<Vector2f> obstacleStartPointIgnored) {
         final float wallThickness = maze3DSettings.obstacleWallThickness();
         final TerrainRenderer3D renderer3D = new TerrainRenderer3D();
         final AtomicInteger wallCount = new AtomicInteger(0);
@@ -92,9 +90,8 @@ public class MazeFactory3D {
         // render all obstacles found in map except the house placeholder obstacle
         for (Obstacle obstacle : terrain.obstacles()) {
             final Vector2f startPoint = obstacle.startPoint().toVector2f();
-            if (house == null || !house.contains(PositionSystem.computeTileAt(startPoint))) {
-                renderer3D.renderObstacle3D(obstacle, isWorldBorder(terrain, obstacle), wallThickness, 4);
-            }
+            if (obstacleStartPointIgnored.test(startPoint)) continue;
+            renderer3D.renderObstacle3D(obstacle, isWorldBorder(terrain, obstacle), wallThickness, 4);
         }
         final var passedTimeMillis = stopWatch.passedTime().toMillis();
         Logger.info("Building {} composite walls took {} milliseconds", wallCount, passedTimeMillis);
@@ -108,25 +105,6 @@ public class MazeFactory3D {
         } else {
             return start.x() == 0 || start.x() == terrain.numCols() * WorldMap.TS;
         }
-    }
-
-    private void createHouse3D(House house, House3DSettings settings, WorldMapColorScheme colorScheme) {
-        house.removeComp(House3DViewComp.class);
-        house.setComp(House3DViewComp.class, new House3DViewComp(
-            house.floorplan(),
-            settings.baseHeight(),
-            settings.wallThickness(),
-            settings.opacity()
-        ));
-        final var house3D = house.reqComp(House3DViewComp.class);
-
-        // apply color scheme
-        house3D.setWallBaseColor(Color.valueOf(colorScheme.wallFill()));
-        house3D.setWallTopColor(Color.valueOf(colorScheme.wallStroke()));
-        house3D.setDoorColor(Color.valueOf(colorScheme.door()));
-
-        house3D.wallBaseHeightProperty().set(settings.baseHeight());
-        house3D.setDoorSensitivity(settings.sensitivity());
     }
 
     private Maze3D.Materials createMazeMaterials(WorldMapColorScheme colorScheme) {
