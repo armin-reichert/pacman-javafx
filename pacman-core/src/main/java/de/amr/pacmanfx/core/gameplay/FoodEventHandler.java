@@ -4,12 +4,16 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
+import de.amr.pacmanfx.core.entities.Bonus;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventListener;
+import de.amr.pacmanfx.core.event.bonus.BonusEatenEvent;
 import de.amr.pacmanfx.core.event.pac.PacEatsFoodEvent;
 import de.amr.pacmanfx.core.event.pac.PacPowerStartsEvent;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.rules.GameRules;
+import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
@@ -81,5 +85,24 @@ public class FoodEventHandler implements DefaultGameEventListener {
         if (powerDurationTicks > 0) {
             game.eventManager().publishGameEvent(new PacPowerStartsEvent(pac, powerDurationTicks));
         }
+    }
+
+    @Override
+    public void onBonusEaten(BonusEatenEvent e) {
+        final Bonus bonus = e.bonus();
+        final GameSession session = game.session();
+        final GameLevel level = session.level();
+        final GameSystems systems = game.variant().systems();
+        final GameRules rules = game.variant().rules();
+
+        // Bonus value depends on game variant and bonus type
+        game.variant().gamePlay().scorePoints(game, bonus.data().points(), level.number());
+        Logger.info("Scored {} points for eating bonus {}", bonus.data().points(), bonus);
+
+        // Eaten bonus is displayed as points for short time
+        systems.bonusState().showEatenForSeconds(bonus, rules.eatenBonusDisplaySeconds());
+
+        // A bonus moving through the world stops
+        bonus.optComp(WorldNavigationComp.class).ifPresent(_ -> systems.worldNavigator().setMoveDirSpeed(bonus, 0));
     }
 }

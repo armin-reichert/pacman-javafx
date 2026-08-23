@@ -35,8 +35,6 @@ public interface GamePlay {
 
     void updateGamePlay(GameContext game, GameLevel level);
 
-    void onEatBonus(GameContext game, GameLevel level, Bonus bonus);
-
     void onEatGhost(GameContext game, GameLevel level, Ghost eatenGhost);
 
     void activateNextBonus(GameContext game, GameLevel level);

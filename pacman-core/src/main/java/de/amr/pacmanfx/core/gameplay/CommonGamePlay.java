@@ -10,7 +10,6 @@ import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;
-import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusMoveAndJumpComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
@@ -146,22 +145,6 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     @Override
-    public void onEatBonus(GameContext game, GameLevel level, Bonus bonus) {
-        requireNonNull(game);
-        requireNonNull(level);
-        requireNonNull(bonus);
-
-        final GameSystems systems = game.variant().systems();
-        systems.bonusState().showEatenForSeconds(bonus, game.variant().rules().eatenBonusDisplaySeconds());
-        bonus.optComp(WorldNavigationComp.class).ifPresent(_ -> systems.worldNavigator().setMoveDirSpeed(bonus, 0));
-
-        scorePoints(game, bonus.data().points(), level.number());
-        Logger.info("Scored {} points for eating bonus {}", bonus.data().points(), bonus);
-
-        game.eventManager().publishGameEvent(new BonusEatenEvent(bonus));
-    }
-
-    @Override
     public void onEatGhost(GameContext game, GameLevel level, Ghost eatenGhost) {
         requireNonNull(game);
         requireNonNull(level);
@@ -280,10 +263,7 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     private void evalCollisions(GameContext game, GameLevel level, GamePlayStep step) {
-        checkFoodFound(game, level, step);
-        if (step.foundEdibleBonus()) {
-            onEatBonus(game, level, step.edibleBonus());
-        }
+        checkIfPacFoundEdibleItem(game, level, step);
         checkIfPacGetsKilled(game.session(), game.variant().rules(), step);
         if (step.pacKilled()) {
             fixPacPositionIfKilledInsidePortal(level);
@@ -293,7 +273,7 @@ public abstract class CommonGamePlay implements GamePlay {
         }
     }
 
-    private void checkFoodFound(GameContext game, GameLevel level, GamePlayStep step) {
+    private void checkIfPacFoundEdibleItem(GameContext game, GameLevel level, GamePlayStep step) {
         final Pac pac = level.entities().pac();
         final GameSystems systems = game.variant().systems();
         final PacDigestionSystem digestionSystem = systems.pacDigestion();
@@ -311,6 +291,10 @@ public abstract class CommonGamePlay implements GamePlay {
         }
         else {
             digestionSystem.starve(pac);
+        }
+
+        if (step.foundEdibleBonus()) {
+            game.eventManager().publishGameEvent(new BonusEatenEvent(step.edibleBonus()));
         }
     }
 
