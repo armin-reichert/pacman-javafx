@@ -26,8 +26,10 @@ public class GhostAnimationSelectionSystem {
         ghost.animationSelection().setAnimationID(id);
 
         spriteAnimController.select(ghost, id);
-        if (id != CommonSpriteAnimationID.GHOST_POINTS) {
+        if (id == CommonSpriteAnimationID.GHOST_POINTS) {
             // Points "animation" just displays selected image/frame
+            spriteAnimController.stopSelected(ghost);
+        } else {
             spriteAnimController.playSelected(ghost);
         }
     }
