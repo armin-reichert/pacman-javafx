@@ -18,9 +18,8 @@ import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounter3DViewSystem;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.common.ActionBindingsSupport;
-import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.PlaySceneFadeInAnimation;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.DronePerspective;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
@@ -106,11 +105,6 @@ public class PlayScene3D extends GameScene
             }
         };
     }
-
-    public CanvasRenderingComp canvasRendering() {
-        return null; // Do not create on-demand
-    }
-
 
     @Override
     public RandomTextPicker textPicker() {
@@ -319,7 +313,7 @@ public class PlayScene3D extends GameScene
         level3D.replaceLevelCounter3D(session.levelCounter());
         level3D.setAnimationManager(new GameLevel3DAnimationManager(registry, level3D, config, uiConfig));
 
-        level3DParent.getChildren().setAll(level3D);
+        level3DParent.getChildren().setAll(level3D.root());
 
         //TODO check this
         final Pac pac = level.entities().pac();

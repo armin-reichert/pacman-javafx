@@ -92,7 +92,7 @@ public class LevelCompletedAnimation extends ManagedAnimation {
         return new Timeline(
             new KeyFrame(Duration.seconds(0.5), new KeyValue(houseWallHeight, 0, Interpolator.EASE_IN)),
             new KeyFrame(Duration.seconds(1.5), new KeyValue(mazeWallHeight, 0, Interpolator.EASE_IN)),
-            new KeyFrame(Duration.seconds(2.5), _ -> level3D.setVisible(false))
+            new KeyFrame(Duration.seconds(2.5), _ -> level3D.root().setVisible(false))
         );
     }
 
@@ -103,7 +103,7 @@ public class LevelCompletedAnimation extends ManagedAnimation {
      * @return the animation
      */
     private Animation levelRotation(Point3D axis) {
-        final var rotation = new RotateTransition(Duration.seconds(SPINNING_SECONDS), level3D);
+        final var rotation = new RotateTransition(Duration.seconds(SPINNING_SECONDS), level3D.root());
         rotation.setAxis(axis);
         rotation.setFromAngle(0);
         rotation.setToAngle(360);

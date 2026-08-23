@@ -110,24 +110,24 @@ public class MazeFactory3D {
         }
     }
 
-    private void createHouse3D(House house, House3DSettings config3D, WorldMapColorScheme colorScheme) {
+    private void createHouse3D(House house, House3DSettings settings, WorldMapColorScheme colorScheme) {
         if (!house.hasComp(House3DViewComp.class)) {
-            final var view3D = new House3DViewComp(
+            house.setComp(House3DViewComp.class, new House3DViewComp(
                 house.floorplan(),
-                config3D.baseHeight(),
-                config3D.wallThickness(),
-                config3D.opacity()
-            );
-            house.setComp(House3DViewComp.class, view3D);
+                settings.baseHeight(),
+                settings.wallThickness(),
+                settings.opacity()
+            ));
         }
+        final var house3D = house.reqComp(House3DViewComp.class);
 
         // apply color scheme
-        final var view3D = house.reqComp(House3DViewComp.class);
-        view3D.setWallBaseColor(Color.valueOf(colorScheme.wallFill()));
-        view3D.wallBaseHeightProperty().set(config3D.baseHeight());
-        view3D.setWallTopColor(Color.valueOf(colorScheme.wallStroke()));
-        view3D.setDoorColor(Color.valueOf(colorScheme.door()));
-        view3D.setDoorSensitivity(config3D.sensitivity());
+        house3D.setWallBaseColor(Color.valueOf(colorScheme.wallFill()));
+        house3D.setWallTopColor(Color.valueOf(colorScheme.wallStroke()));
+        house3D.setDoorColor(Color.valueOf(colorScheme.door()));
+
+        house3D.wallBaseHeightProperty().set(settings.baseHeight());
+        house3D.setDoorSensitivity(settings.sensitivity());
     }
 
     private Maze3D.Materials createMazeMaterials(WorldMapColorScheme colorScheme) {
@@ -140,11 +140,7 @@ public class MazeFactory3D {
         final PhongMaterial wallTopMaterial = coloredPhongMaterial(Color.valueOf(colorScheme.wallFill()));
         wallTopMaterial.setSpecularPower(WALL_TOP_SPECULAR_POWER);
 
-        return new Maze3D.Materials(
-            floorMaterial,
-            wallBaseMaterial,
-            wallTopMaterial
-        );
+        return new Maze3D.Materials(floorMaterial, wallBaseMaterial, wallTopMaterial);
     }
 
     private void bindWallBaseMaterialColor(Maze3D maze3D, PhongMaterial wallBaseMaterial, Color wallStrokeColor) {

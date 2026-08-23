@@ -37,7 +37,7 @@ public class PlaySceneFadeInAnimation extends ManagedAnimation {
             new KeyFrame(Duration.ZERO, _ -> {
                 // TODO: required?
                 playScene3D.perspectiveManager().currentPerspective().ifPresent(Perspective::startControlling);
-                playScene3D.optGameLevel3D().ifPresent(level3D -> level3D.setVisible(true));
+                playScene3D.optGameLevel3D().ifPresent(level3D -> level3D.root().setVisible(true));
             }),
 
             new KeyFrame(Duration.ZERO,

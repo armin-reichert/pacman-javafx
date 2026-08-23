@@ -48,7 +48,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         session.optLevel().ifPresent(_ -> {
             if (!gamePlay.allOptionsHaveDefaultValue(session)) {
                 final ImageView levelInfo = createLevelInfoView(level3D);
-                level3D.getChildren().add(levelInfo);
+                level3D.root().getChildren().add(levelInfo);
             }
         });
     }

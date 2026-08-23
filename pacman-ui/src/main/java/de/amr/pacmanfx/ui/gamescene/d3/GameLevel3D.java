@@ -59,7 +59,9 @@ import static java.util.Objects.requireNonNull;
 /**
  * Represents the 3D visualization of a Pac-Man game level.
  */
-public class GameLevel3D extends Group implements DisposableGraphicsObject {
+public class GameLevel3D implements DisposableGraphicsObject {
+
+    private final Group root = new Group();
 
     private final GameLevel level;
 
@@ -90,7 +92,11 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         createMessageView3D(registry);
         arrangeLayout(game.session());
 
-        setMouseTransparent(true); // this increases performance they say...
+        root.setMouseTransparent(true); // this increases performance they say...
+    }
+
+    public Group root() {
+        return root;
     }
 
     public void setAnimationManager(GameLevel3DAnimationManager animationManager) {
@@ -102,7 +108,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         if (maze3D != null) {
             maze3D.dispose();
         }
-        cleanupGroup(this, true);
+        cleanupGroup(root, true);
     }
 
     // Public accessors
@@ -162,7 +168,7 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
     public void ensureBonus3DViewAddedToSceneGraph(Bonus bonus) {
         if (!bonus.hasComp(Bonus3DViewComp.class)) {
             final var view3D = createBonusView3D(bonus);
-            getChildren().add(view3D.root());
+            root.getChildren().add(view3D.root());
         }
     }
 
@@ -170,17 +176,16 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final Image numberImage = uiConfig.renderConfig().killedGhostPointsImage(killIndex);
         final NumberBox3D numberBox = new NumberBox3D(numberImage);
 
-
         final Ghost3DViewComp ghost3DView = ghost.reqComp(Ghost3DViewComp.class);
         numberBox.setTranslateX(ghost3DView.root().getTranslateX());
         numberBox.setTranslateY(ghost3DView.root().getTranslateY());
         numberBox.setTranslateZ(ghost3DView.root().getTranslateZ());
-        getChildren().add(numberBox);
+        root.getChildren().add(numberBox);
 
         //TODO move elsewhere (animation system)
         final double risingHeight = (killIndex + 1) * 12;
         final var animation = new HideGhost3DRiseNumberBoxAnimation(ghost3DView, numberBox, risingHeight);
-        animation.delegate().setOnFinished(_ -> getChildren().remove(numberBox));
+        animation.delegate().setOnFinished(_ -> root.getChildren().remove(numberBox));
         animation.playFromStart();
     }
 
@@ -298,11 +303,11 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
 
         final Group oldRoot = view3D.root();
         if (oldRoot != null) {
-            getChildren().remove(oldRoot);
+            root.getChildren().remove(oldRoot);
         }
 
         LevelCounter3DViewSystem.updateLevelCounter3D(uiConfig, levelCounter, level);
-        getChildren().add(view3D.root());
+        root.getChildren().add(view3D.root());
     }
 
     private void createMessageView3D(AnimationRegistry registry) {
@@ -321,30 +326,30 @@ public class GameLevel3D extends Group implements DisposableGraphicsObject {
         final House house = level.entities().house();
         final House3DViewComp house3D = house.reqComp(House3DViewComp.class);
 
-        getChildren().add(livesCounter3D.root());
+        root.getChildren().add(livesCounter3D.root());
 
-        getChildren().add(pac3D.root());
-        getChildren().add(pac3D.powerLight());
+        root.getChildren().add(pac3D.root());
+        root.getChildren().add(pac3D.powerLight());
 
         for (Ghost ghost: level.entities().ghosts()) {
             final Ghost3DViewComp ghost3D = ghost.reqComp(Ghost3DViewComp.class);
-            getChildren().add(ghost3D.root());
+            root.getChildren().add(ghost3D.root());
         }
 
         for (Energizer3D energizer3D : energizer3DByTile.values()) {
-            getChildren().add(energizer3D.root());
+            root.getChildren().add(energizer3D.root());
         }
 
         for (Pellet3D pellet3D : pellet3DByTile.values()) {
-            getChildren().add(pellet3D.root());
+            root.getChildren().add(pellet3D.root());
         }
 
-        getChildren().add(maze3D.particlesGroup());
-        getChildren().add(maze3D.root());
+        root.getChildren().add(maze3D.particlesGroup());
+        root.getChildren().add(maze3D.root());
 
-        getChildren().add(house3D.root());
-        getChildren().add(house3D.doors());
+        root.getChildren().add(house3D.root());
+        root.getChildren().add(house3D.doors());
 
-        getChildren().add(ghostHunterLight);
+        root.getChildren().add(ghostHunterLight);
     }
 }

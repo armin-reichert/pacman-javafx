@@ -196,7 +196,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         final long tick = app().clock().currentTick();
 
         if (event.allPellets()) {
-            level3D.pellets3D().map(Pellet3D::root).forEach(shape -> level3D.getChildren().remove(shape));
+            level3D.pellets3D().map(Pellet3D::root).forEach(shape -> level3D.root().getChildren().remove(shape));
         }
         else {
             final Vector2i tile = event.pac().pos().tile();
@@ -221,7 +221,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     }
 
     private void removePelletAfterDelay(GameLevel3D level3D, Pellet3D pellet3D) {
-        pauseSecThen(PELLET_EATING_DELAY_SEC, () -> level3D.getChildren().remove(pellet3D.root())).play();
+        pauseSecThen(PELLET_EATING_DELAY_SEC, () -> level3D.root().getChildren().remove(pellet3D.root())).play();
     }
 
     @Override
@@ -264,7 +264,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         };
         MessageView3DDisplaySystem.showMessage(
             level.entities().messageView(),
-            level3D,
+            level3D.root(),
             center,
             GlobalAssets.PredefinedFont.ARCADE6.font(),
             level3D.animationManager().registry(),
