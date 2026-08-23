@@ -14,6 +14,8 @@ public class ScoreDataComp implements EntityComponent {
 
     private LocalDate date;
 
+    private boolean extraLifeReached;
+
     public ScoreDataComp() {
         reset();
     }
@@ -24,6 +26,7 @@ public class ScoreDataComp implements EntityComponent {
         points = 0;
         levelNumber = 1;
         date = LocalDate.now();
+        extraLifeReached = false;
     }
 
     public boolean isEnabled() { return enabled; }
@@ -46,5 +49,13 @@ public class ScoreDataComp implements EntityComponent {
 
     public LocalDate date() {
         return date;
+    }
+
+    public boolean extraLifeReached() {
+        return extraLifeReached;
+    }
+
+    public void setExtraLifeReached(boolean extraLifeReached) {
+        this.extraLifeReached = extraLifeReached;
     }
 }

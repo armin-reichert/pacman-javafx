@@ -4,6 +4,7 @@ import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.core.entities.score.comp.ScoreDataComp;
 import de.amr.pacmanfx.core.entities.score.comp.ScorePersistencyComp;
+import de.amr.pacmanfx.core.model.rules.ScoringRules;
 import org.tinylog.Logger;
 
 import java.io.*;
@@ -32,7 +33,24 @@ public class ScoreSystem {
         return new File(GameConstants.USER_HOME_DIR, fileName);
     }
 
-    public static void setPoints(Score score, int points) {
+    public static void scorePoints(Score score, Score highScore, int points, int levelNumber, ScoringRules rules) {
+        if (!score.data().isEnabled()) {
+            return;
+        }
+
+        final int oldPoints = score.data().points();
+        final int newPoints = oldPoints + points;
+        setPoints(score, newPoints);
+        score.data().setExtraLifeReached(rules.isExtraLifeAwarded(oldPoints, newPoints));
+
+        if (highScore.data().isEnabled() && newPoints > highScore.data().points()) {
+            setPoints(highScore, newPoints);
+            setLevelNumber(highScore, levelNumber);
+            setDate(highScore, LocalDate.now());
+        }
+    }
+
+    private static void setPoints(Score score, int points) {
         score.data().setPoints(points);
     }
 

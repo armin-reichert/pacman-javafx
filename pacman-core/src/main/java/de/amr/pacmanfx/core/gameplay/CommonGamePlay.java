@@ -10,15 +10,14 @@ import de.amr.basics.timer.Pulse;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusMoveAndJumpComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.livescounter.system.LivesCounterSystem;
 import de.amr.pacmanfx.core.entities.pac.comp.PacPowerComp;
 import de.amr.pacmanfx.core.entities.pac.system.PacDigestionSystem;
-import de.amr.pacmanfx.core.entities.score.comp.ScoreDataComp;
 import de.amr.pacmanfx.core.entities.score.comp.ScorePersistencyComp;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
@@ -42,7 +41,6 @@ import org.tinylog.Logger;
 
 import java.io.File;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 
@@ -297,26 +295,16 @@ public abstract class CommonGamePlay implements GamePlay {
         requireValidLevelNumber(levelNumber);
 
         final GameSession session = game.session();
-        final ScoreDataComp scoreData = session.score().data();
-
-        if (!scoreData.isEnabled()) {
-            return;
-        }
-
-        final int oldScore = scoreData.points();
-        final int newScore = oldScore + points;
-        ScoreSystem.setPoints(session.score(), newScore);
-
+        final Score gameScore = session.score();
         final Score highScore = session.highScore();
-        if (highScore != null && highScore.data().isEnabled() && newScore > highScore.data().points()) {
-            ScoreSystem.setPoints(highScore, newScore);
-            ScoreSystem.setLevelNumber(highScore, levelNumber);
-            ScoreSystem.setDate(highScore, LocalDate.now());
-        }
 
-        if (game.variant().rules().scoringRules().isExtraLifeAwarded(oldScore, newScore)) {
+        ScoreSystem.scorePoints(gameScore, highScore, points, levelNumber, game.variant().rules().scoringRules());
+
+        if (gameScore.data().extraLifeReached()) {
             LivesCounterSystem.addLife(session.hudEntities().theOne(LivesCounter.class));
-            game.eventManager().publishGameEvent(new SpecialScoreEvent(newScore));
+            game.eventManager().publishGameEvent(new SpecialScoreEvent(gameScore.data().points()));
+            // Do not forget to clear the flag!
+            gameScore.data().setExtraLifeReached(false);
         }
     }
 
