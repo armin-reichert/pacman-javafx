@@ -23,16 +23,6 @@ import javafx.scene.paint.PhongMaterial;
 public interface Factory3D extends Disposable {
 
     /**
-     * Creates a 3D maze.
-     *
-     * @param terrain the terrain layer
-     * @param config world configuration
-     * @param colorScheme the map color scheme
-     * @return a 3D maze representing the given terrain
-     */
-    Maze3D createMaze3D(House house, TerrainLayer terrain, WorldSettings config, WorldMapColorScheme colorScheme);
-
-    /**
      * Creates the 3D representation of Pac for this game variant, including model,
      * materials, and animation bindings.
      *

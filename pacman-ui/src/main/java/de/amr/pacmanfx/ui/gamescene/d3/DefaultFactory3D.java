@@ -5,10 +5,7 @@
 package de.amr.pacmanfx.ui.gamescene.d3;
 
 import de.amr.pacmanfx.core.entities.Ghost;
-import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.entities.Pac;
-import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
-import de.amr.pacmanfx.core.model.world.map.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Pellet3DSettings;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
@@ -34,25 +31,13 @@ public class DefaultFactory3D implements Factory3D {
 
     protected final Map<GhostStateColors, GhostAppearanceMaterialSet> ghostMaterialsCache = new HashMap<>();
     protected final Map<Float, TriangleMesh> pelletMeshesCache = new HashMap<>();
-    protected final MazeFactory3D mazeFactory3D;
 
-    public DefaultFactory3D() {
-        mazeFactory3D = new MazeFactory3D();
-    }
+    public DefaultFactory3D() {}
 
     @Override
     public void dispose() {
         ghostMaterialsCache.clear();
         pelletMeshesCache.clear();
-    }
-
-    @Override
-    public Maze3D createMaze3D(
-        House house,
-        TerrainLayer terrain,
-        WorldSettings settings,
-        WorldMapColorScheme colorScheme) {
-        return mazeFactory3D.createMaze3D(house, terrain, settings, colorScheme);
     }
 
     @Override

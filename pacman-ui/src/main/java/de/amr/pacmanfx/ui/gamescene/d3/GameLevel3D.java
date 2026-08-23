@@ -196,7 +196,7 @@ public class GameLevel3D implements DisposableGraphicsObject {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final House house = level.entities().house();
 
-        maze3D = uiConfig.factory3D().createMaze3D(house, terrain, uiConfig.worldSettings(), colorScheme);
+        maze3D = new MazeFactory3D().createMaze3D(house, terrain, uiConfig.worldSettings(), colorScheme);
 
         maze3D.drawModeProperty()      .bind(viewModel.common3D.drawModeProperty);
         maze3D.wallOpacityProperty()   .bind(viewModel.maze3D.wallOpacityProperty);
