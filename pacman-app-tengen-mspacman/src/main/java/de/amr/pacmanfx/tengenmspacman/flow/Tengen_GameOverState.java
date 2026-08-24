@@ -7,6 +7,7 @@ package de.amr.pacmanfx.tengenmspacman.flow;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.entities.LivesCounter;
@@ -46,9 +47,6 @@ public class Tengen_GameOverState extends GameState {
 
         countdownAfter = 0;
 
-        // Needed if state entry was triggered by user interaction
-        final LivesCounter livesCounter = session.hudEntities().theOne(LivesCounter.class);
-        LivesCounterSystem.setNumLives(livesCounter, 0);
         session.setPlaying(false);
         session.cheats().clear();
 
@@ -76,7 +74,10 @@ public class Tengen_GameOverState extends GameState {
 
     @Override
     public void onUpdate(GameContext game) {
+        final GameSystems systems = game.variant().systems();
         final GameSession session = game.session();
+
+        systems.entityUpdater().updateSessionHUDEntities(game);
 
         if (countdownAfter > 0) {
             --countdownAfter;

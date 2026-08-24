@@ -8,7 +8,6 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
-import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -24,8 +23,8 @@ import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -143,7 +142,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
                 dynamicCamera.update(tilesPx(terrain.numRows()), level.entities().pac());
             }
             ensureActorAnimationsCreated(session, level);
-            updateHUD(session, level);
+            updateHUD();
             optSoundEffects().ifPresent(soundEffects -> {
                 soundEffects.setEnabled(!session.isAttractMode());
                 soundEffects.playAmbientGameLevelSound(game(), level);
@@ -292,22 +291,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
             subScene.getWidth(), subScene.getHeight(), reqCanvasRendering().scaling());
     }
 
-    private void updateHUD(GameSession session, GameLevel level) {
+    private void updateHUD() {
         final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().variant().gamePlay();
-        final HUDState hud = session.hud();
+        final HUDState hud = game().session().hud();
 
-        // As long as Pac-Man is still invisible on start, he is shown as an additional entry in the lives counter
-        final boolean oneExtra = CommonGameStateID.GAME_OR_LEVEL_STARTING.hasSameNameAs(game().state())
-            && !level.entities().pac().isVisible();
-
-        int count = session.numLives() - 1;
-        if (oneExtra) ++count;
-        count = Math.clamp(count, 0, hud.maxLivesShown());
-
-        final LivesCounter livesCounter = session.hudEntities().theOne(LivesCounter.class);
-        livesCounter.data().setNumLives(count);
-
-        if (gamePlay.mapCategory(session) == MapCategory.ARCADE) {
+        if (gamePlay.mapCategory(game().session()) == MapCategory.ARCADE) {
             hud.hideLevelNumber();
         } else {
             hud.showLevelNumber();
