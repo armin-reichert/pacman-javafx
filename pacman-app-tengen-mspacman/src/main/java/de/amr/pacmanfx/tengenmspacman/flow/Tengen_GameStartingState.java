@@ -43,6 +43,8 @@ public class Tengen_GameStartingState extends GameState {
         final GameLevel level = session.level();
         final long tick = timer().tickCount();
 
+        game.variant().systems().entityUpdater().updateSessionHUDEntities(game);
+
         if (tick == TICK_SHOW_READY) {
             game.variant().gamePlay().startLevel(game, level);
         }

@@ -34,6 +34,8 @@ public class Tengen_LevelCompleteState extends GameState {
         final GameSession session = game.session();
         final GameFlowController flow = game.variant().gameFlow();
 
+        game.variant().systems().entityUpdater().updateSessionHUDEntities(game);
+
         if (session.isAttractMode()) {
             flow.enterGameState(game, TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME);
             return;

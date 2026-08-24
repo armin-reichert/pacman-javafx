@@ -31,6 +31,9 @@ public class Tengen_LevelContinueState extends GameState {
     @Override
     public void onUpdate(GameContext game) {
         final long tick = timer().tickCount();
+
+        game.variant().systems().entityUpdater().updateSessionHUDEntities(game);
+
         if (tick == TICK_RESUME_HUNTING) {
             game.variant().gameFlow().enterGameState(game, CommonGameStateID.GAME_LEVEL_PLAYING);
         }
