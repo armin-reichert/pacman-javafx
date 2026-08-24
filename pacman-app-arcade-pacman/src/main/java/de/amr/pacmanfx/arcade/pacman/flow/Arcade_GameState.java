@@ -18,7 +18,7 @@ public enum Arcade_GameState {
     GAME_STARTING              (new Arcade_GameStartingState()),
     GAME_LEVEL_CONTINUE        (new Arcade_LevelContinueState()),
     GAME_LEVEL_PLAYING         (new Common_PlayingLevelState()),
-    GAME_LEVEL_COMPLETE        (new Arcade_LevelCompleteState()),
+    GAME_LEVEL_COMPLETE        (new Common_LevelCompleteState()),
     GAME_LEVEL_TRANSITION      (new Common_LevelTransitionState()),
     GAME_LEVEL_EATING_GHOST    (new Common_EatingGhostState()),
     GAME_LEVEL_PACMAN_DYING    (new Common_PacManDyingState(new Common_PacManDyingState.Timing(60, 90, 190, 210))),
