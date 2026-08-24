@@ -25,6 +25,8 @@ public interface GameRules {
 
     int numLevelFlashes(int levelNumber);
 
+    LevelContinuationRules levelContinuation();
+
     /**
      * @return minimum duration of demo level (in seconds) or {@code Optional#empty()} if unlimited
      */

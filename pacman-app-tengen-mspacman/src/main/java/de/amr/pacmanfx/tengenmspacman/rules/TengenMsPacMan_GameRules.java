@@ -10,6 +10,7 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.rules.ActorCollisionRules;
 import de.amr.pacmanfx.core.model.rules.CollisionStrategy;
 import de.amr.pacmanfx.core.model.rules.GameRules;
+import de.amr.pacmanfx.core.model.rules.LevelContinuationRules;
 import de.amr.pacmanfx.tengenmspacman.model.BonusSymbol;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import javafx.beans.property.ObjectProperty;
@@ -69,6 +70,11 @@ public class TengenMsPacMan_GameRules implements GameRules {
     @Override
     public TengenMsPacMan_ActorSpeedRules actorSpeedRules() {
         return actorSpeedControl;
+    }
+
+    @Override
+    public LevelContinuationRules levelContinuation() {
+        return new LevelContinuationRules(60, 240);
     }
 
     @Override

@@ -2,39 +2,46 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.tengenmspacman.flow;
+package de.amr.pacmanfx.core.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.event.gameplay.GameContinuedEvent;
-import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
-import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.level.GameLevelMessageType;
+import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.model.rules.LevelContinuationRules;
 
-public class Tengen_LevelContinueState extends GameState {
+public class Common_LevelContinueState extends GameState {
 
-    static final short TICK_RESUME_HUNTING = 240;
-
-    public Tengen_LevelContinueState() {
+    public Common_LevelContinueState() {
         super(CommonGameStateID.GAME_LEVEL_CONTINUE);
     }
 
     @Override
     public void onEnter(GameContext game) {
-        final GameLevel level = game.session().level();
+        final GameSession session = game.session();
+        final GameLevel level = session.level();
+
         game.variant().gamePlay().prepareLevelForPlaying(game);
+
         level.entities().pac().show();
         level.entities().ghosts().forEach(GameEntity::show);
-       game.eventManager().publishGameEvent(new GameContinuedEvent());
+
+        game.variant().gamePlay().showLevelMessage(game, level, GameLevelMessageType.READY);
     }
 
     @Override
     public void onUpdate(GameContext game) {
+        final LevelContinuationRules rules = game.variant().rules().levelContinuation();
         final long tick = timer().tickCount();
 
         game.variant().systems().entityUpdater().updateSessionHUDEntities(game);
 
-        if (tick == TICK_RESUME_HUNTING) {
+        if (tick == rules.continuePlayingTicks()) {
+            game.eventManager().publishGameEvent(new GameContinuedEvent());
+        }
+        else if (tick == rules.resumeHuntingTicks()) {
             game.variant().gameFlow().enterGameState(game, CommonGameStateID.GAME_LEVEL_PLAYING);
         }
     }
