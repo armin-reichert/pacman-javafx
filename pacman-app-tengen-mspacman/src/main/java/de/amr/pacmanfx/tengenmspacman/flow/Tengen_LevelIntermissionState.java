@@ -33,7 +33,7 @@ public class Tengen_LevelIntermissionState extends GameState {
             session.hud().hideHUD();
         } else {
             session.hud()
-                .hideGameOptions()
+                .hideTengenGameOptions()
                 .hideScore()
                 .showLevelCounter()
                 .hideLivesCounter()
@@ -63,7 +63,7 @@ public class Tengen_LevelIntermissionState extends GameState {
             hudState.hideHUD();
         } else {
             hudState
-                .showGameOptions()
+                .showTengenGameOptions()
                 .showScore()
                 .showLevelCounter()
                 .hideLivesCounter()

@@ -114,9 +114,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
         hud.showScore().showLevelCounter().showLivesCounter().showHUD();
 
         if (gamePlay.allOptionsHaveDefaultValue(session)) {
-            hud.hideGameOptions();
+            hud.hideTengenGameOptions();
         } else {
-            hud.showGameOptions();
+            hud.showTengenGameOptions();
         }
 
         resetRendering2D();
@@ -300,9 +300,9 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
         final HUDState hud = game().session().hud();
 
         if (gamePlay.mapCategory(game().session()) == MapCategory.ARCADE) {
-            hud.hideLevelNumber();
+            hud.hideTengenLevelNumber();
         } else {
-            hud.showLevelNumber();
+            hud.showTengenLevelNumber();
         }
     }
 

@@ -87,7 +87,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer
             drawLevelCounter(session, counterY);
         }
 
-        if (session.hud().gameOptionsVisible()) {
+        if (session.hud().tengenGameOptionsVisible()) {
             drawGameOptions(
                 session.value(TengenMsPacMan_GamePlayOptions.MAP_CATEGORY, MapCategory.class),
                 session.value(TengenMsPacMan_GamePlayOptions.DIFFICULTY, Difficulty.class),
@@ -153,7 +153,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer
             }
             x -= tilesPx(2);
         }
-        if (session.hud().isLevelNumberVisible()) {
+        if (session.hud().isTengenLevelNumberVisible()) {
             session.optLevel().ifPresent(level -> {
                 final int levelNumber = level.number();
                 drawLevelNumberBox(levelNumber, LEVEL_COUNTER_POS_LEFT, y); // left box

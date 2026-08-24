@@ -137,31 +137,31 @@ public class HUDState {
 
     public final BooleanProperty gameOptionsVisible = new SimpleBooleanProperty();
 
-    public HUDState showGameOptions() {
+    public HUDState showTengenGameOptions() {
         gameOptionsVisible.set(true);
         return this;
     }
 
-    public HUDState hideGameOptions() {
+    public HUDState hideTengenGameOptions() {
         gameOptionsVisible.set(false);
         return this;
     }
 
-    public boolean gameOptionsVisible() {
+    public boolean tengenGameOptionsVisible() {
         return gameOptionsVisible.get();
     }
 
-    public HUDState showLevelNumber() {
+    public HUDState showTengenLevelNumber() {
         levelNumberVisible.set(true);
         return this;
     }
 
-    public HUDState hideLevelNumber() {
+    public HUDState hideTengenLevelNumber() {
         levelNumberVisible.set(false);
         return this;
     }
 
-    public boolean isLevelNumberVisible() {
+    public boolean isTengenLevelNumberVisible() {
         return levelNumberVisible.get();
     }
 }
