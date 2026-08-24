@@ -58,6 +58,7 @@ public abstract class CommonGamePlay implements GamePlay {
         systems.pacPower().reset(pac);
         systems.worldNavigator().setMoveDir(pac, Direction.LEFT);
         systems.worldNavigator().setWishDir(pac, Direction.LEFT);
+        systems.actorSpriteAnimController().select(pac, CommonSpriteAnimationID.PAC_MUNCHING);
 
         level.entities().ghosts().forEach(ghost -> {
             ghost.reset(); // initially invisible!
