@@ -45,9 +45,7 @@ public class Tengen_GameStartingState extends GameState {
         final long tick = timer().tickCount();
 
         if (tick == TICK_SHOW_READY) {
-            game.variant().gamePlay().startLevel(game);
-            // Note: This event is very important because it triggers the creation of the actor animations!
-            game.eventManager().publishGameEvent(new LevelStartedEvent(level));
+            game.variant().gamePlay().startLevel(game, level);
         }
         else if (tick == TICK_SHOW_GUYS) {
             level.entities().pac().show();

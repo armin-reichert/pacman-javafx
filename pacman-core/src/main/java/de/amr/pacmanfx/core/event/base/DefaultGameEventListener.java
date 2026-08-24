@@ -50,9 +50,7 @@ public interface DefaultGameEventListener extends GameEventListener {
     }
 
     // public implementations remain the same
-    default void onGameStateChange(GameStateChangeEvent e) {
-        Logger.info("Enter game state '{}'", e.newState().name());
-    }
+    default void onGameStateChange(GameStateChangeEvent e) {}
 
     default void onCreditAdded(CreditAddedEvent e) {}
     default void onSpecialScore(SpecialScoreEvent e) {}

@@ -105,10 +105,7 @@ public abstract class CommonGamePlay implements GamePlay {
         if (currentLevel.number() < lastLevelNumber) {
             final GameLevel nextLevel = buildNormalLevel(game, currentLevel.number() + 1);
             game.eventManager().publishGameEvent(new LevelCreatedEvent(nextLevel));
-
-            startLevel(game);
-            // Note: This event is very important because it triggers the creation of the actor animations!
-            eventManager.publishGameEvent(new LevelStartedEvent(currentLevel));
+            startLevel(game, nextLevel);
         } else {
             Logger.warn("Last level ({}) reached, cannot start next level", lastLevelNumber);
         }

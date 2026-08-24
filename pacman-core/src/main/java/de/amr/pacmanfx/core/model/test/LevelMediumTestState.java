@@ -13,7 +13,6 @@ import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
-import de.amr.pacmanfx.core.event.gameplay.LevelStartedEvent;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
@@ -39,7 +38,6 @@ public class LevelMediumTestState extends GameState {
     @Override
     public void onEnter(GameContext game) {
         final GamePlay gamePlay = game.variant().gamePlay();
-        final GameEventManager eventManager = game.eventManager();
         final GameSession session = game.session();
 
         lastTestedLevelNumber = game.variant().rules().lastLevelNumber() == Integer.MAX_VALUE
@@ -51,11 +49,8 @@ public class LevelMediumTestState extends GameState {
         final GameLevel newLevel = gamePlay.buildNormalLevel(game, 1);
         game.eventManager().publishGameEvent(new LevelCreatedEvent(newLevel));
 
-        gamePlay.startLevel(game);
         configureLevelForTest(game);
-
-        // Note: This event is very important because it triggers the creation of the actor animations!
-        eventManager.publishGameEvent(new LevelStartedEvent(session.level()));
+        gamePlay.startLevel(game, session.level());
     }
 
     @Override

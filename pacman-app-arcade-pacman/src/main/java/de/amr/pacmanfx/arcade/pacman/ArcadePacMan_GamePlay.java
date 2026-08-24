@@ -18,6 +18,7 @@ import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
+import de.amr.pacmanfx.core.event.gameplay.LevelStartedEvent;
 import de.amr.pacmanfx.core.gameplay.ArcadeHouseGateKeeper;
 import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
@@ -25,7 +26,6 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.HUDState;
 import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.core.model.rules.HuntingTimer;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
@@ -221,11 +221,10 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     }
 
     @Override
-    public void startLevel(GameContext game) {
+    public void startLevel(GameContext game, GameLevel level) {
         requireNonNull(game);
 
         final GameSession session = game.session();
-        final GameLevel level = session.level();
 
         prepareLevelForPlaying(game);
         session.setLevelStartTimeMillis(System.currentTimeMillis());
@@ -237,6 +236,9 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         levelCounterSystem.updateCounter(levelCounter, level.number(), level.bonusSymbolCode(0));
 
         showLevelMessage(game, level, GameLevelMessageType.READY);
+
+        // Note: This event is very important because it triggers the creation of the actor animations!
+        game.eventManager().publishGameEvent(new LevelStartedEvent(level.number()));
     }
 
     // Playing level

@@ -169,12 +169,11 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 
     @Override
     default void onLevelStarted(LevelStartedEvent event) {
-        final GameLevel level = event.level();
-        final GameSession session = game().session();
+        final GameLevel level = session().level();
         final GameLevel3D level3D = assertLevel3D();
         final State<GameContext> newState = game().state();
 
-        level3D.replaceLevelCounter3D(session.hudEntities().theOne(LevelCounter.class));
+        level3D.replaceLevelCounter3D(session().hudEntities().theOne(LevelCounter.class));
 
         //TODO rethink this
         if (newState instanceof GameState gameState && gameState.id() instanceof TestStateID) {
@@ -187,7 +186,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         //TODO: workaround, check cause for invisible Pac-Man 3D after cut scene
         level.entities().pac().reqComp(Pac3DViewComp.class).root().setVisible(true);
 
-        gameScene().replaceActionBindings(session, level);
+        gameScene().replaceActionBindings(session(), level);
         gameScene().fadeIn();
     }
 

@@ -47,9 +47,7 @@ public class Arcade_GameStartingState extends GameState {
         systems.entityUpdater().updateSessionHUDEntities(game);
 
         if (tick == TICK_NEW_GAME_START_LEVEL) {
-            game.variant().gamePlay().startLevel(game);
-            // Note: This event is very important because it triggers the creation of the actor animations!
-            game.eventManager().publishGameEvent(new LevelStartedEvent(level));
+            game.variant().gamePlay().startLevel(game, level);
         }
         else if (tick == TICK_NEW_GAME_SHOW_GUYS) {
             level.entities().pac().show();

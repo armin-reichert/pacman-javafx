@@ -24,7 +24,7 @@ public interface GamePlay {
 
     GameLevel buildNormalLevel(GameContext game, int levelNumber);
 
-    void startLevel(GameContext game);
+    void startLevel(GameContext game, GameLevel level);
 
     void startNextLevel(GameContext game);
 

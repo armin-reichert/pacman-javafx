@@ -226,7 +226,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
         }
         newCanvas.widthProperty() .bind(reqCanvasRendering().scalingProperty().multiply(NES_SCREEN_WIDTH));
         newCanvas.heightProperty().bind(reqCanvasRendering().scalingProperty().multiply(canvasHeightUnscaled));
-        rootPane.getChildren().add(newCanvas);
+        if (!rootPane.getChildren().contains(newCanvas)) {
+            rootPane.getChildren().add(newCanvas);
+        } else {
+            Logger.info("Avoided adding canvas twice to Tengen play scene!");
+        }
     };
 
     private void resetRendering2D() {

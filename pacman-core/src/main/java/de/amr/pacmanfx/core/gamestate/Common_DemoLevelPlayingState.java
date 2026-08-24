@@ -103,9 +103,6 @@ public final class Common_DemoLevelPlayingState extends GameState {
 
         gamePlay.prepareLevelForPlaying(game);
         gamePlay.showLevelMessage(game, level, GameLevelMessageType.GAME_OVER);
-
-        // Note: This event is very important because it triggers the creation of the actor animations!
-        game.eventManager().publishGameEvent(new LevelStartedEvent(level));
     }
 
     private void showActors(GameLevelEntitySet entities) {

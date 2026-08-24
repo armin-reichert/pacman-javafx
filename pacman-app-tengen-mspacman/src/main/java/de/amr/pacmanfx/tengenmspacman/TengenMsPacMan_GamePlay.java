@@ -22,6 +22,7 @@ import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
+import de.amr.pacmanfx.core.event.gameplay.LevelStartedEvent;
 import de.amr.pacmanfx.core.gameplay.ArcadeHouseGateKeeper;
 import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
@@ -338,11 +339,10 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     }
 
     @Override
-    public void startLevel(GameContext game) {
+    public void startLevel(GameContext game, GameLevel level) {
         requireNonNull(game);
 
         final GameSession session = game.session();
-        final GameLevel level = session.level();
 
         prepareLevelForPlaying(game);
 
@@ -363,6 +363,9 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         // Actors are shown immediately when level starts!
         pac.show();
         level.entities().ghosts().forEach(GameEntity::show);
+
+        // Note: This event is very important because it triggers the creation of the actor animations!
+        game.eventManager().publishGameEvent(new LevelStartedEvent(level.number()));
     }
 
     // Playing level

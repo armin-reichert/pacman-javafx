@@ -12,7 +12,6 @@ import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.event.TestStartedEvent;
 import de.amr.pacmanfx.core.event.bonus.BonusEatenEvent;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
-import de.amr.pacmanfx.core.event.gameplay.LevelStartedEvent;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
@@ -41,15 +40,14 @@ public class LevelShortTestState extends GameState {
         final GameLevel newLevel = gamePlay.buildNormalLevel(game, 1);
         game.eventManager().publishGameEvent(new LevelCreatedEvent(newLevel));
 
-        gamePlay.startLevel(game);
 
         final GameLevel level = session.level();
         level.entities().pac().show();
         level.entities().ghosts().forEach(GameEntity::show);
 
         timer().resetToIndefiniteDuration();
-        // Note: This event is very important because it triggers the creation of the actor animations!
-        game.eventManager().publishGameEvent(new LevelStartedEvent(level));
+
+        gamePlay.startLevel(game, level);
     }
 
     @Override
