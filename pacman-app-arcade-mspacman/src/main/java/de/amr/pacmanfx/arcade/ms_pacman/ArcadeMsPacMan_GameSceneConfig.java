@@ -11,7 +11,7 @@ import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene3D;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
-import de.amr.pacmanfx.core.model.test.CutScenesTestState;
+import de.amr.pacmanfx.core.model.test.Test_CutScenesTestState;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameSceneConfig;
@@ -44,7 +44,7 @@ class ArcadeMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
     protected Named determineSceneID(GameViewModel viewModel, GameContext game) {
         final GameState state = game.state();
 
-        if (state instanceof CutScenesTestState testState) {
+        if (state instanceof Test_CutScenesTestState testState) {
             return AbstractGameSceneConfig.cutSceneID(testState.testedCutSceneNumber);
         }
 

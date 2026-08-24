@@ -8,11 +8,11 @@ import de.amr.pacmanfx.core.event.GenericChangeEvent;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 
-public class CutScenesTestState extends GameState {
+public class Test_CutScenesTestState extends GameState {
 
     public int testedCutSceneNumber;
 
-    public CutScenesTestState() {
+    public Test_CutScenesTestState() {
         super(TestStateID.CUT_SCENE_TEST);
     }
 

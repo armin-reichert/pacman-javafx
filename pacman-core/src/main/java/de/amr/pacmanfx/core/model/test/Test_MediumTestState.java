@@ -20,13 +20,13 @@ import de.amr.pacmanfx.core.level.GameLevel;
 
 import java.util.List;
 
-public class LevelMediumTestState extends GameState {
+public class Test_MediumTestState extends GameState {
 
     static final int TEST_DURATION_SEC = 10;
 
     private int lastTestedLevelNumber;
 
-    public LevelMediumTestState() {
+    public Test_MediumTestState() {
         super(TestStateID.LEVEL_TEST_M);
     }
 

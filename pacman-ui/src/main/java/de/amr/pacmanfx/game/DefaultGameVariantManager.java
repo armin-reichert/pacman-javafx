@@ -5,9 +5,9 @@
 package de.amr.pacmanfx.game;
 
 import de.amr.pacmanfx.core.gamestate.GameFlowController;
-import de.amr.pacmanfx.core.model.test.CutScenesTestState;
-import de.amr.pacmanfx.core.model.test.LevelMediumTestState;
-import de.amr.pacmanfx.core.model.test.LevelShortTestState;
+import de.amr.pacmanfx.core.model.test.Test_CutScenesTestState;
+import de.amr.pacmanfx.core.model.test.Test_MediumTestState;
+import de.amr.pacmanfx.core.model.test.Test_ShortTestState;
 import de.amr.pacmanfx.ui.vm.GameViewModel;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -89,9 +89,9 @@ public class DefaultGameVariantManager implements GameVariantManager {
         final var variant = new GameVariant(cartridge);
         if (includeInteractiveTests) {
             final GameFlowController gameFlow = variant.config().gameFlow();
-            gameFlow.addState(new LevelShortTestState());
-            gameFlow.addState(new LevelMediumTestState());
-            gameFlow.addState(new CutScenesTestState());
+            gameFlow.addState(new Test_ShortTestState());
+            gameFlow.addState(new Test_MediumTestState());
+            gameFlow.addState(new Test_CutScenesTestState());
         }
         variant.config().worldMapManager().loadMapPrototypes();
         Logger.info("Loaded world maps for game variant {}", variantName);

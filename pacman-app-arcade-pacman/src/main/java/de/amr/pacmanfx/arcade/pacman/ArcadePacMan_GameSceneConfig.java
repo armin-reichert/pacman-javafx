@@ -8,7 +8,7 @@ import de.amr.pacmanfx.arcade.pacman.scenes.*;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
-import de.amr.pacmanfx.core.model.test.CutScenesTestState;
+import de.amr.pacmanfx.core.model.test.Test_CutScenesTestState;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameSceneConfig;
@@ -43,7 +43,7 @@ class ArcadePacMan_GameSceneConfig extends AbstractGameSceneConfig {
         requireNonNull(game);
 
         final GameState state = game.state();
-        if (state instanceof CutScenesTestState testState) {
+        if (state instanceof Test_CutScenesTestState testState) {
             return AbstractGameSceneConfig.cutSceneID(testState.testedCutSceneNumber);
         }
         if (CommonGameStateID.BOOT.hasSameNameAs(state)) {

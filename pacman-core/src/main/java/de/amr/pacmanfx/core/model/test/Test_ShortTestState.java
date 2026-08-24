@@ -18,11 +18,11 @@ import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
 
-public class LevelShortTestState extends GameState {
+public class Test_ShortTestState extends GameState {
 
     private int lastTestedLevelNumber;
 
-    public LevelShortTestState() {
+    public Test_ShortTestState() {
         super(TestStateID.LEVEL_TEST_S);
     }
 
