@@ -33,7 +33,7 @@ public class Arcade_GameOverState extends GameState {
         }
 
         game.variant().gamePlay().showLevelMessage(game, level, GameLevelMessageType.GAME_OVER);
-        session.setPlaying(false);
+        session.setGameRunning(false);
         game.session().cheats().clear();
 
         timer().restartTicks(session.gameOverStateTicks());

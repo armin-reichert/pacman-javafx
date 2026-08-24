@@ -9,7 +9,6 @@ import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.event.gameplay.GameStartedEvent;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
-import de.amr.pacmanfx.core.event.gameplay.LevelStartedEvent;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -52,7 +51,7 @@ public class Tengen_GameStartingState extends GameState {
             level.entities().ghosts().forEach(GameEntity::show);
         }
         else if (tick == TICK_START_PLAYING) {
-            session.setPlaying(true);
+            session.setGameRunning(true);
             game.variant().gameFlow().enterGameState(game, CommonGameStateID.GAME_LEVEL_PLAYING);
         }
     }

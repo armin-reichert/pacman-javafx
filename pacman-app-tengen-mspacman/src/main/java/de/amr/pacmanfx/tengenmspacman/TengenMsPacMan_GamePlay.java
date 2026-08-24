@@ -30,7 +30,6 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 import de.amr.pacmanfx.core.level.GameLevelMessage;
 import de.amr.pacmanfx.core.level.GameLevelMessageType;
-import de.amr.pacmanfx.core.model.HUDState;
 import de.amr.pacmanfx.core.model.rules.HuntingTimer;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -199,6 +198,11 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     // GamePlay interface
 
     @Override
+    public boolean canStart(GameContext game) {
+        return canStartNewGame(game.session());
+    }
+
+    @Override
     public void startSession(GameContext game) {
         requireNonNull(game);
         final GameSession session = game.session();
@@ -218,7 +222,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         session.setNumLives(game.variant().initialLifeCount());
         session.setCutScenesEnabled(true);
         session.setLevel(null);
-        session.setPlaying(false);
+        session.setGameRunning(false);
         initScores(session);
         configureLevelCounter(game, session.hudEntities().theOne(LevelCounter.class));
 
@@ -243,8 +247,14 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final GameSession session = game.session();
         final WorldNavigationSystem navigator = game.variant().systems().worldNavigator();
 
-        final WorldMap worldMap = game.variant().worldMapManager().supplyWorldMap(levelNumber, mapCategory(session));
+        final MapCategory mapCategory = mapCategory(session);
+
+        final WorldMap worldMap = game.variant().worldMapManager().supplyWorldMap(levelNumber, mapCategory);
+
         final TengenMsPacMan_GameRules rules = (TengenMsPacMan_GameRules) game.variant().rules();
+        rules.setMapCategory(mapCategory);
+        Logger.info("Using game rules for map category {}", mapCategory);
+
         final HuntingTimer huntingTimer = new HuntingTimer("Tengen Ms. Pac-Man Hunting Timer", rules.numHuntingPhases());
 
         addEntities(entities, game, worldMap);

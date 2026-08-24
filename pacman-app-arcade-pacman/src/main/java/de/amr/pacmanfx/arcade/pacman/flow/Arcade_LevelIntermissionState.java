@@ -29,7 +29,7 @@ public class Arcade_LevelIntermissionState extends GameState {
         final GameSession session = game.session();
         final GameFlowController flow = game.variant().gameFlow();
         if (timer().hasExpired()) {
-            flow.enterGameState(game, session.isPlaying()
+            flow.enterGameState(game, session.isGameRunning()
                 ? CommonGameStateID.GAME_LEVEL_TRANSITION : CommonGameStateID.GAME_INTRO);
         }
     }

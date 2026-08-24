@@ -10,8 +10,6 @@ import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
 import de.amr.pacmanfx.core.entities.House;
-import de.amr.pacmanfx.core.entities.LivesCounter;
-import de.amr.pacmanfx.core.entities.livescounter.system.LivesCounterSystem;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
@@ -47,7 +45,7 @@ public class Tengen_GameOverState extends GameState {
 
         countdownAfter = 0;
 
-        session.setPlaying(false);
+        session.setGameRunning(false);
         session.cheats().clear();
 
         try {

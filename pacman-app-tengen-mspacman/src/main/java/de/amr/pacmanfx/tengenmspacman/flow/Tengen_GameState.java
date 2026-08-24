@@ -16,7 +16,7 @@ public enum Tengen_GameState {
     GAME_INTRO                  (new Common_IntroState()),
     GAME_PREPARATION            (new Common_PreparationState()),
     SHOWING_HALL_OF_FAME        (new Tengen_ShowingHallOfFameState() ),
-    GAME_OR_LEVEL_STARTING      (new Tengen_GameOrLevelStartingState()),
+    GAME_OR_LEVEL_STARTING      (new Common_GameOrLevelStartingState()),
     DEMO_LEVEL_PLAYING          (new Common_DemoLevelPlayingState()),
     GAME_STARTING               (new Tengen_GameStartingState()),
     GAME_LEVEL_CONTINUE         (new Tengen_LevelContinueState()),

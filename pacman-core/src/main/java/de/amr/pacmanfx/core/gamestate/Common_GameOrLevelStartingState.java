@@ -2,15 +2,13 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.arcade.pacman.flow;
+package de.amr.pacmanfx.core.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
-import de.amr.pacmanfx.core.gamestate.GameState;
 
-public class Arcade_GameOrLevelStartingState extends GameState {
+public class Common_GameOrLevelStartingState extends GameState {
 
-    public Arcade_GameOrLevelStartingState() {
+    public Common_GameOrLevelStartingState() {
         super(CommonGameStateID.GAME_OR_LEVEL_STARTING);
     }
 
@@ -25,10 +23,10 @@ public class Arcade_GameOrLevelStartingState extends GameState {
     }
 
     private CommonGameStateID computeNextState(GameContext game) {
-        if (game.session().isPlaying()) {
+        if (game.session().isGameRunning()) {
             return CommonGameStateID.GAME_LEVEL_CONTINUE;
         }
-        if (!game.coinMechanism().isEmpty()) {
+        if (game.variant().gamePlay().canStart(game)) {
             return CommonGameStateID.GAME_STARTING;
         }
         return  CommonGameStateID.DEMO_LEVEL_PLAYING;

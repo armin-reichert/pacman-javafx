@@ -13,7 +13,7 @@ public enum Arcade_GameState {
     BOOT                       (new Common_BootState()),
     GAME_INTRO                 (new Common_IntroState()),
     GAME_PREPARATION           (new Common_PreparationState()),
-    GAME_OR_LEVEL_STARTING     (new Arcade_GameOrLevelStartingState()),
+    GAME_OR_LEVEL_STARTING     (new Common_GameOrLevelStartingState()),
     DEMO_LEVEL_PLAYING         (new Common_DemoLevelPlayingState()),
     GAME_STARTING              (new Arcade_GameStartingState()),
     GAME_LEVEL_CONTINUE        (new Arcade_LevelContinueState()),

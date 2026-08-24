@@ -116,6 +116,6 @@ public class DS_GameControl extends GameDashboardSection {
     }
 
     private boolean canEnterNextLevel(GameSession session, GameState gameState) {
-        return session.isPlaying() && CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(gameState);
+        return session.isGameRunning() && CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(gameState);
     }
 }

@@ -38,7 +38,7 @@ public class GameSession {
 
     private boolean attractMode;
 
-    private boolean playing;
+    private boolean gameRunning;
 
     private int numLives;
 
@@ -132,12 +132,12 @@ public class GameSession {
         return attractMode;
     }
 
-    public boolean isPlaying() {
-        return playing;
+    public boolean isGameRunning() {
+        return gameRunning;
     }
 
-    public void setPlaying(boolean playing) {
-        this.playing = playing;
+    public void setGameRunning(boolean gameRunning) {
+        this.gameRunning = gameRunning;
     }
 
     public boolean cutScenesEnabled() {

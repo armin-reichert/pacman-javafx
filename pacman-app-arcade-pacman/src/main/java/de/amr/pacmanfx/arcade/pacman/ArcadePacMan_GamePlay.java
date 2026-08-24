@@ -95,7 +95,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         session.setNumLives(game.variant().initialLifeCount());
         session.setCutScenesEnabled(true);
         session.setLevel(null);
-        session.setPlaying(false);
+        session.setGameRunning(false);
         initScores(session);
         configureLevelCounter(game, session.hudEntities().theOne(LevelCounter.class));
 
@@ -242,6 +242,11 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     }
 
     // Playing level
+
+    @Override
+    public boolean canStart(GameContext game) {
+        return !game.coinMechanism().isEmpty();
+    }
 
     @Override
     public void activateNextBonus(GameContext game, GameLevel level) {

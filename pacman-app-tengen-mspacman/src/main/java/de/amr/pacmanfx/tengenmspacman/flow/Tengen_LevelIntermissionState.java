@@ -46,7 +46,7 @@ public class Tengen_LevelIntermissionState extends GameState {
     public void onUpdate(GameContext game) {
         final GameSession session = game.session();
         if (timer().hasExpired()) {
-            game.variant().gameFlow().enterGameState(game, session.isPlaying()
+            game.variant().gameFlow().enterGameState(game, session.isGameRunning()
                 ? CommonGameStateID.GAME_LEVEL_TRANSITION : CommonGameStateID.GAME_INTRO);
         }
     }
