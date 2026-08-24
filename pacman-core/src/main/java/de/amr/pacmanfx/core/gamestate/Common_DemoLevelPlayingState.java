@@ -28,7 +28,8 @@ public final class Common_DemoLevelPlayingState extends GameState {
     public void onEnter(GameContext game) {
         final GameSession session = game.session();
         session.setLevel(game.variant().gamePlay().buildDemoLevel(game));
-        session.hud().showCredit().hideLivesCounter();
+        session.setNumLives(1);
+        session.hud().showCredit().hideLivesCounter().showHUD();
         game.eventManager().publishGameEvent(new LevelCreatedEvent(session.level()));
     }
 
@@ -38,6 +39,8 @@ public final class Common_DemoLevelPlayingState extends GameState {
 
         final GameLevel level = game.session().level();
         final int huntingStartTick = game.variant().rules().demoLevelHuntingStartTick();
+
+        game.variant().systems().entityUpdater().updateSessionHUDEntities(game);
 
         if (tick == 1) {
             prepareLevel(game);
