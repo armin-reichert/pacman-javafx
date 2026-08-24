@@ -49,7 +49,7 @@ public class SpriteMap {
     private Object get(Named id) {
         requireNonNull(id);
         if (!map.containsKey(id)) {
-            throw new IllegalArgumentException("Np sprite map value exists for id '%s'".formatted(id));
+            throw new IllegalArgumentException("No sprite map value exists for id '%s'".formatted(id));
         }
         return map.get(id);
     }
