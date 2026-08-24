@@ -6,11 +6,9 @@ package de.amr.pacmanfx.core.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.GameSystems;
-import de.amr.pacmanfx.core.entities.LivesCounter;
+import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.entities.Pac;
-import de.amr.pacmanfx.core.entities.livescounter.system.LivesCounterSystem;
 import de.amr.pacmanfx.core.entities.pac.comp.PacState;
 import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.core.event.pac.PacDeadEvent;
@@ -69,10 +67,11 @@ public final class Common_PacManDyingState extends GameState {
         final GameFlowController gameFlow = game.variant().gameFlow();
         final GameSession session = game.session();
         final GameLevel level = session.level();
-        final LivesCounter livesCounter = session.hudEntities().theOne(LivesCounter.class);
         final Pac pac = level.entities().pac();
         final long tick = timer().tickCount();
 
+        //TODO check this
+        systems.entityUpdater().updateSessionHUDEntities(game);
         systems.entityUpdater().updateLevelHeartbeat(level);
         systems.entityUpdater().updatePac(game, level, pac);
 
@@ -81,9 +80,8 @@ public final class Common_PacManDyingState extends GameState {
                 gameFlow.enterGameState(game, CommonGameStateID.GAME_OVER);
             }
             else {
-                LivesCounterSystem.subtractLife(livesCounter);
-                final boolean gameOver = livesCounter.data().numLives() == 0;
-                gameFlow.enterGameState(game, gameOver
+                session.setNumLives(session.numLives() - 1);
+                gameFlow.enterGameState(game, session.numLives() == 0
                     ? CommonGameStateID.GAME_OVER
                     : CommonGameStateID.GAME_OR_LEVEL_STARTING);
             }

@@ -7,12 +7,13 @@ package de.amr.pacmanfx.core.model;
 import de.amr.pacmanfx.core.level.GameLevelMessage;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import org.tinylog.Logger;
 
 import java.util.Optional;
 
 public class HUDState {
 
-    public final BooleanProperty visible = new SimpleBooleanProperty(true);
+    private boolean visible;
 
     public final BooleanProperty creditShown = new SimpleBooleanProperty(false);
 
@@ -22,19 +23,21 @@ public class HUDState {
 
     public final BooleanProperty scoreShown = new SimpleBooleanProperty(true);
 
-    private int livesCount;
-
     private GameLevelMessage message;
 
     public HUDState() {}
 
-    public void show() { visible.set(true); }
-
-    public void hide() {
-        visible.set(false);
+    public void show() {
+        visible = true;
+        Logger.info("HUD is VISIBLE!");
     }
 
-    public boolean isVisible() { return visible.get(); }
+    public void hide() {
+        visible = false;
+        Logger.info("HUD is HIDDEN!");
+    }
+
+    public boolean isVisible() { return visible; }
 
     // credit
 
@@ -82,15 +85,6 @@ public class HUDState {
         return this;
     }
 
-    // visible lives count
-
-    public int visibleLifeCount() {
-        return livesCount;
-    }
-
-    public void setLivesCount(int count) {
-        livesCount = count;
-    }
 
     public int maxLivesShown() {
         return 5;

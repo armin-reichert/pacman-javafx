@@ -13,7 +13,6 @@ import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusMoveAndJumpComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
-import de.amr.pacmanfx.core.entities.livescounter.system.LivesCounterSystem;
 import de.amr.pacmanfx.core.entities.pac.system.PacDigestionSystem;
 import de.amr.pacmanfx.core.entities.score.comp.ScorePersistencyComp;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
@@ -77,7 +76,7 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     @Override
-    public GameLevel buildNormalLevel(GameContext game, int levelNumber, int numLives) {
+    public GameLevel buildNormalLevel(GameContext game, int levelNumber) {
         requireNonNull(game);
         requireValidLevelNumber(levelNumber);
 
@@ -87,7 +86,6 @@ public abstract class CommonGamePlay implements GamePlay {
 
         session.setLevel(level);
         session.setAttractMode(false);
-        session.hudEntities().theOne(LivesCounter.class).data().setNumLives(numLives);
         ScoreSystem.setLevelNumber(session.score(), levelNumber);
         session.gateKeeper().setLevelNumber(levelNumber);
 
@@ -101,16 +99,16 @@ public abstract class CommonGamePlay implements GamePlay {
         final GameSession session = game.session();
         final GameEventManager eventManager = game.eventManager();
 
-        final GameLevel oldLevel = game.session().level();
+        final GameLevel currentLevel = session.level();
         final int lastLevelNumber = game.variant().rules().lastLevelNumber();
 
-        if (oldLevel.number() < lastLevelNumber) {
-            final GameLevel newLevel = buildNormalLevel(game, oldLevel.number() + 1, session.hudEntities().theOne(LivesCounter.class).data().numLives());
-            game.eventManager().publishGameEvent(new LevelCreatedEvent(newLevel));
+        if (currentLevel.number() < lastLevelNumber) {
+            final GameLevel nextLevel = buildNormalLevel(game, currentLevel.number() + 1);
+            game.eventManager().publishGameEvent(new LevelCreatedEvent(nextLevel));
 
             startLevel(game);
             // Note: This event is very important because it triggers the creation of the actor animations!
-            eventManager.publishGameEvent(new LevelStartedEvent(oldLevel));
+            eventManager.publishGameEvent(new LevelStartedEvent(currentLevel));
         } else {
             Logger.warn("Last level ({}) reached, cannot start next level", lastLevelNumber);
         }
@@ -237,7 +235,7 @@ public abstract class CommonGamePlay implements GamePlay {
         ScoreSystem.scorePoints(gameScore, highScore, points, levelNumber, game.variant().rules().scoringRules());
 
         if (gameScore.data().extraLifeReached()) {
-            LivesCounterSystem.addLife(session.hudEntities().theOne(LivesCounter.class));
+            session.setNumLives(session.numLives() + 1);
             game.eventManager().publishGameEvent(new SpecialScoreEvent(gameScore.data().points()));
             // Do not forget to clear the flag!
             gameScore.data().setExtraLifeReached(false);

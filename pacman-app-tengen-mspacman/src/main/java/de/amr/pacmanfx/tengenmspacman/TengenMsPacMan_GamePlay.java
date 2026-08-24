@@ -202,7 +202,6 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         requireNonNull(game);
         final GameSession session = game.session();
 
-        session.hud().hide();
         setBoosterOn(session, false);
 
         setBoosterMode(session,      TengenMsPacMan_GameVariantUIConfig.DEFAULT_PAC_BOOSTER);
@@ -215,10 +214,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final ArcadeHouseGateKeeper gateKeeper = new ArcadeHouseGateKeeper();
         session.setGateKeeper(gateKeeper);
 
-        final HUDState hudState = session.hud();
-//        hudState.creditProperty().bind(game.coinMechanism().numCoinsProperty());
-        hudState.hide();
-
+        session.setNumLives(game.variant().initialLifeCount());
         session.setCutScenesEnabled(true);
         session.setLevel(null);
         session.setPlaying(false);

@@ -78,6 +78,7 @@ public class DS_GameInfo extends GameDashboardSection {
             })
         );
 
+        addDynamicInfo("Pac lives",      () -> app.game().session().numLives());
         addDynamicInfo("Hunting Phase",  fnLevelInfo(app, this::fmtHuntingPhase));
         addDynamicInfo("-Running",       fnLevelInfo(app, level -> fmtHuntingTicksRunning(level.huntingTimerStrategy())));
         addDynamicInfo("-Remaining",     fnLevelInfo(app, level -> fmtHuntingTicksRemaining(level.huntingTimerStrategy())));

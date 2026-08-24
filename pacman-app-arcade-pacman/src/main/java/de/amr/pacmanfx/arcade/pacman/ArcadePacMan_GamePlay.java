@@ -92,9 +92,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         gateKeeper.setGhostReleasedCallback(this::onGhostReleasedFromHouse);
         session.setGateKeeper(gateKeeper);
 
-        final HUDState hudState = session.hud();
-        hudState.hide();
-
+        session.setNumLives(game.variant().initialLifeCount());
         session.setCutScenesEnabled(true);
         session.setLevel(null);
         session.setPlaying(false);

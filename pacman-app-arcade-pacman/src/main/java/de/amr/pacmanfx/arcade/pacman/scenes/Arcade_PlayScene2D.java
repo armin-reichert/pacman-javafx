@@ -9,10 +9,7 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.entities.LivesCounter;
-import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
-import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -52,7 +49,6 @@ public class Arcade_PlayScene2D extends GameScene
         final GameSession session = game.session();
         session.optLevel().ifPresent(level -> {
             ActorAnimationManager.ensureActorAnimationsCreated(app(), level);
-            updateLivesCounter(game().state(), session, level.entities().pac());
             optSoundEffects().ifPresent(sfx -> sfx.playAmbientGameLevelSound(game(), level));
         });
     }
@@ -146,14 +142,5 @@ public class Arcade_PlayScene2D extends GameScene
 
         soundManager().setEnabled(false);
         Logger.info("Game scene {} accepted demo level", getClass().getSimpleName());
-    }
-
-    // While Pac-Man is not yet visible on game/level start, an additional lives symbol more is shown in the counter
-    private void updateLivesCounter(GameState gameState, GameSession session, Pac pac) {
-        final LivesCounter livesCounter = session.hudEntities().theOne(LivesCounter.class);
-        final boolean oneMore = CommonGameStateID.GAME_OR_LEVEL_STARTING.hasSameNameAs(gameState) && !pac.isVisible();
-        final int livesToDisplay = livesCounter.data().numLives() - 1 + (oneMore ? 1 : 0);
-        final int livesDisplayed = Math.clamp(livesToDisplay, 0, session.hud().maxLivesShown());
-        session.hud().setLivesCount(livesDisplayed);
     }
 }

@@ -48,7 +48,7 @@ public class LevelMediumTestState extends GameState {
 
         timer().restartSeconds(TEST_DURATION_SEC);
 
-        final GameLevel newLevel = gamePlay.buildNormalLevel(game, 1, game.variant().initialLifeCount());
+        final GameLevel newLevel = gamePlay.buildNormalLevel(game, 1);
         game.eventManager().publishGameEvent(new LevelCreatedEvent(newLevel));
 
         gamePlay.startLevel(game);

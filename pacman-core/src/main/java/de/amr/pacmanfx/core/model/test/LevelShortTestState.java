@@ -38,7 +38,7 @@ public class LevelShortTestState extends GameState {
             ? 25
             : game.variant().rules().lastLevelNumber();
 
-        final GameLevel newLevel = gamePlay.buildNormalLevel(game, 1, game.variant().initialLifeCount());
+        final GameLevel newLevel = gamePlay.buildNormalLevel(game, 1);
         game.eventManager().publishGameEvent(new LevelCreatedEvent(newLevel));
 
         gamePlay.startLevel(game);

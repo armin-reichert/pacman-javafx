@@ -8,9 +8,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
-import de.amr.pacmanfx.core.entities.Bonus;
-import de.amr.pacmanfx.core.entities.Ghost;
-import de.amr.pacmanfx.core.entities.Pac;
+import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusStateComp;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostStateSystem;
 import de.amr.pacmanfx.core.entities.pac.comp.PacState;
@@ -28,6 +26,7 @@ public class EntityUpdater {
         updateGhosts(game, level);
         level.entities().optBonus().ifPresent(bonus -> updateBonus(game, level, bonus));
         updateLevelHeartbeat(level);
+        updateSessionHUDEntities(game);
     }
 
     public void updateLevelHeartbeat(GameLevel level) {
@@ -89,5 +88,21 @@ public class EntityUpdater {
             }
             case EATEN -> systems.bonusState().update(game, bonus);
         }
+    }
+
+    public void updateSessionHUDEntities(GameContext game) {
+        final GameSession session = game.session();
+        final Pac pac = session.level().entities().pac();
+
+        // When a game/level starts or continues, Pac-Man is invisible for some short time.
+        // During that time, Pac-Man is shown as an additional entry in the level counter.
+        final boolean starting = game.state().id() == CommonGameStateID.GAME_STARTING
+            || game.state().id() == CommonGameStateID.GAME_OR_LEVEL_STARTING;
+        final boolean oneMore = starting && !pac.isVisible();
+        int count = oneMore ? session.numLives() : session.numLives() - 1;
+        count = Math.clamp(count, 0, session.hud().maxLivesShown());
+
+        final LivesCounter livesCounter = session.hudEntities().theOne(LivesCounter.class);
+        livesCounter.data().setNumLives(count);
     }
 }

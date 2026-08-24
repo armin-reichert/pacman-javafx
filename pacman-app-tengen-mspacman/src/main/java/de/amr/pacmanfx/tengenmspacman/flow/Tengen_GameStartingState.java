@@ -31,7 +31,7 @@ public class Tengen_GameStartingState extends GameState {
         final var gamePlay = (TengenMsPacMan_GamePlay) game.variant().gamePlay();
         final GameSession session = game.session();
 
-        final GameLevel newLevel = gamePlay.buildNormalLevel(game, gamePlay.startLevelNumber(session), game.variant().initialLifeCount());
+        final GameLevel newLevel = gamePlay.buildNormalLevel(game, gamePlay.startLevelNumber(session));
         game.eventManager().publishGameEvent(new LevelCreatedEvent(newLevel));
 
         ScoreSystem.enableScore(session.highScore(), true);

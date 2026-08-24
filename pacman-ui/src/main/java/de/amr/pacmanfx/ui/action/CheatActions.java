@@ -5,16 +5,14 @@
 package de.amr.pacmanfx.ui.action;
 
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.Ghost;
-import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
-import de.amr.pacmanfx.core.entities.livescounter.system.LivesCounterSystem;
 import de.amr.pacmanfx.core.event.pac.PacEatsFoodEvent;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GameCheats;
-import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
@@ -50,11 +48,9 @@ public final class CheatActions {
             @Override
             public void execute(GameAppContext app) {
                 final GameSession session = app.game().session();
-                final LivesCounter livesCounter = session.hudEntities().theOne(LivesCounter.class);
-                LivesCounterSystem.addLives(livesCounter, 3);
+                session.setNumLives(session.numLives() + 3);
                 session.cheats().notifyCheatUsed();
-                final String msg = app.ui().translations().translate(
-                    "flash.cheat_add_lives", livesCounter.data().numLives());
+                final String msg = app.ui().translations().translate("flash.cheat_add_lives", session.numLives());
                 app.ui().shortMessage(msg);
             }
 

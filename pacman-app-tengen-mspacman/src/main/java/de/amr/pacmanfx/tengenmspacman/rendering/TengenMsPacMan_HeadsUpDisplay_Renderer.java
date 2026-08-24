@@ -129,15 +129,15 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
     }
 
     private void drawLivesCounter(GameSession session, float y) {
+        final LivesCounter livesCounter = session.hudEntities().theOne(LivesCounter.class);
+        final int count = livesCounter.data().numLives();
         final RectShort symbolSprite = spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL);
-        for (int i = 0; i < session.hud().visibleLifeCount(); ++i) {
+        for (int i = 0; i < count; ++i) {
             drawSprite(symbolSprite, tilesPx(4 + i * 2), y, true);
         }
-        final LivesCounter livesCounter = session.hudEntities().theOne(LivesCounter.class);
-        final int numLives = livesCounter.data().numLives();
-        if (numLives > session.hud().maxLivesShown()) {
+        if (count > session.hud().maxLivesShown()) {
             fillText(
-                "(%d)".formatted(numLives),
+                "(%d)".formatted(count),
                 NES_Palette.color(0x28),
                 totalLivesFont.get(),
                 tilesPx(14),

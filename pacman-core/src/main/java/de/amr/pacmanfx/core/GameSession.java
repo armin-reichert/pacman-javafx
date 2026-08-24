@@ -40,6 +40,8 @@ public class GameSession {
 
     private boolean playing;
 
+    private int numLives;
+
     private final HUDState hud;
 
     private final GameCheats cheats;
@@ -52,10 +54,11 @@ public class GameSession {
 
     private boolean cutScenesEnabled;
 
-    public GameSession(String variantName, GameCheats cheats) {
+    public GameSession(String variantName, GameCheats cheats, int numLives) {
         requireNonNull(variantName);
         requireNonNull(cheats);
 
+        this.numLives = Validations.requireNonNegativeInt(numLives);
         this.cheats = cheats;
         this.hud = new HUDState();
         this.gateKeeper = new ArcadeHouseGateKeeper();
@@ -73,6 +76,14 @@ public class GameSession {
                 highScore().data().setEnabled(false);
             }
         });
+    }
+
+    public int numLives() {
+        return numLives;
+    }
+
+    public void setNumLives(int numLives) {
+        this.numLives = numLives;
     }
 
     public void setLevel(GameLevel level) {

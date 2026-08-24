@@ -153,10 +153,14 @@ public final class PacManGamesMasterApp implements GameAppContext {
     // GameLifecycle
 
     public void startGame() {
-        createSession();
+        final GameSession session = new GameSession(
+            gameVariantManager.currentVariantName(), new GameCheats(), game.variant().initialLifeCount());
+        game.setSession(session);
+        game.variant().gamePlay().startSession(game);
+
         ui.window().mainScene().connect(game.session());
         ui.views().selectGamePlayView();
-        game.variant().gamePlay().startSession(game);
+
         simulation.start();
     }
 
@@ -197,10 +201,6 @@ public final class PacManGamesMasterApp implements GameAppContext {
         });
     }
 
-    private void createSession() {
-        game.setSession(new GameSession(gameVariantManager.currentVariantName(), new GameCheats()));
-    }
-
     private void startBackgroundServices() {
         watchdog().startWatching();
         Logger.info("Custom map directory is getting watched!");
@@ -231,7 +231,7 @@ public final class PacManGamesMasterApp implements GameAppContext {
             gameVariant.config(),
             new DefaultGameEventManager()
         );
-        createSession();
+        game.setSession(new GameSession(gameVariantManager.currentVariantName(), new GameCheats(), gameVariant.config().initialLifeCount()));
 
         stateChangeEventMapper = new StateChangeEventMapper(game.eventManager());
 

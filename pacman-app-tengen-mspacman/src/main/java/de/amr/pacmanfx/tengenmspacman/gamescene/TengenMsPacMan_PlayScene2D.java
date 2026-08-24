@@ -295,16 +295,18 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
     private void updateHUD(GameSession session, GameLevel level) {
         final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().variant().gamePlay();
         final HUDState hud = session.hud();
-        final LivesCounter livesCounter = session.hudEntities().theOne(LivesCounter.class);
 
         // As long as Pac-Man is still invisible on start, he is shown as an additional entry in the lives counter
         final boolean oneExtra = CommonGameStateID.GAME_OR_LEVEL_STARTING.hasSameNameAs(game().state())
             && !level.entities().pac().isVisible();
-        final int numLives = livesCounter.data().numLives();
-        final int displayed = oneExtra ? numLives : numLives - 1;
 
-        final int visibleLives = Math.clamp(displayed, 0, hud.maxLivesShown());
-        hud.setLivesCount(visibleLives);
+        int count = session.numLives() - 1;
+        if (oneExtra) ++count;
+        count = Math.clamp(count, 0, hud.maxLivesShown());
+
+        final LivesCounter livesCounter = session.hudEntities().theOne(LivesCounter.class);
+        livesCounter.data().setNumLives(count);
+
         if (gamePlay.mapCategory(session) == MapCategory.ARCADE) {
             hud.hideLevelNumber();
         } else {

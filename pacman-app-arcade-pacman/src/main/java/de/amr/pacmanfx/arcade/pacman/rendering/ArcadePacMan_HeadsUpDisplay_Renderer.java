@@ -4,12 +4,13 @@
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.math.RectShort;
+import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.LevelCounter;
 import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Score;
-import de.amr.pacmanfx.core.model.HUDState;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
@@ -49,56 +50,43 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer
         requireNonNull(session);
         requireNonNull(gameScene);
 
-        if (gameScene.optCanvasRendering().isEmpty()) {
+        if (!session.hud().isVisible()) {
             return;
         }
 
-        final HUDState hud = session.hud();
-        if (!hud.isVisible()) return;
+        if (gameScene.optCanvasRendering().isEmpty()) {
+            return;
+        }
+        final CanvasRenderingComp canvasRendering = gameScene.reqCanvasRendering();
 
-        if (hud.isScoreShown()) {
-            drawScore(session.score(), SCORE_TEXT, arcadeFont8(), SCORE_TEXT_COLOR, tilesPx(1), tilesPx(1));
-
-            final Score highScore = session.highScore();
-            Color color = SCORE_TEXT_COLOR;
-            if (!session.isAttractMode() && !highScore.data().isEnabled()) {
-                color = SCORE_TEXT_COLOR_DISABLED;
-            }
-            drawScore(highScore, HIGH_SCORE_TEXT, arcadeFont8(), color, tilesPx(14), tilesPx(1));
+        if (session.hud().isScoreShown()) {
+            drawScores(session);
         }
 
-        if (hud.isLevelCounterShown()) {
-            final LevelCounter levelCounter = session.hudEntities().theOne(LevelCounter.class);
-            final RectShort[] bonusSymbolSprites = spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS);
-            final float y = gameScene.reqCanvasRendering().unscaledHeight() - tilesPx(2) + 2;
-            float x = gameScene.reqCanvasRendering().unscaledWidth() - tilesPx(4);
-            for (int symbolCode : levelCounter.data().symbolCodes()) {
-                drawSprite(bonusSymbolSprites[symbolCode], x, y, true);
-                x -= tilesPx(2); // symbols are drawn from right to left
-            }
+        if (session.hud().isLevelCounterShown()) {
+            drawLevelCounter(session, canvasRendering);
         }
 
-        if (hud.isLivesCounterShown()) {
-            final RectShort livesCounterSprite = spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL);
-            final float x = tilesPx(2);
-            final float y = gameScene.reqCanvasRendering().unscaledHeight() - tilesPx(2);
-            for (int i = 0; i < hud.visibleLifeCount(); ++i) {
-                drawSprite(livesCounterSprite, x + i * tilesPx(2), y, true);
-            }
-            final LivesCounter livesCounter = session.hudEntities().theOne(LivesCounter.class);
-            final int lifeCount = livesCounter.data().numLives();
-            if (lifeCount > hud.maxLivesShown()) {
-                // Show text indicating that more lives are available than symbols displayed (cheating may cause this)
-                final Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
-                fillText("%d".formatted(lifeCount), ARCADE_YELLOW, font, x - 14, y + TS);
-            }
+        if (session.hud().isLivesCounterShown()) {
+            drawLivesCounter(session, canvasRendering);
         }
 
-        if (hud.isCreditShown()) {
-            final int credit = gameScene.game().coinMechanism().numCoins();
-            fillText(CREDIT_TEXT_PATTERN.formatted(credit), ARCADE_WHITE, arcadeFont8(), tilesPx(2),
-                gameScene.reqCanvasRendering().unscaledHeight());
+        if (session.hud().isCreditShown()) {
+            drawCredit(gameScene.game().coinMechanism(), canvasRendering);
         }
+    }
+
+    private void drawScores(GameSession session) {
+        final Score gameScore = session.score();
+        final Score highScore = session.highScore();
+
+        drawScore(gameScore, SCORE_TEXT, arcadeFont8(), SCORE_TEXT_COLOR, tilesPx(1), tilesPx(1));
+
+        Color color = SCORE_TEXT_COLOR;
+        if (!session.isAttractMode() && !highScore.data().isEnabled()) {
+            color = SCORE_TEXT_COLOR_DISABLED;
+        }
+        drawScore(highScore, HIGH_SCORE_TEXT, arcadeFont8(), color, tilesPx(14), tilesPx(1));
     }
 
     private void drawScore(Score score, String title, Font font, Color color, double x, double y) {
@@ -107,5 +95,39 @@ public class ArcadePacMan_HeadsUpDisplay_Renderer
         if (score.data().points() != 0) {
             fillText("L" + score.data().levelNumber(), color, font, x + tilesPx(8), y + TS + 1);
         }
+    }
+
+    private void drawLevelCounter(GameSession session, CanvasRenderingComp canvasRendering) {
+        final LevelCounter levelCounter = session.hudEntities().theOne(LevelCounter.class);
+        final RectShort[] bonusSymbolSprites = spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS);
+        final float y = canvasRendering.unscaledHeight() - tilesPx(2) + 2;
+        float x = canvasRendering.unscaledWidth() - tilesPx(4);
+        for (int symbolCode : levelCounter.data().symbolCodes()) {
+            drawSprite(bonusSymbolSprites[symbolCode], x, y, true);
+            x -= tilesPx(2); // symbols are drawn from right to left
+        }
+    }
+
+    private void drawLivesCounter(GameSession session, CanvasRenderingComp canvasRendering) {
+        final LivesCounter livesCounter = session.hudEntities().theOne(LivesCounter.class);
+        final int count = livesCounter.data().numLives();
+        final RectShort sprite = spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL);
+        final float x = tilesPx(2);
+        final float y = canvasRendering.unscaledHeight() - tilesPx(2);
+        final float spacing = tilesPx(2);
+        for (int i = 0; i < count; ++i) {
+            drawSprite(sprite, x + i * spacing, y, true);
+        }
+        if (count > session.hud().maxLivesShown()) {
+            // Show text indicating that more lives are available than symbols displayed (cheating may cause this)
+            final Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
+            fillText("%d".formatted(count), ARCADE_YELLOW, font, x - 14, y + TS);
+        }
+    }
+
+    private void drawCredit(CoinMechanism coinMechanism, CanvasRenderingComp canvasRendering) {
+        final int credit = coinMechanism.numCoins();
+        final String text = CREDIT_TEXT_PATTERN.formatted(credit);
+        fillText(text, ARCADE_WHITE, arcadeFont8(), tilesPx(2), canvasRendering.unscaledHeight());
     }
 }

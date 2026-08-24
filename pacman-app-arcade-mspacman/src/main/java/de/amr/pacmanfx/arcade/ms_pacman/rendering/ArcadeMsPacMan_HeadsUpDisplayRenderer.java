@@ -79,19 +79,19 @@ public class ArcadeMsPacMan_HeadsUpDisplayRenderer extends BaseRenderer implemen
         }
 
         if (hud.isLivesCounterShown()) {
+            final LivesCounter livesCounter = session.hudEntities().theOne(LivesCounter.class);
+            final int count = livesCounter.data().numLives();
             gameScene.optCanvasRendering().ifPresent(canvasRendering -> {
                 final RectShort sprite = spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL);
                 final float x = tilesPx(2);
                 final float y = canvasRendering.unscaledHeight() - tilesPx(2);
-                for (int i = 0; i < hud.visibleLifeCount(); ++i) {
+                for (int i = 0; i < count; ++i) {
                     drawSprite(sprite, x + i * tilesPx(2), y, true);
                 }
-                final LivesCounter livesCounter = session.hudEntities().theOne(LivesCounter.class);
-                final int lifeCount = livesCounter.data().numLives();
-                if (lifeCount > hud.maxLivesShown()) {
+                if (count > hud.maxLivesShown()) {
                     // show text indicating that more lives are available than symbols displayed (cheating may cause this)
                     Font hintFont = Font.font("Serif", FontWeight.BOLD, scaled(8));
-                    fillText("%d".formatted(lifeCount), ARCADE_YELLOW, hintFont, x - 14, y + TS);
+                    fillText("%d".formatted(count), ARCADE_YELLOW, hintFont, x - 14, y + TS);
                 }
             });
         }
