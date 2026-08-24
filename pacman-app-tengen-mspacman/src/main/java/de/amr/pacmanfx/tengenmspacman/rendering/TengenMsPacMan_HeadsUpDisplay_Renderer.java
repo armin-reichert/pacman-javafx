@@ -8,7 +8,6 @@ import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.LevelCounter;
 import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Score;
-import de.amr.pacmanfx.core.model.HUDState;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlayOptions;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene1;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene2;
@@ -20,6 +19,7 @@ import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
@@ -36,7 +36,9 @@ import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer implements SpriteRenderer, HeadsUpDisplay_Renderer {
+public class TengenMsPacMan_HeadsUpDisplay_Renderer
+    extends BaseRenderer
+    implements SpriteRenderer, HeadsUpDisplay_Renderer {
 
     private static final Color SCORE_TEXT_COLOR = NES_Palette.color(0x20);
     private static final Color SCORE_TEXT_COLOR_DISABLED = NES_Palette.color(0x10);
@@ -61,41 +63,31 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
         requireNonNull(session);
         requireNonNull(gameScene);
 
+        if (!session.hud().isVisible()) return;
+
         if (gameScene.optCanvasRendering().isEmpty()) {
-            return;
+            return; // Should not happen, but...
         }
-
-        final HUDState hud = session.hud();
-
-        if (!hud.isVisible()) return;
+        final CanvasRenderingComp canvasRendering = gameScene.reqCanvasRendering();
 
         ctx.save();
         ctx.translate(0, scaled(computeOffsetY(gameScene)));
 
-        if (hud.isScoreShown()) {
-            // blink frequency = 1Hz (30 ticks on, 30 ticks off)
-            final boolean on = tick % 60 < 30;
-            drawScore(session.score(), on, arcadeFont8());
-
-            final Score highScore = session.highScore();
-            Color color = SCORE_TEXT_COLOR;
-            if (!highScore.data().isEnabled() && !session.isAttractMode()) {
-                color = SCORE_TEXT_COLOR_DISABLED;
-            }
-            drawHighScore(highScore, arcadeFont8(), color);
+        if (session.hud().isScoreShown()) {
+            drawScores(session);
         }
 
-        final int counterY = gameScene.reqCanvasRendering().unscaledHeight() - TS;
+        final int counterY = canvasRendering.unscaledHeight() - TS;
 
-        if (hud.isLivesCounterShown()) {
+        if (session.hud().isLivesCounterShown()) {
             drawLivesCounter(session, counterY);
         }
 
-        if (hud.isLevelCounterShown()) {
+        if (session.hud().isLevelCounterShown()) {
             drawLevelCounter(session, counterY);
         }
 
-        if (hud.gameOptionsVisible()) {
+        if (session.hud().gameOptionsVisible()) {
             drawGameOptions(
                 session.value(TengenMsPacMan_GamePlayOptions.MAP_CATEGORY, MapCategory.class),
                 session.value(TengenMsPacMan_GamePlayOptions.DIFFICULTY, Difficulty.class),
@@ -106,14 +98,18 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
         ctx.restore();
     }
 
-    private double computeOffsetY(GameScene scene) {
-        return switch (scene) {
-            case TengenMsPacMan_CutScene1 ignored -> -2 * TS;
-            case TengenMsPacMan_CutScene2 ignored -> -2 * TS;
-            case TengenMsPacMan_CutScene3 ignored -> -2 * TS;
-            case TengenMsPacMan_CutScene4 ignored -> -2 * TS;
-            default -> 0;
-        };
+    private void drawScores(GameSession session) {
+        final long tick = session.thisFrame().tick();
+        // blink frequency = 1Hz (30 ticks on, 30 ticks off)
+        final boolean on = tick % 60 < 30;
+        drawScore(session.score(), on, arcadeFont8());
+
+        final Score highScore = session.highScore();
+        Color color = SCORE_TEXT_COLOR;
+        if (!highScore.data().isEnabled() && !session.isAttractMode()) {
+            color = SCORE_TEXT_COLOR_DISABLED;
+        }
+        drawHighScore(highScore, arcadeFont8(), color);
     }
 
     private void drawScore(Score score, boolean on, Font font) {
@@ -164,6 +160,16 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer extends BaseRenderer impleme
                 drawLevelNumberBox(levelNumber, LEVEL_COUNTER_POS_RIGHT, y); // right box
             });
         }
+    }
+
+    private double computeOffsetY(GameScene scene) {
+        return switch (scene) {
+            case TengenMsPacMan_CutScene1 ignored -> -2 * TS;
+            case TengenMsPacMan_CutScene2 ignored -> -2 * TS;
+            case TengenMsPacMan_CutScene3 ignored -> -2 * TS;
+            case TengenMsPacMan_CutScene4 ignored -> -2 * TS;
+            default -> 0;
+        };
     }
 
     // These methods are also used by the 3D scene, so make them public:
