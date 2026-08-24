@@ -96,7 +96,6 @@ public abstract class CommonGamePlay implements GamePlay {
         requireNonNull(game);
 
         final GameSession session = game.session();
-        final GameEventManager eventManager = game.eventManager();
 
         final GameLevel currentLevel = session.level();
         final int lastLevelNumber = game.variant().rules().lastLevelNumber();

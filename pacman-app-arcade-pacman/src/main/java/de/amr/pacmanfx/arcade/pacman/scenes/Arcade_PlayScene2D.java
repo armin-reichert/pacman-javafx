@@ -45,6 +45,11 @@ public class Arcade_PlayScene2D extends GameScene
     }
 
     @Override
+    protected void onActivate() {
+        game().session().hud().showLevelCounter().showLivesCounter().show();
+    }
+
+    @Override
     public void onTick(GameContext game) {
         final GameSession session = game.session();
         session.optLevel().ifPresent(level -> {

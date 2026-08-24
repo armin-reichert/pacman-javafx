@@ -16,8 +16,8 @@ public final class Common_PreparationState extends GameState {
     @Override
     public void onEnter(GameContext game) {
         final GameSession session = game.session();
-        session.hud()
-            .showCredit().showScore().showLevelCounter().hideLivesCounter().show();
+        session.setNumLives(game.variant().initialLifeCount());
+        session.hud().showCredit().showScore().showLevelCounter().hideLivesCounter().show();
     }
 
     @Override
