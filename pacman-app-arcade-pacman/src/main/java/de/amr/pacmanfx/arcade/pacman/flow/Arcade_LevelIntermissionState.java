@@ -20,7 +20,7 @@ public class Arcade_LevelIntermissionState extends GameState {
     @Override
     public void onEnter(GameContext game) {
         final HUDState hudState = game.session().hud();
-        hudState.hideCredit().hideScore().showLevelCounter().hideLivesCounter().show();
+        hudState.hideCredit().hideScore().showLevelCounter().hideLivesCounter().showHUD();
         timer().resetToIndefiniteDuration();
     }
 
@@ -37,6 +37,6 @@ public class Arcade_LevelIntermissionState extends GameState {
     @Override
     public void onExit(GameContext game) {
         game.session().hud()
-            .hideCredit().showScore().showLevelCounter().showLivesCounter().show();
+            .hideCredit().showScore().showLevelCounter().showLivesCounter().showHUD();
     }
 }

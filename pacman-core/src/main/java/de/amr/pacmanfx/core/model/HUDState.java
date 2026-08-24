@@ -27,12 +27,12 @@ public class HUDState {
 
     public HUDState() {}
 
-    public void show() {
+    public void showHUD() {
         visible = true;
         Logger.info("HUD is VISIBLE!");
     }
 
-    public void hide() {
+    public void hideHUD() {
         visible = false;
         Logger.info("HUD is HIDDEN!");
     }

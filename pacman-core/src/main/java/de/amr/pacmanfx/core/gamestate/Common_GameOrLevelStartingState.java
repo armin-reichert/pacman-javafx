@@ -14,7 +14,7 @@ public class Common_GameOrLevelStartingState extends GameState {
 
     @Override
     public void onEnter(GameContext game) {
-        game.session().hud().showScore().showLevelCounter().show();
+        game.session().hud().showScore().showLevelCounter().showHUD();
     }
 
     @Override

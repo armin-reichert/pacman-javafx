@@ -110,7 +110,7 @@ public class LevelMediumTestState extends GameState {
             systems.actorSpriteAnimController().playSelected(ghost);
         });
 
-        session.hud().show();
+        session.hud().showHUD();
         game.eventManager().publishGameEvent(new StopAllSoundsEvent());
     }
 }

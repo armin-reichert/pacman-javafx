@@ -14,7 +14,7 @@ public final class Common_IntroState extends GameState {
 
     @Override
     public void onEnter(GameContext game) {
-        game.session().hud().showLevelCounter().hideLivesCounter().showCredit().showScore().show();
+        game.session().hud().showLevelCounter().hideLivesCounter().showCredit().showScore().showHUD();
         game.session().setLevel(null);
         timer().resetToIndefiniteDuration();
     }

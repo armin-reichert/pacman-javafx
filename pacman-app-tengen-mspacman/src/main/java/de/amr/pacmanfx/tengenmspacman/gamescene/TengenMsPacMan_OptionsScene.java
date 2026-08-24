@@ -75,7 +75,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene {
     public void onActivate() {
         final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().variant().gamePlay();
         final GameSession session = game().session();
-        session.hud().hide();
+        session.hud().hideHUD();
 
         final var actions = app().currentGameVariantUIConfig().extensionValue(
             TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);

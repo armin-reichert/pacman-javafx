@@ -101,7 +101,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
     @Override
     public void onEnteredFrom3DScene() {
         final GameSession session = game().session();
-        session.hud().showLevelCounter().showLivesCounter().show();
+        session.hud().showLevelCounter().showLivesCounter().showHUD();
         session.optLevel().ifPresent(level -> acceptGameLevel(session, level));
     }
 
@@ -111,7 +111,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
         final GameSession session = game().session();
         final HUDState hud = session.hud();
 
-        hud.showScore().showLevelCounter().showLivesCounter().show();
+        hud.showScore().showLevelCounter().showLivesCounter().showHUD();
 
         if (gamePlay.allOptionsHaveDefaultValue(session)) {
             hud.hideGameOptions();

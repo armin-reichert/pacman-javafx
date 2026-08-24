@@ -46,7 +46,7 @@ public class Arcade_PlayScene2D extends GameScene
 
     @Override
     protected void onActivate() {
-        game().session().hud().showLevelCounter().showLivesCounter().show();
+        game().session().hud().showLevelCounter().showLivesCounter().showHUD();
     }
 
     @Override
