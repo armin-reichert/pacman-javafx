@@ -84,11 +84,6 @@ public class ArcadeMsPacMan_GameRules extends ArcadePacMan_GameRules {
     private static final int[] HUNTING_TICKS_LEVEL_5_PLUS = { 300, 1200, 1, 62220, 1, 62220, 1, -1};
 
     @Override
-    public int numHuntingPhases() {
-        return super.numHuntingPhases();
-    }
-
-    @Override
     public long huntingPhaseDuration(int levelNumber, int phaseIndex) {
         Validations.requireValidLevelNumber(levelNumber);
         if (Validations.inClosedRange(phaseIndex, 0, NUM_HUNTING_PHASES - 1)) {
