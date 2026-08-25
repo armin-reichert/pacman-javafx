@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.arcade.pacman;
 
+import de.amr.basics.Named;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
@@ -81,6 +82,12 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     public ArcadePacMan_GamePlay() {}
 
     // Game start
+
+
+    @Override
+    protected Named pacStartAnimationID() {
+        return CommonSpriteAnimationID.PAC_FULL;
+    }
 
     @Override
     public void startSession(GameContext game) {

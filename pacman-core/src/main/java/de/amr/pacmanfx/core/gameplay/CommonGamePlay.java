@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.core.gameplay;
 
+import de.amr.basics.Named;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
@@ -42,6 +43,8 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class CommonGamePlay implements GamePlay {
 
+    protected abstract Named pacStartAnimationID();
+
     @Override
     public void prepareLevelForPlaying(GameContext game) {
         final GameSystems systems = game.variant().systems();
@@ -56,7 +59,9 @@ public abstract class CommonGamePlay implements GamePlay {
         systems.pacPower().reset(pac);
         systems.worldNavigator().setMoveDir(pac, Direction.LEFT);
         systems.worldNavigator().setWishDir(pac, Direction.LEFT);
-        systems.actorSpriteAnimController().select(pac, CommonSpriteAnimationID.PAC_MUNCHING);
+
+        //TODO temp solution
+        systems.actorSpriteAnimController().select(pac, pacStartAnimationID());
 
         level.entities().ghosts().forEach(ghost -> {
             ghost.reset(); // initially invisible!

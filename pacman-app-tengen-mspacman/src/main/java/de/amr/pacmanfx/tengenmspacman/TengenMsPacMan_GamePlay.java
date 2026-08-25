@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.tengenmspacman;
 
+import de.amr.basics.Named;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameException;
@@ -194,6 +195,11 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     }
 
     // GamePlay interface
+
+    @Override
+    protected Named pacStartAnimationID() {
+        return CommonSpriteAnimationID.PAC_MUNCHING;
+    }
 
     @Override
     public boolean canStart(GameContext game) {
