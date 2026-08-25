@@ -23,7 +23,7 @@ public class Common_LevelCompleteState extends GameState {
 
     @Override
     public void onUpdate(GameContext game) {
-        game.variant().systems().entityUpdater().updateSessionHUDEntities(game);
+        game.variant().systems().entityUpdater().updateHUD(game);
         if (timer().hasExpired()) {
             game.variant().gameFlow().enterGameState(game, computeNextStateID(game));
         }

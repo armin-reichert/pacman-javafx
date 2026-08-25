@@ -83,7 +83,7 @@ public class TengenMsPacMan_IntroScene extends GameScene {
     public void onActivate() {
         final GameVariantUIConfig variantConfig = app().gameVariants().currentGameVariant().uiConfig();
 
-        game().session().hud().hideHUD();
+        game().session().hud().hide();
 
         spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 

@@ -7,11 +7,11 @@ package de.amr.pacmanfx.tengenmspacman.gamescene;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.model.HUDState;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.game.GameVariant;
@@ -101,7 +101,12 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
     @Override
     public void onEnteredFrom3DScene() {
         final GameSession session = game().session();
-        session.hud().showLevelCounter().showLivesCounter().showHUD();
+
+        final HUD hud = session.hud();
+        hud.levelCounter().show();
+        hud.livesCounter().show();
+        hud.show();
+
         session.optLevel().ifPresent(level -> acceptGameLevel(session, level));
     }
 
@@ -109,15 +114,14 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
     public void onActivate() {
         final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().variant().gamePlay();
         final GameSession session = game().session();
-        final HUDState hud = session.hud();
+        final HUD hud = session.hud();
 
-        hud.showScore().showLevelCounter().showLivesCounter().showHUD();
+        hud.gameScore().show();
+        hud.levelCounter().show();
+        hud.livesCounter().show();
+        hud.show();
 
-        if (gamePlay.allOptionsHaveDefaultValue(session)) {
-            hud.hideTengenGameOptions();
-        } else {
-            hud.showTengenGameOptions();
-        }
+        hud.setTengenGameOptionsVisible(!gamePlay.allOptionsHaveDefaultValue(session));
 
         resetRendering2D();
         updateScaling();
@@ -297,13 +301,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
 
     private void updateHUD() {
         final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().variant().gamePlay();
-        final HUDState hud = game().session().hud();
-
-        if (gamePlay.mapCategory(game().session()) == MapCategory.ARCADE) {
-            hud.hideTengenLevelNumber();
-        } else {
-            hud.showTengenLevelNumber();
-        }
+        final HUD hud = game().session().hud();
+        hud.setTengenLevelNumberVisible(gamePlay.mapCategory(game().session()) != MapCategory.ARCADE);
     }
 
     void playLevelCompleteAnimation(GameLevel level, int numFlashes) {

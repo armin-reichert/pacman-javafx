@@ -23,7 +23,7 @@ import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelEntitySet;
-import de.amr.pacmanfx.core.level.GameLevelMessageType;
+import de.amr.pacmanfx.core.level.LevelMessageType;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.core.model.rules.HuntingTimer;
@@ -87,12 +87,15 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         requireNonNull(game);
         final GameSession session = game.session();
 
-        session.setNumLives(game.variant().initialLifeCount());
+        final int lives = game.variant().initialLifeCount();
+        session.setNumLives(lives);
+        session.hud().livesCounter().data().setMaxLives(5);
+
         session.setCutScenesEnabled(true);
         session.setLevel(null);
         session.setGameRunning(false);
         initScores(session);
-        configureLevelCounter(game, session.hudEntities().levelCounter());
+        configureLevelCounter(game, session.hud().levelCounter());
 
         game.variant().gameFlow().restartGameState(game, CommonGameStateID.BOOT);
     }
@@ -210,7 +213,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         session.setLevel(level);
         session.setAttractMode(true);
 
-        ScoreSystem.setLevelNumber(session.hudEntities().gameScore(), 1);
+        ScoreSystem.setLevelNumber(session.hud().gameScore(), 1);
 
         return level;
     }
@@ -223,14 +226,15 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
         prepareLevelForPlaying(game);
         session.setLevelStartTimeMillis(System.currentTimeMillis());
-        session.hudEntities().gameScore().data().setEnabled(true);
         session.cheats().update(game);
 
+        session.hud().gameScore().data().setEnabled(true);
+
         final LevelCounterSystem levelCounterSystem = game.variant().systems().levelCounterSystem();
-        final LevelCounter levelCounter = session.hudEntities().levelCounter();
+        final LevelCounter levelCounter = session.hud().levelCounter();
         levelCounterSystem.updateCounter(levelCounter, level.number(), level.bonusSymbolCode(0));
 
-        showLevelMessage(game, level, GameLevelMessageType.READY);
+        showLevelMessage(game, level, LevelMessageType.READY);
 
         // Note: This event is very important because it triggers the creation of the actor animations!
         game.eventManager().publishGameEvent(new LevelStartedEvent(level.number()));

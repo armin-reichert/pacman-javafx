@@ -7,8 +7,9 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.entities.House;
+import de.amr.pacmanfx.core.entities.MessageView;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.level.GameLevelMessage;
+import de.amr.pacmanfx.core.level.LevelMessageType;
 import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
@@ -47,7 +48,11 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
     @Override
     public void drawLevel(GameContext game, GameLevel level, RenderInfo info) {
         drawMap(level, info);
-        game.session().hud().optMessage().ifPresent(message -> drawLevelMessage(message, messagePosition(level)));
+
+        final MessageView messageView = game.session().hud().messageView();
+        if (messageView.data().messageType() != LevelMessageType.NO_MESSAGE) {
+            drawLevelMessage(messageView, messagePosition(level));
+        }
     }
 
     protected void drawMap(GameLevel level, RenderInfo info) {
@@ -95,8 +100,8 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
         ctx.restore();
     }
 
-    protected void drawLevelMessage(GameLevelMessage msg, Vector2f pos) {
-        switch (msg.type()) {
+    protected void drawLevelMessage(MessageView messageView, Vector2f pos) {
+        switch (messageView.data().messageType()) {
             case GAME_OVER -> fillTextCentered("GAME  OVER", ARCADE_RED, arcadeFont8(), pos.x(), pos.y());
             case READY -> fillTextCentered("READY!", ARCADE_YELLOW, arcadeFont8(), pos.x(), pos.y());
         }

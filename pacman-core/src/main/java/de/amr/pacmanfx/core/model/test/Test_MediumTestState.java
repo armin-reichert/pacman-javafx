@@ -87,7 +87,7 @@ public class Test_MediumTestState extends GameState {
     @Override
     public void onExit(GameContext game) {
         final LevelCounterSystem levelCounterSystem = game.variant().systems().levelCounterSystem();
-        levelCounterSystem.clearCounter(game.session().hudEntities().levelCounter());
+        levelCounterSystem.clearCounter(game.session().hud().levelCounter());
     }
 
     private void configureLevelForTest(GameContext game) {
@@ -109,7 +109,7 @@ public class Test_MediumTestState extends GameState {
             systems.actorSpriteAnimController().playSelected(ghost);
         });
 
-        session.hud().showHUD();
+        session.hud().show();
         game.eventManager().publishGameEvent(new StopAllSoundsEvent());
     }
 }

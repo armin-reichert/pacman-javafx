@@ -75,7 +75,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene {
     public void onActivate() {
         final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().variant().gamePlay();
         final GameSession session = game().session();
-        session.hud().hideHUD();
+        session.hud().hide();
 
         final var actions = app().currentGameVariantUIConfig().extensionValue(
             TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
@@ -242,7 +242,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene {
 
     private void saveHighScore(GameSession session) {
         try {
-            ScoreSystem.save(session.hudEntities().highScore());
+            ScoreSystem.save(session.hud().highScore());
         } catch (IOException x) {
             Logger.error(x, "Could not save Tengen Ms. Pac-Man high score");
             //TODO Show message in UI

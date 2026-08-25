@@ -4,16 +4,10 @@
 
 package de.amr.pacmanfx.core;
 
-import de.amr.pacmanfx.core.entities.LevelCounter;
-import de.amr.pacmanfx.core.entities.LivesCounter;
-import de.amr.pacmanfx.core.entities.MessageView;
-import de.amr.pacmanfx.core.entities.Score;
-import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.gameplay.hunt.GamePlayStep;
 import de.amr.pacmanfx.core.gamestate.FrameState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GameCheats;
-import de.amr.pacmanfx.core.model.HUDState;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,43 +16,6 @@ import java.util.Optional;
 import static java.util.Objects.requireNonNull;
 
 public class GameSession {
-
-    public static class HUDEntities {
-
-        private final LevelCounter levelCounter;
-        private final LivesCounter livesCounter;
-        private final Score gameScore;
-        private final Score highScore;
-        private final MessageView messageView;
-
-        public HUDEntities(String variantName) {
-            levelCounter = new LevelCounter();
-            livesCounter = new LivesCounter();
-            messageView = new MessageView();
-            gameScore = new Score(Score.Type.GAME_SCORE);
-            highScore = ScoreSystem.createHighScore(ScoreSystem.highScoreFile(variantName));
-        }
-
-        public LevelCounter levelCounter() {
-            return levelCounter;
-        }
-
-        public LivesCounter livesCounter() {
-            return livesCounter;
-        }
-
-        public Score gameScore() {
-            return gameScore;
-        }
-
-        public Score highScore() {
-            return highScore;
-        }
-
-        public MessageView messageView() {
-            return messageView;
-        }
-    }
 
     public interface GameSessionValueKey {}
 
@@ -72,9 +29,7 @@ public class GameSession {
 
     private int numLives;
 
-    private final HUDState hud;
-
-    private final HUDEntities hudEntities;
+    private final HUD hud;
 
     private final GameCheats cheats;
 
@@ -93,14 +48,13 @@ public class GameSession {
         this.numLives = Validations.requireNonNegativeInt(numLives);
         this.cheats = cheats;
 
-        this.hud = new HUDState();
-        this.hudEntities = new HUDEntities(variantName);
+        this.hud = new HUD(variantName);
 
         newFrameState(0);
 
         cheats.cheatUsedProperty().addListener((_, _, cheated) -> {
             if (cheated) {
-                hudEntities.highScore().data().setEnabled(false);
+                hud.highScore().data().setEnabled(false);
             }
         });
     }
@@ -131,11 +85,7 @@ public class GameSession {
         throw new IllegalStateException("No game level exists at this time");
     }
 
-    public HUDEntities hudEntities() {
-        return hudEntities;
-    }
-
-    public HUDState hud() {
+    public HUD hud() {
         return hud;
     }
 

@@ -5,10 +5,10 @@
 package de.amr.pacmanfx.tengenmspacman.flow;
 
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.model.HUDState;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
@@ -29,15 +29,15 @@ public class Tengen_LevelIntermissionState extends GameState {
         final boolean isLastCutScene = cutSceneNumber.isPresent()
             && cutSceneNumber.getAsInt() == game.variant().rules().lastCutSceneNumber();
 
+        final HUD hud = session.hud();
         if (isLastCutScene) {
-            session.hud().hideHUD();
+            hud.hide();
         } else {
-            session.hud()
-                .hideTengenGameOptions()
-                .hideScore()
-                .showLevelCounter()
-                .hideLivesCounter()
-                .showHUD();
+            hud.gameScore().hide();
+            hud.levelCounter().show();
+            hud.livesCounter().hide();
+            hud.setTengenGameOptionsVisible(false);
+            hud.show();
         }
         timer().resetToIndefiniteDuration();
     }
@@ -46,7 +46,7 @@ public class Tengen_LevelIntermissionState extends GameState {
     public void onUpdate(GameContext game) {
         final GameSession session = game.session();
 
-        game.variant().systems().entityUpdater().updateSessionHUDEntities(game);
+        game.variant().systems().entityUpdater().updateHUD(game);
 
         if (timer().hasExpired()) {
             game.variant().gameFlow().enterGameState(game, session.isGameRunning()
@@ -58,16 +58,15 @@ public class Tengen_LevelIntermissionState extends GameState {
     public void onExit(GameContext game) {
         final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game.variant().gamePlay();
         final GameSession session = game.session();
-        final HUDState hudState = session.hud();
+        final HUD hud = session.hud();
         if (gamePlay.mapCategory(session) == MapCategory.ARCADE) {
-            hudState.hideHUD();
+            hud.hide();
         } else {
-            hudState
-                .showTengenGameOptions()
-                .showScore()
-                .showLevelCounter()
-                .hideLivesCounter()
-                .showHUD();
+            hud.setTengenGameOptionsVisible(true);
+            hud.gameScore().show();
+            hud.levelCounter().show();
+            hud.livesCounter().hide();
+            hud.show();
         }
     }
 }

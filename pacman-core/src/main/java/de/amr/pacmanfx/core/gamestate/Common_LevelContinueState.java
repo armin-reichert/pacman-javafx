@@ -8,7 +8,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.event.gameplay.GameContinuedEvent;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.level.GameLevelMessageType;
+import de.amr.pacmanfx.core.level.LevelMessageType;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.model.rules.LevelContinuationRules;
 
@@ -28,7 +28,7 @@ public class Common_LevelContinueState extends GameState {
         level.entities().pac().show();
         level.entities().ghosts().forEach(GameEntity::show);
 
-        game.variant().gamePlay().showLevelMessage(game, level, GameLevelMessageType.READY);
+        game.variant().gamePlay().showLevelMessage(game, level, LevelMessageType.READY);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class Common_LevelContinueState extends GameState {
         final LevelContinuationRules rules = game.variant().rules().levelContinuation();
         final long tick = timer().tickCount();
 
-        game.variant().systems().entityUpdater().updateSessionHUDEntities(game);
+        game.variant().systems().entityUpdater().updateHUD(game);
 
         if (tick == rules.continuePlayingTicks()) {
             game.eventManager().publishGameEvent(new GameContinuedEvent());

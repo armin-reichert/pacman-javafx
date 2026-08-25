@@ -7,10 +7,11 @@ package de.amr.pacmanfx.core.gamestate;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.entities.MessageView;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.gameplay.hunt.GamePlayStep;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.level.GameLevelMessageType;
+import de.amr.pacmanfx.core.level.LevelMessageType;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.model.rules.GameRules;
 import org.tinylog.Logger;
@@ -29,10 +30,10 @@ public final class Common_PlayingLevelState extends GameState {
         final GameSession session = game.session();
         final GameLevel level = game.session().level();
         final Pac pac = level.entities().pac();
-
-        session.hud().optMessage()
-            .filter(message -> message.type() == GameLevelMessageType.READY)
-            .ifPresent(_ -> session.hud().clearMessage());
+        final MessageView messageView = session.hud().messageView();
+        if (messageView.data().messageType() == LevelMessageType.READY) {
+            messageView.data().setMessageType(LevelMessageType.NO_MESSAGE);
+        }
 
         level.heartbeat().setStartState(Pulse.State.ON);
         level.heartbeat().restart();

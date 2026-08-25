@@ -143,7 +143,7 @@ public class GameSceneManager {
         playScene3D.initFood3D(level, true);
         playScene3D.updateHUD3D(game);
 
-        LivesCounter3DViewSystem.startTracking(session.hudEntities().livesCounter(), pac);
+        LivesCounter3DViewSystem.startTracking(session.hud().livesCounter(), pac);
 
         if (pac.power().isActive()) {
             variantConfig.optSoundEffects().ifPresent(GameSoundEffects::playPacPowerSound);

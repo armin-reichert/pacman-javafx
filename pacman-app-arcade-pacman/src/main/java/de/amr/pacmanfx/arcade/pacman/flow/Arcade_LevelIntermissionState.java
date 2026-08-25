@@ -5,10 +5,10 @@
 package de.amr.pacmanfx.arcade.pacman.flow;
 
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.gamestate.GameFlowController;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
-import de.amr.pacmanfx.core.model.HUDState;
 import de.amr.pacmanfx.core.GameSession;
 
 public class Arcade_LevelIntermissionState extends GameState {
@@ -19,8 +19,13 @@ public class Arcade_LevelIntermissionState extends GameState {
 
     @Override
     public void onEnter(GameContext game) {
-        final HUDState hudState = game.session().hud();
-        hudState.hideCredit().hideScore().showLevelCounter().hideLivesCounter().showHUD();
+        final HUD hud = game.session().hud();
+        hud.hideCredit();
+        hud.gameScore().hide();
+        hud.levelCounter().show();
+        hud.livesCounter().hide();
+        hud.show();
+
         timer().resetToIndefiniteDuration();
     }
 
@@ -36,7 +41,11 @@ public class Arcade_LevelIntermissionState extends GameState {
 
     @Override
     public void onExit(GameContext game) {
-        game.session().hud()
-            .hideCredit().showScore().showLevelCounter().showLivesCounter().showHUD();
+        final HUD hud = game.session().hud();
+        hud.hideCredit();
+        hud.gameScore().show();
+        hud.levelCounter().show();
+        hud.livesCounter().show();
+        hud.show();
     }
 }

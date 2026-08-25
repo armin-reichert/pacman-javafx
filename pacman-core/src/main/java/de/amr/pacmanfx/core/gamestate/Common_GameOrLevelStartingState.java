@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.core.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.HUD;
 
 public class Common_GameOrLevelStartingState extends GameState {
 
@@ -14,7 +15,10 @@ public class Common_GameOrLevelStartingState extends GameState {
 
     @Override
     public void onEnter(GameContext game) {
-        game.session().hud().showScore().showLevelCounter().showHUD();
+        final HUD hud = game.session().hud();
+        hud.gameScore().show();
+        hud.levelCounter().show();
+        hud.show();
     }
 
     @Override

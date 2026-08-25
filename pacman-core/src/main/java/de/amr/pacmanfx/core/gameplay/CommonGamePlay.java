@@ -25,8 +25,7 @@ import de.amr.pacmanfx.core.event.pac.PacPowerEndsEvent;
 import de.amr.pacmanfx.core.event.pac.PacPowerStartsFadingEvent;
 import de.amr.pacmanfx.core.gameplay.hunt.GamePlayStep;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.level.GameLevelMessage;
-import de.amr.pacmanfx.core.level.GameLevelMessageType;
+import de.amr.pacmanfx.core.level.LevelMessageType;
 import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.core.model.rules.ScoringRules;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -85,7 +84,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
         session.setLevel(level);
         session.setAttractMode(false);
-        ScoreSystem.setLevelNumber(session.hudEntities().gameScore(), levelNumber);
+        ScoreSystem.setLevelNumber(session.hud().gameScore(), levelNumber);
 
         return level;
     }
@@ -109,9 +108,8 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     @Override
-    public void showLevelMessage(GameContext game, GameLevel level, GameLevelMessageType type) {
-        final var message = new GameLevelMessage(type);
-        game.session().hud().setMessage(message);
+    public void showLevelMessage(GameContext game, GameLevel level, LevelMessageType type) {
+        game.session().hud().messageView().data().setMessageType(type);
     }
 
     @Override
@@ -223,8 +221,8 @@ public abstract class CommonGamePlay implements GamePlay {
         requireValidLevelNumber(levelNumber);
 
         final GameSession session = game.session();
-        final Score gameScore = session.hudEntities().gameScore();
-        final Score highScore = session.hudEntities().highScore();
+        final Score gameScore = session.hud().gameScore();
+        final Score highScore = session.hud().highScore();
 
         ScoreSystem.scorePoints(gameScore, highScore, points, levelNumber, game.variant().rules().scoringRules());
 
@@ -239,8 +237,8 @@ public abstract class CommonGamePlay implements GamePlay {
     // private
 
     protected void initScores(GameSession session) {
-        final Score gameScore = session.hudEntities().gameScore();
-        final Score highScore = session.hudEntities().highScore();
+        final Score gameScore = session.hud().gameScore();
+        final Score highScore = session.hud().highScore();
 
         gameScore.reset();
         final File highScoreFile = highScore.reqComp(ScorePersistencyComp.class).file();

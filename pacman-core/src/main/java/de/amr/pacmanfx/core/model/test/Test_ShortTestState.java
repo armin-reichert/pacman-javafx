@@ -16,7 +16,7 @@ import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.level.GameLevelMessageType;
+import de.amr.pacmanfx.core.level.LevelMessageType;
 
 public class Test_ShortTestState extends GameState {
 
@@ -63,13 +63,14 @@ public class Test_ShortTestState extends GameState {
             gamePlay.prepareLevelForPlaying(game);
             level.entities().pac().show();
             level.entities().ghosts().forEach(GameEntity::show);
-            gamePlay.showLevelMessage(game, level, GameLevelMessageType.READY);
-            session.hud().hideCredit().showLivesCounter();
+            gamePlay.showLevelMessage(game, level, LevelMessageType.READY);
+            session.hud().hideCredit();
+            session.hud().livesCounter().show();
             level.heartbeat().restart();
             game.eventManager().publishGameEvent(new TestStartedEvent(level));
         }
         else if (timer().atSecond(START + 1)) {
-            session.hud().clearMessage();
+            session.hud().messageView().data().setMessageType(LevelMessageType.NO_MESSAGE);
         }
         else if (timer().atSecond(START + 3)) {
             gamePlay.activateNextBonus(game, level);
@@ -112,7 +113,7 @@ public class Test_ShortTestState extends GameState {
     @Override
     public void onExit(GameContext game) {
         final LevelCounterSystem levelCounterSystem = game.variant().systems().levelCounterSystem();
-        final LevelCounter levelCounter = game.session().hudEntities().levelCounter();
+        final LevelCounter levelCounter = game.session().hud().levelCounter();
         levelCounterSystem.clearCounter(levelCounter);
     }
 }

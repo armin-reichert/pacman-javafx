@@ -73,21 +73,21 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer
         ctx.save();
         ctx.translate(0, scaled(computeOffsetY(gameScene)));
 
-        if (session.hud().isScoreShown()) {
+        if (session.hud().gameScore().isVisible()) {
             drawScores(session);
         }
 
         final int counterY = canvasRendering.unscaledHeight() - TS;
 
-        if (session.hud().isLivesCounterShown()) {
+        if (session.hud().livesCounter().isVisible()) {
             drawLivesCounter(session, counterY);
         }
 
-        if (session.hud().isLevelCounterShown()) {
+        if (session.hud().levelCounter().isVisible()) {
             drawLevelCounter(session, counterY);
         }
 
-        if (session.hud().tengenGameOptionsVisible()) {
+        if (session.hud().isTengenGameOptionsVisible()) {
             drawGameOptions(
                 session.value(TengenMsPacMan_GamePlayOptions.MAP_CATEGORY, MapCategory.class),
                 session.value(TengenMsPacMan_GamePlayOptions.DIFFICULTY, Difficulty.class),
@@ -102,9 +102,9 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer
         final long tick = session.thisFrame().tick();
         // blink frequency = 1Hz (30 ticks on, 30 ticks off)
         final boolean on = tick % 60 < 30;
-        drawScore(session.hudEntities().gameScore(), on, arcadeFont8());
+        drawScore(session.hud().gameScore(), on, arcadeFont8());
 
-        final Score highScore = session.hudEntities().highScore();
+        final Score highScore = session.hud().highScore();
         Color color = SCORE_TEXT_COLOR;
         if (!highScore.data().isEnabled() && !session.isAttractMode()) {
             color = SCORE_TEXT_COLOR_DISABLED;
@@ -125,13 +125,13 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer
     }
 
     private void drawLivesCounter(GameSession session, float y) {
-        final LivesCounter livesCounter = session.hudEntities().livesCounter();
+        final LivesCounter livesCounter = session.hud().livesCounter();
         final int count = livesCounter.data().numLives();
         final RectShort symbolSprite = spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL);
         for (int i = 0; i < count; ++i) {
             drawSprite(symbolSprite, tilesPx(4 + i * 2), y, true);
         }
-        if (count > session.hud().maxLivesShown()) {
+        if (count > session.hud().livesCounter().data().maxLives()) {
             fillText(
                 "(%d)".formatted(count),
                 NES_Palette.color(0x28),
@@ -142,7 +142,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer
     }
 
     private void drawLevelCounter(GameSession session, float y) {
-        final LevelCounter levelCounter = session.hudEntities().levelCounter();
+        final LevelCounter levelCounter = session.hud().levelCounter();
         final RectShort[] symbolSprites = spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS);
         float x = LEVEL_COUNTER_POS_RIGHT - tilesPx(2);
         // symbols are drawn from right to left!

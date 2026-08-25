@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.flow;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.event.gameplay.GameStartedEvent;
@@ -30,8 +31,10 @@ public class Arcade_GameStartingState extends GameState {
         final GameLevel newLevel = game.variant().gamePlay().buildNormalLevel(game, 1);
         game.eventManager().publishGameEvent(new LevelCreatedEvent(newLevel));
 
-        game.session().hud().hideCredit().showLivesCounter();
-        ScoreSystem.enableScore(game.session().hudEntities().highScore(), true);
+        final HUD hud = game.session().hud();
+        hud.hideCredit();
+        hud.livesCounter().show();
+        ScoreSystem.enableScore(game.session().hud().highScore(), true);
 
         game.eventManager().publishGameEvent(new GameStartedEvent(game));
     }
@@ -43,7 +46,7 @@ public class Arcade_GameStartingState extends GameState {
         final GameLevel level = session.level();
         final long tick = timer().tickCount();
 
-        systems.entityUpdater().updateSessionHUDEntities(game);
+        systems.entityUpdater().updateHUD(game);
 
         if (tick == TICK_NEW_GAME_START_LEVEL) {
             game.variant().gamePlay().startLevel(game, level);

@@ -9,6 +9,7 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.ui.action.CheatActions;
@@ -46,7 +47,10 @@ public class Arcade_PlayScene2D extends GameScene
 
     @Override
     protected void onActivate() {
-        game().session().hud().showLevelCounter().showLivesCounter().showHUD();
+        final HUD hud = game().session().hud();
+        hud.levelCounter().show();
+        hud.livesCounter().show();
+        hud.show();
     }
 
     @Override

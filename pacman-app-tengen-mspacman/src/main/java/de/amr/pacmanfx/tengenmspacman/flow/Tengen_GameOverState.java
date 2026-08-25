@@ -15,7 +15,7 @@ import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.level.GameLevelMessageType;
+import de.amr.pacmanfx.core.level.LevelMessageType;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Extras;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlayOptions;
@@ -49,12 +49,12 @@ public class Tengen_GameOverState extends GameState {
         session.cheats().clear();
 
         try {
-            ScoreSystem.saveHighScoreIfNeeded(session.hudEntities().highScore());
+            ScoreSystem.saveHighScoreIfNeeded(session.hud().highScore());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        gamePlay.showLevelMessage(game, level, GameLevelMessageType.GAME_OVER);
+        gamePlay.showLevelMessage(game, level, LevelMessageType.GAME_OVER);
 
         final MapCategory mapCategory = session.value(TengenMsPacMan_GamePlayOptions.MAP_CATEGORY, MapCategory.class);
         if (!session.isAttractMode() && mapCategory != MapCategory.ARCADE) {
@@ -75,7 +75,7 @@ public class Tengen_GameOverState extends GameState {
         final GameSystems systems = game.variant().systems();
         final GameSession session = game.session();
 
-        systems.entityUpdater().updateSessionHUDEntities(game);
+        systems.entityUpdater().updateHUD(game);
 
         if (countdownAfter > 0) {
             --countdownAfter;
@@ -113,7 +113,7 @@ public class Tengen_GameOverState extends GameState {
     @Override
     public void onExit(GameContext game) {
         final GameSession session = game.session();
-        session.hud().clearMessage();
+        session.hud().messageView().data().setMessageType(LevelMessageType.NO_MESSAGE);
         session.clearValue(TengenMsPacMan_Extras.GAME_OVER_MESSAGE_ANIMATION);
     }
 

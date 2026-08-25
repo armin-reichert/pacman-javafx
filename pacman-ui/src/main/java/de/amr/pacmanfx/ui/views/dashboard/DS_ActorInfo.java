@@ -58,7 +58,7 @@ public class DS_ActorInfo extends GameDashboardSection {
     private Supplier<String> supplyLivesCount(GameAppContext appContext) {
         return fnLevelInfo(appContext, _ -> {
             final GameSession session = appContext.game().session();
-            final LivesCounter livesCounter = session.hudEntities().livesCounter();
+            final LivesCounter livesCounter = session.hud().livesCounter();
             return String.valueOf(livesCounter.data().numLives());
         });
     }

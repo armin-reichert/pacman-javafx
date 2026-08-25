@@ -59,26 +59,26 @@ public abstract class Arcade_HeadsUpDisplay_Renderer
         }
         final CanvasRenderingComp canvasRendering = gameScene.reqCanvasRendering();
 
-        if (session.hud().isScoreShown()) {
+        if (session.hud().gameScore().isVisible()) {
             drawScores(session);
         }
 
-        if (session.hud().isLevelCounterShown()) {
+        if (session.hud().levelCounter().isVisible()) {
             drawLevelCounter(session, canvasRendering);
         }
 
-        if (session.hud().isLivesCounterShown()) {
+        if (session.hud().livesCounter().isVisible()) {
             drawLivesCounter(session, canvasRendering);
         }
 
-        if (session.hud().isCreditShown()) {
+        if (session.hud().isCreditVisible()) {
             drawCredit(gameScene.game().coinMechanism(), canvasRendering);
         }
     }
 
     private void drawScores(GameSession session) {
-        final Score gameScore = session.hudEntities().gameScore();
-        final Score highScore = session.hudEntities().highScore();
+        final Score gameScore = session.hud().gameScore();
+        final Score highScore = session.hud().highScore();
 
         drawScore(gameScore, SCORE_TEXT, arcadeFont8(), SCORE_TEXT_COLOR, tilesPx(1), tilesPx(1));
 
@@ -98,7 +98,7 @@ public abstract class Arcade_HeadsUpDisplay_Renderer
     }
 
     private void drawLevelCounter(GameSession session, CanvasRenderingComp canvasRendering) {
-        final LevelCounter levelCounter = session.hudEntities().levelCounter();
+        final LevelCounter levelCounter = session.hud().levelCounter();
         final RectShort[] bonusSymbolSprites = bonusSymbolSprites();
         final float y = canvasRendering.unscaledHeight() - tilesPx(2) + 2;
         float x = canvasRendering.unscaledWidth() - tilesPx(4);
@@ -109,7 +109,7 @@ public abstract class Arcade_HeadsUpDisplay_Renderer
     }
 
     private void drawLivesCounter(GameSession session, CanvasRenderingComp canvasRendering) {
-        final LivesCounter livesCounter = session.hudEntities().livesCounter();
+        final LivesCounter livesCounter = session.hud().livesCounter();
         final int count = livesCounter.data().numLives();
         final RectShort sprite = livesCounterSymbol();
         final float x = tilesPx(2);
@@ -118,7 +118,7 @@ public abstract class Arcade_HeadsUpDisplay_Renderer
         for (int i = 0; i < count; ++i) {
             drawSprite(sprite, x + i * spacing, y, true);
         }
-        if (count > session.hud().maxLivesShown()) {
+        if (count > livesCounter.data().maxLives()) {
             // Show text indicating that more lives are available than symbols displayed (cheating may cause this)
             final Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
             fillText("%d".formatted(count), ARCADE_YELLOW, font, x - 14, y + TS);

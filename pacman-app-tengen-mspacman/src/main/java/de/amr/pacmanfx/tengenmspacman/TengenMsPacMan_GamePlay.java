@@ -27,8 +27,7 @@ import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelEntitySet;
-import de.amr.pacmanfx.core.level.GameLevelMessage;
-import de.amr.pacmanfx.core.level.GameLevelMessageType;
+import de.amr.pacmanfx.core.level.LevelMessageType;
 import de.amr.pacmanfx.core.model.rules.HuntingTimer;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -219,7 +218,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         session.setLevel(null);
         session.setGameRunning(false);
         initScores(session);
-        configureLevelCounter(game, session.hudEntities().levelCounter());
+        configureLevelCounter(game, session.hud().levelCounter());
 
         game.variant().gameFlow().restartGameState(game, CommonGameStateID.BOOT);
     }
@@ -305,15 +304,6 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     }
 
     @Override
-    public void showLevelMessage(GameContext game, GameLevel level, GameLevelMessageType type) {
-        requireNonNull(game);
-        requireNonNull(level);
-        requireNonNull(type);
-
-        game.session().hud().setMessage(new GameLevelMessage(type));
-    }
-
-    @Override
     public GameLevel buildDemoLevel(GameContext game) {
         requireNonNull(game);
 
@@ -337,7 +327,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         session.setLevel(demoLevel);
         session.setAttractMode(true);
 
-        ScoreSystem.setLevelNumber(session.hudEntities().gameScore(), 1);
+        ScoreSystem.setLevelNumber(session.hud().gameScore(), 1);
 
         return demoLevel;
     }
@@ -351,14 +341,14 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         prepareLevelForPlaying(game);
 
         session.setLevelStartTimeMillis(System.currentTimeMillis());
-        session.hudEntities().gameScore().data().setEnabled(true);
+        session.hud().gameScore().data().setEnabled(true);
         session.cheats().update(game);
 
         final LevelCounterSystem levelCounterSystem = game.variant().systems().levelCounterSystem();
-        final LevelCounter levelCounter = session.hudEntities().levelCounter();
+        final LevelCounter levelCounter = session.hud().levelCounter();
         levelCounterSystem.updateCounter(levelCounter, level.number(), level.bonusSymbolCode(0));
 
-        showLevelMessage(game, level, GameLevelMessageType.READY);
+        showLevelMessage(game, level, LevelMessageType.READY);
 
         final Pac pac = level.entities().pac();
         final boolean boosterOn = boosterMode(session) == BoosterMode.BOOSTER_ALWAYS_ON;

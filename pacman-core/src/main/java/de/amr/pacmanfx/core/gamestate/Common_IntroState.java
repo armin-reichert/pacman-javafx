@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.core.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.HUD;
 
 public final class Common_IntroState extends GameState {
 
@@ -14,7 +15,13 @@ public final class Common_IntroState extends GameState {
 
     @Override
     public void onEnter(GameContext game) {
-        game.session().hud().showLevelCounter().hideLivesCounter().showCredit().showScore().showHUD();
+        final HUD hud = game.session().hud();
+        hud.levelCounter().show();
+        hud.livesCounter().hide();
+        hud.gameScore().show();
+        hud.showCredit();
+        hud.show();
+
         game.session().setLevel(null);
         timer().resetToIndefiniteDuration();
     }

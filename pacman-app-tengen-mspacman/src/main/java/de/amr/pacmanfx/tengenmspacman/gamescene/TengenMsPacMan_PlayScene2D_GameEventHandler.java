@@ -19,7 +19,7 @@ import de.amr.pacmanfx.core.event.gameplay.*;
 import de.amr.pacmanfx.core.event.ghost.GhostEatenEvent;
 import de.amr.pacmanfx.core.event.pac.*;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.level.GameLevelMessageType;
+import de.amr.pacmanfx.core.level.LevelMessageType;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Extras;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
@@ -69,7 +69,7 @@ public interface TengenMsPacMan_PlayScene2D_GameEventHandler extends DefaultGame
             resetActorAnimations(systems.actorSpriteAnimController(), session, level);
             gameScene().dynamicCamera().playIntroSequence();
             if (game.variant().gamePlay() instanceof TengenMsPacMan_GamePlay tengenGame) {
-                tengenGame.showLevelMessage(game, level, GameLevelMessageType.READY);
+                tengenGame.showLevelMessage(game, level, LevelMessageType.READY);
             }
         });
     }

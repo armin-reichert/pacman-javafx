@@ -4,6 +4,6 @@
 
 package de.amr.pacmanfx.core.level;
 
-public enum GameLevelMessageType {
-    READY, GAME_OVER
+public enum LevelMessageType {
+    NO_MESSAGE, READY, GAME_OVER
 }

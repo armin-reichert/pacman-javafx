@@ -7,14 +7,14 @@ package de.amr.pacmanfx.core.gamestate;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
+import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelEntitySet;
-import de.amr.pacmanfx.core.level.GameLevelMessageType;
-import de.amr.pacmanfx.core.model.HUDState;
+import de.amr.pacmanfx.core.level.LevelMessageType;
 
 import java.util.Optional;
 
@@ -29,7 +29,11 @@ public final class Common_DemoLevelPlayingState extends GameState {
         final GameSession session = game.session();
         session.setLevel(game.variant().gamePlay().buildDemoLevel(game));
         session.setNumLives(1);
-        session.hud().showCredit().hideLivesCounter().showHUD();
+
+        session.hud().showCredit();
+        session.hud().levelCounter().hide();
+        session.hud().show();
+
         game.eventManager().publishGameEvent(new LevelCreatedEvent(session.level()));
     }
 
@@ -40,7 +44,7 @@ public final class Common_DemoLevelPlayingState extends GameState {
         final GameLevel level = game.session().level();
         final int huntingStartTick = game.variant().rules().demoLevelHuntingStartTick();
 
-        game.variant().systems().entityUpdater().updateSessionHUDEntities(game);
+        game.variant().systems().entityUpdater().updateHUD(game);
 
         if (tick == 1) {
             prepareLevel(game);
@@ -76,12 +80,11 @@ public final class Common_DemoLevelPlayingState extends GameState {
         entities.ghosts().forEach(animController::playSelected);
     }
 
-    // Clears the "READY!" message. The "GAME_OVER" (demo level) and the "TEST LEVEL XX" messages
-    // are left alone.
-    private void clearReadyMessage(HUDState hud) {
-        hud.optMessage()
-            .filter(message -> message.type() == GameLevelMessageType.READY)
-            .ifPresent(_ -> hud.clearMessage());
+    // Clears the "READY!" message. The "GAME_OVER" (demo level) and the "TEST LEVEL XX" messages are left alone.
+    private void clearReadyMessage(HUD hud) {
+        if (hud.messageView().data().messageType() == LevelMessageType.READY) {
+            hud.clearMessage();
+        }
     }
 
     private void updateDemoLevel(GameContext game) {
@@ -100,11 +103,11 @@ public final class Common_DemoLevelPlayingState extends GameState {
         final GamePlay gamePlay = game.variant().gamePlay();
         final GameLevel level = session.level();
 
-        session.hudEntities().gameScore().data().setEnabled(false);
-        session.hudEntities().highScore().data().setEnabled(false);
+        session.hud().gameScore().data().setEnabled(false);
+        session.hud().highScore().data().setEnabled(false);
 
         gamePlay.prepareLevelForPlaying(game);
-        gamePlay.showLevelMessage(game, level, GameLevelMessageType.GAME_OVER);
+        gamePlay.showLevelMessage(game, level, LevelMessageType.GAME_OVER);
     }
 
     private void showActors(GameLevelEntitySet entities) {

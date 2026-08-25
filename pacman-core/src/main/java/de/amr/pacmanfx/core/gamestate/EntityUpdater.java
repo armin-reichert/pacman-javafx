@@ -26,7 +26,7 @@ public class EntityUpdater {
         updateGhosts(game, level);
         level.entities().optBonus().ifPresent(bonus -> updateBonus(game, level, bonus));
         updateLevelHeartbeat(level);
-        updateSessionHUDEntities(game);
+        updateHUD(game);
     }
 
     public void updateLevelHeartbeat(GameLevel level) {
@@ -90,7 +90,7 @@ public class EntityUpdater {
         }
     }
 
-    public void updateSessionHUDEntities(GameContext game) {
+    public void updateHUD(GameContext game) {
         final GameSession session = game.session();
         final Pac pac = session.level().entities().pac();
 
@@ -100,9 +100,9 @@ public class EntityUpdater {
             || game.state().id() == CommonGameStateID.GAME_OR_LEVEL_STARTING;
         final boolean oneMore = starting && !pac.isVisible();
         int count = oneMore ? session.numLives() : session.numLives() - 1;
-        count = Math.clamp(count, 0, session.hud().maxLivesShown());
+        count = Math.clamp(count, 0, session.hud().livesCounter().data().maxLives());
 
-        final LivesCounter livesCounter = session.hudEntities().livesCounter();
+        final LivesCounter livesCounter = session.hud().livesCounter();
         livesCounter.data().setNumLives(count);
     }
 }

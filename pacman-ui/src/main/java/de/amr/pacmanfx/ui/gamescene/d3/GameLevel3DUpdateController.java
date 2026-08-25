@@ -48,7 +48,7 @@ public class GameLevel3DUpdateController {
 
     private static void updateLivesCounter3D(GameContext game) {
         final GameSession session = game.session();
-        LivesCounter3DViewSystem.update(session.hudEntities().livesCounter());
+        LivesCounter3DViewSystem.update(session.hud().livesCounter());
     }
 
     private static void updateGhosts3D(GameLevel3D level3D) {

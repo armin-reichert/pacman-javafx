@@ -96,19 +96,17 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         overPaintActorSprites(level);
         drawFood(level);
 
-        game.session().hud().optMessage().ifPresent(message -> {
-            switch (message.type()) {
-                case GAME_OVER -> {
-                    final MessageAnimation messageAnimation = game.session().value(
-                        TengenMsPacMan_Extras.GAME_OVER_MESSAGE_ANIMATION, MessageAnimation.class);
-                    final Vector2f pos = (messageAnimation != null)
-                        ? messageAnimation.pos().asVector2f()
-                        : messagePosition(level);
-                    drawGameOverMessage(game.session(), level.worldMap(), pos);
-                }
-                case READY -> drawReadyMessage(messagePosition(level));
+        switch (game.session().hud().messageView().data().messageType()) {
+            case GAME_OVER -> {
+                final MessageAnimation messageAnimation = game.session().value(
+                    TengenMsPacMan_Extras.GAME_OVER_MESSAGE_ANIMATION, MessageAnimation.class);
+                final Vector2f pos = (messageAnimation != null)
+                    ? messageAnimation.pos().asVector2f()
+                    : messagePosition(level);
+                drawGameOverMessage(game.session(), level.worldMap(), pos);
             }
-        });
+            case READY -> drawReadyMessage(messagePosition(level));
+        }
     }
 
     private void drawFood(GameLevel level) {

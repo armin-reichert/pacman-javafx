@@ -71,7 +71,7 @@ public final class Common_PacManDyingState extends GameState {
         final long tick = timer().tickCount();
 
         //TODO check this
-        systems.entityUpdater().updateSessionHUDEntities(game);
+        systems.entityUpdater().updateHUD(game);
         systems.entityUpdater().updateLevelHeartbeat(level);
         systems.entityUpdater().updatePac(game, level, pac);
 
