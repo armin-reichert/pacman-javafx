@@ -92,7 +92,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         session.setLevel(null);
         session.setGameRunning(false);
         initScores(session);
-        configureLevelCounter(game, session.hudEntities().theOne(LevelCounter.class));
+        configureLevelCounter(game, session.hudEntities().levelCounter());
 
         game.variant().gameFlow().restartGameState(game, CommonGameStateID.BOOT);
     }
@@ -210,7 +210,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         session.setLevel(level);
         session.setAttractMode(true);
 
-        ScoreSystem.setLevelNumber(session.score(), 1);
+        ScoreSystem.setLevelNumber(session.hudEntities().gameScore(), 1);
 
         return level;
     }
@@ -223,11 +223,11 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
         prepareLevelForPlaying(game);
         session.setLevelStartTimeMillis(System.currentTimeMillis());
-        session.score().data().setEnabled(true);
+        session.hudEntities().gameScore().data().setEnabled(true);
         session.cheats().update(game);
 
         final LevelCounterSystem levelCounterSystem = game.variant().systems().levelCounterSystem();
-        final LevelCounter levelCounter = session.hudEntities().theOne(LevelCounter.class);
+        final LevelCounter levelCounter = session.hudEntities().levelCounter();
         levelCounterSystem.updateCounter(levelCounter, level.number(), level.bonusSymbolCode(0));
 
         showLevelMessage(game, level, GameLevelMessageType.READY);

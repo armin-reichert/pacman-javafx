@@ -31,7 +31,7 @@ public class Arcade_GameStartingState extends GameState {
         game.eventManager().publishGameEvent(new LevelCreatedEvent(newLevel));
 
         game.session().hud().hideCredit().showLivesCounter();
-        ScoreSystem.enableScore(game.session().highScore(), true);
+        ScoreSystem.enableScore(game.session().hudEntities().highScore(), true);
 
         game.eventManager().publishGameEvent(new GameStartedEvent(game));
     }

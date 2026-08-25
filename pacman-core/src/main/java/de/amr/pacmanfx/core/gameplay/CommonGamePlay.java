@@ -85,7 +85,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
         session.setLevel(level);
         session.setAttractMode(false);
-        ScoreSystem.setLevelNumber(session.score(), levelNumber);
+        ScoreSystem.setLevelNumber(session.hudEntities().gameScore(), levelNumber);
 
         return level;
     }
@@ -223,8 +223,8 @@ public abstract class CommonGamePlay implements GamePlay {
         requireValidLevelNumber(levelNumber);
 
         final GameSession session = game.session();
-        final Score gameScore = session.score();
-        final Score highScore = session.highScore();
+        final Score gameScore = session.hudEntities().gameScore();
+        final Score highScore = session.hudEntities().highScore();
 
         ScoreSystem.scorePoints(gameScore, highScore, points, levelNumber, game.variant().rules().scoringRules());
 
@@ -239,11 +239,14 @@ public abstract class CommonGamePlay implements GamePlay {
     // private
 
     protected void initScores(GameSession session) {
-        session.score().reset();
-        final File highScoreFile = session.highScore().reqComp(ScorePersistencyComp.class).file();
+        final Score gameScore = session.hudEntities().gameScore();
+        final Score highScore = session.hudEntities().highScore();
+
+        gameScore.reset();
+        final File highScoreFile = highScore.reqComp(ScorePersistencyComp.class).file();
         try {
-            ScoreSystem.load(session.highScore());
-            ScoreSystem.enableScore(session.highScore(), true);
+            ScoreSystem.load(highScore);
+            ScoreSystem.enableScore(highScore, true);
         } catch (IOException x) {
             Logger.error(x, "Error loading high-score file {}", highScoreFile.getAbsolutePath());
         }

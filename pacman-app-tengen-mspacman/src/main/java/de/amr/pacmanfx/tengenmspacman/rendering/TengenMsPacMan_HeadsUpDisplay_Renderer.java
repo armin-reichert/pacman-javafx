@@ -102,9 +102,9 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer
         final long tick = session.thisFrame().tick();
         // blink frequency = 1Hz (30 ticks on, 30 ticks off)
         final boolean on = tick % 60 < 30;
-        drawScore(session.score(), on, arcadeFont8());
+        drawScore(session.hudEntities().gameScore(), on, arcadeFont8());
 
-        final Score highScore = session.highScore();
+        final Score highScore = session.hudEntities().highScore();
         Color color = SCORE_TEXT_COLOR;
         if (!highScore.data().isEnabled() && !session.isAttractMode()) {
             color = SCORE_TEXT_COLOR_DISABLED;
@@ -125,7 +125,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer
     }
 
     private void drawLivesCounter(GameSession session, float y) {
-        final LivesCounter livesCounter = session.hudEntities().theOne(LivesCounter.class);
+        final LivesCounter livesCounter = session.hudEntities().livesCounter();
         final int count = livesCounter.data().numLives();
         final RectShort symbolSprite = spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL);
         for (int i = 0; i < count; ++i) {
@@ -142,7 +142,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer
     }
 
     private void drawLevelCounter(GameSession session, float y) {
-        final LevelCounter levelCounter = session.hudEntities().theOne(LevelCounter.class);
+        final LevelCounter levelCounter = session.hudEntities().levelCounter();
         final RectShort[] symbolSprites = spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS);
         float x = LEVEL_COUNTER_POS_RIGHT - tilesPx(2);
         // symbols are drawn from right to left!

@@ -100,8 +100,8 @@ public final class Common_DemoLevelPlayingState extends GameState {
         final GamePlay gamePlay = game.variant().gamePlay();
         final GameLevel level = session.level();
 
-        session.score().data().setEnabled(false);
-        session.highScore().data().setEnabled(false);
+        session.hudEntities().gameScore().data().setEnabled(false);
+        session.hudEntities().highScore().data().setEnabled(false);
 
         gamePlay.prepareLevelForPlaying(game);
         gamePlay.showLevelMessage(game, level, GameLevelMessageType.GAME_OVER);

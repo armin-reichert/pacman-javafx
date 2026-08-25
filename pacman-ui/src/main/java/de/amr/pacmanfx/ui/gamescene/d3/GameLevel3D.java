@@ -94,9 +94,9 @@ public class GameLevel3D implements DisposableGraphicsObject {
         final Pac pac = level.entities().pac();
         final List<Ghost> ghosts = level.entities().ghosts();
 
-        final LevelCounter levelCounter = session.hudEntities().theOne(LevelCounter.class);
-        final LivesCounter livesCounter = session.hudEntities().theOne(LivesCounter.class);
-        final MessageView messageView   = session.hudEntities().theOne(MessageView.class);
+        final LevelCounter levelCounter = session.hudEntities().levelCounter();
+        final LivesCounter livesCounter = session.hudEntities().livesCounter();
+        final MessageView messageView   = session.hudEntities().messageView();
 
         final WorldMapColorScheme colorScheme = uiConfig.renderConfig().colorScheme(level.worldMap(), uiConfig.worldSettings());
 

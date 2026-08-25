@@ -102,7 +102,7 @@ public class EntityUpdater {
         int count = oneMore ? session.numLives() : session.numLives() - 1;
         count = Math.clamp(count, 0, session.hud().maxLivesShown());
 
-        final LivesCounter livesCounter = session.hudEntities().theOne(LivesCounter.class);
+        final LivesCounter livesCounter = session.hudEntities().livesCounter();
         livesCounter.data().setNumLives(count);
     }
 }

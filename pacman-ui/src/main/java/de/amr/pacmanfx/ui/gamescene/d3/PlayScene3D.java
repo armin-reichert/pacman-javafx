@@ -7,8 +7,6 @@ package de.amr.pacmanfx.ui.gamescene.d3;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameVariantConfig;
-import de.amr.pacmanfx.core.entities.LevelCounter;
-import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
@@ -262,7 +260,7 @@ public class PlayScene3D extends GameScene
         final GameSession session = game.session();
 
         // If score is disabled, show "GAME OVER" text instead
-        final Score score = session.score();
+        final Score score = session.hudEntities().gameScore();
         if (score.data().isEnabled()) {
             scoresView.showScore(score.data().points(), score.data().levelNumber());
         } else {
@@ -272,7 +270,7 @@ public class PlayScene3D extends GameScene
         }
 
         // High score is always visible
-        final Score highScore = session.highScore();
+        final Score highScore = session.hudEntities().highScore();
         scoresView.showHighScore(highScore.data().points(), highScore.data().levelNumber());
     }
 
@@ -312,7 +310,7 @@ public class PlayScene3D extends GameScene
         // Create a new 3D game level representation
         level3D = new GameLevel3D(game, registry, viewModel, uiConfig);
         addAdditional3DLevelElements(level3D);
-        level3D.replaceLevelCounter3D(session.hudEntities().theOne(LevelCounter.class));
+        level3D.replaceLevelCounter3D(session.hudEntities().levelCounter());
         level3D.setAnimationManager(new GameLevel3DAnimationManager(registry, level3D, config, uiConfig));
 
         level3DParent.getChildren().setAll(level3D.root());
@@ -321,7 +319,7 @@ public class PlayScene3D extends GameScene
         final Pac pac = level.entities().pac();
         initPac3DProperties(level, pac);
 
-        LivesCounter3DViewSystem.startTracking(session.hudEntities().theOne(LivesCounter.class), pac);
+        LivesCounter3DViewSystem.startTracking(session.hudEntities().livesCounter(), pac);
     }
 
     /**
@@ -343,13 +341,13 @@ public class PlayScene3D extends GameScene
             subSceneRoot.getChildren().remove(oldScoresView.root());
         }
 
-        final Score leftScore = session.score();
+        final Score leftScore = session.hudEntities().gameScore();
         if (!leftScore.hasComp(ScoreViewComp.class)) {
             leftScore.setComp(ScoreViewComp.class, new ScoreViewComp());
         }
         leftScore.reqComp(ScoreViewComp.class).titleDisplay().setText(leftTitle);
 
-        final Score rightScore = session.highScore();
+        final Score rightScore = session.hudEntities().highScore();
         if (!rightScore.hasComp(ScoreViewComp.class)) {
             rightScore.setComp(ScoreViewComp.class, new ScoreViewComp());
         }

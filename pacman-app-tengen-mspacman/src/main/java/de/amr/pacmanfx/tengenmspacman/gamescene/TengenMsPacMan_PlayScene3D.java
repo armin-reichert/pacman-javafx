@@ -135,7 +135,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     public void updateHUD3D(GameContext game) {
         optScoresView().ifPresent(scores3D -> {
             final GameSession session = game.session();
-            final Score score = session.score(), highScore = session.highScore();
+            final Score score = session.hudEntities().gameScore(), highScore = session.hudEntities().highScore();
             if (score.data().isEnabled()) {
                 scores3D.showScore(score.data().points(), score.data().levelNumber());
             } else {

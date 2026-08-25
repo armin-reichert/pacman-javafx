@@ -33,7 +33,7 @@ public class Tengen_GameStartingState extends GameState {
         final GameLevel newLevel = gamePlay.buildNormalLevel(game, gamePlay.startLevelNumber(session));
         game.eventManager().publishGameEvent(new LevelCreatedEvent(newLevel));
 
-        ScoreSystem.enableScore(session.highScore(), true);
+        ScoreSystem.enableScore(session.hudEntities().highScore(), true);
         game.eventManager().publishGameEvent(new GameStartedEvent(game));
     }
 

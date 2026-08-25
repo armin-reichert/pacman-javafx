@@ -112,7 +112,7 @@ public class Test_ShortTestState extends GameState {
     @Override
     public void onExit(GameContext game) {
         final LevelCounterSystem levelCounterSystem = game.variant().systems().levelCounterSystem();
-        final LevelCounter levelCounter = game.session().hudEntities().theOne(LevelCounter.class);
+        final LevelCounter levelCounter = game.session().hudEntities().levelCounter();
         levelCounterSystem.clearCounter(levelCounter);
     }
 }

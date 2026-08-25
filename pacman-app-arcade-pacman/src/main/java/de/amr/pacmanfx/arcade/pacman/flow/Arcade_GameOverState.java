@@ -27,7 +27,7 @@ public class Arcade_GameOverState extends GameState {
         final GameLevel level = session.level();
 
         try {
-            ScoreSystem.saveHighScoreIfNeeded(session.highScore());
+            ScoreSystem.saveHighScoreIfNeeded(session.hudEntities().highScore());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

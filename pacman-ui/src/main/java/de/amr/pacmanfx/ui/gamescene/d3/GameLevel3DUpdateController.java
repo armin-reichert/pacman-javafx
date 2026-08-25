@@ -6,7 +6,6 @@ import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.House;
-import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -49,7 +48,7 @@ public class GameLevel3DUpdateController {
 
     private static void updateLivesCounter3D(GameContext game) {
         final GameSession session = game.session();
-        LivesCounter3DViewSystem.update(session.hudEntities().theOne(LivesCounter.class));
+        LivesCounter3DViewSystem.update(session.hudEntities().livesCounter());
     }
 
     private static void updateGhosts3D(GameLevel3D level3D) {

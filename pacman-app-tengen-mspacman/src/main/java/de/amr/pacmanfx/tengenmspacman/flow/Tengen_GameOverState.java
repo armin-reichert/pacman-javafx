@@ -49,7 +49,7 @@ public class Tengen_GameOverState extends GameState {
         session.cheats().clear();
 
         try {
-            ScoreSystem.saveHighScoreIfNeeded(session.highScore());
+            ScoreSystem.saveHighScoreIfNeeded(session.hudEntities().highScore());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -7,7 +7,6 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.entities.Ghost;
-import de.amr.pacmanfx.core.entities.LevelCounter;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
@@ -88,7 +87,7 @@ public class Test_MediumTestState extends GameState {
     @Override
     public void onExit(GameContext game) {
         final LevelCounterSystem levelCounterSystem = game.variant().systems().levelCounterSystem();
-        levelCounterSystem.clearCounter(game.session().hudEntities().theOne(LevelCounter.class));
+        levelCounterSystem.clearCounter(game.session().hudEntities().levelCounter());
     }
 
     private void configureLevelForTest(GameContext game) {

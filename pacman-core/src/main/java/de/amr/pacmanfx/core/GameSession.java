@@ -4,8 +4,6 @@
 
 package de.amr.pacmanfx.core;
 
-import de.amr.basics.QuerySet;
-import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.entities.LevelCounter;
 import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.MessageView;
@@ -25,13 +23,48 @@ import static java.util.Objects.requireNonNull;
 
 public class GameSession {
 
+    public static class HUDEntities {
+
+        private final LevelCounter levelCounter;
+        private final LivesCounter livesCounter;
+        private final Score gameScore;
+        private final Score highScore;
+        private final MessageView messageView;
+
+        public HUDEntities(String variantName) {
+            levelCounter = new LevelCounter();
+            livesCounter = new LivesCounter();
+            messageView = new MessageView();
+            gameScore = new Score(Score.Type.GAME_SCORE);
+            highScore = ScoreSystem.createHighScore(ScoreSystem.highScoreFile(variantName));
+        }
+
+        public LevelCounter levelCounter() {
+            return levelCounter;
+        }
+
+        public LivesCounter livesCounter() {
+            return livesCounter;
+        }
+
+        public Score gameScore() {
+            return gameScore;
+        }
+
+        public Score highScore() {
+            return highScore;
+        }
+
+        public MessageView messageView() {
+            return messageView;
+        }
+    }
+
     public interface GameSessionValueKey {}
 
     private FrameState frameState;
 
     private GameLevel level;
-
-    private final QuerySet<GameEntity> hudEntities = new QuerySet<>();
 
     private boolean attractMode;
 
@@ -40,6 +73,8 @@ public class GameSession {
     private int numLives;
 
     private final HUDState hud;
+
+    private final HUDEntities hudEntities;
 
     private final GameCheats cheats;
 
@@ -57,19 +92,15 @@ public class GameSession {
 
         this.numLives = Validations.requireNonNegativeInt(numLives);
         this.cheats = cheats;
+
         this.hud = new HUDState();
+        this.hudEntities = new HUDEntities(variantName);
 
         newFrameState(0);
 
-        hudEntities.add(new LevelCounter());
-        hudEntities.add(new LivesCounter());
-        hudEntities.add(new MessageView());
-        hudEntities.add(new Score(Score.Type.GAME_SCORE));
-        hudEntities.add(ScoreSystem.createHighScore(ScoreSystem.highScoreFile(variantName)));
-
         cheats.cheatUsedProperty().addListener((_, _, cheated) -> {
             if (cheated) {
-                highScore().data().setEnabled(false);
+                hudEntities.highScore().data().setEnabled(false);
             }
         });
     }
@@ -100,7 +131,7 @@ public class GameSession {
         throw new IllegalStateException("No game level exists at this time");
     }
 
-    public QuerySet<GameEntity> hudEntities() {
+    public HUDEntities hudEntities() {
         return hudEntities;
     }
 
@@ -134,21 +165,6 @@ public class GameSession {
 
     public void setCutScenesEnabled(boolean enabled) {
         cutScenesEnabled = enabled;
-    }
-
-    // Easier access to score and high-score entities
-
-    public Score score() {
-        return hudEntities
-            .selectWhere(Score.class, score -> score.type() == Score.Type.GAME_SCORE)
-            .findFirst()
-            .orElseThrow();
-    }
-
-    public Score highScore() {
-        return hudEntities
-            .selectWhere(Score.class, score -> score.type() == Score.Type.HIGH_SCORE)
-            .findFirst().orElseThrow();
     }
 
     public <T> T value(GameSessionValueKey key, Class<T> type) {

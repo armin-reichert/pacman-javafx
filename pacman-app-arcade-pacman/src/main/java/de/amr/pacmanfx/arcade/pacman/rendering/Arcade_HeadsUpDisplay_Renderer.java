@@ -77,8 +77,8 @@ public abstract class Arcade_HeadsUpDisplay_Renderer
     }
 
     private void drawScores(GameSession session) {
-        final Score gameScore = session.score();
-        final Score highScore = session.highScore();
+        final Score gameScore = session.hudEntities().gameScore();
+        final Score highScore = session.hudEntities().highScore();
 
         drawScore(gameScore, SCORE_TEXT, arcadeFont8(), SCORE_TEXT_COLOR, tilesPx(1), tilesPx(1));
 
@@ -98,7 +98,7 @@ public abstract class Arcade_HeadsUpDisplay_Renderer
     }
 
     private void drawLevelCounter(GameSession session, CanvasRenderingComp canvasRendering) {
-        final LevelCounter levelCounter = session.hudEntities().theOne(LevelCounter.class);
+        final LevelCounter levelCounter = session.hudEntities().levelCounter();
         final RectShort[] bonusSymbolSprites = bonusSymbolSprites();
         final float y = canvasRendering.unscaledHeight() - tilesPx(2) + 2;
         float x = canvasRendering.unscaledWidth() - tilesPx(4);
@@ -109,7 +109,7 @@ public abstract class Arcade_HeadsUpDisplay_Renderer
     }
 
     private void drawLivesCounter(GameSession session, CanvasRenderingComp canvasRendering) {
-        final LivesCounter livesCounter = session.hudEntities().theOne(LivesCounter.class);
+        final LivesCounter livesCounter = session.hudEntities().livesCounter();
         final int count = livesCounter.data().numLives();
         final RectShort sprite = livesCounterSymbol();
         final float x = tilesPx(2);

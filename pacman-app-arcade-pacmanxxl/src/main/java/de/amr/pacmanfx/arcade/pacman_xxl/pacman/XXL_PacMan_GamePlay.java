@@ -23,7 +23,7 @@ import static java.util.Objects.requireNonNull;
 
 public class XXL_PacMan_GamePlay extends ArcadePacMan_GamePlay {
 
-    private static final int[] DEMOLEVEL_NUMBERS = { 1, 3, 6, 10, 14, 18 };
+    private static final int[] DEMO_LEVEL_NUMBERS = { 1, 3, 6, 10, 14, 18 };
 
     @Override
     public GameLevel buildDemoLevel(GameContext game) {
@@ -36,7 +36,7 @@ public class XXL_PacMan_GamePlay extends ArcadePacMan_GamePlay {
         worldMapManager.setSelectionMode(WorldMapSelectionMode.NO_CUSTOM_MAPS);
 
         // Select random (standard) level with different map and map color scheme for each choice
-        final int levelNumber = DEMOLEVEL_NUMBERS[randomInt(0, DEMOLEVEL_NUMBERS.length)];
+        final int levelNumber = DEMO_LEVEL_NUMBERS[randomInt(0, DEMO_LEVEL_NUMBERS.length)];
         final GameLevel level = createLevel(game, levelNumber);
 
         final Pac pac = level.entities().pac();
@@ -53,10 +53,10 @@ public class XXL_PacMan_GamePlay extends ArcadePacMan_GamePlay {
         session.setLevel(level);
         session.setAttractMode(true);
 
-        ScoreSystem.setLevelNumber(session.score(), levelNumber);
+        ScoreSystem.setLevelNumber(session.hudEntities().gameScore(), levelNumber);
 
         final LevelCounterSystem levelCounterSystem = game.variant().systems().levelCounterSystem();
-        final LevelCounter levelCounter = session.hudEntities().theOne(LevelCounter.class);
+        final LevelCounter levelCounter = session.hudEntities().levelCounter();
         levelCounterSystem.enableCounter(levelCounter, false);
 
         return level;
