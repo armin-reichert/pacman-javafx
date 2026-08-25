@@ -42,7 +42,7 @@ public final class Common_PacManDyingState extends GameState {
         final GameLevel level = session.level();
         final Pac pac = level.entities().pac();
 
-        session.gateKeeper().resetCounterAndSetEnabled(true);
+        level.gateKeeper().resetCounterAndSetEnabled(true);
 
         level.huntingTimerStrategy().stop();
 

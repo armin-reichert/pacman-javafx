@@ -125,8 +125,18 @@ public final class ArcadeHouseGateKeeper {
     private int          globalCounterValue;
     private boolean      globalCounterEnabled;
 
-    public ArcadeHouseGateKeeper() {
-        reset();
+    public ArcadeHouseGateKeeper(int levelNumber) {
+        pacStarvingLimit = levelNumber < 5 ? 240 : 180; // 4 sec : 3 sec
+        Arrays.fill(ghostLimits, (byte) 0);
+        if (levelNumber == 1) {
+            ghostLimits[GhostPersonality.CYAN_GHOST_BASHFUL.ordinal()] = 30;
+            ghostLimits[GhostPersonality.ORANGE_GHOST_POKEY.ordinal()] = 60;
+        } else if (levelNumber == 2) {
+            ghostLimits[GhostPersonality.ORANGE_GHOST_POKEY.ordinal()] = 50;
+        }
+        Arrays.fill(ghostCounters, 0);
+        globalCounterValue = 0;
+        globalCounterEnabled = false;
     }
 
     public void reset() {
@@ -139,20 +149,6 @@ public final class ArcadeHouseGateKeeper {
 
     public void setGhostReleasedCallback(BiConsumer<GameLevel, Ghost> callback) {
         ghostReleasedCallback = requireNonNull(callback);
-    }
-
-    public void setLevelNumber(int levelNumber) {
-        pacStarvingLimit = levelNumber < 5 ? 240 : 180; // 4 sec : 3 sec
-        Arrays.fill(ghostLimits, (byte) 0);
-        if (levelNumber == 1) {
-            ghostLimits[GhostPersonality.CYAN_GHOST_BASHFUL.ordinal()] = 30;
-            ghostLimits[GhostPersonality.ORANGE_GHOST_POKEY.ordinal()] = 60;
-        } else if (levelNumber == 2) {
-            ghostLimits[GhostPersonality.ORANGE_GHOST_POKEY.ordinal()] = 50;
-        }
-        Arrays.fill(ghostCounters, 0);
-        globalCounterValue = 0;
-        globalCounterEnabled = false;
     }
 
     private Optional<String> checkReleaseOfGhost(GameLevel level, Ghost prisoner, PacDigestionSystem digestionSystem) {

@@ -11,7 +11,6 @@ import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.MessageView;
 import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
-import de.amr.pacmanfx.core.gameplay.ArcadeHouseGateKeeper;
 import de.amr.pacmanfx.core.gameplay.hunt.GamePlayStep;
 import de.amr.pacmanfx.core.gamestate.FrameState;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -33,8 +32,6 @@ public class GameSession {
     private GameLevel level;
 
     private final QuerySet<GameEntity> hudEntities = new QuerySet<>();
-
-    private ArcadeHouseGateKeeper gateKeeper;
 
     private boolean attractMode;
 
@@ -61,7 +58,6 @@ public class GameSession {
         this.numLives = Validations.requireNonNegativeInt(numLives);
         this.cheats = cheats;
         this.hud = new HUDState();
-        this.gateKeeper = new ArcadeHouseGateKeeper();
 
         newFrameState(0);
 
@@ -106,14 +102,6 @@ public class GameSession {
 
     public QuerySet<GameEntity> hudEntities() {
         return hudEntities;
-    }
-
-    public void setGateKeeper(ArcadeHouseGateKeeper gateKeeper) {
-        this.gateKeeper = gateKeeper;
-    }
-
-    public ArcadeHouseGateKeeper gateKeeper() {
-        return gateKeeper;
     }
 
     public HUDState hud() {

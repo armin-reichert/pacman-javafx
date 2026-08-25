@@ -19,7 +19,6 @@ import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
 import de.amr.pacmanfx.core.event.gameplay.LevelStartedEvent;
-import de.amr.pacmanfx.core.gameplay.ArcadeHouseGateKeeper;
 import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -88,10 +87,6 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         requireNonNull(game);
         final GameSession session = game.session();
 
-        final ArcadeHouseGateKeeper gateKeeper = new ArcadeHouseGateKeeper();
-        gateKeeper.setGhostReleasedCallback(this::onGhostReleasedFromHouse);
-        session.setGateKeeper(gateKeeper);
-
         session.setNumLives(game.variant().initialLifeCount());
         session.setCutScenesEnabled(true);
         session.setLevel(null);
@@ -129,8 +124,10 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         final HuntingTimer huntingTimer = new HuntingTimer("Arcade Pac-Man Hunting Timer", game.variant().rules().numHuntingPhases());
 
         final GameLevel level = new GameLevel(levelNumber, worldMap, entities, huntingTimer);
-        session.setLevel(level);
 
+        level.gateKeeper().setGhostReleasedCallback(this::onGhostReleasedFromHouse);
+
+        session.setLevel(level);
         session.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
 
         final GameRules rules = game.variant().rules();
@@ -212,8 +209,6 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
         session.setLevel(level);
         session.setAttractMode(true);
-
-        session.gateKeeper().setLevelNumber(1);
 
         ScoreSystem.setLevelNumber(session.score(), 1);
 

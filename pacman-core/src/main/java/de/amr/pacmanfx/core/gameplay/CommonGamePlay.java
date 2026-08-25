@@ -86,7 +86,6 @@ public abstract class CommonGamePlay implements GamePlay {
         session.setLevel(level);
         session.setAttractMode(false);
         ScoreSystem.setLevelNumber(session.score(), levelNumber);
-        session.gateKeeper().setLevelNumber(levelNumber);
 
         return level;
     }
@@ -130,7 +129,7 @@ public abstract class CommonGamePlay implements GamePlay {
         collisionHandler.setDoubleChecked(rules.actorCollisionRules().isCollisionDoubleChecked());
 
         level.huntingTimerStrategy().update(rules, level.number());
-        session.gateKeeper().unlockGhostIfPossible(game, level);
+        level.gateKeeper().unlockGhostIfPossible(game, level);
 
         if (pac.power().ends()) {
             game.eventManager().publishGameEvent(new PacPowerEndsEvent(pac));

@@ -151,7 +151,6 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         );
         pac.autoSteering().setSteering(steering);
 
-        session.gateKeeper().setLevelNumber(1);
         ScoreSystem.setLevelNumber(session.score(), 1);
 
         final LevelCounterSystem levelCounterSystem = game.variant().systems().levelCounterSystem();

@@ -215,10 +215,6 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         setStartLevelNumber(session, TengenMsPacMan_GameVariantUIConfig.DEFAULT_START_LEVEL);
         setNumContinues(session,     TengenMsPacMan_GameVariantUIConfig.DEFAULT_NUM_CONTINUES);
 
-        //TODO We just use the Arcade logic here, no idea how it has been implemented in NES Tengen Ms. Pac-Man
-        final ArcadeHouseGateKeeper gateKeeper = new ArcadeHouseGateKeeper();
-        session.setGateKeeper(gateKeeper);
-
         session.setNumLives(game.variant().initialLifeCount());
         session.setCutScenesEnabled(true);
         session.setLevel(null);
@@ -342,7 +338,6 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         session.setLevel(demoLevel);
         session.setAttractMode(true);
 
-        session.gateKeeper().setLevelNumber(1);
         ScoreSystem.setLevelNumber(session.score(), 1);
 
         return demoLevel;

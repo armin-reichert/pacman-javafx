@@ -6,6 +6,7 @@ package de.amr.pacmanfx.core.level;
 
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.entities.Ghost;
+import de.amr.pacmanfx.core.gameplay.ArcadeHouseGateKeeper;
 import de.amr.pacmanfx.core.model.rules.HuntingTimerStrategy;
 import de.amr.pacmanfx.core.model.world.map.FoodState;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -30,6 +31,7 @@ public class GameLevel {
     private final List<Integer> bonusSymbolCodes = new ArrayList<>();
 
     private final HuntingTimerStrategy huntingTimerStrategy;
+    private final ArcadeHouseGateKeeper gateKeeper;
 
     private byte currentBonusIndex; // -1=no bonus, 0=first, 1=second
 
@@ -40,11 +42,10 @@ public class GameLevel {
         this.worldMap = requireNonNull(worldMap);
         this.entities = requireNonNull(entities);
         this.huntingTimerStrategy = requireNonNull(huntingTimerStrategy);
-
-        foodState = new FoodState(worldMap.foodLayer());
-
-        heartbeat = new Pulse(10, Pulse.State.OFF);
-        currentBonusIndex = -1;
+        this.gateKeeper = new ArcadeHouseGateKeeper(number);
+        this.foodState = new FoodState(worldMap.foodLayer());
+        this.heartbeat = new Pulse(10, Pulse.State.OFF);
+        this.currentBonusIndex = -1;
 
         huntingTimerStrategy.reset();
     }
@@ -79,6 +80,10 @@ public class GameLevel {
      */
     public HuntingTimerStrategy huntingTimerStrategy() {
         return huntingTimerStrategy;
+    }
+
+    public ArcadeHouseGateKeeper gateKeeper() {
+        return gateKeeper;
     }
 
     // Ghost kill chain

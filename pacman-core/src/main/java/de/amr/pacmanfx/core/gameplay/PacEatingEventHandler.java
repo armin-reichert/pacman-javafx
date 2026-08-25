@@ -57,7 +57,7 @@ public class PacEatingEventHandler implements DefaultGameEventListener {
         game.variant().gamePlay().scorePoints(game, rules.scoringRules().pointsForPellet(), level.number());
 
         // The "gatekeeper" of the ghost house has counters for the eaten food driving its behavior
-        session.gateKeeper().registerFoodEaten(level);
+        level.gateKeeper().registerFoodEaten(level);
 
         // Update Elroy state of red ghost (Arcade Pac-Man only)
         systems().ghostState().updateElroyState(game);
@@ -76,7 +76,7 @@ public class PacEatingEventHandler implements DefaultGameEventListener {
         game.variant().gamePlay().scorePoints(game, rules.scoringRules().pointsForEnergizer(), level.number());
 
         // The "gatekeeper" of the ghost house has counters for the eaten food driving its behavior
-        session.gateKeeper().registerFoodEaten(level);
+        level.gateKeeper().registerFoodEaten(level);
 
         // Update Elroy state of red ghost (Arcade Pac-Man only)
         systems().ghostState().updateElroyState(game);
