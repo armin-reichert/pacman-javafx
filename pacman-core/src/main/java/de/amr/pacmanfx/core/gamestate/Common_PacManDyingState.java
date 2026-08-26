@@ -72,20 +72,13 @@ public final class Common_PacManDyingState extends GameState {
         final Pac pac = level.entities().pac();
         final long tick = timer().tickCount();
 
-        if (timer().hasExpired()) {
-            if (session.isAttractMode()) {
-                gameFlow.enterGameState(game, CommonGameStateID.GAME_OVER);
-            }
-            else {
-                session.setNumLives(session.numLives() - 1);
-                gameFlow.enterGameState(game, session.numLives() == 0
-                    ? CommonGameStateID.GAME_OVER
-                    : CommonGameStateID.GAME_OR_LEVEL_STARTING);
-            }
+        if (tick == 0) {
+            // At this point in time, the "dying" animation has been selected. However, it could
+            // be in the state from the previous playing (it is cached), so we reset it here.
+            systems.actorSpriteAnimController().resetSelected(pac);
         }
         else if (tick == timing.hideGhostsTick()) {
             level.entities().ghosts().forEach(GameEntity::hide);
-            systems.actorSpriteAnimController().resetSelected(pac);
         }
         else if (tick == timing.animationStartTick()) {
             systems.pacAnimation().setDisabled(pac, false); // "dying" animation can run now
@@ -99,6 +92,19 @@ public final class Common_PacManDyingState extends GameState {
             level.entities().optBonus().ifPresent(bonus -> level.entities().remove(bonus));
             game.eventManager().publishGameEvent(new PacDeadEvent(pac));
         }
+
+        if (timer().hasExpired()) {
+            if (session.isAttractMode()) {
+                gameFlow.enterGameState(game, CommonGameStateID.GAME_OVER);
+            }
+            else {
+                session.setNumLives(session.numLives() - 1);
+                gameFlow.enterGameState(game, session.numLives() == 0
+                    ? CommonGameStateID.GAME_OVER
+                    : CommonGameStateID.GAME_OR_LEVEL_STARTING);
+            }
+        }
+
     }
 
     @Override
