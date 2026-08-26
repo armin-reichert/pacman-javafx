@@ -4,11 +4,11 @@
 
 package de.amr.pacmanfx.core.entities.ghost.comp;
 
-import de.amr.pacmanfx.core.ecs.EntityComponent;
+import de.amr.pacmanfx.core.ecs.GameEntityComp;
 
 import static java.util.Objects.requireNonNull;
 
-public class ElroyComp implements EntityComponent {
+public class ElroyComp implements GameEntityComp {
 
     public enum Boost { NONE, MEDIUM, LARGE }
 

@@ -82,8 +82,8 @@ public class WorldNavigationSystem {
         navigation.setWishDir(dir);
     }
 
-    public void clearTargetTile(GameEntity gameEntity) {
-        gameEntity.optComp(WorldNavigationComp.class).ifPresent(comp -> comp.setTargetTile(null));
+    public void clearTargetTile(GameEntity entity) {
+        entity.optComp(WorldNavigationComp.class).ifPresent(comp -> comp.setTargetTile(null));
     }
 
     public void requestTurnBack(GameEntity actor) {

@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.uilib.entities3D.levelcounter.comp;
 
 import de.amr.basics.Disposable;
-import de.amr.pacmanfx.core.ecs.EntityComponent;
+import de.amr.pacmanfx.core.ecs.GameEntityComp;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.Animation;
@@ -16,7 +16,7 @@ import javafx.scene.Node;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
 
-public class LevelCounter3DAnimationComp implements EntityComponent, Disposable {
+public class LevelCounter3DAnimationComp implements GameEntityComp, Disposable {
 
     private ManagedAnimation spinningAnimation;
 

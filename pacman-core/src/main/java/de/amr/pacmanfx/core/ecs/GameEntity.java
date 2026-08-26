@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.core.ecs;
 
 import de.amr.basics.Disposable;
-import de.amr.pacmanfx.core.ComponentRegistry;
+import de.amr.basics.Composition;
 import de.amr.pacmanfx.core.ecs.comp.MovementComp;
 import de.amr.pacmanfx.core.ecs.comp.PositionComp;
 import de.amr.pacmanfx.core.ecs.comp.VisibilityComp;
@@ -15,12 +15,13 @@ import java.util.Optional;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Game entities are composed of entity (pure data) components. Entity "systems" use these components.
+ * Entities are composed of components. Entity "systems" are mostly stateless classes
+ * working on entities.
  * <p>
- * Each game entity by default contains the components "position" and "visibility".
+ * Each entity by default contains the components "position" and "visibility".
  * </p>
  */
-public class GameEntity extends ComponentRegistry<EntityComponent> implements Disposable {
+public class GameEntity extends Composition<GameEntityComp> implements Disposable {
 
     protected String name;
 
@@ -59,7 +60,7 @@ public class GameEntity extends ComponentRegistry<EntityComponent> implements Di
      * Resets all components (position, visibility etc.) to their default values.
      */
     public void reset() {
-        componentsNoCopy().forEach(EntityComponent::reset);
+        componentsNoCopy().forEach(GameEntityComp::reset);
     }
 
     public final void show() {

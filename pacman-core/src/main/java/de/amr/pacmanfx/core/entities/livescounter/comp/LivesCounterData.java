@@ -4,9 +4,9 @@
 
 package de.amr.pacmanfx.core.entities.livescounter.comp;
 
-import de.amr.pacmanfx.core.ecs.EntityComponent;
+import de.amr.pacmanfx.core.ecs.GameEntityComp;
 
-public class LivesCounterData implements EntityComponent {
+public class LivesCounterData implements GameEntityComp {
 
     private int maxLives;
 

@@ -4,9 +4,9 @@
 
 package de.amr.pacmanfx.core.entities.clapperboard.comp;
 
-import de.amr.pacmanfx.core.ecs.EntityComponent;
+import de.amr.pacmanfx.core.ecs.GameEntityComp;
 
-public class ClapperboardStateComp implements EntityComponent {
+public class ClapperboardStateComp implements GameEntityComp {
 
     private ClapperboardState state;
     private boolean textVisible;

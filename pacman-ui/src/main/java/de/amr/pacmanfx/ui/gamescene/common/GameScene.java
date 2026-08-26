@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.gamescene.common;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.ComponentRegistry;
+import de.amr.basics.Composition;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
@@ -35,31 +35,31 @@ public class GameScene implements GameSceneController, DefaultGameEventListener,
 
     private final GameAppContext app;
 
-    private final ComponentRegistry<GameSceneComponent> componentRegistry = new ComponentRegistry<>();
+    private final Composition<GameSceneComponent> composition = new Composition<>();
 
     protected GameScene(GameAppContext app) {
         this.app = requireNonNull(app);
     }
 
     public Optional<CanvasRenderingComp> optCanvasRendering() {
-        return componentRegistry.optComp(CanvasRenderingComp.class);
+        return composition.optComp(CanvasRenderingComp.class);
     }
 
     public CanvasRenderingComp reqCanvasRendering() {
-        return componentRegistry.reqComp(CanvasRenderingComp.class);
+        return composition.reqComp(CanvasRenderingComp.class);
     }
 
     public ActionBindingsSupport actionBindingsSupport() {
-        ActionBindingsSupport actionBindings = componentRegistry.optComp(ActionBindingsSupport.class).orElse(null);
+        ActionBindingsSupport actionBindings = composition.optComp(ActionBindingsSupport.class).orElse(null);
         if (actionBindings == null) {
-            componentRegistry.setComp(ActionBindingsSupport.class, new ActionBindingsSupport());
+            composition.setComp(ActionBindingsSupport.class, new ActionBindingsSupport());
             Logger.info("Added ActionBindingsSupport to " + getClass().getSimpleName());
         }
-        return componentRegistry.reqComp(ActionBindingsSupport.class);
+        return composition.reqComp(ActionBindingsSupport.class);
     }
 
-    public ComponentRegistry<GameSceneComponent> components() {
-        return componentRegistry;
+    public Composition<GameSceneComponent> components() {
+        return composition;
     }
 
     public GameAppContext app() {
@@ -110,7 +110,7 @@ public class GameScene implements GameSceneController, DefaultGameEventListener,
 
     @Override
     public void dispose() {
-        componentRegistry.dispose();
+        composition.dispose();
     }
 
     // --- Interface "GameSceneController"
@@ -123,7 +123,7 @@ public class GameScene implements GameSceneController, DefaultGameEventListener,
     @Override
     public final void deactivate() {
         onDeactivate();
-        componentRegistry.optComp(ActionBindingsSupport.class).ifPresent(comp -> comp.bindingsMap().dispose());
+        composition.optComp(ActionBindingsSupport.class).ifPresent(comp -> comp.bindingsMap().dispose());
         optSoundEffects().ifPresent(GameSoundEffects::stopAll);
     }
 
@@ -149,8 +149,8 @@ public class GameScene implements GameSceneController, DefaultGameEventListener,
 
     @Override
     public void onInput() {
-        if (componentRegistry.hasComp(ActionBindingsSupport.class)) {
-            componentRegistry.reqComp(ActionBindingsSupport.class)
+        if (composition.hasComp(ActionBindingsSupport.class)) {
+            composition.reqComp(ActionBindingsSupport.class)
                 .bindingsMap()
                 .executeMatchingAction(app());
         }

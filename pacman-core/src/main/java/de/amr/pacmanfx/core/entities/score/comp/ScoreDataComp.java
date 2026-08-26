@@ -1,10 +1,10 @@
 package de.amr.pacmanfx.core.entities.score.comp;
 
-import de.amr.pacmanfx.core.ecs.EntityComponent;
+import de.amr.pacmanfx.core.ecs.GameEntityComp;
 
 import java.time.LocalDate;
 
-public class ScoreDataComp implements EntityComponent {
+public class ScoreDataComp implements GameEntityComp {
 
     private boolean enabled;
 

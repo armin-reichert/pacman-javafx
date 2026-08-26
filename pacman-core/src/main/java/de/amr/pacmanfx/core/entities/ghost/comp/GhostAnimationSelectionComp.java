@@ -1,9 +1,9 @@
 package de.amr.pacmanfx.core.entities.ghost.comp;
 
-import de.amr.pacmanfx.core.ecs.EntityComponent;
+import de.amr.pacmanfx.core.ecs.GameEntityComp;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 
-public class GhostAnimationSelectionComp implements EntityComponent {
+public class GhostAnimationSelectionComp implements GameEntityComp {
 
     private CommonSpriteAnimationID animationID;
 

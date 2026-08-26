@@ -1,13 +1,13 @@
 package de.amr.pacmanfx.core.entities.score.comp;
 
-import de.amr.pacmanfx.core.ecs.EntityComponent;
+import de.amr.pacmanfx.core.ecs.GameEntityComp;
 
 import java.io.File;
 import java.time.format.DateTimeFormatter;
 
 import static java.util.Objects.requireNonNull;
 
-public class ScorePersistencyComp implements EntityComponent {
+public class ScorePersistencyComp implements GameEntityComp {
 
     public static final String GITHUB_PACMAN_JAVAFX = "https://github.com/armin-reichert/pacman-javafx";
 

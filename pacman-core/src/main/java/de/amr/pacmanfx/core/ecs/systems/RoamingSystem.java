@@ -33,9 +33,9 @@ public class RoamingSystem {
          </cite>
      */
     public <E extends GameEntity> void roam(GameLevel level, E gameEntity,
-        WorldNavigationComp navigation,
-        WorldMovementPolicy<E> worldMovementPolicy,
-        MovementSystem motor, float speed)
+                                            WorldNavigationComp navigation,
+                                            WorldMovementPolicy<E> worldMovementPolicy,
+                                            MovementSystem motor, float speed)
     {
         final Vector2i tile = gameEntity.pos().tile();
         final boolean teleporting = level.worldMap().terrainLayer().isTileInPortalSpace(tile);

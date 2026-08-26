@@ -1,9 +1,9 @@
 package de.amr.pacmanfx.core.ecs.comp;
 
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimFacade;
-import de.amr.pacmanfx.core.ecs.EntityComponent;
+import de.amr.pacmanfx.core.ecs.GameEntityComp;
 
-public class SpriteAnimationComp implements EntityComponent {
+public class SpriteAnimationComp implements GameEntityComp {
 
     private SpriteAnimFacade facade = SpriteAnimFacade.EMPTY_SPRITE_ANIMATION_FACADE;
 

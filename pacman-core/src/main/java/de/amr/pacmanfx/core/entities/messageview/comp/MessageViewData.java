@@ -4,12 +4,12 @@
 
 package de.amr.pacmanfx.core.entities.messageview.comp;
 
-import de.amr.pacmanfx.core.ecs.EntityComponent;
+import de.amr.pacmanfx.core.ecs.GameEntityComp;
 import de.amr.pacmanfx.core.level.MessageType;
 
 import java.util.Objects;
 
-public class MessageViewData implements EntityComponent {
+public class MessageViewData implements GameEntityComp {
 
     private MessageType messageType = MessageType.NO_MESSAGE;
 

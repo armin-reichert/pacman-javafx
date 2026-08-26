@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.core.entities.bonus.comp;
 
-import de.amr.pacmanfx.core.ecs.EntityComponent;
+import de.amr.pacmanfx.core.ecs.GameEntityComp;
 
-public record BonusDataComp(int symbolCode, int points) implements EntityComponent {
+public record BonusDataComp(int symbolCode, int points) implements GameEntityComp {
 }

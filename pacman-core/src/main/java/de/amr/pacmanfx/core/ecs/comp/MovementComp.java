@@ -5,9 +5,9 @@
 package de.amr.pacmanfx.core.ecs.comp;
 
 import de.amr.basics.math.Vector2f;
-import de.amr.pacmanfx.core.ecs.EntityComponent;
+import de.amr.pacmanfx.core.ecs.GameEntityComp;
 
-public class MovementComp implements EntityComponent {
+public class MovementComp implements GameEntityComp {
 
     private float vx;
     private float vy;

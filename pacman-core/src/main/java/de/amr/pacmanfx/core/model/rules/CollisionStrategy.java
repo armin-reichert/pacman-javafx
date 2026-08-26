@@ -6,7 +6,6 @@ package de.amr.pacmanfx.core.model.rules;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.systems.PositionSystem;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.core.ecs.systems.PositionSystem.boundingBox;

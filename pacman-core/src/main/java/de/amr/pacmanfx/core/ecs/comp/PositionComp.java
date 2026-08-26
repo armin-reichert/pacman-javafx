@@ -6,12 +6,12 @@ package de.amr.pacmanfx.core.ecs.comp;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.ecs.EntityComponent;
+import de.amr.pacmanfx.core.ecs.GameEntityComp;
 import de.amr.pacmanfx.core.ecs.systems.PositionSystem;
 
 import static java.util.Objects.requireNonNull;
 
-public final class PositionComp implements EntityComponent {
+public final class PositionComp implements GameEntityComp {
 
     private float x;
     private float y;

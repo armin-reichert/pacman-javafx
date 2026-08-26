@@ -5,11 +5,11 @@
 package de.amr.pacmanfx.core.entities.bonus.comp;
 
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.core.ecs.EntityComponent;
+import de.amr.pacmanfx.core.ecs.GameEntityComp;
 
 import java.util.Objects;
 
-public class BonusStateComp implements EntityComponent {
+public class BonusStateComp implements GameEntityComp {
 
     private boolean edibleStateExpired;
 

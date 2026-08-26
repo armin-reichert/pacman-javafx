@@ -2,9 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core;
-
-import de.amr.basics.Disposable;
+package de.amr.basics;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -14,26 +12,25 @@ import java.util.SequencedCollection;
 import static java.util.Objects.requireNonNull;
 
 /**
- * A component registry.
+ * A component composition
  *
- * @param <C> the component base type e.g. {@link de.amr.pacmanfx.core.ecs.EntityComponent}
+ * @param <C> the common component base type
  */
-public class ComponentRegistry<C> implements Disposable {
+public class Composition<C> implements Disposable {
 
-    private final LinkedHashMap<Class<? extends C>, C> componentMap = new LinkedHashMap<>(10);
+    private final LinkedHashMap<Class<? extends C>, C> componentsByType = new LinkedHashMap<>(10);
 
-    public ComponentRegistry() {
-    }
+    public Composition() {}
 
     protected SequencedCollection<C> componentsNoCopy() {
-        return componentMap.sequencedValues();
+        return componentsByType.sequencedValues();
     }
 
     /**
      * @return a copy of the set of registered components in insertion-order
      */
     public SequencedCollection<C> components() {
-        return List.copyOf(componentMap.sequencedValues());
+        return List.copyOf(componentsByType.sequencedValues());
     }
 
     @Override
@@ -43,7 +40,7 @@ public class ComponentRegistry<C> implements Disposable {
                 ((Disposable) component).dispose();
             }
         }
-        componentMap.clear();
+        componentsByType.clear();
     }
 
     /**
@@ -56,15 +53,15 @@ public class ComponentRegistry<C> implements Disposable {
     public final <T extends C> void setComp(Class<T> type, T component) {
         requireNonNull(type);
         requireNonNull(component);
-        if (componentMap.containsKey(type)) {
+        if (componentsByType.containsKey(type)) {
             throw new IllegalArgumentException("Component for class: " + type.getSimpleName() + " is already registered!");
         }
-        componentMap.put(type, component);
+        componentsByType.put(type, component);
     }
 
     public final <T extends C> void removeComp(Class<T> type) {
         if (hasComp(type)) {
-            var comp = componentMap.remove(type);
+            var comp = componentsByType.remove(type);
             if (comp instanceof Disposable disposable) {
                 disposable.dispose();
             }
@@ -80,10 +77,10 @@ public class ComponentRegistry<C> implements Disposable {
      */
     public final <T extends C> T reqComp(Class<T> type) {
         requireNonNull(type);
-        if (!componentMap.containsKey(type)) {
+        if (!componentsByType.containsKey(type)) {
             throw new IllegalArgumentException("No component found for class %s".formatted(type.getSimpleName()));
         }
-        final C component = componentMap.get(type);
+        final C component = componentsByType.get(type);
         return type.cast(component);
     }
 
@@ -96,7 +93,7 @@ public class ComponentRegistry<C> implements Disposable {
      */
     public final <T extends C> boolean hasComp(Class<T> type) {
         requireNonNull(type);
-        return componentMap.containsKey(type);
+        return componentsByType.containsKey(type);
     }
 
     /**
@@ -108,7 +105,7 @@ public class ComponentRegistry<C> implements Disposable {
      */
     public final <T extends C> Optional<T> optComp(Class<T> type) {
         requireNonNull(type);
-        final C component = componentMap.get(type);
+        final C component = componentsByType.get(type);
         return Optional.ofNullable(component).map(type::cast);
     }
 }

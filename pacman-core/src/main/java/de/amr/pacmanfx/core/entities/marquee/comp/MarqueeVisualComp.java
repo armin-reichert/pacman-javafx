@@ -4,9 +4,9 @@
 
 package de.amr.pacmanfx.core.entities.marquee.comp;
 
-import de.amr.pacmanfx.core.ecs.EntityComponent;
+import de.amr.pacmanfx.core.ecs.GameEntityComp;
 
-public class MarqueeVisualComp implements EntityComponent {
+public class MarqueeVisualComp implements GameEntityComp {
 
     private String bulbOnColor = "#fff";
     private String bulbOffColor = "333";

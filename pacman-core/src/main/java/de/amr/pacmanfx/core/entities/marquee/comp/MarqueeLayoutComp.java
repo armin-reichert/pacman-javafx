@@ -5,10 +5,10 @@
 package de.amr.pacmanfx.core.entities.marquee.comp;
 
 
-import de.amr.pacmanfx.core.ecs.EntityComponent;
+import de.amr.pacmanfx.core.ecs.GameEntityComp;
 import de.amr.pacmanfx.core.ecs.comp.PositionComp;
 
-public class MarqueeLayoutComp implements EntityComponent {
+public class MarqueeLayoutComp implements GameEntityComp {
 
     private int numBulbsHorizontally;
     private int numBulbsVertically;

@@ -1,6 +1,6 @@
 package de.amr.pacmanfx.uilib.entities3D.ghost.comp;
 
-import de.amr.pacmanfx.core.ecs.EntityComponent;
+import de.amr.pacmanfx.core.ecs.GameEntityComp;
 import de.amr.pacmanfx.uilib.PacMan3DModel;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -16,7 +16,7 @@ import javafx.scene.transform.Translate;
 
 import static java.util.Objects.requireNonNull;
 
-public class Ghost3DViewComp implements EntityComponent {
+public class Ghost3DViewComp implements GameEntityComp {
 
     private final ObjectProperty<DrawMode> drawMode = new SimpleObjectProperty<>(DrawMode.FILL);
 

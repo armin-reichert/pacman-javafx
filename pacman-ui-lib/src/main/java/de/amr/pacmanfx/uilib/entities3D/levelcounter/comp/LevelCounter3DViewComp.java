@@ -4,11 +4,11 @@
 
 package de.amr.pacmanfx.uilib.entities3D.levelcounter.comp;
 
-import de.amr.pacmanfx.core.ecs.EntityComponent;
+import de.amr.pacmanfx.core.ecs.GameEntityComp;
 import de.amr.pacmanfx.uilib.DisposableGraphicsObject;
 import javafx.scene.Group;
 
-public class LevelCounter3DViewComp implements EntityComponent, DisposableGraphicsObject {
+public class LevelCounter3DViewComp implements GameEntityComp, DisposableGraphicsObject {
 
     private Group root;
 

@@ -11,9 +11,9 @@ import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DViewComp;
 
 public class LivesCounter3DViewSystem {
 
-    public static void startTracking(LivesCounter livesCounter, GameEntity gameEntity) {
+    public static void startTracking(LivesCounter livesCounter, GameEntity entity) {
         final LivesCounter3DViewComp livesCounter3D = livesCounter.reqComp(LivesCounter3DViewComp.class);
-        final Pac3DViewComp pac3D =  gameEntity.reqComp(Pac3DViewComp.class);
+        final Pac3DViewComp pac3D =  entity.reqComp(Pac3DViewComp.class);
         for (NodePositionTracker tracker : livesCounter3D.trackers()) {
             tracker.startTrackingTarget(pac3D.root());
         }

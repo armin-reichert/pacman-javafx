@@ -1,6 +1,6 @@
 package de.amr.pacmanfx.uilib.entities3D.ghost.comp;
 
-import de.amr.pacmanfx.core.ecs.EntityComponent;
+import de.amr.pacmanfx.core.ecs.GameEntityComp;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
@@ -8,7 +8,7 @@ import de.amr.pacmanfx.uilib.entities3D.ghost.anim.GhostBrakeAnimation3D;
 import de.amr.pacmanfx.uilib.entities3D.ghost.anim.GhostDressAnimation3D;
 import de.amr.pacmanfx.uilib.entities3D.ghost.anim.GhostFlashingAnimation3D;
 
-public class Ghost3DAnimationComp implements EntityComponent {
+public class Ghost3DAnimationComp implements GameEntityComp {
 
     private ManagedAnimation flashing;
     private ManagedAnimation dressMovement;

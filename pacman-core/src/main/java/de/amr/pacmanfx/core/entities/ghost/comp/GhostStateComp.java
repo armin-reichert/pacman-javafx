@@ -4,11 +4,11 @@
 
 package de.amr.pacmanfx.core.entities.ghost.comp;
 
-import de.amr.pacmanfx.core.ecs.EntityComponent;
+import de.amr.pacmanfx.core.ecs.GameEntityComp;
 
 import static java.util.Objects.requireNonNull;
 
-public class GhostStateComp implements EntityComponent {
+public class GhostStateComp implements GameEntityComp {
 
     public static final GhostState DEFAULT_STATE = GhostState.LOCKED;
 

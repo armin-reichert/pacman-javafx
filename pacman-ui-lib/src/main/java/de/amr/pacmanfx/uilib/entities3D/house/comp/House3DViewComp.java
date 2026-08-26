@@ -3,7 +3,7 @@ package de.amr.pacmanfx.uilib.entities3D.house.comp;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.core.ecs.EntityComponent;
+import de.amr.pacmanfx.core.ecs.GameEntityComp;
 import de.amr.pacmanfx.core.entities.house.comp.HouseFloorplanComp;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.uilib.DisposableGraphicsObject;
@@ -22,7 +22,7 @@ import static de.amr.basics.util.Ufx.colorWithOpacity;
 import static de.amr.basics.util.Ufx.coloredPhongMaterial;
 import static java.util.Objects.requireNonNull;
 
-public class House3DViewComp implements EntityComponent, DisposableGraphicsObject {
+public class House3DViewComp implements GameEntityComp, DisposableGraphicsObject {
 
     public static final int DOOR_VERTICAL_BAR_COUNT = 4;
 
