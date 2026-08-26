@@ -40,7 +40,9 @@ public class WorldNavigationComp implements GameEntityComp {
     //TODO: store in frame state?
     private final WorldNavigationInfo info = new WorldNavigationInfo();
 
-    public WorldNavigationComp() {}
+    public WorldNavigationComp() {
+        reset();
+    }
 
     @Override
     public void reset() {

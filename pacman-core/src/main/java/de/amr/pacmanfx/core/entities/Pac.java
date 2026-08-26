@@ -21,7 +21,7 @@ public final class Pac extends GameEntity {
     /**
      * @param name a readable name. Any honest Pac-Man and Pac-Woman should have a name! Period.
      */
-    public Pac(String name) {
+    public Pac(String name, boolean male) {
         this.name = requireNonNull(name);
 
         setComp(MovementComp.class, new MovementComp());
@@ -30,7 +30,7 @@ public final class Pac extends GameEntity {
         setComp(PacDigestionComp.class, new PacDigestionComp());
         setComp(PacPowerComp.class, new PacPowerComp());
         setComp(PacCheatsComp.class, new PacCheatsComp());
-        setComp(PacStateComp.class, new PacStateComp());
+        setComp(PacStateComp.class, new PacStateComp(male));
         setComp(SpriteAnimationComp.class, new SpriteAnimationComp());
         setComp(PacAnimationComp.class, new PacAnimationComp());
     }

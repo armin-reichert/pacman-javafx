@@ -21,16 +21,14 @@ public final class TengenMsPacMan_ActorFactory {
     private TengenMsPacMan_ActorFactory() {}
 
     public Pac createPacMan() {
-        final var pacMan = new Pac("Pac-Man");
+        final var pacMan = new Pac("Pac-Man", true);
         pacMan.reset();
-        pacMan.state().setMale(false);
         return pacMan;
     }
 
     public Pac createMsPacMan() {
-        final var msPacMan = new Pac("Ms. Pac-Man");
+        final var msPacMan = new Pac("Ms. Pac-Man", false);
         msPacMan.reset();
-        msPacMan.state().setMale(false);
         return msPacMan;
     }
 

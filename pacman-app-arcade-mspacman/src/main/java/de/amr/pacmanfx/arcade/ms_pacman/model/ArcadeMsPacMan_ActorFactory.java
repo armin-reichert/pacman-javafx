@@ -16,9 +16,7 @@ public class ArcadeMsPacMan_ActorFactory extends ArcadePacMan_ActorFactory {
     }
 
     public Pac createMsPacMan() {
-        final Pac msPacMan =  new Pac("Ms. Pac-Man");
-        msPacMan.state().setMale(false);
-        return msPacMan;
+        return new Pac("Ms. Pac-Man", false);
     }
 
     public Ghost createRedGhost() {
