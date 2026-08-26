@@ -89,7 +89,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
         final int lives = game.variant().initialLifeCount();
         session.setNumLives(lives);
-        session.hud().livesCounter().data().setMaxLives(5);
+        session.hud().livesCounter().data().setMaxLivesShown(5);
 
         session.setCutScenesEnabled(true);
         session.setLevel(null);

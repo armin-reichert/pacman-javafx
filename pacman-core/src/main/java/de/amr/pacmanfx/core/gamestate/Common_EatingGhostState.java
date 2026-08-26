@@ -5,10 +5,12 @@
 package de.amr.pacmanfx.core.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
+import de.amr.pacmanfx.core.entities.pac.comp.PacState;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 
 /**
  * When a ghost has been eaten by Pac-Man, the game play freezes for a second, the ghost is displayed by the
@@ -25,14 +27,18 @@ public final class Common_EatingGhostState extends GameState {
     @Override
     public void onEnter(GameContext game) {
         timer().restartTicks(FREEZE_TICKS);
+
+        final GameSystems systems = game.variant().systems();
+        final GameSession session = game.session();
+        final GameLevel level = session.level();
+        final Pac pac = level.entities().pac();
+
+        systems.pacState().setState(pac, PacState.SLEEPING);
+        pac.hide();
     }
 
     @Override
     public void onUpdate(GameContext game) {
-        final EntityUpdater updater = game.variant().systems().entityUpdater();
-        final GameLevel level = game.session().level();
-
-        updater.updateEntities(game, level);
         if (timer().hasExpired()) {
             game.variant().gameFlow().resumePreviousState(game);
         }
@@ -41,10 +47,13 @@ public final class Common_EatingGhostState extends GameState {
     @Override
     public void onExit(GameContext game) {
         final GameSystems systems = game.variant().systems();
-        final GameLevelEntitySet entities = game.session().level().entities();
+        final GameLevel level = game.session().level();
 
-        entities.pac().show();
-        entities.ghostsInState(GhostState.EATEN).forEach(eatenGhost ->
+        final Pac pac = level.entities().pac();
+        systems.pacState().setState(pac, PacState.ACTIVE);
+        pac.show();
+
+        level.entities().ghostsInState(GhostState.EATEN).forEach(eatenGhost ->
             systems.ghostState().changeGhostState(eatenGhost, GhostState.RETURNING_HOME));
     }
 }

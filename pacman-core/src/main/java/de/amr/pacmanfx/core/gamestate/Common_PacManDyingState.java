@@ -72,7 +72,7 @@ public final class Common_PacManDyingState extends GameState {
 
         //TODO check this
         systems.entityUpdater().updateHUD(game);
-        systems.entityUpdater().updateLevelHeartbeat(level);
+        systems.entityUpdater().updateHeartbeat(level);
         systems.entityUpdater().updatePac(game, level, pac);
 
         if (timer().hasExpired()) {

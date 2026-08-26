@@ -89,7 +89,7 @@ public class DS_ActorInfo extends GameDashboardSection {
         final Vector2i tile = actor.pos().tile();
         final Vector2i tileOffset = actor.pos().offset();
 
-        return "(%2d,%2d)+(%2d,%2d)%s".formatted(
+        return "(%2d,%2d) offset=(%2d,%2d)%s".formatted(
             tile.x(), tile.y(),
             tileOffset.x(), tileOffset.y(),
             worldNavigation.isNewTileEntered() ? " NEW" : "");
@@ -101,11 +101,11 @@ public class DS_ActorInfo extends GameDashboardSection {
         return actor.optComp(MovementComp.class).map(movement -> {
             final WorldNavigationComp navigation = actor.reqComp(WorldNavigationComp.class);
             final float speed = movement.speed() * GameConstants.SIMULATION_FPS;
-            final boolean blocked = !navigation.info().moved;
-            final String turnbackHint = navigation.isTurnBackRequested() ? "REV!" : "";
-            return blocked
-                ? "BLOCKED!"
-                : "%.2fpx/s %s (%s)%s".formatted(speed, navigation.moveDir(), navigation.wishDir(), turnbackHint);
+            final boolean moved = !navigation.info().moved;
+            final String turnbackText = navigation.isTurnBackRequested() ? "REV!" : "";
+            return moved
+                ? "STANDING STILL"
+                : "%.2fpx/s %s (%s)%s".formatted(speed, navigation.moveDir(), navigation.wishDir(), turnbackText);
         }).orElse(NO_INFO);
     }
 

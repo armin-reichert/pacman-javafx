@@ -21,15 +21,17 @@ import java.util.List;
 // Preliminary central place for calling entity updates
 public class EntityUpdater {
 
-    public void updateEntities(GameContext game, GameLevel level) {
-        updatePac(game, level, level.entities().pac());
-        updateGhosts(game, level);
-        level.entities().optBonus().ifPresent(bonus -> updateBonus(game, level, bonus));
-        updateLevelHeartbeat(level);
+    public void updateEntities(GameContext game) {
+        game.session().optLevel().ifPresent(level -> {
+            updatePac(game, level, level.entities().pac());
+            updateGhosts(game, level);
+            level.entities().optBonus().ifPresent(bonus -> updateBonus(game, level, bonus));
+            updateHeartbeat(level);
+        });
         updateHUD(game);
     }
 
-    public void updateLevelHeartbeat(GameLevel level) {
+    public void updateHeartbeat(GameLevel level) {
         level.heartbeat().triggerPulse();
     }
 
@@ -37,26 +39,32 @@ public class EntityUpdater {
         final GameSystems systems = game.variant().systems();
         final GameRules rules = game.variant().rules();
         final GameSession session = game.session();
+        final MovementSystem motor = systems.motor();
 
-        if (game.state().id() == CommonGameStateID.GAME_LEVEL_EATING_GHOST) {
-            return; // Pac-Man is invisible and frozen
-        }
+        switch (pac.state().enumValue()) {
+            case SLEEPING -> {
+                systems.worldNavigator().setMoveDirSpeed(pac, 0);
+                systems.pacAnimation().update(pac);
+                systems.actorSpriteAnimController().playSelected(pac);
+            }
+            case ACTIVE -> {
+                final ActorSpeedRules speedRules = rules.actorSpeedRules();
+                final float speed = pac.power().isActive()
+                    ? speedRules.pacSpeedWhenHasPower(game, level)
+                    : speedRules.pacSpeed(game, level);
 
-        if (pac.state().enumValue() != PacState.DEAD) {
-            final ActorSpeedRules speedRules = rules.actorSpeedRules();
-            final float speed = pac.power().isActive()
-                ? speedRules.pacSpeedWhenHasPower(game, level)
-                : speedRules.pacSpeed(game, level);
-
-            final MovementSystem motor = systems.motor();
-            systems.worldNavigator().setMoveDirSpeed(pac, speed);
-            systems.worldNavigator().tryMovingOrTeleporting(
-                level, pac, motor, systems.pacWorldMovementPolicy());
-
-            systems.pacAutoSteering().update(session, pac);
-
-            systems.pacDigestion().update(pac);
-            systems.pacPower().update(pac, rules.pacPowerFadingSeconds(level.number()));
+                systems.pacDigestion().update(pac);
+                systems.pacPower().update(pac, rules.pacPowerFadingSeconds(level.number()));
+                systems.pacAutoSteering().update(session, pac);
+                systems.worldNavigator().setMoveDirSpeed(pac, speed);
+                systems.worldNavigator().tryMovingOrTeleporting(level, pac, motor, systems.pacWorldMovementPolicy());
+                systems.pacAnimation().update(pac);
+                systems.actorSpriteAnimController().playSelected(pac);
+            }
+            case DEAD -> {
+                systems.pacAnimation().update(pac);
+                systems.actorSpriteAnimController().playSelected(pac);
+            }
         }
 
         systems.pacState().update(pac);
@@ -92,17 +100,24 @@ public class EntityUpdater {
 
     public void updateHUD(GameContext game) {
         final GameSession session = game.session();
-        final Pac pac = session.level().entities().pac();
-
-        // When a game/level starts or continues, Pac-Man is invisible for some short time.
-        // During that time, Pac-Man is shown as an additional entry in the level counter.
-        final boolean starting = game.state().id() == CommonGameStateID.GAME_STARTING
-            || game.state().id() == CommonGameStateID.GAME_OR_LEVEL_STARTING;
-        final boolean oneMore = starting && !pac.isVisible();
-        int count = oneMore ? session.numLives() : session.numLives() - 1;
-        count = Math.clamp(count, 0, session.hud().livesCounter().data().maxLives());
-
         final LivesCounter livesCounter = session.hud().livesCounter();
-        livesCounter.data().setNumLives(count);
+
+        int displayedLivesCount = session.numLives() - 1;
+
+        // When a new game starts or a level starts or continues, Pac-Man is invisible for some short time.
+        // During that time, the level counter shows an additional entry and Pac-Man seems to hop from the lives
+        // counter into the maze when the level starts.
+        if (session.optLevel().isPresent()) {
+            displayedLivesCount = adjustLiveCountOnStart(displayedLivesCount, game.state(), session.level());
+        }
+        displayedLivesCount = Math.clamp(displayedLivesCount, 0, livesCounter.data().maxLives());
+        livesCounter.data().setNumLives(displayedLivesCount);
+    }
+
+    private int adjustLiveCountOnStart(int count, GameState gameState, GameLevel level) {
+        final boolean starting = gameState.id() == CommonGameStateID.GAME_STARTING
+                              || gameState.id() == CommonGameStateID.GAME_OR_LEVEL_STARTING;
+        final Pac pac = level.entities().pac();
+        return starting && !pac.isVisible() ? count + 1 : count;
     }
 }

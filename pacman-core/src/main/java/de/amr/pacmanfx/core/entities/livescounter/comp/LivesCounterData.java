@@ -8,7 +8,7 @@ import de.amr.pacmanfx.core.ecs.GameEntityComp;
 
 public class LivesCounterData implements GameEntityComp {
 
-    private int maxLives;
+    private int maxLivesShown;
 
     private int numLives;
 
@@ -21,16 +21,16 @@ public class LivesCounterData implements GameEntityComp {
     }
 
     public int maxLives() {
-        return maxLives;
+        return maxLivesShown;
     }
 
-    public void setMaxLives(int maxLives) {
-        this.maxLives = maxLives;
+    public void setMaxLivesShown(int maxLivesShown) {
+        this.maxLivesShown = maxLivesShown;
     }
 
     @Override
     public void reset() {
         numLives = 0;
-        maxLives = 5;
+        maxLivesShown = 5;
     }
 }

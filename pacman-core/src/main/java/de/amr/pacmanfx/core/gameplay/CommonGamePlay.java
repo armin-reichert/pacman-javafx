@@ -55,6 +55,7 @@ public abstract class CommonGamePlay implements GamePlay {
         pac.pos().set(worldMap.terrainLayer().pacStartPosition());
         systems.pacState().setState(pac, PacState.SLEEPING);
         systems.pacPower().reset(pac);
+        systems.motor().setVelocity(pac, 0, 0);
         systems.worldNavigator().setMoveDir(pac, Direction.LEFT);
         systems.worldNavigator().setWishDir(pac, Direction.LEFT);
         systems.pacAnimation().update(pac);
