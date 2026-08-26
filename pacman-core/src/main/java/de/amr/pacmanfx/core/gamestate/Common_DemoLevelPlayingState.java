@@ -5,12 +5,10 @@
 package de.amr.pacmanfx.core.gamestate;
 
 import de.amr.basics.timer.Pulse;
-import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.GameVariantConfig;
-import de.amr.pacmanfx.core.HUD;
+import de.amr.pacmanfx.core.*;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
+import de.amr.pacmanfx.core.entities.Pac;
+import de.amr.pacmanfx.core.entities.pac.comp.PacState;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -27,19 +25,17 @@ public final class Common_DemoLevelPlayingState extends GameState {
 
     @Override
     public void onEnter(GameContext game) {
-        final GameLevel level = game.variant().gamePlay().buildDemoLevel(game);
+        final GamePlay gamePlay = game.variant().gamePlay();
         final GameSession session = game.session();
 
+        configureHUD(session.hud());
+        gamePlay.showMessage(game, MessageType.GAME_OVER);
+
+        final GameLevel level = gamePlay.buildDemoLevel(game);
         session.setLevel(level);
         session.setNumLives(1);
 
-        session.hud().showCredit();
-        session.hud().levelCounter().hide();
-        session.hud().gameScore().data().setEnabled(false);
-        session.hud().highScore().data().setEnabled(false);
-        session.hud().show();
-
-        game.eventManager().publishGameEvent(new LevelCreatedEvent(session.level()));
+        game.eventManager().publishGameEvent(new LevelCreatedEvent(level));
     }
 
     @Override
@@ -48,51 +44,53 @@ public final class Common_DemoLevelPlayingState extends GameState {
 
         final GameVariantConfig variantConfig = game.variant();
         final GamePlay gamePlay = variantConfig.gamePlay();
-        final EntityUpdater updater = variantConfig.systems().entityUpdater();
+        final GameSystems systems = variantConfig.systems();
 
         final GameSession session = game.session();
         final GameLevel demoLevel = session.level();
 
         if (tick == 1) {
             gamePlay.prepareLevelForPlaying(game, demoLevel);
-            gamePlay.showMessage(game, MessageType.GAME_OVER);
         }
         else if (tick == 2) {
-            showActors(session.level().entities());
+            showActors(demoLevel.entities());
         }
         else if (tick == game.variant().rules().demoLevelHuntingStartTick()) {
-            startEnergizerBlinking(session.level());
-            startActorAnimations(session.level(), game.variant().systems().actorSpriteAnimController());
-            clearReadyMessage(game.session().hud());
+            final var animController = systems.actorSpriteAnimController();
+
+            session.hud().clearMessage();
+            startEnergizerBlinking(demoLevel);
+
+            final Pac pac = demoLevel.entities().pac();
+            systems.pacState().setState(pac, PacState.ACTIVE);
+
+            demoLevel.entities().ghosts().forEach(animController::playSelected);
+
             // This call fires a game event!
-            session.level().huntingTimerStrategy().startFirstPhase(game, session.level().number());
+            demoLevel.huntingTimerStrategy().startFirstPhase(game, demoLevel.number());
         }
         else if (tick > game.variant().rules().demoLevelHuntingStartTick()) {
-            updater.updateEntities(game, demoLevel);
+            systems.entityUpdater().updateEntities(game, demoLevel);
             gamePlay.updateGamePlay(game, demoLevel);
-            computeNextState(game, demoLevel)
-                .ifPresent(nextState -> variantConfig.gameFlow().enterGameState(game, nextState));
+            computeNextState(game, demoLevel).ifPresent(nextState ->
+                variantConfig.gameFlow().enterGameState(game, nextState));
         }
-        updater.updateHUD(game);
+
+        systems.entityUpdater().updateHUD(game);
+    }
+
+    private void configureHUD(HUD hud) {
+        hud.gameScore().data().setEnabled(false);
+        hud.highScore().data().setEnabled(false);
+        hud.levelCounter().hide();
+        hud.showCredit();
+        hud.show();
     }
 
     private void startEnergizerBlinking(GameLevel level) {
         final Pulse heartbeat = level.heartbeat();
         heartbeat.setStartState(Pulse.State.ON);
         heartbeat.restart();
-    }
-
-    private void startActorAnimations(GameLevel level, ActorSpriteAnimController animController) {
-        final GameLevelEntitySet entities = level.entities();
-        animController.playSelected(entities.pac());
-        entities.ghosts().forEach(animController::playSelected);
-    }
-
-    // Clears the "READY!" message. The "GAME_OVER" (demo level) and the "TEST LEVEL XX" messages are left alone.
-    private void clearReadyMessage(HUD hud) {
-        if (hud.messageView().data().messageType() == MessageType.READY) {
-            hud.clearMessage();
-        }
     }
 
     private void showActors(GameLevelEntitySet entities) {
