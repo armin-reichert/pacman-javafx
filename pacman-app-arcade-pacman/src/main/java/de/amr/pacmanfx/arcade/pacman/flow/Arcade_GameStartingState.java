@@ -8,6 +8,8 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.entities.Ghost;
+import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.event.gameplay.GameStartedEvent;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
@@ -28,13 +30,26 @@ public class Arcade_GameStartingState extends GameState {
 
     @Override
     public void onEnter(GameContext game) {
-        final GameLevel newLevel = game.variant().gamePlay().buildNormalLevel(game, 1);
-        game.eventManager().publishGameEvent(new LevelCreatedEvent(newLevel));
+
+        // Build new level
+        final GameLevel level = game.variant().gamePlay().buildNormalLevel(game, 1);
+
+        game.eventManager().publishGameEvent(new LevelCreatedEvent(level));
 
         final HUD hud = game.session().hud();
         hud.hideCredit();
         hud.livesCounter().show();
         ScoreSystem.enableScore(game.session().hud().highScore(), true);
+
+        // Initially, ghosts and Pac-Man do not move nor animate
+        final Pac pac = level.entities().pac();
+        game.variant().systems().worldNavigator().setDisabled(pac, true);
+        game.variant().systems().pacAnimation().setDisabled(pac, true);
+
+        for (Ghost ghost : level.entities().ghosts()) {
+            game.variant().systems().worldNavigator().setDisabled(ghost, true);
+            game.variant().systems().ghostAnimation().setDisabled(ghost, true);
+        }
 
         game.eventManager().publishGameEvent(new GameStartedEvent(game));
     }
@@ -56,6 +71,17 @@ public class Arcade_GameStartingState extends GameState {
             level.entities().ghosts().forEach(GameEntity::show);
         }
         else if (tick == TICK_NEW_GAME_START_PLAYING) {
+
+            // Now, actors start moving and animating
+            final Pac pac = level.entities().pac();
+            game.variant().systems().worldNavigator().setDisabled(pac, false);
+            game.variant().systems().pacAnimation().setDisabled(pac, false);
+
+            for (Ghost ghost : level.entities().ghosts()) {
+                game.variant().systems().worldNavigator().setDisabled(ghost, false);
+                game.variant().systems().ghostAnimation().setDisabled(ghost, false);
+            }
+
             session.setGameRunning(true);
             game.variant().gameFlow().enterGameState(game, CommonGameStateID.GAME_LEVEL_PLAYING);
         }

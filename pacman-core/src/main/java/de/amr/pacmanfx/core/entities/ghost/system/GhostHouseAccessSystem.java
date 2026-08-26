@@ -61,6 +61,10 @@ public class GhostHouseAccessSystem {
      * The ghost speed is slower than outside, but I do not know the exact value.
      */
     public boolean leaveHouse(Ghost ghost, WorldNavigationSystem worldNavigationSystem, MovementSystem motor, float speed) {
+        if (ghost.reqComp(WorldNavigationComp.class).isDisabled()) {
+            return false;
+        }
+
         final PositionComp position = ghost.pos();
         final House house = ghost.worldInfo().house();
         final Vector2f houseEntryPosition = house.floorplan().entryPosition();
@@ -107,6 +111,10 @@ public class GhostHouseAccessSystem {
         MovementSystem motor,
         float speed)
     {
+        if (ghost.reqComp(WorldNavigationComp.class).isDisabled()) {
+            return Optional.empty();
+        }
+
         final PositionComp position = ghost.pos();
         final House house = ghost.worldInfo().house();
         final Vector2f revivalPosition = WorldMap.halfTileRightOf(

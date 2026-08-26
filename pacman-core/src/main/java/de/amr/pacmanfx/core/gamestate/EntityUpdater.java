@@ -80,6 +80,7 @@ public class EntityUpdater {
 
         final GameSystems systems = game.variant().systems();
         updatedGhosts.forEach(ghost -> {
+            //TODO ghost state update currently also updates movement through the world, should be separate!
             systems.ghostState().update(game, level, ghost);
             systems.ghostAnimation().update(ghost, level.entities().pac(), systems.actorSpriteAnimController());
         });
