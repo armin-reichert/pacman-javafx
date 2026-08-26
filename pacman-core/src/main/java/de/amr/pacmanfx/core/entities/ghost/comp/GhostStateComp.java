@@ -14,6 +14,8 @@ public class GhostStateComp implements GameEntityComp {
 
     private GhostState enumValue;
 
+    private long stateTick;
+
     private boolean flashing;
 
     private boolean threatenedByPac;
@@ -28,6 +30,14 @@ public class GhostStateComp implements GameEntityComp {
 
     public void setEnumValue(GhostState enumValue) {
         this.enumValue = requireNonNull(enumValue);
+    }
+
+    public long stateTick() {
+        return stateTick;
+    }
+
+    public void setStateTick(long stateTick) {
+        this.stateTick = stateTick;
     }
 
     public boolean flashing() {

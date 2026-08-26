@@ -27,6 +27,8 @@ public class WorldNavigationComp implements GameEntityComp {
 
     private Vector2i targetTile;
 
+    private boolean disabled;
+
     private boolean newTileEntered;
     private boolean turnBackRequested;
     private boolean canTeleport = DEFAULT_CAN_TELEPORT;
@@ -67,6 +69,14 @@ public class WorldNavigationComp implements GameEntityComp {
 
     public WorldNavigationInfo info() {
         return info;
+    }
+
+    public boolean isDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
     }
 
     /**

@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.bonus.system.BonusMoveAndJumpSystem;
 import de.amr.pacmanfx.core.entities.bonus.system.BonusStateSystem;
-import de.amr.pacmanfx.core.entities.ghost.system.GhostAnimationSelectionSystem;
+import de.amr.pacmanfx.core.entities.ghost.system.GhostAnimationSystem;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostHouseAccessSystem;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostStateSystem;
 import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
@@ -45,7 +45,7 @@ public interface GameSystems {
 
     GhostStateSystem ghostState();
 
-    GhostAnimationSelectionSystem ghostSpriteAnimation();
+    GhostAnimationSystem ghostAnimation();
 
     GhostHouseAccessSystem ghostHouseAccess();
 

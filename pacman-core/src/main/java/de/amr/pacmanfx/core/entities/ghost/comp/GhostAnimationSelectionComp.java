@@ -7,6 +7,8 @@ public class GhostAnimationSelectionComp implements GameEntityComp {
 
     private CommonSpriteAnimationID animationID;
 
+    private boolean disabled;
+
     private int frame;
 
     public GhostAnimationSelectionComp() {
@@ -33,5 +35,13 @@ public class GhostAnimationSelectionComp implements GameEntityComp {
 
     public int frame() {
         return frame;
+    }
+
+    public boolean disabled() {
+        return disabled;
+    }
+
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
     }
 }

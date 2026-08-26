@@ -25,6 +25,7 @@ public final class Common_DemoLevelPlayingState extends GameState {
 
     @Override
     public void onEnter(GameContext game) {
+        final GameSystems systems = game.variant().systems();
         final GamePlay gamePlay = game.variant().gamePlay();
         final GameSession session = game.session();
 
@@ -34,6 +35,11 @@ public final class Common_DemoLevelPlayingState extends GameState {
         final GameLevel level = gamePlay.buildDemoLevel(game);
         session.setLevel(level);
         session.setNumLives(1);
+
+        level.entities().ghosts().forEach(ghost -> {
+            systems.worldNavigator().setDisabled(ghost, true);
+            systems.ghostAnimation().setDisabled(ghost, true);
+        });
 
         game.eventManager().publishGameEvent(new LevelCreatedEvent(level));
     }
@@ -56,27 +62,26 @@ public final class Common_DemoLevelPlayingState extends GameState {
             showActors(demoLevel.entities());
         }
         else if (tick == game.variant().rules().demoLevelHuntingStartTick()) {
-            final var animController = systems.actorSpriteAnimController();
-
             session.hud().clearMessage();
             startEnergizerBlinking(demoLevel);
 
             final Pac pac = demoLevel.entities().pac();
             systems.pacState().setState(pac, PacState.ACTIVE);
 
-            demoLevel.entities().ghosts().forEach(animController::playSelected);
+            demoLevel.entities().ghosts().forEach(ghost -> {
+                systems.worldNavigator().setDisabled(ghost, false);
+                systems.ghostAnimation().setDisabled(ghost, false);
+            });
 
             // This call fires a game event!
             demoLevel.huntingTimerStrategy().startFirstPhase(game, demoLevel.number());
         }
-        else if (tick > game.variant().rules().demoLevelHuntingStartTick()) {
-//            systems.entityUpdater().updateEntities(game, demoLevel);
+        else if (tick >= game.variant().rules().demoLevelHuntingStartTick()) {
             gamePlay.updateGamePlay(game, demoLevel);
-            computeNextState(game, demoLevel).ifPresent(nextState ->
-                variantConfig.gameFlow().enterGameState(game, nextState));
         }
 
-        systems.entityUpdater().updateHUD(game);
+        computeNextState(game, demoLevel).ifPresent(nextState ->
+            variantConfig.gameFlow().enterGameState(game, nextState));
     }
 
     private void configureHUD(HUD hud) {

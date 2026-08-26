@@ -53,11 +53,8 @@ public final class Common_PlayingLevelState extends GameState {
     public void onUpdate(GameContext game) {
         final GameSession session = game.session();
         final GameLevel level = session.level();
-        final GameSystems systems = game.variant().systems();
         final GameRules rules = game.variant().rules();
         final GameFlowController gameFlow = game.variant().gameFlow();
-
-//        systems.entityUpdater().updateEntities(game, level);
 
         game.variant().gamePlay().updateGamePlay(game, level);
 

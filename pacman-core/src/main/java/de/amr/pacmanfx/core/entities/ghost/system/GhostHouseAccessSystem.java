@@ -6,6 +6,7 @@ package de.amr.pacmanfx.core.entities.ghost.system;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.ecs.comp.PositionComp;
+import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
 import de.amr.pacmanfx.core.ecs.systems.WorldMovementPolicy;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
@@ -27,9 +28,13 @@ public class GhostHouseAccessSystem {
      * and start blinking when Pac-Man's power starts fading. After that, they return to their normal color.
      */
     public void stayInHouse(Ghost ghost, WorldNavigationSystem worldNavigationSystem, MovementSystem motor, float speed) {
+
+        if (ghost.reqComp(WorldNavigationComp.class).isDisabled()) {
+            return;
+        }
+
         final House house = ghost.worldInfo().house();
         final PositionComp position = ghost.pos();
-
         if (house.isVisitedBy(ghost)) {
             // locked inside house: jumping
             final float minY = (house.floorplan().minTile().y() + 1) * WorldMap.TS + WorldMap.HTS;
@@ -45,10 +50,6 @@ public class GhostHouseAccessSystem {
             position.setY(Math.clamp(position.y(), minY, maxY));
             worldNavigationSystem.setMoveDirSpeed(ghost, speed);
             motor.move(ghost);
-        }
-        else {
-            // locked outside of house: standing still
-            worldNavigationSystem.setMoveDirSpeed(ghost, 0);
         }
     }
 

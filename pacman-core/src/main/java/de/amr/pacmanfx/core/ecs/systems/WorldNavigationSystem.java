@@ -52,6 +52,10 @@ public class WorldNavigationSystem {
 
     public WorldNavigationSystem() {}
 
+    public void setDisabled(GameEntity entity, boolean disabled) {
+        entity.reqComp(WorldNavigationComp.class).setDisabled(disabled);
+    }
+
     /**
      * Sets the move direction and updates the velocity vector.
      *
@@ -200,6 +204,11 @@ public class WorldNavigationSystem {
         requireNonNull(movementPolicy);
 
         final WorldNavigationComp navigation = actor.reqComp(WorldNavigationComp.class);
+
+        if (navigation.isDisabled()) {
+            return;
+        }
+
         navigation.setTargetTile(targetTile);
         navigateTowardsTarget(actor, level, movementPolicy);
 
@@ -222,8 +231,11 @@ public class WorldNavigationSystem {
         requireNonNull(level);
 
         final WorldNavigationComp navigation = actor.reqComp(WorldNavigationComp.class);
-
         navigation.info().clear();
+
+        if (navigation.isDisabled()) {
+            return;
+        }
 
         if (navigation.canTeleport()) {
             navigation.info().teleportStarted = tryTeleporting(actor, level.worldMap().terrainLayer());

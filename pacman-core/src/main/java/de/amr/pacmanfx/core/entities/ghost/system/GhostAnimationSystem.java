@@ -10,9 +10,9 @@ import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostStateComp;
 
-public class GhostAnimationSelectionSystem {
+public class GhostAnimationSystem {
 
-    public GhostAnimationSelectionSystem() {}
+    public GhostAnimationSystem() {}
 
     public void update(Ghost ghost, Pac pac, ActorSpriteAnimController spriteAnimController) {
         final CommonSpriteAnimationID id = switch (ghost.state().enumValue()) {
@@ -24,14 +24,18 @@ public class GhostAnimationSelectionSystem {
         };
 
         ghost.animationSelection().setAnimationID(id);
-
         spriteAnimController.select(ghost, id);
-        if (id == CommonSpriteAnimationID.GHOST_POINTS) {
+
+        if (id == CommonSpriteAnimationID.GHOST_POINTS || ghost.animationSelection().disabled()) {
             // Points "animation" just displays selected image/frame
             spriteAnimController.stopSelected(ghost);
         } else {
             spriteAnimController.playSelected(ghost);
         }
+    }
+
+    public void setDisabled(Ghost ghost, boolean disabled) {
+        ghost.animationSelection().setDisabled(disabled);
     }
 
     private CommonSpriteAnimationID threatenedOrNormalAnimation(Ghost ghost, Pac pac) {

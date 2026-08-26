@@ -21,7 +21,7 @@ import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
-import de.amr.pacmanfx.core.entities.ghost.system.GhostAnimationSelectionSystem;
+import de.amr.pacmanfx.core.entities.ghost.system.GhostAnimationSystem;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.rules.CollisionStrategy;
@@ -180,7 +180,7 @@ public class ArcadePacMan_IntroScene extends GameScene {
     private void chasePacMan(long tick) {
         final GameSystems systems = game().variant().systems();
         final MovementSystem motor = systems.motor();
-        final GhostAnimationSelectionSystem ghostSpriteAnimationSystem = systems.ghostSpriteAnimation();
+        final GhostAnimationSystem ghostSpriteAnimationSystem = systems.ghostAnimation();
 
         blinking.triggerPulse();
         motor.move(pacMan);

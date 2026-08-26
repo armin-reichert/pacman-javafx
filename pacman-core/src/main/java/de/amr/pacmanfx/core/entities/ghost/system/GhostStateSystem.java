@@ -48,6 +48,7 @@ public class GhostStateSystem {
 
         final Pac pac = level.entities().pac();
 
+        ghost.state().setStateTick(game.state().timer().tickCount());
         ghost.state().setFlashing(pac.power().isFading());
         ghost.state().setThreatenedByPac(isGhostThreatenedByPac(level, ghost, pac));
 

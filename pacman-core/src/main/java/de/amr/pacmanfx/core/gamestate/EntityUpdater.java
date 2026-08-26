@@ -8,10 +8,12 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
-import de.amr.pacmanfx.core.entities.*;
+import de.amr.pacmanfx.core.entities.Bonus;
+import de.amr.pacmanfx.core.entities.Ghost;
+import de.amr.pacmanfx.core.entities.LivesCounter;
+import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusStateComp;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostStateSystem;
-import de.amr.pacmanfx.core.entities.pac.comp.PacState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.rules.ActorSpeedRules;
 import de.amr.pacmanfx.core.model.rules.GameRules;
@@ -80,7 +82,7 @@ public class EntityUpdater {
         final GameSystems systems = game.variant().systems();
         updatedGhosts.forEach(ghost -> {
             systems.ghostState().update(game, level, ghost);
-            systems.ghostSpriteAnimation().update(ghost, level.entities().pac(), systems.actorSpriteAnimController());
+            systems.ghostAnimation().update(ghost, level.entities().pac(), systems.actorSpriteAnimController());
         });
     }
 

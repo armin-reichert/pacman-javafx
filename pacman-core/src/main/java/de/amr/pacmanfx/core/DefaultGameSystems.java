@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.entities.bonus.system.BonusMoveAndJumpSystem;
 import de.amr.pacmanfx.core.entities.bonus.system.BonusStateSystem;
 import de.amr.pacmanfx.core.entities.bonus.system.BonusWorldMovementPolicy;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostHouseAccessSystem;
-import de.amr.pacmanfx.core.entities.ghost.system.GhostAnimationSelectionSystem;
+import de.amr.pacmanfx.core.entities.ghost.system.GhostAnimationSystem;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostStateSystem;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostWorldMovementPolicy;
 import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
@@ -40,7 +40,7 @@ public class DefaultGameSystems implements GameSystems {
     protected GhostStateSystem ghostState;
     protected GhostHouseAccessSystem ghostHouseAccess;
     protected GhostWorldMovementPolicy ghostWorldMovementPolicy;
-    protected GhostAnimationSelectionSystem ghostSpriteAnimation;
+    protected GhostAnimationSystem ghostSpriteAnimation;
 
     protected GhostHuntingStrategy orangeGhostPokeyHuntingStrategy;
     protected GhostHuntingStrategy cyanGhostBashfulHuntingStrategy;
@@ -79,7 +79,7 @@ public class DefaultGameSystems implements GameSystems {
         cyanGhostBashfulHuntingStrategy = createBashfulHuntingStrategy();
         orangeGhostPokeyHuntingStrategy = createPokeyHuntingStrategy();
 
-        ghostSpriteAnimation = new GhostAnimationSelectionSystem();
+        ghostSpriteAnimation = new GhostAnimationSystem();
     }
 
     protected void createBonusSystems() {
@@ -200,7 +200,7 @@ public class DefaultGameSystems implements GameSystems {
     }
 
     @Override
-    public GhostAnimationSelectionSystem ghostSpriteAnimation() {
+    public GhostAnimationSystem ghostAnimation() {
         return ghostSpriteAnimation;
     }
 
