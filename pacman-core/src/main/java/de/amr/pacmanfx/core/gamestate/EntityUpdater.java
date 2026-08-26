@@ -42,7 +42,7 @@ public class EntityUpdater {
             return; // Pac-Man is invisible and frozen
         }
 
-        if (pac.getPacState() != PacState.DEAD) {
+        if (pac.state().enumValue() != PacState.DEAD) {
             final ActorSpeedRules speedRules = rules.actorSpeedRules();
             final float speed = pac.power().isActive()
                 ? speedRules.pacSpeedWhenHasPower(game, level)

@@ -4,37 +4,41 @@ import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Pac;
 
+import java.util.Objects;
+
 public class PacAnimationSystem {
 
-    private final ActorSpriteAnimController spriteAnimSystem;
+    private final ActorSpriteAnimController animController;
 
-    public PacAnimationSystem(ActorSpriteAnimController spriteAnimSystem) {
-        this.spriteAnimSystem = spriteAnimSystem;
+    public PacAnimationSystem(ActorSpriteAnimController animController) {
+        this.animController = animController;
     }
 
     public void update(Pac pac) {
-        switch (pac.getPacState()) {
+        Objects.requireNonNull(pac);
+
+        switch (pac.state().enumValue()) {
             case SLEEPING -> {
                 // Female Pac just cannot shut her mouth for a second!
                 final boolean male = pac.state().isMale();
-                spriteAnimSystem.select(pac, male ? CommonSpriteAnimationID.PAC_MOUTH_SHUT : CommonSpriteAnimationID.PAC_MOUTH_MOVING);
+                animController.select(pac, male ? CommonSpriteAnimationID.PAC_MOUTH_SHUT : CommonSpriteAnimationID.PAC_MOUTH_MOVING);
             }
             case ACTIVE -> {
                 if (pac.state().isMoving()) {
-                    spriteAnimSystem.select(pac, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
-                    spriteAnimSystem.playSelected(pac);
+                    animController.select(pac, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
+                    animController.playSelected(pac);
                 } else {
-                    spriteAnimSystem.stopSelected(pac);
+                    animController.stopSelected(pac);
                 }
             }
             case DEAD -> {
                 if (pac.animation().readyForDying()) {
-                    spriteAnimSystem.select(pac, CommonSpriteAnimationID.PAC_DYING);
-                    spriteAnimSystem.resetSelected(pac);
+                    animController.select(pac, CommonSpriteAnimationID.PAC_DYING);
+                    animController.resetSelected(pac);
                     pac.animation().setReadyForDying(false);
                 }
                 else if (pac.animation().startDying()) {
-                    spriteAnimSystem.playSelected(pac);
+                    animController.playSelected(pac);
                     pac.animation().setStartDying(false);
                 }
             }
@@ -42,6 +46,6 @@ public class PacAnimationSystem {
     }
 
     public void stop(Pac pac) {
-        spriteAnimSystem.stopSelected(pac);
+        animController.stopSelected(pac);
     }
 }

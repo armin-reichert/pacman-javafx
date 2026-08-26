@@ -77,7 +77,7 @@ public final class Pac extends GameEntity {
     public String toString() {
         return "Pac{" +
             "name=" + name +
-            ", state=" + getPacState() +
+            ", state=" + state() +
             ", visible=" + visibility() +
             ", position=" + pos() +
             ", movement=" + movement() +
@@ -95,9 +95,4 @@ public final class Pac extends GameEntity {
         spriteAnim().spriteAnimations().select(CommonSpriteAnimationID.PAC_MOUTH_SHUT);
         spriteAnim().spriteAnimations().resetSelected();
     }
-
-    public PacState getPacState() {
-        return state().enumValue();
-    }
-
 }
