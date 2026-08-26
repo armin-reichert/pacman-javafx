@@ -10,8 +10,8 @@ import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.bonus.system.BonusMoveAndJumpSystem;
 import de.amr.pacmanfx.core.entities.bonus.system.BonusStateSystem;
 import de.amr.pacmanfx.core.entities.bonus.system.BonusWorldMovementPolicy;
-import de.amr.pacmanfx.core.entities.ghost.system.GhostHouseAccessSystem;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostAnimationSystem;
+import de.amr.pacmanfx.core.entities.ghost.system.GhostHouseAccessSystem;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostStateSystem;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostWorldMovementPolicy;
 import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
@@ -66,7 +66,7 @@ public class DefaultGameSystems implements GameSystems {
         pacWorldMovementPolicy = new PacWorldMovementPolicy();
         pacAutoSteering = new PacAutoSteeringSystem();
         pacState = new PacStateSystem();
-        pacAnimation = new PacAnimationSystem(actorSpriteAnimController);
+        pacAnimation = new PacAnimationSystem();
     }
 
     protected void createGhostSystems() {

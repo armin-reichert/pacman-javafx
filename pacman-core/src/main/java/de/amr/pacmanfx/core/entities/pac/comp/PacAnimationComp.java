@@ -1,30 +1,34 @@
 package de.amr.pacmanfx.core.entities.pac.comp;
 
+import de.amr.basics.Named;
 import de.amr.pacmanfx.core.ecs.GameEntityComp;
+import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 
 public class PacAnimationComp implements GameEntityComp {
 
-    private boolean readyForDying;
-    private boolean startDying;
+    private Named animationID;
 
-    public boolean readyForDying() {
-        return readyForDying;
+    private boolean disabled;
+
+    public boolean isDisabled() {
+        return disabled;
     }
 
-    public void setReadyForDying(boolean readyForDying) {
-        this.readyForDying = readyForDying;
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
     }
 
-    public boolean startDying() {
-        return startDying;
+    public Named animationID() {
+        return animationID;
     }
 
-    public void setStartDying(boolean startDying) {
-        this.startDying = startDying;
+    public void setAnimationID(Named animationID) {
+        this.animationID = animationID;
     }
 
     @Override
     public void reset() {
-        readyForDying = false;
+        disabled = false;
+        animationID = CommonSpriteAnimationID.PAC_MOUTH_SHUT;
     }
 }

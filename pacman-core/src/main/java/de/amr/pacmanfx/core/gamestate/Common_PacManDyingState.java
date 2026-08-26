@@ -55,9 +55,10 @@ public final class Common_PacManDyingState extends GameState {
         systems.worldNavigator().setMoveDirSpeed(pac, 0);
         systems.pacPower().reset(pac);
         systems.pacState().setState(pac, PacState.DEAD);
-        systems.pacAnimation().stop(pac);
+        systems.pacAnimation().setDisabled(pac, true);
 
         timer().resetToIndefiniteDuration();
+
         game.eventManager().publishGameEvent(new StopAllSoundsEvent());
     }
 
@@ -69,11 +70,6 @@ public final class Common_PacManDyingState extends GameState {
         final GameLevel level = session.level();
         final Pac pac = level.entities().pac();
         final long tick = timer().tickCount();
-
-        //TODO check this
-        systems.entityUpdater().updateHUD(game);
-        systems.entityUpdater().updateHeartbeat(level);
-        systems.entityUpdater().updatePac(game, level, pac);
 
         if (timer().hasExpired()) {
             if (session.isAttractMode()) {
@@ -88,10 +84,9 @@ public final class Common_PacManDyingState extends GameState {
         }
         else if (tick == timing.hideGhostsTick()) {
             level.entities().ghosts().forEach(GameEntity::hide);
-            pac.animation().setReadyForDying(true);
         }
         else if (tick == timing.animationStartTick()) {
-            pac.animation().setStartDying(true);
+            systems.pacAnimation().setDisabled(pac, false);
             game.eventManager().publishGameEvent(new PacDyingEvent(pac));
         }
         else if (tick == timing.hidePacTick()) {

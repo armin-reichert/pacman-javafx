@@ -44,33 +44,32 @@ public class EntityUpdater {
         final MovementSystem motor = systems.motor();
 
         switch (pac.state().enumValue()) {
-            case SLEEPING -> {
-                systems.worldNavigator().setMoveDirSpeed(pac, 0);
-                systems.pacAnimation().update(pac);
-                systems.actorSpriteAnimController().playSelected(pac);
-            }
-            case ACTIVE -> {
-                final ActorSpeedRules speedRules = rules.actorSpeedRules();
-                final float speed = pac.power().isActive()
-                    ? speedRules.pacSpeedWhenHasPower(game, level)
-                    : speedRules.pacSpeed(game, level);
-
-                systems.pacDigestion().update(pac);
-                systems.pacPower().update(pac, rules.pacPowerFadingSeconds(level.number()));
-                systems.pacAutoSteering().update(session, pac);
-                systems.worldNavigator().setMoveDirSpeed(pac, speed);
-                systems.worldNavigator().tryMovingOrTeleporting(level, pac, motor, systems.pacWorldMovementPolicy());
-                systems.pacAnimation().update(pac);
-                systems.actorSpriteAnimController().playSelected(pac);
-            }
-            case DEAD -> {
-                systems.pacAnimation().update(pac);
-                systems.actorSpriteAnimController().playSelected(pac);
-            }
+            case SLEEPING, DEAD -> systems.worldNavigator().setDisabled(pac, true);
+            case ACTIVE -> systems.worldNavigator().setDisabled(pac, false);
         }
 
+        final ActorSpeedRules speedRules = rules.actorSpeedRules();
+        final float speed = pac.power().isActive()
+            ? speedRules.pacSpeedWhenHasPower(game, level)
+            : speedRules.pacSpeed(game, level);
+
         systems.pacState().update(pac);
+        systems.pacDigestion().update(pac);
+        systems.pacPower().update(pac, rules.pacPowerFadingSeconds(level.number()));
+
+        // Steering and movement
+        systems.pacAutoSteering().update(session, pac);
+        systems.worldNavigator().setMoveDirSpeed(pac, speed);
+        systems.worldNavigator().tryMovingOrTeleporting(level, pac, motor, systems.pacWorldMovementPolicy());
+
+        // Animation
         systems.pacAnimation().update(pac);
+        systems.actorSpriteAnimController().select(pac, pac.animation().animationID());
+        if (!pac.animation().isDisabled()) {
+            systems.actorSpriteAnimController().playSelected(pac);
+        } else {
+            systems.actorSpriteAnimController().stopSelected(pac);
+        }
     }
 
     public void updateGhosts(GameContext game, GameLevel level) {

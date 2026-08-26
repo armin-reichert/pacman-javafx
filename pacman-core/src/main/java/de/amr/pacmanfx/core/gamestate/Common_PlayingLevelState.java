@@ -42,9 +42,6 @@ public final class Common_PlayingLevelState extends GameState {
 
         systems.pacState().setState(pac, PacState.ACTIVE);
 
-        systems.actorSpriteAnimController().playSelected(pac);
-        level.entities().ghosts().forEach(systems.actorSpriteAnimController()::playSelected);
-
         // This call fires a game event!
         level.huntingTimerStrategy().startFirstPhase(game, level.number());
     }
