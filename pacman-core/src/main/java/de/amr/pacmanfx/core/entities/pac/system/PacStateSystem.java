@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.core.entities.pac.system;
 
-import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.pac.comp.PacState;
 import de.amr.pacmanfx.core.entities.pac.comp.PacStateComp;
@@ -23,16 +22,7 @@ public class PacStateSystem {
         final PacStateComp state = pac.state();
         switch (state.enumValue()) {
             case SLEEPING, DEAD -> state.setMoving(false);
-            case ACTIVE -> state.setMoving(!isStandingStill(pac));
+            case ACTIVE -> state.setMoving(pac.worldNavigation().info().moved);
         }
-    }
-
-    public boolean isStandingStill(Pac pac) {
-        return pac.movement().hasZeroVelocity() ||didNotMoveThroughWorld(pac);
-    }
-
-    private boolean didNotMoveThroughWorld(Pac pac) {
-        final WorldNavigationComp worldNavigation = pac.worldNavigation();
-        return !worldNavigation.info().moved;
     }
 }
