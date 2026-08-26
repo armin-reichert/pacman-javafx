@@ -155,7 +155,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene {
         sys.worldNavigator().setMoveDir(msPacMan, Direction.LEFT);
         sys.worldNavigator().setMoveDirSpeed(msPacMan, SPEED_PAC_CHASING);
 
-        sys.actorSpriteAnimController().select(msPacMan, CommonSpriteAnimationID.PAC_MUNCHING);
+        sys.actorSpriteAnimController().select(msPacMan, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
         sys.actorSpriteAnimController().playSelected(msPacMan);
 
         pinky.pos().set(msPacMan.pos().x() + 6 * WorldMap.TS, msPacMan.pos().y());

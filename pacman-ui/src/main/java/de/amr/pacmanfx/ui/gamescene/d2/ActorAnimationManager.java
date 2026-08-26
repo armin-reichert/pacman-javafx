@@ -45,7 +45,7 @@ public class ActorAnimationManager {
     }
 
     public static void resetPacAnimation(ActorSpriteAnimController animSystem, Pac pac) {
-        animSystem.select(pac, CommonSpriteAnimationID.PAC_MUNCHING);
+        animSystem.select(pac, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
         animSystem.resetSelected(pac);
     }
 

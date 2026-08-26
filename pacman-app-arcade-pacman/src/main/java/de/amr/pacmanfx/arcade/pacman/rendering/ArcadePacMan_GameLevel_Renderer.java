@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.entities.MessageView;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.level.LevelMessageType;
+import de.amr.pacmanfx.core.level.MessageType;
 import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
@@ -50,7 +50,7 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
         drawMap(level, info);
 
         final MessageView messageView = game.session().hud().messageView();
-        if (messageView.data().messageType() != LevelMessageType.NO_MESSAGE) {
+        if (messageView.data().messageType() != MessageType.NO_MESSAGE) {
             drawLevelMessage(messageView, messagePosition(level));
         }
     }

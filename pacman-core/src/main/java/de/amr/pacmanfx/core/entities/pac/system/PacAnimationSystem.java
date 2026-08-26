@@ -14,9 +14,14 @@ public class PacAnimationSystem {
 
     public void update(Pac pac) {
         switch (pac.getPacState()) {
-            case ALIVE -> {
+            case SLEEPING -> {
+                // Female Pac just cannot shut her mouth for a second!
+                final boolean male = pac.state().isMale();
+                spriteAnimSystem.select(pac, male ? CommonSpriteAnimationID.PAC_MOUTH_SHUT : CommonSpriteAnimationID.PAC_MOUTH_MOVING);
+            }
+            case ACTIVE -> {
                 if (pac.state().isMoving()) {
-                    spriteAnimSystem.select(pac, CommonSpriteAnimationID.PAC_MUNCHING);
+                    spriteAnimSystem.select(pac, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
                     spriteAnimSystem.playSelected(pac);
                 } else {
                     spriteAnimSystem.stopSelected(pac);

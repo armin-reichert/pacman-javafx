@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman;
 
-import de.amr.basics.Named;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GamePlay;
@@ -44,11 +43,6 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
 
     private static final Set<GhostState> TURNBACK_STATES = Set.of(
         GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE);
-
-    @Override
-    protected Named pacStartAnimationID() {
-        return CommonSpriteAnimationID.PAC_MUNCHING;
-    }
 
     @Override
     public void configureLevelCounter(GameContext game, LevelCounter levelCounter) {

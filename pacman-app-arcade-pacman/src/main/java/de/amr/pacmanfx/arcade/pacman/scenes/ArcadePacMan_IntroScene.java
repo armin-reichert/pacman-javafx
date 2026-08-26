@@ -134,7 +134,7 @@ public class ArcadePacMan_IntroScene extends GameScene {
 
         pacMan = factory.createPacMan();
         pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animContainer));
-        pacMan.spriteAnim().spriteAnimations().select(CommonSpriteAnimationID.PAC_MUNCHING);
+        pacMan.spriteAnim().spriteAnimations().select(CommonSpriteAnimationID.PAC_MOUTH_MOVING);
         pacMan.spriteAnim().spriteAnimations().playSelected();
 
         ghosts[0] = renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.RED_GHOST_SHADOW);

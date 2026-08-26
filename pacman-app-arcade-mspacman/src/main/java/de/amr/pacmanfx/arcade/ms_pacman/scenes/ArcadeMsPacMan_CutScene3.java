@@ -169,7 +169,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene {
         msPacMan.show();
         worldNavigator.setMoveDir(msPacMan, Direction.RIGHT);
 
-        animSystem.select(msPacMan, CommonSpriteAnimationID.PAC_MUNCHING);
+        animSystem.select(msPacMan, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
         animSystem.stopSelected(msPacMan);
 
         stork.pos().set(TS * 30, TS * 12);

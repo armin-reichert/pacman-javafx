@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.core.gameplay;
 
-import de.amr.basics.Named;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
@@ -14,6 +13,7 @@ import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusMoveAndJumpComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
+import de.amr.pacmanfx.core.entities.pac.comp.PacState;
 import de.amr.pacmanfx.core.entities.pac.system.PacDigestionSystem;
 import de.amr.pacmanfx.core.entities.score.comp.ScorePersistencyComp;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
@@ -26,7 +26,7 @@ import de.amr.pacmanfx.core.event.pac.PacPowerEndsEvent;
 import de.amr.pacmanfx.core.event.pac.PacPowerStartsFadingEvent;
 import de.amr.pacmanfx.core.gameplay.hunt.GamePlayStep;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.level.LevelMessageType;
+import de.amr.pacmanfx.core.level.MessageType;
 import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.core.model.rules.ScoringRules;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -43,25 +43,21 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class CommonGamePlay implements GamePlay {
 
-    protected abstract Named pacStartAnimationID();
-
     @Override
-    public void prepareLevelForPlaying(GameContext game) {
+    public void prepareLevelForPlaying(GameContext game, GameLevel level) {
         final GameSystems systems = game.variant().systems();
 
-        final GameLevel level = game.session().level();
         final WorldMap worldMap = level.worldMap();
         final House house = level.entities().house();
         final Pac pac = level.entities().pac();
 
         pac.reset(); // initially invisible!
         pac.pos().set(worldMap.terrainLayer().pacStartPosition());
+        systems.pacState().setState(pac, PacState.SLEEPING);
         systems.pacPower().reset(pac);
         systems.worldNavigator().setMoveDir(pac, Direction.LEFT);
         systems.worldNavigator().setWishDir(pac, Direction.LEFT);
-
-        //TODO temp solution
-        systems.actorSpriteAnimController().select(pac, pacStartAnimationID());
+        systems.pacAnimation().update(pac);
 
         level.entities().ghosts().forEach(ghost -> {
             ghost.reset(); // initially invisible!
@@ -113,7 +109,7 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     @Override
-    public void showLevelMessage(GameContext game, GameLevel level, LevelMessageType type) {
+    public void showMessage(GameContext game, MessageType type) {
         game.session().hud().messageView().data().setMessageType(type);
     }
 
@@ -202,7 +198,7 @@ public abstract class CommonGamePlay implements GamePlay {
         pac.power().reset();
         navigator.setMoveDirSpeed(pac, 0);
         animController.stopSelected(pac);
-        animController.select(pac, CommonSpriteAnimationID.PAC_FULL);
+        animController.select(pac, CommonSpriteAnimationID.PAC_MOUTH_SHUT);
 
         level.entities().ghosts().forEach(ghost -> {
             navigator.setMoveDirSpeed(ghost, 0);

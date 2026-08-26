@@ -20,7 +20,7 @@ public class TengenMsPacMan_PacSAM extends LazySAM {
 
     public TengenMsPacMan_PacSAM(SpriteAnimContainer container) {
         setFactory(id -> switch (id) {
-            case CommonSpriteAnimationID.PAC_FULL -> new SpriteAnimationBuilder()
+            case CommonSpriteAnimationID.PAC_MOUTH_SHUT -> new SpriteAnimationBuilder()
                 .singleSprite(spriteSheet.findSprite(SpriteID.MS_PAC_FULL))
                 .build(container);
 
@@ -29,7 +29,7 @@ public class TengenMsPacMan_PacSAM extends LazySAM {
                 .frameTicks(8)
                 .build(container);
 
-            case CommonSpriteAnimationID.PAC_MUNCHING -> new SpriteAnimationBuilder()
+            case CommonSpriteAnimationID.PAC_MOUTH_MOVING -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.findSpriteSequence(SpriteID.MS_PAC_MUNCHING))
                 .frameTicks(2)
                 .repeated()

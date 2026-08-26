@@ -42,7 +42,7 @@ public class PacStateComp implements EntityComponent {
 
     @Override
     public void reset() {
-        enumValue = PacState.ALIVE;
+        enumValue = PacState.SLEEPING;
         moving = false;
     }
 }

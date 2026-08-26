@@ -9,9 +9,10 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.entities.MessageView;
 import de.amr.pacmanfx.core.entities.Pac;
+import de.amr.pacmanfx.core.entities.pac.comp.PacState;
 import de.amr.pacmanfx.core.gameplay.hunt.GamePlayStep;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.level.LevelMessageType;
+import de.amr.pacmanfx.core.level.MessageType;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.model.rules.GameRules;
 import org.tinylog.Logger;
@@ -30,13 +31,16 @@ public final class Common_PlayingLevelState extends GameState {
         final GameSession session = game.session();
         final GameLevel level = game.session().level();
         final Pac pac = level.entities().pac();
+
         final MessageView messageView = session.hud().messageView();
-        if (messageView.data().messageType() == LevelMessageType.READY) {
-            messageView.data().setMessageType(LevelMessageType.NO_MESSAGE);
+        if (messageView.data().messageType() == MessageType.READY) {
+            session.hud().clearMessage();
         }
 
         level.heartbeat().setStartState(Pulse.State.ON);
         level.heartbeat().restart();
+
+        systems.pacState().setState(pac, PacState.ACTIVE);
 
         systems.actorSpriteAnimController().playSelected(pac);
         level.entities().ghosts().forEach(systems.actorSpriteAnimController()::playSelected);

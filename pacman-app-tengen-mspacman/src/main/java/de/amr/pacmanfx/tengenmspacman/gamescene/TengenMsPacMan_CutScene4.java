@@ -175,7 +175,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
             navigator.setMoveDir(msPacMan, Direction.LEFT);
             navigator.setMoveDirSpeed(msPacMan, 1f);
 
-            animSystem.select(msPacMan, CommonSpriteAnimationID.PAC_MUNCHING);
+            animSystem.select(msPacMan, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
             animSystem.playSelected(msPacMan);
         }
         else if (tick == 230) {
@@ -191,7 +191,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
             animSystem.select(pacMan, TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
             animSystem.playSelected(pacMan);
 
-            animSystem.select(msPacMan, CommonSpriteAnimationID.PAC_MUNCHING);
+            animSystem.select(msPacMan, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
             animSystem.playSelected(msPacMan);
         }
         else if (tick == 520) {

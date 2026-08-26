@@ -161,7 +161,7 @@ public class ArcadePacMan_CutScene2 extends GameScene {
         sys.worldNavigator().setMoveDir(pacMan, Direction.LEFT);
         sys.worldNavigator().setMoveDirSpeed(pacMan, 1.15f);
 
-        sys.actorSpriteAnimController().select(pacMan, CommonSpriteAnimationID.PAC_MUNCHING);
+        sys.actorSpriteAnimController().select(pacMan, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
         sys.actorSpriteAnimController().playSelected(pacMan);
     }
 

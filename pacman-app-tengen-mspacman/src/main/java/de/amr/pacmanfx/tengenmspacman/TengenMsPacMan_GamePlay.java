@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.tengenmspacman;
 
-import de.amr.basics.Named;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameException;
@@ -28,7 +27,7 @@ import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelEntitySet;
-import de.amr.pacmanfx.core.level.LevelMessageType;
+import de.amr.pacmanfx.core.level.MessageType;
 import de.amr.pacmanfx.core.model.rules.HuntingTimer;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -82,7 +81,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
         //TODO this is currently broken! Sprite is reset when Ms. Pac-Man moves!
         final ActorSpriteAnimController animSystem = game.variant().systems().actorSpriteAnimController();
-        animSystem.select(pac, boosterOn ? TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER : CommonSpriteAnimationID.PAC_MUNCHING);
+        animSystem.select(pac, boosterOn ? TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER : CommonSpriteAnimationID.PAC_MOUTH_MOVING);
     }
 
     public void setBoosterMode(GameSession session, BoosterMode boosterMode) {
@@ -195,11 +194,6 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     }
 
     // GamePlay interface
-
-    @Override
-    protected Named pacStartAnimationID() {
-        return CommonSpriteAnimationID.PAC_MUNCHING;
-    }
 
     @Override
     public boolean canStart(GameContext game) {
@@ -344,7 +338,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
         final GameSession session = game.session();
 
-        prepareLevelForPlaying(game);
+        prepareLevelForPlaying(game, level);
 
         session.setLevelStartTimeMillis(System.currentTimeMillis());
         session.hud().gameScore().data().setEnabled(true);
@@ -354,7 +348,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final LevelCounter levelCounter = session.hud().levelCounter();
         levelCounterSystem.updateCounter(levelCounter, level.number(), level.bonusSymbolCode(0));
 
-        showLevelMessage(game, level, LevelMessageType.READY);
+        showMessage(game, MessageType.READY);
 
         final Pac pac = level.entities().pac();
         final boolean boosterOn = boosterMode(session) == BoosterMode.BOOSTER_ALWAYS_ON;

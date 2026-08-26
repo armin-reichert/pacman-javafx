@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.arcade.pacman;
 
-import de.amr.basics.Named;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
@@ -24,7 +23,7 @@ import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelEntitySet;
-import de.amr.pacmanfx.core.level.LevelMessageType;
+import de.amr.pacmanfx.core.level.MessageType;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.rules.GameRules;
 import de.amr.pacmanfx.core.model.rules.HuntingTimer;
@@ -82,12 +81,6 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     public ArcadePacMan_GamePlay() {}
 
     // Game start
-
-
-    @Override
-    protected Named pacStartAnimationID() {
-        return CommonSpriteAnimationID.PAC_FULL;
-    }
 
     @Override
     public void startSession(GameContext game) {
@@ -231,7 +224,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
         final GameSession session = game.session();
 
-        prepareLevelForPlaying(game);
+        prepareLevelForPlaying(game, level);
         session.setLevelStartTimeMillis(System.currentTimeMillis());
         session.cheats().update(game);
 
@@ -241,7 +234,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         final LevelCounter levelCounter = session.hud().levelCounter();
         levelCounterSystem.updateCounter(levelCounter, level.number(), level.bonusSymbolCode(0));
 
-        showLevelMessage(game, level, LevelMessageType.READY);
+        showMessage(game, MessageType.READY);
 
         // Note: This event is very important because it triggers the creation of the actor animations!
         game.eventManager().publishGameEvent(new LevelStartedEvent(level.number()));

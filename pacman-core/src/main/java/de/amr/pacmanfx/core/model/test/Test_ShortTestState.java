@@ -16,7 +16,7 @@ import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.level.LevelMessageType;
+import de.amr.pacmanfx.core.level.MessageType;
 
 public class Test_ShortTestState extends GameState {
 
@@ -60,17 +60,17 @@ public class Test_ShortTestState extends GameState {
         final float START = 1.0f;
 
         if (timer().atSecond(START)) {
-            gamePlay.prepareLevelForPlaying(game);
+            gamePlay.prepareLevelForPlaying(game, level);
             level.entities().pac().show();
             level.entities().ghosts().forEach(GameEntity::show);
-            gamePlay.showLevelMessage(game, level, LevelMessageType.READY);
+            gamePlay.showMessage(game, MessageType.READY);
             session.hud().hideCredit();
             session.hud().livesCounter().show();
             level.heartbeat().restart();
             game.eventManager().publishGameEvent(new TestStartedEvent(level));
         }
         else if (timer().atSecond(START + 1)) {
-            session.hud().messageView().data().setMessageType(LevelMessageType.NO_MESSAGE);
+            session.hud().messageView().data().setMessageType(MessageType.NO_MESSAGE);
         }
         else if (timer().atSecond(START + 3)) {
             gamePlay.activateNextBonus(game, level);

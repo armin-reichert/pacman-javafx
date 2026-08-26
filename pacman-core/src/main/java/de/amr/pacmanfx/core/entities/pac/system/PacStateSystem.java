@@ -22,8 +22,8 @@ public class PacStateSystem {
     public void update(Pac pac) {
         final PacStateComp state = pac.state();
         switch (state.enumValue()) {
-            case ALIVE -> state.setMoving(!isStandingStill(pac));
-            case DEAD -> state.setMoving(false);
+            case SLEEPING, DEAD -> state.setMoving(false);
+            case ACTIVE -> state.setMoving(!isStandingStill(pac));
         }
     }
 

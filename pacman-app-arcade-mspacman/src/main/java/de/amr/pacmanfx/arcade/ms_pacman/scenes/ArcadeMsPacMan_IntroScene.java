@@ -133,7 +133,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
 
         // Start animations
 
-        animController.select(msPacMan, CommonSpriteAnimationID.PAC_MUNCHING);
+        animController.select(msPacMan, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
         animController.playSelected(msPacMan);
 
         for (Ghost ghost : ghosts) {

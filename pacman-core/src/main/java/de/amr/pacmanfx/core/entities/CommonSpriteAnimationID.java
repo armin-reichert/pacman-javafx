@@ -7,9 +7,9 @@ package de.amr.pacmanfx.core.entities;
 import de.amr.basics.Named;
 
 public enum CommonSpriteAnimationID implements Named {
-    PAC_MUNCHING,
+    PAC_MOUTH_MOVING,
     PAC_DYING,
-    PAC_FULL,
+    PAC_MOUTH_SHUT,
 
     GHOST_EYES,
     GHOST_FLASHING,

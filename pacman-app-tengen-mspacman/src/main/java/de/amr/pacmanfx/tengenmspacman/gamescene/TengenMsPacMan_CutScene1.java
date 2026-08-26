@@ -212,7 +212,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene {
 
             msPacMan.show();
             navigator.setMoveDirSpeed(msPacMan, SPEED_CHASING);
-            animSystem.select(msPacMan, CommonSpriteAnimationID.PAC_MUNCHING);
+            animSystem.select(msPacMan, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
             animSystem.playSelected(msPacMan);
         }
         else if (tick == 160) {

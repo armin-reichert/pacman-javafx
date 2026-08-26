@@ -179,7 +179,7 @@ public class TengenMsPacMan_IntroScene extends GameScene {
                 worldNavigationSystem.setMoveDirSpeed(scene.msPacMan, SPEED);
 
                 animController.setAnimations(scene.msPacMan, renderConfig.createPacAnimations(animContainer));
-                animController.select(scene.msPacMan, CommonSpriteAnimationID.PAC_MUNCHING);
+                animController.select(scene.msPacMan, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
                 animController.playSelected(scene.msPacMan);
 
                 scene.ghosts = List.of(

@@ -19,7 +19,7 @@ import de.amr.pacmanfx.core.event.gameplay.*;
 import de.amr.pacmanfx.core.event.ghost.GhostEatenEvent;
 import de.amr.pacmanfx.core.event.pac.*;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.level.LevelMessageType;
+import de.amr.pacmanfx.core.level.MessageType;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Extras;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
@@ -69,7 +69,7 @@ public interface TengenMsPacMan_PlayScene2D_GameEventHandler extends DefaultGame
             resetActorAnimations(systems.actorSpriteAnimController(), session, level);
             gameScene().dynamicCamera().playIntroSequence();
             if (game.variant().gamePlay() instanceof TengenMsPacMan_GamePlay tengenGame) {
-                tengenGame.showLevelMessage(game, level, LevelMessageType.READY);
+                tengenGame.showMessage(game, MessageType.READY);
             }
         });
     }
@@ -183,7 +183,7 @@ public interface TengenMsPacMan_PlayScene2D_GameEventHandler extends DefaultGame
         final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) gameScene().game().variant().gamePlay();
         animSystem.select(pac, gamePlay.isBoosterOn(session)
             ? TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER
-            : CommonSpriteAnimationID.PAC_MUNCHING);
+            : CommonSpriteAnimationID.PAC_MOUTH_MOVING);
         animSystem.resetSelected(pac);
     }
 

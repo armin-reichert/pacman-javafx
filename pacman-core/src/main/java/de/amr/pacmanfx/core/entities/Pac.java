@@ -92,7 +92,7 @@ public final class Pac extends GameEntity {
     public void reset() {
         super.reset();
         worldNavigation().corneringSpeedDelta = 1.5f; // no real cornering implementation but better than nothing
-        spriteAnim().spriteAnimations().select(CommonSpriteAnimationID.PAC_FULL);
+        spriteAnim().spriteAnimations().select(CommonSpriteAnimationID.PAC_MOUTH_SHUT);
         spriteAnim().spriteAnimations().resetSelected();
     }
 

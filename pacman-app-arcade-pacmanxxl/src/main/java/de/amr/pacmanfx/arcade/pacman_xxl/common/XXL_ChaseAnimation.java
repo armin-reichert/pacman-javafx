@@ -113,7 +113,7 @@ class XXL_ChaseAnimation {
         worldNavigationSystem.setMoveDirSpeed(pac, PAC_FLEEING_SPEED);
 
         animController.setAnimations(pac, renderConfig.createPacAnimations(animContainer));
-        animController.select(pac, CommonSpriteAnimationID.PAC_MUNCHING);
+        animController.select(pac, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
         animController.playSelected(pac);
 
         ghosts = List.of(

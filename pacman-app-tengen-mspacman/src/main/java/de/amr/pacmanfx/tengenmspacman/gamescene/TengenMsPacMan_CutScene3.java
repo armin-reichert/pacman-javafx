@@ -194,7 +194,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene {
             navigator.setMoveDir(msPacMan, Direction.RIGHT);
             navigator.setMoveDirSpeed(msPacMan, 0);
 
-            animSystem.select(msPacMan, CommonSpriteAnimationID.PAC_MUNCHING);
+            animSystem.select(msPacMan, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
             animSystem.stopSelected(msPacMan);
 
             stork.show();

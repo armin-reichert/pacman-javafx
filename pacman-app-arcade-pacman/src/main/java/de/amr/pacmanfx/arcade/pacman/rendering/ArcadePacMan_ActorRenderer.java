@@ -50,7 +50,7 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
     }
 
     private RectShort computePacSprite(ActorSpriteAnimController animSystem, Pac pac) {
-        if (animSystem.isSelected(pac, CommonSpriteAnimationID.PAC_MUNCHING)) {
+        if (animSystem.isSelected(pac, CommonSpriteAnimationID.PAC_MOUTH_MOVING)) {
             final Direction dir = pac.worldNavigation().moveDir();
             final RectShort[] sprites = spriteSheet().pacMunchingSprites(dir);
             return spriteOrDefault(sprites, animSystem.currentFrame(pac));

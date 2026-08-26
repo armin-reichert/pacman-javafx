@@ -77,7 +77,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             case null -> facingSprite(SpriteID.MS_PAC_MUNCHING, frame, dir);
 
             case CommonSpriteAnimationID.PAC_DYING    -> computePacDyingSprite(pac);
-            case CommonSpriteAnimationID.PAC_MUNCHING -> facingSprite(SpriteID.MS_PAC_MUNCHING, frame, dir);
+            case CommonSpriteAnimationID.PAC_MOUTH_MOVING -> facingSprite(SpriteID.MS_PAC_MUNCHING, frame, dir);
             case TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER -> facingSprite(SpriteID.MS_PAC_MUNCHING_BOOSTER, frame, dir);
             case TengenMsPacMan_AnimationID.MS_PAC_MAN_TURNING_AWAY -> facingSprite(SpriteID.MS_PAC_TURNING_AWAY, frame, dir);
             case TengenMsPacMan_AnimationID.MS_PAC_MAN_WAVING_HAND -> facingSprite(SpriteID.MS_PAC_WAVING_HAND, frame, dir);

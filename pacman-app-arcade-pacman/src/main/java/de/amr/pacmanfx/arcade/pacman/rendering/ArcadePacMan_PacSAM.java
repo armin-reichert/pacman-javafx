@@ -26,13 +26,13 @@ public class ArcadePacMan_PacSAM extends LazySAM {
 
     private SpriteAnimation createAnimation(Named animationID, SpriteAnimContainer container) {
         return switch (animationID) {
-            case CommonSpriteAnimationID.PAC_FULL -> new SpriteAnimationBuilder()
+            case CommonSpriteAnimationID.PAC_MOUTH_SHUT -> new SpriteAnimationBuilder()
                 .singleSprite(spriteSheet.findSprite(SpriteID.PACMAN_FULL))
                 .initiallyStopped()
                 .build(container);
 
             // Renderer draws sprites depending on Pac-Man move direction!
-            case CommonSpriteAnimationID.PAC_MUNCHING -> new SpriteAnimationBuilder()
+            case CommonSpriteAnimationID.PAC_MOUTH_MOVING -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.pacMunchingSprites(Direction.LEFT))
                 .repeated()
                 .build(container);

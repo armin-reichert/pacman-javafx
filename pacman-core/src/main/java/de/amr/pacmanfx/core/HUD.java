@@ -5,7 +5,7 @@ import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.MessageView;
 import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
-import de.amr.pacmanfx.core.level.LevelMessageType;
+import de.amr.pacmanfx.core.level.MessageType;
 
 public class HUD {
 
@@ -75,7 +75,7 @@ public class HUD {
     }
 
     public void clearMessage() {
-        messageView.data().setMessageType(LevelMessageType.NO_MESSAGE);
+        messageView.data().setMessageType(MessageType.NO_MESSAGE);
     }
 
     // Tengen only

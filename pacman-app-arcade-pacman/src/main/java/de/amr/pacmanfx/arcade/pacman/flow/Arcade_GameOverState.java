@@ -10,8 +10,7 @@ import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameState;
-import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.level.LevelMessageType;
+import de.amr.pacmanfx.core.level.MessageType;
 
 import java.io.IOException;
 
@@ -24,7 +23,6 @@ public class Arcade_GameOverState extends GameState {
     @Override
     public void onEnter(GameContext game) {
         final GameSession session = game.session();
-        final GameLevel level = session.level();
 
         try {
             ScoreSystem.saveHighScoreIfNeeded(session.hud().highScore());
@@ -32,7 +30,7 @@ public class Arcade_GameOverState extends GameState {
             throw new RuntimeException(e);
         }
 
-        game.variant().gamePlay().showLevelMessage(game, level, LevelMessageType.GAME_OVER);
+        game.variant().gamePlay().showMessage(game, MessageType.GAME_OVER);
         session.setGameRunning(false);
         game.session().cheats().clear();
 

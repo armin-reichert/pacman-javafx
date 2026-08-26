@@ -34,7 +34,7 @@ public class Pac3DTransformSystem {
         final Pac3DViewComp view3D = pac.reqComp(Pac3DViewComp.class);
         final Vector2f center = pac.pos().bodyCenter();
 
-        if (pac.state().enumValue() == PacState.ALIVE) {
+        if (pac.state().enumValue() == PacState.ACTIVE) {
             updateVisibility(pac, center, level.worldMap());
             updatePosition(view3D, center);
             final Direction moveDir = pac.worldNavigation().moveDir();

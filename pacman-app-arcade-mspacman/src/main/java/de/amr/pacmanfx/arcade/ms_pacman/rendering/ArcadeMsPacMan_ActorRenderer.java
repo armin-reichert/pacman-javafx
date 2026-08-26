@@ -69,7 +69,7 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
 
     private RectShort computePacSprite(Pac pac) {
         RectShort sprite;
-        if (animController.isSelected(pac, CommonSpriteAnimationID.PAC_MUNCHING)) {
+        if (animController.isSelected(pac, CommonSpriteAnimationID.PAC_MOUTH_MOVING)) {
             final RectShort[] sprites = spriteSheet().msPacManMunchingSprites(pac.worldNavigation().moveDir());
             sprite = spriteOrDefault(sprites, animController.currentFrame(pac));
         }

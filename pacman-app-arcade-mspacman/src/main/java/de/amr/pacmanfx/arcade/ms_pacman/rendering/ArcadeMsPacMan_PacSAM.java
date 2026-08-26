@@ -23,11 +23,11 @@ public class ArcadeMsPacMan_PacSAM extends LazySAM {
     private SpriteAnimation createAnimation(Named animationID, SpriteAnimContainer container) {
 
         return switch (animationID) {
-            case CommonSpriteAnimationID.PAC_FULL -> new SpriteAnimationBuilder()
+            case CommonSpriteAnimationID.PAC_MOUTH_SHUT -> new SpriteAnimationBuilder()
                 .singleSprite(spriteSheet.findSprite(SpriteID.MS_PACMAN_FULL))
                 .build(container);
 
-            case CommonSpriteAnimationID.PAC_MUNCHING -> new SpriteAnimationBuilder()
+            case CommonSpriteAnimationID.PAC_MOUTH_MOVING -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.msPacManMunchingSprites(Direction.LEFT))
                 .repeated()
                 .build(container);

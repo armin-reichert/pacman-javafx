@@ -6,10 +6,9 @@ package de.amr.pacmanfx.core.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.event.gameplay.GameContinuedEvent;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.level.LevelMessageType;
+import de.amr.pacmanfx.core.level.MessageType;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.model.rules.LevelContinuationRules;
 
@@ -24,12 +23,12 @@ public class Common_LevelContinueState extends GameState {
         final GameSession session = game.session();
         final GameLevel level = session.level();
 
-        game.variant().gamePlay().prepareLevelForPlaying(game);
+        game.variant().gamePlay().prepareLevelForPlaying(game, level);
 
         level.entities().pac().show();
         level.entities().ghosts().forEach(GameEntity::show);
 
-        game.variant().gamePlay().showLevelMessage(game, level, LevelMessageType.READY);
+        game.variant().gamePlay().showMessage(game, MessageType.READY);
     }
 
     @Override
