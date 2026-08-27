@@ -6,21 +6,21 @@ package de.amr.pacmanfx.core.entities.marquee.system;
 
 import de.amr.pacmanfx.core.entities.Marquee;
 
-public class MarqueeSystem {
+public class MarqueeAnimSystem {
 
     public static class SingletonHolder {
-        static final MarqueeSystem SINGLETON = new MarqueeSystem();
+        static final MarqueeAnimSystem SINGLETON = new MarqueeAnimSystem();
     }
 
-    public static MarqueeSystem instance() {
+    public static MarqueeAnimSystem instance() {
         return SingletonHolder.SINGLETON;
     }
 
     public void update(Marquee marquee) {
-        marquee.runner().tickTimer().doTick();
+        marquee.anim().tickTimer().doTick();
     }
 
     public void start(Marquee marquee) {
-        marquee.runner().tickTimer().restartIndefinitely();
+        marquee.anim().tickTimer().restartIndefinitely();
     }
 }

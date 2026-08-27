@@ -18,7 +18,7 @@ import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Marquee;
 import de.amr.pacmanfx.core.entities.Pac;
-import de.amr.pacmanfx.core.entities.marquee.system.MarqueeSystem;
+import de.amr.pacmanfx.core.entities.marquee.system.MarqueeAnimSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
@@ -168,7 +168,7 @@ public class TengenMsPacMan_IntroScene extends GameScene {
 
                 timer.restartTicks(TickTimer.INDEFINITE);
 
-                MarqueeSystem.instance().start(scene.marquee);
+                MarqueeAnimSystem.instance().start(scene.marquee);
 
                 scene.msPacMan = actorFactory.createMsPacMan();
                 scene.msPacMan.pos().set(WorldMap.TS * 33, ACTOR_Y);
@@ -205,7 +205,7 @@ public class TengenMsPacMan_IntroScene extends GameScene {
 
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
-                MarqueeSystem.instance().update(scene.marquee);
+                MarqueeAnimSystem.instance().update(scene.marquee);
 
                 if (timer.atSecond(1)) {
                     scene.flow.enterState(scene, GHOSTS_MARCHING_IN);
@@ -222,7 +222,7 @@ public class TengenMsPacMan_IntroScene extends GameScene {
 
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
-                MarqueeSystem.instance().update(scene.marquee);
+                MarqueeAnimSystem.instance().update(scene.marquee);
 
                 boolean reachedEndPosition = letGhostMarchIn(scene);
                 if (reachedEndPosition) {
@@ -284,7 +284,7 @@ public class TengenMsPacMan_IntroScene extends GameScene {
                 final GameSystems systems = game.variant().systems();
                 final GameSession session = game.session();
 
-                MarqueeSystem.instance().update(scene.marquee);
+                MarqueeAnimSystem.instance().update(scene.marquee);
 
                 systems.motor().move(scene.msPacMan);
                 if (scene.msPacMan.pos().x() <= MS_PAC_MAN_STOP_X) {

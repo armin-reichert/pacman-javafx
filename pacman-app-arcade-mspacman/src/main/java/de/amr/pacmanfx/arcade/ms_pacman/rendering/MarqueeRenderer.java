@@ -28,7 +28,7 @@ public class MarqueeRenderer extends BaseRenderer {
      * </p>
      */
     public void drawMarquee(Marquee marquee) {
-        final MarqueeRunnerComp runner = marquee.runner();
+        final MarqueeAnimComp runner = marquee.anim();
         final MarqueeLayoutComp layout = marquee.layout();
         final MarqueeVisualComp visualComp = marquee.visualization();
 
