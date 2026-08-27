@@ -3,12 +3,16 @@
  */
 package de.amr.pacmanfx.core.model.test;
 
+import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.entities.LevelCounter;
+import de.amr.pacmanfx.core.entities.Pac;
+import de.amr.pacmanfx.core.entities.bonus.comp.BonusMoveAndJumpComp;
 import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
+import de.amr.pacmanfx.core.entities.pac.comp.PacState;
 import de.amr.pacmanfx.core.event.TestStartedEvent;
 import de.amr.pacmanfx.core.event.bonus.BonusEatenEvent;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
@@ -96,7 +100,7 @@ public class Test_ShortTestState extends GameState {
             level.entities().pac().hide();
             level.entities().ghosts().forEach(GameEntity::hide);
             level.heartbeat().stop();
-            gamePlay.finishLevel(game, level);
+            finishLevel(level, systems);
         }
         else if (timer().atSecond(START + 10)) {
             if (level.number() == lastTestedLevelNumber) {
@@ -115,5 +119,31 @@ public class Test_ShortTestState extends GameState {
         final LevelCounterSystem levelCounterSystem = game.variant().systems().levelCounterSystem();
         final LevelCounter levelCounter = game.session().hud().levelCounter();
         levelCounterSystem.clearCounter(levelCounter);
+    }
+
+    private void finishLevel(GameLevel level, GameSystems systems) {
+        level.huntingTimerStrategy().stop();
+
+        level.heartbeat().setStartState(Pulse.State.OFF);
+        level.heartbeat().reset();
+
+        // If level was ended by cheat, there might still be food remaining, so eat it:
+        level.food().eatAll();
+
+        // Pac-Man stops and stands still
+        final Pac pac = level.entities().pac();
+        systems.pacState().setState(pac, PacState.SLEEPING);
+        systems.pacPower().reset(pac);
+
+        // Ghosts stop
+        level.entities().ghosts().forEach(ghost -> systems.worldNavigator().setDisabled(ghost, true));
+
+        level.entities().optBonus().ifPresent(bonus -> {
+            systems.bonusState().setBonusInactive(bonus);
+            bonus.optComp(BonusMoveAndJumpComp.class).ifPresent(_-> systems.bonusMoveAndJump().setBonusInactive(bonus));
+            level.entities().remove(bonus);
+        });
+
+        timer().resetToIndefiniteDuration();
     }
 }

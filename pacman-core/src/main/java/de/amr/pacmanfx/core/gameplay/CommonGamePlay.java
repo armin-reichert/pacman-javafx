@@ -11,7 +11,6 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.entities.*;
-import de.amr.pacmanfx.core.entities.bonus.comp.BonusMoveAndJumpComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.pac.comp.PacState;
 import de.amr.pacmanfx.core.entities.pac.system.PacDigestionSystem;
@@ -176,43 +175,6 @@ public abstract class CommonGamePlay implements GamePlay {
         level.entities().pac().hide();
 
         game.eventManager().publishGameEvent(new GhostEatenEvent(eatenGhost));
-    }
-
-    @Override
-    public void finishLevel(GameContext game, GameLevel level) {
-        requireNonNull(game);
-        requireNonNull(level);
-
-        final GameSystems systems = game.variant().systems();
-        final var animController = systems.actorSpriteAnimController();
-        final var navigator = systems.worldNavigator();
-        final Pac pac = level.entities().pac();
-
-        level.huntingTimerStrategy().stop();
-
-        level.heartbeat().setStartState(Pulse.State.OFF);
-        level.heartbeat().reset();
-
-        // If level was ended by cheat, there might still be food remaining, so eat it:
-        level.food().eatAll();
-
-        pac.power().reset();
-        navigator.setMoveDirSpeed(pac, 0);
-        animController.stopSelected(pac);
-        animController.select(pac, CommonSpriteAnimationID.PAC_MOUTH_SHUT);
-
-        level.entities().ghosts().forEach(ghost -> {
-            navigator.setMoveDirSpeed(ghost, 0);
-            //TODO check in emulator if ghost animation is reset to normal when level ends
-            animController.stopSelected(ghost);
-            animController.select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);
-        });
-
-        level.entities().optBonus().ifPresent(bonus -> {
-            systems.bonusState().setBonusInactive(bonus);
-            bonus.optComp(BonusMoveAndJumpComp.class).ifPresent(_-> systems.bonusMoveAndJump().setBonusInactive(bonus));
-            level.entities().remove(bonus);
-        });
     }
 
     // Scoring
