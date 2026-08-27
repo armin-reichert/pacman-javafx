@@ -41,19 +41,18 @@ public class GhostStateSystem {
 
         final GameSystems systems = game.variant().systems();
         final ActorSpeedRules speedRules = game.variant().rules().actorSpeedRules();
-        final GhostHouseAccessComp houseAccess = ghost.reqComp(GhostHouseAccessComp.class);
 
         switch (ghost.state().enumValue()) {
             case LOCKED -> {
                 // gets unlocked by gatekeeper for now
             }
             case ENTERING_HOUSE -> {
-                if (houseAccess.reachedRevivalPosition()) {
+                if (ghost.houseAccess().reachedRevivalPosition()) {
                     setState(ghost, GhostState.LOCKED);
                 }
             }
             case LEAVING_HOUSE -> {
-                if (houseAccess.leftHouse()) {
+                if (ghost.houseAccess().leftHouse()) {
                     final GhostState state = ghost.state().isThreatenedByPac()
                         ? GhostState.FRIGHTENED
                         : GhostState.HUNTING_PAC;
@@ -61,7 +60,7 @@ public class GhostStateSystem {
                 }
             }
             case RETURNING_HOME -> {
-                if (houseAccess.reachedHouseEntry()) {
+                if (ghost.houseAccess().reachedHouseEntry()) {
                     setState(ghost, GhostState.ENTERING_HOUSE);
                 }
             }

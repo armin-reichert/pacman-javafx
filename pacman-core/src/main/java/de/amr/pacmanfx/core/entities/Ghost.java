@@ -57,6 +57,9 @@ public final class Ghost extends GameEntity {
         return reqComp(GhostWorldInfoComp.class);
     }
 
+    public GhostHouseAccessComp houseAccess() {
+        return reqComp(GhostHouseAccessComp.class);
+    }
     public GhostStateComp state() {
         return reqComp(GhostStateComp.class);
     }

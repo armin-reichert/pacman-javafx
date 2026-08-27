@@ -89,7 +89,7 @@ public class GhostHouseAccessSystem {
 
             // don't change direction directly when outside house
             ghost.worldNavigation().setNewTileEntered(false);
-            ghost.reqComp(GhostHouseAccessComp.class).setLeftHouse(true);
+            ghost.houseAccess().setLeftHouse(true);
         }
         else {
             final float centerX = position.x() + WorldMap.HTS;
@@ -109,7 +109,7 @@ public class GhostHouseAccessSystem {
             navigator.setMoveDirSpeed(ghost, speed);
             motor.move(ghost);
 
-            ghost.reqComp(GhostHouseAccessComp.class).setLeftHouse(false);
+            ghost.houseAccess().setLeftHouse(false);
         }
     }
 
@@ -131,7 +131,7 @@ public class GhostHouseAccessSystem {
             position.set(revivalPosition.x(), revivalPosition.y());
             navigator.setMoveDir(ghost, UP);
             navigator.setWishDir(ghost, UP);
-            ghost.reqComp(GhostHouseAccessComp.class).setReachedRevivalPosition(true);
+            ghost.houseAccess().setReachedRevivalPosition(true);
             return;
         }
 
@@ -150,7 +150,7 @@ public class GhostHouseAccessSystem {
         navigator.setMoveDirSpeed(ghost, speed);
         motor.move(ghost);
 
-        ghost.reqComp(GhostHouseAccessComp.class).setReachedRevivalPosition(false);
+        ghost.houseAccess().setReachedRevivalPosition(false);
     }
 
     private void moveTowardsHouse(Ghost ghost, GameLevel level, float speed) {
@@ -162,14 +162,14 @@ public class GhostHouseAccessSystem {
             ghostPos.set(entryPos);
             navigator.setMoveDir(ghost, DOWN);
             navigator.setWishDir(ghost, DOWN);
-            ghost.reqComp(GhostHouseAccessComp.class).setReachedHouseEntry(true);
+            ghost.houseAccess().setReachedHouseEntry(true);
         }
         else {
             navigator.setTargetTile(ghost, house.floorplan().leftDoorTile());
             navigator.setWishDirTowardsTargetTile(ghost, level, movementPolicy);
             navigator.setMoveDirSpeed(ghost, speed);
             navigator.tryMovingOrTeleporting(level, ghost, motor, movementPolicy);
-            ghost.reqComp(GhostHouseAccessComp.class).setReachedHouseEntry(false);
+            ghost.houseAccess().setReachedHouseEntry(false);
         }
     }
 }
