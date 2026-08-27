@@ -9,6 +9,7 @@ import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.entities.Pac;
+import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.pac.comp.PacState;
 import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.core.event.pac.PacDeadEvent;
@@ -50,9 +51,12 @@ public final class Common_PacManDyingState extends GameState {
         systems.pacPower().reset(pac);
         systems.pacAnimation().setDisabled(pac, true);
 
-        // Note: this works also if the bonus has no Elroy component!
         level.entities().ghosts().forEach(ghost -> {
-            systems.worldNavigator().setDisabled(ghost, true);
+            // Copilot claims that eaten ghosts returning to the house continue even when Pac-Man dies
+            if (ghost.state().enumValue() != GhostState.RETURNING_HOME) {
+                systems.worldNavigator().setDisabled(ghost, true);
+            }
+            // Note: this works also if the bonus has no Elroy component!
             systems.ghostState().setElroyEnabled(ghost, false);
         });
 
