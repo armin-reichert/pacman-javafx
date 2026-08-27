@@ -5,10 +5,10 @@
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.basics.math.Direction;
+import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
@@ -76,38 +76,38 @@ public class ArcadePacMan_CutScene3 extends GameScene {
         sys.motor().move(blinky);
     }
 
-    private void startAnimation(GameSystems sys) {
+    private void startAnimation(GameSystems systems) {
         soundManager().play(PacManGameSoundID.INTERMISSION_3, 2);
-        startBlinkyChasingPacMan(sys);
+        startBlinkyChasingPacMan(systems);
     }
 
-    private void startBlinkyRunningNaked(GameSystems sys) {
-        sys.worldNavigator().placeAtTile(blinky, -1, 20);
-        sys.worldNavigator().setMoveDir(blinky, Direction.RIGHT);
-        sys.worldNavigator().setWishDir(blinky, Direction.RIGHT);
+    private void startBlinkyRunningNaked(GameSystems systems) {
+        systems.worldNavigator().placeAtTile(blinky, -1, 20);
+        systems.worldNavigator().setMoveDir(blinky, Direction.RIGHT);
+        systems.worldNavigator().setWishDir(blinky, Direction.RIGHT);
 
-        sys.actorSpriteAnimController().select(blinky, CommonSpriteAnimationID.BLINKY_NAKED);
-        sys.actorSpriteAnimController().playSelected(blinky);
+        systems.actorSpriteAnimController().select(blinky, CommonSpriteAnimationID.BLINKY_NAKED);
+        systems.actorSpriteAnimController().playSelected(blinky);
     }
 
-    private void startBlinkyChasingPacMan(GameSystems sys) {
+    private void startBlinkyChasingPacMan(GameSystems systems) {
         pacMan.show();
 
-        sys.worldNavigator().placeAtTile(pacMan, 29, 20);
-        sys.worldNavigator().setMoveDir(pacMan, Direction.LEFT);
-        sys.worldNavigator().setMoveDirSpeed(pacMan, 1.25f);
+        systems.worldNavigator().placeAtTile(pacMan, 29, 20);
+        systems.worldNavigator().setMoveDir(pacMan, Direction.LEFT);
+        systems.worldNavigator().setMoveDirSpeed(pacMan, 1.25f);
 
-        sys.actorSpriteAnimController().select(pacMan, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
-        sys.actorSpriteAnimController().playSelected(pacMan);
+        systems.actorSpriteAnimController().select(pacMan, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
+        systems.actorSpriteAnimController().playSelected(pacMan);
 
         blinky.show();
 
-        sys.worldNavigator().placeAtTile(blinky, 35, 20);
-        sys.worldNavigator().setMoveDir(blinky, Direction.LEFT);
-        sys.worldNavigator().setWishDir(blinky, Direction.LEFT);
-        sys.worldNavigator().setMoveDirSpeed(blinky, 1.25f);
+        systems.worldNavigator().placeAtTile(blinky, 35, 20);
+        systems.worldNavigator().setMoveDir(blinky, Direction.LEFT);
+        systems.worldNavigator().setWishDir(blinky, Direction.LEFT);
+        systems.worldNavigator().setMoveDirSpeed(blinky, 1.25f);
 
-        sys.actorSpriteAnimController().select(blinky, CommonSpriteAnimationID.BLINKY_PATCHED);
-        sys.actorSpriteAnimController().playSelected(blinky);
+        systems.actorSpriteAnimController().select(blinky, CommonSpriteAnimationID.BLINKY_PATCHED);
+        systems.actorSpriteAnimController().playSelected(blinky);
     }
 }

@@ -4,12 +4,12 @@
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.basics.math.Direction;
+import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.bag.ArcadeMsPacMan_BagSAM;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.stork.ArcadeMsPacMan_StorkSAM;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
@@ -153,10 +153,10 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene {
 
     // State DELIVER_JUNIOR
 
-    private void enterDeliverJuniorState(GameSystems sys, SceneState newState) {
-        final MovementSystem motor = sys.motor();
-        final WorldNavigationSystem worldNavigator = sys.worldNavigator();
-        final ActorSpriteAnimController animSystem = sys.actorSpriteAnimController();
+    private void enterDeliverJuniorState(GameSystems systems, SceneState newState) {
+        final MovementSystem motor = systems.motor();
+        final WorldNavigationSystem worldNavigator = systems.worldNavigator();
+        final ActorSpriteAnimController animSystem = systems.actorSpriteAnimController();
         
         pacMan.pos().set(TS * 3, GROUND_Y - 4);
         pacMan.show();

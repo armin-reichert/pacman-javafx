@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.basics.math.Direction;
+import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimation;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimationBuilder;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
@@ -12,7 +13,6 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
@@ -125,44 +125,44 @@ public class ArcadePacMan_CutScene2 extends GameScene {
         game().state().triggerTimeout();
     }
 
-    private void dressRaptures(GameSystems sys) {
+    private void dressRaptures(GameSystems systems) {
         blinky.pos().sub(4, 0);
-        sys.actorSpriteAnimController().select(blinky, CommonSpriteAnimationID.BLINKY_DAMAGED);
+        systems.actorSpriteAnimController().select(blinky, CommonSpriteAnimationID.BLINKY_DAMAGED);
         setDressState(NailDressState.RAPTURED);
     }
 
-    private void blinkyStopsMoving(GameSystems sys) {
-        sys.worldNavigator().setMoveDirSpeed(blinky, 0);
-        sys.actorSpriteAnimController().stopSelected(blinky);
+    private void blinkyStopsMoving(GameSystems systems) {
+        systems.worldNavigator().setMoveDirSpeed(blinky, 0);
+        systems.actorSpriteAnimController().stopSelected(blinky);
     }
 
-    private void blinkyGetsCaughtOnNail(GameSystems sys) {
-        sys.worldNavigator().setMoveDirSpeed(blinky, 0.09f);
+    private void blinkyGetsCaughtOnNail(GameSystems systems) {
+        systems.worldNavigator().setMoveDirSpeed(blinky, 0.09f);
         //TODO
         //blinkyAnimation(CommonAnimationID.GHOST_NORMAL).setFrameDurationTicks(32);
     }
 
-    private void blinkyStartsRunning(GameSystems sys) {
+    private void blinkyStartsRunning(GameSystems systems) {
         blinky.show();
 
-        sys.worldNavigator().placeAtTile(blinky, 28, 20, -3, 0);
-        sys.worldNavigator().setMoveDir(blinky, Direction.LEFT);
-        sys.worldNavigator().setWishDir(blinky, Direction.LEFT);
-        sys.worldNavigator().setMoveDirSpeed(blinky, 1.25f);
+        systems.worldNavigator().placeAtTile(blinky, 28, 20, -3, 0);
+        systems.worldNavigator().setMoveDir(blinky, Direction.LEFT);
+        systems.worldNavigator().setWishDir(blinky, Direction.LEFT);
+        systems.worldNavigator().setMoveDirSpeed(blinky, 1.25f);
 
-        sys.actorSpriteAnimController().select(blinky, CommonSpriteAnimationID.GHOST_NORMAL);
-        sys.actorSpriteAnimController().playSelected(blinky);
+        systems.actorSpriteAnimController().select(blinky, CommonSpriteAnimationID.GHOST_NORMAL);
+        systems.actorSpriteAnimController().playSelected(blinky);
     }
 
-    private void pacManStartsRunning(GameSystems sys) {
+    private void pacManStartsRunning(GameSystems systems) {
         pacMan.show();
 
-        sys.worldNavigator().placeAtTile(pacMan, 28, 20);
-        sys.worldNavigator().setMoveDir(pacMan, Direction.LEFT);
-        sys.worldNavigator().setMoveDirSpeed(pacMan, 1.15f);
+        systems.worldNavigator().placeAtTile(pacMan, 28, 20);
+        systems.worldNavigator().setMoveDir(pacMan, Direction.LEFT);
+        systems.worldNavigator().setMoveDirSpeed(pacMan, 1.15f);
 
-        sys.actorSpriteAnimController().select(pacMan, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
-        sys.actorSpriteAnimController().playSelected(pacMan);
+        systems.actorSpriteAnimController().select(pacMan, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
+        systems.actorSpriteAnimController().playSelected(pacMan);
     }
 
     private void setDressState(NailDressState state) {

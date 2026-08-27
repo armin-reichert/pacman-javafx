@@ -4,13 +4,13 @@
 package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.basics.math.Direction;
+import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.Heart;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.Clapperboard;
@@ -120,53 +120,53 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene {
         sceneTimer.start();
     }
 
-    private void updateStateClapperboard(GameSystems sys) {
+    private void updateStateClapperboard(GameSystems systems) {
         ClapperboardStateSystem.update(clapperboard);
         if (sceneTimer.atSecond(1)) {
             soundManager().play(PacManGameSoundID.INTERMISSION_1);
         } else if (sceneTimer.hasExpired()) {
-            enterStateChasedByGhosts(sys);
+            enterStateChasedByGhosts(systems);
         }
     }
 
-    private void enterStateChasedByGhosts(GameSystems sys) {
+    private void enterStateChasedByGhosts(GameSystems systems) {
         pacMan.pos().set(WorldMap.TS * (-2), UPPER_Y);
         pacMan.show();
 
-        sys.worldNavigator().setMoveDir(pacMan, Direction.RIGHT);
-        sys.worldNavigator().setMoveDirSpeed(pacMan, SPEED_PAC_CHASING);
+        systems.worldNavigator().setMoveDir(pacMan, Direction.RIGHT);
+        systems.worldNavigator().setMoveDirSpeed(pacMan, SPEED_PAC_CHASING);
 
-        sys.actorSpriteAnimController().select(pacMan, CommonSpriteAnimationID.MR_PAC_MAN_MUNCHING);
-        sys.actorSpriteAnimController().playSelected(pacMan);
+        systems.actorSpriteAnimController().select(pacMan, CommonSpriteAnimationID.MR_PAC_MAN_MUNCHING);
+        systems.actorSpriteAnimController().playSelected(pacMan);
 
         inky.pos().set(pacMan.pos().x() - 6 * WorldMap.TS, pacMan.pos().y());
         inky.show();
 
-        sys.worldNavigator().setMoveDirSpeed(inky, SPEED_GHOST_CHASING);
-        sys.worldNavigator().setMoveDir(inky, Direction.RIGHT);
-        sys.worldNavigator().setWishDir(inky, Direction.RIGHT);
+        systems.worldNavigator().setMoveDirSpeed(inky, SPEED_GHOST_CHASING);
+        systems.worldNavigator().setMoveDir(inky, Direction.RIGHT);
+        systems.worldNavigator().setWishDir(inky, Direction.RIGHT);
 
-        sys.actorSpriteAnimController().select(inky, CommonSpriteAnimationID.GHOST_NORMAL);
-        sys.actorSpriteAnimController().playSelected(inky);
+        systems.actorSpriteAnimController().select(inky, CommonSpriteAnimationID.GHOST_NORMAL);
+        systems.actorSpriteAnimController().playSelected(inky);
 
         msPacMan.pos().set(WorldMap.TS * 30, LOWER_Y);
         msPacMan.show();
 
-        sys.worldNavigator().setMoveDir(msPacMan, Direction.LEFT);
-        sys.worldNavigator().setMoveDirSpeed(msPacMan, SPEED_PAC_CHASING);
+        systems.worldNavigator().setMoveDir(msPacMan, Direction.LEFT);
+        systems.worldNavigator().setMoveDirSpeed(msPacMan, SPEED_PAC_CHASING);
 
-        sys.actorSpriteAnimController().select(msPacMan, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
-        sys.actorSpriteAnimController().playSelected(msPacMan);
+        systems.actorSpriteAnimController().select(msPacMan, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
+        systems.actorSpriteAnimController().playSelected(msPacMan);
 
         pinky.pos().set(msPacMan.pos().x() + 6 * WorldMap.TS, msPacMan.pos().y());
         pinky.show();
 
-        sys.worldNavigator().setMoveDir(pinky, Direction.LEFT);
-        sys.worldNavigator().setWishDir(pinky, Direction.LEFT);
-        sys.worldNavigator().setMoveDirSpeed(pinky, SPEED_GHOST_CHASING);
+        systems.worldNavigator().setMoveDir(pinky, Direction.LEFT);
+        systems.worldNavigator().setWishDir(pinky, Direction.LEFT);
+        systems.worldNavigator().setMoveDirSpeed(pinky, SPEED_GHOST_CHASING);
 
-        sys.actorSpriteAnimController().select(pinky, CommonSpriteAnimationID.GHOST_NORMAL);
-        sys.actorSpriteAnimController().playSelected(pinky);
+        systems.actorSpriteAnimController().select(pinky, CommonSpriteAnimationID.GHOST_NORMAL);
+        systems.actorSpriteAnimController().playSelected(pinky);
 
         setState(SceneState.CHASED_BY_GHOSTS, TickTimer.INDEFINITE);
     }
@@ -180,57 +180,57 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene {
         }
     }
 
-    private void enterStateComingTogether(GameSystems sys) {
+    private void enterStateComingTogether(GameSystems systems) {
         msPacMan.pos().set(WorldMap.TS * (-3), MIDDLE_Y);
-        sys.worldNavigator().setMoveDir(msPacMan, Direction.RIGHT);
+        systems.worldNavigator().setMoveDir(msPacMan, Direction.RIGHT);
 
         pinky.pos().set(msPacMan.pos().x() - 5 * WorldMap.TS, msPacMan.pos().y());
-        sys.worldNavigator().setMoveDir(pinky, Direction.RIGHT);
-        sys.worldNavigator().setWishDir(pinky, Direction.RIGHT);
+        systems.worldNavigator().setMoveDir(pinky, Direction.RIGHT);
+        systems.worldNavigator().setWishDir(pinky, Direction.RIGHT);
 
         pacMan.pos().set(WorldMap.TS * 31, MIDDLE_Y);
-        sys.worldNavigator().setMoveDir(pacMan, Direction.LEFT);
+        systems.worldNavigator().setMoveDir(pacMan, Direction.LEFT);
 
         inky.pos().set(pacMan.pos().x() + 5 * WorldMap.TS, pacMan.pos().y());
-        sys.worldNavigator().setMoveDir(inky, Direction.LEFT);
-        sys.worldNavigator().setWishDir(inky, Direction.LEFT);
+        systems.worldNavigator().setMoveDir(inky, Direction.LEFT);
+        systems.worldNavigator().setWishDir(inky, Direction.LEFT);
 
         setState(SceneState.COMING_TOGETHER, TickTimer.INDEFINITE);
     }
 
-    private void updateStateComingTogether(GameSystems sys) {
+    private void updateStateComingTogether(GameSystems systems) {
         // Pac-Man and Ms. Pac-Man reach end position?
         if (pacMan.worldNavigation().moveDir() == Direction.UP && pacMan.pos().y() < UPPER_Y) {
-            enterStateInHeaven(sys);
+            enterStateInHeaven(systems);
         }
 
         // Pac-Man and Ms. Pac-Man meet?
         else if (pacMan.worldNavigation().moveDir() == Direction.LEFT && pacMan.pos().x() - msPacMan.pos().x() < WorldMap.TS * 2) {
-            sys.worldNavigator().setMoveDir(pacMan, Direction.UP);
-            sys.worldNavigator().setMoveDirSpeed(pacMan, SPEED_RISING);
-            sys.worldNavigator().setMoveDir(msPacMan, Direction.UP);
-            sys.worldNavigator().setMoveDirSpeed(msPacMan, SPEED_RISING);
+            systems.worldNavigator().setMoveDir(pacMan, Direction.UP);
+            systems.worldNavigator().setMoveDirSpeed(pacMan, SPEED_RISING);
+            systems.worldNavigator().setMoveDir(msPacMan, Direction.UP);
+            systems.worldNavigator().setMoveDirSpeed(msPacMan, SPEED_RISING);
         }
 
         // Inky and Pinky collide?
         else if (inky.worldNavigation().moveDir() == Direction.LEFT && inky.pos().x() - pinky.pos().x() < WorldMap.TS * 2) {
-            sys.worldNavigator().setMoveDir(inky, Direction.RIGHT);
-            sys.worldNavigator().setWishDir(inky, Direction.RIGHT);
-            sys.worldNavigator().setMoveDirSpeed(inky, SPEED_GHOST_AFTER_COLLISION);
+            systems.worldNavigator().setMoveDir(inky, Direction.RIGHT);
+            systems.worldNavigator().setWishDir(inky, Direction.RIGHT);
+            systems.worldNavigator().setMoveDirSpeed(inky, SPEED_GHOST_AFTER_COLLISION);
 
-            sys.motor().setVelocityY(inky, inky.movement().velocityY() - 2.0f);
-            sys.motor().setAcceleration(inky, 0, 0.4f);
+            systems.motor().setVelocityY(inky, inky.movement().velocityY() - 2.0f);
+            systems.motor().setAcceleration(inky, 0, 0.4f);
 
-            sys.worldNavigator().setMoveDir(pinky, Direction.LEFT);
-            sys.worldNavigator().setWishDir(pinky, Direction.LEFT);
-            sys.worldNavigator().setMoveDirSpeed(pinky, SPEED_GHOST_AFTER_COLLISION);
+            systems.worldNavigator().setMoveDir(pinky, Direction.LEFT);
+            systems.worldNavigator().setWishDir(pinky, Direction.LEFT);
+            systems.worldNavigator().setMoveDirSpeed(pinky, SPEED_GHOST_AFTER_COLLISION);
 
-            sys.motor().setVelocityY(pinky, pinky.movement().velocityY() - 2.0f);
-            sys.motor().setAcceleration(pinky, 0, 0.4f);
+            systems.motor().setVelocityY(pinky, pinky.movement().velocityY() - 2.0f);
+            systems.motor().setAcceleration(pinky, 0, 0.4f);
         }
 
         else {
-            List.of(pacMan, msPacMan, inky, pinky).forEach(sys.motor()::move);
+            List.of(pacMan, msPacMan, inky, pinky).forEach(systems.motor()::move);
 
             // Collision with ground?
             if (inky.pos().y() > MIDDLE_Y) {
@@ -244,18 +244,18 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene {
         }
     }
 
-    private void enterStateInHeaven(GameSystems sys) {
-        sys.worldNavigator().setMoveDirSpeed(pacMan, 0);
-        sys.worldNavigator().setMoveDir(pacMan, Direction.LEFT);
+    private void enterStateInHeaven(GameSystems systems) {
+        systems.worldNavigator().setMoveDirSpeed(pacMan, 0);
+        systems.worldNavigator().setMoveDir(pacMan, Direction.LEFT);
 
-        sys.actorSpriteAnimController().stopSelected(pacMan);
-        sys.actorSpriteAnimController().resetSelected(pacMan);
+        systems.actorSpriteAnimController().stopSelected(pacMan);
+        systems.actorSpriteAnimController().resetSelected(pacMan);
 
-        sys.worldNavigator().setMoveDirSpeed(msPacMan, 0);
-        sys.worldNavigator().setMoveDir(msPacMan, Direction.RIGHT);
+        systems.worldNavigator().setMoveDirSpeed(msPacMan, 0);
+        systems.worldNavigator().setMoveDir(msPacMan, Direction.RIGHT);
 
-        sys.actorSpriteAnimController().stopSelected(msPacMan);
-        sys.actorSpriteAnimController().resetSelected(msPacMan);
+        systems.actorSpriteAnimController().stopSelected(msPacMan);
+        systems.actorSpriteAnimController().resetSelected(msPacMan);
 
         inky.hide();
         pinky.hide();

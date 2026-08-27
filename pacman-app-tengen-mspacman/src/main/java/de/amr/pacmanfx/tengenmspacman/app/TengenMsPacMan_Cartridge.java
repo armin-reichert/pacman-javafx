@@ -1,7 +1,7 @@
 package de.amr.pacmanfx.tengenmspacman.app;
 
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.core.DefaultGameSystems;
+import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.game.Cartridge;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantUIConfig;
@@ -17,7 +17,7 @@ public class TengenMsPacMan_Cartridge {
 
     public static final Cartridge CARTRIDGE = new Cartridge(
         GameVariantID.TENGEN_MS_PACMAN,
-        DefaultGameSystems::new,
+        GameSystems::new,
         TengenMsPacMan_GamePlay::new,
         TengenMsPacMan_GameVariantUIConfig::createGameFlow,
         TengenMsPacMan_GameRules::new,

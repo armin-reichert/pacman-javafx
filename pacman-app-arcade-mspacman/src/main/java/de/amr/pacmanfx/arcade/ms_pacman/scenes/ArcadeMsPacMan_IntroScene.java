@@ -7,13 +7,13 @@ package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 import de.amr.basics.fsm.State;
 import de.amr.basics.fsm.StateMachine;
 import de.amr.basics.math.Direction;
+import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
@@ -94,9 +94,9 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
         final var actorFactory = new ArcadeMsPacMan_ActorFactory();
         final GameVariant variant = app().gameVariants().currentGameVariant();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
-        final SpriteAnimContainer animContainer    = variant.spriteAnimContainer();
-        final ActorSpriteAnimController animController  = variant.config().systems().actorSpriteAnimController();
-        final GameSystems systems                  = variant.config().systems();
+        final SpriteAnimContainer animContainer = variant.spriteAnimContainer();
+        final ActorSpriteAnimController animController = variant.config().systems().actorSpriteAnimController();
+        final GameSystems systems  = variant.config().systems();
         final WorldNavigationSystem worldNavigationSystem = systems.worldNavigator();
 
         createMarquee();
