@@ -125,7 +125,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
             worldNavigationSystem.setWishDir(ghost, Direction.LEFT);
             worldNavigationSystem.setMoveDirSpeed(ghost, ACTOR_SPEED);
 
-            systems.ghostState().changeGhostState(ghost, GhostState.HUNTING_PAC);
+            systems.ghostState().setState(ghost, GhostState.HUNTING_PAC);
         }
 
         ghostPresented = GhostPersonality.RED_GHOST_SHADOW;

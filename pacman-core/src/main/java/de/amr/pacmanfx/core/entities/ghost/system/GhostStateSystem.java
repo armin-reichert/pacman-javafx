@@ -62,7 +62,7 @@ public class GhostStateSystem {
                     final GhostState stateAfterLeavingHouse = ghost.state().isThreatenedByPac()
                         ? GhostState.FRIGHTENED
                         : GhostState.HUNTING_PAC;
-                    changeGhostState(ghost, stateAfterLeavingHouse);
+                    setState(ghost, stateAfterLeavingHouse);
                 }
             }
 
@@ -72,16 +72,16 @@ public class GhostStateSystem {
                 roamingSystem.roam(level, ghost, ghost.worldNavigation(), movementPolicy, motor, speed);
 
             case RETURNING_HOME -> houseAccessSystem.reachHouse(level, ghost, navigator, movementPolicy, motor, speed)
-                .ifPresent(newState -> changeGhostState(ghost, newState));
+                .ifPresent(newState -> setState(ghost, newState));
 
             case ENTERING_HOUSE -> houseAccessSystem.enterHouse(ghost, navigator, motor, speed)
-                .ifPresent(newState -> changeGhostState(ghost, newState));
+                .ifPresent(newState -> setState(ghost, newState));
 
             case EATEN -> {}
         }
     }
 
-    public void changeGhostState(Ghost ghost, GhostState newState) {
+    public void setState(Ghost ghost, GhostState newState) {
         requireNonNull(ghost);
         requireNonNull(newState);
 

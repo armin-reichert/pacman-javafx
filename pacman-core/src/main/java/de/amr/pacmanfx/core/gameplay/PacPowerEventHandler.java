@@ -36,7 +36,7 @@ public class PacPowerEventHandler implements DefaultGameEventListener {
 
         level.entities()
             .ghostsInState(GhostState.HUNTING_PAC)
-            .forEach(ghost -> systems.ghostState().changeGhostState(ghost, GhostState.FRIGHTENED));
+            .forEach(ghost -> systems.ghostState().setState(ghost, GhostState.FRIGHTENED));
 
         systems.pacPower().start(e.pac(), durationTicks);
     }
@@ -49,7 +49,7 @@ public class PacPowerEventHandler implements DefaultGameEventListener {
         level.clearGhostKillChain();
 
         level.entities().ghostsInState(GhostState.FRIGHTENED).forEach(ghost ->
-            systems.ghostState().changeGhostState(ghost, GhostState.HUNTING_PAC));
+            systems.ghostState().setState(ghost, GhostState.HUNTING_PAC));
 
         level.huntingTimerStrategy().start();
 

@@ -66,7 +66,7 @@ public abstract class CommonGamePlay implements GamePlay {
             final Direction direction = house.floorplan().ghostStartDirection(ghost.personality());
             systems.worldNavigator().setMoveDir(ghost, direction);
             systems.worldNavigator().setWishDir(ghost, direction);
-            systems.ghostState().changeGhostState(ghost, GhostState.LOCKED);
+            systems.ghostState().setState(ghost, GhostState.LOCKED);
             systems.actorSpriteAnimController().resetSelected(ghost);
         });
 
@@ -168,7 +168,7 @@ public abstract class CommonGamePlay implements GamePlay {
             systems.actorSpriteAnimController().stopSelected(ghost);
         }
 
-        systems.ghostState().changeGhostState(eatenGhost, GhostState.EATEN);
+        systems.ghostState().setState(eatenGhost, GhostState.EATEN);
         // Animation index is 0-based, animation frame 0 shows points for *first* killed ghost...
         systems.actorSpriteAnimController().selectAndSetFrame(eatenGhost, CommonSpriteAnimationID.GHOST_POINTS, killedBefore);
 
