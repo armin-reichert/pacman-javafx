@@ -46,11 +46,11 @@ public final class Common_PacManDyingState extends GameState {
         level.gateKeeper().resetCounterAndSetEnabled(true);
         level.huntingTimerStrategy().stop();
 
-        // Stop Pac-Man and set "dead" state
+        // Stop Pac-Man movement and animation and set "dead" state
         systems.worldNavigator().setDisabled(pac, true);
-        systems.pacState().setState(pac, PacState.DEAD);
-        systems.pacPower().reset(pac);
         systems.pacAnimation().setDisabled(pac, true);
+        systems.pacPower().reset(pac);
+        systems.pacState().setState(pac, PacState.DEAD);
 
         level.entities().ghosts().forEach(ghost -> {
             // Copilot claims that eaten ghosts returning to the house continue even when Pac-Man dies
@@ -61,10 +61,13 @@ public final class Common_PacManDyingState extends GameState {
             systems.ghostState().setElroyEnabled(ghost, false);
         });
 
-        // Note: this works also if the bonus has no movement component!
+        // Stop bonus movement. Note: this works also if the bonus has no movement component!
         level.entities().optBonus().ifPresent(bonus -> systems.bonusMoveAndJump().setBonusInactive(bonus));
 
+        // End of dying animation triggers state timeout
         timer().resetToIndefiniteDuration();
+
+        //TODO: needed? Scene controllers stop sounds already?
         game.eventManager().publishGameEvent(new StopAllSoundsEvent());
     }
 
@@ -73,19 +76,18 @@ public final class Common_PacManDyingState extends GameState {
         final long tick = timer().tickCount();
 
         if (tick == 0) {
-            // At this point in time, the "dying" animation has been selected. However, it could
-            // be in the state from the previous playing (it is cached), so we reset it here.
+            // At this point in time, the "dying" animation is selected. However, it could still
+            // be at the last frame (from the previous execution), so we have to reset it here.
             systems.actorSpriteAnimController().resetSelected(pac);
         }
         else if (tick == pacDyingTiming.hideGhostsTick()) {
             level.entities().ghosts().forEach(GameEntity::hide);
         }
         else if (tick == pacDyingTiming.animationStartTick()) {
-            systems.pacAnimation().setDisabled(pac, false); // "dying" animation can run now
+            systems.pacAnimation().setDisabled(pac, false); // "dying" animation can start/continue
             game.eventManager().publishGameEvent(new PacDyingEvent(pac));
         }
         else if (tick == pacDyingTiming.hidePacTick()) {
-            systems.actorSpriteAnimController().resetSelected(pac);
             pac.hide();
         }
         else if (tick == pacDyingTiming.pacDeadTick()) {
