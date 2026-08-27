@@ -6,14 +6,15 @@ package de.amr.pacmanfx.core.entities.ghost.system;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
-import de.amr.pacmanfx.core.ecs.systems.*;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.ghost.comp.ElroyComp;
+import de.amr.pacmanfx.core.entities.ghost.comp.GhostHouseAccessComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.gameplay.hunt.GhostHuntingStrategy;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
+import de.amr.pacmanfx.core.rules.ActorSpeedRules;
 import de.amr.pacmanfx.core.rules.GameRules;
 
 import java.util.Set;
@@ -26,25 +27,11 @@ public class GhostStateSystem {
     public static final Set<GhostState> UPDATED_GHOST_STATES_WHILE_EATEN = Set.of(
         GhostState.EATEN, GhostState.RETURNING_HOME, GhostState.ENTERING_HOUSE);
 
-    private final GhostHouseAccessSystem houseAccessSystem;
-
-    public GhostStateSystem(GhostHouseAccessSystem houseAccessSystem) {
-        this.houseAccessSystem = requireNonNull(houseAccessSystem);
-    }
+    public GhostStateSystem() {}
 
     public void update(GameContext game, GameLevel level, Ghost ghost) {
         requireNonNull(game);
         requireNonNull(ghost);
-
-        final GameSystems systems = game.variant().systems();
-
-        final MovementSystem motor = systems.motor();
-        final WorldNavigationSystem navigator = systems.worldNavigator();
-        final WorldMovementPolicy<Ghost> movementPolicy = systems.ghostWorldMovementPolicy();
-        final GhostHuntingStrategy huntingStrategy = systems.ghostHuntingStrategy(ghost.personality());
-        final RoamingSystem roamingSystem = systems.roaming();
-
-        final float speed = game.variant().rules().actorSpeedRules().ghostSpeed(game, ghost);
 
         final Pac pac = level.entities().pac();
 
@@ -52,32 +39,46 @@ public class GhostStateSystem {
         ghost.state().setFlashing(pac.power().isFading());
         ghost.state().setThreatenedByPac(isGhostThreatenedByPac(level, ghost, pac));
 
+        final GameSystems systems = game.variant().systems();
+        final ActorSpeedRules speedRules = game.variant().rules().actorSpeedRules();
+        final GhostHouseAccessComp houseAccess = ghost.reqComp(GhostHouseAccessComp.class);
+
         switch (ghost.state().enumValue()) {
-
-            case LOCKED -> houseAccessSystem.stayInHouse(ghost, navigator, motor, speed);
-
-            case LEAVING_HOUSE -> {
-                boolean leftHouse = houseAccessSystem.leaveHouse(ghost, navigator, motor, speed);
-                if (leftHouse) {
-                    final GhostState stateAfterLeavingHouse = ghost.state().isThreatenedByPac()
-                        ? GhostState.FRIGHTENED
-                        : GhostState.HUNTING_PAC;
-                    setState(ghost, stateAfterLeavingHouse);
+            case LOCKED -> {
+                // gets unlocked by gatekeeper for now
+            }
+            case ENTERING_HOUSE -> {
+                if (houseAccess.reachedRevivalPosition()) {
+                    setState(ghost, GhostState.LOCKED);
                 }
             }
+            case LEAVING_HOUSE -> {
+                if (houseAccess.leftHouse()) {
+                    final GhostState state = ghost.state().isThreatenedByPac()
+                        ? GhostState.FRIGHTENED
+                        : GhostState.HUNTING_PAC;
+                    setState(ghost, state);
+                }
+            }
+            case RETURNING_HOME -> {
+                if (houseAccess.reachedHouseEntry()) {
+                    setState(ghost, GhostState.ENTERING_HOUSE);
+                }
+            }
+            case HUNTING_PAC -> {
+                //TODO This does not belong here!
+                final GhostHuntingStrategy huntingStrategy = systems.ghostHuntingStrategy(ghost.personality());
+                final GhostWorldMovementPolicy movementPolicy = systems.ghostWorldMovementPolicy();
+                final float speed = speedRules.ghostSpeed(game, ghost);
+                huntingStrategy.hunt(level, ghost, systems.motor(), speed, movementPolicy);
+            }
 
-            case HUNTING_PAC -> huntingStrategy.hunt(level, ghost, motor, speed, movementPolicy);
-
-            case FRIGHTENED ->
-                roamingSystem.roam(level, ghost, ghost.worldNavigation(), movementPolicy, motor, speed);
-
-            case RETURNING_HOME -> houseAccessSystem.reachHouse(level, ghost, navigator, movementPolicy, motor, speed)
-                .ifPresent(newState -> setState(ghost, newState));
-
-            case ENTERING_HOUSE -> houseAccessSystem.enterHouse(ghost, navigator, motor, speed)
-                .ifPresent(newState -> setState(ghost, newState));
-
-            case EATEN -> {}
+            case FRIGHTENED -> {
+                //TODO This does not belong here!
+                final GhostWorldMovementPolicy movementPolicy = systems.ghostWorldMovementPolicy();
+                final float speed = speedRules.ghostSpeed(game, ghost);
+                systems.roaming().roam(level, ghost, ghost.worldNavigation(), movementPolicy, systems.motor(), speed);
+            }
         }
     }
 

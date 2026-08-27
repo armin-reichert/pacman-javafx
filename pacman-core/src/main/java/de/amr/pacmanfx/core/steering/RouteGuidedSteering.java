@@ -62,7 +62,7 @@ public class RouteGuidedSteering<E extends GameEntity> implements Steering<E> {
             selectNextTargetTile(level, gameEntity);
         }
         else {
-            navigator.navigateTowardsTarget(gameEntity, level, worldMovementPolicy);
+            navigator.setWishDirTowardsTargetTile(gameEntity, level, worldMovementPolicy);
         }
     }
 
@@ -73,7 +73,7 @@ public class RouteGuidedSteering<E extends GameEntity> implements Steering<E> {
             //TODO Use navigator method instead
             navigation.setTargetTile(route.get(targetIndex));
             // The next line is important!
-            navigator.navigateTowardsTarget(actor, level, worldMovementPolicy);
+            navigator.setWishDirTowardsTargetTile(actor, level, worldMovementPolicy);
         }
     }
 }

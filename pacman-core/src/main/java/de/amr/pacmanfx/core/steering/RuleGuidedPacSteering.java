@@ -169,7 +169,7 @@ public class RuleGuidedPacSteering implements Steering<Pac> {
                 level, pac, findNearestFoodTiles(level)));
         }
         worldNavigation.optTargetTile().ifPresent(_ -> {
-            navigator.navigateTowardsTarget(pac, level, worldMovementPolicy);
+            navigator.setWishDirTowardsTargetTile(pac, level, worldMovementPolicy);
             Logger.trace("Navigated towards {}, moveDir={} wishDir={}",
                 worldNavigation.targetTile(), worldNavigation.moveDir(), worldNavigation.wishDir());
         });

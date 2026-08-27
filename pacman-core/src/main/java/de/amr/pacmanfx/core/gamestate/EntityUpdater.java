@@ -74,13 +74,17 @@ public class EntityUpdater {
 
     public void updateGhosts(GameContext game, GameLevel level) {
         final boolean ghostEatenState = game.state().id().equals(CommonGameStateID.GAME_LEVEL_EATING_GHOST);
-        final List<Ghost> updatedGhosts = ghostEatenState
+        final List<Ghost> ghostsToUpdate = ghostEatenState
             ? level.entities().ghostsInAnyOfStates(GhostStateSystem.UPDATED_GHOST_STATES_WHILE_EATEN).toList()
             : level.entities().ghosts();
 
         final GameSystems systems = game.variant().systems();
-        updatedGhosts.forEach(ghost -> {
-            //TODO ghost state update currently also updates movement through the world, should be separate!
+        final GameRules rules = game.variant().rules();
+        final ActorSpeedRules speedRules = rules.actorSpeedRules();
+
+        ghostsToUpdate.forEach(ghost -> {
+            final float speed = speedRules.ghostSpeed(game, ghost);
+            systems.ghostHouseAccess().update(ghost, level, speed);
             systems.ghostState().update(game, level, ghost);
             systems.ghostAnimation().update(ghost, level.entities().pac(), systems.actorSpriteAnimController());
         });

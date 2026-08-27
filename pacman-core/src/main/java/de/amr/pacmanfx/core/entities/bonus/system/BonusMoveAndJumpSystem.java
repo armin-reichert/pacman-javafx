@@ -72,7 +72,7 @@ public class BonusMoveAndJumpSystem {
             || level.worldMap().terrainLayer().isTileInPortalSpace(tile);
 
         if (!exitPortalReached) {
-            navigationSystem.navigateTowardsTarget(bonus, level, movementPolicy);
+            navigationSystem.setWishDirTowardsTargetTile(bonus, level, movementPolicy);
             navigationSystem.tryMovingOrTeleporting(level, bonus, motor, movementPolicy);
         }
         moveAndJump.setTargetReached(exitPortalReached);

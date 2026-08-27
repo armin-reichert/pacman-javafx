@@ -9,6 +9,7 @@ import de.amr.pacmanfx.core.ecs.comp.MovementComp;
 import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
 import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostAnimationSelectionComp;
+import de.amr.pacmanfx.core.entities.ghost.comp.GhostHouseAccessComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostStateComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostWorldInfoComp;
 import de.amr.pacmanfx.core.model.GhostPersonality;
@@ -29,6 +30,7 @@ public final class Ghost extends GameEntity {
         setComp(MovementComp.class, new MovementComp());
         setComp(WorldNavigationComp.class, new WorldNavigationComp());
         setComp(GhostWorldInfoComp.class, new GhostWorldInfoComp());
+        setComp(GhostHouseAccessComp.class, new GhostHouseAccessComp());
         setComp(GhostStateComp.class, new GhostStateComp());
         setComp(GhostAnimationSelectionComp.class, new GhostAnimationSelectionComp());
         setComp(SpriteAnimationComp.class, new SpriteAnimationComp());

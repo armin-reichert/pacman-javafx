@@ -70,14 +70,15 @@ public class GameSystems {
     }
 
     protected void createGhostSystems() {
-        ghostHouseAccess = new GhostHouseAccessSystem();
         ghostWorldMovementPolicy = new GhostWorldMovementPolicy();
-        ghostState = new GhostStateSystem(ghostHouseAccess);
+        ghostState = new GhostStateSystem();
 
         redGhostShadowHuntingStrategy = createShadowHuntingStrategy();
         pinkGhostSpeedyHuntingStrategy = createSpeedyHuntingStrategy();
         cyanGhostBashfulHuntingStrategy = createBashfulHuntingStrategy();
         orangeGhostPokeyHuntingStrategy = createPokeyHuntingStrategy();
+
+        ghostHouseAccess = new GhostHouseAccessSystem(navigator, ghostWorldMovementPolicy, motor);
 
         ghostSpriteAnimation = new GhostAnimationSystem();
     }
