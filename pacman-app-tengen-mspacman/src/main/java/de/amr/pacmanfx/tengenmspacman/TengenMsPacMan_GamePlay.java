@@ -28,7 +28,7 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 import de.amr.pacmanfx.core.level.MessageType;
-import de.amr.pacmanfx.core.model.rules.HuntingTimer;
+import de.amr.pacmanfx.core.rules.HuntingTimer;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;

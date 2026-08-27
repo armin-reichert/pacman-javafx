@@ -14,7 +14,7 @@ import de.amr.pacmanfx.core.gameplay.hunt.GamePlayStep;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.MessageType;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.model.rules.GameRules;
+import de.amr.pacmanfx.core.rules.GameRules;
 import org.tinylog.Logger;
 
 import java.util.List;

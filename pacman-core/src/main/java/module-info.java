@@ -19,7 +19,7 @@ module de.amr.pacmanfx.core {
     exports de.amr.pacmanfx.core.level;
     exports de.amr.pacmanfx.core.gameplay;
     exports de.amr.pacmanfx.core.gamestate;
-    exports de.amr.pacmanfx.core.model.rules;
+    exports de.amr.pacmanfx.core.rules;
     exports de.amr.pacmanfx.core.event.base;
     exports de.amr.pacmanfx.core.event.pac;
     exports de.amr.pacmanfx.core.event.ghost;

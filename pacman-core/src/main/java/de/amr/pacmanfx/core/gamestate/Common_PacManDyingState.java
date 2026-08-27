@@ -15,32 +15,33 @@ import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.core.event.pac.PacDeadEvent;
 import de.amr.pacmanfx.core.event.pac.PacDyingEvent;
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.rules.PacDyingTiming;
 
 import static java.util.Objects.requireNonNull;
 
 public final class Common_PacManDyingState extends GameState {
 
-    public record Timing(
-        int hideGhostsTick,
-        int animationStartTick,
-        int hidePacTick,
-        int pacDeadTick) {}
+    private GameFlowController gameFlow;
+    private GameSystems systems;
+    private GameSession session;
+    private GameLevel level;
+    private Pac pac;
+    private PacDyingTiming pacDyingTiming;
 
-    private final Timing timing;
-
-    public Common_PacManDyingState(Timing timing) {
+    public Common_PacManDyingState() {
         super(CommonGameStateID.GAME_LEVEL_PACMAN_DYING);
-        this.timing = requireNonNull(timing);
     }
 
     @Override
     public void onEnter(GameContext game) {
         requireNonNull(game);
 
-        final GameSystems systems = game.variant().systems();
-        final GameSession session = game.session();
-        final GameLevel level = session.level();
-        final Pac pac = level.entities().pac();
+        gameFlow = game.variant().gameFlow();
+        systems = game.variant().systems();
+        pacDyingTiming = game.variant().rules().pacDyingTiming();
+        session = game.session();
+        level = session.level();
+        pac = level.entities().pac();
 
         level.gateKeeper().resetCounterAndSetEnabled(true);
         level.huntingTimerStrategy().stop();
@@ -69,11 +70,6 @@ public final class Common_PacManDyingState extends GameState {
 
     @Override
     public void onUpdate(GameContext game) {
-        final GameSystems systems = game.variant().systems();
-        final GameFlowController gameFlow = game.variant().gameFlow();
-        final GameSession session = game.session();
-        final GameLevel level = session.level();
-        final Pac pac = level.entities().pac();
         final long tick = timer().tickCount();
 
         if (tick == 0) {
@@ -81,18 +77,18 @@ public final class Common_PacManDyingState extends GameState {
             // be in the state from the previous playing (it is cached), so we reset it here.
             systems.actorSpriteAnimController().resetSelected(pac);
         }
-        else if (tick == timing.hideGhostsTick()) {
+        else if (tick == pacDyingTiming.hideGhostsTick()) {
             level.entities().ghosts().forEach(GameEntity::hide);
         }
-        else if (tick == timing.animationStartTick()) {
+        else if (tick == pacDyingTiming.animationStartTick()) {
             systems.pacAnimation().setDisabled(pac, false); // "dying" animation can run now
             game.eventManager().publishGameEvent(new PacDyingEvent(pac));
         }
-        else if (tick == timing.hidePacTick()) {
+        else if (tick == pacDyingTiming.hidePacTick()) {
             systems.actorSpriteAnimController().resetSelected(pac);
             pac.hide();
         }
-        else if (tick == timing.pacDeadTick()) {
+        else if (tick == pacDyingTiming.pacDeadTick()) {
             level.entities().optBonus().ifPresent(bonus -> level.entities().remove(bonus));
             game.eventManager().publishGameEvent(new PacDeadEvent(pac));
         }
@@ -108,12 +104,10 @@ public final class Common_PacManDyingState extends GameState {
                     : CommonGameStateID.GAME_OR_LEVEL_STARTING);
             }
         }
-
     }
 
     @Override
     public void onExit(GameContext game) {
-        game.session().level().entities().ghosts().forEach(ghost ->
-            game.variant().systems().worldNavigator().setDisabled(ghost, false));
+        level.entities().ghosts().forEach(ghost -> systems.worldNavigator().setDisabled(ghost, false));
     }
 }

@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core.model.rules;
+package de.amr.pacmanfx.core.rules;
 
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -27,9 +27,6 @@ public interface GameRules {
 
     LevelContinuationRules levelContinuation();
 
-    /**
-     * @return minimum duration of demo level (in seconds) or {@code Optional#empty()} if unlimited
-     */
     default Optional<Float> demoLevelMinDurationSec() {
         return Optional.empty(); // no limit
     }
@@ -46,27 +43,18 @@ public interface GameRules {
 
     float eatenBonusDisplaySeconds();
 
-    /**
-     * @param levelNumber level number
-     * @return (optional) number (1,2,...) of cut scene to be played after this level
-     */
     OptionalInt cutSceneAfterLevel(int levelNumber);
 
     int lastCutSceneNumber();
-
-    // Hunting
 
     float pacPowerSeconds(int levelNumber);
 
     float pacPowerFadingSeconds(int levelNumber);
 
+    PacDyingTiming pacDyingTiming();
+
     int numHuntingPhases();
 
-    /**
-     * @param levelNumber game level number
-     * @param phaseIndex index of hunting phase ({@code 0..numPhases - 1})
-     * @return Duration (number of ticks) of phase.
-     */
     long huntingPhaseDuration(int levelNumber, int phaseIndex);
 
     int demoLevelHuntingStartTick();
@@ -79,5 +67,3 @@ public interface GameRules {
         return false;
     }
 }
-
-

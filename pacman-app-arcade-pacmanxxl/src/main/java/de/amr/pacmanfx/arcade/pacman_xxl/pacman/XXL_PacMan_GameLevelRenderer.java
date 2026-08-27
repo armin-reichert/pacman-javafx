@@ -5,7 +5,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl.pacman;
 
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_GameLevel_Renderer;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.model.rules.GameRules;
+import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
 import de.amr.pacmanfx.ui.gamescene.d2.GenericMapRenderer;

@@ -14,7 +14,7 @@ import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.gameplay.hunt.GhostHuntingStrategy;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.rules.GameRules;
+import de.amr.pacmanfx.core.rules.GameRules;
 
 import java.util.Set;
 

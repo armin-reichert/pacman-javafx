@@ -9,7 +9,7 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ScoringRules;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.model.rules.*;
+import de.amr.pacmanfx.core.rules.*;
 
 import java.util.List;
 import java.util.Map;
@@ -64,6 +64,8 @@ public class ArcadePacMan_GameRules implements GameRules {
         13, 3,
         17, 3
     );
+
+    private static final PacDyingTiming PAC_DYING_TIMING = new PacDyingTiming(60, 90, 190, 210);
 
     protected ActorCollisionRules actorCollisionRules;
 
@@ -200,6 +202,11 @@ public class ArcadePacMan_GameRules implements GameRules {
     public float pacPowerFadingSeconds(int levelNumber) {
         //TODO not sure what is correct
         return levelData(levelNumber).numFlashes() * 0.5f;
+    }
+
+    @Override
+    public PacDyingTiming pacDyingTiming() {
+        return PAC_DYING_TIMING;
     }
 
     @Override

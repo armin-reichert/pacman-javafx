@@ -24,7 +24,7 @@ import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostAnimationSystem;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.rules.CollisionStrategy;
+import de.amr.pacmanfx.core.rules.CollisionStrategy;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariant;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;

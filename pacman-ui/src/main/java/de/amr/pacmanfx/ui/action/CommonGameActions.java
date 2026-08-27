@@ -6,8 +6,8 @@ package de.amr.pacmanfx.ui.action;
 
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.model.rules.ActorCollisionRules;
-import de.amr.pacmanfx.core.model.rules.CollisionStrategy;
+import de.amr.pacmanfx.core.rules.ActorCollisionRules;
+import de.amr.pacmanfx.core.rules.CollisionStrategy;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;

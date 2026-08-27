@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.basics.Named;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.model.rules.GameRules;
+import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneController;

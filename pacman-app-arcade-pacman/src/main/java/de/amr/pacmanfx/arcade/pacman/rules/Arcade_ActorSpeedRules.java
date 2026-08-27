@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.entities.ghost.comp.ElroyComp;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.model.rules.ActorSpeedRules;
+import de.amr.pacmanfx.core.rules.ActorSpeedRules;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 
 public class Arcade_ActorSpeedRules implements ActorSpeedRules {

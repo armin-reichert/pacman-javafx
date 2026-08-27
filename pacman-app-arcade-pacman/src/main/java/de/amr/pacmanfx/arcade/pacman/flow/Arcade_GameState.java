@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.arcade.pacman.flow;
 
 import de.amr.pacmanfx.core.gamestate.*;
+import de.amr.pacmanfx.core.rules.PacDyingTiming;
 
 /**
  * The game states used by the Arcade game variants (Pc-Man, Ms. Pac-Man and their XXL versions).
@@ -21,7 +22,7 @@ public enum Arcade_GameState {
     GAME_LEVEL_COMPLETE        (new Common_LevelCompleteState()),
     GAME_LEVEL_TRANSITION      (new Common_LevelTransitionState()),
     GAME_LEVEL_EATING_GHOST    (new Common_EatingGhostState()),
-    GAME_LEVEL_PACMAN_DYING    (new Common_PacManDyingState(new Common_PacManDyingState.Timing(60, 90, 190, 210))),
+    GAME_LEVEL_PACMAN_DYING    (new Common_PacManDyingState()),
     GAME_OVER                  (new Arcade_GameOverState()),
     GAME_LEVEL_INTERMISSION    (new Arcade_LevelIntermissionState());
 

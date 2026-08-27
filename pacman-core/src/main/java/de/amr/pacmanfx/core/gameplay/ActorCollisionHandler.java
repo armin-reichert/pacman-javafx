@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusState;
 import de.amr.pacmanfx.core.gameplay.hunt.GamePlayStep;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.model.rules.CollisionStrategy;
+import de.amr.pacmanfx.core.rules.CollisionStrategy;
 
 import java.util.List;
 

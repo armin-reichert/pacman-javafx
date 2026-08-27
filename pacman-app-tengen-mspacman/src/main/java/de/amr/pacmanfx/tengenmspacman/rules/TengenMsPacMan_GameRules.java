@@ -7,10 +7,7 @@ package de.amr.pacmanfx.tengenmspacman.rules;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.model.rules.ActorCollisionRules;
-import de.amr.pacmanfx.core.model.rules.CollisionStrategy;
-import de.amr.pacmanfx.core.model.rules.GameRules;
-import de.amr.pacmanfx.core.model.rules.LevelContinuationRules;
+import de.amr.pacmanfx.core.rules.*;
 import de.amr.pacmanfx.tengenmspacman.model.BonusSymbol;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import javafx.beans.property.ObjectProperty;
@@ -49,6 +46,8 @@ public class TengenMsPacMan_GameRules implements GameRules {
         17, 3,
         LAST_LEVEL_NUMBER, 4
     );
+
+    private static final PacDyingTiming PAC_DYING_TIMING = new PacDyingTiming(60, 90, 190, 240);
 
     private final ActorCollisionRules actorCollisionRules = new ActorCollisionRules();
     private final TengenMsPacMan_ActorSpeedRules actorSpeedControl = new TengenMsPacMan_ActorSpeedRules();
@@ -186,5 +185,10 @@ public class TengenMsPacMan_GameRules implements GameRules {
     @Override
     public float pacPowerFadingSeconds(int levelNumber) {
         return 1.5f; //TODO  not sure about this
+    }
+
+    @Override
+    public PacDyingTiming pacDyingTiming() {
+        return PAC_DYING_TIMING;
     }
 }

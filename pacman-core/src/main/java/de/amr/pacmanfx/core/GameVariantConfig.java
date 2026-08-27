@@ -2,7 +2,7 @@ package de.amr.pacmanfx.core;
 
 import de.amr.pacmanfx.core.gamestate.GameFlowController;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
-import de.amr.pacmanfx.core.model.rules.GameRules;
+import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 import org.tinylog.Logger;
 

@@ -4,7 +4,7 @@ import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.core.entities.score.comp.ScoreDataComp;
 import de.amr.pacmanfx.core.entities.score.comp.ScorePersistencyComp;
-import de.amr.pacmanfx.core.model.rules.ScoringRules;
+import de.amr.pacmanfx.core.rules.ScoringRules;
 import org.tinylog.Logger;
 
 import java.io.*;

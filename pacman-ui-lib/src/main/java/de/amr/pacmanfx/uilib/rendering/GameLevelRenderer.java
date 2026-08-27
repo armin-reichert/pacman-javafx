@@ -5,8 +5,7 @@ package de.amr.pacmanfx.uilib.rendering;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.model.rules.GameRules;
+import de.amr.pacmanfx.core.rules.GameRules;
 
 public interface GameLevelRenderer extends Renderer {
 

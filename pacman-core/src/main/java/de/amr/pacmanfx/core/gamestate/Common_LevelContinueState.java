@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.event.gameplay.GameContinuedEvent;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.MessageType;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.model.rules.LevelContinuationRules;
+import de.amr.pacmanfx.core.rules.LevelContinuationRules;
 
 public class Common_LevelContinueState extends GameState {
 

@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.arcade.pacman.model;
 
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.model.rules.ScoringRules;
+import de.amr.pacmanfx.core.rules.ScoringRules;
 
 public class ArcadePacMan_ScoringRules implements ScoringRules {
 

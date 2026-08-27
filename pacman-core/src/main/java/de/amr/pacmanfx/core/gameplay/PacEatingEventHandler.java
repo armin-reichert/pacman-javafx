@@ -17,7 +17,7 @@ import de.amr.pacmanfx.core.event.bonus.BonusEatenEvent;
 import de.amr.pacmanfx.core.event.pac.PacEatsFoodEvent;
 import de.amr.pacmanfx.core.event.pac.PacPowerStartsEvent;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.model.rules.GameRules;
+import de.amr.pacmanfx.core.rules.GameRules;
 import org.tinylog.Logger;
 
 import java.util.Set;

@@ -15,8 +15,8 @@ import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusStateComp;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostStateSystem;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.model.rules.ActorSpeedRules;
-import de.amr.pacmanfx.core.model.rules.GameRules;
+import de.amr.pacmanfx.core.rules.ActorSpeedRules;
+import de.amr.pacmanfx.core.rules.GameRules;
 
 import java.util.List;
 

@@ -27,8 +27,8 @@ import de.amr.pacmanfx.core.event.pac.PacPowerStartsFadingEvent;
 import de.amr.pacmanfx.core.gameplay.hunt.GamePlayStep;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.MessageType;
-import de.amr.pacmanfx.core.model.rules.GameRules;
-import de.amr.pacmanfx.core.model.rules.ScoringRules;
+import de.amr.pacmanfx.core.rules.GameRules;
+import de.amr.pacmanfx.core.rules.ScoringRules;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import org.tinylog.Logger;
 
