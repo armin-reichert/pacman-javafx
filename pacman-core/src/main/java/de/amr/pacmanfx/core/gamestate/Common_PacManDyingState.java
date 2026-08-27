@@ -94,15 +94,10 @@ public final class Common_PacManDyingState extends GameState {
         }
 
         if (timer().hasExpired()) {
-            if (session.isAttractMode()) {
-                gameFlow.enterGameState(game, CommonGameStateID.GAME_OVER);
-            }
-            else {
-                session.setNumLives(session.numLives() - 1);
-                gameFlow.enterGameState(game, session.numLives() == 0
-                    ? CommonGameStateID.GAME_OVER
-                    : CommonGameStateID.GAME_OR_LEVEL_STARTING);
-            }
+            session.setNumLives(session.numLives() - 1);
+            gameFlow.enterGameState(game, session.numLives() == 0
+                ? CommonGameStateID.GAME_OVER
+                : CommonGameStateID.GAME_OR_LEVEL_STARTING);
         }
     }
 
