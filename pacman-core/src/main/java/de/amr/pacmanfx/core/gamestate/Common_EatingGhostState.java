@@ -40,10 +40,8 @@ public final class Common_EatingGhostState extends GameState {
         systems.pacState().setState(pac, PacState.SLEEPING);
         pac.hide();
 
-        level.entities().ghostsInState(GhostState.EATEN).forEach(ghost -> {
-            ghost.animationSelection().setDisabled(true);
-        });
-
+        level.entities().ghostsInState(GhostState.EATEN).forEach(ghost ->
+            ghost.animationSelection().setDisabled(true));
     }
 
     @Override
@@ -57,7 +55,9 @@ public final class Common_EatingGhostState extends GameState {
     public void onExit(GameContext game) {
         systems.pacState().setState(pac, PacState.ACTIVE);
         pac.show();
-        level.entities().ghostsInState(GhostState.EATEN)
-            .forEach(ghost -> ghost.state().setEnumValue(GhostState.RETURNING_HOME));
+        level.entities().ghostsInState(GhostState.EATEN).forEach(ghost -> {
+            ghost.state().setEnumValue(GhostState.RETURNING_HOME);
+            ghost.animationSelection().setDisabled(false);
+        });
     }
 }
