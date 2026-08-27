@@ -19,6 +19,7 @@ import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Marquee;
 import de.amr.pacmanfx.core.entities.Pac;
+import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.marquee.system.MarqueeAnimSystem;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.model.GhostPersonality;
@@ -124,7 +125,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
             worldNavigationSystem.setWishDir(ghost, Direction.LEFT);
             worldNavigationSystem.setMoveDirSpeed(ghost, ACTOR_SPEED);
 
-            systems.ghostState().startHuntingPac(ghost);
+            ghost.state().setEnumValue(GhostState.HUNTING_PAC);
         }
 
         ghostPresented = GhostPersonality.RED_GHOST_SHADOW;

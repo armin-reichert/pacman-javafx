@@ -93,7 +93,7 @@ public abstract class ArcadeMsPacMan_RandomizedHuntingStrategy implements GhostH
                 && worldMovementPolicy.canAccessTile(level, ghost, neighbor);
             if (acceptable) {
                 navigator.setWishDir(ghost, dir);
-                Logger.info("{} selects random wish direction {}", ghost.name(), dir);
+                Logger.trace("{} selects random wish direction {}", ghost.name(), dir);
                 break;
             }
             Logger.debug("{} rejects wish dir {}", ghost.name(), dir);

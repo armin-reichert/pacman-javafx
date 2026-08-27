@@ -25,6 +25,10 @@ public class GhostStateSystem {
 
     public GhostStateSystem() {}
 
+    private boolean isGhostThreatenedByPac(GameLevel level, Ghost ghost, Pac pac) {
+        return pac.power().isActive() && !level.isInGhostKilledChain(ghost);
+    }
+
     public void update(GameContext game, GameLevel level, Ghost ghost) {
         requireNonNull(game);
         requireNonNull(ghost);
@@ -32,76 +36,52 @@ public class GhostStateSystem {
         final Pac pac = level.entities().pac();
 
         ghost.state().setStateTick(game.state().timer().tickCount());
-        ghost.state().setFlashing(pac.power().isFading());
-        ghost.state().setThreatenedByPac(isGhostThreatenedByPac(level, ghost, pac));
+        ghost.state().setPacPowerFading(pac.power().isFading());
+        ghost.state().setPacPower(isGhostThreatenedByPac(level, ghost, pac));
 
         switch (ghost.state().enumValue()) {
             case LOCKED -> {
                 if (ghost.houseAccess().isUnlockRequested()) {
                     final boolean insideHouse = ghost.worldInfo().house().contains(ghost.pos().tile());
                     if (insideHouse) {
-                        setState(ghost, GhostState.LEAVING_HOUSE);
+                        ghost.state().setEnumValue(GhostState.LEAVING_HOUSE);
                     }
                     else {
-                        setState(ghost, ghost.state().isThreatenedByPac() ? GhostState.FRIGHTENED : GhostState.HUNTING_PAC);
+                        ghost.state().setEnumValue(ghost.state().hasPacPower() ? GhostState.FRIGHTENED : GhostState.HUNTING_PAC);
                     }
                     ghost.houseAccess().setUnlockRequested(false);
                 }
             }
             case ENTERING_HOUSE -> {
                 if (ghost.houseAccess().reachedRevivalPosition()) {
-                    ghost.state().setKilled(false);
-                    setState(ghost, GhostState.LOCKED);
+                    ghost.state().setEnumValue(GhostState.LOCKED);
                 }
             }
             case LEAVING_HOUSE -> {
                 if (ghost.houseAccess().leftHouse()) {
-                    setState(ghost, ghost.state().isThreatenedByPac() ? GhostState.FRIGHTENED : GhostState.HUNTING_PAC);
+                    ghost.state().setEnumValue(ghost.state().hasPacPower() ? GhostState.FRIGHTENED : GhostState.HUNTING_PAC);
                 }
             }
             case RETURNING_HOME -> {
                 if (ghost.houseAccess().reachedHouseEntry()) {
-                    setState(ghost, GhostState.ENTERING_HOUSE);
+                    ghost.state().setEnumValue(GhostState.ENTERING_HOUSE);
+                }
+            }
+            case HUNTING_PAC -> {
+                if (ghost.state().hasPacPower()) {
+                    ghost.state().setEnumValue(GhostState.FRIGHTENED);
+                }
+            }
+            case FRIGHTENED -> {
+                if (!ghost.state().hasPacPower()) {
+                    ghost.state().setEnumValue(GhostState.HUNTING_PAC);
                 }
             }
         }
     }
 
-    public void startHuntingPac(Ghost ghost) {
-        ghost.state().setEnumValue(GhostState.HUNTING_PAC);
-    }
-
-    public void setVulnerable(Ghost ghost) {
-        ghost.state().setEnumValue(GhostState.FRIGHTENED);
-    }
-
-    public void setOutOfDanger(Ghost ghost) {
-        if (ghost.state().enumValue() == GhostState.FRIGHTENED) {
-            ghost.state().setEnumValue(GhostState.HUNTING_PAC);
-        }
-    }
-
-    public void setKilled(Ghost ghost) {
-        ghost.state().setEnumValue(GhostState.EATEN); // changes to "returning home" after short time!
-        ghost.state().setKilled(true); // remains true until ghost is revived inside house!
-    }
-
-    public void returnHome(Ghost ghost) {
-        if (ghost.state().enumValue() == GhostState.EATEN) {
-            ghost.state().setEnumValue(GhostState.RETURNING_HOME);
-        }
-    }
-
-    private void setState(Ghost ghost, GhostState newState) {
-        requireNonNull(ghost);
-        requireNonNull(newState);
-
-        ghost.state().setEnumValue(newState);
-    }
-
     public void setElroyEnabled(Ghost ghost, boolean enabled) {
         requireNonNull(ghost);
-
         ghost.optComp(ElroyComp.class).ifPresent(elroy -> elroy.setEnabled(enabled));
     }
 
@@ -116,9 +96,5 @@ public class GhostStateSystem {
                 elroy.setBoost(ElroyComp.Boost.LARGE);
             }
         });
-    }
-
-    private boolean isGhostThreatenedByPac(GameLevel level, Ghost ghost, Pac pac) {
-        return pac.power().isActive() && !level.isInGhostKilledChain(ghost);
     }
 }

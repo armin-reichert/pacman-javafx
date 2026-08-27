@@ -18,6 +18,7 @@ import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Marquee;
 import de.amr.pacmanfx.core.entities.Pac;
+import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.marquee.system.MarqueeAnimSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -198,7 +199,7 @@ public class TengenMsPacMan_IntroScene extends GameScene {
 
                     animController.playSelected(ghost);
 
-                    systems.ghostState().startHuntingPac(ghost);
+                    ghost.state().setEnumValue(GhostState.HUNTING_PAC);
                 }
                 scene.ghostIndex = 0;
             }

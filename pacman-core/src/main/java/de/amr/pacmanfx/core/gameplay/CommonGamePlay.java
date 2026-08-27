@@ -150,31 +150,23 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     @Override
-    public void pacEatsGhost(GameContext game, GameLevel level, Ghost eatenGhost) {
+    public void pacEatsGhost(GameContext game, GameLevel level, Ghost ghost) {
         requireNonNull(game);
         requireNonNull(level);
-        requireNonNull(eatenGhost);
-
-        final GameSystems systems = game.variant().systems();
+        requireNonNull(ghost);
 
         // Eating ghost wins 200, 400, 800, 1600 points
-        final int killedBefore = level.ghostKillChainSize();
-        final int points = game.variant().rules().scoringRules().pointsForGhost(killedBefore);
+        final int nextIndex = level.ghostKillChainSize();
+        final int points = game.variant().rules().scoringRules().pointsForGhost(nextIndex);
+
         scorePoints(game, points, level.number());
 
-        // Stop all ghost animations
-        for (Ghost ghost : level.entities().ghosts()) {
-            systems.actorSpriteAnimController().stopSelected(ghost);
-        }
+        ghost.state().setEnumValue(GhostState.EATEN);
+        ghost.state().setKillChainIndex(nextIndex);
 
-        systems.ghostState().setKilled(eatenGhost);
-        // Animation index is 0-based, animation frame 0 shows points for *first* killed ghost...
-        systems.actorSpriteAnimController().selectAndSetFrame(eatenGhost, CommonSpriteAnimationID.GHOST_POINTS, killedBefore);
+        level.addToGhostKillChain(ghost);
 
-        level.addToGhostKillChain(eatenGhost);
-        level.entities().pac().hide();
-
-        game.eventManager().publishGameEvent(new GhostEatenEvent(eatenGhost));
+        game.eventManager().publishGameEvent(new GhostEatenEvent(ghost));
     }
 
     // Scoring

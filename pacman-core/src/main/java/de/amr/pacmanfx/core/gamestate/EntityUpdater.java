@@ -87,7 +87,7 @@ public class EntityUpdater {
             systems.ghostHouseAccess().update(ghost, level, speed);
             systems.ghostHuntingSystem().update(game, level, ghost);
             systems.ghostState().update(game, level, ghost);
-            systems.ghostAnimation().update(ghost, level.entities().pac(), systems.actorSpriteAnimController());
+            systems.ghostAnimation().update(ghost, systems.actorSpriteAnimController());
         });
     }
 

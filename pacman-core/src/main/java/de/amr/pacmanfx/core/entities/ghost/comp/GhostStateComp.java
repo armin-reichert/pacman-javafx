@@ -14,11 +14,11 @@ public class GhostStateComp implements GameEntityComp {
 
     private long stateTick;
 
-    private boolean flashing;
+    private boolean pacPowerFading;
 
-    private boolean threatenedByPac;
+    private boolean pacPower;
 
-    private boolean killed;
+    private int killChainIndex;
 
     public GhostStateComp() {
         reset();
@@ -40,35 +40,36 @@ public class GhostStateComp implements GameEntityComp {
         this.stateTick = stateTick;
     }
 
-    public boolean flashing() {
-        return flashing;
+    public boolean isPacPowerFading() {
+        return pacPowerFading;
     }
 
-    public void setFlashing(boolean flashing) {
-        this.flashing = flashing;
+    public void setPacPowerFading(boolean pacPowerFading) {
+        this.pacPowerFading = pacPowerFading;
     }
 
-    public boolean isThreatenedByPac() {
-        return threatenedByPac;
+    public boolean hasPacPower() {
+        return pacPower;
     }
 
-    public void setThreatenedByPac(boolean threatenedByPac) {
-        this.threatenedByPac = threatenedByPac;
+    public void setPacPower(boolean pacPower) {
+        this.pacPower = pacPower;
     }
 
-    public boolean isKilled() {
-        return killed;
+    public int killChainIndex() {
+        return killChainIndex;
     }
 
-    public void setKilled(boolean killed) {
-        this.killed = killed;
+    public void setKillChainIndex(int killChainIndex) {
+        this.killChainIndex = killChainIndex;
     }
 
     @Override
     public void reset() {
+        stateTick = 0;
         enumValue = GhostState.LOCKED;
-        killed = false;
-        flashing = false;
-        threatenedByPac = false;
+        killChainIndex = -1;
+        pacPowerFading = false;
+        pacPower = false;
     }
 }

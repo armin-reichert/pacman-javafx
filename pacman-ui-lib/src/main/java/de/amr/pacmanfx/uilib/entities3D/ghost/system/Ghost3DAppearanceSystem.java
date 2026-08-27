@@ -13,7 +13,7 @@ public class Ghost3DAppearanceSystem {
         final GhostStateComp state = ghost.state();
 
         final GhostAppearance appearance = switch (state.enumValue()) {
-            case LOCKED -> state.isThreatenedByPac() ? appearFrightenedOrFlashing(state) : GhostAppearance.NORMAL;
+            case LOCKED -> state.hasPacPower() ? appearFrightenedOrFlashing(state) : GhostAppearance.NORMAL;
             case EATEN -> GhostAppearance.EATEN;
             case ENTERING_HOUSE, RETURNING_HOME -> GhostAppearance.EYES;
             case FRIGHTENED -> appearFrightenedOrFlashing(state);
@@ -23,7 +23,7 @@ public class Ghost3DAppearanceSystem {
     }
 
     private static GhostAppearance appearFrightenedOrFlashing(GhostStateComp state) {
-        return state.flashing() ? GhostAppearance.FLASHING : GhostAppearance.FRIGHTENED;
+        return state.isPacPowerFading() ? GhostAppearance.FLASHING : GhostAppearance.FRIGHTENED;
     }
 
     private static void setAppearance(Ghost ghost, GhostAppearance appearance) {
