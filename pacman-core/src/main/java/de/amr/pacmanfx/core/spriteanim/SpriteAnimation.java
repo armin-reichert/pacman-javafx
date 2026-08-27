@@ -114,6 +114,10 @@ public class SpriteAnimation {
         return sprites.length;
     }
 
+    public boolean running() {
+        return running;
+    }
+
     public RectShort sprite() { return sprites[frame]; }
 
     private int requireValidFrame(int index) {

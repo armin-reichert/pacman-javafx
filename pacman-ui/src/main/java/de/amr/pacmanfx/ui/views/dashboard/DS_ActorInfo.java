@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.views.dashboard;
 
+import de.amr.basics.Named;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameSession;
@@ -12,11 +13,11 @@ import de.amr.pacmanfx.core.ecs.comp.MovementComp;
 import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.Ghost;
-import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
+import de.amr.pacmanfx.core.spriteanim.SpriteAnimation;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 
 import java.util.function.BiFunction;
@@ -55,11 +56,10 @@ public class DS_ActorInfo extends GameDashboardSection {
             .orElse(NO_INFO);
     }
 
-    private Supplier<String> supplyLivesCount(GameAppContext appContext) {
+    private Supplier<?> supplyLivesCount(GameAppContext appContext) {
         return fnLevelInfo(appContext, _ -> {
             final GameSession session = appContext.game().session();
-            final LivesCounter livesCounter = session.hud().livesCounter();
-            return String.valueOf(livesCounter.data().numLives());
+            return session.numLives();
         });
     }
 
@@ -122,7 +122,7 @@ public class DS_ActorInfo extends GameDashboardSection {
             : "No Power";
     }
 
-    private Supplier<String> supplyPacText(GameAppContext appContext, BiFunction<GameLevel, Pac, String> infoSupplier) {
+    private Supplier<?> supplyPacText(GameAppContext appContext, BiFunction<GameLevel, Pac, String> infoSupplier) {
         return fnLevelInfo(appContext, level -> infoSupplier.apply(level, level.entities().pac()));
     }
 
@@ -137,7 +137,7 @@ public class DS_ActorInfo extends GameDashboardSection {
         }).orElse(NO_INFO);
     }
 
-    private Supplier<String> supplyGhostText(
+    private Supplier<?> supplyGhostText(
         GameAppContext appContext,
         BiFunction<GameLevel, Ghost, String> infoSupplier, GhostPersonality personality) {
 
@@ -154,9 +154,16 @@ public class DS_ActorInfo extends GameDashboardSection {
     }
 
     private String ghostAnimationText(ActorSpriteAnimController animSystem, Ghost ghost) {
-        return animSystem.selectedAnimationID(ghost) != null
-            ? "%s:%d".formatted(animSystem.selectedAnimationID(ghost), animSystem.currentFrame(ghost))
-            : NO_INFO;
+        final Named id = animSystem.selectedAnimationID(ghost);
+        if (id == null) {
+            return NO_INFO;
+        }
+        if (animSystem.animation(ghost, id) instanceof SpriteAnimation spriteAnimation) {
+            final boolean running = spriteAnimation.running();
+            final String stoppedText = running ? "" : " (stopped)";
+            return "%s:%d%s".formatted(id, animSystem.currentFrame(ghost), stoppedText);
+        }
+        return NO_INFO;
     }
 
     private String ghostStateText(GameLevel level, Ghost ghost) {
