@@ -77,7 +77,7 @@ public final class Common_DemoLevelPlayingState extends GameState {
             demoLevel.huntingTimerStrategy().startFirstPhase(game, demoLevel.number());
         }
         else if (tick >= game.variant().rules().demoLevelHuntingStartTick()) {
-            gamePlay.updateGamePlay(game, demoLevel);
+            gamePlay.update(game, demoLevel);
         }
 
         computeNextState(game, demoLevel).ifPresent(nextState ->

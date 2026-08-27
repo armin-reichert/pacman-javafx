@@ -134,7 +134,7 @@ public final class PacManGamesMasterApp implements GameAppContext {
             try {
                 gameAction.execute(this);
                 success = true;
-                Logger.info("Action '{}' executed successfully", gameAction.id());
+                Logger.trace("Action '{}' executed successfully", gameAction.id());
             }
             catch (Exception x) {
                 Logger.error(x, "An error occurred executing action '{}'", gameAction.id());

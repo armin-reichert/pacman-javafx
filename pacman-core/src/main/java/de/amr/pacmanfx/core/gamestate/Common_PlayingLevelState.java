@@ -10,6 +10,7 @@ import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.entities.MessageView;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.pac.comp.PacState;
+import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.gameplay.hunt.GamePlayStep;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.MessageType;
@@ -21,16 +22,27 @@ import java.util.List;
 
 public final class Common_PlayingLevelState extends GameState {
 
+    private GameRules rules;
+    private GameFlowController gameFlow;
+    private GamePlay gamePlay;
+    private GameSystems systems;
+    private GameSession session;
+    private GameLevel level;
+    private Pac pac;
+
     public Common_PlayingLevelState() {
         super(CommonGameStateID.GAME_LEVEL_PLAYING);
     }
 
     @Override
     public void onEnter(GameContext game) {
-        final GameSystems systems = game.variant().systems();
-        final GameSession session = game.session();
-        final GameLevel level = game.session().level();
-        final Pac pac = level.entities().pac();
+        rules = game.variant().rules();
+        gameFlow = game.variant().gameFlow();
+        gamePlay = game.variant().gamePlay();
+        systems = game.variant().systems();
+        session = game.session();
+        level = game.session().level();
+        pac = level.entities().pac();
 
         final MessageView messageView = session.hud().messageView();
         if (messageView.data().messageType() == MessageType.READY) {
@@ -48,17 +60,12 @@ public final class Common_PlayingLevelState extends GameState {
 
     @Override
     public void onUpdate(GameContext game) {
-        final GameSession session = game.session();
-        final GameLevel level = session.level();
-        final GameRules rules = game.variant().rules();
-        final GameFlowController gameFlow = game.variant().gameFlow();
 
-        game.variant().gamePlay().updateGamePlay(game, level);
+        gamePlay.update(game, level);
+        session.cheats().update(game);
 
         final GamePlayStep step = session.thisFrame().gamePlayStep();
         logGamePlayStep(step);
-
-        session.cheats().update(game);
 
         if (rules.isLevelCompleted(level)) {
             gameFlow.enterGameState(game, CommonGameStateID.GAME_LEVEL_COMPLETE);
@@ -74,9 +81,9 @@ public final class Common_PlayingLevelState extends GameState {
     private void logGamePlayStep(GamePlayStep result) {
         final List<String> report = result.asText();
         if (!report.isEmpty()) {
-            Logger.info("Hunting Step:");
+            Logger.info("--- Game play step:");
             for (String line : report) {
-                Logger.info("- " + line);
+                Logger.info("    - " + line);
             }
         }
     }

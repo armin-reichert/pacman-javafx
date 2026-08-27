@@ -115,7 +115,7 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     @Override
-    public void updateGamePlay(GameContext game, GameLevel level) {
+    public void update(GameContext game, GameLevel level) {
         requireNonNull(game);
         requireNonNull(level);
 

@@ -71,7 +71,7 @@ public class Test_MediumTestState extends GameState {
             }
         }
         else {
-            game.variant().gamePlay().updateGamePlay(game, level);
+            game.variant().gamePlay().update(game, level);
             if (game.variant().rules().isLevelCompleted(level)) {
                 game.variant().gameFlow().enterGameState(game, CommonGameStateID.GAME_INTRO);
             }

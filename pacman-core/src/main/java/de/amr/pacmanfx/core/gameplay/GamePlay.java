@@ -34,7 +34,7 @@ public interface GamePlay {
 
     boolean canStart(GameContext game);
 
-    void updateGamePlay(GameContext game, GameLevel level);
+    void update(GameContext game, GameLevel level);
 
     void pacEatsGhost(GameContext game, GameLevel level, Ghost eatenGhost);
 
