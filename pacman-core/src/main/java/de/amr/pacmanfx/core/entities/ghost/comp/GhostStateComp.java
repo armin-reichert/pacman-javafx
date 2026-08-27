@@ -10,8 +10,6 @@ import static java.util.Objects.requireNonNull;
 
 public class GhostStateComp implements GameEntityComp {
 
-    public static final GhostState DEFAULT_STATE = GhostState.LOCKED;
-
     private GhostState enumValue;
 
     private long stateTick;
@@ -19,6 +17,8 @@ public class GhostStateComp implements GameEntityComp {
     private boolean flashing;
 
     private boolean threatenedByPac;
+
+    private boolean killed;
 
     public GhostStateComp() {
         reset();
@@ -56,9 +56,18 @@ public class GhostStateComp implements GameEntityComp {
         this.threatenedByPac = threatenedByPac;
     }
 
+    public boolean isKilled() {
+        return killed;
+    }
+
+    public void setKilled(boolean killed) {
+        this.killed = killed;
+    }
+
     @Override
     public void reset() {
-        enumValue = DEFAULT_STATE;
+        enumValue = GhostState.LOCKED;
+        killed = false;
         flashing = false;
         threatenedByPac = false;
     }

@@ -6,23 +6,22 @@ package de.amr.pacmanfx.tengenmspacman.gamescene;
 import de.amr.basics.fsm.State;
 import de.amr.basics.fsm.StateMachine;
 import de.amr.basics.math.Direction;
-import de.amr.pacmanfx.core.GameSystems;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
+import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Marquee;
 import de.amr.pacmanfx.core.entities.Pac;
-import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.marquee.system.MarqueeSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.game.GameVariant;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
@@ -199,7 +198,7 @@ public class TengenMsPacMan_IntroScene extends GameScene {
 
                     animController.playSelected(ghost);
 
-                    systems.ghostState().setState(ghost, GhostState.HUNTING_PAC);
+                    systems.ghostState().startHuntingPac(ghost);
                 }
                 scene.ghostIndex = 0;
             }

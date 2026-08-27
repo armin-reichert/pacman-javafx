@@ -10,10 +10,7 @@ import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.bonus.system.BonusMoveAndJumpSystem;
 import de.amr.pacmanfx.core.entities.bonus.system.BonusStateSystem;
 import de.amr.pacmanfx.core.entities.bonus.system.BonusWorldMovementPolicy;
-import de.amr.pacmanfx.core.entities.ghost.system.GhostAnimationSystem;
-import de.amr.pacmanfx.core.entities.ghost.system.GhostHouseAccessSystem;
-import de.amr.pacmanfx.core.entities.ghost.system.GhostStateSystem;
-import de.amr.pacmanfx.core.entities.ghost.system.GhostWorldMovementPolicy;
+import de.amr.pacmanfx.core.entities.ghost.system.*;
 import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.entities.pac.system.*;
 import de.amr.pacmanfx.core.gameplay.hunt.*;
@@ -38,6 +35,7 @@ public class GameSystems {
     protected PacAnimationSystem pacAnimation;
 
     protected GhostStateSystem ghostState;
+    protected GhostHuntingSystem ghostHuntingSystem;
     protected GhostHouseAccessSystem ghostHouseAccess;
     protected GhostWorldMovementPolicy ghostWorldMovementPolicy;
     protected GhostAnimationSystem ghostSpriteAnimation;
@@ -79,6 +77,7 @@ public class GameSystems {
         orangeGhostPokeyHuntingStrategy = createPokeyHuntingStrategy();
 
         ghostHouseAccess = new GhostHouseAccessSystem(navigator, ghostWorldMovementPolicy, motor);
+        ghostHuntingSystem = new GhostHuntingSystem();
 
         ghostSpriteAnimation = new GhostAnimationSystem();
     }
@@ -171,6 +170,10 @@ public class GameSystems {
 
     public GhostHouseAccessSystem ghostHouseAccess() {
         return ghostHouseAccess;
+    }
+
+    public GhostHuntingSystem ghostHuntingSystem() {
+        return ghostHuntingSystem;
     }
 
     public GhostWorldMovementPolicy ghostWorldMovementPolicy() {

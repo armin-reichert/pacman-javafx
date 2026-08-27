@@ -7,25 +7,24 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 import de.amr.basics.fsm.State;
 import de.amr.basics.fsm.StateMachine;
 import de.amr.basics.math.Direction;
-import de.amr.pacmanfx.core.GameSystems;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
 import de.amr.basics.timer.Pulse;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
+import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
+import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
-import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostAnimationSystem;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.rules.CollisionStrategy;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.core.rules.CollisionStrategy;
+import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.game.GameVariant;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
@@ -173,7 +172,7 @@ public class ArcadePacMan_IntroScene extends GameScene {
             systems.worldNavigator().setWishDir(ghost, Direction.LEFT);
             systems.worldNavigator().setMoveDirSpeed(ghost, CHASING_SPEED);
 
-            systems.ghostState().setState(ghost, GhostState.HUNTING_PAC);
+            systems.ghostState().startHuntingPac(ghost);
         }
     }
 
@@ -217,7 +216,7 @@ public class ArcadePacMan_IntroScene extends GameScene {
             systems.worldNavigator().setWishDir(ghost, Direction.RIGHT);
             systems.worldNavigator().setMoveDirSpeed(ghost, GHOST_FRIGHTENED_SPEED);
 
-            systems.ghostState().setState(ghost, FRIGHTENED);
+            systems.ghostState().setVulnerable(ghost);
             ghost.spriteAnimation().spriteAnimations().select(CommonSpriteAnimationID.GHOST_FRIGHTENED);
             ghost.spriteAnimation().spriteAnimations().playSelected();
         }
@@ -250,7 +249,7 @@ public class ArcadePacMan_IntroScene extends GameScene {
     private void eatGhostAndStopChasing(GameContext game, Ghost victim, long tick) {
         final GameSystems systems = game.variant().systems();
 
-        systems.ghostState().setState(victim, EATEN);
+        systems.ghostState().setKilled(victim);
         systems.actorSpriteAnimController().selectAndSetFrame(victim, CommonSpriteAnimationID.GHOST_POINTS, numGhostsEaten++);
 
         pacMan.hide();

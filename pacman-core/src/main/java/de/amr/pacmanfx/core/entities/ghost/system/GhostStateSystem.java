@@ -5,15 +5,12 @@
 package de.amr.pacmanfx.core.entities.ghost.system;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.ghost.comp.ElroyComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
-import de.amr.pacmanfx.core.gameplay.hunt.GhostHuntingStrategy;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.rules.ActorSpeedRules;
 import de.amr.pacmanfx.core.rules.GameRules;
 
 import java.util.Set;
@@ -38,9 +35,6 @@ public class GhostStateSystem {
         ghost.state().setFlashing(pac.power().isFading());
         ghost.state().setThreatenedByPac(isGhostThreatenedByPac(level, ghost, pac));
 
-        final GameSystems systems = game.variant().systems();
-        final ActorSpeedRules speedRules = game.variant().rules().actorSpeedRules();
-
         switch (ghost.state().enumValue()) {
             case LOCKED -> {
                 if (ghost.houseAccess().isUnlockRequested()) {
@@ -56,6 +50,7 @@ public class GhostStateSystem {
             }
             case ENTERING_HOUSE -> {
                 if (ghost.houseAccess().reachedRevivalPosition()) {
+                    ghost.state().setKilled(false);
                     setState(ghost, GhostState.LOCKED);
                 }
             }
@@ -69,24 +64,35 @@ public class GhostStateSystem {
                     setState(ghost, GhostState.ENTERING_HOUSE);
                 }
             }
-            case HUNTING_PAC -> {
-                //TODO This does not belong here!
-                final GhostHuntingStrategy huntingStrategy = systems.ghostHuntingStrategy(ghost.personality());
-                final GhostWorldMovementPolicy movementPolicy = systems.ghostWorldMovementPolicy();
-                final float speed = speedRules.ghostSpeed(game, ghost);
-                huntingStrategy.hunt(level, ghost, systems.motor(), speed, movementPolicy);
-            }
-
-            case FRIGHTENED -> {
-                //TODO This does not belong here!
-                final GhostWorldMovementPolicy movementPolicy = systems.ghostWorldMovementPolicy();
-                final float speed = speedRules.ghostSpeed(game, ghost);
-                systems.roaming().roam(level, ghost, ghost.worldNavigation(), movementPolicy, systems.motor(), speed);
-            }
         }
     }
 
-    public void setState(Ghost ghost, GhostState newState) {
+    public void startHuntingPac(Ghost ghost) {
+        ghost.state().setEnumValue(GhostState.HUNTING_PAC);
+    }
+
+    public void setVulnerable(Ghost ghost) {
+        ghost.state().setEnumValue(GhostState.FRIGHTENED);
+    }
+
+    public void setOutOfDanger(Ghost ghost) {
+        if (ghost.state().enumValue() == GhostState.FRIGHTENED) {
+            ghost.state().setEnumValue(GhostState.HUNTING_PAC);
+        }
+    }
+
+    public void setKilled(Ghost ghost) {
+        ghost.state().setEnumValue(GhostState.EATEN); // changes to "returning home" after short time!
+        ghost.state().setKilled(true); // remains true until ghost is revived inside house!
+    }
+
+    public void returnHome(Ghost ghost) {
+        if (ghost.state().enumValue() == GhostState.EATEN) {
+            ghost.state().setEnumValue(GhostState.RETURNING_HOME);
+        }
+    }
+
+    private void setState(Ghost ghost, GhostState newState) {
         requireNonNull(ghost);
         requireNonNull(newState);
 

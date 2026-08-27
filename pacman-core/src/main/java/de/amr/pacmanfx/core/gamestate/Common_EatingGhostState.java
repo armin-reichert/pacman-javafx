@@ -52,8 +52,7 @@ public final class Common_EatingGhostState extends GameState {
     public void onExit(GameContext game) {
         systems.pacState().setState(pac, PacState.ACTIVE);
         pac.show();
-
-        level.entities().ghostsInState(GhostState.EATEN).forEach(eatenGhost ->
-            systems.ghostState().setState(eatenGhost, GhostState.RETURNING_HOME));
+        // This only affects eaten ghosts!
+        level.entities().ghosts().forEach(eatenGhost -> systems.ghostState().returnHome(eatenGhost));
     }
 }

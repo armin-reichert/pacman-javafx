@@ -27,9 +27,9 @@ import de.amr.pacmanfx.core.event.pac.PacPowerStartsFadingEvent;
 import de.amr.pacmanfx.core.gameplay.hunt.GamePlayStep;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.MessageType;
+import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.core.rules.ScoringRules;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import org.tinylog.Logger;
 
 import java.io.File;
@@ -61,12 +61,11 @@ public abstract class CommonGamePlay implements GamePlay {
         systems.pacAnimation().update(pac);
 
         level.entities().ghosts().forEach(ghost -> {
-            ghost.reset(); // initially invisible!
+            ghost.reset(); // initially invisible and locked!
             ghost.pos().set(ghost.worldInfo().startPosition());
             final Direction direction = house.floorplan().ghostStartDirection(ghost.personality());
             systems.worldNavigator().setMoveDir(ghost, direction);
             systems.worldNavigator().setWishDir(ghost, direction);
-            systems.ghostState().setState(ghost, GhostState.LOCKED);
             systems.actorSpriteAnimController().resetSelected(ghost);
         });
 
@@ -169,7 +168,7 @@ public abstract class CommonGamePlay implements GamePlay {
             systems.actorSpriteAnimController().stopSelected(ghost);
         }
 
-        systems.ghostState().setState(eatenGhost, GhostState.EATEN);
+        systems.ghostState().setKilled(eatenGhost);
         // Animation index is 0-based, animation frame 0 shows points for *first* killed ghost...
         systems.actorSpriteAnimController().selectAndSetFrame(eatenGhost, CommonSpriteAnimationID.GHOST_POINTS, killedBefore);
 
