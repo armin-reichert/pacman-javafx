@@ -15,6 +15,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 
 import static de.amr.basics.math.Direction.*;
 import static de.amr.pacmanfx.core.Validations.differsAtMost;
+import static java.util.Objects.requireNonNull;
 
 public class GhostHouseAccessSystem {
 
@@ -35,6 +36,11 @@ public class GhostHouseAccessSystem {
             case RETURNING_HOME -> moveTowardsHouseEntry(ghost, level, speed);
             case ENTERING_HOUSE -> moveTowardsRevivalPosition(ghost, speed);
         }
+    }
+
+    public void requestUnlock(Ghost ghost) {
+        requireNonNull(ghost);
+        ghost.houseAccess().setUnlockRequested(true);
     }
 
     /**

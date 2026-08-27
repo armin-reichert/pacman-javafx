@@ -9,7 +9,6 @@ import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.ghost.comp.ElroyComp;
-import de.amr.pacmanfx.core.entities.ghost.comp.GhostHouseAccessComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.gameplay.hunt.GhostHuntingStrategy;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -44,7 +43,16 @@ public class GhostStateSystem {
 
         switch (ghost.state().enumValue()) {
             case LOCKED -> {
-                // gets unlocked by gatekeeper for now
+                if (ghost.houseAccess().isUnlockRequested()) {
+                    final boolean insideHouse = ghost.worldInfo().house().contains(ghost.pos().tile());
+                    if (insideHouse) {
+                        setState(ghost, GhostState.LEAVING_HOUSE);
+                    }
+                    else {
+                        setState(ghost, ghost.state().isThreatenedByPac() ? GhostState.FRIGHTENED : GhostState.HUNTING_PAC);
+                    }
+                    ghost.houseAccess().setUnlockRequested(false);
+                }
             }
             case ENTERING_HOUSE -> {
                 if (ghost.houseAccess().reachedRevivalPosition()) {
@@ -53,10 +61,7 @@ public class GhostStateSystem {
             }
             case LEAVING_HOUSE -> {
                 if (ghost.houseAccess().leftHouse()) {
-                    final GhostState state = ghost.state().isThreatenedByPac()
-                        ? GhostState.FRIGHTENED
-                        : GhostState.HUNTING_PAC;
-                    setState(ghost, state);
+                    setState(ghost, ghost.state().isThreatenedByPac() ? GhostState.FRIGHTENED : GhostState.HUNTING_PAC);
                 }
             }
             case RETURNING_HOME -> {

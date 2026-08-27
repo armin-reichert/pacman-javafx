@@ -217,14 +217,13 @@ public final class ArcadeHouseGateKeeper {
                 // Leave house immediately again after being eaten
                 systems.worldNavigator().setMoveDir(blinky, Direction.UP);
                 systems.worldNavigator().setWishDir(blinky, Direction.UP);
-                systems.ghostState().setState(blinky, GhostState.LEAVING_HOUSE);
             }
             else {
                 // Start hunting towards west direction
                 systems.worldNavigator().setMoveDir(blinky, Direction.LEFT);
                 systems.worldNavigator().setWishDir(blinky, Direction.LEFT);
-                systems.ghostState().setState(blinky, GhostState.HUNTING_PAC);
             }
+            systems.ghostHouseAccess().requestUnlock(blinky);
         }
         Stream.of(GhostPersonality.PINK_GHOST_SPEEDY, GhostPersonality.CYAN_GHOST_BASHFUL, GhostPersonality.ORANGE_GHOST_POKEY)
             .map(level.entities()::ghost)
@@ -233,7 +232,8 @@ public final class ArcadeHouseGateKeeper {
             .ifPresent(prisoner -> checkReleaseOfGhost(level, prisoner, pacDigestionSystem).ifPresent(_ -> {
                 systems.worldNavigator().setMoveDir(prisoner, Direction.UP);
                 systems.worldNavigator().setWishDir(prisoner, Direction.UP);
-                systems.ghostState().setState(prisoner, GhostState.LEAVING_HOUSE);
+                systems.ghostHouseAccess().requestUnlock(prisoner);
+                //TODO check if this should be done here
                 ghostReleasedCallback.accept(level, prisoner);
             }));
     }

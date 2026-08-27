@@ -8,6 +8,8 @@ import de.amr.pacmanfx.core.ecs.GameEntityComp;
 
 public class GhostHouseAccessComp implements GameEntityComp {
 
+    private boolean unlockRequested;
+
     private boolean leftHouse;
 
     private boolean reachedHouseEntry;
@@ -38,10 +40,19 @@ public class GhostHouseAccessComp implements GameEntityComp {
         this.reachedRevivalPosition = reachedRevivalPosition;
     }
 
+    public boolean isUnlockRequested() {
+        return unlockRequested;
+    }
+
+    public void setUnlockRequested(boolean unlockRequested) {
+        this.unlockRequested = unlockRequested;
+    }
+
     @Override
     public void reset() {
         leftHouse = false;
         reachedHouseEntry = false;
         reachedRevivalPosition = false;
+        unlockRequested = false;
     }
 }
