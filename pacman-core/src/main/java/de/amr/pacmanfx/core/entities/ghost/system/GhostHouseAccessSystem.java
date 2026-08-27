@@ -6,12 +6,10 @@ package de.amr.pacmanfx.core.entities.ghost.system;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.ecs.comp.PositionComp;
-import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.House;
-import de.amr.pacmanfx.core.entities.ghost.comp.GhostHouseAccessComp;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 
@@ -34,7 +32,7 @@ public class GhostHouseAccessSystem {
         switch (ghost.state().enumValue()) {
             case LOCKED         -> bounceInHouse(ghost, speed);
             case LEAVING_HOUSE  -> moveTowardsHouseExit(ghost, speed);
-            case RETURNING_HOME -> moveTowardsHouse(ghost, level, speed);
+            case RETURNING_HOME -> moveTowardsHouseEntry(ghost, level, speed);
             case ENTERING_HOUSE -> moveTowardsRevivalPosition(ghost, speed);
         }
     }
@@ -44,7 +42,7 @@ public class GhostHouseAccessSystem {
      * and start blinking when Pac-Man's power starts fading. After that, they return to their normal color.
      */
     private void bounceInHouse(Ghost ghost, float speed) {
-        if (ghost.reqComp(WorldNavigationComp.class).isDisabled()) {
+        if (ghost.worldNavigation().isDisabled()) {
             return;
         }
         final House house = ghost.worldInfo().house();
@@ -74,7 +72,7 @@ public class GhostHouseAccessSystem {
      * The ghost speed is slower than outside, but I do not know the exact value.
      */
     private void moveTowardsHouseExit(Ghost ghost, float speed) {
-        if (ghost.reqComp(WorldNavigationComp.class).isDisabled()) {
+        if (ghost.worldNavigation().isDisabled()) {
             return;
         }
 
@@ -118,7 +116,7 @@ public class GhostHouseAccessSystem {
      * then moves up again (if the house center is his revival position), or moves sidewards towards his revival position.
      */
     private void moveTowardsRevivalPosition(Ghost ghost, float speed) {
-        if (ghost.reqComp(WorldNavigationComp.class).isDisabled()) {
+        if (ghost.worldNavigation().isDisabled()) {
             return;
         }
 
@@ -153,7 +151,7 @@ public class GhostHouseAccessSystem {
         ghost.houseAccess().setReachedRevivalPosition(false);
     }
 
-    private void moveTowardsHouse(Ghost ghost, GameLevel level, float speed) {
+    private void moveTowardsHouseEntry(Ghost ghost, GameLevel level, float speed) {
         final PositionComp ghostPos = ghost.pos();
         final House house = ghost.worldInfo().house();
         final Vector2f entryPos = house.floorplan().entryPosition();
