@@ -4,8 +4,8 @@ import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GamePlay;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameVariantUIConfig;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_WorldMapManager;
 import de.amr.pacmanfx.arcade.pacman.rules.ArcadePacMan_GameRules;
-import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.game.Cartridge;
 
 public class ArcadePacMan_Cartridge {

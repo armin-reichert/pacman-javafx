@@ -1,7 +1,7 @@
 package de.amr.pacmanfx.core.ecs.comp;
 
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimFacade;
 import de.amr.pacmanfx.core.ecs.GameEntityComp;
+import de.amr.pacmanfx.core.spriteanim.SpriteAnimFacade;
 
 public class SpriteAnimationComp implements GameEntityComp {
 

@@ -6,9 +6,9 @@ package de.amr.pacmanfx.core.ecs.systems;
 
 import de.amr.basics.Named;
 import de.amr.basics.math.RectShort;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimFacade;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
+import de.amr.pacmanfx.core.spriteanim.SpriteAnimFacade;
 
 import static java.util.Objects.requireNonNull;
 

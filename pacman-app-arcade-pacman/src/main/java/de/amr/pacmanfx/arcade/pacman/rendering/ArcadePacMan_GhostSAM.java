@@ -5,12 +5,12 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.Named;
 import de.amr.basics.math.Direction;
-import de.amr.pacmanfx.core.spriteanim.LazySAM;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimation;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimationBuilder;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.model.GhostPersonality;
+import de.amr.pacmanfx.core.spriteanim.LazySAM;
+import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
+import de.amr.pacmanfx.core.spriteanim.SpriteAnimation;
+import de.amr.pacmanfx.core.spriteanim.SpriteAnimationBuilder;
 
 import java.util.Objects;
 

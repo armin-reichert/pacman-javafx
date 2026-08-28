@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.game;
 
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.core.GameVariantConfig;
+import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
 
 public class GameVariant {
 

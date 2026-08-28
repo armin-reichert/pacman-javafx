@@ -7,9 +7,9 @@ package de.amr.pacmanfx.core.level;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.gameplay.ArcadeHouseGateKeeper;
-import de.amr.pacmanfx.core.rules.HuntingTimerStrategy;
 import de.amr.pacmanfx.core.model.world.map.FoodState;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.core.rules.HuntingTimerStrategy;
 
 import java.util.ArrayList;
 import java.util.List;

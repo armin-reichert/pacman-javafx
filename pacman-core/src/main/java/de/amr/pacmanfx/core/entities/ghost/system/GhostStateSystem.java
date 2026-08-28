@@ -6,7 +6,6 @@ package de.amr.pacmanfx.core.entities.ghost.system;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.entities.Ghost;
-import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.ghost.comp.ElroyComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -25,19 +24,11 @@ public class GhostStateSystem {
 
     public GhostStateSystem() {}
 
-    private boolean isGhostThreatenedByPac(GameLevel level, Ghost ghost, Pac pac) {
-        return pac.power().isActive() && !level.isInGhostKilledChain(ghost);
-    }
-
-    public void update(GameContext game, GameLevel level, Ghost ghost) {
+    public void update(GameContext game, Ghost ghost) {
         requireNonNull(game);
         requireNonNull(ghost);
 
-        final Pac pac = level.entities().pac();
-
         ghost.state().setStateTick(game.state().timer().tickCount());
-        ghost.state().setPacPowerFading(pac.power().isFading());
-        ghost.state().setPacPower(isGhostThreatenedByPac(level, ghost, pac));
 
         switch (ghost.state().enumValue()) {
             case LOCKED -> {

@@ -6,10 +6,10 @@ package de.amr.pacmanfx.game;
 
 import de.amr.basics.Named;
 import de.amr.pacmanfx.core.GameSystems;
-import de.amr.pacmanfx.core.gamestate.GameFlowController;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
-import de.amr.pacmanfx.core.rules.GameRules;
+import de.amr.pacmanfx.core.gamestate.GameFlowController;
 import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
+import de.amr.pacmanfx.core.rules.GameRules;
 
 import java.util.function.Supplier;
 

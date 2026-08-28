@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.core.ecs;
 
-import de.amr.basics.Disposable;
 import de.amr.basics.Composition;
+import de.amr.basics.Disposable;
 import de.amr.pacmanfx.core.ecs.comp.MovementComp;
 import de.amr.pacmanfx.core.ecs.comp.PositionComp;
 import de.amr.pacmanfx.core.ecs.comp.VisibilityComp;

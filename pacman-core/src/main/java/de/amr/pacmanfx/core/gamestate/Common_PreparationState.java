@@ -5,8 +5,6 @@
 package de.amr.pacmanfx.core.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.HUD;
 
 public final class Common_PreparationState extends AbstractGameState {
 

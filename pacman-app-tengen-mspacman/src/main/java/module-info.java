@@ -22,7 +22,7 @@ open module de.amr.pacmanfx.tengenmspacman {
     exports de.amr.pacmanfx.tengenmspacman.model;
     exports de.amr.pacmanfx.tengenmspacman.rendering;
     exports de.amr.pacmanfx.tengenmspacman.gamescene;
-    exports de.amr.pacmanfx.tengenmspacman.flow;
+    exports de.amr.pacmanfx.tengenmspacman.gamestate;
     exports de.amr.pacmanfx.tengenmspacman.config;
     exports de.amr.pacmanfx.tengenmspacman.dashboard;
     exports de.amr.pacmanfx.tengenmspacman.sprites;

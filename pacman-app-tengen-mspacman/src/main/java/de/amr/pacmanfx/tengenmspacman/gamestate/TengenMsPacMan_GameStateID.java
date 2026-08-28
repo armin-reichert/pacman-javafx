@@ -1,4 +1,4 @@
-package de.amr.pacmanfx.tengenmspacman.flow;
+package de.amr.pacmanfx.tengenmspacman.gamestate;
 
 import de.amr.basics.Named;
 

@@ -88,7 +88,7 @@ public class EntityUpdater {
             final float speed = speedRules.ghostSpeed(game, ghost);
             systems.ghostHouseAccess().update(ghost, level, speed);
             systems.ghostHuntingSystem().update(game, level, ghost);
-            systems.ghostState().update(game, level, ghost);
+            systems.ghostState().update(game, ghost);
             systems.ghostAnimation().update(ghost, systems.actorSpriteAnimController());
         });
     }

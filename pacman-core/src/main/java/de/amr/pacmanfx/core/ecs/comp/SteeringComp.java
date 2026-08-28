@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.core.ecs.comp;
 
-import de.amr.pacmanfx.core.ecs.GameEntityComp;
 import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.ecs.GameEntityComp;
 import de.amr.pacmanfx.core.steering.Steering;
 
 public class SteeringComp<E extends GameEntity> implements GameEntityComp {
