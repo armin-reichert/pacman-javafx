@@ -51,8 +51,7 @@ public final class Common_EatingGhostState extends AbstractGameState {
         systems.pacState().setState(pac, PacState.ACTIVE);
         pac.show();
         level.entities().ghostsInState(GhostState.EATEN).forEach(ghost -> {
-            //TODO use system
-            ghost.state().setEnumValue(GhostState.RETURNING_HOME);
+            systems.ghostState().setState(ghost, GhostState.RETURNING_HOME);
             systems.ghostAnimation().setDisabled(ghost, false);
         });
     }

@@ -11,6 +11,7 @@ import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.rules.GameRules;
+import org.tinylog.Logger;
 
 import java.util.Set;
 
@@ -35,40 +36,48 @@ public class GhostStateSystem {
                 if (ghost.houseAccess().isUnlockRequested()) {
                     final boolean insideHouse = ghost.worldInfo().house().contains(ghost.pos().tile());
                     if (insideHouse) {
-                        ghost.state().setEnumValue(GhostState.LEAVING_HOUSE);
+                        setState(ghost, GhostState.LEAVING_HOUSE);
                     }
                     else {
-                        ghost.state().setEnumValue(ghost.state().hasPacPower() ? GhostState.FRIGHTENED : GhostState.HUNTING_PAC);
+                        setState(ghost, ghost.state().hasPacPower() ? GhostState.FRIGHTENED : GhostState.HUNTING_PAC);
                     }
                     ghost.houseAccess().setUnlockRequested(false);
                 }
             }
             case ENTERING_HOUSE -> {
                 if (ghost.houseAccess().reachedRevivalPosition()) {
-                    ghost.state().setEnumValue(GhostState.LOCKED);
+                    setState(ghost, GhostState.LOCKED);
                 }
             }
             case LEAVING_HOUSE -> {
                 if (ghost.houseAccess().leftHouse()) {
-                    ghost.state().setEnumValue(ghost.state().hasPacPower() ? GhostState.FRIGHTENED : GhostState.HUNTING_PAC);
+                    setState(ghost, ghost.state().hasPacPower() ? GhostState.FRIGHTENED : GhostState.HUNTING_PAC);
                 }
             }
             case RETURNING_HOME -> {
                 if (ghost.houseAccess().reachedHouseEntry()) {
-                    ghost.state().setEnumValue(GhostState.ENTERING_HOUSE);
+                    setState(ghost, GhostState.ENTERING_HOUSE);
                 }
             }
             case HUNTING_PAC -> {
                 if (ghost.state().hasPacPower()) {
-                    ghost.state().setEnumValue(GhostState.FRIGHTENED);
+                    setState(ghost, GhostState.FRIGHTENED);
                 }
             }
             case FRIGHTENED -> {
                 if (!ghost.state().hasPacPower()) {
-                    ghost.state().setEnumValue(GhostState.HUNTING_PAC);
+                    setState(ghost, GhostState.HUNTING_PAC);
                 }
             }
         }
+    }
+
+    public void setState(Ghost ghost, GhostState state) {
+        requireNonNull(ghost);
+        requireNonNull(state);
+        final GhostState oldState = ghost.state().enumValue();
+        ghost.state().setEnumValue(state);
+        Logger.info("Ghost {} state: {} -> {}", ghost.name(), oldState, state);
     }
 
     public void setElroyEnabled(Ghost ghost, boolean enabled) {

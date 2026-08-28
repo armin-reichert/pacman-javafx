@@ -198,8 +198,7 @@ public class TengenMsPacMan_IntroScene extends GameScene {
                     worldNavigationSystem.setMoveDirSpeed(ghost, SPEED);
 
                     animController.playSelected(ghost);
-
-                    ghost.state().setEnumValue(GhostState.HUNTING_PAC);
+                    systems.ghostState().setState(ghost, GhostState.HUNTING_PAC);
                 }
                 scene.ghostIndex = 0;
             }

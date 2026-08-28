@@ -164,7 +164,8 @@ public abstract class CommonGamePlay implements GamePlay {
 
         scorePoints(game, points, level.number());
 
-        ghost.state().setEnumValue(GhostState.EATEN);
+        game.variant().systems().ghostState().setState(ghost, GhostState.EATEN);
+        //TODO use system
         ghost.state().setKillChainIndex(nextIndex);
 
         level.addToGhostKillChain(ghost);
