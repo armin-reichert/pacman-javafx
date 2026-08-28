@@ -4,7 +4,9 @@
 
 package de.amr.pacmanfx.core.gamestate;
 
+import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.pac.comp.PacState;
@@ -16,8 +18,6 @@ import de.amr.pacmanfx.core.level.GameLevel;
  */
 public final class Common_EatingGhostState extends AbstractGameState {
 
-    public static final int FREEZE_TICKS = 60;
-
     private GameLevel level;
     private Pac pac;
 
@@ -27,7 +27,7 @@ public final class Common_EatingGhostState extends AbstractGameState {
 
     @Override
     public void onEnterState(GameContext game) {
-        timer().restartTicks(FREEZE_TICKS);
+        timer().restartTicks(TickTimer.secToTicks(rules.eatenGhostDisplaySeconds()));
 
         level = session.level();
         pac = level.entities().pac();
@@ -35,8 +35,7 @@ public final class Common_EatingGhostState extends AbstractGameState {
         systems.pacState().setState(pac, PacState.SLEEPING);
         pac.hide();
 
-        level.entities().ghostsInState(GhostState.EATEN).forEach(ghost ->
-            systems.ghostAnimation().setDisabled(ghost, true));
+        level.entities().ghostsInState(GhostState.EATEN).forEach(Ghost::hide);
     }
 
     @Override
@@ -51,8 +50,8 @@ public final class Common_EatingGhostState extends AbstractGameState {
         systems.pacState().setState(pac, PacState.ACTIVE);
         pac.show();
         level.entities().ghostsInState(GhostState.EATEN).forEach(ghost -> {
+            ghost.show();
             systems.ghostState().setState(ghost, GhostState.RETURNING_HOME);
-            systems.ghostAnimation().setDisabled(ghost, false);
         });
     }
 }

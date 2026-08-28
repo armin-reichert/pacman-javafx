@@ -22,6 +22,7 @@ public class GameSystems {
     private final EntityUpdater entityUpdater = new EntityUpdater();
     private final ActorSpriteAnimController actorSpriteAnimController = new ActorSpriteAnimController();
 
+    protected LifetimeSystem lifetime = new LifetimeSystem();
     protected MovementSystem motor =  new MovementSystem();
     protected WorldNavigationSystem navigator = new WorldNavigationSystem();
     protected RoamingSystem roamingNavigator = new RoamingSystem(navigator);
@@ -126,6 +127,10 @@ public class GameSystems {
 
     public ActorSpriteAnimController actorSpriteAnimController() {
         return actorSpriteAnimController;
+    }
+
+    public LifetimeSystem lifetime() {
+        return lifetime;
     }
 
     public MovementSystem motor() {

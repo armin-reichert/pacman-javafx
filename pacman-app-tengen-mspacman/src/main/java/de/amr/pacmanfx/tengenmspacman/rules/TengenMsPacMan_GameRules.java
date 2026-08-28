@@ -132,6 +132,11 @@ public class TengenMsPacMan_GameRules implements GameRules {
     }
 
     @Override
+    public float eatenGhostDisplaySeconds() {
+        return 1;
+    }
+
+    @Override
     public OptionalInt cutSceneAfterLevel(int levelNumber) {
         final Integer cutSceneNumber = CUT_SCENE_NUMBER_AFTER_LEVEL_NUMBER.get(levelNumber);
         return cutSceneNumber != null

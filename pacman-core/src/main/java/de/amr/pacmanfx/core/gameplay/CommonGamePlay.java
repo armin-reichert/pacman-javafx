@@ -7,9 +7,11 @@ package de.amr.pacmanfx.core.gameplay;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
+import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.ecs.comp.LifetimeComp;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.pac.comp.PacState;
@@ -155,9 +157,11 @@ public abstract class CommonGamePlay implements GamePlay {
         requireNonNull(level);
         requireNonNull(ghost);
 
+        final GameRules rules = game.variant().rules();
+
         // Eating ghost wins 200, 400, 800, 1600 points
         final int nextIndex = level.ghostKillChainSize();
-        final int ghostValue = game.variant().rules().scoringRules().pointsForGhost(nextIndex);
+        final int ghostValue = rules.scoringRules().pointsForGhost(nextIndex);
 
         scorePoints(game, ghostValue, level.number());
 
@@ -168,9 +172,11 @@ public abstract class CommonGamePlay implements GamePlay {
 
         // Spawn Points entity
         final GhostPoints points = new GhostPoints(ghostValue);
+        level.entities().add(points);
+
         points.show();
         points.pos().set(ghost.pos().asVector2f());
-        level.entities().add(points);
+        points.setComp(LifetimeComp.class, new LifetimeComp(TickTimer.secToTicks(rules.eatenGhostDisplaySeconds())));
 
         game.eventManager().publishGameEvent(new GhostEatenEvent(ghost));
     }

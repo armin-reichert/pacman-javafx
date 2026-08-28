@@ -6,6 +6,7 @@ package de.amr.pacmanfx.core.ecs;
 
 import de.amr.basics.Composition;
 import de.amr.basics.Disposable;
+import de.amr.pacmanfx.core.ecs.comp.LifetimeComp;
 import de.amr.pacmanfx.core.ecs.comp.MovementComp;
 import de.amr.pacmanfx.core.ecs.comp.PositionComp;
 import de.amr.pacmanfx.core.ecs.comp.VisibilityComp;
@@ -43,6 +44,10 @@ public class GameEntity extends Composition<GameEntityComp> implements Disposabl
 
     public final Optional<MovementComp> optMovement() {
         return optComp(MovementComp.class);
+    }
+
+    public final Optional<LifetimeComp> optLifetime() {
+        return optComp(LifetimeComp.class);
     }
 
     public final void setName(String name) {

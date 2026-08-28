@@ -10,6 +10,7 @@ import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
@@ -49,11 +50,19 @@ public class GameLevelEntitySet {
                 }
                 theHouse = house;
             }
-            case GhostPoints points -> {
-                thePoints.add(points);
-            }
+            case GhostPoints points -> thePoints.add(points);
             default -> throw new IllegalArgumentException("Unknown entity type!");
         }
+    }
+
+    public Stream<GameEntity> all() {
+        return Stream.of(
+            Optional.ofNullable(thePac).stream(),
+            theGhosts.values().stream(),
+            Optional.ofNullable(theBonus).stream(),
+            Optional.ofNullable(theHouse).stream(),
+            thePoints.stream()
+        ).flatMap(Function.identity());
     }
 
     public void remove(GameEntity entity) {

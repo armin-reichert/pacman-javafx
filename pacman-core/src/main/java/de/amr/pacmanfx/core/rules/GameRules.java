@@ -59,6 +59,8 @@ public interface GameRules {
 
     int demoLevelHuntingStartTick();
 
+    float eatenGhostDisplaySeconds();
+
     default boolean ghostBecomesElroy1(GameLevel level, Ghost ghost) {
         return false;
     }

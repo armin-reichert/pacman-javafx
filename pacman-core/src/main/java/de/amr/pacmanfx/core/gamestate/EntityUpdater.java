@@ -30,6 +30,8 @@ public class EntityUpdater {
             updateGhosts(game, level);
             level.entities().optBonus().ifPresent(bonus -> updateBonus(game, level, bonus));
             updateHeartbeat(level);
+            // Handle entities with limited lifetime like ghost points, bonus points etc.
+            game.variant().systems().lifetime().update(level.entities());
         });
         updateHUD(game);
     }

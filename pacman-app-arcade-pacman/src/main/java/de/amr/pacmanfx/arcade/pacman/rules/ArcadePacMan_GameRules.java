@@ -210,6 +210,11 @@ public class ArcadePacMan_GameRules implements GameRules {
     }
 
     @Override
+    public float eatenGhostDisplaySeconds() {
+        return 1;
+    }
+
+    @Override
     public boolean ghostBecomesElroy1(GameLevel level, Ghost ghost) {
         int remainingFoodCount = level.food().remainingFoodCount();
         return remainingFoodCount == levelData(level.number()).numDotsLeftElroy1();
