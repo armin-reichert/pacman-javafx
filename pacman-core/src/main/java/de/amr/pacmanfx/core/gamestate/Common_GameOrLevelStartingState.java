@@ -7,9 +7,12 @@ package de.amr.pacmanfx.core.gamestate;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.HUD;
+import de.amr.pacmanfx.core.gameplay.GamePlay;
 
 public class Common_GameOrLevelStartingState extends GameState {
 
+    private GameFlowController gameFlow;
+    private GamePlay gamePlay;
     private GameSession session;
 
     public Common_GameOrLevelStartingState() {
@@ -18,6 +21,8 @@ public class Common_GameOrLevelStartingState extends GameState {
 
     @Override
     public void onEnter(GameContext game) {
+        gameFlow = game.variant().gameFlow();
+        gamePlay = game.variant().gamePlay();
         session = game.session();
 
         final HUD hud = session.hud();
@@ -28,14 +33,14 @@ public class Common_GameOrLevelStartingState extends GameState {
 
     @Override
     public void onUpdate(GameContext game) {
-        game.variant().gameFlow().enterGameState(game, computeNextState(game));
+        gameFlow.enterGameState(game, computeNextState(game));
     }
 
     private CommonGameStateID computeNextState(GameContext game) {
-        if (game.session().isGameRunning()) {
+        if (session.isGameRunning()) {
             return CommonGameStateID.GAME_LEVEL_CONTINUE;
         }
-        if (game.variant().gamePlay().canStart(game)) {
+        if (gamePlay.canStart(game)) {
             return CommonGameStateID.GAME_STARTING;
         }
         return  CommonGameStateID.DEMO_LEVEL_PLAYING;
