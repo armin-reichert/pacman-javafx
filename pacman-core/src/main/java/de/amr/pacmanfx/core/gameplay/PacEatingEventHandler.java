@@ -8,8 +8,8 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;
-import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.entities.Bonus;
+import de.amr.pacmanfx.core.entities.BonusPoints;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventListener;
@@ -98,20 +98,25 @@ public class PacEatingEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onBonusEaten(BonusEatenEvent e) {
-        final Bonus bonus = e.bonus();
+        final GameRules rules = game.variant().rules();
+        final GamePlay gamePlay = game.variant().gamePlay();
+
         final GameSession session = game.session();
         final GameLevel level = session.level();
-        final GameSystems systems = game.variant().systems();
-        final GameRules rules = game.variant().rules();
+        final Bonus bonus = e.bonus();
 
         // Bonus value depends on game variant and bonus type
-        game.variant().gamePlay().scorePoints(game, bonus.data().points(), level.number());
-        Logger.info("Scored {} points for eating bonus {}", bonus.data().points(), bonus);
+        final int bonusValue = rules.scoringRules().pointsForBonus(bonus.data().symbolCode());
+        gamePlay.scorePoints(game, bonusValue, level.number());
+        Logger.info("Scored {} points for eating bonus {}", bonusValue, bonus);
+
+        level.entities().remove(bonus);
 
         // Eaten bonus is displayed as points for short time
-        systems.bonusState().showEatenForSeconds(bonus, rules.eatenBonusDisplaySeconds());
-
-        // A bonus moving through the world stops
-        bonus.optComp(WorldNavigationComp.class).ifPresent(_ -> systems.worldNavigator().setMoveDirSpeed(bonus, 0));
+        final var bonusPoints = new BonusPoints(bonusValue);
+        bonusPoints.pos().set(bonus.pos().asVector2f());
+        bonusPoints.setLifetime(rules.eatenBonusDisplaySeconds());
+        bonusPoints.show();
+        level.entities().add(bonusPoints);
     }
 }

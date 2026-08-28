@@ -61,35 +61,8 @@ public class BonusStateSystem {
         bonus.hide();
     }
 
-    public void showEdibleForSeconds(Bonus bonus, float seconds) {
-        showEdibleStateAndStartTimer(bonus, seconds);
-    }
-
-    public void showEdible(Bonus bonus) {
-        showEdibleStateAndStartTimer(bonus, null);
-    }
-
-    private void showEdibleStateAndStartTimer(Bonus bonus, Float optionalSec) {
-        requireNonNull(bonus);
-
+    public void setBonusEdible(Bonus bonus) {
         final BonusStateComp state = bonus.state();
         state.setEnumValue(BonusState.EDIBLE);
-        if (optionalSec == null) {
-            state.timer().restartIndefinitely();
-        } else {
-            state.timer().restartSeconds(optionalSec);
-        }
-
-        bonus.show();
-    }
-
-    public void showEatenForSeconds(Bonus bonus, float seconds) {
-        requireNonNull(bonus);
-
-        final BonusStateComp state = bonus.state();
-        state.setEnumValue(BonusState.EATEN);
-        state.timer().restartSeconds(seconds);
-
-        bonus.show();
     }
 }

@@ -33,6 +33,7 @@ module de.amr.pacmanfx.core {
     exports de.amr.pacmanfx.core.ecs.systems;
     exports de.amr.pacmanfx.core.entities.pac.system;
     exports de.amr.pacmanfx.core.entities.bonus.system;
+    exports de.amr.pacmanfx.core.entities.bonuspoints.comp;
     exports de.amr.pacmanfx.core.entities.ghost.system;
     exports de.amr.pacmanfx.core.entities.marquee.system;
     exports de.amr.pacmanfx.core.entities.bonus.comp;

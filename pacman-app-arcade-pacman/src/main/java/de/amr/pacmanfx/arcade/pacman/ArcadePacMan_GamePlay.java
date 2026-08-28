@@ -16,7 +16,6 @@ import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.levelCounter.comp.LevelCounterBehavior;
 import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
-import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
 import de.amr.pacmanfx.core.event.gameplay.LevelStartedEvent;
 import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
@@ -39,7 +38,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static de.amr.basics.math.RandomNumbers.randomFloat;
 import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tile;
 import static java.util.Objects.requireNonNull;
@@ -253,24 +251,23 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         requireNonNull(level);
 
         final GameSystems systems = game.variant().systems();
-        final GameEventManager eventManager = game.eventManager();
+        final GameRules rules = game.variant().rules();
 
         level.selectNextBonus();
 
         final int symbolCode = level.bonusSymbolCode(level.currentBonusIndex());
-        final int value = game.variant().rules().scoringRules().pointsForBonus(symbolCode);
-        final float edibleSec = randomFloat(9, 10);
-        final Vector2i tile = level.worldMap().terrainLayer().getTilePropertyOrDefault(
-            WorldMapPropertyName.POS_BONUS, ArcadePacMan_GameVariantUIConfig.DEFAULT_BONUS_TILE);
-
-        final Bonus bonus = Bonus.createStaticBonus(symbolCode, value);
-        level.entities().optBonus().ifPresent(oldBonus -> level.entities().remove(oldBonus));
+        final Bonus bonus = Bonus.createStaticBonus(symbolCode);
         level.entities().add(bonus);
 
+        // In XXL game variant, the bonus position is stored inside the terrain map
+        final Vector2i tile = level.worldMap().terrainLayer().getTilePropertyOrDefault(
+            WorldMapPropertyName.POS_BONUS, ArcadePacMan_GameVariantUIConfig.DEFAULT_BONUS_TILE);
         bonus.pos().set(WorldMap.halfTileRightOf(tile));
-        systems.bonusState().showEdibleForSeconds(bonus, edibleSec);
+        bonus.setLifetime(rules.edibleBonusDisplaySeconds());
+        systems.bonusState().setBonusEdible(bonus);
+        bonus.show();
 
-        eventManager.publishGameEvent(new BonusActivatedEvent(bonus));
+        game.eventManager().publishGameEvent(new BonusActivatedEvent(bonus));
     }
 
     private void onGhostReleasedFromHouse(GameLevel level, Ghost prisoner) {

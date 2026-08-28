@@ -41,16 +41,17 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         if (!actor.isVisible()) return;
         final Vector2f center = actor.pos().bodyCenter();
         switch (actor) {
-            case Pac pac                   -> drawSpriteCentered(computePacSprite(pac),     center);
-            case Ghost ghost               -> drawSpriteCentered(computeGhostSprite(ghost), center);
-            case Bonus bonus               -> drawSpriteCentered(computeBonusSprite(bonus), center);
-            case GhostPoints points             -> drawSpriteCentered(computePointsSprite(points), center);
+            case Pac pac                   -> drawSpriteCentered(computeSprite(pac),    center);
+            case Ghost ghost               -> drawSpriteCentered(computeSprite(ghost),  center);
+            case GhostPoints points        -> drawSpriteCentered(computeSprite(points), center);
+            case Bonus bonus               -> drawSpriteCentered(computeSprite(bonus),  center);
+            case BonusPoints points        -> drawSpriteCentered(computeSprite(points), center);
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
             default                        -> drawSpriteCentered(animController.currentSprite(actor), center);
         }
     }
 
-    private RectShort computeGhostSprite(Ghost ghost) {
+    private RectShort computeSprite(Ghost ghost) {
         RectShort sprite;
         if (animController.isSelected(ghost, CommonSpriteAnimationID.GHOST_NORMAL)) {
             final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.worldNavigation().wishDir());
@@ -68,7 +69,7 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         return sprite;
     }
 
-    private RectShort computePacSprite(Pac pac) {
+    private RectShort computeSprite(Pac pac) {
         RectShort sprite;
         if (animController.isSelected(pac, CommonSpriteAnimationID.PAC_MOUTH_MOVING)) {
             final RectShort[] sprites = spriteSheet().msPacManMunchingSprites(pac.worldNavigation().moveDir());
@@ -87,6 +88,40 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         return sprite;
     }
 
+    // TODO decouple symbol code from sprite index
+    private RectShort computeSprite(Bonus bonus) {
+        return switch (bonus.bonusState()) {
+            case EDIBLE -> spriteOrDefault(spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS), bonus.data().symbolCode());
+            case EATEN ->  spriteOrDefault(spriteSheet().findSpriteSequence(SpriteID.BONUS_VALUES), bonus.data().symbolCode());
+            case INACTIVE -> RectShort.NULL_RECTANGLE;
+        };
+    }
+
+    private RectShort computeSprite(BonusPoints bonusPoints) {
+        final int index = switch (bonusPoints.points().value()) {
+            case 100 -> 0;
+            case 200 -> 1;
+            case 500 -> 2;
+            case 700 -> 3;
+            case 1000 -> 4;
+            case 2000 -> 5;
+            case 5000 -> 6;
+            default -> throw new IllegalArgumentException("Illegal points value: " + bonusPoints.points());
+        };
+        return spriteOrDefault(spriteSheet().findSpriteSequence(SpriteID.BONUS_VALUES), index);
+    }
+
+    private RectShort computeSprite(GhostPoints ghostPoints) {
+        final int index = switch (ghostPoints.points().number()) {
+            case 200 -> 0;
+            case 400 -> 1;
+            case 800 -> 2;
+            case 1600 -> 3;
+            default -> throw new IllegalArgumentException("Illegal points value: " + ghostPoints.points());
+        };
+        return spriteOrDefault(spriteSheet().findSpriteSequence(SpriteID.GHOST_NUMBERS), index);
+    }
+
     private void drawClapperBoard(Clapperboard clapperboard) {
         if (!clapperboard.isVisible()) return;
         ClapperboardAnimationSystem.sprite(clapperboard).ifPresent(sprite -> {
@@ -103,25 +138,5 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             ctx.fillText(number, numberX, y);
             ctx.fillText(text, textX, y);
         });
-    }
-
-    // TODO decouple symbol code from sprite index
-    private RectShort computeBonusSprite(Bonus bonus) {
-        return switch (bonus.bonusState()) {
-            case EDIBLE -> spriteOrDefault(spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS), bonus.data().symbolCode());
-            case EATEN ->  spriteOrDefault(spriteSheet().findSpriteSequence(SpriteID.BONUS_VALUES), bonus.data().symbolCode());
-            case INACTIVE -> RectShort.NULL_RECTANGLE;
-        };
-    }
-
-    private RectShort computePointsSprite(GhostPoints points) {
-        final int index = switch (points.value().number()) {
-            case 200 -> 0;
-            case 400 -> 1;
-            case 800 -> 2;
-            case 1600 -> 3;
-            default -> throw new IllegalArgumentException("Illegal points value: " + points.value());
-        };
-        return spriteOrDefault(spriteSheet().findSpriteSequence(SpriteID.GHOST_NUMBERS), index);
     }
 }

@@ -12,8 +12,6 @@ import de.amr.pacmanfx.core.entities.bonus.comp.BonusMoveAndJumpComp;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusState;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusStateComp;
 
-import static de.amr.pacmanfx.core.Validations.requireNonNegativeInt;
-
 /**
  * A bonus that either stays at a fixed position or jumps through the world, starting at some portal,
  * making one round around the ghost house and leaving the world at some portal at the other border.
@@ -22,35 +20,24 @@ import static de.amr.pacmanfx.core.Validations.requireNonNegativeInt;
  */
 public final class Bonus extends GameEntity {
 
-    public static Bonus createStaticBonus(int symbolCode, int points) {
-        return new Bonus(false, symbolCode, points);
+    public static Bonus createStaticBonus(int symbolCode) {
+        return new Bonus(symbolCode);
     }
 
-    public static Bonus createMovingBonus(int symbolCode, int points) {
-        return new Bonus(true, symbolCode, points);
+    public static Bonus createMovingBonus(int symbolCode) {
+        final var bonus = new Bonus(symbolCode);
+        bonus.setComp(MovementComp.class, new MovementComp());
+        bonus.setComp(WorldNavigationComp.class, new WorldNavigationComp());
+        bonus.setComp(BonusMoveAndJumpComp.class, new BonusMoveAndJumpComp());
+        bonus.reqComp(WorldNavigationComp.class).setCanTeleport(false);
+        return bonus;
     }
 
-    private Bonus(boolean moving, int symbolCode, int points) {
-        name = "Bonus-symbol:%d-points:%d".formatted(symbolCode, points);
-
-        setComp(BonusDataComp.class, new BonusDataComp(
-            requireNonNegativeInt(symbolCode),
-            requireNonNegativeInt(points)
-        ));
+    private Bonus(int symbolCode) {
+        name = "Bonus-symbol:%d".formatted(symbolCode);
+        setComp(BonusDataComp.class, new BonusDataComp(symbolCode));
         setComp(BonusStateComp.class, new BonusStateComp());
-
-        if (moving) {
-            setComp(MovementComp.class, new MovementComp());
-
-            final WorldNavigationComp worldNavigation = new WorldNavigationComp();
-            worldNavigation.setCanTeleport(false);
-            setComp(WorldNavigationComp.class, worldNavigation);
-
-            setComp(BonusMoveAndJumpComp.class, new BonusMoveAndJumpComp());
-        }
     }
-
-    // Component access
 
     public BonusDataComp data() {
         return reqComp(BonusDataComp.class);

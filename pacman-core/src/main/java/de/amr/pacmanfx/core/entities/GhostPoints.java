@@ -9,7 +9,7 @@ public class GhostPoints extends GameEntity {
         setComp(GhostPointsComp.class, new GhostPointsComp(value));
     }
 
-    public GhostPointsComp value() {
+    public GhostPointsComp points() {
         return reqComp(GhostPointsComp.class);
     }
 }

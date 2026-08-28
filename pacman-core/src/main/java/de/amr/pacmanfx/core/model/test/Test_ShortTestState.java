@@ -7,6 +7,8 @@ import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.entities.Bonus;
+import de.amr.pacmanfx.core.entities.BonusPoints;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusMoveAndJumpComp;
 import de.amr.pacmanfx.core.entities.pac.comp.PacState;
@@ -17,6 +19,7 @@ import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.MessageType;
+import org.tinylog.Logger;
 
 public class Test_ShortTestState extends AbstractGameState {
 
@@ -66,21 +69,13 @@ public class Test_ShortTestState extends AbstractGameState {
             gamePlay.activateNextBonus(game, level);
         }
         else if (timer().atSecond(START + 5)) {
-            level.entities().optBonus().ifPresent(bonus -> {
-                systems.bonusState().showEatenForSeconds(bonus, 2);
-                systems.worldNavigator().setMoveDirSpeed(bonus, 0);
-                game.eventManager().publishGameEvent(new BonusEatenEvent(bonus));
-            });
+            level.entities().optBonus().ifPresent(bonus -> eatBonus(game, level, bonus));
         }
         else if (timer().atSecond(START + 6)) {
             gamePlay.activateNextBonus(game, level);
         }
         else if (timer().atSecond(START + 8)) {
-            level.entities().optBonus().ifPresent(bonus -> {
-                systems.bonusState().showEatenForSeconds(bonus, 2);
-                systems.worldNavigator().setMoveDirSpeed(bonus, 0);
-                game.eventManager().publishGameEvent(new BonusEatenEvent(bonus));
-            });
+            level.entities().optBonus().ifPresent(bonus -> eatBonus(game, level, bonus));
         }
         else if (timer().atSecond(START + 9)) {
             level.entities().pac().hide();
@@ -98,6 +93,24 @@ public class Test_ShortTestState extends AbstractGameState {
         } else {
             level.entities().optBonus().ifPresent(bonus -> systems.entityUpdater().updateBonus(game, level, bonus));
         }
+    }
+
+    private void eatBonus(GameContext game, GameLevel level, Bonus bonus) {
+        // Bonus value depends on game variant and bonus type
+        final int bonusValue = rules.scoringRules().pointsForBonus(bonus.data().symbolCode());
+        gamePlay.scorePoints(game, bonusValue, level.number());
+        Logger.info("Scored {} points for eating bonus {}", bonusValue, bonus);
+
+        level.entities().remove(bonus);
+
+        // Eaten bonus is displayed as points for short time
+        final var points = new BonusPoints(bonusValue);
+        points.pos().set(bonus.pos().asVector2f());
+        points.setLifetime(rules.eatenBonusDisplaySeconds());
+        points.show();
+        level.entities().add(points);
+
+        game.eventManager().publishGameEvent(new BonusEatenEvent(bonus));
     }
 
     @Override

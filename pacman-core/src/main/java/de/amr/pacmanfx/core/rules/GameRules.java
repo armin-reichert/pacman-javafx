@@ -41,6 +41,8 @@ public interface GameRules {
 
     List<Integer> bonusSymbols(int levelNumber);
 
+    float edibleBonusDisplaySeconds();
+
     float eatenBonusDisplaySeconds();
 
     OptionalInt cutSceneAfterLevel(int levelNumber);

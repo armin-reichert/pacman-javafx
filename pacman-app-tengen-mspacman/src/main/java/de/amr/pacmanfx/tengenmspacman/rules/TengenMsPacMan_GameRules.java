@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.tengenmspacman.rules;
 
+import de.amr.basics.math.RandomNumbers;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -129,6 +130,11 @@ public class TengenMsPacMan_GameRules implements GameRules {
     @Override
     public float eatenBonusDisplaySeconds() {
         return 2;
+    }
+
+    @Override
+    public float edibleBonusDisplaySeconds() {
+        return RandomNumbers.randomFloat(9, 10); // not used for moving bonus
     }
 
     @Override

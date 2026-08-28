@@ -177,7 +177,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         requireNonNull(level);
 
         final GameSystems systems = game.variant().systems();
-
+        final GameRules rules = game.variant().rules();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
         if (level.entities().optBonus().isPresent() && level.entities().optBonus().get().bonusState() == BonusState.EDIBLE) {
@@ -193,21 +193,22 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
 
         level.selectNextBonus();
 
-        final int symbolCode = level.bonusSymbolCode(level.currentBonusIndex());
-        final int value = game.variant().rules().scoringRules().pointsForBonus(symbolCode);
-
         Bonus bonus;
+        final int symbolCode = level.bonusSymbolCode(level.currentBonusIndex());
+
+        // Maps in XXL game variant or custom maps might have no portal, in this case sue static bonus
         if (terrain.horizontalPortals().isEmpty()) {
-            bonus = Bonus.createStaticBonus(symbolCode, value);
+            bonus = Bonus.createStaticBonus(symbolCode);
             final Vector2i bonusTile = terrain.getTilePropertyOrDefault(WorldMapPropertyName.POS_BONUS, new Vector2i(13, 20));
             bonus.pos().set(WorldMap.halfTileRightOf(bonusTile));
-            systems.bonusState().showEdibleForSeconds(bonus, randomFloat(9, 10));
+            bonus.setLifetime(randomFloat(9, 10));
         } else {
-            bonus = Bonus.createMovingBonus(symbolCode, value);
-            final float speed = game.variant().rules().actorSpeedRules().bonusSpeed(game, level);
-            systems.bonusState().showEdible(bonus);
+            bonus = Bonus.createMovingBonus(symbolCode);
+            final float speed = rules.actorSpeedRules().bonusSpeed(game, level);
             systems.bonusMoveAndJump().startWandering(bonus, computeBonusRoute(terrain, house), speed);
         }
+        systems.bonusState().setBonusEdible(bonus);
+        bonus.show();
 
         level.entities().optBonus().ifPresent(oldBonus -> level.entities().remove(oldBonus));
         level.entities().add(bonus);

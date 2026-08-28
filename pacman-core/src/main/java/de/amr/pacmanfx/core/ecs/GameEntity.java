@@ -6,6 +6,7 @@ package de.amr.pacmanfx.core.ecs;
 
 import de.amr.basics.Composition;
 import de.amr.basics.Disposable;
+import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.ecs.comp.LifetimeComp;
 import de.amr.pacmanfx.core.ecs.comp.MovementComp;
 import de.amr.pacmanfx.core.ecs.comp.PositionComp;
@@ -46,12 +47,12 @@ public class GameEntity extends Composition<GameEntityComp> implements Disposabl
         return optComp(MovementComp.class);
     }
 
-    public final Optional<LifetimeComp> optLifetime() {
-        return optComp(LifetimeComp.class);
-    }
-
     public final LifetimeComp lifetime() {
         return reqComp(LifetimeComp.class);
+    }
+
+    public void setLifetime(float seconds) {
+        setComp(LifetimeComp.class, new LifetimeComp(TickTimer.secToTicks(seconds)));
     }
 
     public final void setName(String name) {

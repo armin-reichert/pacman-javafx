@@ -108,6 +108,7 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
         entities.optBonus().ifPresent(actorsInZOrder::add);
         actorsInZOrder.add(entities.pac());
         GHOST_Z_ORDER.stream().map(entities::ghost).forEach(actorsInZOrder::add);
-        actorsInZOrder.addAll(entities.thePoints());
+        actorsInZOrder.addAll(entities.theGhostPoints());
+        actorsInZOrder.addAll(entities.theBonusPoints());
     }
 }

@@ -18,11 +18,11 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRenderer, ActorRenderer {
 
-    private final ActorSpriteAnimController animSystem;
+    private final ActorSpriteAnimController animController;
 
-    public ArcadePacMan_ActorRenderer(ActorSpriteAnimController animSystem, Canvas canvas) {
+    public ArcadePacMan_ActorRenderer(ActorSpriteAnimController animController, Canvas canvas) {
         super(canvas);
-        this.animSystem = requireNonNull(animSystem);
+        this.animController = requireNonNull(animController);
     }
 
     @Override
@@ -34,60 +34,74 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
     public void drawActor(GameEntity actor) {
         requireNonNull(actor);
         if (!actor.isVisible()) return;
-        drawSpriteCentered(computeSprite(animSystem, actor), actor.pos().bodyCenter());
+        drawSpriteCentered(computeSprite(actor), actor.pos().bodyCenter());
     }
 
-    private RectShort computeSprite(ActorSpriteAnimController animSystem, GameEntity actor) {
+    private RectShort computeSprite(GameEntity actor) {
         return switch (actor) {
-            case Pac pac -> computePacSprite(animSystem, pac);
-            case Ghost ghost -> computeGhostSprite(animSystem, ghost);
-            case Bonus bonus -> computeBonusSprite(bonus);
-            case GhostPoints points -> computePointsSprite(points);
-            default -> animSystem.currentSprite(actor);
+            case Pac pac -> computeSprite(pac);
+            case Ghost ghost -> computeSprite(ghost);
+            case GhostPoints points -> computeSprite(points);
+            case Bonus bonus -> computeSprite(bonus);
+            case BonusPoints bonusPoints -> computeSprite(bonusPoints);
+            default -> animController.currentSprite(actor);
         };
     }
 
-    private RectShort computePacSprite(ActorSpriteAnimController animSystem, Pac pac) {
-        if (animSystem.isSelected(pac, CommonSpriteAnimationID.PAC_MOUTH_MOVING)) {
+    private RectShort computeSprite(Pac pac) {
+        if (animController.isSelected(pac, CommonSpriteAnimationID.PAC_MOUTH_MOVING)) {
             final Direction dir = pac.worldNavigation().moveDir();
             final RectShort[] sprites = spriteSheet().pacMunchingSprites(dir);
-            return spriteOrDefault(sprites, animSystem.currentFrame(pac));
+            return spriteOrDefault(sprites, animController.currentFrame(pac));
         }
         else {
-            return animSystem.currentSprite(pac);
+            return animController.currentSprite(pac);
         }
     }
 
-    private RectShort computeGhostSprite(ActorSpriteAnimController animSystem, Ghost ghost) {
-        if (animSystem.isSelected(ghost, CommonSpriteAnimationID.GHOST_NORMAL)) {
+    private RectShort computeSprite(Ghost ghost) {
+        if (animController.isSelected(ghost, CommonSpriteAnimationID.GHOST_NORMAL)) {
             final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.worldNavigation().wishDir());
-            return spriteOrDefault(sprites, animSystem.currentFrame(ghost));
+            return spriteOrDefault(sprites, animController.currentFrame(ghost));
         }
-        else if (animSystem.isSelected(ghost, CommonSpriteAnimationID.GHOST_EYES)) {
+        else if (animController.isSelected(ghost, CommonSpriteAnimationID.GHOST_EYES)) {
             return spriteSheet().ghostEyesSprite(ghost.worldNavigation().wishDir());
         }
         else {
-            return animSystem.currentSprite(ghost);
+            return animController.currentSprite(ghost);
         }
     }
 
-    private RectShort computeBonusSprite(Bonus bonus) {
-        //TODO: decouple symbol code from index in sprite array
-        return switch (bonus.bonusState()) {
-            case EDIBLE   -> spriteOrDefault(spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS), bonus.data().symbolCode());
-            case EATEN    -> spriteOrDefault(spriteSheet().findSpriteSequence(SpriteID.BONUS_VALUES),  bonus.data().symbolCode());
-            case INACTIVE -> RectShort.NULL_RECTANGLE;
-        };
-    }
-
-    private RectShort computePointsSprite(GhostPoints points) {
-        final int index = switch (points.value().number()) {
+    private RectShort computeSprite(GhostPoints points) {
+        final int index = switch (points.points().number()) {
             case 200 -> 0;
             case 400 -> 1;
             case 800 -> 2;
             case 1600 -> 3;
-            default -> throw new IllegalArgumentException("Illegal points value: " + points.value());
+            default -> throw new IllegalArgumentException("Illegal points value: " + points.points());
         };
         return spriteOrDefault(spriteSheet().findSpriteSequence(SpriteID.GHOST_NUMBERS), index);
+    }
+
+    private RectShort computeSprite(Bonus bonus) {
+        //TODO: decouple symbol code from index in sprite array
+        return switch (bonus.bonusState()) {
+            case EDIBLE   -> spriteOrDefault(spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS), bonus.data().symbolCode());
+            case EATEN, INACTIVE  -> RectShort.NULL_RECTANGLE;
+        };
+    }
+
+    private RectShort computeSprite(BonusPoints bonusPoints) {
+        final int index = switch (bonusPoints.points().value()) {
+            case 100 -> 0;
+            case 300 -> 1;
+            case 500 -> 2;
+            case 700 -> 3;
+            case 1000 -> 4;
+            case 2000 -> 5;
+            case 5000 -> 6;
+            default -> throw new IllegalArgumentException("Illegal points value: " + bonusPoints.points());
+        };
+        return spriteOrDefault(spriteSheet().findSpriteSequence(SpriteID.BONUS_VALUES), index);
     }
 }

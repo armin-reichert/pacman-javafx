@@ -392,14 +392,13 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         level.selectNextBonus();
 
         final int symbolCode = level.bonusSymbolCode(level.currentBonusIndex());
-        final int value = game.variant().rules().scoringRules().pointsForBonus(symbolCode);
         final float speed = game.variant().rules().actorSpeedRules().bonusSpeed(game, level);
 
-        final Bonus bonus = Bonus.createMovingBonus(symbolCode, value);
+        final Bonus bonus = Bonus.createMovingBonus(symbolCode);
         level.entities().optBonus().ifPresent(oldBonus -> level.entities().remove(oldBonus));
         level.entities().add(bonus);
-
-        systems.bonusState().showEdible(bonus);
+        systems.bonusState().setBonusEdible(bonus);
+        bonus.show();
 
         final boolean leftToRight = randomBoolean();
         final List<Vector2i> waypoints = List.of(
