@@ -2,10 +2,9 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.arcade.pacman.flow;
+package de.amr.pacmanfx.arcade.pacman.gamestate;
 
 import de.amr.pacmanfx.core.gamestate.*;
-import de.amr.pacmanfx.core.rules.PacDyingTiming;
 
 /**
  * The game states used by the Arcade game variants (Pc-Man, Ms. Pac-Man and their XXL versions).

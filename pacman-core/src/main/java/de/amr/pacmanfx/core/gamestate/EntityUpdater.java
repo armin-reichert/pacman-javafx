@@ -7,6 +7,7 @@ package de.amr.pacmanfx.core.gamestate;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
 import de.amr.pacmanfx.core.entities.Bonus;
 import de.amr.pacmanfx.core.entities.Ghost;
@@ -63,12 +64,13 @@ public class EntityUpdater {
         systems.worldNavigator().tryMovingOrTeleporting(level, pac, motor, systems.pacWorldMovementPolicy());
 
         // Animation
+        final ActorSpriteAnimController spriteAnimController = systems.actorSpriteAnimController();
         systems.pacAnimation().update(pac);
-        systems.actorSpriteAnimController().select(pac, pac.animation().animationID());
-        if (!pac.animation().isDisabled()) {
-            systems.actorSpriteAnimController().playSelected(pac);
+        spriteAnimController.select(pac, pac.animation().animationID());
+        if (pac.animation().isDisabled()) {
+            spriteAnimController.stopSelected(pac);
         } else {
-            systems.actorSpriteAnimController().stopSelected(pac);
+            spriteAnimController.playSelected(pac);
         }
     }
 

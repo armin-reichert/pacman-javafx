@@ -1,6 +1,6 @@
 package de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman;
 
-import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
+import de.amr.pacmanfx.arcade.pacman.gamestate.Arcade_GameState;
 import de.amr.pacmanfx.core.gamestate.GameFlowController;
 
 public class XXL_MsPacMan_GameFlow extends GameFlowController {

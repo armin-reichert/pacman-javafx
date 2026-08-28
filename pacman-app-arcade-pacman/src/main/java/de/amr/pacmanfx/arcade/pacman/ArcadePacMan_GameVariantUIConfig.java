@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.basics.Named;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.arcade.pacman.flow.Arcade_GameState;
+import de.amr.pacmanfx.arcade.pacman.gamestate.Arcade_GameState;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_RenderConfig;
 import de.amr.pacmanfx.core.gamestate.GameFlowController;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
