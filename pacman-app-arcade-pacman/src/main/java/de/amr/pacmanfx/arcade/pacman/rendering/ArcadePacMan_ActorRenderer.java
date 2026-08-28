@@ -8,10 +8,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
-import de.amr.pacmanfx.core.entities.Bonus;
-import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
-import de.amr.pacmanfx.core.entities.Ghost;
-import de.amr.pacmanfx.core.entities.Pac;
+import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
@@ -45,6 +42,7 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
             case Pac pac -> computePacSprite(animSystem, pac);
             case Ghost ghost -> computeGhostSprite(animSystem, ghost);
             case Bonus bonus -> computeBonusSprite(bonus);
+            case GhostPoints points -> computePointsSprite(points);
             default -> animSystem.currentSprite(actor);
         };
     }
@@ -80,5 +78,16 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
             case EATEN    -> spriteOrDefault(spriteSheet().findSpriteSequence(SpriteID.BONUS_VALUES),  bonus.data().symbolCode());
             case INACTIVE -> RectShort.NULL_RECTANGLE;
         };
+    }
+
+    private RectShort computePointsSprite(GhostPoints points) {
+        final int index = switch (points.value().number()) {
+            case 200 -> 0;
+            case 400 -> 1;
+            case 800 -> 2;
+            case 1600 -> 3;
+            default -> throw new IllegalArgumentException("Illegal points value: " + points.value());
+        };
+        return spriteOrDefault(spriteSheet().findSpriteSequence(SpriteID.GHOST_NUMBERS), index);
     }
 }

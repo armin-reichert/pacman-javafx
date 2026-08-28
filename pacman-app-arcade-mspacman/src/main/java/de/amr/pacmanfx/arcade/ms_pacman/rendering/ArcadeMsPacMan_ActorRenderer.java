@@ -44,6 +44,7 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             case Pac pac                   -> drawSpriteCentered(computePacSprite(pac),     center);
             case Ghost ghost               -> drawSpriteCentered(computeGhostSprite(ghost), center);
             case Bonus bonus               -> drawSpriteCentered(computeBonusSprite(bonus), center);
+            case GhostPoints points             -> drawSpriteCentered(computePointsSprite(points), center);
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
             default                        -> drawSpriteCentered(animController.currentSprite(actor), center);
         }
@@ -111,5 +112,16 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             case EATEN ->  spriteOrDefault(spriteSheet().findSpriteSequence(SpriteID.BONUS_VALUES), bonus.data().symbolCode());
             case INACTIVE -> RectShort.NULL_RECTANGLE;
         };
+    }
+
+    private RectShort computePointsSprite(GhostPoints points) {
+        final int index = switch (points.value().number()) {
+            case 200 -> 0;
+            case 400 -> 1;
+            case 800 -> 2;
+            case 1600 -> 3;
+            default -> throw new IllegalArgumentException("Illegal points value: " + points.value());
+        };
+        return spriteOrDefault(spriteSheet().findSpriteSequence(SpriteID.GHOST_NUMBERS), index);
     }
 }

@@ -10,10 +10,7 @@ import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;
-import de.amr.pacmanfx.core.entities.Ghost;
-import de.amr.pacmanfx.core.entities.House;
-import de.amr.pacmanfx.core.entities.Pac;
-import de.amr.pacmanfx.core.entities.Score;
+import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.pac.comp.PacState;
 import de.amr.pacmanfx.core.entities.pac.system.PacDigestionSystem;
@@ -160,16 +157,20 @@ public abstract class CommonGamePlay implements GamePlay {
 
         // Eating ghost wins 200, 400, 800, 1600 points
         final int nextIndex = level.ghostKillChainSize();
-        final int points = game.variant().rules().scoringRules().pointsForGhost(nextIndex);
+        final int ghostValue = game.variant().rules().scoringRules().pointsForGhost(nextIndex);
 
-        scorePoints(game, points, level.number());
+        scorePoints(game, ghostValue, level.number());
 
         game.variant().systems().ghostState().setState(ghost, GhostState.EATEN);
-
         //TODO use system
         ghost.state().setKillChainIndex(nextIndex);
-
         level.addToGhostKillChain(ghost);
+
+        // Spawn Points entity
+        final GhostPoints points = new GhostPoints(ghostValue);
+        points.show();
+        points.pos().set(ghost.pos().asVector2f());
+        level.entities().add(points);
 
         game.eventManager().publishGameEvent(new GhostEatenEvent(ghost));
     }

@@ -50,11 +50,6 @@ public class ArcadePacMan_GhostSAM extends LazySAM {
                 .singleSprite(spriteSheet.ghostEyesSprite(Direction.LEFT))
                 .build(container);
 
-            case CommonSpriteAnimationID.GHOST_POINTS -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet.findSpriteSequence(SpriteID.GHOST_NUMBERS))
-                .initiallyStopped()
-                .build(container);
-
             case CommonSpriteAnimationID.BLINKY_DAMAGED -> new SpriteAnimationBuilder()
                 .sprites(spriteSheet.findSpriteSequence(SpriteID.RED_GHOST_DAMAGED))
                 .initiallyStopped()
@@ -75,13 +70,5 @@ public class ArcadePacMan_GhostSAM extends LazySAM {
 
             default -> throw new IllegalArgumentException("Illegal animation ID: " + animationID);
         };
-    }
-
-    @Override
-    public void setAnimationFrame(Named name, int frameIndex) {
-        super.setAnimationFrame(name, frameIndex);
-        if (CommonSpriteAnimationID.GHOST_POINTS.equals(name)) {
-            animation(CommonSpriteAnimationID.GHOST_POINTS).setFrame(frameIndex);
-        }
     }
 }

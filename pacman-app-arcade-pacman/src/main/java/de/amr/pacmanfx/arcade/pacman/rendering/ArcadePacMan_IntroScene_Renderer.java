@@ -120,6 +120,9 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Ga
             actorRenderer.drawActor(ghost);
         }
         actorRenderer.drawActor(introScene.pacMan);
+        if (introScene.points != null) {
+            actorRenderer.drawActor(introScene.points);
+        }
     }
 
     private void drawCopyright() {

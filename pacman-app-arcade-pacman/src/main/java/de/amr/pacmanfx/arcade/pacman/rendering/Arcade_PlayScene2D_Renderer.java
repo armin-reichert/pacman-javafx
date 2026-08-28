@@ -9,6 +9,7 @@ import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -78,7 +79,7 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
             final RenderInfo info = createRenderInfo(level, playScene);
             levelRenderer.applyLevelSettings(rules, level, info);
             levelRenderer.drawLevel(scene.game(), level, info);
-            updateActorZOrder(level);
+            updateActorZOrder(level.entities());
             actorsInZOrder.forEach(actorRenderer::drawActor);
             if (scene.app().ui().viewModel().debugModeOnProperty.get()) {
                 debugRenderer.draw(scene, tick);
@@ -102,10 +103,11 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
     }
 
     // Actor z-order: Bonus under Pac-Man under ghosts in z-order.
-    private void updateActorZOrder(GameLevel level) {
+    private void updateActorZOrder(GameLevelEntitySet entities) {
         actorsInZOrder.clear();
-        level.entities().optBonus().ifPresent(actorsInZOrder::add);
-        actorsInZOrder.add(level.entities().pac());
-        GHOST_Z_ORDER.stream().map(level.entities()::ghost).forEach(actorsInZOrder::add);
+        entities.optBonus().ifPresent(actorsInZOrder::add);
+        actorsInZOrder.add(entities.pac());
+        GHOST_Z_ORDER.stream().map(entities::ghost).forEach(actorsInZOrder::add);
+        actorsInZOrder.addAll(entities.thePoints());
     }
 }

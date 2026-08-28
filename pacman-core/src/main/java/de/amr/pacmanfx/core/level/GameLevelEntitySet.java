@@ -5,17 +5,11 @@
 package de.amr.pacmanfx.core.level;
 
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.entities.Bonus;
-import de.amr.pacmanfx.core.entities.Ghost;
-import de.amr.pacmanfx.core.entities.House;
-import de.amr.pacmanfx.core.entities.Pac;
+import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 
-import java.util.Collection;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
@@ -26,6 +20,7 @@ public class GameLevelEntitySet {
     private final EnumMap<GhostPersonality, Ghost> theGhosts = new EnumMap<>(GhostPersonality.class);
     private Bonus theBonus;
     private House theHouse;
+    private final List<GhostPoints> thePoints = new ArrayList<>();
 
     public void add(GameEntity entity) {
         requireNonNull(entity);
@@ -54,6 +49,9 @@ public class GameLevelEntitySet {
                 }
                 theHouse = house;
             }
+            case GhostPoints points -> {
+                thePoints.add(points);
+            }
             default -> throw new IllegalArgumentException("Unknown entity type!");
         }
     }
@@ -65,6 +63,7 @@ public class GameLevelEntitySet {
             case Pac   _ -> thePac = null;
             case Bonus _ -> theBonus = null;
             case House _ -> theHouse = null;
+            case GhostPoints points -> thePoints.remove(points);
             default -> throw new IllegalArgumentException("Unknown entity type!");
         }
     }
@@ -105,5 +104,9 @@ public class GameLevelEntitySet {
 
     public House house() {
         return theHouse;
+    }
+
+    public List<GhostPoints> thePoints() {
+        return thePoints;
     }
 }

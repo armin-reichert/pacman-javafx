@@ -13,7 +13,8 @@ import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimation;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimationBuilder;
 
-import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.*;
+import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.GHOST_FLASHING;
+import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.GHOST_FRIGHTENED;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_GhostSAM extends LazySAM {
@@ -52,20 +53,7 @@ public class ArcadeMsPacMan_GhostSAM extends LazySAM {
                 .singleSprite(spriteSheet.ghostEyesSprite(Direction.LEFT))
                 .build(container);
 
-            case CommonSpriteAnimationID.GHOST_POINTS -> new SpriteAnimationBuilder()
-                .sprites(spriteSheet.findSpriteSequence(GHOST_NUMBERS))
-                .initiallyStopped()
-                .build(container);
-
             default -> throw new IllegalArgumentException("Illegal animation ID: " + animationID);
         };
-    }
-
-    @Override
-    public void setAnimationFrame(Named name, int frameIndex) {
-        super.setAnimationFrame(name, frameIndex);
-        if (CommonSpriteAnimationID.GHOST_POINTS.equals(name)) {
-            animation(CommonSpriteAnimationID.GHOST_POINTS).setFrame(frameIndex);
-        }
     }
 }
