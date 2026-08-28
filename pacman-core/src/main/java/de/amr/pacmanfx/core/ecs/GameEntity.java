@@ -50,6 +50,10 @@ public class GameEntity extends Composition<GameEntityComp> implements Disposabl
         return optComp(LifetimeComp.class);
     }
 
+    public final LifetimeComp lifetime() {
+        return reqComp(LifetimeComp.class);
+    }
+
     public final void setName(String name) {
         this.name = requireNonNull(name);
     }

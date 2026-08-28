@@ -17,4 +17,8 @@ public class LifetimeComp implements GameEntityComp {
     public void becomeOlder() {
         --ticksRemaining;
     }
+
+    public boolean ends() {
+        return ticksRemaining <= 0;
+    }
 }

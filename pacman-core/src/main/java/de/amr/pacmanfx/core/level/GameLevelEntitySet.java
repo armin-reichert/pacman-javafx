@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.core.level;
 
 import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.ecs.GameEntityComp;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.model.GhostPersonality;
@@ -55,14 +56,19 @@ public class GameLevelEntitySet {
         }
     }
 
-    public Stream<GameEntity> all() {
+    public Stream<? extends GameEntity> all() {
         return Stream.of(
             Optional.ofNullable(thePac).stream(),
             theGhosts.values().stream(),
             Optional.ofNullable(theBonus).stream(),
             Optional.ofNullable(theHouse).stream(),
             thePoints.stream()
-        ).flatMap(Function.identity());
+            ).flatMap(Function.identity());
+    }
+
+    @SafeVarargs
+    public final Stream<? extends GameEntity> allWith(Class<? extends GameEntityComp>... componentClasses) {
+        return all().filter(entity -> Stream.of(componentClasses).allMatch(entity::hasComp));
     }
 
     public void remove(GameEntity entity) {
