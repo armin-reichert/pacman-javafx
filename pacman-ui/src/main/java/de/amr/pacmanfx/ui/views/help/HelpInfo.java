@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.views.help;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
-import de.amr.pacmanfx.core.gamestate.GameState;
+import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -29,7 +29,7 @@ public class HelpInfo {
     public static HelpInfo build(GameAppContext app) {
         final GameContext game = app.game();
         final GameSession session = game.session();
-        final GameState state = game.state();
+        final AbstractGameState state = game.state();
         final boolean demoLevel = session.isAttractMode();
 
         final HelpInfo helpInfo = new HelpInfo(app);

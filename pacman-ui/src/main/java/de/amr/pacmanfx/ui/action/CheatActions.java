@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.event.pac.PacEatsFoodEvent;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
-import de.amr.pacmanfx.core.gamestate.GameState;
+import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.ui.GameUI;
@@ -73,7 +73,7 @@ public final class CheatActions {
 
             @Override
             public boolean isEnabled(GameAppContext app) {
-                final GameState gameState = app.game().state();
+                final AbstractGameState gameState = app.game().state();
                 return normalLevel(app).isPresent() && CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(gameState);
             }
         };
@@ -101,7 +101,7 @@ public final class CheatActions {
 
             @Override
             public boolean isEnabled(GameAppContext app) {
-                final GameState gameState = app.game().state();
+                final AbstractGameState gameState = app.game().state();
                 return normalLevel(app).isPresent() && CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(gameState);
             }
         };
@@ -115,7 +115,7 @@ public final class CheatActions {
 
             @Override
             public boolean isEnabled(GameAppContext app) {
-                final GameState state = app.game().state();
+                final AbstractGameState state = app.game().state();
                 final GameLevel level = normalLevel(app).orElse(null);
                 return level != null
                     && CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(state)

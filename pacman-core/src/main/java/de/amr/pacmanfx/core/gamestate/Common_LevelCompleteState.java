@@ -7,20 +7,13 @@ package de.amr.pacmanfx.core.gamestate;
 import de.amr.basics.Named;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusMoveAndJumpComp;
 import de.amr.pacmanfx.core.entities.pac.comp.PacState;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.rules.GameRules;
 
-public class Common_LevelCompleteState extends GameState {
+public class Common_LevelCompleteState extends AbstractGameState {
 
-    protected GameFlowController gameFlow;
-    protected GameSystems systems;
-    protected GameRules rules;
-    protected GameSession session;
     protected GameLevel level;
     protected Pac pac;
 
@@ -29,12 +22,7 @@ public class Common_LevelCompleteState extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext game) {
-
-        systems = game.variant().systems();
-        gameFlow = game.variant().gameFlow();
-        rules = game.variant().rules();
-        session = game.session();
+    public void onEnterState(GameContext game) {
         level = session.level();
         pac = level.entities().pac();
 
@@ -70,7 +58,7 @@ public class Common_LevelCompleteState extends GameState {
     @Override
     public void onUpdate(GameContext game) {
         if (timer().hasExpired()) {
-            gameFlow.enterGameState(game, computeNextStateID());
+            flow.enterGameState(game, computeNextStateID());
         }
     }
 

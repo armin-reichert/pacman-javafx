@@ -5,8 +5,6 @@
 package de.amr.pacmanfx.core.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
@@ -17,29 +15,19 @@ import de.amr.pacmanfx.core.event.pac.PacDyingEvent;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.rules.PacDyingTiming;
 
-import static java.util.Objects.requireNonNull;
+public final class Common_PacManDyingState extends AbstractGameState {
 
-public final class Common_PacManDyingState extends GameState {
-
-    private GameFlowController gameFlow;
-    private GameSystems systems;
-    private GameSession session;
+    private PacDyingTiming pacDyingTiming;
     private GameLevel level;
     private Pac pac;
-    private PacDyingTiming pacDyingTiming;
 
     public Common_PacManDyingState() {
         super(CommonGameStateID.GAME_LEVEL_PACMAN_DYING);
     }
 
     @Override
-    public void onEnter(GameContext game) {
-        requireNonNull(game);
-
-        gameFlow = game.variant().gameFlow();
-        systems = game.variant().systems();
-        pacDyingTiming = game.variant().rules().pacDyingTiming();
-        session = game.session();
+    public void onEnterState(GameContext game) {
+        pacDyingTiming = rules.pacDyingTiming();
         level = session.level();
         pac = level.entities().pac();
 
@@ -97,7 +85,7 @@ public final class Common_PacManDyingState extends GameState {
 
         if (timer().hasExpired()) {
             session.setNumLives(session.numLives() - 1);
-            gameFlow.enterGameState(game, session.numLives() == 0
+            flow.enterGameState(game, session.numLives() == 0
                 ? CommonGameStateID.GAME_OVER
                 : CommonGameStateID.GAME_OR_LEVEL_STARTING);
         }

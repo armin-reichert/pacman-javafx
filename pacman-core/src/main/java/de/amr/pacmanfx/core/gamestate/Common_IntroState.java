@@ -5,31 +5,29 @@
 package de.amr.pacmanfx.core.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.HUD;
 
-public final class Common_IntroState extends GameState {
+public final class Common_IntroState extends AbstractGameState {
 
     public Common_IntroState() {
         super(CommonGameStateID.GAME_INTRO);
     }
 
     @Override
-    public void onEnter(GameContext game) {
-        final HUD hud = game.session().hud();
+    public void onEnterState(GameContext game) {
         hud.levelCounter().show();
         hud.livesCounter().hide();
         hud.gameScore().show();
         hud.showCredit();
         hud.show();
 
-        game.session().setLevel(null);
+        session.setLevel(null);
         timer().resetToIndefiniteDuration();
     }
 
     @Override
     public void onUpdate(GameContext game) {
         if (timer().hasExpired()) {
-            game.variant().gameFlow().enterGameState(game, CommonGameStateID.GAME_OR_LEVEL_STARTING);
+            flow.enterGameState(game, CommonGameStateID.GAME_OR_LEVEL_STARTING);
         }
     }
 }

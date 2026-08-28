@@ -5,49 +5,41 @@
 package de.amr.pacmanfx.arcade.pacman.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
+import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
-import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.MessageType;
 
 import java.io.IOException;
 
-public class Arcade_GameOverState extends GameState {
+public class Arcade_GameOverState extends AbstractGameState {
 
     public Arcade_GameOverState() {
         super(CommonGameStateID.GAME_OVER);
     }
 
     @Override
-    public void onEnter(GameContext game) {
-        final GameSession session = game.session();
-
+    public void onEnterState(GameContext game) {
         try {
-            ScoreSystem.saveHighScoreIfNeeded(session.hud().highScore());
+            ScoreSystem.saveHighScoreIfNeeded(hud.highScore());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        game.variant().gamePlay().showMessage(game, MessageType.GAME_OVER);
+        gamePlay.showMessage(game, MessageType.GAME_OVER);
+
         session.setGameRunning(false);
-        game.session().cheats().clear();
+        session.cheats().clear();
 
         timer().restartTicks(session.gameOverStateTicks());
     }
 
     @Override
     public void onUpdate(GameContext game) {
-        final GameSystems systems = game.variant().systems();
-        final GameSession session = game.session();
-
-        systems.entityUpdater().updateHUD(game);
-
         if (timer().hasExpired()) {
             session.hud().clearMessage();
             session.cheats().clear();
-            game.variant().gameFlow().enterGameState(game, game.coinMechanism().isEmpty()
+            flow.enterGameState(game, game.coinMechanism().isEmpty()
                 ? CommonGameStateID.GAME_INTRO
                 : CommonGameStateID.GAME_PREPARATION);
         }

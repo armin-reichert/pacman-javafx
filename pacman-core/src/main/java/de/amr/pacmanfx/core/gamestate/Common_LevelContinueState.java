@@ -10,59 +10,56 @@ import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.event.gameplay.GameContinuedEvent;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.MessageType;
-import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.rules.LevelContinuationRules;
 
-public class Common_LevelContinueState extends GameState {
+public class Common_LevelContinueState extends AbstractGameState {
 
     public Common_LevelContinueState() {
         super(CommonGameStateID.GAME_LEVEL_CONTINUE);
     }
 
     @Override
-    public void onEnter(GameContext game) {
-        final GameSession session = game.session();
+    public void onEnterState(GameContext game) {
         final GameLevel level = session.level();
+        final Pac pac = level.entities().pac();
 
-        game.variant().gamePlay().prepareLevelForPlaying(game, level);
+        gamePlay.prepareLevelForPlaying(game, level);
 
         // Initially, ghosts and Pac-Man do not move nor animate
-        final Pac pac = level.entities().pac();
         pac.show();
-        game.variant().systems().worldNavigator().setDisabled(pac, true);
-        game.variant().systems().pacAnimation().setDisabled(pac, true);
+        systems.worldNavigator().setDisabled(pac, true);
+        systems.pacAnimation().setDisabled(pac, true);
 
         for (Ghost ghost : level.entities().ghosts()) {
             ghost.show();
-            game.variant().systems().worldNavigator().setDisabled(ghost, true);
-            game.variant().systems().ghostAnimation().setDisabled(ghost, true);
+            systems.worldNavigator().setDisabled(ghost, true);
+            systems.ghostAnimation().setDisabled(ghost, true);
         }
 
-        game.variant().gamePlay().showMessage(game, MessageType.READY);
+        gamePlay.showMessage(game, MessageType.READY);
     }
 
     @Override
     public void onUpdate(GameContext game) {
-        final LevelContinuationRules rules = game.variant().rules().levelContinuation();
+        final LevelContinuationRules continuationRules = rules.levelContinuation();
         final long tick = timer().tickCount();
-        final GameSession session = game.session();
         final GameLevel level = session.level();
+        final Pac pac = level.entities().pac();
 
-        if (tick == rules.continuePlayingTicks()) {
+        if (tick == continuationRules.continuePlayingTicks()) {
             game.eventManager().publishGameEvent(new GameContinuedEvent());
         }
-        else if (tick == rules.resumeHuntingTicks()) {
+        else if (tick == continuationRules.resumeHuntingTicks()) {
             // Initially, ghosts and Pac-Man do not move nor animate
-            final Pac pac = level.entities().pac();
-            game.variant().systems().worldNavigator().setDisabled(pac, false);
-            game.variant().systems().pacAnimation().setDisabled(pac, false);
+            systems.worldNavigator().setDisabled(pac, false);
+            systems.pacAnimation().setDisabled(pac, false);
 
             for (Ghost ghost : level.entities().ghosts()) {
-                game.variant().systems().worldNavigator().setDisabled(ghost, false);
-                game.variant().systems().ghostAnimation().setDisabled(ghost, false);
+                systems.worldNavigator().setDisabled(ghost, false);
+                systems.ghostAnimation().setDisabled(ghost, false);
             }
 
-            game.variant().gameFlow().enterGameState(game, CommonGameStateID.GAME_LEVEL_PLAYING);
+            flow.enterGameState(game, CommonGameStateID.GAME_LEVEL_PLAYING);
         }
     }
 }

@@ -10,26 +10,21 @@ import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.pac.comp.PacState;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
-import de.amr.pacmanfx.core.gameplay.GamePlay;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 import de.amr.pacmanfx.core.level.MessageType;
 
 import java.util.Optional;
 
-public final class Common_DemoLevelPlayingState extends GameState {
+public final class Common_DemoLevelPlayingState extends AbstractGameState {
 
     public Common_DemoLevelPlayingState() {
         super(CommonGameStateID.DEMO_LEVEL_PLAYING);
     }
 
     @Override
-    public void onEnter(GameContext game) {
-        final GameSystems systems = game.variant().systems();
-        final GamePlay gamePlay = game.variant().gamePlay();
-        final GameSession session = game.session();
-
-        configureHUD(session.hud());
+    public void onEnterState(GameContext game) {
+        configureHUD(hud);
         gamePlay.showMessage(game, MessageType.GAME_OVER);
 
         final GameLevel level = gamePlay.buildDemoLevel(game);
@@ -49,38 +44,34 @@ public final class Common_DemoLevelPlayingState extends GameState {
         final long tick = timer().tickCount();
 
         final GameVariantConfig variantConfig = game.variant();
-        final GamePlay gamePlay = variantConfig.gamePlay();
-        final GameSystems systems = variantConfig.systems();
-
-        final GameSession session = game.session();
-        final GameLevel demoLevel = session.level();
+        final GameLevel level = session.level();
 
         if (tick == 1) {
-            gamePlay.prepareLevelForPlaying(game, demoLevel);
+            gamePlay.prepareLevelForPlaying(game, level);
         }
         else if (tick == 2) {
-            showActors(demoLevel.entities());
+            showActors(level.entities());
         }
         else if (tick == game.variant().rules().demoLevelHuntingStartTick()) {
             session.hud().clearMessage();
-            startEnergizerBlinking(demoLevel);
+            startEnergizerBlinking(level);
 
-            final Pac pac = demoLevel.entities().pac();
+            final Pac pac = level.entities().pac();
             systems.pacState().setState(pac, PacState.ACTIVE);
 
-            demoLevel.entities().ghosts().forEach(ghost -> {
+            level.entities().ghosts().forEach(ghost -> {
                 systems.worldNavigator().setDisabled(ghost, false);
                 systems.ghostAnimation().setDisabled(ghost, false);
             });
 
             // This call fires a game event!
-            demoLevel.huntingTimerStrategy().startFirstPhase(game, demoLevel.number());
+            level.huntingTimerStrategy().startFirstPhase(game, level.number());
         }
         else if (tick >= game.variant().rules().demoLevelHuntingStartTick()) {
-            gamePlay.update(game, demoLevel);
+            gamePlay.update(game, level);
         }
 
-        computeNextState(game, demoLevel).ifPresent(nextState ->
+        computeNextState(game, level).ifPresent(nextState ->
             variantConfig.gameFlow().enterGameState(game, nextState));
     }
 

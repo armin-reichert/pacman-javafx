@@ -4,29 +4,28 @@
 
 package de.amr.pacmanfx.tengenmspacman.flow;
 
+import de.amr.basics.math.Vector2f;
+import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.GameSystems;
-import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
-import de.amr.pacmanfx.core.gameplay.GamePlay;
+import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
-import de.amr.pacmanfx.core.gamestate.GameState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.MessageType;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Extras;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlayOptions;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.model.MessageAnimation;
-import org.tinylog.Logger;
 
 import java.io.IOException;
 import java.util.Optional;
 
-public class Tengen_GameOverState extends GameState {
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
+
+public class Tengen_GameOverState extends AbstractGameState {
 
     public static final int GAME_OVER_MESSAGE_DELAY_SEC = 2;
     public static final int COUNTDOWN_AFTER_ANIMATION = 180;
@@ -38,10 +37,10 @@ public class Tengen_GameOverState extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext game) {
-        final GameSession session = game.session();
+    public void onEnterState(GameContext game) {
+        final TengenMsPacMan_GamePlay tengenGamePlay = (TengenMsPacMan_GamePlay) gamePlay;
+        final MapCategory mapCategory = tengenGamePlay.mapCategory(session);
         final GameLevel level = session.level();
-        final GamePlay gamePlay = game.variant().gamePlay();
 
         countdownAfter = 0;
 
@@ -49,21 +48,17 @@ public class Tengen_GameOverState extends GameState {
         session.cheats().clear();
 
         try {
-            ScoreSystem.saveHighScoreIfNeeded(session.hud().highScore());
+            ScoreSystem.saveHighScoreIfNeeded(hud.highScore());
         } catch (IOException e) {
+            //TODO improve error handling
             throw new RuntimeException(e);
         }
 
         gamePlay.showMessage(game, MessageType.GAME_OVER);
 
-        final MapCategory mapCategory = session.value(TengenMsPacMan_GamePlayOptions.MAP_CATEGORY, MapCategory.class);
         if (!session.isAttractMode() && mapCategory != MapCategory.ARCADE) {
             timer().restartIndefinitely(); // animation end triggers state exit
-            startGameOverMessageAnimation(
-                session,
-                level.entities().house(),
-                game.variant().systems().motor()
-            );
+            startGameOverMessageAnimation();
         }
         else {
             timer().restartTicks(session.gameOverStateTicks());
@@ -72,62 +67,62 @@ public class Tengen_GameOverState extends GameState {
 
     @Override
     public void onUpdate(GameContext game) {
-        final GameSystems systems = game.variant().systems();
-        final GameSession session = game.session();
-
-        systems.entityUpdater().updateHUD(game);
+        final TengenMsPacMan_GamePlay tengenGamePlay = (TengenMsPacMan_GamePlay) gamePlay;
 
         if (countdownAfter > 0) {
             --countdownAfter;
             if (countdownAfter == 0) {
                 timer().expire();
-                Logger.info("Countdown ends, expire game over state");
             }
         }
 
         if (timer().hasExpired()) {
             if (session.isAttractMode()) {
-                game.variant().gameFlow().enterGameState(game, TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME);
+                flow.enterGameState(game, TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME);
                 return;
             }
-
-            final var gamePlay = (TengenMsPacMan_GamePlay) game.variant().gamePlay();
-            final boolean continueGame = gamePlay.checkGameContinuesOnGameOver(session);
-            game.variant().gameFlow().enterGameState(game, continueGame
-                ? CommonGameStateID.GAME_PREPARATION
-                : CommonGameStateID.GAME_INTRO);
-
+            final boolean continueGame = tengenGamePlay.checkGameContinuesOnGameOver(session);
+            flow.enterGameState(game, continueGame ? CommonGameStateID.GAME_PREPARATION : CommonGameStateID.GAME_INTRO);
             return;
         }
 
-        getMessageAnimation(session).ifPresent(animation -> {
-            if (animation.finished() && countdownAfter == 0) {
+        // Show animated game over message moving horizontally over scene and wrapping around
+        animatedGameOverMessage(session).ifPresent(messageAnimation -> {
+            if (messageAnimation.finished() && countdownAfter == 0) {
                 countdownAfter = COUNTDOWN_AFTER_ANIMATION;
-                Logger.info("Start countdown after animation: {} ticks", countdownAfter);
             } else {
-                animation.update(game.variant().systems().motor());
+                messageAnimation.update(systems.motor());
             }
         });
     }
 
     @Override
     public void onExit(GameContext game) {
-        final GameSession session = game.session();
-        session.hud().messageView().data().setMessageType(MessageType.NO_MESSAGE);
+        hud.clearMessage();
         session.clearValue(TengenMsPacMan_Extras.GAME_OVER_MESSAGE_ANIMATION);
     }
 
-    private Optional<MessageAnimation> getMessageAnimation(GameSession session) {
+    private Optional<MessageAnimation> animatedGameOverMessage(GameSession session) {
         return Optional.ofNullable(
             session.value(TengenMsPacMan_Extras.GAME_OVER_MESSAGE_ANIMATION, MessageAnimation.class)
         );
     }
 
-    // For map categories "mini", "big" or "strange", the "game over" message is animated
-    private void startGameOverMessageAnimation(GameSession session, House house, MovementSystem motor) {
+    // For map categories MINI, BIG and STRANGE, the GAME OVER message is animated
+    private void startGameOverMessageAnimation() {
         final var messageAnimation = new MessageAnimation();
         session.setValue(TengenMsPacMan_Extras.GAME_OVER_MESSAGE_ANIMATION, messageAnimation);
         messageAnimation.setDelayTicks(GAME_OVER_MESSAGE_DELAY_SEC * GameConstants.SIMULATION_FPS);
-        messageAnimation.start(house, motor);
+        messageAnimation.start(computeMessageStartPosition(), systems.motor());
+    }
+
+    private Vector2f computeMessageStartPosition() {
+        final House house = session.level().entities().house();
+        final Vector2i houseSize = house.sizeInTiles();
+        // Compute center position under house
+        return house.floorplan().minTile()
+            .toVector2f()
+            .plus(houseSize.x() * 0.5f, houseSize.y() + 1)
+            .scaled(TS);
     }
 }

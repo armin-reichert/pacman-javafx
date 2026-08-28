@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.core;
 
 import de.amr.pacmanfx.core.event.base.GameEventManager;
-import de.amr.pacmanfx.core.gamestate.GameState;
+import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 
 import static java.util.Objects.requireNonNull;
 
@@ -48,7 +48,7 @@ public class GameContext {
         return eventManager;
     }
 
-    public GameState state() {
+    public AbstractGameState state() {
         return variant.gameFlow().state();
     }
 }

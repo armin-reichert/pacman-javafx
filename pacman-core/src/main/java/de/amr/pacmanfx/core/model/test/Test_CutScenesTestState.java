@@ -1,14 +1,15 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.core.model.test;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.GenericChangeEvent;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
-import de.amr.pacmanfx.core.gamestate.GameState;
+import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 
-public class Test_CutScenesTestState extends GameState {
+public class Test_CutScenesTestState extends AbstractGameState {
 
     public int testedCutSceneNumber;
 
@@ -17,7 +18,7 @@ public class Test_CutScenesTestState extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext game) {
+    public void onEnterState(GameContext game) {
         testedCutSceneNumber = 1;
         timer().resetToIndefiniteDuration();
     }
@@ -25,13 +26,13 @@ public class Test_CutScenesTestState extends GameState {
     @Override
     public void onUpdate(GameContext game) {
         if (timer().hasExpired()) {
-            if (testedCutSceneNumber < game.variant().rules().lastCutSceneNumber()) {
+            if (testedCutSceneNumber < rules.lastCutSceneNumber()) {
                 testedCutSceneNumber += 1;
                 timer().resetToIndefiniteDuration();
                 //TODO find another solution and get rid of this event type
                 game.eventManager().publishGameEvent(new GenericChangeEvent("Cut Scene Test"));
             } else {
-                game.variant().gameFlow().enterGameState(game, CommonGameStateID.GAME_INTRO);
+                flow.enterGameState(game, CommonGameStateID.GAME_INTRO);
             }
         }
     }

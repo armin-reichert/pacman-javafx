@@ -18,7 +18,7 @@ public class LevelCounterSystem {
         requireNonNull(behavior);
         levelCounter.data().setBehavior(behavior);
     }
-    public void clearCounter(LevelCounter levelCounter) {
+    public void clear(LevelCounter levelCounter) {
         levelCounter.data().symbolCodes().clear();
     }
 

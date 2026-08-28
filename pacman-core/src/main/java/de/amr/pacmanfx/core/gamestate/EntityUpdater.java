@@ -123,7 +123,7 @@ public class EntityUpdater {
         livesCounter.data().setNumLives(displayedLivesCount);
     }
 
-    private int adjustLiveCountOnStart(int count, GameState gameState, GameLevel level) {
+    private int adjustLiveCountOnStart(int count, AbstractGameState gameState, GameLevel level) {
         final boolean starting = gameState.id() == CommonGameStateID.GAME_STARTING
                               || gameState.id() == CommonGameStateID.GAME_OR_LEVEL_STARTING;
         final Pac pac = level.entities().pac();

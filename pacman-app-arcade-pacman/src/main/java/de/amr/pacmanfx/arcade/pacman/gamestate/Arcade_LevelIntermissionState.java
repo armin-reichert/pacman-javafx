@@ -5,21 +5,17 @@
 package de.amr.pacmanfx.arcade.pacman.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.HUD;
-import de.amr.pacmanfx.core.gamestate.GameFlowController;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
-import de.amr.pacmanfx.core.gamestate.GameState;
-import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 
-public class Arcade_LevelIntermissionState extends GameState {
+public class Arcade_LevelIntermissionState extends AbstractGameState {
 
     public Arcade_LevelIntermissionState() {
         super(CommonGameStateID.GAME_LEVEL_INTERMISSION);
     }
 
     @Override
-    public void onEnter(GameContext game) {
-        final HUD hud = game.session().hud();
+    public void onEnterState(GameContext game) {
         hud.hideCredit();
         hud.gameScore().hide();
         hud.levelCounter().show();
@@ -31,8 +27,6 @@ public class Arcade_LevelIntermissionState extends GameState {
 
     @Override
     public void onUpdate(GameContext game) {
-        final GameSession session = game.session();
-        final GameFlowController flow = game.variant().gameFlow();
         if (timer().hasExpired()) {
             flow.enterGameState(game, session.isGameRunning()
                 ? CommonGameStateID.GAME_LEVEL_TRANSITION : CommonGameStateID.GAME_INTRO);
@@ -41,7 +35,6 @@ public class Arcade_LevelIntermissionState extends GameState {
 
     @Override
     public void onExit(GameContext game) {
-        final HUD hud = game.session().hud();
         hud.hideCredit();
         hud.gameScore().show();
         hud.levelCounter().show();

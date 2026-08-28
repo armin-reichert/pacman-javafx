@@ -8,7 +8,7 @@ import de.amr.pacmanfx.arcade.pacman.gamestate.Arcade_GameState;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.event.gameplay.CreditAddedEvent;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
-import de.amr.pacmanfx.core.gamestate.GameState;
+import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
@@ -42,7 +42,7 @@ public final class Arcade_Actions {
             @Override
             public boolean isEnabled(GameAppContext app) {
                 final GameSession session = app.game().session();
-                final GameState gameState = app.game().state();
+                final AbstractGameState gameState = app.game().state();
                 if (app.game().coinMechanism().isFull()) {
                     return false;
                 }
@@ -67,7 +67,7 @@ public final class Arcade_Actions {
                 if (app.game().coinMechanism().isEmpty()) {
                     return false;
                 }
-                final GameState state = app.game().state();
+                final AbstractGameState state = app.game().state();
                 return (CommonGameStateID.GAME_INTRO.hasSameNameAs(state)
                     || CommonGameStateID.GAME_PREPARATION.hasSameNameAs(state));
             }

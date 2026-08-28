@@ -8,18 +8,16 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.HUD;
 
-public final class Common_PreparationState extends GameState {
+public final class Common_PreparationState extends AbstractGameState {
 
     public Common_PreparationState() {
         super(CommonGameStateID.GAME_PREPARATION);
     }
 
     @Override
-    public void onEnter(GameContext game) {
-        final GameSession session = game.session();
+    public void onEnterState(GameContext game) {
         session.setNumLives(game.variant().initialLifeCount());
 
-        final HUD hud = session.hud();
         hud.showCredit();
         hud.gameScore().show();
         hud.levelCounter().show();

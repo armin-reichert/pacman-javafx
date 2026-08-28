@@ -5,27 +5,15 @@
 package de.amr.pacmanfx.core.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.HUD;
-import de.amr.pacmanfx.core.gameplay.GamePlay;
 
-public class Common_GameOrLevelStartingState extends GameState {
-
-    private GameFlowController gameFlow;
-    private GamePlay gamePlay;
-    private GameSession session;
+public class Common_GameOrLevelStartingState extends AbstractGameState {
 
     public Common_GameOrLevelStartingState() {
         super(CommonGameStateID.GAME_OR_LEVEL_STARTING);
     }
 
     @Override
-    public void onEnter(GameContext game) {
-        gameFlow = game.variant().gameFlow();
-        gamePlay = game.variant().gamePlay();
-        session = game.session();
-
-        final HUD hud = session.hud();
+    public void onEnterState(GameContext game) {
         hud.gameScore().show();
         hud.levelCounter().show();
         hud.show();
@@ -33,7 +21,7 @@ public class Common_GameOrLevelStartingState extends GameState {
 
     @Override
     public void onUpdate(GameContext game) {
-        gameFlow.enterGameState(game, computeNextState(game));
+        flow.enterGameState(game, computeNextState(game));
     }
 
     private CommonGameStateID computeNextState(GameContext game) {

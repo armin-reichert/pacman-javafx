@@ -21,7 +21,7 @@ import de.amr.pacmanfx.core.event.pac.PacEatsFoodEvent;
 import de.amr.pacmanfx.core.event.pac.PacPowerEndsEvent;
 import de.amr.pacmanfx.core.event.pac.PacPowerStartsEvent;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
-import de.amr.pacmanfx.core.gamestate.GameState;
+import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
@@ -84,7 +84,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         Logger.info("Enter game state '{}'", e.newState().name());
         final var newState = e.newState();
 
-        if (!(newState instanceof GameState gameState)) {
+        if (!(newState instanceof AbstractGameState gameState)) {
             Logger.error("New state is not a game state?");
             return;
         }
@@ -144,7 +144,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     @Override
     default void onGameStarted(GameStartedEvent event) {
         final GameSession session = game().session();
-        final GameState state = game().state();
+        final AbstractGameState state = game().state();
 
         final boolean silent = session.isAttractMode() || state.id() instanceof TestStateID;
 
@@ -176,7 +176,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         level3D.replaceLevelCounter3D(session().hud().levelCounter());
 
         //TODO rethink this
-        if (newState instanceof GameState gameState && gameState.id() instanceof TestStateID) {
+        if (newState instanceof AbstractGameState gameState && gameState.id() instanceof TestStateID) {
             gameScene().replaceGameLevel3D(game(), level);
             level3D.animationManager().startEnergizerPumping();
             final MessageView messageView = session().hud().messageView();

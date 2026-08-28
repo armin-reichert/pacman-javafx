@@ -25,13 +25,13 @@ public enum Arcade_GameState {
     GAME_OVER                  (new Arcade_GameOverState()),
     GAME_LEVEL_INTERMISSION    (new Arcade_LevelIntermissionState());
 
-    Arcade_GameState(GameState state) {
+    Arcade_GameState(AbstractGameState state) {
         this.state = state;
     }
 
-    public GameState state() {
+    public AbstractGameState state() {
         return state;
     }
 
-    final GameState state;
+    final AbstractGameState state;
 }

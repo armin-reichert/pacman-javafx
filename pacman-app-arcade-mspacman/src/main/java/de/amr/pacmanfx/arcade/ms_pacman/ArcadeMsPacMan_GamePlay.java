@@ -49,7 +49,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         final LevelCounterSystem system = game.variant().systems().levelCounterSystem();
         system.setCounterBehavior(levelCounter, LevelCounterBehavior.DISABLE_WHEN_FULL);
         system.setCounterCapacity(levelCounter, 7);
-        system.clearCounter(levelCounter);
+        system.clear(levelCounter);
         system.enableCounter(levelCounter, true);
     }
 

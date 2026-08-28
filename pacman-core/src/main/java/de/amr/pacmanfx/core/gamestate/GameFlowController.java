@@ -23,8 +23,8 @@ public class GameFlowController extends StateMachine<GameContext> {
     }
 
     @Override
-    public GameState state() {
-        return (GameState) super.state();
+    public AbstractGameState state() {
+        return (AbstractGameState) super.state();
     }
 
     public void enterGameState(GameContext game, Named gameStateID) {

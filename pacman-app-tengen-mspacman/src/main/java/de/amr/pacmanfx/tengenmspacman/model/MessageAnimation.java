@@ -4,14 +4,9 @@
 package de.amr.pacmanfx.tengenmspacman.model;
 
 import de.amr.basics.math.Vector2f;
-import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.MovementComp;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
-import de.amr.pacmanfx.core.entities.House;
-
-import static de.amr.basics.math.Vector2f.vec2_float;
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 
 /**
  * The "game over" message in Tengen Ms. Pac-Man (in non-Arcade maps) moves (after some delay) from the center of the
@@ -44,8 +39,8 @@ public class MessageAnimation extends GameEntity {
         this.wrapX = wrapX;
     }
 
-    public void start(House house, MovementSystem motor) {
-        startPosition = computeStartPosition(house);
+    public void start(Vector2f startPosition, MovementSystem motor) {
+        this.startPosition = startPosition;
         show();
         pos().set(startPosition);
         motor.setVelocity(this, 1, 0);
@@ -78,10 +73,4 @@ public class MessageAnimation extends GameEntity {
         return finished;
     }
 
-    private Vector2f computeStartPosition(House house) {
-        Vector2i houseSize = house.sizeInTiles();
-        float cx = tilesPx(house.floorplan().minTile().x() + houseSize.x() * 0.5f);
-        float cy = tilesPx(house.floorplan().minTile().y() + houseSize.y() + 1);
-        return vec2_float(cx, cy);
-    }
 }

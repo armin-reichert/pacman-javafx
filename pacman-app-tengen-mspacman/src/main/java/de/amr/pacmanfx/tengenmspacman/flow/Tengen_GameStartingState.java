@@ -10,12 +10,11 @@ import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.event.gameplay.GameStartedEvent;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
-import de.amr.pacmanfx.core.gamestate.GameState;
+import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
 
-public class Tengen_GameStartingState extends GameState {
+public class Tengen_GameStartingState extends AbstractGameState {
 
     static final short TICK_SHOW_READY = 10;
     static final short TICK_SHOW_GUYS = 70;
@@ -26,27 +25,23 @@ public class Tengen_GameStartingState extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext game) {
-        final var gamePlay = (TengenMsPacMan_GamePlay) game.variant().gamePlay();
-        final GameSession session = game.session();
+    public void onEnterState(GameContext game) {
+        final var tengenGamePlay = (TengenMsPacMan_GamePlay) gamePlay;
 
-        final GameLevel newLevel = gamePlay.buildNormalLevel(game, gamePlay.startLevelNumber(session));
-        game.eventManager().publishGameEvent(new LevelCreatedEvent(newLevel));
+        final GameLevel level = tengenGamePlay.buildNormalLevel(game, tengenGamePlay.startLevelNumber(session));
+        game.eventManager().publishGameEvent(new LevelCreatedEvent(level));
 
-        ScoreSystem.enableScore(session.hud().highScore(), true);
+        ScoreSystem.enableScore(hud.highScore(), true);
         game.eventManager().publishGameEvent(new GameStartedEvent(game));
     }
 
     @Override
     public void onUpdate(GameContext game) {
-        final GameSession session = game.session();
         final GameLevel level = session.level();
         final long tick = timer().tickCount();
 
-        game.variant().systems().entityUpdater().updateHUD(game);
-
         if (tick == TICK_SHOW_READY) {
-            game.variant().gamePlay().startLevel(game, level);
+            gamePlay.startLevel(game, level);
         }
         else if (tick == TICK_SHOW_GUYS) {
             level.entities().pac().show();
@@ -54,7 +49,7 @@ public class Tengen_GameStartingState extends GameState {
         }
         else if (tick == TICK_START_PLAYING) {
             session.setGameRunning(true);
-            game.variant().gameFlow().enterGameState(game, CommonGameStateID.GAME_LEVEL_PLAYING);
+            flow.enterGameState(game, CommonGameStateID.GAME_LEVEL_PLAYING);
         }
     }
 }

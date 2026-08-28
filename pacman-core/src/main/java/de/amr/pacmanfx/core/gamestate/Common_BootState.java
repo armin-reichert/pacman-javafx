@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.GameContext;
 /**
  * Corresponds to the screen showing all these random symbols from the Arcade video memory.
  */
-public final class Common_BootState extends GameState {
+public final class Common_BootState extends AbstractGameState {
 
     public interface Timing {
         int HEX_CODES      = 60;
@@ -24,14 +24,14 @@ public final class Common_BootState extends GameState {
     }
 
     @Override
-    public void onEnter(GameContext game) {
+    public void onEnterState(GameContext game) {
         timer().restartTicks(Timing.EXPIRATION);
     }
 
     @Override
     public void onUpdate(GameContext game) {
         if (timer().hasExpired()) {
-            game.variant().gameFlow().enterGameState(game, CommonGameStateID.GAME_INTRO);
+            flow.enterGameState(game, CommonGameStateID.GAME_INTRO);
         }
     }
 }

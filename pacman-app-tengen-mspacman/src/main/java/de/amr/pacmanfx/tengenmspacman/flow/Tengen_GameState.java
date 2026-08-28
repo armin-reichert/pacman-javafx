@@ -28,13 +28,13 @@ public enum Tengen_GameState {
     GAME_OVER                   (new Tengen_GameOverState()),
     GAME_LEVEL_INTERMISSION     (new Tengen_LevelIntermissionState());
 
-    Tengen_GameState(GameState state) {
+    Tengen_GameState(AbstractGameState state) {
         this.state = requireNonNull(state);
     }
 
-    public GameState state() {
+    public AbstractGameState state() {
         return state;
     }
 
-    final GameState state;
+    final AbstractGameState state;
 }
