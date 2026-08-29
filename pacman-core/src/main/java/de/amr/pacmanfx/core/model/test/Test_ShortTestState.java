@@ -140,6 +140,7 @@ public class Test_ShortTestState extends AbstractGameState {
             bonus.optComp(BonusMoveAndJumpComp.class).ifPresent(_-> systems.bonusMoveAndJump().setBonusInactive(bonus));
             level.entities().remove(bonus);
         });
+        level.clearBonusIndex();
 
         timer().resetToIndefiniteDuration();
     }

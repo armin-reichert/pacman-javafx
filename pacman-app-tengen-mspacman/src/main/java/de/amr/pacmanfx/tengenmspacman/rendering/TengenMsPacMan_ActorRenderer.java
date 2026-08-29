@@ -125,10 +125,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     private RectShort computeSprite(Bonus bonus) {
         return switch (bonus.bonusState()) {
             case EDIBLE -> spriteOrDefault(spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS), bonus.data().symbolCode());
-            // Note: sprite sheet has bonus values in different order!
-            case EATEN -> spriteOrDefault(spriteSheet().findSpriteSequence(SpriteID.BONUS_VALUES),
-                renderConfig.bonusValueSpriteIndex(bonus.data().symbolCode()));
-            case INACTIVE -> RectShort.NULL_RECTANGLE;
+            case EATEN, INACTIVE -> RectShort.NULL_RECTANGLE;
         };
     }
 

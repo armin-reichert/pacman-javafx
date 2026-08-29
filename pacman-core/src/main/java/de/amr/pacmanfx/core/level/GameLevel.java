@@ -97,6 +97,9 @@ public class GameLevel {
         return entities;
     }
 
+    public void clearBonusIndex() {
+        currentBonusIndex = -1;
+    }
     /**
      * @return the index of the current bonus
      */

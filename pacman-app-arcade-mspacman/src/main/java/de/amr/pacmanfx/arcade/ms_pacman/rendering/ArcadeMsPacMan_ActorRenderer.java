@@ -15,6 +15,8 @@ import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 
+import java.util.Arrays;
+
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
 import static java.util.Objects.requireNonNull;
 
@@ -22,6 +24,10 @@ import static java.util.Objects.requireNonNull;
  * Implements the rendering for all actor types occurring in the Arcade Ms. Pac-Man game.
  */
 public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements SpriteRenderer, ActorRenderer {
+
+    // These arrays must be sorted!
+    private static final int[] GHOST_POINTS = { 200, 400, 800, 1600 };
+    private static final int[] BONUS_POINTS = { 100, 200, 500, 700, 1000, 2000, 5000 };
 
     private final ActorSpriteAnimController animController;
 
@@ -92,34 +98,18 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     private RectShort computeSprite(Bonus bonus) {
         return switch (bonus.bonusState()) {
             case EDIBLE -> spriteOrDefault(spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS), bonus.data().symbolCode());
-            case EATEN ->  spriteOrDefault(spriteSheet().findSpriteSequence(SpriteID.BONUS_VALUES), bonus.data().symbolCode());
-            case INACTIVE -> RectShort.NULL_RECTANGLE;
+            case EATEN, INACTIVE -> RectShort.NULL_RECTANGLE;
         };
     }
 
     private RectShort computeSprite(BonusPoints bonusPoints) {
-        final int index = switch (bonusPoints.points().number()) {
-            case 100 -> 0;
-            case 200 -> 1;
-            case 500 -> 2;
-            case 700 -> 3;
-            case 1000 -> 4;
-            case 2000 -> 5;
-            case 5000 -> 6;
-            default -> throw new IllegalArgumentException("Illegal bonus points number: " + bonusPoints.points().number());
-        };
-        return spriteOrDefault(spriteSheet().findSpriteSequence(SpriteID.BONUS_VALUES), index);
+        final int index = Arrays.binarySearch(BONUS_POINTS, bonusPoints.points().number());
+        return index >= 0 ? spriteSheet().findSpriteSequence(SpriteID.BONUS_VALUES)[index] : RectShort.NULL_RECTANGLE;
     }
 
     private RectShort computeSprite(GhostPoints ghostPoints) {
-        final int index = switch (ghostPoints.points().number()) {
-            case 200 -> 0;
-            case 400 -> 1;
-            case 800 -> 2;
-            case 1600 -> 3;
-            default -> throw new IllegalArgumentException("Illegal points value: " + ghostPoints.points());
-        };
-        return spriteOrDefault(spriteSheet().findSpriteSequence(SpriteID.GHOST_NUMBERS), index);
+        final int index = Arrays.binarySearch(GHOST_POINTS, ghostPoints.points().number());
+        return index >= 0 ? spriteSheet().findSpriteSequence(SpriteID.GHOST_NUMBERS)[index] : RectShort.NULL_RECTANGLE;
     }
 
     private void drawClapperBoard(Clapperboard clapperboard) {

@@ -14,9 +14,15 @@ import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 
+import java.util.Arrays;
+
 import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRenderer, ActorRenderer {
+
+    // These arrays must be sorted!
+    private static final int[] GHOST_POINTS = { 200, 400, 800, 1600 };
+    private static final int[] BONUS_POINTS = { 100, 300, 500, 700, 1000, 2000, 3000, 5000 };
 
     private final ActorSpriteAnimController animController;
 
@@ -72,15 +78,14 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
         }
     }
 
-    private RectShort computeSprite(GhostPoints points) {
-        final int index = switch (points.points().number()) {
-            case 200 -> 0;
-            case 400 -> 1;
-            case 800 -> 2;
-            case 1600 -> 3;
-            default -> throw new IllegalArgumentException("Illegal points value: " + points.points());
-        };
-        return spriteOrDefault(spriteSheet().findSpriteSequence(SpriteID.GHOST_NUMBERS), index);
+    private RectShort computeSprite(BonusPoints bonusPoints) {
+        final int index = Arrays.binarySearch(BONUS_POINTS, bonusPoints.points().number());
+        return index >= 0 ? spriteSheet().findSpriteSequence(SpriteID.BONUS_VALUES)[index] : RectShort.NULL_RECTANGLE;
+    }
+
+    private RectShort computeSprite(GhostPoints ghostPoints) {
+        final int index = Arrays.binarySearch(GHOST_POINTS, ghostPoints.points().number());
+        return index >= 0 ? spriteSheet().findSpriteSequence(SpriteID.GHOST_NUMBERS)[index] : RectShort.NULL_RECTANGLE;
     }
 
     private RectShort computeSprite(Bonus bonus) {
@@ -89,19 +94,5 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
             case EDIBLE   -> spriteOrDefault(spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS), bonus.data().symbolCode());
             case EATEN, INACTIVE  -> RectShort.NULL_RECTANGLE;
         };
-    }
-
-    private RectShort computeSprite(BonusPoints bonusPoints) {
-        final int index = switch (bonusPoints.points().number()) {
-            case 100 -> 0;
-            case 300 -> 1;
-            case 500 -> 2;
-            case 700 -> 3;
-            case 1000 -> 4;
-            case 2000 -> 5;
-            case 5000 -> 6;
-            default -> throw new IllegalArgumentException("Illegal bonus points number: " + bonusPoints.points().number());
-        };
-        return spriteOrDefault(spriteSheet().findSpriteSequence(SpriteID.BONUS_VALUES), index);
     }
 }
