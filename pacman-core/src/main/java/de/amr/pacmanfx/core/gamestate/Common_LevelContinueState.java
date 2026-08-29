@@ -23,6 +23,7 @@ public class Common_LevelContinueState extends AbstractGameState {
         level = session.level();
         gamePlay.prepareLevelForPlaying(game, level);
         gamePlay.showMessage(game, MessageType.READY);
+        showActors(level.entities());
     }
 
     @Override
@@ -30,7 +31,7 @@ public class Common_LevelContinueState extends AbstractGameState {
         final LevelContinuationRules continuationRules = rules.levelContinuation();
         final long tick = timer().tickCount();
         if (tick < continuationRules.continuePlayingTicks()) {
-            showActorsFrozen(level.entities());
+            freezeActors(level.entities());
         }
         if (tick == continuationRules.continuePlayingTicks()) {
             game.eventManager().publishGameEvent(new GameContinuedEvent());

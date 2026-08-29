@@ -8,7 +8,6 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
@@ -21,7 +20,6 @@ import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.model.MessageAnimation;
 
 import java.io.IOException;
-import java.util.Optional;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 
@@ -31,6 +29,7 @@ public class Tengen_GameOverState extends AbstractGameState {
     public static final int COUNTDOWN_AFTER_ANIMATION = 180;
 
     private long countdownAfter;
+    private GameLevel level;
 
     public Tengen_GameOverState() {
         super(CommonGameStateID.GAME_OVER);
@@ -38,9 +37,7 @@ public class Tengen_GameOverState extends AbstractGameState {
 
     @Override
     public void onEnterState(GameContext game) {
-        final TengenMsPacMan_GamePlay tengenGamePlay = (TengenMsPacMan_GamePlay) gamePlay;
-        final MapCategory mapCategory = tengenGamePlay.mapCategory(session);
-        final GameLevel level = session.level();
+        level = session.level();
 
         countdownAfter = 0;
 
@@ -56,9 +53,10 @@ public class Tengen_GameOverState extends AbstractGameState {
 
         gamePlay.showMessage(game, MessageType.GAME_OVER);
 
+        final MapCategory mapCategory = TengenMsPacMan_GamePlay.mapCategory(session);
         if (!session.isAttractMode() && mapCategory != MapCategory.ARCADE) {
-            timer().restartIndefinitely(); // animation end triggers state exit
             startGameOverMessageAnimation();
+            timer().restartIndefinitely(); // animation completion triggers state exit
         }
         else {
             timer().restartTicks(session.gameOverStateTicks());
@@ -67,8 +65,6 @@ public class Tengen_GameOverState extends AbstractGameState {
 
     @Override
     public void onUpdate(GameContext game) {
-        final TengenMsPacMan_GamePlay tengenGamePlay = (TengenMsPacMan_GamePlay) gamePlay;
-
         if (countdownAfter > 0) {
             --countdownAfter;
             if (countdownAfter == 0) {
@@ -81,31 +77,26 @@ public class Tengen_GameOverState extends AbstractGameState {
                 flow.enterGameState(game, TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME);
                 return;
             }
-            final boolean continueGame = tengenGamePlay.checkGameContinuesOnGameOver(session);
+            final boolean continueGame = TengenMsPacMan_GamePlay.checkGameContinuesOnGameOver(session);
             flow.enterGameState(game, continueGame ? CommonGameStateID.GAME_PREPARATION : CommonGameStateID.GAME_INTRO);
             return;
         }
 
         // Show animated game over message moving horizontally over scene and wrapping around
-        animatedGameOverMessage(session).ifPresent(messageAnimation -> {
+        final var messageAnimation = session.value(TengenMsPacMan_Extras.GAME_OVER_MESSAGE_ANIMATION, MessageAnimation.class);
+        if (messageAnimation != null) {
             if (messageAnimation.finished() && countdownAfter == 0) {
                 countdownAfter = COUNTDOWN_AFTER_ANIMATION;
             } else {
                 messageAnimation.update(systems.motor());
             }
-        });
+        }
     }
 
     @Override
     public void onExit(GameContext game) {
         hud.clearMessage();
         session.clearValue(TengenMsPacMan_Extras.GAME_OVER_MESSAGE_ANIMATION);
-    }
-
-    private Optional<MessageAnimation> animatedGameOverMessage(GameSession session) {
-        return Optional.ofNullable(
-            session.value(TengenMsPacMan_Extras.GAME_OVER_MESSAGE_ANIMATION, MessageAnimation.class)
-        );
     }
 
     // For map categories MINI, BIG and STRANGE, the GAME OVER message is animated
@@ -117,7 +108,7 @@ public class Tengen_GameOverState extends AbstractGameState {
     }
 
     private Vector2f computeMessageStartPosition() {
-        final House house = session.level().entities().house();
+        final House house = level.entities().house();
         final Vector2i houseSize = house.sizeInTiles();
         // Compute center position under house
         return house.floorplan().minTile()

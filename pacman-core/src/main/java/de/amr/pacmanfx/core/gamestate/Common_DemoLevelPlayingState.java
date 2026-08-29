@@ -8,12 +8,10 @@ import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameVariantConfig;
 import de.amr.pacmanfx.core.HUD;
-import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.pac.comp.PacState;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 import de.amr.pacmanfx.core.level.MessageType;
 
 import java.util.Optional;
@@ -89,11 +87,6 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
         final Pulse heartbeat = level.heartbeat();
         heartbeat.setStartState(Pulse.State.ON);
         heartbeat.restart();
-    }
-
-    private void showActors(GameLevelEntitySet entities) {
-        entities.pac().show();
-        entities.ghosts().forEach(GameEntity::show);
     }
 
     private Optional<CommonGameStateID> computeNextState(GameContext game, GameLevel level) {

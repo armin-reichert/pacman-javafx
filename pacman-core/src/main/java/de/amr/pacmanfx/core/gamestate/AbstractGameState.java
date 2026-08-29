@@ -74,8 +74,16 @@ public abstract class AbstractGameState implements State<GameContext>, Named {
         hud = session.hud();
     }
 
-    protected void showActorsFrozen(GameLevelEntitySet entitySet) {
-        final Pac pac = entitySet.pac();
+    protected void showActors(GameLevelEntitySet entities) {
+        final Pac pac = entities.pac();
+        pac.show();
+        for (Ghost ghost : entities.ghosts()) {
+            ghost.show();
+        }
+    }
+
+    protected void freezeActors(GameLevelEntitySet entities) {
+        final Pac pac = entities.pac();
         systems.worldNavigator().setDisabled(pac, true);
         systems.pacAnimation().setDisabled(pac, true);
         if (pac.state().isMale()) {
@@ -85,20 +93,18 @@ public abstract class AbstractGameState implements State<GameContext>, Named {
             //TODO this is wrong for Tengen Ms. Pac-Man:
             pac.spriteAnim().spriteAnimations().setAnimationFrame(CommonSpriteAnimationID.PAC_MOUTH_MOVING, 1);
         }
-        pac.show();
 
-        for (Ghost ghost : entitySet.ghosts()) {
+        for (Ghost ghost : entities.ghosts()) {
             systems.worldNavigator().setDisabled(ghost, true);
             systems.ghostAnimation().setDisabled(ghost, true);
-            ghost.show();
         }
     }
 
-    protected void unfreezeActors(GameLevelEntitySet entitySet) {
-        final Pac pac = entitySet.pac();
+    protected void unfreezeActors(GameLevelEntitySet entities) {
+        final Pac pac = entities.pac();
         systems.worldNavigator().setDisabled(pac, false);
         systems.pacAnimation().setDisabled(pac, false);
-        for (Ghost ghost : entitySet.ghosts()) {
+        for (Ghost ghost : entities.ghosts()) {
             systems.worldNavigator().setDisabled(ghost, false);
             systems.ghostAnimation().setDisabled(ghost, false);
         }

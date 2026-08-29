@@ -5,8 +5,6 @@
 package de.amr.pacmanfx.tengenmspacman.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.event.gameplay.GameStartedEvent;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
@@ -22,7 +20,6 @@ public class Tengen_GameStartingState extends AbstractGameState {
     static final short TICK_START_PLAYING = 250;
 
     private GameLevel level;
-    private Pac pac;
 
     public Tengen_GameStartingState() {
         super(CommonGameStateID.GAME_STARTING);
@@ -31,7 +28,6 @@ public class Tengen_GameStartingState extends AbstractGameState {
     @Override
     public void onEnterState(GameContext game) {
         level = gamePlay.buildNormalLevel(game, TengenMsPacMan_GamePlay.startLevelNumber(session));
-        pac = level.entities().pac();
 
         game.eventManager().publishGameEvent(new LevelCreatedEvent(level));
 
@@ -52,15 +48,14 @@ public class Tengen_GameStartingState extends AbstractGameState {
         final long tick = timer().tickCount();
 
         if (tick < TICK_START_PLAYING) {
-            showActorsFrozen(level.entities());
+            freezeActors(level.entities());
         }
 
         if (tick == TICK_START_LEVEL) {
             gamePlay.startLevel(game, level);
         }
         else if (tick == TICK_SHOW_GUYS) {
-            pac.show();
-            level.entities().ghosts().forEach(GameEntity::show);
+            showActors(level.entities());
         }
         else if (tick == TICK_START_PLAYING) {
             unfreezeActors(level.entities());

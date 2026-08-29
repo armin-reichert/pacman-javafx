@@ -5,8 +5,6 @@
 package de.amr.pacmanfx.arcade.pacman.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.event.gameplay.GameStartedEvent;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
@@ -21,7 +19,6 @@ public class Arcade_GameStartingState extends AbstractGameState {
     static final int TICK_START_PLAYING = 240;
 
     private GameLevel level;
-    private Pac pac;
 
     public Arcade_GameStartingState() {
         super(CommonGameStateID.GAME_STARTING);
@@ -30,7 +27,6 @@ public class Arcade_GameStartingState extends AbstractGameState {
     @Override
     public void onEnterState(GameContext game) {
         level = game.variant().gamePlay().buildNormalLevel(game, 1);
-        pac = level.entities().pac();
 
         game.eventManager().publishGameEvent(new LevelCreatedEvent(level));
 
@@ -50,14 +46,13 @@ public class Arcade_GameStartingState extends AbstractGameState {
     public void onUpdate(GameContext game) {
         final long tick = timer().tickCount();
         if (tick < TICK_START_PLAYING) {
-            showActorsFrozen(level.entities());
+            freezeActors(level.entities());
         }
         if (tick == TICK_START_LEVEL) {
             gamePlay.startLevel(game, level);
         }
         else if (tick == TICK_SHOW_GUYS) {
-            pac.show();
-            level.entities().ghosts().forEach(GameEntity::show);
+            showActors(level.entities());
         }
         else if (tick == TICK_START_PLAYING) {
             unfreezeActors(level.entities());
