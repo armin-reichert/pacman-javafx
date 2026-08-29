@@ -10,7 +10,6 @@ import de.amr.pacmanfx.core.entities.LevelCounter;
 import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlayOptions;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene1;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene2;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene3;
@@ -77,7 +76,7 @@ public class TengenMsPacMan_HUD_Renderer
         ctx.translate(0, scaled(computeOffsetY(gameScene)));
 
         if (hud.gameScore().isVisible()) {
-            drawScores(session);
+            drawScores(hud.gameScore(), hud.highScore(), session, session.thisFrame().tick());
         }
 
         final int counterY = canvasRendering.unscaledHeight() - TS;
@@ -97,13 +96,11 @@ public class TengenMsPacMan_HUD_Renderer
         ctx.restore();
     }
 
-    private void drawScores(GameSession session) {
-        final long tick = session.thisFrame().tick();
+    private void drawScores(Score gameScore, Score highScore, GameSession session, long tick) {
         // blink frequency = 1Hz (30 ticks on, 30 ticks off)
         final boolean on = tick % 60 < 30;
-        drawScore(session.hud().gameScore(), on, arcadeFont8());
+        drawScore(gameScore, on, arcadeFont8());
 
-        final Score highScore = session.hud().highScore();
         Color color = SCORE_TEXT_COLOR;
         if (!highScore.data().isEnabled() && !session.isAttractMode()) {
             color = SCORE_TEXT_COLOR_DISABLED;
