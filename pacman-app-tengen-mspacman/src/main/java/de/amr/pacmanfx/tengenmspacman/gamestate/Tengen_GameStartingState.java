@@ -6,7 +6,6 @@ package de.amr.pacmanfx.tengenmspacman.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.event.gameplay.GameStartedEvent;
@@ -53,29 +52,19 @@ public class Tengen_GameStartingState extends AbstractGameState {
         final long tick = timer().tickCount();
 
         if (tick < TICK_START_PLAYING) {
-            systems.worldNavigator().setDisabled(pac, true);
-            systems.pacAnimation().setDisabled(pac, true);
-            for (Ghost ghost : level.entities().ghosts()) {
-                systems.worldNavigator().setDisabled(ghost, true);
-                systems.ghostAnimation().setDisabled(ghost, true);
-            }
+            showActorsFrozen(level.entities());
         }
 
         if (tick == TICK_START_LEVEL) {
             gamePlay.startLevel(game, level);
         }
         else if (tick == TICK_SHOW_GUYS) {
-            level.entities().pac().show();
+            pac.show();
             level.entities().ghosts().forEach(GameEntity::show);
         }
         else if (tick == TICK_START_PLAYING) {
+            unfreezeActors(level.entities());
             // Now, actors start moving and animating
-            systems.worldNavigator().setDisabled(pac, false);
-            systems.pacAnimation().setDisabled(pac, false);
-            for (Ghost ghost : level.entities().ghosts()) {
-                systems.worldNavigator().setDisabled(ghost, false);
-                systems.ghostAnimation().setDisabled(ghost, false);
-            }
 
             game.coinMechanism().consumeCoin();
             session.setGameRunning(true);

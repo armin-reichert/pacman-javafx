@@ -14,28 +14,18 @@ import de.amr.pacmanfx.core.rules.LevelContinuationRules;
 
 public class Common_LevelContinueState extends AbstractGameState {
 
+    private GameLevel level;
+    private Pac pac;
+
     public Common_LevelContinueState() {
         super(CommonGameStateID.GAME_LEVEL_CONTINUE);
     }
 
     @Override
     public void onEnterState(GameContext game) {
-        final GameLevel level = session.level();
-        final Pac pac = level.entities().pac();
-
+        level = session.level();
+        pac = level.entities().pac();
         gamePlay.prepareLevelForPlaying(game, level);
-
-        // Initially, ghosts and Pac-Man do not move nor animate
-        pac.show();
-        systems.worldNavigator().setDisabled(pac, true);
-        systems.pacAnimation().setDisabled(pac, true);
-
-        for (Ghost ghost : level.entities().ghosts()) {
-            ghost.show();
-            systems.worldNavigator().setDisabled(ghost, true);
-            systems.ghostAnimation().setDisabled(ghost, true);
-        }
-
         gamePlay.showMessage(game, MessageType.READY);
     }
 
@@ -43,8 +33,10 @@ public class Common_LevelContinueState extends AbstractGameState {
     public void onUpdate(GameContext game) {
         final LevelContinuationRules continuationRules = rules.levelContinuation();
         final long tick = timer().tickCount();
-        final GameLevel level = session.level();
-        final Pac pac = level.entities().pac();
+
+        if (tick < continuationRules.continuePlayingTicks()) {
+            showActorsFrozen(level.entities());
+        }
 
         if (tick == continuationRules.continuePlayingTicks()) {
             game.eventManager().publishGameEvent(new GameContinuedEvent());

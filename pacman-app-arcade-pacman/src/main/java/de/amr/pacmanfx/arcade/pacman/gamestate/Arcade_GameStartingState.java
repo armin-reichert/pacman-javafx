@@ -52,12 +52,7 @@ public class Arcade_GameStartingState extends AbstractGameState {
         final long tick = timer().tickCount();
 
         if (tick < TICK_START_PLAYING) {
-            systems.worldNavigator().setDisabled(pac, true);
-            systems.pacAnimation().setDisabled(pac, true);
-            for (Ghost ghost : level.entities().ghosts()) {
-                systems.worldNavigator().setDisabled(ghost, true);
-                systems.ghostAnimation().setDisabled(ghost, true);
-            }
+            showActorsFrozen(level.entities());
         }
 
         if (tick == TICK_START_LEVEL) {
@@ -75,6 +70,7 @@ public class Arcade_GameStartingState extends AbstractGameState {
                 systems.worldNavigator().setDisabled(ghost, false);
                 systems.ghostAnimation().setDisabled(ghost, false);
             }
+            systems.pacAnimation().setDisabled(pac, false);
 
             game.coinMechanism().consumeCoin();
             session.setGameRunning(true);
