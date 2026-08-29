@@ -30,7 +30,6 @@ public class Arcade_GameStartingState extends AbstractGameState {
 
     @Override
     public void onEnterState(GameContext game) {
-        // Build new level
         level = game.variant().gamePlay().buildNormalLevel(game, 1);
         pac = level.entities().pac();
 
@@ -69,7 +68,6 @@ public class Arcade_GameStartingState extends AbstractGameState {
             level.entities().ghosts().forEach(GameEntity::show);
         }
         else if (tick == TICK_START_PLAYING) {
-
             // Now, actors start moving and animating
             systems.worldNavigator().setDisabled(pac, false);
             systems.pacAnimation().setDisabled(pac, false);
