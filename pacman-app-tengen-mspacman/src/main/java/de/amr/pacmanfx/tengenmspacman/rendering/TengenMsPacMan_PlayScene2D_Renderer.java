@@ -8,7 +8,7 @@ import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
-import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -39,7 +39,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
 {
     private static final int CONTENT_INDENT = 2 * WorldMap.TS;
 
-    private static final List<GhostPersonality> GHOSTS_Z_ORDER = List.of(
+    private static final List<GhostPersonality> GHOST_Z_ORDER = List.of(
         GhostPersonality.ORANGE_GHOST_POKEY,
         GhostPersonality.CYAN_GHOST_BASHFUL,
         GhostPersonality.PINK_GHOST_SPEEDY,
@@ -116,7 +116,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
             final double scaledIndent = scaled(CONTENT_INDENT);
 
             configureRenderInfo(playScene2D, worldMap, tick);
-            configureActorZOrder(level);
+            updateActorZOrder(level.entities());
 
             ctx.save();
             ctx.translate(scaledIndent, 0);
@@ -154,10 +154,14 @@ public class TengenMsPacMan_PlayScene2D_Renderer
         });
     }
 
-    private void configureActorZOrder(GameLevel level) {
+    // Actor z-order: Bonus under Pac-Man under ghosts in z-order.
+    private void updateActorZOrder(GameLevelEntitySet entities) {
         actorsInZOrder.clear();
-        actorsInZOrder.add(level.entities().pac());
-        GHOSTS_Z_ORDER.stream().map(level.entities()::ghost).forEach(actorsInZOrder::add);
-        level.entities().optBonus().ifPresent(actorsInZOrder::add);
+        entities.optBonus().ifPresent(actorsInZOrder::add);
+        actorsInZOrder.add(entities.pac());
+        GHOST_Z_ORDER.stream().map(entities::ghost).forEach(actorsInZOrder::add);
+        actorsInZOrder.addAll(entities.theGhostPoints());
+        actorsInZOrder.addAll(entities.theBonusPoints());
     }
+
 }

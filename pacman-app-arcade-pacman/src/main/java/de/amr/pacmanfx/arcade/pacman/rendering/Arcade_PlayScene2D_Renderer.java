@@ -33,7 +33,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameScene2D_Renderer, SpriteRenderer {
 
-    private static final List<GhostPersonality> GHOST_Z_ORDER = List.of(
+    public static final List<GhostPersonality> GHOST_Z_ORDER = List.of(
         GhostPersonality.ORANGE_GHOST_POKEY,
         GhostPersonality.CYAN_GHOST_BASHFUL,
         GhostPersonality.PINK_GHOST_SPEEDY,

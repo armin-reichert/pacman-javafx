@@ -46,16 +46,18 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
 
         final Vector2f center = actor.pos().bodyCenter();
         switch (actor) {
-            case Bonus bonus -> drawSpriteCentered(computeBonusSprite(renderConfig, bonus), center);
-            case Ghost ghost -> drawSpriteCentered(computeGhostSprite(ghost), center);
-            case Pac pac -> drawFacingSpriteCentered(computePacSprite(pac), center);
+            case Bonus bonus -> drawSpriteCentered(computeSprite(bonus), center);
+            case BonusPoints points -> drawSpriteCentered(computeSprite(points), center);
+            case Ghost ghost -> drawSpriteCentered(computeSprite(ghost), center);
+            case GhostPoints points -> drawSpriteCentered(computeSprite(points), center);
+            case Pac pac -> drawFacingSpriteCentered(computeSprite(pac), center);
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
             case Stork stork -> drawStork(stork);
             default -> drawSpriteCentered(animSystem.currentSprite(actor), center);
         }
     }
 
-    private RectShort computeGhostSprite(Ghost ghost) {
+    private RectShort computeSprite(Ghost ghost) {
         if (animSystem.isSelected(ghost, CommonSpriteAnimationID.GHOST_NORMAL)) {
             final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.worldNavigation().wishDir());
             return spriteOrDefault(sprites, animSystem.currentFrame(ghost));
@@ -68,7 +70,18 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         }
     }
 
-    private FacingSprite computePacSprite(Pac pac) {
+    private RectShort computeSprite(GhostPoints ghostPoints) {
+        final int index = switch (ghostPoints.points().number()) {
+            case 200 -> 0;
+            case 400 -> 1;
+            case 800 -> 2;
+            case 1600 -> 3;
+            default -> throw new IllegalArgumentException("Illegal ghost points value: " + ghostPoints.points().number());
+        };
+        return spriteOrDefault(spriteSheet().findSpriteSequence(SpriteID.GHOST_NUMBERS), index);
+    }
+
+    private FacingSprite computeSprite(Pac pac) {
         final int frame = animSystem.currentFrame(pac);
         final Direction dir = pac.worldNavigation().moveDir();
         return switch (animSystem.selectedAnimationID(pac)) {
@@ -109,7 +122,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         }
     }
 
-    private RectShort computeBonusSprite(TengenMsPacMan_RenderConfig renderConfig, Bonus bonus) {
+    private RectShort computeSprite(Bonus bonus) {
         return switch (bonus.bonusState()) {
             case EDIBLE -> spriteOrDefault(spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS), bonus.data().symbolCode());
             // Note: sprite sheet has bonus values in different order!
@@ -117,6 +130,10 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
                 renderConfig.bonusValueSpriteIndex(bonus.data().symbolCode()));
             case INACTIVE -> RectShort.NULL_RECTANGLE;
         };
+    }
+
+    private RectShort computeSprite(BonusPoints bonusPoints) {
+        return RectShort.NULL_RECTANGLE; //TODO implement
     }
 
     private void drawClapperBoard(Clapperboard clapperboard) {

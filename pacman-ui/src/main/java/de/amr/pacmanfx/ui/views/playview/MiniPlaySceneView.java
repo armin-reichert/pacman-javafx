@@ -7,8 +7,10 @@ import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.rules.GameRules;
@@ -34,12 +36,19 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
 public class MiniPlaySceneView {
+
+    public static final List<GhostPersonality> GHOST_Z_ORDER = List.of(
+        GhostPersonality.ORANGE_GHOST_POKEY,
+        GhostPersonality.CYAN_GHOST_BASHFUL,
+        GhostPersonality.PINK_GHOST_SPEEDY,
+        GhostPersonality.RED_GHOST_SHADOW);
 
     public static final Insets PADDING = new Insets(0, 10, 0, 10);
 
@@ -62,6 +71,8 @@ public class MiniPlaySceneView {
 
     // Used in debug draw mode
     private long drawCallCount;
+
+    private final List<GameEntity> actorsInZOrder = new ArrayList<>();
 
     public MiniPlaySceneView() {
         canvas = new Canvas();
@@ -189,13 +200,17 @@ public class MiniPlaySceneView {
         levelRenderer.applyLevelSettings(rules, level, info);
         levelRenderer.drawLevel(game, level, info);
 
-        level.entities().optBonus().ifPresent(bonus -> actorRenderer.drawActor(bonus));
-        actorRenderer.drawActor(level.entities().pac());
-        Stream.of(
-            GhostPersonality.ORANGE_GHOST_POKEY,
-            GhostPersonality.CYAN_GHOST_BASHFUL,
-            GhostPersonality.PINK_GHOST_SPEEDY,
-            GhostPersonality.RED_GHOST_SHADOW
-        ).map(level.entities()::ghost).forEach(ghost -> actorRenderer.drawActor(ghost));
+        updateActorZOrder(level.entities());
+        actorsInZOrder.forEach(actorRenderer::drawActor);
+    }
+
+    // Actor z-order: Bonus under Pac-Man under ghosts in z-order.
+    private void updateActorZOrder(GameLevelEntitySet entities) {
+        actorsInZOrder.clear();
+        entities.optBonus().ifPresent(actorsInZOrder::add);
+        actorsInZOrder.add(entities.pac());
+        GHOST_Z_ORDER.stream().map(entities::ghost).forEach(actorsInZOrder::add);
+        actorsInZOrder.addAll(entities.theGhostPoints());
+        actorsInZOrder.addAll(entities.theBonusPoints());
     }
 }

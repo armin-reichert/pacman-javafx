@@ -51,7 +51,7 @@ public enum CollisionStrategy {
             final Vector2f otherCenter = other.pos().bodyCenter();
             float dist = eitherCenter.euclideanDist(otherCenter);
             if (dist < COLLISION_SENSITIVITY_PIXELS) {
-                Logger.info("Collision detected (dist={}): {} collides with {}", dist, either, other);
+                Logger.debug("Collision detected (dist={}): {} collides with {}", dist, either, other);
                 return true;
             }
             return false;
