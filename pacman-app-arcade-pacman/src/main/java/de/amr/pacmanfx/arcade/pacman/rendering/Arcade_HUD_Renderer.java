@@ -13,6 +13,7 @@ import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.HUD_Renderer;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
@@ -26,7 +27,7 @@ import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_YELLOW;
 import static java.util.Objects.requireNonNull;
 
-public abstract class Arcade_HUD_Renderer
+public class Arcade_HUD_Renderer
     extends BaseRenderer
     implements SpriteRenderer, HUD_Renderer {
 
@@ -37,16 +38,29 @@ public abstract class Arcade_HUD_Renderer
     private static final Color SCORE_TEXT_COLOR = ARCADE_WHITE;
     private static final Color SCORE_TEXT_COLOR_DISABLED = Color.GRAY;
 
-    protected Arcade_HUD_Renderer(Canvas canvas) {
+    protected final SpriteSheet spriteSheet;
+    protected final RectShort livesCounterSymbolSprite;
+    protected final RectShort[] bonusSymbolSprites;
+
+    public Arcade_HUD_Renderer(
+        Canvas canvas,
+        SpriteSheet spriteSheet,
+        RectShort livesCounterSymbolSprite,
+        RectShort[] bonusSymbolSprites) {
+
         super(canvas);
+        this.spriteSheet = requireNonNull(spriteSheet);
+        this.livesCounterSymbolSprite = requireNonNull(livesCounterSymbolSprite);
+        this.bonusSymbolSprites = requireNonNull( bonusSymbolSprites);
     }
 
-    protected abstract RectShort[] bonusSymbolSprites();
-
-    protected abstract RectShort livesCounterSymbol();
+    @Override
+    public SpriteSheet spriteSheet() {
+        return spriteSheet;
+    }
 
     @Override
-    public void draw(GameSession session, GameScene gameScene, long tick) {
+    public void drawHUD(GameSession session, GameScene gameScene, long tick) {
         requireNonNull(session);
         requireNonNull(gameScene);
 
@@ -99,7 +113,6 @@ public abstract class Arcade_HUD_Renderer
 
     private void drawLevelCounter(GameSession session, CanvasRenderingComp canvasRendering) {
         final LevelCounter levelCounter = session.hud().levelCounter();
-        final RectShort[] bonusSymbolSprites = bonusSymbolSprites();
         final float y = canvasRendering.unscaledHeight() - tilesPx(2) + 2;
         float x = canvasRendering.unscaledWidth() - tilesPx(4);
         for (int symbolCode : levelCounter.data().symbolCodes()) {
@@ -113,13 +126,12 @@ public abstract class Arcade_HUD_Renderer
         final int numLives = session.numLives();
         final int displayedSymbolsCount = Math.min(numLives - 1, livesCounter.data().maxLives());
 
-        final RectShort sprite = livesCounterSymbol();
         final float x = tilesPx(2);
         final float y = canvasRendering.unscaledHeight() - tilesPx(2);
         final float spacing = tilesPx(2);
         // Draw at most (numLives - 1) symbols in lives counter
         for (int i = 0; i < displayedSymbolsCount; ++i) {
-            drawSprite(sprite, x + i * spacing, y, true);
+            drawSprite(livesCounterSymbolSprite, x + i * spacing, y, true);
         }
         if (numLives - 1 > livesCounter.data().maxLives()) {
             // Show text indicating that more lives are available than symbols displayed (cheating may cause this)

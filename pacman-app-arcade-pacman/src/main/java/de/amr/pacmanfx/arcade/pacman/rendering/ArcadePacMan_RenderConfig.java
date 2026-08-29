@@ -114,7 +114,12 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
         requireNonNull(canvas);
 
         final CanvasRenderingComp r2D = gameScene.components().reqComp(CanvasRenderingComp.class);
-        final var renderer = new ArcadePacMan_HUD_Renderer(canvas);
+        final var renderer = new Arcade_HUD_Renderer(
+            canvas,
+            spriteSheet(),
+            spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL),
+            spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS)
+        );
         renderer.setImageSmoothing(true);
         r2D.configureRenderer(renderer);
 

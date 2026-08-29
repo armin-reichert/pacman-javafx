@@ -79,10 +79,15 @@ public class XXL_PacMan_RenderConfig implements GameVariantRenderConfig {
     @Override
     public HUD_Renderer createHUDRenderer(GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas) {
         final CanvasRenderingComp r2D = gameScene.components().reqComp(CanvasRenderingComp.class);
-        final var hudRenderer = new ArcadePacMan_HUD_Renderer(canvas);
-        hudRenderer.setImageSmoothing(true);
-        r2D.configureRenderer(hudRenderer);
-        return hudRenderer;
+        final var renderer = new Arcade_HUD_Renderer(
+            canvas,
+            spriteSheet(),
+            spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL),
+            spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS)
+        );
+        renderer.setImageSmoothing(true);
+        r2D.configureRenderer(renderer);
+        return renderer;
     }
 
     @Override

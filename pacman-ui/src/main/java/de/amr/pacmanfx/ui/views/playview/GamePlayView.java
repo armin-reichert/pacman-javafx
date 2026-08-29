@@ -259,7 +259,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
                         sceneRenderer.draw(gameScene, tick);
                     }
                     if (hudRenderer != null) {
-                        hudRenderer.draw(session, gameScene, tick);
+                        hudRenderer.drawHUD(session, gameScene, tick);
                     }
                 });
             } catch (Exception x) {

@@ -9,6 +9,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.*;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.*;
 import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_BootScene2D_Renderer;
+import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_HUD_Renderer;
 import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_PlayScene2D_Renderer;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
@@ -83,10 +84,15 @@ public class XXL_MsPacMan_RenderConfig implements GameVariantRenderConfig {
     @Override
     public HUD_Renderer createHUDRenderer(GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas) {
         final CanvasRenderingComp r2D = gameScene.components().reqComp(CanvasRenderingComp.class);
-        final var hudRenderer = new ArcadeMsPacMan_HUD_Renderer(canvas);
-        hudRenderer.setImageSmoothing(true);
-        r2D.configureRenderer(hudRenderer);
-        return hudRenderer;
+        final var renderer = new Arcade_HUD_Renderer(
+            canvas,
+            spriteSheet(),
+            spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL),
+            spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS)
+        );
+        renderer.setImageSmoothing(true);
+        r2D.configureRenderer(renderer);
+        return renderer;
     }
 
     @Override

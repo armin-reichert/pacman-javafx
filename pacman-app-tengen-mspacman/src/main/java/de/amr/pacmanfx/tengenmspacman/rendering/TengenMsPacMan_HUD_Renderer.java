@@ -59,7 +59,7 @@ public class TengenMsPacMan_HUD_Renderer
     }
 
     @Override
-    public void draw(GameSession session, GameScene gameScene, long tick) {
+    public void drawHUD(GameSession session, GameScene gameScene, long tick) {
         requireNonNull(session);
         requireNonNull(gameScene);
 
