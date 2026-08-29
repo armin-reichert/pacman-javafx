@@ -18,6 +18,7 @@ import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.FacingSprite;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 
@@ -61,31 +62,12 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         }
     }
 
-    private RectShort computeSprite(Ghost ghost) {
-        if (animSystem.isSelected(ghost, CommonSpriteAnimationID.GHOST_NORMAL)) {
-            final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.worldNavigation().wishDir());
-            return spriteOrDefault(sprites, animSystem.currentFrame(ghost));
-        }
-        if (animSystem.isSelected(ghost, CommonSpriteAnimationID.GHOST_EYES)) {
-            return spriteSheet().ghostEyesSprite(ghost.worldNavigation().wishDir());
-        }
-        else {
-            return animSystem.currentSprite(ghost);
-        }
-    }
-
-    private RectShort computeSprite(GhostPoints ghostPoints) {
-        final int index = Arrays.binarySearch(GHOST_POINTS, ghostPoints.points().number());
-        return index >= 0 ? spriteSheet().findSpriteSequence(SpriteID.GHOST_NUMBERS)[index] : RectShort.NULL_RECTANGLE;
-    }
-
     private FacingSprite computeSprite(Pac pac) {
         final int frame = animSystem.currentFrame(pac);
         final Direction dir = pac.worldNavigation().moveDir();
         return switch (animSystem.selectedAnimationID(pac)) {
             case null -> facingSprite(SpriteID.MS_PAC_MUNCHING, frame, dir);
-
-            case CommonSpriteAnimationID.PAC_DYING    -> computePacDyingSprite(pac);
+            case CommonSpriteAnimationID.PAC_DYING -> computePacDyingSprite(pac);
             case CommonSpriteAnimationID.PAC_MOUTH_MOVING -> facingSprite(SpriteID.MS_PAC_MUNCHING, frame, dir);
             case TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER -> facingSprite(SpriteID.MS_PAC_MUNCHING_BOOSTER, frame, dir);
             case TengenMsPacMan_AnimationID.MS_PAC_MAN_TURNING_AWAY -> facingSprite(SpriteID.MS_PAC_TURNING_AWAY, frame, dir);
@@ -105,17 +87,35 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     private FacingSprite computePacDyingSprite(Pac pac) {
         final var dyingAnimation = animSystem.animation(pac, CommonSpriteAnimationID.PAC_DYING);
         if (dyingAnimation instanceof SpriteAnimation spriteAnimation) {
-            final Direction facingDir = switch (spriteAnimation.frame()) {
+            final Direction dir = switch (spriteAnimation.frame()) {
                 case 0, 4, 8  -> Direction.DOWN;
                 case 1, 5, 9  -> Direction.LEFT;
                 case 2, 6, 10 -> Direction.UP;
                 case 3, 7     -> Direction.RIGHT;
                 default       -> Direction.UP; // end position from frame 11 on
             };
-            return new FacingSprite(spriteAnimation.sprite(), facingDir);
+            return new FacingSprite(spriteAnimation.sprite(), dir);
         } else {
             throw new IllegalArgumentException("No sprite animation set for Pac-Man dying");
         }
+    }
+
+    private RectShort computeSprite(Ghost ghost) {
+        if (animSystem.isSelected(ghost, CommonSpriteAnimationID.GHOST_NORMAL)) {
+            final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.worldNavigation().wishDir());
+            return spriteOrDefault(sprites, animSystem.currentFrame(ghost));
+        }
+        if (animSystem.isSelected(ghost, CommonSpriteAnimationID.GHOST_EYES)) {
+            return spriteSheet().ghostEyesSprite(ghost.worldNavigation().wishDir());
+        }
+        else {
+            return animSystem.currentSprite(ghost);
+        }
+    }
+
+    private RectShort computeSprite(GhostPoints ghostPoints) {
+        final int index = Arrays.binarySearch(GHOST_POINTS, ghostPoints.points().number());
+        return index >= 0 ? spriteSheet().findSpriteSequence(SpriteID.GHOST_NUMBERS)[index] : RectShort.NULL_RECTANGLE;
     }
 
     private RectShort computeSprite(Bonus bonus) {
@@ -168,7 +168,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     private void drawFacingSpriteCentered(FacingSprite facingSprite, Vector2f centerUnscaled) {
         ctx().save();
         ctx().translate(centerUnscaled.x() * scaling(), centerUnscaled.y() * scaling());
-        switch (facingSprite.facingDirection()) {
+        switch (facingSprite.facing()) {
             case LEFT  -> { /* sprite facing direction in sprite sheet */ }
             case UP    -> ctx().rotate(90);
             case RIGHT -> ctx().scale(-1, 1); // mirror at y-axis

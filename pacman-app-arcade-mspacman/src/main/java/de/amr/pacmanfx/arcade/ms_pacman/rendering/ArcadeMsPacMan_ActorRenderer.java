@@ -70,7 +70,7 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             sprite = animController.currentSprite(ghost);
         }
         if (sprite == null) {
-            throw new IllegalStateException("Could not determine Pac sprite");
+            throw new IllegalStateException("Could not determine ghost sprite");
         }
         return sprite;
     }
@@ -113,12 +113,11 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     }
 
     private void drawClapperBoard(Clapperboard clapperboard) {
-        if (!clapperboard.isVisible()) return;
         ClapperboardAnimationSystem.sprite(clapperboard).ifPresent(sprite -> {
             drawSpriteCentered(sprite, clapperboard.pos().bodyCenter());
 
             // Draw number and title
-            final String number = String.valueOf(clapperboard.inscription().number());
+            final String number = clapperboard.inscription().number();
             final String text = clapperboard.inscription().text();
             final double numberX = scaled(clapperboard.pos().x() + sprite.width() - 25);
             final double textX = scaled(clapperboard.pos().x() + sprite.width());

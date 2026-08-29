@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.uilib.rendering;
 
 import de.amr.basics.math.Direction;
@@ -14,8 +15,6 @@ import static java.util.Objects.requireNonNull;
  * Mix-in interface providing sprite rendering functionality.
  */
 public interface SpriteRenderer extends Renderer {
-
-    record FacingSprite(RectShort sprite, Direction facingDirection) {}
 
     SpriteSheet spriteSheet();
 

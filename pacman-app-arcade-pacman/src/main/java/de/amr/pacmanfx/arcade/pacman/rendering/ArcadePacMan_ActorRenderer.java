@@ -88,8 +88,8 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
         return index >= 0 ? spriteSheet().findSpriteSequence(SpriteID.GHOST_NUMBERS)[index] : RectShort.NULL_RECTANGLE;
     }
 
+    //TODO: decouple symbol code from index in sprite array
     private RectShort computeSprite(Bonus bonus) {
-        //TODO: decouple symbol code from index in sprite array
         return switch (bonus.bonusState()) {
             case EDIBLE   -> spriteOrDefault(spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS), bonus.data().symbolCode());
             case EATEN, INACTIVE  -> RectShort.NULL_RECTANGLE;
