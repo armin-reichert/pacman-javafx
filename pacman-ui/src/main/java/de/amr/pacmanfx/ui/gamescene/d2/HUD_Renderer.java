@@ -7,7 +7,7 @@ import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 
-public interface HeadsUpDisplay_Renderer extends Renderer {
+public interface HUD_Renderer extends Renderer {
 
     /**
      * Draws the Head-Up Display (score, live counter, level counter, coins inserted)

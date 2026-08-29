@@ -122,9 +122,9 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public TengenMsPacMan_HeadsUpDisplay_Renderer createHUDRenderer(GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas) {
+    public TengenMsPacMan_HUD_Renderer createHUDRenderer(GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas) {
         final CanvasRenderingComp r2D = gameScene.components().reqComp(CanvasRenderingComp.class);
-        return r2D.configureRenderer(new TengenMsPacMan_HeadsUpDisplay_Renderer(canvas));
+        return r2D.configureRenderer(new TengenMsPacMan_HUD_Renderer(canvas));
     }
 
     @Override

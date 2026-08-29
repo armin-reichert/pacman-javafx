@@ -21,7 +21,7 @@ import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
-import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
+import de.amr.pacmanfx.ui.gamescene.d2.HUD_Renderer;
 import de.amr.pacmanfx.ui.settings.ui.DashboardSectionSettings;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
@@ -103,7 +103,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     private FontAwesomeIcon pausedIcon;
 
     private GameScene2D_Renderer sceneRenderer;
-    private HeadsUpDisplay_Renderer hudRenderer;
+    private HUD_Renderer hudRenderer;
 
     public GamePlayView() {
         createLayout();

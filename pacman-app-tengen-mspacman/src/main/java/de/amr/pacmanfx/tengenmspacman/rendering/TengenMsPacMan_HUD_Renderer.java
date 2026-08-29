@@ -20,7 +20,7 @@ import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
-import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
+import de.amr.pacmanfx.ui.gamescene.d2.HUD_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.beans.property.ObjectProperty;
@@ -36,9 +36,9 @@ import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_HeadsUpDisplay_Renderer
+public class TengenMsPacMan_HUD_Renderer
     extends BaseRenderer
-    implements SpriteRenderer, HeadsUpDisplay_Renderer {
+    implements SpriteRenderer, HUD_Renderer {
 
     private static final Color SCORE_TEXT_COLOR = NES_Palette.color(0x20);
     private static final Color SCORE_TEXT_COLOR_DISABLED = NES_Palette.color(0x10);
@@ -48,7 +48,7 @@ public class TengenMsPacMan_HeadsUpDisplay_Renderer
 
     private final ObjectProperty<Font> totalLivesFont = new SimpleObjectProperty<>(Font.font("Serif", FontWeight.BOLD, 8));
 
-    public TengenMsPacMan_HeadsUpDisplay_Renderer(Canvas canvas) {
+    public TengenMsPacMan_HUD_Renderer(Canvas canvas) {
         super(canvas);
         totalLivesFont.bind(scalingProperty().map(scaling -> Font.font("Serif", FontWeight.BOLD, scaling.doubleValue() * 8)));
     }

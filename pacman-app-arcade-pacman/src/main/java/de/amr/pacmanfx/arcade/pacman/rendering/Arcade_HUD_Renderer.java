@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
-import de.amr.pacmanfx.ui.gamescene.d2.HeadsUpDisplay_Renderer;
+import de.amr.pacmanfx.ui.gamescene.d2.HUD_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
@@ -26,9 +26,9 @@ import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_YELLOW;
 import static java.util.Objects.requireNonNull;
 
-public abstract class Arcade_HeadsUpDisplay_Renderer
+public abstract class Arcade_HUD_Renderer
     extends BaseRenderer
-    implements SpriteRenderer, HeadsUpDisplay_Renderer {
+    implements SpriteRenderer, HUD_Renderer {
 
     public static final String SCORE_TEXT = "SCORE";
     public static final String HIGH_SCORE_TEXT = "HIGH SCORE";
@@ -37,7 +37,7 @@ public abstract class Arcade_HeadsUpDisplay_Renderer
     private static final Color SCORE_TEXT_COLOR = ARCADE_WHITE;
     private static final Color SCORE_TEXT_COLOR_DISABLED = Color.GRAY;
 
-    protected Arcade_HeadsUpDisplay_Renderer(Canvas canvas) {
+    protected Arcade_HUD_Renderer(Canvas canvas) {
         super(canvas);
     }
 
@@ -110,18 +110,21 @@ public abstract class Arcade_HeadsUpDisplay_Renderer
 
     private void drawLivesCounter(GameSession session, CanvasRenderingComp canvasRendering) {
         final LivesCounter livesCounter = session.hud().livesCounter();
-        final int count = livesCounter.data().numLives();
+        final int numLives = session.numLives();
+        final int displayedSymbolsCount = Math.min(numLives - 1, livesCounter.data().maxLives());
+
         final RectShort sprite = livesCounterSymbol();
         final float x = tilesPx(2);
         final float y = canvasRendering.unscaledHeight() - tilesPx(2);
         final float spacing = tilesPx(2);
-        for (int i = 0; i < count; ++i) {
+        // Draw at most (numLives - 1) symbols in lives counter
+        for (int i = 0; i < displayedSymbolsCount; ++i) {
             drawSprite(sprite, x + i * spacing, y, true);
         }
-        if (count > livesCounter.data().maxLives()) {
+        if (numLives - 1 > livesCounter.data().maxLives()) {
             // Show text indicating that more lives are available than symbols displayed (cheating may cause this)
             final Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
-            fillText("%d".formatted(count), ARCADE_YELLOW, font, x - 14, y + TS);
+            fillText("%d".formatted(numLives), ARCADE_YELLOW, font, x - 14, y + TS);
         }
     }
 

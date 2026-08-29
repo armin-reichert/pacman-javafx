@@ -1,21 +1,21 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.arcade.ms_pacman.rendering;
+
+package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.math.RectShort;
-import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_HeadsUpDisplay_Renderer;
 import javafx.scene.canvas.Canvas;
 
-public class ArcadeMsPacMan_HeadsUpDisplayRenderer extends Arcade_HeadsUpDisplay_Renderer {
+public class ArcadePacMan_HUD_Renderer extends Arcade_HUD_Renderer {
 
-    public ArcadeMsPacMan_HeadsUpDisplayRenderer(Canvas canvas) {
+    public ArcadePacMan_HUD_Renderer(Canvas canvas) {
         super(canvas);
     }
 
     @Override
-    public ArcadeMsPacMan_SpriteSheet spriteSheet() {
-        return ArcadeMsPacMan_SpriteSheet.instance();
+    public ArcadePacMan_SpriteSheet spriteSheet() {
+        return ArcadePacMan_SpriteSheet.instance();
     }
 
     @Override
