@@ -5,9 +5,11 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.entities.LevelCounter;
 import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Score;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlayOptions;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene1;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene2;
@@ -59,11 +61,12 @@ public class TengenMsPacMan_HUD_Renderer
     }
 
     @Override
-    public void drawHUD(GameSession session, GameScene gameScene, long tick) {
+    public void drawHUD(HUD hud, GameSession session, GameScene gameScene, long tick) {
+        requireNonNull(hud);
         requireNonNull(session);
         requireNonNull(gameScene);
 
-        if (!session.hud().isVisible()) return;
+        if (!hud.isVisible()) return;
 
         if (gameScene.optCanvasRendering().isEmpty()) {
             return; // Should not happen, but...
@@ -73,26 +76,22 @@ public class TengenMsPacMan_HUD_Renderer
         ctx.save();
         ctx.translate(0, scaled(computeOffsetY(gameScene)));
 
-        if (session.hud().gameScore().isVisible()) {
+        if (hud.gameScore().isVisible()) {
             drawScores(session);
         }
 
         final int counterY = canvasRendering.unscaledHeight() - TS;
 
-        if (session.hud().livesCounter().isVisible()) {
+        if (hud.livesCounter().isVisible()) {
             drawLivesCounter(session, counterY);
         }
 
-        if (session.hud().levelCounter().isVisible()) {
+        if (hud.levelCounter().isVisible()) {
             drawLevelCounter(session, counterY);
         }
 
-        if (session.hud().isTengenGameOptionsVisible()) {
-            drawGameOptions(
-                session.value(TengenMsPacMan_GamePlayOptions.MAP_CATEGORY, MapCategory.class),
-                session.value(TengenMsPacMan_GamePlayOptions.DIFFICULTY, Difficulty.class),
-                session.value(TengenMsPacMan_GamePlayOptions.BOOSTER_MODE, BoosterMode.class),
-                tilesPx(16), tilesPx(2.5f));
+        if (hud.isTengenGameOptionsVisible()) {
+            drawGameOptions(session, tilesPx(16), tilesPx(2.5f));
         }
 
         ctx.restore();
@@ -183,24 +182,30 @@ public class TengenMsPacMan_HUD_Renderer
         drawSprite(spriteSheet().findDigitSprite(ones), x + 10, y + 2, true);
     }
 
-    public void drawGameOptions(MapCategory category, Difficulty difficulty, BoosterMode booster, double centerX, double y) {
-        final RectShort categorySprite = switch (category) {
+    public void drawGameOptions(GameSession session, double centerX, double y) {
+        final MapCategory mapCategory = TengenMsPacMan_GamePlay.mapCategory(session);
+        final Difficulty difficulty   = TengenMsPacMan_GamePlay.difficulty(session);
+        final BoosterMode boosterMode = TengenMsPacMan_GamePlay.boosterMode(session);
+
+        final RectShort mapCategorySprite = switch (mapCategory) {
             case BIG     -> spriteSheet().findSprite(SpriteID.INFO_CATEGORY_BIG);
             case MINI    -> spriteSheet().findSprite(SpriteID.INFO_CATEGORY_MINI);
             case STRANGE -> spriteSheet().findSprite(SpriteID.INFO_CATEGORY_STRANGE);
             case ARCADE  -> RectShort.NULL_RECTANGLE;
         };
+
         final RectShort difficultySprite = switch (difficulty) {
             case EASY   -> spriteSheet().findSprite(SpriteID.INFO_DIFFICULTY_EASY);
             case HARD   -> spriteSheet().findSprite(SpriteID.INFO_DIFFICULTY_HARD);
             case CRAZY  -> spriteSheet().findSprite(SpriteID.INFO_DIFFICULTY_CRAZY);
             case NORMAL -> RectShort.NULL_RECTANGLE;
         };
+
         drawSpriteCentered(spriteSheet().findSprite(SpriteID.INFO_FRAME), centerX, y);
-        if (booster != BoosterMode.BOOSTER_OFF) {
+        if (boosterMode != BoosterMode.BOOSTER_OFF) {
             drawSpriteCentered(spriteSheet().findSprite(SpriteID.INFO_BOOSTER), centerX - tilesPx(5.5f), y);
         }
         drawSpriteCentered(difficultySprite, centerX, y);
-        drawSpriteCentered(categorySprite, centerX + tilesPx(4.5f), y);
+        drawSpriteCentered(mapCategorySprite, centerX + tilesPx(4.5f), y);
     }
 }

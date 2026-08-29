@@ -54,11 +54,9 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     public static final int ARCADE_MAP_GAME_OVER_TICKS = 420;
     public static final int NON_ARCADE_MAP_GAME_OVER_TICKS = 600;
 
-    public TengenMsPacMan_GamePlay() {}
-
     // Tengen Ms. Pac-Man specific methods
 
-    public boolean allOptionsHaveDefaultValue(GameSession session) {
+    public static boolean allOptionsHaveDefaultValue(GameSession session) {
         final BoosterMode boosterMode = session.value(TengenMsPacMan_GamePlayOptions.BOOSTER_MODE, BoosterMode.class);
         final Difficulty difficulty = session.value(TengenMsPacMan_GamePlayOptions.DIFFICULTY, Difficulty.class);
         final MapCategory mapCategory = session.value(TengenMsPacMan_GamePlayOptions.MAP_CATEGORY, MapCategory.class);
@@ -72,7 +70,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
             && numContinues == TengenMsPacMan_GameVariantUIConfig.DEFAULT_NUM_CONTINUES;
     }
 
-    public void setBoosterOn(GameContext game, Pac pac, boolean boosterOn) {
+    public static void setBoosterOn(GameContext game, Pac pac, boolean boosterOn) {
         requireNonNull(game);
         requireNonNull(pac);
 
@@ -84,74 +82,65 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         animSystem.select(pac, boosterOn ? TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER : CommonSpriteAnimationID.PAC_MOUTH_MOVING);
     }
 
-    public void setBoosterMode(GameSession session, BoosterMode boosterMode) {
+    public static void setBoosterMode(GameSession session, BoosterMode boosterMode) {
         requireNonNull(session);
         requireNonNull(boosterMode);
-
         session.setValue(TengenMsPacMan_GamePlayOptions.BOOSTER_MODE, boosterMode);
     }
 
-    public BoosterMode boosterMode(GameSession session) {
+    public static BoosterMode boosterMode(GameSession session) {
         return session.value(TengenMsPacMan_GamePlayOptions.BOOSTER_MODE, BoosterMode.class);
     }
 
-    public void setMapCategory(GameSession session, MapCategory mapCategory) {
+    public static void setMapCategory(GameSession session, MapCategory mapCategory) {
         requireNonNull(session);
         requireNonNull(mapCategory);
-
         session.setValue(TengenMsPacMan_GamePlayOptions.MAP_CATEGORY, mapCategory);
     }
 
-    public MapCategory mapCategory(GameSession session) {
+    public static MapCategory mapCategory(GameSession session) {
         return session.value(TengenMsPacMan_GamePlayOptions.MAP_CATEGORY, MapCategory.class);
     }
 
-    public void setDifficulty(GameContext game, Difficulty difficulty) {
+    public static void setDifficulty(GameContext game, Difficulty difficulty) {
         requireNonNull(game);
         requireNonNull(difficulty);
-
         game.session().setValue(TengenMsPacMan_GamePlayOptions.DIFFICULTY, difficulty);
-
         //TODO this should also move into session!
         final var speedRules = (TengenMsPacMan_ActorSpeedRules) game.variant().rules().actorSpeedRules();
         speedRules.setDifficulty(difficulty);
     }
 
-    public Difficulty difficulty(GameSession session) {
+    public static Difficulty difficulty(GameSession session) {
         requireNonNull(session);
-
         return session.value(TengenMsPacMan_GamePlayOptions.DIFFICULTY, Difficulty.class);
     }
 
-    public void setStartLevelNumber(GameSession session, int number) {
+    public static void setStartLevelNumber(GameSession session, int number) {
         requireNonNull(session);
         if (number < TengenMsPacMan_GameRules.FIRST_LEVEL ||
             number > TengenMsPacMan_GameRules.LAST_LEVEL_NUMBER) {
             throw GameException.invalidLevelNumber(number);
         }
-
         session.setValue(TengenMsPacMan_GamePlayOptions.START_LEVEL_NUMBER, number);
     }
 
-    public int startLevelNumber(GameSession session) {
+    public static int startLevelNumber(GameSession session) {
         requireNonNull(session);
-
         return session.value(TengenMsPacMan_GamePlayOptions.START_LEVEL_NUMBER, Integer.class);
     }
 
-    public void setNumContinues(GameSession session, int numContinues) {
+    public static void setNumContinues(GameSession session, int numContinues) {
         requireNonNull(session);
-
         session.setValue(TengenMsPacMan_GamePlayOptions.NUM_CONTINUES, numContinues);
     }
 
-    public int numContinues(GameSession session) {
+    public static int numContinues(GameSession session) {
         requireNonNull(session);
-
         return session.value(TengenMsPacMan_GamePlayOptions.NUM_CONTINUES, Integer.class);
     }
 
-    public boolean checkGameContinuesOnGameOver(GameSession session) {
+    public static boolean checkGameContinuesOnGameOver(GameSession session) {
         requireNonNull(session);
 
         if (startLevelNumber(session) < 10) {
@@ -169,29 +158,27 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         return false;
     }
 
-    public void setBoosterOn(GameSession session, boolean boosterOn) {
+    public static void setBoosterOn(GameSession session, boolean boosterOn) {
         requireNonNull(session);
-
         session.setValue(TengenMsPacMan_GamePlayOptions.BOOSTER_ON, boosterOn);
     }
 
-    public boolean isBoosterOn(GameSession session) {
+    public static boolean isBoosterOn(GameSession session) {
         requireNonNull(session);
-
         return session.value(TengenMsPacMan_GamePlayOptions.BOOSTER_ON, Boolean.class);
     }
 
-    public boolean canStartNewGame(GameSession session) {
+    public static boolean canStartNewGame(GameSession session) {
         requireNonNull(session);
-
         return session.value(TengenMsPacMan_GamePlayOptions.CAN_START_GAME, Boolean.class);
     }
 
-    public void setCanStartNewGame(GameSession session, boolean canStartNewGame) {
+    public static void setCanStartNewGame(GameSession session, boolean canStartNewGame) {
         requireNonNull(session);
-
         session.setValue(TengenMsPacMan_GamePlayOptions.CAN_START_GAME, canStartNewGame);
     }
+
+    public TengenMsPacMan_GamePlay() {}
 
     // GamePlay interface
 

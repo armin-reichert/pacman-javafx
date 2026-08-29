@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.entities.LevelCounter;
 import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Score;
@@ -60,11 +61,12 @@ public class Arcade_HUD_Renderer
     }
 
     @Override
-    public void drawHUD(GameSession session, GameScene gameScene, long tick) {
+    public void drawHUD(HUD hud, GameSession session, GameScene gameScene, long tick) {
+        requireNonNull(hud);
         requireNonNull(session);
         requireNonNull(gameScene);
 
-        if (!session.hud().isVisible()) {
+        if (!hud.isVisible()) {
             return;
         }
 
@@ -73,27 +75,24 @@ public class Arcade_HUD_Renderer
         }
         final CanvasRenderingComp canvasRendering = gameScene.reqCanvasRendering();
 
-        if (session.hud().gameScore().isVisible()) {
-            drawScores(session);
+        if (hud.gameScore().isVisible()) {
+            drawScores(hud.gameScore(), hud.highScore(), session);
         }
 
-        if (session.hud().levelCounter().isVisible()) {
-            drawLevelCounter(session, canvasRendering);
+        if (hud.levelCounter().isVisible()) {
+            drawLevelCounter(hud.levelCounter(), canvasRendering);
         }
 
-        if (session.hud().livesCounter().isVisible()) {
-            drawLivesCounter(session, canvasRendering);
+        if (hud.livesCounter().isVisible()) {
+            drawLivesCounter(hud.livesCounter(), session, canvasRendering);
         }
 
-        if (session.hud().isCreditVisible()) {
+        if (hud.isCreditVisible()) {
             drawCredit(gameScene.game().coinMechanism(), canvasRendering);
         }
     }
 
-    private void drawScores(GameSession session) {
-        final Score gameScore = session.hud().gameScore();
-        final Score highScore = session.hud().highScore();
-
+    private void drawScores(Score gameScore, Score highScore, GameSession session) {
         drawScore(gameScore, SCORE_TEXT, arcadeFont8(), SCORE_TEXT_COLOR, tilesPx(1), tilesPx(1));
 
         Color color = SCORE_TEXT_COLOR;
@@ -111,8 +110,7 @@ public class Arcade_HUD_Renderer
         }
     }
 
-    private void drawLevelCounter(GameSession session, CanvasRenderingComp canvasRendering) {
-        final LevelCounter levelCounter = session.hud().levelCounter();
+    private void drawLevelCounter(LevelCounter levelCounter, CanvasRenderingComp canvasRendering) {
         final float y = canvasRendering.unscaledHeight() - tilesPx(2) + 2;
         float x = canvasRendering.unscaledWidth() - tilesPx(4);
         for (int symbolCode : levelCounter.data().symbolCodes()) {
@@ -121,8 +119,7 @@ public class Arcade_HUD_Renderer
         }
     }
 
-    private void drawLivesCounter(GameSession session, CanvasRenderingComp canvasRendering) {
-        final LivesCounter livesCounter = session.hud().livesCounter();
+    private void drawLivesCounter(LivesCounter livesCounter, GameSession session, CanvasRenderingComp canvasRendering) {
         final int numLives = session.numLives();
         final int displayedSymbolsCount = Math.min(numLives - 1, livesCounter.data().maxLives());
 
