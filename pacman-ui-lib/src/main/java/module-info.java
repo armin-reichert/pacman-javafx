@@ -32,7 +32,6 @@ open module de.amr.pacmanfx.uilib {
     exports de.amr.pacmanfx.uilib.entities3D.pac.comp;
     exports de.amr.pacmanfx.uilib.entities3D.pac.system;
     exports de.amr.pacmanfx.uilib.entities3D.ghost.anim;
-    exports de.amr.pacmanfx.uilib.entities3D.ghost_old;
     exports de.amr.pacmanfx.uilib.entities3D.bonus.system;
     exports de.amr.pacmanfx.uilib.entities3D.bonus.comp;
     exports de.amr.pacmanfx.uilib.entities3D.factory;
