@@ -40,6 +40,7 @@ public final class Common_EatingGhostState extends AbstractGameState {
 
     @Override
     public void onUpdate(GameContext game) {
+        gamePlay.update(game, level);
         if (timer().hasExpired()) {
             flow.resumePreviousState(game);
         }
