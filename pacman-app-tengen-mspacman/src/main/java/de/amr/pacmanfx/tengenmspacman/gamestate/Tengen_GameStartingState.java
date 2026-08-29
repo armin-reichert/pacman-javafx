@@ -64,11 +64,8 @@ public class Tengen_GameStartingState extends AbstractGameState {
         }
         else if (tick == TICK_START_PLAYING) {
             unfreezeActors(level.entities());
-            // Now, actors start moving and animating
-
             game.coinMechanism().consumeCoin();
             session.setGameRunning(true);
-
             flow.enterGameState(game, CommonGameStateID.GAME_LEVEL_PLAYING);
         }
     }
