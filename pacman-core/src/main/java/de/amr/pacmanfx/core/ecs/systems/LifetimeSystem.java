@@ -1,5 +1,6 @@
 package de.amr.pacmanfx.core.ecs.systems;
 
+import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.LifetimeComp;
 import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 

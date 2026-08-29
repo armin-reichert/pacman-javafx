@@ -13,6 +13,7 @@ import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
+import de.amr.pacmanfx.core.entities.GhostPoints;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -41,6 +42,7 @@ class XXL_ChaseAnimation {
 
     enum ChasingState {GHOSTS_CHASING_PAC, PAC_CHASING_GHOSTS}
 
+    static final int[] GHOST_POINTS = { 200, 400, 800, 1600 };
     private static final float FPS = 60;
     private static final Duration FRAME_TIME = Duration.millis(1000.0 / FPS);
 
@@ -54,6 +56,7 @@ class XXL_ChaseAnimation {
     private float y;
     private Pac pac;
     private List<Ghost> ghosts;
+    private GhostPoints ghostPoints;
     private ActorRenderer actorRenderer;
     private ChasingState state;
 
@@ -193,9 +196,20 @@ class XXL_ChaseAnimation {
                 if (colliding(pac, ghost) && collisions.stream().noneMatch(collision -> collision.ghost() == ghost)) {
                     final var collision = new Collision(ghost, System.currentTimeMillis());
                     collisions.add(collision);
-                    animController.selectAndSetFrame(ghost, CommonSpriteAnimationID.GHOST_POINTS, i);
+                    ghostPoints = new GhostPoints(GHOST_POINTS[i]); //TODO correct value
+                    ghostPoints.pos().set(ghost.pos().asVector2f());
+                    ghostPoints.setLifetime(1);
+                    ghostPoints.show();
+                    ghost.hide();
+                    //animController.selectAndSetFrame(ghost, CommonSpriteAnimationID.GHOST_POINTS, i);
                     break;
                 }
+            }
+        }
+        if (ghostPoints != null) {
+            ghostPoints.lifetime().becomeOlder();
+            if (ghostPoints.lifetime().ends()) {
+                ghostPoints = null;
             }
         }
     }
@@ -239,6 +253,9 @@ class XXL_ChaseAnimation {
             actorRenderer.setImageSmoothing(true);
             ghosts.forEach(actorRenderer::drawActor);
             actorRenderer.drawActor(pac);
+            if (ghostPoints != null) {
+                actorRenderer.drawActor(ghostPoints);
+            }
             ctx.restore();
         }
     }
