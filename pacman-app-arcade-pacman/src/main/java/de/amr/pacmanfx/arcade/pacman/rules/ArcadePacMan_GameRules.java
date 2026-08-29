@@ -231,4 +231,12 @@ public class ArcadePacMan_GameRules implements GameRules {
         int remainingFoodCount = level.food().remainingFoodCount();
         return remainingFoodCount == levelData(level.number()).numDotsLeftElroy2();
     }
+
+    @Override
+    public int numGhostFlashes(int levelNumber) {
+        //TODO This is what Copilot claims, I have no proof that it is correct
+        if (levelNumber <= 8) return 9;
+        if (levelNumber <= 12) return 4;
+        return 0;
+    }
 }

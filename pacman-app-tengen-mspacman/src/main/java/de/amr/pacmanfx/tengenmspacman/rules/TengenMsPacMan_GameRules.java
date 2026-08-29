@@ -202,4 +202,9 @@ public class TengenMsPacMan_GameRules implements GameRules {
     public PacDyingTiming pacDyingTiming() {
         return PAC_DYING_TIMING;
     }
+
+    @Override
+    public int numGhostFlashes(int levelNumber) {
+        return 5; //TODO ask someone how knows it like @RussianManSMC
+    }
 }
