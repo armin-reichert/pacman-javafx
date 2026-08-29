@@ -133,7 +133,24 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     }
 
     private RectShort computeSprite(BonusPoints bonusPoints) {
-        return RectShort.NULL_RECTANGLE; //TODO implement
+        final int index =  switch (bonusPoints.points().number()) {
+            case 100 -> 0;
+            case 200 -> 1;
+            case 500 -> 2;
+            case 700 -> 3;
+            case 1000 -> 4;
+            case 2000 -> 5;
+            case 3000 -> 6;
+            case 4000 -> 7;
+            case 5000 -> 8;
+            case 6000 -> 9;
+            case 7000 -> 10;
+            case 8000 -> 11;
+            case 9000 -> 12;
+            case 10_000 -> 13;
+            default -> throw new IllegalArgumentException("Illegals bonus points number: " + bonusPoints.points().number());
+        };
+        return spriteOrDefault(spriteSheet().findSpriteSequence(SpriteID.BONUS_VALUES), index);
     }
 
     private void drawClapperBoard(Clapperboard clapperboard) {

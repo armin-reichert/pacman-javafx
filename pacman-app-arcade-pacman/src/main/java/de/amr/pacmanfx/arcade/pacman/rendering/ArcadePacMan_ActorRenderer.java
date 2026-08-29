@@ -92,7 +92,7 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
     }
 
     private RectShort computeSprite(BonusPoints bonusPoints) {
-        final int index = switch (bonusPoints.points().value()) {
+        final int index = switch (bonusPoints.points().number()) {
             case 100 -> 0;
             case 300 -> 1;
             case 500 -> 2;
@@ -100,7 +100,7 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
             case 1000 -> 4;
             case 2000 -> 5;
             case 5000 -> 6;
-            default -> throw new IllegalArgumentException("Illegal points value: " + bonusPoints.points());
+            default -> throw new IllegalArgumentException("Illegal bonus points number: " + bonusPoints.points().number());
         };
         return spriteOrDefault(spriteSheet().findSpriteSequence(SpriteID.BONUS_VALUES), index);
     }
