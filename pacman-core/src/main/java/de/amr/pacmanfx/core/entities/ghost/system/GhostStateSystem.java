@@ -31,6 +31,9 @@ public class GhostStateSystem {
 
         ghost.state().setStateTick(game.state().timer().tickCount());
 
+        final boolean pacHasPower = ghost.state().hasPacPower();
+        final boolean alreadyKilled = ghost.state().killChainIndex() != -1;
+
         switch (ghost.state().enumValue()) {
             case LOCKED -> {
                 if (ghost.houseAccess().isUnlockRequested()) {
@@ -39,7 +42,7 @@ public class GhostStateSystem {
                         setState(ghost, GhostState.LEAVING_HOUSE);
                     }
                     else {
-                        setState(ghost, ghost.state().hasPacPower() ? GhostState.FRIGHTENED : GhostState.HUNTING_PAC);
+                        setState(ghost, pacHasPower && !alreadyKilled ? GhostState.FRIGHTENED : GhostState.HUNTING_PAC);
                     }
                     ghost.houseAccess().setUnlockRequested(false);
                 }
@@ -51,7 +54,7 @@ public class GhostStateSystem {
             }
             case LEAVING_HOUSE -> {
                 if (ghost.houseAccess().leftHouse()) {
-                    setState(ghost, ghost.state().hasPacPower() ? GhostState.FRIGHTENED : GhostState.HUNTING_PAC);
+                    setState(ghost, pacHasPower && !alreadyKilled ? GhostState.FRIGHTENED : GhostState.HUNTING_PAC);
                 }
             }
             case RETURNING_HOME -> {
@@ -60,12 +63,12 @@ public class GhostStateSystem {
                 }
             }
             case HUNTING_PAC -> {
-                if (ghost.state().hasPacPower()) {
+                if (pacHasPower && !alreadyKilled) {
                     setState(ghost, GhostState.FRIGHTENED);
                 }
             }
             case FRIGHTENED -> {
-                if (!ghost.state().hasPacPower()) {
+                if (!pacHasPower) {
                     setState(ghost, GhostState.HUNTING_PAC);
                 }
             }

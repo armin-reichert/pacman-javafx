@@ -46,12 +46,13 @@ public class TengenMsPacMan_ScoringRules implements ScoringRules {
     }
 
     @Override
-    public int pointsForGhost(int killedBefore) {
-        return switch (killedBefore) {
-            case 0 -> 200;
-            case 1 -> 400;
-            case 2 -> 800;
-            default -> 1600;
+    public int pointsForGhost(int ghostKillCount) {
+        return switch (ghostKillCount) {
+            case 1 -> 200;
+            case 2 -> 400;
+            case 3 -> 800;
+            case 4 -> 1600;
+            default -> throw new IllegalArgumentException("Ghost kill count: " + ghostKillCount);
         };
     }
 

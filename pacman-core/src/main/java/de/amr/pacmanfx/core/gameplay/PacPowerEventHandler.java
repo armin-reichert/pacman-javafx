@@ -30,7 +30,6 @@ public class PacPowerEventHandler implements DefaultGameEventListener {
         final GameLevel level = game.session().level();
 
         level.huntingTimerStrategy().stop();
-        level.clearGhostKillChain();
 
         level.entities().ghosts().forEach(ghost -> {
             ghost.state().setPacPower(true);
@@ -55,7 +54,6 @@ public class PacPowerEventHandler implements DefaultGameEventListener {
     public void onPacPowerEnds(PacPowerEndsEvent e) {
         final GameLevel level = game.session().level();
 
-        level.clearGhostKillChain();
         level.entities().ghosts().forEach(ghost -> {
             ghost.state().setPacPower(false);
             ghost.state().setPacPowerFading(false);

@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.level.GameLevel;
 
 public interface ScoringRules {
 
-    int pointsForGhost(int killedBefore);
+    int pointsForGhost(int ghostKillCount);
 
     int pointsForPellet();
 

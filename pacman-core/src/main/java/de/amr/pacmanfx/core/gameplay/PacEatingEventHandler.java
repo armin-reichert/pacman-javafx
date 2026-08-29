@@ -82,7 +82,7 @@ public class PacEatingEventHandler implements DefaultGameEventListener {
         systems().ghostState().updateElroyState(game);
 
         // The "kill chain" starts: 200, 400, 800, 1600 points for ghosts eaten with same energizer power
-        level.clearGhostKillChain();
+        level.setGhostKillCount(0);
 
         // Ghosts turn back even if the Pac power time is zero and no event is published!
         level.entities().ghostsInAnyOfStates(GHOST_TURNBACK_STATES).forEach(systems().worldNavigator()::requestTurnBack);

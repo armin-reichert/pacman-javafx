@@ -39,7 +39,7 @@ public interface DefaultGameEventListener extends GameEventListener {
             case PacDeadEvent e                  -> onPacDead(e);
             case PacDyingEvent e                 -> onPacDying(e);
             case PacEatsFoodEvent e              -> onPacEatsFood(e);
-            case PacPowerStartsEvent e             -> onPacPowerStarts(e);
+            case PacPowerStartsEvent e           -> onPacPowerStarts(e);
             case PacPowerEndsEvent e             -> onPacPowerEnds(e);
             case PacPowerStartsFadingEvent e     -> onPacPowerStartsFading(e);
             case SpecialScoreEvent e             -> onSpecialScore(e);

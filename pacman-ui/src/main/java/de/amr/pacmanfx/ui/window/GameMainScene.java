@@ -16,7 +16,6 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import org.tinylog.Logger;
 
 import static de.amr.basics.math.RandomNumbers.randomArrayEntry;
 import static java.util.Objects.requireNonNull;
@@ -46,8 +45,6 @@ public class GameMainScene extends Scene {
 
         keyboardInfoPopup = new KeyboardInfoPopup();
         keyboardInfoPopup.rootPane().setAlignment(Pos.TOP_CENTER);
-
-        rootPane().setOnMouseClicked(e -> Logger.info("Mouse clicked: {}", e));
     }
 
     public StackPane rootPane() {

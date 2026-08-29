@@ -306,10 +306,11 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 
     private void onGhostsKilled(GameLevel3D level3D) {
         final GameSession session = game().session();
-        final GameLevel level = session.level();
         final GameVariantUIConfig uiConfig = app().currentGameVariantUIConfig();
-        session.thisFrame().gamePlayStep().ghostsKilled().forEach(
-            ghost -> level3D.addKilledGhostNumberBox(ghost, uiConfig, level.indexInKillChain(ghost)));
+        session.thisFrame().gamePlayStep().ghostsKilled().forEach(ghost -> {
+            final int index = ghost.state().killChainIndex();
+            level3D.addKilledGhostNumberBox(ghost, uiConfig, index);
+        });
     }
 
     private void onLevelComplete() {

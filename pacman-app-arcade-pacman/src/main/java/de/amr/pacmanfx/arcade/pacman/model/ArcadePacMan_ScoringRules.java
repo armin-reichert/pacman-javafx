@@ -12,11 +12,8 @@ public class ArcadePacMan_ScoringRules implements ScoringRules {
     private static final byte[] GHOST_POINT_FACTORS = { 2, 4, 8, 16 };
 
     @Override
-    public int pointsForGhost(int killedBefore) {
-        if (killedBefore < 0 || killedBefore > GHOST_POINT_FACTORS.length) {
-            throw new IllegalArgumentException("killedBefore index is out of range: " + killedBefore);
-        }
-        return GHOST_POINT_FACTORS[killedBefore] * 100;
+    public int pointsForGhost(int ghostKillCount) {
+        return GHOST_POINT_FACTORS[ghostKillCount - 1] * 100;
     }
 
     @Override

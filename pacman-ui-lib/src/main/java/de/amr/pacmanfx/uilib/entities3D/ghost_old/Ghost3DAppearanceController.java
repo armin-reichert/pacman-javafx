@@ -29,7 +29,7 @@ public class Ghost3DAppearanceController {
         final GhostAppearance appearance = switch (ghost.state().enumValue()) {
             case LOCKED, LEAVING_HOUSE -> {
                 //TODO maybe the (model) ghost should store the "frightened no more" state?
-                final boolean killedDuringCurrentPhase = level.isInGhostKilledChain(ghost);
+                final boolean killedDuringCurrentPhase = ghost.state().killChainIndex() != -1;
                 yield pac.power().isActive() && !killedDuringCurrentPhase
                     ? pac.power().isFading() ? GhostAppearance.FLASHING : GhostAppearance.FRIGHTENED
                     : GhostAppearance.NORMAL;

@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.core.level;
 
 import de.amr.basics.timer.Pulse;
-import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.gameplay.ArcadeHouseGateKeeper;
 import de.amr.pacmanfx.core.model.world.map.FoodState;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -27,13 +26,13 @@ public class GameLevel {
     private final WorldMap worldMap;
     private final GameLevelEntitySet entities;
     private final Pulse heartbeat;
-    private final List<Ghost> ghostKillChain = new ArrayList<>();
     private final List<Integer> bonusSymbolCodes = new ArrayList<>();
 
     private final HuntingTimerStrategy huntingTimerStrategy;
     private final ArcadeHouseGateKeeper gateKeeper;
 
     private byte currentBonusIndex; // -1=no bonus, 0=first, 1=second
+    private int ghostKillCount;
 
     private final FoodState foodState;
 
@@ -48,10 +47,6 @@ public class GameLevel {
         this.currentBonusIndex = -1;
 
         huntingTimerStrategy.reset();
-    }
-
-    public FoodState food() {
-        return foodState;
     }
 
     /**
@@ -75,6 +70,10 @@ public class GameLevel {
         return worldMap;
     }
 
+    public FoodState food() {
+        return foodState;
+    }
+
     /**
      * @return the timer controlling the hunting phases (scattering and chasing).
      */
@@ -86,36 +85,12 @@ public class GameLevel {
         return gateKeeper;
     }
 
-    // Ghost kill chain
-
-    public void clearGhostKillChain() {
-        ghostKillChain.clear();
+    public int ghostKillCount() {
+        return ghostKillCount;
     }
 
-    public void addToGhostKillChain(Ghost ghost) {
-        requireNonNull(ghost);
-        if (ghostKillChain.contains(ghost)) {
-            throw new IllegalArgumentException("Ghost kill chain already contains ghost %s".formatted(ghost.name()));
-        }
-        ghostKillChain.add(ghost);
-    }
-
-    public int ghostKillChainSize() {
-        return ghostKillChain.size();
-    }
-
-    public boolean isInGhostKilledChain(Ghost ghost) {
-        requireNonNull(ghost);
-        return ghostKillChain.contains(ghost);
-    }
-
-    /**
-     * @param ghost a ghost
-     * @return the index (0..3) in the ghost kill chain of an energizer or {@code -1}
-     */
-    public int indexInKillChain(Ghost ghost) {
-        requireNonNull(ghost);
-        return ghostKillChain.indexOf(ghost);
+    public void setGhostKillCount(int ghostKillCount) {
+        this.ghostKillCount = ghostKillCount;
     }
 
     public GameLevelEntitySet entities() {
