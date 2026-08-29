@@ -8,6 +8,7 @@ import de.amr.basics.json.JsonLoader;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.GameEvent;
 import de.amr.pacmanfx.core.event.GenericChangeEvent;
+import de.amr.pacmanfx.core.event.HighScoreAccessErrorEvent;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
 import de.amr.pacmanfx.core.event.gameplay.GameStateChangeEvent;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
@@ -172,6 +173,10 @@ public class GameUI implements GameEventListener {
                 }
             }
             case GenericChangeEvent _ -> forceGameSceneReload = true;
+            case HighScoreAccessErrorEvent failure -> {
+                shortMessage(Duration.seconds(5), "Accessing high score failed!\n%s", failure.reason().getMessage());
+                return;
+            }
             default -> {}
         }
         gameScenes.updateGameSceneAndForceReload(forceGameSceneReload);

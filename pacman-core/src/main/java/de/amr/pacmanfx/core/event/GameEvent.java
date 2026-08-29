@@ -24,6 +24,7 @@ public sealed interface GameEvent permits
     GhostEatenEvent,
     GhostEntersHouseEvent,
     GhostStartsReturningHomeEvent,
+    HighScoreAccessErrorEvent,
     HuntingPhaseStartedEvent,
     IntermissionStartedEvent,
     LevelCreatedEvent,

@@ -1,9 +1,6 @@
 package de.amr.pacmanfx.core.event.base;
 
-import de.amr.pacmanfx.core.event.GameEvent;
-import de.amr.pacmanfx.core.event.GenericChangeEvent;
-import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
-import de.amr.pacmanfx.core.event.TestStartedEvent;
+import de.amr.pacmanfx.core.event.*;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
 import de.amr.pacmanfx.core.event.bonus.BonusEatenEvent;
 import de.amr.pacmanfx.core.event.bonus.BonusExpiredEvent;
@@ -12,6 +9,8 @@ import de.amr.pacmanfx.core.event.ghost.GhostEatenEvent;
 import de.amr.pacmanfx.core.event.ghost.GhostEntersHouseEvent;
 import de.amr.pacmanfx.core.event.ghost.GhostStartsReturningHomeEvent;
 import de.amr.pacmanfx.core.event.pac.*;
+
+import java.io.IOException;
 
 /**
  * Implementors can override {@link #onGameEvent(GameEvent)} or specific methods for targeted reactions.
@@ -32,6 +31,7 @@ public interface DefaultGameEventListener extends GameEventListener {
             case GhostEatenEvent e               -> onGhostEaten(e);
             case GhostEntersHouseEvent e         -> onGhostEntersHouse(e);
             case GhostStartsReturningHomeEvent e -> onGhostStartsReturningHome(e);
+            case HighScoreAccessErrorEvent e     -> onHighScoreAccessError(e);
             case HuntingPhaseStartedEvent e      -> onHuntingPhaseStarted(e);
             case IntermissionStartedEvent e      -> onIntermissionStarted(e);
             case LevelCreatedEvent e             -> onLevelCreated(e);
@@ -61,6 +61,7 @@ public interface DefaultGameEventListener extends GameEventListener {
     default void onGhostEaten(GhostEatenEvent e) {}
     default void onGhostEntersHouse(GhostEntersHouseEvent e) {}
     default void onGhostStartsReturningHome(GhostStartsReturningHomeEvent e) {}
+    default void onHighScoreAccessError(HighScoreAccessErrorEvent e) {}
     default void onHuntingPhaseStarted(HuntingPhaseStartedEvent e) {}
     default void onIntermissionStarted(IntermissionStartedEvent e) {}
     default void onLevelCreated(LevelCreatedEvent e) {}

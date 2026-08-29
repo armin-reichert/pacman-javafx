@@ -14,8 +14,8 @@ import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.pac.comp.PacState;
 import de.amr.pacmanfx.core.entities.pac.system.PacDigestionSystem;
-import de.amr.pacmanfx.core.entities.score.comp.ScorePersistencyComp;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
+import de.amr.pacmanfx.core.event.HighScoreAccessErrorEvent;
 import de.amr.pacmanfx.core.event.bonus.BonusEatenEvent;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
 import de.amr.pacmanfx.core.event.gameplay.SpecialScoreEvent;
@@ -31,7 +31,6 @@ import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.core.rules.ScoringRules;
 import org.tinylog.Logger;
 
-import java.io.File;
 import java.io.IOException;
 
 import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
@@ -201,17 +200,16 @@ public abstract class CommonGamePlay implements GamePlay {
 
     // private
 
-    protected void initScores(GameSession session) {
-        final Score gameScore = session.hud().gameScore();
-        final Score highScore = session.hud().highScore();
+    protected void initScores(GameContext game) {
+        final Score gameScore = game.session().hud().gameScore();
+        final Score highScore = game.session().hud().highScore();
 
         gameScore.reset();
-        final File highScoreFile = highScore.reqComp(ScorePersistencyComp.class).file();
         try {
             ScoreSystem.load(highScore);
             ScoreSystem.enableScore(highScore, true);
-        } catch (IOException x) {
-            Logger.error(x, "Error loading high-score file {}", highScoreFile.getAbsolutePath());
+        } catch (IOException e) {
+            game.eventManager().publishGameEvent(new HighScoreAccessErrorEvent(e));
         }
     }
 

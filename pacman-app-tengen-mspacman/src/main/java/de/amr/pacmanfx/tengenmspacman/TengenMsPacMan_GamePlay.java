@@ -204,7 +204,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         session.setCutScenesEnabled(true);
         session.setLevel(null);
         session.setGameRunning(false);
-        initScores(session);
+        initScores(game);
         configureLevelCounter(game, session.hud().levelCounter());
 
         game.variant().gameFlow().restartGameState(game, CommonGameStateID.BOOT);

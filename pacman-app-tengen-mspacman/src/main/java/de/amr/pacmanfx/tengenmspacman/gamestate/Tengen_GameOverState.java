@@ -10,6 +10,7 @@ import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
+import de.amr.pacmanfx.core.event.HighScoreAccessErrorEvent;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -47,8 +48,7 @@ public class Tengen_GameOverState extends AbstractGameState {
         try {
             ScoreSystem.saveHighScoreIfNeeded(hud.highScore());
         } catch (IOException e) {
-            //TODO improve error handling
-            throw new RuntimeException(e);
+            game.eventManager().publishGameEvent(new HighScoreAccessErrorEvent(e));
         }
 
         gamePlay.showMessage(game, MessageType.GAME_OVER);

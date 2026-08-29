@@ -75,18 +75,11 @@ public class ScoreSystem {
         }
 
         final ScoreDataComp data = score.data();
-        try {
-            data.setPoints(Integer.parseInt(properties.getProperty(ScorePersistencyComp.ATTR_POINTS)));
-            data.setLevelNumber(Integer.parseInt(properties.getProperty(ScorePersistencyComp.ATTR_LEVEL)));
-            data.setDate(LocalDate.parse(
-                properties.getProperty(ScorePersistencyComp.ATTR_DATE), DateTimeFormatter.ISO_LOCAL_DATE));
-        }
-        catch (Exception e) {
-            throw new IOException("High score file is corrupted: " + persistency.file(), e);
-        }
+        data.setPoints(Integer.parseInt(properties.getProperty(ScorePersistencyComp.ATTR_POINTS)));
+        data.setLevelNumber(Integer.parseInt(properties.getProperty(ScorePersistencyComp.ATTR_LEVEL)));
+        data.setDate(LocalDate.parse(properties.getProperty(ScorePersistencyComp.ATTR_DATE), DateTimeFormatter.ISO_LOCAL_DATE));
 
-        Logger.info("Score loaded from file '{}': points={}, level={}",
-            persistency.file(), data.points(), data.levelNumber());
+        Logger.info("Score loaded from file '{}': points={}, level={}", persistency.file(), data.points(), data.levelNumber());
     }
 
     /**
