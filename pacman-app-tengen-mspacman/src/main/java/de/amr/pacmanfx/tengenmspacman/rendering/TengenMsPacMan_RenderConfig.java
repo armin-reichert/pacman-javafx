@@ -99,37 +99,37 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public GameScene2D_Renderer createGameSceneRenderer(GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas) {
+    public GameScene2D_Renderer createGameSceneRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
         final CanvasRenderingComp r2D = gameScene.components().reqComp(CanvasRenderingComp.class);
         final GameScene2D_Renderer renderer = switch (gameScene) {
-            case TengenMsPacMan_BootScene    ignored -> new TengenMsPacMan_BootScene_Renderer(this, gameScene, animSystem, canvas);
-            case TengenMsPacMan_IntroScene   ignored -> new TengenMsPacMan_IntroScene_Renderer(this, gameScene, animSystem, canvas);
+            case TengenMsPacMan_BootScene    ignored -> new TengenMsPacMan_BootScene_Renderer(this, gameScene, animController, canvas);
+            case TengenMsPacMan_IntroScene   ignored -> new TengenMsPacMan_IntroScene_Renderer(this, gameScene, animController, canvas);
             case TengenMsPacMan_OptionsScene ignored -> new TengenMsPacMan_OptionsScene_Renderer(gameScene, canvas);
-            case TengenMsPacMan_PlayScene2D  ignored -> new TengenMsPacMan_PlayScene2D_Renderer(this, gameScene, animSystem, canvas);
+            case TengenMsPacMan_PlayScene2D  ignored -> new TengenMsPacMan_PlayScene2D_Renderer(this, gameScene, animController, canvas);
             case TengenMsPacMan_CreditsScene ignored -> new TengenMsPacMan_CreditsScene_Renderer(gameScene, canvas);
-            case TengenMsPacMan_CutScene1    ignored -> new TengenMsPacMan_CutScene1_Renderer(this, gameScene, animSystem, canvas);
-            case TengenMsPacMan_CutScene2    ignored -> new TengenMsPacMan_CutScene2_Renderer(this, gameScene, animSystem, canvas);
-            case TengenMsPacMan_CutScene3    ignored -> new TengenMsPacMan_CutScene3_Renderer(this, gameScene, animSystem, canvas);
-            case TengenMsPacMan_CutScene4    ignored -> new TengenMsPacMan_CutScene4_Renderer(this, gameScene, animSystem, canvas);
+            case TengenMsPacMan_CutScene1    ignored -> new TengenMsPacMan_CutScene1_Renderer(this, gameScene, animController, canvas);
+            case TengenMsPacMan_CutScene2    ignored -> new TengenMsPacMan_CutScene2_Renderer(this, gameScene, animController, canvas);
+            case TengenMsPacMan_CutScene3    ignored -> new TengenMsPacMan_CutScene3_Renderer(this, gameScene, animController, canvas);
+            case TengenMsPacMan_CutScene4    ignored -> new TengenMsPacMan_CutScene4_Renderer(this, gameScene, animController, canvas);
             default -> throw new IllegalStateException("Unexpected value: " + gameScene);
         };
         return r2D.configureRenderer(renderer);
     }
 
     @Override
-    public TengenMsPacMan_GameLevelRenderer createGameLevelRenderer(ActorSpriteAnimController animSystem, Canvas canvas) {
+    public TengenMsPacMan_GameLevelRenderer createGameLevelRenderer(ActorSpriteAnimController animController, Canvas canvas) {
         return new TengenMsPacMan_GameLevelRenderer(assets, canvas);
     }
 
     @Override
-    public TengenMsPacMan_HUD_Renderer createHUDRenderer(GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas) {
+    public TengenMsPacMan_HUD_Renderer createHUDRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
         final CanvasRenderingComp r2D = gameScene.components().reqComp(CanvasRenderingComp.class);
         return r2D.configureRenderer(new TengenMsPacMan_HUD_Renderer(canvas));
     }
 
     @Override
-    public TengenMsPacMan_ActorRenderer createActorRenderer(ActorSpriteAnimController animSystem, Canvas canvas) {
-        return new TengenMsPacMan_ActorRenderer(this, animSystem, canvas);
+    public TengenMsPacMan_ActorRenderer createActorRenderer(ActorSpriteAnimController animController, Canvas canvas) {
+        return new TengenMsPacMan_ActorRenderer(animController, canvas);
     }
 
     @Override

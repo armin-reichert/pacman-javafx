@@ -21,16 +21,20 @@ import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 
+import java.util.Arrays;
+
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements SpriteRenderer, ActorRenderer {
 
-    private final TengenMsPacMan_RenderConfig renderConfig;
+    // These arrays must be sorted!
+    private static final int[] GHOST_POINTS = { 200, 400, 800, 1600 };
+    private static final int[] BONUS_POINTS = { 100, 200, 500, 700, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000 };
+
     private final ActorSpriteAnimController animSystem;
 
-    public TengenMsPacMan_ActorRenderer(TengenMsPacMan_RenderConfig renderConfig, ActorSpriteAnimController animSystem, Canvas canvas) {
+    public TengenMsPacMan_ActorRenderer(ActorSpriteAnimController animSystem, Canvas canvas) {
         super(canvas);
-        this.renderConfig = requireNonNull(renderConfig);
         this.animSystem = requireNonNull(animSystem);
     }
 
@@ -71,22 +75,14 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     }
 
     private RectShort computeSprite(GhostPoints ghostPoints) {
-        final int index = switch (ghostPoints.points().number()) {
-            case 200 -> 0;
-            case 400 -> 1;
-            case 800 -> 2;
-            case 1600 -> 3;
-            default -> throw new IllegalArgumentException("Illegal ghost points value: " + ghostPoints.points().number());
-        };
-        return spriteOrDefault(spriteSheet().findSpriteSequence(SpriteID.GHOST_NUMBERS), index);
+        final int index = Arrays.binarySearch(GHOST_POINTS, ghostPoints.points().number());
+        return index >= 0 ? spriteSheet().findSpriteSequence(SpriteID.GHOST_NUMBERS)[index] : RectShort.NULL_RECTANGLE;
     }
 
     private FacingSprite computeSprite(Pac pac) {
         final int frame = animSystem.currentFrame(pac);
         final Direction dir = pac.worldNavigation().moveDir();
         return switch (animSystem.selectedAnimationID(pac)) {
-
-//            case null -> throw new IllegalStateException("Could not determine Pac-sprite, no animation selected");
             case null -> facingSprite(SpriteID.MS_PAC_MUNCHING, frame, dir);
 
             case CommonSpriteAnimationID.PAC_DYING    -> computePacDyingSprite(pac);
@@ -130,24 +126,8 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     }
 
     private RectShort computeSprite(BonusPoints bonusPoints) {
-        final int index =  switch (bonusPoints.points().number()) {
-            case 100 -> 0;
-            case 200 -> 1;
-            case 500 -> 2;
-            case 700 -> 3;
-            case 1000 -> 4;
-            case 2000 -> 5;
-            case 3000 -> 6;
-            case 4000 -> 7;
-            case 5000 -> 8;
-            case 6000 -> 9;
-            case 7000 -> 10;
-            case 8000 -> 11;
-            case 9000 -> 12;
-            case 10_000 -> 13;
-            default -> throw new IllegalArgumentException("Illegals bonus points number: " + bonusPoints.points().number());
-        };
-        return spriteOrDefault(spriteSheet().findSpriteSequence(SpriteID.BONUS_VALUES), index);
+        final int index = Arrays.binarySearch(BONUS_POINTS, bonusPoints.points().number());
+        return index >= 0 ? spriteSheet().findSpriteSequence(SpriteID.BONUS_VALUES)[index] : RectShort.NULL_RECTANGLE;
     }
 
     private void drawClapperBoard(Clapperboard clapperboard) {
