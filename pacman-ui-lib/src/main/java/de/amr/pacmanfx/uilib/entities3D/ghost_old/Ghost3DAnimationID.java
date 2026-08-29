@@ -13,8 +13,8 @@ import static java.util.Objects.requireNonNull;
 public enum Ghost3DAnimationID implements Named {
     BRAKING, DRESS, FLASHING;
 
-    public Ghost3DWrapperToBeRemoved.AnimationKey key(Ghost ghost) {
+    public Ghost3DAnimationKey key(Ghost ghost) {
         requireNonNull(ghost);
-        return new Ghost3DWrapperToBeRemoved.AnimationKey(this, ghost.personality());
+        return new Ghost3DAnimationKey(this, ghost.personality());
     }
 }
