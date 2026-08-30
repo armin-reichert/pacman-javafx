@@ -115,9 +115,13 @@ public class GameSystems {
     protected void createBonusSystems() {
         bonusWorldMovementPolicy = new BonusWorldMovementPolicy();
 
-        bonusUpdateSystem = new BonusUpdateSystem();
-        bonusMoveAndJumpSystem = new BonusMoveAndJumpSystem(navigator, bonusWorldMovementPolicy);
         bonusStateSystem = new BonusStateSystem();
+        bonusMoveAndJumpSystem = new BonusMoveAndJumpSystem(navigator, bonusWorldMovementPolicy);
+        bonusUpdateSystem = new BonusUpdateSystem(
+            bonusStateSystem,
+            bonusMoveAndJumpSystem,
+            motor
+        );
     }
 
     protected void createHUDSystems() {
