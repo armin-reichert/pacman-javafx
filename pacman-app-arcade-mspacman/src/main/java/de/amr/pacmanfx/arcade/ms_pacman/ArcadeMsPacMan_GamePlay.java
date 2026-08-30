@@ -19,7 +19,6 @@ import de.amr.pacmanfx.core.entities.bonus.comp.BonusState;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.levelCounter.comp.LevelCounterBehavior;
 import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
-import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelEntitySet;
@@ -144,18 +143,11 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         final Pac pac = level.entities().pac();
         pac.cheats().setImmune(false);
         pac.cheats().setUsingAutopilot(true);
+        pac.autoSteering().setSteering(
+            new RuleGuidedPacSteering(systems.worldNavigator(), systems.pacWorldMovementPolicy()));
 
-        final var steering = new RuleGuidedPacSteering(
-            systems.worldNavigator(),
-            systems.pacWorldMovementPolicy()
-        );
-        pac.autoSteering().setSteering(steering);
-
-        ScoreSystem.setLevelNumber(session.hud().gameScore(), 1);
-
-        final LevelCounterSystem levelCounterSystem = game.variant().systems().levelCounterSystem();
-        final LevelCounter levelCounter = session.hud().levelCounter();
-        levelCounterSystem.enableCounter(levelCounter, true);
+        systems.scoreSystem().setLevelNumber(session.hud().gameScore(), 1);
+        systems.levelCounterSystem().enableCounter(session.hud().levelCounter(), true);
 
         return level;
     }

@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.tengenmspacman.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.event.gameplay.GameStartedEvent;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
@@ -38,7 +37,7 @@ public class Tengen_GameStartingState extends AbstractGameState {
         hud.highScore().show();
         hud.show();
 
-        ScoreSystem.enableScore(hud.highScore(), true);
+        systems.scoreSystem().enableScore(hud.highScore(), true);
 
         game.eventManager().publishGameEvent(new GameStartedEvent(game));
     }

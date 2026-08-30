@@ -80,10 +80,10 @@ public abstract class CommonGamePlay implements GamePlay {
         final GameSession session = game.session();
 
         final GameLevel level = createLevel(game, levelNumber);
+        game.variant().systems().scoreSystem().setLevelNumber(session.hud().gameScore(), levelNumber);
 
         session.setLevel(level);
         session.setAttractMode(false);
-        ScoreSystem.setLevelNumber(session.hud().gameScore(), levelNumber);
 
         return level;
     }
@@ -185,29 +185,32 @@ public abstract class CommonGamePlay implements GamePlay {
         requireValidLevelNumber(levelNumber);
 
         final GameSession session = game.session();
+
+        final ScoreSystem scoreSystem = game.variant().systems().scoreSystem();
         final Score gameScore = session.hud().gameScore();
         final Score highScore = session.hud().highScore();
 
-        ScoreSystem.scorePoints(gameScore, highScore, points, levelNumber, game.variant().rules().scoringRules());
+        scoreSystem.scorePoints(gameScore, highScore, points, levelNumber, game.variant().rules().scoringRules());
 
-        if (gameScore.data().extraLifeReached()) {
+        if (scoreSystem.extraLifeReached(gameScore)) {
+            // Do not forget to clear the flag!
+            scoreSystem.clearExtraLife(gameScore);
             session.setNumLives(session.numLives() + 1);
             game.eventManager().publishGameEvent(new SpecialScoreEvent(gameScore.data().points()));
-            // Do not forget to clear the flag!
-            gameScore.data().setExtraLifeReached(false);
         }
     }
 
     // private
 
     protected void initScores(GameContext game) {
+        final ScoreSystem scoreSystem = game.variant().systems().scoreSystem();
         final Score gameScore = game.session().hud().gameScore();
         final Score highScore = game.session().hud().highScore();
 
         gameScore.reset();
         try {
-            ScoreSystem.load(highScore);
-            ScoreSystem.enableScore(highScore, true);
+            scoreSystem.load(highScore);
+            scoreSystem.enableScore(highScore, true);
         } catch (IOException e) {
             game.eventManager().publishGameEvent(new HighScoreAccessErrorEvent(e));
         }

@@ -46,8 +46,7 @@ public class Tengen_LevelIntermissionState extends AbstractGameState {
 
     @Override
     public void onExit(GameContext game) {
-        final TengenMsPacMan_GamePlay tengenGamePlay = (TengenMsPacMan_GamePlay) gamePlay;
-        if (tengenGamePlay.mapCategory(session) == MapCategory.ARCADE) {
+        if (TengenMsPacMan_GamePlay.mapCategory(session) == MapCategory.ARCADE) {
             hud.hide();
         } else {
             hud.setTengenGameOptionsVisible(true);

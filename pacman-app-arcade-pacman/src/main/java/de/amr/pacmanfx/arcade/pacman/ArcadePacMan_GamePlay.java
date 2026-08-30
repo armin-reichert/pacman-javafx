@@ -15,7 +15,6 @@ import de.amr.pacmanfx.core.entities.ghost.comp.ElroyComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.levelCounter.comp.LevelCounterBehavior;
 import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
-import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
 import de.amr.pacmanfx.core.event.gameplay.LevelStartedEvent;
 import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
@@ -200,6 +199,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     public GameLevel buildDemoLevel(GameContext game) {
         requireNonNull(game);
 
+        final GameSystems systems = game.variant().systems();
         final GameSession session = game.session();
 
         final GameLevel level = createLevel(game, 1);
@@ -210,15 +210,15 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
         // Overwrite autosteering for demo level by fixed route steering
         pac.autoSteering().setSteering(new RouteGuidedSteering<>(
-            game.variant().systems().worldNavigator(),
-            game.variant().systems().pacWorldMovementPolicy(),
+            systems.worldNavigator(),
+            systems.pacWorldMovementPolicy(),
             DEMO_LEVEL_ROUTE
         ));
 
+        systems.scoreSystem().setLevelNumber(session.hud().gameScore(), level.number());
+
         session.setLevel(level);
         session.setAttractMode(true);
-
-        ScoreSystem.setLevelNumber(session.hud().gameScore(), 1);
 
         return level;
     }

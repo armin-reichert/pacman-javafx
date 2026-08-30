@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.arcade.pacman.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.event.HighScoreAccessErrorEvent;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
@@ -22,7 +21,7 @@ public class Arcade_GameOverState extends AbstractGameState {
     @Override
     public void onEnterState(GameContext game) {
         try {
-            ScoreSystem.saveHighScoreIfNeeded(hud.highScore());
+            systems.scoreSystem().saveHighScoreIfNeeded(hud.highScore());
         } catch (IOException e) {
             game.eventManager().publishGameEvent(new HighScoreAccessErrorEvent(e));
         }

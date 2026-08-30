@@ -19,7 +19,6 @@ import de.amr.pacmanfx.core.entities.bonus.comp.BonusState;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.levelCounter.comp.LevelCounterBehavior;
 import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
-import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
 import de.amr.pacmanfx.core.event.gameplay.LevelStartedEvent;
@@ -312,19 +311,15 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         session.setGameOverStateTicks(120);
 
         final Pac pac = demoLevel.entities().pac();
+        // There are maps that cannot be handled with Arcade-steering logic
+        pac.autoSteering().setSteering(new RuleGuidedPacSteering(systems.worldNavigator(), systems.pacWorldMovementPolicy()));
         pac.cheats().setImmune(false);
         pac.cheats().setUsingAutopilot(true);
 
-        final var steering = new RuleGuidedPacSteering(
-            systems.worldNavigator(),
-            systems.pacWorldMovementPolicy()
-        );
-        pac.autoSteering().setSteering(steering);
+        systems.scoreSystem().setLevelNumber(session.hud().gameScore(), 1);
 
         session.setLevel(demoLevel);
         session.setAttractMode(true);
-
-        ScoreSystem.setLevelNumber(session.hud().gameScore(), 1);
 
         return demoLevel;
     }

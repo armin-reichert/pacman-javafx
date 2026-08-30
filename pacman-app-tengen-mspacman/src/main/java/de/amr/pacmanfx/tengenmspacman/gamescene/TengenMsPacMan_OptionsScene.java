@@ -1,11 +1,14 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.tengenmspacman.gamescene;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
+import de.amr.pacmanfx.core.event.HighScoreAccessErrorEvent;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
@@ -21,7 +24,6 @@ import de.amr.pacmanfx.ui.input.JoypadButton;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.input.KeyCode;
-import org.tinylog.Logger;
 
 import java.io.IOException;
 
@@ -73,7 +75,6 @@ public class TengenMsPacMan_OptionsScene extends GameScene {
 
     @Override
     public void onActivate() {
-        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().variant().gamePlay();
         final GameSession session = game().session();
         session.hud().hide();
 
@@ -87,7 +88,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene {
         bindingsMap.registerAllBindings(app().commonActions().sceneTestActions().bindings());
 
         selectedOption.set(OPTION_PAC_BOOSTER);
-        gamePlay.setCanStartNewGame(session, true);
+        TengenMsPacMan_GamePlay.setCanStartNewGame(session, true);
 
         idleTicks = 0;
         initialDelay = INITIAL_DELAY;
@@ -149,103 +150,90 @@ public class TengenMsPacMan_OptionsScene extends GameScene {
     }
 
     private void setPrevStartLevelValue() {
-        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().variant().gamePlay();
         final GameSession session = game().session();
 
-        int current = gamePlay.startLevelNumber(session);
+        int current = TengenMsPacMan_GamePlay.startLevelNumber(session);
         int prev = (current == MIN_START_LEVEL) ? MAX_START_LEVEL : current - 1;
-        gamePlay.setStartLevelNumber(session, prev);
+        TengenMsPacMan_GamePlay.setStartLevelNumber(session, prev);
 
         optionValueChanged();
     }
 
     private void setNextStartLevelValue() {
-        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().variant().gamePlay();
         final GameSession session = game().session();
 
-        int current = gamePlay.startLevelNumber(session);
+        int current = TengenMsPacMan_GamePlay.startLevelNumber(session);
         int next = (current < MAX_START_LEVEL) ? current + 1 : MIN_START_LEVEL;
-        gamePlay.setStartLevelNumber(session, next);
+        TengenMsPacMan_GamePlay.setStartLevelNumber(session, next);
 
         optionValueChanged();
     }
 
     private void setPrevMapCategoryValue(GameSession session) {
-        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().variant().gamePlay();
-
-        final MapCategory category = gamePlay.mapCategory(session);
+        final MapCategory category = TengenMsPacMan_GamePlay.mapCategory(session);
         final var values = MapCategory.values();
         final int current = category.ordinal(), prev = (current == 0) ? values.length - 1 :  current - 1;
-        gamePlay.setMapCategory(session, values[prev]);
+        TengenMsPacMan_GamePlay.setMapCategory(session, values[prev]);
 
-        saveHighScore(session);
+        saveHighScore();
         optionValueChanged();
     }
 
     private void setNextMapCategoryValue(GameSession session) {
-        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().variant().gamePlay();
-
-        final MapCategory category = gamePlay.mapCategory(session);
+        final MapCategory category = TengenMsPacMan_GamePlay.mapCategory(session);
         var values = MapCategory.values();
         int current = category.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
-        gamePlay.setMapCategory(session, values[next]);
+        TengenMsPacMan_GamePlay.setMapCategory(session, values[next]);
 
-        saveHighScore(session);
+        saveHighScore();
         optionValueChanged();
     }
 
     private void setPrevDifficultyValue(GameSession session) {
-        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().variant().gamePlay();
-
-        final Difficulty difficulty = gamePlay.difficulty(session);
+        final Difficulty difficulty = TengenMsPacMan_GamePlay.difficulty(session);
         final var values = Difficulty.values();
         final int current = difficulty.ordinal(), prev = (current == 0) ? values.length - 1 : current - 1;
-        gamePlay.setDifficulty(game(), values[prev]);
+        TengenMsPacMan_GamePlay.setDifficulty(game(), values[prev]);
 
-        saveHighScore(session);
+        saveHighScore();
         optionValueChanged();
     }
 
     private void setNextDifficultyValue(GameSession session) {
-        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().variant().gamePlay();
-
-        final Difficulty difficulty = gamePlay.difficulty(session);
+        final Difficulty difficulty = TengenMsPacMan_GamePlay.difficulty(session);
         final var values = Difficulty.values();
         final int current = difficulty.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
-        gamePlay.setDifficulty(game(), values[next]);
+        TengenMsPacMan_GamePlay.setDifficulty(game(), values[next]);
 
-        saveHighScore(session);
+        saveHighScore();
         optionValueChanged();
     }
 
     private void setPrevPacBoosterValue(GameSession session) {
-        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().variant().gamePlay();
-
-        final BoosterMode boosterMode = gamePlay.boosterMode(session);
+        final BoosterMode boosterMode = TengenMsPacMan_GamePlay.boosterMode(session);
         final var values = BoosterMode.values();
         final int current = boosterMode.ordinal(), prev = (current == 0) ? values.length - 1 : current - 1;
-        gamePlay.setBoosterMode(session, values[prev]);
+        TengenMsPacMan_GamePlay.setBoosterMode(session, values[prev]);
 
         optionValueChanged();
     }
 
     private void setNextPacBoosterValue(GameSession session) {
-        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game().variant().gamePlay();
-
-        final BoosterMode boosterMode = gamePlay.boosterMode(session);
+        final BoosterMode boosterMode = TengenMsPacMan_GamePlay.boosterMode(session);
         final var values = BoosterMode.values();
         final int current = boosterMode.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
-        gamePlay.setBoosterMode(session, values[next]);
+        TengenMsPacMan_GamePlay.setBoosterMode(session, values[next]);
 
         optionValueChanged();
     }
 
-    private void saveHighScore(GameSession session) {
+    private void saveHighScore() {
+        final ScoreSystem scoreSystem = game().variant().systems().scoreSystem();
+        final Score highScore = game().session().hud().highScore();
         try {
-            ScoreSystem.save(session.hud().highScore());
+            scoreSystem.save(highScore);
         } catch (IOException x) {
-            Logger.error(x, "Could not save Tengen Ms. Pac-Man high score");
-            //TODO Show message in UI
+            game().eventManager().publishGameEvent(new HighScoreAccessErrorEvent(x));
         }
     }
 }

@@ -9,10 +9,7 @@ import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_WorldMapManager;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;
-import de.amr.pacmanfx.core.entities.LevelCounter;
 import de.amr.pacmanfx.core.entities.Pac;
-import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
-import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
@@ -30,32 +27,24 @@ public class XXL_MsPacMan_GamePlay extends ArcadeMsPacMan_GamePlay {
 
         final GameSession session = game.session();
         final GameSystems systems = game.variant().systems();
-        final XXL_WorldMapManager worldMapManager = (XXL_WorldMapManager) game.variant().worldMapManager();
 
-        worldMapManager.setSelectionMode(WorldMapSelectionMode.NO_CUSTOM_MAPS);
+        final XXL_WorldMapManager mapManager = (XXL_WorldMapManager) game.variant().worldMapManager();
+        mapManager.setSelectionMode(WorldMapSelectionMode.NO_CUSTOM_MAPS);
 
         // Select random (standard) level with different map and map color scheme for each choice
         final int levelNumber = DEMO_LEVEL_NUMBERS[randomInt(0, DEMO_LEVEL_NUMBERS.length)];
         final GameLevel level = createLevel(game, levelNumber);
 
         final Pac pac = level.entities().pac();
+        pac.autoSteering().setSteering(new RuleGuidedPacSteering(systems.worldNavigator(), systems.pacWorldMovementPolicy()));
         pac.cheats().setImmune(false);
         pac.cheats().setUsingAutopilot(true);
-
-        final var steering = new RuleGuidedPacSteering(
-            systems.worldNavigator(),
-            systems.pacWorldMovementPolicy()
-        );
-        pac.autoSteering().setSteering(steering);
 
         session.setLevel(level);
         session.setAttractMode(true);
 
-        ScoreSystem.setLevelNumber(session.hud().gameScore(), levelNumber);
-
-        final LevelCounterSystem levelCounterSystem = game.variant().systems().levelCounterSystem();
-        final LevelCounter levelCounter = session.hud().levelCounter();
-        levelCounterSystem.enableCounter(levelCounter, false);
+        systems.scoreSystem().setLevelNumber(session.hud().gameScore(), levelNumber);
+        systems.levelCounterSystem().enableCounter(session.hud().levelCounter(), false);
 
         return level;
     }

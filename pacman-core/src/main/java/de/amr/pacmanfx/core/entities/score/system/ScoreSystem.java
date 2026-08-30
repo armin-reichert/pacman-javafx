@@ -33,7 +33,16 @@ public class ScoreSystem {
         return new File(GameConstants.USER_HOME_DIR, fileName);
     }
 
-    public static void scorePoints(Score score, Score highScore, int points, int levelNumber, ScoringRules rules) {
+    public static Score createHighScore(File file) {
+        requireNonNull(file);
+        final Score score = new Score(Score.Type.HIGH_SCORE);
+        final var persistency = new ScorePersistencyComp();
+        score.setComp(ScorePersistencyComp.class, persistency);
+        persistency.setFile(file);
+        return score;
+    }
+
+    public void scorePoints(Score score, Score highScore, int points, int levelNumber, ScoringRules rules) {
         if (!score.data().isEnabled()) {
             return;
         }
@@ -50,19 +59,27 @@ public class ScoreSystem {
         }
     }
 
-    private static void setPoints(Score score, int points) {
+    private void setPoints(Score score, int points) {
         score.data().setPoints(points);
     }
 
-    public static void setLevelNumber(Score score, int levelNumber) {
+    public void setLevelNumber(Score score, int levelNumber) {
         score.data().setLevelNumber(levelNumber);
     }
 
-    public static void setDate(Score score, LocalDate date) {
+    public void setDate(Score score, LocalDate date) {
         score.data().setDate(date);
     }
 
-    public static void load(Score score) throws IOException {
+    public boolean extraLifeReached(Score score) {
+        return score.data().extraLifeReached();
+    }
+
+    public void clearExtraLife(Score score) {
+        score.data().setExtraLifeReached(false);
+    }
+
+    public void load(Score score) throws IOException {
         final ScorePersistencyComp persistency = score.reqComp(ScorePersistencyComp.class);
 
         if (!persistency.file().exists()) {
@@ -97,7 +114,7 @@ public class ScoreSystem {
      *
      * @throws IOException if saving fails
      */
-    public static void save(Score score) throws IOException {
+    public void save(Score score) throws IOException {
         final ScoreDataComp data = score.data();
         final ScorePersistencyComp persistency = score.reqComp(ScorePersistencyComp.class);
 
@@ -131,20 +148,11 @@ public class ScoreSystem {
             persistency.file(), data.points(), data.levelNumber());
     }
 
-    public static void enableScore(Score score, boolean enabled) {
+    public void enableScore(Score score, boolean enabled) {
         score.data().setEnabled(enabled);
     }
 
-    public static Score createHighScore(File file) {
-        Objects.requireNonNull(file);
-        final Score score = new Score(Score.Type.HIGH_SCORE);
-        final ScorePersistencyComp persistency = new ScorePersistencyComp();
-        score.setComp(ScorePersistencyComp.class, persistency);
-        persistency.setFile(file);
-        return score;
-    }
-
-    public static void saveHighScoreIfNeeded(Score currentHighScore) throws IOException {
+    public void saveHighScoreIfNeeded(Score currentHighScore) throws IOException {
         final File file = currentHighScore.requirePersistency().file();
         final Score savedHighScore = createHighScore(file);
         load(savedHighScore);
