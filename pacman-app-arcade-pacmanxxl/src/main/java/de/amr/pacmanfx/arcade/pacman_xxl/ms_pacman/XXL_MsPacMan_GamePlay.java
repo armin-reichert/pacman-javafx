@@ -43,7 +43,7 @@ public class XXL_MsPacMan_GamePlay extends ArcadeMsPacMan_GamePlay {
         session.setLevel(level);
         session.setAttractMode(true);
 
-        systems.scoreSystem().setLevelNumber(session.hud().gameScore(), levelNumber);
+        session.hud().gameScore().data().setLevelNumber( levelNumber);
         session.hud().levelCounter().data().setEnabled(false);
 
         return level;

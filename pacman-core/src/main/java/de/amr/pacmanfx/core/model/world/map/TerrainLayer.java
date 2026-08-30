@@ -78,13 +78,13 @@ public final class TerrainLayer extends WorldMapLayer {
     public boolean isRealIntersectionTile(Vector2i tile, Predicate<Vector2i> inaccessibleCondition) {
         requireNonNull(tile);
 
-        if (outOfBounds(tile) || isInaccessibleTerrainTile(tile) || inaccessibleCondition.test(tile)) {
+        if (outOfBounds(tile) || isInaccessibleTile(tile) || inaccessibleCondition.test(tile)) {
             return false;
         }
 
         long inaccessibleNeighbors = 0;
         inaccessibleNeighbors += neighborTilesOutsideWorld(tile).count();
-        inaccessibleNeighbors += neighborTilesInsideWorld(tile).filter(this::isInaccessibleTerrainTile).count();
+        inaccessibleNeighbors += neighborTilesInsideWorld(tile).filter(this::isInaccessibleTile).count();
         inaccessibleNeighbors += neighborTilesInsideWorld(tile).filter(inaccessibleCondition).count();
         return inaccessibleNeighbors <= 1; // 3 or 4 accessible neighbors
     }
@@ -152,7 +152,7 @@ public final class TerrainLayer extends WorldMapLayer {
         return horizontalPortals().stream().anyMatch(portal -> portal.contains(tile));
     }
 
-    public boolean isInaccessibleTerrainTile(Vector2i tile) {
+    public boolean isInaccessibleTile(Vector2i tile) {
         return !outOfBounds(tile) && isBlocked(content(tile));
     }
 

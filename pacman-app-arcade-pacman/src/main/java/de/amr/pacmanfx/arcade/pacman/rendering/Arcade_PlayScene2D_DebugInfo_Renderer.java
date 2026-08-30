@@ -71,7 +71,7 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
                     final double cx = tile.x() * WorldMap.TS + WorldMap.HTS;
                     final double cy = tile.y() * WorldMap.TS + WorldMap.HTS;
                     for (Direction dir : CLOCK_ORDER) {
-                        if (!terrain.isInaccessibleTerrainTile(tile.plus(dir.vector()))) {
+                        if (!terrain.isInaccessibleTile(tile.plus(dir.vector()))) {
                             final double x = cx + dir.vector().x() * WorldMap.HTS;
                             final double y = cy + dir.vector().y() * WorldMap.HTS;
                             ctx.setStroke(Color.WHITE);

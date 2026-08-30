@@ -213,7 +213,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
             DEMO_LEVEL_ROUTE
         ));
 
-        systems.scoreSystem().setLevelNumber(session.hud().gameScore(), level.number());
+        session.hud().gameScore().data().setLevelNumber(level.number());
 
         session.setLevel(level);
         session.setAttractMode(true);

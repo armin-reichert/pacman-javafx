@@ -80,7 +80,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final GameSession session = game.session();
 
         final GameLevel level = createLevel(game, levelNumber);
-        game.variant().systems().scoreSystem().setLevelNumber(session.hud().gameScore(), levelNumber);
+        session.hud().gameScore().data().setLevelNumber(levelNumber);
 
         session.setLevel(level);
         session.setAttractMode(false);
@@ -192,7 +192,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
         scoreSystem.scorePoints(gameScore, highScore, points, levelNumber, game.variant().rules().scoringRules());
 
-        if (scoreSystem.extraLifeReached(gameScore)) {
+        if (gameScore.data().extraLifeReached()) {
             // Do not forget to clear the flag!
             scoreSystem.clearExtraLife(gameScore);
             session.setNumLives(session.numLives() + 1);

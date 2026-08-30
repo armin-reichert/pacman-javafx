@@ -144,7 +144,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         pac.autoSteering().setSteering(
             new RuleGuidedPacSteering(systems.navigator(), systems.pacWorldMovementPolicy()));
 
-        systems.scoreSystem().setLevelNumber(session.hud().gameScore(), 1);
+        session.hud().gameScore().data().setLevelNumber(level.number());
         session.hud().levelCounter().data().setEnabled(true);
 
         return level;

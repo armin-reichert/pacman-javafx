@@ -43,37 +43,23 @@ public class ScoreSystem {
         return createHighScore(highScoreFile(variantName));
     }
 
-    public void scorePoints(Score score, Score highScore, int points, int levelNumber, ScoringRules rules) {
-        if (!score.data().isEnabled()) {
+    public void scorePoints(Score gameScore, Score highScore, int points, int levelNumber, ScoringRules rules) {
+        final ScoreDataComp gameScoreData = gameScore.data();
+        if (!gameScoreData.isEnabled()) {
             return;
         }
 
-        final int oldPoints = score.data().points();
+        final int oldPoints = gameScoreData.points();
         final int newPoints = oldPoints + points;
-        setPoints(score, newPoints);
-        score.data().setExtraLifeReached(rules.isExtraLifeAwarded(oldPoints, newPoints));
+        gameScoreData.setPoints(newPoints);
+        gameScoreData.setExtraLifeReached(rules.isExtraLifeAwarded(oldPoints, newPoints));
 
-        if (highScore.data().isEnabled() && newPoints > highScore.data().points()) {
-            setPoints(highScore, newPoints);
-            setLevelNumber(highScore, levelNumber);
-            setDate(highScore, LocalDate.now());
+        final ScoreDataComp highScoreData = highScore.data();
+        if (highScoreData.isEnabled() && newPoints > highScoreData.points()) {
+            highScoreData.setPoints(newPoints);
+            highScoreData.setLevelNumber(levelNumber);
+            highScoreData.setDate(LocalDate.now());
         }
-    }
-
-    private void setPoints(Score score, int points) {
-        score.data().setPoints(points);
-    }
-
-    public void setLevelNumber(Score score, int levelNumber) {
-        score.data().setLevelNumber(levelNumber);
-    }
-
-    public void setDate(Score score, LocalDate date) {
-        score.data().setDate(date);
-    }
-
-    public boolean extraLifeReached(Score score) {
-        return score.data().extraLifeReached();
     }
 
     public void clearExtraLife(Score score) {

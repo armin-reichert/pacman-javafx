@@ -314,7 +314,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         pac.cheats().setImmune(false);
         pac.cheats().setUsingAutopilot(true);
 
-        systems.scoreSystem().setLevelNumber(session.hud().gameScore(), 1);
+        session.hud().gameScore().data().setLevelNumber(demoLevel.number());
 
         session.setLevel(demoLevel);
         session.setAttractMode(true);
