@@ -30,7 +30,7 @@ public class GameSystems {
     protected LifetimeSystem lifetime = new LifetimeSystem();
     protected MovementSystem motor =  new MovementSystem();
     protected WorldNavigationSystem navigator = new WorldNavigationSystem(motor);
-    protected RoamingSystem roaming = new RoamingSystem(navigator);
+    protected RoamingSystem roamingSystem = new RoamingSystem(navigator);
 
     protected WorldMovementPolicy<Pac> pacWorldMovementPolicy;
     protected PacAutoSteeringSystem pacAutoSteeringSystem;
@@ -99,16 +99,14 @@ public class GameSystems {
 
         ghostStateSystem = new GhostStateSystem();
         ghostHouseAccessSystem = new GhostHouseAccessSystem(navigator, ghostWorldMovementPolicy, motor);
-        ghostHuntingSystem = new GhostHuntingSystem();
+        ghostHuntingSystem = new GhostHuntingSystem(ghostWorldMovementPolicy, roamingSystem);
         ghostAnimationSystem = new GhostAnimationSystem(actorSpriteAnimController);
 
         ghostUpdateSystem = new GhostUpdateSystem(
             ghostHouseAccessSystem,
             ghostHuntingSystem,
             ghostStateSystem,
-            ghostAnimationSystem,
-            actorSpriteAnimController
-        );
+            ghostAnimationSystem);
     }
 
     protected void createBonusSystems() {
@@ -147,7 +145,7 @@ public class GameSystems {
     }
 
     public RoamingSystem roaming() {
-        return roaming;
+        return roamingSystem;
     }
 
     public ActorSpriteAnimController actorSpriteAnimController() {
@@ -190,7 +188,7 @@ public class GameSystems {
     // Ghost systems
 
 
-    public GhostUpdateSystem ghostUpdateSystem() {
+    public GhostUpdateSystem ghostUpdate() {
         return ghostUpdateSystem;
     }
 
@@ -202,7 +200,7 @@ public class GameSystems {
         return ghostHouseAccessSystem;
     }
 
-    public GhostHuntingSystem ghostHuntingSystem() {
+    public GhostHuntingSystem ghostHunting() {
         return ghostHuntingSystem;
     }
 

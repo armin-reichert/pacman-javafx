@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.core.entities.ghost.system;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -20,20 +19,17 @@ public class GhostUpdateSystem {
     private final GhostHuntingSystem huntingSystem;
     private final GhostStateSystem stateSystem;
     private final GhostAnimationSystem animationSystem;
-    private final ActorSpriteAnimController animController;
 
     public GhostUpdateSystem(
         GhostHouseAccessSystem houseAccessSystem,
         GhostHuntingSystem huntingSystem,
         GhostStateSystem stateSystem,
-        GhostAnimationSystem animationSystem,
-        ActorSpriteAnimController animController)
+        GhostAnimationSystem animationSystem)
     {
         this.houseAccessSystem = houseAccessSystem;
         this.huntingSystem = huntingSystem;
         this.stateSystem = stateSystem;
         this.animationSystem = animationSystem;
-        this.animController = animController;
     }
 
     public void update(GameContext game, GameLevel level) {
@@ -48,9 +44,10 @@ public class GhostUpdateSystem {
         ghostsToUpdate.forEach(ghost -> {
             final float speed = speedRules.ghostSpeed(game, ghost);
             houseAccessSystem.update(ghost, level, speed);
-            huntingSystem.update(game, level, ghost);
+            //TODO this is ugly
+            huntingSystem.update(game, level, ghost, game.variant().systems().ghostHuntingStrategy(ghost.personality()));
             stateSystem.update(game, ghost);
-            animationSystem.update(ghost, animController);
+            animationSystem.update(ghost);
         });
     }
 }

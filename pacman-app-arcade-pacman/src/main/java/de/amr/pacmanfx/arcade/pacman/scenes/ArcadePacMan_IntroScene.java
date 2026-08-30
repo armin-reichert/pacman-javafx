@@ -18,8 +18,8 @@ import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
-import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.GhostPoints;
+import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostAnimationSystem;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
@@ -205,7 +205,7 @@ public class ArcadePacMan_IntroScene extends GameScene {
         }
 
         for (Ghost ghost : ghosts) {
-            ghostSpriteAnimationSystem.update(ghost, systems.actorSpriteAnimController());
+            ghostSpriteAnimationSystem.update(ghost);
         }
     }
 

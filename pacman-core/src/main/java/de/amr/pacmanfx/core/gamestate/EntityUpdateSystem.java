@@ -26,7 +26,7 @@ public class EntityUpdateSystem {
 
         level.heartbeat().triggerPulse();
         systems.pacUpdateSystem().update(game, level, level.entities().pac());
-        systems.ghostUpdateSystem().update(game, level);
+        systems.ghostUpdate().update(game, level);
         level.entities().optBonus().ifPresent(bonus -> systems.bonusUpdateSystem().update(game, level, bonus));
 
         // Handle entities with limited lifetime like ghost points, bonus points etc.
