@@ -45,10 +45,6 @@ public class GhostAnimationSystem {
         }
     }
 
-    public void setDisabled(Ghost ghost, boolean disabled) {
-        ghost.animationSelection().setDisabled(disabled);
-    }
-
     private CommonSpriteAnimationID frightenedAnim(boolean pacPowerFading) {
         return pacPowerFading ? CommonSpriteAnimationID.GHOST_FLASHING : CommonSpriteAnimationID.GHOST_FRIGHTENED;
     }

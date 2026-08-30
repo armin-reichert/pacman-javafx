@@ -39,7 +39,7 @@ public class Common_LevelCompleteState extends AbstractGameState {
         systems.pacPower().reset(pac);
 
         // Ghosts stop
-        level.entities().ghosts().forEach(ghost -> systems.navigator().setDisabled(ghost, true));
+        level.entities().ghosts().forEach(ghost -> ghost.worldNavigation().setDisabled(true));
 
         level.entities().optBonus().ifPresent(bonus -> {
             systems.bonusState().setBonusInactive(bonus);
@@ -52,7 +52,7 @@ public class Common_LevelCompleteState extends AbstractGameState {
 
     @Override
     public void onExit(GameContext context) {
-        level.entities().ghosts().forEach(ghost -> systems.navigator().setDisabled(ghost, false));
+        level.entities().ghosts().forEach(ghost -> ghost.worldNavigation().setDisabled(false));
     }
 
     @Override

@@ -84,8 +84,8 @@ public abstract class AbstractGameState implements State<GameContext>, Named {
 
     protected void freezeActors(GameLevelEntitySet entities) {
         final Pac pac = entities.pac();
-        systems.navigator().setDisabled(pac, true);
-        systems.pacAnimation().setDisabled(pac, true);
+        pac.worldNavigation().setDisabled(true);
+        pac.animation().setDisabled(true);
         if (pac.state().isMale()) {
             pac.animation().setAnimationID(CommonSpriteAnimationID.PAC_MOUTH_SHUT);
         } else {
@@ -95,18 +95,18 @@ public abstract class AbstractGameState implements State<GameContext>, Named {
         }
 
         for (Ghost ghost : entities.ghosts()) {
-            systems.navigator().setDisabled(ghost, true);
-            systems.ghostAnimation().setDisabled(ghost, true);
+            ghost.worldNavigation().setDisabled(true);
+            ghost.worldNavigation().setDisabled(true);
         }
     }
 
     protected void unfreezeActors(GameLevelEntitySet entities) {
         final Pac pac = entities.pac();
-        systems.navigator().setDisabled(pac, false);
-        systems.pacAnimation().setDisabled(pac, false);
+        pac.worldNavigation().setDisabled(false);
+        pac.animation().setDisabled(false);
         for (Ghost ghost : entities.ghosts()) {
-            systems.navigator().setDisabled(ghost, false);
-            systems.ghostAnimation().setDisabled(ghost, false);
+            ghost.worldNavigation().setDisabled(false);
+            ghost.animationSelection().setDisabled(false);
         }
     }
 }

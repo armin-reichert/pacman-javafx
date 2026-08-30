@@ -35,15 +35,15 @@ public final class Common_PacManDyingState extends AbstractGameState {
         level.huntingTimerStrategy().stop();
 
         // Stop Pac-Man movement and animation and set "dead" state
-        systems.navigator().setDisabled(pac, true);
-        systems.pacAnimation().setDisabled(pac, true);
+        pac.worldNavigation().setDisabled(true);
+        pac.animation().setDisabled(true);
         systems.pacPower().reset(pac);
         systems.pacState().setState(pac, PacState.DEAD);
 
         level.entities().ghosts().forEach(ghost -> {
             // Copilot claims that eaten ghosts returning to the house continue even when Pac-Man dies
             if (ghost.state().enumValue() != GhostState.RETURNING_HOME) {
-                systems.navigator().setDisabled(ghost, true);
+                ghost.worldNavigation().setDisabled(true);
             }
             // Note: this works also if the bonus has no Elroy component!
             systems.ghostState().setElroyEnabled(ghost, false);
@@ -72,7 +72,7 @@ public final class Common_PacManDyingState extends AbstractGameState {
             level.entities().ghosts().forEach(GameEntity::hide);
         }
         else if (tick == pacDyingTiming.animationStartTick()) {
-            systems.pacAnimation().setDisabled(pac, false); // "dying" animation can start/continue
+            pac.animation().setDisabled(false); // "dying" animation can start/continue
             game.eventManager().publishGameEvent(new PacDyingEvent(pac));
         }
         else if (tick == pacDyingTiming.hidePacTick()) {
@@ -93,6 +93,6 @@ public final class Common_PacManDyingState extends AbstractGameState {
 
     @Override
     public void onExit(GameContext game) {
-        level.entities().ghosts().forEach(ghost -> systems.navigator().setDisabled(ghost, false));
+        level.entities().ghosts().forEach(ghost -> ghost.worldNavigation().setDisabled(false));
     }
 }

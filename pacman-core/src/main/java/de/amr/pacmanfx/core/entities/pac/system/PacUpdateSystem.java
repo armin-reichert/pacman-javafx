@@ -52,8 +52,8 @@ public class PacUpdateSystem {
         final GameSession session = game.session();
 
         switch (pac.state().enumValue()) {
-            case SLEEPING, DEAD -> navigator.setDisabled(pac, true);
-            case ACTIVE -> navigator.setDisabled(pac, false);
+            case SLEEPING, DEAD -> pac.worldNavigation().setDisabled(true);
+            case ACTIVE -> pac.worldNavigation().setDisabled(false);
         }
 
         final ActorSpeedRules speedRules = rules.actorSpeedRules();

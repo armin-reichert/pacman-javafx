@@ -3,19 +3,14 @@ package de.amr.pacmanfx.core.entities.pac.system;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Pac;
 
-import java.util.Objects;
+import static java.util.Objects.requireNonNull;
 
 public class PacAnimationSystem {
 
     public PacAnimationSystem() {}
 
-    public void setDisabled(Pac pac, boolean disabled) {
-        pac.animation().setDisabled(disabled);
-    }
-
     public void update(Pac pac) {
-        Objects.requireNonNull(pac);
-
+        requireNonNull(pac);
         switch (pac.state().enumValue()) {
             case SLEEPING -> {
                 // Female Pac just cannot shut her mouth for a second!
@@ -28,9 +23,7 @@ public class PacAnimationSystem {
                 pac.animation().setAnimationID(CommonSpriteAnimationID.PAC_MOUTH_MOVING);
                 pac.animation().setDisabled(!pac.state().isMoving());
             }
-            case DEAD -> {
-                pac.animation().setAnimationID(CommonSpriteAnimationID.PAC_DYING);
-            }
+            case DEAD -> pac.animation().setAnimationID(CommonSpriteAnimationID.PAC_DYING);
         }
     }
 }

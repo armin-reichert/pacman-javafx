@@ -58,10 +58,6 @@ public class WorldNavigationSystem {
         this.motor = requireNonNull(motor);
     }
 
-    public void setDisabled(GameEntity actor, boolean disabled) {
-        actor.reqComp(WorldNavigationComp.class).setDisabled(disabled);
-    }
-
     /**
      * Sets the move direction and updates the velocity vector.
      *
