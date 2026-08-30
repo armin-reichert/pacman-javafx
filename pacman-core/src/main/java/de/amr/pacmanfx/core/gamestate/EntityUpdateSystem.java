@@ -11,7 +11,6 @@ import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
 import de.amr.pacmanfx.core.entities.Bonus;
 import de.amr.pacmanfx.core.entities.Ghost;
-import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusStateComp;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostStateSystem;
@@ -33,7 +32,7 @@ public class EntityUpdateSystem {
             // Handle entities with limited lifetime like ghost points, bonus points etc.
             game.variant().systems().lifetime().update(level.entities());
         });
-        updateHUD(game);
+        game.variant().systems().hudUpdateSystem().update(game.session().hud(), game);
     }
 
     public void updateHeartbeat(GameLevel level) {
@@ -107,28 +106,5 @@ public class EntityUpdateSystem {
             }
             case EATEN -> systems.bonusState().update(game, bonus);
         }
-    }
-
-    public void updateHUD(GameContext game) {
-        final GameSession session = game.session();
-        final LivesCounter livesCounter = session.hud().livesCounter();
-
-        int displayedLivesCount = session.numLives() - 1;
-
-        // When a new game starts or a level starts or continues, Pac-Man is invisible for some short time.
-        // During that time, the level counter shows an additional entry and Pac-Man seems to hop from the lives
-        // counter into the maze when the level starts.
-        if (session.optLevel().isPresent()) {
-            displayedLivesCount = adjustLiveCountOnStart(displayedLivesCount, game.state(), session.level());
-        }
-        displayedLivesCount = Math.clamp(displayedLivesCount, 0, livesCounter.data().maxLivesShown());
-        livesCounter.data().setNumLives(displayedLivesCount);
-    }
-
-    private int adjustLiveCountOnStart(int count, AbstractGameState gameState, GameLevel level) {
-        final boolean starting = gameState.id() == CommonGameStateID.GAME_STARTING
-                              || gameState.id() == CommonGameStateID.GAME_OR_LEVEL_STARTING;
-        final Pac pac = level.entities().pac();
-        return starting && !pac.isVisible() ? count + 1 : count;
     }
 }

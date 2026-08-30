@@ -17,11 +17,14 @@ import de.amr.pacmanfx.core.entities.pac.system.*;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.gameplay.hunt.*;
 import de.amr.pacmanfx.core.gamestate.EntityUpdateSystem;
+import de.amr.pacmanfx.core.gamestate.HUD_UpdateSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 
 public class GameSystems {
 
     private final EntityUpdateSystem updateSystem = new EntityUpdateSystem();
+    private final HUD_UpdateSystem hudUpdateSystem = new HUD_UpdateSystem();
+
     private final ActorSpriteAnimController actorSpriteAnimController = new ActorSpriteAnimController();
 
     protected LifetimeSystem lifetime = new LifetimeSystem();
@@ -105,6 +108,10 @@ public class GameSystems {
         return updateSystem;
     }
 
+    public HUD_UpdateSystem hudUpdateSystem() {
+        return hudUpdateSystem;
+    }
+
     public LifetimeSystem lifetime() {
         return lifetime;
     }
@@ -124,6 +131,7 @@ public class GameSystems {
     public ActorSpriteAnimController actorSpriteAnimController() {
         return actorSpriteAnimController;
     }
+
 
     // Pac-Man systems
 

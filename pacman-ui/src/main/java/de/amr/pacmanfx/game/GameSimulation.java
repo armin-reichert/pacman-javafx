@@ -14,6 +14,7 @@ import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
+//TODO create interfaces for runtime and renderer and refine dependencies
 public final class GameSimulation {
 
     private final GameAppContext app;
