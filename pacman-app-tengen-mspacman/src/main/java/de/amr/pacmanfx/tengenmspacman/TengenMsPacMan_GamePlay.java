@@ -207,7 +207,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         livesCounter.data().setNumLives(numLives);
         livesCounter.data().setMaxLivesShown(5);
 
-        configureLevelCounter(game, session.hud().levelCounter());
+        configureLevelCounter(game, game.variant().systems().levelCounterSystem(), session.hud().levelCounter());
 
         initScores(game);
 
@@ -221,12 +221,11 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     // Level building and level start
 
     @Override
-    public void configureLevelCounter(GameContext game, LevelCounter levelCounter) {
-        final LevelCounterSystem system = game.variant().systems().levelCounterSystem();
-        system.setCounterBehavior(levelCounter, LevelCounterBehavior.DISABLE_WHEN_FULL);
-        system.setCounterCapacity(levelCounter, 7);
-        system.clear(levelCounter);
-        system.enableCounter(levelCounter, true);
+    public void configureLevelCounter(GameContext game, LevelCounterSystem levelCounterSystem, LevelCounter levelCounter) {
+        levelCounter.data().setBehavior(LevelCounterBehavior.DISABLE_WHEN_FULL);
+        levelCounter.data().setCapacity(7);
+        levelCounter.data().setEnabled(true);
+        levelCounterSystem.clear(levelCounter);
     }
 
     @Override

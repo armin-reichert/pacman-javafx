@@ -44,12 +44,11 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE);
 
     @Override
-    public void configureLevelCounter(GameContext game, LevelCounter levelCounter) {
-        final LevelCounterSystem system = game.variant().systems().levelCounterSystem();
-        system.setCounterBehavior(levelCounter, LevelCounterBehavior.DISABLE_WHEN_FULL);
-        system.setCounterCapacity(levelCounter, 7);
-        system.clear(levelCounter);
-        system.enableCounter(levelCounter, true);
+    public void configureLevelCounter(GameContext game, LevelCounterSystem levelCounterSystem, LevelCounter levelCounter) {
+        levelCounter.data().setBehavior(LevelCounterBehavior.DISABLE_WHEN_FULL);
+        levelCounter.data().setCapacity(7);
+        levelCounter.data().setEnabled(true);
+        levelCounterSystem.clear(levelCounter);
     }
 
     @Override
@@ -92,9 +91,8 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
 
         /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
          * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
-        final LevelCounterSystem levelCounterSystem = game.variant().systems().levelCounterSystem();
         final LevelCounter levelCounter = session.hud().levelCounter();
-        levelCounterSystem.enableCounter(levelCounter, levelNumber < 8);
+        levelCounter.data().setEnabled(levelNumber < 8);
 
         return level;
     }
@@ -147,7 +145,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
             new RuleGuidedPacSteering(systems.navigator(), systems.pacWorldMovementPolicy()));
 
         systems.scoreSystem().setLevelNumber(session.hud().gameScore(), 1);
-        systems.levelCounterSystem().enableCounter(session.hud().levelCounter(), true);
+        session.hud().levelCounter().data().setEnabled(true);
 
         return level;
     }

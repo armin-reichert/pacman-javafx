@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.core.entities.levelCounter.system;
 
 import de.amr.pacmanfx.core.entities.LevelCounter;
-import de.amr.pacmanfx.core.entities.levelCounter.comp.LevelCounterBehavior;
 
 import static java.util.Objects.requireNonNull;
 
@@ -13,11 +12,6 @@ public class LevelCounterSystem {
 
     public LevelCounterSystem() {}
 
-    public void setCounterBehavior(LevelCounter levelCounter, LevelCounterBehavior behavior) {
-        requireNonNull(levelCounter);
-        requireNonNull(behavior);
-        levelCounter.data().setBehavior(behavior);
-    }
     public void clear(LevelCounter levelCounter) {
         levelCounter.data().symbolCodes().clear();
     }
@@ -46,13 +40,5 @@ public class LevelCounterSystem {
                 case SHIFT_WHEN_FULL   -> data.symbolCodes().removeFirst();
             }
         }
-    }
-
-    public void enableCounter(LevelCounter levelCounter, boolean enabled) {
-        levelCounter.data().setEnabled(enabled);
-    }
-
-    public void setCounterCapacity(LevelCounter levelCounter, int capacity) {
-        levelCounter.data().setCapacity(capacity);
     }
 }
