@@ -25,7 +25,7 @@ public class GhostHuntingSystem {
                 final GhostHuntingStrategy huntingStrategy = systems.ghostHuntingStrategy(ghost.personality());
                 final GhostWorldMovementPolicy movementPolicy = systems.ghostWorldMovementPolicy();
                 final float speed = speedRules.ghostSpeed(game, ghost);
-                huntingStrategy.hunt(level, ghost, systems.motor(), speed, movementPolicy);
+                huntingStrategy.hunt(level, ghost, speed, movementPolicy);
             }
 
             case FRIGHTENED -> {

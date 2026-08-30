@@ -13,7 +13,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 
 public interface GhostHuntingStrategy {
 
-    void hunt(GameLevel level, Ghost ghost, MovementSystem motor, float speed, WorldMovementPolicy<Ghost> worldMovementPolicy);
+    void hunt(GameLevel level, Ghost ghost, float speed, WorldMovementPolicy<Ghost> worldMovementPolicy);
 
     default Vector2i computeScatterTile(WorldMap worldMap, Ghost ghost) {
         return worldMap.terrainLayer().ghostScatterTile(ghost.personality());

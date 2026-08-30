@@ -6,7 +6,6 @@ package de.amr.pacmanfx.arcade.ms_pacman.model.systems.ghost;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
 import de.amr.pacmanfx.core.ecs.systems.WorldMovementPolicy;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.Ghost;
@@ -35,9 +34,10 @@ public abstract class ArcadeMsPacMan_RandomizedHuntingStrategy implements GhostH
     protected abstract Vector2i computeChasingTargetTile(GameLevel level);
 
     @Override
-    public void hunt(GameLevel level, Ghost ghost, MovementSystem motor, float speed, WorldMovementPolicy<Ghost> worldMovementPolicy) {
+    public void hunt(GameLevel level, Ghost ghost, float speed, WorldMovementPolicy<Ghost> worldMovementPolicy) {
         requireNonNull(level);
         requireNonNull(ghost);
+        requireNonNull(worldMovementPolicy);
 
         if (level.huntingTimerStrategy().phaseIndex() == 0) { // first scatter phase
             moveRandomlyThroughWorld(level, ghost, speed, worldMovementPolicy);

@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.core.gameplay.hunt;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
 import de.amr.pacmanfx.core.ecs.systems.WorldMovementPolicy;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.Ghost;
@@ -22,9 +21,10 @@ public class PokeyHuntingStrategy implements GhostHuntingStrategy {
     }
 
     @Override
-    public void hunt(GameLevel level, Ghost ghost, MovementSystem motor, float speed, WorldMovementPolicy<Ghost> worldMovementPolicy) {
+    public void hunt(GameLevel level, Ghost ghost, float speed, WorldMovementPolicy<Ghost> worldMovementPolicy) {
         requireNonNull(level);
         requireNonNull(ghost);
+        requireNonNull(worldMovementPolicy);
 
         final Vector2i targetTile = level.huntingTimerStrategy().isChasing()
             ? computeChasingTargetTile(level, ghost)
