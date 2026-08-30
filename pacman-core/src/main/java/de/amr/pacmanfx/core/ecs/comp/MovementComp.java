@@ -49,6 +49,10 @@ public class MovementComp implements GameEntityComp {
         vy = v.y();
     }
 
+    public Vector2f velocity() {
+        return new Vector2f(vx, vy);
+    }
+
     public float speed() {
         return (float) Math.hypot(vx, vy);
     }
