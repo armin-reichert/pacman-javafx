@@ -9,6 +9,7 @@ import de.amr.pacmanfx.core.entities.Bonus;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.bonus.system.BonusMoveAndJumpSystem;
 import de.amr.pacmanfx.core.entities.bonus.system.BonusStateSystem;
+import de.amr.pacmanfx.core.entities.bonus.system.BonusUpdateSystem;
 import de.amr.pacmanfx.core.entities.bonus.system.BonusWorldMovementPolicy;
 import de.amr.pacmanfx.core.entities.ghost.system.*;
 import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
@@ -21,7 +22,7 @@ import de.amr.pacmanfx.core.model.GhostPersonality;
 
 public class GameSystems {
 
-    private final EntityUpdateSystem updateSystem = new EntityUpdateSystem();
+    private final EntityUpdateSystem entityUpdateSystem = new EntityUpdateSystem();
     private final HUD_UpdateSystem hudUpdateSystem = new HUD_UpdateSystem();
 
     private final ActorSpriteAnimController actorSpriteAnimController = new ActorSpriteAnimController();
@@ -32,23 +33,27 @@ public class GameSystems {
     protected RoamingSystem roaming = new RoamingSystem(navigator);
 
     protected WorldMovementPolicy<Pac> pacWorldMovementPolicy;
-    protected PacAutoSteeringSystem pacAutoSteering;
-    protected PacStateSystem pacState;
-    protected PacPowerSystem pacPower;
-    protected PacDigestionSystem pacDigestion;
-    protected PacAnimationSystem pacAnimation;
+    protected PacAutoSteeringSystem pacAutoSteeringSystem;
 
-    protected GhostStateSystem ghostState;
+    protected PacUpdateSystem pacUpdateSystem;
+    protected PacStateSystem pacStateSystem;
+    protected PacPowerSystem pacPowerSystem;
+    protected PacDigestionSystem pacDigestionSystem;
+    protected PacAnimationSystem pacAnimationSystem;
+
+    protected GhostUpdateSystem ghostUpdateSystem;
+    protected GhostStateSystem ghostStateSystem;
     protected GhostHuntingSystem ghostHuntingSystem;
-    protected GhostHouseAccessSystem ghostHouseAccess;
+    protected GhostHouseAccessSystem ghostHouseAccessSystem;
     protected GhostWorldMovementPolicy ghostWorldMovementPolicy;
-    protected GhostAnimationSystem ghostSpriteAnimation;
+    protected GhostAnimationSystem ghostAnimationSystem;
 
     protected GhostHuntingStrategy orangeGhostPokeyHuntingStrategy;
     protected GhostHuntingStrategy cyanGhostBashfulHuntingStrategy;
     protected GhostHuntingStrategy redGhostShadowHuntingStrategy;
     protected GhostHuntingStrategy pinkGhostSpeedyHuntingStrategy;
 
+    protected BonusUpdateSystem bonusUpdateSystem;
     protected BonusStateSystem bonusStateSystem;
     protected WorldMovementPolicy<Bonus> bonusWorldMovementPolicy;
     protected BonusMoveAndJumpSystem bonusMoveAndJumpSystem;
@@ -65,31 +70,45 @@ public class GameSystems {
     }
 
     protected void createPacSystems() {
-        pacPower = new PacPowerSystem();
-        pacDigestion = new PacDigestionSystem();
         pacWorldMovementPolicy = new PacWorldMovementPolicy();
-        pacAutoSteering = new PacAutoSteeringSystem();
-        pacState = new PacStateSystem();
-        pacAnimation = new PacAnimationSystem();
+
+        pacAutoSteeringSystem = new PacAutoSteeringSystem();
+        pacPowerSystem = new PacPowerSystem();
+        pacDigestionSystem = new PacDigestionSystem();
+        pacStateSystem = new PacStateSystem();
+        pacAnimationSystem = new PacAnimationSystem();
+
+        pacUpdateSystem = new PacUpdateSystem(
+            pacStateSystem,
+            pacDigestionSystem,
+            pacPowerSystem,
+            pacAutoSteeringSystem,
+            pacAnimationSystem,
+            actorSpriteAnimController,
+            pacWorldMovementPolicy,
+            navigator,
+            motor);
     }
 
     protected void createGhostSystems() {
         ghostWorldMovementPolicy = new GhostWorldMovementPolicy();
-        ghostState = new GhostStateSystem();
 
         redGhostShadowHuntingStrategy = createShadowHuntingStrategy();
         pinkGhostSpeedyHuntingStrategy = createSpeedyHuntingStrategy();
         cyanGhostBashfulHuntingStrategy = createBashfulHuntingStrategy();
         orangeGhostPokeyHuntingStrategy = createPokeyHuntingStrategy();
 
-        ghostHouseAccess = new GhostHouseAccessSystem(navigator, ghostWorldMovementPolicy, motor);
+        ghostUpdateSystem = new GhostUpdateSystem();
+        ghostStateSystem = new GhostStateSystem();
+        ghostHouseAccessSystem = new GhostHouseAccessSystem(navigator, ghostWorldMovementPolicy, motor);
         ghostHuntingSystem = new GhostHuntingSystem();
-
-        ghostSpriteAnimation = new GhostAnimationSystem();
+        ghostAnimationSystem = new GhostAnimationSystem();
     }
 
     protected void createBonusSystems() {
         bonusWorldMovementPolicy = new BonusWorldMovementPolicy();
+
+        bonusUpdateSystem = new BonusUpdateSystem();
         bonusMoveAndJumpSystem = new BonusMoveAndJumpSystem(navigator, bonusWorldMovementPolicy);
         bonusStateSystem = new BonusStateSystem();
     }
@@ -102,7 +121,7 @@ public class GameSystems {
     // Global systems
 
     public EntityUpdateSystem updateSystem() {
-        return updateSystem;
+        return entityUpdateSystem;
     }
 
     public HUD_UpdateSystem hudUpdateSystem() {
@@ -132,24 +151,28 @@ public class GameSystems {
 
     // Pac-Man systems
 
+    public PacUpdateSystem pacUpdateSystem() {
+        return pacUpdateSystem;
+    }
+
     public PacAutoSteeringSystem pacAutoSteering() {
-        return pacAutoSteering;
+        return pacAutoSteeringSystem;
     }
 
     public PacStateSystem pacState() {
-        return pacState;
+        return pacStateSystem;
     }
 
     public PacPowerSystem pacPower() {
-        return pacPower;
+        return pacPowerSystem;
     }
 
     public PacDigestionSystem pacDigestion() {
-        return pacDigestion;
+        return pacDigestionSystem;
     }
 
     public PacAnimationSystem pacAnimation() {
-        return pacAnimation;
+        return pacAnimationSystem;
     }
 
     // Pac-man policies
@@ -160,12 +183,17 @@ public class GameSystems {
 
     // Ghost systems
 
+
+    public GhostUpdateSystem ghostUpdateSystem() {
+        return ghostUpdateSystem;
+    }
+
     public GhostStateSystem ghostState() {
-        return ghostState;
+        return ghostStateSystem;
     }
 
     public GhostHouseAccessSystem ghostHouseAccess() {
-        return ghostHouseAccess;
+        return ghostHouseAccessSystem;
     }
 
     public GhostHuntingSystem ghostHuntingSystem() {
@@ -173,7 +201,7 @@ public class GameSystems {
     }
 
     public GhostAnimationSystem ghostAnimation() {
-        return ghostSpriteAnimation;
+        return ghostAnimationSystem;
     }
 
     // Ghost policies/strategies
@@ -220,6 +248,11 @@ public class GameSystems {
     }
 
     // Bonus systems
+
+
+    public BonusUpdateSystem bonusUpdateSystem() {
+        return bonusUpdateSystem;
+    }
 
     public BonusStateSystem bonusState() {
         return bonusStateSystem;
