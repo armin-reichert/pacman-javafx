@@ -14,7 +14,6 @@ import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Objects;
 import java.util.Properties;
 
 import static java.util.Objects.requireNonNull;
@@ -33,13 +32,15 @@ public class ScoreSystem {
         return new File(GameConstants.USER_HOME_DIR, fileName);
     }
 
-    public static Score createHighScore(File file) {
-        requireNonNull(file);
+    private static Score createHighScore(File file) {
         final Score score = new Score(Score.Type.HIGH_SCORE);
-        final var persistency = new ScorePersistencyComp();
-        score.setComp(ScorePersistencyComp.class, persistency);
-        persistency.setFile(file);
+        score.setComp(ScorePersistencyComp.class, new ScorePersistencyComp(file));
         return score;
+    }
+
+    public static Score createHighScore(String variantName) {
+        requireNonNull(variantName);
+        return createHighScore(highScoreFile(variantName));
     }
 
     public void scorePoints(Score score, Score highScore, int points, int levelNumber, ScoringRules rules) {

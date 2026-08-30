@@ -27,7 +27,7 @@ public class HUD {
         livesCounter = new LivesCounter();
         messageView = new MessageView();
         gameScore = new Score(Score.Type.GAME_SCORE);
-        highScore = ScoreSystem.createHighScore(ScoreSystem.highScoreFile(variantName));
+        highScore = ScoreSystem.createHighScore(variantName);
     }
 
     public boolean isVisible() {

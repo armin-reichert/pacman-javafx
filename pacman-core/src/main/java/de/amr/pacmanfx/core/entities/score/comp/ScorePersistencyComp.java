@@ -18,11 +18,9 @@ public class ScorePersistencyComp implements GameEntityComp {
 
     public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    private File file;
+    private final File file;
 
-    public ScorePersistencyComp() {}
-
-    public void setFile(File file) {
+    public ScorePersistencyComp(File file) {
         this.file = requireNonNull(file);
     }
 
