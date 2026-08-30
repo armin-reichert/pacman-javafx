@@ -8,11 +8,17 @@ import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
 
+import static java.util.Objects.requireNonNull;
+
 public class GhostAnimationSystem {
 
-    public GhostAnimationSystem() {}
+    private final ActorSpriteAnimController spriteAnimController;
 
-    public void update(Ghost ghost, ActorSpriteAnimController spriteAnimController) {
+    public GhostAnimationSystem(ActorSpriteAnimController spriteAnimController) {
+        this.spriteAnimController = requireNonNull(spriteAnimController);
+    }
+
+    public void update(Ghost ghost) {
         final boolean pacHasPower = ghost.state().hasPacPower();
         final boolean pacPowerFading = ghost.state().isPacPowerFading();
         final boolean inKillChain = ghost.state().killChainIndex() != -1;

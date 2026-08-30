@@ -100,7 +100,7 @@ public class GameSystems {
         ghostStateSystem = new GhostStateSystem();
         ghostHouseAccessSystem = new GhostHouseAccessSystem(navigator, ghostWorldMovementPolicy, motor);
         ghostHuntingSystem = new GhostHuntingSystem();
-        ghostAnimationSystem = new GhostAnimationSystem();
+        ghostAnimationSystem = new GhostAnimationSystem(actorSpriteAnimController);
 
         ghostUpdateSystem = new GhostUpdateSystem(
             ghostHouseAccessSystem,
