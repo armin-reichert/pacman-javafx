@@ -58,7 +58,7 @@ class XXL_ChaseAnimation {
     private final ActorSpriteAnimController animController = new ActorSpriteAnimController();
 
     private final int numTilesX;
-    private final Timeline chaseSimulation;
+    private final Timeline chaseSimulation = new Timeline();
     private final FloatProperty scaling = new SimpleFloatProperty(1);
 
     private float y;
@@ -75,8 +75,8 @@ class XXL_ChaseAnimation {
 
     public XXL_ChaseAnimation(int numTilesX) {
         this.numTilesX = numTilesX;
-        chaseSimulation = new Timeline();
         chaseSimulation.setCycleCount(Animation.INDEFINITE);
+        chaseSimulation.getKeyFrames().setAll(new KeyFrame(FRAME_TIME, _ -> update()));
         animationTimer.attachAnimContainer(animContainer);
     }
 
@@ -127,18 +127,21 @@ class XXL_ChaseAnimation {
         requireNonNull(game);
         this.variant = requireNonNull(variant);
         requireNonNull(canvas);
-
-        final ArcadePacMan_ActorFactory actorFactory = ArcadePacMan_ActorFactory.instance();
+        final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
 
         navigator = variant.config().systems().navigator();
-        motor = variant.config().systems().motor();
-
-        chaseSimulation.getKeyFrames().setAll(new KeyFrame(FRAME_TIME, _ -> update()));
-
-        final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
+        motor     = variant.config().systems().motor();
 
         actorRenderer = renderConfig.createActorRenderer(animController, canvas);
         actorRenderer.scalingProperty().bind(scalingProperty());
+
+        createPac(renderConfig);
+        createGhosts(renderConfig);
+        startGhostsChasePacMan();
+    }
+
+    private void createPac(GameVariantRenderConfig renderConfig) {
+        final var actorFactory = ArcadePacMan_ActorFactory.instance();
 
         pac = actorFactory.createPacMan();
         pac.pos().setX(numTilesX * WorldMap.TS);
@@ -151,31 +154,9 @@ class XXL_ChaseAnimation {
         animController.setAnimations(pac, renderConfig.createPacAnimations(animContainer));
         animController.select(pac, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
         animController.playSelected(pac);
-
-        createGhosts();
-        clearCollisions();
-
-        for (Ghost ghost : ghosts) {
-            ghost.pos().setX((numTilesX + 4) * WorldMap.TS + ghost.personality().ordinal() * GHOST_DISTANCE);
-            ghost.show();
-
-            navigator.setMoveDir(ghost, Direction.LEFT);
-            navigator.setWishDir(ghost, Direction.LEFT);
-            navigator.setMoveDirSpeed(ghost, GHOST_CHASE_SPEED);
-
-            animController.select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);
-            animController.playSelected(ghost);
-        }
-
-        state = ChasingState.GHOSTS_CHASING_PAC;
     }
 
-    private void clearCollisions() {
-        collisionCount = 0;
-    }
-
-    private void createGhosts() {
-        GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
+    private void createGhosts(GameVariantRenderConfig renderConfig) {
         ghosts = new ArrayList<>(List.of(
             renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.RED_GHOST_SHADOW),
             renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.PINK_GHOST_SPEEDY),
@@ -186,8 +167,8 @@ class XXL_ChaseAnimation {
 
     private void letPacManChaseGhosts() {
         if (ghosts.isEmpty()) {
-            createGhosts();
-            clearCollisions();
+            createGhosts(variant.uiConfig().renderConfig());
+            collisionCount = 0;
         }
 
         // If ghosts and Pac leave screen at right border, ghosts start chasing Pac moving left
@@ -216,17 +197,17 @@ class XXL_ChaseAnimation {
         pac.pos().setX(numTilesX * WorldMap.TS);
 
         for (Ghost ghost : ghosts) {
-            ghost.pos().setX((numTilesX + 4) * WorldMap.TS + ghost.personality().ordinal() * 2 * WorldMap.TS);
+            ghost.pos().setX((numTilesX + 4) * WorldMap.TS + ghost.personality().ordinal() * GHOST_DISTANCE);
             ghost.show();
 
             navigator.setMoveDir(ghost, Direction.LEFT);
             navigator.setWishDir(ghost, Direction.LEFT);
-            navigator.setMoveDirSpeed(ghost, 1.05f);
+            navigator.setMoveDirSpeed(ghost, GHOST_CHASE_SPEED);
 
             animController.select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);
             animController.playSelected(ghost);
         }
-
+        collisionCount = 0;
         state = ChasingState.GHOSTS_CHASING_PAC;
     }
 
