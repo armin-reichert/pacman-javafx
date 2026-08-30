@@ -91,7 +91,7 @@ public class Test_ShortTestState extends AbstractGameState {
                 gamePlay.startNextLevel(game);
             }
         } else {
-            level.entities().optBonus().ifPresent(bonus -> systems.entityUpdater().updateBonus(game, level, bonus));
+            level.entities().optBonus().ifPresent(bonus -> systems.updateSystem().updateBonus(game, level, bonus));
         }
     }
 
@@ -133,7 +133,7 @@ public class Test_ShortTestState extends AbstractGameState {
         systems.pacPower().reset(pac);
 
         // Ghosts stop
-        level.entities().ghosts().forEach(ghost -> systems.worldNavigator().setDisabled(ghost, true));
+        level.entities().ghosts().forEach(ghost -> systems.navigator().setDisabled(ghost, true));
 
         level.entities().optBonus().ifPresent(bonus -> {
             systems.bonusState().setBonusInactive(bonus);

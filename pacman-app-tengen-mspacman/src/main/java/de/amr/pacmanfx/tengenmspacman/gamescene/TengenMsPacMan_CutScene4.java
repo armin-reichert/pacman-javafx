@@ -154,7 +154,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
 
     private void playCutScene(GameContext game, long tick) {
         final GameSystems systems = game.variant().systems();
-        final WorldNavigationSystem navigator = systems.worldNavigator();
+        final WorldNavigationSystem navigator = systems.navigator();
         final ActorSpriteAnimController animSystem = systems.actorSpriteAnimController();
 
         letActorsMove(game, tick);
@@ -233,7 +233,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimContainer animContainer    = variant.spriteAnimContainer();
         final ActorSpriteAnimController animController  = variant.config().systems().actorSpriteAnimController();
-        final WorldNavigationSystem worldNavigationSystem = variant.config().systems().worldNavigator();
+        final WorldNavigationSystem worldNavigationSystem = variant.config().systems().navigator();
 
         final Pac junior = factory.createPacMan();
         double randomX = 8 * TS + (8 * TS) * Math.random();
@@ -266,7 +266,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
     private void updateJunior(GameContext game, long tick, int index) {
         final GameSystems systems = game.variant().systems();
         final MovementSystem motor = systems.motor();
-        final WorldNavigationSystem navigator = systems.worldNavigator();
+        final WorldNavigationSystem navigator = systems.navigator();
 
         Pac junior = juniors.get(index);
         long creationTime = juniorSpawnTicks.get(index);

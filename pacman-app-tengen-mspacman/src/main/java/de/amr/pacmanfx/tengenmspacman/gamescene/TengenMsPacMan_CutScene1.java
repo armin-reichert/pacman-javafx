@@ -117,7 +117,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene {
         final int tick = (int) game.state().timer().tickCount();
         switch (tick) {
             case TICK_CLAP -> {
-                getReady(game.variant().systems().worldNavigator());
+                getReady(game.variant().systems().navigator());
                 clapperboard.show();
                 TengenMsPacMan_ClapperboardStateSystem.startFlapAnimation(clapperboard);
                 playMusic();
@@ -199,7 +199,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene {
     }
 
     private void playCutScene(GameContext game, int tick) {
-        final WorldNavigationSystem navigator = game.variant().systems().worldNavigator();
+        final WorldNavigationSystem navigator = game.variant().systems().navigator();
         final ActorSpriteAnimController animSystem = game.variant().systems().actorSpriteAnimController();
 
         letActorsMove(game);

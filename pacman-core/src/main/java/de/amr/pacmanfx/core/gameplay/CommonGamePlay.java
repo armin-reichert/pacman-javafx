@@ -54,16 +54,16 @@ public abstract class CommonGamePlay implements GamePlay {
         systems.pacState().setState(pac, PacState.SLEEPING);
         systems.pacPower().reset(pac);
         systems.motor().setVelocity(pac, 0, 0);
-        systems.worldNavigator().setMoveDir(pac, Direction.LEFT);
-        systems.worldNavigator().setWishDir(pac, Direction.LEFT);
+        systems.navigator().setMoveDir(pac, Direction.LEFT);
+        systems.navigator().setWishDir(pac, Direction.LEFT);
         systems.pacAnimation().update(pac);
 
         level.entities().ghosts().forEach(ghost -> {
             ghost.reset(); // initially invisible and locked!
             ghost.pos().set(ghost.worldInfo().startPosition());
             final Direction direction = house.floorplan().ghostStartDirection(ghost.personality());
-            systems.worldNavigator().setMoveDir(ghost, direction);
-            systems.worldNavigator().setWishDir(ghost, direction);
+            systems.navigator().setMoveDir(ghost, direction);
+            systems.navigator().setWishDir(ghost, direction);
             systems.actorSpriteAnimController().resetSelected(ghost);
         });
 

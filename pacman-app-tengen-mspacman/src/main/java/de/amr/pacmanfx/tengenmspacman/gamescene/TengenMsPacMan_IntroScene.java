@@ -165,7 +165,7 @@ public class TengenMsPacMan_IntroScene extends GameScene {
                 final ActorSpriteAnimController animController  = variant.config().systems().actorSpriteAnimController();
 
                 final GameSystems systems = variant.config().systems();
-                final WorldNavigationSystem worldNavigationSystem = systems.worldNavigator();
+                final WorldNavigationSystem worldNavigationSystem = systems.navigator();
 
                 timer.restartTicks(TickTimer.INDEFINITE);
 
@@ -237,7 +237,7 @@ public class TengenMsPacMan_IntroScene extends GameScene {
             boolean letGhostMarchIn(TengenMsPacMan_IntroScene scene) {
                 final GameSystems systems = scene.game().variant().systems();
                 final MovementSystem motor = systems.motor();
-                final WorldNavigationSystem navigator = systems.worldNavigator();
+                final WorldNavigationSystem navigator = systems.navigator();
 
                 final Ghost ghost = scene.ghosts.get(scene.ghostIndex);
                 if (ghost.worldNavigation().moveDir() == Direction.LEFT) {
@@ -288,7 +288,7 @@ public class TengenMsPacMan_IntroScene extends GameScene {
 
                 systems.motor().move(scene.msPacMan);
                 if (scene.msPacMan.pos().x() <= MS_PAC_MAN_STOP_X) {
-                    systems.worldNavigator().setMoveDirSpeed(scene.msPacMan, 0);
+                    systems.navigator().setMoveDirSpeed(scene.msPacMan, 0);
                     systems.actorSpriteAnimController().resetSelected(scene.msPacMan);
                 }
                 if (timer.atSecond(8)) {

@@ -166,16 +166,16 @@ public class ArcadePacMan_IntroScene extends GameScene {
         pacMan.pos().set(WorldMap.TS * 28, WorldMap.TS * 20);
         pacMan.show();
 
-        systems.worldNavigator().setMoveDir(pacMan, Direction.LEFT);
-        systems.worldNavigator().setMoveDirSpeed(pacMan, CHASING_SPEED);
+        systems.navigator().setMoveDir(pacMan, Direction.LEFT);
+        systems.navigator().setMoveDirSpeed(pacMan, CHASING_SPEED);
 
         for (Ghost ghost : ghosts) {
             ghost.pos().set(pacMan.pos().x() + 16 * ghost.personality().ordinal() + 18, pacMan.pos().y());
             ghost.show();
 
-            systems.worldNavigator().setMoveDir(ghost, Direction.LEFT);
-            systems.worldNavigator().setWishDir(ghost, Direction.LEFT);
-            systems.worldNavigator().setMoveDirSpeed(ghost, CHASING_SPEED);
+            systems.navigator().setMoveDir(ghost, Direction.LEFT);
+            systems.navigator().setWishDir(ghost, Direction.LEFT);
+            systems.navigator().setMoveDirSpeed(ghost, CHASING_SPEED);
             systems.ghostState().setState(ghost, GhostState.HUNTING_PAC);
         }
     }
@@ -212,13 +212,13 @@ public class ArcadePacMan_IntroScene extends GameScene {
     private void turnCardsStopPacMan(GameContext game) {
         final GameSystems systems = game.variant().systems();
 
-        systems.worldNavigator().setMoveDirSpeed(pacMan, 0);
+        systems.navigator().setMoveDirSpeed(pacMan, 0);
         systems.actorSpriteAnimController().stopSelected(pacMan);
 
         for (Ghost ghost : ghosts) {
-            systems.worldNavigator().setMoveDir(ghost, Direction.RIGHT);
-            systems.worldNavigator().setWishDir(ghost, Direction.RIGHT);
-            systems.worldNavigator().setMoveDirSpeed(ghost, GHOST_FRIGHTENED_SPEED);
+            systems.navigator().setMoveDir(ghost, Direction.RIGHT);
+            systems.navigator().setWishDir(ghost, Direction.RIGHT);
+            systems.navigator().setMoveDirSpeed(ghost, GHOST_FRIGHTENED_SPEED);
 
             systems.ghostState().setState(ghost, GhostState.FRIGHTENED);
 
@@ -228,7 +228,7 @@ public class ArcadePacMan_IntroScene extends GameScene {
     }
 
     private void turnCardsRestartPacMan(GameSystems systems) {
-        systems.worldNavigator().setMoveDirSpeed(pacMan, CHASING_SPEED);
+        systems.navigator().setMoveDirSpeed(pacMan, CHASING_SPEED);
         systems.actorSpriteAnimController().playSelected(pacMan);
     }
 
@@ -258,10 +258,10 @@ public class ArcadePacMan_IntroScene extends GameScene {
         victim.hide();
 
         pacMan.hide();
-        systems.worldNavigator().setMoveDirSpeed(pacMan, 0);
+        systems.navigator().setMoveDirSpeed(pacMan, 0);
 
         for (Ghost ghost : ghosts) {
-            systems.worldNavigator().setMoveDirSpeed(ghost, 0);
+            systems.navigator().setMoveDirSpeed(ghost, 0);
             systems.actorSpriteAnimController().stopSelected(ghost);
         }
 
@@ -281,7 +281,7 @@ public class ArcadePacMan_IntroScene extends GameScene {
 
     private void continueChasing(GameSystems systems) {
         pacMan.show();
-        systems.worldNavigator().setMoveDirSpeed(pacMan, CHASING_SPEED);
+        systems.navigator().setMoveDirSpeed(pacMan, CHASING_SPEED);
 
         for (Ghost ghost : ghosts) {
             if (ghost.state().enumValue() == EATEN) {
@@ -289,7 +289,7 @@ public class ArcadePacMan_IntroScene extends GameScene {
                 points = null;
             } else {
                 ghost.show();
-                systems.worldNavigator().setMoveDirSpeed(ghost, GHOST_FRIGHTENED_SPEED);
+                systems.navigator().setMoveDirSpeed(ghost, GHOST_FRIGHTENED_SPEED);
                 ghost.spriteAnimation().spriteAnimations().playSelected();
             }
         }
@@ -391,8 +391,8 @@ public class ArcadePacMan_IntroScene extends GameScene {
                 scene.lastGhostEatenTick = timer.tickCount();
                 scene.numGhostsEaten = 0;
 
-                systems.worldNavigator().setMoveDir(scene.pacMan, Direction.RIGHT);
-                systems.worldNavigator().setMoveDirSpeed(scene.pacMan, CHASING_SPEED);
+                systems.navigator().setMoveDir(scene.pacMan, Direction.RIGHT);
+                systems.navigator().setMoveDirSpeed(scene.pacMan, CHASING_SPEED);
             }
 
             @Override

@@ -35,7 +35,7 @@ public final class Common_PacManDyingState extends AbstractGameState {
         level.huntingTimerStrategy().stop();
 
         // Stop Pac-Man movement and animation and set "dead" state
-        systems.worldNavigator().setDisabled(pac, true);
+        systems.navigator().setDisabled(pac, true);
         systems.pacAnimation().setDisabled(pac, true);
         systems.pacPower().reset(pac);
         systems.pacState().setState(pac, PacState.DEAD);
@@ -43,7 +43,7 @@ public final class Common_PacManDyingState extends AbstractGameState {
         level.entities().ghosts().forEach(ghost -> {
             // Copilot claims that eaten ghosts returning to the house continue even when Pac-Man dies
             if (ghost.state().enumValue() != GhostState.RETURNING_HOME) {
-                systems.worldNavigator().setDisabled(ghost, true);
+                systems.navigator().setDisabled(ghost, true);
             }
             // Note: this works also if the bonus has no Elroy component!
             systems.ghostState().setElroyEnabled(ghost, false);
@@ -93,6 +93,6 @@ public final class Common_PacManDyingState extends AbstractGameState {
 
     @Override
     public void onExit(GameContext game) {
-        level.entities().ghosts().forEach(ghost -> systems.worldNavigator().setDisabled(ghost, false));
+        level.entities().ghosts().forEach(ghost -> systems.navigator().setDisabled(ghost, false));
     }
 }

@@ -103,12 +103,12 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene {
     }
 
     private void enterStateChasing(GameSystems systems) {
-        systems.worldNavigator().setMoveDir(pacMan, Direction.RIGHT);
+        systems.navigator().setMoveDir(pacMan, Direction.RIGHT);
 
         systems.actorSpriteAnimController().select(pacMan, CommonSpriteAnimationID.MR_PAC_MAN_MUNCHING);
         systems.actorSpriteAnimController().playSelected(pacMan);
 
-        systems.worldNavigator().setMoveDir(msPacMan, Direction.RIGHT);
+        systems.navigator().setMoveDir(msPacMan, Direction.RIGHT);
 
         systems.actorSpriteAnimController().select(msPacMan, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
         systems.actorSpriteAnimController().playSelected(msPacMan);
@@ -120,49 +120,49 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene {
         if (sceneTimer.atSecond(4.5)) {
             pacMan.pos().set(TS * (-2), UPPER_Y);
             pacMan.show();
-            systems.worldNavigator().setMoveDir(pacMan, Direction.RIGHT);
-            systems.worldNavigator().setMoveDirSpeed(pacMan, 2.0f);
+            systems.navigator().setMoveDir(pacMan, Direction.RIGHT);
+            systems.navigator().setMoveDirSpeed(pacMan, 2.0f);
 
             msPacMan.pos().set(TS * (-8), UPPER_Y);
             msPacMan.show();
-            systems.worldNavigator().setMoveDir(msPacMan, Direction.RIGHT);
-            systems.worldNavigator().setMoveDirSpeed(msPacMan, 2.0f);
+            systems.navigator().setMoveDir(msPacMan, Direction.RIGHT);
+            systems.navigator().setMoveDirSpeed(msPacMan, 2.0f);
         }
         else if (sceneTimer.atSecond(9)) {
             pacMan.pos().set(TS * 36, LOWER_Y);
-            systems.worldNavigator().setMoveDir(pacMan, Direction.LEFT);
-            systems.worldNavigator().setMoveDirSpeed(pacMan, 2.0f);
+            systems.navigator().setMoveDir(pacMan, Direction.LEFT);
+            systems.navigator().setMoveDirSpeed(pacMan, 2.0f);
 
             msPacMan.pos().set(TS * 30, LOWER_Y);
-            systems.worldNavigator().setMoveDir(msPacMan, Direction.LEFT);
-            systems.worldNavigator().setMoveDirSpeed(msPacMan, 2.0f);
+            systems.navigator().setMoveDir(msPacMan, Direction.LEFT);
+            systems.navigator().setMoveDirSpeed(msPacMan, 2.0f);
         }
         else if (sceneTimer.atSecond(13.5)) {
             pacMan.pos().set(TS * (-2), MIDDLE_Y);
-            systems.worldNavigator().setMoveDir(pacMan, Direction.RIGHT);
-            systems.worldNavigator().setMoveDirSpeed(pacMan, 2.0f);
+            systems.navigator().setMoveDir(pacMan, Direction.RIGHT);
+            systems.navigator().setMoveDirSpeed(pacMan, 2.0f);
 
             msPacMan.pos().set(TS * (-8), MIDDLE_Y);
-            systems.worldNavigator().setMoveDir(msPacMan, Direction.RIGHT);
-            systems.worldNavigator().setMoveDirSpeed(msPacMan, 2.0f);
+            systems.navigator().setMoveDir(msPacMan, Direction.RIGHT);
+            systems.navigator().setMoveDirSpeed(msPacMan, 2.0f);
         }
         else if (sceneTimer.atSecond(17.5)) {
             pacMan.pos().set(TS * 42, UPPER_Y);
-            systems.worldNavigator().setMoveDir(pacMan, Direction.LEFT);
-            systems.worldNavigator().setMoveDirSpeed(pacMan, 4.0f);
+            systems.navigator().setMoveDir(pacMan, Direction.LEFT);
+            systems.navigator().setMoveDirSpeed(pacMan, 4.0f);
 
             msPacMan.pos().set(TS * 30, UPPER_Y);
-            systems.worldNavigator().setMoveDir(msPacMan, Direction.LEFT);
-            systems.worldNavigator().setMoveDirSpeed(msPacMan, 4.0f);
+            systems.navigator().setMoveDir(msPacMan, Direction.LEFT);
+            systems.navigator().setMoveDirSpeed(msPacMan, 4.0f);
         }
         else if (sceneTimer.atSecond(18.5)) {
             pacMan.pos().set(TS * (-2), LOWER_Y);
-            systems.worldNavigator().setMoveDir(pacMan, Direction.RIGHT);
-            systems.worldNavigator().setMoveDirSpeed(pacMan, 4.0f);
+            systems.navigator().setMoveDir(pacMan, Direction.RIGHT);
+            systems.navigator().setMoveDirSpeed(pacMan, 4.0f);
 
             msPacMan.pos().set(TS * (-14), LOWER_Y);
-            systems.worldNavigator().setMoveDir(msPacMan, Direction.RIGHT);
-            systems.worldNavigator().setMoveDirSpeed(msPacMan, 4.0f);
+            systems.navigator().setMoveDir(msPacMan, Direction.RIGHT);
+            systems.navigator().setMoveDirSpeed(msPacMan, 4.0f);
         }
         else if (sceneTimer.atSecond(23)) {
             game().state().triggerTimeout();

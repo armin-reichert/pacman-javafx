@@ -215,13 +215,13 @@ public final class ArcadeHouseGateKeeper {
         if (blinky.state().enumValue() == GhostState.LOCKED) {
             if (house.isVisitedBy(blinky)) {
                 // Leave house immediately again after being eaten
-                systems.worldNavigator().setMoveDir(blinky, Direction.UP);
-                systems.worldNavigator().setWishDir(blinky, Direction.UP);
+                systems.navigator().setMoveDir(blinky, Direction.UP);
+                systems.navigator().setWishDir(blinky, Direction.UP);
             }
             else {
                 // Start hunting towards west direction
-                systems.worldNavigator().setMoveDir(blinky, Direction.LEFT);
-                systems.worldNavigator().setWishDir(blinky, Direction.LEFT);
+                systems.navigator().setMoveDir(blinky, Direction.LEFT);
+                systems.navigator().setWishDir(blinky, Direction.LEFT);
             }
             systems.ghostHouseAccess().requestUnlock(blinky);
         }
@@ -230,8 +230,8 @@ public final class ArcadeHouseGateKeeper {
             .filter(ghost -> ghost.state().enumValue() == GhostState.LOCKED)
             .findFirst()
             .ifPresent(prisoner -> checkReleaseOfGhost(level, prisoner, pacDigestionSystem).ifPresent(_ -> {
-                systems.worldNavigator().setMoveDir(prisoner, Direction.UP);
-                systems.worldNavigator().setWishDir(prisoner, Direction.UP);
+                systems.navigator().setMoveDir(prisoner, Direction.UP);
+                systems.navigator().setWishDir(prisoner, Direction.UP);
                 systems.ghostHouseAccess().requestUnlock(prisoner);
                 //TODO check if this should be done here
                 ghostReleasedCallback.accept(level, prisoner);

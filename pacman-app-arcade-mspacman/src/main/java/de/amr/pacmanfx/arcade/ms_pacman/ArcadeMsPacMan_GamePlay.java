@@ -60,7 +60,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         final GameLevelEntitySet entities = new GameLevelEntitySet();
 
         final GameSession session = game.session();
-        final WorldNavigationSystem navigator = game.variant().systems().worldNavigator();
+        final WorldNavigationSystem navigator = game.variant().systems().navigator();
         final WorldMap worldMap = game.variant().worldMapManager().supplyWorldMap(levelNumber);
         final TerrainLayer terrain = worldMap.terrainLayer();
 
@@ -105,7 +105,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         entities.add(msPacMan);
 
         msPacMan.autoSteering().setSteering(new RuleGuidedPacSteering(
-            systems.worldNavigator(), systems.pacWorldMovementPolicy()
+            systems.navigator(), systems.pacWorldMovementPolicy()
         ));
     }
 
@@ -144,7 +144,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         pac.cheats().setImmune(false);
         pac.cheats().setUsingAutopilot(true);
         pac.autoSteering().setSteering(
-            new RuleGuidedPacSteering(systems.worldNavigator(), systems.pacWorldMovementPolicy()));
+            new RuleGuidedPacSteering(systems.navigator(), systems.pacWorldMovementPolicy()));
 
         systems.scoreSystem().setLevelNumber(session.hud().gameScore(), 1);
         systems.levelCounterSystem().enableCounter(session.hud().levelCounter(), true);

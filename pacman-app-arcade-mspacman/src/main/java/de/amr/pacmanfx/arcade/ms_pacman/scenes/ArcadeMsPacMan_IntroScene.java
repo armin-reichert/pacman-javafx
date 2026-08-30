@@ -97,7 +97,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
         final SpriteAnimContainer animContainer = variant.spriteAnimContainer();
         final ActorSpriteAnimController animController = variant.config().systems().actorSpriteAnimController();
         final GameSystems systems  = variant.config().systems();
-        final WorldNavigationSystem worldNavigationSystem = systems.worldNavigator();
+        final WorldNavigationSystem worldNavigationSystem = systems.navigator();
 
         createMarquee();
 
@@ -105,8 +105,8 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
         msPacMan.pos().set(WorldMap.TS * 31, WorldMap.TS * 20);
         msPacMan.show();
 
-        systems.worldNavigator().setMoveDir(msPacMan, Direction.LEFT);
-        systems.worldNavigator().setMoveDirSpeed(msPacMan, ACTOR_SPEED);
+        systems.navigator().setMoveDir(msPacMan, Direction.LEFT);
+        systems.navigator().setMoveDirSpeed(msPacMan, ACTOR_SPEED);
 
         animController.setAnimations(msPacMan, renderConfig.createPacAnimations(animContainer));
 
@@ -204,8 +204,8 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
                 if (ghost.worldNavigation().moveDir() == Direction.LEFT) {
                     if (ghost.pos().x() <= STOP_X_GHOST) {
                         ghost.pos().setX(STOP_X_GHOST);
-                        sys.worldNavigator().setMoveDir(ghost, Direction.UP);
-                        sys.worldNavigator().setWishDir(ghost, Direction.UP);
+                        sys.navigator().setMoveDir(ghost, Direction.UP);
+                        sys.navigator().setWishDir(ghost, Direction.UP);
                         scene.numTicksBeforeRising = 2;
                     } else {
                         sys.motor().move(ghost);
@@ -217,7 +217,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
                         scene.numTicksBeforeRising--;
                     }
                     else if (ghost.pos().y() <= endPositionY) {
-                        sys.worldNavigator().setMoveDirSpeed(ghost, 0);
+                        sys.navigator().setMoveDirSpeed(ghost, 0);
                         sys.actorSpriteAnimController().stopSelected(ghost);
                         sys.actorSpriteAnimController().resetSelected(ghost);
                         return true;
@@ -240,7 +240,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
 
                 sys.motor().move(msPacMan);
                 if (msPacMan.pos().x() <= STOP_X_MS_PACMAN) {
-                    sys.worldNavigator().setMoveDirSpeed(msPacMan, 0);
+                    sys.navigator().setMoveDirSpeed(msPacMan, 0);
                     sys.actorSpriteAnimController().resetSelected(msPacMan);
                     scene.sceneFlow.enterState(scene, READY_TO_PLAY);
                 }

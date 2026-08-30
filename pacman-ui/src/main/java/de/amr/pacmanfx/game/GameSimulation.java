@@ -41,7 +41,7 @@ public final class GameSimulation {
     private void simulate() {
         final GameContext game = app.game();
         game.session().newFrameState(clock.currentTick());
-        game.variant().systems().entityUpdater().updateEntities(game);
+        game.variant().systems().updateSystem().updateEntities(game);
         game.variant().gameFlow().update(game);
         app.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(game));
     }

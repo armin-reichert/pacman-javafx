@@ -100,7 +100,7 @@ class XXL_ChaseAnimation {
 
         final ArcadePacMan_ActorFactory actorFactory = ArcadePacMan_ActorFactory.instance();
         final GameSystems systems = game.variant().systems();
-        final WorldNavigationSystem worldNavigationSystem = systems.worldNavigator();
+        final WorldNavigationSystem worldNavigationSystem = systems.navigator();
 
         chaseSimulation.getKeyFrames().setAll(new KeyFrame(FRAME_TIME, _ -> update(systems)));
 
@@ -157,7 +157,7 @@ class XXL_ChaseAnimation {
     }
 
     private void pacManChasesGhosts(GameSystems systems) {
-        final WorldNavigationSystem worldNavigationSystem = systems.worldNavigator();
+        final WorldNavigationSystem worldNavigationSystem = systems.navigator();
 
         moveActors(systems.motor());
 
@@ -219,7 +219,7 @@ class XXL_ChaseAnimation {
     }
 
     private void ghostsChasePacMan(GameSystems systems) {
-        final WorldNavigationSystem worldNavigationSystem = systems.worldNavigator();
+        final WorldNavigationSystem worldNavigationSystem = systems.navigator();
 
         moveActors(systems.motor());
 

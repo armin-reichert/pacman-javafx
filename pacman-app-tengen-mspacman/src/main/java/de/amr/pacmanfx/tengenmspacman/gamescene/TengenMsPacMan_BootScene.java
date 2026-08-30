@@ -76,9 +76,9 @@ public class TengenMsPacMan_BootScene extends GameScene {
             case 113 -> {
                 ghost.pos().set(reqCanvasRendering().unscaledWidth() - WorldMap.TS, GHOST_Y);
                 ghost.show();
-                systems.worldNavigator().setMoveDir(ghost, Direction.LEFT);
-                systems.worldNavigator().setWishDir(ghost, Direction.LEFT);
-                systems.worldNavigator().setMoveDirSpeed(ghost, WorldMap.TS);
+                systems.navigator().setMoveDir(ghost, Direction.LEFT);
+                systems.navigator().setWishDir(ghost, Direction.LEFT);
+                systems.navigator().setMoveDirSpeed(ghost, WorldMap.TS);
             }
             case 181 -> systems.motor().setVelocity(movingText, 0, WorldMap.TS);
             case 203 -> {

@@ -22,7 +22,7 @@ import de.amr.pacmanfx.core.rules.GameRules;
 import java.util.List;
 
 // Preliminary central place for calling entity updates
-public class EntityUpdater {
+public class EntityUpdateSystem {
 
     public void updateEntities(GameContext game) {
         game.session().optLevel().ifPresent(level -> {
@@ -47,8 +47,8 @@ public class EntityUpdater {
         final MovementSystem motor = systems.motor();
 
         switch (pac.state().enumValue()) {
-            case SLEEPING, DEAD -> systems.worldNavigator().setDisabled(pac, true);
-            case ACTIVE -> systems.worldNavigator().setDisabled(pac, false);
+            case SLEEPING, DEAD -> systems.navigator().setDisabled(pac, true);
+            case ACTIVE -> systems.navigator().setDisabled(pac, false);
         }
 
         final ActorSpeedRules speedRules = rules.actorSpeedRules();
@@ -62,8 +62,8 @@ public class EntityUpdater {
 
         // Steering and movement
         systems.pacAutoSteering().update(session, pac);
-        systems.worldNavigator().setMoveDirSpeed(pac, speed);
-        systems.worldNavigator().tryMovingOrTeleporting(level, pac, motor, systems.pacWorldMovementPolicy());
+        systems.navigator().setMoveDirSpeed(pac, speed);
+        systems.navigator().tryMovingOrTeleporting(level, pac, motor, systems.pacWorldMovementPolicy());
 
         // Animation
         final ActorSpriteAnimController spriteAnimController = systems.actorSpriteAnimController();

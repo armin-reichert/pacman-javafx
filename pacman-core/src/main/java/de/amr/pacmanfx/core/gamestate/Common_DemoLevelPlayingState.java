@@ -32,7 +32,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
         session.setNumLives(1);
 
         level.entities().ghosts().forEach(ghost -> {
-            systems.worldNavigator().setDisabled(ghost, true);
+            systems.navigator().setDisabled(ghost, true);
             systems.ghostAnimation().setDisabled(ghost, true);
         });
 
@@ -60,7 +60,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
             systems.pacState().setState(pac, PacState.ACTIVE);
 
             level.entities().ghosts().forEach(ghost -> {
-                systems.worldNavigator().setDisabled(ghost, false);
+                systems.navigator().setDisabled(ghost, false);
                 systems.ghostAnimation().setDisabled(ghost, false);
             });
 

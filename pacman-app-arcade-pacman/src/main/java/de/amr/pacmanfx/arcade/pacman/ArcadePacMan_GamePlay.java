@@ -123,7 +123,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         final GameLevelEntitySet entities = new GameLevelEntitySet();
 
         final GameSession session = game.session();
-        final WorldNavigationSystem navigator = game.variant().systems().worldNavigator();
+        final WorldNavigationSystem navigator = game.variant().systems().navigator();
         final WorldMap worldMap = game.variant().worldMapManager().supplyWorldMap(levelNumber);
 
         addEntities(entities, game, worldMap);
@@ -181,7 +181,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
         final GameSystems systems = game.variant().systems();
         pacMan.autoSteering().setSteering(new RuleGuidedPacSteering(
-            systems.worldNavigator(), systems.pacWorldMovementPolicy()
+            systems.navigator(), systems.pacWorldMovementPolicy()
         ));
 
         // Special tiles where attacking ghosts cannot move up
@@ -210,7 +210,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
         // Overwrite autosteering for demo level by fixed route steering
         pac.autoSteering().setSteering(new RouteGuidedSteering<>(
-            systems.worldNavigator(),
+            systems.navigator(),
             systems.pacWorldMovementPolicy(),
             DEMO_LEVEL_ROUTE
         ));

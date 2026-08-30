@@ -85,7 +85,7 @@ public class PacEatingEventHandler implements DefaultGameEventListener {
         level.setGhostKillCount(0);
 
         // Ghosts turn back even if the Pac power time is zero and no event is published!
-        level.entities().ghostsInAnyOfStates(GHOST_TURNBACK_STATES).forEach(systems().worldNavigator()::requestTurnBack);
+        level.entities().ghostsInAnyOfStates(GHOST_TURNBACK_STATES).forEach(systems().navigator()::requestTurnBack);
 
         // Pac-Man "digests" and takes a 3 tick nap
         systems().pacDigestion().digestEnergizer(pac, rules);

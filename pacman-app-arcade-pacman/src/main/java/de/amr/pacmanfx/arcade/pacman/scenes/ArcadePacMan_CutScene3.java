@@ -82,9 +82,9 @@ public class ArcadePacMan_CutScene3 extends GameScene {
     }
 
     private void startBlinkyRunningNaked(GameSystems systems) {
-        systems.worldNavigator().placeAtTile(blinky, -1, 20);
-        systems.worldNavigator().setMoveDir(blinky, Direction.RIGHT);
-        systems.worldNavigator().setWishDir(blinky, Direction.RIGHT);
+        systems.navigator().placeAtTile(blinky, -1, 20);
+        systems.navigator().setMoveDir(blinky, Direction.RIGHT);
+        systems.navigator().setWishDir(blinky, Direction.RIGHT);
 
         systems.actorSpriteAnimController().select(blinky, CommonSpriteAnimationID.BLINKY_NAKED);
         systems.actorSpriteAnimController().playSelected(blinky);
@@ -93,19 +93,19 @@ public class ArcadePacMan_CutScene3 extends GameScene {
     private void startBlinkyChasingPacMan(GameSystems systems) {
         pacMan.show();
 
-        systems.worldNavigator().placeAtTile(pacMan, 29, 20);
-        systems.worldNavigator().setMoveDir(pacMan, Direction.LEFT);
-        systems.worldNavigator().setMoveDirSpeed(pacMan, 1.25f);
+        systems.navigator().placeAtTile(pacMan, 29, 20);
+        systems.navigator().setMoveDir(pacMan, Direction.LEFT);
+        systems.navigator().setMoveDirSpeed(pacMan, 1.25f);
 
         systems.actorSpriteAnimController().select(pacMan, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
         systems.actorSpriteAnimController().playSelected(pacMan);
 
         blinky.show();
 
-        systems.worldNavigator().placeAtTile(blinky, 35, 20);
-        systems.worldNavigator().setMoveDir(blinky, Direction.LEFT);
-        systems.worldNavigator().setWishDir(blinky, Direction.LEFT);
-        systems.worldNavigator().setMoveDirSpeed(blinky, 1.25f);
+        systems.navigator().placeAtTile(blinky, 35, 20);
+        systems.navigator().setMoveDir(blinky, Direction.LEFT);
+        systems.navigator().setWishDir(blinky, Direction.LEFT);
+        systems.navigator().setMoveDirSpeed(blinky, 1.25f);
 
         systems.actorSpriteAnimController().select(blinky, CommonSpriteAnimationID.BLINKY_PATCHED);
         systems.actorSpriteAnimController().playSelected(blinky);

@@ -235,7 +235,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final GameLevelEntitySet entities = new GameLevelEntitySet();
 
         final GameSession session = game.session();
-        final WorldNavigationSystem navigator = game.variant().systems().worldNavigator();
+        final WorldNavigationSystem navigator = game.variant().systems().navigator();
 
         final MapCategory mapCategory = mapCategory(session);
 
@@ -289,7 +289,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
         final GameSystems systems = game.variant().systems();
         msPacMan.autoSteering().setSteering(new RuleGuidedPacSteering(
-            systems.worldNavigator(), systems.pacWorldMovementPolicy()
+            systems.navigator(), systems.pacWorldMovementPolicy()
         ));
 
         final TerrainLayer terrain = worldMap.terrainLayer();
@@ -312,7 +312,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
         final Pac pac = demoLevel.entities().pac();
         // There are maps that cannot be handled with Arcade-steering logic
-        pac.autoSteering().setSteering(new RuleGuidedPacSteering(systems.worldNavigator(), systems.pacWorldMovementPolicy()));
+        pac.autoSteering().setSteering(new RuleGuidedPacSteering(systems.navigator(), systems.pacWorldMovementPolicy()));
         pac.cheats().setImmune(false);
         pac.cheats().setUsingAutopilot(true);
 

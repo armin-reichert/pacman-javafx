@@ -16,18 +16,18 @@ import de.amr.pacmanfx.core.entities.livescounter.system.LivesCounterSystem;
 import de.amr.pacmanfx.core.entities.pac.system.*;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.gameplay.hunt.*;
-import de.amr.pacmanfx.core.gamestate.EntityUpdater;
+import de.amr.pacmanfx.core.gamestate.EntityUpdateSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 
 public class GameSystems {
 
-    private final EntityUpdater entityUpdater = new EntityUpdater();
+    private final EntityUpdateSystem updateSystem = new EntityUpdateSystem();
     private final ActorSpriteAnimController actorSpriteAnimController = new ActorSpriteAnimController();
 
     protected LifetimeSystem lifetime = new LifetimeSystem();
     protected MovementSystem motor =  new MovementSystem();
     protected WorldNavigationSystem navigator = new WorldNavigationSystem();
-    protected RoamingSystem roamingNavigator = new RoamingSystem(navigator);
+    protected RoamingSystem roaming = new RoamingSystem(navigator);
 
     protected WorldMovementPolicy<Pac> pacWorldMovementPolicy;
     protected PacAutoSteeringSystem pacAutoSteering;
@@ -99,6 +99,93 @@ public class GameSystems {
         livesCounterSystem = new LivesCounterSystem();
     }
 
+    // Global systems
+
+    public EntityUpdateSystem updateSystem() {
+        return updateSystem;
+    }
+
+    public LifetimeSystem lifetime() {
+        return lifetime;
+    }
+
+    public MovementSystem motor() {
+        return motor;
+    }
+
+    public WorldNavigationSystem navigator() {
+        return navigator;
+    }
+
+    public RoamingSystem roaming() {
+        return roaming;
+    }
+
+    public ActorSpriteAnimController actorSpriteAnimController() {
+        return actorSpriteAnimController;
+    }
+
+    // Pac-Man systems
+
+    public PacAutoSteeringSystem pacAutoSteering() {
+        return pacAutoSteering;
+    }
+
+    public PacStateSystem pacState() {
+        return pacState;
+    }
+
+    public PacPowerSystem pacPower() {
+        return pacPower;
+    }
+
+    public PacDigestionSystem pacDigestion() {
+        return pacDigestion;
+    }
+
+    public PacAnimationSystem pacAnimation() {
+        return pacAnimation;
+    }
+
+    // Pac-man policies
+
+    public WorldMovementPolicy<Pac> pacWorldMovementPolicy() {
+        return pacWorldMovementPolicy;
+    }
+
+    // Ghost systems
+
+    public GhostStateSystem ghostState() {
+        return ghostState;
+    }
+
+    public GhostHouseAccessSystem ghostHouseAccess() {
+        return ghostHouseAccess;
+    }
+
+    public GhostHuntingSystem ghostHuntingSystem() {
+        return ghostHuntingSystem;
+    }
+
+    public GhostAnimationSystem ghostAnimation() {
+        return ghostSpriteAnimation;
+    }
+
+    // Ghost policies/strategies
+
+    public GhostWorldMovementPolicy ghostWorldMovementPolicy() {
+        return ghostWorldMovementPolicy;
+    }
+
+    public GhostHuntingStrategy ghostHuntingStrategy(GhostPersonality personality) {
+        return switch (personality) {
+            case RED_GHOST_SHADOW -> redGhostShadowHuntingStrategy;
+            case PINK_GHOST_SPEEDY -> pinkGhostSpeedyHuntingStrategy;
+            case CYAN_GHOST_BASHFUL -> cyanGhostBashfulHuntingStrategy;
+            case ORANGE_GHOST_POKEY -> orangeGhostPokeyHuntingStrategy;
+        };
+    }
+
     /**
      * @return strategy used by the red ghost ("Shadow")
      */
@@ -127,89 +214,10 @@ public class GameSystems {
         return new PokeyHuntingStrategy(navigator);
     }
 
-    public EntityUpdater entityUpdater() {
-        return entityUpdater;
-    }
-
-    public ActorSpriteAnimController actorSpriteAnimController() {
-        return actorSpriteAnimController;
-    }
-
-    public LifetimeSystem lifetime() {
-        return lifetime;
-    }
-
-    public MovementSystem motor() {
-        return motor;
-    }
-
-    public WorldNavigationSystem worldNavigator() {
-        return navigator;
-    }
-
-    public RoamingSystem roaming() {
-        return roamingNavigator;
-    }
-
-    public PacAutoSteeringSystem pacAutoSteering() {
-        return pacAutoSteering;
-    }
-
-    public PacStateSystem pacState() {
-        return pacState;
-    }
-
-    public PacPowerSystem pacPower() {
-        return pacPower;
-    }
-
-    public PacDigestionSystem pacDigestion() {
-        return pacDigestion;
-    }
-
-    public WorldMovementPolicy<Pac> pacWorldMovementPolicy() {
-        return pacWorldMovementPolicy;
-    }
-
-    public PacAnimationSystem pacAnimation() {
-        return pacAnimation;
-    }
-
-    public GhostStateSystem ghostState() {
-        return ghostState;
-    }
-
-    public GhostHouseAccessSystem ghostHouseAccess() {
-        return ghostHouseAccess;
-    }
-
-    public GhostHuntingSystem ghostHuntingSystem() {
-        return ghostHuntingSystem;
-    }
-
-    public GhostWorldMovementPolicy ghostWorldMovementPolicy() {
-        return ghostWorldMovementPolicy;
-    }
-
-    public GhostHuntingStrategy ghostHuntingStrategy(GhostPersonality personality) {
-        return switch (personality) {
-            case RED_GHOST_SHADOW -> redGhostShadowHuntingStrategy;
-            case PINK_GHOST_SPEEDY -> pinkGhostSpeedyHuntingStrategy;
-            case CYAN_GHOST_BASHFUL -> cyanGhostBashfulHuntingStrategy;
-            case ORANGE_GHOST_POKEY -> orangeGhostPokeyHuntingStrategy;
-        };
-    }
-
-    public GhostAnimationSystem ghostAnimation() {
-        return ghostSpriteAnimation;
-    }
+    // Bonus systems
 
     public BonusStateSystem bonusState() {
         return bonusStateSystem;
-    }
-
-    public WorldMovementPolicy<Bonus> bonusWorldMovementPolicy() {
-        return bonusWorldMovementPolicy;
     }
 
     public BonusMoveAndJumpSystem bonusMoveAndJump() {
