@@ -34,7 +34,7 @@ public class BashfulHuntingStrategy implements GhostHuntingStrategy {
             : computeScatterTile(level.worldMap(), ghost);
 
         navigator.setMoveDirSpeed(ghost, speed);
-        navigator.tryMovingTowardsTargetTile(motor, ghost, level, targetTile, worldMovementPolicy);
+        navigator.tryMovingTowardsTargetTile(ghost, level, targetTile, worldMovementPolicy);
     }
 
     // 1. Compute the position 2 tiles ahead of Pac-Man in the current direction. Take the overflow bug

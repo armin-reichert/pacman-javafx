@@ -7,7 +7,6 @@ package de.amr.pacmanfx.core.entities.pac.system;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
-import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
 import de.amr.pacmanfx.core.ecs.systems.WorldMovementPolicy;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.Pac;
@@ -19,7 +18,6 @@ import static java.util.Objects.requireNonNull;
 
 public class PacUpdateSystem {
 
-    private final MovementSystem motor;
     private final WorldNavigationSystem navigator;
     private final PacStateSystem pacStateSystem;
     private final PacDigestionSystem pacDigestionSystem;
@@ -37,8 +35,7 @@ public class PacUpdateSystem {
         PacAnimationSystem pacAnimationSystem,
         ActorSpriteAnimController animController,
         WorldMovementPolicy<Pac> movementPolicy,
-        WorldNavigationSystem navigator,
-        MovementSystem motor)
+        WorldNavigationSystem navigator)
     {
         this.pacStateSystem = requireNonNull(pacStateSystem);
         this.pacDigestionSystem = requireNonNull(pacDigestionSystem);
@@ -48,7 +45,6 @@ public class PacUpdateSystem {
         this.animController = requireNonNull(animController);
         this.movementPolicy = requireNonNull(movementPolicy);
         this.navigator = requireNonNull(navigator);
-        this.motor = requireNonNull(motor);
     }
 
     public void update(GameContext game, GameLevel level, Pac pac) {
@@ -72,7 +68,7 @@ public class PacUpdateSystem {
         // Steering and movement
         pacAutoSteeringSystem.update(session, pac);
         navigator.setMoveDirSpeed(pac, speed);
-        navigator.tryMovingOrTeleporting(level, pac, motor, movementPolicy);
+        navigator.tryMovingOrTeleporting(level, pac, movementPolicy);
 
         // Animation
         pacAnimationSystem.update(pac);

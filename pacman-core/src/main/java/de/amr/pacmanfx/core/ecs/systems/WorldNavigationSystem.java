@@ -50,10 +50,16 @@ public class WorldNavigationSystem {
             : tilesAhead(actor, numTiles);
     }
 
-    public WorldNavigationSystem() {}
+    // -------------------------------------------------------------
 
-    public void setDisabled(GameEntity entity, boolean disabled) {
-        entity.reqComp(WorldNavigationComp.class).setDisabled(disabled);
+    private final MovementSystem motor;
+
+    public WorldNavigationSystem(MovementSystem motor) {
+        this.motor = requireNonNull(motor);
+    }
+
+    public void setDisabled(GameEntity actor, boolean disabled) {
+        actor.reqComp(WorldNavigationComp.class).setDisabled(disabled);
     }
 
     /**
@@ -81,25 +87,23 @@ public class WorldNavigationSystem {
     public void setWishDir(GameEntity actor, Direction dir) {
         requireNonNull(actor);
         requireNonNull(dir);
-
-        final WorldNavigationComp navigation = actor.reqComp(WorldNavigationComp.class);
-        navigation.setWishDir(dir);
+        actor.reqComp(WorldNavigationComp.class).setWishDir(dir);
     }
 
-    public void setTargetTile(GameEntity entity, Vector2i tile) {
+    public void setTargetTile(GameEntity actor, Vector2i tile) {
+        requireNonNull(actor);
         requireNonNull(tile);
-        entity.optComp(WorldNavigationComp.class).ifPresent(comp -> comp.setTargetTile(tile));
-
+        actor.optComp(WorldNavigationComp.class).ifPresent(comp -> comp.setTargetTile(tile));
     }
-    public void clearTargetTile(GameEntity entity) {
-        entity.optComp(WorldNavigationComp.class).ifPresent(comp -> comp.setTargetTile(null));
+
+    public void clearTargetTile(GameEntity actor) {
+        requireNonNull(actor);
+        actor.reqComp(WorldNavigationComp.class).setTargetTile(null);
     }
 
     public void requestTurnBack(GameEntity actor) {
         requireNonNull(actor);
-
-        final WorldNavigationComp navigation = actor.reqComp(WorldNavigationComp.class);
-        navigation.setTurnBackRequested(true);
+        actor.reqComp(WorldNavigationComp.class).setTurnBackRequested(true);
     }
 
     /**
@@ -115,16 +119,14 @@ public class WorldNavigationSystem {
         requireNonNull(actor);
 
         final PositionComp position = actor.pos();
-        final WorldNavigationComp worldNavigation = actor.reqComp(WorldNavigationComp.class);
-
-        final Vector2i currentTile = actor.pos().tile();
+        final WorldNavigationComp navigation = actor.reqComp(WorldNavigationComp.class);
+        final Vector2i tileBefore = actor.pos().tile();
 
         position.setX(tx * WorldMap.TS + ox);
         position.setY(ty * WorldMap.TS + oy);
 
-        final Vector2i newTile = actor.pos().tile();
-
-        worldNavigation.setNewTileEntered(!newTile.equals(currentTile));
+        final Vector2i tileAfter = actor.pos().tile();
+        navigation.setNewTileEntered(!tileAfter.equals(tileBefore));
     }
 
     /**
@@ -157,9 +159,9 @@ public class WorldNavigationSystem {
     public void setMoveDirSpeed(GameEntity actor, float speed) {
         requireNonNull(actor);
 
-        final MovementComp motor = actor.reqComp(MovementComp.class);
+        final MovementComp movement = actor.reqComp(MovementComp.class);
         final Direction moveDir = actor.reqComp(WorldNavigationComp.class).moveDir();
-        motor.setVelocity(moveDir.vector().scaled(speed));
+        movement.setVelocity(moveDir.vector().scaled(speed));
     }
 
     public <E extends GameEntity> void setWishDirTowardsTargetTile(E actor, GameLevel level, WorldMovementPolicy<E>  movementPolicy) {
@@ -173,8 +175,8 @@ public class WorldNavigationSystem {
             return; // we don't need no navigation, dim dit didit didit...
         }
 
-        final Vector2i currentTile = actor.pos().tile();
-        if (level.worldMap().terrainLayer().isTileInPortalSpace(currentTile)) {
+        final Vector2i tileBefore = actor.pos().tile();
+        if (level.worldMap().terrainLayer().isTileInPortalSpace(tileBefore)) {
             return;
         }
         Direction candidateDir = null;
@@ -183,7 +185,7 @@ public class WorldNavigationSystem {
             if (dir == navigation.moveDir().opposite()) {
                 continue; // reversing the move direction is not allowed  (except to get out of dead-ends, see below)
             }
-            final Vector2i neighborTile = currentTile.plus(dir.vector());
+            final Vector2i neighborTile = tileBefore.plus(dir.vector());
             if (movementPolicy.canAccessTile(level, actor, neighborTile)) {
                 double dist = neighborTile.euclideanDist(navigation.targetTile());
                 if (dist < minDistToTarget) {
@@ -199,7 +201,6 @@ public class WorldNavigationSystem {
     }
 
     public <E extends GameEntity> void tryMovingTowardsTargetTile(
-        MovementSystem motor,
         E actor,
         GameLevel level,
         Vector2i targetTile,
@@ -219,7 +220,7 @@ public class WorldNavigationSystem {
         navigation.setTargetTile(targetTile);
         setWishDirTowardsTargetTile(actor, level, movementPolicy);
 
-        tryMovingOrTeleporting(level, actor, motor, movementPolicy);
+        tryMovingOrTeleporting(level, actor, movementPolicy);
     }
 
     /**
@@ -231,7 +232,6 @@ public class WorldNavigationSystem {
     public <E extends GameEntity> void tryMovingOrTeleporting(
         GameLevel level,
         E actor,
-        MovementSystem motor,
         WorldMovementPolicy<E> movementPolicy)
     {
         requireNonNull(actor);
@@ -261,11 +261,11 @@ public class WorldNavigationSystem {
             setWishDir(actor, navigation.moveDir().opposite());
             navigation.setTurnBackRequested(false);
         }
-        tryMovingTowards(motor, actor, level, movementPolicy, actor.pos().tile(), navigation.wishDir());
+        tryMovingTowards(actor, level, movementPolicy, actor.pos().tile(), navigation.wishDir());
         if (navigation.info().moved) {
             setMoveDir(actor, navigation.wishDir());
         } else {
-            tryMovingTowards(motor, actor, level, movementPolicy, actor.pos().tile(), navigation.moveDir());
+            tryMovingTowards(actor, level, movementPolicy, actor.pos().tile(), navigation.moveDir());
         }
     }
 
@@ -283,7 +283,6 @@ public class WorldNavigationSystem {
     }
 
     private <E extends GameEntity> void tryMovingTowards(
-        MovementSystem motor,
         E actor,
         GameLevel level,
         WorldMovementPolicy<E> movementPolicy,

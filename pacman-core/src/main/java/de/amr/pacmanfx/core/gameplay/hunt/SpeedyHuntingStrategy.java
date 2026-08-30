@@ -33,7 +33,7 @@ public class SpeedyHuntingStrategy implements GhostHuntingStrategy {
             : computeScatterTile(level.worldMap(), ghost);
 
         navigator.setMoveDirSpeed(ghost, speed);
-        navigator.tryMovingTowardsTargetTile(motor, ghost, level, targetTile, worldMovementPolicy);
+        navigator.tryMovingTowardsTargetTile(ghost, level, targetTile, worldMovementPolicy);
     }
 
     private Vector2i computeChasingTargetTile(GameLevel level) {

@@ -8,7 +8,6 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
-import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
 import de.amr.pacmanfx.core.ecs.systems.WorldMovementPolicy;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.Bonus;
@@ -27,7 +26,10 @@ public class BonusMoveAndJumpSystem {
     private final WorldNavigationSystem navigationSystem;
     private final WorldMovementPolicy<Bonus> movementPolicy;
 
-    public BonusMoveAndJumpSystem(WorldNavigationSystem navigationSystem, WorldMovementPolicy<Bonus> movementPolicy) {
+    public BonusMoveAndJumpSystem(
+        WorldNavigationSystem navigationSystem,
+        WorldMovementPolicy<Bonus> movementPolicy)
+    {
         this.navigationSystem = requireNonNull(navigationSystem);
         this.movementPolicy = requireNonNull(movementPolicy);
     }
@@ -44,6 +46,7 @@ public class BonusMoveAndJumpSystem {
     public void startWandering(Bonus bonus, BonusRouteInfo routeInfo, float speed) {
         requireNonNull(bonus);
         requireNonNull(routeInfo);
+
         final BonusMoveAndJumpComp moveAndJump = bonus.reqComp(BonusMoveAndJumpComp.class);
         setRoute(bonus, routeInfo);
         navigationSystem.clearTargetTile(bonus);
@@ -51,17 +54,16 @@ public class BonusMoveAndJumpSystem {
         moveAndJump.jumpPulse().restart();
     }
 
-    public void update(GameLevel level, Bonus bonus, MovementSystem motor) {
+    public void update(GameLevel level, Bonus bonus) {
         if (bonus.hasComp(BonusMoveAndJumpComp.class)) {
-            wander(level, bonus, motor);
+            wander(level, bonus);
             jump(bonus);
         }
     }
 
-    private void wander(GameLevel level, Bonus bonus, MovementSystem motor) {
+    private void wander(GameLevel level, Bonus bonus) {
         requireNonNull(level);
         requireNonNull(bonus);
-        requireNonNull(motor);
 
         final BonusMoveAndJumpComp moveAndJump = bonus.reqComp(BonusMoveAndJumpComp.class);
 
@@ -73,7 +75,7 @@ public class BonusMoveAndJumpSystem {
 
         if (!exitPortalReached) {
             navigationSystem.setWishDirTowardsTargetTile(bonus, level, movementPolicy);
-            navigationSystem.tryMovingOrTeleporting(level, bonus, motor, movementPolicy);
+            navigationSystem.tryMovingOrTeleporting(level, bonus, movementPolicy);
         }
         moveAndJump.setTargetReached(exitPortalReached);
     }

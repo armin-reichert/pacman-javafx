@@ -40,16 +40,14 @@ public abstract class ArcadeMsPacMan_RandomizedHuntingStrategy implements GhostH
         requireNonNull(ghost);
 
         if (level.huntingTimerStrategy().phaseIndex() == 0) { // first scatter phase
-            moveRandomlyThroughWorld(motor, level, ghost, speed, worldMovementPolicy);
+            moveRandomlyThroughWorld(level, ghost, speed, worldMovementPolicy);
         }
         else {
-            normalHunt(motor, level, ghost, speed, worldMovementPolicy);
+            normalHunt(level, ghost, speed, worldMovementPolicy);
         }
     }
 
-    protected void normalHunt(
-        MovementSystem motor, GameLevel level, Ghost ghost, float speed, WorldMovementPolicy<Ghost> worldMovementPolicy) {
-
+    protected void normalHunt(GameLevel level, Ghost ghost, float speed, WorldMovementPolicy<Ghost> worldMovementPolicy) {
         final boolean chaseOverride = ghost.hasComp(ElroyComp.class) && ghost.reqComp(ElroyComp.class).enabled();
         final boolean chase = level.huntingTimerStrategy().isChasing() || chaseOverride;
         final Vector2i targetTile = chase
@@ -57,19 +55,17 @@ public abstract class ArcadeMsPacMan_RandomizedHuntingStrategy implements GhostH
             : computeScatterTile(level.worldMap(), ghost);
 
         navigator.setMoveDirSpeed(ghost, speed);
-        navigator.tryMovingTowardsTargetTile(motor, ghost, level, targetTile, worldMovementPolicy);
+        navigator.tryMovingTowardsTargetTile(ghost, level, targetTile, worldMovementPolicy);
     }
     
-    protected void moveRandomlyThroughWorld(
-        MovementSystem motor, GameLevel level, Ghost ghost, float speed, WorldMovementPolicy<Ghost> worldMovementPolicy) {
-
+    protected void moveRandomlyThroughWorld(GameLevel level, Ghost ghost, float speed, WorldMovementPolicy<Ghost> worldMovementPolicy) {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final Vector2i tile = ghost.pos().tile();
 
         final boolean teleporting = terrain.isTileInPortalSpace(tile);
         if (teleporting) {
             navigator.setMoveDirSpeed(ghost, speed);
-            navigator.tryMovingOrTeleporting(level, ghost, motor, worldMovementPolicy);
+            navigator.tryMovingOrTeleporting(level, ghost, worldMovementPolicy);
             return;
         }
 
@@ -81,7 +77,7 @@ public abstract class ArcadeMsPacMan_RandomizedHuntingStrategy implements GhostH
             selectRandomWishDir(ghost, level, worldMovementPolicy);
         }
         navigator.setMoveDirSpeed(ghost, speed);
-        navigator.tryMovingOrTeleporting(level, ghost, motor, worldMovementPolicy);
+        navigator.tryMovingOrTeleporting(level, ghost, worldMovementPolicy);
     }
 
     private void selectRandomWishDir(Ghost ghost, GameLevel level, WorldMovementPolicy<Ghost> worldMovementPolicy) {

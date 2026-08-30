@@ -32,7 +32,7 @@ public class GhostHuntingSystem {
                 //TODO This does not belong here!
                 final GhostWorldMovementPolicy movementPolicy = systems.ghostWorldMovementPolicy();
                 final float speed = speedRules.ghostSpeed(game, ghost);
-                systems.roaming().roam(level, ghost, ghost.worldNavigation(), movementPolicy, systems.motor(), speed);
+                systems.roaming().roam(level, ghost, ghost.worldNavigation(), movementPolicy, speed);
             }
 
         }

@@ -29,7 +29,7 @@ public class GameSystems {
 
     protected LifetimeSystem lifetime = new LifetimeSystem();
     protected MovementSystem motor =  new MovementSystem();
-    protected WorldNavigationSystem navigator = new WorldNavigationSystem();
+    protected WorldNavigationSystem navigator = new WorldNavigationSystem(motor);
     protected RoamingSystem roaming = new RoamingSystem(navigator);
 
     protected WorldMovementPolicy<Pac> pacWorldMovementPolicy;
@@ -86,8 +86,7 @@ public class GameSystems {
             pacAnimationSystem,
             actorSpriteAnimController,
             pacWorldMovementPolicy,
-            navigator,
-            motor);
+            navigator);
     }
 
     protected void createGhostSystems() {
@@ -117,11 +116,7 @@ public class GameSystems {
 
         bonusStateSystem = new BonusStateSystem();
         bonusMoveAndJumpSystem = new BonusMoveAndJumpSystem(navigator, bonusWorldMovementPolicy);
-        bonusUpdateSystem = new BonusUpdateSystem(
-            bonusStateSystem,
-            bonusMoveAndJumpSystem,
-            motor
-        );
+        bonusUpdateSystem = new BonusUpdateSystem(bonusStateSystem, bonusMoveAndJumpSystem);
     }
 
     protected void createHUDSystems() {
