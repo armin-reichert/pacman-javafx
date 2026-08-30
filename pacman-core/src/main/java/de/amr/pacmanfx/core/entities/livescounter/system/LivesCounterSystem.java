@@ -4,16 +4,27 @@
 
 package de.amr.pacmanfx.core.entities.livescounter.system;
 
-
 import de.amr.pacmanfx.core.entities.LivesCounter;
+
+import static java.util.Objects.requireNonNull;
 
 public class LivesCounterSystem {
 
-    public static void setNumLives(LivesCounter livesCounter, int numLives) {
-        livesCounter.data().setNumLives(numLives);
+    public void setNumLives(LivesCounter livesCounter, int n) {
+        requireNonNull(livesCounter);
+        final var data = livesCounter.data();
+        data.setNumLives(n);
     }
 
-    public static void addLives(LivesCounter livesCounter, int lives) {
-        setNumLives(livesCounter, livesCounter.data().numLives() + lives);
+    public void addLives(LivesCounter livesCounter, int n) {
+        requireNonNull(livesCounter);
+        final var data = livesCounter.data();
+        data.setNumLives(data.numLives() + 1);
+    }
+
+    public void setMaxLivesShown(LivesCounter livesCounter, int n) {
+        requireNonNull(livesCounter);
+        final var data = livesCounter.data();
+        data.setMaxLivesShown(n);
     }
 }

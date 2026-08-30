@@ -65,15 +65,19 @@ public class TengenMsPacMan_HUD_Renderer
         requireNonNull(session);
         requireNonNull(gameScene);
 
-        if (!hud.isVisible()) return;
-
         if (gameScene.optCanvasRendering().isEmpty()) {
             return; // Should not happen, but...
         }
         final CanvasRenderingComp canvasRendering = gameScene.reqCanvasRendering();
 
+        if (!hud.isVisible()) return;
+
         ctx.save();
         ctx.translate(0, scaled(computeOffsetY(gameScene)));
+
+        if (hud.isTengenGameOptionsVisible()) {
+            drawGameOptions(session, tilesPx(16), tilesPx(2.5f));
+        }
 
         if (hud.gameScore().isVisible()) {
             drawScores(hud.gameScore(), hud.highScore(), session, session.thisFrame().tick());
@@ -82,15 +86,11 @@ public class TengenMsPacMan_HUD_Renderer
         final int counterY = canvasRendering.unscaledHeight() - TS;
 
         if (hud.livesCounter().isVisible()) {
-            drawLivesCounter(session, counterY);
+            drawLivesCounter(hud.livesCounter(), session, counterY);
         }
 
         if (hud.levelCounter().isVisible()) {
-            drawLevelCounter(session, counterY);
-        }
-
-        if (hud.isTengenGameOptionsVisible()) {
-            drawGameOptions(session, tilesPx(16), tilesPx(2.5f));
+            drawLevelCounter(hud, hud.levelCounter(), session, counterY);
         }
 
         ctx.restore();
@@ -120,36 +120,32 @@ public class TengenMsPacMan_HUD_Renderer
         fillText("%6d".formatted(score.data().points()), color, font, tilesPx(13), tilesPx(2));
     }
 
-    private void drawLivesCounter(GameSession session, float y) {
-        final LivesCounter livesCounter = session.hud().livesCounter();
-        final int count = livesCounter.data().numLives();
+    private void drawLivesCounter(LivesCounter livesCounter, GameSession session, float y) {
+        final int numLives = session.numLives();
+        final int displayedSymbolsCount = Math.min(numLives - 1, livesCounter.data().maxLivesShown());
+
         final RectShort symbolSprite = spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL);
-        for (int i = 0; i < count; ++i) {
+        for (int i = 0; i < displayedSymbolsCount; ++i) {
             drawSprite(symbolSprite, tilesPx(4 + i * 2), y, true);
         }
-        if (count > session.hud().livesCounter().data().maxLives()) {
-            fillText(
-                "(%d)".formatted(count),
-                NES_Palette.color(0x28),
-                totalLivesFont.get(),
-                tilesPx(14),
-                y + TS);
+        if (numLives - 1 > livesCounter.data().maxLivesShown()) {
+            fillText("(%d)".formatted(numLives), NES_Palette.color(0x28), totalLivesFont.get(),
+                tilesPx(14), y + TS);
         }
     }
 
-    private void drawLevelCounter(GameSession session, float y) {
-        final LevelCounter levelCounter = session.hud().levelCounter();
+    private void drawLevelCounter(HUD hud, LevelCounter levelCounter, GameSession session, float y) {
         final RectShort[] symbolSprites = spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS);
         float x = LEVEL_COUNTER_POS_RIGHT - tilesPx(2);
         // symbols are drawn from right to left!
         final List<Integer> symbolCodes = levelCounter.data().symbolCodes();
-        for (int symbolCode : symbolCodes) {
-            if (0 <= symbolCode && symbolCode < symbolSprites.length) {
-                drawSprite(symbolSprites[symbolCode], x, y, true);
+        for (int code : symbolCodes) {
+            if (0 <= code && code < symbolSprites.length) {
+                drawSprite(symbolSprites[code], x, y, true);
             }
             x -= tilesPx(2);
         }
-        if (session.hud().isTengenLevelNumberVisible()) {
+        if (hud.isTengenLevelNumberVisible()) {
             session.optLevel().ifPresent(level -> {
                 final int levelNumber = level.number();
                 drawLevelNumberBox(levelNumber, LEVEL_COUNTER_POS_LEFT, y); // left box
@@ -160,10 +156,10 @@ public class TengenMsPacMan_HUD_Renderer
 
     private double computeOffsetY(GameScene scene) {
         return switch (scene) {
-            case TengenMsPacMan_CutScene1 ignored -> -2 * TS;
-            case TengenMsPacMan_CutScene2 ignored -> -2 * TS;
-            case TengenMsPacMan_CutScene3 ignored -> -2 * TS;
-            case TengenMsPacMan_CutScene4 ignored -> -2 * TS;
+            case TengenMsPacMan_CutScene1 _,
+                 TengenMsPacMan_CutScene2 _,
+                 TengenMsPacMan_CutScene3 _,
+                 TengenMsPacMan_CutScene4 _ -> -2 * TS;
             default -> 0;
         };
     }

@@ -110,18 +110,9 @@ public class Arcade_HUD_Renderer
         }
     }
 
-    private void drawLevelCounter(LevelCounter levelCounter, CanvasRenderingComp canvasRendering) {
-        final float y = canvasRendering.unscaledHeight() - tilesPx(2) + 2;
-        float x = canvasRendering.unscaledWidth() - tilesPx(4);
-        for (int symbolCode : levelCounter.data().symbolCodes()) {
-            drawSprite(bonusSymbolSprites[symbolCode], x, y, true);
-            x -= tilesPx(2); // symbols are drawn from right to left
-        }
-    }
-
     private void drawLivesCounter(LivesCounter livesCounter, GameSession session, CanvasRenderingComp canvasRendering) {
         final int numLives = session.numLives();
-        final int displayedSymbolsCount = Math.min(numLives - 1, livesCounter.data().maxLives());
+        final int displayedSymbolsCount = Math.min(numLives - 1, livesCounter.data().maxLivesShown());
 
         final float x = tilesPx(2);
         final float y = canvasRendering.unscaledHeight() - tilesPx(2);
@@ -130,10 +121,18 @@ public class Arcade_HUD_Renderer
         for (int i = 0; i < displayedSymbolsCount; ++i) {
             drawSprite(livesCounterSymbolSprite, x + i * spacing, y, true);
         }
-        if (numLives - 1 > livesCounter.data().maxLives()) {
+        if (numLives - 1 > livesCounter.data().maxLivesShown()) {
             // Show text indicating that more lives are available than symbols displayed (cheating may cause this)
             final Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
             fillText("%d".formatted(numLives), ARCADE_YELLOW, font, x - 14, y + TS);
+        }
+    }
+    private void drawLevelCounter(LevelCounter levelCounter, CanvasRenderingComp canvasRendering) {
+        final float y = canvasRendering.unscaledHeight() - tilesPx(2) + 2;
+        float x = canvasRendering.unscaledWidth() - tilesPx(4);
+        for (int symbolCode : levelCounter.data().symbolCodes()) {
+            drawSprite(bonusSymbolSprites[symbolCode], x, y, true);
+            x -= tilesPx(2); // symbols are drawn from right to left
         }
     }
 

@@ -20,7 +20,7 @@ public class LivesCounterData implements GameEntityComp {
         this.numLives = numLives;
     }
 
-    public int maxLives() {
+    public int maxLivesShown() {
         return maxLivesShown;
     }
 

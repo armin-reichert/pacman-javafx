@@ -12,6 +12,7 @@ import de.amr.pacmanfx.core.entities.bonus.system.BonusStateSystem;
 import de.amr.pacmanfx.core.entities.bonus.system.BonusWorldMovementPolicy;
 import de.amr.pacmanfx.core.entities.ghost.system.*;
 import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
+import de.amr.pacmanfx.core.entities.livescounter.system.LivesCounterSystem;
 import de.amr.pacmanfx.core.entities.pac.system.*;
 import de.amr.pacmanfx.core.gameplay.hunt.*;
 import de.amr.pacmanfx.core.gamestate.EntityUpdater;
@@ -26,7 +27,6 @@ public class GameSystems {
     protected MovementSystem motor =  new MovementSystem();
     protected WorldNavigationSystem navigator = new WorldNavigationSystem();
     protected RoamingSystem roamingNavigator = new RoamingSystem(navigator);
-
 
     protected WorldMovementPolicy<Pac> pacWorldMovementPolicy;
     protected PacAutoSteeringSystem pacAutoSteering;
@@ -51,12 +51,13 @@ public class GameSystems {
     protected BonusMoveAndJumpSystem bonusMoveAndJumpSystem;
 
     protected LevelCounterSystem levelCounterSystem;
+    protected LivesCounterSystem livesCounterSystem;
 
     public GameSystems() {
         createPacSystems();
         createGhostSystems();
         createBonusSystems();
-        createLevelCounterSystem();
+        createHUDSystems();
     }
 
     protected void createPacSystems() {
@@ -89,8 +90,9 @@ public class GameSystems {
         bonusStateSystem = new BonusStateSystem();
     }
 
-    protected void createLevelCounterSystem() {
+    protected void createHUDSystems() {
         levelCounterSystem = new LevelCounterSystem();
+        livesCounterSystem = new LivesCounterSystem();
     }
 
     /**
@@ -212,5 +214,9 @@ public class GameSystems {
 
     public LevelCounterSystem levelCounterSystem() {
         return levelCounterSystem;
+    }
+
+    public LivesCounterSystem livesCounterSystem() {
+        return livesCounterSystem;
     }
 }

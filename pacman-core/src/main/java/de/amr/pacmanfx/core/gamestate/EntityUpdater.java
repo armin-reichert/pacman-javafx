@@ -121,7 +121,7 @@ public class EntityUpdater {
         if (session.optLevel().isPresent()) {
             displayedLivesCount = adjustLiveCountOnStart(displayedLivesCount, game.state(), session.level());
         }
-        displayedLivesCount = Math.clamp(displayedLivesCount, 0, livesCounter.data().maxLives());
+        displayedLivesCount = Math.clamp(displayedLivesCount, 0, livesCounter.data().maxLivesShown());
         livesCounter.data().setNumLives(displayedLivesCount);
     }
 

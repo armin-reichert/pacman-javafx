@@ -83,17 +83,24 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     @Override
     public void startSession(GameContext game) {
         requireNonNull(game);
+
+        final GameSystems systems = game.variant().systems();
         final GameSession session = game.session();
 
-        final int lives = game.variant().initialLifeCount();
-        session.setNumLives(lives);
-        session.hud().livesCounter().data().setMaxLivesShown(5);
+        final int numLives = game.variant().initialLifeCount();
+        session.setNumLives(numLives);
+
+        final LivesCounter livesCounter = session.hud().livesCounter();
+        systems.livesCounterSystem().setNumLives(livesCounter, numLives);
+        systems.livesCounterSystem().setMaxLivesShown(livesCounter, 5);
+
+        configureLevelCounter(game, session.hud().levelCounter());
+
+        initScores(game);
 
         session.setCutScenesEnabled(true);
         session.setLevel(null);
         session.setGameRunning(false);
-        initScores(game);
-        configureLevelCounter(game, session.hud().levelCounter());
 
         game.variant().gameFlow().restartGameState(game, CommonGameStateID.BOOT);
     }
