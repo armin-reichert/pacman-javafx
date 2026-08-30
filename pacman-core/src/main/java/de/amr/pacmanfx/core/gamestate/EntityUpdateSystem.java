@@ -20,26 +20,28 @@ import de.amr.pacmanfx.core.rules.GameRules;
 
 import java.util.List;
 
+import static java.util.Objects.requireNonNull;
+
 // Preliminary central place for calling entity updates
 public class EntityUpdateSystem {
 
     public void updateEntities(GameContext game) {
-        game.session().optLevel().ifPresent(level -> {
-            updatePac(game, level, level.entities().pac());
-            updateGhosts(game, level);
-            level.entities().optBonus().ifPresent(bonus -> updateBonus(game, level, bonus));
-            updateHeartbeat(level);
-            // Handle entities with limited lifetime like ghost points, bonus points etc.
-            game.variant().systems().lifetime().update(level.entities());
-        });
-        game.variant().systems().hudUpdateSystem().update(game.session().hud(), game);
+        requireNonNull(game);
+        final GameSession session = game.session();
+        session.optLevel().ifPresent(level -> updateLevel(game, level));
+        game.variant().systems().hudUpdateSystem().update(session.hud(), game);
     }
 
-    public void updateHeartbeat(GameLevel level) {
+    private void updateLevel(GameContext game, GameLevel level) {
         level.heartbeat().triggerPulse();
+        updatePac(game, level, level.entities().pac());
+        updateGhosts(game, level);
+        level.entities().optBonus().ifPresent(bonus -> updateBonus(game, level, bonus));
+        // Handle entities with limited lifetime like ghost points, bonus points etc.
+        game.variant().systems().lifetime().update(level.entities());
     }
 
-    public void updatePac(GameContext game, GameLevel level, Pac pac) {
+    private void updatePac(GameContext game, GameLevel level, Pac pac) {
         final GameSystems systems = game.variant().systems();
         final GameRules rules = game.variant().rules();
         final GameSession session = game.session();
@@ -75,7 +77,7 @@ public class EntityUpdateSystem {
         }
     }
 
-    public void updateGhosts(GameContext game, GameLevel level) {
+    private void updateGhosts(GameContext game, GameLevel level) {
         final boolean ghostEatenState = game.state().id().equals(CommonGameStateID.GAME_LEVEL_EATING_GHOST);
         final List<Ghost> ghostsToUpdate = ghostEatenState
             ? level.entities().ghostsInAnyOfStates(GhostStateSystem.UPDATED_GHOST_STATES_WHILE_EATEN).toList()
@@ -94,7 +96,7 @@ public class EntityUpdateSystem {
         });
     }
 
-    public void updateBonus(GameContext game, GameLevel level, Bonus bonus) {
+    private void updateBonus(GameContext game, GameLevel level, Bonus bonus) {
         final GameSystems systems = game.variant().systems();
 
         final BonusStateComp state = bonus.state();
