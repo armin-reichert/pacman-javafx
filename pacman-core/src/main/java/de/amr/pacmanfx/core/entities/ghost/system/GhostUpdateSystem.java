@@ -4,9 +4,8 @@
 
 package de.amr.pacmanfx.core.entities.ghost.system;
 
-
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -17,23 +16,41 @@ import java.util.List;
 
 public class GhostUpdateSystem {
 
+    private final GhostHouseAccessSystem houseAccessSystem;
+    private final GhostHuntingSystem huntingSystem;
+    private final GhostStateSystem stateSystem;
+    private final GhostAnimationSystem animationSystem;
+    private final ActorSpriteAnimController animController;
+
+    public GhostUpdateSystem(
+        GhostHouseAccessSystem houseAccessSystem,
+        GhostHuntingSystem huntingSystem,
+        GhostStateSystem stateSystem,
+        GhostAnimationSystem animationSystem,
+        ActorSpriteAnimController animController)
+    {
+        this.houseAccessSystem = houseAccessSystem;
+        this.huntingSystem = huntingSystem;
+        this.stateSystem = stateSystem;
+        this.animationSystem = animationSystem;
+        this.animController = animController;
+    }
+
     public void update(GameContext game, GameLevel level) {
         final boolean ghostEatenState = game.state().id().equals(CommonGameStateID.GAME_LEVEL_EATING_GHOST);
         final List<Ghost> ghostsToUpdate = ghostEatenState
             ? level.entities().ghostsInAnyOfStates(GhostStateSystem.UPDATED_GHOST_STATES_WHILE_EATEN).toList()
             : level.entities().ghosts();
 
-        final GameSystems systems = game.variant().systems();
         final GameRules rules = game.variant().rules();
         final ActorSpeedRules speedRules = rules.actorSpeedRules();
 
         ghostsToUpdate.forEach(ghost -> {
             final float speed = speedRules.ghostSpeed(game, ghost);
-            systems.ghostHouseAccess().update(ghost, level, speed);
-            systems.ghostHuntingSystem().update(game, level, ghost);
-            systems.ghostState().update(game, ghost);
-            systems.ghostAnimation().update(ghost, systems.actorSpriteAnimController());
+            houseAccessSystem.update(ghost, level, speed);
+            huntingSystem.update(game, level, ghost);
+            stateSystem.update(game, ghost);
+            animationSystem.update(ghost, animController);
         });
     }
-
 }

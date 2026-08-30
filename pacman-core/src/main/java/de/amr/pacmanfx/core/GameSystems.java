@@ -98,11 +98,18 @@ public class GameSystems {
         cyanGhostBashfulHuntingStrategy = createBashfulHuntingStrategy();
         orangeGhostPokeyHuntingStrategy = createPokeyHuntingStrategy();
 
-        ghostUpdateSystem = new GhostUpdateSystem();
         ghostStateSystem = new GhostStateSystem();
         ghostHouseAccessSystem = new GhostHouseAccessSystem(navigator, ghostWorldMovementPolicy, motor);
         ghostHuntingSystem = new GhostHuntingSystem();
         ghostAnimationSystem = new GhostAnimationSystem();
+
+        ghostUpdateSystem = new GhostUpdateSystem(
+            ghostHouseAccessSystem,
+            ghostHuntingSystem,
+            ghostStateSystem,
+            ghostAnimationSystem,
+            actorSpriteAnimController
+        );
     }
 
     protected void createBonusSystems() {
