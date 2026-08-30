@@ -90,8 +90,6 @@ public class Test_ShortTestState extends AbstractGameState {
                 timer().resetToIndefiniteDuration();
                 gamePlay.startNextLevel(game);
             }
-        } else {
-            level.entities().optBonus().ifPresent(bonus -> systems.updateSystem().updateBonus(game, level, bonus));
         }
     }
 

@@ -83,15 +83,14 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     public void startSession(GameContext game) {
         requireNonNull(game);
 
-        final GameSystems systems = game.variant().systems();
         final GameSession session = game.session();
 
         final int numLives = game.variant().initialLifeCount();
         session.setNumLives(numLives);
 
         final LivesCounter livesCounter = session.hud().livesCounter();
-        systems.livesCounterSystem().setNumLives(livesCounter, numLives);
-        systems.livesCounterSystem().setMaxLivesShown(livesCounter, 5);
+        livesCounter.data().setNumLives(numLives);
+        livesCounter.data().setMaxLivesShown(5);
 
         configureLevelCounter(game, session.hud().levelCounter());
 

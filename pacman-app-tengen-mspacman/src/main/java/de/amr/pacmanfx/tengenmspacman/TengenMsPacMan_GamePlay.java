@@ -190,7 +190,6 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     public void startSession(GameContext game) {
         requireNonNull(game);
 
-        final GameSystems systems = game.variant().systems();
         final GameSession session = game.session();
 
         setBoosterMode(session,      TengenMsPacMan_GameVariantUIConfig.DEFAULT_PAC_BOOSTER);
@@ -205,8 +204,8 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         session.setNumLives(numLives);
 
         final LivesCounter livesCounter = session.hud().livesCounter();
-        systems.livesCounterSystem().setNumLives(livesCounter, numLives);
-        systems.livesCounterSystem().setMaxLivesShown(livesCounter, 5);
+        livesCounter.data().setNumLives(numLives);
+        livesCounter.data().setMaxLivesShown(5);
 
         configureLevelCounter(game, session.hud().levelCounter());
 

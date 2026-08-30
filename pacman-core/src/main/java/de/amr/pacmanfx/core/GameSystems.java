@@ -12,7 +12,6 @@ import de.amr.pacmanfx.core.entities.bonus.system.BonusStateSystem;
 import de.amr.pacmanfx.core.entities.bonus.system.BonusWorldMovementPolicy;
 import de.amr.pacmanfx.core.entities.ghost.system.*;
 import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
-import de.amr.pacmanfx.core.entities.livescounter.system.LivesCounterSystem;
 import de.amr.pacmanfx.core.entities.pac.system.*;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.gameplay.hunt.*;
@@ -57,7 +56,6 @@ public class GameSystems {
     // HUD systems
     protected ScoreSystem scoreSystem;
     protected LevelCounterSystem levelCounterSystem;
-    protected LivesCounterSystem livesCounterSystem;
 
     public GameSystems() {
         createPacSystems();
@@ -99,7 +97,6 @@ public class GameSystems {
     protected void createHUDSystems() {
         scoreSystem = new ScoreSystem();
         levelCounterSystem = new LevelCounterSystem();
-        livesCounterSystem = new LivesCounterSystem();
     }
 
     // Global systems
@@ -240,9 +237,5 @@ public class GameSystems {
 
     public LevelCounterSystem levelCounterSystem() {
         return levelCounterSystem;
-    }
-
-    public LivesCounterSystem livesCounterSystem() {
-        return livesCounterSystem;
     }
 }
