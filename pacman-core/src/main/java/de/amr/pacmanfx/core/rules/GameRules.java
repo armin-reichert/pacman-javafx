@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.core.rules;
 
+import de.amr.basics.Named;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.level.GameLevel;
 
@@ -54,6 +55,8 @@ public interface GameRules {
     float pacPowerFadingSeconds(int levelNumber);
 
     PacDyingTiming pacDyingTiming();
+
+    Named initialPacAnimationID();
 
     int numHuntingPhases();
 

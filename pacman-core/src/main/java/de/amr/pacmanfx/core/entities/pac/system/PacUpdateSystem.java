@@ -62,6 +62,6 @@ public class PacUpdateSystem {
         navigator.setMoveDirSpeed(pac, speed);
         navigator.tryMovingOrTeleporting(level, pac, movementPolicy);
 
-        pacAnimationSystem.update(pac);
+        pacAnimationSystem.update(pac, game.variant().rules());
     }
 }

@@ -20,17 +20,14 @@ public class Arcade_GameOverState extends AbstractGameState {
 
     @Override
     public void onEnterState(GameContext game) {
+        gamePlay.showMessage(game, MessageType.GAME_OVER);
+        session.setGameRunning(false);
+        session.cheats().clear();
         try {
             systems.scoreSystem().saveHighScoreIfNeeded(hud.highScore());
         } catch (IOException e) {
             game.eventManager().publishGameEvent(new HighScoreAccessErrorEvent(e));
         }
-
-        gamePlay.showMessage(game, MessageType.GAME_OVER);
-
-        session.setGameRunning(false);
-        session.cheats().clear();
-
         timer().restartTicks(session.gameOverStateTicks());
     }
 
@@ -39,6 +36,7 @@ public class Arcade_GameOverState extends AbstractGameState {
         if (timer().hasExpired()) {
             session.hud().clearMessage();
             session.cheats().clear();
+            session.setLevel(null);
             flow.enterGameState(game, game.coinMechanism().isEmpty()
                 ? CommonGameStateID.GAME_INTRO
                 : CommonGameStateID.GAME_PREPARATION);

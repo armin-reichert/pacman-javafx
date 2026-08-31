@@ -56,7 +56,7 @@ public abstract class CommonGamePlay implements GamePlay {
         systems.motor().setVelocity(pac, 0, 0);
         systems.navigator().setMoveDir(pac, Direction.LEFT);
         systems.navigator().setWishDir(pac, Direction.LEFT);
-        systems.pacAnimation().update(pac);
+        systems.pacAnimation().update(pac, game.variant().rules());
 
         level.entities().ghosts().forEach(ghost -> {
             ghost.reset(); // initially invisible and locked!

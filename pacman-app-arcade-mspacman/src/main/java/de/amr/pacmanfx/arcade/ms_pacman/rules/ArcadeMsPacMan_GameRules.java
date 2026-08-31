@@ -4,9 +4,11 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.rules;
 
+import de.amr.basics.Named;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.arcade.pacman.rules.ArcadePacMan_GameRules;
 import de.amr.pacmanfx.core.Validations;
+import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 
 import java.util.List;
 import java.util.Optional;
@@ -95,5 +97,10 @@ public class ArcadeMsPacMan_GameRules extends ArcadePacMan_GameRules {
         else {
             throw new IllegalArgumentException("Phase index " + phaseIndex + " is invalid");
         }
+    }
+
+    @Override
+    public Named initialPacAnimationID() {
+        return CommonSpriteAnimationID.PAC_MOUTH_MOVING;
     }
 }

@@ -6,6 +6,7 @@ import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.pac.comp.PacAnimationComp;
 import de.amr.pacmanfx.core.entities.pac.comp.PacStateComp;
+import de.amr.pacmanfx.core.rules.GameRules;
 
 import static java.util.Objects.requireNonNull;
 
@@ -17,7 +18,7 @@ public class PacAnimationSystem {
         this.animController = requireNonNull(animController);
     }
 
-    public void update(Pac pac) {
+    public void update(Pac pac, GameRules rules) {
         requireNonNull(pac);
 
         final PacStateComp state = pac.state();
@@ -29,11 +30,7 @@ public class PacAnimationSystem {
 
         switch (state.enumValue()) {
             case SLEEPING -> {
-                // Female Pac just cannot shut her mouth for a second!
-                final var animationID = state.isMale()
-                    ? CommonSpriteAnimationID.PAC_MOUTH_SHUT
-                    : CommonSpriteAnimationID.PAC_MOUTH_MOVING;
-                animation.setAnimationID(animationID);
+                animation.setAnimationID(rules.initialPacAnimationID());
                 animation.setStopped(true);
             }
             case ACTIVE -> {
