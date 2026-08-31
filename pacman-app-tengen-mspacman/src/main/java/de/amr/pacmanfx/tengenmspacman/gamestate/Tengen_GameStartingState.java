@@ -10,7 +10,8 @@ import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
+
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.startLevelNumber;
 
 public class Tengen_GameStartingState extends AbstractGameState {
 
@@ -26,9 +27,7 @@ public class Tengen_GameStartingState extends AbstractGameState {
 
     @Override
     public void onEnterState(GameContext game) {
-        level = gamePlay.buildNormalLevel(game, TengenMsPacMan_GamePlay.startLevelNumber(session));
-
-        game.eventManager().publishGameEvent(new LevelCreatedEvent(level));
+        level = gamePlay.buildNormalLevel(game, startLevelNumber(session));
 
         hud.hideCredit();
         hud.livesCounter().show();
@@ -37,8 +36,9 @@ public class Tengen_GameStartingState extends AbstractGameState {
         hud.highScore().show();
         hud.show();
 
-        systems.scoreSystem().enableScore(hud.highScore(), true);
+        hud.highScore().data().setEnabled(true);
 
+        game.eventManager().publishGameEvent(new LevelCreatedEvent(level));
         game.eventManager().publishGameEvent(new GameStartedEvent(game));
     }
 

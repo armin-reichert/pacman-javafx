@@ -135,10 +135,6 @@ public class ScoreSystem {
             persistency.file(), data.points(), data.levelNumber());
     }
 
-    public void enableScore(Score score, boolean enabled) {
-        score.data().setEnabled(enabled);
-    }
-
     public void saveHighScoreIfNeeded(Score currentHighScore) throws IOException {
         final File file = currentHighScore.requirePersistency().file();
         final Score savedHighScore = createHighScore(file);

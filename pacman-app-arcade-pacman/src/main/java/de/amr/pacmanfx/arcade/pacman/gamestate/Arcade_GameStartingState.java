@@ -27,9 +27,7 @@ public class Arcade_GameStartingState extends AbstractGameState {
 
     @Override
     public void onEnterState(GameContext game) {
-        level = game.variant().gamePlay().buildNormalLevel(game, 1);
-
-        game.eventManager().publishGameEvent(new LevelCreatedEvent(level));
+        level = gamePlay.buildNormalLevel(game, 1);
 
         hud.hideCredit();
         hud.livesCounter().show();
@@ -38,9 +36,11 @@ public class Arcade_GameStartingState extends AbstractGameState {
         hud.highScore().show();
         hud.show();
 
-        systems.scoreSystem().enableScore(hud.highScore(), true);
+        hud.highScore().data().setEnabled(true);
 
         lockPacAndGhost(level.entities());
+
+        game.eventManager().publishGameEvent(new LevelCreatedEvent(level));
         game.eventManager().publishGameEvent(new GameStartedEvent(game));
     }
 

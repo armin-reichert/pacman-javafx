@@ -210,7 +210,7 @@ public abstract class CommonGamePlay implements GamePlay {
         gameScore.reset();
         try {
             scoreSystem.load(highScore);
-            scoreSystem.enableScore(highScore, true);
+            highScore.data().setEnabled(true);
         } catch (IOException e) {
             game.eventManager().publishGameEvent(new HighScoreAccessErrorEvent(e));
         }
