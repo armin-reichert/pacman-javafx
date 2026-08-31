@@ -60,16 +60,23 @@ public class PacAnimationSystem {
         }
     }
 
-    public void playDyingAnimation(Pac pac) {
+    public void selectDyingAnimation(Pac pac) {
         requireNonNull(pac);
 
         final Named id = CommonSpriteAnimationID.PAC_DYING;
         final PacAnimationComp animation = pac.animation();
         animation.setAnimationID(id);
         animation.setLocked(false);
-        animation.setStopped(false);
+        animation.setStopped(true);
 
         animController.select(pac, id);
         animController.setAnimationFrame(pac, id, 0);
+    }
+
+    public void startDyingAnimation(Pac pac) {
+        requireNonNull(pac);
+
+        final PacAnimationComp animation = pac.animation();
+        animation.setStopped(false);
     }
 }

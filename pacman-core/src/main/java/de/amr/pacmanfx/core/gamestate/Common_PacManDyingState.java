@@ -62,10 +62,11 @@ public final class Common_PacManDyingState extends AbstractGameState {
 
         if (tick == rules.pacDyingTiming().hideGhostsTick()) {
             level.entities().ghosts().forEach(GameEntity::hide);
+            systems.pacAnimation().lockAnimation(pac, false);
+            systems.pacAnimation().selectDyingAnimation(pac);
         }
         else if (tick == rules.pacDyingTiming().animationStartTick()) {
-            systems.pacAnimation().lockAnimation(pac, false);
-            systems.pacAnimation().playDyingAnimation(pac);
+            systems.pacAnimation().startDyingAnimation(pac);
             game.eventManager().publishGameEvent(new PacDyingEvent(pac));
         }
         else if (tick == rules.pacDyingTiming().hidePacTick()) {
