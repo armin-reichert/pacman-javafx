@@ -177,6 +177,17 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         session.setValue(TengenMsPacMan_GamePlayOptions.CAN_START_GAME, canStartNewGame);
     }
 
+    // HUD extras
+
+    public static void setHUD_Option(GameSession session, TengenMsPacMan_HUD_Options option, boolean value) {
+        requireNonNull(session);
+        session.setValue(option, value);
+    }
+
+    public static boolean hasHUD_Option(GameSession session, TengenMsPacMan_HUD_Options option) {
+        return session.value(option, Boolean.class);
+    }
+
     public TengenMsPacMan_GamePlay() {}
 
     // GamePlay interface

@@ -15,6 +15,16 @@ import org.tinylog.Logger;
 import static de.amr.basics.math.Direction.*;
 import static java.util.Objects.requireNonNull;
 
+/**
+ * Lets the actor roam through the current level's world.
+ * <br/><br/>
+ <cite>
+    Roam if you want to, roam around the world!<br>
+    ...                , without wings without wheels!<br>
+    ...                , roam around the world!<br>
+    ...                , without anything but the love we feel!
+ </cite>
+ */
 public class RoamingSystem {
 
     private final WorldNavigationSystem navigator;
@@ -23,15 +33,6 @@ public class RoamingSystem {
         this.navigator = requireNonNull(navigator);
     }
 
-    /**
-     * Lets the actor roam through the current level's world.<br>
-         <cite>
-             Roam if you want to, roam around the world!<br>
-             Roam if you want to, without wings without wheels!<br>
-             Roam if you want to, roam around the world!<br>
-             Roam if you want to, without anything but the love we feel!
-         </cite>
-     */
     public <E extends GameEntity> void roam(
         GameLevel level,
         E actor,

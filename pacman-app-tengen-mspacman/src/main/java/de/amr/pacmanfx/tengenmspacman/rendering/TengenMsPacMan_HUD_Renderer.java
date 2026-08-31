@@ -10,6 +10,7 @@ import de.amr.pacmanfx.core.entities.LevelCounter;
 import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_HUD_Options;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene1;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene2;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene3;
@@ -35,6 +36,7 @@ import java.util.List;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.hasHUD_Option;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_HUD_Renderer
@@ -75,7 +77,7 @@ public class TengenMsPacMan_HUD_Renderer
         ctx.save();
         ctx.translate(0, scaled(computeOffsetY(gameScene)));
 
-        if (hud.isTengenGameOptionsVisible()) {
+        if (hasHUD_Option(session, TengenMsPacMan_HUD_Options.GAME_OPTIONS_VISIBLE)) {
             drawGameOptions(session, tilesPx(16), tilesPx(2.5f));
         }
 
@@ -90,7 +92,7 @@ public class TengenMsPacMan_HUD_Renderer
         }
 
         if (hud.levelCounter().isVisible()) {
-            drawLevelCounter(hud, hud.levelCounter(), session, counterY);
+            drawLevelCounter(hud.levelCounter(), session, counterY);
         }
 
         ctx.restore();
@@ -134,7 +136,7 @@ public class TengenMsPacMan_HUD_Renderer
         }
     }
 
-    private void drawLevelCounter(HUD hud, LevelCounter levelCounter, GameSession session, float y) {
+    private void drawLevelCounter(LevelCounter levelCounter, GameSession session, float y) {
         final RectShort[] symbolSprites = spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS);
         float x = LEVEL_COUNTER_POS_RIGHT - tilesPx(2);
         // symbols are drawn from right to left!
@@ -145,11 +147,11 @@ public class TengenMsPacMan_HUD_Renderer
             }
             x -= tilesPx(2);
         }
-        if (hud.isTengenLevelNumberVisible()) {
+        if (hasHUD_Option(session, TengenMsPacMan_HUD_Options.LEVEL_NUMBER_VISIBLE)) {
             session.optLevel().ifPresent(level -> {
-                final int levelNumber = level.number();
-                drawLevelNumberBox(levelNumber, LEVEL_COUNTER_POS_LEFT, y); // left box
-                drawLevelNumberBox(levelNumber, LEVEL_COUNTER_POS_RIGHT, y); // right box
+                final int number = level.number();
+                drawLevelNumberBox(number, LEVEL_COUNTER_POS_LEFT, y);
+                drawLevelNumberBox(number, LEVEL_COUNTER_POS_RIGHT, y);
             });
         }
     }

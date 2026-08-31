@@ -18,10 +18,6 @@ public class HUD {
     private final Score highScore;
     private final MessageView messageView;
 
-    //TODO These are Tengen only and do not really belong here
-    private boolean tengenGameOptionsVisible;
-    private boolean tengenLevelNumberVisible;
-
     public HUD(String variantName) {
         levelCounter = new LevelCounter();
         livesCounter = new LivesCounter();
@@ -76,23 +72,5 @@ public class HUD {
 
     public void clearMessage() {
         messageView.data().setMessageType(MessageType.NO_MESSAGE);
-    }
-
-    // Tengen only
-
-    public boolean isTengenGameOptionsVisible() {
-        return tengenGameOptionsVisible;
-    }
-
-    public void setTengenGameOptionsVisible(boolean tengenGameOptionsVisible) {
-        this.tengenGameOptionsVisible = tengenGameOptionsVisible;
-    }
-
-    public boolean isTengenLevelNumberVisible() {
-        return tengenLevelNumberVisible;
-    }
-
-    public void setTengenLevelNumberVisible(boolean tengenLevelNumberVisible) {
-        this.tengenLevelNumberVisible = tengenLevelNumberVisible;
     }
 }

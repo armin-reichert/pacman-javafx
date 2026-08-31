@@ -18,7 +18,6 @@ import de.amr.pacmanfx.game.GameVariant;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -42,8 +41,11 @@ import org.tinylog.Logger;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.*;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantUIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantUIConfig.NES_SCREEN_WIDTH;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_HUD_Options.GAME_OPTIONS_VISIBLE;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_HUD_Options.LEVEL_NUMBER_VISIBLE;
 import static de.amr.pacmanfx.tengenmspacman.gamescene.SceneDisplay.SCROLLING;
 import static de.amr.pacmanfx.ui.views.ContextMenuSupport.*;
 
@@ -120,7 +122,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
         hud.livesCounter().show();
         hud.show();
 
-        hud.setTengenGameOptionsVisible(!TengenMsPacMan_GamePlay.allOptionsHaveDefaultValue(session));
+        setHUD_Option(session, GAME_OPTIONS_VISIBLE, !allOptionsHaveDefaultValue(session));
 
         resetRendering2D();
         updateScaling();
@@ -145,7 +147,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
                 dynamicCamera.update(tilesPx(terrain.numRows()), level.entities().pac());
             }
             ensureActorAnimationsCreated(session, level);
-            updateHUD();
+            updateHUD(session);
             optSoundEffects().ifPresent(soundEffects -> {
                 soundEffects.setEnabled(!session.isAttractMode());
                 soundEffects.playAmbientGameLevelSound(game(), level);
@@ -298,9 +300,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
             subScene.getWidth(), subScene.getHeight(), reqCanvasRendering().scaling());
     }
 
-    private void updateHUD() {
-        final HUD hud = game().session().hud();
-        hud.setTengenLevelNumberVisible(TengenMsPacMan_GamePlay.mapCategory(game().session()) != MapCategory.ARCADE);
+    private void updateHUD(GameSession session) {
+        setHUD_Option(session, LEVEL_NUMBER_VISIBLE, mapCategory(session) != MapCategory.ARCADE);
     }
 
     void playLevelCompleteAnimation(GameLevel level, int numFlashes) {
