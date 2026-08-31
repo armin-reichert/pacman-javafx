@@ -6,7 +6,6 @@ package de.amr.pacmanfx.core.gamestate;
 
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.pac.comp.PacState;
 import de.amr.pacmanfx.core.gameplay.hunt.GamePlayStep;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -31,7 +30,7 @@ public final class Common_PlayingLevelState extends AbstractGameState {
         level.heartbeat().setStartState(Pulse.State.ON);
         level.heartbeat().restart();
 
-        systems.pacState().setState(level.entities().pac(), PacState.ACTIVE);
+        level.entities().pac().state().setEnumValue(PacState.ACTIVE);
 
         // This call fires a game event!
         level.huntingTimerStrategy().startFirstPhase(game, level.number());

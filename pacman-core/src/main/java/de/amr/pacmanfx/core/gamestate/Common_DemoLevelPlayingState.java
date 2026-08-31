@@ -56,7 +56,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
             startEnergizerBlinking(level);
 
             final Pac pac = level.entities().pac();
-            systems.pacState().setState(pac, PacState.ACTIVE);
+            pac.state().setEnumValue(PacState.ACTIVE);
 
             level.entities().ghosts().forEach(ghost -> {
                 ghost.worldNavigation().setDisabled(false);

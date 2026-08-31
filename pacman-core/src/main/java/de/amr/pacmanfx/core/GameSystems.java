@@ -36,7 +36,6 @@ public class GameSystems {
     protected PacAutoSteeringSystem pacAutoSteeringSystem;
 
     protected PacUpdateSystem pacUpdateSystem;
-    protected PacStateSystem pacStateSystem;
     protected PacPowerSystem pacPowerSystem;
     protected PacDigestionSystem pacDigestionSystem;
     protected PacAnimationSystem pacAnimationSystem;
@@ -75,11 +74,9 @@ public class GameSystems {
         pacAutoSteeringSystem = new PacAutoSteeringSystem();
         pacPowerSystem = new PacPowerSystem();
         pacDigestionSystem = new PacDigestionSystem();
-        pacStateSystem = new PacStateSystem();
         pacAnimationSystem = new PacAnimationSystem();
 
         pacUpdateSystem = new PacUpdateSystem(
-            pacStateSystem,
             pacDigestionSystem,
             pacPowerSystem,
             pacAutoSteeringSystem,
@@ -161,10 +158,6 @@ public class GameSystems {
 
     public PacAutoSteeringSystem pacAutoSteering() {
         return pacAutoSteeringSystem;
-    }
-
-    public PacStateSystem pacState() {
-        return pacStateSystem;
     }
 
     public PacPowerSystem pacPower() {

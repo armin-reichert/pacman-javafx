@@ -12,8 +12,6 @@ public class PacStateComp implements GameEntityComp {
 
     private PacState enumValue;
 
-    private boolean moving;
-
     private final boolean male;
 
     public PacStateComp(boolean male) {
@@ -29,14 +27,6 @@ public class PacStateComp implements GameEntityComp {
         this.enumValue = Objects.requireNonNull(enumValue);
     }
 
-    public boolean isMoving() {
-        return moving;
-    }
-
-    public void setMoving(boolean moving) {
-        this.moving = moving;
-    }
-
     public boolean isMale() {
         return male;
     }
@@ -44,6 +34,5 @@ public class PacStateComp implements GameEntityComp {
     @Override
     public void reset() {
         enumValue = PacState.SLEEPING;
-        moving = false;
     }
 }

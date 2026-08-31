@@ -38,7 +38,7 @@ public final class Common_PacManDyingState extends AbstractGameState {
         pac.worldNavigation().setDisabled(true);
         pac.animation().setDisabled(true);
         systems.pacPower().reset(pac);
-        systems.pacState().setState(pac, PacState.DEAD);
+        pac.state().setEnumValue(PacState.DEAD);
 
         level.entities().ghosts().forEach(ghost -> {
             // Copilot claims that eaten ghosts returning to the house continue even when Pac-Man dies

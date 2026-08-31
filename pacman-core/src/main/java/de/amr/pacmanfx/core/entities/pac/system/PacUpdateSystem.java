@@ -19,7 +19,6 @@ import static java.util.Objects.requireNonNull;
 public class PacUpdateSystem {
 
     private final WorldNavigationSystem navigator;
-    private final PacStateSystem pacStateSystem;
     private final PacDigestionSystem pacDigestionSystem;
     private final PacPowerSystem pacPowerSystem;
     private final PacAutoSteeringSystem pacAutoSteeringSystem;
@@ -28,7 +27,6 @@ public class PacUpdateSystem {
     private final WorldMovementPolicy<Pac> movementPolicy;
 
     public PacUpdateSystem(
-        PacStateSystem pacStateSystem,
         PacDigestionSystem pacDigestionSystem,
         PacPowerSystem pacPowerSystem,
         PacAutoSteeringSystem pacAutoSteeringSystem,
@@ -37,7 +35,6 @@ public class PacUpdateSystem {
         WorldMovementPolicy<Pac> movementPolicy,
         WorldNavigationSystem navigator)
     {
-        this.pacStateSystem = requireNonNull(pacStateSystem);
         this.pacDigestionSystem = requireNonNull(pacDigestionSystem);
         this.pacPowerSystem = requireNonNull(pacPowerSystem);
         this.pacAutoSteeringSystem = requireNonNull(pacAutoSteeringSystem);
@@ -61,7 +58,6 @@ public class PacUpdateSystem {
             ? speedRules.pacSpeedWhenHasPower(game, level)
             : speedRules.pacSpeed(game, level);
 
-        pacStateSystem.update(pac);
         pacDigestionSystem.update(pac);
         pacPowerSystem.update(pac, rules.pacPowerFadingSeconds(level.number()));
 

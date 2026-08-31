@@ -127,7 +127,7 @@ public class Test_ShortTestState extends AbstractGameState {
 
         // Pac-Man stops and stands still
         final Pac pac = level.entities().pac();
-        systems.pacState().setState(pac, PacState.SLEEPING);
+        pac.state().setEnumValue(PacState.SLEEPING);
         systems.pacPower().reset(pac);
 
         // Ghosts stop

@@ -35,7 +35,7 @@ public class Common_LevelCompleteState extends AbstractGameState {
         level.food().eatAll();
 
         // Pac-Man stops and stands still
-        systems.pacState().setState(pac, PacState.SLEEPING);
+        pac.state().setEnumValue(PacState.SLEEPING);
         systems.pacPower().reset(pac);
 
         // Ghosts stop

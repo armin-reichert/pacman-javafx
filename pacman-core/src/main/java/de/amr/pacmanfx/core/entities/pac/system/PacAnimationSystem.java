@@ -21,7 +21,7 @@ public class PacAnimationSystem {
             }
             case ACTIVE -> {
                 pac.animation().setAnimationID(CommonSpriteAnimationID.PAC_MOUTH_MOVING);
-                pac.animation().setDisabled(!pac.state().isMoving());
+                pac.animation().setDisabled(!pac.worldNavigation().info().moved);
             }
             case DEAD -> pac.animation().setAnimationID(CommonSpriteAnimationID.PAC_DYING);
         }

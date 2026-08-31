@@ -41,7 +41,8 @@ public class Pac3DAnimationSystem {
 
         final ManagedAnimation chewing = animation.chewing();
         if (chewing != null) {
-            if (state.isMoving()) {
+            final boolean moved = pac.worldNavigation().info().moved;
+            if (moved) {
                 chewing.playOrContinue();
             } else {
                 chewing.stop();
