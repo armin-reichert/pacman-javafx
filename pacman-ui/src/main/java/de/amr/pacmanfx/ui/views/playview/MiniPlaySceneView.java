@@ -208,9 +208,9 @@ public class MiniPlaySceneView {
     private void updateActorZOrder(GameLevelEntitySet entities) {
         actorsInZOrder.clear();
         entities.optBonus().ifPresent(actorsInZOrder::add);
-        actorsInZOrder.add(entities.pac());
-        GHOST_Z_ORDER.stream().map(entities::ghost).forEach(actorsInZOrder::add);
         actorsInZOrder.addAll(entities.theGhostPoints());
         actorsInZOrder.addAll(entities.theBonusPoints());
+        actorsInZOrder.add(entities.pac());
+        GHOST_Z_ORDER.stream().map(entities::ghost).forEach(actorsInZOrder::add);
     }
 }

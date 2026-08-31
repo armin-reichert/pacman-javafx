@@ -126,17 +126,6 @@ public class DS_ActorInfo extends GameDashboardSection {
         return fnLevelInfo(appContext, level -> infoSupplier.apply(level, level.entities().pac()));
     }
 
-    private Supplier<String> supplyPacAnimationText(GameAppContext app) {
-        return () -> app.game().session().optLevel().map(level -> {
-            final ActorSpriteAnimController animSystem = app.game().variant().systems().actorSpriteAnimController();
-            final Pac pac = level.entities().pac();
-            if (animSystem.selectedAnimationID(pac) != null) {
-                return "%s:%d".formatted(animSystem.selectedAnimationID(pac), animSystem.currentFrame(pac));
-            }
-            return NO_INFO;
-        }).orElse(NO_INFO);
-    }
-
     private Supplier<?> supplyGhostText(
         GameAppContext appContext,
         BiFunction<GameLevel, Ghost, String> infoSupplier, GhostPersonality personality) {
@@ -153,15 +142,37 @@ public class DS_ActorInfo extends GameDashboardSection {
         return "%s (%s)".formatted(ghost.name(), ghostStateText(level, ghost));
     }
 
+    private Supplier<String> supplyPacAnimationText(GameAppContext app) {
+        return () -> app.game().session().optLevel().map(level -> {
+            final ActorSpriteAnimController animSystem = app.game().variant().systems().actorSpriteAnimController();
+            final Pac pac = level.entities().pac();
+            final boolean stopped = pac.animation().isStopped();
+            final boolean locked = pac.animation().isLocked();
+            String statusText = "";
+            if (locked) statusText += " locked";
+            if (stopped) statusText += " stopped";
+            if (animSystem.selectedAnimationID(pac) != null) {
+                return "%s:%d%s".formatted(
+                    animSystem.selectedAnimationID(pac),
+                    animSystem.currentFrame(pac),
+                    statusText);
+            }
+            return NO_INFO;
+        }).orElse(NO_INFO);
+    }
+
     private String ghostAnimationText(ActorSpriteAnimController animSystem, Ghost ghost) {
         final Named id = animSystem.selectedAnimationID(ghost);
         if (id == null) {
             return NO_INFO;
         }
         if (animSystem.animation(ghost, id) instanceof SpriteAnimation spriteAnimation) {
-            final boolean running = spriteAnimation.running();
-            final String stoppedText = running ? "" : " (stopped)";
-            return "%s:%d%s".formatted(id, animSystem.currentFrame(ghost), stoppedText);
+            final boolean stopped = ghost.animation().isStopped();
+            final boolean locked = ghost.animation().isLocked();
+            String statusText = "";
+            if (locked) statusText += " locked";
+            if (stopped) statusText += " stopped";
+            return "%s:%d%s".formatted(id, animSystem.currentFrame(ghost), statusText);
         }
         return NO_INFO;
     }

@@ -8,6 +8,7 @@ import de.amr.basics.Named;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
+import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostAnimationComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostStateComp;
 
@@ -15,10 +16,10 @@ import static java.util.Objects.requireNonNull;
 
 public class GhostAnimationSystem {
 
-    private final ActorSpriteAnimController spriteAnimController;
+    private final ActorSpriteAnimController animController;
 
-    public GhostAnimationSystem(ActorSpriteAnimController spriteAnimController) {
-        this.spriteAnimController = requireNonNull(spriteAnimController);
+    public GhostAnimationSystem(ActorSpriteAnimController animController) {
+        this.animController = requireNonNull(animController);
     }
 
     public void update(Ghost ghost) {
@@ -46,11 +47,21 @@ public class GhostAnimationSystem {
 
         animation.setAnimationID(animationID);
 
-        spriteAnimController.select(ghost, animationID);
+        animController.select(ghost, animationID);
         if (ghost.animation().isStopped()) {
-            spriteAnimController.stopSelected(ghost);
+            animController.stopSelected(ghost);
         } else {
-            spriteAnimController.playSelected(ghost);
+            animController.playSelected(ghost);
+        }
+    }
+
+    public void lockAnimation(Ghost ghost, boolean locked) {
+        requireNonNull(ghost);
+        if (locked) {
+            ghost.animation().setLocked(true);
+            animController.stopSelected(ghost);
+        } else {
+            ghost.animation().setLocked(false);
         }
     }
 

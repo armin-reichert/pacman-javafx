@@ -6,7 +6,6 @@ import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.pac.comp.PacAnimationComp;
 import de.amr.pacmanfx.core.entities.pac.comp.PacStateComp;
-import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
@@ -42,6 +41,8 @@ public class PacAnimationSystem {
                 animation.setStopped(!pac.worldNavigation().info().moved);
             }
         }
+
+        animController.select(pac, animation.animationID());
         if (animation.isStopped()) {
             animController.stopSelected(pac);
         } else {
@@ -49,17 +50,14 @@ public class PacAnimationSystem {
         }
     }
 
-    public void lockAnimation(Pac pac) {
+    public void lockAnimation(Pac pac, boolean locked) {
         requireNonNull(pac);
-
-        pac.animation().setLocked(true);
-        animController.stopSelected(pac);
-    }
-
-    public void unlockAnimation(Pac pac) {
-        requireNonNull(pac);
-
-        pac.animation().setLocked(false);
+        if (locked) {
+            pac.animation().setLocked(true);
+            animController.stopSelected(pac);
+        } else {
+            pac.animation().setLocked(false);
+        }
     }
 
     public void playDyingAnimation(Pac pac) {

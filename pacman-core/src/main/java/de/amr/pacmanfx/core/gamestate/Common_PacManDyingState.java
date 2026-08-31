@@ -33,7 +33,7 @@ public final class Common_PacManDyingState extends AbstractGameState {
 
         pac.worldNavigation().setDisabled(true);
         systems.pacPower().reset(pac);
-        systems.pacAnimation().lockAnimation(pac);
+        systems.pacAnimation().lockAnimation(pac, true);
 
         pac.state().setEnumValue(PacState.DEAD);
 
@@ -64,7 +64,7 @@ public final class Common_PacManDyingState extends AbstractGameState {
             level.entities().ghosts().forEach(GameEntity::hide);
         }
         else if (tick == rules.pacDyingTiming().animationStartTick()) {
-            systems.pacAnimation().unlockAnimation(pac);
+            systems.pacAnimation().lockAnimation(pac, false);
             systems.pacAnimation().playDyingAnimation(pac);
             game.eventManager().publishGameEvent(new PacDyingEvent(pac));
         }
