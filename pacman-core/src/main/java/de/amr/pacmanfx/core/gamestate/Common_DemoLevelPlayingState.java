@@ -53,7 +53,6 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
             showActors(level.entities());
         }
         else if (tick == game.variant().rules().demoLevelHuntingStartTick()) {
-            session.hud().clearMessage();
             startEnergizerBlinking(level);
 
             final Pac pac = level.entities().pac();
