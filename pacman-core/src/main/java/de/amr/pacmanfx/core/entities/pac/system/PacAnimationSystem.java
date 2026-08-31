@@ -1,29 +1,77 @@
 package de.amr.pacmanfx.core.entities.pac.system;
 
+import de.amr.basics.Named;
+import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Pac;
+import de.amr.pacmanfx.core.entities.pac.comp.PacAnimationComp;
+import de.amr.pacmanfx.core.entities.pac.comp.PacStateComp;
+import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
 public class PacAnimationSystem {
 
-    public PacAnimationSystem() {}
+    private final ActorSpriteAnimController animController;
+
+    public PacAnimationSystem(ActorSpriteAnimController animController) {
+        this.animController = requireNonNull(animController);
+    }
 
     public void update(Pac pac) {
         requireNonNull(pac);
-        switch (pac.state().enumValue()) {
+
+        final PacStateComp state = pac.state();
+        final PacAnimationComp animation = pac.animation();
+
+        if (animation.isLocked()) {
+            return;
+        }
+
+        switch (state.enumValue()) {
             case SLEEPING -> {
                 // Female Pac just cannot shut her mouth for a second!
-                final boolean male = pac.state().isMale();
-                pac.animation().setAnimationID(male
+                final var animationID = state.isMale()
                     ? CommonSpriteAnimationID.PAC_MOUTH_SHUT
-                    : CommonSpriteAnimationID.PAC_MOUTH_MOVING);
+                    : CommonSpriteAnimationID.PAC_MOUTH_MOVING;
+                animation.setAnimationID(animationID);
+                animation.setStopped(true);
             }
             case ACTIVE -> {
-                pac.animation().setAnimationID(CommonSpriteAnimationID.PAC_MOUTH_MOVING);
-                pac.animation().setDisabled(!pac.worldNavigation().info().moved);
+                animation.setAnimationID(CommonSpriteAnimationID.PAC_MOUTH_MOVING);
+                animation.setStopped(!pac.worldNavigation().info().moved);
             }
-            case DEAD -> pac.animation().setAnimationID(CommonSpriteAnimationID.PAC_DYING);
         }
+        if (animation.isStopped()) {
+            animController.stopSelected(pac);
+        } else {
+            animController.playSelected(pac);
+        }
+    }
+
+    public void lockAnimation(Pac pac) {
+        requireNonNull(pac);
+
+        pac.animation().setLocked(true);
+        animController.stopSelected(pac);
+    }
+
+    public void unlockAnimation(Pac pac) {
+        requireNonNull(pac);
+
+        pac.animation().setLocked(false);
+    }
+
+    public void playDyingAnimation(Pac pac) {
+        requireNonNull(pac);
+
+        final Named id = CommonSpriteAnimationID.PAC_DYING;
+        final PacAnimationComp animation = pac.animation();
+        animation.setAnimationID(id);
+        animation.setLocked(false);
+        animation.setStopped(false);
+
+        animController.select(pac, id);
+        animController.setAnimationFrame(pac, id, 0);
     }
 }

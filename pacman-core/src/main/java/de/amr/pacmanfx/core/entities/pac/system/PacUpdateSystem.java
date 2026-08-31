@@ -6,7 +6,6 @@ package de.amr.pacmanfx.core.entities.pac.system;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.WorldMovementPolicy;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.Pac;
@@ -23,7 +22,6 @@ public class PacUpdateSystem {
     private final PacPowerSystem pacPowerSystem;
     private final PacAutoSteeringSystem pacAutoSteeringSystem;
     private final PacAnimationSystem pacAnimationSystem;
-    private final ActorSpriteAnimController animController;
     private final WorldMovementPolicy<Pac> movementPolicy;
 
     public PacUpdateSystem(
@@ -31,7 +29,6 @@ public class PacUpdateSystem {
         PacPowerSystem pacPowerSystem,
         PacAutoSteeringSystem pacAutoSteeringSystem,
         PacAnimationSystem pacAnimationSystem,
-        ActorSpriteAnimController animController,
         WorldMovementPolicy<Pac> movementPolicy,
         WorldNavigationSystem navigator)
     {
@@ -39,7 +36,6 @@ public class PacUpdateSystem {
         this.pacPowerSystem = requireNonNull(pacPowerSystem);
         this.pacAutoSteeringSystem = requireNonNull(pacAutoSteeringSystem);
         this.pacAnimationSystem = requireNonNull(pacAnimationSystem);
-        this.animController = requireNonNull(animController);
         this.movementPolicy = requireNonNull(movementPolicy);
         this.navigator = requireNonNull(navigator);
     }
@@ -66,13 +62,6 @@ public class PacUpdateSystem {
         navigator.setMoveDirSpeed(pac, speed);
         navigator.tryMovingOrTeleporting(level, pac, movementPolicy);
 
-        // Animation
         pacAnimationSystem.update(pac);
-        animController.select(pac, pac.animation().animationID());
-        if (pac.animation().isDisabled()) {
-            animController.stopSelected(pac);
-        } else {
-            animController.playSelected(pac);
-        }
     }
 }

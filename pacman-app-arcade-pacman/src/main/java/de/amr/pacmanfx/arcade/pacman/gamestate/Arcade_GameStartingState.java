@@ -5,6 +5,8 @@
 package de.amr.pacmanfx.arcade.pacman.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.entities.Pac;
+import de.amr.pacmanfx.core.entities.pac.comp.PacState;
 import de.amr.pacmanfx.core.event.gameplay.GameStartedEvent;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
@@ -38,15 +40,13 @@ public class Arcade_GameStartingState extends AbstractGameState {
 
         systems.scoreSystem().enableScore(hud.highScore(), true);
 
+        lockPacAndGhost(level.entities());
         game.eventManager().publishGameEvent(new GameStartedEvent(game));
     }
 
     @Override
     public void onUpdate(GameContext game) {
         final long tick = timer().tickCount();
-        if (tick < TICK_START_PLAYING) {
-            freezeActors(level.entities());
-        }
         if (tick == TICK_START_LEVEL) {
             gamePlay.startLevel(game, level);
         }
@@ -54,7 +54,10 @@ public class Arcade_GameStartingState extends AbstractGameState {
             showActors(level.entities());
         }
         else if (tick == TICK_START_PLAYING) {
-            unfreezeActors(level.entities());
+            final Pac pac = level.entities().pac();
+            unlockPacAndGhosts(level.entities());
+            pac.state().setEnumValue(PacState.ACTIVE);
+
             game.coinMechanism().consumeCoin();
             session.setGameRunning(true);
             flow.enterGameState(game, CommonGameStateID.GAME_LEVEL_PLAYING);

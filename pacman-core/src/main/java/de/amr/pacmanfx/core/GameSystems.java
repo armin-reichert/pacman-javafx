@@ -74,14 +74,13 @@ public class GameSystems {
         pacAutoSteeringSystem = new PacAutoSteeringSystem();
         pacPowerSystem = new PacPowerSystem();
         pacDigestionSystem = new PacDigestionSystem();
-        pacAnimationSystem = new PacAnimationSystem();
+        pacAnimationSystem = new PacAnimationSystem(actorSpriteAnimController);
 
         pacUpdateSystem = new PacUpdateSystem(
             pacDigestionSystem,
             pacPowerSystem,
             pacAutoSteeringSystem,
             pacAnimationSystem,
-            actorSpriteAnimController,
             pacWorldMovementPolicy,
             navigator);
     }

@@ -33,7 +33,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
 
         level.entities().ghosts().forEach(ghost -> {
             ghost.worldNavigation().setDisabled(true);
-            ghost.animationSelection().setDisabled(true);
+            ghost.animation().setStopped(true);
         });
 
         game.eventManager().publishGameEvent(new LevelCreatedEvent(level));
@@ -60,7 +60,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
 
             level.entities().ghosts().forEach(ghost -> {
                 ghost.worldNavigation().setDisabled(false);
-                ghost.animationSelection().setDisabled(false);
+                ghost.animation().setStopped(false);
             });
 
             // This call fires a game event!

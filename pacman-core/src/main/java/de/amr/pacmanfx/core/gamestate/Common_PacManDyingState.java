@@ -13,11 +13,9 @@ import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.core.event.pac.PacDeadEvent;
 import de.amr.pacmanfx.core.event.pac.PacDyingEvent;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.rules.PacDyingTiming;
 
 public final class Common_PacManDyingState extends AbstractGameState {
 
-    private PacDyingTiming pacDyingTiming;
     private GameLevel level;
     private Pac pac;
 
@@ -27,17 +25,16 @@ public final class Common_PacManDyingState extends AbstractGameState {
 
     @Override
     public void onEnterState(GameContext game) {
-        pacDyingTiming = rules.pacDyingTiming();
         level = session.level();
         pac = level.entities().pac();
 
         level.gateKeeper().resetCounterAndSetEnabled(true);
         level.huntingTimerStrategy().stop();
 
-        // Stop Pac-Man movement and animation and set "dead" state
         pac.worldNavigation().setDisabled(true);
-        pac.animation().setDisabled(true);
         systems.pacPower().reset(pac);
+        systems.pacAnimation().lockAnimation(pac);
+
         pac.state().setEnumValue(PacState.DEAD);
 
         level.entities().ghosts().forEach(ghost -> {
@@ -63,36 +60,28 @@ public final class Common_PacManDyingState extends AbstractGameState {
     public void onUpdate(GameContext game) {
         final long tick = timer().tickCount();
 
-        if (tick == 0) {
-            // At this point in time, the "dying" animation is selected. However, it could still
-            // be at the last frame (from the previous execution), so we have to reset it here.
-            systems.actorSpriteAnimController().resetSelected(pac);
-        }
-        else if (tick == pacDyingTiming.hideGhostsTick()) {
+        if (tick == rules.pacDyingTiming().hideGhostsTick()) {
             level.entities().ghosts().forEach(GameEntity::hide);
         }
-        else if (tick == pacDyingTiming.animationStartTick()) {
-            pac.animation().setDisabled(false); // "dying" animation can start/continue
+        else if (tick == rules.pacDyingTiming().animationStartTick()) {
+            systems.pacAnimation().unlockAnimation(pac);
+            systems.pacAnimation().playDyingAnimation(pac);
             game.eventManager().publishGameEvent(new PacDyingEvent(pac));
         }
-        else if (tick == pacDyingTiming.hidePacTick()) {
+        else if (tick == rules.pacDyingTiming().hidePacTick()) {
             pac.hide();
         }
-        else if (tick == pacDyingTiming.pacDeadTick()) {
+        else if (tick == rules.pacDyingTiming().pacDeadTick()) {
             level.entities().optBonus().ifPresent(bonus -> level.entities().remove(bonus));
             game.eventManager().publishGameEvent(new PacDeadEvent(pac));
         }
 
         if (timer().hasExpired()) {
+            level.entities().ghosts().forEach(ghost -> ghost.worldNavigation().setDisabled(false));
             session.setNumLives(session.numLives() - 1);
             flow.enterGameState(game, session.numLives() == 0
                 ? CommonGameStateID.GAME_OVER
                 : CommonGameStateID.GAME_OR_LEVEL_STARTING);
         }
-    }
-
-    @Override
-    public void onExit(GameContext game) {
-        level.entities().ghosts().forEach(ghost -> ghost.worldNavigation().setDisabled(false));
     }
 }

@@ -47,7 +47,7 @@ public class Tengen_GameStartingState extends AbstractGameState {
         final long tick = timer().tickCount();
 
         if (tick < TICK_START_PLAYING) {
-            freezeActors(level.entities());
+            lockPacAndGhost(level.entities());
         }
 
         if (tick == TICK_START_LEVEL) {
@@ -57,7 +57,7 @@ public class Tengen_GameStartingState extends AbstractGameState {
             showActors(level.entities());
         }
         else if (tick == TICK_START_PLAYING) {
-            unfreezeActors(level.entities());
+            unlockPacAndGhosts(level.entities());
             game.coinMechanism().consumeCoin();
             session.setGameRunning(true);
             flow.enterGameState(game, CommonGameStateID.GAME_LEVEL_PLAYING);

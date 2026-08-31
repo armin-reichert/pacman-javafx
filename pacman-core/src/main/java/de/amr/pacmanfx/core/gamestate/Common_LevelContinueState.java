@@ -31,13 +31,13 @@ public class Common_LevelContinueState extends AbstractGameState {
         final LevelContinuationRules continuationRules = rules.levelContinuation();
         final long tick = timer().tickCount();
         if (tick < continuationRules.continuePlayingTicks()) {
-            freezeActors(level.entities());
+            lockPacAndGhost(level.entities());
         }
         if (tick == continuationRules.continuePlayingTicks()) {
             game.eventManager().publishGameEvent(new GameContinuedEvent());
         }
         else if (tick == continuationRules.resumeHuntingTicks()) {
-            unfreezeActors(level.entities());
+            unlockPacAndGhosts(level.entities());
             flow.enterGameState(game, CommonGameStateID.GAME_LEVEL_PLAYING);
         }
     }

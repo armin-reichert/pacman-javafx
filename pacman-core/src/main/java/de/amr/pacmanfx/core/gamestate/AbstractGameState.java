@@ -82,10 +82,9 @@ public abstract class AbstractGameState implements State<GameContext>, Named {
         }
     }
 
-    protected void freezeActors(GameLevelEntitySet entities) {
+    protected void lockPacAndGhost(GameLevelEntitySet entities) {
         final Pac pac = entities.pac();
         pac.worldNavigation().setDisabled(true);
-        pac.animation().setDisabled(true);
 
         if (pac.state().isMale()) {
             pac.animation().setAnimationID(CommonSpriteAnimationID.PAC_MOUTH_SHUT);
@@ -94,20 +93,21 @@ public abstract class AbstractGameState implements State<GameContext>, Named {
             //TODO this is wrong for Tengen Ms. Pac-Man:
             pac.spriteAnim().spriteAnimations().setAnimationFrame(CommonSpriteAnimationID.PAC_MOUTH_MOVING, 1);
         }
+        systems.pacAnimation().lockAnimation(pac);
 
         for (Ghost ghost : entities.ghosts()) {
             ghost.worldNavigation().setDisabled(true);
-            ghost.animationSelection().setDisabled(true);
+            ghost.animation().setLocked(true);
         }
     }
 
-    protected void unfreezeActors(GameLevelEntitySet entities) {
+    protected void unlockPacAndGhosts(GameLevelEntitySet entities) {
         final Pac pac = entities.pac();
         pac.worldNavigation().setDisabled(false);
-        pac.animation().setDisabled(false);
+        systems.pacAnimation().unlockAnimation(pac);
         for (Ghost ghost : entities.ghosts()) {
             ghost.worldNavigation().setDisabled(false);
-            ghost.animationSelection().setDisabled(false);
+            ghost.animation().setLocked(false);
         }
     }
 }

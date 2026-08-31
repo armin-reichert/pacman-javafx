@@ -8,14 +8,24 @@ public class PacAnimationComp implements GameEntityComp {
 
     private Named animationID;
 
-    private boolean disabled;
+    private boolean stopped;
 
-    public boolean isDisabled() {
-        return disabled;
+    private boolean locked;
+
+    public boolean isStopped() {
+        return stopped;
     }
 
-    public void setDisabled(boolean disabled) {
-        this.disabled = disabled;
+    public void setStopped(boolean stopped) {
+        this.stopped = stopped;
+    }
+
+    public boolean isLocked() {
+        return locked;
+    }
+
+    public void setLocked(boolean locked) {
+        this.locked = locked;
     }
 
     public Named animationID() {
@@ -28,7 +38,8 @@ public class PacAnimationComp implements GameEntityComp {
 
     @Override
     public void reset() {
-        disabled = false;
+        stopped = false;
+        locked = false;
         animationID = CommonSpriteAnimationID.PAC_MOUTH_SHUT;
     }
 }
