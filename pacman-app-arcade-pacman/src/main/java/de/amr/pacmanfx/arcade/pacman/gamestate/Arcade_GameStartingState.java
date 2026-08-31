@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.arcade.pacman.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.pac.comp.PacState;
 import de.amr.pacmanfx.core.event.gameplay.GameStartedEvent;
@@ -21,7 +20,6 @@ public class Arcade_GameStartingState extends AbstractGameState {
     static final int TICK_START_PLAYING = 240;
 
     private GameLevel level;
-    private Pac pac;
 
     public Arcade_GameStartingState() {
         super(CommonGameStateID.GAME_STARTING);
@@ -30,7 +28,6 @@ public class Arcade_GameStartingState extends AbstractGameState {
     @Override
     public void onEnterState(GameContext game) {
         level = game.variant().gamePlay().buildNormalLevel(game, 1);
-        pac = level.entities().pac();
 
         game.eventManager().publishGameEvent(new LevelCreatedEvent(level));
 
@@ -42,13 +39,6 @@ public class Arcade_GameStartingState extends AbstractGameState {
         hud.show();
 
         systems.scoreSystem().enableScore(hud.highScore(), true);
-
-        if (pac.state().isMale()) {
-            pac.animation().setAnimationID(CommonSpriteAnimationID.PAC_MOUTH_SHUT);
-        } else {
-            pac.animation().setAnimationID(CommonSpriteAnimationID.PAC_MOUTH_MOVING);
-            pac.spriteAnim().spriteAnimations().setAnimationFrame(CommonSpriteAnimationID.PAC_MOUTH_MOVING, 1);
-        }
 
         lockPacAndGhost(level.entities());
         game.eventManager().publishGameEvent(new GameStartedEvent(game));
