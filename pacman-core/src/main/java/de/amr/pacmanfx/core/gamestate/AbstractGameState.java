@@ -86,6 +86,7 @@ public abstract class AbstractGameState implements State<GameContext>, Named {
         final Pac pac = entities.pac();
         pac.worldNavigation().setDisabled(true);
         pac.animation().setDisabled(true);
+
         if (pac.state().isMale()) {
             pac.animation().setAnimationID(CommonSpriteAnimationID.PAC_MOUTH_SHUT);
         } else {
@@ -96,7 +97,7 @@ public abstract class AbstractGameState implements State<GameContext>, Named {
 
         for (Ghost ghost : entities.ghosts()) {
             ghost.worldNavigation().setDisabled(true);
-            ghost.worldNavigation().setDisabled(true);
+            ghost.animationSelection().setDisabled(true);
         }
     }
 

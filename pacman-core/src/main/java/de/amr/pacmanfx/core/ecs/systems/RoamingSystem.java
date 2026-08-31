@@ -34,44 +34,50 @@ public class RoamingSystem {
      */
     public <E extends GameEntity> void roam(
         GameLevel level,
-        E gameEntity,
+        E actor,
         WorldNavigationComp navigation,
         WorldMovementPolicy<E> worldMovementPolicy,
         float speed)
     {
-        final Vector2i tile = gameEntity.pos().tile();
-        final boolean teleporting = level.worldMap().terrainLayer().isTileInPortalSpace(tile);
+        final Vector2i tile = actor.pos().tile();
+        final boolean inPortalSpace = level.worldMap().terrainLayer().isTileInPortalSpace(tile);
 
+        // Compute a random direction whenever a new tile has been entered or in a dead-end.
+        // While teleporting, keep direction.
         final boolean stuck = !navigation.info().moved;
-        if ((navigation.isNewTileEntered() || stuck) && !teleporting) {
-            final Direction dir = computeRoamingDirection(level, gameEntity, worldMovementPolicy, tile);
-            navigator.setWishDir(gameEntity, dir);
-            Logger.debug("Ghost {} takes random wish direction {}", gameEntity.name(), dir);
+        if ((navigation.isNewTileEntered() || stuck) && !inPortalSpace) {
+            final Direction dir = computeNextDirection(level, actor, worldMovementPolicy, tile);
+            navigator.setWishDir(actor, dir);
+            Logger.debug("Ghost {} takes random wish direction {}", actor.name(), dir);
         }
-        navigator.setMoveDirSpeed(gameEntity, speed);
-        navigator.tryMovingOrTeleporting(level, gameEntity, worldMovementPolicy);
+
+        navigator.setMoveDirSpeed(actor, speed);
+        navigator.tryMovingOrTeleporting(level, actor, worldMovementPolicy);
     }
 
-    // try a random direction towards an accessible tile, do not turn back unless there is no other way
-    private <E extends GameEntity> Direction computeRoamingDirection(
-        GameLevel level, E gameEntity, WorldMovementPolicy<E> policy, Vector2i currentTile) {
-
-        final WorldNavigationComp navigation = gameEntity.reqComp(WorldNavigationComp.class);
-
+    // Try a random accessible direction, do not turn back unless there is no other way
+    private <E extends GameEntity> Direction computeNextDirection(
+        GameLevel level,
+        E actor,
+        WorldMovementPolicy<E> policy,
+        Vector2i currentTile)
+    {
+        final WorldNavigationComp navigation = actor.reqComp(WorldNavigationComp.class);
         final Direction oppositeDir = navigation.moveDir().opposite();
-        Direction selectedDir = choosePseudoRandomDirection();
-        int tries = 0;
-        while (selectedDir == oppositeDir
-            || !policy.canAccessTile(level, gameEntity, currentTile.plus(selectedDir.vector())))
-        {
-            selectedDir = selectedDir.nextClockwise();
-            if (++tries > 4) {
-                return oppositeDir;  // avoid endless loop
+
+        Direction nextDir = choosePseudoRandomDirection();
+        for (int i = 0; i < 4; ++i) {
+            final Vector2i nextTile = currentTile.plus(nextDir.vector());
+            final boolean accessible = policy.canAccessTile(level, actor, nextTile);
+            if (accessible && nextDir != oppositeDir) {
+                return nextDir;
             }
+            nextDir = nextDir.nextClockwise();
         }
-        return selectedDir;
+        return oppositeDir;
     }
 
+    // Saw this on YouTube :-)
     private Direction choosePseudoRandomDirection() {
         final int rnd = RandomNumbers.randomInt(0, 1000);
         if (rnd < 163)             return UP;
