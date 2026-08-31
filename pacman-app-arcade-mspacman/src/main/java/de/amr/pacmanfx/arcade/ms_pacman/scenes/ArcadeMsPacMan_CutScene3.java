@@ -17,7 +17,7 @@ import de.amr.pacmanfx.core.entities.Clapperboard;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.clapperboard.system.ClapperboardStateSystem;
-import de.amr.pacmanfx.core.entities.stork.Stork;
+import de.amr.pacmanfx.core.entities.Stork;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.game.GameVariant;

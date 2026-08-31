@@ -25,7 +25,6 @@ module de.amr.pacmanfx.core {
     exports de.amr.pacmanfx.core.event.ghost;
     exports de.amr.pacmanfx.core.event.bonus;
     exports de.amr.pacmanfx.core.event.gameplay;
-    exports de.amr.pacmanfx.core.entities.stork;
     exports de.amr.pacmanfx.core.model.world.map;
     exports de.amr.pacmanfx.core.model.world.obstacle;
     exports de.amr.pacmanfx.core.ecs;
