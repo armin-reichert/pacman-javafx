@@ -50,7 +50,7 @@ public abstract class AbstractGameState implements State<GameContext>, Named {
         return Arrays.asList(names).contains(id);
     }
 
-        @Override
+    @Override
     public String name() {
         return id.name();
     }

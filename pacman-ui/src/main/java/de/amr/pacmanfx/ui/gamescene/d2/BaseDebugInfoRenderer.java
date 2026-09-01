@@ -24,6 +24,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_Renderer {
 
@@ -133,7 +134,7 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
     }
 
     private void drawAnimationInfo(ActorSpriteAnimController animController, GameEntity actor, Color bgColor) {
-        final int width = 120;
+        final int padding = 4;
         final int height = 16;
         final int actorOffsetX = -40;
         final int actorOffsetY = -30;
@@ -148,20 +149,26 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
                 false, false);
         };
 
+        dummy.setFont(debugTextFont);
+        dummy.setText(formatAnimationInfo(info));
+        double width = dummy.getLayoutBounds().getWidth() + 2 * padding;
+
         ctx.save();
         ctx.translate(scaled(center.x() + actorOffsetX), scaled(center.y() + actorOffsetY));
 
         ctx.setFill(Ufx.colorWithOpacity(Color.DARKBLUE, 0.8));
-        ctx.fillRect(0, 0, scaled(width), scaled(height));
+        ctx.fillRect(0, 0, width, scaled(height));
         ctx.setFill(bgColor);
         ctx.fillRect(0, 0, scaled(1), scaled(height));
 
         ctx.setFill(debugTextFill);
-        ctx.setFont(debugTextFont);
-        ctx.fillText(formatAnimationInfo(info), scaled(3), scaled(0.6 * height));
+        ctx.setFont(dummy.getFont());
+        ctx.fillText(dummy.getText(), scaled(3), scaled(0.6 * height));
 
         ctx.restore();
     }
+
+    private final Text dummy = new Text();
 
     private void drawDirectionIndicator(GameEntity actor) {
         final WorldNavigationComp worldNavigation = actor.reqComp(WorldNavigationComp.class);
