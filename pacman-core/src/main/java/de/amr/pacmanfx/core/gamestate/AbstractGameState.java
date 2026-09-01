@@ -11,7 +11,6 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.HUD;
-import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
@@ -61,45 +60,30 @@ public abstract class AbstractGameState implements State<GameContext>, Named {
 
     @Override
     public final void onEnter(GameContext game) {
-        initStateContext(game);
-        onEnterState(game);
-    }
-
-    protected void initStateContext(GameContext game) {
         rules = game.variant().rules();
         flow = game.variant().gameFlow();
         gamePlay = game.variant().gamePlay();
         systems = game.variant().systems();
         session = game.session();
         hud = session.hud();
+        onEnterState(game);
     }
 
-    protected void showActors(GameLevelEntitySet entities) {
-        final Pac pac = entities.pac();
-        pac.show();
+    protected void showPacAndGhosts(GameLevelEntitySet entities) {
+        entities.pac().show();
         for (Ghost ghost : entities.ghosts()) {
             ghost.show();
         }
     }
 
-    protected void lockPacAndGhost(GameLevelEntitySet entities) {
+    protected void lockPacAndGhosts(GameLevelEntitySet entities, boolean locked) {
         final Pac pac = entities.pac();
-        pac.worldNavigation().setDisabled(true);
-        systems.pacAnimation().lockAnimation(pac, true);
+        pac.worldNavigation().setDisabled(locked);
+        systems.pacAnimation().lockAnimation(pac, locked);
 
         for (Ghost ghost : entities.ghosts()) {
-            ghost.worldNavigation().setDisabled(true);
-            systems.ghostAnimation().lockAnimation(ghost, true);
-        }
-    }
-
-    protected void unlockPacAndGhosts(GameLevelEntitySet entities) {
-        final Pac pac = entities.pac();
-        pac.worldNavigation().setDisabled(false);
-        systems.pacAnimation().lockAnimation(pac, false);
-        for (Ghost ghost : entities.ghosts()) {
-            ghost.worldNavigation().setDisabled(false);
-            systems.ghostAnimation().lockAnimation(ghost, false);
+            ghost.worldNavigation().setDisabled(locked);
+            systems.ghostAnimation().lockAnimation(ghost, locked);
         }
     }
 }

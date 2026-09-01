@@ -38,7 +38,7 @@ public class Arcade_GameStartingState extends AbstractGameState {
 
         hud.highScore().data().setEnabled(true);
 
-        lockPacAndGhost(level.entities());
+        lockPacAndGhosts(level.entities(), true);
 
         game.eventManager().publishGameEvent(new LevelCreatedEvent(level));
         game.eventManager().publishGameEvent(new GameStartedEvent(game));
@@ -51,11 +51,11 @@ public class Arcade_GameStartingState extends AbstractGameState {
             gamePlay.startLevel(game, level);
         }
         else if (tick == TICK_SHOW_GUYS) {
-            showActors(level.entities());
+            showPacAndGhosts(level.entities());
         }
         else if (tick == TICK_START_PLAYING) {
             final Pac pac = level.entities().pac();
-            unlockPacAndGhosts(level.entities());
+            lockPacAndGhosts(level.entities(), false);
             pac.state().setEnumValue(PacState.ACTIVE);
 
             game.coinMechanism().consumeCoin();

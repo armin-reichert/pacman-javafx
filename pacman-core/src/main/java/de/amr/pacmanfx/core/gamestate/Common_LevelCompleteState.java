@@ -57,7 +57,7 @@ public class Common_LevelCompleteState extends AbstractGameState {
 
     @Override
     public void onUpdate(GameContext game) {
-        lockPacAndGhost(level.entities());
+        lockPacAndGhosts(level.entities(), true);
         if (timer().hasExpired()) {
             flow.enterGameState(game, computeNextStateID());
         }
