@@ -32,7 +32,7 @@ public final class Common_PacManDyingState extends AbstractGameState {
         level.huntingTimerStrategy().stop();
 
         pac.worldNavigation().setDisabled(true);
-        systems.pacPower().reset(pac);
+        systems.pacPower().stopAndReset(pac);
         systems.pacAnimation().lockAnimation(pac, true);
 
         pac.state().setEnumValue(PacState.DEAD);

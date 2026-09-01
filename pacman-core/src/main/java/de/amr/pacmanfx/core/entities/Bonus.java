@@ -12,6 +12,8 @@ import de.amr.pacmanfx.core.entities.bonus.comp.BonusMoveAndJumpComp;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusState;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusStateComp;
 
+import java.util.Optional;
+
 /**
  * A bonus that either stays at a fixed position or jumps through the world, starting at some portal,
  * making one round around the ghost house and leaving the world at some portal at the other border.
@@ -29,12 +31,12 @@ public final class Bonus extends GameEntity {
         bonus.setComp(MovementComp.class, new MovementComp());
         bonus.setComp(WorldNavigationComp.class, new WorldNavigationComp());
         bonus.setComp(BonusMoveAndJumpComp.class, new BonusMoveAndJumpComp());
+
         bonus.reqComp(WorldNavigationComp.class).setCanTeleport(false);
         return bonus;
     }
 
-    private Bonus(int symbolCode) {
-        name = "Bonus-symbol:%d".formatted(symbolCode);
+    public Bonus(int symbolCode) {
         setComp(BonusDataComp.class, new BonusDataComp(symbolCode));
         setComp(BonusStateComp.class, new BonusStateComp());
     }
@@ -47,7 +49,11 @@ public final class Bonus extends GameEntity {
         return reqComp(BonusStateComp.class);
     }
 
-    public BonusState bonusState() {
-        return state().enumValue();
+    public Optional<WorldNavigationComp> optWorldNavigation() {
+        return optComp(WorldNavigationComp.class);
+    }
+
+    public Optional<BonusMoveAndJumpComp> optMoveAndJump() {
+        return optComp(BonusMoveAndJumpComp.class);
     }
 }

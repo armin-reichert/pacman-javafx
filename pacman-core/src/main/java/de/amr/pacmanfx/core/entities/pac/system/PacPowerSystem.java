@@ -16,7 +16,7 @@ public final class PacPowerSystem {
         Logger.debug("Power timer activated, {} ticks ({0.00} sec)", durationTicks, durationTicks / 60f);
     }
 
-    public void reset(Pac pac) {
+    public void stopAndReset(Pac pac) {
         pac.power().reset();
     }
 

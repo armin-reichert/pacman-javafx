@@ -85,7 +85,7 @@ public class GameLevel3DUpdateController {
         final GameLevel level = level3D.level();
         level.entities().optBonus().ifPresent(bonus -> {
             level3D.ensureBonus3DViewAddedToSceneGraph(bonus);
-            switch (bonus.bonusState()) {
+            switch (bonus.state().enumValue()) {
                 case EDIBLE -> Bonus3DViewSystem.lookEdible(bonus);
                 case EATEN -> Bonus3DViewSystem.lookEaten(bonus, level3D.animationManager().registry());
                 case INACTIVE -> {}

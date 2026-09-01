@@ -115,7 +115,7 @@ public class PacEatingEventHandler implements DefaultGameEventListener {
         // Eaten bonus is displayed as points for short time
         final var bonusPoints = new BonusPoints(bonusValue);
         bonusPoints.pos().set(bonus.pos().asVector2f());
-        bonusPoints.setLifetime(rules.eatenBonusDisplaySeconds());
+        bonusPoints.setLifetimeSec(rules.eatenBonusDisplaySeconds());
         bonusPoints.show();
         level.entities().add(bonusPoints);
     }

@@ -59,7 +59,7 @@ public class ActorCollisionHandler {
         final Pac pac = level.entities().pac();
         final Bonus bonus = level.entities().optBonus().orElse(null);
         step.setEdibleBonus(null);
-        if (bonus != null && bonus.bonusState() == BonusState.EDIBLE && strategy.collide(pac, bonus)) {
+        if (bonus != null && bonus.state().enumValue() == BonusState.EDIBLE && strategy.collide(pac, bonus)) {
             step.setEdibleBonus(bonus);
         }
     }

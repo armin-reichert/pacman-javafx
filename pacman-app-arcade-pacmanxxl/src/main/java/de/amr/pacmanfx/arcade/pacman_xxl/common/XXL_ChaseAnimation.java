@@ -247,7 +247,7 @@ class XXL_ChaseAnimation {
                 ghostPoints.pos().set(ghost.pos().asVector2f());
                 ghostPoints.setComp(MovementComp.class, new MovementComp());
                 ghostPoints.optMovement().ifPresent(movement -> movement.setVelocity(ghost.movement().velocity()));
-                ghostPoints.setLifetime(GHOST_POINTS_DISPLAY_SEC);
+                ghostPoints.setLifetimeSec(GHOST_POINTS_DISPLAY_SEC);
                 ghostPoints.show();
 
                 it.remove();

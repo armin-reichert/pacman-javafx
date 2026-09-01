@@ -26,23 +26,19 @@ public class Common_LevelCompleteState extends AbstractGameState {
         level = session.level();
         pac = level.entities().pac();
 
-        level.huntingTimerStrategy().stop();
-
         level.heartbeat().setStartState(Pulse.State.OFF);
-        level.heartbeat().reset();
+        level.heartbeat().stopAndReset();
+
+        level.huntingTimerStrategy().stop();
 
         // If level was ended by cheat, there might still be food remaining, so eat it:
         level.food().eatAll();
 
-        // Pac-Man stops and stands still
+        systems.pacPower().stopAndReset(pac);
         pac.state().setEnumValue(PacState.SLEEPING);
-        systems.pacPower().reset(pac);
-
-        // Ghosts stop
-        level.entities().ghosts().forEach(ghost -> ghost.worldNavigation().setDisabled(true));
 
         level.entities().optBonus().ifPresent(bonus -> {
-            systems.bonusState().setBonusInactive(bonus);
+            systems.bonusState().setInactive(bonus);
             bonus.optComp(BonusMoveAndJumpComp.class).ifPresent(_-> systems.bonusMoveAndJump().setBonusInactive(bonus));
             level.entities().remove(bonus);
         });
@@ -57,7 +53,9 @@ public class Common_LevelCompleteState extends AbstractGameState {
 
     @Override
     public void onUpdate(GameContext game) {
-        lockPacAndGhosts(level.entities(), true);
+        if (timer().tickCount() == 1) {
+            lockPacAndGhosts(level.entities(), true);
+        }
         if (timer().hasExpired()) {
             flow.enterGameState(game, computeNextStateID());
         }

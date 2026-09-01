@@ -180,7 +180,7 @@ public class RuleGuidedPacSteering implements Steering<Pac> {
         if (level.entities().optBonus().isPresent()) {
             final Bonus bonus = level.entities().optBonus().get();
             final Vector2i bonusTile = bonus.pos().tile();
-            return bonus.bonusState() == BonusState.EDIBLE
+            return bonus.state().enumValue() == BonusState.EDIBLE
                 && bonusTile.manhattanDist(pacTile) <= CollectedData.MAX_BONUS_HARVEST_DIST;
         }
         return false;

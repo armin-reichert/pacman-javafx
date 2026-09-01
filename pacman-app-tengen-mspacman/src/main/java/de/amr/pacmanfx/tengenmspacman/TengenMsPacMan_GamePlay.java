@@ -372,14 +372,13 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
         //TODO Find out how Tengen really implemented this
-        if (level.entities().optBonus().isPresent() && level.entities().optBonus().get().bonusState() == BonusState.EDIBLE) {
-            Logger.info("Previous bonus is still active, skip this bonus");
-            return;
-        }
-
-        if (terrain.horizontalPortals().isEmpty()) {
-            Logger.error("Cannot activate next bonus: No portal exists in game level");
-            return;
+        final Bonus prevBonus = level.entities().optBonus().orElse(null);
+        if (prevBonus != null) {
+            if (prevBonus.state().enumValue() == BonusState.EDIBLE) {
+                Logger.info("Previous bonus is still active, skip new bonus");
+                return;
+            }
+            level.entities().remove(prevBonus);
         }
 
         final House house = level.entities().house();
@@ -398,7 +397,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final Bonus bonus = Bonus.createMovingBonus(symbolCode);
         level.entities().optBonus().ifPresent(oldBonus -> level.entities().remove(oldBonus));
         level.entities().add(bonus);
-        systems.bonusState().setBonusEdible(bonus);
+        systems.bonusState().setEdible(bonus);
         bonus.show();
 
         final boolean leftToRight = randomBoolean();

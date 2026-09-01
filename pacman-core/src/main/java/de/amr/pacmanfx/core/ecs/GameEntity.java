@@ -51,7 +51,7 @@ public class GameEntity extends Composition<GameEntityComp> implements Disposabl
         return reqComp(LifetimeComp.class);
     }
 
-    public void setLifetime(float seconds) {
+    public void setLifetimeSec(float seconds) {
         setComp(LifetimeComp.class, new LifetimeComp(TickTimer.secToTicks(seconds)));
     }
 

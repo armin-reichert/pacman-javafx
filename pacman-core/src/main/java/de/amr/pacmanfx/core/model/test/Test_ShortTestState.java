@@ -104,7 +104,7 @@ public class Test_ShortTestState extends AbstractGameState {
         // Eaten bonus is displayed as points for short time
         final var points = new BonusPoints(bonusValue);
         points.pos().set(bonus.pos().asVector2f());
-        points.setLifetime(rules.eatenBonusDisplaySeconds());
+        points.setLifetimeSec(rules.eatenBonusDisplaySeconds());
         points.show();
         level.entities().add(points);
 
@@ -120,7 +120,7 @@ public class Test_ShortTestState extends AbstractGameState {
         level.huntingTimerStrategy().stop();
 
         level.heartbeat().setStartState(Pulse.State.OFF);
-        level.heartbeat().reset();
+        level.heartbeat().stopAndReset();
 
         // If level was ended by cheat, there might still be food remaining, so eat it:
         level.food().eatAll();
@@ -128,13 +128,13 @@ public class Test_ShortTestState extends AbstractGameState {
         // Pac-Man stops and stands still
         final Pac pac = level.entities().pac();
         pac.state().setEnumValue(PacState.SLEEPING);
-        systems.pacPower().reset(pac);
+        systems.pacPower().stopAndReset(pac);
 
         // Ghosts stop
         level.entities().ghosts().forEach(ghost -> ghost.worldNavigation().setDisabled(true));
 
         level.entities().optBonus().ifPresent(bonus -> {
-            systems.bonusState().setBonusInactive(bonus);
+            systems.bonusState().setInactive(bonus);
             bonus.optComp(BonusMoveAndJumpComp.class).ifPresent(_-> systems.bonusMoveAndJump().setBonusInactive(bonus));
             level.entities().remove(bonus);
         });

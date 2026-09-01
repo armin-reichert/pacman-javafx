@@ -166,47 +166,58 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         requireNonNull(game);
         requireNonNull(level);
 
-        final GameSystems systems = game.variant().systems();
-        final GameRules rules = game.variant().rules();
-        final TerrainLayer terrain = level.worldMap().terrainLayer();
-
-        if (level.entities().optBonus().isPresent() && level.entities().optBonus().get().bonusState() == BonusState.EDIBLE) {
-            Logger.info("Previous bonus is still active, skip this bonus");
-            return;
-        }
-
-        final House house = level.entities().house();
-        if (house == null) {
-            Logger.error("Moving bonus cannot be activated, no house exists in this level!");
-            return;
+        final Bonus prevBonus = level.entities().optBonus().orElse(null);
+        if (prevBonus != null) {
+            if (prevBonus.state().enumValue() == BonusState.EDIBLE) {
+                //TODO Can this happen in original game?
+                Logger.info("Previous bonus is still edible, skip new bonus creation");
+                return;
+            }
+            level.entities().remove(prevBonus);
         }
 
         level.selectNextBonus();
-
-        Bonus bonus;
         final int symbolCode = level.bonusSymbolCode(level.currentBonusIndex());
 
-        // Maps in XXL game variant or custom maps might have no portal, in this case sue static bonus
-        if (terrain.horizontalPortals().isEmpty()) {
-            bonus = Bonus.createStaticBonus(symbolCode);
-            final Vector2i bonusTile = terrain.getTilePropertyOrDefault(WorldMapPropertyName.POS_BONUS, new Vector2i(13, 20));
-            bonus.pos().set(WorldMap.halfTileRightOf(bonusTile));
-            bonus.setLifetime(randomFloat(9, 10));
-        } else {
-            bonus = Bonus.createMovingBonus(symbolCode);
-            final float speed = rules.actorSpeedRules().bonusSpeed(game, level);
-            systems.bonusMoveAndJump().startWandering(bonus, computeBonusRoute(terrain, house), speed);
-        }
-        systems.bonusState().setBonusEdible(bonus);
-        bonus.show();
-
-        level.entities().optBonus().ifPresent(oldBonus -> level.entities().remove(oldBonus));
+        // Maps in XXL game variant or custom maps might have no portal, in this case use static bonus
+        final boolean portalExists = !level.worldMap().terrainLayer().horizontalPortals().isEmpty();
+        final Bonus bonus = portalExists
+            ? createMovingBonus(game, level, symbolCode)
+            : createStaticBonus(level, symbolCode, randomFloat(9, 10));
         level.entities().add(bonus);
+
+        game.variant().systems().bonusState().setEdible(bonus);
 
         game.eventManager().publishGameEvent(new BonusActivatedEvent(bonus));
     }
 
-    // ------------------------------------------------
+    private Bonus createStaticBonus(GameLevel level, int symbolCode, float lifetimeSec) {
+        final Bonus bonus = Bonus.createStaticBonus(symbolCode);
+        final Vector2i bonusTile = level.worldMap().terrainLayer()
+            .getTilePropertyOrDefault(WorldMapPropertyName.POS_BONUS, new Vector2i(13, 20));
+        bonus.pos().set(WorldMap.halfTileRightOf(bonusTile));
+        bonus.setLifetimeSec(lifetimeSec);
+        return bonus;
+    }
+
+    private Bonus createMovingBonus(GameContext game, GameLevel level, int symbolCode) {
+        final House house = level.entities().house();
+        if (house == null) {
+            throw new IllegalStateException("Moving bonus cannot be activated, no house exists in this level!");
+        }
+
+        final GameSystems systems = game.variant().systems();
+        final GameRules rules = game.variant().rules();
+
+        final Bonus movingBonus = Bonus.createMovingBonus(symbolCode);
+        systems.bonusState().setEdible(movingBonus);
+
+        final BonusRouteInfo routeInfo = computeBonusRoute(level.worldMap().terrainLayer(), house);
+        final float speed = rules.actorSpeedRules().bonusSpeed(game, level);
+        systems.bonusMoveAndJump().startWandering(movingBonus, routeInfo, speed);
+
+        return movingBonus;
+    }
 
     private BonusRouteInfo computeBonusRoute(TerrainLayer terrain, House house) {
         final List<HPortal> portals = terrain.horizontalPortals();

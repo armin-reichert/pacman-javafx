@@ -26,17 +26,17 @@ public class Pulse {
     public Pulse(int halfPeriod, State startState) {
         this.halfPeriod = halfPeriod;
         this.startState = startState;
-        reset();
+        stopAndReset();
     }
 
-    public void reset() {
+    public void stopAndReset() {
         stop();
         pulseCount = 0;
         state = startState;
     }
 
     public void restart() {
-        reset();
+        stopAndReset();
         start();
     }
 

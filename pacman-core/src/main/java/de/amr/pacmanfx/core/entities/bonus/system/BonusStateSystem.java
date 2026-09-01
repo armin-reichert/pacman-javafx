@@ -18,51 +18,53 @@ public class BonusStateSystem {
     public BonusStateSystem() {}
 
     public void update(GameContext game, Bonus bonus) {
-        final BonusStateComp state = bonus.state();
+        requireNonNull(game);
+        requireNonNull(bonus);
 
+        final BonusStateComp state = bonus.state();
         state.timer().doTick();
 
         switch (state.enumValue()) {
-
             case INACTIVE -> {}
 
             case EDIBLE -> {
-                boolean timedOut = state.timer().hasExpired();
-
-                boolean tourEnded = bonus.optComp(BonusMoveAndJumpComp.class)
+                boolean expired = state.timer().hasExpired();
+                boolean tourComplete = bonus.optMoveAndJump()
                     .map(BonusMoveAndJumpComp::targetReached)
                     .orElse(false);
 
-                if (timedOut || tourEnded) {
-                    state.setEdibleStateExpired(timedOut);
-                    setBonusInactive(bonus);
+                if (expired || tourComplete) {
+                    state.setEdibleStateExpired(expired);
+                    setInactive(bonus);
                     game.eventManager().publishGameEvent(new BonusExpiredEvent(bonus));
                 }
             }
 
             case EATEN -> {
-                final boolean timedOut = state.timer().hasExpired();
-                if (timedOut) {
-                    setBonusInactive(bonus);
+                final boolean expired = state.timer().hasExpired();
+                if (expired) {
+                    setInactive(bonus);
                     game.eventManager().publishGameEvent(new BonusExpiredEvent(bonus));
                 }
             }
         }
     }
 
-    public void setBonusInactive(Bonus bonus) {
+    public void setInactive(Bonus bonus) {
         requireNonNull(bonus);
 
         final BonusStateComp state = bonus.state();
-
         state.setEnumValue(BonusState.INACTIVE);
         state.timer().restartIndefinitely();
 
         bonus.hide();
     }
 
-    public void setBonusEdible(Bonus bonus) {
+    public void setEdible(Bonus bonus) {
+        requireNonNull(bonus);
+
         final BonusStateComp state = bonus.state();
         state.setEnumValue(BonusState.EDIBLE);
+        bonus.show();
     }
 }

@@ -38,7 +38,7 @@ public class BonusMoveAndJumpSystem {
         requireNonNull(bonus);
 
         bonus.optComp(BonusMoveAndJumpComp.class).ifPresent(moveAndJump -> {
-            moveAndJump.jumpPulse().reset();
+            moveAndJump.jumpPulse().stopAndReset();
             navigationSystem.setMoveDirSpeed(bonus, 0);
         });
     }

@@ -52,7 +52,7 @@ public abstract class CommonGamePlay implements GamePlay {
         pac.reset(); // initially invisible!
         pac.pos().set(worldMap.terrainLayer().pacStartPosition());
         pac.state().setEnumValue(PacState.SLEEPING);
-        systems.pacPower().reset(pac);
+        systems.pacPower().stopAndReset(pac);
         systems.motor().setVelocity(pac, 0, 0);
         systems.navigator().setMoveDir(pac, Direction.LEFT);
         systems.navigator().setWishDir(pac, Direction.LEFT);
@@ -69,7 +69,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
         // Blinking energizers are visible when state is ON
         level.heartbeat().setStartState(Pulse.State.ON);
-        level.heartbeat().reset();
+        level.heartbeat().stopAndReset();
     }
 
     @Override
@@ -171,7 +171,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final GhostPoints points = new GhostPoints(ghostValue);
         points.show();
         points.pos().set(ghost.pos().asVector2f());
-        points.setLifetime(rules.eatenGhostDisplaySeconds());
+        points.setLifetimeSec(rules.eatenGhostDisplaySeconds());
         level.entities().add(points);
 
         game.eventManager().publishGameEvent(new GhostEatenEvent(ghost));
