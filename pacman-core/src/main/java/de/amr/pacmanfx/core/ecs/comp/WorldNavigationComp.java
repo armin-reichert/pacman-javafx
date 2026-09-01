@@ -8,7 +8,6 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.ecs.GameEntityComp;
 
-import java.util.List;
 import java.util.Optional;
 
 import static de.amr.basics.math.Direction.RIGHT;
@@ -18,9 +17,6 @@ public class WorldNavigationComp implements GameEntityComp {
     public static final Direction DEFAULT_MOVE_DIR = RIGHT;
     public static final Direction DEFAULT_WISH_DIR = RIGHT;
     public static final boolean DEFAULT_CAN_TELEPORT = true;
-
-    /** Order in which directions are selected when navigation decision is met. */
-    public static final List<Direction> NAVIGATION_ORDER = List.of(Direction.UP, Direction.LEFT, Direction.DOWN, Direction.RIGHT);
 
     private Direction moveDir;
     private Direction wishDir;

@@ -170,7 +170,7 @@ public class GhostHouseAccessSystem {
         }
         else {
             navigator.setTargetTile(ghost, house.floorplan().leftDoorTile());
-            navigator.setWishDirTowardsTargetTile(ghost, level, movementPolicy);
+            navigator.navigateActorTowardsCurrentTarget(ghost, level, movementPolicy);
             navigator.setMoveDirSpeed(ghost, speed);
             navigator.tryMovingOrTeleporting(level, ghost, movementPolicy);
             ghost.houseAccess().setReachedHouseEntry(false);

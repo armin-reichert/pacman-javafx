@@ -16,10 +16,15 @@ import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import org.tinylog.Logger;
 
+import java.util.List;
+
 import static de.amr.basics.math.Direction.UP;
 import static java.util.Objects.requireNonNull;
 
 public class WorldNavigationSystem {
+
+    /** Order in which directions are selected when navigation decision is met. */
+    public static final List<Direction> NAVIGATION_ORDER = List.of(Direction.UP, Direction.LEFT, Direction.DOWN, Direction.RIGHT);
 
     /**
      * @param actor an actor that can move through the world
@@ -67,18 +72,19 @@ public class WorldNavigationSystem {
         requireNonNull(actor);
         requireNonNull(dir);
 
-        final MovementComp movement = actor.reqComp(MovementComp.class);
         final WorldNavigationComp navigation = actor.reqComp(WorldNavigationComp.class);
-        navigation.setMoveDir(dir);
-
-        float speed = movement.speed();
-        movement.setVelocity(dir.vector().x() * speed, dir.vector().y() * speed);
+        if (navigation.moveDir() != dir) {
+            navigation.setMoveDir(dir);
+            final MovementComp movement = actor.reqComp(MovementComp.class);
+            movement.setVelocity(dir.vector().scaled(movement.speed()));
+        }
     }
 
     /**
-     * Sets the wish direction.
+     * Sets the wish direction for the given actor. Asserts actor has navigation capability.
      *
-     * @param dir the wish direction (must not be null)
+     * @param actor an actor with navigation capability
+     * @param dir the wish direction (not null)
      */
     public void setWishDir(GameEntity actor, Direction dir) {
         requireNonNull(actor);
@@ -86,17 +92,33 @@ public class WorldNavigationSystem {
         actor.reqComp(WorldNavigationComp.class).setWishDir(dir);
     }
 
+    /**
+     * Sets the current target tile for the given actor. Asserts actor has navigation capability.
+     *
+     * @param actor an actor with navigation capability
+     * @param tile target tile (not null)
+     */
     public void setTargetTile(GameEntity actor, Vector2i tile) {
         requireNonNull(actor);
         requireNonNull(tile);
-        actor.optComp(WorldNavigationComp.class).ifPresent(comp -> comp.setTargetTile(tile));
+        actor.reqComp(WorldNavigationComp.class).setTargetTile(tile);
     }
 
+    /**
+     * Clears the current target tile for the given actor. Asserts actor has navigation capability.
+     *
+     * @param actor an actor with navigation capability
+     */
     public void clearTargetTile(GameEntity actor) {
         requireNonNull(actor);
         actor.reqComp(WorldNavigationComp.class).setTargetTile(null);
     }
 
+    /**
+     * Requests the actor to turn around by 180 degrees at the next occasion.
+     *
+     * @param actor an actor with navigation capability
+     */
     public void requestTurnBack(GameEntity actor) {
         requireNonNull(actor);
         actor.reqComp(WorldNavigationComp.class).setTurnBackRequested(true);
@@ -106,6 +128,7 @@ public class WorldNavigationSystem {
      * Places this actor at the given tile coordinate with the given tile offsets. Updates the
      * <code>newTileEntered</code> state.
      *
+     * @param actor an actor with navigation capability
      * @param tx tile x-coordinate (grid column)
      * @param ty tile y-coordinate (grid row)
      * @param ox x-offset inside tile
@@ -128,6 +151,7 @@ public class WorldNavigationSystem {
     /**
      * Places this actor exactly at the given tile coordinate. Updates the <code>newTileEntered</code> state.
      *
+     * @param actor an actor with navigation capability
      * @param tx tile x-coordinate (grid column)
      * @param ty tile y-coordinate (grid row)
      */
@@ -138,8 +162,8 @@ public class WorldNavigationSystem {
     /**
      * Places this actor centered over the given tile.
      *
-     * @param actor an actor
-     * @param tile tile where actor is placed
+     * @param actor an actor with navigation capability
+     * @param tile tile where actor is placed (not null)
      */
     public void placeAtTile(GameEntity actor, Vector2i tile) {
         requireNonNull(tile);
@@ -149,8 +173,8 @@ public class WorldNavigationSystem {
     /**
      * Changes the velocity of the motor towards the current move direction of the given actor.
      *
-     * @param actor an actor
-     * @param speed the speed value
+     * @param actor an actor with navigation capability
+     * @param speed the speed in pixels/tick
      */
     public void setMoveDirSpeed(GameEntity actor, float speed) {
         requireNonNull(actor);
@@ -160,7 +184,15 @@ public class WorldNavigationSystem {
         movement.setVelocity(moveDir.vector().scaled(speed));
     }
 
-    public <E extends GameEntity> void setWishDirTowardsTargetTile(E actor, GameLevel level, WorldMovementPolicy<E>  movementPolicy) {
+    /**
+     * Computes the wish direction suited to reach an actor's current target tile.
+     *
+     * @param actor an actor with navigation capability
+     * @param level the game level
+     * @param movementPolicy the movement policy of the actor
+     * @param <A> the actor type
+     */
+    public <A extends GameEntity> void navigateActorTowardsCurrentTarget(A actor, GameLevel level, WorldMovementPolicy<A>  movementPolicy) {
         requireNonNull(actor);
         requireNonNull(level);
         requireNonNull(movementPolicy);
@@ -175,25 +207,30 @@ public class WorldNavigationSystem {
         if (level.worldMap().terrainLayer().isTileInPortalSpace(tileBefore)) {
             return;
         }
-        Direction candidateDir = null;
-        double minDistToTarget = Double.MAX_VALUE;
-        for (Direction dir : WorldNavigationComp.NAVIGATION_ORDER) {
-            if (dir == navigation.moveDir().opposite()) {
+
+        // Computes for each tile accessible from the current tile the distance to the current target tile and
+        // selects the one with the minimum distance. Tiles are checked in the fixed navigation order which creates
+        // the characteristic behavior observed in the Arcade game.
+        // We also allow maps with dead-ends (custom maps), so the actor is allowed to turn-back if stuck in one.
+        final Direction backwards = navigation.moveDir().opposite();
+        Direction candidate = null;
+        double currentMinDist = Double.MAX_VALUE;
+        for (Direction dir : NAVIGATION_ORDER) {
+            if (dir == backwards) {
                 continue; // reversing the move direction is not allowed  (except to get out of dead-ends, see below)
             }
             final Vector2i neighborTile = tileBefore.plus(dir.vector());
             if (movementPolicy.canAccessTile(level, actor, neighborTile)) {
-                double dist = neighborTile.euclideanDist(navigation.targetTile());
-                if (dist < minDistToTarget) {
-                    minDistToTarget = dist;
-                    candidateDir = dir;
+                final double distanceToTarget = neighborTile.euclideanDist(navigation.targetTile());
+                if (distanceToTarget < currentMinDist) {
+                    currentMinDist = distanceToTarget;
+                    candidate = dir;
                 }
             }
         }
 
         // if no direction towards the current target tile could be determined, reverse (exit from dead-end)
-        final Direction wishDir = candidateDir != null ? candidateDir : navigation.moveDir().opposite();
-        setWishDir(actor, wishDir);
+        setWishDir(actor, candidate != null ? candidate : backwards);
     }
 
     public <E extends GameEntity> void tryMovingTowardsTargetTile(
@@ -214,7 +251,7 @@ public class WorldNavigationSystem {
         }
 
         navigation.setTargetTile(targetTile);
-        setWishDirTowardsTargetTile(actor, level, movementPolicy);
+        navigateActorTowardsCurrentTarget(actor, level, movementPolicy);
 
         tryMovingOrTeleporting(level, actor, movementPolicy);
     }
