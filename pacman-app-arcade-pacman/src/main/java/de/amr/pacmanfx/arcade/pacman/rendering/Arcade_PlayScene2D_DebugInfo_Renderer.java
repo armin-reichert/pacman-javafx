@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.math.Direction;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
@@ -46,56 +47,60 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
 
     @Override
     public void draw(GameScene gameScene, long tick) {
-        final CanvasRenderingComp r2D = gameScene.components().reqComp(CanvasRenderingComp.class);
-
-        drawTileGrid(r2D.unscaledWidth(), r2D.unscaledHeight(), Color.LIGHTGRAY);
-
+        final CanvasRenderingComp canvasRendering = gameScene.components().reqComp(CanvasRenderingComp.class);
+        drawTileGrid(canvasRendering.unscaledWidth(), canvasRendering.unscaledHeight(), Color.LIGHTGRAY);
         final GameSession session = gameScene.game().session();
         session.optLevel().ifPresent(level -> {
-            // We assume all ghosts have the same set of special terrain tiles
-            level.entities().ghost(GhostPersonality.RED_GHOST_SHADOW).worldInfo().specialTerrainTiles().forEach(tile -> {
-                final double x = scaled(tile.x() * WorldMap.TS);
-                final double y = scaled(tile.y() * WorldMap.TS + WorldMap.HTS), size = scaled(WorldMap.TS);
-                ctx.setFill(Color.RED);
-                ctx.fillRect(x, y, size, 2);
-            });
-
-            // Mark intersection tiles
-            final TerrainLayer terrain = level.worldMap().terrainLayer();
-            final House house = level.entities().house();
-            terrain.tiles()
-                .filter(tile -> tile.y() >= terrain.emptyRowsOverMaze())
-                .filter(tile -> tile.y() < terrain.numRows() - terrain.emptyRowsBelowMaze())
-                .filter(tile -> terrain.isRealIntersectionTile(tile, house::contains))
-                .forEach(tile -> {
-                    final double cx = tile.x() * WorldMap.TS + WorldMap.HTS;
-                    final double cy = tile.y() * WorldMap.TS + WorldMap.HTS;
-                    for (Direction dir : CLOCK_ORDER) {
-                        if (!terrain.isInaccessibleTile(tile.plus(dir.vector()))) {
-                            final double x = cx + dir.vector().x() * WorldMap.HTS;
-                            final double y = cy + dir.vector().y() * WorldMap.HTS;
-                            ctx.setStroke(Color.WHITE);
-                            ctx.setLineWidth(2);
-                            ctx.strokeLine(scaled(cx), scaled(cy), scaled(x), scaled(y));
-                        }
-                    }
-            });
-
-            final AbstractGameState state = gameScene.game().state();
-            final String gameStateText = state.name() + " (Tick %d)".formatted(state.timer().tickCount());
-            String huntingPhaseText = "";
-            if (CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(state)) {
-                final HuntingTimer huntingRules = level.huntingTimer();
-                huntingPhaseText = " %s (Tick %d)".formatted(huntingRules.currentHuntingPhase(), huntingRules.tickCount());
-            }
-            ctx.setFill(debugTextFill);
-            ctx.setStroke(debugTextStroke);
-            ctx.setFont(debugTextFont);
-            ctx.fillText("%s%s".formatted(gameStateText, huntingPhaseText), 0, tilesPx(8));
-
+//            drawTerrainDebugInfo(level);
+            drawGameStateDebugInfo(gameScene.game(), level);
             updateActorDrawingOrder(level);
             actorsInZOrder.forEach(actor -> drawMovingActorInfo(animSystem, actor));
         });
+    }
+
+    private void drawGameStateDebugInfo(GameContext game, GameLevel level) {
+        final AbstractGameState state = game.state();
+        final String gameStateText = state.name() + " (Tick %d)".formatted(state.timer().tickCount());
+        String huntingPhaseText = "";
+        if (CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(state)) {
+            final HuntingTimer huntingRules = level.huntingTimer();
+            huntingPhaseText = " %s (Tick %d)".formatted(huntingRules.currentHuntingPhase(), huntingRules.tickCount());
+        }
+        ctx.setFill(debugTextFill);
+        ctx.setStroke(debugTextStroke);
+        ctx.setFont(debugTextFont);
+        ctx.fillText("%s%s".formatted(gameStateText, huntingPhaseText), 0, tilesPx(8));
+    }
+
+    private void drawTerrainDebugInfo(GameLevel level) {
+        // We assume all ghosts have the same set of special terrain tiles
+        level.entities().ghost(GhostPersonality.RED_GHOST_SHADOW).worldInfo().specialTerrainTiles().forEach(tile -> {
+            final double x = scaled(tile.x() * WorldMap.TS);
+            final double y = scaled(tile.y() * WorldMap.TS + WorldMap.HTS), size = scaled(WorldMap.TS);
+            ctx.setFill(Color.RED);
+            ctx.fillRect(x, y, size, 2);
+        });
+
+        // Mark intersection tiles
+        final TerrainLayer terrain = level.worldMap().terrainLayer();
+        final House house = level.entities().house();
+        terrain.tiles()
+            .filter(tile -> tile.y() >= terrain.emptyRowsOverMaze())
+            .filter(tile -> tile.y() < terrain.numRows() - terrain.emptyRowsBelowMaze())
+            .filter(tile -> terrain.isRealIntersectionTile(tile, house::contains))
+            .forEach(tile -> {
+                final double cx = tile.x() * WorldMap.TS + WorldMap.HTS;
+                final double cy = tile.y() * WorldMap.TS + WorldMap.HTS;
+                for (Direction dir : CLOCK_ORDER) {
+                    if (!terrain.isInaccessibleTile(tile.plus(dir.vector()))) {
+                        final double x = cx + dir.vector().x() * WorldMap.HTS;
+                        final double y = cy + dir.vector().y() * WorldMap.HTS;
+                        ctx.setStroke(Color.WHITE);
+                        ctx.setLineWidth(2);
+                        ctx.strokeLine(scaled(cx), scaled(cy), scaled(x), scaled(y));
+                    }
+                }
+            });
     }
 
     private void updateActorDrawingOrder(GameLevel level) {
