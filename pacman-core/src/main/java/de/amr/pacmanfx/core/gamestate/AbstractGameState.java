@@ -78,11 +78,11 @@ public abstract class AbstractGameState implements State<GameContext>, Named {
 
     protected void lockPacAndGhosts(GameLevelEntitySet entities, boolean locked) {
         final Pac pac = entities.pac();
-        pac.worldNavigation().setDisabled(locked);
+        pac.worldNavigation().setPaused(locked);
         systems.pacAnimation().lockAnimation(pac, locked);
 
         for (Ghost ghost : entities.ghosts()) {
-            ghost.worldNavigation().setDisabled(locked);
+            ghost.worldNavigation().setPaused(locked);
             systems.ghostAnimation().lockAnimation(ghost, locked);
         }
     }

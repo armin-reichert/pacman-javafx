@@ -48,7 +48,7 @@ public class Common_LevelCompleteState extends AbstractGameState {
 
     @Override
     public void onExit(GameContext context) {
-        level.entities().ghosts().forEach(ghost -> ghost.worldNavigation().setDisabled(false));
+        level.entities().ghosts().forEach(ghost -> ghost.worldNavigation().setPaused(false));
     }
 
     @Override

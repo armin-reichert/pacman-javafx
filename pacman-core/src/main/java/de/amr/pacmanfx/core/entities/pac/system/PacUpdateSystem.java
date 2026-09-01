@@ -41,27 +41,30 @@ public class PacUpdateSystem {
     }
 
     public void update(GameContext game, GameLevel level, Pac pac) {
-        final GameRules rules = game.variant().rules();
-        final GameSession session = game.session();
+        requireNonNull(game);
+        requireNonNull(level);
+        requireNonNull(pac);
 
         switch (pac.state().enumValue()) {
-            case SLEEPING, DEAD -> pac.worldNavigation().setDisabled(true);
-            case ACTIVE -> pac.worldNavigation().setDisabled(false);
+            case SLEEPING, DEAD -> pac.worldNavigation().setPaused(true);
+            case ACTIVE -> pac.worldNavigation().setPaused(false);
         }
 
-        final ActorSpeedRules speedRules = rules.actorSpeedRules();
-        final float speed = pac.power().isActive()
-            ? speedRules.pacSpeedWhenHasPower(game, level)
-            : speedRules.pacSpeed(game, level);
+        final GameRules rules = game.variant().rules();
+
+        if (!pac.worldNavigation().isPaused()) {
+            final GameSession session = game.session();
+            final ActorSpeedRules speedRules = rules.actorSpeedRules();
+            final float speed = pac.power().isActive()
+                ? speedRules.pacSpeedWhenHasPower(game, level)
+                : speedRules.pacSpeed(game, level);
+            pacAutoSteeringSystem.update(session, pac);
+            navigator.setMoveDirSpeed(pac, speed);
+            navigator.tryMovingOrTeleporting(level, pac, movementPolicy);
+        }
 
         pacDigestionSystem.update(pac);
         pacPowerSystem.update(pac, rules.pacPowerFadingSeconds(level.number()));
-
-        // Steering and movement
-        pacAutoSteeringSystem.update(session, pac);
-        navigator.setMoveDirSpeed(pac, speed);
-        navigator.tryMovingOrTeleporting(level, pac, movementPolicy);
-
         pacAnimationSystem.update(pac, game.variant().rules());
     }
 }

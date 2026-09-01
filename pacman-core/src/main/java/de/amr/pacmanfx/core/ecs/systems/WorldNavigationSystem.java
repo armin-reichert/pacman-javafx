@@ -209,7 +209,7 @@ public class WorldNavigationSystem {
 
         final WorldNavigationComp navigation = actor.reqComp(WorldNavigationComp.class);
 
-        if (navigation.isDisabled()) {
+        if (navigation.isPaused()) {
             return;
         }
 
@@ -236,7 +236,7 @@ public class WorldNavigationSystem {
         final WorldNavigationComp navigation = actor.reqComp(WorldNavigationComp.class);
         navigation.info().clear();
 
-        if (navigation.isDisabled()) {
+        if (navigation.isPaused()) {
             return;
         }
 

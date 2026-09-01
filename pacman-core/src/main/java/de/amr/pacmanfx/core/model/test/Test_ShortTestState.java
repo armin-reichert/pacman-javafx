@@ -131,7 +131,7 @@ public class Test_ShortTestState extends AbstractGameState {
         systems.pacPower().stopAndReset(pac);
 
         // Ghosts stop
-        level.entities().ghosts().forEach(ghost -> ghost.worldNavigation().setDisabled(true));
+        level.entities().ghosts().forEach(ghost -> ghost.worldNavigation().setPaused(true));
 
         level.entities().optBonus().ifPresent(bonus -> {
             systems.bonusState().setInactive(bonus);

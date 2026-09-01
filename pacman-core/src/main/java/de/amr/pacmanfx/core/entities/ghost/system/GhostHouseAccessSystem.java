@@ -48,7 +48,7 @@ public class GhostHouseAccessSystem {
      * and start blinking when Pac-Man's power starts fading. After that, they return to their normal color.
      */
     private void bounceInHouse(Ghost ghost, float speed) {
-        if (ghost.worldNavigation().isDisabled()) {
+        if (ghost.worldNavigation().isPaused()) {
             return;
         }
         final House house = ghost.worldInfo().house();
@@ -78,7 +78,7 @@ public class GhostHouseAccessSystem {
      * The ghost speed is slower than outside, but I do not know the exact value.
      */
     private void moveTowardsHouseExit(Ghost ghost, float speed) {
-        if (ghost.worldNavigation().isDisabled()) {
+        if (ghost.worldNavigation().isPaused()) {
             return;
         }
 
@@ -122,7 +122,7 @@ public class GhostHouseAccessSystem {
      * then moves up again (if the house center is his revival position), or moves sidewards towards his revival position.
      */
     private void moveTowardsRevivalPosition(Ghost ghost, float speed) {
-        if (ghost.worldNavigation().isDisabled()) {
+        if (ghost.worldNavigation().isPaused()) {
             return;
         }
 
