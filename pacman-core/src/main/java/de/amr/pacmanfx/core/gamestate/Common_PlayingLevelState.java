@@ -33,7 +33,7 @@ public final class Common_PlayingLevelState extends AbstractGameState {
         level.entities().pac().state().setEnumValue(PacState.ACTIVE);
 
         // This call fires a game event!
-        level.huntingTimerStrategy().startFirstPhase(game, level.number());
+        level.huntingTimer().startFirstPhase(game, level.number());
     }
 
     @Override

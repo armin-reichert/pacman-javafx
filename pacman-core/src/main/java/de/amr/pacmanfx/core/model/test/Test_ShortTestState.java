@@ -117,7 +117,7 @@ public class Test_ShortTestState extends AbstractGameState {
     }
 
     private void finishLevel(GameLevel level, GameSystems systems) {
-        level.huntingTimerStrategy().stop();
+        level.huntingTimer().stop();
 
         level.heartbeat().setStartState(Pulse.State.OFF);
         level.heartbeat().stopAndReset();

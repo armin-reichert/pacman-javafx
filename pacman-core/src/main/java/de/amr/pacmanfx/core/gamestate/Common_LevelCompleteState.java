@@ -29,7 +29,7 @@ public class Common_LevelCompleteState extends AbstractGameState {
         level.heartbeat().setStartState(Pulse.State.OFF);
         level.heartbeat().stopAndReset();
 
-        level.huntingTimerStrategy().stop();
+        level.huntingTimer().stop();
 
         // If level was ended by cheat, there might still be food remaining, so eat it:
         level.food().eatAll();

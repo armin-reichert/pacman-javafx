@@ -80,8 +80,8 @@ public class DS_GameInfo extends GameDashboardSection {
 
         addDynamicInfo("Pac lives",      () -> app.game().session().numLives());
         addDynamicInfo("Hunting Phase",  fnLevelInfo(app, this::fmtHuntingPhase));
-        addDynamicInfo("-Running",       fnLevelInfo(app, level -> fmtHuntingTicksRunning(level.huntingTimerStrategy())));
-        addDynamicInfo("-Remaining",     fnLevelInfo(app, level -> fmtHuntingTicksRemaining(level.huntingTimerStrategy())));
+        addDynamicInfo("-Running",       fnLevelInfo(app, level -> fmtHuntingTicksRunning(level.huntingTimer())));
+        addDynamicInfo("-Remaining",     fnLevelInfo(app, level -> fmtHuntingTicksRemaining(level.huntingTimer())));
         addDynamicInfo("Collision mode", fnRulesInfo(app, rules -> fmtCollisionMode(rules.actorCollisionRules().getCollisionStrategy())));
         addDynamicInfo("Pac-Man speed",  supplyLevelSpeedInfo(app, (level, rules) -> fmtPacNormalSpeed(app.game(), level, rules)));
         addDynamicInfo("- empowered",    supplyLevelSpeedInfo(app, (level, rules) -> fmtPacSpeedPowered(app.game(), level, rules)));
@@ -129,7 +129,7 @@ public class DS_GameInfo extends GameDashboardSection {
     }
 
     private String fmtHuntingPhase(GameLevel level) {
-        final HuntingTimerStrategy huntingRules = level.huntingTimerStrategy();
+        final HuntingTimer huntingRules = level.huntingTimer();
         return "%s #%d%s (%s)".formatted(
             huntingRules.currentHuntingPhase().name(),
             huntingRules.currentHuntingPhase() == HuntingPhase.CHASING
@@ -147,11 +147,11 @@ public class DS_GameInfo extends GameDashboardSection {
         return "%.2f sec".formatted(duration / (float) GameConstants.SIMULATION_FPS);
     }
 
-    private String fmtHuntingTicksRunning(HuntingTimerStrategy huntingRules) {
+    private String fmtHuntingTicksRunning(HuntingTimer huntingRules) {
         return "%d".formatted(huntingRules.tickCount());
     }
 
-    private String fmtHuntingTicksRemaining(HuntingTimerStrategy huntingRules) {
+    private String fmtHuntingTicksRemaining(HuntingTimer huntingRules) {
         return "%d".formatted(huntingRules.remainingTicksOfCurrentPhase());
     }
 

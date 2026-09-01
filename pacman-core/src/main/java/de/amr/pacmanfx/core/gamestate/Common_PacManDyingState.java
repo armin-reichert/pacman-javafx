@@ -29,7 +29,7 @@ public final class Common_PacManDyingState extends AbstractGameState {
         pac = level.entities().pac();
 
         level.gateKeeper().resetCounterAndSetEnabled(true);
-        level.huntingTimerStrategy().stop();
+        level.huntingTimer().stop();
 
         pac.worldNavigation().setDisabled(true);
         systems.pacPower().stopAndReset(pac);

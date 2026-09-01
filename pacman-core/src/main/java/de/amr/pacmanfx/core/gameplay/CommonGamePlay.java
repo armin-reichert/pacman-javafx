@@ -125,7 +125,7 @@ public abstract class CommonGamePlay implements GamePlay {
         collisionHandler.setStrategy(rules.actorCollisionRules().getCollisionStrategy());
         collisionHandler.setDoubleChecked(rules.actorCollisionRules().isCollisionDoubleChecked());
 
-        level.huntingTimerStrategy().update(rules, level.number());
+        level.huntingTimer().update(rules, level.number());
 
         level.gateKeeper().unlockGhostIfPossible(game, level);
 

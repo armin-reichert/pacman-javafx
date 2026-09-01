@@ -26,7 +26,7 @@ import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
 import de.amr.pacmanfx.core.rules.GameRules;
-import de.amr.pacmanfx.core.rules.HuntingTimer;
+import de.amr.pacmanfx.core.rules.DefaultHuntingTimer;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
 import org.tinylog.Logger;
 
@@ -73,7 +73,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         createAndSetMsPacMan(entities, game.variant().systems());
         createAndSetGhosts(entities, worldMap.terrainLayer(), house);
 
-        final HuntingTimer huntingTimer = new HuntingTimer("Arcade Ms. Pac-Man Hunting Timer", game.variant().rules().numHuntingPhases());
+        final DefaultHuntingTimer huntingTimer = new DefaultHuntingTimer("Arcade Ms. Pac-Man Hunting Timer", game.variant().rules().numHuntingPhases());
 
         final GameLevel level = new GameLevel(levelNumber, worldMap, entities, huntingTimer);
 

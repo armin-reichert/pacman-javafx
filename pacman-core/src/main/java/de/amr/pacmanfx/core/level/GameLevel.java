@@ -8,7 +8,7 @@ import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.gameplay.ArcadeHouseGateKeeper;
 import de.amr.pacmanfx.core.model.world.map.FoodState;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.core.rules.HuntingTimerStrategy;
+import de.amr.pacmanfx.core.rules.HuntingTimer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +28,7 @@ public class GameLevel {
     private final Pulse heartbeat;
     private final List<Integer> bonusSymbolCodes = new ArrayList<>();
 
-    private final HuntingTimerStrategy huntingTimerStrategy;
+    private final HuntingTimer huntingTimer;
     private final ArcadeHouseGateKeeper gateKeeper;
 
     private byte currentBonusIndex; // -1=no bonus, 0=first, 1=second
@@ -36,17 +36,17 @@ public class GameLevel {
 
     private final FoodState foodState;
 
-    public GameLevel(int number, WorldMap worldMap, GameLevelEntitySet entities, HuntingTimerStrategy huntingTimerStrategy) {
+    public GameLevel(int number, WorldMap worldMap, GameLevelEntitySet entities, HuntingTimer huntingTimer) {
         this.number = requireValidLevelNumber(number);
         this.worldMap = requireNonNull(worldMap);
         this.entities = requireNonNull(entities);
-        this.huntingTimerStrategy = requireNonNull(huntingTimerStrategy);
+        this.huntingTimer = requireNonNull(huntingTimer);
         this.gateKeeper = new ArcadeHouseGateKeeper(number);
         this.foodState = new FoodState(worldMap.foodLayer());
         this.heartbeat = new Pulse(10, Pulse.State.OFF);
         this.currentBonusIndex = -1;
 
-        huntingTimerStrategy.reset();
+        huntingTimer.reset();
     }
 
     /**
@@ -77,8 +77,8 @@ public class GameLevel {
     /**
      * @return the timer controlling the hunting phases (scattering and chasing).
      */
-    public HuntingTimerStrategy huntingTimerStrategy() {
-        return huntingTimerStrategy;
+    public HuntingTimer huntingTimer() {
+        return huntingTimer;
     }
 
     public ArcadeHouseGateKeeper gateKeeper() {

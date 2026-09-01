@@ -64,7 +64,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
             });
 
             // This call fires a game event!
-            level.huntingTimerStrategy().startFirstPhase(game, level.number());
+            level.huntingTimer().startFirstPhase(game, level.number());
         }
         else if (tick >= game.variant().rules().demoLevelHuntingStartTick()) {
             gamePlay.update(game, level);

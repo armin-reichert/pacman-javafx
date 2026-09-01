@@ -30,7 +30,7 @@ import de.amr.pacmanfx.core.level.MessageType;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
-import de.amr.pacmanfx.core.rules.HuntingTimer;
+import de.amr.pacmanfx.core.rules.DefaultHuntingTimer;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
 import de.amr.pacmanfx.tengenmspacman.model.BoosterMode;
 import de.amr.pacmanfx.tengenmspacman.model.Difficulty;
@@ -254,7 +254,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         rules.setMapCategory(mapCategory);
         Logger.info("Using game rules for map category {}", mapCategory);
 
-        final HuntingTimer huntingTimer = new HuntingTimer("Tengen Ms. Pac-Man Hunting Timer", rules.numHuntingPhases());
+        final DefaultHuntingTimer huntingTimer = new DefaultHuntingTimer("Tengen Ms. Pac-Man Hunting Timer", rules.numHuntingPhases());
 
         addEntities(entities, game, worldMap);
 

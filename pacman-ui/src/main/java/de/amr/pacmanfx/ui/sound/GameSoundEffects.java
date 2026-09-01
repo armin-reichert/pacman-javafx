@@ -301,7 +301,7 @@ public class GameSoundEffects implements Disposable {
         if (pac.power().isActive()) {
             return NO_SIREN;
         }
-        return 1 + level.huntingTimerStrategy().phaseIndex() / 2;
+        return 1 + level.huntingTimer().phaseIndex() / 2;
     }
 
     public void playSiren(int number) {

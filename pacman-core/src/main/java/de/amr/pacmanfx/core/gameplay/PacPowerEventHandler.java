@@ -29,7 +29,7 @@ public class PacPowerEventHandler implements DefaultGameEventListener {
         final long durationTicks = e.powerDurationTicks();
         final GameLevel level = game.session().level();
 
-        level.huntingTimerStrategy().stop();
+        level.huntingTimer().stop();
 
         level.entities().ghosts().forEach(ghost -> {
             ghost.state().setPacPower(true);
@@ -59,7 +59,7 @@ public class PacPowerEventHandler implements DefaultGameEventListener {
             ghost.state().setPacPowerFading(false);
             ghost.state().setKillChainIndex(-1);
         });
-        level.huntingTimerStrategy().start();
+        level.huntingTimer().start();
 
         Logger.info("Pac power ended, hunting resumed.");
     }

@@ -4,153 +4,39 @@
 
 package de.amr.pacmanfx.core.rules;
 
-import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.event.gameplay.HuntingPhaseStartedEvent;
-import org.tinylog.Logger;
 
 import java.util.Optional;
-import java.util.function.Consumer;
 
-import static de.amr.basics.math.MathAdds.isEven;
-import static de.amr.basics.math.MathAdds.isOdd;
-import static de.amr.pacmanfx.core.Validations.requireNonNegativeInt;
-import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
-import static java.util.Objects.requireNonNull;
+public interface HuntingTimer {
 
-/**
- * Controls the timing of the hunting phases (alternating scattering and chasing).
- */
-public class HuntingTimer extends TickTimer implements HuntingTimerStrategy {
+    void reset();
 
-    private enum HuntingPhaseEvent {PHASE_START, PHASE_END}
+    void update(GameRules rules, int levelNumber);
 
-    private final int numPhases;
+    boolean inChasingPhase();
 
-    private int phaseIndex = Integer.MIN_VALUE;
+    boolean inScatteringPhase();
 
-    private Consumer<Integer> phaseChangeCallback = index -> Logger.info("Hunting phase index is now {}", index);
+    void stop();
 
-    /**
-     * @param name a readable name for this timer
-     * @param numPhases the total number of scatter and chasing phases (4+4 in Arcade Pac-Man games)
-     */
-    public HuntingTimer(String name, int numPhases) {
-        super(name);
-        this.numPhases = requireNonNegativeInt(numPhases);
-    }
+    void start();
 
-    public void setPhaseIndex(int index) {
-        requireValidPhaseIndex(index);
-        if (phaseIndex != index) {
-            phaseIndex = index;
-            logPhase(phaseIndex, HuntingPhaseEvent.PHASE_START);
-            phaseChangeCallback.accept(phaseIndex);
-        }
-    }
+    void startFirstPhase(GameContext game, int number);
 
-    public void setPhaseChangeCallback(Consumer<Integer> callback) {
-        this.phaseChangeCallback = requireNonNull(callback);
-    }
+    int phaseIndex();
 
-    @Override
-    public void startFirstPhase(GameContext game, int levelNumber) {
-        requireNonNull(game);
-        requireValidLevelNumber(levelNumber);
+    HuntingPhase currentHuntingPhase();
 
-        startPhase(game.variant().rules(), levelNumber, 0);
+    long tickCount();
 
-        game.eventManager().publishGameEvent(new HuntingPhaseStartedEvent(
-            game,
-            phaseIndex,
-            currentHuntingPhase())
-        );
-    }
+    long remainingTicksOfCurrentPhase();
 
-    @Override
-    public void update(GameRules rules, int levelNumber) {
-        requireNonNull(rules);
-        requireValidLevelNumber(levelNumber);
-        if (hasExpired()) {
-            logPhase(phaseIndex, HuntingPhaseEvent.PHASE_END);
-            int nextPhaseIndex = requireValidPhaseIndex(phaseIndex + 1);
-            startPhase(rules, levelNumber, nextPhaseIndex);
-        } else {
-            doTick();
-        }
-    }
+    Optional<Integer> currentChasingPhaseIndex();
 
-    @Override
-    public void reset() {
-        stop();
-        reset(TickTimer.INDEFINITE);
-        phaseIndex = Integer.MIN_VALUE;
-    }
+    Optional<Integer> currentScatterPhaseIndex();
 
-    @Override
-    public long remainingTicksOfCurrentPhase() {
-        return remainingTicks();
-    }
+    boolean isStopped();
 
-    @Override
-    public int phaseIndex() { return phaseIndex; }
-
-    @Override
-    public Optional<Integer> currentScatterPhaseIndex() {
-        return isEven(phaseIndex) ? Optional.of(phaseIndex / 2) : Optional.empty();
-    }
-
-    @Override
-    public Optional<Integer> currentChasingPhaseIndex() {
-        return isOdd(phaseIndex) ? Optional.of(phaseIndex / 2) : Optional.empty();
-    }
-
-    @Override
-    public HuntingPhase currentHuntingPhase() {
-        return phase(phaseIndex);
-    }
-
-    @Override
-    public boolean isChasing() {
-        return currentHuntingPhase() == HuntingPhase.CHASING;
-    }
-
-    @Override
-    public boolean isScattering() {
-        return currentHuntingPhase() == HuntingPhase.SCATTERING;
-    }
-
-    // private
-
-    private HuntingPhase phase(int phase) {
-        return isEven(phase) ? HuntingPhase.SCATTERING : HuntingPhase.CHASING;
-    }
-
-    private void logPhase(int index, HuntingPhaseEvent event) {
-        final String eventText = switch (event) {
-            case PHASE_START -> "begins:";
-            case PHASE_END -> "ends:  ";
-        };
-        Logger.info("Hunting phase {} {} {}, {} ticks / {} seconds). {}",
-            index,
-            eventText,
-            phase(index),
-            durationTicks(),
-            (float) durationTicks() / GameConstants.SIMULATION_FPS,
-            this);
-    }
-
-    private void startPhase(GameRules rules, int levelNumber, int index) {
-        final long duration = rules.huntingPhaseDuration(levelNumber, index);
-        restartTicks(duration);
-        setPhaseIndex(index);
-    }
-
-    private int requireValidPhaseIndex(int index) {
-        if (index < 0 || index > numPhases - 1) {
-            throw new IllegalArgumentException("Hunting phase index must be 0..%d, but is %d".formatted(numPhases, index));
-        }
-        return index;
-    }
+    long durationTicks();
 }

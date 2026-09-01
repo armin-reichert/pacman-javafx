@@ -27,7 +27,7 @@ public class SpeedyHuntingStrategy implements GhostHuntingStrategy {
         requireNonNull(ghost);
         requireNonNull(worldMovementPolicy);
 
-        final boolean chase = level.huntingTimerStrategy().isChasing();
+        final boolean chase = level.huntingTimer().inChasingPhase();
         final Vector2i targetTile = chase
             ? computeChasingTargetTile(level)
             : computeScatterTile(level.worldMap(), ghost);

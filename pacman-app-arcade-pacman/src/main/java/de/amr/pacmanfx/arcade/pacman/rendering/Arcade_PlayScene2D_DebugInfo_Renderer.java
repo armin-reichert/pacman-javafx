@@ -14,7 +14,7 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.core.rules.HuntingTimerStrategy;
+import de.amr.pacmanfx.core.rules.HuntingTimer;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
@@ -85,7 +85,7 @@ public class Arcade_PlayScene2D_DebugInfo_Renderer extends BaseDebugInfoRenderer
             final String gameStateText = state.name() + " (Tick %d)".formatted(state.timer().tickCount());
             String huntingPhaseText = "";
             if (CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(state)) {
-                final HuntingTimerStrategy huntingRules = level.huntingTimerStrategy();
+                final HuntingTimer huntingRules = level.huntingTimer();
                 huntingPhaseText = " %s (Tick %d)".formatted(huntingRules.currentHuntingPhase(), huntingRules.tickCount());
             }
             ctx.setFill(debugTextFill);
