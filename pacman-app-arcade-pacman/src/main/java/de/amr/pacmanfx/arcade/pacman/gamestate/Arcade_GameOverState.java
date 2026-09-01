@@ -32,7 +32,7 @@ public class Arcade_GameOverState extends AbstractGameState {
     }
 
     @Override
-    public void onUpdate(GameContext game) {
+    public void onUpdateState(GameContext game, long globalTick, long stateTick) {
         if (timer().hasExpired()) {
             session.hud().clearMessage();
             session.cheats().clear();

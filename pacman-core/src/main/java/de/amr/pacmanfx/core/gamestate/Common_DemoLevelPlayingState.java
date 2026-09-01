@@ -40,19 +40,17 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
     }
 
     @Override
-    public void onUpdate(GameContext game) {
-        final long tick = timer().tickCount();
-
+    public void onUpdateState(GameContext game, long globalTick, long stateTick) {
         final GameVariantConfig variantConfig = game.variant();
         final GameLevel level = session.level();
 
-        if (tick == 1) {
+        if (stateTick == 1) {
             gamePlay.prepareLevelForPlaying(game, level);
         }
-        else if (tick == 2) {
+        else if (stateTick == 2) {
             showPacAndGhosts(level.entities());
         }
-        else if (tick == game.variant().rules().demoLevelHuntingStartTick()) {
+        else if (stateTick == game.variant().rules().demoLevelHuntingStartTick()) {
             startEnergizerBlinking(level);
 
             final Pac pac = level.entities().pac();
@@ -66,7 +64,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
             // This call fires a game event!
             level.huntingTimer().startFirstPhase(game, level.number());
         }
-        else if (tick >= game.variant().rules().demoLevelHuntingStartTick()) {
+        else if (stateTick >= game.variant().rules().demoLevelHuntingStartTick()) {
             gamePlay.update(game, level);
         }
 

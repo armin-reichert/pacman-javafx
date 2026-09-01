@@ -24,7 +24,7 @@ public class Test_CutScenesTestState extends AbstractGameState {
     }
 
     @Override
-    public void onUpdate(GameContext game) {
+    public void onUpdateState(GameContext game, long globalTick, long stateTick) {
         if (timer().hasExpired()) {
             if (testedCutSceneNumber < rules.lastCutSceneNumber()) {
                 testedCutSceneNumber += 1;

@@ -41,7 +41,7 @@ public class Tengen_LevelIntermissionState extends AbstractGameState {
     }
 
     @Override
-    public void onUpdate(GameContext game) {
+    public void onUpdateState(GameContext game, long globalTick, long stateTick) {
         if (timer().hasExpired()) {
             flow.enterGameState(game, session.isGameRunning() ? CommonGameStateID.GAME_LEVEL_TRANSITION : CommonGameStateID.GAME_INTRO);
         }

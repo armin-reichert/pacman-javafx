@@ -40,6 +40,8 @@ public abstract class AbstractGameState implements State<GameContext>, Named {
 
     public abstract void onEnterState(GameContext game);
 
+    public abstract void onUpdateState(GameContext game, long globalTick, long stateTick);
+
     public Named id() {
         return id;
     }
@@ -48,7 +50,7 @@ public abstract class AbstractGameState implements State<GameContext>, Named {
         return Arrays.asList(names).contains(id);
     }
 
-    @Override
+        @Override
     public String name() {
         return id.name();
     }
@@ -67,6 +69,11 @@ public abstract class AbstractGameState implements State<GameContext>, Named {
         session = game.session();
         hud = session.hud();
         onEnterState(game);
+    }
+
+    @Override
+    public final void onUpdate(GameContext game) {
+        onUpdateState(game, game.session().thisFrame().tick(), timer().tickCount());
     }
 
     protected void showPacAndGhosts(GameLevelEntitySet entities) {

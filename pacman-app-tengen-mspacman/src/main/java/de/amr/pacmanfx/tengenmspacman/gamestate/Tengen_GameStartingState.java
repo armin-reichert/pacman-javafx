@@ -43,20 +43,18 @@ public class Tengen_GameStartingState extends AbstractGameState {
     }
 
     @Override
-    public void onUpdate(GameContext game) {
-        final long tick = timer().tickCount();
-
-        if (tick < TICK_START_PLAYING) {
+    public void onUpdateState(GameContext game, long globalTick, long stateTick) {
+        if (stateTick < TICK_START_PLAYING) {
             lockPacAndGhosts(level.entities(), true);
         }
 
-        if (tick == TICK_START_LEVEL) {
+        if (stateTick == TICK_START_LEVEL) {
             gamePlay.startLevel(game, level);
         }
-        else if (tick == TICK_SHOW_GUYS) {
+        else if (stateTick == TICK_SHOW_GUYS) {
             showPacAndGhosts(level.entities());
         }
-        else if (tick == TICK_START_PLAYING) {
+        else if (stateTick == TICK_START_PLAYING) {
             lockPacAndGhosts(level.entities(), false);
             game.coinMechanism().consumeCoin();
             session.setGameRunning(true);

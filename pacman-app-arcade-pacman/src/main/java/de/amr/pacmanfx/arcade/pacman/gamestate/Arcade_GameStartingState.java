@@ -45,15 +45,14 @@ public class Arcade_GameStartingState extends AbstractGameState {
     }
 
     @Override
-    public void onUpdate(GameContext game) {
-        final long tick = timer().tickCount();
-        if (tick == TICK_START_LEVEL) {
+    public void onUpdateState(GameContext game, long globalTick, long stateTick) {
+        if (stateTick == TICK_START_LEVEL) {
             gamePlay.startLevel(game, level);
         }
-        else if (tick == TICK_SHOW_GUYS) {
+        else if (stateTick == TICK_SHOW_GUYS) {
             showPacAndGhosts(level.entities());
         }
-        else if (tick == TICK_START_PLAYING) {
+        else if (stateTick == TICK_START_PLAYING) {
             final Pac pac = level.entities().pac();
             lockPacAndGhosts(level.entities(), false);
             pac.state().setEnumValue(PacState.ACTIVE);

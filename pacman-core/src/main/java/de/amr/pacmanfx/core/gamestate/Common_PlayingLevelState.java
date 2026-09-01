@@ -37,7 +37,7 @@ public final class Common_PlayingLevelState extends AbstractGameState {
     }
 
     @Override
-    public void onUpdate(GameContext game) {
+    public void onUpdateState(GameContext game, long globalTick, long stateTick) {
 
         gamePlay.update(game, level);
         session.cheats().update(game);

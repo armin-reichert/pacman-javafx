@@ -43,7 +43,7 @@ public class Test_MediumTestState extends AbstractGameState {
     }
 
     @Override
-    public void onUpdate(GameContext game) {
+    public void onUpdateState(GameContext game, long globalTick, long stateTick) {
         final GameLevel level = session.level();
 
         if (timer().hasExpired()) {

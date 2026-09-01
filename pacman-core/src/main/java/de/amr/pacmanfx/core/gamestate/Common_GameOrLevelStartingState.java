@@ -20,7 +20,7 @@ public class Common_GameOrLevelStartingState extends AbstractGameState {
     }
 
     @Override
-    public void onUpdate(GameContext game) {
+    public void onUpdateState(GameContext game, long globalTick, long stateTick) {
         flow.enterGameState(game, computeNextState(game));
     }
 
