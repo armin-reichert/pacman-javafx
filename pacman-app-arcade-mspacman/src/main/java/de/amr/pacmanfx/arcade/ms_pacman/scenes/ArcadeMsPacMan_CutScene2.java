@@ -8,6 +8,7 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.entities.Clapperboard;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Pac;
@@ -21,6 +22,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
@@ -37,9 +39,9 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene {
     static final int MIDDLE_Y = TS * 18;
     static final int LOWER_Y  = TS * 24;
 
-    public Pac pacMan;
-    public Pac msPacMan;
-    public Clapperboard clapperboard;
+    private Pac pacMan;
+    private Pac msPacMan;
+    private Clapperboard clapperboard;
 
     public ArcadeMsPacMan_CutScene2(GameAppContext app) {
         super(app);
@@ -62,6 +64,10 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene {
             default -> throw new IllegalStateException("Illegal scene state: " + state);
         }
         sceneTimer.doTick();
+    }
+
+    public Stream<GameEntity> entitiesInRenderOrder() {
+        return Stream.of(clapperboard, msPacMan, pacMan);
     }
 
     private void initScene() {

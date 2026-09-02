@@ -9,15 +9,12 @@ import de.amr.pacmanfx.arcade.ms_pacman.entities.stork.ArcadeMsPacMan_StorkSAM;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
-import de.amr.pacmanfx.core.entities.Bag;
-import de.amr.pacmanfx.core.entities.Clapperboard;
-import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
-import de.amr.pacmanfx.core.entities.Pac;
+import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.clapperboard.system.ClapperboardStateSystem;
-import de.amr.pacmanfx.core.entities.Stork;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.game.GameVariant;
@@ -29,6 +26,7 @@ import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import org.tinylog.Logger;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
@@ -71,6 +69,10 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene {
     @Override
     public void onTick(GameContext game) {
         updateSceneState();
+    }
+
+    public Stream<GameEntity> entitiesInRenderOrder() {
+        return Stream.of(clapperboard, msPacMan, pacMan, stork, bag);
     }
 
     private void initScene() {

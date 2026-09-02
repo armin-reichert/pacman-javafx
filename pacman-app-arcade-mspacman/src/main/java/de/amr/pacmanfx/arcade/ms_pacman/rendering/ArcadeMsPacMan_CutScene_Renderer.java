@@ -16,66 +16,29 @@ import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 
-import java.util.stream.Stream;
-
 public class ArcadeMsPacMan_CutScene_Renderer extends BaseRenderer implements GameScene2D_Renderer {
 
     private final ArcadeMsPacMan_ActorRenderer actorRenderer;
     private final BaseDebugInfoRenderer debugRenderer;
 
-    public ArcadeMsPacMan_CutScene_Renderer(
-        GameVariantRenderConfig renderConfig,
-        GameScene gameScene,
-        ActorSpriteAnimController animController,
-        Canvas canvas) {
-
+    public ArcadeMsPacMan_CutScene_Renderer(GameVariantRenderConfig renderConfig, GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
         super(canvas);
 
-        final CanvasRenderingComp r2D = gameScene.components().reqComp(CanvasRenderingComp.class);
-
-        actorRenderer = r2D.configureRenderer((ArcadeMsPacMan_ActorRenderer) renderConfig.createActorRenderer(animController, canvas));
+        final CanvasRenderingComp canvasRendering = gameScene.components().reqComp(CanvasRenderingComp.class);
+        actorRenderer = canvasRendering.configureRenderer((ArcadeMsPacMan_ActorRenderer) renderConfig.createActorRenderer(animController, canvas));
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(gameScene, canvas);
     }
 
     @Override
-    public void draw(GameScene scene, long tick) {
-        switch (scene) {
-            case ArcadeMsPacMan_CutScene1 cutScene1 -> drawCutScene1(cutScene1);
-            case ArcadeMsPacMan_CutScene2 cutScene2 -> drawCutScene2(cutScene2);
-            case ArcadeMsPacMan_CutScene3 cutScene3 -> drawCutScene3(cutScene3);
-            default -> throw new IllegalStateException("Unexpected value: " + scene);
+    public void draw(GameScene gameScene, long tick) {
+        switch (gameScene) {
+            case ArcadeMsPacMan_CutScene1 cutScene -> cutScene.entitiesInRenderOrder().forEach(actorRenderer::drawActor);
+            case ArcadeMsPacMan_CutScene2 cutScene -> cutScene.entitiesInRenderOrder().forEach(actorRenderer::drawActor);
+            case ArcadeMsPacMan_CutScene3 cutScene -> cutScene.entitiesInRenderOrder().forEach(actorRenderer::drawActor);
+            default -> throw new IllegalStateException("Unexpected value: " + gameScene);
         }
-        if (scene instanceof ArcadeMsPacMan_CutScene1 cutScene) {
+        if (gameScene.viewModel().debugModeOnProperty().get()) {
+            debugRenderer.draw(gameScene, tick);
         }
-
-        if (scene.viewModel().debugModeOnProperty().get()) {
-            debugRenderer.draw(scene, tick);
-        }
-    }
-
-    private void drawCutScene1(ArcadeMsPacMan_CutScene1 cutScene) {
-        Stream.of(
-            cutScene.clapperboard,
-            cutScene.msPacMan,
-            cutScene.pacMan,
-            cutScene.inky,
-            cutScene.pinky,
-            cutScene.heart).forEach(actorRenderer::drawActor);
-    }
-
-    private void drawCutScene2(ArcadeMsPacMan_CutScene2 cutScene) {
-        Stream.of(
-            cutScene.clapperboard,
-            cutScene.msPacMan,
-            cutScene.pacMan).forEach(actorRenderer::drawActor);
-    }
-
-    private void drawCutScene3(ArcadeMsPacMan_CutScene3 cutScene) {
-        Stream.of(
-            cutScene.clapperboard,
-            cutScene.msPacMan,
-            cutScene.pacMan,
-            cutScene.stork,
-            cutScene.bag).forEach(actorRenderer::drawActor);
     }
 }

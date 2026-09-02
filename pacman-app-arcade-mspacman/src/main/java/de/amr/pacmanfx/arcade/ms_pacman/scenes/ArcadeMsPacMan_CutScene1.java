@@ -28,6 +28,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 
@@ -50,12 +51,12 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene {
     static final float SPEED_GHOST_AFTER_COLLISION = 0.3f;
 
     // Public for access by renderer
-    public Pac pacMan;
-    public Pac msPacMan;
-    public Ghost inky;
-    public Ghost pinky;
-    public GameEntity heart;
-    public Clapperboard clapperboard;
+    private Pac pacMan;
+    private Pac msPacMan;
+    private Ghost inky;
+    private Ghost pinky;
+    private GameEntity heart;
+    private Clapperboard clapperboard;
 
     public ArcadeMsPacMan_CutScene1(GameAppContext app) {
         super(app);
@@ -80,6 +81,10 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene {
             default -> throw new IllegalStateException("Illegal scene state: " + sceneState);
         }
         sceneTimer.doTick();
+    }
+
+    public Stream<GameEntity> entitiesInRenderOrder() {
+        return Stream.of(clapperboard, msPacMan, pacMan, inky, pinky, heart);
     }
 
     private void initScene() {
