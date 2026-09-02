@@ -4,12 +4,14 @@
 
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
+import de.amr.basics.math.Vector2f;
+import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.HUD;
-import de.amr.pacmanfx.core.entities.LevelCounter;
-import de.amr.pacmanfx.core.entities.LivesCounter;
-import de.amr.pacmanfx.core.entities.Score;
+import de.amr.pacmanfx.core.entities.*;
+import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.level.MessageType;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.HUD_Renderer;
@@ -22,10 +24,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
+import static de.amr.basics.math.Vector2f.vec2_float;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
-import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
-import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_YELLOW;
+import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
 import static java.util.Objects.requireNonNull;
 
 public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer, HUD_Renderer {
@@ -80,6 +82,24 @@ public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer,
         }
     }
 
+    /**
+     * Called when the message inside the game scene should be rendered.
+     *
+     * @param session the game session
+     */
+    @Override
+    public void drawMessage(GameSession session) {
+        final MessageView messageView = session.hud().messageView();
+        if (messageView.data().messageType() != MessageType.NO_MESSAGE) {
+            final Vector2f pos = messagePosition(session.level());
+            final Font scaledFont = Ufx.scaleFontBy(style.messageFont(), scaling());
+            switch (messageView.data().messageType()) {
+                case GAME_OVER -> fillTextCentered("GAME  OVER", ARCADE_RED, scaledFont, pos.x(), pos.y());
+                case READY -> fillTextCentered("READY!", ARCADE_YELLOW, scaledFont, pos.x(), pos.y());
+            }
+        }
+    }
+
     private void drawScore(Score score, String title, Font font, Color color, double x, double y) {
         fillText(title, color, font, x, y);
         fillText("%7s".formatted("%02d".formatted(score.data().points())), color, font, x, y + TS + 1);
@@ -113,4 +133,13 @@ public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer,
             x -= tilesPx(2); // symbols are drawn from right to left
         }
     }
+
+    private Vector2f messagePosition(GameLevel level) {
+        final House house = level.entities().house();
+        Vector2i houseSize = house.sizeInTiles();
+        float cx = tilesPx(house.floorplan().minTile().x() + houseSize.x() * 0.5f);
+        float cy = tilesPx(house.floorplan().minTile().y() + houseSize.y() + 1);
+        return vec2_float(cx, cy);
+    }
+
 }

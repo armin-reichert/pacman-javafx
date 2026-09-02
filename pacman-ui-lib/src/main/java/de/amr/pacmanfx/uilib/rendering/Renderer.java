@@ -12,6 +12,10 @@ public interface Renderer {
 
     GraphicsContext ctx();
 
+    void clearCanvas();
+
+    void fillCanvas(Color color);
+
     DoubleProperty scalingProperty();
 
     double scaling();

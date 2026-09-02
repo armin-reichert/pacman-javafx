@@ -22,7 +22,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
-import de.amr.pacmanfx.uilib.rendering.RenderInfo;
+import de.amr.basics.InfoMap;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -37,7 +37,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
     extends BaseRenderer
     implements GameScene2D_Renderer, SpriteRenderer, TengenMsPacMan_SceneRendererMixin
 {
-    private static final int CONTENT_INDENT = 2 * WorldMap.TS;
+    public static final int CONTENT_INDENT = 2 * WorldMap.TS;
 
     private static final List<GhostPersonality> GHOST_Z_ORDER = List.of(
         GhostPersonality.ORANGE_GHOST_POKEY,
@@ -75,7 +75,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
 
     private final ActorSpriteAnimController animController;
 
-    private final RenderInfo renderInfo = new RenderInfo();
+    private final InfoMap infoMap = new InfoMap();
     private final TengenMsPacMan_GameLevelRenderer levelRenderer;
     private final TengenMsPacMan_ActorRenderer actorRenderer;
     private final BaseDebugInfoRenderer debugRenderer;
@@ -105,7 +105,6 @@ public class TengenMsPacMan_PlayScene2D_Renderer
 
     @Override
     public void draw(GameScene scene, long tick) {
-        clearCanvas();
         if (!(scene instanceof TengenMsPacMan_PlayScene2D playScene2D)) {
             return;
         }
@@ -121,7 +120,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
 
             ctx.save();
             ctx.translate(scaledIndent, 0);
-            levelRenderer.drawLevel(scene.game(), level, renderInfo);
+            levelRenderer.drawLevel(scene.game(), level, infoMap);
             levelRenderer.drawDoor(house, worldMap); // ghosts appear under door, so draw door over again
             actorsInZOrder.forEach(actorRenderer::drawActor);
             ctx.restore();
@@ -143,15 +142,15 @@ public class TengenMsPacMan_PlayScene2D_Renderer
     }
 
     private void configureRenderInfo(TengenMsPacMan_PlayScene2D playScene2D, WorldMap worldMap, long tick) {
-        renderInfo.clear();
+        infoMap.clear();
         // this is needed for drawing animated maze with different images:
-        renderInfo.put(CommonRenderInfoKey.TICK, tick);
-        renderInfo.put(MapConfigKey.MAP_CATEGORY, worldMap.getConfigValue(MapConfigKey.MAP_CATEGORY));
-        renderInfo.put(CommonRenderInfoKey.MAP_BRIGHT, false);
-        renderInfo.put(CommonRenderInfoKey.MAZE_FLASHING_INDEX, -1);
+        infoMap.put(CommonRenderInfoKey.TICK, tick);
+        infoMap.put(MapConfigKey.MAP_CATEGORY, worldMap.getConfigValue(MapConfigKey.MAP_CATEGORY));
+        infoMap.put(CommonRenderInfoKey.MAP_BRIGHT, false);
+        infoMap.put(CommonRenderInfoKey.MAZE_FLASHING_INDEX, -1);
         playScene2D.optLevelCompletedAnimation().flatMap(LevelCompletedAnimation::flashingState).ifPresent(flashingState -> {
-            renderInfo.put(CommonRenderInfoKey.MAP_BRIGHT, flashingState.isHighlighted());
-            renderInfo.put(CommonRenderInfoKey.MAZE_FLASHING_INDEX, flashingState.flashingIndex());
+            infoMap.put(CommonRenderInfoKey.MAP_BRIGHT, flashingState.isHighlighted());
+            infoMap.put(CommonRenderInfoKey.MAZE_FLASHING_INDEX, flashingState.flashingIndex());
         });
     }
 

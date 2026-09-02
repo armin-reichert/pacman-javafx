@@ -1,14 +1,14 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
+import de.amr.basics.InfoMap;
 import de.amr.basics.math.RectShort;
-import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
@@ -16,23 +16,19 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
 import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
 import de.amr.pacmanfx.core.rules.GameRules;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Extras;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.MapConfigKey;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
-import de.amr.pacmanfx.tengenmspacman.model.MessageAnimation;
 import de.amr.pacmanfx.tengenmspacman.sprites.*;
-import de.amr.pacmanfx.uilib.assets.AssetMap;
-import de.amr.pacmanfx.uilib.rendering.*;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
+import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
+import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
-import static de.amr.basics.math.Vector2f.vec2_float;
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.GAME_OVER_MESSAGE_TEXT;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.READY_MESSAGE_TEXT;
 import static de.amr.pacmanfx.tengenmspacman.sprites.NonArcadeMapsSpriteSheet.MapID.MAP32_ANIMATED;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
@@ -48,12 +44,8 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         return (int) (phase < 3 ? phase : 1);
     }
 
-    //TODO pass render config instead?
-    private final AssetMap assets;
-
-    public TengenMsPacMan_GameLevelRenderer(AssetMap assets, Canvas canvas) {
+    public TengenMsPacMan_GameLevelRenderer(Canvas canvas) {
         super(canvas);
-        this.assets = requireNonNull(assets);
     }
 
     @Override
@@ -62,7 +54,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
     }
 
     @Override
-    public void applyLevelSettings(GameRules rules, GameLevel level, RenderInfo info) {
+    public void applyLevelSettings(GameRules rules, GameLevel level, InfoMap renderInfo) {
         final WorldMap worldMap = level.worldMap();
         // store the maze sprite set with the correct colors for this level in the map configuration:
         if (!worldMap.hasConfigValue(MapConfigKey.MAP_IMAGE_SET)) {
@@ -74,19 +66,19 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
     }
 
     @Override
-    public void drawLevel(GameContext game, GameLevel level, RenderInfo info) {
+    public void drawLevel(GameContext game, GameLevel level, InfoMap renderInfo) {
         final WorldMap worldMap = level.worldMap();
-        applyLevelSettings(game.variant().rules(), level, info);
-        if (info.getBoolean(CommonRenderInfoKey.MAP_BRIGHT)) {
-            final int flashingIndex = info.get(CommonRenderInfoKey.MAZE_FLASHING_INDEX, Integer.class);
-            configureHighlightedMapRenderInfo(info, worldMap, flashingIndex);
+        applyLevelSettings(game.variant().rules(), level, renderInfo);
+        if (renderInfo.getBoolean(CommonRenderInfoKey.MAP_BRIGHT)) {
+            final int flashingIndex = renderInfo.get(CommonRenderInfoKey.MAZE_FLASHING_INDEX, Integer.class);
+            configureHighlightedMapRenderInfo(renderInfo, worldMap, flashingIndex);
         } else {
-            final long tick = info.get(CommonRenderInfoKey.TICK, Long.class);
-            final MapCategory mapCategory = info.get(MapConfigKey.MAP_CATEGORY, MapCategory.class);
-            configureNormalMapRenderInfo(info, mapCategory, worldMap, tick);
+            final long tick = renderInfo.get(CommonRenderInfoKey.TICK, Long.class);
+            final MapCategory mapCategory = renderInfo.get(MapConfigKey.MAP_CATEGORY, MapCategory.class);
+            configureNormalMapRenderInfo(renderInfo, mapCategory, worldMap, tick);
         }
-        final Image mazeImage = info.get(CommonRenderInfoKey.MAZE_IMAGE, Image.class);
-        final RectShort mazeSprite = info.get(CommonRenderInfoKey.MAZE_SPRITE, RectShort.class);
+        final Image mazeImage = renderInfo.get(CommonRenderInfoKey.MAZE_IMAGE, Image.class);
+        final RectShort mazeSprite = renderInfo.get(CommonRenderInfoKey.MAZE_SPRITE, RectShort.class);
         final int x = 0, y = worldMap.terrainLayer().emptyRowsOverMaze() * WorldMap.TS;
         ctx.setImageSmoothing(imageSmoothing());
         ctx.drawImage(mazeImage,
@@ -96,17 +88,6 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         overPaintActorSprites(level);
         drawFood(level);
 
-        switch (game.session().hud().messageView().data().messageType()) {
-            case GAME_OVER -> {
-                final MessageAnimation messageAnimation = game.session().value(
-                    TengenMsPacMan_Extras.GAME_OVER_MESSAGE_ANIMATION, MessageAnimation.class);
-                final Vector2f pos = (messageAnimation != null)
-                    ? messageAnimation.pos().asVector2f()
-                    : messagePosition(level);
-                drawGameOverMessage(game.session(), level.worldMap(), pos);
-            }
-            case READY -> drawReadyMessage(messagePosition(level));
-        }
     }
 
     private void drawFood(GameLevel level) {
@@ -162,18 +143,6 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         });
     }
 
-    private void drawGameOverMessage(GameSession session, WorldMap worldMap, Vector2f pos) {
-        final NES_WorldMapColorScheme colorScheme = worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
-        final Color color = session.isAttractMode()
-            ? Color.valueOf(colorScheme.wallStroke())
-            : assets.color("color.game_over_message");
-        fillTextCentered(GAME_OVER_MESSAGE_TEXT, color, arcadeFont8(), pos.x(), pos.y());
-    }
-
-    private void drawReadyMessage(Vector2f pos) {
-        fillTextCentered(READY_MESSAGE_TEXT, assets.color("color.ready_message"), arcadeFont8(), pos.x(), pos.y());
-    }
-
     public void drawDoor(House house, WorldMap worldMap) {
         final MapImageSet recoloredImageSet = worldMap.getConfigValue(MapConfigKey.MAP_IMAGE_SET);
         final Color strokeColor = Color.valueOf(recoloredImageSet.mapImage().colorScheme().wallStroke());
@@ -219,7 +188,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
             overPaintSize, overPaintSize);
     }
 
-    private void configureHighlightedMapRenderInfo(RenderInfo info, WorldMap worldMap, int flashingIndex) {
+    private void configureHighlightedMapRenderInfo(InfoMap info, WorldMap worldMap, int flashingIndex) {
         final MapImageSet imageSet = worldMap.getConfigValue(MapConfigKey.MAP_IMAGE_SET);
         final int i = Math.clamp(flashingIndex, 0, imageSet.flashingMapImages().size() - 1);
         final ColorSchemedMapSprite flashingMapImage = imageSet.flashingMapImages().get(i);
@@ -227,7 +196,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         info.put(CommonRenderInfoKey.MAZE_SPRITE, flashingMapImage.sprite());
     }
 
-    private void configureNormalMapRenderInfo(RenderInfo info, MapCategory mapCategory, WorldMap worldMap, long tick) {
+    private void configureNormalMapRenderInfo(InfoMap info, MapCategory mapCategory, WorldMap worldMap, long tick) {
         final MapImageSet imageSet = worldMap.getConfigValue(MapConfigKey.MAP_IMAGE_SET);
         info.put(CommonRenderInfoKey.MAZE_IMAGE, imageSet.mapImage().spriteSheetImage());
         final int mapNumber = worldMap.getConfigValue(WorldMapConfigKey.MAP_NUMBER);
@@ -239,11 +208,4 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         }
     }
 
-    protected Vector2f messagePosition(GameLevel level) {
-        final House house = level.entities().house();
-        Vector2i houseSize = house.sizeInTiles();
-        float cx = tilesPx(house.floorplan().minTile().x() + houseSize.x() * 0.5f);
-        float cy = tilesPx(house.floorplan().minTile().y() + houseSize.y() + 1);
-        return vec2_float(cx, cy);
-    }
 }

@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
+import de.amr.basics.InfoMap;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
@@ -46,18 +47,18 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
     }
 
     @Override
-    public void applyLevelSettings(GameRules rules, GameLevel level, RenderInfo info) {}
+    public void applyLevelSettings(GameRules rules, GameLevel level, InfoMap renderInfo) {}
 
     @Override
-    public void drawLevel(GameContext game, GameLevel level, RenderInfo info) {
-        drawMap(level, info);
+    public void drawLevel(GameContext game, GameLevel level, InfoMap renderInfo) {
+        drawMap(level, renderInfo);
         final MessageView messageView = game.session().hud().messageView();
         if (messageView.data().messageType() != MessageType.NO_MESSAGE) {
             drawGameLevelMessage(messageView, messagePosition(level));
         }
     }
 
-    protected void drawMap(GameLevel level, RenderInfo info) {
+    protected void drawMap(GameLevel level, InfoMap info) {
         final House house = level.entities().house();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final float emptySpaceOverMazePixels = tilesPx(terrain.emptyRowsOverMaze());

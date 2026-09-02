@@ -27,6 +27,8 @@ public class CanvasRenderingComp implements GameSceneComponent, Disposable {
 
     private final ObjectProperty<Canvas> canvas = new SimpleObjectProperty<>();
 
+    private boolean clearCanvasBeforeRendering;
+
     public CanvasRenderingComp() {
         this(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.x(), WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.y());
     }
@@ -34,6 +36,7 @@ public class CanvasRenderingComp implements GameSceneComponent, Disposable {
     public CanvasRenderingComp(int width, int height) {
         setUnscaledWidth(width);
         setUnscaledHeight(height);
+        clearCanvasBeforeRendering = true;
     }
 
     @Override
@@ -158,5 +161,13 @@ public class CanvasRenderingComp implements GameSceneComponent, Disposable {
     /** @return the aspect ratio (width / height) */
     public double aspectRatio() {
         return scaledWidth() / scaledHeight();
+    }
+
+    public boolean clearCanvasBeforeRendering() {
+        return clearCanvasBeforeRendering;
+    }
+
+    public void setClearCanvasBeforeRendering(boolean clearCanvasBeforeRendering) {
+        this.clearCanvasBeforeRendering = clearCanvasBeforeRendering;
     }
 }

@@ -1,18 +1,19 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.uilib.rendering;
+
+package de.amr.basics;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static java.util.Objects.requireNonNull;
 
-public class RenderInfo {
+public class InfoMap {
 
     private final Map<Object, Object> map = new HashMap<>();
 
-    public RenderInfo() {}
+    public InfoMap() {}
 
     public boolean getBoolean(Object key) {
         return get(key, Boolean.class);

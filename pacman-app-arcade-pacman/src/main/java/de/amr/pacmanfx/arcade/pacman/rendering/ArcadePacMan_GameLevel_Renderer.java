@@ -3,25 +3,21 @@
  */
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
-import de.amr.basics.math.Vector2f;
-import de.amr.basics.math.Vector2i;
+import de.amr.basics.InfoMap;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.entities.House;
-import de.amr.pacmanfx.core.entities.MessageView;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.level.MessageType;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.rules.GameRules;
-import de.amr.pacmanfx.uilib.rendering.*;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
+import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
+import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
-import static de.amr.basics.math.Vector2f.vec2_float;
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
-import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
-import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_YELLOW;
 import static java.util.function.Predicate.not;
 
 /**
@@ -43,19 +39,14 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
     }
 
     @Override
-    public void applyLevelSettings(GameRules rules, GameLevel level, RenderInfo info) {}
+    public void applyLevelSettings(GameRules rules, GameLevel level, InfoMap renderInfo) {}
 
     @Override
-    public void drawLevel(GameContext game, GameLevel level, RenderInfo info) {
-        drawMap(level, info);
-
-        final MessageView messageView = game.session().hud().messageView();
-        if (messageView.data().messageType() != MessageType.NO_MESSAGE) {
-            drawLevelMessage(messageView, messagePosition(level));
-        }
+    public void drawLevel(GameContext game, GameLevel level, InfoMap renderInfo) {
+        drawMap(level, renderInfo);
     }
 
-    protected void drawMap(GameLevel level, RenderInfo info) {
+    protected void drawMap(GameLevel level, InfoMap info) {
         final House house = level.entities().house();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final int emptySpaceOverMazePixels = terrain.emptyRowsOverMaze() * WorldMap.TS;
@@ -98,20 +89,5 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
                 .forEach(tile -> fillSquareAtTileCenter(tile, 10));
         }
         ctx.restore();
-    }
-
-    protected void drawLevelMessage(MessageView messageView, Vector2f pos) {
-        switch (messageView.data().messageType()) {
-            case GAME_OVER -> fillTextCentered("GAME  OVER", ARCADE_RED, arcadeFont8(), pos.x(), pos.y());
-            case READY -> fillTextCentered("READY!", ARCADE_YELLOW, arcadeFont8(), pos.x(), pos.y());
-        }
-    }
-
-    protected Vector2f messagePosition(GameLevel level) {
-        final House house = level.entities().house();
-        Vector2i houseSize = house.sizeInTiles();
-        float cx = tilesPx(house.floorplan().minTile().x() + houseSize.x() * 0.5f);
-        float cy = tilesPx(house.floorplan().minTile().y() + houseSize.y() + 1);
-        return vec2_float(cx, cy);
     }
 }

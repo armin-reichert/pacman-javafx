@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.ui.views.playview;
 
+import de.amr.basics.InfoMap;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
@@ -197,7 +198,7 @@ public class MiniPlaySceneView {
 
     private void drawGameLevel(GameContext game, GameLevel level) {
         final GameRules rules = game.variant().rules();
-        final var info = new RenderInfo();
+        final var info = new InfoMap();
         info.putAll(Map.of(
             CommonRenderInfoKey.ENERGIZER_VISIBLE, level.heartbeat().state() == Pulse.State.ON,
             CommonRenderInfoKey.MAP_BRIGHT, false,

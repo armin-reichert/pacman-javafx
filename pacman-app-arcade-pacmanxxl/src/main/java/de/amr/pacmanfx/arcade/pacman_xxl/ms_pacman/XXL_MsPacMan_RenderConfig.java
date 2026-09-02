@@ -16,6 +16,7 @@ import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
+import de.amr.pacmanfx.core.level.MessageType;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -37,9 +38,17 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
-import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
+import java.util.EnumMap;
+import java.util.Map;
+
+import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
 
 public class XXL_MsPacMan_RenderConfig implements GameVariantRenderConfig {
+
+    private static final EnumMap<MessageType, Color> MESSAGE_COLORS = new EnumMap<>(Map.of(
+        MessageType.READY, ARCADE_YELLOW,
+        MessageType.GAME_OVER, ARCADE_RED
+    ));
 
     private static final Rectangle2D BOOT_SCENE_SPRITES = new Rectangle2D(380, 0, 204, 208);
 
@@ -98,7 +107,9 @@ public class XXL_MsPacMan_RenderConfig implements GameVariantRenderConfig {
                 ARCADE_WHITE,
                 Color.GRAY,
                 GlobalAssets.Fonts.ARCADE8.font(),
-                "CREDIT %2d"
+                "CREDIT %2d",
+                GlobalAssets.Fonts.ARCADE8.font(),
+                MESSAGE_COLORS::get
             ),
             canvas
         );

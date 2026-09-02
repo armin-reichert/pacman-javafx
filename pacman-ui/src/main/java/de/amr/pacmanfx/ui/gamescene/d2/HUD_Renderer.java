@@ -20,4 +20,6 @@ public interface HUD_Renderer extends Renderer {
      * @param tick current tick of the game machine clock
      */
     void drawHUD(HUD hud, GameSession session, GameScene gameScene, long tick);
+
+    void drawMessage(GameSession session);
 }

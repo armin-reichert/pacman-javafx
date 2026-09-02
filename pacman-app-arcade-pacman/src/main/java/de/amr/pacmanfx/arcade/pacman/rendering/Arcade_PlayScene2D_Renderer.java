@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
+import de.amr.basics.InfoMap;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
 import de.amr.pacmanfx.core.GameSession;
@@ -64,7 +65,6 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
 
     @Override
     public void draw(GameScene scene, long tick) {
-        clearCanvas();
         if (!(scene instanceof Arcade_PlayScene2D playScene)) {
             return;
         }
@@ -75,7 +75,7 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
         // Level creation happens by handling a game event after the play scene has been activated. Therefore,
         // the game level is not yet existing for the first two ticks after this scene got active.
         session.optLevel().ifPresent(level -> {
-            final RenderInfo info = createRenderInfo(level, playScene);
+            final InfoMap info = createRenderInfo(level, playScene);
             levelRenderer.applyLevelSettings(rules, level, info);
             levelRenderer.drawLevel(scene.game(), level, info);
             updateActorZOrder(level.entities());
@@ -86,8 +86,8 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
         });
     }
 
-    private RenderInfo createRenderInfo(GameLevel level, Arcade_PlayScene2D playScene2D) {
-        final var info = new RenderInfo();
+    private InfoMap createRenderInfo(GameLevel level, Arcade_PlayScene2D playScene2D) {
+        final var info = new InfoMap();
         final boolean energizerVisible = level.heartbeat().state() == Pulse.State.ON;
         final boolean mapIsEmpty = level.food().remainingFoodCount() == 0;
         info.put(CommonRenderInfoKey.ENERGIZER_VISIBLE, energizerVisible);

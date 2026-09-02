@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.uilib.rendering;
 
+import de.amr.basics.InfoMap;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.rules.GameRules;
@@ -15,14 +16,14 @@ public interface GameLevelRenderer extends Renderer {
      *
      * @param rules game rules for the current variant
      * @param level the game level
-     * @param info rendering info
+     * @param renderInfo rendering info
      */
-    void applyLevelSettings(GameRules rules, GameLevel level, RenderInfo info);
+    void applyLevelSettings(GameRules rules, GameLevel level, InfoMap renderInfo);
 
     /**
      * @param game the current game
      * @param level the game level to draw
-     * @param info additional rendering info
+     * @param renderInfo additional rendering info
      */
-    void drawLevel(GameContext game, GameLevel level, RenderInfo info);
+    void drawLevel(GameContext game, GameLevel level, InfoMap renderInfo);
 }

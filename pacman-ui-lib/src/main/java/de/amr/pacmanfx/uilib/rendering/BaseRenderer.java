@@ -54,17 +54,19 @@ public class BaseRenderer implements Renderer {
         arcadeFont6.bind(scaling.map(_ -> Ufx.deriveFont(ARCADE_FONT, scaled(6))));
     }
 
+    // Renderer interface
+
+    @Override
     public void clearCanvas() {
         fillCanvas(backgroundColor());
     }
 
+    @Override
     public void fillCanvas(Color color) {
         requireNonNull(color);
         ctx.setFill(color);
         ctx.fillRect(0, 0, ctx.getCanvas().getWidth(), ctx.getCanvas().getHeight());
     }
-
-    // Renderer interface
 
     @Override
     public GraphicsContext ctx() {

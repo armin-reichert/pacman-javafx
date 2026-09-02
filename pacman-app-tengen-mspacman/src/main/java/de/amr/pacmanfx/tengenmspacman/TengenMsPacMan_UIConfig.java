@@ -6,14 +6,11 @@ package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.basics.Named;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.gamestate.GameFlowController;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.tengenmspacman.config.TengenJsonConfigLoader;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_GameSceneConfig;
-import de.amr.pacmanfx.tengenmspacman.gamestate.Tengen_GameState;
-import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
@@ -221,8 +218,6 @@ public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
         assets.addAsset("app_icon",                RM.loadImage("graphics/icons/mspacman.png"));
         assets.addAsset("startpage.image1",        RM.loadImage("graphics/flyer-page-1.png"));
         assets.addAsset("startpage.image2",        RM.loadImage("graphics/flyer-page-2.png"));
-        assets.addAsset("color.game_over_message", NES_Palette.color(0x11));
-        assets.addAsset("color.ready_message",     NES_Palette.color(0x28));
     }
 
 }

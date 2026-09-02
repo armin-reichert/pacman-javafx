@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
 import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.ui.gamescene.d2.GenericMapRenderer;
-import de.amr.pacmanfx.uilib.rendering.RenderInfo;
+import de.amr.basics.InfoMap;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapColoring;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -29,7 +29,7 @@ public class XXL_MsPacMan_GameLevelRenderer extends ArcadeMsPacMan_GameLevelRend
     }
 
     @Override
-    public void applyLevelSettings(GameRules rules, GameLevel level, RenderInfo info) {
+    public void applyLevelSettings(GameRules rules, GameLevel level, InfoMap renderInfo) {
         final GenericWorldMapColorScheme worldMapColorScheme = level.worldMap().getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
         final var mapColoring = new TerrainMapColoring(
             backgroundColor(),
@@ -37,11 +37,11 @@ public class XXL_MsPacMan_GameLevelRenderer extends ArcadeMsPacMan_GameLevelRend
             Color.valueOf(worldMapColorScheme.wallStroke()),
             Color.valueOf(worldMapColorScheme.door())
         );
-        info.put(GenericMapRenderer.RenderInfoKey.TERRAIN_MAP_COLORING, mapColoring);
+        renderInfo.put(GenericMapRenderer.RenderInfoKey.TERRAIN_MAP_COLORING, mapColoring);
     }
 
     @Override
-    protected void drawMap(GameLevel level, RenderInfo info) {
+    protected void drawMap(GameLevel level, InfoMap info) {
         mapRenderer.drawMap(level, info);
     }
 }

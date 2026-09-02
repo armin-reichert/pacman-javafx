@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.ui.gamescene.d2;
 
+import de.amr.basics.InfoMap;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
@@ -58,7 +59,7 @@ public class GenericMapRenderer extends BaseRenderer {
         terrainRenderer.setMapColoring(newColoring);
     }
 
-    public void drawMap(GameLevel level, RenderInfo info) {
+    public void drawMap(GameLevel level, InfoMap info) {
         final WorldMap worldMap = level.worldMap();
         if (info.getBoolean(CommonRenderInfoKey.MAP_BRIGHT)) {
             terrainRenderer.setMapColoring(info.getBoolean(CommonRenderInfoKey.ENERGIZER_VISIBLE) ? blinkingOnMapColoring : blinkingOffMapColoring);
