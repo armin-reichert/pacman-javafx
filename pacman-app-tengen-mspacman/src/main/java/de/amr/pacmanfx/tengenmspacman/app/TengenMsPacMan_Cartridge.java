@@ -19,7 +19,7 @@ public class TengenMsPacMan_Cartridge {
         GameVariantID.TENGEN_MS_PACMAN,
         GameSystems::new,
         TengenMsPacMan_GamePlay::new,
-        TengenMsPacMan_UIConfig::createGameFlow,
+        TengenMsPacMan_GamePlay::createGameFlow,
         TengenMsPacMan_GameRules::new,
         TengenMsPacMan_WorldMapManager::new,
         TengenMsPacMan_UIConfig::new

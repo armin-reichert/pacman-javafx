@@ -24,6 +24,7 @@ import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
 import de.amr.pacmanfx.core.event.gameplay.LevelStartedEvent;
 import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
+import de.amr.pacmanfx.core.gamestate.GameFlowController;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 import de.amr.pacmanfx.core.level.MessageType;
@@ -32,6 +33,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
 import de.amr.pacmanfx.core.rules.DefaultHuntingTimer;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
+import de.amr.pacmanfx.tengenmspacman.gamestate.Tengen_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.BoosterMode;
 import de.amr.pacmanfx.tengenmspacman.model.Difficulty;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
@@ -52,6 +54,20 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
     public static final int ARCADE_MAP_GAME_OVER_TICKS = 420;
     public static final int NON_ARCADE_MAP_GAME_OVER_TICKS = 600;
+    public static final int DEFAULT_START_LEVEL = 1;
+    public static final int DEFAULT_NUM_CONTINUES = 4;
+    public static final BoosterMode DEFAULT_PAC_BOOSTER = BoosterMode.BOOSTER_OFF;
+    public static final Difficulty DEFAULT_DIFFICULTY = Difficulty.NORMAL;
+    public static final MapCategory DEFAULT_MAP_CATEGORY = MapCategory.ARCADE;
+    public static final Vector2i HOUSE_MIN_TILE = WorldMap.tile(10, 15);
+
+    public static GameFlowController createGameFlow() {
+        final var gameFlow = new GameFlowController("Tengen Ms. Pac-Man Game Flow");
+        for (Tengen_GameState gameState : Tengen_GameState.values()) {
+            gameFlow.addState(gameState.state());
+        }
+        return gameFlow;
+    }
 
     // Tengen Ms. Pac-Man specific methods
 
@@ -62,11 +78,11 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final int startLevel = session.value(TengenMsPacMan_GamePlayOptions.START_LEVEL_NUMBER, Integer.class);
         final int numContinues = session.value(TengenMsPacMan_GamePlayOptions.NUM_CONTINUES, Integer.class);
 
-        return boosterMode == TengenMsPacMan_UIConfig.DEFAULT_PAC_BOOSTER
-            && difficulty == TengenMsPacMan_UIConfig.DEFAULT_DIFFICULTY
-            && mapCategory == TengenMsPacMan_UIConfig.DEFAULT_MAP_CATEGORY
-            && startLevel == TengenMsPacMan_UIConfig.DEFAULT_START_LEVEL
-            && numContinues == TengenMsPacMan_UIConfig.DEFAULT_NUM_CONTINUES;
+        return boosterMode == DEFAULT_PAC_BOOSTER
+            && difficulty == DEFAULT_DIFFICULTY
+            && mapCategory == DEFAULT_MAP_CATEGORY
+            && startLevel == DEFAULT_START_LEVEL
+            && numContinues == DEFAULT_NUM_CONTINUES;
     }
 
     public static void setBoosterOn(GameContext game, Pac pac, boolean boosterOn) {
@@ -203,11 +219,11 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
         final GameSession session = game.session();
 
-        setBoosterMode(session,      TengenMsPacMan_UIConfig.DEFAULT_PAC_BOOSTER);
-        setDifficulty(game,          TengenMsPacMan_UIConfig.DEFAULT_DIFFICULTY);
-        setMapCategory(session,      TengenMsPacMan_UIConfig.DEFAULT_MAP_CATEGORY);
-        setStartLevelNumber(session, TengenMsPacMan_UIConfig.DEFAULT_START_LEVEL);
-        setNumContinues(session,     TengenMsPacMan_UIConfig.DEFAULT_NUM_CONTINUES);
+        setBoosterMode(session,      DEFAULT_PAC_BOOSTER);
+        setDifficulty(game,          DEFAULT_DIFFICULTY);
+        setMapCategory(session,      DEFAULT_MAP_CATEGORY);
+        setStartLevelNumber(session, DEFAULT_START_LEVEL);
+        setNumContinues(session,     DEFAULT_NUM_CONTINUES);
 
         setBoosterOn(session, false);
 
@@ -278,7 +294,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     }
 
     private void addEntities(GameLevelEntitySet entities, GameContext game, WorldMap worldMap) {
-        final House house = HouseFactory.createArcadeHouse(TengenMsPacMan_UIConfig.HOUSE_MIN_TILE);
+        final House house = HouseFactory.createArcadeHouse(HOUSE_MIN_TILE);
 
         final var actorFactory  = TengenMsPacMan_ActorFactory.instance();
         final Pac msPacMan      = actorFactory.createMsPacMan();
