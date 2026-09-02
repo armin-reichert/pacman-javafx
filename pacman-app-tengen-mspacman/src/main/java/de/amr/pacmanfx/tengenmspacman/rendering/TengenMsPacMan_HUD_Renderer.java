@@ -42,6 +42,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import org.tinylog.Logger;
 
 import java.util.EnumMap;
 import java.util.List;
@@ -62,8 +63,8 @@ public class TengenMsPacMan_HUD_Renderer
     implements SpriteRenderer, HUD_Renderer {
 
     private static final EnumMap<MessageType, Color> MESSAGE_COLORS = new EnumMap<>(Map.of(
-        MessageType.READY, NES_Palette.color(0x28),
-        MessageType.GAME_OVER, NES_Palette.color(0x11)
+        MessageType.READY,     NES_Palette.color(0x28),
+        MessageType.GAME_OVER, NES_Palette.color(0x11)  // blue
     ));
 
     private static final Color SCORE_TEXT_COLOR = NES_Palette.color(0x20);
@@ -134,6 +135,7 @@ public class TengenMsPacMan_HUD_Renderer
                         ? messageAnimation.pos().asVector2f()
                         : messagePosition(level);
                     drawGameOverMessage(session, level.worldMap(), pos);
+                    Logger.info("Message drawn at x={}", pos.x());
                 }
                 case READY -> drawReadyMessage(messagePosition(level));
             }
@@ -145,7 +147,7 @@ public class TengenMsPacMan_HUD_Renderer
         final NES_WorldMapColorScheme colorScheme = worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
         final Color color = session.isAttractMode()
             ? Color.valueOf(colorScheme.wallStroke())
-            : MESSAGE_COLORS.get(MessageType.NO_MESSAGE);
+            : MESSAGE_COLORS.get(MessageType.GAME_OVER);
         fillTextCentered(GAME_OVER_MESSAGE_TEXT, color, arcadeFont8(), pos.x(), pos.y());
     }
 

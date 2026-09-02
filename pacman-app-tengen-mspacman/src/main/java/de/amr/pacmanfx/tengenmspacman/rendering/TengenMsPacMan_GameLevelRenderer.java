@@ -87,7 +87,6 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         );
         overPaintActorSprites(level);
         drawFood(level);
-
     }
 
     private void drawFood(GameLevel level) {

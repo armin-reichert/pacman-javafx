@@ -253,17 +253,16 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         app.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
             try {
                 gameScene.optCanvasRendering().ifPresent(canvasRendering -> {
+                    //TODO more z-order control
                     if (canvasRendering.clearCanvasBeforeRendering()) {
                         sceneRenderer.clearCanvas();
-                    }
-                    if (hudRenderer != null) {
-                        hudRenderer.drawMessage(session);
                     }
                     if (sceneRenderer != null) {
                         sceneRenderer.draw(gameScene, tick);
                     }
                     if (hudRenderer != null) {
                         hudRenderer.drawHUD(session.hud(), session, gameScene, tick);
+                        hudRenderer.drawMessage(session);
                     }
                 });
                 miniView.draw();
