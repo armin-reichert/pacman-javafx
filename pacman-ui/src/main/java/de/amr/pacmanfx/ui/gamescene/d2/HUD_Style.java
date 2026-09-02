@@ -17,5 +17,6 @@ public record HUD_Style(
     String highScoreText,
     Color scoreTextColor,
     Color scoreTextColorDisabled,
-    Font scoreTextFont
+    Font scoreTextFont,
+    String creditTextFormat
 ) {}

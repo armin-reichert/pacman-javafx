@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.entities.LevelCounter;
@@ -29,11 +28,7 @@ import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_YELLOW;
 import static java.util.Objects.requireNonNull;
 
-public class Arcade_HUD_Renderer
-    extends BaseRenderer
-    implements SpriteRenderer, HUD_Renderer {
-
-    public static final String CREDIT_TEXT_PATTERN = "CREDIT %2d";
+public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer, HUD_Renderer {
 
     protected final HUD_Style style;
 
@@ -60,11 +55,15 @@ public class Arcade_HUD_Renderer
         if (gameScene.optCanvasRendering().isEmpty()) {
             return;
         }
+
         final CanvasRenderingComp canvasRendering = gameScene.reqCanvasRendering();
+        final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
 
         if (hud.gameScore().isVisible()) {
             final boolean highScoreDisabled = session.isAttractMode() || !session.hud().highScore().data().isEnabled();
-            drawScores(hud.gameScore(), hud.highScore(), highScoreDisabled);
+            final Color highScoreTextColor = highScoreDisabled ? style.scoreTextColorDisabled() : style.scoreTextColor();
+            drawScore(hud.gameScore(), style.scoreText(), scaledFont, style.scoreTextColor(), tilesPx(1), tilesPx(1));
+            drawScore(hud.highScore(), style.highScoreText(), scaledFont, highScoreTextColor, tilesPx(14), tilesPx(1));
         }
 
         if (hud.levelCounter().isVisible()) {
@@ -76,15 +75,9 @@ public class Arcade_HUD_Renderer
         }
 
         if (hud.isCreditVisible()) {
-            drawCredit(gameScene.game().coinMechanism(), canvasRendering);
+            final String text = style.creditTextFormat().formatted(gameScene.game().coinMechanism().numCoins());
+            fillText(text, ARCADE_WHITE, scaledFont, tilesPx(2), canvasRendering.unscaledHeight());
         }
-    }
-
-    private void drawScores(Score gameScore, Score highScore, boolean highScoreDisabled) {
-        final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
-        final Color highScoreTextColor = highScoreDisabled ? style.scoreTextColorDisabled() : style.scoreTextColor();
-        drawScore(gameScore, style.scoreText(), scaledFont, style.scoreTextColor(), tilesPx(1), tilesPx(1));
-        drawScore(highScore, style.highScoreText(), scaledFont, highScoreTextColor, tilesPx(14), tilesPx(1));
     }
 
     private void drawScore(Score score, String title, Font font, Color color, double x, double y) {
@@ -119,11 +112,5 @@ public class Arcade_HUD_Renderer
             drawSprite(style.bonusSymbolSprites()[symbolCode], x, y, true);
             x -= tilesPx(2); // symbols are drawn from right to left
         }
-    }
-
-    private void drawCredit(CoinMechanism coinMechanism, CanvasRenderingComp canvasRendering) {
-        final int credit = coinMechanism.numCoins();
-        final String text = CREDIT_TEXT_PATTERN.formatted(credit);
-        fillText(text, ARCADE_WHITE, arcadeFont8(), tilesPx(2), canvasRendering.unscaledHeight());
     }
 }
