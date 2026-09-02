@@ -1,18 +1,18 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-
-package de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman;
+package de.amr.pacmanfx.arcade.pacman_xxl.pacman;
 
 import de.amr.basics.Named;
-import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_Factory3D;
-import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_GameVariantUIConfig;
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
+import de.amr.pacmanfx.ui.gamescene.d3.DefaultFactory3D;
+import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
@@ -24,53 +24,51 @@ import org.tinylog.Logger;
 
 import java.util.*;
 
-import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry;
 import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.audioClip;
 import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.mediaPlayer;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
 
-public final class XXL_MsPacMan_GameVariantUIConfig implements GameVariantUIConfig {
+public final class XXL_PacMan_UIConfig implements GameVariantUIConfig {
 
-    private static final ResourceManager XXL_RM = () -> XXL_MsPacMan_GameVariantUIConfig.class;
-    private static final ResourceManager ARCADE_RM = () -> ArcadeMsPacMan_GameVariantUIConfig.class;
+    private static final ResourceManager XXL_RM = () -> XXL_PacMan_UIConfig.class;
+    private static final ResourceManager ARCADE_PACMAN_RM = () -> ArcadePacMan_UIConfig.class;
     private static final String XXL_PATH = "/de/amr/pacmanfx/arcade/pacman_xxl/";
     private static final String XXL_PKG = "de.amr.pacmanfx.arcade.pacman_xxl.";
 
-    private static final List<SoundEntry> SOUND_ENTRIES = Arrays.asList(
-        mediaPlayer(PacManGameSoundID.BONUS_ACTIVE,          ARCADE_RM.url("sound/Fruit_Bounce.mp3")),
-        audioClip(PacManGameSoundID.BONUS_EATEN,             ARCADE_RM.url("sound/Fruit.mp3")),
-        audioClip(PacManGameSoundID.COIN_INSERTED,           ARCADE_RM.url("sound/credit.wav")),
-        audioClip(PacManGameSoundID.ENERGIZER_EXPLOSION_1,   XXL_RM.url(XXL_PATH + "sound/explosion1.mp3")),
-        audioClip(PacManGameSoundID.ENERGIZER_EXPLOSION_2,   XXL_RM.url(XXL_PATH + "sound/explosion2.mp3")),
-        audioClip(PacManGameSoundID.EXTRA_LIFE,              ARCADE_RM.url("sound/ExtraLife.mp3")),
-        mediaPlayer(PacManGameSoundID.GAME_OVER,             ARCADE_RM.url("sound/game-over.mp3")),
-        mediaPlayer(PacManGameSoundID.GAME_READY,            ARCADE_RM.url("sound/Start.mp3")),
-        audioClip(PacManGameSoundID.GHOST_EATEN,             ARCADE_RM.url("sound/Ghost.mp3")),
-        mediaPlayer(PacManGameSoundID.GHOST_RETURNS,         ARCADE_RM.url("sound/GhostEyes.mp3")),
-        mediaPlayer(PacManGameSoundID.INTERMISSION_1,        ARCADE_RM.url("sound/Act_1_They_Meet.mp3")),
-        mediaPlayer(PacManGameSoundID.INTERMISSION_2,        ARCADE_RM.url("sound/Act_2_The_Chase.mp3")),
-        mediaPlayer(PacManGameSoundID.INTERMISSION_3,        ARCADE_RM.url("sound/Act_3_Junior.mp3")),
-        audioClip(PacManGameSoundID.LEVEL_CHANGED,           ARCADE_RM.url("sound/sweep.mp3")),
-        mediaPlayer(PacManGameSoundID.LEVEL_COMPLETE,        ARCADE_RM.url("sound/level-complete.mp3")),
-        mediaPlayer(PacManGameSoundID.PAC_MAN_DEATH,         ARCADE_RM.url("sound/Died.mp3")),
-        audioClip(PacManGameSoundID.PAC_MAN_MUNCHING,        ARCADE_RM.url("sound/munch.wav")),
-        mediaPlayer(PacManGameSoundID.PAC_MAN_POWER,         ARCADE_RM.url("sound/ScaredGhost.mp3"))
+    private static final List<SoundManager.SoundEntry> SOUND_ENTRIES = Arrays.asList(
+        audioClip    (PacManGameSoundID.BONUS_EATEN,           ARCADE_PACMAN_RM.url("sound/eat_fruit.mp3")),
+        audioClip    (PacManGameSoundID.COIN_INSERTED,         ARCADE_PACMAN_RM.url("sound/credit.wav")),
+        audioClip    (PacManGameSoundID.ENERGIZER_EXPLOSION_1, XXL_RM.url(XXL_PATH + "sound/explosion1.mp3")),
+        audioClip    (PacManGameSoundID.ENERGIZER_EXPLOSION_2, XXL_RM.url(XXL_PATH + "sound/explosion2.mp3")),
+        audioClip    (PacManGameSoundID.EXTRA_LIFE,            ARCADE_PACMAN_RM.url("sound/extend.mp3")),
+        audioClip    (PacManGameSoundID.GAME_OVER,             ARCADE_PACMAN_RM.url("sound/common/game-over.mp3")),
+        mediaPlayer  (PacManGameSoundID.GAME_READY,            ARCADE_PACMAN_RM.url("sound/game_start.mp3")),
+        audioClip    (PacManGameSoundID.GHOST_EATEN,           ARCADE_PACMAN_RM.url("sound/eat_ghost.mp3")),
+        mediaPlayer  (PacManGameSoundID.GHOST_RETURNS,         ARCADE_PACMAN_RM.url("sound/retreating.mp3")),
+        mediaPlayer  (PacManGameSoundID.INTERMISSION_1,        ARCADE_PACMAN_RM.url("sound/intermission.mp3")),
+        mediaPlayer  (PacManGameSoundID.INTERMISSION_2,        ARCADE_PACMAN_RM.url("sound/intermission.mp3")),
+        mediaPlayer  (PacManGameSoundID.INTERMISSION_3,        ARCADE_PACMAN_RM.url("sound/intermission.mp3")),
+        audioClip    (PacManGameSoundID.LEVEL_CHANGED,         ARCADE_PACMAN_RM.url("sound/common/sweep.mp3")),
+        mediaPlayer  (PacManGameSoundID.LEVEL_COMPLETE,        ARCADE_PACMAN_RM.url("sound/common/level-complete.mp3")),
+        mediaPlayer  (PacManGameSoundID.PAC_MAN_DEATH,         ARCADE_PACMAN_RM.url("sound/pacman_death.wav")),
+        audioClip    (PacManGameSoundID.PAC_MAN_MUNCHING,      ARCADE_PACMAN_RM.url("sound/munch.wav")),
+        mediaPlayer  (PacManGameSoundID.PAC_MAN_POWER,         ARCADE_PACMAN_RM.url("sound/ghost-turn-to-blue.mp3"))
     );
 
-    private final TranslationManager translations = () -> ResourceBundle.getBundle(XXL_PKG + "localized_texts_ms_pacman");
-    private final ArcadeMsPacMan_Factory3D factory3D = new ArcadeMsPacMan_Factory3D();
-    private final XXL_MsPacMan_GameSceneConfig gameSceneConfig = new XXL_MsPacMan_GameSceneConfig();
+    private final ResourceBundle textBundle = ResourceBundle.getBundle(XXL_PKG + "localized_texts_pacman");
+    private final Factory3D factory3D = new DefaultFactory3D();
+    private final XXL_PacMan_GameSceneConfig gameSceneConfig = new XXL_PacMan_GameSceneConfig();
 
-    private XXL_MsPacMan_RenderConfig renderConfig;
-    private AssetMap assets;
+    private XXL_PacMan_RenderConfig renderConfig;
     private GameSoundEffects soundEffects;
+    private AssetMap assets;
 
     private final Map<Named, Object> extensions = new HashMap<>();
 
     @Override
     public void init() {
         loadAssets();
-        renderConfig = new XXL_MsPacMan_RenderConfig(assets);
+        renderConfig = new XXL_PacMan_RenderConfig(assets);
         renderConfig.addAssets();
         assets.freeze();
         extensions.put(Arcade_GameExtensions.ACTIONS, new Arcade_Actions());
@@ -78,16 +76,16 @@ public final class XXL_MsPacMan_GameVariantUIConfig implements GameVariantUIConf
 
     @Override
     public void loadSounds(SoundManager soundManager) {
-        for (SoundEntry entry : SOUND_ENTRIES) {
+        for (SoundManager.SoundEntry entry : SOUND_ENTRIES) {
             soundManager.add(entry);
         }
         soundEffects = new GameSoundEffects(soundManager);
-        soundEffects.setMunchingSoundDelay((byte) 0);
+        soundEffects.setMunchingSoundDelay((byte) 9);
         soundEffects.registerSirens(
-            ARCADE_RM.url("sound/GhostNoise1.wav"),
-            ARCADE_RM.url("sound/GhostNoise2.wav"),
-            ARCADE_RM.url("sound/GhostNoise3.wav"),
-            ARCADE_RM.url("sound/GhostNoise4.wav")
+            ARCADE_PACMAN_RM.url("sound/siren_1.mp3"),
+            ARCADE_PACMAN_RM.url("sound/siren_2.mp3"),
+            ARCADE_PACMAN_RM.url("sound/siren_3.mp3"),
+            ARCADE_PACMAN_RM.url("sound/siren_4.mp3")
         );
         soundEffects.setSirenVolume(0.33f);
     }
@@ -95,7 +93,7 @@ public final class XXL_MsPacMan_GameVariantUIConfig implements GameVariantUIConf
     @Override
     public void unloadSounds(SoundManager soundManager) {
         Logger.info("Unload sounds");
-        for (SoundEntry entry : SOUND_ENTRIES) {
+        for (SoundManager.SoundEntry entry : SOUND_ENTRIES) {
             soundManager.remove(entry);
         }
         if (soundEffects != null) {
@@ -105,7 +103,8 @@ public final class XXL_MsPacMan_GameVariantUIConfig implements GameVariantUIConf
     }
 
     @Override
-    public void connectApp(GameAppContext app) {}
+    public void connectApp(GameAppContext ignore) {
+    }
 
     @Override
     public void dispose() {
@@ -136,7 +135,7 @@ public final class XXL_MsPacMan_GameVariantUIConfig implements GameVariantUIConf
     }
 
     @Override
-    public ArcadeMsPacMan_Factory3D factory3D() {
+    public Factory3D factory3D() {
         return factory3D;
     }
 
@@ -157,7 +156,7 @@ public final class XXL_MsPacMan_GameVariantUIConfig implements GameVariantUIConf
 
     @Override
     public TranslationManager translations() {
-        return translations;
+        return () -> textBundle;
     }
 
     @Override
@@ -165,12 +164,10 @@ public final class XXL_MsPacMan_GameVariantUIConfig implements GameVariantUIConf
         return WorldSettings.DEFAULT_SETTINGS;
     }
 
-    // private
-
     private void loadAssets() {
         assets = new AssetMap();
-        assets.addAsset("app_icon", XXL_RM.loadImage(XXL_PATH + "graphics/icons/mspacman.png"));
-        assets.addAsset("logo.midway", ARCADE_RM.loadImage("graphics/midway_logo.png"));
+        assets.addAsset("app_icon", XXL_RM.loadImage(XXL_PATH + "graphics/icons/pacman.png"));
         assets.addAsset("color.game_over_message", ARCADE_RED);
     }
+
 }

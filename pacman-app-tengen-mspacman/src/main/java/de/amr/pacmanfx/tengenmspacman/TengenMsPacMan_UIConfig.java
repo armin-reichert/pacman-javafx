@@ -35,7 +35,7 @@ import java.util.*;
 import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.audioClip;
 import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.mediaPlayer;
 
-public class TengenMsPacMan_GameVariantUIConfig implements GameVariantUIConfig {
+public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
 
     public static final int DEFAULT_START_LEVEL = 1;
     public static final int DEFAULT_NUM_CONTINUES = 4;
@@ -82,7 +82,7 @@ public class TengenMsPacMan_GameVariantUIConfig implements GameVariantUIConfig {
     );
 
     private static final WorldSettings WORLD_SETTINGS = TengenJsonConfigLoader.load(
-        TengenMsPacMan_GameVariantUIConfig.class.getResource("/de/amr/pacmanfx/tengenmspacman/world.json"), WorldSettings.class);
+        TengenMsPacMan_UIConfig.class.getResource("/de/amr/pacmanfx/tengenmspacman/world.json"), WorldSettings.class);
 
     /** Path inside resources folder where map files (.world) are stored. */
     public static final String MAPS_FOLDER = "/de/amr/pacmanfx/tengenmspacman/maps/";

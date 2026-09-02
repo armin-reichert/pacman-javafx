@@ -7,7 +7,7 @@ package de.amr.pacmanfx.tengenmspacman.sprites;
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantUIConfig;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 
 import java.util.List;
@@ -42,11 +42,11 @@ public class TengenMsPacMan_MapRepository {
     public MapImageSet createMapImageSet(WorldMap worldMap, int flashCount) {
         requireNonNull(worldMap);
 
-        final MapCategory mapCategory = worldMap.getConfigValue(TengenMsPacMan_GameVariantUIConfig.MapConfigKey.MAP_CATEGORY);
+        final MapCategory mapCategory = worldMap.getConfigValue(TengenMsPacMan_UIConfig.MapConfigKey.MAP_CATEGORY);
         final int mapNumber           = worldMap.getConfigValue(WorldMapConfigKey.MAP_NUMBER);
         final NES_WorldMapColorScheme reqColorScheme = worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
         // for randomly colored maps (levels 28-31, non-ARCADE maps), multiple random flash colors appear
-        final boolean randomFlashColors = worldMap.getConfigValue(TengenMsPacMan_GameVariantUIConfig.MapConfigKey.MULTIPLE_FLASH_COLORS);
+        final boolean randomFlashColors = worldMap.getConfigValue(TengenMsPacMan_UIConfig.MapConfigKey.MULTIPLE_FLASH_COLORS);
 
         return switch (mapCategory) {
 
@@ -57,7 +57,7 @@ public class TengenMsPacMan_MapRepository {
             case BIG     -> bigMapImageSet(mapNumber, reqColorScheme, flashCount, randomFlashColors);
 
             case STRANGE -> strangeMapImageSet(
-                worldMap.getConfigValue(TengenMsPacMan_GameVariantUIConfig.MapConfigKey.MAP_ID), // set by map selector!
+                worldMap.getConfigValue(TengenMsPacMan_UIConfig.MapConfigKey.MAP_ID), // set by map selector!
                 randomFlashColors ? reqColorScheme : null,
                 flashCount,
                 randomFlashColors);

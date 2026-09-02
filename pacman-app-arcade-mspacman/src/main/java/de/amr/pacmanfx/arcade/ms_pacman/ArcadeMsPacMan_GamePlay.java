@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.ms_pacman;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GamePlay;
-import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameVariantUIConfig;
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;
@@ -64,7 +64,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         final TerrainLayer terrain = worldMap.terrainLayer();
 
         final Vector2i houseMinTile = terrain.getTilePropertyOrDefault(
-            WorldMapPropertyName.POS_HOUSE_MIN_TILE, ArcadePacMan_GameVariantUIConfig.ARCADE_MAP_HOUSE_MIN_TILE);
+            WorldMapPropertyName.POS_HOUSE_MIN_TILE, ArcadePacMan_UIConfig.ARCADE_MAP_HOUSE_MIN_TILE);
         terrain.propertyMap().put(WorldMapPropertyName.POS_HOUSE_MIN_TILE, houseMinTile.toString());
 
         final House house = HouseFactory.createArcadeHouse(houseMinTile);

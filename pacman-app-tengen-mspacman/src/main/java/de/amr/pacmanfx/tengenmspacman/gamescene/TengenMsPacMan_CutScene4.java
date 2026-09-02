@@ -40,7 +40,7 @@ import java.util.Set;
 import static de.amr.basics.math.RandomNumbers.randomInt;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantUIConfig.*;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.*;
 
 public class TengenMsPacMan_CutScene4 extends GameScene {
 

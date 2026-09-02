@@ -34,7 +34,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * The Arcade Pac‑Man game variant.
  */
-public class ArcadePacMan_GameVariantUIConfig implements GameVariantUIConfig {
+public class ArcadePacMan_UIConfig implements GameVariantUIConfig {
 
     /**
      * Top-left tile of ghost house in original Arcade maps (Pac-Man, Ms. Pac-Man).
@@ -51,7 +51,7 @@ public class ArcadePacMan_GameVariantUIConfig implements GameVariantUIConfig {
         return gameFlow;
     }
 
-    private final static ResourceManager RM = () -> ArcadePacMan_GameVariantUIConfig.class;
+    private final static ResourceManager RM = () -> ArcadePacMan_UIConfig.class;
 
     private static final List<SoundManager.SoundEntry> SOUND_ENTRIES = Arrays.asList(
         audioClip   (PacManGameSoundID.BONUS_EATEN,      RM.url("sound/eat_fruit.mp3")),

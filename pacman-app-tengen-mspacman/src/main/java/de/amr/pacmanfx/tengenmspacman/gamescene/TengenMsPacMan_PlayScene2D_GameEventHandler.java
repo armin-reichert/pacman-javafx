@@ -35,7 +35,7 @@ import java.util.Optional;
 
 import static de.amr.basics.util.Ufx.textWidth;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantUIConfig.GAME_OVER_MESSAGE_TEXT;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.GAME_OVER_MESSAGE_TEXT;
 
 public interface TengenMsPacMan_PlayScene2D_GameEventHandler extends DefaultGameEventListener {
 

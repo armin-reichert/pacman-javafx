@@ -153,7 +153,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         final TerrainLayer terrain = worldMap.terrainLayer();
 
         final Vector2i houseMinTile = terrain.getTilePropertyOrDefault(
-            WorldMapPropertyName.POS_HOUSE_MIN_TILE, ArcadePacMan_GameVariantUIConfig.ARCADE_MAP_HOUSE_MIN_TILE);
+            WorldMapPropertyName.POS_HOUSE_MIN_TILE, ArcadePacMan_UIConfig.ARCADE_MAP_HOUSE_MIN_TILE);
         terrain.propertyMap().put(WorldMapPropertyName.POS_HOUSE_MIN_TILE,  String.valueOf(houseMinTile));
 
         final var actorFactory = ArcadePacMan_ActorFactory.instance();
@@ -266,7 +266,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
         // In XXL game variant, the bonus position is stored inside the terrain map
         final Vector2i tile = level.worldMap().terrainLayer().getTilePropertyOrDefault(
-            WorldMapPropertyName.POS_BONUS, ArcadePacMan_GameVariantUIConfig.DEFAULT_BONUS_TILE);
+            WorldMapPropertyName.POS_BONUS, ArcadePacMan_UIConfig.DEFAULT_BONUS_TILE);
         bonus.pos().set(WorldMap.halfTileRightOf(tile));
         bonus.setLifetimeSec(rules.edibleBonusDisplaySeconds());
         systems.bonusState().setEdible(bonus);

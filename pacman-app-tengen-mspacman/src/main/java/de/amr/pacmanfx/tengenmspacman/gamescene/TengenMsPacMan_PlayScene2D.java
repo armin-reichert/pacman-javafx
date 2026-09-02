@@ -43,8 +43,8 @@ import java.util.Optional;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.*;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantUIConfig.NES_SCREEN_HEIGHT;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantUIConfig.NES_SCREEN_WIDTH;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_HUD_Options.GAME_OPTIONS_VISIBLE;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_HUD_Options.LEVEL_NUMBER_VISIBLE;
 import static de.amr.pacmanfx.tengenmspacman.gamescene.SceneDisplay.SCROLLING;

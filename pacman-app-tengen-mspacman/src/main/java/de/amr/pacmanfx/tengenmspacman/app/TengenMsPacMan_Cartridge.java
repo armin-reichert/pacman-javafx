@@ -4,7 +4,7 @@ import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.game.Cartridge;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameVariantUIConfig;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_WorldMapManager;
 import de.amr.pacmanfx.tengenmspacman.rules.TengenMsPacMan_GameRules;
 
@@ -19,9 +19,9 @@ public class TengenMsPacMan_Cartridge {
         GameVariantID.TENGEN_MS_PACMAN,
         GameSystems::new,
         TengenMsPacMan_GamePlay::new,
-        TengenMsPacMan_GameVariantUIConfig::createGameFlow,
+        TengenMsPacMan_UIConfig::createGameFlow,
         TengenMsPacMan_GameRules::new,
         TengenMsPacMan_WorldMapManager::new,
-        TengenMsPacMan_GameVariantUIConfig::new
+        TengenMsPacMan_UIConfig::new
     );
 }

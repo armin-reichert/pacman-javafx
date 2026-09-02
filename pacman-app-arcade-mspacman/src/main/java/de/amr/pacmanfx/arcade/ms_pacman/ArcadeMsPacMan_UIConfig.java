@@ -30,9 +30,9 @@ import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.audioClip;
 import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.mediaPlayer;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
 
-public class ArcadeMsPacMan_GameVariantUIConfig implements GameVariantUIConfig {
+public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
 
-    private static final ResourceManager RM = () -> ArcadeMsPacMan_GameVariantUIConfig.class;
+    private static final ResourceManager RM = () -> ArcadeMsPacMan_UIConfig.class;
 
     private static final List<SoundManager.SoundEntry> SOUND_ENTRIES = Arrays.asList(
         mediaPlayer(PacManGameSoundID.BONUS_ACTIVE, RM.url("sound/Fruit_Bounce.mp3")),
