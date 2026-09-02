@@ -31,9 +31,10 @@ public class Camera3DActions {
         actionNextPerspective = new GameAction("perspective_next") {
             @Override
             public void execute(GameAppContext app) {
-                final PerspectiveID nextID = app.ui().viewModel().common3D.cameraPerspectiveIdProperty.get().next();
-                app.ui().viewModel().common3D.cameraPerspectiveIdProperty.set(nextID);
-                app.ui().shortMessage(translatedPerspectiveMessage(app, nextID));
+                final var perspectiveIDProperty = app.ui().viewModel().common3DSettings().cameraPerspectiveIDProperty();
+                final PerspectiveID perspectiveID = perspectiveIDProperty.get().next();
+                perspectiveIDProperty.set(perspectiveID);
+                app.ui().shortMessage(translatedPerspectiveMessage(app, perspectiveID));
             }
 
             @Override
@@ -45,8 +46,9 @@ public class Camera3DActions {
         actionPreviousPerspective = new GameAction("perspective_previous") {
             @Override
             public void execute(GameAppContext app) {
-                final PerspectiveID prevID = app.ui().viewModel().common3D.cameraPerspectiveIdProperty.get().prev();
-                app.ui().viewModel().common3D.cameraPerspectiveIdProperty.set(prevID);
+                final var perspectiveIDProperty = app.ui().viewModel().common3DSettings().cameraPerspectiveIDProperty();
+                final PerspectiveID prevID = perspectiveIDProperty.get().prev();
+                perspectiveIDProperty.set(prevID);
                 app.ui().shortMessage(translatedPerspectiveMessage(app, prevID));
             }
             @Override
@@ -58,7 +60,8 @@ public class Camera3DActions {
         actionToggleDrawMode = new GameAction("toggle_draw_mode") {
             @Override
             public void execute(GameAppContext app) {
-                Ufx.toggleProperty(app.ui().viewModel().common3D.drawModeProperty, DrawMode.LINE, DrawMode.FILL);
+                final var drawModeProperty = app.ui().viewModel().common3DSettings().drawModeProperty();
+                Ufx.toggleProperty(drawModeProperty, DrawMode.LINE, DrawMode.FILL);
             }
             @Override
             public boolean isEnabled(GameAppContext app) {

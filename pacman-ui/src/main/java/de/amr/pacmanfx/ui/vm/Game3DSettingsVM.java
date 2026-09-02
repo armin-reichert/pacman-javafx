@@ -32,28 +32,44 @@ public class Game3DSettingsVM {
     );
 
     /* Whether 3D axes are visible in the 3D play scene. */
-    public final BooleanProperty axesVisibleProperty;
+    private final BooleanProperty axesVisible;
 
     /* Currently active 3D camera perspective. */
-    public final ObjectProperty<PerspectiveID> cameraPerspectiveIdProperty;
+    private final ObjectProperty<PerspectiveID> cameraPerspectiveID;
 
     /* Draw mode for 3D geometry (fill or wireframe). */
-    public final ObjectProperty<DrawMode> drawModeProperty;
+    private final ObjectProperty<DrawMode> drawMode;
 
     /* Whether 3D rendering is enabled at all. */
-    public final BooleanProperty view3DEnabledProperty;
+    private final BooleanProperty view3DEnabled;
 
     public Game3DSettingsVM() {
-        axesVisibleProperty = new SimpleBooleanProperty();
-        cameraPerspectiveIdProperty = new SimpleObjectProperty<>();
-        drawModeProperty = new SimpleObjectProperty<>();
-        view3DEnabledProperty = new SimpleBooleanProperty();
+        axesVisible = new SimpleBooleanProperty();
+        cameraPerspectiveID = new SimpleObjectProperty<>();
+        drawMode = new SimpleObjectProperty<>();
+        view3DEnabled = new SimpleBooleanProperty();
     }
 
     public void init(Game3DSettings settings) {
-        axesVisibleProperty.set(settings.axesVisible());
-        cameraPerspectiveIdProperty.set(settings.cameraPerspectiveId());
-        drawModeProperty.set(settings.drawMode());
-        view3DEnabledProperty.set(settings.view3DEnabled());
+        axesVisible.set(settings.axesVisible());
+        cameraPerspectiveID.set(settings.cameraPerspectiveId());
+        drawMode.set(settings.drawMode());
+        view3DEnabled.set(settings.view3DEnabled());
+    }
+
+    public BooleanProperty axesVisibleProperty() {
+        return axesVisible;
+    }
+
+    public ObjectProperty<PerspectiveID> cameraPerspectiveIDProperty() {
+        return cameraPerspectiveID;
+    }
+
+    public ObjectProperty<DrawMode> drawModeProperty() {
+        return drawMode;
+    }
+
+    public BooleanProperty view3DEnabledProperty() {
+        return view3DEnabled;
     }
 }

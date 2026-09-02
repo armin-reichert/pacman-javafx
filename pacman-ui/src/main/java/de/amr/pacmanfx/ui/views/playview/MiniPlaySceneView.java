@@ -17,6 +17,8 @@ import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationManager;
+import de.amr.pacmanfx.ui.vm.GameViewModel;
+import de.amr.pacmanfx.ui.vm.MiniViewSettingsVM;
 import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -90,14 +92,16 @@ public class MiniPlaySceneView {
         return rootPane;
     }
 
-    public void setGameApp(GameAppContext appcontext) {
-        this.app = requireNonNull(appcontext);
+    public void setGameApp(GameAppContext app) {
+        this.app = requireNonNull(app);
 
-        rootPane.backgroundProperty().bind(appcontext.ui().viewModel().common2D.canvasBackgroundColorProperty.map(Background::fill));
-        rootPane.opacityProperty().bind(appcontext.ui().viewModel().miniView.opacityPercentageProperty.divide(100.0));
+        final GameViewModel vm = app.ui().viewModel();
 
-        canvas.heightProperty().bind(appcontext.ui().viewModel().miniView.heightProperty);
-        canvas.widthProperty().bind(Bindings.createDoubleBinding(
+        rootPane.backgroundProperty().bind(vm.common2DSettings().canvasBackgroundColorProperty().map(Background::fill));
+        rootPane.opacityProperty()   .bind(vm.miniViewSettings().opacityPercentageProperty.divide(100.0));
+
+        canvas.heightProperty().bind(vm.miniViewSettings().heightProperty);
+        canvas.widthProperty() .bind(Bindings.createDoubleBinding(
             () -> {
                 final double aspect = (double) worldSize.get().x() / worldSize.get().y();
                 return aspect * canvas.getHeight();
@@ -115,24 +119,27 @@ public class MiniPlaySceneView {
         worldSize.set(size);
     }
 
-    public void setRenderConfig(ActorSpriteAnimController animSystem, GameVariantRenderConfig renderConfig) {
+    public void setRenderConfig(ActorSpriteAnimController animController, GameVariantRenderConfig renderConfig) {
+        final GameViewModel vm = app.ui().viewModel();
+
         canvasRenderer = new BaseRenderer(canvas);
 
-        levelRenderer = renderConfig.createGameLevelRenderer(animSystem, canvas);
+        levelRenderer = renderConfig.createGameLevelRenderer(animController, canvas);
         levelRenderer.scalingProperty().bind(scaling);
-        levelRenderer.backgroundColorProperty().bind(app.ui().viewModel().common2D.canvasBackgroundColorProperty);
+        levelRenderer.backgroundColorProperty().bind(vm.common2DSettings().canvasBackgroundColorProperty());
 
-        actorRenderer = renderConfig.createActorRenderer(animSystem, canvas);
+        actorRenderer = renderConfig.createActorRenderer(animController, canvas);
         actorRenderer.scalingProperty().bind(scaling);
-        actorRenderer.backgroundColorProperty().bind(app.ui().viewModel().common2D.canvasBackgroundColorProperty);
+        actorRenderer.backgroundColorProperty().bind(vm.common2DSettings().canvasBackgroundColorProperty());
     }
 
-    public void slideIn() {
+    public void slideIn(MiniViewSettingsVM settingsVM) {
+        requireNonNull(settingsVM);
+
         if (slideInAnimation != null) {
             slideInAnimation.stop();
         }
-        slideInAnimation = new TranslateTransition(
-            Duration.seconds(app.ui().viewModel().miniView.slideInSecondsProperty.get()), rootPane);
+        slideInAnimation = new TranslateTransition(Duration.seconds(settingsVM.slideInSecondsProperty.get()), rootPane);
         slideInAnimation.setToY(0);
         slideInAnimation.setByY(10);
         slideInAnimation.setDelay(Duration.seconds(1));
@@ -140,12 +147,13 @@ public class MiniPlaySceneView {
         slideInAnimation.play();
     }
 
-    public void slideOut() {
+    public void slideOut(MiniViewSettingsVM settingsVM) {
+        requireNonNull(settingsVM);
+
         if (slideOutAnimation != null) {
             slideOutAnimation.stop();
         }
-        slideOutAnimation = new TranslateTransition(
-            Duration.seconds(app.ui().viewModel().miniView.slideOutSecondsProperty.get()), rootPane);
+        slideOutAnimation = new TranslateTransition(Duration.seconds(settingsVM.slideOutSecondsProperty.get()), rootPane);
         slideOutAnimation.setToY(-rootPane.getHeight());
         slideOutAnimation.setByY(10);
         slideOutAnimation.setDelay(Duration.seconds(2));
@@ -176,7 +184,7 @@ public class MiniPlaySceneView {
             drawGameLevel(game, level);
         }
 
-        if (app.ui().viewModel().debugModeOnProperty.get()) {
+        if (app.ui().viewModel().debugModeOnProperty().get()) {
             canvasRenderer.fillTextCentered(
                 "scaling: %.2f, draw calls: %d".formatted(scaling.doubleValue(), drawCallCount),
                 Color.WHITE, Font.font(12 * scaling.get()),

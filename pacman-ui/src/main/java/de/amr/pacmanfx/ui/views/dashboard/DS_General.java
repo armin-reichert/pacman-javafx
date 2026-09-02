@@ -59,9 +59,9 @@ public class DS_General extends GameDashboardSection {
         btnStep.setText(null);
         btnStep.setTooltip(new Tooltip("Single Step Mode"));
         btnStep.disableProperty().bind(gameClock.updatesDisabledProperty().not());
-        setAction(btnStep, () -> gameClock.makeSteps(viewModel.numSimulationStepsProperty.get(), true));
+        setAction(btnStep, () -> gameClock.makeSteps(viewModel.numSimulationStepsProperty().get(), true));
 
-        intSpinner("Num Steps", 1, 50, viewModel.numSimulationStepsProperty);
+        intSpinner("Num Steps", 1, 50, viewModel.numSimulationStepsProperty());
 
         final var sliderTargetFPS = slider("Simulation Speed", MIN_FRAME_RATE, MAX_FRAME_RATE, 60, false, false);
         editPropertyWithSlider(sliderTargetFPS, gameClock.targetFrameRateProperty());
@@ -69,9 +69,9 @@ public class DS_General extends GameDashboardSection {
         addDynamicInfo("", () -> "FPS: %.1f (Target: %d)".formatted(gameClock.fps(), gameClock.targetFrameRate()));
         addDynamicInfo("Total Updates",  gameClock::pausableUpdatesCount);
 
-        colorPicker("Canvas Color", viewModel.common2D.canvasBackgroundColorProperty);
-        checkBox("Font Smoothing",  viewModel.common2D.fontSmoothingOnProperty);
-        checkBox("Show Debug Info", viewModel.debugModeOnProperty);
+        colorPicker("Canvas Color", viewModel.common2DSettings().canvasBackgroundColorProperty());
+        checkBox("Font Smoothing",  viewModel.common2DSettings().fontSmoothingOnProperty());
+        checkBox("Show Debug Info", viewModel.debugModeOnProperty());
         checkBox("Time Measured",   gameClock.timeMeasuredProperty());
     }
 }

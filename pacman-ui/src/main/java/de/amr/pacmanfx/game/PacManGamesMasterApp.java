@@ -220,7 +220,7 @@ public final class PacManGamesMasterApp implements GameAppContext {
         uiConfig.loadSounds(ui.soundManager());
         uiConfig.connectApp(this);
 
-        ui.viewModel().maze3D.init(gameVariant.uiConfig().worldSettings().maze());
+        ui.viewModel().maze3DSettings().init(gameVariant.uiConfig().worldSettings().maze());
 
         ui.spriteAnimTimer().attachAnimContainer(gameVariant.spriteAnimContainer());
         //TODO do not start here

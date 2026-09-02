@@ -75,7 +75,7 @@ public class Arcade_BootScene2D_Renderer extends BaseRenderer implements GameSce
                 drawGrid(r2D.unscaledWidth(), r2D.unscaledHeight());
             }
         }
-        if (scene.app().ui().viewModel().debugModeOnProperty.get()) {
+        if (scene.viewModel().debugModeOnProperty().get()) {
             debugRenderer.draw(scene, tick);
         }
     }

@@ -10,43 +10,83 @@ import javafx.util.Duration;
 
 public class GameViewModel {
 
-    public final ObjectProperty<Duration> flashMessageDurationProperty;
-    public final BooleanProperty testStatesIncludedProperty;
-    public final BooleanProperty debugModeOnProperty;
-    public final BooleanProperty keyboardMonitorOnProperty;
-    public final BooleanProperty mutedProperty;
-    public final IntegerProperty numSimulationStepsProperty;
+    private final ObjectProperty<Duration> flashMessageDuration;
+    private final BooleanProperty testStatesIncluded;
+    private final BooleanProperty debugModeOn;
+    private final BooleanProperty keyboardMonitorOn;
+    private final BooleanProperty mute;
+    private final IntegerProperty numSimulationSteps;
 
-    public final MiniViewSettingsVM miniView;
-    public final Game2DSettingsVM common2D;
-    public final Game3DSettingsVM common3D;
-    public final Maze3DSettingsVM maze3D;
+    private final MiniViewSettingsVM miniViewSettings;
+    private final Game2DSettingsVM common2DSettings;
+    private final Game3DSettingsVM common3DSettings;
+    private final Maze3DSettingsVM maze3DSettings;
 
     public GameViewModel() {
-        flashMessageDurationProperty = new SimpleObjectProperty<>();
-        testStatesIncludedProperty = new SimpleBooleanProperty();
-        debugModeOnProperty = new SimpleBooleanProperty();
-        keyboardMonitorOnProperty = new SimpleBooleanProperty();
-        mutedProperty = new SimpleBooleanProperty();
-        numSimulationStepsProperty = new SimpleIntegerProperty(1);
+        flashMessageDuration = new SimpleObjectProperty<>();
+        testStatesIncluded = new SimpleBooleanProperty();
+        debugModeOn = new SimpleBooleanProperty();
+        keyboardMonitorOn = new SimpleBooleanProperty();
+        mute = new SimpleBooleanProperty();
+        numSimulationSteps = new SimpleIntegerProperty(1);
 
-        miniView = new MiniViewSettingsVM();
-        common2D = new Game2DSettingsVM();
-        common3D = new Game3DSettingsVM();
-        maze3D = new Maze3DSettingsVM();
+        miniViewSettings = new MiniViewSettingsVM();
+        common2DSettings = new Game2DSettingsVM();
+        common3DSettings = new Game3DSettingsVM();
+        maze3DSettings = new Maze3DSettingsVM();
     }
 
     public void init(GameUISettings settings) {
-        flashMessageDurationProperty.set(Duration.seconds(settings.flashMessageDuration()));
-        testStatesIncludedProperty.set(settings.testStatesIncluded());
-        debugModeOnProperty.set(settings.debugModeOn());
-        keyboardMonitorOnProperty.set(settings.keyboardMonitorOn());
-        mutedProperty.set(settings.muted());
+        flashMessageDuration.set(Duration.seconds(settings.flashMessageDuration()));
+        testStatesIncluded.set(settings.testStatesIncluded());
+        debugModeOn.set(settings.debugModeOn());
+        keyboardMonitorOn.set(settings.keyboardMonitorOn());
+        mute.set(settings.muted());
 
-        miniView.init(settings.miniView());
-        common2D.init(settings.common2D());
-        common3D.init(settings.common3D());
+        miniViewSettings.init(settings.miniView());
+        common2DSettings.init(settings.common2D());
+        common3DSettings.init(settings.common3D());
 
         // maze3D is initialized elsewhere because it can be game-variant specific!
+    }
+
+    public ObjectProperty<Duration> flashMessageDurationProperty() {
+        return flashMessageDuration;
+    }
+
+    public BooleanProperty testStatesIncludedProperty() {
+        return testStatesIncluded;
+    }
+
+    public BooleanProperty debugModeOnProperty() {
+        return debugModeOn;
+    }
+
+    public BooleanProperty keyboardMonitorOnProperty() {
+        return keyboardMonitorOn;
+    }
+
+    public BooleanProperty muteProperty() {
+        return mute;
+    }
+
+    public IntegerProperty numSimulationStepsProperty() {
+        return numSimulationSteps;
+    }
+
+    public MiniViewSettingsVM miniViewSettings() {
+        return miniViewSettings;
+    }
+
+    public Game2DSettingsVM common2DSettings() {
+        return common2DSettings;
+    }
+
+    public Game3DSettingsVM common3DSettings() {
+        return common3DSettings;
+    }
+
+    public Maze3DSettingsVM maze3DSettings() {
+        return maze3DSettings;
     }
 }

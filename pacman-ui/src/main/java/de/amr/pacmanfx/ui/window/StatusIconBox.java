@@ -8,6 +8,7 @@ import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
+import de.amr.pacmanfx.ui.vm.GameViewModel;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.controls.FontAwesomeIcon;
 import de.amr.pacmanfx.uilib.controls.FontAwesomeSymbol;
@@ -67,23 +68,23 @@ public class StatusIconBox implements Disposable {
 
     public void setGameApp(GameAppContext app) {
         final TranslationManager translations = app.ui().translations();
-
-        setTooltip(iconMuted, translations.translate("status_icon.muted"));
-        setTooltip(icon3D, translations.translate("status_icon.3d"));
-        setTooltip(iconAutopilot, translations.translate("status_icon.autopilot"));
-        setTooltip(iconImmune, translations.translate("status_icon.immune"));
-        setTooltip(iconCheated, translations.translate("status_icon.cheated"));
-
+        final GameViewModel vm = app.ui().viewModel();
         final GameViewManager views = app.ui().views();
+
+        setTooltip(iconMuted,     translations.translate("status_icon.muted"));
+        setTooltip(icon3D,        translations.translate("status_icon.3d"));
+        setTooltip(iconAutopilot, translations.translate("status_icon.autopilot"));
+        setTooltip(iconImmune,    translations.translate("status_icon.immune"));
+        setTooltip(iconCheated,   translations.translate("status_icon.cheated"));
 
         // Hide status icon box in editor view
         rootPane().visibleProperty().bind(
-                views.currentViewIDProperty().isEqualTo(GameViewID.GAMEPLAY)
-            .or(views.currentViewIDProperty().isEqualTo(GameViewID.START_PAGES))
+            views.currentViewIDProperty().isEqualTo(GameViewID.GAMEPLAY).or(
+                views.currentViewIDProperty().isEqualTo(GameViewID.START_PAGES))
         );
 
-        iconMuted.visibleProperty().bind(app.ui().viewModel().mutedProperty);
-        icon3D.visibleProperty().bind(app.ui().viewModel().common3D.view3DEnabledProperty);
+        iconMuted.visibleProperty().bind(vm.muteProperty());
+        icon3D.visibleProperty().bind(vm.common3DSettings().view3DEnabledProperty());
     }
 
     public void bind(GameCheats cheats) {

@@ -94,7 +94,7 @@ public class Arcade_PlayScene2D extends GameScene
             }
         });
         addSeparator(contextMenu);
-        addLocalizedCheckBox(contextMenu, translations, app().ui().viewModel().mutedProperty, "context_menu.muted");
+        addLocalizedCheckBox(contextMenu, translations, viewModel().muteProperty(), "context_menu.muted");
         addLocalizedActionItem(app(), contextMenu, translations, app().commonActions().gameFlowActions().actionQuit(), "context_menu.quit");
 
         return Optional.of(contextMenu);

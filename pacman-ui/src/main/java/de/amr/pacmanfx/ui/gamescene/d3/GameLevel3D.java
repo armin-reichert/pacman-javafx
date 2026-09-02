@@ -217,10 +217,10 @@ public class GameLevel3D implements DisposableGraphicsObject {
             uiConfig.worldSettings(),
             colorScheme);
 
-        maze3D.drawModeProperty()      .bind(viewModel.common3D.drawModeProperty);
-        maze3D.wallOpacityProperty()   .bind(viewModel.maze3D.wallOpacityProperty);
-        maze3D.wallBaseHeightProperty().bind(viewModel.maze3D.wallHeightProperty);
-        maze3D.floorColorProperty()    .bind(viewModel.maze3D.floorColorProperty);
+        maze3D.drawModeProperty()      .bind(viewModel.common3DSettings().drawModeProperty());
+        maze3D.wallOpacityProperty()   .bind(viewModel.maze3DSettings().wallOpacityProperty());
+        maze3D.wallBaseHeightProperty().bind(viewModel.maze3DSettings().wallHeightProperty());
+        maze3D.floorColorProperty()    .bind(viewModel.maze3DSettings().floorColorProperty());
     }
 
     private void createFood3DViews() {
@@ -278,14 +278,14 @@ public class GameLevel3D implements DisposableGraphicsObject {
 
     private void createPac3DView(Pac pac, PacSettings settings) {
         uiConfig.factory3D().createPac3D(pac, settings);
-        pac.reqComp(Pac3DViewComp.class).drawModeProperty().bind(viewModel.common3D.drawModeProperty);
+        pac.reqComp(Pac3DViewComp.class).drawModeProperty().bind(viewModel.common3DSettings().drawModeProperty());
     }
 
     private void createGhost3DViews(List<Ghost> ghosts, List<GhostSettings> settings) {
         ghosts.forEach(ghost -> {
             final var ghostSettings = settings.get(ghost.personality().ordinal());
             uiConfig.factory3D().createGhost3D(ghost, ghostSettings);
-            ghost.reqComp(Ghost3DViewComp.class).drawModeProperty().bind(viewModel.common3D.drawModeProperty);
+            ghost.reqComp(Ghost3DViewComp.class).drawModeProperty().bind(viewModel.common3DSettings().drawModeProperty());
         });
     }
 

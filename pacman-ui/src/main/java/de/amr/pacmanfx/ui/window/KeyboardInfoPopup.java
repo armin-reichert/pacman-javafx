@@ -63,7 +63,7 @@ public class KeyboardInfoPopup {
     }
 
     public void setGameApp(GameAppContext app) {
-        rootPane.visibleProperty().bind(app.ui().viewModel().keyboardMonitorOnProperty);
+        rootPane.visibleProperty().bind(app.ui().viewModel().keyboardMonitorOnProperty());
 
         app.input().keyboard().addStateListener(state -> {
             keyInfoBox.getChildren().clear();

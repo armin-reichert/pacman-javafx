@@ -43,7 +43,7 @@ public class TengenMsPacMan_BootScene_Renderer extends BaseRenderer implements G
             actorRenderer.drawActor(bootScene.ghost);
         }
 
-        if (scene.app().ui().viewModel().debugModeOnProperty.get()) {
+        if (scene.viewModel().debugModeOnProperty().get()) {
             debugRenderer.draw(scene, tick);
         }
     }

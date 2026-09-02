@@ -49,7 +49,7 @@ public class ArcadeMsPacMan_CutScene1_Renderer extends BaseRenderer implements G
                 cutScene.heart).forEach(actorRenderer::drawActor);
         }
 
-        if (scene.app().ui().viewModel().debugModeOnProperty.get()) {
+        if (scene.viewModel().debugModeOnProperty().get()) {
             debugRenderer.draw(scene, tick);
         }
     }

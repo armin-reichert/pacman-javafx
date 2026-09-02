@@ -81,7 +81,7 @@ public class GameUI implements GameEventListener {
         views.gamePlayView().populateDashboard(dashboardFactory, settings.dashboard(), translations);
 
         soundManager = new SoundManager();
-        soundManager.muteProperty().bind(viewModel.mutedProperty);
+        soundManager.muteProperty().bind(viewModel.muteProperty());
     }
 
     public GameWindow window() {
@@ -148,7 +148,7 @@ public class GameUI implements GameEventListener {
      * @param args    formatting arguments
      */
     public void shortMessage(String message, Object... args) {
-        shortMessage(viewModel.flashMessageDurationProperty.get(), message, args);
+        shortMessage(viewModel.flashMessageDurationProperty().get(), message, args);
     }
 
     public void clearMessage() {

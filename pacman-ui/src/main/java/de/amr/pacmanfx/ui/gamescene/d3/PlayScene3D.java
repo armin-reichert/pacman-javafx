@@ -87,10 +87,10 @@ public class PlayScene3D extends GameScene
         perspectiveManager = new PerspectiveManager(camera);
 
         final var coordinateSystem = new CoordinateSystem();
-        coordinateSystem.visibleProperty().bind(viewModel.common3D.axesVisibleProperty);
+        coordinateSystem.visibleProperty().bind(viewModel.common3DSettings().axesVisibleProperty());
 
         ambientLight = new AmbientLight();
-        ambientLight.colorProperty().bind(viewModel.maze3D.lightColorProperty);
+        ambientLight.colorProperty().bind(viewModel.maze3DSettings().lightColorProperty());
 
         subSceneRoot = new Group(level3DParent, coordinateSystem, ambientLight);
 
@@ -141,9 +141,9 @@ public class PlayScene3D extends GameScene
 
     @Override
     public void onActivate() {
-        final Game3DSettingsVM settings3D = app().ui().viewModel().common3D;
-        perspectiveManager.activeIDProperty().bind(settings3D.cameraPerspectiveIdProperty);
-        settings3D.drawModeProperty.addListener(drawModeChangeListener);
+        final Game3DSettingsVM settings3D = app().ui().viewModel().common3DSettings();
+        perspectiveManager.activeIDProperty().bind(settings3D.cameraPerspectiveIDProperty());
+        settings3D.drawModeProperty().addListener(drawModeChangeListener);
         subScene.setFill(Color.BLACK);
         bindActions();
     }
@@ -151,7 +151,7 @@ public class PlayScene3D extends GameScene
     @Override
     public void onDeactivate() {
         perspectiveManager.activeIDProperty().unbind();
-        app().ui().viewModel().common3D.drawModeProperty.removeListener(drawModeChangeListener);
+        app().ui().viewModel().common3DSettings().drawModeProperty().removeListener(drawModeChangeListener);
         disposeContextMenu();
     }
 

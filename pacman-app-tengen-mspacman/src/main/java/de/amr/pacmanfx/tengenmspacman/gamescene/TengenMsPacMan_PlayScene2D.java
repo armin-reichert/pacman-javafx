@@ -24,6 +24,7 @@ import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
+import de.amr.pacmanfx.ui.vm.GameViewModel;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -60,24 +61,25 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
     private final SubScene subScene;
 
     private final PerspectiveCamera fixedCamera = new PerspectiveCamera(false);
-    private final PlayScene2DCamera dynamicCamera;
+    private final PlayScene2DCamera dynamicCamera = new PlayScene2DCamera();
 
     private LevelCompletedAnimation levelCompletedAnimation;
 
     public TengenMsPacMan_PlayScene2D(GameAppContext app) {
         super(app);
+
+        // Add canvas rendering capability, no canvas assigned yet!
         components().setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
 
-        dynamicCamera = new PlayScene2DCamera();
+        final GameViewModel vm = app.ui().viewModel();
+        final TengenMsPacMan_UISettings uiSettings = uiSettings();
 
-        rootPane.backgroundProperty().bind(app.ui().viewModel().common2D.canvasBackgroundColorProperty.map(Background::fill));
+        rootPane.backgroundProperty().bind(vm.common2DSettings().canvasBackgroundColorProperty().map(Background::fill));
 
         // Scene size gets bound to parent scene when embedded in game view, initial size doesn't matter.
         subScene = new SubScene(rootPane, 88, 88);
-        subScene.fillProperty().bind(app.ui().viewModel().common2D.canvasBackgroundColorProperty);
+        subScene.fillProperty().bind(vm.common2DSettings().canvasBackgroundColorProperty());
         subScene.heightProperty().addListener((_, _, _) -> updateScaling());
-
-        final var uiSettings = uiSettings();
 
         subScene.cameraProperty().bind(uiSettings.playSceneDisplay.map(mode -> mode == SCROLLING ? dynamicCamera : fixedCamera));
         subScene.cameraProperty().addListener((_, _, _) -> updateScaling());
@@ -185,7 +187,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
         addLocalizedCheckBox(contextMenu, translations, game().session().cheats().pacUsingAutopilotProperty(), "context_menu.autopilot");
         addLocalizedCheckBox(contextMenu, translations, game().session().cheats().pacImmuneProperty(), "context_menu.immunity");
         addSeparator(contextMenu);
-        addLocalizedCheckBox(contextMenu, translations, app().ui().viewModel().mutedProperty, "context_menu.muted");
+        addLocalizedCheckBox(contextMenu, translations, app().ui().viewModel().muteProperty(), "context_menu.muted");
         addLocalizedActionItem(app(), contextMenu, translations, app().commonActions().gameFlowActions().actionQuit(), "context_menu.quit");
 
         return Optional.of(contextMenu);

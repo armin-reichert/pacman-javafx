@@ -58,7 +58,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         final double infoHeight = tilesPx(2);
         levelInfo.setFitWidth(infoWidth);
         levelInfo.setFitHeight(infoHeight);
-        levelInfo.imageProperty().bind(app().ui().viewModel().maze3D.floorColorProperty.map(
+        levelInfo.imageProperty().bind(app().ui().viewModel().maze3DSettings().floorColorProperty().map(
             color -> createLevelInfoImage(level.number(), session, infoWidth, infoHeight, color))
         );
 

@@ -36,7 +36,7 @@ public class DefaultGameVariantManager implements GameVariantManager {
 
     @Override
     public void registerGameVariant(String variantName) {
-        final boolean includeInteractiveTests = viewModel.testStatesIncludedProperty.get();
+        final boolean includeInteractiveTests = viewModel.testStatesIncludedProperty().get();
         final GameVariant gameVariant = createGameVariant(variantName, includeInteractiveTests);
         variantsByName.put(variantName, gameVariant);
     }

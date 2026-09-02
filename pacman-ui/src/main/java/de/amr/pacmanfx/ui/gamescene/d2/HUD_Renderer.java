@@ -15,8 +15,8 @@ public interface HUD_Renderer extends Renderer {
      * Draws the Head-Up Display (score, live counter, level counter, coins inserted)
      *
      * @param hud the HUD
-     * @param session the running game session
-     * @param gameScene 2D scene
+     * @param session current game session
+     * @param gameScene current game scene
      * @param tick current tick of the game machine clock
      */
     void drawHUD(HUD hud, GameSession session, GameScene gameScene, long tick);

@@ -14,6 +14,7 @@ import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.views.GameViewID;
+import javafx.beans.property.BooleanProperty;
 import javafx.scene.input.KeyCode;
 
 import java.util.Set;
@@ -76,24 +77,24 @@ public class UISettingsActions {
         actionToggleDebugInfo = new GameAction("toggle_debug_info") {
             @Override
             public void execute(GameAppContext app) {
-                toggleBooleanProperty(app.ui().viewModel().debugModeOnProperty);
+                toggleBooleanProperty(app.ui().viewModel().debugModeOnProperty());
             }
         };
 
         actionToggleKeyboardMonitor = new GameAction("toggle_keyboard_monitor") {
             @Override
             public void execute(GameAppContext app) {
-                toggleBooleanProperty(app.ui().viewModel().keyboardMonitorOnProperty);
+                toggleBooleanProperty(app.ui().viewModel().keyboardMonitorOnProperty());
             }
         };
 
         actionToggleMiniViewVisibility = new GameAction("toggle_mini_view_visibility") {
             @Override
             public void execute(GameAppContext app) {
-                toggleBooleanProperty(app.ui().viewModel().miniView.activeProperty);
+                toggleBooleanProperty(app.ui().viewModel().miniViewSettings().activeProperty);
                 if (!app.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D)) {
                     final String msg = app.ui().translations().translate(
-                        app.ui().viewModel().miniView.activeProperty.get() ? "flash.pip_on" : "flash.pip_off");
+                        app.ui().viewModel().miniViewSettings().activeProperty.get() ? "flash.pip_on" : "flash.pip_off");
                     app.ui().shortMessage(msg);
                 }
             }
@@ -103,11 +104,11 @@ public class UISettingsActions {
             @Override
             public void execute(GameAppContext app) {
                 final GameContext game = app.game();
-                toggleBooleanProperty(app.ui().viewModel().common3D.view3DEnabledProperty);
-                final boolean is3DEnabled = app.ui().viewModel().common3D.view3DEnabledProperty.get();
-                if (!inPlayScene(app)) {
-                    app.ui().shortMessage(app.ui().translations().translate(is3DEnabled
-                        ? "flash.use_3D_scene" : "flash.use_2D_scene"));
+                final BooleanProperty view3DEnabledProperty = app.ui().viewModel().common3DSettings().view3DEnabledProperty();
+                toggleBooleanProperty(view3DEnabledProperty);
+                final boolean enabled = view3DEnabledProperty.get();
+                if (!isPlaySceneRunning(app)) {
+                    app.ui().shortMessage(app.ui().translations().translate(enabled ? "flash.use_3D_scene" : "flash.use_2D_scene"));
                 }
                 if (isLevelPlaying(game.state())) {
                     app.ui().gameScenes().forceGameSceneUpdate();
@@ -119,7 +120,7 @@ public class UISettingsActions {
                 return app.ui().views().isSelected(GameViewID.GAMEPLAY);
             }
 
-            private boolean inPlayScene(GameAppContext app) {
+            private boolean isPlaySceneRunning(GameAppContext app) {
                 final GameSceneManager gameScenes = app.ui().gameScenes();
                 return gameScenes.currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_2D)
                     || gameScenes.currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D);

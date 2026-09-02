@@ -8,6 +8,7 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneController;
 import de.amr.pacmanfx.ui.views.GameViewID;
+import de.amr.pacmanfx.ui.vm.GameViewModel;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.BooleanProperty;
@@ -88,8 +89,8 @@ public class GameWindow {
             connected,
             appContext.gameVariants().selectedVariantNameProperty(),
             appContext.clock().updatesDisabledProperty(),
-            ui.viewModel().debugModeOnProperty,
-            ui.viewModel().common3D.view3DEnabledProperty,
+            ui.viewModel().debugModeOnProperty(),
+            ui.viewModel().common3DSettings().view3DEnabledProperty(),
             ui.views().currentViewIDProperty(),
             ui.gameScenes().currentGameSceneProperty()
         );
@@ -120,14 +121,15 @@ public class GameWindow {
         }
     }
 
-    private String titleForCurrentGameScene(GameAppContext appContext) {
-        final GameSceneController gameScene = appContext.ui().gameScenes().optCurrentGameScene().orElse(null);
+    private String titleForCurrentGameScene(GameAppContext app) {
+        final GameSceneController gameScene = app.ui().gameScenes().optCurrentGameScene().orElse(null);
+        final GameViewModel vm = app.ui().viewModel();
 
-        final boolean debug = appContext.ui().viewModel().debugModeOnProperty.get();
-        final boolean is3D = appContext.ui().viewModel().common3D.view3DEnabledProperty.get();
-        final boolean paused = appContext.clock().getUpdatesDisabled();
+        final boolean debug  = vm.debugModeOnProperty().get();
+        final boolean is3D   = vm.common3DSettings().view3DEnabledProperty().get();
+        final boolean paused = app.clock().getUpdatesDisabled();
 
-        final String normalTitle = stageTitle(appContext, paused, is3D);
+        final String normalTitle = stageTitle(app, paused, is3D);
         return (gameScene == null || !debug)
             ? normalTitle
             : "%s [%s]".formatted(normalTitle, gameScene.getClass().getSimpleName());

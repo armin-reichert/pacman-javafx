@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui.vm;
 
-
 import de.amr.pacmanfx.ui.settings.ui.Game2DSettings;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
@@ -14,17 +13,21 @@ import javafx.scene.paint.Color;
 
 public class Game2DSettingsVM {
 
-    public ObjectProperty<Color> canvasBackgroundColorProperty;
+    private final ObjectProperty<Color> canvasBackgroundColor = new SimpleObjectProperty<>(Color.BLACK);
+    private final BooleanProperty fontSmoothingOn = new SimpleBooleanProperty(false);
 
-    public BooleanProperty fontSmoothingOnProperty;
-
-    public Game2DSettingsVM() {
-        canvasBackgroundColorProperty = new SimpleObjectProperty<>();
-        fontSmoothingOnProperty = new SimpleBooleanProperty();
-    }
+    public Game2DSettingsVM() {}
 
     public void init(Game2DSettings settings) {
-        canvasBackgroundColorProperty.set(settings.canvasBackgroundColor());
-        fontSmoothingOnProperty.set(settings.fontSmoothingOn());
+        canvasBackgroundColor.set(settings.canvasBackgroundColor());
+        fontSmoothingOn.set(settings.fontSmoothingOn());
+    }
+
+    public ObjectProperty<Color> canvasBackgroundColorProperty() {
+        return canvasBackgroundColor;
+    }
+
+    public BooleanProperty fontSmoothingOnProperty() {
+        return fontSmoothingOn;
     }
 }

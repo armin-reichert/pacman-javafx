@@ -10,33 +10,52 @@ import javafx.scene.paint.Color;
 
 public class Maze3DSettingsVM {
 
-    public final ObjectProperty<Color> floorColorProperty;
-
-    public final ObjectProperty<Color> lightColorProperty;
-
-    public final DoubleProperty wallHeightProperty;
-
-    public final DoubleProperty wallOpacityProperty;
-
-    public final FloatProperty obstacleWallThicknessProperty;
-
-    public final ObjectProperty<Color> darkWallFillColorProperty;
+    private final ObjectProperty<Color> floorColor;
+    private final ObjectProperty<Color> lightColor;
+    private final DoubleProperty wallHeight;
+    private final DoubleProperty wallOpacity;
+    private final FloatProperty obstacleWallThickness;
+    private final ObjectProperty<Color> darkWallFillColor;
 
     public Maze3DSettingsVM() {
-        floorColorProperty = new SimpleObjectProperty<>();
-        lightColorProperty = new SimpleObjectProperty<>();
-        wallHeightProperty = new SimpleDoubleProperty();
-        wallOpacityProperty = new SimpleDoubleProperty();
-        obstacleWallThicknessProperty = new SimpleFloatProperty();
-        darkWallFillColorProperty = new SimpleObjectProperty<>();
+        floorColor = new SimpleObjectProperty<>();
+        lightColor = new SimpleObjectProperty<>();
+        wallHeight = new SimpleDoubleProperty();
+        wallOpacity = new SimpleDoubleProperty();
+        obstacleWallThickness = new SimpleFloatProperty();
+        darkWallFillColor = new SimpleObjectProperty<>();
     }
 
     public void init(Maze3DSettings settings) {
-        floorColorProperty.set(settings.floorColor());
-        lightColorProperty.set(settings.lightColor());
-        wallHeightProperty.set(settings.wallHeight());
-        wallOpacityProperty.set(settings.wallOpacity());
-        obstacleWallThicknessProperty.set(settings.obstacleWallThickness());
-        darkWallFillColorProperty.set(Color.valueOf(settings.darkWallFillColor()));
+        floorColor.set(settings.floorColor());
+        lightColor.set(settings.lightColor());
+        wallHeight.set(settings.wallHeight());
+        wallOpacity.set(settings.wallOpacity());
+        obstacleWallThickness.set(settings.obstacleWallThickness());
+        darkWallFillColor.set(Color.valueOf(settings.darkWallFillColor()));
+    }
+
+    public ObjectProperty<Color> floorColorProperty() {
+        return floorColor;
+    }
+
+    public ObjectProperty<Color> lightColorProperty() {
+        return lightColor;
+    }
+
+    public DoubleProperty wallHeightProperty() {
+        return wallHeight;
+    }
+
+    public DoubleProperty wallOpacityProperty() {
+        return wallOpacity;
+    }
+
+    public FloatProperty obstacleWallThicknessProperty() {
+        return obstacleWallThickness;
+    }
+
+    public ObjectProperty<Color> darkWallFillColorProperty() {
+        return darkWallFillColor;
     }
 }

@@ -19,6 +19,7 @@ import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundManager;
+import de.amr.pacmanfx.ui.vm.GameViewModel;
 import javafx.scene.SubScene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.input.ScrollEvent;
@@ -64,6 +65,10 @@ public class GameScene implements GameSceneController, DefaultGameEventListener,
 
     public GameAppContext app() {
         return app;
+    }
+
+    public GameViewModel viewModel() {
+        return app.ui().viewModel();
     }
 
     public GameContext game() {

@@ -45,9 +45,9 @@ public class DS_3DSettings extends GameDashboardSection {
 
         comboPerspectives = choiceBox("Perspective", PerspectiveID.values());
 
-        colorPicker("Light Color", vm.maze3D.lightColorProperty);
+        colorPicker("Light Color", vm.maze3DSettings().lightColorProperty());
 
-        colorPicker("Floor Color", vm.maze3D.floorColorProperty);
+        colorPicker("Floor Color", vm.maze3DSettings().floorColorProperty());
 
         addDynamicInfo("Camera", () -> subSceneCameraInfo(currentSubSceneFX(app)));
 
@@ -58,34 +58,34 @@ public class DS_3DSettings extends GameDashboardSection {
             app.game().session().optLevel().orElse(null)
         ));
 
-        cbMiniViewVisible = checkBox("Mini View", vm.miniView.activeProperty);
+        cbMiniViewVisible = checkBox("Mini View", vm.miniViewSettings().activeProperty);
 
         sliderMiniViewHeight = slider(
             " - Height",
-            vm.miniView.minHeightProperty.get(),
-            vm.miniView.maxHeightProperty.get(),
-            vm.miniView.heightProperty.get(),
+            vm.miniViewSettings().minHeightProperty.get(),
+            vm.miniViewSettings().maxHeightProperty.get(),
+            vm.miniViewSettings().heightProperty.get(),
             false, false);
 
         sliderMiniViewOpacityPercentage = slider(
             " - Opacity",
             0, 100,
-            vm.miniView.opacityPercentageProperty.get(),
+            vm.miniViewSettings().opacityPercentageProperty.get(),
             false, false);
 
         sliderWallHeight = slider(
             "Wall Height",
             0, 16,
-            vm.maze3D.wallHeightProperty.get(),
+            vm.maze3DSettings().wallHeightProperty().get(),
             false, false);
 
         sliderWallOpacity = slider(
             "Wall Opacity",
             0, 1,
-            vm.maze3D.wallOpacityProperty.get(),
+            vm.maze3DSettings().wallOpacityProperty().get(),
             false, false);
 
-        cbAxesVisible = checkBox("Show Axes", vm.common3D.axesVisibleProperty);
+        cbAxesVisible = checkBox("Show Axes", vm.common3DSettings().axesVisibleProperty());
 
         cbWireframeMode = checkBox("Wireframe Mode");
 
@@ -95,11 +95,11 @@ public class DS_3DSettings extends GameDashboardSection {
         setTooltip(sliderWallHeight, sliderWallHeight.valueProperty(), "%.0f px");
         setTooltip(sliderWallOpacity, sliderWallOpacity.valueProperty().multiply(100), "%.0f %%");
 
-        editPropertyWithSlider(sliderMiniViewHeight,            vm.miniView.heightProperty);
-        editPropertyWithSlider(sliderMiniViewOpacityPercentage, vm.miniView.opacityPercentageProperty);
-        editPropertyWithSlider(sliderWallHeight,                vm.maze3D.wallHeightProperty);
-        editPropertyWithSlider(sliderWallOpacity,               vm.maze3D.wallOpacityProperty);
-        editPropertyWithChoiceBox(comboPerspectives,            vm.common3D.cameraPerspectiveIdProperty);
+        editPropertyWithSlider(sliderMiniViewHeight,            vm.miniViewSettings().heightProperty);
+        editPropertyWithSlider(sliderMiniViewOpacityPercentage, vm.miniViewSettings().opacityPercentageProperty);
+        editPropertyWithSlider(sliderWallHeight,                vm.maze3DSettings().wallHeightProperty());
+        editPropertyWithSlider(sliderWallOpacity,               vm.maze3DSettings().wallOpacityProperty());
+        editPropertyWithChoiceBox(comboPerspectives,            vm.common3DSettings().cameraPerspectiveIDProperty());
 
         cbUsePlayScene3D.setOnAction(_ -> app.runAction(app.commonActions().uiSettingsActions().actionTogglePlayScene2D3D()));
         cbWireframeMode .setOnAction(_ -> app.runAction(app.commonActions().camera3DActions().actionToggleDrawMode()));
@@ -112,14 +112,14 @@ public class DS_3DSettings extends GameDashboardSection {
         final GameViewModel vm = app.ui().viewModel();
         final MiniPlaySceneView miniView = app.ui().views().gamePlayView().miniPlaySceneView();
 
-        comboPerspectives.setValue(vm.common3D.cameraPerspectiveIdProperty.get());
+        comboPerspectives.setValue(vm.common3DSettings().cameraPerspectiveIDProperty().get());
 
-        cbUsePlayScene3D.setSelected(vm.common3D.view3DEnabledProperty.get());
-        cbAxesVisible   .setSelected(vm.common3D.axesVisibleProperty.get());
-        cbWireframeMode .setSelected(vm.common3D.drawModeProperty.get() == DrawMode.LINE);
+        cbUsePlayScene3D.setSelected(vm.common3DSettings().view3DEnabledProperty().get());
+        cbAxesVisible   .setSelected(vm.common3DSettings().axesVisibleProperty().get());
+        cbWireframeMode .setSelected(vm.common3DSettings().drawModeProperty().get() == DrawMode.LINE);
 
         // Mini view
-        cbMiniViewVisible.setSelected(vm.miniView.activeProperty.getValue());
+        cbMiniViewVisible.setSelected(vm.miniViewSettings().activeProperty.getValue());
         sliderMiniViewHeight.setDisable(miniView.isMoving());
     }
 

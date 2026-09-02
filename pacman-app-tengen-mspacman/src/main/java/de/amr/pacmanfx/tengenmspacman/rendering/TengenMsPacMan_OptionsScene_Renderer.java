@@ -68,11 +68,10 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
         final GameContext game = gameScene.game();
         final GameSession session = game.session();
 
-        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game.variant().gamePlay();
-        final var scene = (TengenMsPacMan_OptionsScene) gameScene;
+        final var optionsScene = (TengenMsPacMan_OptionsScene) gameScene;
 
         clearCanvas();
-        if (scene.initialDelay > 0) return;
+        if (optionsScene.initialDelay > 0) return;
 
         ctx.setFont(arcadeFont8());
 
@@ -80,14 +79,14 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
             drawJoypadKeyBinding(gameScene.app().input().joypad().currentKeyBinding());
         }
 
-        drawHorizontalBar(NES_Palette.color(0x20), NES_Palette.color(0x21), scene.reqCanvasRendering().unscaledWidth(), TS, 20);
+        drawHorizontalBar(NES_Palette.color(0x20), NES_Palette.color(0x21), optionsScene.reqCanvasRendering().unscaledWidth(), TS, 20);
 
         float y = 48;
         fillText("MS PAC-MAN OPTIONS", NES_YELLOW, COL_LABEL + 3 * TS, 48);
 
         y += tilesPx(3);
         // Players (not implemented)
-        drawMarkerIfSelected(scene, OPTION_PLAYERS, y, arcadeFont8());
+        drawMarkerIfSelected(optionsScene, OPTION_PLAYERS, y, arcadeFont8());
         fillText("TYPE", NES_YELLOW, COL_LABEL, y);
         fillText(":", NES_YELLOW, COL_LABEL + 4 * TS + 4, y);
         // gray out
@@ -95,10 +94,10 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
 
         y += tilesPx(3);
         // Pac-Booster
-        drawMarkerIfSelected(scene, OPTION_PAC_BOOSTER, y, arcadeFont8());
+        drawMarkerIfSelected(optionsScene, OPTION_PAC_BOOSTER, y, arcadeFont8());
         fillText("PAC BOOSTER", NES_YELLOW, COL_LABEL, y);
         fillText(":", NES_YELLOW, COL_COLON, y);
-        String pacBoosterText = switch (gamePlay.boosterMode(session)) {
+        String pacBoosterText = switch (TengenMsPacMan_GamePlay.boosterMode(session)) {
             case BOOSTER_OFF -> "OFF";
             case BOOSTER_ALWAYS_ON -> "ALWAYS ON";
             case ACTIVATE_WITH_A_OR_B -> "USE A OR B";
@@ -107,29 +106,29 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
 
         y += tilesPx(3);
         // Game difficulty
-        drawMarkerIfSelected(scene, OPTION_DIFFICULTY, y, arcadeFont8());
+        drawMarkerIfSelected(optionsScene, OPTION_DIFFICULTY, y, arcadeFont8());
         fillText("GAME DIFFICULTY", NES_YELLOW, COL_LABEL, y);
         fillText(":", NES_YELLOW, COL_COLON, y);
-        fillText(gamePlay.difficulty(session).name(), NES_WHITE, COL_VALUE, y);
+        fillText(TengenMsPacMan_GamePlay.difficulty(session).name(), NES_WHITE, COL_VALUE, y);
 
         y += tilesPx(3);
         // Maze (type) selection
-        drawMarkerIfSelected(scene, OPTION_MAZE_SELECTION, y, arcadeFont8());
+        drawMarkerIfSelected(optionsScene, OPTION_MAZE_SELECTION, y, arcadeFont8());
         fillText("MAZE SELECTION", NES_YELLOW, COL_LABEL, y);
         fillText(":", NES_YELLOW, COL_COLON, y);
-        fillText(gamePlay.mapCategory(session).name(), NES_WHITE, COL_VALUE, y);
+        fillText(TengenMsPacMan_GamePlay.mapCategory(session).name(), NES_WHITE, COL_VALUE, y);
 
         y += tilesPx(3);
 
-        final int startLevelNumber = gamePlay.startLevelNumber(session);
-        final int numContinues = gamePlay.numContinues(session);
+        final int startLevelNumber = TengenMsPacMan_GamePlay.startLevelNumber(session);
+        final int numContinues = TengenMsPacMan_GamePlay.numContinues(session);
 
-        drawMarkerIfSelected(scene, OPTION_STARTING_LEVEL, y, arcadeFont8());
+        drawMarkerIfSelected(optionsScene, OPTION_STARTING_LEVEL, y, arcadeFont8());
         fillText("STARTING LEVEL", NES_YELLOW, COL_LABEL, y);
         fillText(":", NES_YELLOW, COL_COLON, y);
         fillText(String.valueOf(startLevelNumber), NES_WHITE, COL_VALUE, y);
         if (numContinues < 4) {
-            final var spriteSheet = (TengenMsPacMan_SpriteSheet) app.currentGameVariantUIConfig().renderConfig().spriteSheet();
+            final var spriteSheet = app.currentGameVariantUIConfig().renderConfig().spriteSheet();
             final RectShort continuesSprite = spriteSheet.findSprite(switch (numContinues) {
                 case 0 -> SpriteID.CONTINUES_0;
                 case 1 -> SpriteID.CONTINUES_1;
@@ -149,9 +148,9 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
         y += tilesPx(1);
         fillText("PRESS START TO START GAME",   NES_YELLOW, tilesPx(3), y);
 
-        drawHorizontalBar(NES_Palette.color(0x20), NES_Palette.color(0x21), scene.reqCanvasRendering().unscaledWidth(), TS, 212);
+        drawHorizontalBar(NES_Palette.color(0x20), NES_Palette.color(0x21), optionsScene.reqCanvasRendering().unscaledWidth(), TS, 212);
 
-        if (gameScene.app().ui().viewModel().debugModeOnProperty.get()) {
+        if (gameScene.viewModel().debugModeOnProperty().get()) {
             debugRenderer.draw(gameScene, tick);
         }
     }
