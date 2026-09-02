@@ -11,13 +11,6 @@ import de.amr.pacmanfx.core.GameContext;
  */
 public final class Common_BootState extends AbstractGameState {
 
-    public interface Timing {
-        int HEX_CODES      = 60;
-        int SPRITE_GARBAGE = 120;
-        int GRID           = 210;
-        int EXPIRATION     = 240;
-    }
-
     public Common_BootState() {
         // "Das muss das Boot abkönnen! Jawohl, Herr Kaleu!"
         super(CommonGameStateID.BOOT);
@@ -25,7 +18,7 @@ public final class Common_BootState extends AbstractGameState {
 
     @Override
     public void onEnterState(GameContext game) {
-        timer().restartTicks(Timing.EXPIRATION);
+        timer().restartIndefinitely();
     }
 
     @Override

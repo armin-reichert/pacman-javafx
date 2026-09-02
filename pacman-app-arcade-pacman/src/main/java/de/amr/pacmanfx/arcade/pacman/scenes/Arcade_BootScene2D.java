@@ -6,10 +6,12 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.basics.math.RandomNumbers;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.gamestate.Common_BootState;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
+
+import java.util.EnumMap;
+import java.util.Map;
 
 /**
  * The boot screen displays some strange hex codes, garbage from the graphics memory
@@ -21,8 +23,17 @@ public class Arcade_BootScene2D extends GameScene {
         BLANK,
         HEX_CODES,
         RANDOM_SPRITE_FRAGMENTS,
-        GRID
+        GRID,
+        EXPIRATION
     }
+
+    public static final Map<SceneState, Integer> TICKS = new EnumMap<>(Map.of(
+        SceneState.BLANK, 0,
+        SceneState.HEX_CODES, 60,
+        SceneState.RANDOM_SPRITE_FRAGMENTS, 120,
+        SceneState.GRID, 210,
+        SceneState.EXPIRATION, 240
+    ));
 
     public SceneState sceneState;
 
@@ -50,10 +61,18 @@ public class Arcade_BootScene2D extends GameScene {
 
     @Override
     public void onTick(GameContext game) {
-        switch ((int) game().state().timer().tickCount()) {
-            case Common_BootState.Timing.HEX_CODES -> sceneState = SceneState.HEX_CODES;
-            case Common_BootState.Timing.SPRITE_GARBAGE -> sceneState = SceneState.RANDOM_SPRITE_FRAGMENTS;
-            case Common_BootState.Timing.GRID -> sceneState = SceneState.GRID;
+        final long tick = game().state().timer().tickCount();
+        if (tick == TICKS.get(SceneState.HEX_CODES)) {
+            sceneState = SceneState.HEX_CODES;
+        }
+        else if (tick == TICKS.get(SceneState.RANDOM_SPRITE_FRAGMENTS)) {
+            sceneState = SceneState.RANDOM_SPRITE_FRAGMENTS;
+        }
+        else if (tick == TICKS.get(SceneState.GRID)) {
+            sceneState = SceneState.GRID;
+        }
+        else if (tick == TICKS.get(SceneState.EXPIRATION)) {
+            game().state().timer().expire();
         }
     }
 }
