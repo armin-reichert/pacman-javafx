@@ -47,15 +47,15 @@ public class TengenMsPacMan_PlayScene2D_Renderer
 
     private class PlaySceneDebugInfoRenderer extends BaseDebugInfoRenderer {
 
-        public PlaySceneDebugInfoRenderer(Canvas canvas) {
-            super(canvas);
+        public PlaySceneDebugInfoRenderer(ActorSpriteAnimController animController, Canvas canvas) {
+            super(animController, canvas);
         }
 
         @Override
-        public void draw(GameScene scene, long tick) {
-            final GameSession session = scene.game().session();
-            final AbstractGameState gameState = scene.game().state();
-            final TengenMsPacMan_PlayScene2D playScene = (TengenMsPacMan_PlayScene2D) scene;
+        public void draw(GameScene gameScene, long tick) {
+            final GameSession session = gameScene.game().session();
+            final AbstractGameState gameState = gameScene.game().state();
+            final TengenMsPacMan_PlayScene2D playScene = (TengenMsPacMan_PlayScene2D) gameScene;
 
             drawTileGrid(NES_SCREEN_WIDTH, playScene.canvasHeightUnscaled(), Color.LIGHTGRAY);
 
@@ -65,15 +65,15 @@ public class TengenMsPacMan_PlayScene2D_Renderer
             ctx.setFont(debugTextFont);
             ctx.fillText("%s %d".formatted(gameState, gameState.timer().tickCount()), 0, scaled(3 * WorldMap.TS));
             session.optLevel().ifPresent(level -> {
-                drawMovingActorInfo(animSystem, level.entities().pac());
-                level.entities().ghosts().forEach(ghost -> drawMovingActorInfo(animSystem, ghost));
+                drawMovingActorInfo(animController, level.entities().pac());
+                level.entities().ghosts().forEach(ghost -> drawMovingActorInfo(animController, ghost));
             });
             ctx.fillText("Camera y=%.2f".formatted(playScene.dynamicCamera().getTranslateY()), scaled(11* WorldMap.TS), scaled(15* WorldMap.TS));
             ctx.restore();
         }
     }
 
-    private final ActorSpriteAnimController animSystem;
+    private final ActorSpriteAnimController animController;
 
     private final RenderInfo renderInfo = new RenderInfo();
     private final TengenMsPacMan_GameLevelRenderer levelRenderer;
@@ -82,14 +82,15 @@ public class TengenMsPacMan_PlayScene2D_Renderer
     private final List<GameEntity> actorsInZOrder = new ArrayList<>();
 
     public TengenMsPacMan_PlayScene2D_Renderer(
-        GameVariantRenderConfig renderConfig, GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas) {
+        GameVariantRenderConfig renderConfig, GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
         super(canvas);
 
         final CanvasRenderingComp r2D = gameScene.components().reqComp(CanvasRenderingComp.class);
-        this.animSystem = requireNonNull(animSystem);
-        levelRenderer = r2D.configureRenderer((TengenMsPacMan_GameLevelRenderer) renderConfig.createGameLevelRenderer(animSystem, canvas));
-        actorRenderer = r2D.configureRenderer((TengenMsPacMan_ActorRenderer)     renderConfig.createActorRenderer(animSystem, canvas));
-        debugRenderer = r2D.configureRenderer(new PlaySceneDebugInfoRenderer(canvas));
+        this.animController = requireNonNull(animController);
+
+        levelRenderer = r2D.configureRenderer((TengenMsPacMan_GameLevelRenderer) renderConfig.createGameLevelRenderer(animController, canvas));
+        actorRenderer = r2D.configureRenderer((TengenMsPacMan_ActorRenderer)     renderConfig.createActorRenderer(animController, canvas));
+        debugRenderer = r2D.configureRenderer(new PlaySceneDebugInfoRenderer(animController, canvas));
     }
 
     @Override

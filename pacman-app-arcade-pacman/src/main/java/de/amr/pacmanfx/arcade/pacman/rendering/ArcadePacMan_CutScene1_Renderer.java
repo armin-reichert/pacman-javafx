@@ -18,11 +18,12 @@ public class ArcadePacMan_CutScene1_Renderer extends ArcadePacMan_CutScene_Rende
         super(gameScene, animSystem, canvas);
 
         final CanvasRenderingComp r2D = gameScene.components().reqComp(CanvasRenderingComp.class);
-        debugRenderer = r2D.configureRenderer(new BaseDebugInfoRenderer(canvas) {
+        final ActorSpriteAnimController animController = gameScene.game().variant().systems().actorSpriteAnimController();
+        debugRenderer = r2D.configureRenderer(new BaseDebugInfoRenderer(animController, canvas) {
             @Override
-            public void draw(GameScene scene, long tick) {
-                super.draw(scene, tick);
-                if (scene instanceof ArcadePacMan_CutScene1 cutScene1) {
+            public void draw(GameScene gameScene, long tick) {
+                super.draw(gameScene, tick);
+                if (gameScene instanceof ArcadePacMan_CutScene1 cutScene1) {
                     final String text = cutScene1.sceneTick < ArcadePacMan_CutScene1.ANIMATION_START_TICK
                         ? String.format("Wait %d", ArcadePacMan_CutScene1.ANIMATION_START_TICK - cutScene1.sceneTick)
                         : String.format("Frame %d", cutScene1.sceneTick);

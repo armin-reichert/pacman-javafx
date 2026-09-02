@@ -1,24 +1,31 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.ui.gamescene.d2;
 
 import de.amr.basics.Named;
+import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.timer.TickTimer;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
 import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.PositionSystem;
 import de.amr.pacmanfx.core.entities.Ghost;
+import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostAnimationComp;
 import de.amr.pacmanfx.core.entities.pac.comp.PacAnimationComp;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
+import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.model.GhostPersonality;
+import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.rules.HuntingTimer;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
@@ -29,47 +36,72 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
+import static java.util.Objects.requireNonNull;
+
 public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_Renderer {
 
-    public static final Color DEFAULT_FILL_COLOR = Color.WHITE;
-    public static final Color DEFAULT_STROKE_COLOR = Color.GRAY;
+    record AnimationInfo(Named animationID, int frame, boolean stopped, boolean locked) {}
 
-    protected Color debugTextFill = DEFAULT_FILL_COLOR;
-    protected Color debugTextStroke = DEFAULT_STROKE_COLOR;
+    private static final List<Direction> CLOCK_WISE = List.of(Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT);
+
+    protected Color debugTextFill = Color.WHITE;
+    protected Color debugTextStroke = Color.GRAY;
     protected Font debugTextFont = Font.font("Sans", 14.0f);
 
-    public BaseDebugInfoRenderer(Canvas canvas) {
+    private final List<GameEntity> actorsInZOrder = new ArrayList<>();
+    private final ActorSpriteAnimController animController;
+    private final Text dummy = new Text();
+
+    public BaseDebugInfoRenderer(ActorSpriteAnimController animController, Canvas canvas) {
         super(canvas);
+        this.animController = requireNonNull(animController);
+    }
+
+    private void updateActorZOrder(GameLevel level) {
+        actorsInZOrder.clear();
+        level.entities().optBonus().ifPresent(actorsInZOrder::add);
+        actorsInZOrder.add(level.entities().pac());
+        Stream.of(
+            GhostPersonality.ORANGE_GHOST_POKEY,
+            GhostPersonality.CYAN_GHOST_BASHFUL,
+            GhostPersonality.PINK_GHOST_SPEEDY,
+            GhostPersonality.RED_GHOST_SHADOW
+        ).map(level.entities()::ghost).forEach(actorsInZOrder::add);
     }
 
     @Override
-    public void draw(GameScene scene, long tick) {
-        final CanvasRenderingComp r2D = scene.components().reqComp(CanvasRenderingComp.class);
+    public void draw(GameScene gameScene, long tick) {
+        final GameSession session = gameScene.game().session();
+        final CanvasRenderingComp r2D = gameScene.components().reqComp(CanvasRenderingComp.class);
+
         drawTileGrid(r2D.unscaledWidth(), r2D.unscaledHeight(), Color.LIGHTGRAY);
-        drawGameStateDebugInfo(scene.game());
+        drawGameStateInfo(gameScene.game());
+        session.optLevel().ifPresent(level -> {
+//            drawTerrainDebugInfo(level);
+            updateActorZOrder(level);
+            actorsInZOrder.forEach(actor -> drawMovingActorInfo(animController, actor));
+        });
     }
 
-    public void drawGameStateDebugInfo(GameContext game) {
+    public void drawGameStateInfo(GameContext game) {
         final AbstractGameState gameState = game.state();
-        String stateText = "Game State: '%s' (Tick %d of %s)".formatted(
+        String text = "Game State: '%s' (Tick %d of %s)".formatted(
             gameState.name(),
             gameState.timer().tickCount(),
             gameState.timer().durationTicks() == TickTimer.INDEFINITE ? "∞" : String.valueOf(gameState.timer().tickCount())
         );
-        if (game.session().optLevel().isPresent()) {
-            String huntingPhaseText = "";
-            if (CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(gameState)) {
-                final HuntingTimer huntingTimer = game.session().level().huntingTimer();
-                huntingPhaseText = " %s (Tick %d)".formatted(
-                    huntingTimer.currentHuntingPhase(),
-                    huntingTimer.tickCount());
-            }
-            stateText += huntingPhaseText;
+        if (game.session().optLevel().isPresent() && CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(gameState)) {
+            final HuntingTimer ht = game.session().level().huntingTimer();
+            text += " %s (Tick %d)".formatted(ht.currentHuntingPhase(), ht.tickCount());
         }
         ctx.setFill(debugTextFill);
-        ctx.setStroke(debugTextStroke);
         ctx.setFont(debugTextFont);
-        ctx.fillText(stateText, 0, scaled(3 * WorldMap.TS));
+        ctx.setStroke(debugTextStroke);
+        ctx.fillText(text, 0, scaled(24));
     }
 
     public void drawMovingActorInfo(ActorSpriteAnimController animController, GameEntity actor) {
@@ -86,18 +118,13 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
             ctx.fillText(text, scaled(pac.pos().x() - 4), scaled(pac.pos().y() + 16));
         }
 
-        if (actor.hasComp(SpriteAnimationComp.class)) {
+        actor.optComp(SpriteAnimationComp.class).ifPresent(_ -> {
             if (animController.selectedAnimationID(actor) != null) {
                 drawAnimationInfo(animController, actor, bgColor(actor));
             }
-        }
+        });
 
-        if (actor.hasComp(WorldNavigationComp.class)) {
-            final WorldNavigationComp worldNavigation = actor.reqComp(WorldNavigationComp.class);
-            if (worldNavigation.wishDir() != null) {
-                drawDirectionIndicator(actor);
-            }
-        }
+        actor.optComp(WorldNavigationComp.class).ifPresent(navigation -> drawDirectionIndicator(actor, navigation));
 
         final Rectangle2D boundingBox = PositionSystem.boundingBox(actor.pos().asVector2f());
         ctx.save();
@@ -106,8 +133,6 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
         ctx.strokeRect(scaled(boundingBox.getMinX()), scaled(boundingBox.getMinY()), scaled(boundingBox.getWidth()), scaled(boundingBox.getHeight()));
         ctx.restore();
     }
-
-    record AnimationInfo(Named animationID, int frame, boolean stopped, boolean locked) {}
 
     private Color bgColor(GameEntity actor) {
         return switch (actor) {
@@ -184,21 +209,51 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
         ctx.restore();
     }
 
-    private final Text dummy = new Text();
-
-    private void drawDirectionIndicator(GameEntity actor) {
-        final WorldNavigationComp worldNavigation = actor.reqComp(WorldNavigationComp.class);
+    private void drawDirectionIndicator(GameEntity actor, WorldNavigationComp navigation) {
+        if (navigation.wishDir() == null) return;
 
         ctx.save();
         Vector2f center = actor.pos().bodyCenter();
-        Vector2f arrowHead = center.plus(worldNavigation.wishDir().vector().scaled(12f)).scaled(scaling());
+        Vector2f arrowHead = center.plus(navigation.wishDir().vector().scaled(12f)).scaled(scaling());
         Vector2f guyCenter = center.scaled(scaling());
         double radius = scaled(2), diameter = 2 * radius;
         ctx.setStroke(Color.WHITE);
         ctx.setLineWidth(0.5);
         ctx.strokeLine(guyCenter.x(), guyCenter.y(), arrowHead.x(), arrowHead.y());
-        ctx.setFill(worldNavigation.isNewTileEntered() ? Color.YELLOW : Color.GREEN);
+        ctx.setFill(navigation.isNewTileEntered() ? Color.YELLOW : Color.GREEN);
         ctx.fillOval(arrowHead.x() - radius, arrowHead.y() - radius, diameter, diameter);
         ctx.restore();
     }
+
+    public void drawTerrainDebugInfo(GameLevel level) {
+        // We assume all ghosts have the same set of special terrain tiles
+        level.entities().ghost(GhostPersonality.RED_GHOST_SHADOW).worldInfo().specialTerrainTiles().forEach(tile -> {
+            final double x = scaled(tile.x() * WorldMap.TS);
+            final double y = scaled(tile.y() * WorldMap.TS + WorldMap.HTS), size = scaled(WorldMap.TS);
+            ctx.setFill(Color.RED);
+            ctx.fillRect(x, y, size, 2);
+        });
+
+        // Mark intersection tiles
+        final TerrainLayer terrain = level.worldMap().terrainLayer();
+        final House house = level.entities().house();
+        terrain.tiles()
+            .filter(tile -> tile.y() >= terrain.emptyRowsOverMaze())
+            .filter(tile -> tile.y() < terrain.numRows() - terrain.emptyRowsBelowMaze())
+            .filter(tile -> terrain.isRealIntersectionTile(tile, house::contains))
+            .forEach(tile -> {
+                final double cx = tile.x() * WorldMap.TS + WorldMap.HTS;
+                final double cy = tile.y() * WorldMap.TS + WorldMap.HTS;
+                for (Direction dir : CLOCK_WISE) {
+                    if (!terrain.isInaccessibleTile(tile.plus(dir.vector()))) {
+                        final double x = cx + dir.vector().x() * WorldMap.HTS;
+                        final double y = cy + dir.vector().y() * WorldMap.HTS;
+                        ctx.setStroke(Color.WHITE);
+                        ctx.setLineWidth(2);
+                        ctx.strokeLine(scaled(cx), scaled(cy), scaled(x), scaled(y));
+                    }
+                }
+            });
+    }
+
 }

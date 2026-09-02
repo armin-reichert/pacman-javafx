@@ -39,18 +39,19 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Ga
     private final BaseDebugInfoRenderer debugRenderer;
     private final RectShort energizerSprite;
 
-    public ArcadePacMan_IntroScene_Renderer(GameVariantRenderConfig renderConfig, GameScene scene, ActorSpriteAnimController animSystem, Canvas canvas) {
+    public ArcadePacMan_IntroScene_Renderer(GameVariantRenderConfig renderConfig, GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas) {
         super(canvas);
 
-        final CanvasRenderingComp r2D = scene.components().reqComp(CanvasRenderingComp.class);
+        final CanvasRenderingComp r2D = gameScene.components().reqComp(CanvasRenderingComp.class);
+        final ActorSpriteAnimController animController = gameScene.game().variant().systems().actorSpriteAnimController();
 
         actorRenderer = r2D.configureRenderer((ArcadePacMan_ActorRenderer) renderConfig.createActorRenderer(animSystem, canvas));
 
-        debugRenderer = r2D.configureRenderer(new BaseDebugInfoRenderer(canvas) {
+        debugRenderer = r2D.configureRenderer(new BaseDebugInfoRenderer(animController, canvas) {
             @Override
-            public void draw(GameScene scene, long tick) {
-                ArcadePacMan_IntroScene introScene = (ArcadePacMan_IntroScene) scene;
-                super.draw(scene, tick);
+            public void draw(GameScene gameScene, long tick) {
+                ArcadePacMan_IntroScene introScene = (ArcadePacMan_IntroScene) gameScene;
+                super.draw(gameScene, tick);
                 ctx.fillText("Scene timer %d".formatted(introScene.flow.state().timer().tickCount()), 0, scaled(5 * WorldMap.TS));
                 drawMovingActorInfo(animSystem, introScene.pacMan);
                 for (var ghost : introScene.ghosts) {
