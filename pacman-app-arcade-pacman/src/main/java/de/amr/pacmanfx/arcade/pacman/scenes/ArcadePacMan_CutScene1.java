@@ -29,23 +29,25 @@ import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
  */
 public class ArcadePacMan_CutScene1 extends GameScene {
 
-    public static final short ANIMATION_START_TICK = 120;
-
-    public int sceneTick;
     public Pac pacMan;
     public Ghost blinky;
 
     public ArcadePacMan_CutScene1(GameAppContext app) {
         super(app);
         components().setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
+        components().setComp(CutSceneTimingComp.class, new CutSceneTimingComp(120));
+    }
+
+    private CutSceneTimingComp timing() {
+        return components().reqComp(CutSceneTimingComp.class);
     }
     
     @Override
     public void onActivate() {
         final GameVariant variant = app().gameVariants().currentGameVariant();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
-        final SpriteAnimContainer animContainer    = variant.spriteAnimContainer();
-        final ActorSpriteAnimController animController  = variant.config().systems().actorSpriteAnimController();
+        final SpriteAnimContainer animContainer = variant.spriteAnimContainer();
+        final ActorSpriteAnimController animController = variant.config().systems().actorSpriteAnimController();
         final var factory = ArcadePacMan_ActorFactory.instance();
 
         pacMan = factory.createPacMan();
@@ -53,33 +55,36 @@ public class ArcadePacMan_CutScene1 extends GameScene {
 
         blinky = renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.RED_GHOST_SHADOW);
 
-        sceneTick = -1;
+        timing().setTick(-1);
     }
 
     @Override
     public void onTick(GameContext game) {
-        if (++sceneTick < ANIMATION_START_TICK) {
+        final GameSystems systems = game.variant().systems();
+
+        final CutSceneTimingComp timing = timing();
+        timing.setTick(timing().tick() + 1);
+
+        if (timing.tick() < timing.animationStartTick()) {
             return;
         }
 
-        final GameSystems sys = game.variant().systems();
-
-        if (sceneTick == ANIMATION_START_TICK) {
+        if (timing.tick() == timing.animationStartTick()) {
             soundManager().play(PacManGameSoundID.INTERMISSION_1, 2);
-            startBlinkyChasingPacMan(sys);
+            startBlinkyChasingPacMan(systems);
         }
-        else if (sceneTick == ANIMATION_START_TICK + 260) {
-            startBlinkyEscapingPacMan(sys);
+        else if (timing.tick() == timing.animationStartTick() + 260) {
+            startBlinkyEscapingPacMan(systems);
         }
-        else if (sceneTick == ANIMATION_START_TICK + 400) {
-            startBigPacManChasingBlinky(sys);
+        else if (timing.tick() == timing.animationStartTick() + 400) {
+            startBigPacManChasingBlinky(systems);
         }
-        else if (sceneTick == ANIMATION_START_TICK + 632) {
+        else if (timing.tick() == timing.animationStartTick() + 632) {
             game().state().triggerTimeout();
         }
-        if (sceneTick >= ANIMATION_START_TICK) {
-            sys.motor().move(pacMan);
-            sys.motor().move(blinky);
+        if (timing.tick() >= timing.animationStartTick()) {
+            systems.motor().move(pacMan);
+            systems.motor().move(blinky);
         }
     }
 

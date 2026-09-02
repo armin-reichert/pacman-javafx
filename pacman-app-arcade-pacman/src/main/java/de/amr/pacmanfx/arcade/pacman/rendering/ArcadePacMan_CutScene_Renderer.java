@@ -1,8 +1,12 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
+import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_CutScene1;
+import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_CutScene2;
+import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_CutScene3;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
@@ -16,7 +20,7 @@ import javafx.scene.canvas.Canvas;
 
 import static java.util.Objects.requireNonNull;
 
-public abstract class ArcadePacMan_CutScene_Renderer extends BaseRenderer implements GameScene2D_Renderer, SpriteRenderer {
+public class ArcadePacMan_CutScene_Renderer extends BaseRenderer implements GameScene2D_Renderer, SpriteRenderer {
 
     protected final ActorSpriteAnimController animSystem;
     protected final ActorRenderer actorRenderer;
@@ -44,5 +48,28 @@ public abstract class ArcadePacMan_CutScene_Renderer extends BaseRenderer implem
         }
     }
 
-    protected abstract void drawSceneContent(GameScene scene);
+    protected void drawSceneContent(GameScene scene) {
+        switch (scene) {
+            case ArcadePacMan_CutScene1 cutScene1 -> drawCutScene1(cutScene1);
+            case ArcadePacMan_CutScene2 cutScene2 -> drawCutScene2(cutScene2);
+            case ArcadePacMan_CutScene3 cutScene3 -> drawCutScene3(cutScene3);
+            default -> throw new IllegalStateException("Unexpected value: " + scene);
+        }
+    }
+
+    private void drawCutScene1(ArcadePacMan_CutScene1 cutScene) {
+        actorRenderer.drawActor(cutScene.blinky);
+        actorRenderer.drawActor(cutScene.pacMan);
+    }
+
+    private void drawCutScene2(ArcadePacMan_CutScene2 cutScene) {
+        drawSprite(cutScene.nailDressAnimation.sprite(), cutScene.nailX, cutScene.nailY, true);
+        actorRenderer.drawActor(cutScene.pacMan);
+        actorRenderer.drawActor(cutScene.blinky);
+    }
+
+    private void drawCutScene3(ArcadePacMan_CutScene3 cutScene) {
+        actorRenderer.drawActor(cutScene.pacMan);
+        actorRenderer.drawActor(cutScene.blinky);
+    }
 }

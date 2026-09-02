@@ -137,7 +137,6 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
     }
 
     private void drawMarquee(TengenMsPacMan_IntroScene intro) {
-//        intro.tengenMarquee.draw(ctx);
         marqueeRenderer.drawMarquee(intro.marquee);
     }
 }

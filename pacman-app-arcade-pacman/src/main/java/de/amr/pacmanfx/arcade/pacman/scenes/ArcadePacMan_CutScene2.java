@@ -26,7 +26,6 @@ import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
-import static de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_CutScene2.NailDressState.*;
 
 /**
  * Second cut scene in Arcade Pac-Man game:<br>
@@ -39,21 +38,37 @@ public class ArcadePacMan_CutScene2 extends GameScene {
         NAIL, STRETCHED_SMALL, STRETCHED_MEDIUM, STRETCHED_LARGE, RAPTURED
     }
 
-    public static final int TICK_ANIMATION_START = 120;
-    public static final int TICK_PAC_MAN_STARTS_RUNNING = TICK_ANIMATION_START + 25;
-    public static final int TICK_BLINKY_STARTS_RUNNING  = TICK_ANIMATION_START + 111;
-    public static final int TICK_BLINKY_GETS_CAUGHT     = TICK_ANIMATION_START + 194;
-    public static final int TICK_DRESS_STRETCHED_SMALL  = TICK_ANIMATION_START + 198;
-    public static final int TICK_DRESS_STRETCHED_MEDIUM = TICK_ANIMATION_START + 230;
-    public static final int TICK_DRESS_STRETCHED_LARGE  = TICK_ANIMATION_START + 262;
-    public static final int TICK_BLINKY_STOPS_MOVING    = TICK_ANIMATION_START + 296;
-    public static final int TICK_DRESS_RAPTURES         = TICK_ANIMATION_START + 360;
-    public static final int TICK_BLINK_INSPECTS_DAMAGE  = TICK_ANIMATION_START + 420;
-    public static final int TICK_ANIMATION_ENDS         = TICK_ANIMATION_START + 508;
+    public static class TimingComp extends CutSceneTimingComp {
+
+        private final int TICK_PAC_MAN_STARTS_RUNNING;
+        private final int TICK_BLINKY_STARTS_RUNNING;
+        private final int TICK_BLINKY_GETS_CAUGHT;
+        private final int TICK_DRESS_STRETCHED_SMALL;
+        private final int TICK_DRESS_STRETCHED_MEDIUM;
+        private final int TICK_DRESS_STRETCHED_LARGE;
+        private final int TICK_BLINKY_STOPS_MOVING;
+        private final int TICK_DRESS_RAPTURES;
+        private final int TICK_BLINK_INSPECTS_DAMAGE;
+        private final int TICK_ANIMATION_ENDS;
+
+        public TimingComp(int animationStartTick) {
+            super(120);
+            TICK_PAC_MAN_STARTS_RUNNING = animationStartTick + 25;
+            TICK_BLINKY_STARTS_RUNNING  = animationStartTick + 111;
+            TICK_BLINKY_GETS_CAUGHT     = animationStartTick + 194;
+            TICK_DRESS_STRETCHED_SMALL  = animationStartTick + 198;
+            TICK_DRESS_STRETCHED_MEDIUM = animationStartTick + 230;
+            TICK_DRESS_STRETCHED_LARGE  = animationStartTick + 262;
+            TICK_BLINKY_STOPS_MOVING    = animationStartTick + 296;
+            TICK_DRESS_RAPTURES         = animationStartTick + 360;
+            TICK_BLINK_INSPECTS_DAMAGE  = animationStartTick + 420;
+            TICK_ANIMATION_ENDS         = animationStartTick + 508;
+        }
+    }
+
 
     public final int nailX = WorldMap.TS * 14;
     public final int nailY = WorldMap.TS * 19 + 3;
-    public int sceneTick;
     public Pac pacMan;
     public Ghost blinky;
     public SpriteAnimation nailDressAnimation;
@@ -61,6 +76,11 @@ public class ArcadePacMan_CutScene2 extends GameScene {
     public ArcadePacMan_CutScene2(GameAppContext app) {
         super(app);
         components().setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
+        components().setComp(CutSceneTimingComp.class, new TimingComp(120));
+    }
+
+    private TimingComp timing() {
+        return (TimingComp) components().reqComp(CutSceneTimingComp.class);
     }
 
     @Override
@@ -82,33 +102,45 @@ public class ArcadePacMan_CutScene2 extends GameScene {
             .initiallyStopped()
             .build(animContainer);
 
-        sceneTick = -1;
+        timing().setTick(-1);
     }
 
     @Override
     public void onTick(GameContext game) {
-        if (++sceneTick < TICK_ANIMATION_START) {
+        final GameSystems systems = game.variant().systems();
+        final TimingComp timing = timing();
+
+        timing.setTick(timing.tick() + 1);
+
+        if (timing.tick() < timing.animationStartTick()) {
             return;
         }
 
-        final GameSystems sys = game.variant().systems();
-
-        switch (sceneTick) {
-            case TICK_ANIMATION_START        -> startTheShow();
-            case TICK_PAC_MAN_STARTS_RUNNING -> pacManStartsRunning(sys);
-            case TICK_BLINKY_STARTS_RUNNING  -> blinkyStartsRunning(sys);
-            case TICK_BLINKY_GETS_CAUGHT     -> blinkyGetsCaughtOnNail(sys);
-            case TICK_DRESS_STRETCHED_SMALL  -> setDressState(STRETCHED_SMALL);
-            case TICK_DRESS_STRETCHED_MEDIUM -> setDressState(STRETCHED_MEDIUM);
-            case TICK_DRESS_STRETCHED_LARGE  -> setDressState(STRETCHED_LARGE);
-            case TICK_BLINKY_STOPS_MOVING    -> blinkyStopsMoving(sys);
-            case TICK_DRESS_RAPTURES         -> dressRaptures(sys);
-            case TICK_BLINK_INSPECTS_DAMAGE  -> blinkyInspectsDamagedDress(sys.actorSpriteAnimController());
-            case TICK_ANIMATION_ENDS         -> endTheShow();
+        if (timing.tick() == timing.animationStartTick()) {
+            startTheShow();
+        } else if (timing.tick() == timing.TICK_PAC_MAN_STARTS_RUNNING) {
+            pacManStartsRunning(systems);
+        } else if (timing.tick() == timing.TICK_BLINKY_STARTS_RUNNING) {
+            blinkyStartsRunning(systems);
+        } else if (timing.tick() == timing.TICK_BLINKY_GETS_CAUGHT) {
+            blinkyGetsCaughtOnNail(systems);
+        } else if (timing.tick() == timing.TICK_DRESS_STRETCHED_SMALL) {
+            setDressState(NailDressState.STRETCHED_SMALL);
+        } else if (timing.tick() == timing.TICK_DRESS_STRETCHED_MEDIUM) {
+            setDressState(NailDressState.STRETCHED_MEDIUM);
+        } else if (timing.tick() == timing.TICK_DRESS_STRETCHED_LARGE) {
+            setDressState(NailDressState.STRETCHED_LARGE);
+        } else if (timing.tick() == timing.TICK_BLINKY_STOPS_MOVING) {
+            blinkyStopsMoving(systems);
+        } else if (timing.tick() == timing.TICK_DRESS_RAPTURES) {
+            dressRaptures(systems);
+        } else if (timing.tick() == timing.TICK_BLINK_INSPECTS_DAMAGE) {
+            blinkyInspectsDamagedDress(systems.actorSpriteAnimController());
+        } else if (timing.tick() == timing.TICK_ANIMATION_ENDS) {
+            endTheShow();
         }
-
-        sys.motor().move(pacMan);
-        sys.motor().move(blinky);
+        systems.motor().move(pacMan);
+        systems.motor().move(blinky);
     }
 
     private void blinkyInspectsDamagedDress(ActorSpriteAnimController animSystem) {
