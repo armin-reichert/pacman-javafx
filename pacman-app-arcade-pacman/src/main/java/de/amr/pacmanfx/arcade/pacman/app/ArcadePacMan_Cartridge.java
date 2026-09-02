@@ -14,7 +14,7 @@ public class ArcadePacMan_Cartridge {
         GameVariantID.ARCADE_PACMAN,
         GameSystems::new,
         ArcadePacMan_GamePlay::new,
-        ArcadePacMan_UIConfig::createGameFlow,
+        ArcadePacMan_GamePlay::createGameFlow,
         ArcadePacMan_GameRules::new,
         ArcadePacMan_WorldMapManager::new,
         ArcadePacMan_UIConfig::new

@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.arcade.pacman.gamestate.Arcade_GameState;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
@@ -19,6 +20,7 @@ import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
 import de.amr.pacmanfx.core.event.gameplay.LevelStartedEvent;
 import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
+import de.amr.pacmanfx.core.gamestate.GameFlowController;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 import de.amr.pacmanfx.core.level.MessageType;
@@ -27,8 +29,8 @@ import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.TerrainTile;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
-import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.core.rules.DefaultHuntingTimer;
+import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.core.steering.RouteGuidedSteering;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
 import org.tinylog.Logger;
@@ -73,11 +75,25 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         tile( 6,23)
     );
 
+    /**
+     * Top-left tile of ghost house in original Arcade maps (Pac-Man, Ms. Pac-Man).
+     */
+    public static final Vector2i ARCADE_MAP_HOUSE_MIN_TILE = tile(10, 15);
+
+    public static final Vector2i DEFAULT_BONUS_TILE = new Vector2i(13, 20);
+
     protected static final int GAME_OVER_STATE_TICKS = 90;
 
-    public ArcadePacMan_GamePlay() {}
+    public static GameFlowController createGameFlow() {
+        final var gameFlow = new GameFlowController("Arcade Pac-Man Game Flow");
+        for (Arcade_GameState gameState : Arcade_GameState.values()) {
+            gameFlow.addState(gameState.state());
+        }
+        return gameFlow;
+    }
 
-    // Game start
+
+    public ArcadePacMan_GamePlay() {}
 
     @Override
     public void startSession(GameContext game) {
@@ -153,7 +169,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         final TerrainLayer terrain = worldMap.terrainLayer();
 
         final Vector2i houseMinTile = terrain.getTilePropertyOrDefault(
-            WorldMapPropertyName.POS_HOUSE_MIN_TILE, ArcadePacMan_UIConfig.ARCADE_MAP_HOUSE_MIN_TILE);
+            WorldMapPropertyName.POS_HOUSE_MIN_TILE, ARCADE_MAP_HOUSE_MIN_TILE);
         terrain.propertyMap().put(WorldMapPropertyName.POS_HOUSE_MIN_TILE,  String.valueOf(houseMinTile));
 
         final var actorFactory = ArcadePacMan_ActorFactory.instance();
@@ -266,7 +282,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
         // In XXL game variant, the bonus position is stored inside the terrain map
         final Vector2i tile = level.worldMap().terrainLayer().getTilePropertyOrDefault(
-            WorldMapPropertyName.POS_BONUS, ArcadePacMan_UIConfig.DEFAULT_BONUS_TILE);
+            WorldMapPropertyName.POS_BONUS, DEFAULT_BONUS_TILE);
         bonus.pos().set(WorldMap.halfTileRightOf(tile));
         bonus.setLifetimeSec(rules.edibleBonusDisplaySeconds());
         systems.bonusState().setEdible(bonus);
