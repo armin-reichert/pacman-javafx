@@ -5,6 +5,8 @@
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.ArcadeMsPacMan_CutScene1;
+import de.amr.pacmanfx.arcade.ms_pacman.scenes.ArcadeMsPacMan_CutScene2;
+import de.amr.pacmanfx.arcade.ms_pacman.scenes.ArcadeMsPacMan_CutScene3;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
@@ -16,12 +18,12 @@ import javafx.scene.canvas.Canvas;
 
 import java.util.stream.Stream;
 
-public class ArcadeMsPacMan_CutScene1_Renderer extends BaseRenderer implements GameScene2D_Renderer {
+public class ArcadeMsPacMan_CutScene_Renderer extends BaseRenderer implements GameScene2D_Renderer {
 
     private final ArcadeMsPacMan_ActorRenderer actorRenderer;
     private final BaseDebugInfoRenderer debugRenderer;
 
-    public ArcadeMsPacMan_CutScene1_Renderer(
+    public ArcadeMsPacMan_CutScene_Renderer(
         GameVariantRenderConfig renderConfig,
         GameScene gameScene,
         ActorSpriteAnimController animController,
@@ -37,20 +39,43 @@ public class ArcadeMsPacMan_CutScene1_Renderer extends BaseRenderer implements G
 
     @Override
     public void draw(GameScene scene, long tick) {
-        clearCanvas();
-
+        switch (scene) {
+            case ArcadeMsPacMan_CutScene1 cutScene1 -> drawCutScene1(cutScene1);
+            case ArcadeMsPacMan_CutScene2 cutScene2 -> drawCutScene2(cutScene2);
+            case ArcadeMsPacMan_CutScene3 cutScene3 -> drawCutScene3(cutScene3);
+            default -> throw new IllegalStateException("Unexpected value: " + scene);
+        }
         if (scene instanceof ArcadeMsPacMan_CutScene1 cutScene) {
-            Stream.of(
-                cutScene.clapperboard,
-                cutScene.msPacMan,
-                cutScene.pacMan,
-                cutScene.inky,
-                cutScene.pinky,
-                cutScene.heart).forEach(actorRenderer::drawActor);
         }
 
         if (scene.viewModel().debugModeOnProperty().get()) {
             debugRenderer.draw(scene, tick);
         }
+    }
+
+    private void drawCutScene1(ArcadeMsPacMan_CutScene1 cutScene) {
+        Stream.of(
+            cutScene.clapperboard,
+            cutScene.msPacMan,
+            cutScene.pacMan,
+            cutScene.inky,
+            cutScene.pinky,
+            cutScene.heart).forEach(actorRenderer::drawActor);
+    }
+
+    private void drawCutScene2(ArcadeMsPacMan_CutScene2 cutScene) {
+        Stream.of(
+            cutScene.clapperboard,
+            cutScene.msPacMan,
+            cutScene.pacMan).forEach(actorRenderer::drawActor);
+    }
+
+    private void drawCutScene3(ArcadeMsPacMan_CutScene3 cutScene) {
+        Stream.of(
+            cutScene.clapperboard,
+            cutScene.msPacMan,
+            cutScene.pacMan,
+            cutScene.stork,
+            cutScene.bag).forEach(actorRenderer::drawActor);
     }
 }
