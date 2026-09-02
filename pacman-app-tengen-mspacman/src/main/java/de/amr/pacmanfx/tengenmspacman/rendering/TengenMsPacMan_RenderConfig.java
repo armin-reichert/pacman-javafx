@@ -107,10 +107,10 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
             case TengenMsPacMan_OptionsScene ignored -> new TengenMsPacMan_OptionsScene_Renderer(gameScene, canvas);
             case TengenMsPacMan_PlayScene2D  ignored -> new TengenMsPacMan_PlayScene2D_Renderer(this, gameScene, animController, canvas);
             case TengenMsPacMan_CreditsScene ignored -> new TengenMsPacMan_CreditsScene_Renderer(gameScene, canvas);
-            case TengenMsPacMan_CutScene1    ignored -> new TengenMsPacMan_CutScene1_Renderer(this, gameScene, animController, canvas);
-            case TengenMsPacMan_CutScene2    ignored -> new TengenMsPacMan_CutScene2_Renderer(this, gameScene, animController, canvas);
-            case TengenMsPacMan_CutScene3    ignored -> new TengenMsPacMan_CutScene3_Renderer(this, gameScene, animController, canvas);
-            case TengenMsPacMan_CutScene4    ignored -> new TengenMsPacMan_CutScene4_Renderer(this, gameScene, animController, canvas);
+            case TengenMsPacMan_CutScene1    ignored -> new TengenMsPacMan_CutScene_Renderer(this, gameScene, animController, canvas);
+            case TengenMsPacMan_CutScene2    ignored -> new TengenMsPacMan_CutScene_Renderer(this, gameScene, animController, canvas);
+            case TengenMsPacMan_CutScene3    ignored -> new TengenMsPacMan_CutScene_Renderer(this, gameScene, animController, canvas);
+            case TengenMsPacMan_CutScene4    ignored -> new TengenMsPacMan_CutScene_Renderer(this, gameScene, animController, canvas);
             default -> throw new IllegalStateException("Unexpected value: " + gameScene);
         };
         return r2D.configureRenderer(renderer);
