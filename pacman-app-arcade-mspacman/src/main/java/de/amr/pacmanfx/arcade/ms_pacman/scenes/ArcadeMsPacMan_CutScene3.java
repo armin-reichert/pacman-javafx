@@ -25,7 +25,6 @@ import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
-import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
@@ -41,21 +40,22 @@ import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
  */
 public class ArcadeMsPacMan_CutScene3 extends GameScene {
 
-    private enum SceneState {
-        CLAPPERBOARD        (0),
-        DELIVER_JUNIOR      (180),
-        END                 (540);
+    static class Timing extends CutSceneTimingComp {
 
-        SceneState(int start) {
-            this.start = start;
+        public Timing(long animationStartTick) {
+            super(animationStartTick);
         }
 
-        public int startTick() {
-            return start;
+        public boolean isDeliverJuniorTime() {
+            return tick() == 180;
         }
 
-        private final int start;
+        public boolean isEndTime() {
+            return tick() == 540;
+        }
     }
+
+    private enum SceneState { CLAPPERBOARD, DELIVER_JUNIOR, END }
 
     private static final int GROUND_Y = TS * 24;
 
@@ -72,7 +72,11 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene {
     public ArcadeMsPacMan_CutScene3(GameAppContext app) {
         super(app);
         components().setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
-        components().setComp(CutSceneTimingComp.class, new CutSceneTimingComp(540));
+        components().setComp(CutSceneTimingComp.class, new Timing(0));
+    }
+
+    private Timing timing() {
+        return (Timing) components().reqComp(CutSceneTimingComp.class);
     }
 
     @Override
@@ -89,10 +93,6 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene {
 
     public Stream<GameEntity> entitiesInRenderOrder() {
         return Stream.of(clapperboard, msPacMan, pacMan, stork, bag);
-    }
-
-    private CutSceneTimingComp timing() {
-        return components().reqComp(CutSceneTimingComp.class);
     }
 
     private void initScene() {
@@ -122,19 +122,26 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene {
 
     // Scene controller state machine
 
-    private Optional<SceneState> transition(SceneState state) {
-        return timing().tick() == state.startTick() ? Optional.of(state) : Optional.empty();
-    }
-
     private void updateSceneState() {
         final GameSystems systems = game().variant().systems();
 
         switch (sceneState) {
-            case CLAPPERBOARD -> transition(SceneState.DELIVER_JUNIOR)
-                .ifPresentOrElse(state -> enterDeliverJuniorState(systems, state), this::updateClapperboardState);
+            case CLAPPERBOARD -> {
+                if (timing().isDeliverJuniorTime()) {
+                    changeState(SceneState.DELIVER_JUNIOR);
+                    enterDeliverJuniorState(systems);
+                } else {
+                    updateClapperboardState();
+                }
+            }
 
-            case DELIVER_JUNIOR -> transition(SceneState.END)
-                .ifPresentOrElse(this::changeState, this::updateDeliverJuniorState);
+            case DELIVER_JUNIOR -> {
+                if (timing().isEndTime()) {
+                    changeState(SceneState.END);
+                } else {
+                    updateDeliverJuniorState();
+                }
+            }
 
             case END -> game().state().triggerTimeout();
 
@@ -152,14 +159,14 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene {
 
     private void updateClapperboardState() {
         ClapperboardStateSystem.update(clapperboard);
-        if (timing().tick() == SceneState.CLAPPERBOARD.startTick() + 60) {
+        if (timing().tick() ==  timing().animationStartTick() + 60) {
             soundManager().play(PacManGameSoundID.INTERMISSION_3);
         }
     }
 
     // State DELIVER_JUNIOR
 
-    private void enterDeliverJuniorState(GameSystems systems, SceneState newState) {
+    private void enterDeliverJuniorState(GameSystems systems) {
         final MovementSystem motor = systems.motor();
         final WorldNavigationSystem worldNavigator = systems.navigator();
         final ActorSpriteAnimController animSystem = systems.actorSpriteAnimController();
@@ -193,8 +200,6 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene {
 
         stork.setBagReleasedFromBeak(false);
         numBagBounces = 0;
-
-        changeState(newState);
     }
 
     private void updateDeliverJuniorState() {
