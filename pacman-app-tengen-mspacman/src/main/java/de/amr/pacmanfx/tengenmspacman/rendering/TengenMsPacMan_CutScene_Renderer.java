@@ -32,16 +32,16 @@ public class TengenMsPacMan_CutScene_Renderer extends BaseRenderer implements Ga
     }
 
     @Override
-    public void draw(GameScene scene, long tick) {
-        switch (scene) {
+    public void draw(GameScene gameScene, long tick) {
+        switch (gameScene) {
             case TengenMsPacMan_CutScene1 cutScene1 -> drawCutScene1(cutScene1);
             case TengenMsPacMan_CutScene2 cutScene2 -> drawCutScene2(cutScene2);
             case TengenMsPacMan_CutScene3 cutScene3 -> drawCutScene3(cutScene3);
             case TengenMsPacMan_CutScene4 cutScene4 -> drawCutScene4(cutScene4);
             default -> throw new IllegalArgumentException("No cut scene!");
-        };
-        if (scene.viewModel().debugModeOnProperty().get()) {
-            debugRenderer.draw(scene, tick);
+        }
+        if (gameScene.viewModel().debugModeOnProperty().get()) {
+            debugRenderer.draw(gameScene, tick);
         }
     }
 
