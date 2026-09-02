@@ -56,6 +56,7 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.READY_MESSA
 import static java.util.Objects.requireNonNull;
 
 //TODO Use HUDStyle
+//TODO Moving "game over" message is broken
 public class TengenMsPacMan_HUD_Renderer
     extends BaseRenderer
     implements SpriteRenderer, HUD_Renderer {
