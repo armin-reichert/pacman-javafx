@@ -7,6 +7,7 @@ import de.amr.basics.Named;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.timer.TickTimer;
 import de.amr.basics.util.Ufx;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
 import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
@@ -17,7 +18,9 @@ import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostAnimationComp;
 import de.amr.pacmanfx.core.entities.pac.comp.PacAnimationComp;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
+import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.core.rules.HuntingTimer;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.geometry.Rectangle2D;
@@ -41,19 +44,32 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
 
     @Override
     public void draw(GameScene scene, long tick) {
-        final AbstractGameState gameState = scene.game().state();
-        final String stateText = "Game State: '%s' (Tick %d of %s)".formatted(
+        final CanvasRenderingComp r2D = scene.components().reqComp(CanvasRenderingComp.class);
+        drawTileGrid(r2D.unscaledWidth(), r2D.unscaledHeight(), Color.LIGHTGRAY);
+        drawGameStateDebugInfo(scene.game());
+    }
+
+    public void drawGameStateDebugInfo(GameContext game) {
+        final AbstractGameState gameState = game.state();
+        String stateText = "Game State: '%s' (Tick %d of %s)".formatted(
             gameState.name(),
             gameState.timer().tickCount(),
             gameState.timer().durationTicks() == TickTimer.INDEFINITE ? "∞" : String.valueOf(gameState.timer().tickCount())
         );
+        if (game.session().optLevel().isPresent()) {
+            String huntingPhaseText = "";
+            if (CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(gameState)) {
+                final HuntingTimer huntingTimer = game.session().level().huntingTimer();
+                huntingPhaseText = " %s (Tick %d)".formatted(
+                    huntingTimer.currentHuntingPhase(),
+                    huntingTimer.tickCount());
+            }
+            stateText += huntingPhaseText;
+        }
         ctx.setFill(debugTextFill);
         ctx.setStroke(debugTextStroke);
         ctx.setFont(debugTextFont);
         ctx.fillText(stateText, 0, scaled(3 * WorldMap.TS));
-
-        final CanvasRenderingComp r2D = scene.components().reqComp(CanvasRenderingComp.class);
-        drawTileGrid(r2D.unscaledWidth(), r2D.unscaledHeight(), Color.LIGHTGRAY);
     }
 
     public void drawMovingActorInfo(ActorSpriteAnimController animController, GameEntity actor) {
