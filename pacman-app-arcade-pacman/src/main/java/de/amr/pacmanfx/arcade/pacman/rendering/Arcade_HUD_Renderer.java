@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
-import de.amr.basics.math.RectShort;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameSession;
@@ -38,28 +37,14 @@ public class Arcade_HUD_Renderer
 
     protected final HUD_Style style;
 
-    protected final SpriteSheet spriteSheet;
-    protected final RectShort livesCounterSymbolSprite;
-    protected final RectShort[] bonusSymbolSprites;
-
-    public Arcade_HUD_Renderer(
-        HUD_Style style,
-        Canvas canvas,
-        SpriteSheet spriteSheet,
-        RectShort livesCounterSymbolSprite,
-        RectShort[] bonusSymbolSprites)
-    {
+    public Arcade_HUD_Renderer(HUD_Style style, Canvas canvas) {
         super(canvas);
-
         this.style = requireNonNull(style);
-        this.spriteSheet = requireNonNull(spriteSheet);
-        this.livesCounterSymbolSprite = requireNonNull(livesCounterSymbolSprite);
-        this.bonusSymbolSprites = requireNonNull( bonusSymbolSprites);
     }
 
     @Override
     public SpriteSheet spriteSheet() {
-        return spriteSheet;
+        return style.spriteSheet();
     }
 
     @Override
@@ -119,7 +104,7 @@ public class Arcade_HUD_Renderer
         final float spacing = tilesPx(2);
         // Draw at most (numLives - 1) symbols in lives counter
         for (int i = 0; i < displayedSymbolsCount; ++i) {
-            drawSprite(livesCounterSymbolSprite, x + i * spacing, y, true);
+            drawSprite(style.livesCounterSymbolSprite(), x + i * spacing, y, true);
         }
         if (numLives - 1 > livesCounter.data().maxLivesShown()) {
             // Show text indicating that more lives are available than symbols displayed (cheating may cause this)
@@ -131,7 +116,7 @@ public class Arcade_HUD_Renderer
         final float y = canvasRendering.unscaledHeight() - tilesPx(2) + 2;
         float x = canvasRendering.unscaledWidth() - tilesPx(4);
         for (int symbolCode : levelCounter.data().symbolCodes()) {
-            drawSprite(bonusSymbolSprites[symbolCode], x, y, true);
+            drawSprite(style.bonusSymbolSprites()[symbolCode], x, y, true);
             x -= tilesPx(2); // symbols are drawn from right to left
         }
     }

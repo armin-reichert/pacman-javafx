@@ -90,16 +90,16 @@ public class XXL_MsPacMan_RenderConfig implements GameVariantRenderConfig {
         final CanvasRenderingComp r2D = gameScene.components().reqComp(CanvasRenderingComp.class);
         final var renderer = new Arcade_HUD_Renderer(
             new HUD_Style(
+                spriteSheet(),
+                spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL),
+                spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS),
                 "SCORE",
                 "HIGH SCORE",
                 ARCADE_WHITE,
                 Color.GRAY,
                 GlobalAssets.Fonts.ARCADE8.font()
             ),
-            canvas,
-            spriteSheet(),
-            spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL),
-            spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS)
+            canvas
         );
         renderer.setImageSmoothing(true);
         r2D.configureRenderer(renderer);
