@@ -16,7 +16,7 @@ public class ArcadePacMan_StartScene extends GameScene {
 
     public ArcadePacMan_StartScene(GameAppContext app) {
         super(app);
-        components().setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
+        setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
     }
 
     @Override

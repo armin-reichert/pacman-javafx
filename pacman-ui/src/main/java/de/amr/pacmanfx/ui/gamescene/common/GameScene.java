@@ -32,35 +32,30 @@ import static java.util.Objects.requireNonNull;
 /**
  * Abstract base class for all game scenes (2D and 3D).
  */
-public class GameScene implements GameSceneController, DefaultGameEventListener, Disposable {
+public class GameScene extends Composition<GameSceneComponent>
+    implements GameSceneController, DefaultGameEventListener, Disposable {
 
     private final GameAppContext app;
-
-    private final Composition<GameSceneComponent> composition = new Composition<>();
 
     protected GameScene(GameAppContext app) {
         this.app = requireNonNull(app);
     }
 
     public Optional<CanvasRenderingComp> optCanvasRendering() {
-        return composition.optComp(CanvasRenderingComp.class);
+        return optComp(CanvasRenderingComp.class);
     }
 
     public CanvasRenderingComp reqCanvasRendering() {
-        return composition.reqComp(CanvasRenderingComp.class);
+        return reqComp(CanvasRenderingComp.class);
     }
 
     public ActionBindingsSupport actionBindingsSupport() {
-        ActionBindingsSupport actionBindings = composition.optComp(ActionBindingsSupport.class).orElse(null);
+        ActionBindingsSupport actionBindings = optComp(ActionBindingsSupport.class).orElse(null);
         if (actionBindings == null) {
-            composition.setComp(ActionBindingsSupport.class, new ActionBindingsSupport());
+            setComp(ActionBindingsSupport.class, new ActionBindingsSupport());
             Logger.info("Added ActionBindingsSupport to " + getClass().getSimpleName());
         }
-        return composition.reqComp(ActionBindingsSupport.class);
-    }
-
-    public Composition<GameSceneComponent> components() {
-        return composition;
+        return reqComp(ActionBindingsSupport.class);
     }
 
     public GameAppContext app() {
@@ -111,13 +106,6 @@ public class GameScene implements GameSceneController, DefaultGameEventListener,
      */
     public void onEnteredFrom3DScene() {}
 
-    // --- Interface "Disposable"
-
-    @Override
-    public void dispose() {
-        composition.dispose();
-    }
-
     // --- Interface "GameSceneController"
 
     @Override
@@ -128,7 +116,7 @@ public class GameScene implements GameSceneController, DefaultGameEventListener,
     @Override
     public final void deactivate() {
         onDeactivate();
-        composition.optComp(ActionBindingsSupport.class).ifPresent(comp -> comp.bindingsMap().dispose());
+        optComp(ActionBindingsSupport.class).ifPresent(comp -> comp.bindingsMap().dispose());
         optSoundEffects().ifPresent(GameSoundEffects::stopAll);
     }
 
@@ -154,8 +142,8 @@ public class GameScene implements GameSceneController, DefaultGameEventListener,
 
     @Override
     public void onInput() {
-        if (composition.hasComp(ActionBindingsSupport.class)) {
-            composition.reqComp(ActionBindingsSupport.class)
+        if (hasComp(ActionBindingsSupport.class)) {
+            reqComp(ActionBindingsSupport.class)
                 .bindingsMap()
                 .executeMatchingAction(app());
         }

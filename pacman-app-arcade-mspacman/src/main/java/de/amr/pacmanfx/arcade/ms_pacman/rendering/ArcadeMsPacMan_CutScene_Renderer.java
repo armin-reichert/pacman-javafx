@@ -24,7 +24,7 @@ public class ArcadeMsPacMan_CutScene_Renderer extends BaseRenderer implements Ga
     public ArcadeMsPacMan_CutScene_Renderer(GameVariantRenderConfig renderConfig, GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
         super(canvas);
 
-        final CanvasRenderingComp canvasRendering = gameScene.components().reqComp(CanvasRenderingComp.class);
+        final CanvasRenderingComp canvasRendering = gameScene.reqComp(CanvasRenderingComp.class);
         actorRenderer = canvasRendering.configureRenderer((ArcadeMsPacMan_ActorRenderer) renderConfig.createActorRenderer(animController, canvas));
         debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(gameScene, canvas);
     }

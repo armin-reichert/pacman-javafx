@@ -37,7 +37,7 @@ public class Arcade_PlayScene2D extends GameScene
 
     public Arcade_PlayScene2D(GameAppContext app) {
         super(app);
-        components().setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
+        setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
     }
 
     @Override

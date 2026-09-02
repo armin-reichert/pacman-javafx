@@ -64,7 +64,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
 
     public ArcadeMsPacMan_IntroScene(GameAppContext app) {
         super(app);
-        components().setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
+        setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
         sceneFlow = new StateMachine<>(List.of(SceneState.values()));
     }
 

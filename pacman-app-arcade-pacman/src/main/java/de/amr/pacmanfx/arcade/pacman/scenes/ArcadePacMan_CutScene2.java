@@ -75,12 +75,12 @@ public class ArcadePacMan_CutScene2 extends GameScene {
 
     public ArcadePacMan_CutScene2(GameAppContext app) {
         super(app);
-        components().setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
-        components().setComp(CutSceneTimingComp.class, new TimingComp(120));
+        setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
+        setComp(CutSceneTimingComp.class, new TimingComp(120));
     }
 
     private TimingComp timing() {
-        return (TimingComp) components().reqComp(CutSceneTimingComp.class);
+        return (TimingComp) reqComp(CutSceneTimingComp.class);
     }
 
     @Override

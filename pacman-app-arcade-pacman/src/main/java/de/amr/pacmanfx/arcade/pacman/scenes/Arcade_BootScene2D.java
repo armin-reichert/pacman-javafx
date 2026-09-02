@@ -44,7 +44,7 @@ public class Arcade_BootScene2D extends GameScene {
 
         final var canvasRendering = new CanvasRenderingComp();
         canvasRendering.setClearCanvasBeforeRendering(false);
-        components().setComp(CanvasRenderingComp.class, canvasRendering);
+        setComp(CanvasRenderingComp.class, canvasRendering);
 
         // Make some noise
         for (int i = 0; i < noise.length; i++) {

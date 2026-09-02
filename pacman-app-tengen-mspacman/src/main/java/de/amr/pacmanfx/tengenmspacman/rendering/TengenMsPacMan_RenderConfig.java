@@ -100,7 +100,7 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
 
     @Override
     public GameScene2D_Renderer createGameSceneRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
-        final CanvasRenderingComp r2D = gameScene.components().reqComp(CanvasRenderingComp.class);
+        final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
         final GameScene2D_Renderer renderer = switch (gameScene) {
             case TengenMsPacMan_BootScene    ignored -> new TengenMsPacMan_BootScene_Renderer(this, gameScene, animController, canvas);
             case TengenMsPacMan_IntroScene   ignored -> new TengenMsPacMan_IntroScene_Renderer(this, gameScene, animController, canvas);
@@ -123,7 +123,7 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
 
     @Override
     public TengenMsPacMan_HUD_Renderer createHUDRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
-        final CanvasRenderingComp r2D = gameScene.components().reqComp(CanvasRenderingComp.class);
+        final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
         return r2D.configureRenderer(new TengenMsPacMan_HUD_Renderer(canvas));
     }
 

@@ -81,7 +81,7 @@ public class TengenMsPacMan_CreditsScene_Renderer extends BaseRenderer implement
         if (!(gameScene instanceof TengenMsPacMan_CreditsScene creditsScene)) {
             return;
         }
-        final CanvasRenderingComp r2D = gameScene.components().reqComp(CanvasRenderingComp.class);
+        final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
 
         final int width = r2D.unscaledWidth();
         drawHorizontalBar(NES_Palette.color(0x20), NES_Palette.color(0x13), width, TS, 20);

@@ -69,7 +69,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
         super(app);
 
         // Add canvas rendering capability, no canvas assigned yet!
-        components().setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
+        setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
 
         final GameViewModel vm = app.ui().viewModel();
         final TengenMsPacMan_UISettings uiSettings = uiSettings();
@@ -242,8 +242,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
 
     private void resetRendering2D() {
         // Replace component. TODO: Check why necessary
-        components().removeComp(CanvasRenderingComp.class);
-        components().setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
+        removeComp(CanvasRenderingComp.class);
+        setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
 
         reqCanvasRendering().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         // Default height. Varies with map size.

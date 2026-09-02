@@ -343,8 +343,8 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
             subSceneFX.heightProperty().unbind();
         });
 
-        if (gameScene.components().hasComp(CanvasRenderingComp.class)) {
-            final CanvasRenderingComp r2D = gameScene.components().reqComp(CanvasRenderingComp.class);
+        if (gameScene.hasComp(CanvasRenderingComp.class)) {
+            final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
 
             gameSceneFrame.canvas().widthProperty().unbind();
             gameSceneFrame.canvas().heightProperty().unbind();
@@ -422,8 +422,8 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         subSceneFX.widthProperty().bind(mainScene.widthProperty());
         subSceneFX.heightProperty().bind(mainScene.heightProperty());
 
-        if (gameScene.components().hasComp(CanvasRenderingComp.class)) {
-            final CanvasRenderingComp r2D = gameScene.components().reqComp(CanvasRenderingComp.class);
+        if (gameScene.hasComp(CanvasRenderingComp.class)) {
+            final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
             // use the canvas of the decorated pane for 2D scene even though the decoration is not used
             r2D.setCanvas(gameSceneFrame.canvas());
             updateRenderers(gameScene);
@@ -434,7 +434,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     // 2D scenes without camera which are shown at full size
     private void embedGameScene2D(GameSceneConfig gameSceneConfig, GameScene gameScene) {
         final GameMainScene mainScene = app.ui().window().mainScene();
-        final CanvasRenderingComp canvasRendering = gameScene.components().reqComp(CanvasRenderingComp.class);
+        final CanvasRenderingComp canvasRendering = gameScene.reqComp(CanvasRenderingComp.class);
 
         canvasRendering.backgroundColorProperty().bind(app.ui().viewModel().common2DSettings().canvasBackgroundColorProperty());
 
@@ -472,7 +472,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     private void updateRenderers(GameScene gameScene) {
         requireNonNull(gameScene);
 
-        final CanvasRenderingComp canvasRendering = gameScene.components().reqComp(CanvasRenderingComp.class);
+        final CanvasRenderingComp canvasRendering = gameScene.reqComp(CanvasRenderingComp.class);
         final ActorSpriteAnimController animSystem = app.game().variant().systems().actorSpriteAnimController();
         final GameVariantRenderConfig renderConfig = app.currentGameVariantUIConfig().renderConfig();
         final Canvas canvas = canvasRendering.canvas();

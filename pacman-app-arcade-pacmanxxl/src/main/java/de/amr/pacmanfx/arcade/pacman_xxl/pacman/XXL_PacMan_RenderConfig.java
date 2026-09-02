@@ -75,7 +75,7 @@ public class XXL_PacMan_RenderConfig implements GameVariantRenderConfig {
 
     @Override
     public GameScene2D_Renderer createGameSceneRenderer(GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas) {
-        final CanvasRenderingComp r2D = gameScene.components().reqComp(CanvasRenderingComp.class);
+        final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
         final GameScene2D_Renderer renderer = switch (gameScene) {
             case Arcade_BootScene2D ignored -> new Arcade_BootScene2D_Renderer(gameScene, canvas, spriteSheet(), BOOT_SCENE_SPRITES);
             case ArcadePacMan_IntroScene ignored -> new ArcadePacMan_IntroScene_Renderer(this, gameScene, animSystem, canvas);
@@ -91,7 +91,7 @@ public class XXL_PacMan_RenderConfig implements GameVariantRenderConfig {
 
     @Override
     public HUD_Renderer createHUDRenderer(GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas) {
-        final CanvasRenderingComp r2D = gameScene.components().reqComp(CanvasRenderingComp.class);
+        final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
         final var renderer = new Arcade_HUD_Renderer(
             new HUD_Style(
                 spriteSheet(),

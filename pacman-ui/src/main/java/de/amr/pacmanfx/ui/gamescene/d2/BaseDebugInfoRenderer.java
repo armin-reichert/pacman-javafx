@@ -76,7 +76,7 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
     @Override
     public void draw(GameScene gameScene, long tick) {
         final GameSession session = gameScene.game().session();
-        final CanvasRenderingComp r2D = gameScene.components().reqComp(CanvasRenderingComp.class);
+        final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
 
         drawTileGrid(r2D.unscaledWidth(), r2D.unscaledHeight(), Color.LIGHTGRAY);
         drawGameStateInfo(gameScene.game());
