@@ -29,7 +29,6 @@ public class TengenMsPacMan_CutScene3_Renderer extends BaseRenderer implements G
 
     @Override
     public void draw(GameScene scene, long tick) {
-        clearCanvas();
         if (scene instanceof TengenMsPacMan_CutScene3 cutScene) {
             if (!cutScene.darkness()) {
                 actorRenderer.drawActor(cutScene.clapperboard());

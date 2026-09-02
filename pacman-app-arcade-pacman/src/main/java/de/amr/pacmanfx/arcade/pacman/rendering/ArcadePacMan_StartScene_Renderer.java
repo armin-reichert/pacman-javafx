@@ -23,8 +23,6 @@ public class ArcadePacMan_StartScene_Renderer extends BaseRenderer implements Ga
 
     @Override
     public void draw(GameScene scene, long tick) {
-        clearCanvas();
-
         fillText("PUSH START BUTTON",       ARCADE_ORANGE, arcadeFont8(), tilesPx(6),  tilesPx(17));
         fillText("1 PLAYER ONLY",           ARCADE_CYAN,   arcadeFont8(), tilesPx(8),  tilesPx(21));
         fillText("BONUS PAC-MAN FOR 10000", ARCADE_ROSE,   arcadeFont8(), tilesPx(1),  tilesPx(25));

@@ -78,7 +78,6 @@ public class TengenMsPacMan_CreditsScene_Renderer extends BaseRenderer implement
 
     @Override
     public void draw(GameScene gameScene, long tick) {
-        clearCanvas();
         if (!(gameScene instanceof TengenMsPacMan_CreditsScene creditsScene)) {
             return;
         }

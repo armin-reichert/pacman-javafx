@@ -73,7 +73,6 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Ga
     @Override
     public void draw(GameScene scene, long tick) {
         final var introScene = (ArcadePacMan_IntroScene) scene;
-        clearCanvas();
         drawGhostGallery(introScene);
         switch (introScene.flow.state()) {
             case SHOWING_POINTS -> drawPoints(introScene);

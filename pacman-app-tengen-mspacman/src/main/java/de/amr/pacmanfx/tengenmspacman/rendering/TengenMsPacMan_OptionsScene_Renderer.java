@@ -70,7 +70,6 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
 
         final var optionsScene = (TengenMsPacMan_OptionsScene) gameScene;
 
-        clearCanvas();
         if (optionsScene.initialDelay > 0) return;
 
         ctx.setFont(arcadeFont8());

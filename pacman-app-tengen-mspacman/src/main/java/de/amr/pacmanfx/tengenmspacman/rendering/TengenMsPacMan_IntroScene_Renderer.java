@@ -75,8 +75,6 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
 
     @Override
     public void draw(GameScene scene, long globalTick) {
-        clearCanvas();
-
         final TengenMsPacMan_IntroScene intro = (TengenMsPacMan_IntroScene) scene;
         final State<TengenMsPacMan_IntroScene> introState = intro.flow.state();
         final long stateTick = intro.flow.state().timer().tickCount();

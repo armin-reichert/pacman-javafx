@@ -32,8 +32,6 @@ public class TengenMsPacMan_BootScene_Renderer extends BaseRenderer implements G
 
     @Override
     public void draw(GameScene scene, long tick) {
-        clearCanvas();
-
         final TengenMsPacMan_BootScene bootScene = (TengenMsPacMan_BootScene) scene;
         if (bootScene.gray) {
             actorRenderer.fillCanvas(NES_Palette.color(0x10));
