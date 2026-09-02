@@ -42,18 +42,14 @@ public class ArcadePacMan_CutScene_Renderer extends BaseRenderer implements Game
 
     @Override
     public void draw(GameScene scene, long tick) {
-        drawSceneContent(scene);
-        if (scene.viewModel().debugModeOnProperty().get()) {
-            debugRenderer.draw(scene, tick);
-        }
-    }
-
-    protected void drawSceneContent(GameScene scene) {
         switch (scene) {
             case ArcadePacMan_CutScene1 cutScene1 -> drawCutScene1(cutScene1);
             case ArcadePacMan_CutScene2 cutScene2 -> drawCutScene2(cutScene2);
             case ArcadePacMan_CutScene3 cutScene3 -> drawCutScene3(cutScene3);
             default -> throw new IllegalStateException("Unexpected value: " + scene);
+        }
+        if (scene.viewModel().debugModeOnProperty().get()) {
+            debugRenderer.draw(scene, tick);
         }
     }
 
