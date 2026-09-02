@@ -90,10 +90,10 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
         if (game.variant().rules().isLevelCompleted(level)) {
             return Optional.of(CommonGameStateID.GAME_INTRO);
         }
-        else if (game.session().thisFrame().gamePlayStep().pacKilled()) {
+        else if (game.session().thisFrame().pacKilled()) {
             return Optional.of(CommonGameStateID.GAME_LEVEL_PACMAN_DYING);
         }
-        else if (game.session().thisFrame().gamePlayStep().hasGhostBeenKilled()) {
+        else if (game.session().thisFrame().hasGhostBeenKilled()) {
             return Optional.of(CommonGameStateID.GAME_LEVEL_EATING_GHOST);
         }
         return Optional.empty(); // keep game state

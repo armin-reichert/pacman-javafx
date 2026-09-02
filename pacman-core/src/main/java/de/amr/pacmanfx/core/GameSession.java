@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.core;
 
-import de.amr.pacmanfx.core.gameplay.hunt.GamePlayStep;
 import de.amr.pacmanfx.core.gamestate.FrameState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GameCheats;
@@ -57,6 +56,10 @@ public class GameSession {
                 hud.highScore().data().setEnabled(false);
             }
         });
+    }
+
+    public void newFrameState(long tick) {
+        frameState = new FrameState(tick);
     }
 
     public int numLives() {
@@ -138,10 +141,6 @@ public class GameSession {
 
     public FrameState thisFrame() {
         return frameState;
-    }
-
-    public void newFrameState(long tick) {
-        frameState = new FrameState(tick, new GamePlayStep());
     }
 
     public int gameOverStateTicks() {

@@ -7,7 +7,6 @@ package de.amr.pacmanfx.core.gamestate;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.entities.pac.comp.PacState;
-import de.amr.pacmanfx.core.gameplay.hunt.GamePlayStep;
 import de.amr.pacmanfx.core.level.GameLevel;
 import org.tinylog.Logger;
 
@@ -38,26 +37,25 @@ public final class Common_PlayingLevelState extends AbstractGameState {
 
     @Override
     public void onUpdateState(GameContext game, long globalTick, long stateTick) {
-
+        
         gamePlay.update(game, level);
         session.cheats().update(game);
 
-        final GamePlayStep step = session.thisFrame().gamePlayStep();
-        logGamePlayStep(step);
+        logGamePlayStep(session.thisFrame());
 
         if (rules.isLevelCompleted(level)) {
             flow.enterGameState(game, CommonGameStateID.GAME_LEVEL_COMPLETE);
         }
-        else if (step.pacKilled()) {
+        else if (session.thisFrame().pacKilled()) {
             flow.enterGameState(game, CommonGameStateID.GAME_LEVEL_PACMAN_DYING);
         }
-        else if (step.hasGhostBeenKilled()) {
+        else if (session.thisFrame().hasGhostBeenKilled()) {
             flow.enterGameState(game, CommonGameStateID.GAME_LEVEL_EATING_GHOST);
         }
     }
 
-    private static void logGamePlayStep(GamePlayStep result) {
-        final List<String> report = result.asText();
+    private static void logGamePlayStep(FrameState frameState) {
+        final List<String> report = frameState.asText();
         if (!report.isEmpty()) {
             Logger.info("--- Game play step:");
             for (String line : report) {

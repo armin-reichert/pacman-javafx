@@ -23,7 +23,7 @@ import de.amr.pacmanfx.core.event.ghost.GhostEatenEvent;
 import de.amr.pacmanfx.core.event.pac.PacEatsFoodEvent;
 import de.amr.pacmanfx.core.event.pac.PacPowerEndsEvent;
 import de.amr.pacmanfx.core.event.pac.PacPowerStartsFadingEvent;
-import de.amr.pacmanfx.core.gameplay.hunt.GamePlayStep;
+import de.amr.pacmanfx.core.gamestate.FrameState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.MessageType;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -118,10 +118,9 @@ public abstract class CommonGamePlay implements GamePlay {
 
         final GameRules rules = game.variant().rules();
         final GameSession session = game.session();
-        final GamePlayStep step = session.thisFrame().gamePlayStep();
         final Pac pac = level.entities().pac();
 
-        final ActorCollisionHandler collisionHandler = new ActorCollisionHandler(step);
+        final ActorCollisionHandler collisionHandler = new ActorCollisionHandler(session.thisFrame());
         collisionHandler.setStrategy(rules.actorCollisionRules().getCollisionStrategy());
         collisionHandler.setDoubleChecked(rules.actorCollisionRules().isCollisionDoubleChecked());
 
@@ -138,13 +137,13 @@ public abstract class CommonGamePlay implements GamePlay {
 
         collisionHandler.detectCollisions(level);
 
-        checkIfPacFoundEdibleItem(game, level, step);
-        checkIfPacGetsKilled(game.session(), game.variant().rules(), step);
-        if (step.pacKilled()) {
+        checkIfPacFoundEdibleItem(game, level, session.thisFrame());
+        checkIfPacGetsKilled(game.session(), game.variant().rules(), session.thisFrame());
+        if (session.thisFrame().pacKilled()) {
             fixPacPositionIfKilledInsidePortal(level);
         }
         else {
-            checkIfGhostsGetKilled(game, level, step);
+            checkIfGhostsGetKilled(game, level, session.thisFrame());
         }
     }
 
@@ -216,32 +215,32 @@ public abstract class CommonGamePlay implements GamePlay {
         }
     }
 
-    private void checkIfPacFoundEdibleItem(GameContext game, GameLevel level, GamePlayStep step) {
+    private void checkIfPacFoundEdibleItem(GameContext game, GameLevel level, FrameState frameState) {
         final Pac pac = level.entities().pac();
         final GameSystems systems = game.variant().systems();
         final PacDigestionSystem digestionSystem = systems.pacDigestion();
         final ScoringRules scoringRules = game.variant().rules().scoringRules();
 
-        if (step.foodFound()) {
+        if (frameState.foodFound()) {
             digestionSystem.endStarving(pac);
-            final Vector2i foodTile = step.foodFoundTile();
+            final Vector2i foodTile = frameState.foodFoundTile();
             level.food().markFoodEatenAt(foodTile);
             if (scoringRules.isBonusAwarded(level)) {
                 activateNextBonus(game, level);
             }
             game.eventManager().publishGameEvent(
-                new PacEatsFoodEvent(pac, step.energizerFound(), false, game.session().thisFrame().tick()));
+                new PacEatsFoodEvent(pac, frameState.energizerFound(), false, game.session().thisFrame().tick()));
         }
         else {
             digestionSystem.starve(pac);
         }
 
-        if (step.foundEdibleBonus()) {
-            game.eventManager().publishGameEvent(new BonusEatenEvent(step.edibleBonus()));
+        if (frameState.foundEdibleBonus()) {
+            game.eventManager().publishGameEvent(new BonusEatenEvent(frameState.edibleBonus()));
         }
     }
 
-    private void checkIfPacGetsKilled(GameSession session, GameRules rules, GamePlayStep step) {
+    private void checkIfPacGetsKilled(GameSession session, GameRules rules, FrameState frameState) {
         // Check for optional attract mode safe period
         if (session.isAttractMode()) {
             if (rules.demoLevelMinDurationSec().isPresent()) {
@@ -256,20 +255,20 @@ public abstract class CommonGamePlay implements GamePlay {
             return;
         }
 
-        final boolean pacMeetsKiller = step.ghostsCollidingWithPac().stream()
+        final boolean pacMeetsKiller = frameState.ghostsCollidingWithPac().stream()
             .anyMatch(ghost -> ghost.state().enumValue() == GhostState.HUNTING_PAC);
 
-        step.setPacKilled(pacMeetsKiller);
+        frameState.setPacKilled(pacMeetsKiller);
     }
 
-    private void checkIfGhostsGetKilled(GameContext game, GameLevel level, GamePlayStep step) {
-        if (step.detectedPacGhostCollision()) {
+    private void checkIfGhostsGetKilled(GameContext game, GameLevel level, FrameState frameState) {
+        if (frameState.detectedPacGhostCollision()) {
             // Frightened ghosts get killed when colliding with Pac
-            step.ghostsCollidingWithPac().stream()
+            frameState.ghostsCollidingWithPac().stream()
                 .filter(ghost -> ghost.state().enumValue() == GhostState.FRIGHTENED)
-                .forEach(step.ghostsKilled()::add);
+                .forEach(frameState.ghostsKilled()::add);
             // More than one ghost might have been killed in this step
-            step.ghostsKilled().forEach(ghost -> pacEatsGhost(game, level, ghost));
+            frameState.ghostsKilled().forEach(ghost -> pacEatsGhost(game, level, ghost));
         }
     }
 
