@@ -269,7 +269,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
             messageView,
             level3D.root(),
             center,
-            GlobalAssets.PredefinedFont.ARCADE6.font(),
+            GlobalAssets.Fonts.ARCADE6.font(),
             level3D.animationManager().registry(),
             type,
             args);

@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.math.RectShort;
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.HUD;
@@ -14,6 +15,7 @@ import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.HUD_Renderer;
+import de.amr.pacmanfx.ui.gamescene.d2.HUD_Style;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
@@ -32,24 +34,24 @@ public class Arcade_HUD_Renderer
     extends BaseRenderer
     implements SpriteRenderer, HUD_Renderer {
 
-    public static final String SCORE_TEXT = "SCORE";
-    public static final String HIGH_SCORE_TEXT = "HIGH SCORE";
     public static final String CREDIT_TEXT_PATTERN = "CREDIT %2d";
 
-    private static final Color SCORE_TEXT_COLOR = ARCADE_WHITE;
-    private static final Color SCORE_TEXT_COLOR_DISABLED = Color.GRAY;
+    protected final HUD_Style style;
 
     protected final SpriteSheet spriteSheet;
     protected final RectShort livesCounterSymbolSprite;
     protected final RectShort[] bonusSymbolSprites;
 
     public Arcade_HUD_Renderer(
+        HUD_Style style,
         Canvas canvas,
         SpriteSheet spriteSheet,
         RectShort livesCounterSymbolSprite,
-        RectShort[] bonusSymbolSprites) {
-
+        RectShort[] bonusSymbolSprites)
+    {
         super(canvas);
+
+        this.style = requireNonNull(style);
         this.spriteSheet = requireNonNull(spriteSheet);
         this.livesCounterSymbolSprite = requireNonNull(livesCounterSymbolSprite);
         this.bonusSymbolSprites = requireNonNull( bonusSymbolSprites);
@@ -76,7 +78,8 @@ public class Arcade_HUD_Renderer
         final CanvasRenderingComp canvasRendering = gameScene.reqCanvasRendering();
 
         if (hud.gameScore().isVisible()) {
-            drawScores(hud.gameScore(), hud.highScore(), session);
+            final boolean highScoreDisabled = session.isAttractMode() || !session.hud().highScore().data().isEnabled();
+            drawScores(hud.gameScore(), hud.highScore(), highScoreDisabled);
         }
 
         if (hud.levelCounter().isVisible()) {
@@ -92,14 +95,11 @@ public class Arcade_HUD_Renderer
         }
     }
 
-    private void drawScores(Score gameScore, Score highScore, GameSession session) {
-        drawScore(gameScore, SCORE_TEXT, arcadeFont8(), SCORE_TEXT_COLOR, tilesPx(1), tilesPx(1));
-
-        Color color = SCORE_TEXT_COLOR;
-        if (!session.isAttractMode() && !highScore.data().isEnabled()) {
-            color = SCORE_TEXT_COLOR_DISABLED;
-        }
-        drawScore(highScore, HIGH_SCORE_TEXT, arcadeFont8(), color, tilesPx(14), tilesPx(1));
+    private void drawScores(Score gameScore, Score highScore, boolean highScoreDisabled) {
+        final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
+        final Color highScoreTextColor = highScoreDisabled ? style.scoreTextColorDisabled() : style.scoreTextColor();
+        drawScore(gameScore, style.scoreText(), scaledFont, style.scoreTextColor(), tilesPx(1), tilesPx(1));
+        drawScore(highScore, style.highScoreText(), scaledFont, highScoreTextColor, tilesPx(14), tilesPx(1));
     }
 
     private void drawScore(Score score, String title, Font font, Color color, double x, double y) {

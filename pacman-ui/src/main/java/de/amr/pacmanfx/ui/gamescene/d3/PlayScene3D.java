@@ -354,7 +354,7 @@ public class PlayScene3D extends GameScene
         rightScore.reqComp(ScoreViewComp.class).titleDisplay().setText(rightTitle);
 
         scoresView = new ScoresView(leftScore, rightScore);
-        scoresView.setFont(GlobalAssets.PredefinedFont.ARCADE8.font());
+        scoresView.setFont(GlobalAssets.Fonts.ARCADE8.font());
 
         subSceneRoot.getChildren().add(scoresView.root());
 

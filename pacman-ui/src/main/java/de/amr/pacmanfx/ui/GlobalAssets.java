@@ -12,7 +12,6 @@ import de.amr.pacmanfx.uilib.rendering.EggradientSamples;
 import javafx.scene.layout.Background;
 import javafx.scene.media.Media;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 public final class GlobalAssets {
@@ -25,26 +24,26 @@ public final class GlobalAssets {
 
     public static final ResourceManager RES_MGR = () -> GlobalAssets.class;
 
-    public enum PredefinedFont {
+    public enum Fonts {
         ARCADE6       ("fonts/emulogic.ttf", 6),
         ARCADE8       ("fonts/emulogic.ttf", 8),
         HANDWRITING   ("fonts/Molle-Italic.ttf", 9),
         MONOSPACED    ("fonts/fantasquesansmono-bold.otf", 12),
         PAC_FONT_GOOD ("fonts/PacfontGood.ttf", 8);
 
-        PredefinedFont(String path, double size) {
+        Fonts(String path, double size) {
             font = RES_MGR.loadFont(RESOURCE_ROOT + path, size);
         }
 
-        public Font font() {
+        public javafx.scene.text.Font font() {
             return font;
         }
 
-        public Font font(double size) {
-            return Font.font(font.getFamily(), size);
+        public javafx.scene.text.Font font(double size) {
+            return javafx.scene.text.Font.font(font.getFamily(), size);
         }
 
-        private final Font font;
+        private final javafx.scene.text.Font font;
     }
 
     public enum VoiceID {
@@ -72,7 +71,7 @@ public final class GlobalAssets {
 
     static {
         Logger.info("Loading predefined fonts");
-        for (var predefinedFont : PredefinedFont.values()) {
+        for (var predefinedFont : Fonts.values()) {
             Logger.info(predefinedFont.font());
         }
     }

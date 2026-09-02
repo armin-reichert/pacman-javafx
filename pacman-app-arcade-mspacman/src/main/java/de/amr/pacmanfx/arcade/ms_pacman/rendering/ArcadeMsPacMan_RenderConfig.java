@@ -27,6 +27,7 @@ import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.HUD_Renderer;
+import de.amr.pacmanfx.ui.gamescene.d2.HUD_Style;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
@@ -131,6 +132,13 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
 
         final CanvasRenderingComp r2D = gameScene.components().reqComp(CanvasRenderingComp.class);
         final var renderer = new Arcade_HUD_Renderer(
+            new HUD_Style(
+                "SCORE",
+                "HIGH SCORE",
+                ARCADE_WHITE,
+                Color.GRAY,
+                GlobalAssets.Fonts.ARCADE8.font()
+            ),
             canvas,
             spriteSheet(),
             spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL),

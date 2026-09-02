@@ -248,8 +248,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
     @Override
     public void render() {
-        final GameContext game = app.game();
-        final GameSession session = game.session();
+        final GameSession session = app.game().session();
         final long tick = app.clock().currentTick();
 
         app.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
@@ -262,14 +261,12 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
                         hudRenderer.drawHUD(session.hud(), session, gameScene, tick);
                     }
                 });
+                miniPlaySceneView.draw();
             } catch (Exception x) {
                 Logger.error(x, "Exception during rendering!");
             }
-
         });
 
-        // Render mini view content
-        miniPlaySceneView.draw();
 
         // Dashboard must always be updated even if simulation is stopped!
         if (overlayLayer.isVisible()) {

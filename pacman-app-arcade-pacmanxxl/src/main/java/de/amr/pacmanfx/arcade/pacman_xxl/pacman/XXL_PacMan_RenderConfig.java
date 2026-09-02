@@ -23,12 +23,16 @@ import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.HUD_Renderer;
+import de.amr.pacmanfx.ui.gamescene.d2.HUD_Style;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
+
+import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
 
 public class XXL_PacMan_RenderConfig implements GameVariantRenderConfig {
 
@@ -80,6 +84,13 @@ public class XXL_PacMan_RenderConfig implements GameVariantRenderConfig {
     public HUD_Renderer createHUDRenderer(GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas) {
         final CanvasRenderingComp r2D = gameScene.components().reqComp(CanvasRenderingComp.class);
         final var renderer = new Arcade_HUD_Renderer(
+            new HUD_Style(
+                "SCORE",
+                "HIGH SCORE",
+                ARCADE_WHITE,
+                Color.GRAY,
+                GlobalAssets.Fonts.ARCADE8.font()
+            ),
             canvas,
             spriteSheet(),
             spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL),
