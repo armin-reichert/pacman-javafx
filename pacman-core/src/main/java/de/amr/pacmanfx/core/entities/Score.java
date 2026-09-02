@@ -5,6 +5,8 @@
 package de.amr.pacmanfx.core.entities;
 
 import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.ecs.comp.RenderingComp;
+import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.entities.score.comp.ScoreDataComp;
 import de.amr.pacmanfx.core.entities.score.comp.ScorePersistencyComp;
 
@@ -21,6 +23,7 @@ public class Score extends GameEntity {
     public Score(Type type) {
         this.type = requireNonNull(type);
         setComp(ScoreDataComp.class, new ScoreDataComp());
+        setComp(RenderingComp.class, new RenderingComp(RenderingLayer.OVERLAY));
     }
 
     public Type type() {

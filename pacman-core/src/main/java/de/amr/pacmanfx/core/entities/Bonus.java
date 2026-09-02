@@ -6,6 +6,8 @@ package de.amr.pacmanfx.core.entities;
 
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.MovementComp;
+import de.amr.pacmanfx.core.ecs.comp.RenderingComp;
+import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusDataComp;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusMoveAndJumpComp;
@@ -39,6 +41,7 @@ public final class Bonus extends GameEntity {
     public Bonus(int symbolCode) {
         setComp(BonusDataComp.class, new BonusDataComp(symbolCode));
         setComp(BonusStateComp.class, new BonusStateComp());
+        setComp(RenderingComp.class, new RenderingComp(RenderingLayer.ACTORS));
     }
 
     public BonusDataComp data() {

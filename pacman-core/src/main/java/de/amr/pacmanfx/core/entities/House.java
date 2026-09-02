@@ -7,6 +7,8 @@ package de.amr.pacmanfx.core.entities;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.ecs.comp.RenderingComp;
+import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.entities.house.comp.HouseFloorplanComp;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 
@@ -18,6 +20,7 @@ public class House extends GameEntity {
 
     public House() {
         setComp(HouseFloorplanComp.class, new HouseFloorplanComp());
+        setComp(RenderingComp.class, new RenderingComp(RenderingLayer.WORLD));
     }
 
     public HouseFloorplanComp floorplan() {

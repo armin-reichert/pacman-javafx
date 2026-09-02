@@ -5,6 +5,8 @@
 package de.amr.pacmanfx.core.entities;
 
 import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.ecs.comp.RenderingComp;
+import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.entities.clapperboard.comp.ClapperboardInscriptionComp;
 import de.amr.pacmanfx.core.entities.clapperboard.comp.ClapperboardStateComp;
 
@@ -16,6 +18,7 @@ public class Clapperboard extends GameEntity {
     public Clapperboard(String number, String text) {
         setComp(ClapperboardStateComp.class, new ClapperboardStateComp());
         setComp(ClapperboardInscriptionComp.class, new ClapperboardInscriptionComp());
+        setComp(RenderingComp.class, new RenderingComp(RenderingLayer.PROPS));
 
         inscription().setNumber(number);
         inscription().setText(text);

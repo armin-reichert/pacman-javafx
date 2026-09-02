@@ -5,9 +5,7 @@
 package de.amr.pacmanfx.core.entities;
 
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.comp.MovementComp;
-import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
-import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
+import de.amr.pacmanfx.core.ecs.comp.*;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostAnimationComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostHouseAccessComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostStateComp;
@@ -34,6 +32,7 @@ public final class Ghost extends GameEntity {
         setComp(GhostStateComp.class, new GhostStateComp());
         setComp(GhostAnimationComp.class, new GhostAnimationComp());
         setComp(SpriteAnimationComp.class, new SpriteAnimationComp());
+        setComp(RenderingComp.class, new RenderingComp(RenderingLayer.ACTORS));
 
         //TODO where does this belong?
         worldNavigation().corneringSpeedDelta = -1.25f;

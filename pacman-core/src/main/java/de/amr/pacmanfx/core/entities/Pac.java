@@ -5,10 +5,7 @@
 package de.amr.pacmanfx.core.entities;
 
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.comp.MovementComp;
-import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
-import de.amr.pacmanfx.core.ecs.comp.SteeringComp;
-import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
+import de.amr.pacmanfx.core.ecs.comp.*;
 import de.amr.pacmanfx.core.entities.pac.comp.*;
 
 import static java.util.Objects.requireNonNull;
@@ -33,6 +30,7 @@ public final class Pac extends GameEntity {
         setComp(PacStateComp.class, new PacStateComp(male));
         setComp(SpriteAnimationComp.class, new SpriteAnimationComp());
         setComp(PacAnimationComp.class, new PacAnimationComp());
+        setComp(RenderingComp.class, new RenderingComp(RenderingLayer.ACTORS));
     }
 
     public MovementComp movement() {
