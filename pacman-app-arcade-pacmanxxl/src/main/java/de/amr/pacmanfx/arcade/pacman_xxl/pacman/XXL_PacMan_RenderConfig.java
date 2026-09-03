@@ -14,6 +14,8 @@ import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import javafx.scene.canvas.Canvas;
 
+import static java.util.Objects.requireNonNull;
+
 public class XXL_PacMan_RenderConfig extends ArcadePacMan_RenderConfig {
 
     public XXL_PacMan_RenderConfig(AssetMap assets) {
@@ -22,11 +24,17 @@ public class XXL_PacMan_RenderConfig extends ArcadePacMan_RenderConfig {
 
     @Override
     public GenericWorldMapColorScheme colorScheme(WorldMap worldMap, WorldSettings worldSettings) {
+        requireNonNull(worldMap);
+        requireNonNull(worldSettings);
+
         return GlobalAssets.enhanceContrast(worldSettings, worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME));
     }
 
     @Override
-    public XXL_PacMan_GameLevelRenderer createGameLevelRenderer(ActorSpriteAnimController animSystem, Canvas canvas) {
+    public XXL_PacMan_GameLevelRenderer createGameLevelRenderer(ActorSpriteAnimController animController, Canvas canvas) {
+        requireNonNull(animController);
+        requireNonNull(canvas);
+
         return new XXL_PacMan_GameLevelRenderer(canvas);
     }
 }
