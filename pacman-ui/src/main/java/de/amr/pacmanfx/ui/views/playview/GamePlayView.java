@@ -7,8 +7,11 @@ package de.amr.pacmanfx.ui.views.playview;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.ecs.comp.RenderingComp;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
@@ -19,6 +22,7 @@ import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
+import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.HUD_Renderer;
 import de.amr.pacmanfx.ui.settings.ui.DashboardSectionSettings;
@@ -54,7 +58,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.FontSmoothingType;
 import org.tinylog.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static de.amr.pacmanfx.ui.views.ContextMenuSupport.addLocalizedActionItem;
 import static de.amr.pacmanfx.ui.views.ContextMenuSupport.addLocalizedTitleItem;
@@ -446,6 +452,15 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
                     rendererRegistry.sceneRenderer().render(gameScene, tick);
                     rendererRegistry.hudRenderer().drawHUD(session.hud(), session, gameScene, tick);
                     rendererRegistry.hudRenderer().drawMessage(session);
+
+                    session.optLevel().ifPresent(level -> {
+                        entitiesInRenderingOrder(level.entities()).forEach(
+                            actor -> rendererRegistry.actorRenderer.render(actor, tick));
+                    });
+
+                    if (gameScene.viewModel().debugModeOnProperty().get()) {
+                        rendererRegistry.debugRenderer().render(gameScene, tick);
+                    }
                 });
                 miniView.draw();
             } catch (Exception x) {
@@ -459,6 +474,15 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         }
     }
 
+    private List<GameEntity> entitiesInRenderingOrder(GameLevelEntitySet entities) {
+        return entities.all()
+            .filter(e -> e.hasComp(RenderingComp.class))
+            .sorted((e1, e2) -> RenderingComp.RENDERING_ORDER.compare(
+                e1.reqComp(RenderingComp.class),
+                e2.reqComp(RenderingComp.class)))
+            .collect(Collectors.toCollection(ArrayList::new));
+    }
+
     private void updateRenderers(GameScene gameScene) {
         requireNonNull(gameScene);
 
@@ -468,20 +492,32 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         final Canvas canvas = canvasRendering.canvas();
 
         if (canvas != null) {
+            rendererRegistry.setActorRenderer(canvasRendering.configureRenderer(renderConfig.createActorRenderer(animController, canvas)));
             rendererRegistry.setSceneRenderer(renderConfig.createGameSceneRenderer(gameScene, animController, canvas));
             rendererRegistry.setHudRenderer(renderConfig.createHUDRenderer(gameScene, animController, canvas)); // may return null!
             rendererRegistry.setFontSmoothing(app.ui().viewModel().common2DSettings().fontSmoothingOnProperty().get());
+            rendererRegistry.setDebugRenderer(canvasRendering.configureRenderer(new BaseGameSceneDebugInfoRenderer(animController, canvas)));
         } else {
             Logger.error("Cannot create game scene and HUD renderer: no canvas has been assigned");
         }
     }
 
     static class RendererRegistry {
+        private BaseRenderer actorRenderer;
         private BaseRenderer sceneRenderer;
         private HUD_Renderer hudRenderer;
+        private BaseRenderer debugRenderer;
 
         public void setFontSmoothing(boolean smoothing) {
             sceneRenderer.ctx().setFontSmoothingType(smoothing ? FontSmoothingType.LCD : FontSmoothingType.GRAY);
+        }
+
+        public BaseRenderer actorRenderer() {
+            return actorRenderer;
+        }
+
+        public void setActorRenderer(BaseRenderer actorRenderer) {
+            this.actorRenderer = actorRenderer;
         }
 
         public BaseRenderer sceneRenderer() {
@@ -498,6 +534,14 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
         public void setHudRenderer(HUD_Renderer hudRenderer) {
             this.hudRenderer = hudRenderer;
+        }
+
+        public BaseRenderer debugRenderer() {
+            return debugRenderer;
+        }
+
+        public void setDebugRenderer(BaseRenderer debugRenderer) {
+            this.debugRenderer = debugRenderer;
         }
     }
 }

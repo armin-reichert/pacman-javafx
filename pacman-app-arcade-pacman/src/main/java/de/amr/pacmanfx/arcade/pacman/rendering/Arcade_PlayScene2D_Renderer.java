@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.InfoMap;
@@ -8,23 +9,19 @@ import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.comp.RenderingComp;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.level.GameLevelEntitySet;
-import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.*;
+import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
-import de.amr.pacmanfx.uilib.rendering.*;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
+import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
+import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 
@@ -36,22 +33,14 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements SpriteR
 
     private final SpriteSheet spriteSheet;
     private final GameLevelRenderer levelRenderer;
-    private final BaseRenderer actorRenderer;
-    private final BaseGameSceneDebugInfoRenderer debugRenderer;
 
     public Arcade_PlayScene2D_Renderer(GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas, SpriteSheet spriteSheet) {
         super(canvas);
         requireNonNull(gameScene);
         this.spriteSheet = requireNonNull(spriteSheet);
-
         final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
-
         final GameVariantRenderConfig renderConfig = gameScene.app().gameVariants().currentGameVariant().uiConfig().renderConfig();
-        final ActorSpriteAnimController animController = gameScene.game().variant().systems().actorSpriteAnimController();
-
         levelRenderer = r2D.configureRenderer(renderConfig.createGameLevelRenderer(animSystem, canvas));
-        actorRenderer = r2D.configureRenderer(renderConfig.createActorRenderer(animSystem, canvas));
-        debugRenderer = r2D.configureRenderer(new BaseGameSceneDebugInfoRenderer(animController, canvas));
     }
 
     @Override
@@ -75,12 +64,6 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements SpriteR
             final InfoMap info = createRenderInfo(level, playScene);
             levelRenderer.applyLevelSettings(rules, level, info);
             levelRenderer.drawLevel(game, level, info);
-
-            entitiesInRenderingOrder(level.entities()).forEach(actor -> actorRenderer.render(actor, tick));
-
-            if (playScene.viewModel().debugModeOnProperty().get()) {
-                debugRenderer.render(playScene, tick);
-            }
         });
     }
 
@@ -97,14 +80,5 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements SpriteR
             info.put(CommonRenderInfoKey.MAP_FLASHING, flashing.isFlashing());
         });
         return info;
-    }
-
-    private List<GameEntity> entitiesInRenderingOrder(GameLevelEntitySet entities) {
-        return entities.all()
-            .filter(e -> e.hasComp(RenderingComp.class))
-            .sorted((e1, e2) -> RenderingComp.RENDERING_ORDER.compare(
-                e1.reqComp(RenderingComp.class),
-                e2.reqComp(RenderingComp.class)))
-            .collect(Collectors.toCollection(ArrayList::new));
     }
 }

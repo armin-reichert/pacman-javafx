@@ -58,48 +58,28 @@ public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
     protected Color debugTextStroke = Color.GRAY;
     protected Font debugTextFont = Font.font("Sans", 14.0f);
 
-    private final List<GameEntity> actorsInZOrder = new ArrayList<>();
     private final ActorSpriteAnimController animController;
     private final Text dummy = new Text();
-
-    private GameScene gameScene;
 
     public BaseGameSceneDebugInfoRenderer(ActorSpriteAnimController animController, Canvas canvas) {
         super(canvas);
         this.animController = requireNonNull(animController);
     }
 
-    private void updateActorZOrder(GameLevel level) {
-        actorsInZOrder.clear();
-        level.entities().optBonus().ifPresent(actorsInZOrder::add);
-        actorsInZOrder.add(level.entities().pac());
-        Stream.of(
-            GhostPersonality.ORANGE_GHOST_POKEY,
-            GhostPersonality.CYAN_GHOST_BASHFUL,
-            GhostPersonality.PINK_GHOST_SPEEDY,
-            GhostPersonality.RED_GHOST_SHADOW
-        ).map(level.entities()::ghost).forEach(actorsInZOrder::add);
-    }
-
-    public void setGameScene(GameScene gameScene) {
-        this.gameScene = gameScene;
-    }
-
     @Override
     public void render(Object r, long tick) {
-        if (gameScene == null) {
+        if (!(r instanceof GameScene gameScene)) {
             return;
         }
 
         final GameSession session = gameScene.game().session();
-        final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
+        final CanvasRenderingComp canvasRendering = gameScene.reqComp(CanvasRenderingComp.class);
 
-        drawTileGrid(r2D.unscaledWidth(), r2D.unscaledHeight(), Color.LIGHTGRAY);
+        drawTileGrid(canvasRendering.unscaledWidth(), canvasRendering.unscaledHeight(), Color.LIGHTGRAY);
         drawGameStateInfo(gameScene.game());
         session.optLevel().ifPresent(level -> {
 //            drawTerrainDebugInfo(level);
-            updateActorZOrder(level);
-            actorsInZOrder.forEach(actor -> drawMovingActorInfo(animController, actor));
+            level.entities().all().forEach(actor -> drawMovingActorInfo(animController, actor));
         });
     }
 
