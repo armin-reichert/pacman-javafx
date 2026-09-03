@@ -30,7 +30,7 @@ import static java.util.Objects.requireNonNull;
  * Renders the 2D play scene for the Arcade Pac-Man games. The XXL games use a generic map renderer that does not need
  * any graphics.
  */
-public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameScene2D_Renderer, SpriteRenderer {
+public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements SpriteRenderer {
 
     public static final List<GhostPersonality> GHOST_Z_ORDER = List.of(
         GhostPersonality.ORANGE_GHOST_POKEY,

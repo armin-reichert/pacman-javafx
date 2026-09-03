@@ -12,11 +12,11 @@ import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
-import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 
+import static de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer.createDefaultSceneDebugRenderer;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_CutScene_Renderer extends BaseRenderer implements SpriteRenderer {
@@ -31,7 +31,7 @@ public class ArcadePacMan_CutScene_Renderer extends BaseRenderer implements Spri
         this.animSystem = requireNonNull(animSystem);
         final GameVariantRenderConfig renderConfig = gameScene.app().gameVariants().currentGameVariant().uiConfig().renderConfig();
         actorRenderer = r2D.configureRenderer(renderConfig.createActorRenderer(animSystem, canvas));
-        debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(gameScene, canvas);
+        debugRenderer = createDefaultSceneDebugRenderer(gameScene, canvas);
     }
 
     @Override

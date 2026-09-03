@@ -6,11 +6,11 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_StartScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
-import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
+import static de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer.createDefaultSceneDebugRenderer;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
 
 public class ArcadePacMan_StartScene_Renderer extends BaseRenderer {
@@ -19,7 +19,7 @@ public class ArcadePacMan_StartScene_Renderer extends BaseRenderer {
 
     public ArcadePacMan_StartScene_Renderer(GameScene scene, Canvas canvas) {
         super(canvas);
-        debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
+        debugRenderer = createDefaultSceneDebugRenderer(scene, canvas);
     }
 
     @Override

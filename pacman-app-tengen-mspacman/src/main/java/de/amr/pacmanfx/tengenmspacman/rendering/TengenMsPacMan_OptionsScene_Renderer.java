@@ -15,7 +15,6 @@ import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
-import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
@@ -26,6 +25,7 @@ import javafx.scene.text.Font;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_OptionsScene.*;
+import static de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer.createDefaultSceneDebugRenderer;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
@@ -44,7 +44,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
     public TengenMsPacMan_OptionsScene_Renderer(GameScene scene, Canvas canvas) {
         super(canvas);
         requireNonNull(scene);
-        debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
+        debugRenderer = createDefaultSceneDebugRenderer(scene, canvas);
     }
 
     @Override

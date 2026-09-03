@@ -11,7 +11,6 @@ import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
-import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -19,9 +18,10 @@ import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.arcade.ms_pacman.scenes.ArcadeMsPacMan_IntroScene.*;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
+import static de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer.createDefaultSceneDebugRenderer;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
 
-public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer implements GameScene2D_Renderer {
+public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer {
 
     private static final String TITLE = "\"MS PAC-MAN\"";
     private static final String[] GHOST_NAMES = { "BLINKY", "PINKY", "INKY", "SUE" };
@@ -49,7 +49,7 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer implements 
         marqueeRenderer   = r2D.configureRenderer(new MarqueeRenderer(canvas));
         copyrightRenderer = r2D.configureRenderer(new CopyrightRenderer(canvas));
         actorRenderer     = r2D.configureRenderer(renderConfig.createActorRenderer(animController, canvas));
-        debugRenderer     = GameScene2D_Renderer.createDefaultSceneDebugRenderer(gameScene, canvas);
+        debugRenderer     = createDefaultSceneDebugRenderer(gameScene, canvas);
     }
 
     @Override

@@ -8,13 +8,13 @@ import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CreditsScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
-import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
+import static de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer.createDefaultSceneDebugRenderer;
 
 public class TengenMsPacMan_CreditsScene_Renderer extends BaseRenderer implements TengenMsPacMan_SceneRendererMixin {
 
@@ -69,7 +69,7 @@ public class TengenMsPacMan_CreditsScene_Renderer extends BaseRenderer implement
 
     public TengenMsPacMan_CreditsScene_Renderer(GameScene scene, Canvas canvas) {
         super(canvas);
-        debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
+        debugRenderer = createDefaultSceneDebugRenderer(scene, canvas);
     }
 
     @Override

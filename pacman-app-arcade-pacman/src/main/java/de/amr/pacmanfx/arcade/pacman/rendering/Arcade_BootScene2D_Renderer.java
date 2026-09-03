@@ -8,7 +8,6 @@ import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
-import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
@@ -20,6 +19,7 @@ import static de.amr.basics.math.RandomNumbers.randomFloat;
 import static de.amr.basics.math.RandomNumbers.randomInt;
 import static de.amr.basics.math.RectShort.sprite;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
+import static de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer.createDefaultSceneDebugRenderer;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
 import static java.lang.Math.clamp;
 import static java.util.Objects.requireNonNull;
@@ -44,7 +44,7 @@ public class Arcade_BootScene2D_Renderer extends BaseRenderer implements SpriteR
         this.spriteRegion = requireNonNull(spriteRegion);
 
         requireNonNull(scene);
-        debugRenderer = GameScene2D_Renderer.createDefaultSceneDebugRenderer(scene, canvas);
+        debugRenderer = createDefaultSceneDebugRenderer(scene, canvas);
     }
 
     @Override

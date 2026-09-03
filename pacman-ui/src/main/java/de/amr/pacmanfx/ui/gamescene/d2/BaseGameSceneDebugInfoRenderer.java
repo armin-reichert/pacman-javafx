@@ -48,6 +48,12 @@ public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
 
     private static final List<Direction> CLOCK_WISE = List.of(Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT);
 
+    public static BaseGameSceneDebugInfoRenderer createDefaultSceneDebugRenderer(GameScene gameScene, Canvas canvas) {
+        final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
+        final ActorSpriteAnimController animController = gameScene.game().variant().systems().actorSpriteAnimController();
+        return r2D.configureRenderer(new BaseGameSceneDebugInfoRenderer(animController, canvas));
+    }
+
     protected Color debugTextFill = Color.WHITE;
     protected Color debugTextStroke = Color.GRAY;
     protected Font debugTextFont = Font.font("Sans", 14.0f);

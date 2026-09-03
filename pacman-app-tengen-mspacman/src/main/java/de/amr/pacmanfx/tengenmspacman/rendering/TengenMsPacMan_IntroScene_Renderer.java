@@ -17,7 +17,6 @@ import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
-import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
@@ -28,6 +27,7 @@ import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_IntroScene.MARQUEE_X;
 import static de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_IntroScene.MARQUEE_Y;
 import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConfig.shadeOfBlue;
+import static de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer.createDefaultSceneDebugRenderer;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
@@ -57,7 +57,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
         final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
         marqueeRenderer = r2D.configureRenderer(new MarqueeRenderer(canvas));
         actorRenderer   = r2D.configureRenderer(renderConfig.createActorRenderer(animSystem, canvas));
-        debugRenderer   = GameScene2D_Renderer.createDefaultSceneDebugRenderer(gameScene, canvas);
+        debugRenderer   = createDefaultSceneDebugRenderer(gameScene, canvas);
 
         uiSettings = gameScene.app().currentGameVariantUIConfig().extensionValue(
             TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
