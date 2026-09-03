@@ -32,9 +32,9 @@ public class ArcadeMsPacMan_CutScene_Renderer extends BaseRenderer implements Ga
     @Override
     public void draw(GameScene gameScene, long tick) {
         switch (gameScene) {
-            case ArcadeMsPacMan_CutScene1 cutScene -> cutScene.entitiesInRenderOrder().forEach(actorRenderer::drawActor);
-            case ArcadeMsPacMan_CutScene2 cutScene -> cutScene.entitiesInRenderOrder().forEach(actorRenderer::drawActor);
-            case ArcadeMsPacMan_CutScene3 cutScene -> cutScene.entitiesInRenderOrder().forEach(actorRenderer::drawActor);
+            case ArcadeMsPacMan_CutScene1 cutScene -> cutScene.entitiesInRenderOrder().forEach(actorRenderer::render);
+            case ArcadeMsPacMan_CutScene2 cutScene -> cutScene.entitiesInRenderOrder().forEach(actorRenderer::render);
+            case ArcadeMsPacMan_CutScene3 cutScene -> cutScene.entitiesInRenderOrder().forEach(actorRenderer::render);
             default -> throw new IllegalStateException("Unexpected value: " + gameScene);
         }
         if (gameScene.viewModel().debugModeOnProperty().get()) {

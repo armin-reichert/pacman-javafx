@@ -38,7 +38,7 @@ public class TengenMsPacMan_BootScene_Renderer extends BaseRenderer implements G
         } else {
             actorRenderer.fillText(TENGEN_PRESENTS, bootScene.shadeOfBlue, actorRenderer.arcadeFont8(),
                 bootScene.movingText.pos().x(), bootScene.movingText.pos().y());
-            actorRenderer.drawActor(bootScene.ghost);
+            actorRenderer.render(bootScene.ghost);
         }
 
         if (scene.viewModel().debugModeOnProperty().get()) {

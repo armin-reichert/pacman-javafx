@@ -122,7 +122,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
             ctx.translate(scaledIndent, 0);
             levelRenderer.drawLevel(scene.game(), level, infoMap);
             levelRenderer.drawDoor(house, worldMap); // ghosts appear under door, so draw door over again
-            actorsInZOrder.forEach(actorRenderer::drawActor);
+            actorsInZOrder.forEach(actorRenderer::render);
             ctx.restore();
 
             if (scene.viewModel().debugModeOnProperty().get()) {

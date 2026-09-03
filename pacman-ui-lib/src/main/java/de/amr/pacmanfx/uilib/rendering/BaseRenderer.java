@@ -57,6 +57,11 @@ public class BaseRenderer implements Renderer {
     // Renderer interface
 
     @Override
+    public void render(Object r) {
+        throw new UnsupportedOperationException("Implement render method for class " + getClass().getSimpleName());
+    }
+
+    @Override
     public void clearCanvas() {
         fillCanvas(backgroundColor());
     }

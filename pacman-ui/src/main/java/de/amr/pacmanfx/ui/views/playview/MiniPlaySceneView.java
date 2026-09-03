@@ -20,7 +20,9 @@ import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationManager;
 import de.amr.pacmanfx.ui.vm.GameViewModel;
 import de.amr.pacmanfx.ui.vm.MiniViewSettingsVM;
-import de.amr.pacmanfx.uilib.rendering.*;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
+import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
@@ -67,7 +69,7 @@ public class MiniPlaySceneView {
     //       selected a game variant when the constructor is called, so no variant configuration is available yet!
     private BaseRenderer canvasRenderer;
     private GameLevelRenderer levelRenderer;
-    private ActorRenderer actorRenderer;
+    private BaseRenderer actorRenderer;
 
     private TranslateTransition slideInAnimation;
     private TranslateTransition slideOutAnimation;
@@ -210,7 +212,7 @@ public class MiniPlaySceneView {
         levelRenderer.drawLevel(game, level, info);
 
         updateActorZOrder(level.entities());
-        actorsInZOrder.forEach(actorRenderer::drawActor);
+        actorsInZOrder.forEach(actorRenderer::render);
     }
 
     // Actor z-order: Bonus under Pac-Man under ghosts in z-order.

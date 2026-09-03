@@ -117,11 +117,11 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Ga
 
     private void drawRumblingGuys(ArcadePacMan_IntroScene introScene) {
         for (Ghost ghost : introScene.ghosts) {
-            actorRenderer.drawActor(ghost);
+            actorRenderer.render(ghost);
         }
-        actorRenderer.drawActor(introScene.pacMan);
+        actorRenderer.render(introScene.pacMan);
         if (introScene.points != null) {
-            actorRenderer.drawActor(introScene.points);
+            actorRenderer.render(introScene.points);
         }
     }
 

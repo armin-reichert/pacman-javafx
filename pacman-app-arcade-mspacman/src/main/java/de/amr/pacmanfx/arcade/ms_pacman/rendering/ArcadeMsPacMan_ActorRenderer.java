@@ -10,7 +10,6 @@ import de.amr.pacmanfx.arcade.ms_pacman.entities.clapperboard.ClapperboardAnimat
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.*;
-import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
@@ -23,7 +22,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Implements the rendering for all actor types occurring in the Arcade Ms. Pac-Man game.
  */
-public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements SpriteRenderer, ActorRenderer {
+public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements SpriteRenderer {
 
     // These arrays must be sorted!
     private static final int[] GHOST_POINTS = { 200, 400, 800, 1600 };
@@ -42,9 +41,12 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     }
 
     @Override
-    public void drawActor(GameEntity actor) {
-        requireNonNull(actor);
+    public void render(Object r) {
+        if (!(r instanceof GameEntity actor)) {
+            return;
+        }
         if (!actor.isVisible()) return;
+
         final Vector2f center = actor.pos().bodyCenter();
         switch (actor) {
             case Pac pac                   -> drawSpriteCentered(computeSprite(pac),    center);

@@ -18,7 +18,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.HUD_Style;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
-import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -33,15 +33,15 @@ public interface GameVariantRenderConfig {
 
     GenericWorldMapColorScheme colorScheme(WorldMap worldMap, WorldSettings worldSettings);
 
-    GameLevelRenderer createGameLevelRenderer(ActorSpriteAnimController animSystem, Canvas canvas);
+    GameLevelRenderer createGameLevelRenderer(ActorSpriteAnimController animController, Canvas canvas);
 
-    GameScene2D_Renderer createGameSceneRenderer(GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas);
+    GameScene2D_Renderer createGameSceneRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas);
 
     HUD_Style hudStyle();
 
-    HUD_Renderer createHUDRenderer(GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas);
+    HUD_Renderer createHUDRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas);
 
-    ActorRenderer createActorRenderer(ActorSpriteAnimController animSystem, Canvas canvas);
+    BaseRenderer createActorRenderer(ActorSpriteAnimController animController, Canvas canvas);
 
     Ghost createAnimatedGhost(ActorSpriteAnimController animController, SpriteAnimContainer container, GhostPersonality personality);
 

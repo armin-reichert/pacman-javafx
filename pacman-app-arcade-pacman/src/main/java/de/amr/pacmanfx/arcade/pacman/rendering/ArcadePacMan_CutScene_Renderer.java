@@ -13,7 +13,6 @@ import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
-import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
@@ -23,7 +22,7 @@ import static java.util.Objects.requireNonNull;
 public class ArcadePacMan_CutScene_Renderer extends BaseRenderer implements GameScene2D_Renderer, SpriteRenderer {
 
     protected final ActorSpriteAnimController animSystem;
-    protected final ActorRenderer actorRenderer;
+    protected final BaseRenderer actorRenderer;
     protected BaseDebugInfoRenderer debugRenderer;
 
     public ArcadePacMan_CutScene_Renderer(GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas) {
@@ -54,18 +53,18 @@ public class ArcadePacMan_CutScene_Renderer extends BaseRenderer implements Game
     }
 
     private void drawCutScene1(ArcadePacMan_CutScene1 cutScene) {
-        actorRenderer.drawActor(cutScene.blinky);
-        actorRenderer.drawActor(cutScene.pacMan);
+        actorRenderer.render(cutScene.blinky);
+        actorRenderer.render(cutScene.pacMan);
     }
 
     private void drawCutScene2(ArcadePacMan_CutScene2 cutScene) {
         drawSprite(cutScene.nailDressAnimation.sprite(), cutScene.nailX, cutScene.nailY, true);
-        actorRenderer.drawActor(cutScene.pacMan);
-        actorRenderer.drawActor(cutScene.blinky);
+        actorRenderer.render(cutScene.pacMan);
+        actorRenderer.render(cutScene.blinky);
     }
 
     private void drawCutScene3(ArcadePacMan_CutScene3 cutScene) {
-        actorRenderer.drawActor(cutScene.pacMan);
-        actorRenderer.drawActor(cutScene.blinky);
+        actorRenderer.render(cutScene.pacMan);
+        actorRenderer.render(cutScene.blinky);
     }
 }

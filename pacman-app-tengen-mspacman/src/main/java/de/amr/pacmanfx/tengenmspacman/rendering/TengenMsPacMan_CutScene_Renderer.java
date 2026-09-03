@@ -46,34 +46,34 @@ public class TengenMsPacMan_CutScene_Renderer extends BaseRenderer implements Ga
     }
 
     private void drawCutScene1(TengenMsPacMan_CutScene1 cutScene) {
-        actorRenderer.drawActor(cutScene.clapperboard());
-        actorRenderer.drawActor(cutScene.msPacMan());
-        actorRenderer.drawActor(cutScene.pacMan());
-        actorRenderer.drawActor(cutScene.inky());
-        actorRenderer.drawActor(cutScene.pinky());
-        actorRenderer.drawActor(cutScene.heart());
+        actorRenderer.render(cutScene.clapperboard());
+        actorRenderer.render(cutScene.msPacMan());
+        actorRenderer.render(cutScene.pacMan());
+        actorRenderer.render(cutScene.inky());
+        actorRenderer.render(cutScene.pinky());
+        actorRenderer.render(cutScene.heart());
     }
 
     private void drawCutScene2(TengenMsPacMan_CutScene2 cutScene) {
-        actorRenderer.drawActor(cutScene.clapperboard());
-        actorRenderer.drawActor(cutScene.msPacMan());
-        actorRenderer.drawActor(cutScene.pacMan());
+        actorRenderer.render(cutScene.clapperboard());
+        actorRenderer.render(cutScene.msPacMan());
+        actorRenderer.render(cutScene.pacMan());
     }
 
     private void drawCutScene3(TengenMsPacMan_CutScene3 cutScene) {
         if (!cutScene.darkness()) {
-            actorRenderer.drawActor(cutScene.clapperboard());
-            actorRenderer.drawActor(cutScene.stork());
-            actorRenderer.drawActor(cutScene.flyingBag());
-            actorRenderer.drawActor(cutScene.msPacMan());
-            actorRenderer.drawActor(cutScene.pacMan());
+            actorRenderer.render(cutScene.clapperboard());
+            actorRenderer.render(cutScene.stork());
+            actorRenderer.render(cutScene.flyingBag());
+            actorRenderer.render(cutScene.msPacMan());
+            actorRenderer.render(cutScene.pacMan());
         }
     }
 
     private void drawCutScene4(TengenMsPacMan_CutScene4 cutScene) {
-        actorRenderer.drawActor(cutScene.clapperboard());
-        actorRenderer.drawActor(cutScene.msPacMan());
-        actorRenderer.drawActor(cutScene.pacMan());
-        cutScene.juniors().forEach(actorRenderer::drawActor);
+        actorRenderer.render(cutScene.clapperboard());
+        actorRenderer.render(cutScene.msPacMan());
+        actorRenderer.render(cutScene.pacMan());
+        cutScene.juniors().forEach(actorRenderer::render);
     }
 }

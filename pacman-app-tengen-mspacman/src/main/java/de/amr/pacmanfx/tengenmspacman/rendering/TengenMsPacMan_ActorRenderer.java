@@ -16,7 +16,6 @@ import de.amr.pacmanfx.tengenmspacman.entities.clapperboard.TengenMsPacMan_Clapp
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
-import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.FacingSprite;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
@@ -26,7 +25,7 @@ import java.util.Arrays;
 
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements SpriteRenderer, ActorRenderer {
+public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements SpriteRenderer {
 
     // These arrays must be sorted!
     private static final int[] GHOST_POINTS = { 200, 400, 800, 1600 };
@@ -45,8 +44,11 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     }
 
     @Override
-    public void drawActor(GameEntity actor) {
-        requireNonNull(actor);
+    public void render(Object r) {
+        if (!(r instanceof GameEntity actor)) {
+            return;
+        }
+
         if (!actor.isVisible()) return;
 
         final Vector2f center = actor.pos().bodyCenter();

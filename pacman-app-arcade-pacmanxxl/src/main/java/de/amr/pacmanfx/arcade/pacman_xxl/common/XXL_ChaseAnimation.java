@@ -21,7 +21,7 @@ import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.game.GameVariant;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationTimer;
-import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -65,7 +65,7 @@ class XXL_ChaseAnimation {
     private Pac pac;
     private List<Ghost> ghosts;
     private GhostPoints ghostPoints;
-    private ActorRenderer actorRenderer;
+    private BaseRenderer actorRenderer;
     private ChasingState state;
 
     private int collisionCount;
@@ -88,10 +88,10 @@ class XXL_ChaseAnimation {
         ctx.save();
         ctx.translate(0, scaling.get() * y);
         actorRenderer.setImageSmoothing(true);
-        ghosts.forEach(actorRenderer::drawActor);
-        actorRenderer.drawActor(pac);
+        ghosts.forEach(actorRenderer::render);
+        actorRenderer.render(pac);
         if (ghostPoints != null) {
-            actorRenderer.drawActor(ghostPoints);
+            actorRenderer.render(ghostPoints);
         }
         ctx.restore();
     }

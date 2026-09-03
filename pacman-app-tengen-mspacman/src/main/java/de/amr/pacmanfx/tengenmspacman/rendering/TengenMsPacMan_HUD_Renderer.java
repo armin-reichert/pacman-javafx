@@ -120,15 +120,16 @@ public class TengenMsPacMan_HUD_Renderer
             ctx.save();
             ctx.translate(scaled(TengenMsPacMan_PlayScene2D_Renderer.CONTENT_INDENT), 0);
             final MessageView messageView = session.hud().messageView();
+            final Font scaledFont = Ufx.scaleFontBy(style.messageFont(), scaling());
             switch (messageView.data().messageType()) {
-                case GAME_OVER -> drawGameOverMessage(session, level);
-                case READY -> drawReadyMessage(level);
+                case GAME_OVER -> drawGameOverMessage(session, level, scaledFont);
+                case READY -> drawReadyMessage(level, scaledFont);
             }
             ctx.restore();
         });
     }
 
-    private void drawGameOverMessage(GameSession session, GameLevel level) {
+    private void drawGameOverMessage(GameSession session, GameLevel level, Font scaledFont) {
         final MessageAnimation animation = session.value(
             TengenMsPacMan_Extras.GAME_OVER_MESSAGE_ANIMATION, MessageAnimation.class);
 
@@ -143,12 +144,15 @@ public class TengenMsPacMan_HUD_Renderer
             ? Color.valueOf(colorScheme.wallStroke())
             : style.messageColor().apply(MessageType.GAME_OVER);
 
-        fillTextCentered(GAME_OVER_TEXT, color, style.messageFont(), pos.x(), pos.y());
+        fillTextCentered(GAME_OVER_TEXT, color, scaledFont, pos.x(), pos.y());
     }
 
-    private void drawReadyMessage(GameLevel level) {
+    private void drawReadyMessage(GameLevel level, Font scaledFont) {
         final Vector2f pos = messagePosition(level);
-        fillTextCentered(READY_TEXT, style.messageColor().apply(MessageType.READY), style.messageFont(), pos.x(), pos.y());
+        fillTextCentered(READY_TEXT,
+            style.messageColor().apply(MessageType.READY),
+            scaledFont,
+            pos.x(), pos.y());
     }
 
     private Vector2f messagePosition(GameLevel level) {

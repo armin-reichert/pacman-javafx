@@ -18,7 +18,6 @@ import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
-import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
@@ -43,7 +42,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
     public static final String MS_PAC_MAN = "MS PAC-MAN";
     public static final String QUOTED_MS_PACMAN = "\"MS PAC-MAN\"";
 
-    private final ActorRenderer actorRenderer;
+    private final BaseRenderer actorRenderer;
     private final BaseDebugInfoRenderer debugRenderer;
     private final MarqueeRenderer marqueeRenderer;
     private final TengenMsPacMan_UISettings uiSettings;
@@ -112,7 +111,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
                 final Ghost currentGhost = intro.ghosts.get(intro.ghostIndex);
                 final Color ghostColor = intro.ghostColors[currentGhost.personality().ordinal()];
                 fillText(currentGhost.name().toUpperCase(), ghostColor, MARQUEE_X + 44, MARQUEE_Y + 41);
-                intro.ghosts.forEach(actorRenderer::drawActor);
+                intro.ghosts.forEach(actorRenderer::render);
             }
 
             case SceneState.MS_PACMAN_MARCHING_IN -> {
@@ -120,8 +119,8 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
                 fillText(QUOTED_MS_PACMAN, NES_Palette.color(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
                 fillText(STARRING, NES_Palette.color(0x20), MARQUEE_X + 12, MARQUEE_Y + 22);
                 fillText(MS_PAC_MAN, NES_Palette.color(0x28), MARQUEE_X + 28, MARQUEE_Y + 38);
-                intro.ghosts.forEach(actorRenderer::drawActor);
-                actorRenderer.drawActor(intro.msPacMan);
+                intro.ghosts.forEach(actorRenderer::render);
+                actorRenderer.render(intro.msPacMan);
             }
 
             default -> {}

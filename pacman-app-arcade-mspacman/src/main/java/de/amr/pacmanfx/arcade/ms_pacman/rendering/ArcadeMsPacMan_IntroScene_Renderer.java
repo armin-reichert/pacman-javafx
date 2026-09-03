@@ -12,7 +12,6 @@ import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
-import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -30,7 +29,7 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer implements 
 
     private final MarqueeRenderer marqueeRenderer;
     private final CopyrightRenderer copyrightRenderer;
-    private final ActorRenderer actorRenderer;
+    private final BaseRenderer actorRenderer;
     private final BaseDebugInfoRenderer debugRenderer;
 
     private final Image copyrightImage;
@@ -64,8 +63,8 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer implements 
 
         marqueeRenderer.drawMarquee(introScene.marquee);
 
-        introScene.ghosts.forEach(actorRenderer::drawActor);
-        actorRenderer.drawActor(introScene.msPacMan);
+        introScene.ghosts.forEach(actorRenderer::render);
+        actorRenderer.render(introScene.msPacMan);
 
         switch (introScene.sceneState()) {
             case SceneState.GHOSTS_MARCHING_IN -> {

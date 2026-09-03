@@ -10,6 +10,9 @@ import javafx.scene.paint.Color;
 
 public interface Renderer {
 
+    //TODO base interface
+    void render(Object r);
+
     GraphicsContext ctx();
 
     void clearCanvas();

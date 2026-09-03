@@ -31,7 +31,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.HUD_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.HUD_Style;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
-import de.amr.pacmanfx.uilib.rendering.ActorRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -167,7 +167,7 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public ActorRenderer createActorRenderer(ActorSpriteAnimController animController, Canvas canvas) {
+    public BaseRenderer createActorRenderer(ActorSpriteAnimController animController, Canvas canvas) {
         requireNonNull(animController);
         requireNonNull(canvas);
 

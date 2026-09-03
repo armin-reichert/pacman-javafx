@@ -39,7 +39,7 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
 
     private final SpriteSheet spriteSheet;
     private final GameLevelRenderer levelRenderer;
-    private final ActorRenderer actorRenderer;
+    private final BaseRenderer actorRenderer;
     private final BaseDebugInfoRenderer debugRenderer;
     private final List<GameEntity> actorsInZOrder = new ArrayList<>();
 
@@ -79,7 +79,7 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
             levelRenderer.applyLevelSettings(rules, level, info);
             levelRenderer.drawLevel(scene.game(), level, info);
             updateActorZOrder(level.entities());
-            actorsInZOrder.forEach(actorRenderer::drawActor);
+            actorsInZOrder.forEach(actorRenderer::render);
             if (scene.viewModel().debugModeOnProperty().get()) {
                 debugRenderer.draw(scene, tick);
             }
