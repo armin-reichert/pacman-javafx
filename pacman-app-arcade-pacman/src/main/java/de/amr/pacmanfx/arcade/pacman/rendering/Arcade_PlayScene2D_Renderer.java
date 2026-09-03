@@ -34,12 +34,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements SpriteRenderer {
 
-    public static final List<GhostPersonality> GHOST_Z_ORDER = List.of(
-        GhostPersonality.ORANGE_GHOST_POKEY,
-        GhostPersonality.CYAN_GHOST_BASHFUL,
-        GhostPersonality.PINK_GHOST_SPEEDY,
-        GhostPersonality.RED_GHOST_SHADOW);
-
     private final SpriteSheet spriteSheet;
     private final GameLevelRenderer levelRenderer;
     private final BaseRenderer actorRenderer;

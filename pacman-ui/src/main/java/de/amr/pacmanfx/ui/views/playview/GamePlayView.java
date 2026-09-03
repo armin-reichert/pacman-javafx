@@ -102,8 +102,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     // Icon layer
     private FontAwesomeIcon pausedIcon;
 
-    private BaseRenderer sceneRenderer;
-    private HUD_Renderer hudRenderer;
+    private final RendererRegistry rendererRegistry = new  RendererRegistry();
 
     public GamePlayView() {
         createLayout();
@@ -128,7 +127,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
         pausedIcon.visibleProperty().bind(app.clock().updatesDisabledProperty());
 
-        vm.common2DSettings().fontSmoothingOnProperty().addListener((_, _, smoothing) -> setFontSmoothing(smoothing));
+        vm.common2DSettings().fontSmoothingOnProperty().addListener((_, _, smoothing) -> rendererRegistry.setFontSmoothing(smoothing));
 
         vm.debugModeOnProperty().addListener((_, _, debug) -> {
             gameSceneLayer.setBackground(debug ? DEBUG_BACKGROUND : null);
@@ -243,39 +242,6 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     @Override
     public StackPane rootPane() {
         return rootPane;
-    }
-
-    @Override
-    public void render() {
-        final GameSession session = app.game().session();
-        final long tick = app.clock().currentTick();
-
-        app.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
-            try {
-                gameScene.optCanvasRendering().ifPresent(canvasRendering -> {
-                    //TODO more z-order control
-                    if (canvasRendering.clearCanvasBeforeRendering()) {
-                        sceneRenderer.clearCanvas();
-                    }
-                    if (sceneRenderer != null) {
-                        sceneRenderer.render(gameScene, tick);
-                    }
-                    if (hudRenderer != null) {
-                        hudRenderer.drawHUD(session.hud(), session, gameScene, tick);
-                        hudRenderer.drawMessage(session);
-                    }
-                });
-                miniView.draw();
-            } catch (Exception x) {
-                Logger.error(x, "Exception during rendering!");
-            }
-        });
-
-
-        // Dashboard must always be updated even if simulation is stopped!
-        if (overlayLayer.isVisible()) {
-            dashboard.update(app);
-        }
     }
 
     // Context menu handler
@@ -396,12 +362,6 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         rootPane.setId("game-play-view");
     }
 
-    private void setFontSmoothing(boolean smoothing) {
-        if (sceneRenderer != null) {
-            sceneRenderer.ctx().setFontSmoothingType(smoothing ? FontSmoothingType.LCD : FontSmoothingType.GRAY);
-        }
-    }
-
     private void showMiniView(GameContext game, GameLevel level) {
         final GameVariantRenderConfig renderConfig = app.gameVariants().currentGameVariant().uiConfig().renderConfig();
         final ActorSpriteAnimController animController = game.variant().systems().actorSpriteAnimController();
@@ -469,20 +429,75 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         gameSceneFrame.clearCanvas();
     }
 
+
+    // ---- Rendering
+
+    @Override
+    public void render() {
+        final GameSession session = app.game().session();
+        final long tick = app.clock().currentTick();
+
+        app.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
+            try {
+                gameScene.optCanvasRendering().ifPresent(canvasRendering -> {
+                    if (canvasRendering.clearCanvasBeforeRendering()) {
+                        rendererRegistry.sceneRenderer().clearCanvas();
+                    }
+                    rendererRegistry.sceneRenderer().render(gameScene, tick);
+                    rendererRegistry.hudRenderer().drawHUD(session.hud(), session, gameScene, tick);
+                    rendererRegistry.hudRenderer().drawMessage(session);
+                });
+                miniView.draw();
+            } catch (Exception x) {
+                Logger.error(x, "Exception during rendering!");
+            }
+        });
+
+        // Dashboard must always be updated even if simulation is stopped!
+        if (overlayLayer.isVisible()) {
+            dashboard.update(app);
+        }
+    }
+
     private void updateRenderers(GameScene gameScene) {
         requireNonNull(gameScene);
 
         final CanvasRenderingComp canvasRendering = gameScene.reqComp(CanvasRenderingComp.class);
-        final ActorSpriteAnimController animSystem = app.game().variant().systems().actorSpriteAnimController();
+        final ActorSpriteAnimController animController = app.game().variant().systems().actorSpriteAnimController();
         final GameVariantRenderConfig renderConfig = app.currentGameVariantUIConfig().renderConfig();
         final Canvas canvas = canvasRendering.canvas();
 
         if (canvas != null) {
-            sceneRenderer = renderConfig.createGameSceneRenderer(gameScene, animSystem, canvas);
-            hudRenderer = renderConfig.createHUDRenderer(gameScene, animSystem, canvas); // may return null!
-            setFontSmoothing(app.ui().viewModel().common2DSettings().fontSmoothingOnProperty().get());
+            rendererRegistry.setSceneRenderer(renderConfig.createGameSceneRenderer(gameScene, animController, canvas));
+            rendererRegistry.setHudRenderer(renderConfig.createHUDRenderer(gameScene, animController, canvas)); // may return null!
+            rendererRegistry.setFontSmoothing(app.ui().viewModel().common2DSettings().fontSmoothingOnProperty().get());
         } else {
             Logger.error("Cannot create game scene and HUD renderer: no canvas has been assigned");
+        }
+    }
+
+    static class RendererRegistry {
+        private BaseRenderer sceneRenderer;
+        private HUD_Renderer hudRenderer;
+
+        public void setFontSmoothing(boolean smoothing) {
+            sceneRenderer.ctx().setFontSmoothingType(smoothing ? FontSmoothingType.LCD : FontSmoothingType.GRAY);
+        }
+
+        public BaseRenderer sceneRenderer() {
+            return sceneRenderer;
+        }
+
+        public void setSceneRenderer(BaseRenderer sceneRenderer) {
+            this.sceneRenderer = sceneRenderer;
+        }
+
+        public HUD_Renderer hudRenderer() {
+            return hudRenderer;
+        }
+
+        public void setHudRenderer(HUD_Renderer hudRenderer) {
+            this.hudRenderer = hudRenderer;
         }
     }
 }
