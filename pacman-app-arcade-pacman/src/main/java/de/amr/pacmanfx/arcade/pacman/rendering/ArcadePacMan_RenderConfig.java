@@ -57,8 +57,24 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
 
     private final AssetMap assets;
 
+    private final HUD_Style hudStyle;
+
     public ArcadePacMan_RenderConfig(AssetMap assets) {
         this.assets = assets;
+
+        hudStyle = new HUD_Style(
+            spriteSheet(),
+            spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL),
+            spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS),
+            "SCORE",
+            "HIGH SCORE",
+            ARCADE_WHITE,
+            Color.GRAY,
+            GlobalAssets.Fonts.ARCADE8.font(),
+            "CREDIT %2d",
+            GlobalAssets.Fonts.ARCADE8.font(),
+            MESSAGE_COLORS::get
+        );
     }
 
     @Override
@@ -115,28 +131,18 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
+    public HUD_Style hudStyle() {
+        return hudStyle;
+    }
+
+    @Override
     public HUD_Renderer createHUDRenderer(GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas) {
         requireNonNull(gameScene);
         requireNonNull(animSystem);
         requireNonNull(canvas);
 
         final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
-        final var renderer = new Arcade_HUD_Renderer(
-            new HUD_Style(
-                spriteSheet(),
-                spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL),
-                spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS),
-                "SCORE",
-                "HIGH SCORE",
-                ARCADE_WHITE,
-                Color.GRAY,
-                GlobalAssets.Fonts.ARCADE8.font(),
-                "CREDIT %2d",
-                GlobalAssets.Fonts.ARCADE8.font(),
-                MESSAGE_COLORS::get
-            ),
-            canvas
-        );
+        final var renderer = new Arcade_HUD_Renderer(hudStyle, canvas);
         renderer.setImageSmoothing(true);
         r2D.configureRenderer(renderer);
 

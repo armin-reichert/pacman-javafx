@@ -9,8 +9,6 @@ import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_HUD_Renderer;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -26,6 +24,7 @@ import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.allOptionsHaveDefaultValue;
 
 /**
  * The 3D play scene of Tengen Ms. Pac-Man.
@@ -42,11 +41,11 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     @Override
     protected void addAdditional3DLevelElements(GameLevel3D level3D) {
         final GameSession session = game().session();
-        final HUD_Style hudStyle = TengenMsPacMan_UIConfig.HUD_STYLE; //TODO
-        // If any of the default level settings has been changed, display the level info
+
         session.optLevel().ifPresent(_ -> {
-            if (!TengenMsPacMan_GamePlay.allOptionsHaveDefaultValue(session)) {
-                final ImageView levelInfo = createLevelInfoView(level3D, hudStyle);
+            if (!allOptionsHaveDefaultValue(session)) {
+                final ImageView levelInfo = createLevelInfoView(level3D,
+                    app().currentGameVariantUIConfig().renderConfig().hudStyle());
                 level3D.root().getChildren().add(levelInfo);
             }
         });

@@ -6,10 +6,13 @@ package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.basics.Named;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_RenderConfig;
+import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
+import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
+import de.amr.pacmanfx.ui.gamescene.d2.HUD_Style;
 import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -18,6 +21,7 @@ import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
+import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import java.util.*;

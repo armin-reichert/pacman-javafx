@@ -14,6 +14,7 @@ import de.amr.pacmanfx.core.spriteanim.SpriteAnimFacade;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.HUD_Renderer;
+import de.amr.pacmanfx.ui.gamescene.d2.HUD_Style;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
@@ -35,6 +36,8 @@ public interface GameVariantRenderConfig {
     GameLevelRenderer createGameLevelRenderer(ActorSpriteAnimController animSystem, Canvas canvas);
 
     GameScene2D_Renderer createGameSceneRenderer(GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas);
+
+    HUD_Style hudStyle();
 
     HUD_Renderer createHUDRenderer(GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas);
 

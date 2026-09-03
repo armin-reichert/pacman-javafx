@@ -37,25 +37,6 @@ import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.mediaPlayer;
 
 public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
 
-    private static final EnumMap<MessageType, Color> MESSAGE_COLORS = new EnumMap<>(Map.of(
-        MessageType.READY,     NES_Palette.color(0x28),
-        MessageType.GAME_OVER, NES_Palette.color(0x11)  // blue
-    ));
-
-    public static HUD_Style HUD_STYLE = new HUD_Style(
-        TengenMsPacMan_SpriteSheet.instance(),
-        TengenMsPacMan_SpriteSheet.instance().findSprite(SpriteID.LIVES_COUNTER_SYMBOL),
-        TengenMsPacMan_SpriteSheet.instance().findSpriteSequence(SpriteID.BONUS_SYMBOLS),
-        "1UP",
-        "HIGH SCORE",
-        NES_Palette.color(0x20),
-        NES_Palette.color(0x10),
-        GlobalAssets.Fonts.ARCADE8.font(),
-        "%d", // not used
-        GlobalAssets.Fonts.ARCADE8.font(),
-        MESSAGE_COLORS::get
-    );
-
     public static final String GAME_OVER_TEXT = "GAME OVER";
     public static final String READY_TEXT = "READY!";
 

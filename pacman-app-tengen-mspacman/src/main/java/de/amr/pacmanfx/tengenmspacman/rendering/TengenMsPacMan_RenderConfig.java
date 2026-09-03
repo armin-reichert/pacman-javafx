@@ -8,6 +8,7 @@ import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
+import de.amr.pacmanfx.core.level.MessageType;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -15,7 +16,6 @@ import de.amr.pacmanfx.core.model.world.map.WorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.gamescene.*;
 import de.amr.pacmanfx.tengenmspacman.model.BonusSymbol;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
@@ -27,6 +27,7 @@ import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
+import de.amr.pacmanfx.ui.gamescene.d2.HUD_Style;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import javafx.scene.canvas.Canvas;
@@ -39,6 +40,11 @@ import java.util.Map;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
+
+    private static final EnumMap<MessageType, Color> MESSAGE_COLORS = new EnumMap<>(Map.of(
+        MessageType.READY,     NES_Palette.color(0x28),
+        MessageType.GAME_OVER, NES_Palette.color(0x11)  // blue
+    ));
 
     // Note: Order of bonus symbols in spritesheet is not 1:1 with order of bonus values!
     // 0=100,1=200,2=500,3=700,4=1000,5=2000,6=3000,7=4000,8=5000,9=6000,10=7000,11=8000,12=9000, 13=10_000
@@ -73,6 +79,20 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     private final AssetMap assets;
+
+    private final HUD_Style hudStyle = new HUD_Style(
+        spriteSheet(),
+        spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL),
+        spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS),
+        "1UP",
+        "HIGH SCORE",
+        NES_Palette.color(0x20),
+        NES_Palette.color(0x10),
+        GlobalAssets.Fonts.ARCADE8.font(),
+        "CREDIT %d", // not used
+        GlobalAssets.Fonts.ARCADE8.font(),
+        MESSAGE_COLORS::get
+    );
 
     public TengenMsPacMan_RenderConfig(AssetMap assets) {
         this.assets = requireNonNull(assets);
@@ -123,9 +143,14 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
+    public HUD_Style hudStyle() {
+        return hudStyle;
+    }
+
+    @Override
     public TengenMsPacMan_HUD_Renderer createHUDRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
         final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
-        return r2D.configureRenderer(new TengenMsPacMan_HUD_Renderer(TengenMsPacMan_UIConfig.HUD_STYLE, canvas));
+        return r2D.configureRenderer(new TengenMsPacMan_HUD_Renderer(hudStyle, canvas));
     }
 
     @Override

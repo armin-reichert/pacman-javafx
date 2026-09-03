@@ -62,10 +62,26 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
         new GenericWorldMapColorScheme("ffb7ae", "ff0000", "fcb5ff", "dedeff")
     };
 
-    private final AssetMap assets;
+    protected final HUD_Style hudStyle;
+
+    protected final AssetMap assets;
 
     public ArcadeMsPacMan_RenderConfig(AssetMap assets) {
         this.assets = assets;
+
+        hudStyle = new HUD_Style(
+            spriteSheet(),
+            spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL),
+            spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS),
+            "SCORE",
+            "HIGH SCORE",
+            ARCADE_WHITE,
+            Color.GRAY,
+            GlobalAssets.Fonts.ARCADE8.font(),
+            "CREDIT %2d",
+            GlobalAssets.Fonts.ARCADE8.font(),
+            MESSAGE_COLORS::get
+        );
     }
 
     @Override
@@ -132,41 +148,31 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
+    public HUD_Style hudStyle() {
+        return hudStyle;
+    }
+
+    @Override
     public HUD_Renderer createHUDRenderer(GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas) {
         requireNonNull(gameScene);
         requireNonNull(animSystem);
         requireNonNull(canvas);
 
-        final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
-        final var renderer = new Arcade_HUD_Renderer(
-            new HUD_Style(
-                spriteSheet(),
-                spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL),
-                spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS),
-                "SCORE",
-                "HIGH SCORE",
-                ARCADE_WHITE,
-                Color.GRAY,
-                GlobalAssets.Fonts.ARCADE8.font(),
-                "CREDIT %2d",
-                GlobalAssets.Fonts.ARCADE8.font(),
-                MESSAGE_COLORS::get
-            ),
-            canvas
-        );
+        final CanvasRenderingComp canvasRendering = gameScene.reqComp(CanvasRenderingComp.class);
+        final var renderer = new Arcade_HUD_Renderer(hudStyle, canvas);
         renderer.setImageSmoothing(true);
-        r2D.configureRenderer(renderer);
+        canvasRendering.configureRenderer(renderer);
 
         return renderer;
     }
 
     @Override
-    public ActorRenderer createActorRenderer(ActorSpriteAnimController animSystem, Canvas canvas) {
+    public ActorRenderer createActorRenderer(ActorSpriteAnimController animController, Canvas canvas) {
+        requireNonNull(animController);
         requireNonNull(canvas);
 
-        final var renderer = new ArcadeMsPacMan_ActorRenderer(animSystem, canvas);
+        final var renderer = new ArcadeMsPacMan_ActorRenderer(animController, canvas);
         renderer.setImageSmoothing(true);
-
         return renderer;
     }
 
