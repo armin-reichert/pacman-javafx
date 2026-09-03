@@ -15,6 +15,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.gamescene.*;
 import de.amr.pacmanfx.tengenmspacman.model.BonusSymbol;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
@@ -124,7 +125,7 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     @Override
     public TengenMsPacMan_HUD_Renderer createHUDRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
         final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
-        return r2D.configureRenderer(new TengenMsPacMan_HUD_Renderer(canvas));
+        return r2D.configureRenderer(new TengenMsPacMan_HUD_Renderer(TengenMsPacMan_UIConfig.HUD_STYLE, canvas));
     }
 
     @Override

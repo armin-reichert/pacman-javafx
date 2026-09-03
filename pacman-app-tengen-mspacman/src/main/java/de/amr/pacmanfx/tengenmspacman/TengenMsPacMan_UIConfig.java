@@ -6,13 +6,19 @@ package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.basics.Named;
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.core.level.MessageType;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.tengenmspacman.config.TengenJsonConfigLoader;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_GameSceneConfig;
+import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConfig;
+import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
+import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
+import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.gamescene.d2.HUD_Style;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
@@ -21,6 +27,7 @@ import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import java.util.*;
@@ -30,8 +37,27 @@ import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.mediaPlayer;
 
 public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
 
-    public static final String GAME_OVER_MESSAGE_TEXT = "GAME OVER";
-    public static final String READY_MESSAGE_TEXT = "READY!";
+    private static final EnumMap<MessageType, Color> MESSAGE_COLORS = new EnumMap<>(Map.of(
+        MessageType.READY,     NES_Palette.color(0x28),
+        MessageType.GAME_OVER, NES_Palette.color(0x11)  // blue
+    ));
+
+    public static HUD_Style HUD_STYLE = new HUD_Style(
+        TengenMsPacMan_SpriteSheet.instance(),
+        TengenMsPacMan_SpriteSheet.instance().findSprite(SpriteID.LIVES_COUNTER_SYMBOL),
+        TengenMsPacMan_SpriteSheet.instance().findSpriteSequence(SpriteID.BONUS_SYMBOLS),
+        "1UP",
+        "HIGH SCORE",
+        NES_Palette.color(0x20),
+        NES_Palette.color(0x10),
+        GlobalAssets.Fonts.ARCADE8.font(),
+        "%d", // not used
+        GlobalAssets.Fonts.ARCADE8.font(),
+        MESSAGE_COLORS::get
+    );
+
+    public static final String GAME_OVER_TEXT = "GAME OVER";
+    public static final String READY_TEXT = "READY!";
 
     // Local resources are stored inside main resource folder subdirectories named after package name of this class
     private static final ResourceManager RM = TengenMsPacMan_ResourceManager.instance();

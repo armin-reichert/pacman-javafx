@@ -35,7 +35,7 @@ import java.util.Optional;
 
 import static de.amr.basics.util.Ufx.textWidth;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.GAME_OVER_MESSAGE_TEXT;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.GAME_OVER_TEXT;
 
 public interface TengenMsPacMan_PlayScene2D_GameEventHandler extends DefaultGameEventListener {
 
@@ -107,7 +107,7 @@ public interface TengenMsPacMan_PlayScene2D_GameEventHandler extends DefaultGame
             if (messageAnimation != null) {
                 // Compute exact message size and wrap position at right border
                 final Font font = Font.font(BaseRenderer.ARCADE_FONT.getFamily(), TS);
-                final double width = textWidth(GAME_OVER_MESSAGE_TEXT, font);
+                final double width = textWidth(GAME_OVER_TEXT, font);
                 final double wrapX = gameScene().reqCanvasRendering().unscaledWidth() + 0.5 * width;
                 messageAnimation.setWidth(width);
                 messageAnimation.setWrapX(wrapX);

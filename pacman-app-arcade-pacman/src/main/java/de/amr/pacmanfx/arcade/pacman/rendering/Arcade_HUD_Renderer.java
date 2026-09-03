@@ -32,6 +32,9 @@ import static java.util.Objects.requireNonNull;
 
 public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer, HUD_Renderer {
 
+    public static final String GAME_OVER_TEXT = "GAME  OVER";
+    public static final String READY_TEXT = "READY!";
+
     protected final HUD_Style style;
 
     public Arcade_HUD_Renderer(HUD_Style style, Canvas canvas) {
@@ -50,15 +53,13 @@ public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer,
         requireNonNull(session);
         requireNonNull(gameScene);
 
-        if (!hud.isVisible()) {
-            return;
-        }
-
         if (gameScene.optCanvasRendering().isEmpty()) {
             return;
         }
-
         final CanvasRenderingComp canvasRendering = gameScene.reqCanvasRendering();
+
+        if (!hud.isVisible()) return;
+
         final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
 
         if (hud.gameScore().isVisible()) {
@@ -94,8 +95,8 @@ public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer,
             final Vector2f pos = messagePosition(session.level());
             final Font scaledFont = Ufx.scaleFontBy(style.messageFont(), scaling());
             switch (messageView.data().messageType()) {
-                case GAME_OVER -> fillTextCentered("GAME  OVER", ARCADE_RED, scaledFont, pos.x(), pos.y());
-                case READY -> fillTextCentered("READY!", ARCADE_YELLOW, scaledFont, pos.x(), pos.y());
+                case GAME_OVER -> fillTextCentered(GAME_OVER_TEXT, ARCADE_RED, scaledFont, pos.x(), pos.y());
+                case READY -> fillTextCentered(READY_TEXT, ARCADE_YELLOW, scaledFont, pos.x(), pos.y());
             }
         }
     }
