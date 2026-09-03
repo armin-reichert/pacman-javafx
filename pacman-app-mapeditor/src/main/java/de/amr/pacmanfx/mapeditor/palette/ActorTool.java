@@ -1,13 +1,14 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.mapeditor.palette;
 
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
-import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
+import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.mapeditor.actions.Action_SetTerrainProperty;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.scene.canvas.GraphicsContext;
@@ -24,10 +25,10 @@ public class ActorTool extends PropertyValueEditorTool {
     private final Consumer<Vector2i> editor;
     private final RectShort sprite;
 
-    public ActorTool(TileMapEditorUI ui, String propertyName, String description, RectShort sprite) {
+    public ActorTool(TileMapEditor mapEditor, String propertyName, String description, RectShort sprite) {
         super(propertyName, description);
         this.sprite = requireNonNull(sprite);
-        editor = tile -> new Action_SetTerrainProperty(ui.editor(), propertyName, String.valueOf(tile)).execute();
+        editor = tile -> new Action_SetTerrainProperty(mapEditor, propertyName, String.valueOf(tile)).execute();
     }
 
     @Override

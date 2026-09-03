@@ -3,14 +3,16 @@
  */
 package de.amr.pacmanfx.mapeditor.palette;
 
+import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.core.model.world.map.FoodTile;
 import de.amr.pacmanfx.core.model.world.map.TerrainTile;
 import de.amr.pacmanfx.core.model.world.map.WorldMapLayerID;
 import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
-import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
+import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites;
 import de.amr.pacmanfx.mapeditor.rendering.TerrainMapTileRenderer;
 import de.amr.pacmanfx.uilib.rendering.FoodMapRenderer;
+import de.amr.pacmanfx.uilib.rendering.TileRenderer;
 import javafx.geometry.Insets;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -22,22 +24,22 @@ import static de.amr.pacmanfx.mapeditor.TileMapEditorGlobals.*;
 
 public class EditorPaletteTabPane extends TabPane {
 
-    public EditorPaletteTabPane(TileMapEditorUI ui, TerrainMapTileRenderer terrainRenderer, FoodMapRenderer foodRenderer) {
+    public EditorPaletteTabPane(TileMapEditor editor, TerrainMapTileRenderer terrainRenderer, FoodMapRenderer foodRenderer) {
         setMinHeight(90);
         setPadding(new Insets(5, 5, 5, 5));
 
-        Palette terrainPalette = createTerrainPalette(ui, terrainRenderer);
-        var tabTerrain = new Tab("", terrainPalette);
+        final Palette terrainPalette = createTerrainPalette(editor, terrainRenderer);
+        final var tabTerrain = new Tab("", terrainPalette);
         tabTerrain.setGraphic(new Text(translated("terrain")));
         tabTerrain.setClosable(false);
 
-        Palette foodPalette = createFoodPalette(ui, foodRenderer);
-        var tabFood = new Tab("", foodPalette);
+        final Palette foodPalette = createFoodPalette(editor, foodRenderer);
+        final var tabFood = new Tab("", foodPalette);
         tabFood.setGraphic(new Text(translated("pellets")));
         tabFood.setClosable(false);
 
-        Palette actorPalette = createActorsPalette(ui, terrainRenderer);
-        var tabActors = new Tab("", actorPalette);
+        final Palette actorPalette = createActorsPalette(editor, terrainRenderer);
+        final var tabActors = new Tab("", actorPalette);
         tabActors.setGraphic(new Text(translated("actors")));
         tabActors.setClosable(false);
 
@@ -64,46 +66,56 @@ public class EditorPaletteTabPane extends TabPane {
         }
     }
 
-    private Palette createTerrainPalette(TileMapEditorUI ui, TerrainMapTileRenderer prototype) {
-        var palette = new Palette(PaletteID.TERRAIN, 13);
+    private static TileCodeTool terrainTool(TileMapEditor editor, TileRenderer renderer, byte code, String description) {
+        final var tool = new TileCodeTool(editor, WorldMapLayerID.TERRAIN, code, description);
+        tool.setTileRenderer(renderer);
+        return tool;
+    }
 
-        palette.addTool(new TileCodeEditorTool(ui.editor(), WorldMapLayerID.TERRAIN, TerrainTile.EMPTY.$, "Empty Space"));
-        palette.addTool(new TileCodeEditorTool(ui.editor(), WorldMapLayerID.TERRAIN, TerrainTile.WALL_H.$, "Horizontal Wall"));
-        palette.addTool(new TileCodeEditorTool(ui.editor(), WorldMapLayerID.TERRAIN, TerrainTile.WALL_V.$, "Vertical Wall"));
-        palette.addTool(new TileCodeEditorTool(ui.editor(), WorldMapLayerID.TERRAIN, TerrainTile.ARC_NW.$, "NW Corner"));
-        palette.addTool(new TileCodeEditorTool(ui.editor(), WorldMapLayerID.TERRAIN, TerrainTile.ARC_NE.$, "NE Corner"));
-        palette.addTool(new TileCodeEditorTool(ui.editor(), WorldMapLayerID.TERRAIN, TerrainTile.ARC_SW.$, "SW Corner"));
-        palette.addTool(new TileCodeEditorTool(ui.editor(), WorldMapLayerID.TERRAIN, TerrainTile.ARC_SE.$, "SE Corner"));
-        palette.addTool(new TileCodeEditorTool(ui.editor(), WorldMapLayerID.TERRAIN, TerrainTile.DOOR.$, "Door"));
-        palette.addTool(new TileCodeEditorTool(ui.editor(), WorldMapLayerID.TERRAIN, TerrainTile.TUNNEL.$, "Tunnel"));
-        palette.addTool(new TileCodeEditorTool(ui.editor(), WorldMapLayerID.TERRAIN, TerrainTile.ONE_WAY_UP.$, "One-Way Up"));
-        palette.addTool(new TileCodeEditorTool(ui.editor(), WorldMapLayerID.TERRAIN, TerrainTile.ONE_WAY_DOWN.$, "One-Way Down"));
-        palette.addTool(new TileCodeEditorTool(ui.editor(), WorldMapLayerID.TERRAIN, TerrainTile.ONE_WAY_LEFT.$, "One-Way Left"));
-        palette.addTool(new TileCodeEditorTool(ui.editor(), WorldMapLayerID.TERRAIN, TerrainTile.ONE_WAY_RIGHT.$, "One-Way Right"));
+    private Palette createTerrainPalette(TileMapEditor editor, TerrainMapTileRenderer prototype) {
+        final var palette = new Palette(PaletteID.TERRAIN, 13);
+
+        final var renderer = new TerrainMapTileRenderer(palette);
+        renderer.backgroundColorProperty().bind(prototype.backgroundColorProperty());
+        renderer.mapColoringProperty().bind(prototype.mapColoringProperty());
+        palette.setRenderer(renderer);
+
+        palette.addTool(terrainTool(editor, renderer, TerrainTile.EMPTY.$, "Empty Space"));
+        palette.addTool(terrainTool(editor, renderer, TerrainTile.WALL_H.$, "Horizontal Wall"));
+        palette.addTool(terrainTool(editor, renderer, TerrainTile.WALL_V.$, "Vertical Wall"));
+        palette.addTool(terrainTool(editor, renderer, TerrainTile.ARC_NW.$, "NW Corner"));
+        palette.addTool(terrainTool(editor, renderer, TerrainTile.ARC_NE.$, "NE Corner"));
+        palette.addTool(terrainTool(editor, renderer, TerrainTile.ARC_SW.$, "SW Corner"));
+        palette.addTool(terrainTool(editor, renderer, TerrainTile.ARC_SE.$, "SE Corner"));
+        palette.addTool(terrainTool(editor, renderer, TerrainTile.DOOR.$, "Door"));
+        palette.addTool(terrainTool(editor, renderer, TerrainTile.TUNNEL.$, "Tunnel"));
+        palette.addTool(terrainTool(editor, renderer, TerrainTile.ONE_WAY_UP.$, "One-Way Up"));
+        palette.addTool(terrainTool(editor, renderer, TerrainTile.ONE_WAY_DOWN.$, "One-Way Down"));
+        palette.addTool(terrainTool(editor, renderer, TerrainTile.ONE_WAY_LEFT.$, "One-Way Left"));
+        palette.addTool(terrainTool(editor, renderer, TerrainTile.ONE_WAY_RIGHT.$, "One-Way Right"));
 
         palette.setSelectedToolIndex(0); // "No Tile"
-
-        var terrainRenderer = new TerrainMapTileRenderer(palette);
-        terrainRenderer.backgroundColorProperty().bind(prototype.backgroundColorProperty());
-        terrainRenderer.mapColoringProperty().bind(prototype.mapColoringProperty());
-        palette.setRenderer(terrainRenderer);
 
         return palette;
     }
 
-    private Palette createActorsPalette(TileMapEditorUI ui, TerrainMapTileRenderer prototype) {
+    private static ActorTool actorTool(TileMapEditor editor, String propertyName, String description, RectShort sprite) {
+        return new ActorTool(editor, propertyName, description, sprite);
+    }
+
+    private Palette createActorsPalette(TileMapEditor editor, TerrainMapTileRenderer prototype) {
         var palette = new Palette(PaletteID.ACTORS, 10);
 
-        palette.addTool(new ActorTool(ui, WorldMapPropertyName.POS_PAC,                  "Pac-Man", ArcadeSprites.PAC_MAN));
-        palette.addTool(new ActorTool(ui, WorldMapPropertyName.POS_GHOST_1_RED,          "Red Ghost", ArcadeSprites.RED_GHOST));
-        palette.addTool(new ActorTool(ui, WorldMapPropertyName.POS_GHOST_2_PINK,         "Pink Ghost", ArcadeSprites.PINK_GHOST));
-        palette.addTool(new ActorTool(ui, WorldMapPropertyName.POS_GHOST_3_CYAN,         "Cyan Ghost", ArcadeSprites.CYAN_GHOST));
-        palette.addTool(new ActorTool(ui, WorldMapPropertyName.POS_GHOST_4_ORANGE,       "Orange Ghost", ArcadeSprites.ORANGE_GHOST));
-        palette.addTool(new ActorTool(ui, WorldMapPropertyName.POS_BONUS,                "Bonus", ArcadeSprites.STRAWBERRY));
-        palette.addTool(new ActorTool(ui, WorldMapPropertyName.POS_SCATTER_RED_GHOST,    "Red Ghost Scatter", ArcadeSprites.RED_GHOST));
-        palette.addTool(new ActorTool(ui, WorldMapPropertyName.POS_SCATTER_PINK_GHOST,   "Pink Ghost Scatter", ArcadeSprites.PINK_GHOST));
-        palette.addTool(new ActorTool(ui, WorldMapPropertyName.POS_SCATTER_CYAN_GHOST,   "Cyan Ghost Scatter", ArcadeSprites.CYAN_GHOST));
-        palette.addTool(new ActorTool(ui, WorldMapPropertyName.POS_SCATTER_ORANGE_GHOST, "Orange Ghost Scatter", ArcadeSprites.ORANGE_GHOST));
+        palette.addTool(actorTool(editor, WorldMapPropertyName.POS_PAC,                  "Pac-Man", ArcadeSprites.PAC_MAN));
+        palette.addTool(actorTool(editor, WorldMapPropertyName.POS_GHOST_1_RED,          "Red Ghost", ArcadeSprites.RED_GHOST));
+        palette.addTool(actorTool(editor, WorldMapPropertyName.POS_GHOST_2_PINK,         "Pink Ghost", ArcadeSprites.PINK_GHOST));
+        palette.addTool(actorTool(editor, WorldMapPropertyName.POS_GHOST_3_CYAN,         "Cyan Ghost", ArcadeSprites.CYAN_GHOST));
+        palette.addTool(actorTool(editor, WorldMapPropertyName.POS_GHOST_4_ORANGE,       "Orange Ghost", ArcadeSprites.ORANGE_GHOST));
+        palette.addTool(actorTool(editor, WorldMapPropertyName.POS_BONUS,                "Bonus", ArcadeSprites.STRAWBERRY));
+        palette.addTool(actorTool(editor, WorldMapPropertyName.POS_SCATTER_RED_GHOST,    "Red Ghost Scatter", ArcadeSprites.RED_GHOST));
+        palette.addTool(actorTool(editor, WorldMapPropertyName.POS_SCATTER_PINK_GHOST,   "Pink Ghost Scatter", ArcadeSprites.PINK_GHOST));
+        palette.addTool(actorTool(editor, WorldMapPropertyName.POS_SCATTER_CYAN_GHOST,   "Cyan Ghost Scatter", ArcadeSprites.CYAN_GHOST));
+        palette.addTool(actorTool(editor, WorldMapPropertyName.POS_SCATTER_ORANGE_GHOST, "Orange Ghost Scatter", ArcadeSprites.ORANGE_GHOST));
 
         palette.setSelectedToolIndex(0); // "No actor"
 
@@ -115,12 +127,12 @@ public class EditorPaletteTabPane extends TabPane {
         return palette;
     }
 
-    private Palette createFoodPalette(TileMapEditorUI ui, FoodMapRenderer prototype) {
+    private Palette createFoodPalette(TileMapEditor editor, FoodMapRenderer prototype) {
         var palette = new Palette(PaletteID.FOOD, 3);
 
-        palette.addTool(new TileCodeEditorTool(ui.editor(), WorldMapLayerID.FOOD, FoodTile.EMPTY.$, "No Food"));
-        palette.addTool(new TileCodeEditorTool(ui.editor(), WorldMapLayerID.FOOD, FoodTile.PELLET.$, "Pellet"));
-        palette.addTool(new TileCodeEditorTool(ui.editor(), WorldMapLayerID.FOOD, FoodTile.ENERGIZER.$, "Energizer"));
+        palette.addTool(new TileCodeTool(editor, WorldMapLayerID.FOOD, FoodTile.EMPTY.$, "No Food"));
+        palette.addTool(new TileCodeTool(editor, WorldMapLayerID.FOOD, FoodTile.PELLET.$, "Pellet"));
+        palette.addTool(new TileCodeTool(editor, WorldMapLayerID.FOOD, FoodTile.ENERGIZER.$, "Energizer"));
 
         palette.setSelectedToolIndex(0); // "No Food"
 

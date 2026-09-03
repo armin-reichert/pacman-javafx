@@ -13,20 +13,25 @@ import de.amr.pacmanfx.uilib.rendering.TileRenderer;
 
 import java.util.function.Consumer;
 
-public class TileCodeEditorTool implements PaletteTool {
+public class TileCodeTool implements PaletteTool {
 
     private final byte code;
     private final String description;
 
     private final Consumer<Vector2i> tileEditor;
+    private TileRenderer tileRenderer;
 
-    public TileCodeEditorTool(TileMapEditor editor, WorldMapLayerID layerID, byte code, String description) {
+    public TileCodeTool(TileMapEditor editor, WorldMapLayerID layerID, byte code, String description) {
         this.code = code;
         this.description = description;
         tileEditor = switch (layerID) {
             case TERRAIN -> tile -> new Action_SetTerrainTileCode(editor, tile, code).execute();
             case FOOD -> tile -> new Action_SetFoodTileCode(editor, tile, code).execute();
         };
+    }
+
+    public void setTileRenderer(TileRenderer tileRenderer) {
+        this.tileRenderer = tileRenderer;
     }
 
     @Override
@@ -41,8 +46,6 @@ public class TileCodeEditorTool implements PaletteTool {
 
     @Override
     public void draw(Renderer renderer, int row, int col) {
-        if (renderer instanceof TileRenderer tileRenderer) {
-            tileRenderer.drawTile(new Vector2i(col, row), code);
-        }
+        tileRenderer.drawTile(new Vector2i(col, row), code);
     }
 }

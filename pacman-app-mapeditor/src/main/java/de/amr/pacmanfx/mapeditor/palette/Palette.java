@@ -53,8 +53,8 @@ public class Palette extends Canvas {
         setOnMouseMoved(this::handleMouseMove);
     }
 
-    public void setRenderer(TileRenderer renderer) {
-        this.renderer = renderer;
+    public void setRenderer(TileRenderer tileRenderer) {
+        this.renderer = requireNonNull(tileRenderer);
     }
 
     public PaletteID id() {

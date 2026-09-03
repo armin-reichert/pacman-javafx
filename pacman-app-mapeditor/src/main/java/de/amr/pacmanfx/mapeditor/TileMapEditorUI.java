@@ -323,7 +323,7 @@ public class TileMapEditorUI {
         createPreviewArea();
         createPropertyEditors();
         createStatusLine();
-        editorPaletteTabPane = new EditorPaletteTabPane(this, editCanvas.terrainRenderer(), editCanvas.foodRenderer());
+        editorPaletteTabPane = new EditorPaletteTabPane(editor, editCanvas.terrainRenderer(), editCanvas.foodRenderer());
         menus = new TileMapEditorMenus(this);
         arrangeLayout();
 
