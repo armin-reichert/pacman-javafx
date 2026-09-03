@@ -10,13 +10,13 @@ public enum RenderingLayer {
     OVERLAY    (60),
     DEBUG      (70);
 
-    private final int layer;
+    private final int z;
 
-    RenderingLayer(int layer){
-        this.layer = layer;
+    RenderingLayer(int z){
+        this.z = z;
     }
 
-    public int layer() {
-        return layer;
+    public int z() {
+        return z;
     }
 }

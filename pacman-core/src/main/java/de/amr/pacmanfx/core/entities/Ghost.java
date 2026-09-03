@@ -34,6 +34,13 @@ public final class Ghost extends GameEntity {
         setComp(SpriteAnimationComp.class, new SpriteAnimationComp());
         setComp(RenderingComp.class, new RenderingComp(RenderingLayer.ACTORS));
 
+        rendering().setLayerPriority(switch (personality) {
+            case RED_GHOST_SHADOW   -> 13; // on top of all other ghosts
+            case PINK_GHOST_SPEEDY  -> 12;
+            case CYAN_GHOST_BASHFUL -> 11;
+            case ORANGE_GHOST_POKEY -> 10; // behind all other ghosts
+        });
+
         //TODO where does this belong?
         worldNavigation().corneringSpeedDelta = -1.25f;
     }
@@ -70,6 +77,10 @@ public final class Ghost extends GameEntity {
 
     public SpriteAnimationComp spriteAnimation() {
         return reqComp(SpriteAnimationComp.class);
+    }
+
+    public RenderingComp rendering() {
+        return reqComp(RenderingComp.class);
     }
 
     @Override

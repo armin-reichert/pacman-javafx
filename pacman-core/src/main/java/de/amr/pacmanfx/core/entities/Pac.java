@@ -31,6 +31,8 @@ public final class Pac extends GameEntity {
         setComp(SpriteAnimationComp.class, new SpriteAnimationComp());
         setComp(PacAnimationComp.class, new PacAnimationComp());
         setComp(RenderingComp.class, new RenderingComp(RenderingLayer.ACTORS));
+
+        rendering().setLayerPriority(0); // Ghosts start at 10
     }
 
     public MovementComp movement() {
@@ -69,6 +71,10 @@ public final class Pac extends GameEntity {
     //TODO integrate with Pac animation comp
     public SpriteAnimationComp spriteAnim() {
         return reqComp(SpriteAnimationComp.class);
+    }
+
+    public RenderingComp rendering() {
+        return reqComp(RenderingComp.class);
     }
 
     @Override

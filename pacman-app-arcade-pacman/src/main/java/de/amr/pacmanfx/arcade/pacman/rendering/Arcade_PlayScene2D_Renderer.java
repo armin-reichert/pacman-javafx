@@ -9,6 +9,7 @@ import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.ecs.comp.RenderingComp;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelEntitySet;
@@ -22,6 +23,7 @@ import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.scene.canvas.Canvas;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static java.util.Objects.requireNonNull;
@@ -42,7 +44,6 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements SpriteR
     private final GameLevelRenderer levelRenderer;
     private final BaseRenderer actorRenderer;
     private final BaseGameSceneDebugInfoRenderer debugRenderer;
-    private final List<GameEntity> actorsInZOrder = new ArrayList<>();
 
     public Arcade_PlayScene2D_Renderer(GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas, SpriteSheet spriteSheet) {
         super(canvas);
@@ -80,8 +81,9 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements SpriteR
             final InfoMap info = createRenderInfo(level, playScene);
             levelRenderer.applyLevelSettings(rules, level, info);
             levelRenderer.drawLevel(game, level, info);
-            updateActorZOrder(level.entities());
-            actorsInZOrder.forEach(actor -> actorRenderer.render(actor, tick));
+
+            actorLayerOrder(level.entities()).forEach(actor -> actorRenderer.render(actor, tick));
+
             if (playScene.viewModel().debugModeOnProperty().get()) {
                 debugRenderer.render(playScene, tick);
             }
@@ -103,13 +105,16 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements SpriteR
         return info;
     }
 
-    // Actor z-order: Bonus under Pac-Man under ghosts in z-order.
-    private void updateActorZOrder(GameLevelEntitySet entities) {
-        actorsInZOrder.clear();
-        entities.optBonus().ifPresent(actorsInZOrder::add);
-        actorsInZOrder.addAll(entities.theGhostPoints());
-        actorsInZOrder.addAll(entities.theBonusPoints());
-        actorsInZOrder.add(entities.pac());
-        GHOST_Z_ORDER.stream().map(entities::ghost).forEach(actorsInZOrder::add);
+    //TODO This is only a first step towards a unified rendering pipeline
+    private List<GameEntity> actorLayerOrder(GameLevelEntitySet entities) {
+        final List<GameEntity> renderables = new ArrayList<>();
+        entities.optBonus().ifPresent(renderables::add);
+        renderables.addAll(entities.theGhostPoints());
+        renderables.addAll(entities.theBonusPoints());
+        renderables.add(entities.pac());
+        GHOST_Z_ORDER.stream().map(entities::ghost).forEach(renderables::add);
+        renderables.sort(Comparator.comparing(actor -> actor.reqComp(RenderingComp.class), RenderingComp.RENDERING_ORDER));
+        return renderables;
     }
+
 }
