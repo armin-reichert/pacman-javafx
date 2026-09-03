@@ -103,14 +103,14 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public GameScene2D_Renderer createGameSceneRenderer(GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas) {
+    public BaseRenderer createGameSceneRenderer(GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas) {
         requireNonNull(gameScene);
         requireNonNull(animSystem);
         requireNonNull(canvas);
 
         final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
 
-        final GameScene2D_Renderer renderer = switch (gameScene) {
+        final BaseRenderer renderer = switch (gameScene) {
             case Arcade_BootScene2D ignored      -> new Arcade_BootScene2D_Renderer(gameScene, canvas,
                 spriteSheet(), BOOT_SCENE_SPRITES);
             case ArcadePacMan_IntroScene ignored -> new ArcadePacMan_IntroScene_Renderer(this, gameScene, animSystem, canvas);

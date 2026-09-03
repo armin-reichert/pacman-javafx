@@ -212,7 +212,7 @@ public class MiniPlaySceneView {
         levelRenderer.drawLevel(game, level, info);
 
         updateActorZOrder(level.entities());
-        actorsInZOrder.forEach(actorRenderer::render);
+        actorsInZOrder.forEach(actor -> actorRenderer.render(actor, game.session().thisFrame().tick()));
     }
 
     // Actor z-order: Bonus under Pac-Man under ghosts in z-order.

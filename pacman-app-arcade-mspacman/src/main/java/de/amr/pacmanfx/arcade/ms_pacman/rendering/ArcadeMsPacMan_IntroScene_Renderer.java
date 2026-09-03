@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
+import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
@@ -30,7 +30,7 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer implements 
     private final MarqueeRenderer marqueeRenderer;
     private final CopyrightRenderer copyrightRenderer;
     private final BaseRenderer actorRenderer;
-    private final BaseDebugInfoRenderer debugRenderer;
+    private final BaseGameSceneDebugInfoRenderer debugRenderer;
 
     private final Image copyrightImage;
 
@@ -53,18 +53,20 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer implements 
     }
 
     @Override
-    public void draw(GameScene scene, long tick) {
+    public void render(Object r, long tick) {
         clearCanvas();
 
-        final ArcadeMsPacMan_IntroScene introScene = (ArcadeMsPacMan_IntroScene) scene;
+        if (!(r instanceof ArcadeMsPacMan_IntroScene introScene)) {
+            return;
+        }
 
         ctx.setFont(arcadeFont8());
         fillText(TITLE, ARCADE_ORANGE, TITLE_X, TITLE_Y);
 
         marqueeRenderer.drawMarquee(introScene.marquee);
 
-        introScene.ghosts.forEach(actorRenderer::render);
-        actorRenderer.render(introScene.msPacMan);
+        introScene.ghosts.forEach(ghost -> actorRenderer.render(ghost, tick));
+        actorRenderer.render(introScene.msPacMan, tick);
 
         switch (introScene.sceneState()) {
             case SceneState.GHOSTS_MARCHING_IN -> {
@@ -85,8 +87,8 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer implements 
         }
         copyrightRenderer.drawCopyright(copyrightImage, tilesPx(6), tilesPx(28));
 
-        if (scene.viewModel().debugModeOnProperty().get()) {
-            debugRenderer.draw(scene, tick);
+        if (introScene.viewModel().debugModeOnProperty().get()) {
+            debugRenderer.render(introScene, tick);
         }
     }
 

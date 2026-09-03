@@ -12,7 +12,7 @@ import javafx.scene.paint.Color;
 public interface Renderer {
 
     //TODO base interface
-    void render(Object r);
+    void render(Object r, long tick);
 
     GraphicsContext ctx();
 

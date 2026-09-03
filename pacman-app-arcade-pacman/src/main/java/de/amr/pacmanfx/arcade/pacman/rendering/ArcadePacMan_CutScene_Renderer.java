@@ -10,7 +10,7 @@ import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_CutScene3;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
+import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
@@ -19,11 +19,11 @@ import javafx.scene.canvas.Canvas;
 
 import static java.util.Objects.requireNonNull;
 
-public class ArcadePacMan_CutScene_Renderer extends BaseRenderer implements GameScene2D_Renderer, SpriteRenderer {
+public class ArcadePacMan_CutScene_Renderer extends BaseRenderer implements SpriteRenderer {
 
     protected final ActorSpriteAnimController animSystem;
     protected final BaseRenderer actorRenderer;
-    protected BaseDebugInfoRenderer debugRenderer;
+    protected BaseGameSceneDebugInfoRenderer debugRenderer;
 
     public ArcadePacMan_CutScene_Renderer(GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas) {
         super(canvas);
@@ -40,31 +40,34 @@ public class ArcadePacMan_CutScene_Renderer extends BaseRenderer implements Game
     }
 
     @Override
-    public void draw(GameScene scene, long tick) {
-        switch (scene) {
-            case ArcadePacMan_CutScene1 cutScene1 -> drawCutScene1(cutScene1);
-            case ArcadePacMan_CutScene2 cutScene2 -> drawCutScene2(cutScene2);
-            case ArcadePacMan_CutScene3 cutScene3 -> drawCutScene3(cutScene3);
-            default -> throw new IllegalStateException("Unexpected value: " + scene);
+    public void render(Object r, long tick) {
+        if (!(r instanceof GameScene gameScene)) {
+            return;
         }
-        if (scene.viewModel().debugModeOnProperty().get()) {
-            debugRenderer.draw(scene, tick);
+        switch (gameScene) {
+            case ArcadePacMan_CutScene1 cutScene1 -> drawCutScene1(cutScene1, tick);
+            case ArcadePacMan_CutScene2 cutScene2 -> drawCutScene2(cutScene2, tick);
+            case ArcadePacMan_CutScene3 cutScene3 -> drawCutScene3(cutScene3, tick);
+            default -> throw new IllegalStateException("Unexpected value: " + gameScene);
+        }
+        if (gameScene.viewModel().debugModeOnProperty().get()) {
+            debugRenderer.render(gameScene, tick);
         }
     }
 
-    private void drawCutScene1(ArcadePacMan_CutScene1 cutScene) {
-        actorRenderer.render(cutScene.blinky);
-        actorRenderer.render(cutScene.pacMan);
+    private void drawCutScene1(ArcadePacMan_CutScene1 cutScene, long tick) {
+        actorRenderer.render(cutScene.blinky, tick);
+        actorRenderer.render(cutScene.pacMan, tick);
     }
 
-    private void drawCutScene2(ArcadePacMan_CutScene2 cutScene) {
+    private void drawCutScene2(ArcadePacMan_CutScene2 cutScene, long tick) {
         drawSprite(cutScene.nailDressAnimation.sprite(), cutScene.nailX, cutScene.nailY, true);
-        actorRenderer.render(cutScene.pacMan);
-        actorRenderer.render(cutScene.blinky);
+        actorRenderer.render(cutScene.pacMan, tick);
+        actorRenderer.render(cutScene.blinky, tick);
     }
 
-    private void drawCutScene3(ArcadePacMan_CutScene3 cutScene) {
-        actorRenderer.render(cutScene.pacMan);
-        actorRenderer.render(cutScene.blinky);
+    private void drawCutScene3(ArcadePacMan_CutScene3 cutScene, long tick) {
+        actorRenderer.render(cutScene.pacMan, tick);
+        actorRenderer.render(cutScene.blinky, tick);
     }
 }

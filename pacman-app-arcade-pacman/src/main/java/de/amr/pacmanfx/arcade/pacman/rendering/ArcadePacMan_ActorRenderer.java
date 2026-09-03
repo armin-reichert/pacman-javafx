@@ -36,7 +36,7 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
     }
 
     @Override
-    public void render(Object r) {
+    public void render(Object r, long tick) {
         if (!(r instanceof GameEntity actor)) {
             return;
         }

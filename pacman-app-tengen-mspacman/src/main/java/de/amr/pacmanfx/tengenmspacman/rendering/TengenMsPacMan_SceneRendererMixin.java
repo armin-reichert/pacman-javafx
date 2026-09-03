@@ -4,9 +4,9 @@
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.input.JoypadButton;
 import de.amr.pacmanfx.ui.input.JoypadKeyBinding;
+import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -15,7 +15,7 @@ import static java.util.Objects.requireNonNull;
 
 public interface TengenMsPacMan_SceneRendererMixin {
 
-    GameScene2D_Renderer renderer();
+    Renderer renderer();
 
     /**
      * Draws a vertical bar of given width and height. The top and bottom edges are drawn with the edgeColor and are

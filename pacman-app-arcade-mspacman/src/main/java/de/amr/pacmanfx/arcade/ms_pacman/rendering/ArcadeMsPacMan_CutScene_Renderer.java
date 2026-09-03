@@ -10,16 +10,16 @@ import de.amr.pacmanfx.arcade.ms_pacman.scenes.ArcadeMsPacMan_CutScene3;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
+import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 
-public class ArcadeMsPacMan_CutScene_Renderer extends BaseRenderer implements GameScene2D_Renderer {
+public class ArcadeMsPacMan_CutScene_Renderer extends BaseRenderer {
 
     private final ArcadeMsPacMan_ActorRenderer actorRenderer;
-    private final BaseDebugInfoRenderer debugRenderer;
+    private final BaseGameSceneDebugInfoRenderer debugRenderer;
 
     public ArcadeMsPacMan_CutScene_Renderer(GameVariantRenderConfig renderConfig, GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
         super(canvas);
@@ -30,15 +30,18 @@ public class ArcadeMsPacMan_CutScene_Renderer extends BaseRenderer implements Ga
     }
 
     @Override
-    public void draw(GameScene gameScene, long tick) {
+    public void render(Object r, long tick) {
+        if (!(r instanceof GameScene gameScene)) {
+            return;
+        }
         switch (gameScene) {
-            case ArcadeMsPacMan_CutScene1 cutScene -> cutScene.entitiesInRenderOrder().forEach(actorRenderer::render);
-            case ArcadeMsPacMan_CutScene2 cutScene -> cutScene.entitiesInRenderOrder().forEach(actorRenderer::render);
-            case ArcadeMsPacMan_CutScene3 cutScene -> cutScene.entitiesInRenderOrder().forEach(actorRenderer::render);
+            case ArcadeMsPacMan_CutScene1 cutScene -> cutScene.entitiesInRenderOrder().forEach(actor -> actorRenderer.render(actor, tick));
+            case ArcadeMsPacMan_CutScene2 cutScene -> cutScene.entitiesInRenderOrder().forEach(actor -> actorRenderer.render(actor, tick));
+            case ArcadeMsPacMan_CutScene3 cutScene -> cutScene.entitiesInRenderOrder().forEach(actor -> actorRenderer.render(actor, tick));
             default -> throw new IllegalStateException("Unexpected value: " + gameScene);
         }
         if (gameScene.viewModel().debugModeOnProperty().get()) {
-            debugRenderer.draw(gameScene, tick);
+            debugRenderer.render(gameScene, tick);
         }
     }
 }

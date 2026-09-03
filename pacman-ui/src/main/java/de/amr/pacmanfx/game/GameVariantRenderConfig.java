@@ -35,7 +35,7 @@ public interface GameVariantRenderConfig {
 
     GameLevelRenderer createGameLevelRenderer(ActorSpriteAnimController animController, Canvas canvas);
 
-    GameScene2D_Renderer createGameSceneRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas);
+    BaseRenderer createGameSceneRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas);
 
     HUD_Style hudStyle();
 

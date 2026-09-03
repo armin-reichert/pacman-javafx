@@ -44,7 +44,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     }
 
     @Override
-    public void render(Object r) {
+    public void render(Object r, long tick) {
         if (!(r instanceof GameEntity actor)) {
             return;
         }

@@ -10,11 +10,9 @@ import javafx.scene.canvas.Canvas;
 
 public interface GameScene2D_Renderer extends Renderer {
 
-    void draw(GameScene gameScene, long tick);
-
-    static BaseDebugInfoRenderer createDefaultSceneDebugRenderer(GameScene gameScene, Canvas canvas) {
+    static BaseGameSceneDebugInfoRenderer createDefaultSceneDebugRenderer(GameScene gameScene, Canvas canvas) {
         final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
         final ActorSpriteAnimController animController = gameScene.game().variant().systems().actorSpriteAnimController();
-        return r2D.configureRenderer(new BaseDebugInfoRenderer(animController, canvas));
+        return r2D.configureRenderer(new BaseGameSceneDebugInfoRenderer(animController, canvas));
     }
 }

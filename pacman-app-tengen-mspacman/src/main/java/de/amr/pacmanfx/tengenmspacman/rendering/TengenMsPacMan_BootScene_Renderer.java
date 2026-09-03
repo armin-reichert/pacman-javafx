@@ -8,18 +8,18 @@ import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_BootScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
+import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 
-public class TengenMsPacMan_BootScene_Renderer extends BaseRenderer implements GameScene2D_Renderer {
+public class TengenMsPacMan_BootScene_Renderer extends BaseRenderer {
 
     public static final String TENGEN_PRESENTS = "TENGEN PRESENTS";
 
     private final TengenMsPacMan_ActorRenderer actorRenderer;
-    private final BaseDebugInfoRenderer debugRenderer;
+    private final BaseGameSceneDebugInfoRenderer debugRenderer;
 
     public TengenMsPacMan_BootScene_Renderer(
         GameVariantRenderConfig renderConfig, GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas) {
@@ -31,18 +31,21 @@ public class TengenMsPacMan_BootScene_Renderer extends BaseRenderer implements G
     }
 
     @Override
-    public void draw(GameScene scene, long tick) {
-        final TengenMsPacMan_BootScene bootScene = (TengenMsPacMan_BootScene) scene;
+    public void render(Object r, long tick) {
+        if (!(r instanceof TengenMsPacMan_BootScene bootScene)) {
+            return;
+        }
+
         if (bootScene.gray) {
             actorRenderer.fillCanvas(NES_Palette.color(0x10));
         } else {
             actorRenderer.fillText(TENGEN_PRESENTS, bootScene.shadeOfBlue, actorRenderer.arcadeFont8(),
                 bootScene.movingText.pos().x(), bootScene.movingText.pos().y());
-            actorRenderer.render(bootScene.ghost);
+            actorRenderer.render(bootScene.ghost, tick);
         }
 
-        if (scene.viewModel().debugModeOnProperty().get()) {
-            debugRenderer.draw(scene, tick);
+        if (bootScene.viewModel().debugModeOnProperty().get()) {
+            debugRenderer.render(bootScene, tick);
         }
     }
 }

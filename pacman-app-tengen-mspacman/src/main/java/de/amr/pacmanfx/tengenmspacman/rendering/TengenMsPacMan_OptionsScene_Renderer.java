@@ -13,11 +13,11 @@ import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_OptionsScene;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
+import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.Renderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -29,7 +29,7 @@ import static de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_OptionsSce
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
-    implements GameScene2D_Renderer, SpriteRenderer, TengenMsPacMan_SceneRendererMixin
+    implements SpriteRenderer, TengenMsPacMan_SceneRendererMixin
 {
     private static final int COL_ARROW = 2 * TS;
     private static final int COL_LABEL = 4 * TS;
@@ -39,7 +39,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
     private static final Color NES_YELLOW = NES_Palette.color(0x28);
     private static final Color NES_WHITE = NES_Palette.color(0x20);
 
-    private final BaseDebugInfoRenderer debugRenderer;
+    private final BaseGameSceneDebugInfoRenderer debugRenderer;
 
     public TengenMsPacMan_OptionsScene_Renderer(GameScene scene, Canvas canvas) {
         super(canvas);
@@ -53,29 +53,28 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
     }
 
     @Override
-    public GameScene2D_Renderer renderer() {
+    public Renderer renderer() {
         return this;
     }
 
     @Override
-    public void draw(GameScene gameScene, long tick) {
-        final GameAppContext app = gameScene.app();
+    public void render(Object r, long tick) {
+        if (!(r instanceof TengenMsPacMan_OptionsScene optionsScene)) {
+            return;
+        }
 
-        final TengenMsPacMan_UISettings uiSettings = app.currentGameVariantUIConfig().extensionValue(
+        final TengenMsPacMan_UISettings uiSettings = optionsScene.app().currentGameVariantUIConfig().extensionValue(
             TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
 
-
-        final GameContext game = gameScene.game();
+        final GameContext game = optionsScene.game();
         final GameSession session = game.session();
-
-        final var optionsScene = (TengenMsPacMan_OptionsScene) gameScene;
 
         if (optionsScene.initialDelay > 0) return;
 
         ctx.setFont(arcadeFont8());
 
         if (uiSettings.joypadBindingsDisplayed.get()) {
-            drawJoypadKeyBinding(gameScene.app().input().joypad().currentKeyBinding());
+            drawJoypadKeyBinding(optionsScene.app().input().joypad().currentKeyBinding());
         }
 
         drawHorizontalBar(NES_Palette.color(0x20), NES_Palette.color(0x21), optionsScene.reqCanvasRendering().unscaledWidth(), TS, 20);
@@ -127,7 +126,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
         fillText(":", NES_YELLOW, COL_COLON, y);
         fillText(String.valueOf(startLevelNumber), NES_WHITE, COL_VALUE, y);
         if (numContinues < 4) {
-            final var spriteSheet = app.currentGameVariantUIConfig().renderConfig().spriteSheet();
+            final var spriteSheet = optionsScene.app().currentGameVariantUIConfig().renderConfig().spriteSheet();
             final RectShort continuesSprite = spriteSheet.findSprite(switch (numContinues) {
                 case 0 -> SpriteID.CONTINUES_0;
                 case 1 -> SpriteID.CONTINUES_1;
@@ -149,8 +148,8 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
 
         drawHorizontalBar(NES_Palette.color(0x20), NES_Palette.color(0x21), optionsScene.reqCanvasRendering().unscaledWidth(), TS, 212);
 
-        if (gameScene.viewModel().debugModeOnProperty().get()) {
-            debugRenderer.draw(gameScene, tick);
+        if (optionsScene.viewModel().debugModeOnProperty().get()) {
+            debugRenderer.render(optionsScene, tick);
         }
     }
 

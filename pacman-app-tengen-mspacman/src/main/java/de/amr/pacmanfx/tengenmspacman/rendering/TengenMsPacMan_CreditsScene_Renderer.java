@@ -6,16 +6,17 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CreditsScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
+import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 
-public class TengenMsPacMan_CreditsScene_Renderer extends BaseRenderer implements GameScene2D_Renderer, TengenMsPacMan_SceneRendererMixin {
+public class TengenMsPacMan_CreditsScene_Renderer extends BaseRenderer implements TengenMsPacMan_SceneRendererMixin {
 
     record Line(String text, int paletteIndex, int column, int skipTiles) {}
 
@@ -63,7 +64,7 @@ public class TengenMsPacMan_CreditsScene_Renderer extends BaseRenderer implement
         }
     }
 
-    private final BaseDebugInfoRenderer debugRenderer;
+    private final BaseGameSceneDebugInfoRenderer debugRenderer;
     private final Pen pen = new Pen();
 
     public TengenMsPacMan_CreditsScene_Renderer(GameScene scene, Canvas canvas) {
@@ -72,16 +73,17 @@ public class TengenMsPacMan_CreditsScene_Renderer extends BaseRenderer implement
     }
 
     @Override
-    public GameScene2D_Renderer renderer() {
+    public Renderer renderer() {
         return this;
     }
 
     @Override
-    public void draw(GameScene gameScene, long tick) {
-        if (!(gameScene instanceof TengenMsPacMan_CreditsScene creditsScene)) {
+    public void render(Object r, long tick) {
+        if (!(r instanceof TengenMsPacMan_CreditsScene creditsScene)) {
             return;
         }
-        final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
+
+        final CanvasRenderingComp r2D = creditsScene.reqComp(CanvasRenderingComp.class);
 
         final int width = r2D.unscaledWidth();
         drawHorizontalBar(NES_Palette.color(0x20), NES_Palette.color(0x13), width, TS, 20);
@@ -102,8 +104,8 @@ public class TengenMsPacMan_CreditsScene_Renderer extends BaseRenderer implement
             }
         }
 
-        if (gameScene.viewModel().debugModeOnProperty().get()) {
-            debugRenderer.draw(gameScene, tick);
+        if (creditsScene.viewModel().debugModeOnProperty().get()) {
+            debugRenderer.render(creditsScene, tick);
         }
     }
 }

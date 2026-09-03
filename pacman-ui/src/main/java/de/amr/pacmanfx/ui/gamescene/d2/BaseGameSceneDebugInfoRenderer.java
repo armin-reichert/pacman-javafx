@@ -42,7 +42,7 @@ import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
-public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_Renderer {
+public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
 
     record AnimationInfo(Named animationID, int frame, boolean stopped, boolean locked) {}
 
@@ -56,7 +56,9 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
     private final ActorSpriteAnimController animController;
     private final Text dummy = new Text();
 
-    public BaseDebugInfoRenderer(ActorSpriteAnimController animController, Canvas canvas) {
+    private GameScene gameScene;
+
+    public BaseGameSceneDebugInfoRenderer(ActorSpriteAnimController animController, Canvas canvas) {
         super(canvas);
         this.animController = requireNonNull(animController);
     }
@@ -73,8 +75,16 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
         ).map(level.entities()::ghost).forEach(actorsInZOrder::add);
     }
 
+    public void setGameScene(GameScene gameScene) {
+        this.gameScene = gameScene;
+    }
+
     @Override
-    public void draw(GameScene gameScene, long tick) {
+    public void render(Object r, long tick) {
+        if (gameScene == null) {
+            return;
+        }
+
         final GameSession session = gameScene.game().session();
         final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
 
@@ -87,7 +97,7 @@ public class BaseDebugInfoRenderer extends BaseRenderer implements GameScene2D_R
         });
     }
 
-    public void drawGameStateInfo(GameContext game) {
+    private void drawGameStateInfo(GameContext game) {
         final AbstractGameState gameState = game.state();
         String text = "Game State: '%s' (Tick %d of %s)".formatted(
             gameState.name(),

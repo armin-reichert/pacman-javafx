@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.basics.InfoMap;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
@@ -40,7 +41,7 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
     private final SpriteSheet spriteSheet;
     private final GameLevelRenderer levelRenderer;
     private final BaseRenderer actorRenderer;
-    private final BaseDebugInfoRenderer debugRenderer;
+    private final BaseGameSceneDebugInfoRenderer debugRenderer;
     private final List<GameEntity> actorsInZOrder = new ArrayList<>();
 
     public Arcade_PlayScene2D_Renderer(GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas, SpriteSheet spriteSheet) {
@@ -55,7 +56,7 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
 
         levelRenderer = r2D.configureRenderer(renderConfig.createGameLevelRenderer(animSystem, canvas));
         actorRenderer = r2D.configureRenderer(renderConfig.createActorRenderer(animSystem, canvas));
-        debugRenderer = r2D.configureRenderer(new BaseDebugInfoRenderer(animController, canvas));
+        debugRenderer = r2D.configureRenderer(new BaseGameSceneDebugInfoRenderer(animController, canvas));
     }
 
     @Override
@@ -64,24 +65,25 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements GameSce
     }
 
     @Override
-    public void draw(GameScene scene, long tick) {
-        if (!(scene instanceof Arcade_PlayScene2D playScene)) {
+    public void render(Object r, long tick) {
+        if (!(r instanceof Arcade_PlayScene2D playScene)) {
             return;
         }
 
-        final GameRules rules = scene.game().variant().rules();
-        final GameSession session = scene.game().session();
+        final GameContext game = playScene.game();
+        final GameRules rules = game.variant().rules();
+        final GameSession session = game.session();
 
         // Level creation happens by handling a game event after the play scene has been activated. Therefore,
         // the game level is not yet existing for the first two ticks after this scene got active.
         session.optLevel().ifPresent(level -> {
             final InfoMap info = createRenderInfo(level, playScene);
             levelRenderer.applyLevelSettings(rules, level, info);
-            levelRenderer.drawLevel(scene.game(), level, info);
+            levelRenderer.drawLevel(game, level, info);
             updateActorZOrder(level.entities());
-            actorsInZOrder.forEach(actorRenderer::render);
-            if (scene.viewModel().debugModeOnProperty().get()) {
-                debugRenderer.draw(scene, tick);
+            actorsInZOrder.forEach(actor -> actorRenderer.render(actor, tick));
+            if (playScene.viewModel().debugModeOnProperty().get()) {
+                debugRenderer.render(playScene, tick);
             }
         });
     }

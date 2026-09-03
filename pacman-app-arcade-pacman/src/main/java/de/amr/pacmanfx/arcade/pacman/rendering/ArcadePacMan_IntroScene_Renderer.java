@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
+import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
@@ -36,7 +36,7 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Ga
     private static final short ENERGIZER_Y = WorldMap.TS * 20;
 
     private final ArcadePacMan_ActorRenderer actorRenderer;
-    private final BaseDebugInfoRenderer debugRenderer;
+    private final BaseGameSceneDebugInfoRenderer debugRenderer;
     private final RectShort energizerSprite;
 
     public ArcadePacMan_IntroScene_Renderer(GameVariantRenderConfig renderConfig, GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas) {
@@ -47,11 +47,14 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Ga
 
         actorRenderer = r2D.configureRenderer((ArcadePacMan_ActorRenderer) renderConfig.createActorRenderer(animSystem, canvas));
 
-        debugRenderer = r2D.configureRenderer(new BaseDebugInfoRenderer(animController, canvas) {
+        debugRenderer = r2D.configureRenderer(new BaseGameSceneDebugInfoRenderer(animController, canvas) {
             @Override
-            public void draw(GameScene gameScene, long tick) {
-                ArcadePacMan_IntroScene introScene = (ArcadePacMan_IntroScene) gameScene;
-                super.draw(gameScene, tick);
+            public void render(Object r, long tick) {
+                if (!(r instanceof ArcadePacMan_IntroScene introScene)) {
+                    return;
+                }
+                super.render(gameScene, tick);
+
                 ctx.fillText("Scene timer %d".formatted(introScene.flow.state().timer().tickCount()), 0, scaled(5 * WorldMap.TS));
                 drawMovingActorInfo(animSystem, introScene.pacMan);
                 for (var ghost : introScene.ghosts) {
@@ -71,26 +74,28 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Ga
     }
 
     @Override
-    public void draw(GameScene scene, long tick) {
-        final var introScene = (ArcadePacMan_IntroScene) scene;
+    public void render(Object r, long tick) {
+        if (!(r instanceof ArcadePacMan_IntroScene introScene)) {
+            return;
+        }
         drawGhostGallery(introScene);
         switch (introScene.flow.state()) {
             case SHOWING_POINTS -> drawPoints(introScene);
             case CHASING_PAC_MAN -> {
                 drawBlinkingEnergizer(introScene.blinking, ENERGIZER_X, ENERGIZER_Y);
-                drawRumblingGuys(introScene);
+                drawRumblingGuys(introScene, tick);
                 drawPoints(introScene);
                 drawCopyright();
             }
             case CHASING_GHOSTS, WAIT_FOR_DEMO_LEVEL -> {
-                drawRumblingGuys(introScene);
+                drawRumblingGuys(introScene, tick);
                 drawPoints(introScene);
                 drawCopyright();
             }
             default -> {}
         }
-        if (scene.viewModel().debugModeOnProperty().get()) {
-            debugRenderer.draw(scene, tick);
+        if (introScene.viewModel().debugModeOnProperty().get()) {
+            debugRenderer.render(introScene, tick);
         }
     }
 
@@ -115,13 +120,13 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Ga
         }
     }
 
-    private void drawRumblingGuys(ArcadePacMan_IntroScene introScene) {
+    private void drawRumblingGuys(ArcadePacMan_IntroScene introScene, long tick) {
         for (Ghost ghost : introScene.ghosts) {
-            actorRenderer.render(ghost);
+            actorRenderer.render(ghost, tick);
         }
-        actorRenderer.render(introScene.pacMan);
+        actorRenderer.render(introScene.pacMan, tick);
         if (introScene.points != null) {
-            actorRenderer.render(introScene.points);
+            actorRenderer.render(introScene.points, tick);
         }
     }
 

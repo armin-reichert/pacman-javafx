@@ -3,6 +3,8 @@
  */
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
+import de.amr.basics.InfoMap;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
@@ -16,13 +18,12 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.MapConfigKey;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_PlayScene2D;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
+import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
-import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
-import de.amr.basics.InfoMap;
+import de.amr.pacmanfx.uilib.rendering.Renderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -35,7 +36,7 @@ import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_PlayScene2D_Renderer
     extends BaseRenderer
-    implements GameScene2D_Renderer, SpriteRenderer, TengenMsPacMan_SceneRendererMixin
+    implements SpriteRenderer, TengenMsPacMan_SceneRendererMixin
 {
     public static final int CONTENT_INDENT = 2 * WorldMap.TS;
 
@@ -45,17 +46,21 @@ public class TengenMsPacMan_PlayScene2D_Renderer
         GhostPersonality.PINK_GHOST_SPEEDY,
         GhostPersonality.RED_GHOST_SHADOW);
 
-    private class PlaySceneDebugInfoRenderer extends BaseDebugInfoRenderer {
+    private class PlaySceneDebugInfoRenderer extends BaseGameSceneDebugInfoRenderer {
 
         public PlaySceneDebugInfoRenderer(ActorSpriteAnimController animController, Canvas canvas) {
             super(animController, canvas);
         }
 
         @Override
-        public void draw(GameScene gameScene, long tick) {
-            final GameSession session = gameScene.game().session();
-            final AbstractGameState gameState = gameScene.game().state();
-            final TengenMsPacMan_PlayScene2D playScene = (TengenMsPacMan_PlayScene2D) gameScene;
+        public void render(Object r, long tick) {
+            if (!(r instanceof TengenMsPacMan_PlayScene2D playScene)) {
+                return;
+            }
+
+            final GameContext game = playScene.game();
+            final GameSession session = game.session();
+            final AbstractGameState gameState = game.state();
 
             drawTileGrid(NES_SCREEN_WIDTH, playScene.canvasHeightUnscaled(), Color.LIGHTGRAY);
 
@@ -78,7 +83,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
     private final InfoMap infoMap = new InfoMap();
     private final TengenMsPacMan_GameLevelRenderer levelRenderer;
     private final TengenMsPacMan_ActorRenderer actorRenderer;
-    private final BaseDebugInfoRenderer debugRenderer;
+    private final BaseGameSceneDebugInfoRenderer debugRenderer;
     private final List<GameEntity> actorsInZOrder = new ArrayList<>();
 
     public TengenMsPacMan_PlayScene2D_Renderer(
@@ -99,34 +104,36 @@ public class TengenMsPacMan_PlayScene2D_Renderer
     }
 
     @Override
-    public GameScene2D_Renderer renderer() {
+    public Renderer renderer() {
         return this;
     }
 
     @Override
-    public void draw(GameScene scene, long tick) {
-        if (!(scene instanceof TengenMsPacMan_PlayScene2D playScene2D)) {
+    public void render(Object r, long tick) {
+        if (!(r instanceof TengenMsPacMan_PlayScene2D playScene)) {
             return;
         }
 
-        final GameSession session = scene.game().session();
+        final GameContext game = playScene.game();
+        final GameSession session = game.session();
+
         session.optLevel().ifPresent(level -> {
             final WorldMap worldMap = level.worldMap();
             final House house = level.entities().house();
             final double scaledIndent = scaled(CONTENT_INDENT);
 
-            configureRenderInfo(playScene2D, worldMap, tick);
+            configureRenderInfo(playScene, worldMap, tick);
             updateActorZOrder(level.entities());
 
             ctx.save();
             ctx.translate(scaledIndent, 0);
-            levelRenderer.drawLevel(scene.game(), level, infoMap);
+            levelRenderer.drawLevel(game, level, infoMap);
             levelRenderer.drawDoor(house, worldMap); // ghosts appear under door, so draw door over again
-            actorsInZOrder.forEach(actorRenderer::render);
+            actorsInZOrder.forEach(actor -> actorRenderer.render(actor, tick));
             ctx.restore();
 
-            if (scene.viewModel().debugModeOnProperty().get()) {
-                debugRenderer.draw(playScene2D, tick);
+            if (playScene.viewModel().debugModeOnProperty().get()) {
+                debugRenderer.render(playScene, tick);
             }
             else {
                 // All maps are 28 tiles wide but the NES screen is 32 tiles wide.

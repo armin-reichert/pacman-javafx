@@ -15,10 +15,11 @@ import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_IntroScene.SceneS
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
+import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.Renderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -30,7 +31,7 @@ import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConf
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
-    implements GameScene2D_Renderer, SpriteRenderer, TengenMsPacMan_SceneRendererMixin {
+    implements SpriteRenderer, TengenMsPacMan_SceneRendererMixin {
 
     public static final String TENGEN_PRESENTS = "TENGEN PRESENTS";
     public static final String PRESS_START = "PRESS START";
@@ -43,7 +44,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
     public static final String QUOTED_MS_PACMAN = "\"MS PAC-MAN\"";
 
     private final BaseRenderer actorRenderer;
-    private final BaseDebugInfoRenderer debugRenderer;
+    private final BaseGameSceneDebugInfoRenderer debugRenderer;
     private final MarqueeRenderer marqueeRenderer;
     private final TengenMsPacMan_UISettings uiSettings;
 
@@ -63,7 +64,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
     }
 
     @Override
-    public GameScene2D_Renderer renderer() {
+    public Renderer renderer() {
         return this;
     }
 
@@ -73,10 +74,12 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
     }
 
     @Override
-    public void draw(GameScene scene, long globalTick) {
-        final TengenMsPacMan_IntroScene intro = (TengenMsPacMan_IntroScene) scene;
-        final State<TengenMsPacMan_IntroScene> introState = intro.flow.state();
-        final long stateTick = intro.flow.state().timer().tickCount();
+    public void render(Object r, long tick) {
+        if (!(r instanceof TengenMsPacMan_IntroScene introScene)) {
+            return;
+        }
+        final State<TengenMsPacMan_IntroScene> introState = introScene.flow.state();
+        final long stateTick = introScene.flow.state().timer().tickCount();
 
         ctx.setFont(arcadeFont8());
         ctx.setImageSmoothing(false);
@@ -84,9 +87,9 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
         switch (introState) {
 
             case SceneState.WAITING_FOR_START -> {
-                if (!intro.dark) {
+                if (!introScene.dark) {
                     final boolean bright = stateTick % 60 < 30; // 0.5s dark, 0.5s bright
-                    fillText(TENGEN_PRESENTS, shadeOfBlue(stateTick), intro.presents.pos().x(), intro.presents.pos().y());
+                    fillText(TENGEN_PRESENTS, shadeOfBlue(stateTick), introScene.presents.pos().x(), introScene.presents.pos().y());
                     drawSprite(spriteSheet().findSprite(SpriteID.LARGE_MS_PAC_MAN_TEXT), 6 * TS, MARQUEE_Y, true);
                     if (bright) {
                         fillText(PRESS_START, NES_Palette.color(0x20), 11 * TS, MARQUEE_Y + 9 * TS);
@@ -98,40 +101,40 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
             }
 
             case SceneState.SHOWING_MARQUEE -> {
-                drawMarquee(intro);
+                drawMarquee(introScene);
                 fillText(QUOTED_MS_PACMAN, NES_Palette.color(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
             }
 
             case SceneState.GHOSTS_MARCHING_IN -> {
-                drawMarquee(intro);
+                drawMarquee(introScene);
                 fillText(QUOTED_MS_PACMAN, NES_Palette.color(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
-                if (intro.ghostIndex == 0) {
+                if (introScene.ghostIndex == 0) {
                     fillText(WITH, NES_Palette.color(0x20), MARQUEE_X + 12, MARQUEE_Y + 23);
                 }
-                final Ghost currentGhost = intro.ghosts.get(intro.ghostIndex);
-                final Color ghostColor = intro.ghostColors[currentGhost.personality().ordinal()];
+                final Ghost currentGhost = introScene.ghosts.get(introScene.ghostIndex);
+                final Color ghostColor = introScene.ghostColors[currentGhost.personality().ordinal()];
                 fillText(currentGhost.name().toUpperCase(), ghostColor, MARQUEE_X + 44, MARQUEE_Y + 41);
-                intro.ghosts.forEach(actorRenderer::render);
+                introScene.ghosts.forEach(ghost -> actorRenderer.render(ghost, tick));
             }
 
             case SceneState.MS_PACMAN_MARCHING_IN -> {
-                drawMarquee(intro);
+                drawMarquee(introScene);
                 fillText(QUOTED_MS_PACMAN, NES_Palette.color(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
                 fillText(STARRING, NES_Palette.color(0x20), MARQUEE_X + 12, MARQUEE_Y + 22);
                 fillText(MS_PAC_MAN, NES_Palette.color(0x28), MARQUEE_X + 28, MARQUEE_Y + 38);
-                intro.ghosts.forEach(actorRenderer::render);
-                actorRenderer.render(intro.msPacMan);
+                introScene.ghosts.forEach(ghost -> actorRenderer.render(ghost, tick));
+                actorRenderer.render(introScene.msPacMan, tick);
             }
 
             default -> {}
         }
 
         if (uiSettings.joypadBindingsDisplayed.get()) {
-            drawJoypadKeyBinding(scene.app().input().joypad().currentKeyBinding());
+            drawJoypadKeyBinding(introScene.app().input().joypad().currentKeyBinding());
         }
 
-        if (scene.viewModel().debugModeOnProperty().get()) {
-            debugRenderer.draw(scene, globalTick);
+        if (introScene.viewModel().debugModeOnProperty().get()) {
+            debugRenderer.render(introScene, tick);
         }
     }
 

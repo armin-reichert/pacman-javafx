@@ -20,7 +20,6 @@ import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
-import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.HUD_Renderer;
 import de.amr.pacmanfx.ui.settings.ui.DashboardSectionSettings;
 import de.amr.pacmanfx.ui.views.GameView;
@@ -34,6 +33,7 @@ import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.controls.FontAwesomeIcon;
 import de.amr.pacmanfx.uilib.controls.FontAwesomeSymbol;
 import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.event.EventHandler;
@@ -102,7 +102,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     // Icon layer
     private FontAwesomeIcon pausedIcon;
 
-    private GameScene2D_Renderer sceneRenderer;
+    private BaseRenderer sceneRenderer;
     private HUD_Renderer hudRenderer;
 
     public GamePlayView() {
@@ -258,7 +258,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
                         sceneRenderer.clearCanvas();
                     }
                     if (sceneRenderer != null) {
-                        sceneRenderer.draw(gameScene, tick);
+                        sceneRenderer.render(gameScene, tick);
                     }
                     if (hudRenderer != null) {
                         hudRenderer.drawHUD(session.hud(), session, gameScene, tick);

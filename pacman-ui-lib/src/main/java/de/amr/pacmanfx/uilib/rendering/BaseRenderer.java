@@ -57,7 +57,7 @@ public class BaseRenderer implements Renderer {
     // Renderer interface
 
     @Override
-    public void render(Object r) {
+    public void render(Object r, long tick) {
         throw new UnsupportedOperationException("Implement render method for class " + getClass().getSimpleName());
     }
 

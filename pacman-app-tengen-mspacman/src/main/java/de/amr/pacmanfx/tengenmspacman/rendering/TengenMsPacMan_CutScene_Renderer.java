@@ -11,16 +11,16 @@ import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene2;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene3;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene4;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
+import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 
-public class TengenMsPacMan_CutScene_Renderer extends BaseRenderer implements GameScene2D_Renderer {
+public class TengenMsPacMan_CutScene_Renderer extends BaseRenderer {
 
     private final TengenMsPacMan_ActorRenderer actorRenderer;
-    private final BaseDebugInfoRenderer debugRenderer;
+    private final BaseGameSceneDebugInfoRenderer debugRenderer;
 
     public TengenMsPacMan_CutScene_Renderer(
         GameVariantRenderConfig renderConfig, GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas) {
@@ -32,48 +32,52 @@ public class TengenMsPacMan_CutScene_Renderer extends BaseRenderer implements Ga
     }
 
     @Override
-    public void draw(GameScene gameScene, long tick) {
+    public void render(Object r, long tick) {
+        if (!(r instanceof GameScene gameScene)) {
+            return;
+        }
+
         switch (gameScene) {
-            case TengenMsPacMan_CutScene1 cutScene1 -> drawCutScene1(cutScene1);
-            case TengenMsPacMan_CutScene2 cutScene2 -> drawCutScene2(cutScene2);
-            case TengenMsPacMan_CutScene3 cutScene3 -> drawCutScene3(cutScene3);
-            case TengenMsPacMan_CutScene4 cutScene4 -> drawCutScene4(cutScene4);
+            case TengenMsPacMan_CutScene1 cutScene1 -> drawCutScene1(cutScene1, tick);
+            case TengenMsPacMan_CutScene2 cutScene2 -> drawCutScene2(cutScene2, tick);
+            case TengenMsPacMan_CutScene3 cutScene3 -> drawCutScene3(cutScene3, tick);
+            case TengenMsPacMan_CutScene4 cutScene4 -> drawCutScene4(cutScene4, tick);
             default -> throw new IllegalArgumentException("No cut scene!");
         }
         if (gameScene.viewModel().debugModeOnProperty().get()) {
-            debugRenderer.draw(gameScene, tick);
+            debugRenderer.render(gameScene, tick);
         }
     }
 
-    private void drawCutScene1(TengenMsPacMan_CutScene1 cutScene) {
-        actorRenderer.render(cutScene.clapperboard());
-        actorRenderer.render(cutScene.msPacMan());
-        actorRenderer.render(cutScene.pacMan());
-        actorRenderer.render(cutScene.inky());
-        actorRenderer.render(cutScene.pinky());
-        actorRenderer.render(cutScene.heart());
+    private void drawCutScene1(TengenMsPacMan_CutScene1 cutScene, long tick) {
+        actorRenderer.render(cutScene.clapperboard(), tick);
+        actorRenderer.render(cutScene.msPacMan(), tick);
+        actorRenderer.render(cutScene.pacMan(), tick);
+        actorRenderer.render(cutScene.inky(), tick);
+        actorRenderer.render(cutScene.pinky(), tick);
+        actorRenderer.render(cutScene.heart(), tick);
     }
 
-    private void drawCutScene2(TengenMsPacMan_CutScene2 cutScene) {
-        actorRenderer.render(cutScene.clapperboard());
-        actorRenderer.render(cutScene.msPacMan());
-        actorRenderer.render(cutScene.pacMan());
+    private void drawCutScene2(TengenMsPacMan_CutScene2 cutScene, long tick) {
+        actorRenderer.render(cutScene.clapperboard(), tick);
+        actorRenderer.render(cutScene.msPacMan(), tick);
+        actorRenderer.render(cutScene.pacMan(), tick);
     }
 
-    private void drawCutScene3(TengenMsPacMan_CutScene3 cutScene) {
+    private void drawCutScene3(TengenMsPacMan_CutScene3 cutScene, long tick) {
         if (!cutScene.darkness()) {
-            actorRenderer.render(cutScene.clapperboard());
-            actorRenderer.render(cutScene.stork());
-            actorRenderer.render(cutScene.flyingBag());
-            actorRenderer.render(cutScene.msPacMan());
-            actorRenderer.render(cutScene.pacMan());
+            actorRenderer.render(cutScene.clapperboard(), tick);
+            actorRenderer.render(cutScene.stork(), tick);
+            actorRenderer.render(cutScene.flyingBag(), tick);
+            actorRenderer.render(cutScene.msPacMan(), tick);
+            actorRenderer.render(cutScene.pacMan(), tick);
         }
     }
 
-    private void drawCutScene4(TengenMsPacMan_CutScene4 cutScene) {
-        actorRenderer.render(cutScene.clapperboard());
-        actorRenderer.render(cutScene.msPacMan());
-        actorRenderer.render(cutScene.pacMan());
-        cutScene.juniors().forEach(actorRenderer::render);
+    private void drawCutScene4(TengenMsPacMan_CutScene4 cutScene, long tick) {
+        actorRenderer.render(cutScene.clapperboard(), tick);
+        actorRenderer.render(cutScene.msPacMan(), tick);
+        actorRenderer.render(cutScene.pacMan(), tick);
+        cutScene.juniors().forEach(junior -> actorRenderer.render(junior, tick));
     }
 }

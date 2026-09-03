@@ -80,7 +80,7 @@ class XXL_ChaseAnimation {
         animationTimer.attachAnimContainer(animContainer);
     }
 
-    public void draw() {
+    public void draw(long tick) {
         if (actorRenderer == null) {
             return;
         }
@@ -88,10 +88,10 @@ class XXL_ChaseAnimation {
         ctx.save();
         ctx.translate(0, scaling.get() * y);
         actorRenderer.setImageSmoothing(true);
-        ghosts.forEach(actorRenderer::render);
-        actorRenderer.render(pac);
+        ghosts.forEach(ghost -> actorRenderer.render(ghost, tick));
+        actorRenderer.render(pac, tick);
         if (ghostPoints != null) {
-            actorRenderer.render(ghostPoints);
+            actorRenderer.render(ghostPoints, tick);
         }
         ctx.restore();
     }

@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.BaseDebugInfoRenderer;
+import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.GameScene2D_Renderer;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
@@ -29,13 +29,13 @@ import static java.util.Objects.requireNonNull;
  * and a grid before the intro scene starts. This scene is used by the Arcade and the XXL variants so we pass the
  * corresponding spritesheet as a parameter.
  */
-public class Arcade_BootScene2D_Renderer extends BaseRenderer implements GameScene2D_Renderer, SpriteRenderer {
+public class Arcade_BootScene2D_Renderer extends BaseRenderer implements SpriteRenderer {
 
     public static final int GRID_SIZE = 16;
 
     private final SpriteSheet spriteSheet;
     private final Rectangle2D spriteRegion;
-    private final BaseDebugInfoRenderer debugRenderer;
+    private final BaseGameSceneDebugInfoRenderer debugRenderer;
 
     public Arcade_BootScene2D_Renderer(GameScene scene, Canvas canvas, SpriteSheet spriteSheet, Rectangle2D spriteRegion) {
         super(canvas);
@@ -53,9 +53,12 @@ public class Arcade_BootScene2D_Renderer extends BaseRenderer implements GameSce
     }
 
     @Override
-    public void draw(GameScene scene, long tick) {
-        final Arcade_BootScene2D bootScene = (Arcade_BootScene2D) scene;
-        final CanvasRenderingComp r2D = scene.reqComp(CanvasRenderingComp.class);
+    public void render(Object r, long tick) {
+        if (!(r instanceof Arcade_BootScene2D bootScene)) {
+            return;
+        }
+
+        final CanvasRenderingComp r2D = bootScene.reqComp(CanvasRenderingComp.class);
         switch (bootScene.sceneState) {
             case BLANK -> clearCanvas();
             case HEX_CODES -> {
@@ -75,8 +78,8 @@ public class Arcade_BootScene2D_Renderer extends BaseRenderer implements GameSce
                 drawGrid(r2D.unscaledWidth(), r2D.unscaledHeight());
             }
         }
-        if (scene.viewModel().debugModeOnProperty().get()) {
-            debugRenderer.draw(scene, tick);
+        if (bootScene.viewModel().debugModeOnProperty().get()) {
+            debugRenderer.render(bootScene, tick);
         }
     }
 
