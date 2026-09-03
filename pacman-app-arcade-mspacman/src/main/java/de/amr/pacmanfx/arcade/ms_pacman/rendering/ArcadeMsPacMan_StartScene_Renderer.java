@@ -44,7 +44,6 @@ public class ArcadeMsPacMan_StartScene_Renderer extends BaseRenderer implements 
     public void draw(GameScene scene, long tick) {
         final double STS = scaled(TS);
 
-        clearCanvas();
         ctx.setFill(ARCADE_ORANGE);
         ctx.setFont(arcadeFont8());
         ctx.fillText("PUSH START BUTTON",      STS*6, STS*16);
