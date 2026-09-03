@@ -51,6 +51,10 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
 
         if (!actor.isVisible()) return;
 
+        //TODO This does not belong here
+        ctx.save();
+        ctx.translate(scaled(16), 0); // content indent of map
+
         final Vector2f center = actor.pos().bodyCenter();
         switch (actor) {
             case Bonus bonus -> drawSpriteCentered(computeSprite(bonus), center);
@@ -62,6 +66,8 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             case Stork stork -> drawStork(stork);
             default -> drawSpriteCentered(animSystem.currentSprite(actor), center);
         }
+
+        ctx.restore();
     }
 
     private FacingSprite computeSprite(Pac pac) {

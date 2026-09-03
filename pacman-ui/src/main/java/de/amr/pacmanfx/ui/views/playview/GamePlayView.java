@@ -453,10 +453,8 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
                     rendererRegistry.hudRenderer().drawHUD(session.hud(), session, gameScene, tick);
                     rendererRegistry.hudRenderer().drawMessage(session);
 
-                    session.optLevel().ifPresent(level -> {
-                        entitiesInRenderingOrder(level.entities()).forEach(
-                            actor -> rendererRegistry.actorRenderer.render(actor, tick));
-                    });
+                    session.optLevel().ifPresent(level -> entitiesInRenderingOrder(level.entities()).forEach(
+                        actor -> rendererRegistry.actorRenderer.render(actor, tick)));
 
                     if (gameScene.viewModel().debugModeOnProperty().get()) {
                         rendererRegistry.debugRenderer().render(gameScene, tick);

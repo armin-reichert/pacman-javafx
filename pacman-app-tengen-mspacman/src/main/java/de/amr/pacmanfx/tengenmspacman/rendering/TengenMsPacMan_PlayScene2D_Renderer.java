@@ -6,11 +6,9 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 import de.amr.basics.InfoMap;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
-import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -28,7 +26,6 @@ import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
@@ -38,7 +35,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer
     extends BaseRenderer
     implements SpriteRenderer, TengenMsPacMan_SceneRendererMixin
 {
-    public static final int CONTENT_INDENT = 2 * WorldMap.TS;
+    public static final int CONTENT_INDENT = 16;
 
     private static final List<GhostPersonality> GHOST_Z_ORDER = List.of(
         GhostPersonality.ORANGE_GHOST_POKEY,
@@ -82,9 +79,6 @@ public class TengenMsPacMan_PlayScene2D_Renderer
 
     private final InfoMap infoMap = new InfoMap();
     private final TengenMsPacMan_GameLevelRenderer levelRenderer;
-    private final TengenMsPacMan_ActorRenderer actorRenderer;
-    private final BaseGameSceneDebugInfoRenderer debugRenderer;
-    private final List<GameEntity> actorsInZOrder = new ArrayList<>();
 
     public TengenMsPacMan_PlayScene2D_Renderer(
         GameVariantRenderConfig renderConfig, GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
@@ -94,8 +88,6 @@ public class TengenMsPacMan_PlayScene2D_Renderer
         this.animController = requireNonNull(animController);
 
         levelRenderer = r2D.configureRenderer((TengenMsPacMan_GameLevelRenderer) renderConfig.createGameLevelRenderer(animController, canvas));
-        actorRenderer = r2D.configureRenderer((TengenMsPacMan_ActorRenderer)     renderConfig.createActorRenderer(animController, canvas));
-        debugRenderer = r2D.configureRenderer(new PlaySceneDebugInfoRenderer(animController, canvas));
     }
 
     @Override
@@ -123,28 +115,25 @@ public class TengenMsPacMan_PlayScene2D_Renderer
             final double scaledIndent = scaled(CONTENT_INDENT);
 
             configureRenderInfo(playScene, worldMap, tick);
-            updateActorZOrder(level.entities());
 
             ctx.save();
             ctx.translate(scaledIndent, 0);
+
             levelRenderer.drawLevel(game, level, infoMap);
             levelRenderer.drawDoor(house, worldMap); // ghosts appear under door, so draw door over again
-            actorsInZOrder.forEach(actor -> actorRenderer.render(actor, tick));
+
             ctx.restore();
 
-            if (playScene.viewModel().debugModeOnProperty().get()) {
-                debugRenderer.render(playScene, tick);
-            }
-            else {
-                // All maps are 28 tiles wide but the NES screen is 32 tiles wide.
-                // To accommodate, the maps are centered horizontally and 2 tiles on each side are clipped.
-                final double stripeHeight = ctx.getCanvas().getHeight();
-                ctx.save();
-                ctx.setFill(backgroundColor());
-                ctx.fillRect(0, 0, scaledIndent, stripeHeight);
-                ctx.fillRect(ctx.getCanvas().getWidth() - scaledIndent, 0, scaledIndent, stripeHeight);
-                ctx.restore();
-            }
+            // All maps are 28 tiles wide but the NES screen is 32 tiles wide.
+            // To accommodate, the maps are centered horizontally and 2 tiles on each side are clipped.
+            final double stripeHeight = ctx.getCanvas().getHeight();
+            ctx.save();
+
+            ctx.setFill(backgroundColor());
+            ctx.fillRect(0, 0, scaledIndent, stripeHeight);
+            ctx.fillRect(ctx.getCanvas().getWidth() - scaledIndent, 0, scaledIndent, stripeHeight);
+
+            ctx.restore();
         });
     }
 
@@ -159,15 +148,5 @@ public class TengenMsPacMan_PlayScene2D_Renderer
             infoMap.put(CommonRenderInfoKey.MAP_BRIGHT, flashingState.isHighlighted());
             infoMap.put(CommonRenderInfoKey.MAZE_FLASHING_INDEX, flashingState.flashingIndex());
         });
-    }
-
-    // Actor z-order: Bonus under Pac-Man under ghosts in z-order.
-    private void updateActorZOrder(GameLevelEntitySet entities) {
-        actorsInZOrder.clear();
-        entities.optBonus().ifPresent(actorsInZOrder::add);
-        actorsInZOrder.addAll(entities.theGhostPoints());
-        actorsInZOrder.addAll(entities.theBonusPoints());
-        actorsInZOrder.add(entities.pac());
-        GHOST_Z_ORDER.stream().map(entities::ghost).forEach(actorsInZOrder::add);
     }
 }
