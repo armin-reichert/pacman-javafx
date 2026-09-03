@@ -32,7 +32,7 @@ public final class Pac extends GameEntity {
         setComp(PacAnimationComp.class, new PacAnimationComp());
         setComp(RenderingComp.class, new RenderingComp(RenderingLayer.ACTORS));
 
-        rendering().setLayerPriority(0); // Ghosts start at 10
+        rendering().setLayerPriority(1); // Ghosts start at 10
     }
 
     public MovementComp movement() {

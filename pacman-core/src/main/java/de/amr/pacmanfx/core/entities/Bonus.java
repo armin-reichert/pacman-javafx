@@ -42,6 +42,7 @@ public final class Bonus extends GameEntity {
         setComp(BonusDataComp.class, new BonusDataComp(symbolCode));
         setComp(BonusStateComp.class, new BonusStateComp());
         setComp(RenderingComp.class, new RenderingComp(RenderingLayer.ACTORS));
+        rendering().setLayerPriority(0);
     }
 
     public BonusDataComp data() {
@@ -50,6 +51,10 @@ public final class Bonus extends GameEntity {
 
     public BonusStateComp state() {
         return reqComp(BonusStateComp.class);
+    }
+
+    public RenderingComp rendering() {
+        return reqComp(RenderingComp.class);
     }
 
     public Optional<WorldNavigationComp> optWorldNavigation() {

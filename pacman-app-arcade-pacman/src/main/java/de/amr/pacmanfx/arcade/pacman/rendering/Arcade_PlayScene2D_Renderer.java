@@ -23,8 +23,8 @@ import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.scene.canvas.Canvas;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 
@@ -82,7 +82,7 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements SpriteR
             levelRenderer.applyLevelSettings(rules, level, info);
             levelRenderer.drawLevel(game, level, info);
 
-            actorLayerOrder(level.entities()).forEach(actor -> actorRenderer.render(actor, tick));
+            entitiesInRenderingOrder(level.entities()).forEach(actor -> actorRenderer.render(actor, tick));
 
             if (playScene.viewModel().debugModeOnProperty().get()) {
                 debugRenderer.render(playScene, tick);
@@ -105,16 +105,12 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements SpriteR
         return info;
     }
 
-    //TODO This is only a first step towards a unified rendering pipeline
-    private List<GameEntity> actorLayerOrder(GameLevelEntitySet entities) {
-        final List<GameEntity> renderables = new ArrayList<>();
-        entities.optBonus().ifPresent(renderables::add);
-        renderables.addAll(entities.theGhostPoints());
-        renderables.addAll(entities.theBonusPoints());
-        renderables.add(entities.pac());
-        GHOST_Z_ORDER.stream().map(entities::ghost).forEach(renderables::add);
-        renderables.sort(Comparator.comparing(actor -> actor.reqComp(RenderingComp.class), RenderingComp.RENDERING_ORDER));
-        return renderables;
+    private List<GameEntity> entitiesInRenderingOrder(GameLevelEntitySet entities) {
+        return entities.all()
+            .filter(e -> e.hasComp(RenderingComp.class))
+            .sorted((e1, e2) -> RenderingComp.RENDERING_ORDER.compare(
+                e1.reqComp(RenderingComp.class),
+                e2.reqComp(RenderingComp.class)))
+            .collect(Collectors.toCollection(ArrayList::new));
     }
-
 }
