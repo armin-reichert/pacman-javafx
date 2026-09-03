@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.mapeditor.editcanvas;
 
 import de.amr.basics.math.Direction;
+import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
@@ -15,7 +16,6 @@ import de.amr.pacmanfx.mapeditor.TileMapEditorUI;
 import de.amr.pacmanfx.mapeditor.TileMapEditorUtils;
 import de.amr.pacmanfx.mapeditor.actions.*;
 import de.amr.pacmanfx.mapeditor.palette.PaletteID;
-import de.amr.pacmanfx.mapeditor.rendering.ActorSpriteRenderer;
 import de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites;
 import de.amr.pacmanfx.mapeditor.rendering.TerrainMapTileRenderer;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
@@ -47,10 +47,29 @@ public class EditCanvas extends Canvas {
     public static final double GRID_LINE_WIDTH = 0.5;
     public static final Color MAZE_AREA_SEPARATOR_COLOR = Color.grayRgb(222, 0.75);
 
-    static class TerrainAndActorRenderer extends TerrainMapTileRenderer implements ActorSpriteRenderer {
+    static class TerrainAndActorRenderer extends TerrainMapTileRenderer {
         public TerrainAndActorRenderer(Canvas canvas) {
             super(canvas);
         }
+        /**
+         * Draws the actor sprite half tile right of the given tile.
+         * @param tile actor tile, actor is drawn half tile right of this tile
+         * @param sprite actor sprite
+         */
+        public void drawActorSprite(Vector2i tile, RectShort sprite) {
+            Vector2i center = tile.scaled(WorldMap.TS).plus(WorldMap.TS, WorldMap.HTS);
+            ctx().save();
+            ctx().scale(scaling(), scaling());
+            ctx().drawImage(ArcadeSprites.SPRITE_SHEET,
+                sprite.x(), sprite.y(), sprite.width(), sprite.height(),
+                center.x() - 0.5f * sprite.width(),
+                center.y() - 0.5f * sprite.height(),
+                sprite.width(),
+                sprite.height()
+            );
+            ctx().restore();
+        }
+
     }
 
     private static final ResourceManager RESOURCE_MANAGER = () -> EditCanvas.class;

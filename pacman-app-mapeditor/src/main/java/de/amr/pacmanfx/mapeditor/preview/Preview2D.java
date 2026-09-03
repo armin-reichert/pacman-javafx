@@ -3,11 +3,11 @@
  */
 package de.amr.pacmanfx.mapeditor.preview;
 
+import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.model.world.map.TerrainTile;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
-import de.amr.pacmanfx.mapeditor.rendering.ActorSpriteRenderer;
 import de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites;
 import de.amr.pacmanfx.mapeditor.rendering.TerrainMapTileRenderer;
 import de.amr.pacmanfx.uilib.rendering.ArcadeHouseRenderer;
@@ -28,9 +28,29 @@ import static de.amr.pacmanfx.mapeditor.TileMapEditorUtils.getColorFromMapLayer;
 
 public class Preview2D extends Canvas {
 
-    static class PreviewRenderer extends TerrainMapVectorRenderer implements ActorSpriteRenderer {
+    static class PreviewRenderer extends TerrainMapVectorRenderer {
+
         public PreviewRenderer(Canvas canvas) {
             super(canvas);
+        }
+
+        /**
+         * Draws the actor sprite half tile right of the given tile.
+         * @param tile actor tile, actor is drawn half tile right of this tile
+         * @param sprite actor sprite
+         */
+        public void drawActorSprite(Vector2i tile, RectShort sprite) {
+            Vector2i center = tile.scaled(WorldMap.TS).plus(WorldMap.TS, WorldMap.HTS);
+            ctx().save();
+            ctx().scale(scaling(), scaling());
+            ctx().drawImage(ArcadeSprites.SPRITE_SHEET,
+                sprite.x(), sprite.y(), sprite.width(), sprite.height(),
+                center.x() - 0.5f * sprite.width(),
+                center.y() - 0.5f * sprite.height(),
+                sprite.width(),
+                sprite.height()
+            );
+            ctx().restore();
         }
     }
 
