@@ -7,11 +7,8 @@ package de.amr.pacmanfx.ui.views.playview;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.comp.RenderingComp;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
@@ -22,9 +19,7 @@ import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
-import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
-import de.amr.pacmanfx.ui.gamescene.d2.HUD_Renderer;
 import de.amr.pacmanfx.ui.settings.ui.DashboardSectionSettings;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
@@ -37,7 +32,6 @@ import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.controls.FontAwesomeIcon;
 import de.amr.pacmanfx.uilib.controls.FontAwesomeSymbol;
 import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
-import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.event.EventHandler;
@@ -55,12 +49,9 @@ import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.FontSmoothingType;
 import org.tinylog.Logger;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static de.amr.pacmanfx.ui.views.ContextMenuSupport.addLocalizedActionItem;
 import static de.amr.pacmanfx.ui.views.ContextMenuSupport.addLocalizedTitleItem;
@@ -108,7 +99,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     // Icon layer
     private FontAwesomeIcon pausedIcon;
 
-    private final RendererRegistry rendererRegistry = new  RendererRegistry();
+    private final RenderManager renderManager = new RenderManager();
 
     public GamePlayView() {
         createLayout();
@@ -133,7 +124,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
         pausedIcon.visibleProperty().bind(app.clock().updatesDisabledProperty());
 
-        vm.common2DSettings().fontSmoothingOnProperty().addListener((_, _, smoothing) -> rendererRegistry.setFontSmoothing(smoothing));
+        vm.common2DSettings().fontSmoothingOnProperty().addListener((_, _, smoothing) -> renderManager.setFontSmoothing(smoothing));
 
         vm.debugModeOnProperty().addListener((_, _, debug) -> {
             gameSceneLayer.setBackground(debug ? DEBUG_BACKGROUND : null);
@@ -243,6 +234,26 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     public void handleQuit(GameAppContext app) {
         app.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.handleQuit(app));
         app.ui().views().selectStartPagesView();
+    }
+
+    @Override
+    public void render() {
+        app.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
+            final GameSession session = app.game().session();
+            final long tick = app.clock().currentTick();
+            try {
+                renderManager.renderFrame(gameScene, session, tick);
+            } catch (Exception x) {
+                Logger.error(x, "Exception during rendering!");
+            }
+            //TODO integrate into render manager
+            miniView.draw();
+        });
+
+        // Dashboard must always be updated even if simulation is stopped!
+        if (overlayLayer.isVisible()) {
+            dashboard.update(app);
+        }
     }
 
     @Override
@@ -392,7 +403,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
             final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
             // use the canvas of the decorated pane for 2D scene even though the decoration is not used
             r2D.setCanvas(gameSceneFrame.canvas());
-            updateRenderers(gameScene);
+            renderManager.updateRenderers(app, gameScene);
         }
         setGameSceneContent(subSceneFX);
     }
@@ -431,115 +442,8 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         }
 
         canvasRendering.setCanvas(gameSceneFrame.canvas());
-        updateRenderers(gameScene);
+        renderManager.updateRenderers(app, gameScene);
         gameSceneFrame.clearCanvas();
     }
 
-
-    // ---- Rendering
-
-    @Override
-    public void render() {
-        final GameSession session = app.game().session();
-        final long tick = app.clock().currentTick();
-
-        app.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
-            try {
-                gameScene.optCanvasRendering().ifPresent(canvasRendering -> {
-                    if (canvasRendering.clearCanvasBeforeRendering()) {
-                        rendererRegistry.sceneRenderer().clearCanvas();
-                    }
-                    rendererRegistry.sceneRenderer().render(gameScene, tick);
-                    rendererRegistry.hudRenderer().drawHUD(session.hud(), session, gameScene, tick);
-                    rendererRegistry.hudRenderer().drawMessage(session);
-
-                    session.optLevel().ifPresent(level -> entitiesInRenderingOrder(level.entities()).forEach(
-                        actor -> rendererRegistry.actorRenderer.render(actor, tick)));
-
-                    if (gameScene.viewModel().debugModeOnProperty().get()) {
-                        rendererRegistry.debugRenderer().render(gameScene, tick);
-                    }
-                });
-                miniView.draw();
-            } catch (Exception x) {
-                Logger.error(x, "Exception during rendering!");
-            }
-        });
-
-        // Dashboard must always be updated even if simulation is stopped!
-        if (overlayLayer.isVisible()) {
-            dashboard.update(app);
-        }
-    }
-
-    private List<GameEntity> entitiesInRenderingOrder(GameLevelEntitySet entities) {
-        return entities.all()
-            .filter(e -> e.hasComp(RenderingComp.class))
-            .sorted((e1, e2) -> RenderingComp.RENDERING_ORDER.compare(
-                e1.reqComp(RenderingComp.class),
-                e2.reqComp(RenderingComp.class)))
-            .collect(Collectors.toCollection(ArrayList::new));
-    }
-
-    private void updateRenderers(GameScene gameScene) {
-        requireNonNull(gameScene);
-
-        final CanvasRenderingComp canvasRendering = gameScene.reqComp(CanvasRenderingComp.class);
-        final ActorSpriteAnimController animController = app.game().variant().systems().actorSpriteAnimController();
-        final GameVariantRenderConfig renderConfig = app.currentGameVariantUIConfig().renderConfig();
-        final Canvas canvas = canvasRendering.canvas();
-
-        if (canvas != null) {
-            rendererRegistry.setActorRenderer(canvasRendering.configureRenderer(renderConfig.createActorRenderer(animController, canvas)));
-            rendererRegistry.setSceneRenderer(renderConfig.createGameSceneRenderer(gameScene, animController, canvas));
-            rendererRegistry.setHudRenderer(renderConfig.createHUDRenderer(gameScene, animController, canvas)); // may return null!
-            rendererRegistry.setFontSmoothing(app.ui().viewModel().common2DSettings().fontSmoothingOnProperty().get());
-            rendererRegistry.setDebugRenderer(canvasRendering.configureRenderer(new BaseGameSceneDebugInfoRenderer(animController, canvas)));
-        } else {
-            Logger.error("Cannot create game scene and HUD renderer: no canvas has been assigned");
-        }
-    }
-
-    static class RendererRegistry {
-        private BaseRenderer actorRenderer;
-        private BaseRenderer sceneRenderer;
-        private HUD_Renderer hudRenderer;
-        private BaseRenderer debugRenderer;
-
-        public void setFontSmoothing(boolean smoothing) {
-            sceneRenderer.ctx().setFontSmoothingType(smoothing ? FontSmoothingType.LCD : FontSmoothingType.GRAY);
-        }
-
-        public BaseRenderer actorRenderer() {
-            return actorRenderer;
-        }
-
-        public void setActorRenderer(BaseRenderer actorRenderer) {
-            this.actorRenderer = actorRenderer;
-        }
-
-        public BaseRenderer sceneRenderer() {
-            return sceneRenderer;
-        }
-
-        public void setSceneRenderer(BaseRenderer sceneRenderer) {
-            this.sceneRenderer = sceneRenderer;
-        }
-
-        public HUD_Renderer hudRenderer() {
-            return hudRenderer;
-        }
-
-        public void setHudRenderer(HUD_Renderer hudRenderer) {
-            this.hudRenderer = hudRenderer;
-        }
-
-        public BaseRenderer debugRenderer() {
-            return debugRenderer;
-        }
-
-        public void setDebugRenderer(BaseRenderer debugRenderer) {
-            this.debugRenderer = debugRenderer;
-        }
-    }
 }
