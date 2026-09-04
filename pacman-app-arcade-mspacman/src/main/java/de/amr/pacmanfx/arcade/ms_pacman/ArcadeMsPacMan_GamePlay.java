@@ -20,7 +20,7 @@ import de.amr.pacmanfx.core.entities.levelCounter.comp.LevelCounterBehavior;
 import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.level.GameLevelEntitySet;
+import de.amr.pacmanfx.core.level.GameLevelEntities;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
@@ -55,7 +55,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         requireNonNull(game);
         requireValidLevelNumber(levelNumber);
 
-        final GameLevelEntitySet entities = new GameLevelEntitySet();
+        final GameLevelEntities entities = new GameLevelEntities();
 
         final GameSession session = game.session();
         final WorldNavigationSystem navigator = game.variant().systems().navigator();
@@ -96,7 +96,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         return level;
     }
 
-    protected void createAndSetMsPacMan(GameLevelEntitySet entities, GameSystems systems) {
+    protected void createAndSetMsPacMan(GameLevelEntities entities, GameSystems systems) {
         final var factory = new ArcadeMsPacMan_ActorFactory();
         final Pac msPacMan = factory.createMsPacMan();
         entities.add(msPacMan);
@@ -106,7 +106,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         ));
     }
 
-    private void createAndSetGhosts(GameLevelEntitySet entities, TerrainLayer terrain, House house) {
+    private void createAndSetGhosts(GameLevelEntities entities, TerrainLayer terrain, House house) {
         final var factory = new ArcadeMsPacMan_ActorFactory();
 
         final Ghost redGhost = factory.createRedGhost();

@@ -124,7 +124,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
         pausedIcon.visibleProperty().bind(app.clock().updatesDisabledProperty());
 
-        vm.common2DSettings().fontSmoothingOnProperty().addListener((_, _, smoothing) -> renderManager.setGameSceneFontSmoothing(smoothing));
+//        vm.common2DSettings().fontSmoothingOnProperty().addListener((_, _, smoothing) -> renderManager.setGameSceneFontSmoothing(smoothing));
 
         vm.debugModeOnProperty().addListener((_, _, debug) -> {
             gameSceneLayer.setBackground(debug ? DEBUG_BACKGROUND : null);
@@ -241,8 +241,9 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         app.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
             final GameSession session = app.game().session();
             final long tick = app.clock().currentTick();
+            final boolean debugMode = gameScene.viewModel().debugModeOnProperty().get();
             try {
-                renderManager.renderFrame(gameScene, session, tick);
+                renderManager.renderFrame(gameScene, session, tick, debugMode);
             } catch (Exception x) {
                 Logger.error(x, "Exception during rendering!");
             }

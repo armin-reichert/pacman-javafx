@@ -24,7 +24,7 @@ public class GameLevel {
     private final int number; // 1=first level
 
     private final WorldMap worldMap;
-    private final GameLevelEntitySet entities;
+    private final GameLevelEntities entities;
     private final Pulse heartbeat;
     private final List<Integer> bonusSymbolCodes = new ArrayList<>();
 
@@ -36,7 +36,7 @@ public class GameLevel {
 
     private final FoodState foodState;
 
-    public GameLevel(int number, WorldMap worldMap, GameLevelEntitySet entities, HuntingTimer huntingTimer) {
+    public GameLevel(int number, WorldMap worldMap, GameLevelEntities entities, HuntingTimer huntingTimer) {
         this.number = requireValidLevelNumber(number);
         this.worldMap = requireNonNull(worldMap);
         this.entities = requireNonNull(entities);
@@ -93,7 +93,7 @@ public class GameLevel {
         this.ghostKillCount = ghostKillCount;
     }
 
-    public GameLevelEntitySet entities() {
+    public GameLevelEntities entities() {
         return entities;
     }
 

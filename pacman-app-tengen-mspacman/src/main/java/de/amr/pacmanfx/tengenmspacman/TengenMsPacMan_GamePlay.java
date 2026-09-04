@@ -26,7 +26,7 @@ import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameFlowController;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.level.GameLevelEntitySet;
+import de.amr.pacmanfx.core.level.GameLevelEntities;
 import de.amr.pacmanfx.core.level.MessageType;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -257,7 +257,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
     @Override
     public GameLevel createLevel(GameContext game, int levelNumber) {
-        final GameLevelEntitySet entities = new GameLevelEntitySet();
+        final GameLevelEntities entities = new GameLevelEntities();
 
         final GameSession session = game.session();
         final WorldNavigationSystem navigator = game.variant().systems().navigator();
@@ -293,7 +293,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         return level;
     }
 
-    private void addEntities(GameLevelEntitySet entities, GameContext game, WorldMap worldMap) {
+    private void addEntities(GameLevelEntities entities, GameContext game, WorldMap worldMap) {
         final House house = HouseFactory.createArcadeHouse(HOUSE_MIN_TILE);
 
         final var actorFactory  = TengenMsPacMan_ActorFactory.instance();

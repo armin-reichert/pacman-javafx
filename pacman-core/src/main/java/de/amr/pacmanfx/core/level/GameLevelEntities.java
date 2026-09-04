@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
-public class GameLevelEntitySet {
+public class GameLevelEntities {
 
     private Pac thePac;
     private final EnumMap<GhostPersonality, Ghost> theGhosts = new EnumMap<>(GhostPersonality.class);

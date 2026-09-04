@@ -10,19 +10,23 @@ import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.ecs.comp.RenderingComp;
+import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
+import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.core.spriteanim.LazySAM;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimation;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimationBuilder;
 import de.amr.pacmanfx.game.GameVariant;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.CutScene;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
@@ -32,7 +36,7 @@ import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
  * Red ghost chases Pac-Man from right to left over screen, at the middle of the screen, a nail
  * is stopping the red ghost, its dress gets stretched and eventually raptures.
  */
-public class ArcadePacMan_CutScene2 extends GameScene {
+public class ArcadePacMan_CutScene2 extends CutScene {
 
     public enum NailDressState {
         NAIL, STRETCHED_SMALL, STRETCHED_MEDIUM, STRETCHED_LARGE, RAPTURED
@@ -66,12 +70,43 @@ public class ArcadePacMan_CutScene2 extends GameScene {
         }
     }
 
+    public final int nailX = WorldMap.TS * 15 - 1;
+    public final int nailY = WorldMap.TS * 20 - 1;
 
-    public final int nailX = WorldMap.TS * 14;
-    public final int nailY = WorldMap.TS * 19 + 3;
-    public Pac pacMan;
-    public Ghost blinky;
-    public SpriteAnimation nailDressAnimation;
+    static class DressAnimation extends LazySAM {
+
+        public DressAnimation(SpriteAnimContainer container) {
+            setFactory(id -> switch (id) {
+
+                case SpriteID.RED_GHOST_STRETCHED -> new SpriteAnimationBuilder()
+                    .sprites(ArcadePacMan_SpriteSheet.instance().findSpriteSequence(SpriteID.RED_GHOST_STRETCHED))
+                    .initiallyStopped()
+                    .build(container);
+
+                default -> throw new IllegalArgumentException("Unknown animation ID: " + id);
+            });
+        }
+    }
+
+    static class NailDress extends GameEntity {
+
+        public NailDress(SpriteAnimContainer animContainer) {
+            setComp(RenderingComp.class, new RenderingComp(RenderingLayer.PROPS));
+            setComp(SpriteAnimationComp.class, new SpriteAnimationComp());
+
+            reqComp(SpriteAnimationComp.class).setSpriteAnimations(new DressAnimation(animContainer));
+            setState(NailDressState.NAIL);
+        }
+
+        public void setState(NailDressState state) {
+            final int frame = state.ordinal();
+            reqComp(SpriteAnimationComp.class).spriteAnimations().setAnimationFrame(SpriteID.RED_GHOST_STRETCHED, frame);
+        }
+    }
+
+    private Pac pacMan;
+    private Ghost blinky;
+    private NailDress nailDress;
 
     public ArcadePacMan_CutScene2(GameAppContext app) {
         super(app);
@@ -87,20 +122,21 @@ public class ArcadePacMan_CutScene2 extends GameScene {
     public void onActivate() {
         final GameVariant variant = app().gameVariants().currentGameVariant();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
-        final SpriteAnimContainer animContainer    = variant.spriteAnimContainer();
-        final ActorSpriteAnimController animController  = variant.config().systems().actorSpriteAnimController();
-        final ArcadePacMan_SpriteSheet spriteSheet = ArcadePacMan_SpriteSheet.instance();
-        final var factory = ArcadePacMan_ActorFactory.instance();
+        final SpriteAnimContainer animContainer = variant.spriteAnimContainer();
+        final ActorSpriteAnimController animController = variant.config().systems().actorSpriteAnimController();
+        final var actorFactory = ArcadePacMan_ActorFactory.instance();
 
-        pacMan = factory.createPacMan();
+        pacMan = actorFactory.createPacMan();
         pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animContainer));
 
         blinky = renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.RED_GHOST_SHADOW);
 
-        nailDressAnimation = new SpriteAnimationBuilder()
-            .sprites(spriteSheet.findSpriteSequence(SpriteID.RED_GHOST_STRETCHED))
-            .initiallyStopped()
-            .build(animContainer);
+        nailDress = new NailDress(animContainer);
+        nailDress.pos().set(nailX, nailY);
+        nailDress.show();
+
+        entities().clear();
+        entities().addAll(pacMan, blinky, nailDress);
 
         timing().setTick(-1);
     }
@@ -125,11 +161,11 @@ public class ArcadePacMan_CutScene2 extends GameScene {
         } else if (timing.tick() == timing.TICK_BLINKY_GETS_CAUGHT) {
             blinkyGetsCaughtOnNail(systems);
         } else if (timing.tick() == timing.TICK_DRESS_STRETCHED_SMALL) {
-            setDressState(NailDressState.STRETCHED_SMALL);
+            nailDress.setState(NailDressState.STRETCHED_SMALL);
         } else if (timing.tick() == timing.TICK_DRESS_STRETCHED_MEDIUM) {
-            setDressState(NailDressState.STRETCHED_MEDIUM);
+            nailDress.setState(NailDressState.STRETCHED_MEDIUM);
         } else if (timing.tick() == timing.TICK_DRESS_STRETCHED_LARGE) {
-            setDressState(NailDressState.STRETCHED_LARGE);
+            nailDress.setState(NailDressState.STRETCHED_LARGE);
         } else if (timing.tick() == timing.TICK_BLINKY_STOPS_MOVING) {
             blinkyStopsMoving(systems);
         } else if (timing.tick() == timing.TICK_DRESS_RAPTURES) {
@@ -149,7 +185,7 @@ public class ArcadePacMan_CutScene2 extends GameScene {
 
     private void startTheShow() {
         soundManager().play(PacManGameSoundID.INTERMISSION_2);
-        setDressState(NailDressState.NAIL);
+        nailDress.setState(NailDressState.NAIL);
     }
 
     private void endTheShow() {
@@ -160,7 +196,7 @@ public class ArcadePacMan_CutScene2 extends GameScene {
     private void dressRaptures(GameSystems systems) {
         blinky.pos().sub(4, 0);
         systems.actorSpriteAnimController().select(blinky, CommonSpriteAnimationID.BLINKY_DAMAGED);
-        setDressState(NailDressState.RAPTURED);
+        nailDress.setState(NailDressState.RAPTURED);
     }
 
     private void blinkyStopsMoving(GameSystems systems) {
@@ -195,9 +231,5 @@ public class ArcadePacMan_CutScene2 extends GameScene {
 
         systems.actorSpriteAnimController().select(pacMan, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
         systems.actorSpriteAnimController().playSelected(pacMan);
-    }
-
-    private void setDressState(NailDressState state) {
-        nailDressAnimation.setFrame(state.ordinal());
     }
 }

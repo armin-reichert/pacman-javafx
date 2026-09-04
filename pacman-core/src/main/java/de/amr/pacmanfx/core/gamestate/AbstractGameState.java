@@ -14,7 +14,7 @@ import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
-import de.amr.pacmanfx.core.level.GameLevelEntitySet;
+import de.amr.pacmanfx.core.level.GameLevelEntities;
 import de.amr.pacmanfx.core.rules.GameRules;
 
 import java.util.Arrays;
@@ -76,14 +76,14 @@ public abstract class AbstractGameState implements State<GameContext>, Named {
         onUpdateState(game, game.session().thisFrame().tick(), timer().tickCount());
     }
 
-    protected void showPacAndGhosts(GameLevelEntitySet entities) {
+    protected void showPacAndGhosts(GameLevelEntities entities) {
         entities.pac().show();
         for (Ghost ghost : entities.ghosts()) {
             ghost.show();
         }
     }
 
-    protected void lockPacAndGhosts(GameLevelEntitySet entities, boolean locked) {
+    protected void lockPacAndGhosts(GameLevelEntities entities, boolean locked) {
         final Pac pac = entities.pac();
         pac.worldNavigation().setPaused(locked);
         systems.pacAnimation().lockAnimation(pac, locked);

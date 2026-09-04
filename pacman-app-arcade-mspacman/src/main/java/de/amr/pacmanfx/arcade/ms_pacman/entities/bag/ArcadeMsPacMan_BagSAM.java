@@ -15,7 +15,7 @@ import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.JUNIOR_PAC;
 
 public class ArcadeMsPacMan_BagSAM extends LazySAM {
 
-    private final ArcadeMsPacMan_SpriteSheet spriteSheet =  ArcadeMsPacMan_SpriteSheet.instance();
+    private final ArcadeMsPacMan_SpriteSheet spriteSheet = ArcadeMsPacMan_SpriteSheet.instance();
 
     public ArcadeMsPacMan_BagSAM(SpriteAnimContainer container) {
         setFactory(id -> switch (id) {

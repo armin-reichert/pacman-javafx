@@ -74,9 +74,9 @@ public class QuerySet<E> implements Iterable<E>, Disposable {
 
     /**
      * @param type entity class
-     * @return the single entity with given class in entity set. If there is none,
+     * @return the single element with given class in element set. If there is none,
      *         a {@link java.util.NoSuchElementException} exception is thrown.
-     * @param <T> type of entity
+     * @param <T> type of element
      */
     public <T> T theOne(Class<T> type) {
         requireNonNull(type);
@@ -84,13 +84,13 @@ public class QuerySet<E> implements Iterable<E>, Disposable {
         for (E e : entries) {
             if (type.isInstance(e)) {
                 if (found != null) {
-                    throw new NoSuchElementException("More than one entity of type '%s'".formatted(type.getSimpleName()));
+                    throw new NoSuchElementException("More than one element of type '%s'".formatted(type.getSimpleName()));
                 }
                 found = type.cast(e);
             }
         }
         if (found == null) {
-            throw new NoSuchElementException("No entity of type '%s'".formatted(type.getSimpleName()));
+            throw new NoSuchElementException("No element of type '%s'".formatted(type.getSimpleName()));
         }
         return found;
     }
@@ -99,18 +99,23 @@ public class QuerySet<E> implements Iterable<E>, Disposable {
         entries.clear();
     }
 
-    public void add(E entity) {
-        requireNonNull(entity);
-        entries.add(entity);
+    public void add(E e) {
+        requireNonNull(e);
+        entries.add(e);
     }
 
-    public void addAll(Collection<? extends E> entityCollection) {
-        requireNonNull(entityCollection);
-        entries.addAll(entityCollection);
+    public void addAll(Collection<? extends E> collection) {
+        requireNonNull(collection);
+        entries.addAll(collection);
     }
 
-    public void remove(E entity) {
-        requireNonNull(entity);
-        entries.remove(entity);
+    @SafeVarargs
+    public final void addAll(E... elements) {
+        entries.addAll(List.of(elements));
+    }
+
+    public void remove(E e) {
+        requireNonNull(e);
+        entries.remove(e);
     }
 }

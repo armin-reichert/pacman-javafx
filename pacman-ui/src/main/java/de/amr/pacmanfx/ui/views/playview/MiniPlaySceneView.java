@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.level.GameLevelEntitySet;
+import de.amr.pacmanfx.core.level.GameLevelEntities;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.rules.GameRules;
@@ -216,7 +216,7 @@ public class MiniPlaySceneView {
     }
 
     // Actor z-order: Bonus under Pac-Man under ghosts in z-order.
-    private void updateActorZOrder(GameLevelEntitySet entities) {
+    private void updateActorZOrder(GameLevelEntities entities) {
         actorsInZOrder.clear();
         entities.optBonus().ifPresent(actorsInZOrder::add);
         actorsInZOrder.addAll(entities.theGhostPoints());

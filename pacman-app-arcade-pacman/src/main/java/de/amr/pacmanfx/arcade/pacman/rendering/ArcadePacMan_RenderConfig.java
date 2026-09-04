@@ -114,9 +114,9 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
             case ArcadePacMan_IntroScene ignored -> new ArcadePacMan_IntroScene_Renderer(this, gameScene, animSystem, canvas);
             case ArcadePacMan_StartScene ignored -> new ArcadePacMan_StartScene_Renderer(gameScene, canvas);
             case Arcade_PlayScene2D ignored      -> new Arcade_PlayScene2D_Renderer(gameScene, animSystem, canvas, spriteSheet());
-            case ArcadePacMan_CutScene1 ignored  -> new ArcadePacMan_CutScene_Renderer(gameScene, animSystem, canvas);
-            case ArcadePacMan_CutScene2 ignored  -> new ArcadePacMan_CutScene_Renderer(gameScene, animSystem, canvas);
-            case ArcadePacMan_CutScene3 ignored  -> new ArcadePacMan_CutScene_Renderer(gameScene, animSystem, canvas);
+            case ArcadePacMan_CutScene1 ignored  -> null;
+            case ArcadePacMan_CutScene2 ignored  -> null;
+            case ArcadePacMan_CutScene3 ignored  -> null;
             default -> throw new IllegalStateException("Illegal game scene: " + gameScene);
         };
     }

@@ -18,7 +18,7 @@ import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.game.GameVariant;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.CutScene;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
@@ -27,16 +27,16 @@ import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
  * Red ghost chases Pac-Man from right to left over the screen,
  * then a frightened ghost is chased by a big Pac-Man from left to right.
  */
-public class ArcadePacMan_CutScene1 extends GameScene {
-
-    public Pac pacMan;
-    public Ghost blinky;
+public class ArcadePacMan_CutScene1 extends CutScene {
 
     public ArcadePacMan_CutScene1(GameAppContext app) {
         super(app);
         setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
         setComp(CutSceneTimingComp.class, new CutSceneTimingComp(120));
     }
+
+    private Pac pacMan;
+    private Ghost blinky;
 
     private CutSceneTimingComp timing() {
         return reqComp(CutSceneTimingComp.class);
@@ -54,6 +54,9 @@ public class ArcadePacMan_CutScene1 extends GameScene {
         pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animContainer));
 
         blinky = renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.RED_GHOST_SHADOW);
+
+        entities().clear();
+        entities().addAll(pacMan, blinky);
 
         timing().setTick(-1);
     }

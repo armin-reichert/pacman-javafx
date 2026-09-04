@@ -17,7 +17,7 @@ import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.game.GameVariant;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.CutScene;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
@@ -26,15 +26,16 @@ import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
  * Red ghost in damaged dress chases Pac-Man from right to left over the screen.
  * After they have disappeared, a naked, shaking ghost runs from left over the screen.
  */
-public class ArcadePacMan_CutScene3 extends GameScene {
+public class ArcadePacMan_CutScene3 extends CutScene {
 
     public static final int TICK_ANIMATION_START      = 120;
     public static final int TICK_BLINKY_RUNNING_NAKED = TICK_ANIMATION_START + 400;
     public static final int TICK_ANIMATION_ENDS       = TICK_ANIMATION_START + 700;
 
     public int sceneTick;
-    public Pac pacMan;
-    public Ghost blinky;
+
+    private Pac pacMan;
+    private Ghost blinky;
 
     public ArcadePacMan_CutScene3(GameAppContext app) {
         super(app);
@@ -53,6 +54,9 @@ public class ArcadePacMan_CutScene3 extends GameScene {
         pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animContainer));
 
         blinky = renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.RED_GHOST_SHADOW);
+
+        entities().clear();
+        entities().addAll(pacMan, blinky);
 
         sceneTick = -1;
     }

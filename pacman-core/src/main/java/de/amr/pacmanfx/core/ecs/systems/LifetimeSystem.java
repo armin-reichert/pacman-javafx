@@ -1,12 +1,11 @@
 package de.amr.pacmanfx.core.ecs.systems;
 
-import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.LifetimeComp;
-import de.amr.pacmanfx.core.level.GameLevelEntitySet;
+import de.amr.pacmanfx.core.level.GameLevelEntities;
 
 public class LifetimeSystem {
 
-    public void update(GameLevelEntitySet entitySet) {
+    public void update(GameLevelEntities entitySet) {
         final var list = entitySet.allWith(LifetimeComp.class).toList();
         list.forEach(entity -> {
             entity.lifetime().becomeOlder();
