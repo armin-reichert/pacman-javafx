@@ -131,7 +131,7 @@ public class MiniPlaySceneView {
         levelRenderer.scalingProperty().bind(scaling);
         levelRenderer.backgroundColorProperty().bind(vm.common2DSettings().canvasBackgroundColorProperty());
 
-        actorRenderer = renderConfig.createActorRenderer(animController, canvas);
+        actorRenderer = renderConfig.createEntityRenderer(animController, canvas);
         actorRenderer.scalingProperty().bind(scaling);
         actorRenderer.backgroundColorProperty().bind(vm.common2DSettings().canvasBackgroundColorProperty());
     }

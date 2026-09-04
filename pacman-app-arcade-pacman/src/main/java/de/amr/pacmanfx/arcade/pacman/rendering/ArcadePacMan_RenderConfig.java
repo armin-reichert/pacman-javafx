@@ -146,9 +146,9 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public BaseRenderer createActorRenderer(ActorSpriteAnimController animSystem, Canvas canvas) {
+    public BaseRenderer createEntityRenderer(ActorSpriteAnimController animSystem, Canvas canvas) {
         requireNonNull(canvas);
-        final var actorRenderer = new ArcadePacMan_ActorRenderer(animSystem, canvas);
+        final var actorRenderer = new ArcadePacMan_EntityRenderer(animSystem, canvas);
         actorRenderer.setImageSmoothing(true);
         return actorRenderer;
     }

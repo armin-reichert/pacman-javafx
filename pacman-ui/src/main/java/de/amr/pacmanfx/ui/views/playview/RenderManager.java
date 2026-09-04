@@ -42,7 +42,7 @@ public class RenderManager {
         if (canvas != null) {
             baseRenderer = new BaseRenderer(canvas);
 
-            entityRenderer = config.createActorRenderer(animController, canvas);
+            entityRenderer = config.createEntityRenderer(animController, canvas);
             configureRenderer(entityRenderer, canvasRendering);
 
             sceneRenderer = config.createGameSceneRenderer(gameScene, animController, canvas); // may be null!
@@ -76,10 +76,14 @@ public class RenderManager {
             if (gameScene instanceof SceneWithoutLevel sceneWithoutLevel) {
                entities.addAll(sceneWithoutLevel.entities().selectAll().toList());
             }
-            entities.addAll(session.hud().entities());
             sortInRenderingOrder(entities).forEach(e -> entityRenderer.render(e, tick));
 
-            hudRenderer.drawHUD(session.hud(), session, gameScene, tick);
+
+            if (session.hud().isVisible()) {
+                //TODO get rid of this:
+                hudRenderer.drawHUD(session.hud(), session, gameScene, tick);
+                session.hud().entities().forEach(hudEntity -> hudRenderer.drawHUDEntity(hudEntity, session));
+            }
 
             if (debugMode) {
                 sceneRenderer.optDebugInfoRenderer().ifPresent(debugRenderer -> debugRenderer.render(gameScene, tick));

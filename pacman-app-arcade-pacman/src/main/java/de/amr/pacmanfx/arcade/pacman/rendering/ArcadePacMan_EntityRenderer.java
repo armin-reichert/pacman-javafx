@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.RectShort;
+import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
@@ -18,7 +19,7 @@ import java.util.Arrays;
 
 import static java.util.Objects.requireNonNull;
 
-public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRenderer {
+public class ArcadePacMan_EntityRenderer extends BaseRenderer implements SpriteRenderer {
 
     // These arrays must be sorted!
     private static final int[] GHOST_POINTS = { 200, 400, 800, 1600 };
@@ -26,7 +27,7 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
 
     private final ActorSpriteAnimController animController;
 
-    public ArcadePacMan_ActorRenderer(ActorSpriteAnimController animController, Canvas canvas) {
+    public ArcadePacMan_EntityRenderer(ActorSpriteAnimController animController, Canvas canvas) {
         super(canvas);
         this.animController = requireNonNull(animController);
     }
@@ -38,25 +39,26 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
 
     @Override
     public void render(Object r, long tick) {
-        if (!(r instanceof GameEntity actor)) {
+        if (!(r instanceof GameEntity gameEntity)) {
             return;
         }
-        if (!actor.isVisible()) return;
+        if (!gameEntity.isVisible()) return;
 
-        final RectShort sprite = switch (r) {
-            case Pac pac -> computeSprite(pac);
-            case Ghost ghost -> computeSprite(ghost);
-            case GhostPoints points -> computeSprite(points);
-            case Bonus bonus -> computeSprite(bonus);
-            case BonusPoints bonusPoints -> computeSprite(bonusPoints);
+        final Vector2f center = gameEntity.pos().bodyCenter();
+
+        switch (r) {
+            case Pac pac -> drawSpriteCentered(computeSprite(pac), center);
+            case Ghost ghost -> drawSpriteCentered(computeSprite(ghost), center);
+            case GhostPoints points -> drawSpriteCentered(computeSprite(points), center);
+            case Bonus bonus -> drawSpriteCentered(computeSprite(bonus), center);
+            case BonusPoints bonusPoints -> drawSpriteCentered(computeSprite(bonusPoints), center);
+
             default -> {
-                if (actor.hasComp(SpriteAnimationComp.class)) {
-                    yield animController.currentSprite(actor);
+                if (gameEntity.hasComp(SpriteAnimationComp.class)) {
+                    drawSpriteCentered(animController.currentSprite(gameEntity), center);
                 }
-                yield RectShort.NULL_RECTANGLE;
             }
-        };
-        drawSpriteCentered(sprite, actor.pos().bodyCenter());
+        }
     }
 
     private RectShort computeSprite(Pac pac) {
@@ -100,4 +102,5 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
             case EATEN, INACTIVE  -> RectShort.NULL_RECTANGLE;
         };
     }
+
 }

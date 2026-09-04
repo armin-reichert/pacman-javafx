@@ -24,7 +24,7 @@ public class ArcadeMsPacMan_CutScene_Renderer extends GameSceneRenderer {
         super(canvas);
 
         final SceneCanvasRenderingComp canvasRendering = gameScene.reqComp(SceneCanvasRenderingComp.class);
-        actorRenderer = canvasRendering.configureRenderer((ArcadeMsPacMan_ActorRenderer) renderConfig.createActorRenderer(animController, canvas));
+        actorRenderer = canvasRendering.configureRenderer((ArcadeMsPacMan_ActorRenderer) renderConfig.createEntityRenderer(animController, canvas));
         setDebugInfoRenderer(createDefaultSceneDebugRenderer(gameScene, canvas));
     }
 

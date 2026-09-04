@@ -19,6 +19,7 @@ public final class Common_BootState extends AbstractGameState {
     @Override
     public void onEnterState(GameContext game) {
         timer().restartIndefinitely();
+        hud.hide();
     }
 
     @Override

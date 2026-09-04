@@ -63,6 +63,7 @@ public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer,
 
         final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
 
+        /*
         if (hud.gameScore().isVisible()) {
             final boolean highScoreDisabled = session.isAttractMode() || !session.hud().highScore().data().isEnabled();
             final Color highScoreTextColor = highScoreDisabled ? style.scoreTextColorDisabled() : style.scoreTextColor();
@@ -78,6 +79,8 @@ public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer,
             drawLivesCounter(hud.livesCounter(), session);
         }
 
+         */
+
         if (hud.isCreditVisible()) {
             final String text = style.creditTextFormat().formatted(gameScene.game().coinMechanism().numCoins());
             fillText(text, ARCADE_WHITE, scaledFont, tilesPx(2), sceneCanvasRendering.unscaledHeight());
@@ -90,14 +93,15 @@ public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer,
         switch (entity) {
             case MessageView messageView -> drawMessage(messageView, session);
             case LevelCounter levelCounter -> drawLevelCounter(levelCounter);
+            case LivesCounter livesCounter -> drawLivesCounter(livesCounter, session);
             case Score score -> {
                 final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
                 if (score.type() == Score.Type.GAME_SCORE) {
-                    drawScore(score, style.scoreText(), scaledFont, style.scoreTextColor(), tilesPx(1), tilesPx(1));
+                    drawScoreText(score, style.scoreText(), scaledFont, style.scoreTextColor());
                 } else {
                     final boolean highScoreDisabled = session.isAttractMode() || !session.hud().highScore().data().isEnabled();
                     final Color highScoreTextColor = highScoreDisabled ? style.scoreTextColorDisabled() : style.scoreTextColor();
-                    drawScore(score, style.highScoreText(), scaledFont, highScoreTextColor, tilesPx(14), tilesPx(1));
+                    drawScoreText(score, style.highScoreText(), scaledFont, highScoreTextColor);
                 }
             }
             default -> throw new IllegalStateException("Unexpected value: " + entity);
@@ -120,7 +124,9 @@ public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer,
         }
     }
 
-    private void drawScore(Score score, String title, Font font, Color color, double x, double y) {
+    private void drawScoreText(Score score, String title, Font font, Color color) {
+        final float x = score.pos().x();
+        final float y = score.pos().y();
         fillText(title, color, font, x, y);
         fillText("%7s".formatted("%02d".formatted(score.data().points())), color, font, x, y + TS + 1);
         if (score.data().points() != 0) {
@@ -132,9 +138,8 @@ public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer,
         final int numLives = session.numLives();
         final int displayedSymbolsCount = Math.min(numLives - 1, livesCounter.data().maxLivesShown());
 
-        final float x = tilesPx(2);
+        final float x = livesCounter.pos().x();
         final float y = livesCounter.pos().y();
-//        final float y = canvasRendering.unscaledHeight() - tilesPx(2);
 
         final float spacing = tilesPx(2);
         // Draw at most (numLives - 1) symbols in lives counter
@@ -151,9 +156,6 @@ public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer,
     private void drawLevelCounter(LevelCounter levelCounter) {
         float x = levelCounter.pos().x();
         final float y = levelCounter.pos().y();
-        //TODO FIXME
-//        final float y = canvasRendering.unscaledHeight() - tilesPx(2) + 2;
-//        float x = canvasRendering.unscaledWidth() - tilesPx(4);
         for (int symbolCode : levelCounter.data().symbolCodes()) {
             drawSprite(style.bonusSymbolSprites()[symbolCode], x, y, true);
             x -= tilesPx(2); // symbols are drawn from right to left
@@ -167,5 +169,4 @@ public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer,
         float cy = tilesPx(house.floorplan().minTile().y() + houseSize.y() + 1);
         return vec2_float(cx, cy);
     }
-
 }

@@ -25,7 +25,7 @@ public class TengenMsPacMan_BootScene_Renderer extends GameSceneRenderer {
         super(canvas);
 
         final SceneCanvasRenderingComp r2D = gameScene.reqComp(SceneCanvasRenderingComp.class);
-        actorRenderer = r2D.configureRenderer((TengenMsPacMan_ActorRenderer) renderConfig.createActorRenderer(animSystem, canvas));
+        actorRenderer = r2D.configureRenderer((TengenMsPacMan_ActorRenderer) renderConfig.createEntityRenderer(animSystem, canvas));
         setDebugInfoRenderer(createDefaultSceneDebugRenderer(gameScene, canvas));
     }
 

@@ -152,7 +152,7 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public TengenMsPacMan_ActorRenderer createActorRenderer(ActorSpriteAnimController animController, Canvas canvas) {
+    public TengenMsPacMan_ActorRenderer createEntityRenderer(ActorSpriteAnimController animController, Canvas canvas) {
         return new TengenMsPacMan_ActorRenderer(animController, canvas);
     }
 

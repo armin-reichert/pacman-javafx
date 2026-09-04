@@ -34,6 +34,7 @@ import org.tinylog.Logger;
 import java.io.IOException;
 
 import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -213,6 +214,9 @@ public abstract class CommonGamePlay implements GamePlay {
         } catch (IOException e) {
             game.eventManager().publishGameEvent(new HighScoreAccessErrorEvent(e));
         }
+
+        gameScore.pos().set(TS, TS);
+        highScore.pos().set(14 * TS, TS);
     }
 
     private void checkIfPacFoundEdibleItem(GameContext game, GameLevel level, FrameState frameState) {
@@ -279,10 +283,10 @@ public abstract class CommonGamePlay implements GamePlay {
         level.worldMap().terrainLayer().hPortalContainingTile(pac.pos().tile()).ifPresent(hPortal -> {
             final Direction moveDir = pac.worldNavigation().moveDir();
             if (moveDir == Direction.LEFT) {
-                final float rightmostX = hPortal.rightBorderEntryTile().x() * WorldMap.TS;
+                final float rightmostX = hPortal.rightBorderEntryTile().x() * TS;
                 pac.pos().setX(rightmostX);
             } else if (moveDir == Direction.RIGHT) {
-                final float leftmostX = hPortal.leftBorderEntryTile().x() * WorldMap.TS;
+                final float leftmostX = hPortal.leftBorderEntryTile().x() * TS;
                 pac.pos().setX(leftmostX);
             }
             Logger.info("Detected Pac-Man collision while teleporting, moved Pac-Man back into world");

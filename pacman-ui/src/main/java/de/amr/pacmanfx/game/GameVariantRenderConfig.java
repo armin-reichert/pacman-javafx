@@ -41,7 +41,7 @@ public interface GameVariantRenderConfig {
 
     HUD_Renderer createHUDRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas);
 
-    BaseRenderer createActorRenderer(ActorSpriteAnimController animController, Canvas canvas);
+    BaseRenderer createEntityRenderer(ActorSpriteAnimController animController, Canvas canvas);
 
     Ghost createAnimatedGhost(ActorSpriteAnimController animController, SpriteAnimContainer container, GhostPersonality personality);
 

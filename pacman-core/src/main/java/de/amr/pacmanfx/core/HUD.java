@@ -10,6 +10,8 @@ import de.amr.pacmanfx.core.level.MessageType;
 
 import java.util.List;
 
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
+
 public class HUD {
 
     private boolean visible;
@@ -27,6 +29,10 @@ public class HUD {
         messageView = new MessageView();
         gameScore = new Score(Score.Type.GAME_SCORE);
         highScore = ScoreSystem.createHighScore(variantName);
+
+        gameScore.pos().set(TS, TS);
+        highScore.show();
+        highScore.pos().set(14 * TS, TS);
     }
 
     public boolean isVisible() {

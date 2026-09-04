@@ -46,7 +46,7 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends GameSceneRenderer {
         final SceneCanvasRenderingComp r2D = gameScene.reqComp(SceneCanvasRenderingComp.class);
         marqueeRenderer   = r2D.configureRenderer(new MarqueeRenderer(canvas));
         copyrightRenderer = r2D.configureRenderer(new CopyrightRenderer(canvas));
-        actorRenderer     = r2D.configureRenderer(renderConfig.createActorRenderer(animController, canvas));
+        actorRenderer     = r2D.configureRenderer(renderConfig.createEntityRenderer(animController, canvas));
         setDebugInfoRenderer(createDefaultSceneDebugRenderer(gameScene, canvas));
     }
 

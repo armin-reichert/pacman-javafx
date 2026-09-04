@@ -55,7 +55,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends GameSceneRenderer
 
         final SceneCanvasRenderingComp r2D = gameScene.reqComp(SceneCanvasRenderingComp.class);
         marqueeRenderer = r2D.configureRenderer(new MarqueeRenderer(canvas));
-        actorRenderer   = r2D.configureRenderer(renderConfig.createActorRenderer(animSystem, canvas));
+        actorRenderer   = r2D.configureRenderer(renderConfig.createEntityRenderer(animSystem, canvas));
         setDebugInfoRenderer(createDefaultSceneDebugRenderer(gameScene, canvas));
 
         uiSettings = gameScene.app().currentGameVariantUIConfig().extensionValue(
