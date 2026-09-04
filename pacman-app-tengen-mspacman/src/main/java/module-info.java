@@ -30,5 +30,7 @@ open module de.amr.pacmanfx.tengenmspacman {
     exports de.amr.pacmanfx.tengenmspacman.entities;
     exports de.amr.pacmanfx.tengenmspacman.entities.bag;
     exports de.amr.pacmanfx.tengenmspacman.entities.clapperboard;
+    exports de.amr.pacmanfx.tengenmspacman.entities.gameoptionsdisplay;
+    exports de.amr.pacmanfx.tengenmspacman.entities.levelnumberdisplay;
     exports de.amr.pacmanfx.tengenmspacman.entities.stork;
 }

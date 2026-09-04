@@ -5,10 +5,7 @@
 package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameException;
-import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.*;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.PositionSystem;
@@ -33,6 +30,8 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
 import de.amr.pacmanfx.core.rules.DefaultHuntingTimer;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
+import de.amr.pacmanfx.tengenmspacman.entities.GameOptionsDisplay;
+import de.amr.pacmanfx.tengenmspacman.entities.LevelNumberDisplay;
 import de.amr.pacmanfx.tengenmspacman.gamestate.Tengen_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.BoosterMode;
 import de.amr.pacmanfx.tengenmspacman.model.Difficulty;
@@ -48,6 +47,7 @@ import java.util.Set;
 
 import static de.amr.basics.math.RandomNumbers.randomBoolean;
 import static de.amr.basics.math.RandomNumbers.randomInt;
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_GamePlay extends CommonGamePlay {
@@ -230,6 +230,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final int numLives = game.variant().initialLifeCount();
         session.setNumLives(numLives);
 
+        // HUD
         final LivesCounter livesCounter = session.hud().livesCounter();
         livesCounter.data().setNumLives(numLives);
         livesCounter.data().setMaxLivesShown(5);
@@ -237,6 +238,8 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         configureLevelCounter(game, game.variant().systems().levelCounterSystem(), session.hud().levelCounter());
 
         initScores(game);
+
+        addHUDElements(session.hud());
 
         session.setCutScenesEnabled(true);
         session.setLevel(null);
@@ -249,6 +252,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
     @Override
     public void configureLevelCounter(GameContext game, LevelCounterSystem levelCounterSystem, LevelCounter levelCounter) {
+        levelCounter.pos().set(26 * TS, 35 * TS); //TODO depends on map height!
         levelCounter.data().setBehavior(LevelCounterBehavior.DISABLE_WHEN_FULL);
         levelCounter.data().setCapacity(7);
         levelCounter.data().setEnabled(true);
@@ -289,6 +293,18 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
                     .forEach(navigator::requestTurnBack);
             }
         });
+
+        session.hud().levelCounter().pos().set(26 * TS, (worldMap.numRows() - 1) * TS);
+
+        final var levelNumberDisplays = session.hud().entities().selectAllOfType(LevelNumberDisplay.class).toList();
+
+        final LevelNumberDisplay either = levelNumberDisplays.getFirst();
+        either.levelNumber().setNumber(levelNumber);
+        either.pos().set(2 * TS, (worldMap.numRows() - 1) * TS);
+
+        final LevelNumberDisplay other = levelNumberDisplays.getLast();
+        other.levelNumber().setNumber(levelNumber);
+        other.pos().set(28 * TS, (worldMap.numRows() - 1) * TS);
 
         return level;
     }
@@ -427,5 +443,16 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         systems.bonusMoveAndJump().startWandering(bonus, new BonusRouteInfo(leftToRight, waypoints), speed);
 
         eventManager.publishGameEvent(new BonusActivatedEvent(bonus));
+    }
+
+    private void addHUDElements(HUD hud) {
+        final GameOptionsDisplay gameOptionsDisplay = new GameOptionsDisplay();
+        hud.addEntity(gameOptionsDisplay);
+
+        final LevelNumberDisplay leftLevelNumberDisplay = new LevelNumberDisplay();
+        hud.addEntity(leftLevelNumberDisplay);
+
+        final LevelNumberDisplay rightLevelNumberDisplay = new LevelNumberDisplay();
+        hud.addEntity(rightLevelNumberDisplay);
     }
 }

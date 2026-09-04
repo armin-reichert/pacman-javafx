@@ -19,6 +19,7 @@ import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
+import de.amr.pacmanfx.tengenmspacman.entities.LevelNumberDisplay;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
@@ -303,7 +304,17 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
     }
 
     private void updateHUD(GameSession session) {
-        setHUD_Option(session, LEVEL_NUMBER_VISIBLE, mapCategory(session) != MapCategory.ARCADE);
+        final boolean showLevelNumber = mapCategory(session) != MapCategory.ARCADE;
+        session.hud().entities()
+            .selectAllOfType(LevelNumberDisplay.class)
+            .forEach(levelNumberDisplay -> {
+                if (showLevelNumber) {
+                    levelNumberDisplay.show();
+                } else {
+                    levelNumberDisplay.hide();
+                }
+            });
+//        setHUD_Option(session, LEVEL_NUMBER_VISIBLE, mapCategory(session) != MapCategory.ARCADE);
     }
 
     void playLevelCompleteAnimation(GameLevel level, int numFlashes) {

@@ -5,16 +5,15 @@
 package de.amr.pacmanfx.tengenmspacman.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
+import de.amr.pacmanfx.tengenmspacman.entities.LevelNumberDisplay;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 
 import java.util.OptionalInt;
-
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.setHUD_Option;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_HUD_Options.GAME_OPTIONS_VISIBLE;
 
 public class Tengen_LevelIntermissionState extends AbstractGameState {
 
@@ -34,7 +33,7 @@ public class Tengen_LevelIntermissionState extends AbstractGameState {
             hud.gameScore().hide();
             hud.levelCounter().show();
             hud.livesCounter().hide();
-            setHUD_Option(session, GAME_OPTIONS_VISIBLE, false);
+            hud.entities().selectAllOfType(LevelNumberDisplay.class).forEach(GameEntity::hide);
             hud.show();
         }
         timer().resetToIndefiniteDuration();
@@ -52,7 +51,7 @@ public class Tengen_LevelIntermissionState extends AbstractGameState {
         if (TengenMsPacMan_GamePlay.mapCategory(session) == MapCategory.ARCADE) {
             hud.hide();
         } else {
-            setHUD_Option(session, GAME_OPTIONS_VISIBLE, false);
+            hud.entities().selectAllOfType(LevelNumberDisplay.class).forEach(GameEntity::hide);
             hud.gameScore().show();
             hud.levelCounter().show();
             hud.livesCounter().hide();

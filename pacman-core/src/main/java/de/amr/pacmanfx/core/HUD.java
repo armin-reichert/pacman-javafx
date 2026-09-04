@@ -1,5 +1,6 @@
 package de.amr.pacmanfx.core;
 
+import de.amr.basics.QuerySet;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
@@ -12,6 +13,8 @@ import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 public class HUD {
 
     private boolean visible;
+
+    private final QuerySet<GameEntity> entities = new QuerySet<>();
 
     private final LevelCounter levelCounter;
     private final LivesCounter livesCounter;
@@ -32,6 +35,8 @@ public class HUD {
         highScore.show();
         highScore.pos().set(14 * TS, TS);
         creditDisplay.pos().set(2 * TS, 35 * TS);
+
+        entities.addAll(levelCounter, livesCounter, messageView, gameScore, highScore, creditDisplay);
     }
 
     public boolean isVisible() {
@@ -74,7 +79,15 @@ public class HUD {
         messageView.data().setMessageType(MessageType.NO_MESSAGE);
     }
 
-    public List<GameEntity> entities() {
-        return List.of(levelCounter, livesCounter, gameScore, highScore, messageView, creditDisplay);
+    public QuerySet<GameEntity> entities() {
+        return entities;
+    }
+
+    public void addEntity(GameEntity entity) {
+        entities.add(entity);
+    }
+
+    public void removeEntity(GameEntity entity) {
+        entities.remove(entity);
     }
 }
