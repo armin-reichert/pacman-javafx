@@ -17,7 +17,6 @@ import de.amr.pacmanfx.core.level.MessageType;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.HUD_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.HUD_Style;
-import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
@@ -51,41 +50,14 @@ public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer,
 
     @Override
     public void drawHUD(HUD hud, GameSession session, GameScene gameScene, long tick) {
-        requireNonNull(hud);
-        requireNonNull(session);
-        requireNonNull(gameScene);
-
-        if (gameScene.optCanvasRendering().isEmpty()) {
-            return;
-        }
-        final SceneCanvasRenderingComp sceneCanvasRendering = gameScene.reqCanvasRendering();
-
-        if (!hud.isVisible()) return;
-
-        final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
-
-        /*
-        if (hud.gameScore().isVisible()) {
-            final boolean highScoreDisabled = session.isAttractMode() || !session.hud().highScore().data().isEnabled();
-            final Color highScoreTextColor = highScoreDisabled ? style.scoreTextColorDisabled() : style.scoreTextColor();
-            drawScore(hud.gameScore(), style.scoreText(), scaledFont, style.scoreTextColor(), tilesPx(1), tilesPx(1));
-            drawScore(hud.highScore(), style.highScoreText(), scaledFont, highScoreTextColor, tilesPx(14), tilesPx(1));
-        }
-
-        if (hud.levelCounter().isVisible()) {
-            drawLevelCounter(hud.levelCounter());
-        }
-
-        if (hud.livesCounter().isVisible()) {
-            drawLivesCounter(hud.livesCounter(), session);
-        }
-
-         */
-
+        //TODO remove this method
     }
 
     @Override
     public void drawHUDEntity(GameEntity entity, GameContext game) {
+        requireNonNull(entity);
+        requireNonNull(game);
+
         if (!entity.isVisible()) return;
         final GameSession session = game.session();
         switch (entity) {
@@ -103,7 +75,7 @@ public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer,
                 }
             }
             case CreditDisplay creditDisplay -> {
-                //TODO hack update elsewhere
+                //TODO update component elsewhere
                 creditDisplay.data().setCredit(game.coinMechanism().numCoins());
                 drawCreditDisplay(creditDisplay);
             }
