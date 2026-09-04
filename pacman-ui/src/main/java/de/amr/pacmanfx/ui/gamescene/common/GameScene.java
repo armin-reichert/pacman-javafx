@@ -16,7 +16,7 @@ import de.amr.pacmanfx.core.event.gameplay.CreditAddedEvent;
 import de.amr.pacmanfx.core.gamestate.GameFlowController;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.vm.GameViewModel;
@@ -41,12 +41,12 @@ public class GameScene extends Composition<GameSceneComponent>
         this.app = requireNonNull(app);
     }
 
-    public Optional<CanvasRenderingComp> optCanvasRendering() {
-        return optComp(CanvasRenderingComp.class);
+    public Optional<SceneCanvasRenderingComp> optCanvasRendering() {
+        return optComp(SceneCanvasRenderingComp.class);
     }
 
-    public CanvasRenderingComp reqCanvasRendering() {
-        return reqComp(CanvasRenderingComp.class);
+    public SceneCanvasRenderingComp reqCanvasRendering() {
+        return reqComp(SceneCanvasRenderingComp.class);
     }
 
     public ActionBindingsSupport actionBindingsSupport() {

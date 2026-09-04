@@ -36,9 +36,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
@@ -49,7 +47,7 @@ public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
     private static final List<Direction> CLOCK_WISE = List.of(Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT);
 
     public static BaseGameSceneDebugInfoRenderer createDefaultSceneDebugRenderer(GameScene gameScene, Canvas canvas) {
-        final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
+        final SceneCanvasRenderingComp r2D = gameScene.reqComp(SceneCanvasRenderingComp.class);
         final ActorSpriteAnimController animController = gameScene.game().variant().systems().actorSpriteAnimController();
         return r2D.configureRenderer(new BaseGameSceneDebugInfoRenderer(animController, canvas));
     }
@@ -73,7 +71,7 @@ public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
         }
 
         final GameSession session = gameScene.game().session();
-        final CanvasRenderingComp canvasRendering = gameScene.reqComp(CanvasRenderingComp.class);
+        final SceneCanvasRenderingComp canvasRendering = gameScene.reqComp(SceneCanvasRenderingComp.class);
 
         drawTileGrid(canvasRendering.unscaledWidth(), canvasRendering.unscaledHeight(), Color.LIGHTGRAY);
         drawGameStateInfo(gameScene.game());

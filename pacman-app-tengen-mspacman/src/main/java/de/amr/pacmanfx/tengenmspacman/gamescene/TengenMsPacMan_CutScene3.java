@@ -27,7 +27,7 @@ import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.input.JoypadButton;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
@@ -60,7 +60,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene {
 
     public TengenMsPacMan_CutScene3(GameAppContext app) {
         super(app);
-        setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
+        setComp(SceneCanvasRenderingComp.class, new SceneCanvasRenderingComp());
         reqCanvasRendering().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         reqCanvasRendering().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
     }

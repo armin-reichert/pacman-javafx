@@ -15,7 +15,7 @@ import javafx.scene.paint.Color;
 
 import static java.util.Objects.requireNonNull;
 
-public class CanvasRenderingComp implements GameSceneComponent, Disposable {
+public class SceneCanvasRenderingComp implements GameSceneComponent, Disposable {
 
     private final IntegerProperty unscaledWidth = new SimpleIntegerProperty();
 
@@ -29,11 +29,11 @@ public class CanvasRenderingComp implements GameSceneComponent, Disposable {
 
     private boolean clearCanvasBeforeRendering;
 
-    public CanvasRenderingComp() {
+    public SceneCanvasRenderingComp() {
         this(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.x(), WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.y());
     }
 
-    public CanvasRenderingComp(int width, int height) {
+    public SceneCanvasRenderingComp(int width, int height) {
         setUnscaledWidth(width);
         setUnscaledHeight(height);
         clearCanvasBeforeRendering = true;

@@ -10,7 +10,7 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
@@ -29,7 +29,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene {
 
     public TengenMsPacMan_CreditsScene(GameAppContext app) {
         super(app);
-        setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
+        setComp(SceneCanvasRenderingComp.class, new SceneCanvasRenderingComp());
         reqCanvasRendering().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         reqCanvasRendering().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
     }

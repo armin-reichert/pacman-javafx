@@ -25,7 +25,7 @@ import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_PacSAM;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.HUD_Style;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
@@ -147,7 +147,7 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
 
     @Override
     public TengenMsPacMan_HUD_Renderer createHUDRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
-        final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
+        final SceneCanvasRenderingComp r2D = gameScene.reqComp(SceneCanvasRenderingComp.class);
         return r2D.configureRenderer(new TengenMsPacMan_HUD_Renderer(hudStyle, canvas));
     }
 

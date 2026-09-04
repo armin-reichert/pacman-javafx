@@ -25,7 +25,7 @@ import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.HUD_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.HUD_Style;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
@@ -155,7 +155,7 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
         requireNonNull(animSystem);
         requireNonNull(canvas);
 
-        final CanvasRenderingComp canvasRendering = gameScene.reqComp(CanvasRenderingComp.class);
+        final SceneCanvasRenderingComp canvasRendering = gameScene.reqComp(SceneCanvasRenderingComp.class);
         final var renderer = new Arcade_HUD_Renderer(hudStyle, canvas);
         renderer.setImageSmoothing(true);
         canvasRendering.configureRenderer(renderer);

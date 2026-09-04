@@ -9,13 +9,14 @@ import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.HUD;
+import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.MessageType;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.HUD_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.HUD_Style;
+import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
@@ -56,7 +57,7 @@ public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer,
         if (gameScene.optCanvasRendering().isEmpty()) {
             return;
         }
-        final CanvasRenderingComp canvasRendering = gameScene.reqCanvasRendering();
+        final SceneCanvasRenderingComp sceneCanvasRendering = gameScene.reqCanvasRendering();
 
         if (!hud.isVisible()) return;
 
@@ -70,27 +71,45 @@ public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer,
         }
 
         if (hud.levelCounter().isVisible()) {
-            drawLevelCounter(hud.levelCounter(), canvasRendering);
+            drawLevelCounter(hud.levelCounter());
         }
 
         if (hud.livesCounter().isVisible()) {
-            drawLivesCounter(hud.livesCounter(), session, canvasRendering);
+            drawLivesCounter(hud.livesCounter(), session);
         }
 
         if (hud.isCreditVisible()) {
             final String text = style.creditTextFormat().formatted(gameScene.game().coinMechanism().numCoins());
-            fillText(text, ARCADE_WHITE, scaledFont, tilesPx(2), canvasRendering.unscaledHeight());
+            fillText(text, ARCADE_WHITE, scaledFont, tilesPx(2), sceneCanvasRendering.unscaledHeight());
         }
     }
 
-    /**
-     * Called when the message inside the game scene should be rendered.
-     *
-     * @param session the game session
-     */
+    @Override
+    public void drawHUDEntity(GameEntity entity, GameSession session) {
+        if (!entity.isVisible()) return;
+        switch (entity) {
+            case MessageView messageView -> drawMessage(messageView, session);
+            case LevelCounter levelCounter -> drawLevelCounter(levelCounter);
+            case Score score -> {
+                final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
+                if (score.type() == Score.Type.GAME_SCORE) {
+                    drawScore(score, style.scoreText(), scaledFont, style.scoreTextColor(), tilesPx(1), tilesPx(1));
+                } else {
+                    final boolean highScoreDisabled = session.isAttractMode() || !session.hud().highScore().data().isEnabled();
+                    final Color highScoreTextColor = highScoreDisabled ? style.scoreTextColorDisabled() : style.scoreTextColor();
+                    drawScore(score, style.highScoreText(), scaledFont, highScoreTextColor, tilesPx(14), tilesPx(1));
+                }
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + entity);
+        }
+    }
+
     @Override
     public void drawMessage(GameSession session) {
-        final MessageView messageView = session.hud().messageView();
+        drawMessage(session.hud().messageView(), session);
+    }
+
+    private void drawMessage(MessageView messageView, GameSession session) {
         if (messageView.data().messageType() != MessageType.NO_MESSAGE) {
             final Vector2f pos = messagePosition(session.level());
             final Font scaledFont = Ufx.scaleFontBy(style.messageFont(), scaling());
@@ -109,12 +128,14 @@ public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer,
         }
     }
 
-    private void drawLivesCounter(LivesCounter livesCounter, GameSession session, CanvasRenderingComp canvasRendering) {
+    private void drawLivesCounter(LivesCounter livesCounter, GameSession session) {
         final int numLives = session.numLives();
         final int displayedSymbolsCount = Math.min(numLives - 1, livesCounter.data().maxLivesShown());
 
         final float x = tilesPx(2);
-        final float y = canvasRendering.unscaledHeight() - tilesPx(2);
+        final float y = livesCounter.pos().y();
+//        final float y = canvasRendering.unscaledHeight() - tilesPx(2);
+
         final float spacing = tilesPx(2);
         // Draw at most (numLives - 1) symbols in lives counter
         for (int i = 0; i < displayedSymbolsCount; ++i) {
@@ -126,9 +147,13 @@ public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer,
             fillText("%d".formatted(numLives), ARCADE_YELLOW, font, x - 14, y + TS);
         }
     }
-    private void drawLevelCounter(LevelCounter levelCounter, CanvasRenderingComp canvasRendering) {
-        final float y = canvasRendering.unscaledHeight() - tilesPx(2) + 2;
-        float x = canvasRendering.unscaledWidth() - tilesPx(4);
+
+    private void drawLevelCounter(LevelCounter levelCounter) {
+        float x = levelCounter.pos().x();
+        final float y = levelCounter.pos().y();
+        //TODO FIXME
+//        final float y = canvasRendering.unscaledHeight() - tilesPx(2) + 2;
+//        float x = canvasRendering.unscaledWidth() - tilesPx(4);
         for (int symbolCode : levelCounter.data().symbolCodes()) {
             drawSprite(style.bonusSymbolSprites()[symbolCode], x, y, true);
             x -= tilesPx(2); // symbols are drawn from right to left

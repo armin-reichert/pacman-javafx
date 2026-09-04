@@ -22,7 +22,7 @@ import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.vm.GameViewModel;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
@@ -69,7 +69,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
         super(app);
 
         // Add canvas rendering capability, no canvas assigned yet!
-        setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
+        setComp(SceneCanvasRenderingComp.class, new SceneCanvasRenderingComp());
 
         final GameViewModel vm = app.ui().viewModel();
         final TengenMsPacMan_UISettings uiSettings = uiSettings();
@@ -242,8 +242,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
 
     private void resetRendering2D() {
         // Replace component. TODO: Check why necessary
-        removeComp(CanvasRenderingComp.class);
-        setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
+        removeComp(SceneCanvasRenderingComp.class);
+        setComp(SceneCanvasRenderingComp.class, new SceneCanvasRenderingComp());
 
         reqCanvasRendering().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         // Default height. Varies with map size.

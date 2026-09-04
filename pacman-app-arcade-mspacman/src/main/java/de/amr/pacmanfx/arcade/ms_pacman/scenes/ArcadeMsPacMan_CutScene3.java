@@ -22,7 +22,7 @@ import de.amr.pacmanfx.game.GameVariant;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import java.util.stream.Stream;
@@ -71,7 +71,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene {
 
     public ArcadeMsPacMan_CutScene3(GameAppContext app) {
         super(app);
-        setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
+        setComp(SceneCanvasRenderingComp.class, new SceneCanvasRenderingComp());
         setComp(CutSceneTimingComp.class, new Timing(0));
     }
 

@@ -19,7 +19,7 @@ import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
-import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.settings.ui.DashboardSectionSettings;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
@@ -327,8 +327,8 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
             subSceneFX.heightProperty().unbind();
         });
 
-        if (gameScene.hasComp(CanvasRenderingComp.class)) {
-            final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
+        if (gameScene.hasComp(SceneCanvasRenderingComp.class)) {
+            final SceneCanvasRenderingComp r2D = gameScene.reqComp(SceneCanvasRenderingComp.class);
 
             gameSceneFrame.canvas().widthProperty().unbind();
             gameSceneFrame.canvas().heightProperty().unbind();
@@ -400,8 +400,8 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         subSceneFX.widthProperty().bind(mainScene.widthProperty());
         subSceneFX.heightProperty().bind(mainScene.heightProperty());
 
-        if (gameScene.hasComp(CanvasRenderingComp.class)) {
-            final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
+        if (gameScene.hasComp(SceneCanvasRenderingComp.class)) {
+            final SceneCanvasRenderingComp r2D = gameScene.reqComp(SceneCanvasRenderingComp.class);
             // use the canvas of the decorated pane for 2D scene even though the decoration is not used
             r2D.setCanvas(gameSceneFrame.canvas());
             renderManager.updateRenderers(app, gameScene);
@@ -412,7 +412,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     // 2D scenes without camera which are shown at full size
     private void embedGameScene2D(GameSceneConfig gameSceneConfig, GameScene gameScene) {
         final GameMainScene mainScene = app.ui().window().mainScene();
-        final CanvasRenderingComp canvasRendering = gameScene.reqComp(CanvasRenderingComp.class);
+        final SceneCanvasRenderingComp canvasRendering = gameScene.reqComp(SceneCanvasRenderingComp.class);
 
         canvasRendering.backgroundColorProperty().bind(app.ui().viewModel().common2DSettings().canvasBackgroundColorProperty());
 

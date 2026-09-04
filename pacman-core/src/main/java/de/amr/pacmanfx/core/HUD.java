@@ -1,11 +1,14 @@
 package de.amr.pacmanfx.core;
 
+import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.entities.LevelCounter;
 import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.MessageView;
 import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.level.MessageType;
+
+import java.util.List;
 
 public class HUD {
 
@@ -72,5 +75,9 @@ public class HUD {
 
     public void clearMessage() {
         messageView.data().setMessageType(MessageType.NO_MESSAGE);
+    }
+
+    public List<GameEntity> entities() {
+        return List.of(levelCounter, livesCounter, gameScore, highScore, messageView);
     }
 }

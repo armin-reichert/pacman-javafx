@@ -8,7 +8,7 @@ import de.amr.basics.math.RandomNumbers;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -42,9 +42,9 @@ public class Arcade_BootScene2D extends GameScene {
     public Arcade_BootScene2D(GameAppContext app) {
         super(app);
 
-        final var canvasRendering = new CanvasRenderingComp();
+        final var canvasRendering = new SceneCanvasRenderingComp();
         canvasRendering.setClearCanvasBeforeRendering(false);
-        setComp(CanvasRenderingComp.class, canvasRendering);
+        setComp(SceneCanvasRenderingComp.class, canvasRendering);
 
         // Make some noise
         for (int i = 0; i < noise.length; i++) {

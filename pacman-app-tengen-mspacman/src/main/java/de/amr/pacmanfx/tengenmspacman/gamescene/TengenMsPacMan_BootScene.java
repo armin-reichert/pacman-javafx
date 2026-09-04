@@ -15,7 +15,7 @@ import de.amr.pacmanfx.game.GameVariant;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
@@ -36,7 +36,7 @@ public class TengenMsPacMan_BootScene extends GameScene {
 
     public TengenMsPacMan_BootScene(GameAppContext app) {
         super(app);
-        setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
+        setComp(SceneCanvasRenderingComp.class, new SceneCanvasRenderingComp());
         reqCanvasRendering().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         reqCanvasRendering().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
     }

@@ -16,7 +16,7 @@ import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationManager;
-import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.scene.control.CheckMenuItem;
@@ -36,7 +36,7 @@ public class Arcade_PlayScene2D extends GameScene implements Arcade_PlayScene2D_
 
     public Arcade_PlayScene2D(GameAppContext app) {
         super(app);
-        setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
+        setComp(SceneCanvasRenderingComp.class, new SceneCanvasRenderingComp());
     }
 
     @Override

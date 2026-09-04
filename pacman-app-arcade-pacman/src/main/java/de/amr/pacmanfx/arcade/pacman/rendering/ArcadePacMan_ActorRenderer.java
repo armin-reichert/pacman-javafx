@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
@@ -48,7 +49,12 @@ public class ArcadePacMan_ActorRenderer extends BaseRenderer implements SpriteRe
             case GhostPoints points -> computeSprite(points);
             case Bonus bonus -> computeSprite(bonus);
             case BonusPoints bonusPoints -> computeSprite(bonusPoints);
-            default -> animController.currentSprite(actor);
+            default -> {
+                if (actor.hasComp(SpriteAnimationComp.class)) {
+                    yield animController.currentSprite(actor);
+                }
+                yield RectShort.NULL_RECTANGLE;
+            }
         };
         drawSpriteCentered(sprite, actor.pos().bodyCenter());
     }

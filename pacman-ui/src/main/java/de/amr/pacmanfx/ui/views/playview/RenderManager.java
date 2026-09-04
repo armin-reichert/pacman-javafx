@@ -8,7 +8,7 @@ import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.SceneWithoutLevel;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.HUD_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameSceneRenderer;
@@ -36,7 +36,7 @@ public class RenderManager {
         final ActorSpriteAnimController animController = app.game().variant().systems().actorSpriteAnimController();
         final GameVariantRenderConfig config = app.currentGameVariantUIConfig().renderConfig();
 
-        final CanvasRenderingComp canvasRendering = gameScene.reqComp(CanvasRenderingComp.class);
+        final SceneCanvasRenderingComp canvasRendering = gameScene.reqComp(SceneCanvasRenderingComp.class);
         final Canvas canvas = canvasRendering.canvas();
 
         if (canvas != null) {
@@ -76,6 +76,7 @@ public class RenderManager {
             if (gameScene instanceof SceneWithoutLevel sceneWithoutLevel) {
                entities.addAll(sceneWithoutLevel.entities().selectAll().toList());
             }
+            entities.addAll(session.hud().entities());
             sortInRenderingOrder(entities).forEach(e -> entityRenderer.render(e, tick));
 
             hudRenderer.drawHUD(session.hud(), session, gameScene, tick);
@@ -119,7 +120,7 @@ public class RenderManager {
             .collect(Collectors.toCollection(ArrayList::new));
     }
 
-    private void configureRenderer(Renderer renderer, CanvasRenderingComp canvasRendering) {
+    private void configureRenderer(Renderer renderer, SceneCanvasRenderingComp canvasRendering) {
         renderer.backgroundColorProperty().bind(canvasRendering.backgroundColorProperty());
         renderer.scalingProperty().bind(canvasRendering.scalingProperty());
     }

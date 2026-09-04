@@ -10,7 +10,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.scenes.ArcadeMsPacMan_CutScene3;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.rendering.GameSceneRenderer;
 import javafx.scene.canvas.Canvas;
 
@@ -23,7 +23,7 @@ public class ArcadeMsPacMan_CutScene_Renderer extends GameSceneRenderer {
     public ArcadeMsPacMan_CutScene_Renderer(GameVariantRenderConfig renderConfig, GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
         super(canvas);
 
-        final CanvasRenderingComp canvasRendering = gameScene.reqComp(CanvasRenderingComp.class);
+        final SceneCanvasRenderingComp canvasRendering = gameScene.reqComp(SceneCanvasRenderingComp.class);
         actorRenderer = canvasRendering.configureRenderer((ArcadeMsPacMan_ActorRenderer) renderConfig.createActorRenderer(animController, canvas));
         setDebugInfoRenderer(createDefaultSceneDebugRenderer(gameScene, canvas));
     }

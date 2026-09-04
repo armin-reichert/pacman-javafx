@@ -15,7 +15,7 @@ import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_IntroScene.SceneS
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameSceneRenderer;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
@@ -53,7 +53,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends GameSceneRenderer
         requireNonNull(renderConfig);
         requireNonNull(gameScene);
 
-        final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
+        final SceneCanvasRenderingComp r2D = gameScene.reqComp(SceneCanvasRenderingComp.class);
         marqueeRenderer = r2D.configureRenderer(new MarqueeRenderer(canvas));
         actorRenderer   = r2D.configureRenderer(renderConfig.createActorRenderer(animSystem, canvas));
         setDebugInfoRenderer(createDefaultSceneDebugRenderer(gameScene, canvas));

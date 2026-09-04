@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.ArcadeMsPacMan_StartScene;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.rendering.GameSceneRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
@@ -28,7 +28,7 @@ public class ArcadeMsPacMan_StartScene_Renderer extends GameSceneRenderer implem
 
         copyrightImage = renderConfig.assets().image("logo.midway");
 
-        final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
+        final SceneCanvasRenderingComp r2D = gameScene.reqComp(SceneCanvasRenderingComp.class);
         copyrightRenderer = r2D.configureRenderer(new CopyrightRenderer(canvas));
         setDebugInfoRenderer(createDefaultSceneDebugRenderer(gameScene, canvas));
     }

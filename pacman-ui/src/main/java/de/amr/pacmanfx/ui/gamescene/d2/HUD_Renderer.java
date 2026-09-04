@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.gamescene.d2;
 
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.HUD;
+import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 
@@ -22,4 +23,6 @@ public interface HUD_Renderer extends Renderer {
     void drawHUD(HUD hud, GameSession session, GameScene gameScene, long tick);
 
     void drawMessage(GameSession session);
+
+    void drawHUDEntity(GameEntity entity, GameSession session);
 }

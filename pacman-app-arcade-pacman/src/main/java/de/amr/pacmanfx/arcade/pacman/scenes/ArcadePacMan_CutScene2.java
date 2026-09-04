@@ -27,7 +27,7 @@ import de.amr.pacmanfx.game.GameVariant;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.SceneWithoutLevel;
-import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 
@@ -110,7 +110,7 @@ public class ArcadePacMan_CutScene2 extends SceneWithoutLevel {
 
     public ArcadePacMan_CutScene2(GameAppContext app) {
         super(app);
-        setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
+        setComp(SceneCanvasRenderingComp.class, new SceneCanvasRenderingComp());
         setComp(CutSceneTimingComp.class, new TimingComp(120));
     }
 

@@ -10,6 +10,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.HUD;
+import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.MessageType;
@@ -29,7 +30,7 @@ import de.amr.pacmanfx.tengenmspacman.sprites.NES_WorldMapColorScheme;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.HUD_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.HUD_Style;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
@@ -71,6 +72,7 @@ public class TengenMsPacMan_HUD_Renderer
             -> Font.font("Serif", FontWeight.BOLD, scaling.doubleValue() * 8)));
     }
 
+
     @Override
     public TengenMsPacMan_SpriteSheet spriteSheet() {
         return TengenMsPacMan_SpriteSheet.instance();
@@ -85,7 +87,7 @@ public class TengenMsPacMan_HUD_Renderer
         if (gameScene.optCanvasRendering().isEmpty()) {
             return; // Should not happen, but...
         }
-        final CanvasRenderingComp canvasRendering = gameScene.reqCanvasRendering();
+        final SceneCanvasRenderingComp canvasRendering = gameScene.reqCanvasRendering();
 
         if (!hud.isVisible()) return;
 
@@ -111,6 +113,11 @@ public class TengenMsPacMan_HUD_Renderer
         }
 
         ctx.restore();
+    }
+
+    @Override
+    public void drawHUDEntity(GameEntity entity, GameSession session) {
+        //TODO
     }
 
     @Override

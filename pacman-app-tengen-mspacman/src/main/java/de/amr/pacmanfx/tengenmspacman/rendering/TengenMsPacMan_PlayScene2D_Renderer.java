@@ -16,7 +16,7 @@ import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_PlayScene2D;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
-import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
 import de.amr.pacmanfx.uilib.rendering.GameSceneRenderer;
@@ -74,7 +74,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends GameSceneRenderer
         GameVariantRenderConfig renderConfig, GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
         super(canvas);
 
-        final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
+        final SceneCanvasRenderingComp r2D = gameScene.reqComp(SceneCanvasRenderingComp.class);
         this.animController = requireNonNull(animController);
 
         levelRenderer = r2D.configureRenderer((TengenMsPacMan_GameLevelRenderer) renderConfig.createGameLevelRenderer(animController, canvas));

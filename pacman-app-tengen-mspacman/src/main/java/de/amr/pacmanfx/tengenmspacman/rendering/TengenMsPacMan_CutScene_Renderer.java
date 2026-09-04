@@ -11,7 +11,7 @@ import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene2;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene3;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene4;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.rendering.GameSceneRenderer;
 import javafx.scene.canvas.Canvas;
 
@@ -25,7 +25,7 @@ public class TengenMsPacMan_CutScene_Renderer extends GameSceneRenderer {
         GameVariantRenderConfig renderConfig, GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas) {
         super(canvas);
 
-        final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
+        final SceneCanvasRenderingComp r2D = gameScene.reqComp(SceneCanvasRenderingComp.class);
         actorRenderer = r2D.configureRenderer((TengenMsPacMan_ActorRenderer) renderConfig.createActorRenderer(animSystem, canvas));
         setDebugInfoRenderer(createDefaultSceneDebugRenderer(gameScene, canvas));
     }

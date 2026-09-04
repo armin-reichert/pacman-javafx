@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameSceneRenderer;
 import javafx.scene.canvas.Canvas;
@@ -43,7 +43,7 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends GameSceneRenderer {
 
         copyrightImage = renderConfig.assets().image("logo.midway");
 
-        final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
+        final SceneCanvasRenderingComp r2D = gameScene.reqComp(SceneCanvasRenderingComp.class);
         marqueeRenderer   = r2D.configureRenderer(new MarqueeRenderer(canvas));
         copyrightRenderer = r2D.configureRenderer(new CopyrightRenderer(canvas));
         actorRenderer     = r2D.configureRenderer(renderConfig.createActorRenderer(animController, canvas));

@@ -32,7 +32,7 @@ import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.SceneWithoutLevel;
-import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 
 import java.util.Arrays;
 import java.util.List;
@@ -97,7 +97,7 @@ public class ArcadePacMan_IntroScene extends SceneWithoutLevel {
 
     public ArcadePacMan_IntroScene(GameAppContext app) {
         super(app);
-        setComp(CanvasRenderingComp.class, new CanvasRenderingComp());
+        setComp(SceneCanvasRenderingComp.class, new SceneCanvasRenderingComp());
         flow = new StateMachine<>(List.of(SceneState.values()));
     }
 

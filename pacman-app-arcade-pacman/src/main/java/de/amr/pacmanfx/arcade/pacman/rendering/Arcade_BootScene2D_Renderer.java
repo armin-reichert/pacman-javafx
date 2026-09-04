@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.GameSceneRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
@@ -55,7 +55,7 @@ public class Arcade_BootScene2D_Renderer extends GameSceneRenderer implements Sp
             return;
         }
 
-        final CanvasRenderingComp r2D = bootScene.reqComp(CanvasRenderingComp.class);
+        final SceneCanvasRenderingComp r2D = bootScene.reqComp(SceneCanvasRenderingComp.class);
         switch (bootScene.sceneState) {
             case BLANK -> clearCanvas();
             case HEX_CODES -> {
