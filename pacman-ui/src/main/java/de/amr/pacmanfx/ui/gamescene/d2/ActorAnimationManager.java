@@ -21,36 +21,36 @@ public class ActorAnimationManager {
         final GameVariant variant = app.gameVariants().currentGameVariant();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimContainer animationContainer = variant.spriteAnimContainer();
-        final ActorSpriteAnimController animSystem = variant.config().systems().actorSpriteAnimController();
+        final ActorSpriteAnimController animController = variant.config().systems().actorSpriteAnimController();
 
         final Pac pac = level.entities().pac();
-        if (animSystem.hasNoAnimations(pac)) {
-            animSystem.setAnimations(pac, renderConfig.createPacAnimations(animationContainer));
-            resetPacAnimation(animSystem, pac);
+        if (animController.hasNoAnimations(pac)) {
+            animController.setAnimations(pac, renderConfig.createPacAnimations(animationContainer));
+            resetPacAnimation(animController, pac);
         }
 
         level.entities().ghosts().forEach(ghost -> {
-            if (animSystem.hasNoAnimations(ghost)) {
-                animSystem.setAnimations(ghost,
+            if (animController.hasNoAnimations(ghost)) {
+                animController.setAnimations(ghost,
                     renderConfig.createGhostAnimations(animationContainer, ghost.personality()));
-                resetGhostAnimation(animSystem, ghost);
+                resetGhostAnimation(animController, ghost);
             }
         });
     }
 
     // Called from game event handler
-    public static void resetActorAnimations(ActorSpriteAnimController animSystem, GameLevel level) {
-        resetPacAnimation(animSystem, level.entities().pac());
-        level.entities().ghosts().forEach(ghost -> resetGhostAnimation(animSystem, ghost));
+    public static void resetActorAnimations(ActorSpriteAnimController animController, GameLevel level) {
+        resetPacAnimation(animController, level.entities().pac());
+        level.entities().ghosts().forEach(ghost -> resetGhostAnimation(animController, ghost));
     }
 
-    public static void resetPacAnimation(ActorSpriteAnimController animSystem, Pac pac) {
-        animSystem.select(pac, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
-        animSystem.resetSelected(pac);
+    public static void resetPacAnimation(ActorSpriteAnimController animController, Pac pac) {
+        animController.select(pac, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
+        animController.resetSelected(pac);
     }
 
-    public static void resetGhostAnimation(ActorSpriteAnimController animSystem, Ghost ghost) {
-        animSystem.select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);
-        animSystem.resetSelected(ghost);
+    public static void resetGhostAnimation(ActorSpriteAnimController animController, Ghost ghost) {
+        animController.select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);
+        animController.resetSelected(ghost);
     }
 }

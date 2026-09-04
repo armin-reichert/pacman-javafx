@@ -30,9 +30,8 @@ import static de.amr.pacmanfx.ui.views.ContextMenuSupport.*;
 /**
  * 2D play scene for Arcade game variants.
  */
-public class Arcade_PlayScene2D extends GameScene
-    implements Arcade_PlayScene2D_GameEventHandler
-{
+public class Arcade_PlayScene2D extends GameScene implements Arcade_PlayScene2D_GameEventHandler {
+
     private LevelCompletedAnimation levelCompletedAnimation;
 
     public Arcade_PlayScene2D(GameAppContext app) {
@@ -55,8 +54,7 @@ public class Arcade_PlayScene2D extends GameScene
 
     @Override
     public void onTick(GameContext game) {
-        final GameSession session = game.session();
-        session.optLevel().ifPresent(level -> {
+        game.session().optLevel().ifPresent(level -> {
             ActorAnimationManager.ensureActorAnimationsCreated(app(), level);
             optSoundEffects().ifPresent(sfx -> sfx.playAmbientGameLevelSound(game(), level));
         });

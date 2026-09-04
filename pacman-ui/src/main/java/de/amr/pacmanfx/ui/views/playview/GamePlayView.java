@@ -124,7 +124,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
         pausedIcon.visibleProperty().bind(app.clock().updatesDisabledProperty());
 
-        vm.common2DSettings().fontSmoothingOnProperty().addListener((_, _, smoothing) -> renderManager.setFontSmoothing(smoothing));
+        vm.common2DSettings().fontSmoothingOnProperty().addListener((_, _, smoothing) -> renderManager.setGameSceneFontSmoothing(smoothing));
 
         vm.debugModeOnProperty().addListener((_, _, debug) -> {
             gameSceneLayer.setBackground(debug ? DEBUG_BACKGROUND : null);

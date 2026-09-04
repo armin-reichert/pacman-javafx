@@ -12,6 +12,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.HUD_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.text.FontSmoothingType;
 import org.tinylog.Logger;
@@ -38,11 +39,17 @@ public class RenderManager {
         final Canvas canvas = canvasRendering.canvas();
 
         if (canvas != null) {
-            setEntityRenderer(canvasRendering.configureRenderer(renderConfig.createActorRenderer(animController, canvas)));
+            setEntityRenderer(renderConfig.createActorRenderer(animController, canvas));
             setSceneRenderer(renderConfig.createGameSceneRenderer(gameScene, animController, canvas));
             setHudRenderer(renderConfig.createHUDRenderer(gameScene, animController, canvas)); // may return null!
-            setFontSmoothing(app.ui().viewModel().common2DSettings().fontSmoothingOnProperty().get());
-            setDebugRenderer(canvasRendering.configureRenderer(new BaseGameSceneDebugInfoRenderer(animController, canvas)));
+            setDebugRenderer(new BaseGameSceneDebugInfoRenderer(animController, canvas)); //TODO handle scene-specific debug renderer
+
+            configureRenderer(entityRenderer, canvasRendering);
+            configureRenderer(sceneRenderer,  canvasRendering);
+            configureRenderer(hudRenderer,    canvasRendering);
+            configureRenderer(debugRenderer,  canvasRendering);
+
+            setGameSceneFontSmoothing(app.ui().viewModel().common2DSettings().fontSmoothingOnProperty().get());
         } else {
             Logger.error("Cannot create game scene and HUD renderer: no canvas has been assigned");
         }
@@ -66,7 +73,7 @@ public class RenderManager {
         });
     }
 
-    public void setFontSmoothing(boolean smoothing) {
+    public void setGameSceneFontSmoothing(boolean smoothing) {
         sceneRenderer.ctx().setFontSmoothingType(smoothing ? FontSmoothingType.LCD : FontSmoothingType.GRAY);
     }
 
@@ -111,4 +118,8 @@ public class RenderManager {
             .collect(Collectors.toCollection(ArrayList::new));
     }
 
+    private void configureRenderer(Renderer renderer, CanvasRenderingComp canvasRendering) {
+        renderer.backgroundColorProperty().bind(canvasRendering.backgroundColorProperty());
+        renderer.scalingProperty().bind(canvasRendering.scalingProperty());
+    }
 }

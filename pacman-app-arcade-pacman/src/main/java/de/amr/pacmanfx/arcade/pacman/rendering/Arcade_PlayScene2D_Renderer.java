@@ -34,13 +34,14 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements SpriteR
     private final SpriteSheet spriteSheet;
     private final GameLevelRenderer levelRenderer;
 
-    public Arcade_PlayScene2D_Renderer(GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas, SpriteSheet spriteSheet) {
+    public Arcade_PlayScene2D_Renderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas, SpriteSheet spriteSheet) {
         super(canvas);
         requireNonNull(gameScene);
+        requireNonNull(animController);
         this.spriteSheet = requireNonNull(spriteSheet);
         final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
         final GameVariantRenderConfig renderConfig = gameScene.app().gameVariants().currentGameVariant().uiConfig().renderConfig();
-        levelRenderer = r2D.configureRenderer(renderConfig.createGameLevelRenderer(animSystem, canvas));
+        levelRenderer = r2D.configureRenderer(renderConfig.createGameLevelRenderer(animController, canvas));
     }
 
     @Override
