@@ -8,6 +8,7 @@ import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.clapperboard.ClapperboardAnimationSystem;
 import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
@@ -55,7 +56,11 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             case Bonus bonus               -> drawSpriteCentered(computeSprite(bonus),  center);
             case BonusPoints points        -> drawSpriteCentered(computeSprite(points), center);
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
-            default                        -> drawSpriteCentered(animController.currentSprite(actor), center);
+            default                        -> {
+                if (actor.hasComp(SpriteAnimationComp.class)) {
+                    drawSpriteCentered(animController.currentSprite(actor), center);
+                }
+            }
         }
     }
 

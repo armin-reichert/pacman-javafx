@@ -40,6 +40,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tile;
 import static java.util.Objects.requireNonNull;
 
@@ -92,7 +93,6 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         return gameFlow;
     }
 
-
     public ArcadePacMan_GamePlay() {}
 
     @Override
@@ -107,6 +107,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         final LivesCounter livesCounter = session.hud().livesCounter();
         livesCounter.data().setNumLives(numLives);
         livesCounter.data().setMaxLivesShown(5);
+        livesCounter.pos().set(2 * TS, 34 * TS);
 
         configureLevelCounter(game, game.variant().systems().levelCounterSystem(), session.hud().levelCounter());
 
@@ -123,6 +124,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
     @Override
     public void configureLevelCounter(GameContext game, LevelCounterSystem levelCounterSystem, LevelCounter levelCounter) {
+        levelCounter.pos().set(24 * TS, 34 * TS + 2);
         levelCounter.data().setCapacity(7);
         levelCounter.data().setEnabled(true);
         levelCounter.data().setBehavior(LevelCounterBehavior.SHIFT_WHEN_FULL);

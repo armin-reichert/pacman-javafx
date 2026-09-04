@@ -35,6 +35,7 @@ import java.util.stream.Stream;
 
 import static de.amr.basics.math.RandomNumbers.*;
 import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
@@ -44,6 +45,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
 
     @Override
     public void configureLevelCounter(GameContext game, LevelCounterSystem levelCounterSystem, LevelCounter levelCounter) {
+        levelCounter.pos().set(24 * TS, 34 * TS + 2);
         levelCounter.data().setBehavior(LevelCounterBehavior.DISABLE_WHEN_FULL);
         levelCounter.data().setCapacity(7);
         levelCounter.data().setEnabled(true);
