@@ -6,7 +6,7 @@ import de.amr.pacmanfx.core.ecs.comp.RenderingComp;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.common.CutScene;
+import de.amr.pacmanfx.ui.gamescene.common.SceneWithoutLevel;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.HUD_Renderer;
@@ -73,8 +73,8 @@ public class RenderManager {
 
             final List<GameEntity> entities = new ArrayList<>();
             session.optLevel().ifPresent(level -> entities.addAll(level.entities().all().toList()));
-            if (gameScene instanceof CutScene cutScene) {
-               entities.addAll(cutScene.entities().selectAll().toList());
+            if (gameScene instanceof SceneWithoutLevel sceneWithoutLevel) {
+               entities.addAll(sceneWithoutLevel.entities().selectAll().toList());
             }
             sortInRenderingOrder(entities).forEach(e -> entityRenderer.render(e, tick));
 

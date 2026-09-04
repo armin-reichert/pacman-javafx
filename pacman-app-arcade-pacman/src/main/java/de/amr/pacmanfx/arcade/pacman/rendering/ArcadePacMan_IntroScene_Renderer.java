@@ -7,13 +7,8 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_IntroScene;
-import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
-import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
-import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.uilib.rendering.GameSceneRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
@@ -22,6 +17,7 @@ import javafx.scene.paint.Color;
 import static de.amr.pacmanfx.arcade.pacman.rendering.SpriteID.GALLERY_GHOSTS;
 import static de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_IntroScene.SceneState.*;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
+import static de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer.createDefaultSceneDebugRenderer;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
 
 public class ArcadePacMan_IntroScene_Renderer extends GameSceneRenderer implements SpriteRenderer {
@@ -35,36 +31,14 @@ public class ArcadePacMan_IntroScene_Renderer extends GameSceneRenderer implemen
     private static final short ENERGIZER_X = WorldMap.TS * LEFT_TILE_X;
     private static final short ENERGIZER_Y = WorldMap.TS * 20;
 
-    private final ArcadePacMan_ActorRenderer actorRenderer;
     private final RectShort energizerSprite;
 
-    public ArcadePacMan_IntroScene_Renderer(GameVariantRenderConfig renderConfig, GameScene gameScene, Canvas canvas) {
+    public ArcadePacMan_IntroScene_Renderer(GameScene gameScene, Canvas canvas) {
         super(canvas);
 
-        final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
-        final ActorSpriteAnimController animController = gameScene.game().variant().systems().actorSpriteAnimController();
-
-        actorRenderer = r2D.configureRenderer((ArcadePacMan_ActorRenderer) renderConfig.createActorRenderer(animController, canvas));
-
-        setDebugInfoRenderer(new BaseGameSceneDebugInfoRenderer(animController, canvas) {
-            @Override
-            public void render(Object r, long tick) {
-                if (!(r instanceof ArcadePacMan_IntroScene introScene)) {
-                    return;
-                }
-                super.render(gameScene, tick);
-
-                ctx.fillText("Scene timer %d".formatted(introScene.flow.state().timer().tickCount()), 0, scaled(5 * WorldMap.TS));
-                drawMovingActorInfo(animController, introScene.pacMan);
-                for (var ghost : introScene.ghosts) {
-                    drawMovingActorInfo(animController, ghost);
-                }
-            }
-        });
-
         energizerSprite = spriteSheet().findSprite(SpriteID.ENERGIZER);
-
         setImageSmoothing(true);
+        setDebugInfoRenderer(createDefaultSceneDebugRenderer(gameScene, canvas));
     }
 
     @Override
@@ -82,12 +56,10 @@ public class ArcadePacMan_IntroScene_Renderer extends GameSceneRenderer implemen
             case SHOWING_POINTS -> drawPoints(introScene);
             case CHASING_PAC_MAN -> {
                 drawBlinkingEnergizer(introScene.blinking, ENERGIZER_X, ENERGIZER_Y);
-                drawRumblingGuys(introScene, tick);
                 drawPoints(introScene);
                 drawCopyright();
             }
             case CHASING_GHOSTS, WAIT_FOR_DEMO_LEVEL -> {
-                drawRumblingGuys(introScene, tick);
                 drawPoints(introScene);
                 drawCopyright();
             }
@@ -113,16 +85,6 @@ public class ArcadePacMan_IntroScene_Renderer extends GameSceneRenderer implemen
             if (introScene.ghostNicknameVisible[p]) {
                 fillText(GHOST_NICKNAMES[p], GHOST_COLORS[p], WorldMap.TS * 18, y + offsetY);
             }
-        }
-    }
-
-    private void drawRumblingGuys(ArcadePacMan_IntroScene introScene, long tick) {
-        for (Ghost ghost : introScene.ghosts) {
-            actorRenderer.render(ghost, tick);
-        }
-        actorRenderer.render(introScene.pacMan, tick);
-        if (introScene.points != null) {
-            actorRenderer.render(introScene.points, tick);
         }
     }
 

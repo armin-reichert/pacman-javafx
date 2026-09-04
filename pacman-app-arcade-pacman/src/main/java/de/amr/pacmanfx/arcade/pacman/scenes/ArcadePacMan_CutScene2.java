@@ -26,7 +26,7 @@ import de.amr.pacmanfx.core.spriteanim.SpriteAnimationBuilder;
 import de.amr.pacmanfx.game.GameVariant;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.common.CutScene;
+import de.amr.pacmanfx.ui.gamescene.common.SceneWithoutLevel;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
@@ -36,7 +36,7 @@ import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
  * Red ghost chases Pac-Man from right to left over screen, at the middle of the screen, a nail
  * is stopping the red ghost, its dress gets stretched and eventually raptures.
  */
-public class ArcadePacMan_CutScene2 extends CutScene {
+public class ArcadePacMan_CutScene2 extends SceneWithoutLevel {
 
     public enum NailDressState {
         NAIL, STRETCHED_SMALL, STRETCHED_MEDIUM, STRETCHED_LARGE, RAPTURED

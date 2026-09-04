@@ -31,7 +31,7 @@ import de.amr.pacmanfx.game.GameVariant;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.SceneWithoutLevel;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 
 import java.util.Arrays;
@@ -44,7 +44,7 @@ import static de.amr.pacmanfx.core.entities.ghost.comp.GhostState.EATEN;
 /**
  * The ghosts are presented one by one, then Pac-Man is chased by the ghosts, turns the cards and hunts the ghosts himself.
  */
-public class ArcadePacMan_IntroScene extends GameScene {
+public class ArcadePacMan_IntroScene extends SceneWithoutLevel {
 
     public static final int NUM_GHOSTS = 4;
 
@@ -83,9 +83,9 @@ public class ArcadePacMan_IntroScene extends GameScene {
     public final StateMachine<ArcadePacMan_IntroScene> flow;
     public boolean titleVisible;
     public Pulse blinking;
-    public Pac pacMan;
-    public final Ghost[] ghosts = new Ghost[NUM_GHOSTS];
-    public GhostPoints points;
+
+    private Pac pacMan;
+    private final Ghost[] ghosts = new Ghost[NUM_GHOSTS];
 
     public final boolean[] ghostImageVisible = new boolean[NUM_GHOSTS];
     public final boolean[] ghostNicknameVisible = new boolean[NUM_GHOSTS];
@@ -132,9 +132,9 @@ public class ArcadePacMan_IntroScene extends GameScene {
 
         blinking = new Pulse(10, Pulse.State.ON);
 
-        final var factory = ArcadePacMan_ActorFactory.instance();
+        final var actorFactory = ArcadePacMan_ActorFactory.instance();
 
-        pacMan = factory.createPacMan();
+        pacMan = actorFactory.createPacMan();
         pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animContainer));
         pacMan.spriteAnim().spriteAnimations().select(CommonSpriteAnimationID.PAC_MOUTH_MOVING);
         pacMan.spriteAnim().spriteAnimations().playSelected();
@@ -144,7 +144,9 @@ public class ArcadePacMan_IntroScene extends GameScene {
         ghosts[2] = renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.CYAN_GHOST_BASHFUL);
         ghosts[3] = renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.ORANGE_GHOST_POKEY);
 
-        points = null;
+        entities().clear();
+        entities().add(pacMan);
+        entities().addAll(ghosts);
 
         Arrays.fill(ghostImageVisible, false);
         Arrays.fill(ghostNicknameVisible, false);
@@ -266,7 +268,7 @@ public class ArcadePacMan_IntroScene extends GameScene {
         }
 
         ++numGhostsEaten;
-        points = new GhostPoints(switch (numGhostsEaten) {
+        final var points = new GhostPoints(switch (numGhostsEaten) {
             case 1 -> 200;
             case 2 -> 400;
             case 3 -> 800;
@@ -275,6 +277,8 @@ public class ArcadePacMan_IntroScene extends GameScene {
         });
         points.pos().set(victim.pos().asVector2f());
         points.show();
+
+        entities().add(points);
 
         lastGhostEatenTick = tick;
     }
@@ -286,7 +290,7 @@ public class ArcadePacMan_IntroScene extends GameScene {
         for (Ghost ghost : ghosts) {
             if (ghost.state().enumValue() == EATEN) {
                 ghost.hide();
-                points = null;
+                entities().removeWhere(GhostPoints.class, _ -> true);
             } else {
                 ghost.show();
                 systems.navigator().setMoveDirSpeed(ghost, GHOST_FRIGHTENED_SPEED);

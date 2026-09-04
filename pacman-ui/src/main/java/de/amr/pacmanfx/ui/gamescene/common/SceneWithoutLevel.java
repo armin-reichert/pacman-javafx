@@ -8,11 +8,11 @@ import de.amr.basics.QuerySet;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 
-public class CutScene extends GameScene {
+public class SceneWithoutLevel extends GameScene {
 
     private final QuerySet<GameEntity> entities = new QuerySet<>();
 
-    public CutScene(GameAppContext app) {
+    public SceneWithoutLevel(GameAppContext app) {
         super(app);
     }
 
