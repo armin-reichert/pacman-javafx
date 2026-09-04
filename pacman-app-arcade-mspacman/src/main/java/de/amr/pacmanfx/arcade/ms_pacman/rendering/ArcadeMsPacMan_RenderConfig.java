@@ -31,6 +31,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.HUD_Style;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.GameSceneRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -120,13 +121,11 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public BaseRenderer createGameSceneRenderer(GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas) {
+    public GameSceneRenderer createGameSceneRenderer(GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas) {
         requireNonNull(canvas);
         requireNonNull(gameScene);
 
-        final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
-
-        final BaseRenderer renderer = switch (gameScene) {
+        return switch (gameScene) {
             case Arcade_BootScene2D ignored        -> new Arcade_BootScene2D_Renderer(gameScene, canvas, spriteSheet(), BOOT_SCENE_SPRITES);
             case ArcadeMsPacMan_IntroScene ignored -> new ArcadeMsPacMan_IntroScene_Renderer(this, gameScene, animSystem, canvas);
             case ArcadeMsPacMan_StartScene ignored -> new ArcadeMsPacMan_StartScene_Renderer(this, gameScene, canvas);
@@ -136,7 +135,6 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
             case ArcadeMsPacMan_CutScene3 ignored  -> new ArcadeMsPacMan_CutScene_Renderer(this, gameScene, animSystem, canvas);
             default -> throw new IllegalStateException("Illegal game scene: " + gameScene);
         };
-        return r2D.configureRenderer(renderer);
     }
 
     @Override

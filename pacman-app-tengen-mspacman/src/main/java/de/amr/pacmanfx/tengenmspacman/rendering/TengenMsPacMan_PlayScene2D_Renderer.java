@@ -19,8 +19,8 @@ import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
-import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
+import de.amr.pacmanfx.uilib.rendering.GameSceneRenderer;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
@@ -31,8 +31,7 @@ import java.util.List;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_PlayScene2D_Renderer
-    extends BaseRenderer
+public class TengenMsPacMan_PlayScene2D_Renderer extends GameSceneRenderer
     implements SpriteRenderer, TengenMsPacMan_SceneRendererMixin
 {
     public static final int CONTENT_INDENT = 16;

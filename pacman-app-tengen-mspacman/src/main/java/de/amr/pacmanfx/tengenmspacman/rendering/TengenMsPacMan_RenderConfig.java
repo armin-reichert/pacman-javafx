@@ -29,7 +29,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.HUD_Style;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
-import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.GameSceneRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -120,9 +120,8 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public BaseRenderer createGameSceneRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
-        final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
-        final BaseRenderer renderer = switch (gameScene) {
+    public GameSceneRenderer createGameSceneRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
+        return switch (gameScene) {
             case TengenMsPacMan_BootScene    ignored -> new TengenMsPacMan_BootScene_Renderer(this, gameScene, animController, canvas);
             case TengenMsPacMan_IntroScene   ignored -> new TengenMsPacMan_IntroScene_Renderer(this, gameScene, animController, canvas);
             case TengenMsPacMan_OptionsScene ignored -> new TengenMsPacMan_OptionsScene_Renderer(gameScene, canvas);
@@ -134,7 +133,6 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
             case TengenMsPacMan_CutScene4    ignored -> new TengenMsPacMan_CutScene_Renderer(this, gameScene, animController, canvas);
             default -> throw new IllegalStateException("Unexpected value: " + gameScene);
         };
-        return r2D.configureRenderer(renderer);
     }
 
     @Override

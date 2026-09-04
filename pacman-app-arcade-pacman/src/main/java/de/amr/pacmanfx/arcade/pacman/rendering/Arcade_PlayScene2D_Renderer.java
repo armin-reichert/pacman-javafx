@@ -14,13 +14,11 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
-import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
-import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
-import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
+import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.scene.canvas.Canvas;
 
 import static java.util.Objects.requireNonNull;
@@ -29,18 +27,21 @@ import static java.util.Objects.requireNonNull;
  * Renders the 2D play scene for the Arcade Pac-Man games. The XXL games use a generic map renderer that does not need
  * any graphics.
  */
-public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements SpriteRenderer {
+public class Arcade_PlayScene2D_Renderer extends GameSceneRenderer implements SpriteRenderer {
 
     private final SpriteSheet spriteSheet;
     private final GameLevelRenderer levelRenderer;
 
     public Arcade_PlayScene2D_Renderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas, SpriteSheet spriteSheet) {
         super(canvas);
+
         requireNonNull(gameScene);
         requireNonNull(animController);
         this.spriteSheet = requireNonNull(spriteSheet);
         final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
         final GameVariantRenderConfig renderConfig = gameScene.app().gameVariants().currentGameVariant().uiConfig().renderConfig();
+
+        setDebugInfoRenderer(new BaseGameSceneDebugInfoRenderer(animController, canvas));
         levelRenderer = r2D.configureRenderer(renderConfig.createGameLevelRenderer(animController, canvas));
     }
 

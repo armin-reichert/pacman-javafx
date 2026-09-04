@@ -18,6 +18,7 @@ import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.GameSceneRenderer;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
@@ -30,7 +31,7 @@ import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConf
 import static de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer.createDefaultSceneDebugRenderer;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
+public class TengenMsPacMan_IntroScene_Renderer extends GameSceneRenderer
     implements SpriteRenderer, TengenMsPacMan_SceneRendererMixin {
 
     public static final String TENGEN_PRESENTS = "TENGEN PRESENTS";

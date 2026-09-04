@@ -8,10 +8,10 @@ import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.HUD_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.GameSceneRenderer;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.text.FontSmoothingType;
@@ -26,9 +26,8 @@ import static java.util.Objects.requireNonNull;
 public class RenderManager {
 
     private BaseRenderer entityRenderer;
-    private BaseRenderer sceneRenderer;
+    private GameSceneRenderer sceneRenderer;
     private HUD_Renderer hudRenderer;
-    private BaseRenderer debugRenderer;
 
     public void updateRenderers(GameAppContext app, GameScene gameScene) {
         requireNonNull(gameScene);
@@ -42,12 +41,11 @@ public class RenderManager {
             setEntityRenderer(renderConfig.createActorRenderer(animController, canvas));
             setSceneRenderer(renderConfig.createGameSceneRenderer(gameScene, animController, canvas));
             setHudRenderer(renderConfig.createHUDRenderer(gameScene, animController, canvas)); // may return null!
-            setDebugRenderer(new BaseGameSceneDebugInfoRenderer(animController, canvas)); //TODO handle scene-specific debug renderer
 
             configureRenderer(entityRenderer, canvasRendering);
             configureRenderer(sceneRenderer,  canvasRendering);
+            sceneRenderer.optDebugInfoRenderer().ifPresent(debugRenderer -> configureRenderer(debugRenderer,  canvasRendering));
             configureRenderer(hudRenderer,    canvasRendering);
-            configureRenderer(debugRenderer,  canvasRendering);
 
             setGameSceneFontSmoothing(app.ui().viewModel().common2DSettings().fontSmoothingOnProperty().get());
         } else {
@@ -67,8 +65,9 @@ public class RenderManager {
             session.optLevel().ifPresent(level -> entitiesInRenderingOrder(level.entities()).forEach(
                 actor -> entityRenderer.render(actor, tick)));
 
-            if (gameScene.viewModel().debugModeOnProperty().get()) {
-                debugRenderer().render(gameScene, tick);
+            final boolean debugMode = gameScene.viewModel().debugModeOnProperty().get();
+            if (debugMode) {
+                sceneRenderer.optDebugInfoRenderer().ifPresent(debugRenderer -> debugRenderer.render(gameScene, tick));
             }
         });
     }
@@ -85,11 +84,11 @@ public class RenderManager {
         this.entityRenderer = entityRenderer;
     }
 
-    public BaseRenderer sceneRenderer() {
+    public GameSceneRenderer sceneRenderer() {
         return sceneRenderer;
     }
 
-    public void setSceneRenderer(BaseRenderer sceneRenderer) {
+    public void setSceneRenderer(GameSceneRenderer sceneRenderer) {
         this.sceneRenderer = sceneRenderer;
     }
 
@@ -99,14 +98,6 @@ public class RenderManager {
 
     public void setHudRenderer(HUD_Renderer hudRenderer) {
         this.hudRenderer = hudRenderer;
-    }
-
-    public BaseRenderer debugRenderer() {
-        return debugRenderer;
-    }
-
-    public void setDebugRenderer(BaseRenderer debugRenderer) {
-        this.debugRenderer = debugRenderer;
     }
 
     private List<GameEntity> entitiesInRenderingOrder(GameLevelEntitySet entities) {
