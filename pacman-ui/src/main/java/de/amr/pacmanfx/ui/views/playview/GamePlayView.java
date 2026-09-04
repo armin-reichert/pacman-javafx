@@ -6,7 +6,6 @@ package de.amr.pacmanfx.ui.views.playview;
 
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -239,11 +238,10 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     @Override
     public void render() {
         app.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
-            final GameSession session = app.game().session();
             final long tick = app.clock().currentTick();
             final boolean debugMode = gameScene.viewModel().debugModeOnProperty().get();
             try {
-                renderManager.renderFrame(gameScene, session, tick, debugMode);
+                renderManager.renderFrame(gameScene, app.game(), tick, debugMode);
             } catch (Exception x) {
                 Logger.error(x, "Exception during rendering!");
             }

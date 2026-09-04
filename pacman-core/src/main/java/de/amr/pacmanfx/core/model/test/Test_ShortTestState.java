@@ -50,7 +50,7 @@ public class Test_ShortTestState extends AbstractGameState {
         final float START = 1.0f;
 
         if (timer().atSecond(START)) {
-            hud.hideCredit();
+            hud.creditDisplay().hide();
             hud.livesCounter().show();
 
             level.heartbeat().restart();

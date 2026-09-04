@@ -16,7 +16,7 @@ public final class Common_PreparationState extends AbstractGameState {
     public void onEnterState(GameContext game) {
         session.setNumLives(game.variant().initialLifeCount());
 
-        hud.showCredit();
+        hud.creditDisplay().show();
         hud.gameScore().show();
         hud.levelCounter().show();
         hud.livesCounter().hide();

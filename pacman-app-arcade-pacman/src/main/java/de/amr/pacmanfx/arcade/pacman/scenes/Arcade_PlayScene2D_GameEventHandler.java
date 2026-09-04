@@ -90,7 +90,7 @@ public interface Arcade_PlayScene2D_GameEventHandler extends DefaultGameEventLis
             completedAnimation.play(numFlashes);
         }
         else if (CommonGameStateID.GAME_OVER.hasSameNameAs(newState)) {
-            game().session().hud().showCredit();
+            game().session().hud().creditDisplay().show();
             optSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);
         }
     }

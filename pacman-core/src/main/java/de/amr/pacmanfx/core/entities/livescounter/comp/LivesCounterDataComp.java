@@ -6,7 +6,7 @@ package de.amr.pacmanfx.core.entities.livescounter.comp;
 
 import de.amr.pacmanfx.core.ecs.GameEntityComp;
 
-public class LivesCounterData implements GameEntityComp {
+public class LivesCounterDataComp implements GameEntityComp {
 
     private int maxLivesShown;
 

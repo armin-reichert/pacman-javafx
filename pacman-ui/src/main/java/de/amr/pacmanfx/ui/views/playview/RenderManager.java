@@ -1,5 +1,6 @@
 package de.amr.pacmanfx.ui.views.playview;
 
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.RenderingComp;
@@ -58,8 +59,10 @@ public class RenderManager {
         }
     }
 
-    public void renderFrame(GameScene gameScene, GameSession session, long tick, boolean debugMode) {
+    public void renderFrame(GameScene gameScene, GameContext game, long tick, boolean debugMode) {
         gameScene.optCanvasRendering().ifPresent(canvasRendering -> {
+            final GameSession session = game.session();
+
             if (canvasRendering.clearCanvasBeforeRendering()) {
                 baseRenderer.clearCanvas();
             }
@@ -82,7 +85,7 @@ public class RenderManager {
             if (session.hud().isVisible()) {
                 //TODO get rid of this:
                 hudRenderer.drawHUD(session.hud(), session, gameScene, tick);
-                session.hud().entities().forEach(hudEntity -> hudRenderer.drawHUDEntity(hudEntity, session));
+                session.hud().entities().forEach(hudEntity -> hudRenderer.drawHUDEntity(hudEntity, game));
             }
 
             if (debugMode) {

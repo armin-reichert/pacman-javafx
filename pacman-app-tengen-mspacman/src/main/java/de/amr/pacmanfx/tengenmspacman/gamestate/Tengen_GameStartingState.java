@@ -29,7 +29,7 @@ public class Tengen_GameStartingState extends AbstractGameState {
     public void onEnterState(GameContext game) {
         level = gamePlay.buildNormalLevel(game, startLevelNumber(session));
 
-        hud.hideCredit();
+        hud.creditDisplay().hide();
         hud.livesCounter().show();
         hud.levelCounter().show();
         hud.gameScore().show();

@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.ecs.GameEntity;
@@ -81,15 +82,12 @@ public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer,
 
          */
 
-        if (hud.isCreditVisible()) {
-            final String text = style.creditTextFormat().formatted(gameScene.game().coinMechanism().numCoins());
-            fillText(text, ARCADE_WHITE, scaledFont, tilesPx(2), sceneCanvasRendering.unscaledHeight());
-        }
     }
 
     @Override
-    public void drawHUDEntity(GameEntity entity, GameSession session) {
+    public void drawHUDEntity(GameEntity entity, GameContext game) {
         if (!entity.isVisible()) return;
+        final GameSession session = game.session();
         switch (entity) {
             case MessageView messageView -> drawMessage(messageView, session);
             case LevelCounter levelCounter -> drawLevelCounter(levelCounter);
@@ -103,6 +101,11 @@ public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer,
                     final Color highScoreTextColor = highScoreDisabled ? style.scoreTextColorDisabled() : style.scoreTextColor();
                     drawScoreText(score, style.highScoreText(), scaledFont, highScoreTextColor);
                 }
+            }
+            case CreditDisplay creditDisplay -> {
+                //TODO hack update elsewhere
+                creditDisplay.data().setCredit(game.coinMechanism().numCoins());
+                drawCreditDisplay(creditDisplay);
             }
             default -> throw new IllegalStateException("Unexpected value: " + entity);
         }
@@ -121,6 +124,16 @@ public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer,
                 case GAME_OVER -> fillTextCentered(GAME_OVER_TEXT, ARCADE_RED, scaledFont, pos.x(), pos.y());
                 case READY -> fillTextCentered(READY_TEXT, ARCADE_YELLOW, scaledFont, pos.x(), pos.y());
             }
+        }
+    }
+
+    private void drawCreditDisplay(CreditDisplay creditDisplay) {
+        if (creditDisplay.isVisible()) {
+            final int credit = creditDisplay.data().credit();
+            final Font scaledFont = Ufx.scaleFontBy(style.messageFont(), scaling());
+            final String text = style.creditTextFormat().formatted(credit);
+            final float baseline = creditDisplay.pos().y();
+            fillText(text, ARCADE_WHITE, scaledFont, creditDisplay.pos().x(), baseline);
         }
     }
 

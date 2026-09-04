@@ -1,10 +1,7 @@
 package de.amr.pacmanfx.core;
 
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.entities.LevelCounter;
-import de.amr.pacmanfx.core.entities.LivesCounter;
-import de.amr.pacmanfx.core.entities.MessageView;
-import de.amr.pacmanfx.core.entities.Score;
+import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.level.MessageType;
 
@@ -15,13 +12,13 @@ import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 public class HUD {
 
     private boolean visible;
-    private boolean creditVisible;
 
     private final LevelCounter levelCounter;
     private final LivesCounter livesCounter;
     private final Score gameScore;
     private final Score highScore;
     private final MessageView messageView;
+    private final CreditDisplay creditDisplay;
 
     public HUD(String variantName) {
         levelCounter = new LevelCounter();
@@ -29,10 +26,12 @@ public class HUD {
         messageView = new MessageView();
         gameScore = new Score(Score.Type.GAME_SCORE);
         highScore = ScoreSystem.createHighScore(variantName);
+        creditDisplay = new CreditDisplay();
 
         gameScore.pos().set(TS, TS);
         highScore.show();
         highScore.pos().set(14 * TS, TS);
+        creditDisplay.pos().set(2 * TS, 35 * TS);
     }
 
     public boolean isVisible() {
@@ -47,16 +46,8 @@ public class HUD {
         visible = false;
     }
 
-    public boolean isCreditVisible() {
-        return creditVisible;
-    }
-
-    public void showCredit() {
-        creditVisible = true;
-    }
-
-    public void hideCredit() {
-        creditVisible = false;
+    public CreditDisplay creditDisplay() {
+        return creditDisplay;
     }
 
     public LevelCounter levelCounter() {
@@ -84,6 +75,6 @@ public class HUD {
     }
 
     public List<GameEntity> entities() {
-        return List.of(levelCounter, livesCounter, gameScore, highScore, messageView);
+        return List.of(levelCounter, livesCounter, gameScore, highScore, messageView, creditDisplay);
     }
 }
