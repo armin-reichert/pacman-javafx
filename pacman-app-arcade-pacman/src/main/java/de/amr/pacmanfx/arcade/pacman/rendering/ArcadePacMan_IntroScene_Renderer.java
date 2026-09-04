@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.math.RectShort;
@@ -37,13 +38,13 @@ public class ArcadePacMan_IntroScene_Renderer extends GameSceneRenderer implemen
     private final ArcadePacMan_ActorRenderer actorRenderer;
     private final RectShort energizerSprite;
 
-    public ArcadePacMan_IntroScene_Renderer(GameVariantRenderConfig renderConfig, GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas) {
+    public ArcadePacMan_IntroScene_Renderer(GameVariantRenderConfig renderConfig, GameScene gameScene, Canvas canvas) {
         super(canvas);
 
         final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
         final ActorSpriteAnimController animController = gameScene.game().variant().systems().actorSpriteAnimController();
 
-        actorRenderer = r2D.configureRenderer((ArcadePacMan_ActorRenderer) renderConfig.createActorRenderer(animSystem, canvas));
+        actorRenderer = r2D.configureRenderer((ArcadePacMan_ActorRenderer) renderConfig.createActorRenderer(animController, canvas));
 
         setDebugInfoRenderer(new BaseGameSceneDebugInfoRenderer(animController, canvas) {
             @Override
@@ -54,9 +55,9 @@ public class ArcadePacMan_IntroScene_Renderer extends GameSceneRenderer implemen
                 super.render(gameScene, tick);
 
                 ctx.fillText("Scene timer %d".formatted(introScene.flow.state().timer().tickCount()), 0, scaled(5 * WorldMap.TS));
-                drawMovingActorInfo(animSystem, introScene.pacMan);
+                drawMovingActorInfo(animController, introScene.pacMan);
                 for (var ghost : introScene.ghosts) {
-                    drawMovingActorInfo(animSystem, ghost);
+                    drawMovingActorInfo(animController, ghost);
                 }
             }
         });
