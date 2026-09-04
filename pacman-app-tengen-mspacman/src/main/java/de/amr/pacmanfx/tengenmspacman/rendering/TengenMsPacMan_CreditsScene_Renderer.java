@@ -6,7 +6,6 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CreditsScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.uilib.rendering.GameSceneRenderer;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
@@ -64,12 +63,11 @@ public class TengenMsPacMan_CreditsScene_Renderer extends GameSceneRenderer impl
         }
     }
 
-    private final BaseGameSceneDebugInfoRenderer debugRenderer;
     private final Pen pen = new Pen();
 
-    public TengenMsPacMan_CreditsScene_Renderer(GameScene scene, Canvas canvas) {
+    public TengenMsPacMan_CreditsScene_Renderer(GameScene gameScene, Canvas canvas) {
         super(canvas);
-        debugRenderer = createDefaultSceneDebugRenderer(scene, canvas);
+        setDebugInfoRenderer(createDefaultSceneDebugRenderer(gameScene, canvas));
     }
 
     @Override
@@ -102,10 +100,6 @@ public class TengenMsPacMan_CreditsScene_Renderer extends GameSceneRenderer impl
                 pen.drawLines(REMAKE_AUTHORS_LINES);
                 ctx.restore();
             }
-        }
-
-        if (creditsScene.viewModel().debugModeOnProperty().get()) {
-            debugRenderer.render(creditsScene, tick);
         }
     }
 }

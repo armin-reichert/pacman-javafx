@@ -6,7 +6,6 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.GameSceneRenderer;
@@ -35,16 +34,14 @@ public class Arcade_BootScene2D_Renderer extends GameSceneRenderer implements Sp
 
     private final SpriteSheet spriteSheet;
     private final Rectangle2D spriteRegion;
-    private final BaseGameSceneDebugInfoRenderer debugRenderer;
 
-    public Arcade_BootScene2D_Renderer(GameScene scene, Canvas canvas, SpriteSheet spriteSheet, Rectangle2D spriteRegion) {
+    public Arcade_BootScene2D_Renderer(GameScene gameScene, Canvas canvas, SpriteSheet spriteSheet, Rectangle2D spriteRegion) {
         super(canvas);
-
+        requireNonNull(gameScene);
         this.spriteSheet = requireNonNull(spriteSheet);
         this.spriteRegion = requireNonNull(spriteRegion);
 
-        requireNonNull(scene);
-        debugRenderer = createDefaultSceneDebugRenderer(scene, canvas);
+        setDebugInfoRenderer(createDefaultSceneDebugRenderer(gameScene, canvas));
     }
 
     @Override
@@ -77,9 +74,6 @@ public class Arcade_BootScene2D_Renderer extends GameSceneRenderer implements Sp
                 clearCanvas();
                 drawGrid(r2D.unscaledWidth(), r2D.unscaledHeight());
             }
-        }
-        if (bootScene.viewModel().debugModeOnProperty().get()) {
-            debugRenderer.render(bootScene, tick);
         }
     }
 

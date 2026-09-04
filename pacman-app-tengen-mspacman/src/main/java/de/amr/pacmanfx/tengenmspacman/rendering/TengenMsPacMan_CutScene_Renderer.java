@@ -11,9 +11,7 @@ import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene2;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene3;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene4;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
-import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameSceneRenderer;
 import javafx.scene.canvas.Canvas;
 
@@ -22,7 +20,6 @@ import static de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer.cre
 public class TengenMsPacMan_CutScene_Renderer extends GameSceneRenderer {
 
     private final TengenMsPacMan_ActorRenderer actorRenderer;
-    private final BaseGameSceneDebugInfoRenderer debugRenderer;
 
     public TengenMsPacMan_CutScene_Renderer(
         GameVariantRenderConfig renderConfig, GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas) {
@@ -30,7 +27,7 @@ public class TengenMsPacMan_CutScene_Renderer extends GameSceneRenderer {
 
         final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
         actorRenderer = r2D.configureRenderer((TengenMsPacMan_ActorRenderer) renderConfig.createActorRenderer(animSystem, canvas));
-        debugRenderer = createDefaultSceneDebugRenderer(gameScene, canvas);
+        setDebugInfoRenderer(createDefaultSceneDebugRenderer(gameScene, canvas));
     }
 
     @Override
@@ -45,9 +42,6 @@ public class TengenMsPacMan_CutScene_Renderer extends GameSceneRenderer {
             case TengenMsPacMan_CutScene3 cutScene3 -> drawCutScene3(cutScene3, tick);
             case TengenMsPacMan_CutScene4 cutScene4 -> drawCutScene4(cutScene4, tick);
             default -> throw new IllegalArgumentException("No cut scene!");
-        }
-        if (gameScene.viewModel().debugModeOnProperty().get()) {
-            debugRenderer.render(gameScene, tick);
         }
     }
 

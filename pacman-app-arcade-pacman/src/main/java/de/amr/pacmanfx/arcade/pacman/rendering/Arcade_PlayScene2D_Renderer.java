@@ -14,13 +14,16 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
-import de.amr.pacmanfx.uilib.rendering.*;
+import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
+import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
+import de.amr.pacmanfx.uilib.rendering.GameSceneRenderer;
+import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 
+import static de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer.createDefaultSceneDebugRenderer;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -41,7 +44,7 @@ public class Arcade_PlayScene2D_Renderer extends GameSceneRenderer implements Sp
         final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
         final GameVariantRenderConfig renderConfig = gameScene.app().gameVariants().currentGameVariant().uiConfig().renderConfig();
 
-        setDebugInfoRenderer(new BaseGameSceneDebugInfoRenderer(animController, canvas));
+        setDebugInfoRenderer(createDefaultSceneDebugRenderer(gameScene, canvas));
         levelRenderer = r2D.configureRenderer(renderConfig.createGameLevelRenderer(animController, canvas));
     }
 

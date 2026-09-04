@@ -14,8 +14,6 @@ import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_OptionsScene;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
-import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameSceneRenderer;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
@@ -26,7 +24,6 @@ import javafx.scene.text.Font;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_OptionsScene.*;
-import static de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer.createDefaultSceneDebugRenderer;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_OptionsScene_Renderer extends GameSceneRenderer
@@ -40,12 +37,9 @@ public class TengenMsPacMan_OptionsScene_Renderer extends GameSceneRenderer
     private static final Color NES_YELLOW = NES_Palette.color(0x28);
     private static final Color NES_WHITE = NES_Palette.color(0x20);
 
-    private final BaseGameSceneDebugInfoRenderer debugRenderer;
-
     public TengenMsPacMan_OptionsScene_Renderer(GameScene scene, Canvas canvas) {
         super(canvas);
         requireNonNull(scene);
-        debugRenderer = createDefaultSceneDebugRenderer(scene, canvas);
     }
 
     @Override
@@ -148,10 +142,6 @@ public class TengenMsPacMan_OptionsScene_Renderer extends GameSceneRenderer
         fillText("PRESS START TO START GAME",   NES_YELLOW, tilesPx(3), y);
 
         drawHorizontalBar(NES_Palette.color(0x20), NES_Palette.color(0x21), optionsScene.reqCanvasRendering().unscaledWidth(), TS, 212);
-
-        if (optionsScene.viewModel().debugModeOnProperty().get()) {
-            debugRenderer.render(optionsScene, tick);
-        }
     }
 
     private void drawMarkerIfSelected(TengenMsPacMan_OptionsScene optionsScene, int optionIndex, double y, Font font) {

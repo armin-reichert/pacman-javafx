@@ -7,9 +7,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.ArcadeMsPacMan_StartScene;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
-import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameSceneRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
@@ -23,18 +21,16 @@ import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_ORANGE;
 public class ArcadeMsPacMan_StartScene_Renderer extends GameSceneRenderer implements SpriteRenderer {
 
     private final CopyrightRenderer copyrightRenderer;
-    private final BaseGameSceneDebugInfoRenderer debugRenderer;
-
     private final Image copyrightImage;
 
     public ArcadeMsPacMan_StartScene_Renderer(GameVariantRenderConfig renderConfig, GameScene gameScene, Canvas canvas) {
         super(canvas);
 
-        final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
-
         copyrightImage = renderConfig.assets().image("logo.midway");
+
+        final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
         copyrightRenderer = r2D.configureRenderer(new CopyrightRenderer(canvas));
-        debugRenderer = createDefaultSceneDebugRenderer(gameScene, canvas);
+        setDebugInfoRenderer(createDefaultSceneDebugRenderer(gameScene, canvas));
     }
 
     @Override
@@ -59,9 +55,5 @@ public class ArcadeMsPacMan_StartScene_Renderer extends GameSceneRenderer implem
         ctx.fillText("PTS", STS*25, STS*25);
         drawSprite(spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL), tilesPx(13), tilesPx(23) + 1, true);
         copyrightRenderer.drawCopyright(copyrightImage, tilesPx(6), tilesPx(28));
-
-        if (startScene.viewModel().debugModeOnProperty().get()) {
-            debugRenderer.render(startScene, tick);
-        }
     }
 }

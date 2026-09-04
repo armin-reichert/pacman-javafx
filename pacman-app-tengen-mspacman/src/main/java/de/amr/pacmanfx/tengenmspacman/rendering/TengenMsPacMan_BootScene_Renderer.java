@@ -8,7 +8,6 @@ import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_BootScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.uilib.rendering.GameSceneRenderer;
 import javafx.scene.canvas.Canvas;
@@ -20,7 +19,6 @@ public class TengenMsPacMan_BootScene_Renderer extends GameSceneRenderer {
     public static final String TENGEN_PRESENTS = "TENGEN PRESENTS";
 
     private final TengenMsPacMan_ActorRenderer actorRenderer;
-    private final BaseGameSceneDebugInfoRenderer debugRenderer;
 
     public TengenMsPacMan_BootScene_Renderer(
         GameVariantRenderConfig renderConfig, GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas) {
@@ -28,7 +26,7 @@ public class TengenMsPacMan_BootScene_Renderer extends GameSceneRenderer {
 
         final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
         actorRenderer = r2D.configureRenderer((TengenMsPacMan_ActorRenderer) renderConfig.createActorRenderer(animSystem, canvas));
-        debugRenderer = createDefaultSceneDebugRenderer(gameScene, canvas);
+        setDebugInfoRenderer(createDefaultSceneDebugRenderer(gameScene, canvas));
     }
 
     @Override
@@ -43,10 +41,6 @@ public class TengenMsPacMan_BootScene_Renderer extends GameSceneRenderer {
             actorRenderer.fillText(TENGEN_PRESENTS, bootScene.shadeOfBlue, actorRenderer.arcadeFont8(),
                 bootScene.movingText.pos().x(), bootScene.movingText.pos().y());
             actorRenderer.render(bootScene.ghost, tick);
-        }
-
-        if (bootScene.viewModel().debugModeOnProperty().get()) {
-            debugRenderer.render(bootScene, tick);
         }
     }
 }

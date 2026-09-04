@@ -15,7 +15,6 @@ import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_IntroScene.SceneS
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameSceneRenderer;
@@ -45,7 +44,6 @@ public class TengenMsPacMan_IntroScene_Renderer extends GameSceneRenderer
     public static final String QUOTED_MS_PACMAN = "\"MS PAC-MAN\"";
 
     private final BaseRenderer actorRenderer;
-    private final BaseGameSceneDebugInfoRenderer debugRenderer;
     private final MarqueeRenderer marqueeRenderer;
     private final TengenMsPacMan_UISettings uiSettings;
 
@@ -58,7 +56,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends GameSceneRenderer
         final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
         marqueeRenderer = r2D.configureRenderer(new MarqueeRenderer(canvas));
         actorRenderer   = r2D.configureRenderer(renderConfig.createActorRenderer(animSystem, canvas));
-        debugRenderer   = createDefaultSceneDebugRenderer(gameScene, canvas);
+        setDebugInfoRenderer(createDefaultSceneDebugRenderer(gameScene, canvas));
 
         uiSettings = gameScene.app().currentGameVariantUIConfig().extensionValue(
             TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
@@ -132,10 +130,6 @@ public class TengenMsPacMan_IntroScene_Renderer extends GameSceneRenderer
 
         if (uiSettings.joypadBindingsDisplayed.get()) {
             drawJoypadKeyBinding(introScene.app().input().joypad().currentKeyBinding());
-        }
-
-        if (introScene.viewModel().debugModeOnProperty().get()) {
-            debugRenderer.render(introScene, tick);
         }
     }
 

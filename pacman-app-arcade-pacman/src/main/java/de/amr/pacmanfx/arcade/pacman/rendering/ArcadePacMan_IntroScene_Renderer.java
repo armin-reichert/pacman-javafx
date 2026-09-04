@@ -35,7 +35,6 @@ public class ArcadePacMan_IntroScene_Renderer extends GameSceneRenderer implemen
     private static final short ENERGIZER_Y = WorldMap.TS * 20;
 
     private final ArcadePacMan_ActorRenderer actorRenderer;
-    private final BaseGameSceneDebugInfoRenderer debugRenderer;
     private final RectShort energizerSprite;
 
     public ArcadePacMan_IntroScene_Renderer(GameVariantRenderConfig renderConfig, GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas) {
@@ -46,7 +45,7 @@ public class ArcadePacMan_IntroScene_Renderer extends GameSceneRenderer implemen
 
         actorRenderer = r2D.configureRenderer((ArcadePacMan_ActorRenderer) renderConfig.createActorRenderer(animSystem, canvas));
 
-        debugRenderer = r2D.configureRenderer(new BaseGameSceneDebugInfoRenderer(animController, canvas) {
+        setDebugInfoRenderer(new BaseGameSceneDebugInfoRenderer(animController, canvas) {
             @Override
             public void render(Object r, long tick) {
                 if (!(r instanceof ArcadePacMan_IntroScene introScene)) {
@@ -92,9 +91,6 @@ public class ArcadePacMan_IntroScene_Renderer extends GameSceneRenderer implemen
                 drawCopyright();
             }
             default -> {}
-        }
-        if (introScene.viewModel().debugModeOnProperty().get()) {
-            debugRenderer.render(introScene, tick);
         }
     }
 

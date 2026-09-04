@@ -10,7 +10,6 @@ import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_CutScene3;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameSceneRenderer;
@@ -24,7 +23,6 @@ public class ArcadePacMan_CutScene_Renderer extends GameSceneRenderer implements
 
     protected final ActorSpriteAnimController animSystem;
     protected final BaseRenderer actorRenderer;
-    protected BaseGameSceneDebugInfoRenderer debugRenderer;
 
     public ArcadePacMan_CutScene_Renderer(GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas) {
         super(canvas);
@@ -32,7 +30,7 @@ public class ArcadePacMan_CutScene_Renderer extends GameSceneRenderer implements
         this.animSystem = requireNonNull(animSystem);
         final GameVariantRenderConfig renderConfig = gameScene.app().gameVariants().currentGameVariant().uiConfig().renderConfig();
         actorRenderer = r2D.configureRenderer(renderConfig.createActorRenderer(animSystem, canvas));
-        debugRenderer = createDefaultSceneDebugRenderer(gameScene, canvas);
+        setDebugInfoRenderer(createDefaultSceneDebugRenderer(gameScene, canvas));
     }
 
     @Override
@@ -50,9 +48,6 @@ public class ArcadePacMan_CutScene_Renderer extends GameSceneRenderer implements
             case ArcadePacMan_CutScene2 cutScene2 -> drawCutScene2(cutScene2, tick);
             case ArcadePacMan_CutScene3 cutScene3 -> drawCutScene3(cutScene3, tick);
             default -> throw new IllegalStateException("Unexpected value: " + gameScene);
-        }
-        if (gameScene.viewModel().debugModeOnProperty().get()) {
-            debugRenderer.render(gameScene, tick);
         }
     }
 

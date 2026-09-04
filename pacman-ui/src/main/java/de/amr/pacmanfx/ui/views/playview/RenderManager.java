@@ -32,20 +32,21 @@ public class RenderManager {
     public void updateRenderers(GameAppContext app, GameScene gameScene) {
         requireNonNull(gameScene);
 
-        final CanvasRenderingComp canvasRendering = gameScene.reqComp(CanvasRenderingComp.class);
         final ActorSpriteAnimController animController = app.game().variant().systems().actorSpriteAnimController();
-        final GameVariantRenderConfig renderConfig = app.currentGameVariantUIConfig().renderConfig();
+        final GameVariantRenderConfig config = app.currentGameVariantUIConfig().renderConfig();
+
+        final CanvasRenderingComp canvasRendering = gameScene.reqComp(CanvasRenderingComp.class);
         final Canvas canvas = canvasRendering.canvas();
 
         if (canvas != null) {
-            setEntityRenderer(renderConfig.createActorRenderer(animController, canvas));
-            setSceneRenderer(renderConfig.createGameSceneRenderer(gameScene, animController, canvas));
-            setHudRenderer(renderConfig.createHUDRenderer(gameScene, animController, canvas)); // may return null!
+            setEntityRenderer(config.createActorRenderer(animController, canvas));
+            setSceneRenderer(config.createGameSceneRenderer(gameScene, animController, canvas));
+            setHudRenderer(config.createHUDRenderer(gameScene, animController, canvas)); // may return null!
 
             configureRenderer(entityRenderer, canvasRendering);
             configureRenderer(sceneRenderer,  canvasRendering);
-            sceneRenderer.optDebugInfoRenderer().ifPresent(debugRenderer -> configureRenderer(debugRenderer,  canvasRendering));
             configureRenderer(hudRenderer,    canvasRendering);
+            sceneRenderer.optDebugInfoRenderer().ifPresent(debugRenderer -> configureRenderer(debugRenderer,  canvasRendering));
 
             setGameSceneFontSmoothing(app.ui().viewModel().common2DSettings().fontSmoothingOnProperty().get());
         } else {

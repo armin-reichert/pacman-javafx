@@ -9,7 +9,6 @@ import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.CanvasRenderingComp;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameSceneRenderer;
@@ -31,7 +30,6 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends GameSceneRenderer {
     private final MarqueeRenderer marqueeRenderer;
     private final CopyrightRenderer copyrightRenderer;
     private final BaseRenderer actorRenderer;
-    private final BaseGameSceneDebugInfoRenderer debugRenderer;
 
     private final Image copyrightImage;
 
@@ -43,14 +41,13 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends GameSceneRenderer {
 
         super(canvas);
 
-        final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
-
         copyrightImage = renderConfig.assets().image("logo.midway");
 
+        final CanvasRenderingComp r2D = gameScene.reqComp(CanvasRenderingComp.class);
         marqueeRenderer   = r2D.configureRenderer(new MarqueeRenderer(canvas));
         copyrightRenderer = r2D.configureRenderer(new CopyrightRenderer(canvas));
         actorRenderer     = r2D.configureRenderer(renderConfig.createActorRenderer(animController, canvas));
-        debugRenderer     = createDefaultSceneDebugRenderer(gameScene, canvas);
+        setDebugInfoRenderer(createDefaultSceneDebugRenderer(gameScene, canvas));
     }
 
     @Override
@@ -87,10 +84,5 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends GameSceneRenderer {
             default -> {}
         }
         copyrightRenderer.drawCopyright(copyrightImage, tilesPx(6), tilesPx(28));
-
-        if (introScene.viewModel().debugModeOnProperty().get()) {
-            debugRenderer.render(introScene, tick);
-        }
     }
-
 }

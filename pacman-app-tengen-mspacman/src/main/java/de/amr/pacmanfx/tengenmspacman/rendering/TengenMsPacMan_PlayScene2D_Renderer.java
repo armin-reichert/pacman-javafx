@@ -9,7 +9,6 @@ import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
-import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.MapConfigKey;
@@ -26,8 +25,6 @@ import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
-import java.util.List;
-
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 import static java.util.Objects.requireNonNull;
 
@@ -35,12 +32,6 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends GameSceneRenderer
     implements SpriteRenderer, TengenMsPacMan_SceneRendererMixin
 {
     public static final int CONTENT_INDENT = 16;
-
-    private static final List<GhostPersonality> GHOST_Z_ORDER = List.of(
-        GhostPersonality.ORANGE_GHOST_POKEY,
-        GhostPersonality.CYAN_GHOST_BASHFUL,
-        GhostPersonality.PINK_GHOST_SPEEDY,
-        GhostPersonality.RED_GHOST_SHADOW);
 
     private class PlaySceneDebugInfoRenderer extends BaseGameSceneDebugInfoRenderer {
 
@@ -64,7 +55,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends GameSceneRenderer
             ctx.translate(scaled(CONTENT_INDENT), 0);
             ctx.setFill(debugTextFill);
             ctx.setFont(debugTextFont);
-            ctx.fillText("%s %d".formatted(gameState, gameState.timer().tickCount()), 0, scaled(3 * WorldMap.TS));
+            ctx.fillText("%s %d".formatted(gameState.name(), gameState.timer().tickCount()), 0, scaled(3 * WorldMap.TS));
             session.optLevel().ifPresent(level -> {
                 drawMovingActorInfo(animController, level.entities().pac());
                 level.entities().ghosts().forEach(ghost -> drawMovingActorInfo(animController, ghost));
@@ -87,6 +78,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends GameSceneRenderer
         this.animController = requireNonNull(animController);
 
         levelRenderer = r2D.configureRenderer((TengenMsPacMan_GameLevelRenderer) renderConfig.createGameLevelRenderer(animController, canvas));
+        setDebugInfoRenderer(new PlaySceneDebugInfoRenderer(animController, canvas));
     }
 
     @Override
