@@ -103,11 +103,10 @@ public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer,
         final float x = livesCounter.pos().x();
         final float y = livesCounter.pos().y();
 
-        final float spacing = tilesPx(2);
-        // Draw at most (numLives - 1) symbols in lives counter
         for (int i = 0; i < displayedSymbolsCount; ++i) {
-            drawSprite(style.livesCounterSymbolSprite(), x + i * spacing, y, true);
+            drawSprite(style.livesCounterSymbolSprite(), x + i * 2 * TS, y, true);
         }
+
         if (numLives - 1 > livesCounter.data().maxLivesShown()) {
             // Show text indicating that more lives are available than symbols displayed (cheating may cause this)
             final Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));

@@ -6,7 +6,6 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.math.RectShort;
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.ecs.GameEntity;
@@ -102,16 +101,6 @@ public class TengenMsPacMan_HUD_Renderer
             drawScores(hud.gameScore(), hud.highScore(), session, tick);
         }
 
-        final int lowerBorder = canvasRendering.unscaledHeight() - TS;
-
-        if (hud.livesCounter().isVisible()) {
-            drawLivesCounter(hud.livesCounter(), session, lowerBorder);
-        }
-
-        if (hud.levelCounter().isVisible()) {
-            //drawLevelCounter(hud.levelCounter(), session, lowerBorder);
-        }
-
         ctx.restore();
     }
 
@@ -125,9 +114,7 @@ public class TengenMsPacMan_HUD_Renderer
 
         switch (entity) {
             case LevelCounter levelCounter -> drawLevelCounter(levelCounter);
-            case LivesCounter livesCounter -> {
-//                drawLivesCounter(livesCounter, session);
-            }
+            case LivesCounter livesCounter -> drawLivesCounter(livesCounter);
             case Score score -> {
 //                final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
 //                if (score.type() == Score.Type.GAME_SCORE) {
@@ -164,14 +151,17 @@ public class TengenMsPacMan_HUD_Renderer
         fillText("%6d".formatted(highScore.data().points()), color, scaledFont, tilesPx(13), tilesPx(2));
     }
 
-    private void drawLivesCounter(LivesCounter livesCounter, GameSession session, float y) {
-        final int numLives = session.numLives();
-        final int displayedSymbolsCount = Math.min(numLives - 1, livesCounter.data().maxLivesShown());
+    private void drawLivesCounter(LivesCounter livesCounter) {
+        final int numLives = livesCounter.data().numLives();
+        final int displayedSymbolsCount = Math.min(numLives, livesCounter.data().maxLivesShown());
 
-        final RectShort symbolSprite = style.livesCounterSymbolSprite();
+        final float x = livesCounter.pos().x();
+        final float y = livesCounter.pos().y();
+
         for (int i = 0; i < displayedSymbolsCount; ++i) {
-            drawSprite(symbolSprite, tilesPx(4 + i * 2), y, true);
+            drawSprite(style.livesCounterSymbolSprite(), x + i * 2 * TS, y, true);
         }
+
         if (numLives - 1 > livesCounter.data().maxLivesShown()) {
             fillText("(%d)".formatted(numLives), NES_Palette.color(0x28), totalLivesFont.get(), tilesPx(14), y + TS);
         }
