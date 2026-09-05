@@ -116,15 +116,12 @@ public class TengenMsPacMan_HUD_Renderer
     }
 
     @Override
-    public void drawHUDEntity(GameEntity entity, GameContext game) {
+    public void drawHUDEntity(GameEntity entity) {
         requireNonNull(entity);
-        requireNonNull(game);
 
         if (!entity.isVisible()) {
             return;
         }
-
-        final GameSession session = game.session();
 
         switch (entity) {
             case LevelCounter levelCounter -> drawLevelCounter(levelCounter);
@@ -142,7 +139,7 @@ public class TengenMsPacMan_HUD_Renderer
 //                }
             }
             case CreditDisplay creditDisplay -> {}
-            case GameOptionsDisplay gameOptionsDisplay -> drawGameOptions(gameOptionsDisplay, game.session());
+            case GameOptionsDisplay gameOptionsDisplay -> {}
             case LevelNumberDisplay levelNumberDisplay -> drawLevelNumberDisplay(levelNumberDisplay);
 
             default -> throw new IllegalStateException("Unexpected value: " + entity);

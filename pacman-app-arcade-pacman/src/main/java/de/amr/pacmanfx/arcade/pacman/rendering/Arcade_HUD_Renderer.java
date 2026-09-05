@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.ecs.GameEntity;
@@ -55,30 +54,24 @@ public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer,
     }
 
     @Override
-    public void drawHUDEntity(GameEntity entity, GameContext game) {
+    public void drawHUDEntity(GameEntity entity) {
         requireNonNull(entity);
-        requireNonNull(game);
 
         if (!entity.isVisible()) return;
-        final GameSession session = game.session();
         switch (entity) {
             case LevelCounter levelCounter -> drawLevelCounter(levelCounter);
-            case LivesCounter livesCounter -> drawLivesCounter(livesCounter, session);
+            case LivesCounter livesCounter -> drawLivesCounter(livesCounter);
             case Score score -> {
                 final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
                 if (score.type() == Score.Type.GAME_SCORE) {
                     drawScoreText(score, style.scoreText(), scaledFont, style.scoreTextColor());
                 } else {
-                    final boolean highScoreDisabled = session.isAttractMode() || !session.hud().highScore().data().isEnabled();
-                    final Color highScoreTextColor = highScoreDisabled ? style.scoreTextColorDisabled() : style.scoreTextColor();
-                    drawScoreText(score, style.highScoreText(), scaledFont, highScoreTextColor);
+                    final boolean disabled = !score.data().isEnabled();
+                    final Color color = disabled ? style.scoreTextColorDisabled() : style.scoreTextColor();
+                    drawScoreText(score, style.highScoreText(), scaledFont, color);
                 }
             }
-            case CreditDisplay creditDisplay -> {
-                //TODO update component elsewhere
-                creditDisplay.data().setCredit(game.coinMechanism().numCoins());
-                drawCreditDisplay(creditDisplay);
-            }
+            case CreditDisplay creditDisplay -> drawCreditDisplay(creditDisplay);
             default -> throw new IllegalStateException("Unexpected value: " + entity);
         }
     }
@@ -103,9 +96,9 @@ public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer,
         }
     }
 
-    private void drawLivesCounter(LivesCounter livesCounter, GameSession session) {
-        final int numLives = session.numLives();
-        final int displayedSymbolsCount = Math.min(numLives - 1, livesCounter.data().maxLivesShown());
+    private void drawLivesCounter(LivesCounter livesCounter) {
+        final int numLives = livesCounter.data().numLives();
+        final int displayedSymbolsCount = Math.min(numLives, livesCounter.data().maxLivesShown());
 
         final float x = livesCounter.pos().x();
         final float y = livesCounter.pos().y();

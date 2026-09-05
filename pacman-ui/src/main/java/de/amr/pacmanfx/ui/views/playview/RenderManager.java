@@ -98,7 +98,7 @@ public class RenderManager {
             if (session.hud().isVisible()) {
                 //TODO get rid of this:
                 hudRenderer.drawHUD(session.hud(), session, gameScene, tick);
-                session.hud().entities().forEach(hudEntity -> hudRenderer.drawHUDEntity(hudEntity, game));
+                session.hud().entities().forEach(hudEntity -> hudRenderer.drawHUDEntity(hudEntity));
             }
 
             if (debugMode) {

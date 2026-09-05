@@ -7,6 +7,7 @@ package de.amr.pacmanfx.core.gamestate;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.level.GameLevel;
 
 import static java.util.Objects.requireNonNull;
@@ -32,5 +33,4 @@ public class EntityUpdateSystem {
         // Handle entities with limited lifetime like ghost points, bonus points etc.
         systems.lifetime().update(level.entities());
     }
-
 }
