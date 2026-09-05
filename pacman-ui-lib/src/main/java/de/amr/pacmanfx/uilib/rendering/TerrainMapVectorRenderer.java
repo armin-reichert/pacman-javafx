@@ -93,7 +93,11 @@ public class TerrainMapVectorRenderer extends BaseRenderer implements TerrainMap
         super(canvas);
     }
 
-    public void draw(WorldMap worldMap) {
+    @Override
+    public void render(Object r, long tick) {
+        if ((!(r instanceof WorldMap worldMap))) {
+            return;
+        }
         ctx.save();
         ctx.scale(scaling(), scaling());
         for (Obstacle obstacle : worldMap.terrainLayer().obstacles()) {

@@ -5,8 +5,11 @@
 package de.amr.pacmanfx.uilib.rendering;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -27,8 +30,49 @@ public class ArcadeHouseRenderer extends BaseRenderer {
         return mapColoring;
     }
 
+    private final DoubleProperty borderWallFullWidth = new SimpleDoubleProperty(4);
+
+    public DoubleProperty borderWallFullWidthProperty() {
+        return borderWallFullWidth;
+    }
+
+    public void setBorderWallFullWidth(double width) {
+        borderWallFullWidth.set(width);
+    }
+
+    public double borderWallFullWidth() {
+        return borderWallFullWidth.get();
+    }
+
+    private final DoubleProperty borderWallInnerWidth = new SimpleDoubleProperty(2);
+
+    public DoubleProperty borderWallInnerWidthProperty() {
+        return borderWallInnerWidth;
+    }
+
+    public void setBorderWallInnerWidth(double width) {
+        borderWallInnerWidth.set(width);
+    }
+
+    public double borderWallInnerWidth() {
+        return borderWallInnerWidth.get();
+    }
+
     public ArcadeHouseRenderer(Canvas canvas) {
         super(canvas);
+    }
+
+    @Override
+    public void render(Object r, long tick) {
+        if (!(r instanceof House house)) {
+            return;
+        }
+        drawHouse(
+            house.floorplan().minTile(),
+            house.sizeInTiles(),
+            borderWallFullWidth(),
+            borderWallInnerWidth()
+        );
     }
 
     public void drawHouse(

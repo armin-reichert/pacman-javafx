@@ -8,7 +8,7 @@ import javafx.scene.canvas.Canvas;
 
 import java.util.Optional;
 
-public class GameSceneRenderer extends BaseRenderer {
+public abstract class GameSceneRenderer extends BaseRenderer {
 
     private BaseRenderer debugInfoRenderer;
 

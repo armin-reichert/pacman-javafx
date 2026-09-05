@@ -3,17 +3,13 @@
  */
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
-import de.amr.basics.InfoMap;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
-import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -24,7 +20,7 @@ import static java.util.function.Predicate.not;
  * Renderer for classic Arcade Pac-Man. ThePac-Man XXL Pac-Man game subclasses this class to use a generic map
  * renderer instead of a sprite based one.
  */
-public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements SpriteRenderer, GameLevelRenderer {
+public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements SpriteRenderer {
 
     private final Image brightMapImage;
 
@@ -39,22 +35,20 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
     }
 
     @Override
-    public void applyLevelSettings(GameRules rules, GameLevel level, InfoMap renderInfo) {}
-
-    @Override
-    public void drawLevel(GameContext game, GameLevel level, InfoMap renderInfo) {
-        drawMap(level, renderInfo);
-    }
-
-    protected void drawMap(GameLevel level, InfoMap info) {
+    public void render(Object r, long tick) {
+        if (!(r instanceof GameLevel level)) {
+            return;
+        }
         final House house = level.entities().house();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final int emptySpaceOverMazePixels = terrain.emptyRowsOverMaze() * WorldMap.TS;
+
         ctx.save();
         ctx.scale(scaling(), scaling());
-        if (info.getBoolean(CommonRenderInfoKey.MAP_EMPTY)) {
+
+        if (infoMap.getBoolean(CommonRenderInfoKey.MAP_EMPTY)) {
             // Empty maze is shown when level is complete and when the flashing animation is running
-            if (info.getBoolean(CommonRenderInfoKey.MAP_BRIGHT)) {
+            if (infoMap.getBoolean(CommonRenderInfoKey.MAP_BRIGHT)) {
                 // Flashing animation bright phase
                 if (brightMapImage != null) {
                     ctx.drawImage(brightMapImage, 0, emptySpaceOverMazePixels);
@@ -62,7 +56,7 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
             } else {
                 drawSprite(spriteSheet().findSpriteSequence(SpriteID.MAP_EMPTY)[0], 0, emptySpaceOverMazePixels, false);
             }
-            if (info.getBoolean(CommonRenderInfoKey.MAP_FLASHING)) {
+            if (infoMap.getBoolean(CommonRenderInfoKey.MAP_FLASHING)) {
                 // Hide ghost house doors while flashing
                 if (house != null) {
                     ctx.setFill(backgroundColor());
@@ -85,7 +79,7 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
                 .forEach(tile -> fillSquareAtTileCenter(tile, 4));
             // Over-paint eaten or dark-blinking energizer tiles
             foodLayer.energizerTiles().stream()
-                .filter(tile -> !info.getBoolean(CommonRenderInfoKey.ENERGIZER_VISIBLE) || level.food().hasEatenFoodAtTile(tile))
+                .filter(tile -> !infoMap.getBoolean(CommonRenderInfoKey.ENERGIZER_VISIBLE) || level.food().hasEatenFoodAtTile(tile))
                 .forEach(tile -> fillSquareAtTileCenter(tile, 10));
         }
         ctx.restore();

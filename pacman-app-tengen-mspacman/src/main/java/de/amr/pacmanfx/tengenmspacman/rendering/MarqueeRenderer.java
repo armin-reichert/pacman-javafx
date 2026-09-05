@@ -5,7 +5,10 @@
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.pacmanfx.core.entities.Marquee;
-import de.amr.pacmanfx.core.entities.marquee.comp.*;
+import de.amr.pacmanfx.core.entities.marquee.comp.MarqueeArea;
+import de.amr.pacmanfx.core.entities.marquee.comp.MarqueeCorners;
+import de.amr.pacmanfx.core.entities.marquee.comp.MarqueeLayoutComp;
+import de.amr.pacmanfx.core.entities.marquee.comp.MarqueeVisualComp;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -27,8 +30,11 @@ public class MarqueeRenderer extends BaseRenderer {
      * probably a bug in the original Arcade game.
      * </p>
      */
-    public void drawMarquee(Marquee marquee) {
-        final MarqueeAnimComp runner = marquee.anim();
+    @Override
+    public void render(Object r, long tick) {
+        if (!(r instanceof Marquee marquee)) {
+            return;
+        }
         final MarqueeLayoutComp layout = marquee.layout();
         final MarqueeVisualComp visualComp = marquee.visualization();
 
@@ -47,7 +53,6 @@ public class MarqueeRenderer extends BaseRenderer {
             bulbSize,
             scaledBulbRadius);
 
-        final long tick = runner.tickTimer().tickCount();
         drawBrightBulbs(
             area,
             corners,

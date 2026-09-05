@@ -11,14 +11,13 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
+import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
-import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameSceneRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
@@ -33,7 +32,8 @@ import static java.util.Objects.requireNonNull;
 public class Arcade_PlayScene2D_Renderer extends GameSceneRenderer implements SpriteRenderer {
 
     private final SpriteSheet spriteSheet;
-    private final GameLevelRenderer levelRenderer;
+
+    private final BaseRenderer levelRenderer;
 
     public Arcade_PlayScene2D_Renderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas, SpriteSheet spriteSheet) {
         super(canvas);
@@ -60,19 +60,17 @@ public class Arcade_PlayScene2D_Renderer extends GameSceneRenderer implements Sp
         }
 
         final GameContext game = playScene.game();
-        final GameRules rules = game.variant().rules();
         final GameSession session = game.session();
 
         // Level creation happens by handling a game event after the play scene has been activated. Therefore,
         // the game level is not yet existing for the first two ticks after this scene got active.
         session.optLevel().ifPresent(level -> {
-            final InfoMap info = createRenderInfo(level, playScene);
-            levelRenderer.applyLevelSettings(rules, level, info);
-            levelRenderer.drawLevel(game, level, info);
+            levelRenderer.setInfoMap(createLevelRenderInfo(level, playScene));
+            levelRenderer.render(level, tick);
         });
     }
 
-    private InfoMap createRenderInfo(GameLevel level, Arcade_PlayScene2D playScene2D) {
+    private InfoMap createLevelRenderInfo(GameLevel level, Arcade_PlayScene2D playScene2D) {
         final var info = new InfoMap();
         final boolean energizerVisible = level.heartbeat().state() == Pulse.State.ON;
         final boolean mapIsEmpty = level.food().remainingFoodCount() == 0;

@@ -381,7 +381,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     private void showMiniView(GameContext game, GameLevel level) {
         final GameVariantRenderConfig renderConfig = app.gameVariants().currentGameVariant().uiConfig().renderConfig();
         final ActorSpriteAnimController animController = game.variant().systems().actorSpriteAnimController();
-        miniView.setRenderConfig(animController, renderConfig);
+        miniView.createRenderer(animController, renderConfig);
         miniView.setWorldSizeInPixel(level.worldMap().terrainLayer().sizeInPixel());
         miniView.slideIn(app.ui().viewModel().miniViewSettings());
     }

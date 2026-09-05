@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.uilib.rendering;
 
+import de.amr.basics.InfoMap;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
@@ -24,7 +25,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Base renderer class providing support for scaling, background color and common font drawing.
  */
-public class BaseRenderer implements Renderer {
+public abstract class BaseRenderer implements Renderer {
 
     public static final Font ARCADE_FONT;
 
@@ -47,20 +48,27 @@ public class BaseRenderer implements Renderer {
     private final ObjectProperty<Font> arcadeFont8 = new SimpleObjectProperty<>();
 
     protected final GraphicsContext ctx;
+
+    protected InfoMap infoMap;
+
     protected boolean imageSmoothing;
 
     public BaseRenderer(Canvas canvas) {
         ctx = requireNonNull(canvas).getGraphicsContext2D();
         arcadeFont8.bind(scaling.map(_ -> Ufx.deriveFont(ARCADE_FONT, scaled(8))));
         arcadeFont6.bind(scaling.map(_ -> Ufx.deriveFont(ARCADE_FONT, scaled(6))));
+        infoMap = new InfoMap();
+    }
+
+    public InfoMap infoMap() {
+        return infoMap;
+    }
+
+    public void setInfoMap(InfoMap infoMap) {
+        this.infoMap = infoMap;
     }
 
     // Renderer interface
-
-    @Override
-    public void render(Object r, long tick) {
-        throw new UnsupportedOperationException("Implement render method for class " + getClass().getSimpleName());
-    }
 
     @Override
     public void clearCanvas() {

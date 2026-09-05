@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.uilib.rendering;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.FoodTile;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import javafx.beans.property.ObjectProperty;
@@ -16,12 +17,15 @@ import static java.util.Objects.requireNonNull;
 public class FoodMapRenderer extends BaseRenderer implements TileRenderer {
 
     private static final double PELLET_SIZE = 2;
+
     private static final double ENERGIZER_SIZE = 8;
 
     private final ObjectProperty<Color> pelletColor = new SimpleObjectProperty<>(Color.PINK);
+
     private final ObjectProperty<Color> energizerColor = new SimpleObjectProperty<>(Color.YELLOW);
 
     public ObjectProperty<Color> pelletColorProperty() { return pelletColor; }
+
     public ObjectProperty<Color> energizerColorProperty() { return energizerColor; }
 
     public FoodMapRenderer(Canvas canvas) {
@@ -34,6 +38,14 @@ public class FoodMapRenderer extends BaseRenderer implements TileRenderer {
 
     public void setPelletColor(Color color) {
         pelletColor.set(requireNonNull(color));
+    }
+
+    @Override
+    public void render(Object r, long tick) {
+        if (!(r instanceof FoodLayer foodLayer)) {
+            return;
+        }
+        //TODO implement
     }
 
     @Override

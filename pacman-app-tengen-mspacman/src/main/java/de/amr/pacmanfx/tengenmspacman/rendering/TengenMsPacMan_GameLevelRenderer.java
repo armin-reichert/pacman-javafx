@@ -8,20 +8,17 @@ import de.amr.basics.InfoMap;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
 import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
-import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.MapConfigKey;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.sprites.*;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
-import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
@@ -33,7 +30,7 @@ import static de.amr.pacmanfx.tengenmspacman.sprites.NonArcadeMapsSpriteSheet.Ma
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
-public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements SpriteRenderer, GameLevelRenderer {
+public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements SpriteRenderer {
 
     /**
      * Strange map #15 (maze #32) has a "psychedelic" animation:
@@ -54,38 +51,40 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
     }
 
     @Override
-    public void applyLevelSettings(GameRules rules, GameLevel level, InfoMap renderInfo) {
+    public void render(Object r, long tick) {
+        if ((!(r instanceof GameLevel level))) {
+            return;
+        }
+
         final WorldMap worldMap = level.worldMap();
         // store the maze sprite set with the correct colors for this level in the map configuration:
         if (!worldMap.hasConfigValue(MapConfigKey.MAP_IMAGE_SET)) {
-            final int numFlashes = rules.numLevelFlashes(level.number());
+            final int numFlashes = 3;
             final MapImageSet mapImageSet = TengenMsPacMan_MapRepository.instance().createMapImageSet(worldMap, numFlashes);
             worldMap.setConfigValue(MapConfigKey.MAP_IMAGE_SET, mapImageSet);
             Logger.debug("Maze sprite set created: {}", mapImageSet);
         }
-    }
 
-    @Override
-    public void drawLevel(GameContext game, GameLevel level, InfoMap renderInfo) {
-        final WorldMap worldMap = level.worldMap();
-        applyLevelSettings(game.variant().rules(), level, renderInfo);
-        if (renderInfo.getBoolean(CommonRenderInfoKey.MAP_BRIGHT)) {
-            final int flashingIndex = renderInfo.get(CommonRenderInfoKey.MAZE_FLASHING_INDEX, Integer.class);
-            configureHighlightedMapRenderInfo(renderInfo, worldMap, flashingIndex);
-        } else {
-            final long tick = renderInfo.get(CommonRenderInfoKey.TICK, Long.class);
-            final MapCategory mapCategory = renderInfo.get(MapConfigKey.MAP_CATEGORY, MapCategory.class);
-            configureNormalMapRenderInfo(renderInfo, mapCategory, worldMap, tick);
+        if (infoMap.getBoolean(CommonRenderInfoKey.MAP_BRIGHT)) {
+            final int flashingIndex = infoMap.get(CommonRenderInfoKey.MAZE_FLASHING_INDEX, Integer.class);
+            configureHighlightedMapRenderInfo(infoMap, worldMap, flashingIndex);
         }
-        final Image mazeImage = renderInfo.get(CommonRenderInfoKey.MAZE_IMAGE, Image.class);
-        final RectShort mazeSprite = renderInfo.get(CommonRenderInfoKey.MAZE_SPRITE, RectShort.class);
+        else {
+            final MapCategory mapCategory = infoMap.get(MapConfigKey.MAP_CATEGORY, MapCategory.class);
+            configureNormalMapRenderInfo(infoMap, mapCategory, worldMap, tick);
+        }
+
+        final Image mazeImage = infoMap.get(CommonRenderInfoKey.MAZE_IMAGE, Image.class);
+        final RectShort mazeSprite = infoMap.get(CommonRenderInfoKey.MAZE_SPRITE, RectShort.class);
         final int x = 0, y = worldMap.terrainLayer().emptyRowsOverMaze() * WorldMap.TS;
         ctx.setImageSmoothing(imageSmoothing());
         ctx.drawImage(mazeImage,
             mazeSprite.x(), mazeSprite.y(), mazeSprite.width(), mazeSprite.height(),
             scaled(x), scaled(y), scaled(mazeSprite.width()), scaled(mazeSprite.height())
         );
+
         overPaintActorSprites(level);
+
         drawFood(level);
     }
 

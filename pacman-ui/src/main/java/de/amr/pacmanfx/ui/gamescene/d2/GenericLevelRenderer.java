@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.ui.gamescene.d2;
 
 import de.amr.basics.InfoMap;
@@ -8,7 +9,6 @@ import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
 import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.scene.canvas.Canvas;
@@ -20,7 +20,7 @@ import static java.util.function.Predicate.not;
  * Vector-based renderer for maze terrain, food, and ghost house.
  * Used by XXL and other dynamic-map variants via delegation.
  */
-public class GenericMapRenderer extends BaseRenderer {
+public class GenericLevelRenderer extends BaseRenderer {
 
     public enum RenderInfoKey {TERRAIN_MAP_COLORING}
 
@@ -31,7 +31,9 @@ public class GenericMapRenderer extends BaseRenderer {
     private TerrainMapColoring blinkingOnMapColoring;
     private TerrainMapColoring blinkingOffMapColoring;
 
-    public GenericMapRenderer(Canvas canvas) {
+    private InfoMap infoMap;
+
+    public GenericLevelRenderer(Canvas canvas) {
         super(canvas);
 
         terrainRenderer = new TerrainMapVectorRenderer(canvas);
@@ -43,10 +45,53 @@ public class GenericMapRenderer extends BaseRenderer {
         foodRenderer.scalingProperty().bind(scalingProperty());
 
         houseRenderer = new ArcadeHouseRenderer(canvas);
+        houseRenderer.mapColoringProperty().bind(terrainRenderer.mapColoringProperty());
         houseRenderer.scalingProperty().bind(scalingProperty());
 
         backgroundColorProperty().addListener((_, _, newColor) -> updateColors(newColor));
         updateColors(backgroundColor());
+    }
+
+    public void setInfoMap(InfoMap infoMap) {
+        this.infoMap = infoMap;
+    }
+
+    @Override
+    public void render(Object r, long tick) {
+        if (!(r instanceof  GameLevel level)) {
+            return;
+        }
+        if (infoMap.getBoolean(CommonRenderInfoKey.MAP_BRIGHT)) {
+            terrainRenderer.setMapColoring(infoMap.getBoolean(CommonRenderInfoKey.ENERGIZER_VISIBLE) ? blinkingOnMapColoring : blinkingOffMapColoring);
+            terrainRenderer.render(level.worldMap(), tick);
+        }
+        else {
+            final TerrainMapColoring mapColoring = infoMap.get(RenderInfoKey.TERRAIN_MAP_COLORING, TerrainMapColoring.class);
+            terrainRenderer.setMapColoring(mapColoring);
+            terrainRenderer.render(level.worldMap(), tick);
+
+            final House house = level.entities().house();
+            if (house != null) {
+                houseRenderer.render(house, tick);
+            }
+
+            // Color scheme is set by the map selector
+            final FoodLayer foodLayer = level.worldMap().foodLayer();
+            final GenericWorldMapColorScheme foodColorScheme = level.worldMap().getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
+            final Color pelletColor = Color.valueOf(foodColorScheme.pellet());
+            foodRenderer.setPelletColor(pelletColor);
+            foodLayer.tiles()
+                .filter(level.food()::hasFoodAtTile)
+                .filter(not(foodLayer::isEnergizerTile))
+                .forEach(foodRenderer::drawPellet);
+
+            if (infoMap.getBoolean(CommonRenderInfoKey.ENERGIZER_VISIBLE)) {
+                foodRenderer.setEnergizerColor(pelletColor);
+                foodLayer.energizerTiles().stream()
+                    .filter(level.food()::hasFoodAtTile)
+                    .forEach(foodRenderer::drawEnergizer);
+            }
+        }
     }
 
     private void updateColors(Color backgroundColor) {
@@ -57,42 +102,5 @@ public class GenericMapRenderer extends BaseRenderer {
             backgroundColor, oldColoring.wallFillColor(), oldColoring.wallStrokeColor(), oldColoring.doorColor()
         );
         terrainRenderer.setMapColoring(newColoring);
-    }
-
-    public void drawMap(GameLevel level, InfoMap info) {
-        final WorldMap worldMap = level.worldMap();
-        if (info.getBoolean(CommonRenderInfoKey.MAP_BRIGHT)) {
-            terrainRenderer.setMapColoring(info.getBoolean(CommonRenderInfoKey.ENERGIZER_VISIBLE) ? blinkingOnMapColoring : blinkingOffMapColoring);
-            terrainRenderer.draw(worldMap);
-        }
-        else {
-            final TerrainMapColoring mapColoring = info.get(RenderInfoKey.TERRAIN_MAP_COLORING, TerrainMapColoring.class);
-            terrainRenderer.setMapColoring(mapColoring);
-            terrainRenderer.draw(worldMap);
-
-            final House house = level.entities().house();
-            if (house != null) {
-                houseRenderer.setMapColoring(mapColoring);
-                houseRenderer.drawHouse(house.floorplan().minTile(), house.sizeInTiles(),
-                    terrainRenderer.borderWallFullWidth(),terrainRenderer.borderWallInnerWidth());
-            }
-
-            // Color scheme is set by the map selector
-            final FoodLayer foodLayer = worldMap.foodLayer();
-            final GenericWorldMapColorScheme foodColorScheme = worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
-            final Color pelletColor = Color.valueOf(foodColorScheme.pellet());
-            foodRenderer.setPelletColor(pelletColor);
-            foodLayer.tiles()
-                .filter(level.food()::hasFoodAtTile)
-                .filter(not(foodLayer::isEnergizerTile))
-                .forEach(foodRenderer::drawPellet);
-
-            if (info.getBoolean(CommonRenderInfoKey.ENERGIZER_VISIBLE)) {
-                foodRenderer.setEnergizerColor(pelletColor);
-                foodLayer.energizerTiles().stream()
-                    .filter(level.food()::hasFoodAtTile)
-                    .forEach(foodRenderer::drawEnergizer);
-            }
-        }
     }
 }

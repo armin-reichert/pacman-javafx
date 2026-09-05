@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.uilib.widgets.optionmenu;
 
 import de.amr.basics.util.Ufx;
@@ -32,7 +33,10 @@ public class OptionMenuRenderer extends BaseRenderer {
         super(canvas);
     }
 
-    public void drawOptionMenu(OptionMenu menu) {
+    public void render(Object r, long tick) {
+        if (!(r instanceof OptionMenu menu)) {
+            return;
+        }
         final OptionMenuSettings settings = menu.settings();
 
         final Font titleFont = settings.titleFont().toFont();

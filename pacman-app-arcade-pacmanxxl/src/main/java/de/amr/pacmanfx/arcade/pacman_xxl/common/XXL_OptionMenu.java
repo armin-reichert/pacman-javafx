@@ -67,9 +67,9 @@ public class XXL_OptionMenu extends OptionMenu {
     }
 
     @Override
-    public void draw() {
-        super.draw();
-        chaseAnimation.draw(app.clock().currentTick());
+    public void render(long tick) {
+        super.render(tick);
+        chaseAnimation.draw(tick);
     }
 
     @Override

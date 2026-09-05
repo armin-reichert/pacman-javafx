@@ -17,6 +17,11 @@ public class CopyrightRenderer extends BaseRenderer {
         super(canvas);
     }
 
+    @Override
+    public void render(Object r, long tick) {
+        //TODO
+    }
+
     public void drawCopyright(Image logo, double x, double y) {
         ctx.drawImage(logo, scaled(x), scaled(y + 2), scaled(tilesPx(4) - 2), scaled(tilesPx(4)));
         ctx.setFont(arcadeFont8());

@@ -18,7 +18,6 @@ import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.GameLevelRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameSceneRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -33,7 +32,7 @@ public interface GameVariantRenderConfig {
 
     GenericWorldMapColorScheme colorScheme(WorldMap worldMap, WorldSettings worldSettings);
 
-    GameLevelRenderer createGameLevelRenderer(ActorSpriteAnimController animController, Canvas canvas);
+    BaseRenderer createGameLevelRenderer(ActorSpriteAnimController animController, Canvas canvas);
 
     GameSceneRenderer createGameSceneRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas);
 

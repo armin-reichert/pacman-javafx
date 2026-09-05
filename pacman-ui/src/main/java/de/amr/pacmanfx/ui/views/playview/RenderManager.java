@@ -41,7 +41,10 @@ public class RenderManager {
         final Canvas canvas = canvasRendering.canvas();
 
         if (canvas != null) {
-            baseRenderer = new BaseRenderer(canvas);
+            baseRenderer = new BaseRenderer(canvas) {
+                @Override
+                public void render(Object r, long tick) {}
+            };
 
             entityRenderer = config.createEntityRenderer(animController, canvas);
             configureRenderer(entityRenderer, canvasRendering);
@@ -54,7 +57,8 @@ public class RenderManager {
 
             hudRenderer = config.createHUDRenderer(gameScene, animController, canvas);
             configureRenderer(hudRenderer, canvasRendering);
-        } else {
+        }
+        else {
             Logger.error("Cannot create game scene and HUD renderer: no canvas has been assigned");
         }
     }

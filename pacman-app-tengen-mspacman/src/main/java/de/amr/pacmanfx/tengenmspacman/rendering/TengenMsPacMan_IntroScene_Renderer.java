@@ -100,12 +100,12 @@ public class TengenMsPacMan_IntroScene_Renderer extends GameSceneRenderer
             }
 
             case SceneState.SHOWING_MARQUEE -> {
-                drawMarquee(introScene);
+                marqueeRenderer.render(introScene.marquee, tick);
                 fillText(QUOTED_MS_PACMAN, NES_Palette.color(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
             }
 
             case SceneState.GHOSTS_MARCHING_IN -> {
-                drawMarquee(introScene);
+                marqueeRenderer.render(introScene.marquee, tick);
                 fillText(QUOTED_MS_PACMAN, NES_Palette.color(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
                 if (introScene.ghostIndex == 0) {
                     fillText(WITH, NES_Palette.color(0x20), MARQUEE_X + 12, MARQUEE_Y + 23);
@@ -117,7 +117,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends GameSceneRenderer
             }
 
             case SceneState.MS_PACMAN_MARCHING_IN -> {
-                drawMarquee(introScene);
+                marqueeRenderer.render(introScene.marquee, tick);
                 fillText(QUOTED_MS_PACMAN, NES_Palette.color(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
                 fillText(STARRING, NES_Palette.color(0x20), MARQUEE_X + 12, MARQUEE_Y + 22);
                 fillText(MS_PAC_MAN, NES_Palette.color(0x28), MARQUEE_X + 28, MARQUEE_Y + 38);
@@ -131,9 +131,5 @@ public class TengenMsPacMan_IntroScene_Renderer extends GameSceneRenderer
         if (uiSettings.joypadBindingsDisplayed.get()) {
             drawJoypadKeyBinding(introScene.app().input().joypad().currentKeyBinding());
         }
-    }
-
-    private void drawMarquee(TengenMsPacMan_IntroScene intro) {
-        marqueeRenderer.drawMarquee(intro.marquee);
     }
 }

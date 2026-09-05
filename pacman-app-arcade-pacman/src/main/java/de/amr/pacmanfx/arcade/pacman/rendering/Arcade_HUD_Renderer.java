@@ -49,6 +49,11 @@ public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer,
     }
 
     @Override
+    public void render(Object r, long tick) {
+        //TODO
+    }
+
+    @Override
     public void drawHUD(HUD hud, GameSession session, GameScene gameScene, long tick) {
         //TODO remove this method
     }

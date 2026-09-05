@@ -61,7 +61,7 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends GameSceneRenderer {
         ctx.setFont(arcadeFont8());
         fillText(TITLE, ARCADE_ORANGE, TITLE_X, TITLE_Y);
 
-        marqueeRenderer.drawMarquee(introScene.marquee);
+        marqueeRenderer.render(introScene.marquee, tick);
 
         introScene.ghosts.forEach(ghost -> actorRenderer.render(ghost, tick));
         actorRenderer.render(introScene.msPacMan, tick);

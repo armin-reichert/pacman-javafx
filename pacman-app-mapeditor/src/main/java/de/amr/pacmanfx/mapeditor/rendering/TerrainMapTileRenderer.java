@@ -126,7 +126,10 @@ public class TerrainMapTileRenderer extends BaseRenderer implements TerrainMapRe
     }
 
     @Override
-    public void draw(WorldMap worldMap) {
+    public void render(Object r, long tick) {
+        if (!(r instanceof WorldMap worldMap)) {
+            return;
+        }
         ctx.save();
         ctx.scale(scaling(), scaling());
         worldMap.terrainLayer().tiles().filter(tile -> terrainFilter.test(worldMap, tile)).forEach(tile -> {

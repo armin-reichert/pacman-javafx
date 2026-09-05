@@ -103,7 +103,7 @@ public class OptionMenu {
         drawLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                draw();
+                render(0); // no global tick available here
             }
         };
 
@@ -112,6 +112,10 @@ public class OptionMenu {
                 startDrawLoop();
             }
         });
+    }
+
+    public void render(long tick) {
+        renderer.render(this, tick);
     }
 
     public void setEntrySelectedSound(AudioClip entrySelectedSound) {
@@ -160,10 +164,6 @@ public class OptionMenu {
     }
 
     public BooleanProperty soundEnabledProperty() { return soundEnabled; }
-
-    public void draw() {
-        renderer.drawOptionMenu(this);
-    }
 
     public void logMenuState() {}
 
