@@ -293,8 +293,8 @@ public class TengenMsPacMan_IntroScene extends GameScene {
                 }
                 if (timer.atSecond(8)) {
                     // start demo level or show options
-                    if (gamePlay.allOptionsHaveDefaultValue(session)) {
-                        gamePlay.setCanStartNewGame(session, false); // TODO check this
+                    if (TengenMsPacMan_GamePlay.allOptionsHaveDefaultValue(session)) {
+                        TengenMsPacMan_GamePlay.setCanStartNewGame(session, false); // TODO check this
                         game.variant().gameFlow().restartState(game, Tengen_GameState.GAME_OR_LEVEL_STARTING.state());
                     } else {
                         game.variant().gameFlow().enterState(game, Tengen_GameState.GAME_PREPARATION.state());
