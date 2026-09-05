@@ -45,10 +45,12 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
 
-    private static final EnumMap<MessageType, Color> MESSAGE_COLORS = new EnumMap<>(Map.of(
-        MessageType.READY, ARCADE_YELLOW,
-        MessageType.GAME_OVER, ARCADE_RED
-    ));
+    private static final Map<MessageType, String> MESSAGE_TEXTS = new EnumMap<>(MessageType.class);
+    static {
+        MESSAGE_TEXTS.put(MessageType.READY, "READY!");
+        MESSAGE_TEXTS.put(MessageType.GAME_OVER, "GAME  OVER");
+        MESSAGE_TEXTS.put(MessageType.NO_MESSAGE, "");
+    }
 
     private static final Rectangle2D BOOT_SCENE_SPRITES = new Rectangle2D(380, 0, 204, 208);
 
@@ -136,7 +138,7 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
 
     @Override
     public BaseRenderer createMessageViewRenderer(Canvas canvas) {
-        return new MessageViewRenderer(canvas);
+        return new MessageViewRenderer(canvas, MESSAGE_TEXTS);
     }
 
     @Override

@@ -7,21 +7,23 @@ package de.amr.pacmanfx.uilib.rendering;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.entities.MessageView;
+import de.amr.pacmanfx.core.level.MessageType;
 import de.amr.pacmanfx.uilib.entities.messageview.comp.MessageViewStyleComp;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
-import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_YELLOW;
+import java.util.Map;
 
-public class MessageViewRenderer extends BaseRenderer{
+import static java.util.Objects.requireNonNull;
 
-    //TODO This does not belong here, maybe use info object?
-    public static final String GAME_OVER_TEXT = "GAME  OVER";
-    public static final String READY_TEXT = "READY!";
+public class MessageViewRenderer extends BaseRenderer {
 
-    public MessageViewRenderer(Canvas canvas) {
+    protected final Map<MessageType, String> texts;
+
+    public MessageViewRenderer(Canvas canvas, Map<MessageType, String> texts) {
         super(canvas);
+        this.texts = requireNonNull(texts);
     }
 
     @Override
@@ -32,13 +34,17 @@ public class MessageViewRenderer extends BaseRenderer{
         if (!messageView.isVisible()) {
             return;
         }
+        if (!translate.equals(Vector2f.ZERO)) {
+            ctx.save();
+            ctx.translate(scaled(translate.x()), scaled(translate.y()));
+        }
         messageView.optComp(MessageViewStyleComp.class).ifPresent(style -> {
-            final Vector2f pos = messageView.pos().asVector2f();
+            final MessageType messageType = messageView.type().messageType();
             final Font scaledFont = Ufx.scaleFontBy(style.messageFont(), scaling());
-            switch (messageView.type().messageType()) {
-                case GAME_OVER -> fillTextCentered(GAME_OVER_TEXT, ARCADE_RED, scaledFont, pos.x(), pos.y());
-                case READY -> fillTextCentered(READY_TEXT, ARCADE_YELLOW, scaledFont, pos.x(), pos.y());
-            }
+            final Color color = style.messageColor().apply(messageType);
+            final Vector2f pos = messageView.pos().asVector2f();
+            fillTextCentered(texts.get(messageType), color, scaledFont, pos.x(), pos.y());
         });
+        ctx.restore();
     }
 }

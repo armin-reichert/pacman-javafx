@@ -39,10 +39,12 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
 
-    private static final EnumMap<MessageType, Color> MESSAGE_COLORS = new EnumMap<>(Map.of(
-        MessageType.READY, ARCADE_YELLOW,
-        MessageType.GAME_OVER, ARCADE_RED
-    ));
+    private static final Map<MessageType, String> MESSAGE_TEXTS = new EnumMap<>(MessageType.class);
+    static {
+        MESSAGE_TEXTS.put(MessageType.READY, "READY!");
+        MESSAGE_TEXTS.put(MessageType.GAME_OVER, "GAME  OVER");
+        MESSAGE_TEXTS.put(MessageType.NO_MESSAGE, "");
+    }
 
     private static final GenericWorldMapColorScheme WORLD_MAP_COLOR_SCHEME = new GenericWorldMapColorScheme(
         ARCADE_BLACK.toString(), ARCADE_BLUE.toString(), ARCADE_PINK.toString(), ARCADE_ROSE.toString()
@@ -126,7 +128,7 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
 
     @Override
     public BaseRenderer createMessageViewRenderer(Canvas canvas) {
-        return new MessageViewRenderer(canvas);
+        return new MessageViewRenderer(canvas, MESSAGE_TEXTS);
     }
 
     @Override

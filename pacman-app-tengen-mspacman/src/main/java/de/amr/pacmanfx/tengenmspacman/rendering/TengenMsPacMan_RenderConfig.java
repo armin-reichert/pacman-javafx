@@ -5,9 +5,11 @@
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.math.RectShort;
+import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
+import de.amr.pacmanfx.core.level.MessageType;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -29,6 +31,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.MessageViewRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -39,6 +42,32 @@ import java.util.Map;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
+
+    private static final Map<MessageType, String> MESSAGE_TEXTS = new EnumMap<>(MessageType.class);
+    static {
+        MESSAGE_TEXTS.put(MessageType.READY, "READY!");
+        MESSAGE_TEXTS.put(MessageType.GAME_OVER, "GAME  OVER");
+        MESSAGE_TEXTS.put(MessageType.NO_MESSAGE, "");
+    }
+
+        /*
+        final MessageAnimation animation = session.value(
+            TengenMsPacMan_Extras.GAME_OVER_MESSAGE_ANIMATION, MessageAnimation.class);
+
+        final Vector2f pos = animation != null
+            ? animation.pos().asVector2f()
+            : messagePosition(level);
+
+
+        final NES_WorldMapColorScheme colorScheme = level.worldMap()
+            .getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
+
+        final Color color = session.isAttractMode()
+            ? Color.valueOf(colorScheme.wallStroke())
+            : style.messageColor().apply(MessageType.GAME_OVER);
+
+         */
+
 
     // Note: Order of bonus symbols in spritesheet is not 1:1 with order of bonus values!
     // 0=100,1=200,2=500,3=700,4=1000,5=2000,6=3000,7=4000,8=5000,9=6000,10=7000,11=8000,12=9000, 13=10_000
@@ -134,7 +163,9 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
 
     @Override
     public BaseRenderer createMessageViewRenderer(Canvas canvas) {
-        return new TengenMsPacMan_MessageViewRenderer(canvas);
+        final var renderer = new MessageViewRenderer(canvas, MESSAGE_TEXTS);
+        renderer.setTranslate(new Vector2f(16, 0)); //TODO this does not belong here
+        return renderer;
     }
 
     @Override

@@ -6,6 +6,7 @@ package de.amr.pacmanfx.uilib.rendering;
 
 import de.amr.basics.InfoMap;
 import de.amr.basics.math.RectShort;
+import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -57,11 +58,21 @@ public abstract class BaseRenderer implements Renderer {
 
     protected boolean imageSmoothing;
 
+    protected Vector2f translate = new Vector2f(0, 0);
+
     public BaseRenderer(Canvas canvas) {
         ctx = requireNonNull(canvas).getGraphicsContext2D();
         arcadeFont8.bind(scaling.map(_ -> Ufx.deriveFont(ARCADE_FONT, scaled(8))));
         arcadeFont6.bind(scaling.map(_ -> Ufx.deriveFont(ARCADE_FONT, scaled(6))));
         infoMap = new InfoMap();
+    }
+
+    public Vector2f translate() {
+        return translate;
+    }
+
+    public void setTranslate(Vector2f translate) {
+        this.translate = requireNonNull(translate);
     }
 
     public InfoMap infoMap() {
