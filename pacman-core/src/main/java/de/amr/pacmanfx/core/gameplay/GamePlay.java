@@ -5,10 +5,12 @@
 package de.amr.pacmanfx.core.gameplay;
 
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.LevelCounter;
 import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.model.world.map.WorldMap;
 
 public interface GamePlay {
 
@@ -16,7 +18,7 @@ public interface GamePlay {
 
     void prepareLevelForPlaying(GameContext game, GameLevel level);
 
-    void configureLevelCounter(GameContext game, LevelCounterSystem levelCounterSystem, LevelCounter levelCounter);
+    void configureHUD(GameContext game, GameLevel level, HUD hud);
 
     GameLevel createLevel(GameContext game, int levelNumber);
 

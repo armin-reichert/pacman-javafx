@@ -235,23 +235,15 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
         setBoosterOn(session, false);
 
-        final int numLives = game.variant().initialLifeCount();
-        session.setNumLives(numLives);
-
-        // HUD
-        final LivesCounter livesCounter = session.hud().livesCounter();
-        livesCounter.data().setNumLives(numLives);
-        livesCounter.data().setMaxLivesShown(5);
-
-        configureLevelCounter(game, game.variant().systems().levelCounterSystem(), session.hud().levelCounter());
-
-        initScores(game);
-
-        addHUDElements(session.hud());
-
+        session.setNumLives(game.variant().initialLifeCount());
         session.setCutScenesEnabled(true);
         session.setLevel(null);
         session.setGameRunning(false);
+
+        addTengenHUDElements(session.hud());
+        configureHUD(game, null, session.hud());
+
+        initScores(game);
 
         game.variant().gameFlow().restartGameState(game, CommonGameStateID.BOOT);
     }
@@ -259,12 +251,38 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     // Level building and level start
 
     @Override
-    public void configureLevelCounter(GameContext game, LevelCounterSystem levelCounterSystem, LevelCounter levelCounter) {
-        levelCounter.pos().set(26 * TS, 35 * TS); //TODO depends on map height!
-        levelCounter.data().setBehavior(LevelCounterBehavior.DISABLE_WHEN_FULL);
-        levelCounter.data().setCapacity(7);
-        levelCounter.data().setEnabled(true);
-        levelCounterSystem.clear(levelCounter);
+    public void configureHUD(GameContext game, GameLevel level, HUD hud) {
+        requireNonNull(game);
+        // level may be null!
+        requireNonNull(hud);
+
+        final LivesCounter livesCounter = hud.livesCounter();
+        final LevelCounter levelCounter = hud.levelCounter();
+
+        if (level != null) {
+            final int bottom = (level.worldMap().numRows() - 1) * TS;
+
+            final var levelNumberDisplays = hud.entities().selectAllOfType(LevelNumberDisplay.class).toList();
+
+            final LevelNumberDisplay either = levelNumberDisplays.getFirst();
+            either.pos().set(2 * TS, bottom);
+            either.levelNumber().setNumber(level.number());
+
+            final LevelNumberDisplay other = levelNumberDisplays.getLast();
+            other.pos().set(28 * TS, bottom);
+            other.levelNumber().setNumber(level.number());
+
+            livesCounter.pos().set(4 * TS, bottom);
+            levelCounter.pos().set(26 * TS, bottom);
+        } else {
+            livesCounter.data().setNumLives(game.variant().initialLifeCount());
+            livesCounter.data().setMaxLivesShown(5);
+
+            levelCounter.data().setBehavior(LevelCounterBehavior.DISABLE_WHEN_FULL);
+            levelCounter.data().setCapacity(7);
+            levelCounter.data().setEnabled(true);
+            game.variant().systems().levelCounterSystem().clear(levelCounter);
+        }
     }
 
     @Override
@@ -297,7 +315,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
         level.setBonusSymbolCodes(rules.bonusSymbols(levelNumber));
 
-        configureHUD(session.hud(), worldMap, levelNumber);
+        configureHUD(game, level, session.hud());
 
         session.setLevel(level);
         // For non-Arcade game levels, spend some extra time for the moving "game over" text animation
@@ -339,19 +357,6 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         entities.ghost(GhostPersonality.ORANGE_GHOST_POKEY).worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE);
     }
 
-    private void configureHUD(HUD hud, WorldMap worldMap, int levelNumber) {
-        hud.levelCounter().pos().set(26 * TS, (worldMap.numRows() - 1) * TS);
-
-        final var levelNumberDisplays = hud.entities().selectAllOfType(LevelNumberDisplay.class).toList();
-
-        final LevelNumberDisplay either = levelNumberDisplays.getFirst();
-        either.levelNumber().setNumber(levelNumber);
-        either.pos().set(2 * TS, (worldMap.numRows() - 1) * TS);
-
-        final LevelNumberDisplay other = levelNumberDisplays.getLast();
-        other.levelNumber().setNumber(levelNumber);
-        other.pos().set(28 * TS, (worldMap.numRows() - 1) * TS);
-    }
 
     @Override
     public GameLevel buildDemoLevel(GameContext game) {
@@ -458,7 +463,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         eventManager.publishGameEvent(new BonusActivatedEvent(bonus));
     }
 
-    private void addHUDElements(HUD hud) {
+    private void addTengenHUDElements(HUD hud) {
         final GameOptionsDisplay gameOptionsDisplay = new GameOptionsDisplay();
         hud.addEntity(gameOptionsDisplay);
 

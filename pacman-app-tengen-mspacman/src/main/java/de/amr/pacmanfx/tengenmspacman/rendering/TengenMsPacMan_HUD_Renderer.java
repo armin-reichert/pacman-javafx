@@ -183,7 +183,6 @@ public class TengenMsPacMan_HUD_Renderer
     private void drawLevelCounter(LevelCounter levelCounter) {
         final RectShort[] symbolSprites = spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS);
 
-//        float x = LEVEL_COUNTER_POS_RIGHT - tilesPx(2);
         float x = levelCounter.pos().x();
         float y = levelCounter.pos().y();
 

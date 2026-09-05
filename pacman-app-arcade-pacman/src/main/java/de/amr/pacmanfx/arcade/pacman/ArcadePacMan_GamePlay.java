@@ -10,6 +10,7 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.ghost.comp.ElroyComp;
@@ -103,18 +104,10 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
         final GameSession session = game.session();
 
-        final int numLives = game.variant().initialLifeCount();
-        session.setNumLives(numLives);
-
-        final LivesCounter livesCounter = session.hud().livesCounter();
-        livesCounter.data().setNumLives(numLives);
-        livesCounter.data().setMaxLivesShown(5);
-        livesCounter.pos().set(2 * TS, 34 * TS);
-
-        configureLevelCounter(game, game.variant().systems().levelCounterSystem(), session.hud().levelCounter());
-
+        configureHUD(game, null, session.hud());
         initScores(game);
 
+        session.setNumLives(game.variant().initialLifeCount());
         session.setCutScenesEnabled(true);
         session.setLevel(null);
         session.setGameRunning(false);
@@ -125,12 +118,27 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     // Level building and level start
 
     @Override
-    public void configureLevelCounter(GameContext game, LevelCounterSystem levelCounterSystem, LevelCounter levelCounter) {
-        levelCounter.pos().set(24 * TS, 34 * TS + 2);
-        levelCounter.data().setCapacity(7);
-        levelCounter.data().setEnabled(true);
-        levelCounter.data().setBehavior(LevelCounterBehavior.SHIFT_WHEN_FULL);
-        levelCounterSystem.clear(levelCounter);
+    public void configureHUD(GameContext game, GameLevel level, HUD hud) {
+        requireNonNull(game);
+        // level may be null!
+        requireNonNull(hud);
+
+        final LivesCounter livesCounter = hud.livesCounter();
+        final LevelCounter levelCounter = hud.levelCounter();
+
+        if (level != null) {
+            final int bottom = (level.worldMap().numRows() - 2) * TS;
+            livesCounter.pos().set(2 * TS, bottom);
+            levelCounter.pos().set(24 * TS, bottom);
+        } else {
+            livesCounter.data().setNumLives(game.variant().initialLifeCount());
+            livesCounter.data().setMaxLivesShown(5);
+
+            levelCounter.data().setCapacity(7);
+            levelCounter.data().setEnabled(true);
+            levelCounter.data().setBehavior(LevelCounterBehavior.SHIFT_WHEN_FULL);
+            game.variant().systems().levelCounterSystem().clear(levelCounter);
+        }
     }
 
     @Override
@@ -138,6 +146,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         requireNonNull(game);
         requireValidLevelNumber(levelNumber);
 
+        final GameSession session = game.session();
         final GameLevelEntities entities = new GameLevelEntities();
 
         final WorldNavigationSystem navigator = game.variant().systems().navigator();
@@ -163,7 +172,8 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
             }
         });
 
-        final GameSession session = game.session();
+        configureHUD(game, level, session.hud());
+
         session.setLevel(level);
         session.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
 

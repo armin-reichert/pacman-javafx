@@ -10,6 +10,7 @@ import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GamePlay;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.ecs.systems.PositionSystem;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.*;
@@ -17,7 +18,6 @@ import de.amr.pacmanfx.core.entities.bonus.comp.BonusRouteInfo;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusState;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.levelCounter.comp.LevelCounterBehavior;
-import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelEntities;
@@ -45,12 +45,30 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE);
 
     @Override
-    public void configureLevelCounter(GameContext game, LevelCounterSystem levelCounterSystem, LevelCounter levelCounter) {
-        levelCounter.pos().set(24 * TS, 34 * TS + 2);
-        levelCounter.data().setBehavior(LevelCounterBehavior.DISABLE_WHEN_FULL);
-        levelCounter.data().setCapacity(7);
-        levelCounter.data().setEnabled(true);
-        levelCounterSystem.clear(levelCounter);
+    public void configureHUD(GameContext game, GameLevel level, HUD hud) {
+        requireNonNull(game);
+        // level may be null!
+        requireNonNull(hud);
+
+        final LivesCounter livesCounter = hud.livesCounter();
+        final LevelCounter levelCounter = hud.levelCounter();
+
+        if (level != null) {
+            levelCounter.data().setEnabled(level.number() < 8);
+            final int bottom = (level.worldMap().numRows() - 2) * TS;
+            livesCounter.pos().set(2 * TS, bottom);
+            levelCounter.pos().set(24 * TS, bottom);
+        } else {
+            livesCounter.data().setNumLives(game.variant().initialLifeCount());
+            livesCounter.data().setMaxLivesShown(5);
+
+            /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
+             * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
+            levelCounter.data().setBehavior(LevelCounterBehavior.DISABLE_WHEN_FULL);
+            levelCounter.data().setCapacity(7);
+            levelCounter.data().setEnabled(true);
+            game.variant().systems().levelCounterSystem().clear(levelCounter);
+        }
     }
 
     @Override
@@ -58,6 +76,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         requireNonNull(game);
         requireValidLevelNumber(levelNumber);
 
+        final GameSession session = game.session();
         final GameLevelEntities entities = new GameLevelEntities();
 
         final WorldNavigationSystem navigator = game.variant().systems().navigator();
@@ -78,12 +97,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         final GameRules rules = game.variant().rules();
         level.setBonusSymbolCodes(rules.bonusSymbols(levelNumber));
 
-        final GameSession session = game.session();
-
-        /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
-         * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
-        final LevelCounter levelCounter = session.hud().levelCounter();
-        levelCounter.data().setEnabled(levelNumber < 8);
+        configureHUD(game, level, session.hud());
 
         session.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
         session.setLevel(level);

@@ -123,8 +123,8 @@ public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer,
     }
 
     private void drawLevelCounter(LevelCounter levelCounter) {
-        float x = levelCounter.pos().x();
         final float y = levelCounter.pos().y();
+        float x = levelCounter.pos().x();
         for (int symbolCode : levelCounter.data().symbolCodes()) {
             drawSprite(style.bonusSymbolSprites()[symbolCode], x, y, true);
             x -= tilesPx(2); // symbols are drawn from right to left
