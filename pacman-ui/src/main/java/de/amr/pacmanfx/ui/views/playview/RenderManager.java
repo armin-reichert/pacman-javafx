@@ -97,30 +97,6 @@ public class RenderManager {
         });
     }
 
-    public BaseRenderer actorRenderer() {
-        return entityRenderer;
-    }
-
-    public void setEntityRenderer(BaseRenderer entityRenderer) {
-        this.entityRenderer = entityRenderer;
-    }
-
-    public BaseRenderer sceneRenderer() {
-        return sceneRenderer;
-    }
-
-    public void setSceneRenderer(BaseRenderer sceneRenderer) {
-        this.sceneRenderer = sceneRenderer;
-    }
-
-    public HUD_Renderer hudRenderer() {
-        return hudRenderer;
-    }
-
-    public void setHudRenderer(HUD_Renderer hudRenderer) {
-        this.hudRenderer = hudRenderer;
-    }
-
     private List<GameEntity> sortInRenderingOrder(Collection<GameEntity> entities) {
         return entities.stream()
             .filter(e -> e.hasComp(RenderingComp.class))
