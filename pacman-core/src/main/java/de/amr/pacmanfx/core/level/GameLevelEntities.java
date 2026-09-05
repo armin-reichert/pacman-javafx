@@ -12,6 +12,7 @@ import de.amr.pacmanfx.core.model.GhostPersonality;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
@@ -69,6 +70,10 @@ public class GameLevelEntities {
             case House _ -> theHouse = null;
             default -> throw new IllegalArgumentException("Unknown entity type!");
         }
+    }
+
+    public void removeAll() {
+        all().collect(Collectors.toCollection(ArrayList::new)).forEach(this::remove);
     }
 
     public Stream<? extends GameEntity> all() {

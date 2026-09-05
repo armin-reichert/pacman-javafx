@@ -13,6 +13,7 @@ import de.amr.pacmanfx.core.entities.pac.comp.PacState;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.MessageType;
+import org.tinylog.Logger;
 
 import java.util.Optional;
 
@@ -68,8 +69,19 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
             gamePlay.update(game, level);
         }
 
-        computeNextState(game, level).ifPresent(nextState ->
-            variantConfig.gameFlow().enterGameState(game, nextState));
+        computeNextState(game, level).ifPresent(nextState -> {
+            if (nextState == CommonGameStateID.GAME_INTRO) {
+                clear(game);
+            }
+            variantConfig.gameFlow().enterGameState(game, nextState);
+        });
+    }
+
+    private void clear(GameContext game) {
+        game.session().hud().clearMessage();
+        game.session().level().entities().removeAll();
+        game.session().setLevel(null);
+        Logger.info("Demo level has been removed");
     }
 
     private void configureHUD(HUD hud) {
