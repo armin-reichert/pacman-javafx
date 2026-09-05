@@ -6,8 +6,6 @@ import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.level.MessageType;
 
-import java.util.List;
-
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 
 public class HUD {

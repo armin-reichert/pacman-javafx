@@ -10,8 +10,6 @@ import de.amr.pacmanfx.core.event.ghost.GhostEntersHouseEvent;
 import de.amr.pacmanfx.core.event.ghost.GhostStartsReturningHomeEvent;
 import de.amr.pacmanfx.core.event.pac.*;
 
-import java.io.IOException;
-
 /**
  * Implementors can override {@link #onGameEvent(GameEvent)} or specific methods for targeted reactions.
  */

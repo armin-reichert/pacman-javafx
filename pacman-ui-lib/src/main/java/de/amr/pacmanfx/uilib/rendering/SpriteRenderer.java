@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.uilib.rendering;
 
-import de.amr.basics.math.Direction;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;

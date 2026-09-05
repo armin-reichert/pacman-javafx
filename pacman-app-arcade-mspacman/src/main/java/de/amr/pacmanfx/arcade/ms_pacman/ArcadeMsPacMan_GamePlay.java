@@ -24,8 +24,8 @@ import de.amr.pacmanfx.core.level.GameLevelEntities;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
-import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.core.rules.DefaultHuntingTimer;
+import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
 import org.tinylog.Logger;
 
