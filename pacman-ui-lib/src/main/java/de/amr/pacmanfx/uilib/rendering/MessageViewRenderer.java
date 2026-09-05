@@ -34,7 +34,8 @@ public class MessageViewRenderer extends BaseRenderer {
         if (!messageView.isVisible()) {
             return;
         }
-        if (!translate.equals(Vector2f.ZERO)) {
+        final boolean translated = !translate.equals(Vector2f.ZERO);
+        if (translated) {
             ctx.save();
             ctx.translate(scaled(translate.x()), scaled(translate.y()));
         }
@@ -45,6 +46,8 @@ public class MessageViewRenderer extends BaseRenderer {
             final Vector2f pos = messageView.pos().asVector2f();
             fillTextCentered(texts.get(messageType), color, scaledFont, pos.x(), pos.y());
         });
-        ctx.restore();
+        if (translated) {
+            ctx.restore();
+        }
     }
 }
