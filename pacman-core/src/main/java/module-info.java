@@ -34,7 +34,6 @@ module de.amr.pacmanfx.core {
     exports de.amr.pacmanfx.core.entities.bonus.system;
     exports de.amr.pacmanfx.core.entities.bonuspoints.comp;
     exports de.amr.pacmanfx.core.entities.ghost.system;
-    exports de.amr.pacmanfx.core.entities.marquee.system;
     exports de.amr.pacmanfx.core.entities.bonus.comp;
     exports de.amr.pacmanfx.core.entities.clapperboard.comp;
     exports de.amr.pacmanfx.core.entities.clapperboard.system;

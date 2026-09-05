@@ -7,21 +7,15 @@ package de.amr.pacmanfx.core.entities;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.RenderingComp;
 import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
-import de.amr.pacmanfx.core.entities.marquee.comp.MarqueeAnimComp;
 import de.amr.pacmanfx.core.entities.marquee.comp.MarqueeLayoutComp;
 import de.amr.pacmanfx.core.entities.marquee.comp.MarqueeVisualComp;
 
 public final class Marquee extends GameEntity {
 
     public Marquee() {
-        setComp(MarqueeAnimComp.class, new MarqueeAnimComp());
         setComp(MarqueeLayoutComp.class, new MarqueeLayoutComp());
         setComp(MarqueeVisualComp.class, new MarqueeVisualComp());
         setComp(RenderingComp.class, new RenderingComp(RenderingLayer.PROPS));
-    }
-
-    public MarqueeAnimComp anim() {
-        return reqComp(MarqueeAnimComp.class);
     }
 
     public MarqueeLayoutComp layout() {
