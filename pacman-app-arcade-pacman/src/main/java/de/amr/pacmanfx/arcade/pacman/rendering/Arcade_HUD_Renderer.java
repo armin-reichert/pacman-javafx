@@ -5,15 +5,11 @@
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.entities.CreditDisplay;
 import de.amr.pacmanfx.core.entities.LevelCounter;
 import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Score;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.HUD_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.HUD_Style;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
@@ -29,7 +25,7 @@ import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_YELLOW;
 import static java.util.Objects.requireNonNull;
 
-public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer, HUD_Renderer {
+public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer {
 
     protected final HUD_Style style;
 
@@ -45,17 +41,9 @@ public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer,
 
     @Override
     public void render(Object r, long tick) {
-        //TODO
-    }
-
-    @Override
-    public void drawHUD(HUD hud, GameSession session, GameScene gameScene, long tick) {
-        //TODO remove this method
-    }
-
-    @Override
-    public void drawHUDEntity(GameEntity entity, long tick) {
-        requireNonNull(entity);
+        if (!(r instanceof GameEntity entity)) {
+            return;
+        }
 
         if (!entity.isVisible()) return;
         switch (entity) {

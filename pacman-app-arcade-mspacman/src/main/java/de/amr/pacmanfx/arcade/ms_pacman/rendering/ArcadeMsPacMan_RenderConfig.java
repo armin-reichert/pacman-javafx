@@ -25,9 +25,7 @@ import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.HUD_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.HUD_Style;
-import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
@@ -40,7 +38,7 @@ import javafx.scene.paint.Color;
 import java.util.EnumMap;
 import java.util.Map;
 
-import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
+import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
@@ -154,16 +152,13 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public HUD_Renderer createHUDRenderer(GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas) {
+    public BaseRenderer createHUDRenderer(GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas) {
         requireNonNull(gameScene);
         requireNonNull(animSystem);
         requireNonNull(canvas);
 
-        final SceneCanvasRenderingComp canvasRendering = gameScene.reqComp(SceneCanvasRenderingComp.class);
         final var renderer = new Arcade_HUD_Renderer(hudStyle, canvas);
         renderer.setImageSmoothing(true);
-        canvasRendering.configureRenderer(renderer);
-
         return renderer;
     }
 

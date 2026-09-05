@@ -7,7 +7,6 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.entities.CreditDisplay;
 import de.amr.pacmanfx.core.entities.LevelCounter;
@@ -27,7 +26,6 @@ import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.HUD_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.HUD_Style;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
@@ -44,7 +42,7 @@ import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteRenderer, HUD_Renderer {
+public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteRenderer {
 
     private final ObjectProperty<Font> totalLivesFont = new SimpleObjectProperty<>(Font.font("Serif", FontWeight.BOLD, 8));
 
@@ -63,29 +61,6 @@ public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteR
         return TengenMsPacMan_SpriteSheet.instance();
     }
 
-    @Override
-    public void render(Object r, long tick) {
-        //TODO
-    }
-
-    @Override
-    public void drawHUD(HUD hud, GameSession session, GameScene gameScene, long tick) {
-        requireNonNull(hud);
-        requireNonNull(session);
-        requireNonNull(gameScene);
-
-        if (gameScene.optCanvasRendering().isEmpty()) {
-            return; // Should not happen, but...
-        }
-        if (!hud.isVisible()) return;
-
-        //TODO better solution to adapt y position to map size
-        ctx.save();
-        ctx.translate(0, scaled(computeOffsetY(gameScene)));
-
-        ctx.restore();
-    }
-
     //TODO This does not belong here
     private double computeOffsetY(GameScene scene) {
         return switch (scene) {
@@ -98,8 +73,10 @@ public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteR
     }
 
     @Override
-    public void drawHUDEntity(GameEntity entity, long tick) {
-        requireNonNull(entity);
+    public void render(Object r, long tick) {
+        if (!(r instanceof GameEntity entity)) {
+            return;
+        }
 
         if (!entity.isVisible()) {
             return;

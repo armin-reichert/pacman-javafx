@@ -13,7 +13,6 @@ import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.common.SceneWithoutLevel;
-import de.amr.pacmanfx.ui.gamescene.d2.HUD_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
@@ -32,7 +31,7 @@ public class RenderManager {
     private BaseRenderer baseRenderer;
     private BaseRenderer entityRenderer;
     private BaseRenderer sceneRenderer;
-    private HUD_Renderer hudRenderer;
+    private BaseRenderer hudRenderer;
     private BaseRenderer messageViewRenderer;
 
     public void updateRenderers(GameAppContext app, GameScene gameScene) {
@@ -96,9 +95,7 @@ public class RenderManager {
             sortInRenderingOrder(entities).forEach(e -> entityRenderer.render(e, tick));
 
             if (session.hud().isVisible()) {
-                //TODO get rid of this:
-                hudRenderer.drawHUD(session.hud(), session, gameScene, tick);
-                session.hud().entities().forEach(hudEntity -> hudRenderer.drawHUDEntity(hudEntity, tick));
+                session.hud().entities().forEach(hudEntity -> hudRenderer.render(hudEntity, tick));
             }
 
             if (debugMode) {
