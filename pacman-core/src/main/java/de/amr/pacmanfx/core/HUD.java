@@ -34,7 +34,7 @@ public class HUD {
         gameScore.pos().set(TS, TS);
         highScore.show();
         highScore.pos().set(14 * TS, TS);
-        creditDisplay.pos().set(2 * TS, 35 * TS);
+        creditDisplay.pos().set(2 * TS, 36 * TS);
 
         entities.addAll(levelCounter, livesCounter, messageView, gameScore, highScore, creditDisplay);
     }
