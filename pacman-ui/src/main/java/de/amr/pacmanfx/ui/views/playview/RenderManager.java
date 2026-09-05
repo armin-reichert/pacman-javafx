@@ -28,26 +28,21 @@ import static java.util.Objects.requireNonNull;
 
 public class RenderManager {
 
-    private BaseRenderer baseRenderer;
     private BaseRenderer entityRenderer;
     private BaseRenderer sceneRenderer;
     private BaseRenderer hudRenderer;
     private BaseRenderer messageViewRenderer;
 
     public void updateRenderers(GameAppContext app, GameScene gameScene) {
+        requireNonNull(app);
         requireNonNull(gameScene);
-
-        final ActorSpriteAnimController animController = app.game().variant().systems().actorSpriteAnimController();
-        final GameVariantRenderConfig config = app.currentGameVariantUIConfig().renderConfig();
 
         final SceneCanvasRenderingComp canvasRendering = gameScene.reqComp(SceneCanvasRenderingComp.class);
         final Canvas canvas = canvasRendering.canvas();
 
         if (canvas != null) {
-            baseRenderer = new BaseRenderer(canvas) {
-                @Override
-                public void render(Object r, long tick) {}
-            };
+            final ActorSpriteAnimController animController = app.game().variant().systems().actorSpriteAnimController();
+            final GameVariantRenderConfig config = app.currentGameVariantUIConfig().renderConfig();
 
             entityRenderer = config.createEntityRenderer(animController, canvas);
             configureRenderer(entityRenderer, canvasRendering);
@@ -74,7 +69,7 @@ public class RenderManager {
             final GameSession session = game.session();
 
             if (canvasRendering.clearCanvasBeforeRendering()) {
-                baseRenderer.clearCanvas();
+                entityRenderer.clearCanvas();
             }
 
             if (sceneRenderer != null) {
