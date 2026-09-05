@@ -64,7 +64,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         final WorldMap worldMap = game.variant().worldMapManager().supplyWorldMap(levelNumber);
 
         createAndAddEntities(entities, worldMap.terrainLayer());
-        configureEntities(entities, game.variant().systems(), worldMap.terrainLayer(), entities.house());
+        configurePacAndGhosts(entities, game.variant().systems(), worldMap.terrainLayer(), entities.house());
 
         final DefaultHuntingTimer huntingTimer = new DefaultHuntingTimer("Arcade Ms. Pac-Man Hunting Timer", game.variant().rules().numHuntingPhases());
         huntingTimer.setPhaseChangeCallback(newPhaseIndex -> {
@@ -115,7 +115,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         entities.add(orangeGhost);
     }
 
-    private void configureEntities(GameLevelEntities entities, GameSystems systems, TerrainLayer terrain, House house) {
+    private void configurePacAndGhosts(GameLevelEntities entities, GameSystems systems, TerrainLayer terrain, House house) {
         entities.pac().autoSteering().setSteering(new RuleGuidedPacSteering(
             systems.navigator(), systems.pacWorldMovementPolicy()
         ));

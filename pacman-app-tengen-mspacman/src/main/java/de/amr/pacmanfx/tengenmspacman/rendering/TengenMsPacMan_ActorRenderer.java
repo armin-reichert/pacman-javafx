@@ -8,6 +8,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimation;
@@ -63,7 +64,11 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             case Pac pac -> drawFacingSpriteCentered(computeSprite(pac), center);
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
             case Stork stork -> drawStork(stork);
-            default -> drawSpriteCentered(animSystem.currentSprite(actor), center);
+            default -> {
+                if (actor.hasComp(SpriteAnimationComp.class)) {
+                    drawSpriteCentered(animSystem.currentSprite(actor), center);
+                }
+            }
         }
 
         ctx.restore();

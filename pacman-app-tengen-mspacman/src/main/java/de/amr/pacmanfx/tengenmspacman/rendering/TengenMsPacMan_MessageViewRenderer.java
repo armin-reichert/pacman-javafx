@@ -5,20 +5,14 @@
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.math.Vector2f;
-import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.entities.MessageView;
-import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.MessageType;
 import de.amr.pacmanfx.uilib.entities.messageview.comp.MessageViewStyleComp;
 import de.amr.pacmanfx.uilib.rendering.MessageViewRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-
-import static de.amr.basics.math.Vector2f.vec2_float;
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 
 public class TengenMsPacMan_MessageViewRenderer extends MessageViewRenderer {
 
@@ -79,13 +73,5 @@ public class TengenMsPacMan_MessageViewRenderer extends MessageViewRenderer {
             style.messageColor().apply(MessageType.READY),
             scaledFont,
             pos.x(), pos.y());
-    }
-
-    private Vector2f messagePosition(GameLevel level) {
-        final House house = level.entities().house();
-        final Vector2i houseSize = house.sizeInTiles();
-        float cx = tilesPx(house.floorplan().minTile().x() + houseSize.x() * 0.5f);
-        float cy = tilesPx(house.floorplan().minTile().y() + houseSize.y() + 1);
-        return vec2_float(cx, cy);
     }
 }

@@ -25,8 +25,10 @@ import de.amr.pacmanfx.core.gamestate.GameFlowController;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelEntities;
 import de.amr.pacmanfx.core.level.MessageType;
+import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
 import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
 import de.amr.pacmanfx.core.rules.DefaultHuntingTimer;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
@@ -37,9 +39,14 @@ import de.amr.pacmanfx.tengenmspacman.model.BoosterMode;
 import de.amr.pacmanfx.tengenmspacman.model.Difficulty;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
+import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.tengenmspacman.rules.TengenMsPacMan_ActorSpeedRules;
 import de.amr.pacmanfx.tengenmspacman.rules.TengenMsPacMan_GameRules;
+import de.amr.pacmanfx.tengenmspacman.sprites.NES_WorldMapColorScheme;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
+import de.amr.pacmanfx.ui.GlobalAssets;
+import de.amr.pacmanfx.uilib.entities.messageview.comp.MessageViewStyleComp;
+import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import java.util.List;
@@ -48,6 +55,7 @@ import java.util.Set;
 import static de.amr.basics.math.RandomNumbers.randomBoolean;
 import static de.amr.basics.math.RandomNumbers.randomInt;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_GamePlay extends CommonGamePlay {
@@ -274,43 +282,35 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         rules.setMapCategory(mapCategory);
         Logger.info("Using game rules for map category {}", mapCategory);
 
-        final DefaultHuntingTimer huntingTimer = new DefaultHuntingTimer("Tengen Ms. Pac-Man Hunting Timer", rules.numHuntingPhases());
+        final var huntingTimer = new DefaultHuntingTimer("Tengen Ms. Pac-Man Hunting Timer", rules.numHuntingPhases());
+        huntingTimer.setPhaseChangeCallback(newPhaseIndex -> {
+            if (newPhaseIndex > 0) {
+                entities.ghostsInAnyOfStates(Set.of(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE))
+                    .forEach(navigator::requestTurnBack);
+            }
+        });
 
-        addEntities(entities, game, worldMap);
+        createAndAddEntities(entities, session, worldMap);
+        configurePacAndGhosts(entities, game.variant().systems(), worldMap.terrainLayer(), entities.house());
 
         final GameLevel level = new GameLevel(levelNumber, worldMap, entities, huntingTimer);
+
+        level.setBonusSymbolCodes(rules.bonusSymbols(levelNumber));
+
+        configureHUD(session.hud(), worldMap, levelNumber);
 
         session.setLevel(level);
         // For non-Arcade game levels, spend some extra time for the moving "game over" text animation
         session.setGameOverStateTicks(mapCategory(session) == MapCategory.ARCADE
             ? ARCADE_MAP_GAME_OVER_TICKS : NON_ARCADE_MAP_GAME_OVER_TICKS);
 
-        level.setBonusSymbolCodes(rules.bonusSymbols(levelNumber));
-
-        huntingTimer.setPhaseChangeCallback(newPhaseIndex -> {
-            if (newPhaseIndex > 0) {
-                level.entities().ghostsInAnyOfStates(Set.of(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE))
-                    .forEach(navigator::requestTurnBack);
-            }
-        });
-
-        session.hud().levelCounter().pos().set(26 * TS, (worldMap.numRows() - 1) * TS);
-
-        final var levelNumberDisplays = session.hud().entities().selectAllOfType(LevelNumberDisplay.class).toList();
-
-        final LevelNumberDisplay either = levelNumberDisplays.getFirst();
-        either.levelNumber().setNumber(levelNumber);
-        either.pos().set(2 * TS, (worldMap.numRows() - 1) * TS);
-
-        final LevelNumberDisplay other = levelNumberDisplays.getLast();
-        other.levelNumber().setNumber(levelNumber);
-        other.pos().set(28 * TS, (worldMap.numRows() - 1) * TS);
-
         return level;
     }
 
-    private void addEntities(GameLevelEntities entities, GameContext game, WorldMap worldMap) {
+    private void createAndAddEntities(GameLevelEntities entities, GameSession session, WorldMap worldMap) {
         final House house = HouseFactory.createArcadeHouse(HOUSE_MIN_TILE);
+        final NES_WorldMapColorScheme colorScheme = worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
+        final MessageView messageView = createMessageView(house, session, colorScheme);
 
         final var actorFactory  = TengenMsPacMan_ActorFactory.instance();
         final Pac msPacMan      = actorFactory.createMsPacMan();
@@ -320,24 +320,37 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final Ghost orangeGhost = actorFactory.createOrangeGhost();
 
         entities.add(house);
+        entities.add(messageView);
         entities.add(msPacMan);
         entities.add(redGhost);
         entities.add(pinkGhost);
         entities.add(cyanGhost);
         entities.add(orangeGhost);
+    }
 
-        // Configure entities
-
-        final GameSystems systems = game.variant().systems();
-        msPacMan.autoSteering().setSteering(new RuleGuidedPacSteering(
+    private void configurePacAndGhosts(GameLevelEntities entities, GameSystems systems, TerrainLayer terrain, House house) {
+        entities.pac().autoSteering().setSteering(new RuleGuidedPacSteering(
             systems.navigator(), systems.pacWorldMovementPolicy()
         ));
 
-        final TerrainLayer terrain = worldMap.terrainLayer();
-        redGhost   .worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_1_RED);
-        pinkGhost  .worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK);
-        cyanGhost  .worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN);
-        orangeGhost.worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE);
+        entities.ghost(GhostPersonality.RED_GHOST_SHADOW)  .worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_1_RED);
+        entities.ghost(GhostPersonality.PINK_GHOST_SPEEDY) .worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK);
+        entities.ghost(GhostPersonality.CYAN_GHOST_BASHFUL).worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN);
+        entities.ghost(GhostPersonality.ORANGE_GHOST_POKEY).worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE);
+    }
+
+    private void configureHUD(HUD hud, WorldMap worldMap, int levelNumber) {
+        hud.levelCounter().pos().set(26 * TS, (worldMap.numRows() - 1) * TS);
+
+        final var levelNumberDisplays = hud.entities().selectAllOfType(LevelNumberDisplay.class).toList();
+
+        final LevelNumberDisplay either = levelNumberDisplays.getFirst();
+        either.levelNumber().setNumber(levelNumber);
+        either.pos().set(2 * TS, (worldMap.numRows() - 1) * TS);
+
+        final LevelNumberDisplay other = levelNumberDisplays.getLast();
+        other.levelNumber().setNumber(levelNumber);
+        other.pos().set(28 * TS, (worldMap.numRows() - 1) * TS);
     }
 
     @Override
@@ -454,5 +467,34 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
         final LevelNumberDisplay rightLevelNumberDisplay = new LevelNumberDisplay();
         hud.addEntity(rightLevelNumberDisplay);
+    }
+
+    private MessageView createMessageView(House house, GameSession session, NES_WorldMapColorScheme colorScheme) {
+        final var messageView = new MessageView();
+
+        // Messages appear centered under house
+        final Vector2i houseSize = house.sizeInTiles();
+        float cx = tilesPx(house.floorplan().minTile().x() + houseSize.x() * 0.5f);
+        float cy = tilesPx(house.floorplan().minTile().y() + houseSize.y() + 1);
+        messageView.pos().set(cx, cy);
+
+        messageView.setComp(MessageViewStyleComp.class, createMessageViewStyleComp(session, colorScheme));
+
+        return messageView;
+    }
+
+    private MessageViewStyleComp createMessageViewStyleComp(GameSession session, NES_WorldMapColorScheme colorScheme) {
+        final var style = new MessageViewStyleComp();
+        style.setMessageFont(GlobalAssets.Fonts.ARCADE8.font());
+        style.setMessageColor(type -> computeMessageColor(type, session, colorScheme));
+        return style;
+    }
+
+    private Color computeMessageColor(MessageType type, GameSession session, NES_WorldMapColorScheme colorScheme) {
+        return switch (type) {
+            case NO_MESSAGE -> null; //TODO delete this message type
+            case READY -> NES_Palette.color(0x28);
+            case GAME_OVER ->session.isAttractMode() ? Color.valueOf(colorScheme.wallStroke()) : NES_Palette.color(0x11);
+        };
     }
 }
