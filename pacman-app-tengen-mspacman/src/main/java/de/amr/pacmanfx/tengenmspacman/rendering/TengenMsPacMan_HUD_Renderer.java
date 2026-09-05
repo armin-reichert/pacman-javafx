@@ -29,7 +29,6 @@ import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.HUD_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.HUD_Style;
-import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.beans.property.ObjectProperty;
@@ -46,13 +45,7 @@ import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.hasHUD_Option;
 import static java.util.Objects.requireNonNull;
 
-//TODO Use HUDStyle
-public class TengenMsPacMan_HUD_Renderer
-    extends BaseRenderer
-    implements SpriteRenderer, HUD_Renderer {
-
-    public static final float LEVEL_COUNTER_POS_LEFT = tilesPx(2);
-    public static final float LEVEL_COUNTER_POS_RIGHT = tilesPx(28);
+public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteRenderer, HUD_Renderer {
 
     private final ObjectProperty<Font> totalLivesFont = new SimpleObjectProperty<>(Font.font("Serif", FontWeight.BOLD, 8));
 
@@ -86,10 +79,9 @@ public class TengenMsPacMan_HUD_Renderer
         if (gameScene.optCanvasRendering().isEmpty()) {
             return; // Should not happen, but...
         }
-        final SceneCanvasRenderingComp canvasRendering = gameScene.reqCanvasRendering();
-
         if (!hud.isVisible()) return;
 
+        //TODO better solution to adapt y position to map size
         ctx.save();
         ctx.translate(0, scaled(computeOffsetY(gameScene)));
 
@@ -102,6 +94,17 @@ public class TengenMsPacMan_HUD_Renderer
         }
 
         ctx.restore();
+    }
+
+    //TODO This does not belong here
+    private double computeOffsetY(GameScene scene) {
+        return switch (scene) {
+            case TengenMsPacMan_CutScene1 _,
+                 TengenMsPacMan_CutScene2 _,
+                 TengenMsPacMan_CutScene3 _,
+                 TengenMsPacMan_CutScene4 _ -> -2 * TS;
+            default -> 0;
+        };
     }
 
     @Override
@@ -125,8 +128,8 @@ public class TengenMsPacMan_HUD_Renderer
 //                    drawScoreText(score, style.highScoreText(), scaledFont, highScoreTextColor);
 //                }
             }
-            case CreditDisplay creditDisplay -> {}
-            case GameOptionsDisplay gameOptionsDisplay -> {}
+            case CreditDisplay _ -> { /* not needed */}
+            case GameOptionsDisplay gameOptionsDisplay -> { /* TODO implement */}
             case LevelNumberDisplay levelNumberDisplay -> drawLevelNumberDisplay(levelNumberDisplay);
 
             default -> throw new IllegalStateException("Unexpected value: " + entity);
@@ -184,20 +187,10 @@ public class TengenMsPacMan_HUD_Renderer
     }
 
     private void drawLevelNumberDisplay(LevelNumberDisplay levelNumberDisplay) {
-        final float x = levelNumberDisplay.pos().x();
-        final float y = levelNumberDisplay.pos().y();
-        drawLevelNumberBox(levelNumberDisplay.levelNumber().number(), x, y);
-    }
-
-    //TODO This does not belong here
-    private double computeOffsetY(GameScene scene) {
-        return switch (scene) {
-            case TengenMsPacMan_CutScene1 _,
-                 TengenMsPacMan_CutScene2 _,
-                 TengenMsPacMan_CutScene3 _,
-                 TengenMsPacMan_CutScene4 _ -> -2 * TS;
-            default -> 0;
-        };
+        drawLevelNumberBox(
+            levelNumberDisplay.levelNumber().number(),
+            levelNumberDisplay.pos().x(),
+            levelNumberDisplay.pos().y());
     }
 
     // These methods are also used by the 3D scene, so make them public:
@@ -211,11 +204,10 @@ public class TengenMsPacMan_HUD_Renderer
         drawSprite(spriteSheet().findDigitSprite(ones), x + 10, y + 2, true);
     }
 
-    private void drawGameOptions(GameOptionsDisplay optionsDisplay, GameSession session) {
+    private void drawGameOptions(GameOptionsDisplay optionsDisplay) {
         final float x = optionsDisplay.pos().x(); //Note: This is the center x position!
         final float y = optionsDisplay.pos().y();
-        drawGameOptions(session, x, y);
-
+        //TODO
     }
 
     //TODO used by 3D scene to create image
