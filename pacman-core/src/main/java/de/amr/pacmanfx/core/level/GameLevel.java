@@ -131,4 +131,13 @@ public class GameLevel {
         throw new IndexOutOfBoundsException("Bonus index %d not in range 0..%d"
             .formatted(i, bonusSymbolCodes.size() - 1));
     }
+
+    public void clearMessage() {
+        entities.theMessageView().data().setMessageType(MessageType.NO_MESSAGE);
+    }
+
+    public void showMessage(MessageType messageType) {
+        entities.theMessageView().data().setMessageType(messageType);
+        entities.theMessageView().show();
+    }
 }

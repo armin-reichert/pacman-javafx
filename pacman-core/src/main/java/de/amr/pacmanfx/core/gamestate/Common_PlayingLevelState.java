@@ -24,7 +24,7 @@ public final class Common_PlayingLevelState extends AbstractGameState {
     public void onEnterState(GameContext game) {
         level = game.session().level();
 
-        hud.clearMessage();
+        level.entities().theMessageView().hide();
 
         level.heartbeat().setStartState(Pulse.State.ON);
         level.heartbeat().restart();

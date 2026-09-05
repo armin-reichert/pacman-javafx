@@ -31,6 +31,8 @@ public interface GameVariantRenderConfig {
 
     GenericWorldMapColorScheme colorScheme(WorldMap worldMap, WorldSettings worldSettings);
 
+    BaseRenderer createMessageViewRenderer(Canvas canvas);
+
     BaseRenderer createGameLevelRenderer(ActorSpriteAnimController animController, Canvas canvas);
 
     BaseRenderer createGameSceneRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas);

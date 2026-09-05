@@ -25,6 +25,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.MessageViewRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -70,9 +71,7 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
             ARCADE_WHITE,
             Color.GRAY,
             GlobalAssets.Fonts.ARCADE8.font(),
-            "CREDIT %2d",
-            GlobalAssets.Fonts.ARCADE8.font(),
-            MESSAGE_COLORS::get
+            "CREDIT %2d"
         );
     }
 
@@ -123,6 +122,11 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
     public ArcadePacMan_GameLevel_Renderer createGameLevelRenderer(ActorSpriteAnimController animSystem, Canvas canvas) {
         requireNonNull(canvas);
         return new ArcadePacMan_GameLevel_Renderer(canvas, assets.image("maze.bright"));
+    }
+
+    @Override
+    public BaseRenderer createMessageViewRenderer(Canvas canvas) {
+        return new MessageViewRenderer(canvas);
     }
 
     @Override

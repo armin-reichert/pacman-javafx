@@ -5,18 +5,15 @@
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.math.RectShort;
-import de.amr.basics.math.Vector2f;
-import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.entities.*;
-import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.level.MessageType;
-import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Extras;
+import de.amr.pacmanfx.core.entities.CreditDisplay;
+import de.amr.pacmanfx.core.entities.LevelCounter;
+import de.amr.pacmanfx.core.entities.LivesCounter;
+import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_HUD_Options;
 import de.amr.pacmanfx.tengenmspacman.entities.GameOptionsDisplay;
@@ -28,8 +25,6 @@ import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene4;
 import de.amr.pacmanfx.tengenmspacman.model.BoosterMode;
 import de.amr.pacmanfx.tengenmspacman.model.Difficulty;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
-import de.amr.pacmanfx.tengenmspacman.model.MessageAnimation;
-import de.amr.pacmanfx.tengenmspacman.sprites.NES_WorldMapColorScheme;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
@@ -47,12 +42,9 @@ import javafx.scene.text.FontWeight;
 
 import java.util.List;
 
-import static de.amr.basics.math.Vector2f.vec2_float;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.hasHUD_Option;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.GAME_OVER_TEXT;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.READY_TEXT;
 import static java.util.Objects.requireNonNull;
 
 //TODO Use HUDStyle
@@ -135,7 +127,6 @@ public class TengenMsPacMan_HUD_Renderer
         final GameSession session = game.session();
 
         switch (entity) {
-            case MessageView messageView -> {}
             case LevelCounter levelCounter -> drawLevelCounter(levelCounter);
             case LivesCounter livesCounter -> {
 //                drawLivesCounter(livesCounter, session);
@@ -156,56 +147,6 @@ public class TengenMsPacMan_HUD_Renderer
 
             default -> throw new IllegalStateException("Unexpected value: " + entity);
         }
-    }
-
-    @Override
-    public void drawMessage(GameSession session) {
-
-        session.optLevel().ifPresent(level -> {
-            ctx.save();
-            ctx.translate(scaled(TengenMsPacMan_PlayScene2D_Renderer.CONTENT_INDENT), 0);
-            final MessageView messageView = session.hud().messageView();
-            final Font scaledFont = Ufx.scaleFontBy(style.messageFont(), scaling());
-            switch (messageView.data().messageType()) {
-                case GAME_OVER -> drawGameOverMessage(session, level, scaledFont);
-                case READY -> drawReadyMessage(level, scaledFont);
-            }
-            ctx.restore();
-        });
-    }
-
-    private void drawGameOverMessage(GameSession session, GameLevel level, Font scaledFont) {
-        final MessageAnimation animation = session.value(
-            TengenMsPacMan_Extras.GAME_OVER_MESSAGE_ANIMATION, MessageAnimation.class);
-
-        final Vector2f pos = animation != null
-            ? animation.pos().asVector2f()
-            : messagePosition(level);
-
-        final NES_WorldMapColorScheme colorScheme = level.worldMap()
-            .getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
-
-        final Color color = session.isAttractMode()
-            ? Color.valueOf(colorScheme.wallStroke())
-            : style.messageColor().apply(MessageType.GAME_OVER);
-
-        fillTextCentered(GAME_OVER_TEXT, color, scaledFont, pos.x(), pos.y());
-    }
-
-    private void drawReadyMessage(GameLevel level, Font scaledFont) {
-        final Vector2f pos = messagePosition(level);
-        fillTextCentered(READY_TEXT,
-            style.messageColor().apply(MessageType.READY),
-            scaledFont,
-            pos.x(), pos.y());
-    }
-
-    private Vector2f messagePosition(GameLevel level) {
-        final House house = level.entities().house();
-        final Vector2i houseSize = house.sizeInTiles();
-        float cx = tilesPx(house.floorplan().minTile().x() + houseSize.x() * 0.5f);
-        float cy = tilesPx(house.floorplan().minTile().y() + houseSize.y() + 1);
-        return vec2_float(cx, cy);
     }
 
     private void drawScores(Score gameScore, Score highScore, GameSession session, long tick) {

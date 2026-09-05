@@ -25,7 +25,6 @@ import de.amr.pacmanfx.core.event.pac.PacPowerEndsEvent;
 import de.amr.pacmanfx.core.event.pac.PacPowerStartsFadingEvent;
 import de.amr.pacmanfx.core.gamestate.FrameState;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.level.MessageType;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.core.rules.ScoringRules;
@@ -105,11 +104,6 @@ public abstract class CommonGamePlay implements GamePlay {
         } else {
             Logger.warn("Last level ({}) reached, cannot start next level", lastLevelNumber);
         }
-    }
-
-    @Override
-    public void showMessage(GameContext game, MessageType type) {
-        game.session().hud().messageView().data().setMessageType(type);
     }
 
     @Override

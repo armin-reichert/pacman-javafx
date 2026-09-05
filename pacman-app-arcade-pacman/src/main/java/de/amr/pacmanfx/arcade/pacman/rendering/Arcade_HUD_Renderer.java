@@ -4,16 +4,15 @@
 
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
-import de.amr.basics.math.Vector2f;
-import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.entities.*;
-import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.level.MessageType;
+import de.amr.pacmanfx.core.entities.CreditDisplay;
+import de.amr.pacmanfx.core.entities.LevelCounter;
+import de.amr.pacmanfx.core.entities.LivesCounter;
+import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.HUD_Renderer;
 import de.amr.pacmanfx.ui.gamescene.d2.HUD_Style;
@@ -25,16 +24,13 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-import static de.amr.basics.math.Vector2f.vec2_float;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
-import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
+import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
+import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_YELLOW;
 import static java.util.Objects.requireNonNull;
 
 public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer, HUD_Renderer {
-
-    public static final String GAME_OVER_TEXT = "GAME  OVER";
-    public static final String READY_TEXT = "READY!";
 
     protected final HUD_Style style;
 
@@ -66,7 +62,6 @@ public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer,
         if (!entity.isVisible()) return;
         final GameSession session = game.session();
         switch (entity) {
-            case MessageView messageView -> drawMessage(messageView, session);
             case LevelCounter levelCounter -> drawLevelCounter(levelCounter);
             case LivesCounter livesCounter -> drawLivesCounter(livesCounter, session);
             case Score score -> {
@@ -88,26 +83,10 @@ public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer,
         }
     }
 
-    @Override
-    public void drawMessage(GameSession session) {
-        drawMessage(session.hud().messageView(), session);
-    }
-
-    private void drawMessage(MessageView messageView, GameSession session) {
-        if (messageView.data().messageType() != MessageType.NO_MESSAGE) {
-            final Vector2f pos = messagePosition(session.level());
-            final Font scaledFont = Ufx.scaleFontBy(style.messageFont(), scaling());
-            switch (messageView.data().messageType()) {
-                case GAME_OVER -> fillTextCentered(GAME_OVER_TEXT, ARCADE_RED, scaledFont, pos.x(), pos.y());
-                case READY -> fillTextCentered(READY_TEXT, ARCADE_YELLOW, scaledFont, pos.x(), pos.y());
-            }
-        }
-    }
-
     private void drawCreditDisplay(CreditDisplay creditDisplay) {
         if (creditDisplay.isVisible()) {
             final int credit = creditDisplay.data().credit();
-            final Font scaledFont = Ufx.scaleFontBy(style.messageFont(), scaling());
+            final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
             final String text = style.creditTextFormat().formatted(credit);
             final float baseline = creditDisplay.pos().y();
             fillText(text, ARCADE_WHITE, scaledFont, creditDisplay.pos().x(), baseline);
@@ -150,13 +129,5 @@ public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer,
             drawSprite(style.bonusSymbolSprites()[symbolCode], x, y, true);
             x -= tilesPx(2); // symbols are drawn from right to left
         }
-    }
-
-    private Vector2f messagePosition(GameLevel level) {
-        final House house = level.entities().house();
-        Vector2i houseSize = house.sizeInTiles();
-        float cx = tilesPx(house.floorplan().minTile().x() + houseSize.x() * 0.5f);
-        float cy = tilesPx(house.floorplan().minTile().y() + houseSize.y() + 1);
-        return vec2_float(cx, cy);
     }
 }

@@ -381,7 +381,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final LevelCounter levelCounter = session.hud().levelCounter();
         levelCounterSystem.updateCounter(levelCounter, level.number(), level.bonusSymbolCode(0));
 
-        showMessage(game, MessageType.READY);
+        level.showMessage(MessageType.READY);
 
         final Pac pac = level.entities().pac();
         final boolean boosterOn = boosterMode(session) == BoosterMode.BOOSTER_ALWAYS_ON;

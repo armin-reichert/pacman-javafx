@@ -58,12 +58,13 @@ public class Test_ShortTestState extends AbstractGameState {
             level.entities().ghosts().forEach(GameEntity::show);
 
             gamePlay.prepareLevelForPlaying(game, level);
-            gamePlay.showMessage(game, MessageType.READY);
+
+            level.showMessage(MessageType.READY);
 
             game.eventManager().publishGameEvent(new TestStartedEvent(level));
         }
         else if (timer().atSecond(START + 1)) {
-            hud.clearMessage();
+            level.entities().theMessageView().hide();
         }
         else if (timer().atSecond(START + 3)) {
             gamePlay.activateNextBonus(game, level);

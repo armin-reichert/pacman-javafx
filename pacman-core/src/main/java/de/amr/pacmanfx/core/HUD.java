@@ -2,9 +2,11 @@ package de.amr.pacmanfx.core;
 
 import de.amr.basics.QuerySet;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.entities.*;
+import de.amr.pacmanfx.core.entities.CreditDisplay;
+import de.amr.pacmanfx.core.entities.LevelCounter;
+import de.amr.pacmanfx.core.entities.LivesCounter;
+import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
-import de.amr.pacmanfx.core.level.MessageType;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 
@@ -17,7 +19,6 @@ public class HUD {
     public HUD(String variantName) {
         final var levelCounter = new LevelCounter();
         final var livesCounter = new LivesCounter();
-        final var messageView = new MessageView();
         final var creditDisplay = new CreditDisplay();
         final var gameScore = new Score(Score.Type.GAME_SCORE);
         final var highScore = ScoreSystem.createHighScore(variantName);
@@ -28,7 +29,7 @@ public class HUD {
         highScore.pos().set(14 * TS, TS);
         highScore.show();
 
-        entities.addAll(levelCounter, livesCounter, messageView, gameScore, highScore, creditDisplay);
+        entities.addAll(levelCounter, livesCounter, gameScore, highScore, creditDisplay);
     }
 
     public boolean isVisible() {
@@ -61,14 +62,6 @@ public class HUD {
 
     public Score highScore() {
         return entities.selectWhere(Score.class, score -> score.type() == Score.Type.HIGH_SCORE).findFirst().orElseThrow();
-    }
-
-    public MessageView messageView() {
-        return entities.theOne(MessageView.class);
-    }
-
-    public void clearMessage() {
-        messageView().data().setMessageType(MessageType.NO_MESSAGE);
     }
 
     public QuerySet<GameEntity> entities() {

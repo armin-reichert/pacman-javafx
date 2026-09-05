@@ -8,6 +8,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.HighScoreAccessErrorEvent;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
+import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.MessageType;
 
 import java.io.IOException;
@@ -20,7 +21,10 @@ public class Arcade_GameOverState extends AbstractGameState {
 
     @Override
     public void onEnterState(GameContext game) {
-        gamePlay.showMessage(game, MessageType.GAME_OVER);
+        final GameLevel level = session.level();
+
+        level.showMessage(MessageType.GAME_OVER);
+
         session.setGameRunning(false);
         session.cheats().clear();
         try {
@@ -34,7 +38,8 @@ public class Arcade_GameOverState extends AbstractGameState {
     @Override
     public void onUpdateState(GameContext game, long globalTick, long stateTick) {
         if (timer().hasExpired()) {
-            session.hud().clearMessage();
+            final GameLevel level = session.level();
+            level.entities().theMessageView().hide();
             session.cheats().clear();
             session.setLevel(null);
             flow.enterGameState(game, game.coinMechanism().isEmpty()

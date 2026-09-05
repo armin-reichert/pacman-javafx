@@ -140,7 +140,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     @Override
     default void onGameContinued(GameContinuedEvent ignoredEvent) {
         final GameLevel3D level3D = assertLevel3D();
-        final MessageView messageView = session().hud().messageView();
+        final MessageView messageView = session().level().entities().theMessageView();
         showMessage(level3D, messageView, LevelMessageType.READY);
     }
 
@@ -156,7 +156,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         }
 
         final GameLevel3D level3D = assertLevel3D();
-        final MessageView messageView = session().hud().messageView();
+        final MessageView messageView = session().level().entities().theMessageView();
         showMessage(level3D, messageView, LevelMessageType.READY);
     }
 
@@ -182,7 +182,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         if (newState instanceof AbstractGameState gameState && gameState.id() instanceof TestStateID) {
             gameScene().replaceGameLevel3D(game(), level);
             level3D.animationManager().startEnergizerPumping();
-            final MessageView messageView = session().hud().messageView();
+            final MessageView messageView = level.entities().theMessageView();
             showMessage(level3D, messageView, LevelMessageType.TEST, level.number());
         }
 
@@ -331,7 +331,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         level.entities().optBonus().ifPresent(bonus ->
             Bonus3DViewSystem.lookExpired(bonus, level3D.animationManager().registry()));
 
-        final MessageView messageView = session().hud().messageView();
+        final MessageView messageView = level.entities().theMessageView();
         MessageView3DAnimationSystem.hideMessageView(messageView);
 
         playLevelEndAnimation(level3D.animationManager().registry(),
@@ -398,7 +398,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     }
 
     private void handleTestState(Game3DSettingsVM globals3D, GameLevel level) {
-        final MessageView messageView = session().hud().messageView();
+        final MessageView messageView = level.entities().theMessageView();
         gameScene().optGameLevel3D().ifPresent(level3D -> {
             gameScene().replaceGameLevel3D(game(), level);
             showMessage(level3D, messageView, LevelMessageType.TEST, level.number());

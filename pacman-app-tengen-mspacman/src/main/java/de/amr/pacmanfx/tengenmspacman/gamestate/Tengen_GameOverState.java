@@ -50,7 +50,7 @@ public class Tengen_GameOverState extends AbstractGameState {
             game.eventManager().publishGameEvent(new HighScoreAccessErrorEvent(e));
         }
 
-        gamePlay.showMessage(game, MessageType.GAME_OVER);
+        level.showMessage(MessageType.GAME_OVER);
 
         final MapCategory mapCategory = TengenMsPacMan_GamePlay.mapCategory(session);
         if (!session.isAttractMode() && mapCategory != MapCategory.ARCADE) {
@@ -94,7 +94,7 @@ public class Tengen_GameOverState extends AbstractGameState {
 
     @Override
     public void onExit(GameContext game) {
-        hud.clearMessage();
+        session.level().clearMessage();
         session.clearValue(TengenMsPacMan_Extras.GAME_OVER_MESSAGE_ANIMATION);
     }
 

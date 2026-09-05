@@ -26,7 +26,6 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
     @Override
     public void onEnterState(GameContext game) {
         configureHUD(hud);
-        gamePlay.showMessage(game, MessageType.GAME_OVER);
 
         final GameLevel level = gamePlay.buildDemoLevel(game);
         session.setLevel(level);
@@ -36,6 +35,8 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
             ghost.worldNavigation().setPaused(true);
             ghost.animation().setStopped(true);
         });
+
+        level.showMessage(MessageType.GAME_OVER);
 
         game.eventManager().publishGameEvent(new LevelCreatedEvent(level));
     }
@@ -78,7 +79,6 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
     }
 
     private void clear(GameContext game) {
-        game.session().hud().clearMessage();
         game.session().level().entities().removeAll();
         game.session().setLevel(null);
         Logger.info("Demo level has been removed");

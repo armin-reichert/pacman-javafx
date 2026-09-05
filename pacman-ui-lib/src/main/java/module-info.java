@@ -23,6 +23,7 @@ open module de.amr.pacmanfx.uilib {
     exports de.amr.pacmanfx.uilib.controls.skin;
     exports de.amr.pacmanfx.uilib.widgets;
     exports de.amr.pacmanfx.uilib.widgets.optionmenu;
+    exports de.amr.pacmanfx.uilib.entities.messageview.comp;
     exports de.amr.pacmanfx.uilib.entities3D.ghost.comp;
     exports de.amr.pacmanfx.uilib.entities3D.bonus.anim;
     exports de.amr.pacmanfx.uilib.entities3D.ghost.system;

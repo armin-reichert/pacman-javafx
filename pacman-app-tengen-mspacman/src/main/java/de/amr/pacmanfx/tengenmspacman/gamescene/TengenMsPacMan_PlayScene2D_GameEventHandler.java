@@ -68,9 +68,7 @@ public interface TengenMsPacMan_PlayScene2D_GameEventHandler extends DefaultGame
         session.optLevel().ifPresent(level -> {
             resetActorAnimations(systems.actorSpriteAnimController(), session, level);
             gameScene().dynamicCamera().playIntroSequence();
-            if (game.variant().gamePlay() instanceof TengenMsPacMan_GamePlay tengenGame) {
-                tengenGame.showMessage(game, MessageType.READY);
-            }
+            level.showMessage(MessageType.READY);
         });
     }
 
@@ -180,8 +178,7 @@ public interface TengenMsPacMan_PlayScene2D_GameEventHandler extends DefaultGame
     }
 
     default void resetPacAnimation(ActorSpriteAnimController animSystem, GameSession session, Pac pac) {
-        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) gameScene().game().variant().gamePlay();
-        animSystem.select(pac, gamePlay.isBoosterOn(session)
+        animSystem.select(pac, TengenMsPacMan_GamePlay.isBoosterOn(session)
             ? TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER
             : CommonSpriteAnimationID.PAC_MOUTH_MOVING);
         animSystem.resetSelected(pac);

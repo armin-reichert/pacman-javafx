@@ -30,6 +30,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.MessageViewRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -89,9 +90,7 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
         NES_Palette.color(0x20),
         NES_Palette.color(0x10),
         GlobalAssets.Fonts.ARCADE8.font(),
-        "CREDIT %d", // not used
-        GlobalAssets.Fonts.ARCADE8.font(),
-        MESSAGE_COLORS::get
+        "CREDIT %d" // not used in Tengen
     );
 
     public TengenMsPacMan_RenderConfig(AssetMap assets) {
@@ -138,6 +137,11 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     @Override
     public TengenMsPacMan_GameLevelRenderer createGameLevelRenderer(ActorSpriteAnimController animController, Canvas canvas) {
         return new TengenMsPacMan_GameLevelRenderer(canvas);
+    }
+
+    @Override
+    public BaseRenderer createMessageViewRenderer(Canvas canvas) {
+        return new MessageViewRenderer(canvas);
     }
 
     @Override

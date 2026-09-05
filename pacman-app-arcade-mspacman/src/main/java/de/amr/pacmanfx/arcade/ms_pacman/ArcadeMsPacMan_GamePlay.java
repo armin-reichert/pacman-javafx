@@ -21,6 +21,7 @@ import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelEntities;
+import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
@@ -59,72 +60,70 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
 
         final GameLevelEntities entities = new GameLevelEntities();
 
-        final GameSession session = game.session();
         final WorldNavigationSystem navigator = game.variant().systems().navigator();
         final WorldMap worldMap = game.variant().worldMapManager().supplyWorldMap(levelNumber);
-        final TerrainLayer terrain = worldMap.terrainLayer();
 
-        final Vector2i houseMinTile = terrain.getTilePropertyOrDefault(
-            WorldMapPropertyName.POS_HOUSE_MIN_TILE, ArcadePacMan_GamePlay.ARCADE_MAP_HOUSE_MIN_TILE);
-        terrain.propertyMap().put(WorldMapPropertyName.POS_HOUSE_MIN_TILE, houseMinTile.toString());
-
-        final House house = HouseFactory.createArcadeHouse(houseMinTile);
-        entities.add(house);
-
-        createAndSetMsPacMan(entities, game.variant().systems());
-        createAndSetGhosts(entities, worldMap.terrainLayer(), house);
+        createAndAddEntities(entities, worldMap.terrainLayer());
+        configureEntities(entities, game.variant().systems(), worldMap.terrainLayer(), entities.house());
 
         final DefaultHuntingTimer huntingTimer = new DefaultHuntingTimer("Arcade Ms. Pac-Man Hunting Timer", game.variant().rules().numHuntingPhases());
-
-        final GameLevel level = new GameLevel(levelNumber, worldMap, entities, huntingTimer);
-
-        session.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
-        session.setLevel(level);
-
         huntingTimer.setPhaseChangeCallback(newPhaseIndex -> {
             if (newPhaseIndex > 0) {
-                level.entities().ghostsInAnyOfStates(TURNBACK_STATES).forEach(navigator::requestTurnBack);
+                entities.ghostsInAnyOfStates(TURNBACK_STATES).forEach(navigator::requestTurnBack);
             }
         });
 
+        final GameLevel level = new GameLevel(levelNumber, worldMap, entities, huntingTimer);
+
         final GameRules rules = game.variant().rules();
         level.setBonusSymbolCodes(rules.bonusSymbols(levelNumber));
+
+        final GameSession session = game.session();
 
         /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
          * (also inside a level) whenever a bonus score is reached. At least that's what I was told. */
         final LevelCounter levelCounter = session.hud().levelCounter();
         levelCounter.data().setEnabled(levelNumber < 8);
 
+        session.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
+        session.setLevel(level);
+
         return level;
     }
 
-    protected void createAndSetMsPacMan(GameLevelEntities entities, GameSystems systems) {
-        final var factory = new ArcadeMsPacMan_ActorFactory();
-        final Pac msPacMan = factory.createMsPacMan();
+    private void createAndAddEntities(GameLevelEntities entities, TerrainLayer terrain) {
+        final Vector2i houseMinTile = terrain.getTilePropertyOrDefault(
+            WorldMapPropertyName.POS_HOUSE_MIN_TILE, ArcadePacMan_GamePlay.ARCADE_MAP_HOUSE_MIN_TILE);
+        terrain.propertyMap().put(WorldMapPropertyName.POS_HOUSE_MIN_TILE, houseMinTile.toString());
+
+        final House house = HouseFactory.createArcadeHouse(houseMinTile);
+        final MessageView messageView = createMessageView(house);
+
+        final var actorFactory  = new ArcadeMsPacMan_ActorFactory();
+        final Pac msPacMan      = actorFactory.createMsPacMan();
+        final Ghost redGhost    = actorFactory.createRedGhost();
+        final Ghost pinkGhost   = actorFactory.createPinkGhost();
+        final Ghost cyanGhost   = actorFactory.createCyanGhost();
+        final Ghost orangeGhost = actorFactory.createOrangeGhost();
+
+        entities.add(house);
+        entities.add(messageView);
         entities.add(msPacMan);
-
-        msPacMan.autoSteering().setSteering(new RuleGuidedPacSteering(
-            systems.navigator(), systems.pacWorldMovementPolicy()
-        ));
-    }
-
-    private void createAndSetGhosts(GameLevelEntities entities, TerrainLayer terrain, House house) {
-        final var factory = new ArcadeMsPacMan_ActorFactory();
-
-        final Ghost redGhost = factory.createRedGhost();
-        final Ghost pinkGhost = factory.createPinkGhost();
-        final Ghost cyanGhost = factory.createCyanGhost();
-        final Ghost orangeGhost = factory.createOrangeGhost();
-
-        redGhost.worldInfo()   .init(terrain, house, WorldMapPropertyName.POS_GHOST_1_RED);
-        pinkGhost.worldInfo()  .init(terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK);
-        cyanGhost.worldInfo()  .init(terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN);
-        orangeGhost.worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE);
-
         entities.add(redGhost);
         entities.add(pinkGhost);
         entities.add(cyanGhost);
         entities.add(orangeGhost);
+    }
+
+    private void configureEntities(GameLevelEntities entities, GameSystems systems, TerrainLayer terrain, House house) {
+        entities.pac().autoSteering().setSteering(new RuleGuidedPacSteering(
+            systems.navigator(), systems.pacWorldMovementPolicy()
+        ));
+
+        entities.ghost(GhostPersonality.RED_GHOST_SHADOW)  .worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_1_RED);
+        entities.ghost(GhostPersonality.PINK_GHOST_SPEEDY) .worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK);
+        entities.ghost(GhostPersonality.CYAN_GHOST_BASHFUL).worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN);
+        entities.ghost(GhostPersonality.ORANGE_GHOST_POKEY).worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE);
     }
 
     @Override

@@ -23,6 +23,7 @@ public class GameLevelEntities {
     private final EnumMap<GhostPersonality, Ghost> theGhosts = new EnumMap<>(GhostPersonality.class);
     private Bonus theBonus;
     private House theHouse;
+    private MessageView theMessage;  // Don't push me cause I'm close to the edge, I'm trying not to lose my head!
     private final List<GhostPoints> theGhostPoints = new ArrayList<>();
     private final List<BonusPoints> theBonusPoints = new ArrayList<>();
 
@@ -55,6 +56,12 @@ public class GameLevelEntities {
                 }
                 theHouse = house;
             }
+            case MessageView messageView -> {
+                if (theMessage != null) {
+                    throw new IllegalArgumentException("MessageView %s already added to entity set!".formatted(theMessage.name()));
+                }
+                theMessage = messageView;
+            }
             default -> throw new IllegalArgumentException("Unknown entity type!");
         }
     }
@@ -68,6 +75,7 @@ public class GameLevelEntities {
             case Bonus _ -> theBonus = null;
             case BonusPoints bonusPoints -> theBonusPoints.remove(bonusPoints);
             case House _ -> theHouse = null;
+            case  MessageView _ -> theMessage = null;
             default -> throw new IllegalArgumentException("Unknown entity type!");
         }
     }
@@ -82,6 +90,7 @@ public class GameLevelEntities {
             theGhosts.values().stream(),
             Optional.ofNullable(theBonus).stream(),
             Optional.ofNullable(theHouse).stream(),
+            Optional.ofNullable(theMessage).stream(),
             theGhostPoints.stream(),
             theBonusPoints.stream()).flatMap(Function.identity());
     }
@@ -135,5 +144,9 @@ public class GameLevelEntities {
 
     public List<GhostPoints> theGhostPoints() {
         return theGhostPoints;
+    }
+
+    public MessageView theMessageView() {
+        return theMessage;
     }
 }

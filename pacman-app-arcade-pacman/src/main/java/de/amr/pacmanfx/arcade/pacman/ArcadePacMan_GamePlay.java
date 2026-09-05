@@ -33,6 +33,9 @@ import de.amr.pacmanfx.core.rules.DefaultHuntingTimer;
 import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.core.steering.RouteGuidedSteering;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
+import de.amr.pacmanfx.ui.GlobalAssets;
+import de.amr.pacmanfx.uilib.entities.messageview.comp.MessageViewStyleComp;
+import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
 import org.tinylog.Logger;
 
 import java.util.List;
@@ -40,8 +43,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.tile;
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.*;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -138,20 +140,17 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
         final GameLevelEntities entities = new GameLevelEntities();
 
-        final GameSession session = game.session();
         final WorldNavigationSystem navigator = game.variant().systems().navigator();
         final WorldMap worldMap = game.variant().worldMapManager().supplyWorldMap(levelNumber);
 
-        addEntities(entities, game, worldMap);
+        createAndAddEntities(entities, worldMap.terrainLayer());
+        configureEntities(entities, game.variant().systems(), worldMap.terrainLayer(), entities.house());
 
         final DefaultHuntingTimer huntingTimer = new DefaultHuntingTimer("Arcade Pac-Man Hunting Timer", game.variant().rules().numHuntingPhases());
 
         final GameLevel level = new GameLevel(levelNumber, worldMap, entities, huntingTimer);
 
         level.gateKeeper().setGhostReleasedCallback(this::onGhostReleasedFromHouse);
-
-        session.setLevel(level);
-        session.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
 
         final GameRules rules = game.variant().rules();
         level.setBonusSymbolCodes(rules.bonusSymbols(levelNumber));
@@ -164,20 +163,22 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
             }
         });
 
+        final GameSession session = game.session();
+        session.setLevel(level);
+        session.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
+
         return level;
     }
 
-    private void addEntities(GameLevelEntities entities, GameContext game, WorldMap worldMap) {
-        final TerrainLayer terrain = worldMap.terrainLayer();
-
+    private void createAndAddEntities(GameLevelEntities entities, TerrainLayer terrain) {
         final Vector2i houseMinTile = terrain.getTilePropertyOrDefault(
             WorldMapPropertyName.POS_HOUSE_MIN_TILE, ARCADE_MAP_HOUSE_MIN_TILE);
         terrain.propertyMap().put(WorldMapPropertyName.POS_HOUSE_MIN_TILE,  String.valueOf(houseMinTile));
 
-        final var actorFactory = ArcadePacMan_ActorFactory.instance();
-
         final House house = HouseFactory.createArcadeHouse(houseMinTile);
+        final MessageView messageView = createMessageView(house);
 
+        final var actorFactory = ArcadePacMan_ActorFactory.instance();
         final Pac pacMan        = actorFactory.createPacMan();
         final Ghost redGhost    = actorFactory.createRedGhost();
         final Ghost pinkGhost   = actorFactory.createPinkGhost();
@@ -185,18 +186,16 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         final Ghost orangeGhost = actorFactory.createOrangeGhost();
 
         entities.add(house);
-
+        entities.add(messageView);
         entities.add(pacMan);
-
         entities.add(redGhost);
         entities.add(pinkGhost);
         entities.add(cyanGhost);
         entities.add(orangeGhost);
+    }
 
-        // Configure entities
-
-        final GameSystems systems = game.variant().systems();
-        pacMan.autoSteering().setSteering(new RuleGuidedPacSteering(
+    private void configureEntities(GameLevelEntities entities, GameSystems systems, TerrainLayer terrain, House house) {
+        entities.pac().autoSteering().setSteering(new RuleGuidedPacSteering(
             systems.navigator(), systems.pacWorldMovementPolicy()
         ));
 
@@ -205,10 +204,10 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
             .filter(tile -> terrain.content(tile) == TerrainTile.ONE_WAY_DOWN.$)
             .collect(Collectors.toUnmodifiableSet());
 
-        redGhost.worldInfo()   .init(terrain, house, WorldMapPropertyName.POS_GHOST_1_RED,    oneWayTiles);
-        pinkGhost.worldInfo()  .init(terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK,   oneWayTiles);
-        cyanGhost.worldInfo()  .init(terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN,   oneWayTiles);
-        orangeGhost.worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE, oneWayTiles);
+        entities.ghost(GhostPersonality.RED_GHOST_SHADOW)  .worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_1_RED,    oneWayTiles);
+        entities.ghost(GhostPersonality.PINK_GHOST_SPEEDY) .worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK,   oneWayTiles);
+        entities.ghost(GhostPersonality.CYAN_GHOST_BASHFUL).worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN,   oneWayTiles);
+        entities.ghost(GhostPersonality.ORANGE_GHOST_POKEY).worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE, oneWayTiles);
     }
 
     @Override
@@ -255,7 +254,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         final LevelCounter levelCounter = session.hud().levelCounter();
         levelCounterSystem.updateCounter(levelCounter, level.number(), level.bonusSymbolCode(0));
 
-        showMessage(game, MessageType.READY);
+        level.showMessage(MessageType.READY);
 
         // Note: This event is very important because it triggers the creation of the actor animations!
         game.eventManager().publishGameEvent(new LevelStartedEvent(level.number()));
@@ -304,5 +303,26 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
                 }
             }
         });
+    }
+
+    protected MessageView createMessageView(House house) {
+        final var messageView = new MessageView();
+
+        // Messages appear centered under house
+        final Vector2i houseSize = house.sizeInTiles();
+        float cx = tilesPx(house.floorplan().minTile().x() + houseSize.x() * 0.5f);
+        float cy = tilesPx(house.floorplan().minTile().y() + houseSize.y() + 1);
+        messageView.pos().set(cx, cy);
+
+        final var style = new MessageViewStyleComp();
+        style.setMessageFont(GlobalAssets.Fonts.ARCADE8.font());
+        style.setMessageColor(type -> switch (type) {
+            case NO_MESSAGE -> null; //TODO delete this message type
+            case READY -> ArcadePalette.ARCADE_YELLOW;
+            case GAME_OVER -> ArcadePalette.ARCADE_RED;
+        });
+        messageView.setComp(MessageViewStyleComp.class, style);
+
+        return messageView;
     }
 }

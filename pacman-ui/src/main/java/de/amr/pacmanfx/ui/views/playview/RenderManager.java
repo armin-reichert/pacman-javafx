@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
 package de.amr.pacmanfx.ui.views.playview;
 
 import de.amr.pacmanfx.core.GameContext;
@@ -29,6 +33,7 @@ public class RenderManager {
     private BaseRenderer entityRenderer;
     private BaseRenderer sceneRenderer;
     private HUD_Renderer hudRenderer;
+    private BaseRenderer messageViewRenderer;
 
     public void updateRenderers(GameAppContext app, GameScene gameScene) {
         requireNonNull(gameScene);
@@ -56,6 +61,9 @@ public class RenderManager {
 
             hudRenderer = config.createHUDRenderer(gameScene, animController, canvas);
             configureRenderer(hudRenderer, canvasRendering);
+
+            messageViewRenderer = config.createMessageViewRenderer(canvas);
+            configureRenderer(messageViewRenderer, canvasRendering);
         }
         else {
             Logger.error("Cannot create game scene and HUD renderer: no canvas has been assigned");
@@ -74,16 +82,18 @@ public class RenderManager {
                 sceneRenderer.render(gameScene, tick);
             }
 
-            //TODO add message into entity collection and assign suitable rendering order
-            hudRenderer.drawMessage(session);
-
             final List<GameEntity> entities = new ArrayList<>();
-            session.optLevel().ifPresent(level -> entities.addAll(level.entities().all().toList()));
+            session.optLevel().ifPresent(level -> {
+                entities.addAll(level.entities().all().toList());
+                if (level.entities().theMessageView() != null) {
+                    messageViewRenderer.render(level.entities().theMessageView(), tick);
+                }
+            });
+
             if (gameScene instanceof SceneWithoutLevel sceneWithoutLevel) {
                entities.addAll(sceneWithoutLevel.entities().selectAll().toList());
             }
             sortInRenderingOrder(entities).forEach(e -> entityRenderer.render(e, tick));
-
 
             if (session.hud().isVisible()) {
                 //TODO get rid of this:

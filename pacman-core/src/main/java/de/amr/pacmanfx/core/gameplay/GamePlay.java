@@ -9,7 +9,6 @@ import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.LevelCounter;
 import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.level.MessageType;
 
 public interface GamePlay {
 
@@ -28,8 +27,6 @@ public interface GamePlay {
     void startLevel(GameContext game, GameLevel level);
 
     void startNextLevel(GameContext game);
-
-    void showMessage(GameContext game, MessageType type);
 
     // Playing level
 

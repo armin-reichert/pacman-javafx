@@ -23,7 +23,7 @@ public class Common_LevelContinueState extends AbstractGameState {
     public void onEnterState(GameContext game) {
         level = session.level();
         gamePlay.prepareLevelForPlaying(game, level);
-        gamePlay.showMessage(game, MessageType.READY);
+        level.showMessage(MessageType.READY);
         level.entities().pac().state().setEnumValue(PacState.SLEEPING);
         timer().restartIndefinitely();
     }
