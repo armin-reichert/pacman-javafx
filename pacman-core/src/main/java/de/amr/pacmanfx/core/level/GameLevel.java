@@ -133,11 +133,11 @@ public class GameLevel {
     }
 
     public void clearMessage() {
-        entities.theMessageView().data().setMessageType(MessageType.NO_MESSAGE);
+        entities.theMessageView().type().setMessageType(MessageType.NO_MESSAGE);
     }
 
     public void showMessage(MessageType messageType) {
-        entities.theMessageView().data().setMessageType(messageType);
+        entities.theMessageView().type().setMessageType(messageType);
         entities.theMessageView().show();
     }
 }

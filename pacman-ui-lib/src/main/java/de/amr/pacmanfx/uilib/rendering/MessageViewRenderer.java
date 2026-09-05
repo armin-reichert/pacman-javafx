@@ -35,7 +35,7 @@ public class MessageViewRenderer extends BaseRenderer{
         messageView.optComp(MessageViewStyleComp.class).ifPresent(style -> {
             final Vector2f pos = messageView.pos().asVector2f();
             final Font scaledFont = Ufx.scaleFontBy(style.messageFont(), scaling());
-            switch (messageView.data().messageType()) {
+            switch (messageView.type().messageType()) {
                 case GAME_OVER -> fillTextCentered(GAME_OVER_TEXT, ARCADE_RED, scaledFont, pos.x(), pos.y());
                 case READY -> fillTextCentered(READY_TEXT, ARCADE_YELLOW, scaledFont, pos.x(), pos.y());
             }

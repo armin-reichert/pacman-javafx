@@ -78,7 +78,7 @@ public class MessageView3DBuilder {
     }
 
     public void build(MessageView messageView) {
-        messageView.data().setText(text);
+        messageView.type().setText(text);
         build3DView(messageView);
     }
 

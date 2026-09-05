@@ -14,7 +14,17 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
+import java.util.EnumMap;
+import java.util.Map;
+
 public class TengenMsPacMan_MessageViewRenderer extends MessageViewRenderer {
+
+    private static final Map<MessageType, String> MESSAGE_TEXT = new EnumMap<>(MessageType.class);
+    static {
+        MESSAGE_TEXT.put(MessageType.READY, "READY!");
+        MESSAGE_TEXT.put(MessageType.GAME_OVER, "GAME  OVER");
+        MESSAGE_TEXT.put(MessageType.NO_MESSAGE, "");
+    }
 
     public TengenMsPacMan_MessageViewRenderer(Canvas canvas) {
         super(canvas);
@@ -27,24 +37,23 @@ public class TengenMsPacMan_MessageViewRenderer extends MessageViewRenderer {
         if (!messageView.isVisible()) {
             return;
         }
+
+        //TODO translation of context does not belong here
+        ctx.save();
+        ctx.translate(scaled(TengenMsPacMan_PlayScene2D_Renderer.CONTENT_INDENT), 0);
+
+        final MessageType messageType = messageView.type().messageType();
         messageView.optComp(MessageViewStyleComp.class).ifPresent(style -> {
-            ctx.save();
-            //TODO this does not belong here
-            ctx.translate(scaled(TengenMsPacMan_PlayScene2D_Renderer.CONTENT_INDENT), 0);
-            switch (messageView.data().messageType()) {
-                case GAME_OVER -> drawGameOverMessage(messageView, style);
-                case READY -> drawReadyMessage(messageView, style);
-            }
-            ctx.restore();
+            final Font scaledFont = Ufx.scaleFontBy(style.messageFont(), scaling());
+            final Color color = style.messageColor().apply(messageType);
+            final Vector2f pos = messageView.pos().asVector2f();
+            fillTextCentered(MESSAGE_TEXT.get(messageType), color, scaledFont, pos.x(), pos.y());
         });
+
+        ctx.restore();
     }
 
-    private void drawGameOverMessage(MessageView messageView, MessageViewStyleComp style) {
-        final Vector2f pos = messageView.pos().asVector2f();
-        final Font scaledFont = Ufx.scaleFontBy(style.messageFont(), scaling());
-
-        //TODO set all this into message view component and update this information at the right time
-        /*
+    /*
         final MessageAnimation animation = session.value(
             TengenMsPacMan_Extras.GAME_OVER_MESSAGE_ANIMATION, MessageAnimation.class);
 
@@ -61,17 +70,4 @@ public class TengenMsPacMan_MessageViewRenderer extends MessageViewRenderer {
             : style.messageColor().apply(MessageType.GAME_OVER);
 
          */
-
-        final Color color = style.messageColor().apply(MessageType.GAME_OVER);
-        fillTextCentered(GAME_OVER_TEXT, color, scaledFont, pos.x(), pos.y());
-    }
-
-    private void drawReadyMessage(MessageView messageView, MessageViewStyleComp style) {
-        final Vector2f pos = messageView.pos().asVector2f();
-        final Font scaledFont = Ufx.scaleFontBy(style.messageFont(), scaling());
-        fillTextCentered(READY_TEXT,
-            style.messageColor().apply(MessageType.READY),
-            scaledFont,
-            pos.x(), pos.y());
-    }
 }

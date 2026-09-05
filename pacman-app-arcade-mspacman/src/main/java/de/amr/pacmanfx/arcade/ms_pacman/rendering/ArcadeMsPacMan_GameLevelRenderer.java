@@ -118,7 +118,7 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
     }
 
     protected void drawGameLevelMessage(MessageView messageView, Vector2f pos) {
-        switch (messageView.data().messageType()) {
+        switch (messageView.type().messageType()) {
             case MessageType.GAME_OVER
                 -> fillTextCentered("GAME  OVER", ARCADE_RED, arcadeFont8(), pos.x(), pos.y());
             case MessageType.READY

@@ -9,13 +9,11 @@ import de.amr.pacmanfx.core.level.MessageType;
 
 import java.util.Objects;
 
-public class MessageViewData implements GameEntityComp {
+public class MessageViewTypeComp implements GameEntityComp {
 
     private MessageType messageType = MessageType.NO_MESSAGE;
 
-    private String text;
-
-    public MessageViewData() {}
+    public MessageViewTypeComp() {}
 
     public MessageType messageType() {
         return messageType;
@@ -23,13 +21,5 @@ public class MessageViewData implements GameEntityComp {
 
     public void setMessageType(MessageType messageType) {
         this.messageType = Objects.requireNonNull(messageType);
-    }
-
-    public String text() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
     }
 }
