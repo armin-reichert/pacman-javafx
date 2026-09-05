@@ -23,7 +23,6 @@ import de.amr.pacmanfx.core.model.GhostPersonality;
 public class GameSystems {
 
     private final EntityUpdateSystem entityUpdateSystem = new EntityUpdateSystem();
-    private final HUD_UpdateSystem hudUpdateSystem = new HUD_UpdateSystem();
 
     private final ActorSpriteAnimController actorSpriteAnimController = new ActorSpriteAnimController();
 
@@ -31,6 +30,8 @@ public class GameSystems {
     protected MovementSystem motor =  new MovementSystem();
     protected WorldNavigationSystem navigator = new WorldNavigationSystem(motor);
     protected RoamingSystem roamingSystem = new RoamingSystem(navigator);
+
+    protected HUD_UpdateSystem hudUpdateSystem;
 
     protected WorldMovementPolicy<Pac> pacWorldMovementPolicy;
     protected PacAutoSteeringSystem pacAutoSteeringSystem;
@@ -116,6 +117,7 @@ public class GameSystems {
     protected void createHUDSystems() {
         scoreSystem = new ScoreSystem();
         levelCounterSystem = new LevelCounterSystem();
+        hudUpdateSystem = new HUD_UpdateSystem();
     }
 
     // Global systems

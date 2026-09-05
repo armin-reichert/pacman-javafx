@@ -5,7 +5,7 @@ import de.amr.pacmanfx.tengenmspacman.model.BoosterMode;
 import de.amr.pacmanfx.tengenmspacman.model.Difficulty;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 
-public class GameOptionsComp implements GameEntityComp {
+public class GameOptionsDataComp implements GameEntityComp {
 
     private MapCategory mapCategory;
 
@@ -13,7 +13,7 @@ public class GameOptionsComp implements GameEntityComp {
 
     private BoosterMode boosterMode;
 
-    public GameOptionsComp() {
+    public GameOptionsDataComp() {
     }
 
     public MapCategory mapCategory() {
