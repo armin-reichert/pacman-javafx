@@ -54,7 +54,7 @@ public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer,
     }
 
     @Override
-    public void drawHUDEntity(GameEntity entity) {
+    public void drawHUDEntity(GameEntity entity, long tick) {
         requireNonNull(entity);
 
         if (!entity.isVisible()) return;

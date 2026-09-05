@@ -90,7 +90,7 @@ public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteR
         }
 
         if (hud.gameScore().isVisible()) {
-            drawScores(hud.gameScore(), hud.highScore(), session, tick);
+//            drawScores(hud.gameScore(), hud.highScore(), session, tick);
         }
 
         ctx.restore();
@@ -108,7 +108,7 @@ public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteR
     }
 
     @Override
-    public void drawHUDEntity(GameEntity entity) {
+    public void drawHUDEntity(GameEntity entity, long tick) {
         requireNonNull(entity);
 
         if (!entity.isVisible()) {
@@ -119,14 +119,11 @@ public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteR
             case LevelCounter levelCounter -> drawLevelCounter(levelCounter);
             case LivesCounter livesCounter -> drawLivesCounter(livesCounter);
             case Score score -> {
-//                final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
-//                if (score.type() == Score.Type.GAME_SCORE) {
-//                    drawScoreText(score, style.scoreText(), scaledFont, style.scoreTextColor());
-//                } else {
-//                    final boolean highScoreDisabled = session.isAttractMode() || !session.hud().highScore().data().isEnabled();
-//                    final Color highScoreTextColor = highScoreDisabled ? style.scoreTextColorDisabled() : style.scoreTextColor();
-//                    drawScoreText(score, style.highScoreText(), scaledFont, highScoreTextColor);
-//                }
+                if (score.type() == Score.Type.GAME_SCORE) {
+                    drawGameScore(score, tick);
+                } else {
+                    drawHighScore(score, tick);
+                }
             }
             case CreditDisplay _ -> { /* not needed */}
             case GameOptionsDisplay gameOptionsDisplay -> { /* TODO implement */}
@@ -136,22 +133,24 @@ public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteR
         }
     }
 
-    private void drawScores(Score gameScore, Score highScore, GameSession session, long tick) {
+    private void drawGameScore(Score gameScore, long tick) {
         final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
-
-        // blink frequency = 1Hz (30 ticks on, 30 ticks off)
+        // Blink frequency = 1Hz (30 ticks on, 30 ticks off)
         final boolean on = tick % 60 < 30;
         if (on) {
-            fillText(style.scoreText(), style.scoreTextColor(), scaledFont, tilesPx(4), tilesPx(1));
+            fillText(style.scoreText(), style.scoreTextColor(), scaledFont, gameScore.pos().x(), gameScore.pos().y());
         }
-        fillText("%6d".formatted(gameScore.data().points()), style.scoreTextColor(), scaledFont, tilesPx(2), tilesPx(2));
+        fillText("%6d".formatted(gameScore.data().points()),
+            style.scoreTextColor(), scaledFont, 2 * TS, gameScore.pos().y() + TS);
 
-        Color color = style.scoreTextColor();
-        if (!highScore.data().isEnabled() && !session.isAttractMode()) {
-            color = style.scoreTextColorDisabled();
-        }
-        fillText("HIGH SCORE", color, scaledFont, tilesPx(11), tilesPx(1));
-        fillText("%6d".formatted(highScore.data().points()), color, scaledFont, tilesPx(13), tilesPx(2));
+    }
+    private void drawHighScore(Score highScore, long tick) {
+        final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
+        final Color color = highScore.data().isEnabled() ? style.scoreTextColor(): style.scoreTextColorDisabled();
+        fillText("HIGH SCORE", color, scaledFont, highScore.pos().x(), highScore.pos().y());
+        fillText("%6d".formatted(highScore.data().points()), color, scaledFont,
+            highScore.pos().x() + 2 * TS, highScore.pos().y() + TS
+        );
     }
 
     private void drawLivesCounter(LivesCounter livesCounter) {

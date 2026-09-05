@@ -22,5 +22,5 @@ public interface HUD_Renderer extends Renderer {
      */
     void drawHUD(HUD hud, GameSession session, GameScene gameScene, long tick);
 
-    void drawHUDEntity(GameEntity entity);
+    void drawHUDEntity(GameEntity entity, long tick);
 }

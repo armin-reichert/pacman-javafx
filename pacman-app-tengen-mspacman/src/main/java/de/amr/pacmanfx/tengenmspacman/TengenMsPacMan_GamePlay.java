@@ -283,6 +283,12 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
             levelCounter.data().setEnabled(true);
             game.variant().systems().levelCounterSystem().clear(levelCounter);
         }
+
+        final Score gameScore = hud.gameScore();
+        gameScore.pos().set(4 * TS, TS);
+
+        final Score highScore = hud.highScore();
+        highScore.pos().set(11 * TS, TS);
     }
 
     @Override
