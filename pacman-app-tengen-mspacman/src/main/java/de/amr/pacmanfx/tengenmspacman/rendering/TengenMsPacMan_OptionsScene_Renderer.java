@@ -14,7 +14,7 @@ import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_OptionsScene;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.uilib.rendering.GameSceneRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
@@ -26,7 +26,7 @@ import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_OptionsScene.*;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_OptionsScene_Renderer extends GameSceneRenderer
+public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
     implements SpriteRenderer, TengenMsPacMan_SceneRendererMixin
 {
     private static final int COL_ARROW = 2 * TS;

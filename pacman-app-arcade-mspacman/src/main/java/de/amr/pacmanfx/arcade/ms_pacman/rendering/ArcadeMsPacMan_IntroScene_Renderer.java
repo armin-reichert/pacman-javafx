@@ -11,7 +11,6 @@ import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.GameSceneRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -21,7 +20,7 @@ import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer.createDefaultSceneDebugRenderer;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
 
-public class ArcadeMsPacMan_IntroScene_Renderer extends GameSceneRenderer {
+public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer {
 
     private static final String TITLE = "\"MS PAC-MAN\"";
     private static final String[] GHOST_NAMES = { "BLINKY", "PINKY", "INKY", "SUE" };

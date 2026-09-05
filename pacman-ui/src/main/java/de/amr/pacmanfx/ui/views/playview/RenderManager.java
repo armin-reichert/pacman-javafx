@@ -12,7 +12,6 @@ import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.HUD_Renderer;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.GameSceneRenderer;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.scene.canvas.Canvas;
 import org.tinylog.Logger;
@@ -28,7 +27,7 @@ public class RenderManager {
 
     private BaseRenderer baseRenderer;
     private BaseRenderer entityRenderer;
-    private GameSceneRenderer sceneRenderer;
+    private BaseRenderer sceneRenderer;
     private HUD_Renderer hudRenderer;
 
     public void updateRenderers(GameAppContext app, GameScene gameScene) {
@@ -106,11 +105,11 @@ public class RenderManager {
         this.entityRenderer = entityRenderer;
     }
 
-    public GameSceneRenderer sceneRenderer() {
+    public BaseRenderer sceneRenderer() {
         return sceneRenderer;
     }
 
-    public void setSceneRenderer(GameSceneRenderer sceneRenderer) {
+    public void setSceneRenderer(BaseRenderer sceneRenderer) {
         this.sceneRenderer = sceneRenderer;
     }
 

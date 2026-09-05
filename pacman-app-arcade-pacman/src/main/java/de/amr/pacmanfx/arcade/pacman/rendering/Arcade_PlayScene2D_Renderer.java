@@ -18,7 +18,6 @@ import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
-import de.amr.pacmanfx.uilib.rendering.GameSceneRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 
@@ -29,7 +28,7 @@ import static java.util.Objects.requireNonNull;
  * Renders the 2D play scene for the Arcade Pac-Man games. The XXL games use a generic map renderer that does not need
  * any graphics.
  */
-public class Arcade_PlayScene2D_Renderer extends GameSceneRenderer implements SpriteRenderer {
+public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements SpriteRenderer {
 
     private final SpriteSheet spriteSheet;
 

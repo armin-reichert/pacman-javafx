@@ -11,12 +11,12 @@ import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
-import de.amr.pacmanfx.uilib.rendering.GameSceneRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer.createDefaultSceneDebugRenderer;
 
-public class ArcadeMsPacMan_CutScene_Renderer extends GameSceneRenderer {
+public class ArcadeMsPacMan_CutScene_Renderer extends BaseRenderer {
 
     private final ArcadeMsPacMan_ActorRenderer actorRenderer;
 

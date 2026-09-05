@@ -8,7 +8,7 @@ import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
-import de.amr.pacmanfx.uilib.rendering.GameSceneRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
@@ -28,7 +28,7 @@ import static java.util.Objects.requireNonNull;
  * and a grid before the intro scene starts. This scene is used by the Arcade and the XXL variants so we pass the
  * corresponding spritesheet as a parameter.
  */
-public class Arcade_BootScene2D_Renderer extends GameSceneRenderer implements SpriteRenderer {
+public class Arcade_BootScene2D_Renderer extends BaseRenderer implements SpriteRenderer {
 
     public static final int GRID_SIZE = 16;
 

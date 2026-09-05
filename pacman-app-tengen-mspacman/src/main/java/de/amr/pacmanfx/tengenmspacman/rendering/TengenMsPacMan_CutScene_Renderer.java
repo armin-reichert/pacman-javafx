@@ -12,12 +12,12 @@ import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene3;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene4;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
-import de.amr.pacmanfx.uilib.rendering.GameSceneRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer.createDefaultSceneDebugRenderer;
 
-public class TengenMsPacMan_CutScene_Renderer extends GameSceneRenderer {
+public class TengenMsPacMan_CutScene_Renderer extends BaseRenderer {
 
     private final TengenMsPacMan_ActorRenderer actorRenderer;
 

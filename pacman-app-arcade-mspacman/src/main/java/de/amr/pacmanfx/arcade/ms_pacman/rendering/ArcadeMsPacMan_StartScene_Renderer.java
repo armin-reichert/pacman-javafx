@@ -8,7 +8,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.scenes.ArcadeMsPacMan_StartScene;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
-import de.amr.pacmanfx.uilib.rendering.GameSceneRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -18,7 +18,7 @@ import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer.createDefaultSceneDebugRenderer;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_ORANGE;
 
-public class ArcadeMsPacMan_StartScene_Renderer extends GameSceneRenderer implements SpriteRenderer {
+public class ArcadeMsPacMan_StartScene_Renderer extends BaseRenderer implements SpriteRenderer {
 
     private final CopyrightRenderer copyrightRenderer;
     private final Image copyrightImage;

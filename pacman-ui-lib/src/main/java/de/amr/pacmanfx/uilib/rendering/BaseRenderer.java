@@ -20,6 +20,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 
+import java.util.Optional;
+
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -51,6 +53,8 @@ public abstract class BaseRenderer implements Renderer {
 
     protected InfoMap infoMap;
 
+    private BaseRenderer debugInfoRenderer;
+
     protected boolean imageSmoothing;
 
     public BaseRenderer(Canvas canvas) {
@@ -66,6 +70,14 @@ public abstract class BaseRenderer implements Renderer {
 
     public void setInfoMap(InfoMap infoMap) {
         this.infoMap = infoMap;
+    }
+
+    public Optional<BaseRenderer> optDebugInfoRenderer() {
+        return Optional.ofNullable(debugInfoRenderer);
+    }
+
+    public void setDebugInfoRenderer(BaseRenderer debugInfoRenderer) {
+        this.debugInfoRenderer = debugInfoRenderer;
     }
 
     // Renderer interface
