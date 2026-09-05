@@ -64,7 +64,6 @@ public class MessageView3DDisplaySystem {
     }
 
     private static void configureMessageView(MessageView messageView, String messageText, Font font, float displaySeconds) {
-        messageView.type().setText(messageText);
         // 3D view must be updated after text change!
         new MessageView3DBuilder()
             .backgroundColor(Color.BLACK)
