@@ -14,25 +14,19 @@ public class HUD {
 
     private final QuerySet<GameEntity> entities = new QuerySet<>();
 
-    private final LevelCounter levelCounter;
-    private final LivesCounter livesCounter;
-    private final Score gameScore;
-    private final Score highScore;
-    private final MessageView messageView;
-    private final CreditDisplay creditDisplay;
-
     public HUD(String variantName) {
-        levelCounter = new LevelCounter();
-        livesCounter = new LivesCounter();
-        messageView = new MessageView();
-        gameScore = new Score(Score.Type.GAME_SCORE);
-        highScore = ScoreSystem.createHighScore(variantName);
-        creditDisplay = new CreditDisplay();
+        final var levelCounter = new LevelCounter();
+        final var livesCounter = new LivesCounter();
+        final var messageView = new MessageView();
+        final var creditDisplay = new CreditDisplay();
+        final var gameScore = new Score(Score.Type.GAME_SCORE);
+        final var highScore = ScoreSystem.createHighScore(variantName);
+
+        creditDisplay.pos().set(2 * TS, 36 * TS);
 
         gameScore.pos().set(TS, TS);
-        highScore.show();
         highScore.pos().set(14 * TS, TS);
-        creditDisplay.pos().set(2 * TS, 36 * TS);
+        highScore.show();
 
         entities.addAll(levelCounter, livesCounter, messageView, gameScore, highScore, creditDisplay);
     }
@@ -50,31 +44,31 @@ public class HUD {
     }
 
     public CreditDisplay creditDisplay() {
-        return creditDisplay;
+        return entities.theOne(CreditDisplay.class);
     }
 
     public LevelCounter levelCounter() {
-        return levelCounter;
+        return entities.theOne(LevelCounter.class);
     }
 
     public LivesCounter livesCounter() {
-        return livesCounter;
+        return entities.theOne(LivesCounter.class);
     }
 
     public Score gameScore() {
-        return gameScore;
+        return entities.selectWhere(Score.class, score -> score.type() == Score.Type.GAME_SCORE).findFirst().orElseThrow();
     }
 
     public Score highScore() {
-        return highScore;
+        return entities.selectWhere(Score.class, score -> score.type() == Score.Type.HIGH_SCORE).findFirst().orElseThrow();
     }
 
     public MessageView messageView() {
-        return messageView;
+        return entities.theOne(MessageView.class);
     }
 
     public void clearMessage() {
-        messageView.data().setMessageType(MessageType.NO_MESSAGE);
+        messageView().data().setMessageType(MessageType.NO_MESSAGE);
     }
 
     public QuerySet<GameEntity> entities() {
