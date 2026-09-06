@@ -19,8 +19,6 @@ import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
-import de.amr.pacmanfx.tengenmspacman.entities.LevelNumberDisplay;
-import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
@@ -43,7 +41,6 @@ import org.tinylog.Logger;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.mapCategory;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 import static de.amr.pacmanfx.tengenmspacman.gamescene.SceneDisplay.SCROLLING;
@@ -146,7 +143,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
                 dynamicCamera.update(tilesPx(terrain.numRows()), level.entities().pac());
             }
             ensureActorAnimationsCreated(session, level);
-            updateHUD(session);
             optSoundEffects().ifPresent(soundEffects -> {
                 soundEffects.setEnabled(!session.isAttractMode());
                 soundEffects.playAmbientGameLevelSound(game(), level);
@@ -297,20 +293,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
         });
         Logger.debug("Tengen 2D play scene sub-scene: w={0.00} h={0.00} scaling={0.00}",
             subScene.getWidth(), subScene.getHeight(), reqCanvasRendering().scaling());
-    }
-
-    private void updateHUD(GameSession session) {
-        final boolean showLevelNumber = mapCategory(session) != MapCategory.ARCADE;
-        session.hud().entities()
-            .ofType(LevelNumberDisplay.class)
-            .forEach(levelNumberDisplay -> {
-                if (showLevelNumber) {
-                    levelNumberDisplay.show();
-                } else {
-                    levelNumberDisplay.hide();
-                }
-            });
-//        setHUD_Option(session, LEVEL_NUMBER_VISIBLE, mapCategory(session) != MapCategory.ARCADE);
     }
 
     void playLevelCompleteAnimation(GameLevel level, int numFlashes) {

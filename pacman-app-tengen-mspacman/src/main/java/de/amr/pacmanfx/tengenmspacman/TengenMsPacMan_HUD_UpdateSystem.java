@@ -8,9 +8,13 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.HUD_UpdateSystem;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.tengenmspacman.entities.GameOptionsDisplay;
+import de.amr.pacmanfx.tengenmspacman.entities.LevelNumberDisplay;
 import de.amr.pacmanfx.tengenmspacman.entities.gameoptionsdisplay.GameOptionsDataComp;
+import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.noOptionsChanged;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.*;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.difficulty;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.mapCategory;
 
 public class TengenMsPacMan_HUD_UpdateSystem extends HUD_UpdateSystem {
 
@@ -44,8 +48,17 @@ public class TengenMsPacMan_HUD_UpdateSystem extends HUD_UpdateSystem {
         }
 
         final GameOptionsDataComp options = optionsDisplay.options();
-        options.setBoosterMode(TengenMsPacMan_GamePlay.boosterMode(session));
-        options.setDifficulty(TengenMsPacMan_GamePlay.difficulty(session));
-        options.setMapCategory(TengenMsPacMan_GamePlay.mapCategory(session));
+        options.setBoosterMode(boosterMode(session));
+        options.setDifficulty(difficulty(session));
+        options.setMapCategory(mapCategory(session));
+
+        final boolean showLevelNumber = mapCategory(session) != MapCategory.ARCADE;
+        session.hud().entities().ofType(LevelNumberDisplay.class).forEach(levelNumberDisplay -> {
+            if (showLevelNumber) {
+                levelNumberDisplay.show();
+            } else {
+                levelNumberDisplay.hide();
+            }
+        });
     }
 }
