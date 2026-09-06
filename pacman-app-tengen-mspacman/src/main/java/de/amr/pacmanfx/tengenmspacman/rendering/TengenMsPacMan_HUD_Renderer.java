@@ -141,9 +141,9 @@ public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteR
         final float y = livesCounter.pos().y();
 
         final int numLives = livesCounter.data().numLives();
-        final int numSymbols = Math.min(numLives, livesCounter.data().maxLivesShown());
 
-        for (int i = 0; i < numSymbols; ++i) {
+        final int numLivesShown = livesCounter.data().numLivesShown();
+        for (int i = 0; i < numLivesShown; ++i) {
             drawSprite(style.livesCounterSymbolSprite(), x + i * 2 * TS, y, true);
         }
 
