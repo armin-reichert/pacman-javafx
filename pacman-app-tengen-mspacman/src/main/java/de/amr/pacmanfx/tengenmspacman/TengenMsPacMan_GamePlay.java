@@ -30,6 +30,7 @@ import de.amr.pacmanfx.core.rules.DefaultHuntingTimer;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
 import de.amr.pacmanfx.tengenmspacman.entities.GameOptionsDisplay;
 import de.amr.pacmanfx.tengenmspacman.entities.LevelNumberDisplay;
+import de.amr.pacmanfx.tengenmspacman.entities.pac.comp.PacBoosterComp;
 import de.amr.pacmanfx.tengenmspacman.gamestate.Tengen_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.BoosterMode;
 import de.amr.pacmanfx.tengenmspacman.model.Difficulty;
@@ -89,16 +90,14 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
             && numContinues == DEFAULT_NUM_CONTINUES;
     }
 
-    public static void setBoosterOn(GameContext game, Pac pac, boolean boosterOn) {
+    public static void setBoosterOn(GameContext game, Pac pac, boolean boosterEnabled) {
         requireNonNull(game);
         requireNonNull(pac);
 
         final GameSession session = game.session();
-        session.setValue(GamePlayOptions.BOOSTER_ON, boosterOn);
+        session.setValue(GamePlayOptions.BOOSTER_ON, boosterEnabled);
 
-        //TODO FIXME! this is currently broken! Sprite is reset when Ms. Pac-Man moves!
-        final ActorSpriteAnimController animSystem = game.variant().systems().actorSpriteAnimController();
-        animSystem.select(pac, boosterOn ? TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER : CommonSpriteAnimationID.PAC_MOUTH_MOVING);
+        pac.reqComp(PacBoosterComp.class).setBoosterEnabled(boosterEnabled);
     }
 
     public static void setBoosterMode(GameSession session, BoosterMode boosterMode) {

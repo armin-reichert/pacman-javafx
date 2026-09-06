@@ -12,7 +12,7 @@ import static java.util.Objects.requireNonNull;
 
 public class PacAnimationSystem {
 
-    private final ActorSpriteAnimController animController;
+    protected final ActorSpriteAnimController animController;
 
     public PacAnimationSystem(ActorSpriteAnimController animController) {
         this.animController = requireNonNull(animController);

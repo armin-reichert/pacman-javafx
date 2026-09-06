@@ -22,9 +22,9 @@ import de.amr.pacmanfx.core.model.GhostPersonality;
 
 public class GameSystems {
 
-    private final EntityUpdateSystem entityUpdateSystem = new EntityUpdateSystem();
+    protected final EntityUpdateSystem entityUpdateSystem = new EntityUpdateSystem();
 
-    private final ActorSpriteAnimController actorSpriteAnimController = new ActorSpriteAnimController();
+    protected final ActorSpriteAnimController actorSpriteAnimController = new ActorSpriteAnimController();
 
     protected LifetimeSystem lifetime = new LifetimeSystem();
     protected MovementSystem motor =  new MovementSystem();

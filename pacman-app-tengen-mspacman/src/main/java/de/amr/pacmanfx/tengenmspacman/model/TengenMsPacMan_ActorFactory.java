@@ -7,6 +7,7 @@ package de.amr.pacmanfx.tengenmspacman.model;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.model.GhostPersonality;
+import de.amr.pacmanfx.tengenmspacman.entities.pac.comp.PacBoosterComp;
 
 public final class TengenMsPacMan_ActorFactory {
 
@@ -28,6 +29,7 @@ public final class TengenMsPacMan_ActorFactory {
 
     public Pac createMsPacMan() {
         final var msPacMan = new Pac("Ms. Pac-Man", false);
+        msPacMan.setComp(PacBoosterComp.class, new PacBoosterComp());
         msPacMan.reset();
         return msPacMan;
     }
