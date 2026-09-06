@@ -16,6 +16,8 @@ public class HUD {
 
     private final QuerySet<GameEntity> entities = new QuerySet<>();
 
+    public HUD() {}
+
     public HUD(String variantName) {
         final var levelCounter = new LevelCounter();
         final var livesCounter = new LivesCounter();

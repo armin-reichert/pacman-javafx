@@ -6,13 +6,11 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.math.RectShort;
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.entities.CreditDisplay;
 import de.amr.pacmanfx.core.entities.LevelCounter;
 import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Score;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
 import de.amr.pacmanfx.tengenmspacman.entities.GameOptionsDisplay;
 import de.amr.pacmanfx.tengenmspacman.entities.LevelNumberDisplay;
 import de.amr.pacmanfx.tengenmspacman.entities.gameoptionsdisplay.GameOptionsDataComp;
@@ -21,20 +19,15 @@ import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene2;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene3;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene4;
 import de.amr.pacmanfx.tengenmspacman.model.BoosterMode;
-import de.amr.pacmanfx.tengenmspacman.model.Difficulty;
-import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.HUD_Style;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 
 import java.util.List;
 
@@ -44,16 +37,11 @@ import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteRenderer {
 
-    private final ObjectProperty<Font> totalLivesFont = new SimpleObjectProperty<>(Font.font("Serif", FontWeight.BOLD, 8));
-
     private final HUD_Style style;
 
     public TengenMsPacMan_HUD_Renderer(HUD_Style style, Canvas canvas) {
         super(canvas);
         this.style = requireNonNull(style);
-
-        totalLivesFont.bind(scalingProperty().map(scaling
-            -> Font.font("Serif", FontWeight.BOLD, scaling.doubleValue() * 8)));
     }
 
     @Override
@@ -89,7 +77,7 @@ public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteR
                 if (score.type() == Score.Type.GAME_SCORE) {
                     drawGameScore(score, tick);
                 } else {
-                    drawHighScore(score, tick);
+                    drawHighScore(score);
                 }
             }
             case CreditDisplay _ -> { /* Not used in this game variant */}
@@ -102,18 +90,15 @@ public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteR
 
     private void drawGameOptionsDisplay(GameOptionsDisplay gameOptionsDisplay) {
         final GameOptionsDataComp options = gameOptionsDisplay.options();
-        final MapCategory mapCategory = options.mapCategory();
-        final Difficulty difficulty   = options.difficulty();
-        final BoosterMode boosterMode = options.boosterMode();
 
-        final RectShort mapCategorySprite = switch (mapCategory) {
+        final RectShort mapCategorySprite = switch (options.mapCategory()) {
             case BIG     -> spriteSheet().findSprite(SpriteID.INFO_CATEGORY_BIG);
             case MINI    -> spriteSheet().findSprite(SpriteID.INFO_CATEGORY_MINI);
             case STRANGE -> spriteSheet().findSprite(SpriteID.INFO_CATEGORY_STRANGE);
             case ARCADE  -> RectShort.NULL_RECTANGLE;
         };
 
-        final RectShort difficultySprite = switch (difficulty) {
+        final RectShort difficultySprite = switch (options.difficulty()) {
             case EASY   -> spriteSheet().findSprite(SpriteID.INFO_DIFFICULTY_EASY);
             case HARD   -> spriteSheet().findSprite(SpriteID.INFO_DIFFICULTY_HARD);
             case CRAZY  -> spriteSheet().findSprite(SpriteID.INFO_DIFFICULTY_CRAZY);
@@ -123,7 +108,7 @@ public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteR
         final float centerX = gameOptionsDisplay.pos().x();
         final float y = gameOptionsDisplay.pos().y();
         drawSpriteCentered(spriteSheet().findSprite(SpriteID.INFO_FRAME), centerX, y);
-        if (boosterMode != BoosterMode.BOOSTER_OFF) {
+        if (options.boosterMode() != BoosterMode.BOOSTER_OFF) {
             drawSpriteCentered(spriteSheet().findSprite(SpriteID.INFO_BOOSTER), centerX - tilesPx(5.5f), y);
         }
         drawSpriteCentered(difficultySprite, centerX, y);
@@ -141,7 +126,7 @@ public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteR
             style.scoreTextColor(), scaledFont, 2 * TS, gameScore.pos().y() + TS);
 
     }
-    private void drawHighScore(Score highScore, long tick) {
+    private void drawHighScore(Score highScore) {
         final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
         final Color color = highScore.data().isEnabled() ? style.scoreTextColor(): style.scoreTextColorDisabled();
         fillText("HIGH SCORE", color, scaledFont, highScore.pos().x(), highScore.pos().y());
@@ -161,8 +146,9 @@ public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteR
             drawSprite(style.livesCounterSymbolSprite(), x + i * 2 * TS, y, true);
         }
 
-        if (numLives - 1 > livesCounter.data().maxLivesShown()) {
-            fillText("(%d)".formatted(numLives), NES_Palette.color(0x28), totalLivesFont.get(), tilesPx(14), y + TS);
+        if (numLives > livesCounter.data().maxLivesShown()) {
+            final Font scaledFont = Ufx.scaleFontBy(Font.font("Serif", 8), scaling());
+            fillText("(%d)".formatted(numLives), NES_Palette.color(0x28), scaledFont, tilesPx(14), y + TS);
         }
     }
 
@@ -186,50 +172,16 @@ public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteR
         drawLevelNumberBox(
             levelNumberDisplay.levelNumber().number(),
             levelNumberDisplay.pos().x(),
-            levelNumberDisplay.pos().y());
+            levelNumberDisplay.pos().y()
+        );
     }
 
-    private void drawGameOptions(GameOptionsDisplay optionsDisplay) {
-        final float x = optionsDisplay.pos().x(); //Note: This is the center x position!
-        final float y = optionsDisplay.pos().y();
-        //TODO
-    }
-
-    // These methods are also used by the 3D scene, so make them public:
-
-    public void drawLevelNumberBox(int number, double x, double y) {
+    private void drawLevelNumberBox(int number, double x, double y) {
         drawSprite(spriteSheet().findSprite(SpriteID.LEVEL_NUMBER_BOX), x, y, true);
         final int tens = number / 10, ones = number % 10;
         if (tens > 0) {
             drawSprite(spriteSheet().findDigitSprite(tens), x + 2, y + 2, true);
         }
         drawSprite(spriteSheet().findDigitSprite(ones), x + 10, y + 2, true);
-    }
-
-    public void drawGameOptions(GameSession session, double centerX, double y) {
-        final MapCategory mapCategory = TengenMsPacMan_GamePlay.mapCategory(session);
-        final Difficulty difficulty   = TengenMsPacMan_GamePlay.difficulty(session);
-        final BoosterMode boosterMode = TengenMsPacMan_GamePlay.boosterMode(session);
-
-        final RectShort mapCategorySprite = switch (mapCategory) {
-            case BIG     -> spriteSheet().findSprite(SpriteID.INFO_CATEGORY_BIG);
-            case MINI    -> spriteSheet().findSprite(SpriteID.INFO_CATEGORY_MINI);
-            case STRANGE -> spriteSheet().findSprite(SpriteID.INFO_CATEGORY_STRANGE);
-            case ARCADE  -> RectShort.NULL_RECTANGLE;
-        };
-
-        final RectShort difficultySprite = switch (difficulty) {
-            case EASY   -> spriteSheet().findSprite(SpriteID.INFO_DIFFICULTY_EASY);
-            case HARD   -> spriteSheet().findSprite(SpriteID.INFO_DIFFICULTY_HARD);
-            case CRAZY  -> spriteSheet().findSprite(SpriteID.INFO_DIFFICULTY_CRAZY);
-            case NORMAL -> RectShort.NULL_RECTANGLE;
-        };
-
-        drawSpriteCentered(spriteSheet().findSprite(SpriteID.INFO_FRAME), centerX, y);
-        if (boosterMode != BoosterMode.BOOSTER_OFF) {
-            drawSpriteCentered(spriteSheet().findSprite(SpriteID.INFO_BOOSTER), centerX - tilesPx(5.5f), y);
-        }
-        drawSpriteCentered(difficultySprite, centerX, y);
-        drawSpriteCentered(mapCategorySprite, centerX + tilesPx(4.5f), y);
     }
 }
