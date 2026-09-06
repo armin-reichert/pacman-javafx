@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.tengenmspacman.entities.GameOptionsDisplay;
 import de.amr.pacmanfx.tengenmspacman.entities.gameoptionsdisplay.GameOptionsDataComp;
 
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.allOptionsHaveDefaultValue;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.noOptionsChanged;
 
 public class TengenMsPacMan_HUD_UpdateSystem extends HUD_UpdateSystem {
 
@@ -35,7 +35,7 @@ public class TengenMsPacMan_HUD_UpdateSystem extends HUD_UpdateSystem {
         livesCounter.data().setNumLives(livesShown);
 
         final GameOptionsDisplay optionsDisplay = hud.entities().theOne(GameOptionsDisplay.class);
-        if (allOptionsHaveDefaultValue(session)) {
+        if (noOptionsChanged(session)) {
             optionsDisplay.hide();
         } else {
             optionsDisplay.show();

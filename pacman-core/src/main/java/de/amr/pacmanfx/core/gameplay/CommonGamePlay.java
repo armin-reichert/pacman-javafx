@@ -31,6 +31,7 @@ import de.amr.pacmanfx.core.rules.ScoringRules;
 import org.tinylog.Logger;
 
 import java.io.IOException;
+import java.util.Set;
 
 import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
@@ -40,6 +41,9 @@ import static java.util.Objects.requireNonNull;
  * Common game play functionality. Can be modified by game-variant specific subclasses.
  */
 public abstract class CommonGamePlay implements GamePlay {
+
+    public static final Set<GhostState> TURNBACK_STATES = Set.of(
+        GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE);
 
     @Override
     public void prepareLevelForPlaying(GameContext game, GameLevel level) {

@@ -13,10 +13,8 @@ import de.amr.pacmanfx.core.ecs.systems.PositionSystem;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusRouteInfo;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusState;
-import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.levelCounter.comp.LevelCounterBehavior;
 import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
-import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
 import de.amr.pacmanfx.core.event.gameplay.LevelStartedEvent;
 import de.amr.pacmanfx.core.gameplay.ArcadeHouseGateKeeper;
@@ -48,7 +46,6 @@ import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import java.util.List;
-import java.util.Set;
 
 import static de.amr.basics.math.RandomNumbers.randomBoolean;
 import static de.amr.basics.math.RandomNumbers.randomInt;
@@ -58,9 +55,6 @@ import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_GamePlay extends CommonGamePlay {
-
-    public static final Set<GhostState> TURNBACK_STATES = Set.of(
-        GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE);
 
     public static final int ARCADE_MAP_GAME_OVER_TICKS = 420;
     public static final int NON_ARCADE_MAP_GAME_OVER_TICKS = 600;
@@ -81,17 +75,17 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
     // Tengen Ms. Pac-Man specific methods
 
-    public static boolean allOptionsHaveDefaultValue(GameSession session) {
-        final BoosterMode boosterMode = session.value(TengenMsPacMan_GamePlayOptions.BOOSTER_MODE, BoosterMode.class);
-        final Difficulty difficulty = session.value(TengenMsPacMan_GamePlayOptions.DIFFICULTY, Difficulty.class);
-        final MapCategory mapCategory = session.value(TengenMsPacMan_GamePlayOptions.MAP_CATEGORY, MapCategory.class);
-        final int startLevel = session.value(TengenMsPacMan_GamePlayOptions.START_LEVEL_NUMBER, Integer.class);
-        final int numContinues = session.value(TengenMsPacMan_GamePlayOptions.NUM_CONTINUES, Integer.class);
+    public static boolean noOptionsChanged(GameSession session) {
+        final BoosterMode boosterMode = boosterMode(session);
+        final Difficulty difficulty   = difficulty(session);
+        final MapCategory mapCategory = mapCategory(session);
+        final int startLevelNumber    = startLevelNumber(session);
+        final int numContinues        = numContinues(session);
 
         return boosterMode == DEFAULT_PAC_BOOSTER
             && difficulty == DEFAULT_DIFFICULTY
             && mapCategory == DEFAULT_MAP_CATEGORY
-            && startLevel == DEFAULT_START_LEVEL
+            && startLevelNumber == DEFAULT_START_LEVEL
             && numContinues == DEFAULT_NUM_CONTINUES;
     }
 
@@ -100,9 +94,9 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         requireNonNull(pac);
 
         final GameSession session = game.session();
-        session.setValue(TengenMsPacMan_GamePlayOptions.BOOSTER_ON, boosterOn);
+        session.setValue(GamePlayOptions.BOOSTER_ON, boosterOn);
 
-        //TODO this is currently broken! Sprite is reset when Ms. Pac-Man moves!
+        //TODO FIXME! this is currently broken! Sprite is reset when Ms. Pac-Man moves!
         final ActorSpriteAnimController animSystem = game.variant().systems().actorSpriteAnimController();
         animSystem.select(pac, boosterOn ? TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER : CommonSpriteAnimationID.PAC_MOUTH_MOVING);
     }
@@ -110,27 +104,30 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     public static void setBoosterMode(GameSession session, BoosterMode boosterMode) {
         requireNonNull(session);
         requireNonNull(boosterMode);
-        session.setValue(TengenMsPacMan_GamePlayOptions.BOOSTER_MODE, boosterMode);
+        session.setValue(GamePlayOptions.BOOSTER_MODE, boosterMode);
     }
 
     public static BoosterMode boosterMode(GameSession session) {
-        return session.value(TengenMsPacMan_GamePlayOptions.BOOSTER_MODE, BoosterMode.class);
+        requireNonNull(session);
+        return session.value(GamePlayOptions.BOOSTER_MODE, BoosterMode.class);
     }
 
     public static void setMapCategory(GameSession session, MapCategory mapCategory) {
         requireNonNull(session);
         requireNonNull(mapCategory);
-        session.setValue(TengenMsPacMan_GamePlayOptions.MAP_CATEGORY, mapCategory);
+        session.setValue(GamePlayOptions.MAP_CATEGORY, mapCategory);
     }
 
     public static MapCategory mapCategory(GameSession session) {
-        return session.value(TengenMsPacMan_GamePlayOptions.MAP_CATEGORY, MapCategory.class);
+        requireNonNull(session);
+        return session.value(GamePlayOptions.MAP_CATEGORY, MapCategory.class);
     }
 
     public static void setDifficulty(GameContext game, Difficulty difficulty) {
         requireNonNull(game);
         requireNonNull(difficulty);
-        game.session().setValue(TengenMsPacMan_GamePlayOptions.DIFFICULTY, difficulty);
+        game.session().setValue(GamePlayOptions.DIFFICULTY, difficulty);
+
         //TODO this should also move into session!
         final var speedRules = (TengenMsPacMan_ActorSpeedRules) game.variant().rules().actorSpeedRules();
         speedRules.setDifficulty(difficulty);
@@ -138,7 +135,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
     public static Difficulty difficulty(GameSession session) {
         requireNonNull(session);
-        return session.value(TengenMsPacMan_GamePlayOptions.DIFFICULTY, Difficulty.class);
+        return session.value(GamePlayOptions.DIFFICULTY, Difficulty.class);
     }
 
     public static void setStartLevelNumber(GameSession session, int number) {
@@ -147,22 +144,22 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
             number > TengenMsPacMan_GameRules.LAST_LEVEL_NUMBER) {
             throw GameException.invalidLevelNumber(number);
         }
-        session.setValue(TengenMsPacMan_GamePlayOptions.START_LEVEL_NUMBER, number);
+        session.setValue(GamePlayOptions.START_LEVEL_NUMBER, number);
     }
 
     public static int startLevelNumber(GameSession session) {
         requireNonNull(session);
-        return session.value(TengenMsPacMan_GamePlayOptions.START_LEVEL_NUMBER, Integer.class);
+        return session.value(GamePlayOptions.START_LEVEL_NUMBER, Integer.class);
     }
 
     public static void setNumContinues(GameSession session, int numContinues) {
         requireNonNull(session);
-        session.setValue(TengenMsPacMan_GamePlayOptions.NUM_CONTINUES, numContinues);
+        session.setValue(GamePlayOptions.NUM_CONTINUES, numContinues);
     }
 
     public static int numContinues(GameSession session) {
         requireNonNull(session);
-        return session.value(TengenMsPacMan_GamePlayOptions.NUM_CONTINUES, Integer.class);
+        return session.value(GamePlayOptions.NUM_CONTINUES, Integer.class);
     }
 
     public static boolean checkGameContinuesOnGameOver(GameSession session) {
@@ -185,30 +182,29 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
     public static void setBoosterOn(GameSession session, boolean boosterOn) {
         requireNonNull(session);
-        session.setValue(TengenMsPacMan_GamePlayOptions.BOOSTER_ON, boosterOn);
+        session.setValue(GamePlayOptions.BOOSTER_ON, boosterOn);
     }
 
     public static boolean isBoosterOn(GameSession session) {
         requireNonNull(session);
-        return session.value(TengenMsPacMan_GamePlayOptions.BOOSTER_ON, Boolean.class);
+        return session.value(GamePlayOptions.BOOSTER_ON, Boolean.class);
     }
 
     public static boolean canStartNewGame(GameSession session) {
         requireNonNull(session);
-        return session.value(TengenMsPacMan_GamePlayOptions.CAN_START_GAME, Boolean.class);
+        return session.value(GamePlayOptions.CAN_START_GAME, Boolean.class);
     }
 
     public static void setCanStartNewGame(GameSession session, boolean canStartNewGame) {
         requireNonNull(session);
-        session.setValue(TengenMsPacMan_GamePlayOptions.CAN_START_GAME, canStartNewGame);
+        session.setValue(GamePlayOptions.CAN_START_GAME, canStartNewGame);
     }
 
     public TengenMsPacMan_GamePlay() {}
 
-    // GamePlay interface
-
     @Override
     public boolean canStart(GameContext game) {
+        requireNonNull(game);
         return canStartNewGame(game.session());
     }
 
@@ -231,8 +227,13 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         session.setLevel(null);
         session.setGameRunning(false);
 
-        addTengenHUDElements(session.hud());
-        configureHUD(game, null, session.hud());
+        final HUD hud = session.hud();
+        hud.addEntity(new GameOptionsDisplay());
+        // Level number boxes left and right side
+        hud.addEntity(new LevelNumberDisplay());
+        hud.addEntity(new LevelNumberDisplay());
+
+        configureHUD(game, null, hud);
 
         initScores(game);
 
@@ -250,23 +251,30 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final LivesCounter livesCounter = hud.livesCounter();
         final LevelCounter levelCounter = hud.levelCounter();
 
+        hud.gameScore().pos().set(4 * TS, TS);
+        hud.highScore().pos().set(11 * TS, TS);
+        hud.entities().theOne(GameOptionsDisplay.class).pos().set(16 * TS, 2.5f * TS); // horizontally centered
+
         if (level != null) {
-            final int bottom = (level.worldMap().numRows() - 1) * TS;
+            // Called when level is created, adjust positions to map size
+
+            final int bottomPos = (level.worldMap().numRows() - 1) * TS;
 
             final var levelNumberDisplays = hud.entities().ofType(LevelNumberDisplay.class).toList();
-
-            final LevelNumberDisplay either = levelNumberDisplays.getFirst();
-            either.pos().set(2 * TS, bottom);
-            either.levelNumber().setNumber(level.number());
-
-            final LevelNumberDisplay other = levelNumberDisplays.getLast();
-            other.pos().set(28 * TS, bottom);
-            other.levelNumber().setNumber(level.number());
-
-            livesCounter.pos().set(4 * TS, bottom);
-            levelCounter.pos().set(26 * TS, bottom);
+            levelNumberDisplays.forEach(levelNumberDisplay -> levelNumberDisplay.levelNumber().setNumber(level.number()));
+            if (levelNumberDisplays.size() != 2) {
+                Logger.error("There should exist exactly 2 level number displays in this HUD!");
+            }
+            else {
+                levelNumberDisplays.getFirst().pos().set(2 * TS, bottomPos);
+                levelNumberDisplays.getLast().pos().set(28 * TS, bottomPos);
+            }
+            livesCounter.pos().set(4 * TS, bottomPos);
+            levelCounter.pos().set(26 * TS, bottomPos);
         }
         else {
+            // Called when session is started, initialize
+
             livesCounter.data().setNumLives(game.variant().initialLifeCount());
             livesCounter.data().setMaxLivesShown(5);
 
@@ -275,15 +283,6 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
             levelCounter.data().setEnabled(true);
             game.variant().systems().levelCounterSystem().clear(levelCounter);
         }
-
-        final Score gameScore = hud.gameScore();
-        gameScore.pos().set(4 * TS, TS);
-
-        final Score highScore = hud.highScore();
-        highScore.pos().set(11 * TS, TS);
-
-        final GameOptionsDisplay optionsDisplay = hud.entities().theOne(GameOptionsDisplay.class);
-        optionsDisplay.pos().set(16 * TS, 2.5f * TS);
     }
 
     @Override
@@ -432,8 +431,10 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
     @Override
     public void activateNextBonus(GameContext game, GameLevel level) {
+        requireNonNull(game);
+        requireNonNull(level);
+
         final GameSystems systems = game.variant().systems();
-        final GameEventManager eventManager = game.eventManager();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
         //TODO Find out how Tengen really implemented this
@@ -475,18 +476,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         );
         systems.bonusMoveAndJump().startWandering(bonus, new BonusRouteInfo(leftToRight, waypoints), speed);
 
-        eventManager.publishGameEvent(new BonusActivatedEvent(bonus));
-    }
-
-    private void addTengenHUDElements(HUD hud) {
-        final GameOptionsDisplay gameOptionsDisplay = new GameOptionsDisplay();
-        hud.addEntity(gameOptionsDisplay);
-
-        final LevelNumberDisplay leftLevelNumberDisplay = new LevelNumberDisplay();
-        hud.addEntity(leftLevelNumberDisplay);
-
-        final LevelNumberDisplay rightLevelNumberDisplay = new LevelNumberDisplay();
-        hud.addEntity(rightLevelNumberDisplay);
+        game.eventManager().publishGameEvent(new BonusActivatedEvent(bonus));
     }
 
     private MessageView createMessageView(House house, GameSession session, NES_WorldMapColorScheme colorScheme) {

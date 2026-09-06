@@ -24,7 +24,7 @@ import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.allOptionsHaveDefaultValue;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.noOptionsChanged;
 
 /**
  * The 3D play scene of Tengen Ms. Pac-Man.
@@ -43,7 +43,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         final GameSession session = game().session();
 
         session.optLevel().ifPresent(_ -> {
-            if (!allOptionsHaveDefaultValue(session)) {
+            if (!noOptionsChanged(session)) {
                 final ImageView levelInfo = createLevelInfoView(level3D,
                     app().currentGameVariantUIConfig().renderConfig().hudStyle());
                 level3D.root().getChildren().add(levelInfo);

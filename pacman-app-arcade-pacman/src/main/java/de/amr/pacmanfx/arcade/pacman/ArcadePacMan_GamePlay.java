@@ -14,7 +14,6 @@ import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.ghost.comp.ElroyComp;
-import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.levelCounter.comp.LevelCounterBehavior;
 import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
@@ -60,9 +59,6 @@ import static java.util.Objects.requireNonNull;
  * @see <a href="https://pacman.holenet.info/">The Pac-Man Dossier by Jamey Pittman</a>
  */
 public class ArcadePacMan_GamePlay extends CommonGamePlay {
-
-    public static final Set<GhostState> TURNBACK_STATES = Set.of(
-        GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE);
 
     public static final List<Vector2i> DEMO_LEVEL_ROUTE = List.of(
         tile( 9,26), tile( 9,29), tile(12,29), tile(12,32), tile(26,32),

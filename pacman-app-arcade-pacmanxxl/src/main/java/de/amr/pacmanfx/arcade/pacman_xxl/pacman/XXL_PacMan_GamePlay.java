@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.arcade.pacman_xxl.pacman;
 
-
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GamePlay;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_WorldMapManager;
 import de.amr.pacmanfx.core.GameContext;
