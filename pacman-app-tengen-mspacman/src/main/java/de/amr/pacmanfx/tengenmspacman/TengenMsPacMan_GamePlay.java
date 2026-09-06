@@ -263,7 +263,8 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
             livesCounter.pos().set(4 * TS, bottom);
             levelCounter.pos().set(26 * TS, bottom);
-        } else {
+        }
+        else {
             livesCounter.data().setNumLives(game.variant().initialLifeCount());
             livesCounter.data().setMaxLivesShown(5);
 

@@ -16,25 +16,24 @@ import java.util.List;
 import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
 import static java.util.Objects.requireNonNull;
 
-/**
- * A game level contains the world and the actors.
- */
 public class GameLevel {
 
     private final int number; // 1=first level
 
-    private final WorldMap worldMap;
-    private final GameLevelEntities entities;
-    private final Pulse heartbeat;
-    private final List<Integer> bonusSymbolCodes = new ArrayList<>();
+    private WorldMap worldMap;
+    private GameLevelEntities entities;
+    private Pulse heartbeat;
+    private List<Integer> bonusSymbolCodes;
+    private HuntingTimer huntingTimer;
+    private ArcadeHouseGateKeeper gateKeeper;
+    private FoodState foodState;
 
-    private final HuntingTimer huntingTimer;
-    private final ArcadeHouseGateKeeper gateKeeper;
-
-    private byte currentBonusIndex; // -1=no bonus, 0=first, 1=second
+    private byte currentBonusIndex = -1; // -1=no bonus, 0=first, 1=second
     private int ghostKillCount;
 
-    private final FoodState foodState;
+    public GameLevel(int number) {
+        this.number = requireValidLevelNumber(number);
+    }
 
     public GameLevel(int number, WorldMap worldMap, GameLevelEntities entities, HuntingTimer huntingTimer) {
         this.number = requireValidLevelNumber(number);
@@ -44,9 +43,6 @@ public class GameLevel {
         this.gateKeeper = new ArcadeHouseGateKeeper(number);
         this.foodState = new FoodState(worldMap.foodLayer());
         this.heartbeat = new Pulse(10, Pulse.State.OFF);
-        this.currentBonusIndex = -1;
-
-        huntingTimer.reset();
     }
 
     /**
@@ -56,11 +52,19 @@ public class GameLevel {
         return number;
     }
 
+    public void setHeartbeat(Pulse heartbeat) {
+        this.heartbeat = heartbeat;
+    }
+
     /**
      * @return the pulse driving the blinking animation for the energizers.
      */
     public Pulse heartbeat() {
         return heartbeat;
+    }
+
+    public void setWorldMap(WorldMap worldMap) {
+        this.worldMap = worldMap;
     }
 
     /**
@@ -70,8 +74,16 @@ public class GameLevel {
         return worldMap;
     }
 
+    public void setFoodState(FoodState foodState) {
+        this.foodState = foodState;
+    }
+
     public FoodState food() {
         return foodState;
+    }
+
+    public void setHuntingTimer(HuntingTimer huntingTimer) {
+        this.huntingTimer = huntingTimer;
     }
 
     /**
@@ -81,16 +93,24 @@ public class GameLevel {
         return huntingTimer;
     }
 
+    public void setGateKeeper(ArcadeHouseGateKeeper gateKeeper) {
+        this.gateKeeper = gateKeeper;
+    }
+
     public ArcadeHouseGateKeeper gateKeeper() {
         return gateKeeper;
+    }
+
+    public void setGhostKillCount(int ghostKillCount) {
+        this.ghostKillCount = ghostKillCount;
     }
 
     public int ghostKillCount() {
         return ghostKillCount;
     }
 
-    public void setGhostKillCount(int ghostKillCount) {
-        this.ghostKillCount = ghostKillCount;
+    public void setEntities(GameLevelEntities entities) {
+        this.entities = entities;
     }
 
     public GameLevelEntities entities() {
@@ -100,6 +120,7 @@ public class GameLevel {
     public void clearBonusIndex() {
         currentBonusIndex = -1;
     }
+
     /**
      * @return the index of the current bonus
      */
@@ -116,8 +137,7 @@ public class GameLevel {
 
     public void setBonusSymbolCodes(List<Integer> codes) {
         requireNonNull(codes);
-        bonusSymbolCodes.clear();
-        bonusSymbolCodes.addAll(codes);
+        bonusSymbolCodes = new ArrayList<>(codes);
     }
 
     /**
@@ -125,6 +145,7 @@ public class GameLevel {
      * @return the bonus symbol code of the bonus with the given index
      */
     public int bonusSymbolCode(int i) {
+        requireNonNull(bonusSymbolCodes);
         if (0 <= i && i < bonusSymbolCodes.size()) {
             return bonusSymbolCodes.get(i);
         }
@@ -133,10 +154,14 @@ public class GameLevel {
     }
 
     public void clearMessage() {
+        requireNonNull(entities);
         entities.theMessageView().type().setMessageType(MessageType.NO_MESSAGE);
     }
 
     public void showMessage(MessageType messageType) {
+        requireNonNull(entities);
+        requireNonNull(messageType);
+
         entities.theMessageView().type().setMessageType(messageType);
         entities.theMessageView().show();
     }

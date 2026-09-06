@@ -5,13 +5,13 @@
 package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.arcade.pacman.gamestate.Arcade_GameState;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.HUD;
-import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.ghost.comp.ElroyComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
@@ -19,6 +19,7 @@ import de.amr.pacmanfx.core.entities.levelCounter.comp.LevelCounterBehavior;
 import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
 import de.amr.pacmanfx.core.event.gameplay.LevelStartedEvent;
+import de.amr.pacmanfx.core.gameplay.ArcadeHouseGateKeeper;
 import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameFlowController;
@@ -26,10 +27,7 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelEntities;
 import de.amr.pacmanfx.core.level.MessageType;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
-import de.amr.pacmanfx.core.model.world.map.TerrainTile;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
+import de.amr.pacmanfx.core.model.world.map.*;
 import de.amr.pacmanfx.core.rules.DefaultHuntingTimer;
 import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.core.steering.RouteGuidedSteering;
@@ -103,19 +101,62 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         requireNonNull(game);
 
         final GameSession session = game.session();
-
-        configureHUD(game, null, session.hud());
-        initScores(game);
-
         session.setNumLives(game.variant().initialLifeCount());
         session.setCutScenesEnabled(true);
         session.setLevel(null);
         session.setGameRunning(false);
 
+        configureHUD(game, null, session.hud());
+        initScores(game);
+
         game.variant().gameFlow().restartGameState(game, CommonGameStateID.BOOT);
     }
 
     // Level building and level start
+
+    @Override
+    public GameLevel createLevel(GameContext game, int levelNumber) {
+        requireNonNull(game);
+        requireValidLevelNumber(levelNumber);
+
+        final GameSession session = game.session();
+        final GameRules rules = game.variant().rules();
+        final GameSystems systems = game.variant().systems();
+        final WorldMap worldMap = game.variant().worldMapManager().supplyWorldMap(levelNumber);
+
+        final GameLevelEntities entities = new GameLevelEntities();
+        createAndAddEntities(entities, worldMap.terrainLayer());
+
+        final var huntingTimer = new DefaultHuntingTimer("Arcade Pac-Man Hunting Timer", rules.numHuntingPhases());
+        // On each phase start (except the initial phase), the ghosts reverse their move direction
+        huntingTimer.setPhaseChangeCallback(newPhaseIndex -> {
+            if (newPhaseIndex > 0) {
+                entities.ghostsInAnyOfStates(Set.of(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE))
+                    .forEach(systems.navigator()::requestTurnBack);
+            }
+        });
+        huntingTimer.reset();
+
+        final var gateKeeper = new ArcadeHouseGateKeeper(levelNumber);
+        gateKeeper.setGhostReleasedCallback(this::onGhostReleasedFromHouse);
+
+        final GameLevel level = new GameLevel(levelNumber);
+        level.setWorldMap(worldMap);
+        level.setEntities(entities);
+        level.setFoodState(new FoodState(worldMap.foodLayer()));
+        level.setGateKeeper(gateKeeper);
+        level.setHuntingTimer(huntingTimer);
+        level.setHeartbeat(new Pulse(10, Pulse.State.OFF));
+        level.setBonusSymbolCodes(rules.bonusSymbols(levelNumber));
+
+        configurePacAndGhosts(entities, systems, worldMap.terrainLayer());
+        configureHUD(game, level, session.hud());
+
+        session.setLevel(level);
+        session.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
+
+        return level;
+    }
 
     @Override
     public void configureHUD(GameContext game, GameLevel level, HUD hud) {
@@ -139,85 +180,6 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
             levelCounter.data().setBehavior(LevelCounterBehavior.SHIFT_WHEN_FULL);
             game.variant().systems().levelCounterSystem().clear(levelCounter);
         }
-    }
-
-    @Override
-    public GameLevel createLevel(GameContext game, int levelNumber) {
-        requireNonNull(game);
-        requireValidLevelNumber(levelNumber);
-
-        final GameSession session = game.session();
-        final GameLevelEntities entities = new GameLevelEntities();
-
-        final WorldNavigationSystem navigator = game.variant().systems().navigator();
-        final WorldMap worldMap = game.variant().worldMapManager().supplyWorldMap(levelNumber);
-
-        createAndAddEntities(entities, worldMap.terrainLayer());
-        configurePacAndGhosts(entities, game.variant().systems(), worldMap.terrainLayer(), entities.house());
-
-        final DefaultHuntingTimer huntingTimer = new DefaultHuntingTimer("Arcade Pac-Man Hunting Timer", game.variant().rules().numHuntingPhases());
-
-        final GameLevel level = new GameLevel(levelNumber, worldMap, entities, huntingTimer);
-
-        level.gateKeeper().setGhostReleasedCallback(this::onGhostReleasedFromHouse);
-
-        final GameRules rules = game.variant().rules();
-        level.setBonusSymbolCodes(rules.bonusSymbols(levelNumber));
-
-        // On each phase start (except the initial phase), the ghosts reverse their move direction
-        huntingTimer.setPhaseChangeCallback(newPhaseIndex -> {
-            if (newPhaseIndex > 0) {
-                level.entities().ghostsInAnyOfStates(Set.of(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE))
-                    .forEach(navigator::requestTurnBack);
-            }
-        });
-
-        configureHUD(game, level, session.hud());
-
-        session.setLevel(level);
-        session.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
-
-        return level;
-    }
-
-    private void createAndAddEntities(GameLevelEntities entities, TerrainLayer terrain) {
-        final Vector2i houseMinTile = terrain.getTilePropertyOrDefault(
-            WorldMapPropertyName.POS_HOUSE_MIN_TILE, ARCADE_MAP_HOUSE_MIN_TILE);
-        terrain.propertyMap().put(WorldMapPropertyName.POS_HOUSE_MIN_TILE,  String.valueOf(houseMinTile));
-
-        final House house = HouseFactory.createArcadeHouse(houseMinTile);
-        final MessageView messageView = createMessageView(house);
-
-        final var actorFactory = ArcadePacMan_ActorFactory.instance();
-        final Pac pacMan        = actorFactory.createPacMan();
-        final Ghost redGhost    = actorFactory.createRedGhost();
-        final Ghost pinkGhost   = actorFactory.createPinkGhost();
-        final Ghost cyanGhost   = actorFactory.createCyanGhost();
-        final Ghost orangeGhost = actorFactory.createOrangeGhost();
-
-        entities.add(house);
-        entities.add(messageView);
-        entities.add(pacMan);
-        entities.add(redGhost);
-        entities.add(pinkGhost);
-        entities.add(cyanGhost);
-        entities.add(orangeGhost);
-    }
-
-    private void configurePacAndGhosts(GameLevelEntities entities, GameSystems systems, TerrainLayer terrain, House house) {
-        entities.pac().autoSteering().setSteering(new RuleGuidedPacSteering(
-            systems.navigator(), systems.pacWorldMovementPolicy()
-        ));
-
-        // Special tiles where attacking ghosts cannot move up
-        final Set<Vector2i> oneWayTiles = terrain.tiles()
-            .filter(tile -> terrain.content(tile) == TerrainTile.ONE_WAY_DOWN.$)
-            .collect(Collectors.toUnmodifiableSet());
-
-        entities.ghost(GhostPersonality.RED_GHOST_SHADOW)  .worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_1_RED,    oneWayTiles);
-        entities.ghost(GhostPersonality.PINK_GHOST_SPEEDY) .worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK,   oneWayTiles);
-        entities.ghost(GhostPersonality.CYAN_GHOST_BASHFUL).worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN,   oneWayTiles);
-        entities.ghost(GhostPersonality.ORANGE_GHOST_POKEY).worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE, oneWayTiles);
     }
 
     @Override
@@ -302,19 +264,6 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         game.eventManager().publishGameEvent(new BonusActivatedEvent(bonus));
     }
 
-    private void onGhostReleasedFromHouse(GameLevel level, Ghost prisoner) {
-        final Ghost redGhost = level.entities().ghost(GhostPersonality.RED_GHOST_SHADOW);
-        // Disabled elroy mode of Blinky is re-enabled when Clyde is released from house
-        redGhost.optComp(ElroyComp.class).ifPresent(elroy -> {
-            if (prisoner.personality() == GhostPersonality.ORANGE_GHOST_POKEY) {
-                if (elroy.boost() != ElroyComp.Boost.NONE && !elroy.enabled()) {
-                    elroy.setEnabled(true);
-                    Logger.debug("Re-enabled {}'s Cruise Elroy mode because {} is released:", redGhost.name(), prisoner.name());
-                }
-            }
-        });
-    }
-
     protected MessageView createMessageView(House house) {
         final var messageView = new MessageView();
 
@@ -334,5 +283,61 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         messageView.setComp(MessageViewStyleComp.class, style);
 
         return messageView;
+    }
+
+    // private
+
+    private void createAndAddEntities(GameLevelEntities entities, TerrainLayer terrain) {
+        final Vector2i houseMinTile = terrain.getTilePropertyOrDefault(
+            WorldMapPropertyName.POS_HOUSE_MIN_TILE, ARCADE_MAP_HOUSE_MIN_TILE);
+        terrain.propertyMap().put(WorldMapPropertyName.POS_HOUSE_MIN_TILE,  String.valueOf(houseMinTile));
+
+        final House house = HouseFactory.createArcadeHouse(houseMinTile);
+        final MessageView messageView = createMessageView(house);
+
+        final var actorFactory = ArcadePacMan_ActorFactory.instance();
+        final Pac pacMan        = actorFactory.createPacMan();
+        final Ghost redGhost    = actorFactory.createRedGhost();
+        final Ghost pinkGhost   = actorFactory.createPinkGhost();
+        final Ghost cyanGhost   = actorFactory.createCyanGhost();
+        final Ghost orangeGhost = actorFactory.createOrangeGhost();
+
+        entities.add(house);
+        entities.add(messageView);
+        entities.add(pacMan);
+        entities.add(redGhost);
+        entities.add(pinkGhost);
+        entities.add(cyanGhost);
+        entities.add(orangeGhost);
+    }
+
+    private void configurePacAndGhosts(GameLevelEntities entities, GameSystems systems, TerrainLayer terrain) {
+        entities.pac().autoSteering().setSteering(new RuleGuidedPacSteering(
+            systems.navigator(), systems.pacWorldMovementPolicy()
+        ));
+
+        // Special tiles where attacking ghosts cannot move up
+        final Set<Vector2i> oneWayTiles = terrain.tiles()
+            .filter(tile -> terrain.content(tile) == TerrainTile.ONE_WAY_DOWN.$)
+            .collect(Collectors.toUnmodifiableSet());
+
+        final House house = entities.house();
+        entities.ghost(GhostPersonality.RED_GHOST_SHADOW)  .worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_1_RED,    oneWayTiles);
+        entities.ghost(GhostPersonality.PINK_GHOST_SPEEDY) .worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK,   oneWayTiles);
+        entities.ghost(GhostPersonality.CYAN_GHOST_BASHFUL).worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN,   oneWayTiles);
+        entities.ghost(GhostPersonality.ORANGE_GHOST_POKEY).worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE, oneWayTiles);
+    }
+
+    private void onGhostReleasedFromHouse(GameLevel level, Ghost prisoner) {
+        final Ghost redGhost = level.entities().ghost(GhostPersonality.RED_GHOST_SHADOW);
+        // Disabled elroy mode of Blinky is re-enabled when Clyde is released from house
+        redGhost.optComp(ElroyComp.class).ifPresent(elroy -> {
+            if (prisoner.personality() == GhostPersonality.ORANGE_GHOST_POKEY) {
+                if (elroy.boost() != ElroyComp.Boost.NONE && !elroy.enabled()) {
+                    elroy.setEnabled(true);
+                    Logger.debug("Re-enabled {}'s Cruise Elroy mode because {} is released:", redGhost.name(), prisoner.name());
+                }
+            }
+        });
     }
 }
