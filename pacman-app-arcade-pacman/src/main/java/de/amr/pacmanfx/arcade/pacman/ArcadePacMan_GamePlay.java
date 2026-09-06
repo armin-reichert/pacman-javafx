@@ -168,7 +168,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         if (level != null) {
             final int bottom = (level.worldMap().numRows() - 2) * TS;
             livesCounter.pos().set(2 * TS, bottom);
-            levelCounter.pos().set(24 * TS, bottom);
+            levelCounter.pos().set(24 * TS, bottom + 2);
         } else {
             livesCounter.data().setNumLivesShown(game.variant().initialLifeCount());
             livesCounter.data().setMaxLivesShown(5);
