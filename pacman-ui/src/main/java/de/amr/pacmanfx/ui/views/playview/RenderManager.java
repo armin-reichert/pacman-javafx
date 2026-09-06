@@ -85,7 +85,7 @@ public class RenderManager {
             });
 
             if (gameScene instanceof SceneWithoutLevel sceneWithoutLevel) {
-               entities.addAll(sceneWithoutLevel.entities().selectAll().toList());
+               entities.addAll(sceneWithoutLevel.entities().all().toList());
             }
             sortInRenderingOrder(entities).forEach(e -> entityRenderer.render(e, tick));
 

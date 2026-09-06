@@ -33,7 +33,7 @@ public class Tengen_LevelIntermissionState extends AbstractGameState {
             hud.gameScore().hide();
             hud.levelCounter().show();
             hud.livesCounter().hide();
-            hud.entities().selectAllOfType(LevelNumberDisplay.class).forEach(GameEntity::hide);
+            hud.entities().ofType(LevelNumberDisplay.class).forEach(GameEntity::hide);
             hud.show();
         }
         timer().resetToIndefiniteDuration();
@@ -51,7 +51,7 @@ public class Tengen_LevelIntermissionState extends AbstractGameState {
         if (TengenMsPacMan_GamePlay.mapCategory(session) == MapCategory.ARCADE) {
             hud.hide();
         } else {
-            hud.entities().selectAllOfType(LevelNumberDisplay.class).forEach(GameEntity::hide);
+            hud.entities().ofType(LevelNumberDisplay.class).forEach(GameEntity::hide);
             hud.gameScore().show();
             hud.levelCounter().show();
             hud.livesCounter().hide();

@@ -251,7 +251,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         if (level != null) {
             final int bottom = (level.worldMap().numRows() - 1) * TS;
 
-            final var levelNumberDisplays = hud.entities().selectAllOfType(LevelNumberDisplay.class).toList();
+            final var levelNumberDisplays = hud.entities().ofType(LevelNumberDisplay.class).toList();
 
             final LevelNumberDisplay either = levelNumberDisplays.getFirst();
             either.pos().set(2 * TS, bottom);

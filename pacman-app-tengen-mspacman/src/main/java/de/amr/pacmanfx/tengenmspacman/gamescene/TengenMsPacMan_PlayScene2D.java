@@ -302,7 +302,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
     private void updateHUD(GameSession session) {
         final boolean showLevelNumber = mapCategory(session) != MapCategory.ARCADE;
         session.hud().entities()
-            .selectAllOfType(LevelNumberDisplay.class)
+            .ofType(LevelNumberDisplay.class)
             .forEach(levelNumberDisplay -> {
                 if (showLevelNumber) {
                     levelNumberDisplay.show();

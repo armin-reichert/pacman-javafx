@@ -12,59 +12,83 @@ import static java.util.Objects.requireNonNull;
 
 public class QuerySet<E> implements Iterable<E>, Disposable {
 
-    private final Set<E> entries = new HashSet<>();
+    private final Set<E> elements = new HashSet<>();
+
+    public void clear() {
+        elements.clear();
+    }
+
+    public void add(E e) {
+        requireNonNull(e);
+        elements.add(e);
+    }
+
+    public void addAll(Collection<? extends E> collection) {
+        requireNonNull(collection);
+        elements.addAll(collection);
+    }
+
+    @SafeVarargs
+    public final void addAll(E... elements) {
+        this.elements.addAll(List.of(elements));
+    }
+
+    public void remove(E e) {
+        requireNonNull(e);
+        elements.remove(e);
+    }
 
     public int size() {
-        return entries.size();
+        return elements.size();
     }
 
     public boolean contains(E entity) {
-        return entries.contains(entity);
+        return elements.contains(entity);
     }
 
     @Override
     public Iterator<E> iterator() {
-        return entries.iterator();
+        return elements.iterator();
     }
 
     @Override
     public void dispose() {
-        for (E e : entries) {
+        for (E e : elements) {
             if (e instanceof Disposable disposable) {
                 disposable.dispose();
             }
         }
-        entries.clear();
+        elements.clear();
     }
 
-    public Stream<E> selectAll() {
-        return entries.stream();
+    public Stream<E> all() {
+        return elements.stream();
     }
 
-    public <T> Stream<T> selectAllOfType(Class<T> type) {
+    public <T extends E> Stream<T> ofType(Class<T> type) {
         requireNonNull(type);
-        return selectAll().filter(type::isInstance).map(type::cast);
+        return all().filter(type::isInstance).map(type::cast);
     }
 
-    public <T> Stream<T> selectWhere(Class<T> type, Predicate<T> condition) {
-        requireNonNull(type);
-        requireNonNull(condition);
-        return selectAllOfType(type).filter(condition);
-    }
-
-    public <T> void removeWhere(Class<T> type, Predicate<T> condition) {
+    public <T extends E> Stream<T> ofTypeWhere(Class<T> type, Predicate<T> condition) {
         requireNonNull(type);
         requireNonNull(condition);
-        entries.removeIf(e -> type.isInstance(e) && condition.test(type.cast(e)));
+        return ofType(type).filter(condition);
     }
 
-    public <T> Optional<T> optAnyOfType(Class<T> type) {
-        return Optional.ofNullable(anyOfType(type));
-    }
-
-    public <T> T anyOfType(Class<T> type) {
+    public <T extends E> void removeWhere(Class<T> type, Predicate<T> condition) {
         requireNonNull(type);
-        for (var e : entries) {
+        requireNonNull(condition);
+        elements.removeIf(e -> type.isInstance(e) && condition.test(type.cast(e)));
+    }
+
+    public <T extends E> Optional<T> anyOfType(Class<T> type) {
+        return Optional.ofNullable(anyOfTypeOrNull(type));
+    }
+
+    public <T extends E> T anyOfTypeOrNull(Class<T> type) {
+        requireNonNull(type);
+        for (var e : elements) {
             if (type.isInstance(e)) {
                 return type.cast(e);
             }
@@ -78,10 +102,10 @@ public class QuerySet<E> implements Iterable<E>, Disposable {
      *         a {@link java.util.NoSuchElementException} exception is thrown.
      * @param <T> type of element
      */
-    public <T> T theOne(Class<T> type) {
+    public <T extends E> T theOne(Class<T> type) {
         requireNonNull(type);
         T found = null;
-        for (E e : entries) {
+        for (E e : elements) {
             if (type.isInstance(e)) {
                 if (found != null) {
                     throw new NoSuchElementException("More than one element of type '%s'".formatted(type.getSimpleName()));
@@ -93,29 +117,5 @@ public class QuerySet<E> implements Iterable<E>, Disposable {
             throw new NoSuchElementException("No element of type '%s'".formatted(type.getSimpleName()));
         }
         return found;
-    }
-
-    public void clear() {
-        entries.clear();
-    }
-
-    public void add(E e) {
-        requireNonNull(e);
-        entries.add(e);
-    }
-
-    public void addAll(Collection<? extends E> collection) {
-        requireNonNull(collection);
-        entries.addAll(collection);
-    }
-
-    @SafeVarargs
-    public final void addAll(E... elements) {
-        entries.addAll(List.of(elements));
-    }
-
-    public void remove(E e) {
-        requireNonNull(e);
-        entries.remove(e);
     }
 }

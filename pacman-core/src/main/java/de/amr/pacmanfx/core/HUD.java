@@ -57,11 +57,11 @@ public class HUD {
     }
 
     public Score gameScore() {
-        return entities.selectWhere(Score.class, score -> score.type() == Score.Type.GAME_SCORE).findFirst().orElseThrow();
+        return entities.ofTypeWhere(Score.class, score -> score.type() == Score.Type.GAME_SCORE).findFirst().orElseThrow();
     }
 
     public Score highScore() {
-        return entities.selectWhere(Score.class, score -> score.type() == Score.Type.HIGH_SCORE).findFirst().orElseThrow();
+        return entities.ofTypeWhere(Score.class, score -> score.type() == Score.Type.HIGH_SCORE).findFirst().orElseThrow();
     }
 
     public QuerySet<GameEntity> entities() {
