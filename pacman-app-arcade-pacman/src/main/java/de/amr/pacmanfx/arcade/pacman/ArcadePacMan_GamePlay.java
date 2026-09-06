@@ -295,20 +295,23 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         final House house = HouseFactory.createArcadeHouse(houseMinTile);
         final MessageView messageView = createMessageView(house);
 
-        final var actorFactory = ArcadePacMan_ActorFactory.instance();
-        final Pac pacMan        = actorFactory.createPacMan();
-        final Ghost redGhost    = actorFactory.createRedGhost();
-        final Ghost pinkGhost   = actorFactory.createPinkGhost();
-        final Ghost cyanGhost   = actorFactory.createCyanGhost();
-        final Ghost orangeGhost = actorFactory.createOrangeGhost();
+        final Pac pac           = actorFactory().createPacMan();
+        final Ghost redGhost    = actorFactory().createRedGhost();
+        final Ghost pinkGhost   = actorFactory().createPinkGhost();
+        final Ghost cyanGhost   = actorFactory().createCyanGhost();
+        final Ghost orangeGhost = actorFactory().createOrangeGhost();
 
         entities.add(house);
         entities.add(messageView);
-        entities.add(pacMan);
+        entities.add(pac);
         entities.add(redGhost);
         entities.add(pinkGhost);
         entities.add(cyanGhost);
         entities.add(orangeGhost);
+    }
+
+    protected ArcadePacMan_ActorFactory actorFactory() {
+        return ArcadePacMan_ActorFactory.instance();
     }
 
     protected void configurePacAndGhosts(GameLevelEntities entities, GameSystems systems, TerrainLayer terrain) {

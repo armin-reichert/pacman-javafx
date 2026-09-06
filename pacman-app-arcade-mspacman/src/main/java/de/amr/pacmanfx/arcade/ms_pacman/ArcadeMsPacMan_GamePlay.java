@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.ms_pacman;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GamePlay;
+import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;
@@ -64,28 +65,8 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
     }
 
     @Override
-    protected void createAndAddEntities(GameLevelEntities entities, TerrainLayer terrain) {
-        final Vector2i houseMinTile = terrain.getTilePropertyOrDefault(
-            WorldMapPropertyName.POS_HOUSE_MIN_TILE, ArcadePacMan_GamePlay.ARCADE_MAP_HOUSE_MIN_TILE);
-        terrain.propertyMap().put(WorldMapPropertyName.POS_HOUSE_MIN_TILE, houseMinTile.toString());
-
-        final House house = HouseFactory.createArcadeHouse(houseMinTile);
-        final MessageView messageView = createMessageView(house);
-
-        final var actorFactory  = new ArcadeMsPacMan_ActorFactory();
-        final Pac msPacMan      = actorFactory.createMsPacMan();
-        final Ghost redGhost    = actorFactory.createRedGhost();
-        final Ghost pinkGhost   = actorFactory.createPinkGhost();
-        final Ghost cyanGhost   = actorFactory.createCyanGhost();
-        final Ghost orangeGhost = actorFactory.createOrangeGhost();
-
-        entities.add(house);
-        entities.add(messageView);
-        entities.add(msPacMan);
-        entities.add(redGhost);
-        entities.add(pinkGhost);
-        entities.add(cyanGhost);
-        entities.add(orangeGhost);
+    protected ArcadePacMan_ActorFactory actorFactory() {
+        return ArcadeMsPacMan_ActorFactory.instance();
     }
 
     @Override

@@ -5,11 +5,11 @@
 package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.*;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.PositionSystem;
-import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusRouteInfo;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusState;
@@ -19,6 +19,7 @@ import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
 import de.amr.pacmanfx.core.event.gameplay.LevelStartedEvent;
+import de.amr.pacmanfx.core.gameplay.ArcadeHouseGateKeeper;
 import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameFlowController;
@@ -26,10 +27,7 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelEntities;
 import de.amr.pacmanfx.core.level.MessageType;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
-import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
+import de.amr.pacmanfx.core.model.world.map.*;
 import de.amr.pacmanfx.core.rules.DefaultHuntingTimer;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
 import de.amr.pacmanfx.tengenmspacman.entities.GameOptionsDisplay;
@@ -54,11 +52,15 @@ import java.util.Set;
 
 import static de.amr.basics.math.RandomNumbers.randomBoolean;
 import static de.amr.basics.math.RandomNumbers.randomInt;
+import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_GamePlay extends CommonGamePlay {
+
+    public static final Set<GhostState> TURNBACK_STATES = Set.of(
+        GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE);
 
     public static final int ARCADE_MAP_GAME_OVER_TICKS = 420;
     public static final int NON_ARCADE_MAP_GAME_OVER_TICKS = 600;
@@ -286,37 +288,51 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
     @Override
     public GameLevel createLevel(GameContext game, int levelNumber) {
-        final GameLevelEntities entities = new GameLevelEntities();
+        requireNonNull(game);
+        requireValidLevelNumber(levelNumber);
 
         final GameSession session = game.session();
-        final WorldNavigationSystem navigator = game.variant().systems().navigator();
-
         final MapCategory mapCategory = mapCategory(session);
+
+        final var rules = (TengenMsPacMan_GameRules) game.variant().rules();
+        final GameSystems systems = game.variant().systems();
+        final var entities = new GameLevelEntities();
 
         final WorldMap worldMap = game.variant().worldMapManager().supplyWorldMap(levelNumber, mapCategory);
 
-        final TengenMsPacMan_GameRules rules = (TengenMsPacMan_GameRules) game.variant().rules();
         rules.setMapCategory(mapCategory);
         Logger.info("Using game rules for map category {}", mapCategory);
 
         final var huntingTimer = new DefaultHuntingTimer("Tengen Ms. Pac-Man Hunting Timer", rules.numHuntingPhases());
         huntingTimer.setPhaseChangeCallback(newPhaseIndex -> {
             if (newPhaseIndex > 0) {
-                entities.ghostsInAnyOfStates(Set.of(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE))
-                    .forEach(navigator::requestTurnBack);
+                entities.ghostsInAnyOfStates(TURNBACK_STATES)
+                    .forEach(systems.navigator()::requestTurnBack);
             }
         });
+        huntingTimer.reset();
+
+        //TODO Tengen uses another logic for the house
+        final var gateKeeper = new ArcadeHouseGateKeeper(levelNumber);
+        gateKeeper.setGhostReleasedCallback((_, ghost) ->
+            Logger.info("Ghost {} released from house", ghost.name()));
 
         createAndAddEntities(entities, session, worldMap);
-        configurePacAndGhosts(entities, game.variant().systems(), worldMap.terrainLayer(), entities.house());
 
-        final GameLevel level = new GameLevel(levelNumber, worldMap, entities, huntingTimer);
-
+        final GameLevel level = new GameLevel(levelNumber);
+        level.setWorldMap(worldMap);
+        level.setEntities(entities);
+        level.setFoodState(new FoodState(worldMap.foodLayer()));
+        level.setGateKeeper(gateKeeper);
+        level.setHuntingTimer(huntingTimer);
+        level.setHeartbeat(new Pulse(10, Pulse.State.OFF));
         level.setBonusSymbolCodes(rules.bonusSymbols(levelNumber));
 
+        configurePacAndGhosts(entities, game.variant().systems(), worldMap.terrainLayer());
         configureHUD(game, level, session.hud());
 
         session.setLevel(level);
+
         // For non-Arcade game levels, spend some extra time for the moving "game over" text animation
         session.setGameOverStateTicks(mapCategory(session) == MapCategory.ARCADE
             ? ARCADE_MAP_GAME_OVER_TICKS : NON_ARCADE_MAP_GAME_OVER_TICKS);
@@ -345,17 +361,17 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         entities.add(orangeGhost);
     }
 
-    private void configurePacAndGhosts(GameLevelEntities entities, GameSystems systems, TerrainLayer terrain, House house) {
+    private void configurePacAndGhosts(GameLevelEntities entities, GameSystems systems, TerrainLayer terrain) {
         entities.pac().autoSteering().setSteering(new RuleGuidedPacSteering(
             systems.navigator(), systems.pacWorldMovementPolicy()
         ));
 
+        final House house = entities.house();
         entities.ghost(GhostPersonality.RED_GHOST_SHADOW)  .worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_1_RED);
         entities.ghost(GhostPersonality.PINK_GHOST_SPEEDY) .worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK);
         entities.ghost(GhostPersonality.CYAN_GHOST_BASHFUL).worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN);
         entities.ghost(GhostPersonality.ORANGE_GHOST_POKEY).worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE);
     }
-
 
     @Override
     public GameLevel buildDemoLevel(GameContext game) {
