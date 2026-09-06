@@ -27,7 +27,6 @@ import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
 import de.amr.pacmanfx.tengenmspacman.gamestate.Tengen_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
@@ -42,6 +41,7 @@ import org.tinylog.Logger;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 
@@ -283,8 +283,8 @@ public class TengenMsPacMan_IntroScene extends GameScene {
                 }
                 if (timer.atSecond(8)) {
                     // start demo level or show options
-                    if (TengenMsPacMan_GamePlay.noOptionsChanged(session)) {
-                        TengenMsPacMan_GamePlay.setCanStartNewGame(session, false); // TODO check this
+                    if (gameOptions(session).areInitial()) {
+                        gameOptions(session).setCanStartNewGame(false); // TODO check this
                         game.variant().gameFlow().restartState(game, Tengen_GameState.GAME_OR_LEVEL_STARTING.state());
                     } else {
                         game.variant().gameFlow().enterState(game, Tengen_GameState.GAME_PREPARATION.state());

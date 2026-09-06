@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.tengenmspacman.entities.pac.system;
 
-
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Pac;
@@ -36,14 +35,21 @@ public class TengenMsPacMan_PacAnimationSystem extends PacAnimationSystem {
 
         switch (state.enumValue()) {
             case SLEEPING -> {
-                animation.setAnimationID(rules.initialPacAnimationID());
+                final boolean boosterEnabled = pac.reqComp(PacBoosterComp.class).boosterEnabled();
+                if (boosterEnabled) {
+                    animation.setAnimationID(TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER);
+                } else {
+                    animation.setAnimationID(rules.initialPacAnimationID());
+                }
                 animation.setStopped(true);
             }
             case ACTIVE -> {
                 final boolean boosterEnabled = pac.reqComp(PacBoosterComp.class).boosterEnabled();
-                animation.setAnimationID(boosterEnabled
-                    ? TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER
-                    : CommonSpriteAnimationID.PAC_MOUTH_MOVING);
+                if (boosterEnabled) {
+                    animation.setAnimationID(TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER);
+                } else {
+                    animation.setAnimationID(CommonSpriteAnimationID.PAC_MOUTH_MOVING);
+                }
                 animation.setStopped(!pac.worldNavigation().info().moved);
             }
         }

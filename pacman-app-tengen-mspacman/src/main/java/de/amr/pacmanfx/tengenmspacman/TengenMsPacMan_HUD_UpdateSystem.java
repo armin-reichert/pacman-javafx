@@ -12,9 +12,7 @@ import de.amr.pacmanfx.tengenmspacman.entities.LevelNumberDisplay;
 import de.amr.pacmanfx.tengenmspacman.entities.gameoptionsdisplay.GameOptionsDataComp;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.*;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.difficulty;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.mapCategory;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
 
 public class TengenMsPacMan_HUD_UpdateSystem extends HUD_UpdateSystem {
 
@@ -41,23 +39,23 @@ public class TengenMsPacMan_HUD_UpdateSystem extends HUD_UpdateSystem {
         livesCounter.data().setNumLivesShown(numLivesShown);
 
         final GameOptionsDisplay optionsDisplay = hud.entities().theOne(GameOptionsDisplay.class);
-        if (noOptionsChanged(session)) {
+        if (gameOptions(session).areInitial()) {
             optionsDisplay.hide();
         } else {
             optionsDisplay.show();
         }
 
         final GameOptionsDataComp options = optionsDisplay.options();
-        options.setBoosterMode(boosterMode(session));
-        options.setDifficulty(difficulty(session));
-        options.setMapCategory(mapCategory(session));
+        options.setBoosterMode(gameOptions(session).boosterMode());
+        options.setDifficulty(gameOptions(session).difficulty());
+        options.setMapCategory(gameOptions(session).mapCategory());
 
-        final boolean showLevelNumber = mapCategory(session) != MapCategory.ARCADE;
-        session.hud().entities().ofType(LevelNumberDisplay.class).forEach(levelNumberDisplay -> {
+        final boolean showLevelNumber = gameOptions(session).mapCategory() != MapCategory.ARCADE;
+        session.hud().entities().ofType(LevelNumberDisplay.class).forEach(display -> {
             if (showLevelNumber) {
-                levelNumberDisplay.show();
+                display.show();
             } else {
-                levelNumberDisplay.hide();
+                display.hide();
             }
         });
     }

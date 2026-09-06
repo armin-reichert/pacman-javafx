@@ -14,12 +14,12 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.rules.ActorSpeedRules;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
 import de.amr.pacmanfx.tengenmspacman.model.BoosterMode;
 import de.amr.pacmanfx.tengenmspacman.model.Difficulty;
 import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.core.Validations.inClosedRange;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_ActorSpeedRules implements ActorSpeedRules {
@@ -45,14 +45,13 @@ public class TengenMsPacMan_ActorSpeedRules implements ActorSpeedRules {
         if (level == null) {
             return 0;
         }
-        final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) game.variant().gamePlay();
         final GameSession session = game.session();
-        final BoosterMode boosterMode = gamePlay.boosterMode(session);
+        final BoosterMode boosterMode = gameOptions(session).boosterMode();
 
         float speed = pacBaseSpeedInLevel(level.number());
         speed += pacDifficultySpeedDelta(difficulty);
         if (boosterMode == BoosterMode.BOOSTER_ALWAYS_ON
-            || boosterMode == BoosterMode.ACTIVATE_WITH_A_OR_B && gamePlay.isBoosterOn(session)) {
+            || boosterMode == BoosterMode.ACTIVATE_WITH_A_OR_B && gameOptions(session).boosterEnabled()) {
             speed += pacBoosterSpeedDelta();
         }
         return speed;

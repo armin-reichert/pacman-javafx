@@ -22,6 +22,7 @@ import de.amr.pacmanfx.tengenmspacman.model.MessageAnimation;
 import java.io.IOException;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
 
 public class Tengen_GameOverState extends AbstractGameState {
 
@@ -52,7 +53,7 @@ public class Tengen_GameOverState extends AbstractGameState {
 
         level.showMessage(MessageType.GAME_OVER);
 
-        final MapCategory mapCategory = TengenMsPacMan_GamePlay.mapCategory(session);
+        final MapCategory mapCategory = gameOptions(session).mapCategory();
         if (!session.isAttractMode() && mapCategory != MapCategory.ARCADE) {
             startGameOverMessageAnimation();
             timer().restartIndefinitely(); // animation completion triggers state exit

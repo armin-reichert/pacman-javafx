@@ -5,13 +5,19 @@
 package de.amr.pacmanfx.tengenmspacman.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.entities.Pac;
+import de.amr.pacmanfx.core.entities.pac.comp.PacState;
 import de.amr.pacmanfx.core.event.gameplay.GameStartedEvent;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.tengenmspacman.entities.pac.comp.PacBoosterComp;
+import de.amr.pacmanfx.tengenmspacman.model.BoosterMode;
+import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
 
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.startLevelNumber;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
 
 public class Tengen_GameStartingState extends AbstractGameState {
 
@@ -27,7 +33,17 @@ public class Tengen_GameStartingState extends AbstractGameState {
 
     @Override
     public void onEnterState(GameContext game) {
-        level = gamePlay.buildNormalLevel(game, startLevelNumber(session));
+        final GameSession session = game.session();
+        final int startLevelNumber = gameOptions(session).startLevelNumber();
+        level = gamePlay.buildNormalLevel(game, startLevelNumber);
+
+        final boolean boosterInitiallyEnabled = gameOptions(session).boosterMode() == BoosterMode.BOOSTER_ALWAYS_ON;
+        gameOptions(session).setBoosterEnabled(boosterInitiallyEnabled);
+
+        //TODO Hack. Should be done by entity update system
+        final Pac pac = level.entities().pac();
+        pac.state().setEnumValue(PacState.SLEEPING);
+        pac.reqComp(PacBoosterComp.class).setBoosterEnabled(boosterInitiallyEnabled);
 
         hud.creditDisplay().hide();
         hud.livesCounter().show();
@@ -44,8 +60,11 @@ public class Tengen_GameStartingState extends AbstractGameState {
 
     @Override
     public void onUpdateState(GameContext game, long globalTick, long stateTick) {
-        if (stateTick < TICK_START_PLAYING) {
-            lockPacAndGhosts(level.entities(), true);
+        final Pac pac = level.entities().pac();
+
+        if (stateTick == 0) {
+            game.variant().systems().pacAnimation().update(pac, game.variant().rules());
+            lockGhosts(level.entities(), true);
         }
 
         if (stateTick == TICK_START_LEVEL) {

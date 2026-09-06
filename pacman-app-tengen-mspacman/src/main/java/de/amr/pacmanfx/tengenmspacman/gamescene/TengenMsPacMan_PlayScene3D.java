@@ -6,11 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.gamescene;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.HUD;
-import de.amr.pacmanfx.core.entities.CreditDisplay;
-import de.amr.pacmanfx.core.entities.LevelCounter;
-import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Score;
-import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
@@ -31,7 +27,7 @@ import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.*;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
 
 /**
  * The 3D play scene of Tengen Ms. Pac-Man.
@@ -48,11 +44,10 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     @Override
     protected void addAdditional3DLevelElements(GameLevel3D level3D) {
         final GameSession session = game().session();
-
         session.optLevel().ifPresent(_ -> {
-            if (!noOptionsChanged(session)) {
-                final ImageView levelInfo = createLevelInfoView(level3D,
-                    app().currentGameVariantUIConfig().renderConfig().hudStyle());
+            if (!gameOptions(session).areInitial()) {
+                final HUD_Style style = app().currentGameVariantUIConfig().renderConfig().hudStyle();
+                final ImageView levelInfo = createLevelInfoView(level3D, style);
                 level3D.root().getChildren().add(levelInfo);
             }
         });
@@ -95,9 +90,9 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         hud.show();
 
         final GameOptionsDisplay optionsDisplay = new GameOptionsDisplay();
-        optionsDisplay.options().setBoosterMode(boosterMode(session));
-        optionsDisplay.options().setDifficulty(difficulty(session));
-        optionsDisplay.options().setMapCategory(mapCategory(session));
+        optionsDisplay.options().setBoosterMode(gameOptions(session).boosterMode());
+        optionsDisplay.options().setDifficulty(gameOptions(session).difficulty());
+        optionsDisplay.options().setMapCategory(gameOptions(session).mapCategory());
         optionsDisplay.pos().set(0.5 * width, 1.5f * TS);
         optionsDisplay.show();
 
@@ -118,10 +113,6 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         hudRenderer.fillCanvas(backgroundColor);
 
         hud.entities().forEach(entity -> hudRenderer.render(entity, 0));
-
-//        hudRenderer.drawLevelNumberBox(levelNumber, 0, 0);
-//        hudRenderer.drawLevelNumberBox(levelNumber, width - 2 * TS, 0);
-//        hudRenderer.drawGameOptions(session, 0.5 * width, tilesPx(1.5f));
 
         return canvas.snapshot(null, null);
     }

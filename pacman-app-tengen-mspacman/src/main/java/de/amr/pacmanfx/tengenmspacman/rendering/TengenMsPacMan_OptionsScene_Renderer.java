@@ -8,7 +8,6 @@ import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_OptionsScene;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
@@ -23,6 +22,7 @@ import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
 import static de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_OptionsScene.*;
 import static java.util.Objects.requireNonNull;
 
@@ -90,7 +90,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
         drawMarkerIfSelected(optionsScene, OPTION_PAC_BOOSTER, y, arcadeFont8());
         fillText("PAC BOOSTER", NES_YELLOW, COL_LABEL, y);
         fillText(":", NES_YELLOW, COL_COLON, y);
-        String pacBoosterText = switch (TengenMsPacMan_GamePlay.boosterMode(session)) {
+        String pacBoosterText = switch (gameOptions(session).boosterMode()) {
             case BOOSTER_OFF -> "OFF";
             case BOOSTER_ALWAYS_ON -> "ALWAYS ON";
             case ACTIVATE_WITH_A_OR_B -> "USE A OR B";
@@ -102,19 +102,19 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
         drawMarkerIfSelected(optionsScene, OPTION_DIFFICULTY, y, arcadeFont8());
         fillText("GAME DIFFICULTY", NES_YELLOW, COL_LABEL, y);
         fillText(":", NES_YELLOW, COL_COLON, y);
-        fillText(TengenMsPacMan_GamePlay.difficulty(session).name(), NES_WHITE, COL_VALUE, y);
+        fillText(gameOptions(session).difficulty().name(), NES_WHITE, COL_VALUE, y);
 
         y += tilesPx(3);
         // Maze (type) selection
         drawMarkerIfSelected(optionsScene, OPTION_MAZE_SELECTION, y, arcadeFont8());
         fillText("MAZE SELECTION", NES_YELLOW, COL_LABEL, y);
         fillText(":", NES_YELLOW, COL_COLON, y);
-        fillText(TengenMsPacMan_GamePlay.mapCategory(session).name(), NES_WHITE, COL_VALUE, y);
+        fillText(gameOptions(session).mapCategory().name(), NES_WHITE, COL_VALUE, y);
 
         y += tilesPx(3);
 
-        final int startLevelNumber = TengenMsPacMan_GamePlay.startLevelNumber(session);
-        final int numContinues = TengenMsPacMan_GamePlay.numContinues(session);
+        final int startLevelNumber = gameOptions(session).startLevelNumber();
+        final int numContinues = gameOptions(session).numContinues();
 
         drawMarkerIfSelected(optionsScene, OPTION_STARTING_LEVEL, y, arcadeFont8());
         fillText("STARTING LEVEL", NES_YELLOW, COL_LABEL, y);

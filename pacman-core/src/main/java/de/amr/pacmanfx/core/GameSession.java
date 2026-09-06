@@ -16,7 +16,7 @@ import static java.util.Objects.requireNonNull;
 
 public class GameSession {
 
-    public interface GameSessionValueKey {}
+    public interface SessionValueKey {}
 
     private FrameState frameState;
 
@@ -32,7 +32,7 @@ public class GameSession {
 
     private final GameCheats cheats;
 
-    private final Map<GameSessionValueKey, Object> values = new HashMap<>();
+    private final Map<SessionValueKey, Object> values = new HashMap<>();
 
     private int gameOverStateTicks;
 
@@ -120,7 +120,7 @@ public class GameSession {
         cutScenesEnabled = enabled;
     }
 
-    public <T> T value(GameSessionValueKey key, Class<T> type) {
+    public <T> T value(SessionValueKey key, Class<T> type) {
         requireNonNull(key);
         final Object value = values.get(key);
         if (value != null) {
@@ -129,12 +129,12 @@ public class GameSession {
         return null;
     }
 
-    public void setValue(GameSessionValueKey key, Object value) {
+    public void setValue(SessionValueKey key, Object value) {
         requireNonNull(key);
         values.put(key, value);
     }
 
-    public void clearValue(GameSessionValueKey key) {
+    public void clearValue(SessionValueKey key) {
         requireNonNull(key);
         values.remove(key);
     }

@@ -13,7 +13,6 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
 import de.amr.pacmanfx.tengenmspacman.model.BoosterMode;
 import de.amr.pacmanfx.tengenmspacman.model.Difficulty;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
@@ -27,6 +26,7 @@ import javafx.scene.input.KeyCode;
 
 import java.io.IOException;
 
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
@@ -88,7 +88,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene {
         bindingsMap.registerAllBindings(app().commonActions().sceneTestActions().bindings());
 
         selectedOption.set(OPTION_PAC_BOOSTER);
-        TengenMsPacMan_GamePlay.setCanStartNewGame(session, true);
+        gameOptions(session).setCanStartNewGame(true);
 
         idleTicks = 0;
         initialDelay = INITIAL_DELAY;
@@ -152,9 +152,9 @@ public class TengenMsPacMan_OptionsScene extends GameScene {
     private void setPrevStartLevelValue() {
         final GameSession session = game().session();
 
-        int current = TengenMsPacMan_GamePlay.startLevelNumber(session);
+        int current = gameOptions(session).startLevelNumber();
         int prev = (current == MIN_START_LEVEL) ? MAX_START_LEVEL : current - 1;
-        TengenMsPacMan_GamePlay.setStartLevelNumber(session, prev);
+        gameOptions(session).setStartLevelNumber(prev);
 
         optionValueChanged();
     }
@@ -162,67 +162,67 @@ public class TengenMsPacMan_OptionsScene extends GameScene {
     private void setNextStartLevelValue() {
         final GameSession session = game().session();
 
-        int current = TengenMsPacMan_GamePlay.startLevelNumber(session);
+        int current = gameOptions(session).startLevelNumber();
         int next = (current < MAX_START_LEVEL) ? current + 1 : MIN_START_LEVEL;
-        TengenMsPacMan_GamePlay.setStartLevelNumber(session, next);
+        gameOptions(session).setStartLevelNumber(next);
 
         optionValueChanged();
     }
 
     private void setPrevMapCategoryValue(GameSession session) {
-        final MapCategory category = TengenMsPacMan_GamePlay.mapCategory(session);
+        final MapCategory category = gameOptions(session).mapCategory();
         final var values = MapCategory.values();
         final int current = category.ordinal(), prev = (current == 0) ? values.length - 1 :  current - 1;
-        TengenMsPacMan_GamePlay.setMapCategory(session, values[prev]);
+        gameOptions(session).setMapCategory(values[prev]);
 
         saveHighScore();
         optionValueChanged();
     }
 
     private void setNextMapCategoryValue(GameSession session) {
-        final MapCategory category = TengenMsPacMan_GamePlay.mapCategory(session);
+        final MapCategory category = gameOptions(session).mapCategory();
         var values = MapCategory.values();
         int current = category.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
-        TengenMsPacMan_GamePlay.setMapCategory(session, values[next]);
+        gameOptions(session).setMapCategory(values[next]);
 
         saveHighScore();
         optionValueChanged();
     }
 
     private void setPrevDifficultyValue(GameSession session) {
-        final Difficulty difficulty = TengenMsPacMan_GamePlay.difficulty(session);
+        final Difficulty difficulty = gameOptions(session).difficulty();
         final var values = Difficulty.values();
         final int current = difficulty.ordinal(), prev = (current == 0) ? values.length - 1 : current - 1;
-        TengenMsPacMan_GamePlay.setDifficulty(game(), values[prev]);
+        gameOptions(session).setDifficulty(values[prev]);
 
         saveHighScore();
         optionValueChanged();
     }
 
     private void setNextDifficultyValue(GameSession session) {
-        final Difficulty difficulty = TengenMsPacMan_GamePlay.difficulty(session);
+        final Difficulty difficulty = gameOptions(session).difficulty();
         final var values = Difficulty.values();
         final int current = difficulty.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
-        TengenMsPacMan_GamePlay.setDifficulty(game(), values[next]);
+        gameOptions(session).setDifficulty(values[next]);
 
         saveHighScore();
         optionValueChanged();
     }
 
     private void setPrevPacBoosterValue(GameSession session) {
-        final BoosterMode boosterMode = TengenMsPacMan_GamePlay.boosterMode(session);
+        final BoosterMode boosterMode = gameOptions(session).boosterMode();
         final var values = BoosterMode.values();
         final int current = boosterMode.ordinal(), prev = (current == 0) ? values.length - 1 : current - 1;
-        TengenMsPacMan_GamePlay.setBoosterMode(session, values[prev]);
+        gameOptions(session).setBoosterMode(values[prev]);
 
         optionValueChanged();
     }
 
     private void setNextPacBoosterValue(GameSession session) {
-        final BoosterMode boosterMode = TengenMsPacMan_GamePlay.boosterMode(session);
+        final BoosterMode boosterMode = gameOptions(session).boosterMode();
         final var values = BoosterMode.values();
         final int current = boosterMode.ordinal(), next = (current == values.length - 1) ? 0 : current + 1;
-        TengenMsPacMan_GamePlay.setBoosterMode(session, values[next]);
+        gameOptions(session).setBoosterMode(values[next]);
 
         optionValueChanged();
     }

@@ -8,6 +8,7 @@ import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
+import de.amr.pacmanfx.tengenmspacman.entities.pac.comp.PacBoosterComp;
 import de.amr.pacmanfx.tengenmspacman.gamescene.SceneDisplay;
 import de.amr.pacmanfx.tengenmspacman.model.BoosterMode;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
@@ -24,6 +25,7 @@ import javafx.scene.input.KeyCodeCombination;
 import java.util.Set;
 
 import static de.amr.basics.util.Ufx.toggleBooleanProperty;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
 import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.bareKey;
 import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
 
@@ -99,21 +101,22 @@ public final class TengenMsPacMan_Actions {
         actionTogglePacBooster = new GameAction("toggle_pac_booster") {
             @Override
             public void execute(GameAppContext app) {
-                final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) app.game().variant().gamePlay();
                 final GameSession session = app.game().session();
-                session.optLevel().ifPresent(gameLevel -> {
-                    gamePlay.setBoosterOn(app.game(), gameLevel.entities().pac(), !gamePlay.isBoosterOn(session));
-                    if (gamePlay.isBoosterOn(session)) {
+                session.optLevel().ifPresent(level -> {
+                    final boolean nextEnabledState = !gameOptions(session).boosterEnabled();
+                    gameOptions(session).setBoosterEnabled(nextEnabledState);
+                    if (nextEnabledState) {
                         app.ui().shortMessage("Booster ON!"); //TODO localize
                     }
+                    //TODO hack: this should be done by entity update system!
+                    level.entities().pac().reqComp(PacBoosterComp.class).setBoosterEnabled(nextEnabledState);
                 });
             }
 
             @Override
             public boolean isEnabled(GameAppContext app) {
-                final TengenMsPacMan_GamePlay gamePlay = (TengenMsPacMan_GamePlay) app.game().variant().gamePlay();
                 final GameSession session = app.game().session();
-                return gamePlay.boosterMode(session) == BoosterMode.ACTIVATE_WITH_A_OR_B && session.optLevel().isPresent();
+                return gameOptions(session).boosterMode() == BoosterMode.ACTIVATE_WITH_A_OR_B && session.optLevel().isPresent();
             }
         };
 

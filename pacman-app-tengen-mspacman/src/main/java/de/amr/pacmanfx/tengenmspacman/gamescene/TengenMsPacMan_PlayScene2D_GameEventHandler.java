@@ -22,7 +22,6 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.MessageType;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Extras;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
 import de.amr.pacmanfx.tengenmspacman.gamestate.Tengen_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.MessageAnimation;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
@@ -35,6 +34,7 @@ import java.util.Optional;
 
 import static de.amr.basics.util.Ufx.textWidth;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.GAME_OVER_TEXT;
 
 public interface TengenMsPacMan_PlayScene2D_GameEventHandler extends DefaultGameEventListener {
@@ -178,7 +178,7 @@ public interface TengenMsPacMan_PlayScene2D_GameEventHandler extends DefaultGame
     }
 
     default void resetPacAnimation(ActorSpriteAnimController animSystem, GameSession session, Pac pac) {
-        animSystem.select(pac, TengenMsPacMan_GamePlay.isBoosterOn(session)
+        animSystem.select(pac, gameOptions(session).boosterEnabled()
             ? TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER
             : CommonSpriteAnimationID.PAC_MOUTH_MOVING);
         animSystem.resetSelected(pac);
