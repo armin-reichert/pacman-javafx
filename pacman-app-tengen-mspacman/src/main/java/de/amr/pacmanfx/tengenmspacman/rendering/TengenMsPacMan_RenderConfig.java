@@ -163,7 +163,6 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     @Override
     public BaseRenderer createMessageViewRenderer(Canvas canvas) {
         final var renderer = new MessageViewRenderer(canvas, MESSAGE_TEXTS);
-        renderer.setTranslate(new Vector2f(16, 0)); //TODO this does not belong here
         return renderer;
     }
 
@@ -175,7 +174,6 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     @Override
     public BaseRenderer createHUDRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
         final var renderer = new TengenMsPacMan_HUD_Renderer(hudStyle, canvas);
-        renderer.setTranslate(new Vector2f(16, 0));
         return renderer;
     }
 

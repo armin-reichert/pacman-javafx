@@ -67,14 +67,6 @@ public abstract class BaseRenderer implements Renderer {
         infoMap = new InfoMap();
     }
 
-    public Vector2f translate() {
-        return translate;
-    }
-
-    public void setTranslate(Vector2f translate) {
-        this.translate = requireNonNull(translate);
-    }
-
     public InfoMap infoMap() {
         return infoMap;
     }

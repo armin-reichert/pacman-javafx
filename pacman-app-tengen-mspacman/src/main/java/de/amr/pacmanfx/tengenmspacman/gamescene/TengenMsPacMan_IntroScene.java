@@ -51,8 +51,8 @@ public class TengenMsPacMan_IntroScene extends GameScene {
     public static final int MARQUEE_X = 60, MARQUEE_Y = 64;
 
     public static final int ACTOR_Y = MARQUEE_Y + 72;
-    public static final int GHOST_STOP_X = MARQUEE_X - 18;
-    public static final int MS_PAC_MAN_STOP_X = MARQUEE_X + 62;
+    public static final int GHOST_STOP_X = MARQUEE_X - 34;
+    public static final int MS_PAC_MAN_STOP_X = MARQUEE_X + 46;
     public static final float SPEED = 2.2f; //TODO check exact speed
 
     public final StateMachine<TengenMsPacMan_IntroScene> flow;
@@ -105,7 +105,7 @@ public class TengenMsPacMan_IntroScene extends GameScene {
         marquee = createMarquee();
 
         presents = new GameEntity();
-        presents.pos().set(9 * WorldMap.TS, MARQUEE_Y - WorldMap.TS);
+        presents.pos().set(8 * WorldMap.TS, MARQUEE_Y - WorldMap.TS);
 
         flow.restartState(this, SceneState.WAITING_FOR_START);
     }
@@ -115,8 +115,8 @@ public class TengenMsPacMan_IntroScene extends GameScene {
 
         marquee.pos().set(MARQUEE_X, MARQUEE_Y);
 
-        marquee.layout().setNumBulbsHorizontally(35);
-        marquee.layout().setNumBulbsVertically(15);
+        marquee.layout().setNumBulbsHorizontally(34);
+        marquee.layout().setNumBulbsVertically(16);
         marquee.layout().setBulbSize(4);
         marquee.layout().setBrightBulbsCount(6);
         marquee.layout().setBrightBulbsDistance(16);

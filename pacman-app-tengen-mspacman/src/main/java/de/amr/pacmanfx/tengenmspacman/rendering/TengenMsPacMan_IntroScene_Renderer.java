@@ -79,24 +79,11 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
         final State<TengenMsPacMan_IntroScene> introState = introScene.flow.state();
         final long stateTick = introScene.flow.state().timer().tickCount();
 
+        ctx.save();
         ctx.setFont(arcadeFont8());
         ctx.setImageSmoothing(false);
 
         switch (introState) {
-
-            case SceneState.WAITING_FOR_START -> {
-                if (!introScene.dark) {
-                    final boolean bright = stateTick % 60 < 30; // 0.5s dark, 0.5s bright
-                    fillText(TENGEN_PRESENTS, shadeOfBlue(stateTick), introScene.presents.pos().x(), introScene.presents.pos().y());
-                    drawSprite(spriteSheet().findSprite(SpriteID.LARGE_MS_PAC_MAN_TEXT), 6 * TS, MARQUEE_Y, true);
-                    if (bright) {
-                        fillText(PRESS_START, NES_Palette.color(0x20), 11 * TS, MARQUEE_Y + 9 * TS);
-                    }
-                    fillText(NAMCO_LTD,           NES_Palette.color(0x25), 6 * TS, MARQUEE_Y + 15 * TS);
-                    fillText(TENGEN_INC,          NES_Palette.color(0x25), 8 * TS, MARQUEE_Y + 16 * TS);
-                    fillText(ALL_RIGHTS_RESERVED, NES_Palette.color(0x25), 7 * TS, MARQUEE_Y + 17 * TS);
-                }
-            }
 
             case SceneState.SHOWING_MARQUEE -> {
                 marqueeRenderer.render(introScene.marquee, tick);
@@ -124,11 +111,27 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
                 actorRenderer.render(introScene.msPacMan, tick);
             }
 
+            case SceneState.WAITING_FOR_START -> {
+                if (!introScene.dark) {
+                    final boolean bright = stateTick % 60 < 30; // 0.5s dark, 0.5s bright
+                    fillText(TENGEN_PRESENTS, shadeOfBlue(stateTick), introScene.presents.pos().x(), introScene.presents.pos().y());
+                    drawSprite(spriteSheet().findSprite(SpriteID.LARGE_MS_PAC_MAN_TEXT), 5 * TS, MARQUEE_Y, true);
+                    if (bright) {
+                        fillText(PRESS_START, NES_Palette.color(0x20), 10 * TS, MARQUEE_Y + 9 * TS);
+                    }
+                    fillText(NAMCO_LTD,           NES_Palette.color(0x25), 5 * TS, MARQUEE_Y + 15 * TS);
+                    fillText(TENGEN_INC,          NES_Palette.color(0x25), 7 * TS, MARQUEE_Y + 16 * TS);
+                    fillText(ALL_RIGHTS_RESERVED, NES_Palette.color(0x25), 6 * TS, MARQUEE_Y + 17 * TS);
+                }
+            }
+
             default -> {}
         }
 
         if (uiSettings.joypadBindingsDisplayed.get()) {
             drawJoypadKeyBinding(introScene.app().input().joypad().currentKeyBinding());
         }
+
+        ctx.restore();
     }
 }

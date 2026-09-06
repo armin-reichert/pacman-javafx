@@ -29,9 +29,7 @@ import de.amr.pacmanfx.core.rules.DefaultHuntingTimer;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
 import de.amr.pacmanfx.tengenmspacman.entities.GameOptionsDisplay;
 import de.amr.pacmanfx.tengenmspacman.entities.LevelNumberDisplay;
-import de.amr.pacmanfx.tengenmspacman.entities.pac.comp.PacBoosterComp;
 import de.amr.pacmanfx.tengenmspacman.gamestate.Tengen_GameState;
-import de.amr.pacmanfx.tengenmspacman.model.BoosterMode;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
@@ -48,7 +46,6 @@ import static de.amr.basics.math.RandomNumbers.randomBoolean;
 import static de.amr.basics.math.RandomNumbers.randomInt;
 import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_GamePlay extends CommonGamePlay {
@@ -303,10 +300,8 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
         level.showMessage(MessageType.READY);
 
-        final Pac pac = level.entities().pac();
-        pac.show();
-
-        // Actors are shown immediately when level starts!
+        //TODO Check in emulator the sequence when actors etc. get visible
+        level.entities().pac().show();
         level.entities().ghosts().forEach(GameEntity::show);
 
         // Note: This event is very important because it triggers the creation of the actor animations!
@@ -370,9 +365,10 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
         // Messages appear centered under house
         final Vector2i houseSize = house.sizeInTiles();
-        float cx = tilesPx(house.floorplan().minTile().x() + houseSize.x() * 0.5f);
-        float cy = tilesPx(house.floorplan().minTile().y() + houseSize.y() + 1);
-        messageView.pos().set(cx, cy);
+        float cx = TS * (house.floorplan().minTile().x() + houseSize.x() * 0.5f);
+        float cy = TS * (house.floorplan().minTile().y() + houseSize.y() + 1);
+        // Add x-offset to center over 32 tiles wide NES screen
+        messageView.pos().set(cx + 2 * TS, cy);
 
         messageView.setComp(MessageViewStyleComp.class, createMessageViewStyleComp(session, colorScheme));
 
