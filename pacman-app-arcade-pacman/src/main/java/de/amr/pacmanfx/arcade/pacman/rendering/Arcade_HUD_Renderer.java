@@ -85,18 +85,17 @@ public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer 
     }
 
     private void drawLivesCounter(LivesCounter livesCounter) {
-        final int numLives = livesCounter.data().numLives();
-        final int displayedSymbolsCount = Math.min(numLives, livesCounter.data().maxLivesShown());
-
         final float x = livesCounter.pos().x();
         final float y = livesCounter.pos().y();
 
-        for (int i = 0; i < displayedSymbolsCount; ++i) {
+        final int numLives = livesCounter.data().numLives();
+        final int numSymbols = Math.min(numLives, livesCounter.data().maxLivesShown());
+
+        for (int i = 0; i < numSymbols; ++i) {
             drawSprite(style.livesCounterSymbolSprite(), x + i * 2 * TS, y, true);
         }
 
-        if (numLives - 1 > livesCounter.data().maxLivesShown()) {
-            // Show text indicating that more lives are available than symbols displayed (cheating may cause this)
+        if (numLives > livesCounter.data().maxLivesShown()) {
             final Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
             fillText("%d".formatted(numLives), ARCADE_YELLOW, font, x - 14, y + TS);
         }

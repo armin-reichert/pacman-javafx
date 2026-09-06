@@ -17,21 +17,23 @@ public class HUD_UpdateSystem {
         final GameSession session = game.session();
 
         final LivesCounter livesCounter = hud.livesCounter();
+        livesCounter.data().setNumLives(session.numLives());
+
         // Normally the lives counter shows a Pac symbol for each remaining live (without the Pac inside the maze)
         // When a new game or a level starts/continues, Pac-Man is invisible for some short time. During this time,
         // the level counter shows an additional entry and Pac-Man seems to "hop" from the lives counter into the maze
         // when the level starts.
-        int livesShown = session.numLives() - 1;
+        int numLivesShown = session.numLives() - 1;
         if (session.optLevel().isPresent()) {
             final GameLevel level = session.level();
             final boolean starting = game.state().id() == CommonGameStateID.GAME_STARTING
                 || game.state().id() == CommonGameStateID.GAME_OR_LEVEL_STARTING;
             if (starting && !level.entities().pac().isVisible()) {
-                ++livesShown;
+                ++numLivesShown;
             }
         }
-        livesShown = Math.clamp(livesShown, 0, livesCounter.data().maxLivesShown());
-        livesCounter.data().setNumLives(livesShown);
+        numLivesShown = Math.clamp(numLivesShown, 0, livesCounter.data().maxLivesShown());
+        livesCounter.data().setNumLivesShown(numLivesShown);
 
         final CreditDisplay creditDisplay = hud.creditDisplay();
         creditDisplay.data().setCredit(game.coinMechanism().numCoins());

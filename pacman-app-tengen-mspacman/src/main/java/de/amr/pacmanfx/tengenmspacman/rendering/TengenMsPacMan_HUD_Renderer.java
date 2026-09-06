@@ -28,6 +28,7 @@ import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 import java.util.List;
 
@@ -136,18 +137,18 @@ public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteR
     }
 
     private void drawLivesCounter(LivesCounter livesCounter) {
-        final int numLives = livesCounter.data().numLives();
-        final int displayedSymbolsCount = Math.min(numLives, livesCounter.data().maxLivesShown());
-
         final float x = livesCounter.pos().x();
         final float y = livesCounter.pos().y();
 
-        for (int i = 0; i < displayedSymbolsCount; ++i) {
+        final int numLives = livesCounter.data().numLives();
+        final int numSymbols = Math.min(numLives, livesCounter.data().maxLivesShown());
+
+        for (int i = 0; i < numSymbols; ++i) {
             drawSprite(style.livesCounterSymbolSprite(), x + i * 2 * TS, y, true);
         }
 
         if (numLives > livesCounter.data().maxLivesShown()) {
-            final Font scaledFont = Ufx.scaleFontBy(Font.font("Serif", 8), scaling());
+            final Font scaledFont = Font.font("Serif", FontWeight.BLACK, scaled(8));
             fillText("(%d)".formatted(numLives), NES_Palette.color(0x28), scaledFont, tilesPx(14), y + TS);
         }
     }

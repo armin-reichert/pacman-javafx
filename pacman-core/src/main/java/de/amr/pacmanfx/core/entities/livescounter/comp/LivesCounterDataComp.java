@@ -10,14 +10,17 @@ public class LivesCounterDataComp implements GameEntityComp {
 
     private int maxLivesShown;
 
+    private int numLivesShown;
+
     private int numLives;
 
-    public int numLives() {
-        return numLives;
+    /** Number of lives shown in counter */
+    public int numLivesShown() {
+        return numLivesShown;
     }
 
-    public void setNumLives(int numLives) {
-        this.numLives = numLives;
+    public void setNumLivesShown(int numLivesShown) {
+        this.numLivesShown = numLivesShown;
     }
 
     public int maxLivesShown() {
@@ -28,9 +31,18 @@ public class LivesCounterDataComp implements GameEntityComp {
         this.maxLivesShown = maxLivesShown;
     }
 
+    /** Real number of lives in game session */
+    public int numLives() {
+        return numLives;
+    }
+
+    public void setNumLives(int numLives) {
+        this.numLives = numLives;
+    }
+
     @Override
     public void reset() {
-        numLives = 0;
+        numLivesShown = 0;
         maxLivesShown = 5;
     }
 }

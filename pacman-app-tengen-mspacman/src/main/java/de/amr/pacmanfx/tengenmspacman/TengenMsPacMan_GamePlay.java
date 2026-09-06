@@ -275,7 +275,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         else {
             // Called when session is started, initialize
 
-            livesCounter.data().setNumLives(game.variant().initialLifeCount());
+            livesCounter.data().setNumLivesShown(game.variant().initialLifeCount());
             livesCounter.data().setMaxLivesShown(5);
 
             levelCounter.data().setBehavior(LevelCounterBehavior.DISABLE_WHEN_FULL);

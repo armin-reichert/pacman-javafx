@@ -28,6 +28,6 @@ public class LivesCounter3DViewSystem {
 
     public static void update(LivesCounter livesCounter) {
         final LivesCounter3DViewComp view3D = livesCounter.reqComp(LivesCounter3DViewComp.class);
-        view3D.livesCountProperty().set(livesCounter.data().numLives() - 1);
+        view3D.livesCountProperty().set(livesCounter.data().numLivesShown() - 1);
     }
 }
