@@ -275,6 +275,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         pac.cheats().setUsingAutopilot(true);
 
         session.hud().gameScore().data().setLevelNumber(demoLevel.number());
+        session.hud().gameScore().data().setEnabled(true);
 
         session.setLevel(demoLevel);
         session.setAttractMode(true);
@@ -365,10 +366,9 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
         // Messages appear centered under house
         final Vector2i houseSize = house.sizeInTiles();
-        float cx = TS * (house.floorplan().minTile().x() + houseSize.x() * 0.5f);
-        float cy = TS * (house.floorplan().minTile().y() + houseSize.y() + 1);
-        // Add x-offset to center over 32 tiles wide NES screen
-        messageView.pos().set(cx + 2 * TS, cy);
+        float x = TS * (house.floorplan().minTile().x() + houseSize.x() * 0.5f + 2.5f);
+        float y = TS * (house.floorplan().minTile().y() + houseSize.y() + 1);
+        messageView.pos().set(x, y);
 
         messageView.setComp(MessageViewStyleComp.class, createMessageViewStyleComp(session, colorScheme));
 

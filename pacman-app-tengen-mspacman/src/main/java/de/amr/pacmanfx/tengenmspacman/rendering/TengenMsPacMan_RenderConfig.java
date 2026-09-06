@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.math.RectShort;
-import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
@@ -45,7 +44,7 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     private static final Map<MessageType, String> MESSAGE_TEXTS = new EnumMap<>(MessageType.class);
     static {
         MESSAGE_TEXTS.put(MessageType.READY, "READY!");
-        MESSAGE_TEXTS.put(MessageType.GAME_OVER, "GAME  OVER");
+        MESSAGE_TEXTS.put(MessageType.GAME_OVER, "GAME OVER");
         MESSAGE_TEXTS.put(MessageType.NO_MESSAGE, "");
     }
 
@@ -162,8 +161,7 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
 
     @Override
     public BaseRenderer createMessageViewRenderer(Canvas canvas) {
-        final var renderer = new MessageViewRenderer(canvas, MESSAGE_TEXTS);
-        return renderer;
+        return new MessageViewRenderer(canvas, MESSAGE_TEXTS);
     }
 
     @Override
@@ -173,8 +171,7 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
 
     @Override
     public BaseRenderer createHUDRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
-        final var renderer = new TengenMsPacMan_HUD_Renderer(hudStyle, canvas);
-        return renderer;
+        return new TengenMsPacMan_HUD_Renderer(hudStyle, canvas);
     }
 
     @Override
