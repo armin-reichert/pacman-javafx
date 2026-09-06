@@ -12,11 +12,9 @@ import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.ecs.systems.PositionSystem;
-import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusRouteInfo;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusState;
-import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.levelCounter.comp.LevelCounterBehavior;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -25,24 +23,18 @@ import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
-import de.amr.pacmanfx.core.rules.DefaultHuntingTimer;
 import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
 import org.tinylog.Logger;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Stream;
 
 import static de.amr.basics.math.RandomNumbers.*;
-import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
-
-    private static final Set<GhostState> TURNBACK_STATES = Set.of(
-        GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE);
 
     @Override
     public void configureHUD(GameContext game, GameLevel level, HUD hud) {
@@ -72,40 +64,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
     }
 
     @Override
-    public GameLevel createLevel(GameContext game, int levelNumber) {
-        requireNonNull(game);
-        requireValidLevelNumber(levelNumber);
-
-        final GameSession session = game.session();
-        final GameLevelEntities entities = new GameLevelEntities();
-
-        final WorldNavigationSystem navigator = game.variant().systems().navigator();
-        final WorldMap worldMap = game.variant().worldMapManager().supplyWorldMap(levelNumber);
-
-        createAndAddEntities(entities, worldMap.terrainLayer());
-        configurePacAndGhosts(entities, game.variant().systems(), worldMap.terrainLayer(), entities.house());
-
-        final DefaultHuntingTimer huntingTimer = new DefaultHuntingTimer("Arcade Ms. Pac-Man Hunting Timer", game.variant().rules().numHuntingPhases());
-        huntingTimer.setPhaseChangeCallback(newPhaseIndex -> {
-            if (newPhaseIndex > 0) {
-                entities.ghostsInAnyOfStates(TURNBACK_STATES).forEach(navigator::requestTurnBack);
-            }
-        });
-
-        final GameLevel level = new GameLevel(levelNumber, worldMap, entities, huntingTimer);
-
-        final GameRules rules = game.variant().rules();
-        level.setBonusSymbolCodes(rules.bonusSymbols(levelNumber));
-
-        configureHUD(game, level, session.hud());
-
-        session.setGameOverStateTicks(GAME_OVER_STATE_TICKS);
-        session.setLevel(level);
-
-        return level;
-    }
-
-    private void createAndAddEntities(GameLevelEntities entities, TerrainLayer terrain) {
+    protected void createAndAddEntities(GameLevelEntities entities, TerrainLayer terrain) {
         final Vector2i houseMinTile = terrain.getTilePropertyOrDefault(
             WorldMapPropertyName.POS_HOUSE_MIN_TILE, ArcadePacMan_GamePlay.ARCADE_MAP_HOUSE_MIN_TILE);
         terrain.propertyMap().put(WorldMapPropertyName.POS_HOUSE_MIN_TILE, houseMinTile.toString());
@@ -129,11 +88,13 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         entities.add(orangeGhost);
     }
 
-    private void configurePacAndGhosts(GameLevelEntities entities, GameSystems systems, TerrainLayer terrain, House house) {
+    @Override
+    protected void configurePacAndGhosts(GameLevelEntities entities, GameSystems systems, TerrainLayer terrain) {
         entities.pac().autoSteering().setSteering(new RuleGuidedPacSteering(
             systems.navigator(), systems.pacWorldMovementPolicy()
         ));
 
+        final House house = entities.house();
         entities.ghost(GhostPersonality.RED_GHOST_SHADOW)  .worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_1_RED);
         entities.ghost(GhostPersonality.PINK_GHOST_SPEEDY) .worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK);
         entities.ghost(GhostPersonality.CYAN_GHOST_BASHFUL).worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN);

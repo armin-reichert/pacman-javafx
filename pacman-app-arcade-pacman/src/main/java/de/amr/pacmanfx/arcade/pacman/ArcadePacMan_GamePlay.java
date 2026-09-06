@@ -61,6 +61,9 @@ import static java.util.Objects.requireNonNull;
  */
 public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
+    public static final Set<GhostState> TURNBACK_STATES = Set.of(
+        GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE);
+
     public static final List<Vector2i> DEMO_LEVEL_ROUTE = List.of(
         tile( 9,26), tile( 9,29), tile(12,29), tile(12,32), tile(26,32),
         tile(26,29), tile(24,29), tile(24,26), tile(26,26), tile(26,23),
@@ -123,15 +126,14 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         final GameRules rules = game.variant().rules();
         final GameSystems systems = game.variant().systems();
         final WorldMap worldMap = game.variant().worldMapManager().supplyWorldMap(levelNumber);
+        final var entities = new GameLevelEntities();
 
-        final GameLevelEntities entities = new GameLevelEntities();
         createAndAddEntities(entities, worldMap.terrainLayer());
 
-        final var huntingTimer = new DefaultHuntingTimer("Arcade Pac-Man Hunting Timer", rules.numHuntingPhases());
-        // On each phase start (except the initial phase), the ghosts reverse their move direction
+        final var huntingTimer = new DefaultHuntingTimer("Arcade Hunting Timer", rules.numHuntingPhases());
         huntingTimer.setPhaseChangeCallback(newPhaseIndex -> {
             if (newPhaseIndex > 0) {
-                entities.ghostsInAnyOfStates(Set.of(GhostState.HUNTING_PAC, GhostState.LOCKED, GhostState.LEAVING_HOUSE))
+                entities.ghostsInAnyOfStates(TURNBACK_STATES)
                     .forEach(systems.navigator()::requestTurnBack);
             }
         });
@@ -285,9 +287,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         return messageView;
     }
 
-    // private
-
-    private void createAndAddEntities(GameLevelEntities entities, TerrainLayer terrain) {
+    protected void createAndAddEntities(GameLevelEntities entities, TerrainLayer terrain) {
         final Vector2i houseMinTile = terrain.getTilePropertyOrDefault(
             WorldMapPropertyName.POS_HOUSE_MIN_TILE, ARCADE_MAP_HOUSE_MIN_TILE);
         terrain.propertyMap().put(WorldMapPropertyName.POS_HOUSE_MIN_TILE,  String.valueOf(houseMinTile));
@@ -311,7 +311,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         entities.add(orangeGhost);
     }
 
-    private void configurePacAndGhosts(GameLevelEntities entities, GameSystems systems, TerrainLayer terrain) {
+    protected void configurePacAndGhosts(GameLevelEntities entities, GameSystems systems, TerrainLayer terrain) {
         entities.pac().autoSteering().setSteering(new RuleGuidedPacSteering(
             systems.navigator(), systems.pacWorldMovementPolicy()
         ));
@@ -328,7 +328,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         entities.ghost(GhostPersonality.ORANGE_GHOST_POKEY).worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_4_ORANGE, oneWayTiles);
     }
 
-    private void onGhostReleasedFromHouse(GameLevel level, Ghost prisoner) {
+    protected void onGhostReleasedFromHouse(GameLevel level, Ghost prisoner) {
         final Ghost redGhost = level.entities().ghost(GhostPersonality.RED_GHOST_SHADOW);
         // Disabled elroy mode of Blinky is re-enabled when Clyde is released from house
         redGhost.optComp(ElroyComp.class).ifPresent(elroy -> {
