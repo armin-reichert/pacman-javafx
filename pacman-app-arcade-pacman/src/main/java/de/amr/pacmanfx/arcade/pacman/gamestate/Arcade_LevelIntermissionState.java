@@ -18,8 +18,9 @@ public class Arcade_LevelIntermissionState extends AbstractGameState {
     public void onEnterState(GameContext game) {
         hud.creditDisplay().hide();
         hud.gameScore().hide();
-        hud.levelCounter().show();
+        hud.highScore().hide();
         hud.livesCounter().hide();
+        hud.levelCounter().show();
         hud.show();
 
         timer().resetToIndefiniteDuration();
@@ -35,10 +36,8 @@ public class Arcade_LevelIntermissionState extends AbstractGameState {
 
     @Override
     public void onExit(GameContext game) {
-        hud.creditDisplay().hide();
         hud.gameScore().show();
-        hud.levelCounter().show();
+        hud.highScore().show();
         hud.livesCounter().show();
-        hud.show();
     }
 }
