@@ -14,14 +14,9 @@ import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.tengenmspacman.entities.GameOptionsDisplay;
 import de.amr.pacmanfx.tengenmspacman.entities.LevelNumberDisplay;
 import de.amr.pacmanfx.tengenmspacman.entities.gameoptionsdisplay.GameOptionsDataComp;
-import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene1;
-import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene2;
-import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene3;
-import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CutScene4;
 import de.amr.pacmanfx.tengenmspacman.model.BoosterMode;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.HUD_Style;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
@@ -48,17 +43,6 @@ public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteR
     @Override
     public TengenMsPacMan_SpriteSheet spriteSheet() {
         return TengenMsPacMan_SpriteSheet.instance();
-    }
-
-    //TODO This does not belong here
-    private double computeOffsetY(GameScene scene) {
-        return switch (scene) {
-            case TengenMsPacMan_CutScene1 _,
-                 TengenMsPacMan_CutScene2 _,
-                 TengenMsPacMan_CutScene3 _,
-                 TengenMsPacMan_CutScene4 _ -> -2 * TS;
-            default -> 0;
-        };
     }
 
     @Override
@@ -169,20 +153,20 @@ public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteR
         }
     }
 
-    private void drawLevelNumberDisplay(LevelNumberDisplay levelNumberDisplay) {
-        drawLevelNumberBox(
-            levelNumberDisplay.levelNumber().number(),
-            levelNumberDisplay.pos().x(),
-            levelNumberDisplay.pos().y()
-        );
-    }
+    private void drawLevelNumberDisplay(LevelNumberDisplay display) {
+        final float x = display.pos().x();
+        final float y = display.pos().y();
+        final int number = display.levelNumber().number();
 
-    private void drawLevelNumberBox(int number, double x, double y) {
         drawSprite(spriteSheet().findSprite(SpriteID.LEVEL_NUMBER_BOX), x, y, true);
-        final int tens = number / 10, ones = number % 10;
+
+        final int tens = number / 10;
         if (tens > 0) {
-            drawSprite(spriteSheet().findDigitSprite(tens), x + 2, y + 2, true);
+            final RectShort tensSprite = spriteSheet().findDigitSprite(number / 10);
+            drawSprite(tensSprite, x + 2, y + 2, true);
         }
-        drawSprite(spriteSheet().findDigitSprite(ones), x + 10, y + 2, true);
+
+        final RectShort onesSprite = spriteSheet().findDigitSprite(number % 10);
+        drawSprite(onesSprite, x + 10, y + 2, true);
     }
 }
