@@ -25,8 +25,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-import java.util.List;
-
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static java.util.Objects.requireNonNull;
@@ -59,60 +57,63 @@ public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteR
             case LevelCounter levelCounter -> drawLevelCounter(levelCounter);
             case LivesCounter livesCounter -> drawLivesCounter(livesCounter);
             case Score score -> {
-                if (score.type() == Score.Type.GAME_SCORE) {
-                    drawGameScore(score, tick);
-                } else {
-                    drawHighScore(score);
+                final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
+                switch (score.type()) {
+                    case GAME_SCORE -> drawGameScore(score, scaledFont, tick);
+                    case HIGH_SCORE -> drawHighScore(score, scaledFont);
                 }
             }
-            case CreditDisplay _ -> { /* Not used in this game variant */}
             case GameOptionsDisplay gameOptionsDisplay -> drawGameOptionsDisplay(gameOptionsDisplay);
             case LevelNumberDisplay levelNumberDisplay -> drawLevelNumberDisplay(levelNumberDisplay);
+            case CreditDisplay _ -> { /* Not used in this game variant */}
 
-            default -> throw new IllegalStateException("Unexpected value: " + entity);
+            default -> throw new IllegalStateException("Unexpected HUD entity: " + entity);
         }
     }
 
-    private void drawGameOptionsDisplay(GameOptionsDisplay gameOptionsDisplay) {
-        final GameOptionsDataComp options = gameOptionsDisplay.options();
+    private void drawGameOptionsDisplay(GameOptionsDisplay display) {
+        final GameOptionsDataComp options = display.options();
 
         final RectShort mapCategorySprite = switch (options.mapCategory()) {
             case BIG     -> spriteSheet().findSprite(SpriteID.INFO_CATEGORY_BIG);
             case MINI    -> spriteSheet().findSprite(SpriteID.INFO_CATEGORY_MINI);
             case STRANGE -> spriteSheet().findSprite(SpriteID.INFO_CATEGORY_STRANGE);
-            case ARCADE  -> RectShort.NULL_RECTANGLE;
+            case ARCADE  -> null;
         };
 
         final RectShort difficultySprite = switch (options.difficulty()) {
             case EASY   -> spriteSheet().findSprite(SpriteID.INFO_DIFFICULTY_EASY);
             case HARD   -> spriteSheet().findSprite(SpriteID.INFO_DIFFICULTY_HARD);
             case CRAZY  -> spriteSheet().findSprite(SpriteID.INFO_DIFFICULTY_CRAZY);
-            case NORMAL -> RectShort.NULL_RECTANGLE;
+            case NORMAL -> null;
         };
 
-        final float centerX = gameOptionsDisplay.pos().x();
-        final float y = gameOptionsDisplay.pos().y();
+        final float centerX = display.pos().x();
+        final float y = display.pos().y();
+
         drawSpriteCentered(spriteSheet().findSprite(SpriteID.INFO_FRAME), centerX, y);
+
         if (options.boosterMode() != BoosterMode.BOOSTER_OFF) {
             drawSpriteCentered(spriteSheet().findSprite(SpriteID.INFO_BOOSTER), centerX - tilesPx(5.5f), y);
         }
-        drawSpriteCentered(difficultySprite, centerX, y);
-        drawSpriteCentered(mapCategorySprite, centerX + tilesPx(4.5f), y);
+        if (difficultySprite != null) {
+            drawSpriteCentered(difficultySprite, centerX, y);
+        }
+        if (mapCategorySprite != null) {
+            drawSpriteCentered(mapCategorySprite, centerX + tilesPx(4.5f), y);
+        }
     }
 
-    private void drawGameScore(Score gameScore, long tick) {
-        final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
+    private void drawGameScore(Score gameScore, Font scaledFont, long tick) {
         // Blink frequency = 1Hz (30 ticks on, 30 ticks off)
-        final boolean on = tick % 60 < 30;
-        if (on) {
+        if (tick % 60 < 30) {
             fillText(style.scoreText(), style.scoreTextColor(), scaledFont, gameScore.pos().x(), gameScore.pos().y());
         }
         fillText("%6d".formatted(gameScore.data().points()),
             style.scoreTextColor(), scaledFont, 2 * TS, gameScore.pos().y() + TS);
-
     }
-    private void drawHighScore(Score highScore) {
-        final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
+
+    private void drawHighScore(Score highScore, Font scaledFont) {
         final Color color = highScore.data().isEnabled() ? style.scoreTextColor(): style.scoreTextColorDisabled();
         fillText("HIGH SCORE", color, scaledFont, highScore.pos().x(), highScore.pos().y());
         fillText("%6d".formatted(highScore.data().points()), color, scaledFont,
@@ -124,28 +125,27 @@ public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteR
         final float x = livesCounter.pos().x();
         final float y = livesCounter.pos().y();
 
-        final int numLives = livesCounter.data().numLives();
-
+        final int numLives      = livesCounter.data().numLives();
         final int numLivesShown = livesCounter.data().numLivesShown();
+        final int maxLivesShown = livesCounter.data().maxLivesShown();
+
         for (int i = 0; i < numLivesShown; ++i) {
-            drawSprite(style.livesCounterSymbolSprite(), x + i * 2 * TS, y, true);
+            drawSprite(style.livesCounterSymbolSprite(), x + i * tilesPx(2), y, true);
         }
 
-        if (numLives > livesCounter.data().maxLivesShown()) {
+        if (numLives > maxLivesShown) {
             final Font scaledFont = Font.font("Serif", FontWeight.BLACK, scaled(8));
             fillText("(%d)".formatted(numLives), NES_Palette.color(0x28), scaledFont, tilesPx(14), y + TS);
         }
     }
 
     private void drawLevelCounter(LevelCounter levelCounter) {
-        final RectShort[] symbolSprites = spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS);
-
         float x = levelCounter.pos().x();
         float y = levelCounter.pos().y();
 
-        // symbols are drawn from right to left!
-        final List<Integer> symbolCodes = levelCounter.data().symbolCodes();
-        for (int code : symbolCodes) {
+        // Symbols are drawn from right to left!
+        final RectShort[] symbolSprites = spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS);
+        for (int code : levelCounter.data().symbolCodes()) {
             if (0 <= code && code < symbolSprites.length) {
                 drawSprite(symbolSprites[code], x, y, true);
             }
