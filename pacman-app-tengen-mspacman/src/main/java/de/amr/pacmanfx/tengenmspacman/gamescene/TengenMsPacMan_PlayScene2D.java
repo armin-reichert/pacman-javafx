@@ -8,6 +8,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.HUD;
+import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
@@ -39,6 +40,7 @@ import javafx.scene.layout.StackPane;
 import org.tinylog.Logger;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
@@ -79,6 +81,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
 
         subScene.cameraProperty().bind(uiSettings.playSceneDisplay.map(mode -> mode == SCROLLING ? dynamicCamera : fixedCamera));
         subScene.cameraProperty().addListener((_, _, _) -> updateScaling());
+    }
+
+    @Override
+    public Stream<Renderable> renderables() {
+        return game().session().optLevel().map(GameLevel::visibleRenderables).orElse(Stream.empty());
     }
 
     @Override

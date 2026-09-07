@@ -6,15 +6,23 @@ package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
+import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
+
+import java.util.stream.Stream;
 
 public class ArcadeMsPacMan_StartScene extends GameScene {
 
     public ArcadeMsPacMan_StartScene(GameAppContext app) {
         super(app);
         setComp(SceneCanvasRenderingComp.class, new SceneCanvasRenderingComp());
+    }
+
+    @Override
+    public Stream<Renderable> renderables() {
+        return Stream.empty();
     }
 
     @Override

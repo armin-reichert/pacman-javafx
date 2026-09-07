@@ -8,7 +8,7 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
-import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.entities.Clapperboard;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Pac;
@@ -66,7 +66,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene {
         sceneTimer.doTick();
     }
 
-    public Stream<GameEntity> entitiesInRenderOrder() {
+    public Stream<Renderable> renderables() {
         return Stream.of(clapperboard, msPacMan, pacMan);
     }
 

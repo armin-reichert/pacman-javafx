@@ -6,8 +6,10 @@ package de.amr.pacmanfx.tengenmspacman.gamescene;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
@@ -33,9 +35,9 @@ import de.amr.pacmanfx.ui.sound.SoundID;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import static de.amr.basics.math.RandomNumbers.randomInt;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
@@ -68,20 +70,9 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
         reqCanvasRendering().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
     }
 
-    public Pac pacMan() {
-        return pacMan;
-    }
-
-    public Pac msPacMan() {
-        return msPacMan;
-    }
-
-    public List<Pac> juniors() {
-        return Collections.unmodifiableList(juniors);
-    }
-
-    public Clapperboard clapperboard() {
-        return clapperboard;
+    @Override
+    public Stream<Renderable> renderables() {
+        return Ufx.streamOf(clapperboard, pacMan, msPacMan, juniors);
     }
 
     @Override

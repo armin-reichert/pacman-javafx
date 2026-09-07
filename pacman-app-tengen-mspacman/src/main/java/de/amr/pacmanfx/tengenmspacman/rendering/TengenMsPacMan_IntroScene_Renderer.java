@@ -17,7 +17,6 @@ import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
@@ -45,19 +44,14 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
     public static final String MS_PAC_MAN = "MS PAC-MAN";
     public static final String QUOTED_MS_PACMAN = "\"MS PAC-MAN\"";
 
-    private final BaseRenderer actorRenderer;
-    private final MarqueeRenderer marqueeRenderer;
     private final TengenMsPacMan_UISettings uiSettings;
 
     public TengenMsPacMan_IntroScene_Renderer(
-        GameVariantRenderConfig renderConfig, GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas) {
+        GameVariantRenderConfig renderConfig, GameScene gameScene, Canvas canvas) {
         super(canvas);
         requireNonNull(renderConfig);
         requireNonNull(gameScene);
 
-        final SceneCanvasRenderingComp r2D = gameScene.reqComp(SceneCanvasRenderingComp.class);
-        marqueeRenderer = r2D.configureRenderer(new MarqueeRenderer(canvas));
-        actorRenderer   = r2D.configureRenderer(renderConfig.createEntityRenderer(animSystem, canvas));
         setDebugInfoRenderer(createDefaultSceneDebugRenderer(gameScene, canvas));
 
         uiSettings = gameScene.app().currentGameVariantUIConfig().extensionValue(
@@ -90,36 +84,30 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
 
         switch (introState) {
 
-            case SceneState.SHOWING_MARQUEE -> {
-                marqueeRenderer.render(introScene.marquee, tick);
-                fillText(QUOTED_MS_PACMAN, NES_Palette.color(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
-            }
+            case SceneState.SHOWING_MARQUEE -> fillText(QUOTED_MS_PACMAN, NES_Palette.color(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
 
             case SceneState.GHOSTS_MARCHING_IN -> {
-                marqueeRenderer.render(introScene.marquee, tick);
                 fillText(QUOTED_MS_PACMAN, NES_Palette.color(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
                 if (introScene.ghostIndex == 0) {
                     fillText(WITH, NES_Palette.color(0x20), MARQUEE_X + 12, MARQUEE_Y + 23);
                 }
-                final Ghost currentGhost = introScene.ghosts.get(introScene.ghostIndex);
+                final Ghost currentGhost = introScene.ghosts().get(introScene.ghostIndex);
                 final Color ghostColor = introScene.ghostColors[currentGhost.personality().ordinal()];
                 fillText(currentGhost.name().toUpperCase(), ghostColor, MARQUEE_X + 44, MARQUEE_Y + 41);
-                introScene.ghosts.forEach(ghost -> actorRenderer.render(ghost, tick));
             }
 
             case SceneState.MS_PACMAN_MARCHING_IN -> {
-                marqueeRenderer.render(introScene.marquee, tick);
                 fillText(QUOTED_MS_PACMAN, NES_Palette.color(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
                 fillText(STARRING, NES_Palette.color(0x20), MARQUEE_X + 12, MARQUEE_Y + 22);
                 fillText(MS_PAC_MAN, NES_Palette.color(0x28), MARQUEE_X + 28, MARQUEE_Y + 38);
-                introScene.ghosts.forEach(ghost -> actorRenderer.render(ghost, tick));
-                actorRenderer.render(introScene.msPacMan, tick);
             }
 
             case SceneState.WAITING_FOR_START -> {
                 if (!introScene.dark) {
                     final boolean bright = stateTick % 60 < 30; // 0.5s dark, 0.5s bright
-                    fillText(TENGEN_PRESENTS, shadeOfBlue(stateTick), introScene.presents.pos().x(), introScene.presents.pos().y());
+                    //TODO convert into Renderable and add to renderables stream
+                    fillText(TENGEN_PRESENTS, shadeOfBlue(stateTick),
+                        introScene.presentsText().pos().x(), introScene.presentsText().pos().y());
                     drawSprite(spriteSheet().findSprite(SpriteID.LARGE_MS_PAC_MAN_TEXT), 5 * TS, MARQUEE_Y, true);
                     if (bright) {
                         fillText(PRESS_START, NES_Palette.color(0x20), 10 * TS, MARQUEE_Y + 9 * TS);

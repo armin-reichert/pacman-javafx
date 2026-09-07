@@ -8,6 +8,7 @@ import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameVariantConfig;
+import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
@@ -51,6 +52,7 @@ import org.tinylog.Logger;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
@@ -106,6 +108,11 @@ public class PlayScene3D extends GameScene
                 level3D.setDrawMode(drawMode);
             }
         };
+    }
+
+    @Override
+    public Stream<Renderable> renderables() {
+        return Stream.empty();
     }
 
     @Override

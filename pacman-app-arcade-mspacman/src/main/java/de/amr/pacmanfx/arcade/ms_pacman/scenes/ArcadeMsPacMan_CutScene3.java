@@ -10,7 +10,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.scenes.CutSceneTimingComp;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
-import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
@@ -91,7 +91,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene {
         updateSceneState();
     }
 
-    public Stream<GameEntity> entitiesInRenderOrder() {
+    public Stream<Renderable> renderables() {
         return Stream.of(clapperboard, msPacMan, pacMan, stork, bag);
     }
 

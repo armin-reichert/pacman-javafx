@@ -34,7 +34,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Abstract base class for all game scenes (2D and 3D).
  */
-public class GameScene extends Composition<GameSceneComponent>
+public abstract class GameScene extends Composition<GameSceneComponent>
     implements GameSceneController, DefaultGameEventListener, Disposable {
 
     private final GameAppContext app;
@@ -90,9 +90,7 @@ public class GameScene extends Composition<GameSceneComponent>
      */
     protected void onDeactivate() {}
 
-    public Stream<Renderable> renderables() {
-        return Stream.empty();
-    }
+    public abstract Stream<Renderable> renderables();
 
     /**
      * If a 3D-variant of this game scene is active when the game level gets created, this method has not yet been called,

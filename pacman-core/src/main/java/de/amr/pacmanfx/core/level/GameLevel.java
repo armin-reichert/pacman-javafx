@@ -6,6 +6,7 @@ package de.amr.pacmanfx.core.level;
 
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.Renderable;
+import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.gameplay.ArcadeHouseGateKeeper;
 import de.amr.pacmanfx.core.model.world.map.FoodState;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -45,6 +46,12 @@ public class GameLevel {
         this.gateKeeper = new ArcadeHouseGateKeeper(number);
         this.foodState = new FoodState(worldMap.foodLayer());
         this.heartbeat = new Pulse(10, Pulse.State.OFF);
+    }
+
+    public Stream<Renderable> visibleRenderables() {
+        return entities.all()
+            .filter(GameEntity::isVisible)
+            .filter(Renderable.class::isInstance).map(Renderable.class::cast);
     }
 
     /**
@@ -166,9 +173,5 @@ public class GameLevel {
 
         entities.theMessageView().type().setMessageType(messageType);
         entities.theMessageView().show();
-    }
-
-    public Stream<Renderable> renderables() {
-        return entities.all().filter(Renderable.class::isInstance).map(Renderable.class::cast);
     }
 }

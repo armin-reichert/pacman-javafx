@@ -6,12 +6,14 @@ package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.basics.math.RandomNumbers;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * The boot screen displays some strange hex codes, garbage from the graphics memory
@@ -51,6 +53,11 @@ public class Arcade_BootScene2D extends GameScene {
             final byte hexDigit = (byte) RandomNumbers.randomInt(0, 16);
             noise[i] = Integer.toHexString(hexDigit);
         }
+    }
+
+    @Override
+    public Stream<Renderable> renderables() {
+        return Stream.empty();
     }
 
     @Override

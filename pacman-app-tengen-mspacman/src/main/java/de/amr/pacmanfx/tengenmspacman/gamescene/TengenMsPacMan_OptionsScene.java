@@ -6,6 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.gamescene;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.event.HighScoreAccessErrorEvent;
@@ -25,6 +26,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.input.KeyCode;
 
 import java.io.IOException;
+import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
@@ -71,6 +73,11 @@ public class TengenMsPacMan_OptionsScene extends GameScene {
         setComp(SceneCanvasRenderingComp.class, new SceneCanvasRenderingComp());
         reqCanvasRendering().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         reqCanvasRendering().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
+    }
+
+    @Override
+    public Stream<Renderable> renderables() {
+        return Stream.empty();
     }
 
     @Override

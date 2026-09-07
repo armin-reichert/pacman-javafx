@@ -5,7 +5,9 @@
 package de.amr.pacmanfx.tengenmspacman.gamescene;
 
 import de.amr.basics.math.Direction;
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.Clapperboard;
@@ -29,6 +31,7 @@ import de.amr.pacmanfx.ui.input.JoypadButton;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
@@ -72,28 +75,9 @@ public class TengenMsPacMan_CutScene1 extends GameScene {
         reqCanvasRendering().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
     }
 
-    public Clapperboard clapperboard() {
-        return clapperboard;
-    }
-
-    public Heart heart() {
-        return heart;
-    }
-
-    public Pac pacMan() {
-        return pacMan;
-    }
-
-    public Pac msPacMan() {
-        return msPacMan;
-    }
-
-    public Ghost inky() {
-        return inky;
-    }
-
-    public Ghost pinky() {
-        return pinky;
+    @Override
+    public Stream<Renderable> renderables() {
+        return Ufx.streamOf(clapperboard, heart, pinky, msPacMan, pacMan, inky, pinky);
     }
 
     @Override

@@ -7,9 +7,11 @@ import de.amr.basics.fsm.State;
 import de.amr.basics.fsm.StateMachine;
 import de.amr.basics.math.Direction;
 import de.amr.basics.timer.TickTimer;
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
@@ -61,11 +63,12 @@ public class TengenMsPacMan_IntroScene extends GameScene {
 
     public Color[] ghostColors;
 
-    public Marquee marquee;
-    public GameEntity presents;
+    private Marquee marquee;
+    private Pac msPacMan;
+    private List<Ghost> ghosts;
 
-    public Pac msPacMan;
-    public List<Ghost> ghosts;
+    private GameEntity presentsText;
+
     public int ghostIndex;
     private int waitBeforeRising;
     public boolean dark;
@@ -76,6 +79,19 @@ public class TengenMsPacMan_IntroScene extends GameScene {
         reqCanvasRendering().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         reqCanvasRendering().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
         flow = new StateMachine<>(List.of(SceneState.values()));
+    }
+
+    public List<Ghost> ghosts() {
+        return ghosts;
+    }
+
+    public GameEntity presentsText() {
+        return presentsText;
+    }
+
+    @Override
+    public Stream<Renderable> renderables() {
+        return Ufx.streamOf(marquee, msPacMan, ghosts);
     }
 
     @Override
@@ -104,8 +120,8 @@ public class TengenMsPacMan_IntroScene extends GameScene {
 
         marquee = createMarquee();
 
-        presents = new GameEntity();
-        presents.pos().set(8 * WorldMap.TS, MARQUEE_Y - WorldMap.TS);
+        presentsText = new GameEntity();
+        presentsText.pos().set(8 * WorldMap.TS, MARQUEE_Y - WorldMap.TS);
 
         flow.restartState(this, SceneState.WAITING_FOR_START);
     }

@@ -17,11 +17,6 @@ import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.scene.canvas.Canvas;
 import org.tinylog.Logger;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import static java.util.Objects.requireNonNull;
 
 public class RenderManager {
@@ -74,18 +69,7 @@ public class RenderManager {
                 sceneRenderer.render(gameScene, tick);
             }
 
-            final List<Renderable> renderables = new ArrayList<>();
-
-            session.optLevel().ifPresent(level -> {
-                renderables.addAll(level.renderables().toList());
-                if (level.entities().theMessageView() != null) {
-                    messageViewRenderer.render(level.entities().theMessageView(), tick);
-                }
-            });
-
-            renderables.addAll(gameScene.renderables().toList());
-
-            renderablesSortedByRenderingOrder(renderables).forEach(e -> entityRenderer.render(e, tick));
+            gameScene.renderables().sorted(Renderable.RENDERING_ORDER).forEach(e -> entityRenderer.render(e, tick));
 
             if (session.hud().isVisible()) {
                 session.hud().entities().forEach(hudEntity -> hudRenderer.render(hudEntity, tick));
@@ -95,12 +79,6 @@ public class RenderManager {
                 sceneRenderer.optDebugInfoRenderer().ifPresent(debugRenderer -> debugRenderer.render(gameScene, tick));
             }
         });
-    }
-
-    private List<Renderable> renderablesSortedByRenderingOrder(Collection<Renderable> renderables) {
-        return renderables.stream()
-            .sorted(Renderable.RENDERING_ORDER)
-            .collect(Collectors.toCollection(ArrayList::new));
     }
 
     private void configureRenderer(Renderer renderer, SceneCanvasRenderingComp canvasRendering) {

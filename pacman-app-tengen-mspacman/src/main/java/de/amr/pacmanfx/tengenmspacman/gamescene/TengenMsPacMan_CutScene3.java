@@ -6,6 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.gamescene;
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
@@ -26,6 +27,8 @@ import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.input.JoypadButton;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
+
+import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
@@ -61,28 +64,9 @@ public class TengenMsPacMan_CutScene3 extends GameScene {
         reqCanvasRendering().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
     }
 
-    public Clapperboard clapperboard() {
-        return clapperboard;
-    }
-
-    public Pac pacMan() {
-        return pacMan;
-    }
-
-    public Pac msPacMan() {
-        return msPacMan;
-    }
-
-    public Stork stork() {
-        return stork;
-    }
-
-    public Bag flyingBag() {
-        return bag;
-    }
-
-    public boolean darkness() {
-        return darkness;
+    @Override
+    public Stream<Renderable> renderables() {
+        return darkness ? Stream.empty() : Stream.of(clapperboard, pacMan, msPacMan, stork, bag);
     }
 
     @Override

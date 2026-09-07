@@ -5,11 +5,13 @@ package de.amr.pacmanfx.arcade.ms_pacman.scenes;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.timer.TickTimer;
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.Heart;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.Clapperboard;
@@ -50,7 +52,6 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene {
     static final float SPEED_RISING = 0.75f;
     static final float SPEED_GHOST_AFTER_COLLISION = 0.3f;
 
-    // Public for access by renderer
     private Pac pacMan;
     private Pac msPacMan;
     private Ghost inky;
@@ -83,8 +84,9 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene {
         sceneTimer.doTick();
     }
 
-    public Stream<GameEntity> entitiesInRenderOrder() {
-        return Stream.of(clapperboard, msPacMan, pacMan, inky, pinky, heart);
+    @Override
+    public Stream<Renderable> renderables() {
+        return Ufx.streamOf(clapperboard, msPacMan, pacMan, inky, pinky, heart);
     }
 
     private void initScene() {

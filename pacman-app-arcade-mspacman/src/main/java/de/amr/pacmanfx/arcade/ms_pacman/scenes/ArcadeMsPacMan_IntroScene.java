@@ -13,6 +13,7 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
@@ -32,6 +33,7 @@ import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
@@ -65,6 +67,12 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
         super(app);
         setComp(SceneCanvasRenderingComp.class, new SceneCanvasRenderingComp());
         sceneFlow = new StateMachine<>(List.of(SceneState.values()));
+    }
+
+    @Override
+    public Stream<Renderable> renderables() {
+        return Stream.empty();
+        //TODO integrate into render manager
     }
 
     @Override

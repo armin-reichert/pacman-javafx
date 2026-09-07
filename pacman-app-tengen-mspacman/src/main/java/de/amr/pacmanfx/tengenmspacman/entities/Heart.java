@@ -4,14 +4,16 @@
 
 package de.amr.pacmanfx.tengenmspacman.entities;
 
+import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 
 import static de.amr.pacmanfx.core.spriteanim.SpriteAnimFacade.singleSpriteAnimationFacade;
 
-public class Heart extends GameEntity {
+public class Heart extends GameEntity implements Renderable {
 
     public Heart() {
         final SpriteAnimationComp animationComp = new SpriteAnimationComp();
@@ -19,5 +21,10 @@ public class Heart extends GameEntity {
             singleSpriteAnimationFacade(TengenMsPacMan_SpriteSheet.instance().findSprite(SpriteID.HEART))
         );
         setComp(SpriteAnimationComp.class, animationComp);
+    }
+
+    @Override
+    public RenderingLayer layer() {
+        return RenderingLayer.PROPS;
     }
 }

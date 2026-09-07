@@ -10,6 +10,7 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.HUD;
+import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.ui.action.CheatActions;
@@ -24,6 +25,7 @@ import javafx.scene.control.ContextMenu;
 import org.tinylog.Logger;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.ui.views.ContextMenuSupport.*;
 
@@ -37,6 +39,11 @@ public class Arcade_PlayScene2D extends GameScene implements Arcade_PlayScene2D_
     public Arcade_PlayScene2D(GameAppContext app) {
         super(app);
         setComp(SceneCanvasRenderingComp.class, new SceneCanvasRenderingComp());
+    }
+
+    @Override
+    public Stream<Renderable> renderables() {
+        return game().session().optLevel().map(GameLevel::visibleRenderables).orElse(Stream.empty());
     }
 
     @Override

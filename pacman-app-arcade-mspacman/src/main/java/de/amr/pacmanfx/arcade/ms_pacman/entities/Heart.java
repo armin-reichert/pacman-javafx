@@ -6,16 +6,23 @@ package de.amr.pacmanfx.arcade.ms_pacman.entities;
 
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
+import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
 
 import static de.amr.pacmanfx.core.spriteanim.SpriteAnimFacade.singleSpriteAnimationFacade;
 
-public class Heart extends GameEntity {
+public class Heart extends GameEntity implements Renderable {
 
     public Heart() {
         setComp(SpriteAnimationComp.class, new SpriteAnimationComp());
         reqComp(SpriteAnimationComp.class).setSpriteAnimations(
             singleSpriteAnimationFacade(ArcadeMsPacMan_SpriteSheet.instance().findSprite(SpriteID.HEART)));
+    }
+
+    @Override
+    public RenderingLayer layer() {
+        return RenderingLayer.PROPS;
     }
 }
