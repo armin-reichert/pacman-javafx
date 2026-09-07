@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.uilib.rendering;
 
+import de.amr.pacmanfx.core.Renderable;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.canvas.Canvas;
@@ -12,7 +13,7 @@ import javafx.scene.paint.Color;
 
 public interface Renderer {
 
-    void render(Object r, long tick);
+    void render(Renderable r, long tick);
 
     GraphicsContext ctx();
 

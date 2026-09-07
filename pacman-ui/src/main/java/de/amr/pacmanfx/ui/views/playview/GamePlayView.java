@@ -6,10 +6,8 @@ package de.amr.pacmanfx.ui.views.playview;
 
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
@@ -183,7 +181,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     }
 
     public void onLevelCreated(GameContext game, GameLevel level) {
-        showMiniView(game, level);
+        showMiniView(level);
         // game scene size might have changed: re-embed
         final GameSceneManager gameSceneManager = app.ui().gameScenes();
         gameSceneManager.optCurrentGameScene().ifPresent(this::embedGameScene);
@@ -241,12 +239,24 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
             final long tick = app.clock().currentTick();
             final boolean debugMode = gameScene.viewModel().debugModeOnProperty().get();
             try {
-                renderManager.renderFrame(gameScene, app.game(), tick, debugMode);
-            } catch (Exception x) {
+                renderManager.clearRenderQueue();
+                renderManager.add(gameScene);
+                renderManager.addAll(gameScene.renderables());
+                renderManager.addAll(app.game().session().hud().renderables());
+
+                renderManager.renderFrame(app.game().session(), tick, debugMode);
+
+                //TODO integrate into render manager
+                final MiniViewRenderer miniViewRenderer = renderManager.createMiniViewRenderer(
+                    app.ui().viewModel(),
+                    app.game().variant().systems().actorSpriteAnimController(),
+                    app.currentGameVariantUIConfig().renderConfig()
+                );
+                miniViewRenderer.render(miniView, tick);
+            }
+            catch (Exception x) {
                 Logger.error(x, "Exception during rendering!");
             }
-            //TODO integrate into render manager
-            miniView.draw();
         });
 
         // Dashboard must always be updated even if simulation is stopped!
@@ -378,10 +388,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         rootPane.setId("game-play-view");
     }
 
-    private void showMiniView(GameContext game, GameLevel level) {
-        final GameVariantRenderConfig renderConfig = app.gameVariants().currentGameVariant().uiConfig().renderConfig();
-        final ActorSpriteAnimController animController = game.variant().systems().actorSpriteAnimController();
-        miniView.createRenderer(animController, renderConfig);
+    private void showMiniView(GameLevel level) {
         miniView.setWorldSizeInPixel(level.worldMap().terrainLayer().sizeInPixel());
         miniView.slideIn(app.ui().viewModel().miniViewSettings());
     }

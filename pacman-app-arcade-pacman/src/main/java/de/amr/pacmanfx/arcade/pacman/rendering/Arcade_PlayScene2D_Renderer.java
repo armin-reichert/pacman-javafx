@@ -9,6 +9,7 @@ import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -53,7 +54,7 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements SpriteR
     }
 
     @Override
-    public void render(Object r, long tick) {
+    public void render(Renderable r, long tick) {
         if (!(r instanceof Arcade_PlayScene2D playScene)) {
             return;
         }

@@ -19,7 +19,7 @@ import java.util.stream.Stream;
  * The boot screen displays some strange hex codes, garbage from the graphics memory
  * and eventually a grid (maybe used to calibrate the screen?). This scene tries to mimic that to a certain degree.
  */
-public class Arcade_BootScene2D extends GameScene {
+public class Arcade_BootScene2D extends GameScene implements Renderable {
 
     public enum SceneState {
         BLANK,

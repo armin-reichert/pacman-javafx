@@ -5,6 +5,8 @@
 package de.amr.pacmanfx.uilib.widgets.optionmenu;
 
 import de.amr.basics.json.JsonLoader;
+import de.amr.pacmanfx.core.Renderable;
+import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.animation.AnimationTimer;
@@ -29,7 +31,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Typical Arcade-style option menu.
  */
-public class OptionMenu {
+public class OptionMenu implements Renderable {
 
     //TODO: make a JavaFX control from this widget and use CSS.
 
@@ -63,7 +65,7 @@ public class OptionMenu {
     protected final BorderPane root = new BorderPane();
     protected final Canvas canvas = new Canvas();
 
-    protected OptionMenuRenderer renderer;
+    protected OptionMenuRenderer menuRenderer;
     protected OptionMenuSettings settings;
 
     private final AnimationTimer drawLoop;
@@ -91,8 +93,8 @@ public class OptionMenu {
         canvas.focusedProperty().addListener((_, _, focus) ->
             Logger.debug("Option menu canvas focus: {}", focus));
 
-        renderer = new OptionMenuRenderer(canvas);
-        renderer.scalingProperty().bind(scalingProperty());
+        menuRenderer = new OptionMenuRenderer(canvas);
+        menuRenderer.scalingProperty().bind(scalingProperty());
 
         root.getStyleClass().add(CSS_STYLE_CLASS);
         root.maxWidthProperty().bind(canvas.widthProperty());
@@ -103,7 +105,7 @@ public class OptionMenu {
         drawLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                render(0); // no global tick available here
+                menuRenderer.render(OptionMenu.this, 0);
             }
         };
 
@@ -114,8 +116,10 @@ public class OptionMenu {
         });
     }
 
-    public void render(long tick) {
-        renderer.render(this, tick);
+
+    @Override
+    public RenderingLayer layer() {
+        return RenderingLayer.MESSAGE;
     }
 
     public void setEntrySelectedSound(AudioClip entrySelectedSound) {
@@ -138,18 +142,18 @@ public class OptionMenu {
         return canvas;
     }
 
-    public void setRenderer(OptionMenuRenderer renderer) {
-        this.renderer = requireNonNull(renderer);
-        renderer.scalingProperty().bind(scalingProperty());
+    public void setMenuRenderer(OptionMenuRenderer menuRenderer) {
+        this.menuRenderer = requireNonNull(menuRenderer);
+        menuRenderer.scalingProperty().bind(scalingProperty());
     }
 
     public void requestFocus() {
-        if (renderer == null) {
+        if (menuRenderer == null) {
             root.requestFocus();
             Logger.info("Focus now on {}", root);
         }
         else {
-            final Canvas canvas = renderer.ctx().getCanvas();
+            final Canvas canvas = menuRenderer.ctx().getCanvas();
             if (!canvas.isFocused()) {
                 canvas.requestFocus();
             }

@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.util.Ufx;
+import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CreditsScene;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
@@ -79,7 +80,7 @@ public class TengenMsPacMan_CreditsScene_Renderer extends BaseRenderer implement
     }
 
     @Override
-    public void render(Object r, long tick) {
+    public void render(Renderable r, long tick) {
         if (!(r instanceof TengenMsPacMan_CreditsScene creditsScene)) {
             return;
         }

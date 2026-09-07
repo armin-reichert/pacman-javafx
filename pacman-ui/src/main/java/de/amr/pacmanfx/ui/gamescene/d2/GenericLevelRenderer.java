@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.ui.gamescene.d2;
 
 import de.amr.basics.InfoMap;
+import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
@@ -57,7 +58,7 @@ public class GenericLevelRenderer extends BaseRenderer {
     }
 
     @Override
-    public void render(Object r, long tick) {
+    public void render(Renderable r, long tick) {
         if (!(r instanceof  GameLevel level)) {
             return;
         }

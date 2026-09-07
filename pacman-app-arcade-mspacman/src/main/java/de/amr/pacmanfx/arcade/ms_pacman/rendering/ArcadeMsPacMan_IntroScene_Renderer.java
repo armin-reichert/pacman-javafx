@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.ArcadeMsPacMan_IntroScene;
+import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -53,7 +54,7 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer {
     }
 
     @Override
-    public void render(Object r, long tick) {
+    public void render(Renderable r, long tick) {
         clearCanvas();
 
         if (!(r instanceof ArcadeMsPacMan_IntroScene introScene)) {

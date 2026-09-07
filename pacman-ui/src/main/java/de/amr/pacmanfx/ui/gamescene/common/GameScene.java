@@ -10,6 +10,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.Renderable;
+import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventListener;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
@@ -35,7 +36,12 @@ import static java.util.Objects.requireNonNull;
  * Abstract base class for all game scenes (2D and 3D).
  */
 public abstract class GameScene extends Composition<GameSceneComponent>
-    implements GameSceneController, DefaultGameEventListener, Disposable {
+    implements Renderable, GameSceneController, DefaultGameEventListener, Disposable {
+
+    @Override
+    public RenderingLayer layer() {
+        return RenderingLayer.SCENE;
+    }
 
     private final GameAppContext app;
 

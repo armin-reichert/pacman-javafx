@@ -8,6 +8,7 @@ import de.amr.basics.math.RectShort;
 import de.amr.basics.timer.Pulse;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_IntroScene;
+import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
@@ -50,7 +51,7 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Sp
     }
 
     @Override
-    public void render(Object r, long tick) {
+    public void render(Renderable r, long tick) {
         if (!(r instanceof ArcadePacMan_IntroScene introScene)) {
             return;
         }

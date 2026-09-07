@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.uilib.rendering;
 
+import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.model.world.map.TerrainTile;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.obstacle.Obstacle;
@@ -94,7 +95,7 @@ public class TerrainMapVectorRenderer extends BaseRenderer implements TerrainMap
     }
 
     @Override
-    public void render(Object r, long tick) {
+    public void render(Renderable r, long tick) {
         if ((!(r instanceof WorldMap worldMap))) {
             return;
         }

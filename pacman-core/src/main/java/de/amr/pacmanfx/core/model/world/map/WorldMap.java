@@ -5,6 +5,8 @@ package de.amr.pacmanfx.core.model.world.map;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.core.Renderable;
+import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import org.tinylog.Logger;
 
 import java.io.*;
@@ -20,7 +22,7 @@ import static de.amr.basics.math.Vector2f.vec2_float;
 import static de.amr.pacmanfx.core.Validations.requireNonNegativeInt;
 import static java.util.Objects.requireNonNull;
 
-public class WorldMap {
+public class WorldMap implements Renderable {
 
     // Tile coordinates
 
@@ -39,7 +41,6 @@ public class WorldMap {
      * @return pixels corresponding to given number of tiles
      */
     public static float tilesPx(double numTiles) { return (float) numTiles * TS; }
-
 
     /**
      * @param tileX tile x coordinate
@@ -129,19 +130,6 @@ public class WorldMap {
         }
     }
 
-    /**
-     * Saves this map to given file (UTF-8 character encoding).
-     *
-     * @param file file to save to
-     */
-    public void saveToFile(File file) throws IOException {
-        requireNonNull(file);
-        final String source = WorldMapWriter.createSourceCode(this, false);
-        try (var fileWriter = new PrintWriter(file, MAP_FILE_CHARSET)) {
-            fileWriter.println(source);
-        }
-    }
-
     int numCols;
     int numRows;
     String url;
@@ -171,6 +159,11 @@ public class WorldMap {
         terrainLayer = new TerrainLayer(prototype.terrainLayer);
         foodLayer = new FoodLayer(prototype.foodLayer);
         configMap = new HashMap<>(prototype.configMap);
+    }
+
+    @Override
+    public RenderingLayer layer() {
+        return RenderingLayer.WORLD;
     }
 
     //TODO What happens with the entries in the config map if the map coordinates change?
@@ -265,5 +258,18 @@ public class WorldMap {
     public boolean hasConfigValue(Object key) {
         requireNonNull(key);
         return configMap != null && configMap.containsKey(key);
+    }
+
+    /**
+     * Saves this map to given file (UTF-8 character encoding).
+     *
+     * @param file file to save to
+     */
+    public void saveToFile(File file) throws IOException {
+        requireNonNull(file);
+        final String source = WorldMapWriter.createSourceCode(this, false);
+        try (var fileWriter = new PrintWriter(file, MAP_FILE_CHARSET)) {
+            fileWriter.println(source);
+        }
     }
 }

@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameVariantID;
+import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
@@ -66,9 +67,8 @@ public class XXL_OptionMenu extends OptionMenu {
         chaseAnimation.scalingProperty().bind(scalingProperty());
     }
 
-    @Override
-    public void render(long tick) {
-        super.render(tick);
+    public void draw(long tick) {
+        menuRenderer.render(this, tick);
         chaseAnimation.draw(tick);
     }
 

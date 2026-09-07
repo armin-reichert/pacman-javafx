@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
+import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
@@ -39,10 +40,11 @@ public class ArcadePacMan_EntityRenderer extends BaseRenderer implements SpriteR
     }
 
     @Override
-    public void render(Object r, long tick) {
+    public void render(Renderable r, long tick) {
         if (!(r instanceof GameEntity gameEntity)) {
             return;
         }
+
         if (!gameEntity.isVisible()) return;
 
         final Vector2f center = gameEntity.pos().bodyCenter();

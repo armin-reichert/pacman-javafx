@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
+import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.entities.Marquee;
 import de.amr.pacmanfx.core.entities.marquee.comp.MarqueeArea;
 import de.amr.pacmanfx.core.entities.marquee.comp.MarqueeCorners;
@@ -31,7 +32,7 @@ public class MarqueeRenderer extends BaseRenderer {
      * </p>
      */
     @Override
-    public void render(Object r, long tick) {
+    public void render(Renderable r, long tick) {
         if (!(r instanceof Marquee marquee)) {
             return;
         }

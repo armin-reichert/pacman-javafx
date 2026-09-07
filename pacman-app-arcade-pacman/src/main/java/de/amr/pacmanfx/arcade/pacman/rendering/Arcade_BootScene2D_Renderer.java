@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
+import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
@@ -53,7 +54,7 @@ public class Arcade_BootScene2D_Renderer extends BaseRenderer implements SpriteR
     }
 
     @Override
-    public void render(Object r, long tick) {
+    public void render(Renderable r, long tick) {
         if (!(r instanceof Arcade_BootScene2D bootScene)) {
             return;
         }

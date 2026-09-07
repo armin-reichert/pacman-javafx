@@ -6,7 +6,6 @@ package de.amr.pacmanfx.core.entities;
 
 import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.comp.RenderingComp;
 import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.entities.livescounter.comp.LivesCounterDataComp;
 

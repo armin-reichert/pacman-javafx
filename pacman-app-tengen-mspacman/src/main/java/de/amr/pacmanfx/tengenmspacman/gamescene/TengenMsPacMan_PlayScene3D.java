@@ -112,7 +112,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         hudRenderer.setScaling(quality);
         hudRenderer.fillCanvas(backgroundColor);
 
-        hud.entities().forEach(entity -> hudRenderer.render(entity, 0));
+        hud.renderables().forEach(renderable -> hudRenderer.render(renderable, 0));
 
         return canvas.snapshot(null, null);
     }

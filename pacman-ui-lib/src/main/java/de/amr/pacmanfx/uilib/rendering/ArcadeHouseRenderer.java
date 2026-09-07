@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.uilib.rendering;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import javafx.beans.property.DoubleProperty;
@@ -63,7 +64,7 @@ public class ArcadeHouseRenderer extends BaseRenderer {
     }
 
     @Override
-    public void render(Object r, long tick) {
+    public void render(Renderable r, long tick) {
         if (!(r instanceof House house)) {
             return;
         }

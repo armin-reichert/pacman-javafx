@@ -6,6 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 import de.amr.basics.InfoMap;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
@@ -40,7 +41,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends BaseRenderer
         }
 
         @Override
-        public void render(Object r, long tick) {
+        public void render(Renderable r, long tick) {
             if (!(r instanceof TengenMsPacMan_PlayScene2D playScene)) {
                 return;
             }
@@ -92,7 +93,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends BaseRenderer
     }
 
     @Override
-    public void render(Object r, long tick) {
+    public void render(Renderable r, long tick) {
         if (!(r instanceof TengenMsPacMan_PlayScene2D playScene)) {
             return;
         }

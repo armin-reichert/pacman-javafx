@@ -6,6 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.fsm.State;
 import de.amr.basics.util.Ufx;
+import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -69,7 +70,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
     }
 
     @Override
-    public void render(Object r, long tick) {
+    public void render(Renderable r, long tick) {
         if (!(r instanceof TengenMsPacMan_IntroScene introScene)) {
             return;
         }

@@ -7,6 +7,7 @@ package de.amr.pacmanfx.core.level;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.gameplay.ArcadeHouseGateKeeper;
 import de.amr.pacmanfx.core.model.world.map.FoodState;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -19,7 +20,7 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
 import static java.util.Objects.requireNonNull;
 
-public class GameLevel {
+public class GameLevel implements Renderable{
 
     private final int number; // 1=first level
 
@@ -46,6 +47,11 @@ public class GameLevel {
         this.gateKeeper = new ArcadeHouseGateKeeper(number);
         this.foodState = new FoodState(worldMap.foodLayer());
         this.heartbeat = new Pulse(10, Pulse.State.OFF);
+    }
+
+    @Override
+    public RenderingLayer layer() {
+        return RenderingLayer.WORLD;
     }
 
     public Stream<Renderable> visibleRenderables() {
