@@ -6,13 +6,16 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.math.RectShort;
 import de.amr.basics.timer.Pulse;
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_IntroScene;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.arcade.pacman.rendering.SpriteID.GALLERY_GHOSTS;
 import static de.amr.pacmanfx.arcade.pacman.scenes.ArcadePacMan_IntroScene.SceneState.*;
@@ -68,7 +71,8 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Sp
     }
 
     private void drawGhostGallery(ArcadePacMan_IntroScene introScene) {
-        ctx.setFont(arcadeFont8());
+        final Font arcade8 = Ufx.deriveFont(GlobalAssets.Fonts.ARCADE.font(), scaled(8));
+        ctx.setFont(arcade8);
         if (introScene.titleVisible) {
             fillText("CHARACTER / NICKNAME", ARCADE_WHITE, tilesPx(LEFT_TILE_X + 3), tilesPx(6));
         }
@@ -89,19 +93,22 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Sp
     }
 
     private void drawCopyright() {
-        fillText(MIDWAY_MFG_CO, ARCADE_PINK, arcadeFont8(), tilesPx(4), tilesPx(32));
+        final Font arcade8 = Ufx.deriveFont(GlobalAssets.Fonts.ARCADE.font(), scaled(8));
+        fillText(MIDWAY_MFG_CO, ARCADE_PINK, arcade8, tilesPx(4), tilesPx(32));
     }
 
     private void drawPoints(ArcadePacMan_IntroScene introScene) {
+        final Font arcade6 = Ufx.deriveFont(GlobalAssets.Fonts.ARCADE.font(), scaled(6));
+        final Font arcade8 = Ufx.deriveFont(GlobalAssets.Fonts.ARCADE.font(), scaled(8));
         ctx.setFill(ARCADE_ROSE);
         // normal pellet
         ctx.fillRect(scaled(tilesPx(LEFT_TILE_X + 6) + 4), scaled(tilesPx(24) + 4), scaled(2), scaled(2));
-        fillText("10",  ARCADE_WHITE, arcadeFont8(), tilesPx(LEFT_TILE_X + 8), tilesPx(25));
-        fillText("PTS", ARCADE_WHITE, arcadeFont6(), tilesPx(LEFT_TILE_X + 11), tilesPx(25));
+        fillText("10",  ARCADE_WHITE, arcade8, tilesPx(LEFT_TILE_X + 8), tilesPx(25));
+        fillText("PTS", ARCADE_WHITE, arcade6, tilesPx(LEFT_TILE_X + 11), tilesPx(25));
         // energizer
         drawBlinkingEnergizer(introScene.blinking, tilesPx(LEFT_TILE_X + 6), tilesPx(26));
-        fillText("50",  ARCADE_WHITE, arcadeFont8(), tilesPx(LEFT_TILE_X + 8), tilesPx(27));
-        fillText("PTS", ARCADE_WHITE, arcadeFont6(), tilesPx(LEFT_TILE_X + 11), tilesPx(27));
+        fillText("50",  ARCADE_WHITE, arcade8, tilesPx(LEFT_TILE_X + 8), tilesPx(27));
+        fillText("PTS", ARCADE_WHITE, arcade6, tilesPx(LEFT_TILE_X + 11), tilesPx(27));
     }
 
     private void drawBlinkingEnergizer(Pulse blinking, double x, double y) {

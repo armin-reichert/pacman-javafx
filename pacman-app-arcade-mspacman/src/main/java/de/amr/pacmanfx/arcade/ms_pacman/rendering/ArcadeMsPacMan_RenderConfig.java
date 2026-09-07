@@ -77,7 +77,7 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
             "HIGH SCORE",
             ARCADE_WHITE,
             Color.GRAY,
-            GlobalAssets.Fonts.ARCADE8.font(),
+            GlobalAssets.Fonts.ARCADE.font(),
             "CREDIT %2d");
     }
 

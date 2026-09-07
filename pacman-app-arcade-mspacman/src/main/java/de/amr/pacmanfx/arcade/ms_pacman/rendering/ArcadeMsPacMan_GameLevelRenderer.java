@@ -5,13 +5,9 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.basics.InfoMap;
 import de.amr.basics.math.RectShort;
-import de.amr.basics.math.Vector2f;
-import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.House;
-import de.amr.pacmanfx.core.entities.MessageView;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.level.MessageType;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
@@ -22,11 +18,8 @@ import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
-import static de.amr.basics.math.Vector2f.vec2_float;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
-import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
-import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_YELLOW;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
@@ -115,22 +108,5 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         if (house.floorplan().rightDoorTile() != null) {
             fillSquareAtTileCenter(house.floorplan().rightDoorTile(), TS + 0.5);
         }
-    }
-
-    protected void drawGameLevelMessage(MessageView messageView, Vector2f pos) {
-        switch (messageView.type().messageType()) {
-            case MessageType.GAME_OVER
-                -> fillTextCentered("GAME  OVER", ARCADE_RED, arcadeFont8(), pos.x(), pos.y());
-            case MessageType.READY
-                -> fillTextCentered("READY!", ARCADE_YELLOW, arcadeFont8(), pos.x(), pos.y());
-        }
-    }
-
-    protected Vector2f messagePosition(GameLevel level) {
-        final House house = level.entities().house();
-        Vector2i houseSize = house.sizeInTiles();
-        float cx = tilesPx(house.floorplan().minTile().x() + houseSize.x() * 0.5f);
-        float cy = tilesPx(house.floorplan().minTile().y() + houseSize.y() + 1);
-        return vec2_float(cx, cy);
     }
 }

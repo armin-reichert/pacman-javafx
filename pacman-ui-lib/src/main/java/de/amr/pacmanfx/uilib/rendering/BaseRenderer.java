@@ -8,9 +8,7 @@ import de.amr.basics.InfoMap;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
-import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -30,13 +28,6 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class BaseRenderer implements Renderer {
 
-    public static final Font ARCADE_FONT;
-
-    static {
-        final ResourceManager rm = () -> BaseRenderer.class;
-        ARCADE_FONT = rm.loadFont("/de/amr/pacmanfx/uilib/fonts/emulogic.ttf", 8);
-    }
-
     public static RectShort spriteOrDefault(RectShort[] sprites, int index) {
         if (0 <= index && index < sprites.length) {
             return sprites[index];
@@ -46,9 +37,6 @@ public abstract class BaseRenderer implements Renderer {
 
     private final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>(Color.BLACK);
     private final DoubleProperty scaling                = new SimpleDoubleProperty(1.0);
-
-    private final ObjectProperty<Font> arcadeFont6 = new SimpleObjectProperty<>();
-    private final ObjectProperty<Font> arcadeFont8 = new SimpleObjectProperty<>();
 
     protected final GraphicsContext ctx;
 
@@ -62,8 +50,6 @@ public abstract class BaseRenderer implements Renderer {
 
     public BaseRenderer(Canvas canvas) {
         ctx = requireNonNull(canvas).getGraphicsContext2D();
-        arcadeFont8.bind(scaling.map(_ -> Ufx.deriveFont(ARCADE_FONT, scaled(8))));
-        arcadeFont6.bind(scaling.map(_ -> Ufx.deriveFont(ARCADE_FONT, scaled(6))));
         infoMap = new InfoMap();
     }
 
@@ -136,18 +122,6 @@ public abstract class BaseRenderer implements Renderer {
     public boolean imageSmoothing() {
         return imageSmoothing;
     }
-
-    /**
-     * @return Arcade font at size "one tile" (8px) scaled with the current renderer scaling.
-     */
-    public Font arcadeFont8() {
-        return arcadeFont8.get();
-    }
-
-    /**
-     * @return Arcade font at size 6px scaled with the current renderer scaling.
-     */
-    public Font arcadeFont6() { return arcadeFont6.get(); }
 
     /**
      * Fills a square at the center of the given tile with the current fill color. Used to hide pellets, energizers

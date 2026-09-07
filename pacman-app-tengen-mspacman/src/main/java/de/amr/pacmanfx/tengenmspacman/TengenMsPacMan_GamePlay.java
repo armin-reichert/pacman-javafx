@@ -377,7 +377,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
     private MessageViewStyleComp createMessageViewStyleComp(GameSession session, NES_WorldMapColorScheme colorScheme) {
         final var style = new MessageViewStyleComp();
-        style.setMessageFont(GlobalAssets.Fonts.ARCADE8.font());
+        style.setMessageFont(GlobalAssets.Fonts.ARCADE.font());
         style.setMessageColor(type -> computeMessageColor(type, session, colorScheme));
         return style;
     }

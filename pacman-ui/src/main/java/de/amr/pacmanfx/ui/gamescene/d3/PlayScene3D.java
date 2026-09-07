@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.gamescene.d3;
 
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameVariantConfig;
@@ -44,6 +45,7 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.DrawMode;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
@@ -353,8 +355,9 @@ public class PlayScene3D extends GameScene
         }
         rightScore.reqComp(ScoreViewComp.class).titleDisplay().setText(rightTitle);
 
+        final Font arcade8 = Ufx.deriveFont(GlobalAssets.Fonts.ARCADE.font(), 8);
         scoresView = new ScoresView(leftScore, rightScore);
-        scoresView.setFont(GlobalAssets.Fonts.ARCADE8.font());
+        scoresView.setFont(arcade8);
 
         subSceneRoot.getChildren().add(scoresView.root());
 

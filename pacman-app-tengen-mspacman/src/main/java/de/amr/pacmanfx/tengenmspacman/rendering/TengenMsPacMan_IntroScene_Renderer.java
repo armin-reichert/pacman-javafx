@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.fsm.State;
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -14,6 +15,7 @@ import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_IntroScene;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_IntroScene.SceneState;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
+import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
@@ -21,6 +23,7 @@ import de.amr.pacmanfx.uilib.rendering.Renderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_IntroScene.MARQUEE_X;
@@ -79,8 +82,10 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
         final State<TengenMsPacMan_IntroScene> introState = introScene.flow.state();
         final long stateTick = introScene.flow.state().timer().tickCount();
 
+        final Font arcade8 = Ufx.deriveFont(GlobalAssets.Fonts.ARCADE.font(), scaled(8));
+
         ctx.save();
-        ctx.setFont(arcadeFont8());
+        ctx.setFont(arcade8);
         ctx.setImageSmoothing(false);
 
         switch (introState) {

@@ -4,16 +4,19 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.ArcadeMsPacMan_IntroScene;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
+import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.arcade.ms_pacman.scenes.ArcadeMsPacMan_IntroScene.*;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
@@ -57,7 +60,8 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer {
             return;
         }
 
-        ctx.setFont(arcadeFont8());
+        final Font arcade8 = Ufx.deriveFont(GlobalAssets.Fonts.ARCADE.font(), scaled(8));
+        ctx.setFont(arcade8);
         fillText(TITLE, ARCADE_ORANGE, TITLE_X, TITLE_Y);
 
         marqueeRenderer.render(introScene.marquee, tick);

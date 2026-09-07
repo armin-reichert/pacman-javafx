@@ -4,7 +4,9 @@
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.math.RectShort;
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
+import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
@@ -12,6 +14,7 @@ import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.text.Font;
 
 import static de.amr.basics.math.MathAdds.lerp;
 import static de.amr.basics.math.RandomNumbers.randomFloat;
@@ -78,10 +81,11 @@ public class Arcade_BootScene2D_Renderer extends BaseRenderer implements SpriteR
     }
 
     private void drawRandomHexDigits(Arcade_BootScene2D bootScene, int width, int height) {
+        final Font arcade8 = Ufx.deriveFont(GlobalAssets.Fonts.ARCADE.font(), scaled(8));
         final int numRows = height / TS;
         final int numCols = width / TS;
         ctx.setFill(ARCADE_WHITE);
-        ctx.setFont(arcadeFont8());
+        ctx.setFont(arcade8);
         for (int row = 0; row < numRows; ++row) {
             final double y = scaled(TS * (row + 1));
             for (int col = 0; col < numCols; ++col) {

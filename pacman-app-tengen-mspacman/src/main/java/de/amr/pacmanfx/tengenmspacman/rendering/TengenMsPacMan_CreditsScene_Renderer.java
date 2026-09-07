@@ -4,12 +4,15 @@
 
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_CreditsScene;
+import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
@@ -81,13 +84,14 @@ public class TengenMsPacMan_CreditsScene_Renderer extends BaseRenderer implement
             return;
         }
 
-        final SceneCanvasRenderingComp r2D = creditsScene.reqComp(SceneCanvasRenderingComp.class);
+        final SceneCanvasRenderingComp canvasRendering = creditsScene.reqComp(SceneCanvasRenderingComp.class);
 
-        final int width = r2D.unscaledWidth();
+        final int width = canvasRendering.unscaledWidth();
         drawHorizontalBar(NES_Palette.color(0x20), NES_Palette.color(0x13), width, TS, 20);
         drawHorizontalBar(NES_Palette.color(0x20), NES_Palette.color(0x13), width, TS, 212);
 
-        ctx.setFont(arcadeFont8());
+        final Font arcade8 = Ufx.deriveFont(GlobalAssets.Fonts.ARCADE.font(), scaled(8));
+        ctx.setFont(arcade8);
         switch (creditsScene.displayMode) {
             case ORIGINAL_AUTHORS -> {
                 pen.setY(tilesPx(7));

@@ -4,6 +4,8 @@
 
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
+import de.amr.basics.util.Ufx;
+import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
@@ -22,12 +24,12 @@ public class ArcadePacMan_StartScene_Renderer extends BaseRenderer {
 
     @Override
     public void render(Object r, long tick) {
-        final Font font8 = arcadeFont8();
-        final Font font6 = arcadeFont6();
-        fillText("PUSH START BUTTON",       ARCADE_ORANGE, font8, tilesPx(6),  tilesPx(17));
-        fillText("1 PLAYER ONLY",           ARCADE_CYAN,   font8, tilesPx(8),  tilesPx(21));
-        fillText("BONUS PAC-MAN FOR 10000", ARCADE_ROSE,   font8, tilesPx(1),  tilesPx(25));
-        fillText("PTS",                     ARCADE_ROSE,   font6, tilesPx(25), tilesPx(25));
-        fillText("© 1980 MIDWAY MFG.CO.",   ARCADE_PINK,   font8, tilesPx(4),  tilesPx(29));
+        final Font arcade6 = Ufx.deriveFont(GlobalAssets.Fonts.ARCADE.font(), scaled(6));
+        final Font arcade8 = Ufx.deriveFont(GlobalAssets.Fonts.ARCADE.font(), scaled(8));
+        fillText("PUSH START BUTTON",       ARCADE_ORANGE, arcade8, tilesPx(6),  tilesPx(17));
+        fillText("1 PLAYER ONLY",           ARCADE_CYAN,   arcade8, tilesPx(8),  tilesPx(21));
+        fillText("BONUS PAC-MAN FOR 10000", ARCADE_ROSE,   arcade8, tilesPx(1),  tilesPx(25));
+        fillText("PTS",                     ARCADE_ROSE,   arcade6, tilesPx(25), tilesPx(25));
+        fillText("© 1980 MIDWAY MFG.CO.",   ARCADE_PINK,   arcade8, tilesPx(4),  tilesPx(29));
     }
 }

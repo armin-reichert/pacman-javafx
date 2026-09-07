@@ -109,7 +109,7 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
         "HIGH SCORE",
         NES_Palette.color(0x20),
         NES_Palette.color(0x10),
-        GlobalAssets.Fonts.ARCADE8.font(),
+        GlobalAssets.Fonts.ARCADE.font(),
         "CREDIT %d" // not used in Tengen
     );
 

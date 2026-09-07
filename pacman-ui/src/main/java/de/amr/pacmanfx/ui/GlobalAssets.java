@@ -25,8 +25,7 @@ public final class GlobalAssets {
     public static final ResourceManager RES_MGR = () -> GlobalAssets.class;
 
     public enum Fonts {
-        ARCADE6       ("fonts/emulogic.ttf", 6),
-        ARCADE8       ("fonts/emulogic.ttf", 8),
+        ARCADE        ("fonts/emulogic.ttf", 8),
         HANDWRITING   ("fonts/Molle-Italic.ttf", 9),
         MONOSPACED    ("fonts/fantasquesansmono-bold.otf", 12),
         PAC_FONT_GOOD ("fonts/PacfontGood.ttf", 8);

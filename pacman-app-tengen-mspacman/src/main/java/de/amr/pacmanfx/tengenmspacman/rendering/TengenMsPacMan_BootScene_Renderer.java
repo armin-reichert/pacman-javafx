@@ -4,13 +4,16 @@
 
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_BootScene;
+import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer.createDefaultSceneDebugRenderer;
 
@@ -38,7 +41,8 @@ public class TengenMsPacMan_BootScene_Renderer extends BaseRenderer {
         if (bootScene.gray) {
             actorRenderer.fillCanvas(NES_Palette.color(0x10));
         } else {
-            actorRenderer.fillText(TENGEN_PRESENTS, bootScene.shadeOfBlue, actorRenderer.arcadeFont8(),
+            final Font arcade8 = Ufx.deriveFont(GlobalAssets.Fonts.ARCADE.font(), scaled(8));
+            actorRenderer.fillText(TENGEN_PRESENTS, bootScene.shadeOfBlue, arcade8,
                 bootScene.movingText.pos().x(), bootScene.movingText.pos().y());
             actorRenderer.render(bootScene.ghost, tick);
         }

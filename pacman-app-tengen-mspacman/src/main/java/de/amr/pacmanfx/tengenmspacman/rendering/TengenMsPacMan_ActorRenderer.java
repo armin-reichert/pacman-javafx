@@ -7,6 +7,7 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
@@ -16,10 +17,12 @@ import de.amr.pacmanfx.tengenmspacman.entities.clapperboard.TengenMsPacMan_Clapp
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
+import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.FacingSprite;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.text.Font;
 
 import java.util.Arrays;
 
@@ -144,6 +147,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
 
     private void drawClapperBoard(Clapperboard clapperboard) {
         TengenMsPacMan_ClapperboardAnimationSystem.sprite(clapperboard).ifPresent(sprite -> {
+            final Font arcade8 = Ufx.deriveFont(GlobalAssets.Fonts.ARCADE.font(), scaled(8));
             double numberX = clapperboard.pos().x() + 8, numberY = clapperboard.pos().y() + 18; // baseline
             drawSpriteCentered(sprite, clapperboard.pos().bodyCenter());
             // over-paint number from sprite sheet
@@ -153,7 +157,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             ctx.fillRect(numberX - 1, numberY - 8, 12, 8);
             ctx.restore();
 
-            ctx.setFont(arcadeFont8());
+            ctx.setFont(arcade8);
             ctx.setFill(NES_Palette.color(0x20));
 
             final String number = String.valueOf(clapperboard.inscription().number());

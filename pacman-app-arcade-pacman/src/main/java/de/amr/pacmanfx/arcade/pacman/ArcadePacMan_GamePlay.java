@@ -272,7 +272,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         messageView.pos().set(cx, cy);
 
         final var style = new MessageViewStyleComp();
-        style.setMessageFont(GlobalAssets.Fonts.ARCADE8.font());
+        style.setMessageFont(GlobalAssets.Fonts.ARCADE.font());
         style.setMessageColor(type -> switch (type) {
             case NO_MESSAGE -> null; //TODO delete this message type
             case READY -> ArcadePalette.ARCADE_YELLOW;
