@@ -235,31 +235,33 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
     @Override
     public void render() {
+        final long tick = app.clock().currentTick();
+        final GameViewModel viewModel = app.ui().viewModel();
+        final boolean debugMode = viewModel.debugModeOnProperty().get();
+
+        renderManager.clearRenderQueue();
+        renderManager.addAll(app.game().session().hud().renderables());
         app.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
-            final long tick = app.clock().currentTick();
-            final boolean debugMode = gameScene.viewModel().debugModeOnProperty().get();
-            try {
-                renderManager.clearRenderQueue();
-                renderManager.add(gameScene);
-                renderManager.addAll(gameScene.renderables());
-                renderManager.addAll(app.game().session().hud().renderables());
-
-                renderManager.renderFrame(app.game().session(), tick, debugMode);
-
-                //TODO integrate into render manager
-                final MiniViewRenderer miniViewRenderer = renderManager.createMiniViewRenderer(
-                    app.ui().viewModel(),
-                    app.game().variant().systems().actorSpriteAnimController(),
-                    app.currentGameVariantUIConfig().renderConfig()
-                );
-                //miniViewRenderer.render(miniView, tick);
-            }
-            catch (Exception x) {
-                Logger.error(x, "Exception during rendering!");
-            }
+            renderManager.add(gameScene);
+            renderManager.addAll(gameScene.renderables());
         });
 
-        // Dashboard must always be updated even if simulation is stopped!
+        try {
+            renderManager.renderFrame(app.game().session(), tick, debugMode);
+
+            //TODO integrate into render manager
+            final MiniViewRenderer miniViewRenderer = renderManager.createMiniViewRenderer(
+                viewModel,
+                app.game().variant().systems().actorSpriteAnimController(),
+                app.currentGameVariantUIConfig().renderConfig()
+            );
+            //miniViewRenderer.render(miniView, tick);
+        }
+        catch (Exception x) {
+            Logger.error(x, "Exception during rendering!");
+        }
+
+        // Dashboard must always be updated, so do it in the render step!
         if (overlayLayer.isVisible()) {
             dashboard.update(app);
         }

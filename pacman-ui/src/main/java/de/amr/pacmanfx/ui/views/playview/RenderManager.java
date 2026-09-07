@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static java.util.Objects.deepEquals;
 import static java.util.Objects.requireNonNull;
 
 public class RenderManager {
@@ -104,9 +103,7 @@ public class RenderManager {
                         renderGameScene(gameScene, tick, debugMode);
                     }
                 }
-                default -> {
-                    entityRenderer.render(renderable, tick);
-                }
+                default -> entityRenderer.render(renderable, tick);
             }
         });
     }
