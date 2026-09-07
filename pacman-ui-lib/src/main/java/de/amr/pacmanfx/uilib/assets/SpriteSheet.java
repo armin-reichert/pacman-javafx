@@ -14,6 +14,13 @@ import javafx.scene.image.WritableImage;
  */
 public interface SpriteSheet {
 
+    static RectShort spriteOrDefault(RectShort[] sprites, int index) {
+        if (0 <= index && index < sprites.length) {
+            return sprites[index];
+        }
+        return RectShort.NULL_RECTANGLE;
+    }
+
     /**
      * @return the sprite sheet image
      */

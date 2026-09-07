@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.uilib.rendering;
 
 import de.amr.basics.InfoMap;
-import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -28,15 +27,9 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class BaseRenderer implements Renderer {
 
-    public static RectShort spriteOrDefault(RectShort[] sprites, int index) {
-        if (0 <= index && index < sprites.length) {
-            return sprites[index];
-        }
-        return RectShort.NULL_RECTANGLE;
-    }
-
     private final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>(Color.BLACK);
-    private final DoubleProperty scaling                = new SimpleDoubleProperty(1.0);
+
+    private final DoubleProperty scaling = new SimpleDoubleProperty(1.0);
 
     protected final GraphicsContext ctx;
 
@@ -80,7 +73,7 @@ public abstract class BaseRenderer implements Renderer {
     public void fillCanvas(Color color) {
         requireNonNull(color);
         ctx.setFill(color);
-        ctx.fillRect(0, 0, ctx.getCanvas().getWidth(), ctx.getCanvas().getHeight());
+        ctx.fillRect(0, 0, canvas().getWidth(), canvas().getHeight());
     }
 
     @Override

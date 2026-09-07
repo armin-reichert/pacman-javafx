@@ -13,6 +13,7 @@ import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.ui.GlobalAssets;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
@@ -71,7 +72,7 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         RectShort sprite;
         if (animController.isSelected(ghost, CommonSpriteAnimationID.GHOST_NORMAL)) {
             final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.worldNavigation().wishDir());
-            sprite = spriteOrDefault(sprites, animController.currentFrame(ghost));
+            sprite = SpriteSheet.spriteOrDefault(sprites, animController.currentFrame(ghost));
         }
         else if (animController.isSelected(ghost, CommonSpriteAnimationID.GHOST_EYES)) {
             sprite = spriteSheet().ghostEyesSprite(ghost.worldNavigation().wishDir());
@@ -89,11 +90,11 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         RectShort sprite;
         if (animController.isSelected(pac, CommonSpriteAnimationID.PAC_MOUTH_MOVING)) {
             final RectShort[] sprites = spriteSheet().msPacManMunchingSprites(pac.worldNavigation().moveDir());
-            sprite = spriteOrDefault(sprites, animController.currentFrame(pac));
+            sprite = SpriteSheet.spriteOrDefault(sprites, animController.currentFrame(pac));
         }
         else if (animController.isSelected(pac, CommonSpriteAnimationID.MR_PAC_MAN_MUNCHING)) {
             final RectShort[] sprites = spriteSheet().mrPacManMunchingSprites(pac.worldNavigation().moveDir());
-            sprite = spriteOrDefault(sprites, animController.currentFrame(pac));
+            sprite = SpriteSheet.spriteOrDefault(sprites, animController.currentFrame(pac));
         }
         else {
             sprite = animController.currentSprite(pac);
@@ -107,7 +108,7 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
     // TODO decouple symbol code from sprite index
     private RectShort computeSprite(Bonus bonus) {
         return switch (bonus.state().enumValue()) {
-            case EDIBLE -> spriteOrDefault(spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS), bonus.data().symbolCode());
+            case EDIBLE -> SpriteSheet.spriteOrDefault(spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS), bonus.data().symbolCode());
             case EATEN, INACTIVE -> RectShort.NULL_RECTANGLE;
         };
     }

@@ -39,11 +39,13 @@ public class TengenMsPacMan_BootScene_Renderer extends BaseRenderer {
         }
 
         if (bootScene.gray) {
-            actorRenderer.fillCanvas(NES_Palette.color(0x10));
-        } else {
+            fillCanvas(NES_Palette.color(0x10));
+        }
+        else {
             final Font arcade8 = Ufx.deriveFont(GlobalAssets.Fonts.ARCADE.font(), scaled(8));
-            actorRenderer.fillText(TENGEN_PRESENTS, bootScene.shadeOfBlue, arcade8,
-                bootScene.movingText.pos().x(), bootScene.movingText.pos().y());
+            fillText(TENGEN_PRESENTS, bootScene.shadeOfBlue, arcade8,
+                bootScene.movingText.pos().x(),
+                bootScene.movingText.pos().y());
             actorRenderer.render(bootScene.ghost, tick);
         }
     }

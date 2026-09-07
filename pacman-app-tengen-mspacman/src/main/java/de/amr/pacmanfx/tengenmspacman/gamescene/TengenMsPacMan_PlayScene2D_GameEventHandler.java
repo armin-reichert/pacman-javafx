@@ -27,14 +27,12 @@ import de.amr.pacmanfx.tengenmspacman.model.MessageAnimation;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
-import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.text.Font;
 import org.tinylog.Logger;
 
 import java.util.Optional;
 
 import static de.amr.basics.util.Ufx.textWidth;
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.GAME_OVER_TEXT;
 

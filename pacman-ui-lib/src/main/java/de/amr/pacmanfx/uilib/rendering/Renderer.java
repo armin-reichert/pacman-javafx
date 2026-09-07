@@ -6,15 +6,19 @@ package de.amr.pacmanfx.uilib.rendering;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 public interface Renderer {
 
-    //TODO base interface
     void render(Object r, long tick);
 
     GraphicsContext ctx();
+
+    default Canvas canvas() {
+        return ctx().getCanvas();
+    }
 
     void clearCanvas();
 
