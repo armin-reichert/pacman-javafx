@@ -17,6 +17,8 @@ import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.scene.canvas.Canvas;
 import org.tinylog.Logger;
 
+import java.util.stream.Stream;
+
 import static java.util.Objects.requireNonNull;
 
 public class RenderManager {
@@ -69,11 +71,19 @@ public class RenderManager {
                 sceneRenderer.render(gameScene, tick);
             }
 
-            gameScene.renderables().sorted(Renderable.RENDERING_ORDER).forEach(e -> entityRenderer.render(e, tick));
-
-            if (session.hud().isVisible()) {
-                session.hud().entities().forEach(hudEntity -> hudRenderer.render(hudEntity, tick));
-            }
+            Stream.concat(
+                session.hud().renderables(),
+                gameScene.renderables()
+            ).sorted(Renderable.RENDERING_ORDER).forEach(renderable -> {
+                switch (renderable.layer()) {
+                    case HUD -> {
+                        if (session.hud().isVisible()) {
+                            hudRenderer.render(renderable, tick);
+                        }
+                    }
+                    case ACTORS -> entityRenderer.render(renderable, tick);
+                }
+            });
 
             if (debugMode) {
                 sceneRenderer.optDebugInfoRenderer().ifPresent(debugRenderer -> debugRenderer.render(gameScene, tick));

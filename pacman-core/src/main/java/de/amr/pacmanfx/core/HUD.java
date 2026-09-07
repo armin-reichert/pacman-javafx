@@ -8,6 +8,8 @@ import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 
+import java.util.stream.Stream;
+
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 
 public class HUD {
@@ -32,6 +34,12 @@ public class HUD {
         highScore.show();
 
         entities.addAll(levelCounter, livesCounter, gameScore, highScore, creditDisplay);
+    }
+
+    public Stream<Renderable> renderables() {
+        return entities.all()
+            .filter(GameEntity::isVisible)
+            .filter(Renderable.class::isInstance).map(Renderable.class::cast);
     }
 
     public boolean isVisible() {
