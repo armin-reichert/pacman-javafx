@@ -5,10 +5,12 @@
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.basics.math.Direction;
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_PacSAM;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
@@ -18,16 +20,18 @@ import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.game.GameVariant;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.common.SceneWithoutLevel;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
+
+import java.util.stream.Stream;
 
 /**
  * First cut scene in Arcade Pac-Man game:<br>
  * Red ghost chases Pac-Man from right to left over the screen,
  * then a frightened ghost is chased by a big Pac-Man from left to right.
  */
-public class ArcadePacMan_CutScene1 extends SceneWithoutLevel {
+public class ArcadePacMan_CutScene1 extends GameScene {
 
     public ArcadePacMan_CutScene1(GameAppContext app) {
         super(app);
@@ -37,6 +41,7 @@ public class ArcadePacMan_CutScene1 extends SceneWithoutLevel {
 
     private Pac pacMan;
     private Ghost blinky;
+
 
     private CutSceneTimingComp timing() {
         return reqComp(CutSceneTimingComp.class);
@@ -55,10 +60,12 @@ public class ArcadePacMan_CutScene1 extends SceneWithoutLevel {
 
         blinky = renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.RED_GHOST_SHADOW);
 
-        entities().clear();
-        entities().addAll(pacMan, blinky);
-
         timing().setTick(-1);
+    }
+
+    @Override
+    public Stream<Renderable> renderables() {
+        return Ufx.streamOf(pacMan, blinky);
     }
 
     @Override

@@ -4,17 +4,15 @@
 
 package de.amr.pacmanfx.core.entities;
 
+import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.comp.RenderingComp;
 import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.entities.score.comp.ScoreDataComp;
 import de.amr.pacmanfx.core.entities.score.comp.ScorePersistencyComp;
 
-import java.util.Optional;
-
 import static java.util.Objects.requireNonNull;
 
-public class Score extends GameEntity {
+public class Score extends GameEntity implements Renderable {
 
     public enum Type { GAME_SCORE, HIGH_SCORE }
 
@@ -23,7 +21,11 @@ public class Score extends GameEntity {
     public Score(Type type) {
         this.type = requireNonNull(type);
         setComp(ScoreDataComp.class, new ScoreDataComp());
-        setComp(RenderingComp.class, new RenderingComp(RenderingLayer.OVERLAY));
+    }
+
+    @Override
+    public RenderingLayer layer() {
+        return RenderingLayer.HUD;
     }
 
     public Type type() {
@@ -34,11 +36,7 @@ public class Score extends GameEntity {
         return reqComp(ScoreDataComp.class);
     }
 
-    public Optional<ScorePersistencyComp> optPersistency() {
-        return optComp(ScorePersistencyComp.class);
-    }
-
-    public ScorePersistencyComp requirePersistency() {
+    public ScorePersistencyComp reqPersistency() {
         return reqComp(ScorePersistencyComp.class);
     }
 }

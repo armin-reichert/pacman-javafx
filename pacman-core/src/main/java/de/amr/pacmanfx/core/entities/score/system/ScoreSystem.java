@@ -136,7 +136,7 @@ public class ScoreSystem {
     }
 
     public void saveHighScoreIfNeeded(Score currentHighScore) throws IOException {
-        final File file = currentHighScore.requirePersistency().file();
+        final File file = currentHighScore.reqPersistency().file();
         final Score savedHighScore = createHighScore(file);
         load(savedHighScore);
         if (savedHighScore.data().points() < currentHighScore.data().points()) {

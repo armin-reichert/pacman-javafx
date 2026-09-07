@@ -5,9 +5,11 @@
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.basics.math.Direction;
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
@@ -17,16 +19,18 @@ import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.game.GameVariant;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.common.SceneWithoutLevel;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
+
+import java.util.stream.Stream;
 
 /**
  * Third cut scene in Arcade Pac-Man game:<br>
  * Red ghost in damaged dress chases Pac-Man from right to left over the screen.
  * After they have disappeared, a naked, shaking ghost runs from left over the screen.
  */
-public class ArcadePacMan_CutScene3 extends SceneWithoutLevel {
+public class ArcadePacMan_CutScene3 extends GameScene {
 
     public static final int TICK_ANIMATION_START      = 120;
     public static final int TICK_BLINKY_RUNNING_NAKED = TICK_ANIMATION_START + 400;
@@ -43,6 +47,11 @@ public class ArcadePacMan_CutScene3 extends SceneWithoutLevel {
     }
 
     @Override
+    public Stream<Renderable> renderables() {
+        return Ufx.streamOf(pacMan, blinky);
+    }
+
+    @Override
     public void onActivate() {
         final GameVariant variant = app().gameVariants().currentGameVariant();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
@@ -54,9 +63,6 @@ public class ArcadePacMan_CutScene3 extends SceneWithoutLevel {
         pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animContainer));
 
         blinky = renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.RED_GHOST_SHADOW);
-
-        entities().clear();
-        entities().addAll(pacMan, blinky);
 
         sceneTick = -1;
     }

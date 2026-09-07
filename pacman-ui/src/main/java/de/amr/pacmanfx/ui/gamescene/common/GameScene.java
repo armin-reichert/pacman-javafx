@@ -9,6 +9,7 @@ import de.amr.basics.Disposable;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventListener;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
@@ -26,6 +27,7 @@ import javafx.scene.input.ScrollEvent;
 import org.tinylog.Logger;
 
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
@@ -87,6 +89,10 @@ public class GameScene extends Composition<GameSceneComponent>
      * Hook method called when the game scene becomes inactive.
      */
     protected void onDeactivate() {}
+
+    public Stream<Renderable> renderables() {
+        return Stream.empty();
+    }
 
     /**
      * If a 3D-variant of this game scene is active when the game level gets created, this method has not yet been called,

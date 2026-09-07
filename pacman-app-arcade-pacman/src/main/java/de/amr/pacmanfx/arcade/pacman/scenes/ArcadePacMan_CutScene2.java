@@ -5,13 +5,14 @@
 package de.amr.pacmanfx.arcade.pacman.scenes;
 
 import de.amr.basics.math.Direction;
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.comp.RenderingComp;
 import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
@@ -26,9 +27,11 @@ import de.amr.pacmanfx.core.spriteanim.SpriteAnimationBuilder;
 import de.amr.pacmanfx.game.GameVariant;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.common.SceneWithoutLevel;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
+
+import java.util.stream.Stream;
 
 
 /**
@@ -36,7 +39,7 @@ import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
  * Red ghost chases Pac-Man from right to left over screen, at the middle of the screen, a nail
  * is stopping the red ghost, its dress gets stretched and eventually raptures.
  */
-public class ArcadePacMan_CutScene2 extends SceneWithoutLevel {
+public class ArcadePacMan_CutScene2 extends GameScene {
 
     public enum NailDressState {
         NAIL, STRETCHED_SMALL, STRETCHED_MEDIUM, STRETCHED_LARGE, RAPTURED
@@ -88,14 +91,18 @@ public class ArcadePacMan_CutScene2 extends SceneWithoutLevel {
         }
     }
 
-    static class NailDress extends GameEntity {
+    static class NailDress extends GameEntity implements Renderable {
 
         public NailDress(SpriteAnimContainer animContainer) {
-            setComp(RenderingComp.class, new RenderingComp(RenderingLayer.PROPS));
             setComp(SpriteAnimationComp.class, new SpriteAnimationComp());
 
             reqComp(SpriteAnimationComp.class).setSpriteAnimations(new DressAnimation(animContainer));
             setState(NailDressState.NAIL);
+        }
+
+        @Override
+        public RenderingLayer layer() {
+            return RenderingLayer.PROPS;
         }
 
         public void setState(NailDressState state) {
@@ -112,6 +119,11 @@ public class ArcadePacMan_CutScene2 extends SceneWithoutLevel {
         super(app);
         setComp(SceneCanvasRenderingComp.class, new SceneCanvasRenderingComp());
         setComp(CutSceneTimingComp.class, new TimingComp(120));
+    }
+
+    @Override
+    public Stream<Renderable> renderables() {
+        return Ufx.streamOf(pacMan, blinky, nailDress);
     }
 
     private TimingComp timing() {
@@ -134,9 +146,6 @@ public class ArcadePacMan_CutScene2 extends SceneWithoutLevel {
         nailDress = new NailDress(animContainer);
         nailDress.pos().set(nailX, nailY);
         nailDress.show();
-
-        entities().clear();
-        entities().addAll(pacMan, blinky, nailDress);
 
         timing().setTick(-1);
     }

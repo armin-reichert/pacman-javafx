@@ -4,8 +4,12 @@
 
 package de.amr.pacmanfx.core.entities;
 
+import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.comp.*;
+import de.amr.pacmanfx.core.ecs.comp.MovementComp;
+import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
+import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
+import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostAnimationComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostHouseAccessComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostStateComp;
@@ -17,7 +21,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * A ghost. Ghosts differ in their personality which defines attack behavior and look.
  */
-public final class Ghost extends GameEntity {
+public final class Ghost extends GameEntity implements Renderable {
 
     private final GhostPersonality personality;
 
@@ -32,14 +36,6 @@ public final class Ghost extends GameEntity {
         setComp(GhostStateComp.class, new GhostStateComp());
         setComp(GhostAnimationComp.class, new GhostAnimationComp());
         setComp(SpriteAnimationComp.class, new SpriteAnimationComp());
-        setComp(RenderingComp.class, new RenderingComp(RenderingLayer.ACTORS));
-
-        rendering().setLayerPriority(switch (personality) {
-            case RED_GHOST_SHADOW   -> 13; // on top of all other ghosts
-            case PINK_GHOST_SPEEDY  -> 12;
-            case CYAN_GHOST_BASHFUL -> 11;
-            case ORANGE_GHOST_POKEY -> 10; // behind all other ghosts
-        });
 
         //TODO where does this belong?
         worldNavigation().corneringSpeedDelta = -1.25f;
@@ -47,6 +43,21 @@ public final class Ghost extends GameEntity {
 
     public GhostPersonality personality() {
         return personality;
+    }
+
+    @Override
+    public RenderingLayer layer() {
+        return RenderingLayer.ACTORS;
+    }
+
+    @Override
+    public int layerPriority() {
+        return switch (personality) {
+            case RED_GHOST_SHADOW   -> 13; // on top of all other ghosts
+            case PINK_GHOST_SPEEDY  -> 12;
+            case CYAN_GHOST_BASHFUL -> 11;
+            case ORANGE_GHOST_POKEY -> 10; // behind all other ghosts
+        };
     }
 
     // Typed component accessors
@@ -77,10 +88,6 @@ public final class Ghost extends GameEntity {
 
     public SpriteAnimationComp spriteAnimation() {
         return reqComp(SpriteAnimationComp.class);
-    }
-
-    public RenderingComp rendering() {
-        return reqComp(RenderingComp.class);
     }
 
     @Override

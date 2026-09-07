@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.core.level;
 
 import de.amr.basics.timer.Pulse;
+import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.gameplay.ArcadeHouseGateKeeper;
 import de.amr.pacmanfx.core.model.world.map.FoodState;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -12,6 +13,7 @@ import de.amr.pacmanfx.core.rules.HuntingTimer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
 import static java.util.Objects.requireNonNull;
@@ -164,5 +166,9 @@ public class GameLevel {
 
         entities.theMessageView().type().setMessageType(messageType);
         entities.theMessageView().show();
+    }
+
+    public Stream<Renderable> renderables() {
+        return entities.all().filter(Renderable.class::isInstance).map(Renderable.class::cast);
     }
 }

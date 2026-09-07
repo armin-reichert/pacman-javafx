@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.core.entities;
 
+import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.*;
 import de.amr.pacmanfx.core.entities.pac.comp.*;
@@ -13,7 +14,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Pac-Man / Ms. Pac-Man.
  */
-public final class Pac extends GameEntity {
+public final class Pac extends GameEntity implements Renderable {
 
     /**
      * @param name a readable name. Any honest Pac-Man and Pac-Woman should have a name! Period.
@@ -30,9 +31,16 @@ public final class Pac extends GameEntity {
         setComp(PacStateComp.class, new PacStateComp(male));
         setComp(SpriteAnimationComp.class, new SpriteAnimationComp());
         setComp(PacAnimationComp.class, new PacAnimationComp());
-        setComp(RenderingComp.class, new RenderingComp(RenderingLayer.ACTORS));
+    }
 
-        rendering().setLayerPriority(1); // Ghosts start at 10
+    @Override
+    public RenderingLayer layer() {
+        return RenderingLayer.ACTORS;
+    }
+
+    @Override
+    public int layerPriority() {
+        return 1; // behind ghosts (these start at 10)
     }
 
     public MovementComp movement() {
@@ -71,10 +79,6 @@ public final class Pac extends GameEntity {
     //TODO integrate with Pac animation comp
     public SpriteAnimationComp spriteAnim() {
         return reqComp(SpriteAnimationComp.class);
-    }
-
-    public RenderingComp rendering() {
-        return reqComp(RenderingComp.class);
     }
 
     @Override

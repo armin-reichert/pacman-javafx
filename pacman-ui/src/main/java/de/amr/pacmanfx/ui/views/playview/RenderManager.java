@@ -6,13 +6,11 @@ package de.amr.pacmanfx.ui.views.playview;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.comp.RenderingComp;
+import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.common.SceneWithoutLevel;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
@@ -76,18 +74,18 @@ public class RenderManager {
                 sceneRenderer.render(gameScene, tick);
             }
 
-            final List<GameEntity> entities = new ArrayList<>();
+            final List<Renderable> renderables = new ArrayList<>();
+
             session.optLevel().ifPresent(level -> {
-                entities.addAll(level.entities().all().toList());
+                renderables.addAll(level.renderables().toList());
                 if (level.entities().theMessageView() != null) {
                     messageViewRenderer.render(level.entities().theMessageView(), tick);
                 }
             });
 
-            if (gameScene instanceof SceneWithoutLevel sceneWithoutLevel) {
-               entities.addAll(sceneWithoutLevel.entities().all().toList());
-            }
-            sortInRenderingOrder(entities).forEach(e -> entityRenderer.render(e, tick));
+            renderables.addAll(gameScene.renderables().toList());
+
+            renderablesSortedByRenderingOrder(renderables).forEach(e -> entityRenderer.render(e, tick));
 
             if (session.hud().isVisible()) {
                 session.hud().entities().forEach(hudEntity -> hudRenderer.render(hudEntity, tick));
@@ -99,12 +97,9 @@ public class RenderManager {
         });
     }
 
-    private List<GameEntity> sortInRenderingOrder(Collection<GameEntity> entities) {
-        return entities.stream()
-            .filter(e -> e.hasComp(RenderingComp.class))
-            .sorted((e1, e2) -> RenderingComp.RENDERING_ORDER.compare(
-                e1.reqComp(RenderingComp.class),
-                e2.reqComp(RenderingComp.class)))
+    private List<Renderable> renderablesSortedByRenderingOrder(Collection<Renderable> renderables) {
+        return renderables.stream()
+            .sorted(Renderable.RENDERING_ORDER)
             .collect(Collectors.toCollection(ArrayList::new));
     }
 

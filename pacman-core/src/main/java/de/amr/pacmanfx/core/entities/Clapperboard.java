@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.core.entities;
 
+import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.comp.RenderingComp;
 import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.entities.clapperboard.comp.ClapperboardInscriptionComp;
 import de.amr.pacmanfx.core.entities.clapperboard.comp.ClapperboardStateComp;
@@ -13,15 +13,19 @@ import de.amr.pacmanfx.core.entities.clapperboard.comp.ClapperboardStateComp;
 /**
  * Animated movie clapperboard.
  */
-public class Clapperboard extends GameEntity {
+public class Clapperboard extends GameEntity implements Renderable {
 
     public Clapperboard(String number, String text) {
         setComp(ClapperboardStateComp.class, new ClapperboardStateComp());
         setComp(ClapperboardInscriptionComp.class, new ClapperboardInscriptionComp());
-        setComp(RenderingComp.class, new RenderingComp(RenderingLayer.PROPS));
 
         inscription().setNumber(number);
         inscription().setText(text);
+    }
+
+    @Override
+    public RenderingLayer layer() {
+        return RenderingLayer.PROPS;
     }
 
     public ClapperboardInscriptionComp inscription() {

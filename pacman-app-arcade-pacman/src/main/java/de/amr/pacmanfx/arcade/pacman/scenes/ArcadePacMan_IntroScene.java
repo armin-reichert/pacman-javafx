@@ -9,11 +9,13 @@ import de.amr.basics.fsm.StateMachine;
 import de.amr.basics.math.Direction;
 import de.amr.basics.timer.Pulse;
 import de.amr.basics.timer.TickTimer;
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
@@ -31,7 +33,7 @@ import de.amr.pacmanfx.game.GameVariant;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.common.SceneWithoutLevel;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 
 import java.util.Arrays;
@@ -44,7 +46,7 @@ import static de.amr.pacmanfx.core.entities.ghost.comp.GhostState.EATEN;
 /**
  * The ghosts are presented one by one, then Pac-Man is chased by the ghosts, turns the cards and hunts the ghosts himself.
  */
-public class ArcadePacMan_IntroScene extends SceneWithoutLevel {
+public class ArcadePacMan_IntroScene extends GameScene {
 
     public static final int NUM_GHOSTS = 4;
 
@@ -86,6 +88,7 @@ public class ArcadePacMan_IntroScene extends SceneWithoutLevel {
 
     private Pac pacMan;
     private final Ghost[] ghosts = new Ghost[NUM_GHOSTS];
+    private GhostPoints points;
 
     public final boolean[] ghostImageVisible = new boolean[NUM_GHOSTS];
     public final boolean[] ghostNicknameVisible = new boolean[NUM_GHOSTS];
@@ -144,10 +147,6 @@ public class ArcadePacMan_IntroScene extends SceneWithoutLevel {
         ghosts[2] = renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.CYAN_GHOST_BASHFUL);
         ghosts[3] = renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.ORANGE_GHOST_POKEY);
 
-        entities().clear();
-        entities().add(pacMan);
-        entities().addAll(ghosts);
-
         Arrays.fill(ghostImageVisible, false);
         Arrays.fill(ghostNicknameVisible, false);
         Arrays.fill(ghostCharacterVisible, false);
@@ -158,6 +157,11 @@ public class ArcadePacMan_IntroScene extends SceneWithoutLevel {
         numGhostsEaten = 0;
 
         soundManager().voice().playAfterSec(1, GlobalAssets.VoiceID.EXPLAIN_GAME_START.media());
+    }
+
+    @Override
+    public Stream<Renderable> renderables() {
+        return Ufx.streamOf(pacMan, ghosts, points);
     }
 
     private void startChasingPacMan(GameContext game) {
@@ -268,7 +272,7 @@ public class ArcadePacMan_IntroScene extends SceneWithoutLevel {
         }
 
         ++numGhostsEaten;
-        final var points = new GhostPoints(switch (numGhostsEaten) {
+        points = new GhostPoints(switch (numGhostsEaten) {
             case 1 -> 200;
             case 2 -> 400;
             case 3 -> 800;
@@ -277,8 +281,6 @@ public class ArcadePacMan_IntroScene extends SceneWithoutLevel {
         });
         points.pos().set(victim.pos().asVector2f());
         points.show();
-
-        entities().add(points);
 
         lastGhostEatenTick = tick;
     }
@@ -290,7 +292,7 @@ public class ArcadePacMan_IntroScene extends SceneWithoutLevel {
         for (Ghost ghost : ghosts) {
             if (ghost.state().enumValue() == EATEN) {
                 ghost.hide();
-                entities().removeWhere(GhostPoints.class, _ -> true);
+                points = null;
             } else {
                 ghost.show();
                 systems.navigator().setMoveDirSpeed(ghost, GHOST_FRIGHTENED_SPEED);

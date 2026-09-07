@@ -33,9 +33,12 @@ import org.tinylog.Logger;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiPredicate;
+import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
@@ -48,6 +51,19 @@ import static java.util.Objects.requireNonNull;
 public final class Ufx {
 
     private Ufx() {}
+
+    @SuppressWarnings("unchecked")
+    public static <T> Stream<T> streamOf(Object... sources) {
+        return Stream.of(sources).flatMap(source -> switch (source) {
+            case null -> Stream.empty();
+            case Object[] arr -> (Stream<T>) Arrays.stream(arr);
+            case Stream<?> s -> (Stream<T>) s;
+            case Collection<?> c -> (Stream<T>) c.stream();
+            case Optional<?> opt -> (Stream<T>) opt.stream();
+            default -> // Single object
+                Stream.of((T) source);
+        });
+    }
 
     public static byte[][] copyOf(byte[][] bytes) {
         byte[][] copy = new byte[bytes.length][];

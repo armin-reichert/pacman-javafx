@@ -7,7 +7,7 @@ public enum RenderingLayer {
     FOOD       (30),
     ACTORS     (40),
     PROPS      (50),
-    OVERLAY    (60),
+    HUD(60),
     DEBUG      (70);
 
     private final int z;

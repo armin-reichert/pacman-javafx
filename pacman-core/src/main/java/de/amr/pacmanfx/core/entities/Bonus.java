@@ -4,9 +4,9 @@
 
 package de.amr.pacmanfx.core.entities;
 
+import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.MovementComp;
-import de.amr.pacmanfx.core.ecs.comp.RenderingComp;
 import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.entities.bonus.comp.BonusDataComp;
@@ -21,7 +21,7 @@ import java.util.Optional;
  *
  * <p>TODO: That's not exactly the original Ms. Pac-Man behaviour with predefined "fruit paths".
  */
-public final class Bonus extends GameEntity {
+public final class Bonus extends GameEntity implements Renderable {
 
     public static Bonus createStaticBonus(int symbolCode) {
         return new Bonus(symbolCode);
@@ -40,8 +40,16 @@ public final class Bonus extends GameEntity {
     public Bonus(int symbolCode) {
         setComp(BonusDataComp.class, new BonusDataComp(symbolCode));
         setComp(BonusStateComp.class, new BonusStateComp());
-        setComp(RenderingComp.class, new RenderingComp(RenderingLayer.ACTORS));
-        rendering().setLayerPriority(0);
+    }
+
+    @Override
+    public RenderingLayer layer() {
+        return RenderingLayer.ACTORS;
+    }
+
+    @Override
+    public int layerPriority() {
+        return -1;
     }
 
     public BonusDataComp data() {
@@ -50,14 +58,6 @@ public final class Bonus extends GameEntity {
 
     public BonusStateComp state() {
         return reqComp(BonusStateComp.class);
-    }
-
-    public RenderingComp rendering() {
-        return reqComp(RenderingComp.class);
-    }
-
-    public Optional<WorldNavigationComp> optWorldNavigation() {
-        return optComp(WorldNavigationComp.class);
     }
 
     public Optional<BonusMoveAndJumpComp> optMoveAndJump() {
