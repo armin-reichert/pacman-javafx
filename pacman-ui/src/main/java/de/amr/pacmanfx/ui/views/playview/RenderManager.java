@@ -104,7 +104,9 @@ public class RenderManager {
                         renderGameScene(gameScene, tick, debugMode);
                     }
                 }
-                default -> entityRenderer.render(renderable, tick);
+                default -> {
+                    entityRenderer.render(renderable, tick);
+                }
             }
         });
     }

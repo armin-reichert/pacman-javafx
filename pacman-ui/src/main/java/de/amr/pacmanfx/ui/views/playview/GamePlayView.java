@@ -252,7 +252,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
                     app.game().variant().systems().actorSpriteAnimController(),
                     app.currentGameVariantUIConfig().renderConfig()
                 );
-                miniViewRenderer.render(miniView, tick);
+                //miniViewRenderer.render(miniView, tick);
             }
             catch (Exception x) {
                 Logger.error(x, "Exception during rendering!");
