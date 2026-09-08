@@ -8,6 +8,8 @@ import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.clapperboard.ClapperboardAnimationSystem;
+import de.amr.pacmanfx.arcade.ms_pacman.scenes.introscene.MarqueeRenderer;
+import de.amr.pacmanfx.arcade.ms_pacman.entities.Copyright;
 import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
@@ -22,6 +24,8 @@ import javafx.scene.text.Font;
 
 import java.util.Arrays;
 
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
+import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
 import static java.util.Objects.requireNonNull;
 
@@ -67,6 +71,7 @@ public class ArcadeMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
             case BonusPoints points        -> drawSpriteCentered(computeSprite(points), center);
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
             case Marquee marquee           -> drawMarquee(marquee, tick);
+            case Copyright copyright -> drawMidwayCopyright(copyright);
             default -> {
                 if (actor.hasComp(SpriteAnimationComp.class)) {
                     drawSpriteCentered(animController.currentSprite(actor), center);
@@ -150,5 +155,17 @@ public class ArcadeMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
 
     private void drawMarquee(Marquee marquee, long tick) {
         marqueeRenderer.render(marquee, tick);
+    }
+
+    private void drawMidwayCopyright(Copyright copyright) {
+        final float x = copyright.pos().x();
+        final float y = copyright.pos().y();
+        final Font arcade8 = Ufx.deriveFont(GlobalAssets.Fonts.ARCADE.font(), scaled(8));
+        ctx.drawImage(copyright.image().image(), scaled(x), scaled(y + 2), scaled(tilesPx(4) - 2), scaled(tilesPx(4)));
+        ctx.setFont(arcade8);
+        ctx.setFill(ARCADE_RED);
+        ctx.fillText("©",             scaled(x + tilesPx(5)), scaled(y + tilesPx(2)) + 2);
+        ctx.fillText("MIDWAY MFG CO", scaled(x + tilesPx(7)), scaled(y + tilesPx(2)));
+        ctx.fillText("1980/1981",     scaled(x + tilesPx(8)), scaled(y + tilesPx(4)));
     }
 }

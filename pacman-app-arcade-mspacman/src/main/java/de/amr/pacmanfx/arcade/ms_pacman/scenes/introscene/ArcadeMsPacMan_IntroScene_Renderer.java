@@ -2,24 +2,19 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.arcade.ms_pacman.rendering;
+package de.amr.pacmanfx.arcade.ms_pacman.scenes.introscene;
 
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.arcade.ms_pacman.scenes.ArcadeMsPacMan_IntroScene;
 import de.amr.pacmanfx.core.Renderable;
-import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import static de.amr.pacmanfx.arcade.ms_pacman.scenes.ArcadeMsPacMan_IntroScene.*;
+import static de.amr.pacmanfx.arcade.ms_pacman.scenes.introscene.ArcadeMsPacMan_IntroScene.*;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer.createDefaultSceneDebugRenderer;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
@@ -30,21 +25,8 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer {
     private static final String[] GHOST_NAMES = { "BLINKY", "PINKY", "INKY", "SUE" };
     private static final Color[] GHOST_COLORS = { ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE };
 
-    private final CopyrightRenderer copyrightRenderer;
-
-    private final Image copyrightImage;
-
-    public ArcadeMsPacMan_IntroScene_Renderer(
-        GameVariantRenderConfig renderConfig,
-        GameScene gameScene,
-        Canvas canvas) {
-
+    public ArcadeMsPacMan_IntroScene_Renderer(GameScene gameScene, Canvas canvas) {
         super(canvas);
-
-        copyrightImage = renderConfig.assets().image("logo.midway");
-
-        final SceneCanvasRenderingComp r2D = gameScene.reqComp(SceneCanvasRenderingComp.class);
-        copyrightRenderer = r2D.configureRenderer(new CopyrightRenderer(canvas));
         setDebugInfoRenderer(createDefaultSceneDebugRenderer(gameScene, canvas));
     }
 
@@ -75,6 +57,5 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer {
             }
             default -> {}
         }
-        copyrightRenderer.drawCopyright(copyrightImage, tilesPx(6), tilesPx(28));
     }
 }

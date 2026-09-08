@@ -2,27 +2,43 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.arcade.ms_pacman.scenes;
+package de.amr.pacmanfx.arcade.ms_pacman.scenes.startscene;
 
+import de.amr.basics.util.Ufx;
+import de.amr.pacmanfx.arcade.ms_pacman.entities.Copyright;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.Renderable;
+import de.amr.pacmanfx.game.GameVariant;
+import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 
 import java.util.stream.Stream;
 
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
+
 public class ArcadeMsPacMan_StartScene extends GameScene {
+
+    private final Copyright copyright;
 
     public ArcadeMsPacMan_StartScene(GameAppContext app) {
         super(app);
         setComp(SceneCanvasRenderingComp.class, new SceneCanvasRenderingComp());
+
+        final GameVariant variant = app().gameVariants().currentGameVariant();
+        final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
+
+        copyright = new Copyright();
+        copyright.show();
+        copyright.pos().set(tilesPx(6), tilesPx(28));
+        copyright.image().setImage(renderConfig.assets().image("logo.midway"));
     }
 
     @Override
     public Stream<Renderable> renderables() {
-        return Stream.empty();
+        return Ufx.streamOf(copyright);
     }
 
     @Override

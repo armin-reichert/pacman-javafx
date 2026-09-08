@@ -2,13 +2,14 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.arcade.ms_pacman.scenes;
+package de.amr.pacmanfx.arcade.ms_pacman.scenes.introscene;
 
 import de.amr.basics.fsm.State;
 import de.amr.basics.fsm.StateMachine;
 import de.amr.basics.math.Direction;
 import de.amr.basics.timer.TickTimer;
 import de.amr.basics.util.Ufx;
+import de.amr.pacmanfx.arcade.ms_pacman.entities.Copyright;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
@@ -36,6 +37,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
 
@@ -56,10 +58,10 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
 
     private final StateMachine<ArcadeMsPacMan_IntroScene> sceneFlow;
 
-    // Public for access by renderer
     private Marquee marquee;
     private Pac msPacMan;
     private List<Ghost> ghosts;
+    private Copyright copyright;
 
     public GhostPersonality ghostPresented;
 
@@ -73,7 +75,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
 
     @Override
     public Stream<Renderable> renderables() {
-        return Ufx.streamOf(marquee, msPacMan, ghosts);
+        return Ufx.streamOf(marquee, msPacMan, ghosts, copyright);
     }
 
     @Override
@@ -137,6 +139,11 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
 
         ghostPresented = GhostPersonality.RED_GHOST_SHADOW;
         numTicksBeforeRising = 0;
+
+        copyright = new Copyright();
+        copyright.show();
+        copyright.pos().set(tilesPx(6), tilesPx(28));
+        copyright.image().setImage(renderConfig.assets().image("logo.midway"));
 
         // Start animations
 

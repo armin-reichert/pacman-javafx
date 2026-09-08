@@ -4,7 +4,11 @@
 package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.basics.Named;
-import de.amr.pacmanfx.arcade.ms_pacman.scenes.*;
+import de.amr.pacmanfx.arcade.ms_pacman.scenes.cutscenes.ArcadeMsPacMan_CutScene1;
+import de.amr.pacmanfx.arcade.ms_pacman.scenes.cutscenes.ArcadeMsPacMan_CutScene2;
+import de.amr.pacmanfx.arcade.ms_pacman.scenes.cutscenes.ArcadeMsPacMan_CutScene3;
+import de.amr.pacmanfx.arcade.ms_pacman.scenes.introscene.ArcadeMsPacMan_IntroScene;
+import de.amr.pacmanfx.arcade.ms_pacman.scenes.startscene.ArcadeMsPacMan_StartScene;
 import de.amr.pacmanfx.arcade.pacman.scenes.bootscene.Arcade_BootScene2D;
 import de.amr.pacmanfx.arcade.pacman.scenes.playscene.Arcade_PlayScene2D;
 import de.amr.pacmanfx.arcade.pacman.scenes.playscene.Arcade_PlayScene3D;

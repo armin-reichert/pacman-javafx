@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.arcade.ms_pacman.rendering;
+package de.amr.pacmanfx.arcade.ms_pacman.scenes.introscene;
 
 import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.entities.Marquee;

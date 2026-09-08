@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.arcade.ms_pacman.scenes;
+package de.amr.pacmanfx.arcade.ms_pacman.scenes.cutscenes;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.timer.TickTimer;

@@ -2,18 +2,17 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.arcade.ms_pacman.rendering;
+package de.amr.pacmanfx.arcade.ms_pacman.scenes.startscene;
 
 import de.amr.basics.util.Ufx;
+import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
+import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.Renderable;
-import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.image.Image;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
@@ -23,16 +22,8 @@ import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_ORANGE;
 
 public class ArcadeMsPacMan_StartScene_Renderer extends BaseRenderer implements SpriteRenderer {
 
-    private final CopyrightRenderer copyrightRenderer;
-    private final Image copyrightImage;
-
-    public ArcadeMsPacMan_StartScene_Renderer(GameVariantRenderConfig renderConfig, GameScene gameScene, Canvas canvas) {
+    public ArcadeMsPacMan_StartScene_Renderer(GameScene gameScene, Canvas canvas) {
         super(canvas);
-
-        copyrightImage = renderConfig.assets().image("logo.midway");
-
-        final SceneCanvasRenderingComp r2D = gameScene.reqComp(SceneCanvasRenderingComp.class);
-        copyrightRenderer = r2D.configureRenderer(new CopyrightRenderer(canvas));
         setDebugInfoRenderer(createDefaultSceneDebugRenderer(gameScene, canvas));
     }
 
@@ -55,6 +46,5 @@ public class ArcadeMsPacMan_StartScene_Renderer extends BaseRenderer implements 
         ctx.setFont(arcade6);
         ctx.fillText("PTS", STS*25, STS*25);
         drawSprite(spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL), tilesPx(13), tilesPx(23) + 1, true);
-        copyrightRenderer.drawCopyright(copyrightImage, tilesPx(6), tilesPx(28));
     }
 }
