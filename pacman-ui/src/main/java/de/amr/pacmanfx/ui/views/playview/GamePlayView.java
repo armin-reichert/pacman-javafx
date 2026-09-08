@@ -104,8 +104,22 @@ public class GamePlayView implements GameView {
     public void setApp(GameAppContext app) {
         this.app = requireNonNull(app);
 
-        final GameViewModel vm = app.ui().viewModel();
+        initLayers(app.ui().viewModel());
+        installResizeHandler();
 
+        contextMenuManager = new ContextMenuManager(app, app.ui().window().mainScene());
+        rootPane.setOnContextMenuRequested(contextMenuManager);
+    }
+
+    private void installResizeHandler() {
+        final GameMainScene mainScene = app.ui().window().mainScene();
+        final ChangeListener<? super Number> handler = (_, _, _) ->
+            decorationPane.stretchTo(mainScene.getWidth(), mainScene.getHeight());
+        mainScene.widthProperty() .addListener(handler);
+        mainScene.heightProperty().addListener(handler);
+    }
+
+    private void initLayers(GameViewModel vm) {
         layers.miniViewLayer().setGameApp(app);
 
         layers.pausedIcon().visibleProperty().bind(app.clock().updatesDisabledProperty());
@@ -126,20 +140,6 @@ public class GamePlayView implements GameView {
             app.ui().gameScenes().currentGameSceneProperty()
         ));
 
-        // Always resize to main scene
-        final GameMainScene mainScene = app.ui().window().mainScene();
-
-        final ChangeListener<? super Number> mainSceneResizeHandler = (_, _, _) -> resizeToFit(mainScene);
-        mainScene.widthProperty() .addListener(mainSceneResizeHandler);
-        mainScene.heightProperty().addListener(mainSceneResizeHandler);
-
-        // Context menu
-        contextMenuManager = new ContextMenuManager(app, mainScene);
-        rootPane.setOnContextMenuRequested(contextMenuManager);
-    }
-
-    public void resizeToFit(Scene parentSceneFX) {
-        decorationPane.stretchTo(parentSceneFX.getWidth(), parentSceneFX.getHeight());
     }
 
     public GameDashboard dashboard() {
