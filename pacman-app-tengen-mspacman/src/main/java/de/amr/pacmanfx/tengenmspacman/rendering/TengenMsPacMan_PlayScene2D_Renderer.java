@@ -21,7 +21,6 @@ import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
-import de.amr.pacmanfx.uilib.rendering.Renderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -29,9 +28,7 @@ import javafx.scene.paint.Color;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_PlayScene2D_Renderer extends BaseRenderer
-    implements SpriteRenderer, TengenMsPacMan_SceneRendererMixin
-{
+public class TengenMsPacMan_PlayScene2D_Renderer extends BaseRenderer implements SpriteRenderer {
     public static final int CONTENT_INDENT = 16;
 
     private class PlaySceneDebugInfoRenderer extends BaseGameSceneDebugInfoRenderer {
@@ -85,11 +82,6 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends BaseRenderer
     @Override
     public TengenMsPacMan_SpriteSheet spriteSheet() {
         return TengenMsPacMan_SpriteSheet.instance();
-    }
-
-    @Override
-    public Renderer renderer() {
-        return this;
     }
 
     @Override

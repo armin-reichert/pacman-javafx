@@ -18,7 +18,6 @@ import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.Renderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -28,11 +27,11 @@ import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
 import static de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_OptionsScene.*;
+import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SceneRendererUtils.drawHorizontalBar;
+import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SceneRendererUtils.drawJoypadKeyBinding;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
-    implements SpriteRenderer, TengenMsPacMan_SceneRendererMixin
-{
+public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer implements SpriteRenderer {
     private static final int COL_ARROW = 2 * TS;
     private static final int COL_LABEL = 4 * TS;
     private static final int COL_COLON = 19 * TS;
@@ -49,11 +48,6 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
     @Override
     public TengenMsPacMan_SpriteSheet spriteSheet() {
         return TengenMsPacMan_SpriteSheet.instance();
-    }
-
-    @Override
-    public Renderer renderer() {
-        return this;
     }
 
     @Override
@@ -74,10 +68,11 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
         ctx.setFont(arcade8);
 
         if (uiSettings.joypadBindingsDisplayed.get()) {
-            drawJoypadKeyBinding(optionsScene.app().input().joypad().currentKeyBinding());
+            drawJoypadKeyBinding(ctx, scaling(), optionsScene.app().input().joypad().currentKeyBinding());
         }
 
-        drawHorizontalBar(NES_Palette.color(0x20), NES_Palette.color(0x21), optionsScene.reqCanvasRendering().unscaledWidth(), TS, 20);
+        drawHorizontalBar(ctx, scaling(), NES_Palette.color(0x20), NES_Palette.color(0x21),
+            optionsScene.reqCanvasRendering().unscaledWidth(), TS, 20);
 
         float y = 48;
         fillText("MS PAC-MAN OPTIONS", NES_YELLOW, COL_LABEL + 3 * TS, 48);
@@ -147,7 +142,8 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
         y += tilesPx(1);
         fillText("PRESS START TO START GAME",   NES_YELLOW, tilesPx(3), y);
 
-        drawHorizontalBar(NES_Palette.color(0x20), NES_Palette.color(0x21), optionsScene.reqCanvasRendering().unscaledWidth(), TS, 212);
+        drawHorizontalBar(ctx, scaling(), NES_Palette.color(0x20), NES_Palette.color(0x21),
+            optionsScene.reqCanvasRendering().unscaledWidth(), TS, 212);
     }
 
     private void drawMarkerIfSelected(TengenMsPacMan_OptionsScene optionsScene, int optionIndex, double y, Font font) {

@@ -1,37 +1,25 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.ui.input.JoypadButton;
 import de.amr.pacmanfx.ui.input.JoypadKeyBinding;
-import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static java.util.Objects.requireNonNull;
 
-public interface TengenMsPacMan_SceneRendererMixin {
+public final class TengenMsPacMan_SceneRendererUtils {
 
-    Renderer renderer();
+    private TengenMsPacMan_SceneRendererUtils() {}
 
-    /**
-     * Draws a vertical bar of given width and height. The top and bottom edges are drawn with the edgeColor and are
-     * 1 pixel high.
-     *
-     * @param edgeColor color of upper and lower edges
-     * @param innerColor color of inner area
-     * @param width width of the bar
-     * @param height height of the bar
-     * @param topY top y-position
-     */
-    default void drawHorizontalBar(Color edgeColor, Color innerColor, double width, double height, double topY) {
+    static void drawHorizontalBar(GraphicsContext ctx, double scaling, Color edgeColor, Color innerColor, double width, double height, double topY) {
         requireNonNull(edgeColor);
         requireNonNull(innerColor);
-        final GraphicsContext ctx = renderer().ctx();
-        final double scaling = renderer().scaling();
         ctx.save();
         ctx.scale(scaling, scaling);
         ctx.setFill(edgeColor);
@@ -41,9 +29,7 @@ public interface TengenMsPacMan_SceneRendererMixin {
         ctx.restore();
     }
 
-    default void drawJoypadKeyBinding(JoypadKeyBinding binding) {
-        final GraphicsContext ctx = renderer().ctx();
-        final double scaling = renderer().scaling();
+    static void drawJoypadKeyBinding(GraphicsContext ctx, double scaling, JoypadKeyBinding binding) {
         ctx.save();
         requireNonNull(binding);
         ctx.setFont(Font.font(scaling*6));

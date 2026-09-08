@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
-import de.amr.basics.fsm.State;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.entities.Ghost;
@@ -18,7 +17,6 @@ import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.Renderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -28,11 +26,11 @@ import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_IntroScene.ANCHOR_X;
 import static de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_IntroScene.ANCHOR_Y;
 import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConfig.shadeOfBlue;
+import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SceneRendererUtils.drawJoypadKeyBinding;
 import static de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer.createDefaultSceneDebugRenderer;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
-    implements SpriteRenderer, TengenMsPacMan_SceneRendererMixin {
+public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer implements SpriteRenderer {
 
     public static final String TENGEN_PRESENTS = "TENGEN PRESENTS";
     public static final String PRESS_START = "PRESS START";
@@ -46,21 +44,16 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
 
     private final TengenMsPacMan_UISettings uiSettings;
 
-    public TengenMsPacMan_IntroScene_Renderer(
-        GameVariantRenderConfig renderConfig, GameScene gameScene, Canvas canvas) {
+    public TengenMsPacMan_IntroScene_Renderer(GameVariantRenderConfig renderConfig, GameScene gameScene, Canvas canvas) {
         super(canvas);
         requireNonNull(renderConfig);
         requireNonNull(gameScene);
+        requireNonNull(canvas);
 
         setDebugInfoRenderer(createDefaultSceneDebugRenderer(gameScene, canvas));
 
         uiSettings = gameScene.app().currentGameVariantUIConfig().extensionValue(
             TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
-    }
-
-    @Override
-    public Renderer renderer() {
-        return this;
     }
 
     @Override
@@ -73,8 +66,6 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
         if (!(r instanceof TengenMsPacMan_IntroScene introScene)) {
             return;
         }
-        final State<TengenMsPacMan_IntroScene> introState = introScene.flow.state();
-        final long stateTick = introScene.flow.state().timer().tickCount();
 
         final Font arcade8 = Ufx.deriveFont(GlobalAssets.Fonts.ARCADE.font(), scaled(8));
 
@@ -82,7 +73,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
         ctx.setFont(arcade8);
         ctx.setImageSmoothing(false);
 
-        switch (introState) {
+        switch (introScene.flow.state()) {
 
             case SceneState.SHOWING_MARQUEE -> fillText(QUOTED_MS_PACMAN, NES_Palette.color(0x28), ANCHOR_X + 20, ANCHOR_Y - 18);
 
@@ -104,25 +95,27 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
             }
 
             case SceneState.WAITING_FOR_START -> {
-                if (!introScene.dark) {
-                    final boolean bright = stateTick % 60 < 30; // 0.5s dark, 0.5s bright
-                    fillText(TENGEN_PRESENTS, shadeOfBlue(stateTick),
-                        introScene.presentsTextPosition.x(), introScene.presentsTextPosition.y());
-                    drawSprite(spriteSheet().findSprite(SpriteID.LARGE_MS_PAC_MAN_TEXT), 5 * TS, ANCHOR_Y, true);
-                    if (bright) {
-                        fillText(PRESS_START, NES_Palette.color(0x20), 10 * TS, ANCHOR_Y + 9 * TS);
-                    }
-                    fillText(NAMCO_LTD,           NES_Palette.color(0x25), 5 * TS, ANCHOR_Y + 15 * TS);
-                    fillText(TENGEN_INC,          NES_Palette.color(0x25), 7 * TS, ANCHOR_Y + 16 * TS);
-                    fillText(ALL_RIGHTS_RESERVED, NES_Palette.color(0x25), 6 * TS, ANCHOR_Y + 17 * TS);
+                if (introScene.dark) {
+                    return;
                 }
+                final long stateTick = introScene.flow.state().timer().tickCount();
+                final boolean bright = stateTick % 60 < 30; // 0.5s dark, 0.5s bright
+                fillText(TENGEN_PRESENTS, shadeOfBlue(stateTick),
+                    introScene.presentsTextPosition.x(), introScene.presentsTextPosition.y());
+                drawSprite(spriteSheet().findSprite(SpriteID.LARGE_MS_PAC_MAN_TEXT), 5 * TS, ANCHOR_Y, true);
+                if (bright) {
+                    fillText(PRESS_START, NES_Palette.color(0x20), 10 * TS, ANCHOR_Y + 9 * TS);
+                }
+                fillText(NAMCO_LTD,           NES_Palette.color(0x25), 5 * TS, ANCHOR_Y + 15 * TS);
+                fillText(TENGEN_INC,          NES_Palette.color(0x25), 7 * TS, ANCHOR_Y + 16 * TS);
+                fillText(ALL_RIGHTS_RESERVED, NES_Palette.color(0x25), 6 * TS, ANCHOR_Y + 17 * TS);
             }
 
             default -> {}
         }
 
         if (uiSettings.joypadBindingsDisplayed.get()) {
-            drawJoypadKeyBinding(introScene.app().input().joypad().currentKeyBinding());
+            drawJoypadKeyBinding(ctx, scaling(), introScene.app().input().joypad().currentKeyBinding());
         }
 
         ctx.restore();

@@ -11,15 +11,15 @@ import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
+import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SceneRendererUtils.drawHorizontalBar;
 import static de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer.createDefaultSceneDebugRenderer;
 
-public class TengenMsPacMan_CreditsScene_Renderer extends BaseRenderer implements TengenMsPacMan_SceneRendererMixin {
+public class TengenMsPacMan_CreditsScene_Renderer extends BaseRenderer {
 
     record Line(String text, int paletteIndex, int column, int skipTiles) {}
 
@@ -75,11 +75,6 @@ public class TengenMsPacMan_CreditsScene_Renderer extends BaseRenderer implement
     }
 
     @Override
-    public Renderer renderer() {
-        return this;
-    }
-
-    @Override
     public void render(Renderable r, long tick) {
         if (!(r instanceof TengenMsPacMan_CreditsScene creditsScene)) {
             return;
@@ -88,8 +83,8 @@ public class TengenMsPacMan_CreditsScene_Renderer extends BaseRenderer implement
         final SceneCanvasRenderingComp canvasRendering = creditsScene.reqComp(SceneCanvasRenderingComp.class);
 
         final int width = canvasRendering.unscaledWidth();
-        drawHorizontalBar(NES_Palette.color(0x20), NES_Palette.color(0x13), width, TS, 20);
-        drawHorizontalBar(NES_Palette.color(0x20), NES_Palette.color(0x13), width, TS, 212);
+        drawHorizontalBar(ctx, scaling(),NES_Palette.color(0x20), NES_Palette.color(0x13), width, TS, 20);
+        drawHorizontalBar(ctx, scaling(),NES_Palette.color(0x20), NES_Palette.color(0x13), width, TS, 212);
 
         final Font arcade8 = Ufx.deriveFont(GlobalAssets.Fonts.ARCADE.font(), scaled(8));
         ctx.setFont(arcade8);
