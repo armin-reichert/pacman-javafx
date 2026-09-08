@@ -239,7 +239,7 @@ public class GamePlayView implements GameView {
         });
 
         try {
-            renderManager.renderFrame(app.game().session(), tick, debugMode);
+            renderManager.renderFrame(tick, debugMode);
 
             //TODO integrate into render manager
             final MiniViewRenderer miniViewRenderer = renderManager.createMiniViewRenderer(

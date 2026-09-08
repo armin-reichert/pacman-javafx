@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui.views.playview;
 
-import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -99,7 +98,7 @@ public class RenderManager {
         renderables.forEach(this::add);
     }
 
-    public void renderFrame(GameSession session, long tick, boolean debugMode) {
+    public void renderFrame(long tick, boolean debugMode) {
         renderQueue.sort(RENDERING_ORDER);
         renderQueue.forEach(r -> {
             switch (r.layer()) {
