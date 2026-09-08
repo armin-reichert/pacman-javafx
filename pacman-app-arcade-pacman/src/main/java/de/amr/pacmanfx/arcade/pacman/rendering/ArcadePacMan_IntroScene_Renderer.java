@@ -41,7 +41,6 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Sp
         super(canvas);
 
         energizerSprite = spriteSheet().findSprite(SpriteID.ENERGIZER);
-        setImageSmoothing(true);
         setDebugInfoRenderer(createDefaultSceneDebugRenderer(gameScene, canvas));
     }
 

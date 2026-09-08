@@ -37,8 +37,6 @@ public abstract class BaseRenderer implements Renderer {
 
     private BaseRenderer debugInfoRenderer;
 
-    protected boolean imageSmoothing;
-
     protected Vector2f translate = new Vector2f(0, 0);
 
     public BaseRenderer(Canvas canvas) {
@@ -104,16 +102,6 @@ public abstract class BaseRenderer implements Renderer {
     @Override
     public Color backgroundColor() {
         return backgroundColorProperty().get();
-    }
-
-    @Override
-    public void setImageSmoothing(boolean imageSmoothing) {
-        this.imageSmoothing = imageSmoothing;
-    }
-
-    @Override
-    public boolean imageSmoothing() {
-        return imageSmoothing;
     }
 
     /**

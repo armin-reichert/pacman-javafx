@@ -15,7 +15,7 @@ import static java.util.Objects.requireNonNull;
  */
 public interface SpriteRenderer extends Renderer {
 
-    SpriteSheet spriteSheet();
+    SpriteSheet<?> spriteSheet();
 
     /**
      * Draws a sprite (region inside sprite sheet) at the given position.
@@ -28,7 +28,6 @@ public interface SpriteRenderer extends Renderer {
     default void drawSprite(RectShort sprite, double x, double y, boolean scaled) {
         requireNonNull(sprite);
         final double s = scaled ? scaling() : 1;
-        ctx().setImageSmoothing(imageSmoothing());
         ctx().drawImage(spriteSheet().sourceImage(),
             sprite.x(), sprite.y(), sprite.width(), sprite.height(),
             s * x, s * y, s * sprite.width(), s * sprite.height());

@@ -78,7 +78,6 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         final Image mazeImage = infoMap.get(CommonRenderInfoKey.MAZE_IMAGE, Image.class);
         final RectShort mazeSprite = infoMap.get(CommonRenderInfoKey.MAZE_SPRITE, RectShort.class);
         final int x = 0, y = worldMap.terrainLayer().emptyRowsOverMaze() * WorldMap.TS;
-        ctx.setImageSmoothing(imageSmoothing());
         ctx.drawImage(mazeImage,
             mazeSprite.x(), mazeSprite.y(), mazeSprite.width(), mazeSprite.height(),
             scaled(x), scaled(y), scaled(mazeSprite.width()), scaled(mazeSprite.height())

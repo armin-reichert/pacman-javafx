@@ -87,7 +87,6 @@ class XXL_ChaseAnimation {
         final GraphicsContext ctx = actorRenderer.ctx();
         ctx.save();
         ctx.translate(0, scaling.get() * y);
-        actorRenderer.setImageSmoothing(true);
         ghosts.forEach(ghost -> actorRenderer.render(ghost, tick));
         actorRenderer.render(pac, tick);
         if (ghostPoints != null) {

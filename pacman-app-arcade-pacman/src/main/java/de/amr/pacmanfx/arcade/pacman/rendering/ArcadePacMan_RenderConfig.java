@@ -140,17 +140,13 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
         requireNonNull(animSystem);
         requireNonNull(canvas);
 
-        final var renderer = new Arcade_HUD_Renderer(hudStyle, canvas);
-        renderer.setImageSmoothing(true);
-        return renderer;
+        return new Arcade_HUD_Renderer(hudStyle, canvas);
     }
 
     @Override
     public BaseRenderer createEntityRenderer(ActorSpriteAnimController animSystem, Canvas canvas) {
         requireNonNull(canvas);
-        final var actorRenderer = new ArcadePacMan_EntityRenderer(animSystem, canvas);
-        actorRenderer.setImageSmoothing(true);
-        return actorRenderer;
+        return new ArcadePacMan_EntityRenderer(animSystem, canvas);
     }
 
     @Override

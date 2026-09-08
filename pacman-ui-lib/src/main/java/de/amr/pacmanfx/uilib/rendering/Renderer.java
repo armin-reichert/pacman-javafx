@@ -38,8 +38,4 @@ public interface Renderer {
     default Color backgroundColor() {
         return backgroundColorProperty().get();
     }
-
-    boolean imageSmoothing();
-
-    void setImageSmoothing(boolean b);
 }
