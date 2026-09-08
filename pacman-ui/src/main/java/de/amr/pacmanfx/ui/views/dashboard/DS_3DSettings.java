@@ -110,7 +110,6 @@ public class DS_3DSettings extends GameDashboardSection {
         super.update(app);
 
         final GameViewModel vm = app.ui().viewModel();
-        final MiniPlaySceneView miniView = app.ui().views().gamePlayView().miniPlaySceneView();
 
         comboPerspectives.setValue(vm.common3DSettings().cameraPerspectiveIDProperty().get());
 
@@ -119,6 +118,7 @@ public class DS_3DSettings extends GameDashboardSection {
         cbWireframeMode .setSelected(vm.common3DSettings().drawModeProperty().get() == DrawMode.LINE);
 
         // Mini view
+        final MiniPlaySceneView miniView = app.ui().views().gamePlayView().layers().miniViewLayer();
         cbMiniViewVisible.setSelected(vm.miniViewSettings().activeProperty.getValue());
         sliderMiniViewHeight.setDisable(miniView.isMoving());
     }

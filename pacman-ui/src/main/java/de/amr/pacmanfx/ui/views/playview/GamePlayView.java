@@ -45,7 +45,6 @@ import org.tinylog.Logger;
 
 import java.util.List;
 
-import static de.amr.pacmanfx.ui.views.ContextMenuSupport.addLocalizedActionItem;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -55,7 +54,6 @@ import static java.util.Objects.requireNonNull;
 public class GamePlayView implements GameView {
 
     //TODO This class is too large and does too many different things
-
 
     public static final float MAX_GAME_SCENE_SCALING = 5;
 
@@ -69,6 +67,13 @@ public class GamePlayView implements GameView {
         new DecorationPane.FrameConfig(26, 10, 5, 55.0, ArcadePalette.ARCADE_WHITE)
     );
 
+    public record Layers(
+        BorderPane gameSceneLayer,
+        MiniPlaySceneView miniViewLayer,
+        BorderPane overlayLayer,
+        HelpView helpLayer,
+        FontAwesomeIcon pausedIcon) {}
+
     // non-static members
 
     private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Action Bindings for Play View");
@@ -79,27 +84,20 @@ public class GamePlayView implements GameView {
 
     private StackPane rootPane;
 
-    // Game scene layer
-    private BorderPane gameSceneLayer;
+    private Layers layers;
+
     private DecorationPane decorationPane;
 
-    // Mini view layer
-    private MiniPlaySceneView miniView;
-
-    // Overlay layer
-    private BorderPane overlayLayer;
     private GameDashboard dashboard;
-
-    // Help layer
-    private HelpView helpLayer;
-
-    // Icon layer
-    private FontAwesomeIcon pausedIcon;
 
     private final RenderManager renderManager = new RenderManager();
 
     public GamePlayView() {
         createLayout();
+    }
+
+    public Layers layers() {
+        return layers;
     }
 
     @Override
@@ -108,20 +106,20 @@ public class GamePlayView implements GameView {
 
         final GameViewModel vm = app.ui().viewModel();
 
-        miniView.setGameApp(app);
+        layers.miniViewLayer().setGameApp(app);
 
-        pausedIcon.visibleProperty().bind(app.clock().updatesDisabledProperty());
+        layers.pausedIcon().visibleProperty().bind(app.clock().updatesDisabledProperty());
 
 //        vm.common2DSettings().fontSmoothingOnProperty().addListener((_, _, smoothing) -> renderManager.setGameSceneFontSmoothing(smoothing));
 
         vm.debugModeOnProperty().addListener((_, _, debug) -> {
-            gameSceneLayer.setBackground(debug ? DEBUG_BACKGROUND : null);
-            gameSceneLayer.setBorder(debug ? DEBUG_BORDER : null);
+            layers.gameSceneLayer().setBackground(debug ? DEBUG_BACKGROUND : null);
+            layers.gameSceneLayer().setBorder(debug ? DEBUG_BORDER : null);
         });
 
-        overlayLayer.visibleProperty().bind(dashboard.visibleProperty());
+        layers.overlayLayer().visibleProperty().bind(dashboard.visibleProperty());
 
-        miniView.rootPane().visibleProperty().bind(Bindings.createObjectBinding(
+        layers.miniViewLayer().rootPane().visibleProperty().bind(Bindings.createObjectBinding(
             () -> vm.miniViewSettings().activeProperty.get()
                 && app.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D),
             vm.miniViewSettings().activeProperty,
@@ -130,9 +128,10 @@ public class GamePlayView implements GameView {
 
         // Always resize to main scene
         final GameMainScene mainScene = app.ui().window().mainScene();
-        final ChangeListener<? super Number> resizeHandler = (_, _, _) -> resizeToFit(mainScene);
-        mainScene.widthProperty().addListener(resizeHandler);
-        mainScene.heightProperty().addListener(resizeHandler);
+
+        final ChangeListener<? super Number> mainSceneResizeHandler = (_, _, _) -> resizeToFit(mainScene);
+        mainScene.widthProperty() .addListener(mainSceneResizeHandler);
+        mainScene.heightProperty().addListener(mainSceneResizeHandler);
 
         // Context menu
         contextMenuManager = new ContextMenuManager(app, mainScene);
@@ -162,17 +161,13 @@ public class GamePlayView implements GameView {
         }
     }
 
-    public MiniPlaySceneView miniPlaySceneView() {
-        return miniView;
-    }
-
     public void showHelp(GameAppContext app) {
         final double scaling = decorationPane.scalingProperty().get();
-        helpLayer.showHelpPopup(app, scaling, app.gameVariants().currentVariantName());
+        layers.helpLayer().showHelpPopup(app, scaling, app.gameVariants().currentVariantName());
     }
 
     public void setGameSceneContent(Node gameSceneContent) {
-        gameSceneLayer.setCenter(gameSceneContent);
+        layers.gameSceneLayer().setCenter(gameSceneContent);
     }
 
     public void onLevelCreated(GameLevel level) {
@@ -257,7 +252,7 @@ public class GamePlayView implements GameView {
         }
 
         // Dashboard must always be updated, so do it in the render step!
-        if (overlayLayer.isVisible()) {
+        if (layers.overlayLayer().isVisible()) {
             dashboard.update(app);
         }
     }
@@ -336,39 +331,42 @@ public class GamePlayView implements GameView {
             WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.x(),
             WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.y()
         );
-        gameSceneLayer = new BorderPane();
-        gameSceneLayer.setCenter(decorationPane);
+
+        final var gameScenePane = new BorderPane();
+        gameScenePane.setCenter(decorationPane);
 
         // Layer 2: Mini view layer
-        miniView = new MiniPlaySceneView();
+        final var miniView = new MiniPlaySceneView();
         StackPane.setAlignment(miniView.rootPane(), Pos.TOP_RIGHT);
 
         // Layer 3: Overlay layer with dashboard
         dashboard = new GameDashboard();
         dashboard.setVisible(false);
 
-        overlayLayer = new BorderPane();
-        overlayLayer.setLeft(dashboard);
+        final var overlayPane = new BorderPane();
+        overlayPane.setLeft(dashboard);
 
         // Layer 4: Help info
-        helpLayer = new HelpView(gameSceneLayer);
+        final var helpView = new HelpView(gameScenePane);
 
         // Layer 4: "Paused" icon
-        pausedIcon = new FontAwesomeIcon(FontAwesomeSymbol.PAUSE);
+        final var pausedIcon = new FontAwesomeIcon(FontAwesomeSymbol.PAUSE);
         pausedIcon.setId("paused-icon");
         StackPane.setAlignment(pausedIcon, Pos.CENTER);
 
-        rootPane = new StackPane(gameSceneLayer, miniView.rootPane(), overlayLayer, helpLayer, pausedIcon);
+        layers = new Layers(gameScenePane, miniView, overlayPane, helpView, pausedIcon);
+
+        rootPane = new StackPane(gameScenePane, miniView.rootPane(), overlayPane, helpView, pausedIcon);
         rootPane.setId("game-play-view");
     }
 
     private void showMiniView(GameLevel level) {
-        miniView.setWorldSizeInPixel(level.worldMap().terrainLayer().sizeInPixel());
-        miniView.slideIn(app.ui().viewModel().miniViewSettings());
+        layers.miniViewLayer().setWorldSizeInPixel(level.worldMap().terrainLayer().sizeInPixel());
+        layers.miniViewLayer().slideIn(app.ui().viewModel().miniViewSettings());
     }
 
     private void hideMiniView() {
-        miniView.slideOut(app.ui().viewModel().miniViewSettings());
+        layers.miniViewLayer().slideOut(app.ui().viewModel().miniViewSettings());
     }
 
     // 3D scenes or 2D scenes with camera
