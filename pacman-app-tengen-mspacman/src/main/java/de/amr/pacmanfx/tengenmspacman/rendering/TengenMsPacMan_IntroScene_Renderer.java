@@ -7,7 +7,6 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 import de.amr.basics.fsm.State;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.Renderable;
-import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
@@ -26,8 +25,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
-import static de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_IntroScene.MARQUEE_X;
-import static de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_IntroScene.MARQUEE_Y;
+import static de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_IntroScene.ANCHOR_X;
+import static de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_IntroScene.ANCHOR_Y;
 import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConfig.shadeOfBlue;
 import static de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer.createDefaultSceneDebugRenderer;
 import static java.util.Objects.requireNonNull;
@@ -85,22 +84,22 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
 
         switch (introState) {
 
-            case SceneState.SHOWING_MARQUEE -> fillText(QUOTED_MS_PACMAN, NES_Palette.color(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
+            case SceneState.SHOWING_MARQUEE -> fillText(QUOTED_MS_PACMAN, NES_Palette.color(0x28), ANCHOR_X + 20, ANCHOR_Y - 18);
 
             case SceneState.GHOSTS_MARCHING_IN -> {
-                fillText(QUOTED_MS_PACMAN, NES_Palette.color(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
+                fillText(QUOTED_MS_PACMAN, NES_Palette.color(0x28), ANCHOR_X + 20, ANCHOR_Y - 18);
                 if (introScene.ghostIndex == 0) {
-                    fillText(WITH, NES_Palette.color(0x20), MARQUEE_X + 12, MARQUEE_Y + 23);
+                    fillText(WITH, NES_Palette.color(0x20), ANCHOR_X + 12, ANCHOR_Y + 23);
                 }
                 final Ghost currentGhost = introScene.ghosts().get(introScene.ghostIndex);
                 final Color ghostColor = introScene.ghostColors[currentGhost.personality().ordinal()];
-                fillText(currentGhost.name().toUpperCase(), ghostColor, MARQUEE_X + 44, MARQUEE_Y + 41);
+                fillText(currentGhost.name().toUpperCase(), ghostColor, ANCHOR_X + 44, ANCHOR_Y + 41);
             }
 
             case SceneState.MS_PACMAN_MARCHING_IN -> {
-                fillText(QUOTED_MS_PACMAN, NES_Palette.color(0x28), MARQUEE_X + 20, MARQUEE_Y - 18);
-                fillText(STARRING, NES_Palette.color(0x20), MARQUEE_X + 12, MARQUEE_Y + 22);
-                fillText(MS_PAC_MAN, NES_Palette.color(0x28), MARQUEE_X + 28, MARQUEE_Y + 38);
+                fillText(QUOTED_MS_PACMAN, NES_Palette.color(0x28), ANCHOR_X + 20, ANCHOR_Y - 18);
+                fillText(STARRING, NES_Palette.color(0x20), ANCHOR_X + 12, ANCHOR_Y + 22);
+                fillText(MS_PAC_MAN, NES_Palette.color(0x28), ANCHOR_X + 28, ANCHOR_Y + 38);
             }
 
             case SceneState.WAITING_FOR_START -> {
@@ -109,13 +108,13 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
                     //TODO convert into Renderable and add to renderables stream
                     fillText(TENGEN_PRESENTS, shadeOfBlue(stateTick),
                         introScene.presentsText().pos().x(), introScene.presentsText().pos().y());
-                    drawSprite(spriteSheet().findSprite(SpriteID.LARGE_MS_PAC_MAN_TEXT), 5 * TS, MARQUEE_Y, true);
+                    drawSprite(spriteSheet().findSprite(SpriteID.LARGE_MS_PAC_MAN_TEXT), 5 * TS, ANCHOR_Y, true);
                     if (bright) {
-                        fillText(PRESS_START, NES_Palette.color(0x20), 10 * TS, MARQUEE_Y + 9 * TS);
+                        fillText(PRESS_START, NES_Palette.color(0x20), 10 * TS, ANCHOR_Y + 9 * TS);
                     }
-                    fillText(NAMCO_LTD,           NES_Palette.color(0x25), 5 * TS, MARQUEE_Y + 15 * TS);
-                    fillText(TENGEN_INC,          NES_Palette.color(0x25), 7 * TS, MARQUEE_Y + 16 * TS);
-                    fillText(ALL_RIGHTS_RESERVED, NES_Palette.color(0x25), 6 * TS, MARQUEE_Y + 17 * TS);
+                    fillText(NAMCO_LTD,           NES_Palette.color(0x25), 5 * TS, ANCHOR_Y + 15 * TS);
+                    fillText(TENGEN_INC,          NES_Palette.color(0x25), 7 * TS, ANCHOR_Y + 16 * TS);
+                    fillText(ALL_RIGHTS_RESERVED, NES_Palette.color(0x25), 6 * TS, ANCHOR_Y + 17 * TS);
                 }
             }
 

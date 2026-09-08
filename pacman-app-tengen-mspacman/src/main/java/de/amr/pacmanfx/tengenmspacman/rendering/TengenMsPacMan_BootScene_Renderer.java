@@ -22,14 +22,14 @@ public class TengenMsPacMan_BootScene_Renderer extends BaseRenderer {
 
     public static final String TENGEN_PRESENTS = "TENGEN PRESENTS";
 
-    private final TengenMsPacMan_ActorRenderer actorRenderer;
+    private final TengenMsPacMan_EntityRenderer actorRenderer;
 
     public TengenMsPacMan_BootScene_Renderer(
         GameVariantRenderConfig renderConfig, GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas) {
         super(canvas);
 
         final SceneCanvasRenderingComp r2D = gameScene.reqComp(SceneCanvasRenderingComp.class);
-        actorRenderer = r2D.configureRenderer((TengenMsPacMan_ActorRenderer) renderConfig.createEntityRenderer(animSystem, canvas));
+        actorRenderer = r2D.configureRenderer((TengenMsPacMan_EntityRenderer) renderConfig.createEntityRenderer(animSystem, canvas));
         setDebugInfoRenderer(createDefaultSceneDebugRenderer(gameScene, canvas));
     }
 

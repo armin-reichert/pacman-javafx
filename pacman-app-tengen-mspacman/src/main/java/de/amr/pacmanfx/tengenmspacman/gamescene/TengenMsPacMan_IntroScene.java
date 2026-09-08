@@ -43,6 +43,7 @@ import org.tinylog.Logger;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
@@ -50,11 +51,11 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_
 public class TengenMsPacMan_IntroScene extends GameScene {
 
     // Anchor point for everything
-    public static final int MARQUEE_X = 60, MARQUEE_Y = 64;
+    public static final int ANCHOR_X = 60, ANCHOR_Y = 64;
 
-    public static final int ACTOR_Y = MARQUEE_Y + 72;
-    public static final int GHOST_STOP_X = MARQUEE_X - 34;
-    public static final int MS_PAC_MAN_STOP_X = MARQUEE_X + 46;
+    public static final int ACTOR_Y = ANCHOR_Y + 72;
+    public static final int GHOST_STOP_X = ANCHOR_X - 34;
+    public static final int MS_PAC_MAN_STOP_X = ANCHOR_X + 46;
     public static final float SPEED = 2.2f; //TODO check exact speed
 
     public final StateMachine<TengenMsPacMan_IntroScene> flow;
@@ -118,18 +119,45 @@ public class TengenMsPacMan_IntroScene extends GameScene {
             .map(personality -> ghostSettings.get(personality.ordinal()).colors().normal().dressColor())
             .toArray(Color[]::new);
 
+        createEntities();
+        flow.restartState(this, SceneState.WAITING_FOR_START);
+    }
+
+    @Override
+    public void onTick(GameContext game) {
+        flow.update(this);
+    }
+
+    // --- private
+
+    private void createEntities() {
         marquee = createMarquee();
 
         presentsText = new GameEntity();
-        presentsText.pos().set(8 * WorldMap.TS, MARQUEE_Y - WorldMap.TS);
+        presentsText.pos().set(8 * TS, ANCHOR_Y - TS);
 
-        flow.restartState(this, SceneState.WAITING_FOR_START);
+        final var actorFactory = TengenMsPacMan_ActorFactory.instance();
+
+        final GameVariant variant = app().gameVariants().currentGameVariant();
+        final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
+        final SpriteAnimContainer animContainer    = variant.spriteAnimContainer();
+        final ActorSpriteAnimController animController  = variant.config().systems().actorSpriteAnimController();
+
+        msPacMan = actorFactory.createMsPacMan();
+        animController.setAnimations(msPacMan, renderConfig.createPacAnimations(animContainer));
+
+        ghosts = List.of(
+            renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.RED_GHOST_SHADOW),
+            renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.CYAN_GHOST_BASHFUL),
+            renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.PINK_GHOST_SPEEDY),
+            renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.ORANGE_GHOST_POKEY)
+        );
     }
 
     private Marquee createMarquee() {
         final var marquee = new Marquee();
 
-        marquee.pos().set(MARQUEE_X, MARQUEE_Y);
+        marquee.pos().set(ANCHOR_X - 2 * TS, ANCHOR_Y);
 
         marquee.layout().setNumBulbsHorizontally(34);
         marquee.layout().setNumBulbsVertically(16);
@@ -143,11 +171,7 @@ public class TengenMsPacMan_IntroScene extends GameScene {
         return marquee;
     }
 
-
-    @Override
-    public void onTick(GameContext game) {
-        flow.update(this);
-    }
+    // --- State machine ---
 
     public enum SceneState implements State<TengenMsPacMan_IntroScene> {
 
@@ -157,6 +181,9 @@ public class TengenMsPacMan_IntroScene extends GameScene {
             public void onEnter(TengenMsPacMan_IntroScene scene) {
                 timer.restartTicks(TickTimer.INDEFINITE);
                 scene.dark = false;
+                scene.marquee.hide();
+                scene.msPacMan.hide();
+                scene.ghosts.forEach(Ghost::hide);
             }
 
             @Override
@@ -173,37 +200,27 @@ public class TengenMsPacMan_IntroScene extends GameScene {
         SHOWING_MARQUEE {
             @Override
             public void onEnter(TengenMsPacMan_IntroScene scene) {
-                final var actorFactory = TengenMsPacMan_ActorFactory.instance();
                 final GameVariant variant = scene.app().gameVariants().currentGameVariant();
-                final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
-                final SpriteAnimContainer animContainer    = variant.spriteAnimContainer();
-                final ActorSpriteAnimController animController  = variant.config().systems().actorSpriteAnimController();
+                final ActorSpriteAnimController animController = variant.config().systems().actorSpriteAnimController();
 
                 final GameSystems systems = variant.config().systems();
                 final WorldNavigationSystem worldNavigationSystem = systems.navigator();
 
                 timer.restartTicks(TickTimer.INDEFINITE);
 
-                scene.msPacMan = actorFactory.createMsPacMan();
-                scene.msPacMan.pos().set(WorldMap.TS * 33, ACTOR_Y);
+                scene.marquee.show();
+
+                scene.msPacMan.pos().set(TS * 33, ACTOR_Y);
                 scene.msPacMan.show();
 
                 worldNavigationSystem.setMoveDir(scene.msPacMan, Direction.LEFT);
                 worldNavigationSystem.setMoveDirSpeed(scene.msPacMan, SPEED);
 
-                animController.setAnimations(scene.msPacMan, renderConfig.createPacAnimations(animContainer));
                 animController.select(scene.msPacMan, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
                 animController.playSelected(scene.msPacMan);
 
-                scene.ghosts = List.of(
-                    renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.RED_GHOST_SHADOW),
-                    renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.CYAN_GHOST_BASHFUL),
-                    renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.PINK_GHOST_SPEEDY),
-                    renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.ORANGE_GHOST_POKEY)
-                );
-
                 for (Ghost ghost : scene.ghosts) {
-                    ghost.pos().set(WorldMap.TS * 33, ACTOR_Y);
+                    ghost.pos().set(TS * 33, ACTOR_Y);
                     ghost.show();
 
                     worldNavigationSystem.setMoveDir(ghost, Direction.LEFT);
@@ -261,7 +278,7 @@ public class TengenMsPacMan_IntroScene extends GameScene {
                     }
                 }
                 else if (ghost.worldNavigation().moveDir() == Direction.UP) {
-                    int endPositionY = MARQUEE_Y + scene.ghostIndex * 16;
+                    int endPositionY = ANCHOR_Y + scene.ghostIndex * 16;
                     if (scene.waitBeforeRising > 0) {
                         scene.waitBeforeRising--;
                     }

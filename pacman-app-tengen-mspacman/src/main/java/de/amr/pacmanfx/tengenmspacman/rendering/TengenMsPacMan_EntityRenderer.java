@@ -30,17 +30,22 @@ import java.util.Arrays;
 
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements SpriteRenderer {
+public class TengenMsPacMan_EntityRenderer extends BaseRenderer implements SpriteRenderer {
 
     // These arrays must be sorted!
     private static final int[] GHOST_POINTS = { 200, 400, 800, 1600 };
     private static final int[] BONUS_POINTS = { 100, 200, 500, 700, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000 };
 
     private final ActorSpriteAnimController animSystem;
+    private final MarqueeRenderer marqueeRenderer;
 
-    public TengenMsPacMan_ActorRenderer(ActorSpriteAnimController animSystem, Canvas canvas) {
+    public TengenMsPacMan_EntityRenderer(ActorSpriteAnimController animSystem, Canvas canvas) {
         super(canvas);
         this.animSystem = requireNonNull(animSystem);
+
+        marqueeRenderer = new MarqueeRenderer(canvas);
+        marqueeRenderer.backgroundColorProperty().bind(backgroundColorProperty());
+        marqueeRenderer.scalingProperty().bind(scalingProperty());
     }
 
     @Override
@@ -69,6 +74,7 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             case Pac pac -> drawFacingSpriteCentered(computeSprite(pac), center);
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
             case Stork stork -> drawStork(stork);
+            case Marquee marquee -> drawMarquee(marquee, tick);
             default -> {
                 if (actor.hasComp(SpriteAnimationComp.class)) {
                     drawSpriteCentered(animSystem.currentSprite(actor), center);
@@ -77,6 +83,10 @@ public class TengenMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
         }
 
         ctx.restore();
+    }
+
+    private void drawMarquee(Marquee marquee, long tick) {
+        marqueeRenderer.render(marquee, tick);
     }
 
     private FacingSprite computeSprite(Pac pac) {
