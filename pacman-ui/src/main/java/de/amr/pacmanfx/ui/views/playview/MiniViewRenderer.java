@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui.views.playview;
 
-import de.amr.basics.InfoMap;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
@@ -45,15 +44,13 @@ public class MiniViewRenderer extends BaseRenderer {
         switch (r) {
             case RenderableWrapper wrapper -> render(wrapper.wrappedRenderable(), tick);
             case GameLevel level -> {
-                final InfoMap infoMap = new InfoMap();
-                infoMap.putAll(Map.of(
+                levelRenderer.infoMap().putAll(Map.of(
                     CommonRenderInfoKey.ENERGIZER_VISIBLE, level.heartbeat().state() == Pulse.State.ON,
                     CommonRenderInfoKey.MAP_BRIGHT, false,
                     CommonRenderInfoKey.MAP_EMPTY, level.food().remainingFoodCount() == 0,
                     CommonRenderInfoKey.MAP_FLASHING, false,
                     CommonRenderInfoKey.TICK, tick
                 ));
-                levelRenderer.setInfoMap(infoMap);
                 levelRenderer.render(level, tick);
             }
             default -> entityRenderer.render(r, tick);
