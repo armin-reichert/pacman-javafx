@@ -13,6 +13,7 @@ import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.vm.GameViewModel;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.AutoClearDisabled;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.scene.canvas.Canvas;
 import org.tinylog.Logger;
@@ -100,36 +101,25 @@ public class RenderManager {
 
     public void renderFrame(GameSession session, long tick, boolean debugMode) {
         renderQueue.sort(RENDERING_ORDER);
-        renderQueue.forEach(renderable -> {
-            switch (renderable.layer()) {
-                case HUD -> {
-                    if (session.hudVisible()) {
-                        hudRenderer.render(renderable, tick);
-                    }
-                }
-                case SCENE -> {
-                    if (renderable instanceof GameScene gameScene) {
-                        renderGameScene(gameScene, tick, debugMode);
-                    }
-                }
-                default -> entityRenderer.render(renderable, tick);
+        renderQueue.forEach(r -> {
+            switch (r.layer()) {
+                case HUD -> hudRenderer.render(r, tick);
+                case SCENE -> renderGameScene(r, tick, debugMode);
+                default -> entityRenderer.render(r, tick);
             }
         });
     }
 
-    //TODO fully integrate game scene rendering into renderFrame
-    private void renderGameScene(GameScene gameScene, long tick, boolean debugMode) {
-        gameScene.optCanvasRendering().ifPresent(canvasRendering -> {
-            if (canvasRendering.clearCanvasBeforeRendering()) {
-                entityRenderer.clearCanvas();
+    private void renderGameScene(Renderable r, long tick, boolean debugMode) {
+        if (sceneRenderer != null) {
+            if (!(sceneRenderer instanceof AutoClearDisabled)) {
+                sceneRenderer.clearCanvas();
             }
-            if (sceneRenderer != null) {
-                sceneRenderer.render(gameScene, tick);
-                if (debugMode) {
-                    sceneRenderer.optDebugInfoRenderer().ifPresent(debugRenderer -> debugRenderer.render(gameScene, tick));
-                }
+            sceneRenderer.render(r, tick);
+            if (debugMode) {
+                sceneRenderer.optDebugInfoRenderer().ifPresent(debugRenderer -> debugRenderer.render(r, tick));
             }
-        });
+        }
     }
 
     private void configureRenderer(Renderer renderer, SceneCanvasRenderingComp canvasRendering) {

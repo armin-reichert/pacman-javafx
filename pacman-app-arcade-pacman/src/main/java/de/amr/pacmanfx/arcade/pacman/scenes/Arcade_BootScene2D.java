@@ -44,9 +44,7 @@ public class Arcade_BootScene2D extends GameScene implements Renderable {
     public Arcade_BootScene2D(GameAppContext app) {
         super(app);
 
-        final var canvasRendering = new SceneCanvasRenderingComp();
-        canvasRendering.setClearCanvasBeforeRendering(false);
-        setComp(SceneCanvasRenderingComp.class, canvasRendering);
+        setComp(SceneCanvasRenderingComp.class, new SceneCanvasRenderingComp());
 
         // Make some noise
         for (int i = 0; i < noise.length; i++) {

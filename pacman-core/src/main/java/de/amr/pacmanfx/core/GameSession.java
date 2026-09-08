@@ -94,7 +94,7 @@ public class GameSession {
         return hud;
     }
 
-    public boolean hudVisible() {
+    public boolean isHUDVisible() {
         return hudVisible;
     }
 

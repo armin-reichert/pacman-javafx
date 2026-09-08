@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.ui.views.playview;
 
 import de.amr.basics.util.Ufx;
+import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
@@ -226,9 +227,12 @@ public class GamePlayView implements GameView {
         final long tick = app.clock().currentTick();
         final GameViewModel viewModel = app.ui().viewModel();
         final boolean debugMode = viewModel.debugModeOnProperty().get();
+        final GameSession session = app.game().session();
 
         renderManager.clearRenderQueue();
-        renderManager.addAll(app.game().session().hud().renderables());
+        if (session.isHUDVisible()) {
+            renderManager.addAll(session.hud().renderables());
+        }
         app.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
             renderManager.add(gameScene);
             renderManager.addAll(gameScene.renderables());

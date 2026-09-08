@@ -12,6 +12,7 @@ import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.AutoClearDisabled;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
@@ -32,14 +33,14 @@ import static java.util.Objects.requireNonNull;
  * and a grid before the intro scene starts. This scene is used by the Arcade and the XXL variants so we pass the
  * corresponding spritesheet as a parameter.
  */
-public class Arcade_BootScene2D_Renderer extends BaseRenderer implements SpriteRenderer {
+public class Arcade_BootScene2D_Renderer extends BaseRenderer implements SpriteRenderer, AutoClearDisabled {
 
     public static final int GRID_SIZE = 16;
 
-    private final SpriteSheet spriteSheet;
+    private final SpriteSheet<?> spriteSheet;
     private final Rectangle2D spriteRegion;
 
-    public Arcade_BootScene2D_Renderer(GameScene gameScene, Canvas canvas, SpriteSheet spriteSheet, Rectangle2D spriteRegion) {
+    public Arcade_BootScene2D_Renderer(GameScene gameScene, Canvas canvas, SpriteSheet<?> spriteSheet, Rectangle2D spriteRegion) {
         super(canvas);
         requireNonNull(gameScene);
         this.spriteSheet = requireNonNull(spriteSheet);
@@ -49,7 +50,7 @@ public class Arcade_BootScene2D_Renderer extends BaseRenderer implements SpriteR
     }
 
     @Override
-    public SpriteSheet spriteSheet() {
+    public SpriteSheet<?> spriteSheet() {
         return spriteSheet;
     }
 
@@ -60,23 +61,26 @@ public class Arcade_BootScene2D_Renderer extends BaseRenderer implements SpriteR
         }
 
         final SceneCanvasRenderingComp r2D = bootScene.reqComp(SceneCanvasRenderingComp.class);
+        final int width = r2D.unscaledWidth();
+        final int height = r2D.unscaledHeight();
+
         switch (bootScene.sceneState) {
             case BLANK -> clearCanvas();
             case HEX_CODES -> {
                 if (tick % 4 == 0) {
                     clearCanvas();
-                    drawRandomHexDigits(bootScene, r2D.unscaledWidth(), r2D.unscaledHeight());
+                    drawRandomHexDigits(bootScene, width, height);
                 }
             }
             case RANDOM_SPRITE_FRAGMENTS -> {
                 if (tick % 4 == 0) {
                     clearCanvas();
-                    drawRandomSpriteFragments(r2D.unscaledWidth(), r2D.unscaledHeight());
+                    drawRandomSpriteFragments(width, height);
                 }
             }
             case GRID -> {
                 clearCanvas();
-                drawGrid(r2D.unscaledWidth(), r2D.unscaledHeight());
+                drawGrid(width, height);
             }
         }
     }
