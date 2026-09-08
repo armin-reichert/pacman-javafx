@@ -6,6 +6,7 @@ package de.amr.pacmanfx.ui.views.playview;
 
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
+import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.window.GameMainScene;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.event.EventHandler;
@@ -37,13 +38,14 @@ public class ContextMenuManager implements EventHandler<ContextMenuEvent> {
     }
 
     @Override
-    public void handle(ContextMenuEvent event) {
+    public void handle(ContextMenuEvent e) {
         contextMenu.getItems().clear();
 
-        app.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
+        final GameSceneManager gameSceneManager = app.ui().gameScenes();
+        gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> {
             final TranslationManager translations = app.ui().translations();
             // Add 2D play scene-specific entries
-            if (app.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_2D)) {
+            if (gameSceneManager.currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_2D)) {
                 addLocalizedTitleItem(contextMenu, translations, "context_menu.scene_display");
                 addLocalizedActionItem(
                     app,
@@ -52,12 +54,12 @@ public class ContextMenuManager implements EventHandler<ContextMenuEvent> {
                     app.commonActions().uiSettingsActions().actionTogglePlayScene2D3D(),
                     "context_menu.use_3D_scene");
             }
-            // Add scene-specific entries
+            // Add game scene provided menu entries
             gameScene.optContextMenu().ifPresent(sceneMenu -> contextMenu.getItems().addAll(sceneMenu.getItems()));
         });
 
         if (!contextMenu.getItems().isEmpty()) {
-            contextMenu.show(mainScene.rootPane(),/*rootPane,*/ event.getScreenX(), event.getScreenY());
+            contextMenu.show(mainScene.rootPane(), e.getScreenX(), e.getScreenY());
             contextMenu.requestFocus();
         }
     }
