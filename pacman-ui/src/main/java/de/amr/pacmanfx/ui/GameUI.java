@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.ui;
 
 import de.amr.basics.json.JsonLoader;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.GameEvent;
 import de.amr.pacmanfx.core.event.GenericChangeEvent;
 import de.amr.pacmanfx.core.event.HighScoreAccessErrorEvent;
@@ -163,10 +162,7 @@ public class GameUI implements GameEventListener {
     public void onGameEvent(GameEvent gameEvent) {
         boolean forceGameSceneReload = false;
         switch (gameEvent) {
-            case LevelCreatedEvent e -> {
-                final GameContext game = app.game();
-                views.gamePlayView().onLevelCreated(e.level());
-            }
+            case LevelCreatedEvent e -> views.gamePlayView().onLevelCreated(e.level());
             case GameStateChangeEvent e -> {
                 if (CommonGameStateID.GAME_LEVEL_COMPLETE.hasSameNameAs(e.newState())) {
                     views.gamePlayView().onLevelCompleted();
