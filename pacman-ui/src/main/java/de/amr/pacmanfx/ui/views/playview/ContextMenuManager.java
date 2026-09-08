@@ -14,6 +14,7 @@ import javafx.scene.control.ContextMenu;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
+import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.ui.views.ContextMenuSupport.addLocalizedActionItem;
 import static de.amr.pacmanfx.ui.views.ContextMenuSupport.addLocalizedTitleItem;
@@ -39,6 +40,8 @@ public class ContextMenuManager implements EventHandler<ContextMenuEvent> {
 
     @Override
     public void handle(ContextMenuEvent e) {
+        Logger.info("Received context menu event {}", e);
+
         contextMenu.getItems().clear();
 
         final GameSceneManager gameSceneManager = app.ui().gameScenes();

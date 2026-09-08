@@ -33,7 +33,6 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.Background;
@@ -119,14 +118,14 @@ public class GamePlayView implements GameView {
         mainScene.heightProperty().addListener(handler);
     }
 
-    private void initLayers(GameViewModel vm) {
+    private void initLayers(GameViewModel viewModel) {
         layers.miniViewLayer().setGameApp(app);
 
         layers.pausedIcon().visibleProperty().bind(app.clock().updatesDisabledProperty());
 
 //        vm.common2DSettings().fontSmoothingOnProperty().addListener((_, _, smoothing) -> renderManager.setGameSceneFontSmoothing(smoothing));
 
-        vm.debugModeOnProperty().addListener((_, _, debug) -> {
+        viewModel.debugModeOnProperty().addListener((_, _, debug) -> {
             layers.gameSceneLayer().setBackground(debug ? DEBUG_BACKGROUND : null);
             layers.gameSceneLayer().setBorder(debug ? DEBUG_BORDER : null);
         });
@@ -134,12 +133,11 @@ public class GamePlayView implements GameView {
         layers.overlayLayer().visibleProperty().bind(dashboard.visibleProperty());
 
         layers.miniViewLayer().rootPane().visibleProperty().bind(Bindings.createObjectBinding(
-            () -> vm.miniViewSettings().activeProperty.get()
+            () -> viewModel.miniViewSettings().activeProperty.get()
                 && app.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D),
-            vm.miniViewSettings().activeProperty,
+            viewModel.miniViewSettings().activeProperty,
             app.ui().gameScenes().currentGameSceneProperty()
         ));
-
     }
 
     public GameDashboard dashboard() {
