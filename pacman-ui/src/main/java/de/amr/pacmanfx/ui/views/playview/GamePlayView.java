@@ -22,6 +22,7 @@ import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
 import de.amr.pacmanfx.ui.views.dashboard.GameDashboard;
 import de.amr.pacmanfx.ui.views.dashboard.GameDashboardSection;
 import de.amr.pacmanfx.ui.views.help.HelpView;
+import de.amr.pacmanfx.ui.vm.Game2DSettingsVM;
 import de.amr.pacmanfx.ui.vm.GameViewModel;
 import de.amr.pacmanfx.ui.window.GameMainScene;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
@@ -30,16 +31,11 @@ import de.amr.pacmanfx.uilib.controls.FontAwesomeSymbol;
 import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
 import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.SubScene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.ContextMenu;
-import javafx.scene.input.ContextMenuEvent;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
@@ -50,13 +46,16 @@ import org.tinylog.Logger;
 import java.util.List;
 
 import static de.amr.pacmanfx.ui.views.ContextMenuSupport.addLocalizedActionItem;
-import static de.amr.pacmanfx.ui.views.ContextMenuSupport.addLocalizedTitleItem;
 import static java.util.Objects.requireNonNull;
 
 /**
  * This view shows the game play and the overlays like dashboard and picture-in-picture view of the running play scene.
+ *
  */
-public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
+public class GamePlayView implements GameView {
+
+    //TODO This class is too large and does too many different things
+
 
     public static final float MAX_GAME_SCENE_SCALING = 5;
 
@@ -70,17 +69,19 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         new DecorationPane.FrameConfig(26, 10, 5, 55.0, ArcadePalette.ARCADE_WHITE)
     );
 
+    // non-static members
+
     private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Action Bindings for Play View");
 
     private GameAppContext app;
 
-    private final ContextMenu contextMenu = new ContextMenu();
+    private ContextMenuManager contextMenuManager;
 
     private StackPane rootPane;
 
     // Game scene layer
     private BorderPane gameSceneLayer;
-    private DecorationPane gameSceneFrame;
+    private DecorationPane decorationPane;
 
     // Mini view layer
     private MiniPlaySceneView miniView;
@@ -107,15 +108,6 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
         final GameViewModel vm = app.ui().viewModel();
 
-        // Context menu
-
-        rootPane.setOnContextMenuRequested(this);
-        app.ui().window().mainScene().addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
-            if (e.getButton() != MouseButton.SECONDARY) {
-                contextMenu.hide();
-            }
-        });
-
         miniView.setGameApp(app);
 
         pausedIcon.visibleProperty().bind(app.clock().updatesDisabledProperty());
@@ -136,15 +128,19 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
             app.ui().gameScenes().currentGameSceneProperty()
         ));
 
-        // Keep this view always at the same size as the main scene
+        // Always resize to main scene
         final GameMainScene mainScene = app.ui().window().mainScene();
         final ChangeListener<? super Number> resizeHandler = (_, _, _) -> resizeToFit(mainScene);
         mainScene.widthProperty().addListener(resizeHandler);
         mainScene.heightProperty().addListener(resizeHandler);
+
+        // Context menu
+        contextMenuManager = new ContextMenuManager(app, mainScene);
+        rootPane.setOnContextMenuRequested(contextMenuManager);
     }
 
     public void resizeToFit(Scene parentSceneFX) {
-        gameSceneFrame.stretchTo(parentSceneFX.getWidth(), parentSceneFX.getHeight());
+        decorationPane.stretchTo(parentSceneFX.getWidth(), parentSceneFX.getHeight());
     }
 
     public GameDashboard dashboard() {
@@ -171,7 +167,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     }
 
     public void showHelp(GameAppContext app) {
-        final double scaling = gameSceneFrame.scalingProperty().get();
+        final double scaling = decorationPane.scalingProperty().get();
         helpLayer.showHelpPopup(app, scaling, app.gameVariants().currentVariantName());
     }
 
@@ -214,7 +210,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         actionBindings.registerAllBindings(app.commonActions().bindings());
         Logger.info(actionBindings);
 
-        gameSceneFrame.installBindings();
+        decorationPane.installBindings();
     }
 
     @Override
@@ -223,7 +219,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         app.ui().soundManager().stopAll();
         app.ui().soundManager().voice().stop();
         actionBindings.dispose();
-        gameSceneFrame.uninstallBindings();
+        decorationPane.uninstallBindings();
     }
 
     @Override
@@ -273,31 +269,6 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
 
     // Context menu handler
 
-    @Override
-    public void handle(ContextMenuEvent event) {
-        contextMenu.getItems().clear();
-
-        app.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
-            final TranslationManager translations = app.ui().translations();
-            // Add 2D play scene-specific entries
-            if (app.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_2D)) {
-                addLocalizedTitleItem(contextMenu, translations, "context_menu.scene_display");
-                addLocalizedActionItem(
-                    app,
-                    contextMenu,
-                    translations,
-                    app.commonActions().uiSettingsActions().actionTogglePlayScene2D3D(),
-                    "context_menu.use_3D_scene");
-            }
-            // Add scene-specific entries
-            gameScene.optContextMenu().ifPresent(sceneMenu -> contextMenu.getItems().addAll(sceneMenu.getItems()));
-        });
-
-        if (!contextMenu.getItems().isEmpty()) {
-            contextMenu.show(rootPane, event.getScreenX(), event.getScreenY());
-            contextMenu.requestFocus();
-        }
-    }
 
     public void replaceGameScene(GameScene currentGameScene, GameScene nextGameScene) {
         requireNonNull(nextGameScene);
@@ -309,15 +280,16 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     }
 
     public void embedGameScene(GameScene gameScene) {
+        final GameMainScene mainScene = app.ui().window().mainScene();
         final GameVariantUIConfig config = app.gameVariants().currentGameVariant().uiConfig();
 
-        contextMenu.hide();
+        contextMenuManager.hideContextMenu();
 
         //TODO FIXME(We must discriminate 3D, 2D+subscene, 2D without subscene) here!
         if (gameScene.optSubSceneFX().isPresent()) {
-            embedGameSceneWithSubSceneFX(gameScene, gameScene.optSubSceneFX().get());
+            embedGameSceneWithSubSceneFX(mainScene, gameScene, gameScene.optSubSceneFX().get());
         } else {
-            embedGameScene2D(config.gameSceneConfig(), gameScene);
+            embedGameScene2D(decorationPane, mainScene, config.gameSceneConfig(), gameScene, app.ui().viewModel().common2DSettings());
         }
 
         renderManager.updateRenderers(app, gameScene);
@@ -330,7 +302,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         requireNonNull(gameScene);
 
         gameScene.deactivate();
-        contextMenu.hide();
+        contextMenuManager.hideContextMenu();
 
         gameScene.optSubSceneFX().ifPresent(subSceneFX -> {
             subSceneFX.widthProperty().unbind();
@@ -340,11 +312,11 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         if (gameScene.hasComp(SceneCanvasRenderingComp.class)) {
             final SceneCanvasRenderingComp r2D = gameScene.reqComp(SceneCanvasRenderingComp.class);
 
-            gameSceneFrame.canvas().widthProperty().unbind();
-            gameSceneFrame.canvas().heightProperty().unbind();
-            gameSceneFrame.unscaledWidthProperty().unbind();
-            gameSceneFrame.unscaledHeightProperty().unbind();
-            gameSceneFrame.backgroundProperty().unbind();
+            decorationPane.canvas().widthProperty().unbind();
+            decorationPane.canvas().heightProperty().unbind();
+            decorationPane.unscaledWidthProperty().unbind();
+            decorationPane.unscaledHeightProperty().unbind();
+            decorationPane.backgroundProperty().unbind();
 
             r2D.backgroundColorProperty().unbind();
             r2D.scalingProperty().unbind();
@@ -359,13 +331,13 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     private void createLayout() {
 
         // Layer 1: Game scene with or without decoration
-        gameSceneFrame = new DecorationPane(
+        decorationPane = new DecorationPane(
             DECORATION_CONFIG,
             WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.x(),
             WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.y()
         );
         gameSceneLayer = new BorderPane();
-        gameSceneLayer.setCenter(gameSceneFrame);
+        gameSceneLayer.setCenter(decorationPane);
 
         // Layer 2: Mini view layer
         miniView = new MiniPlaySceneView();
@@ -400,9 +372,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
     }
 
     // 3D scenes or 2D scenes with camera
-    private void embedGameSceneWithSubSceneFX(GameScene gameScene, SubScene subSceneFX) {
-        final GameMainScene mainScene = app.ui().window().mainScene();
-
+    private void embedGameSceneWithSubSceneFX(GameMainScene mainScene, GameScene gameScene, SubScene subSceneFX) {
         // stretch sub scene to available space
         subSceneFX.widthProperty().bind(mainScene.widthProperty());
         subSceneFX.heightProperty().bind(mainScene.heightProperty());
@@ -410,46 +380,50 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         if (gameScene.hasComp(SceneCanvasRenderingComp.class)) {
             final SceneCanvasRenderingComp r2D = gameScene.reqComp(SceneCanvasRenderingComp.class);
             // use the canvas of the decorated pane for 2D scene even though the decoration is not used
-            r2D.setCanvas(gameSceneFrame.canvas());
+            r2D.setCanvas(decorationPane.canvas());
         }
         setGameSceneContent(subSceneFX);
     }
 
     // 2D scenes without camera which are shown at full size
-    private void embedGameScene2D(GameSceneConfig gameSceneConfig, GameScene gameScene) {
-        final GameMainScene mainScene = app.ui().window().mainScene();
+    private void embedGameScene2D(
+        DecorationPane decorationPane,
+        GameMainScene mainScene,
+        GameSceneConfig gameSceneConfig,
+        GameScene gameScene,
+        Game2DSettingsVM settingsViewModel)
+    {
         final SceneCanvasRenderingComp canvasRendering = gameScene.reqComp(SceneCanvasRenderingComp.class);
 
-        canvasRendering.backgroundColorProperty().bind(app.ui().viewModel().common2DSettings().canvasBackgroundColorProperty());
+        canvasRendering.backgroundColorProperty().bind(settingsViewModel.canvasBackgroundColorProperty());
 
         final boolean decorated = gameSceneConfig.sceneDecorationRequested(gameScene);
         if (decorated) {
-            gameSceneFrame.newCanvas(); //TODO check if creating a new canvas is needed
-            gameSceneFrame.backgroundProperty().bind(canvasRendering.backgroundColorProperty().map(Ufx::paintBackground));
+            decorationPane.newCanvas(); //TODO check if creating a new canvas is needed
+            decorationPane.backgroundProperty().bind(canvasRendering.backgroundColorProperty().map(Ufx::paintBackground));
 
             // Set unscaled decoration pane size to game scene (=world map) size
-            gameSceneFrame.unscaledWidthProperty().bind(canvasRendering.unscaledWidthProperty());
-            gameSceneFrame.unscaledHeightProperty().bind(canvasRendering.unscaledHeightProperty());
+            decorationPane.unscaledWidthProperty().bind(canvasRendering.unscaledWidthProperty());
+            decorationPane.unscaledHeightProperty().bind(canvasRendering.unscaledHeightProperty());
 
             // Limit scaling
-            canvasRendering.scalingProperty().bind(gameSceneFrame.scalingProperty().map(
+            canvasRendering.scalingProperty().bind(decorationPane.scalingProperty().map(
                 scaling -> Math.min(scaling.doubleValue(), GamePlayView.MAX_GAME_SCENE_SCALING)));
 
-            gameSceneFrame.stretchTo(mainScene.getWidth(), mainScene.getHeight());
-            setGameSceneContent(gameSceneFrame);
+            decorationPane.stretchTo(mainScene.getWidth(), mainScene.getHeight());
+            setGameSceneContent(decorationPane);
         }
         else {
-            final Canvas canvas = gameSceneFrame.canvas();
+            final Canvas canvas = decorationPane.canvas();
             // Undecorated game scene takes complete available height
             canvas.heightProperty().bind(mainScene.heightProperty());
             // Width adapts according to aspect ratio
             canvas.widthProperty().bind(mainScene.heightProperty().map(h -> h.doubleValue() * canvasRendering.aspectRatio()));
             canvasRendering.scalingProperty().bind(mainScene.heightProperty().divide(canvasRendering.unscaledHeight()));
-            setGameSceneContent(gameSceneFrame.canvas());
+            setGameSceneContent(decorationPane.canvas());
         }
 
-        canvasRendering.setCanvas(gameSceneFrame.canvas());
-        gameSceneFrame.clearCanvas();
+        canvasRendering.setCanvas(decorationPane.canvas());
+        decorationPane.clearCanvas();
     }
-
 }
