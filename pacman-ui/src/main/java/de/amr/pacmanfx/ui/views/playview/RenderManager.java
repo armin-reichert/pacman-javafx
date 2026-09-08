@@ -91,7 +91,8 @@ public class RenderManager {
     }
 
     public void renderFrame(GameSession session, long tick, boolean debugMode) {
-        renderQueue.stream().sorted(Renderable.RENDERING_ORDER).forEach(renderable -> {
+        renderQueue.sort(Renderable.RENDERING_ORDER);
+        renderQueue.forEach(renderable -> {
             switch (renderable.layer()) {
                 case HUD -> {
                     if (session.hud().isVisible()) { //TODO

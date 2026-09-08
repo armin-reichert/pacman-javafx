@@ -16,6 +16,7 @@ import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
@@ -125,7 +126,8 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer
         fillText(":", NES_YELLOW, COL_COLON, y);
         fillText(String.valueOf(startLevelNumber), NES_WHITE, COL_VALUE, y);
         if (numContinues < 4) {
-            final var spriteSheet = optionsScene.app().currentGameVariantUIConfig().renderConfig().spriteSheet();
+            @SuppressWarnings("unchecked") final SpriteSheet<SpriteID> spriteSheet = (SpriteSheet<SpriteID>)
+                optionsScene.app().currentGameVariantUIConfig().renderConfig().spriteSheet();
             final RectShort continuesSprite = spriteSheet.findSprite(switch (numContinues) {
                 case 0 -> SpriteID.CONTINUES_0;
                 case 1 -> SpriteID.CONTINUES_1;

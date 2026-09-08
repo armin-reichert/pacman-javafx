@@ -28,17 +28,22 @@ import static java.util.Objects.requireNonNull;
 /**
  * Implements the rendering for all actor types occurring in the Arcade Ms. Pac-Man game.
  */
-public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements SpriteRenderer {
+public class ArcadeMsPacMan_EntityRenderer extends BaseRenderer implements SpriteRenderer {
 
     // These arrays must be sorted!
     private static final int[] GHOST_POINTS = { 200, 400, 800, 1600 };
     private static final int[] BONUS_POINTS = { 100, 200, 500, 700, 1000, 2000, 5000 };
 
     private final ActorSpriteAnimController animController;
+    private final MarqueeRenderer marqueeRenderer;
 
-    public ArcadeMsPacMan_ActorRenderer(ActorSpriteAnimController animController, Canvas canvas) {
+    public ArcadeMsPacMan_EntityRenderer(ActorSpriteAnimController animController, Canvas canvas) {
         super(canvas);
         this.animController = requireNonNull(animController);
+
+        this.marqueeRenderer = new MarqueeRenderer(canvas);
+        marqueeRenderer.backgroundColorProperty().bind(backgroundColorProperty());
+        marqueeRenderer.scalingProperty().bind(scalingProperty());
     }
 
     @Override
@@ -61,7 +66,8 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             case Bonus bonus               -> drawSpriteCentered(computeSprite(bonus),  center);
             case BonusPoints points        -> drawSpriteCentered(computeSprite(points), center);
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
-            default                        -> {
+            case Marquee marquee           -> drawMarquee(marquee, tick);
+            default -> {
                 if (actor.hasComp(SpriteAnimationComp.class)) {
                     drawSpriteCentered(animController.currentSprite(actor), center);
                 }
@@ -140,5 +146,9 @@ public class ArcadeMsPacMan_ActorRenderer extends BaseRenderer implements Sprite
             ctx.fillText(number, numberX, y);
             ctx.fillText(text, textX, y);
         });
+    }
+
+    private void drawMarquee(Marquee marquee, long tick) {
+        marqueeRenderer.render(marquee, tick);
     }
 }

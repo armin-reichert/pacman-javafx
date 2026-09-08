@@ -28,6 +28,7 @@ import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.HUD_Style;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.MessageViewRenderer;
 import javafx.scene.canvas.Canvas;
@@ -118,7 +119,7 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public TengenMsPacMan_SpriteSheet spriteSheet() {
+    public SpriteSheet<SpriteID> spriteSheet() {
         return TengenMsPacMan_SpriteSheet.instance();
     }
 

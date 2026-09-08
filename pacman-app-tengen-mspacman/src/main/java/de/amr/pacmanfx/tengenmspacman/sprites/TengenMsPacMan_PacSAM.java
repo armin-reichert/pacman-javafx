@@ -12,8 +12,6 @@ import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
 import java.util.Arrays;
 
-import static de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID.*;
-
 public class TengenMsPacMan_PacSAM extends LazySAM {
 
     private final TengenMsPacMan_SpriteSheet spriteSheet = TengenMsPacMan_SpriteSheet.instance();
@@ -78,7 +76,7 @@ public class TengenMsPacMan_PacSAM extends LazySAM {
     }
 
     //TODO rethink this
-    public static RectShort[] pacDyingSprites(SpriteSheet spriteSheet) {
+    public static RectShort[] pacDyingSprites(SpriteSheet<SpriteID> spriteSheet) {
         final var sprites = new RectShort[11];
         final RectShort mouthOpen = spriteSheet.findSprite(SpriteID.MS_PAC_MUNCHING);
         Arrays.fill(sprites, mouthOpen);

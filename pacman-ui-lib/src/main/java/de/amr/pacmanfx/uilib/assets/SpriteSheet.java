@@ -11,8 +11,10 @@ import javafx.scene.image.WritableImage;
 
 /**
  * Sprite sheet interface.
+ *
+ * @param <K> key type for accessing sprites by key
  */
-public interface SpriteSheet {
+public interface SpriteSheet<K extends Named> {
 
     static RectShort spriteOrDefault(RectShort[] sprites, int index) {
         if (0 <= index && index < sprites.length) {
@@ -26,18 +28,26 @@ public interface SpriteSheet {
      */
     Image sourceImage();
 
-    SpriteMap spriteMap();
+    SpriteMap<K> spriteMap();
 
     /**
-     * @param id a sprite sequence ID
+     * @param key sprite sequence key
      * @return array of rectangular sprite sheet areas where sprites are located
      */
-    default RectShort[] findSpriteSequence(Named id) {
-        return spriteMap().spriteSequence(id);
+    default RectShort[] findSpriteSequence(K key) {
+        return spriteMap().spriteSequence(key);
     }
 
-    default RectShort findSprite(Named id) {
-        return findSpriteSequence(id)[0];
+    default RectShort findSprite(K key) {
+        return findSpriteSequence(key)[0];
+    }
+
+    /**
+     * @param key sprite key
+     * @return image cropped from sprite sheet for given sprite
+     */
+    default Image image(K key) {
+        return image(findSprite(key));
     }
 
     /**
@@ -59,13 +69,5 @@ public interface SpriteSheet {
      */
     default Image image(RectShort sprite) {
         return image(sprite.x(), sprite.y(), sprite.width(), sprite.height());
-    }
-
-    /**
-     * @param id sprite ID
-     * @return image cropped from sprite sheet for given sprite
-     */
-    default Image image(Named id) {
-        return image(findSprite(id));
     }
 }

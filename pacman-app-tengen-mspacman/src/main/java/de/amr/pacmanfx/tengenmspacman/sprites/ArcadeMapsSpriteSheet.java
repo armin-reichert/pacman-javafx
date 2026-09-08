@@ -15,7 +15,7 @@ import javafx.scene.image.Image;
 
 import static de.amr.basics.math.RectShort.sprite;
 
-public final class ArcadeMapsSpriteSheet implements SpriteSheet {
+public final class ArcadeMapsSpriteSheet implements SpriteSheet<ArcadeMapsSpriteSheet.MapID> {
 
     private static class LazyThreadSafeSingletonHolder {
         static final ArcadeMapsSpriteSheet SINGLETON = new ArcadeMapsSpriteSheet();
@@ -39,7 +39,7 @@ public final class ArcadeMapsSpriteSheet implements SpriteSheet {
 
     private Image image;
 
-    private final SpriteMap spriteMap = new SpriteMap();
+    private final SpriteMap<MapID> spriteMap = SpriteMap.createEnumSpriteMap(MapID.class);
 
     private ArcadeMapsSpriteSheet() {
         spriteMap.add(MapID.MAP1, spriteAtCell(0, 0));
@@ -54,7 +54,7 @@ public final class ArcadeMapsSpriteSheet implements SpriteSheet {
     }
 
     @Override
-    public SpriteMap spriteMap() {
+    public SpriteMap<MapID> spriteMap() {
         return spriteMap;
     }
 

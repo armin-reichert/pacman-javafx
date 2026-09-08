@@ -17,7 +17,7 @@ import java.util.stream.IntStream;
 import static de.amr.basics.math.RectShort.sprite;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.*;
 
-public final class ArcadeMsPacMan_SpriteSheet implements SpriteSheet {
+public final class ArcadeMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
     private static class LazyThreadSafeSingletonHolder {
         static final ArcadeMsPacMan_SpriteSheet SINGLETON = new ArcadeMsPacMan_SpriteSheet();
@@ -32,7 +32,7 @@ public final class ArcadeMsPacMan_SpriteSheet implements SpriteSheet {
     // Map images are located left and sprites right of this x position
     private static final int SPRITE_START_X = 456;
 
-    private final SpriteMap spriteMap = new SpriteMap();
+    private final SpriteMap<SpriteID> spriteMap = SpriteMap.createEnumSpriteMap(SpriteID.class);
     private final Image image;
 
     private ArcadeMsPacMan_SpriteSheet() {
@@ -103,7 +103,7 @@ public final class ArcadeMsPacMan_SpriteSheet implements SpriteSheet {
     }
 
     @Override
-    public SpriteMap spriteMap() {
+    public SpriteMap<SpriteID> spriteMap() {
         return spriteMap;
     }
 

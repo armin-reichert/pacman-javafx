@@ -8,6 +8,7 @@ import de.amr.basics.fsm.State;
 import de.amr.basics.fsm.StateMachine;
 import de.amr.basics.math.Direction;
 import de.amr.basics.timer.TickTimer;
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
@@ -56,9 +57,10 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
     private final StateMachine<ArcadeMsPacMan_IntroScene> sceneFlow;
 
     // Public for access by renderer
-    public Marquee marquee;
-    public Pac msPacMan;
-    public List<Ghost> ghosts;
+    private Marquee marquee;
+    private Pac msPacMan;
+    private List<Ghost> ghosts;
+
     public GhostPersonality ghostPresented;
 
     private int numTicksBeforeRising;
@@ -71,8 +73,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
 
     @Override
     public Stream<Renderable> renderables() {
-        return Stream.empty();
-        //TODO integrate into render manager
+        return Ufx.streamOf(marquee, msPacMan, ghosts);
     }
 
     @Override
@@ -152,7 +153,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
 
     private void createMarquee() {
         marquee = new Marquee();
-
+        marquee.show();
         marquee.pos().set(60, 88);
 
         marquee.layout().setNumBulbsHorizontally(35);

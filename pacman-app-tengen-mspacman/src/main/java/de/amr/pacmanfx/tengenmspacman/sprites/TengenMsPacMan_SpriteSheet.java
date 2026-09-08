@@ -17,7 +17,7 @@ import java.util.stream.IntStream;
 import static de.amr.basics.math.RectShort.sprite;
 import static de.amr.pacmanfx.tengenmspacman.sprites.SpriteID.*;
 
-public final class TengenMsPacMan_SpriteSheet implements SpriteSheet {
+public final class TengenMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
     private static class LazyThreadSafeSingletonHolder {
         static final TengenMsPacMan_SpriteSheet SINGLETON = new TengenMsPacMan_SpriteSheet();
@@ -48,7 +48,7 @@ public final class TengenMsPacMan_SpriteSheet implements SpriteSheet {
         });
     }
 
-    private final SpriteMap spriteMap = new SpriteMap();
+    private final SpriteMap<SpriteID> spriteMap = SpriteMap.createEnumSpriteMap(SpriteID.class);
 
     private final Image image;
 
@@ -235,7 +235,7 @@ public final class TengenMsPacMan_SpriteSheet implements SpriteSheet {
     }
 
     @Override
-    public SpriteMap spriteMap() {
+    public SpriteMap<SpriteID> spriteMap() {
         return spriteMap;
     }
 

@@ -28,6 +28,7 @@ import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.HUD_Style;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.MessageViewRenderer;
 import javafx.geometry.Rectangle2D;
@@ -101,7 +102,7 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public ArcadeMsPacMan_SpriteSheet spriteSheet() {
+    public SpriteSheet<SpriteID> spriteSheet() {
         return ArcadeMsPacMan_SpriteSheet.instance();
     }
 
@@ -118,15 +119,15 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public BaseRenderer createGameSceneRenderer(GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas) {
+    public BaseRenderer createGameSceneRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
         requireNonNull(canvas);
         requireNonNull(gameScene);
 
         return switch (gameScene) {
             case Arcade_BootScene2D ignored        -> new Arcade_BootScene2D_Renderer(gameScene, canvas, spriteSheet(), BOOT_SCENE_SPRITES);
-            case ArcadeMsPacMan_IntroScene ignored -> new ArcadeMsPacMan_IntroScene_Renderer(this, gameScene, animSystem, canvas);
+            case ArcadeMsPacMan_IntroScene ignored -> new ArcadeMsPacMan_IntroScene_Renderer(this, gameScene, canvas);
             case ArcadeMsPacMan_StartScene ignored -> new ArcadeMsPacMan_StartScene_Renderer(this, gameScene, canvas);
-            case Arcade_PlayScene2D ignored        -> new Arcade_PlayScene2D_Renderer(gameScene, animSystem, canvas, spriteSheet());
+            case Arcade_PlayScene2D ignored        -> new Arcade_PlayScene2D_Renderer(gameScene, animController, canvas, spriteSheet());
             case ArcadeMsPacMan_CutScene1 ignored  -> null;
             case ArcadeMsPacMan_CutScene2 ignored  -> null;
             case ArcadeMsPacMan_CutScene3 ignored  -> null;
@@ -167,7 +168,7 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
         requireNonNull(animController);
         requireNonNull(canvas);
 
-        final var renderer = new ArcadeMsPacMan_ActorRenderer(animController, canvas);
+        final var renderer = new ArcadeMsPacMan_EntityRenderer(animController, canvas);
         renderer.setImageSmoothing(true);
         return renderer;
     }

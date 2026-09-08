@@ -30,16 +30,13 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer {
     private static final String[] GHOST_NAMES = { "BLINKY", "PINKY", "INKY", "SUE" };
     private static final Color[] GHOST_COLORS = { ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE };
 
-    private final MarqueeRenderer marqueeRenderer;
     private final CopyrightRenderer copyrightRenderer;
-    private final BaseRenderer actorRenderer;
 
     private final Image copyrightImage;
 
     public ArcadeMsPacMan_IntroScene_Renderer(
         GameVariantRenderConfig renderConfig,
         GameScene gameScene,
-        ActorSpriteAnimController animController,
         Canvas canvas) {
 
         super(canvas);
@@ -47,16 +44,12 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer {
         copyrightImage = renderConfig.assets().image("logo.midway");
 
         final SceneCanvasRenderingComp r2D = gameScene.reqComp(SceneCanvasRenderingComp.class);
-        marqueeRenderer   = r2D.configureRenderer(new MarqueeRenderer(canvas));
         copyrightRenderer = r2D.configureRenderer(new CopyrightRenderer(canvas));
-        actorRenderer     = r2D.configureRenderer(renderConfig.createEntityRenderer(animController, canvas));
         setDebugInfoRenderer(createDefaultSceneDebugRenderer(gameScene, canvas));
     }
 
     @Override
     public void render(Renderable r, long tick) {
-        clearCanvas();
-
         if (!(r instanceof ArcadeMsPacMan_IntroScene introScene)) {
             return;
         }
@@ -64,11 +57,6 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer {
         final Font arcade8 = Ufx.deriveFont(GlobalAssets.Fonts.ARCADE.font(), scaled(8));
         ctx.setFont(arcade8);
         fillText(TITLE, ARCADE_ORANGE, TITLE_X, TITLE_Y);
-
-        marqueeRenderer.render(introScene.marquee, tick);
-
-        introScene.ghosts.forEach(ghost -> actorRenderer.render(ghost, tick));
-        actorRenderer.render(introScene.msPacMan, tick);
 
         switch (introScene.sceneState()) {
             case SceneState.GHOSTS_MARCHING_IN -> {
