@@ -1,11 +1,10 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.arcade.pacman.rendering;
+package de.amr.pacmanfx.arcade.pacman.scenes.bootscene;
 
 import de.amr.basics.math.RectShort;
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
 import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;

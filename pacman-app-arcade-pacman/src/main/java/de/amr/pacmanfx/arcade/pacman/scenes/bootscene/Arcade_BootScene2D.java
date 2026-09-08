@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.arcade.pacman.scenes;
+package de.amr.pacmanfx.arcade.pacman.scenes.bootscene;
 
 import de.amr.basics.math.RandomNumbers;
 import de.amr.pacmanfx.core.GameContext;

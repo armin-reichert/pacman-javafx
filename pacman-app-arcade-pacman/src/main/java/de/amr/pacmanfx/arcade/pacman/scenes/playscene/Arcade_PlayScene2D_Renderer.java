@@ -2,11 +2,10 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.arcade.pacman.rendering;
+package de.amr.pacmanfx.arcade.pacman.scenes.playscene;
 
 import de.amr.basics.InfoMap;
 import de.amr.basics.timer.Pulse;
-import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.Renderable;

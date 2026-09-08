@@ -5,9 +5,9 @@ package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.basics.Named;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.*;
-import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_BootScene2D;
-import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene2D;
-import de.amr.pacmanfx.arcade.pacman.scenes.Arcade_PlayScene3D;
+import de.amr.pacmanfx.arcade.pacman.scenes.bootscene.Arcade_BootScene2D;
+import de.amr.pacmanfx.arcade.pacman.scenes.playscene.Arcade_PlayScene2D;
+import de.amr.pacmanfx.arcade.pacman.scenes.playscene.Arcade_PlayScene3D;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
