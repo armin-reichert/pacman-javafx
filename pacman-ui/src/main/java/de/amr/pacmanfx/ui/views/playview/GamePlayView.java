@@ -229,10 +229,15 @@ public class GamePlayView implements GameView {
         final boolean debugMode = viewModel.debugModeOnProperty().get();
         final GameSession session = app.game().session();
 
+        final MiniPlaySceneView miniView = app.ui().views().gamePlayView().layers().miniViewLayer();
+
         renderManager.clearRenderQueue();
+
         if (session.isHUDVisible()) {
             renderManager.addAll(session.hud().renderables());
         }
+        renderManager.addAll(miniView.renderables());
+
         app.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
             renderManager.add(gameScene);
             renderManager.addAll(gameScene.renderables());
@@ -240,14 +245,6 @@ public class GamePlayView implements GameView {
 
         try {
             renderManager.renderFrame(tick, debugMode);
-
-            //TODO integrate into render manager
-            final MiniViewRenderer miniViewRenderer = renderManager.createMiniViewRenderer(
-                viewModel,
-                app.game().variant().systems().actorSpriteAnimController(),
-                app.currentGameVariantUIConfig().renderConfig()
-            );
-            //miniViewRenderer.render(miniView, tick);
         }
         catch (Exception x) {
             Logger.error(x, "Exception during rendering!");

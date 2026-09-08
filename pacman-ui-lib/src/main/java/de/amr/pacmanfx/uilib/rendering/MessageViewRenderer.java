@@ -35,11 +35,6 @@ public class MessageViewRenderer extends BaseRenderer {
         if (!messageView.isVisible()) {
             return;
         }
-        final boolean translated = !translate.equals(Vector2f.ZERO);
-        if (translated) {
-            ctx.save();
-            ctx.translate(scaled(translate.x()), scaled(translate.y()));
-        }
         messageView.optComp(MessageViewStyleComp.class).ifPresent(style -> {
             final MessageType messageType = messageView.type().messageType();
             final Font scaledFont = Ufx.scaleFontBy(style.messageFont(), scaling());
@@ -47,8 +42,5 @@ public class MessageViewRenderer extends BaseRenderer {
             final Vector2f pos = messageView.pos().asVector2f();
             fillTextCentered(texts.get(messageType), color, scaledFont, pos.x(), pos.y());
         });
-        if (translated) {
-            ctx.restore();
-        }
     }
 }

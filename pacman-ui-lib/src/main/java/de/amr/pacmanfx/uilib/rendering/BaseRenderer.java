@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.uilib.rendering;
 
 import de.amr.basics.InfoMap;
-import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import javafx.beans.property.DoubleProperty;
@@ -36,8 +35,6 @@ public abstract class BaseRenderer implements Renderer {
     protected InfoMap infoMap;
 
     private BaseRenderer debugInfoRenderer;
-
-    protected Vector2f translate = new Vector2f(0, 0);
 
     public BaseRenderer(Canvas canvas) {
         ctx = requireNonNull(canvas).getGraphicsContext2D();

@@ -5,12 +5,15 @@
 package de.amr.pacmanfx.ui.views.playview;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
+import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.vm.GameViewModel;
 import de.amr.pacmanfx.ui.vm.MiniViewSettingsVM;
+import de.amr.pacmanfx.uilib.rendering.RenderableWrapper;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
@@ -28,9 +31,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
+import java.util.stream.Stream;
+
 import static java.util.Objects.requireNonNull;
 
-public class MiniPlaySceneView implements Renderable {
+public class MiniPlaySceneView {
 
     public static final Insets PADDING = new Insets(0, 10, 0, 10);
 
@@ -57,17 +62,20 @@ public class MiniPlaySceneView implements Renderable {
         rootPane.maxHeightProperty().bind(canvas.heightProperty());
     }
 
-    @Override
-    public RenderingLayer layer() {
-        return RenderingLayer.OVERLAY;
-    }
-
     public GameAppContext app() {
         return app;
     }
 
     public Pane rootPane() {
         return rootPane;
+    }
+
+    public Canvas canvas() {
+        return canvas;
+    }
+
+    public DoubleProperty scalingProperty() {
+        return scaling;
     }
 
     public void setGameApp(GameAppContext app) {
@@ -129,4 +137,19 @@ public class MiniPlaySceneView implements Renderable {
         return slideInAnimation != null && slideInAnimation.getStatus() == Animation.Status.RUNNING
             || slideOutAnimation != null && slideOutAnimation.getStatus() == Animation.Status.RUNNING;
     }
+
+    public Stream<Renderable> renderables() {
+        final GameLevel level = app.game().session().optLevel().orElse(null);
+        if (level == null) {
+            return Stream.empty();
+        }
+        return Ufx.streamOf(
+            new RenderableWrapper(level, RenderingLayer.OVERLAY),
+            level.entities().all()
+                .filter(Renderable.class::isInstance)
+                .map(Renderable.class::cast)
+                .map(r -> new RenderableWrapper(r, RenderingLayer.OVERLAY))
+        );
+    }
+
 }
