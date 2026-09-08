@@ -4,16 +4,22 @@
 
 package de.amr.pacmanfx.ui.views.playview;
 
+import de.amr.basics.InfoMap;
+import de.amr.basics.timer.Pulse;
+import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
+import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.vm.GameViewModel;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
+import de.amr.pacmanfx.uilib.rendering.RenderableWrapper;
 import javafx.scene.canvas.Canvas;
 
-public class MiniViewRenderer {
+import java.util.Map;
 
-    // Note: The level and actor renderers cannot be created in the constructor, because the game controller has not yet
-    //       selected a game variant when the constructor is called, so no variant configuration is available yet!
+public class MiniViewRenderer extends BaseRenderer {
+
     private final BaseRenderer levelRenderer;
     private final BaseRenderer entityRenderer;
 
@@ -23,18 +29,34 @@ public class MiniViewRenderer {
         GameVariantRenderConfig renderConfig,
         GameViewModel vm) {
 
+        super(canvas);
+
         entityRenderer = renderConfig.createEntityRenderer(animController, canvas);
         entityRenderer.backgroundColorProperty().bind(vm.common2DSettings().canvasBackgroundColorProperty());
+        entityRenderer.scalingProperty().bind(scalingProperty());
 
         levelRenderer = renderConfig.createGameLevelRenderer(animController, canvas);
         levelRenderer.backgroundColorProperty().bind(vm.common2DSettings().canvasBackgroundColorProperty());
+        levelRenderer.scalingProperty().bind(scalingProperty());
     }
 
-    public BaseRenderer entityRenderer() {
-        return entityRenderer;
-    }
-
-    public BaseRenderer levelRenderer() {
-        return levelRenderer;
+    @Override
+    public void render(Renderable r, long tick) {
+        switch (r) {
+            case RenderableWrapper wrapper -> render(wrapper.wrappedRenderable(), tick);
+            case GameLevel level -> {
+                final InfoMap infoMap = new InfoMap();
+                infoMap.putAll(Map.of(
+                    CommonRenderInfoKey.ENERGIZER_VISIBLE, level.heartbeat().state() == Pulse.State.ON,
+                    CommonRenderInfoKey.MAP_BRIGHT, false,
+                    CommonRenderInfoKey.MAP_EMPTY, level.food().remainingFoodCount() == 0,
+                    CommonRenderInfoKey.MAP_FLASHING, false,
+                    CommonRenderInfoKey.TICK, tick
+                ));
+                levelRenderer.setInfoMap(infoMap);
+                levelRenderer.render(level, tick);
+            }
+            default -> entityRenderer.render(r, tick);
+        }
     }
 }

@@ -10,7 +10,7 @@ public interface Renderable {
 
     RenderingLayer layer();
 
-    default int zOrder() {
+    default int z() {
         return 0;
     }
 }

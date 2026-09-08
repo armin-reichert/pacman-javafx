@@ -48,7 +48,7 @@ public final class Bonus extends GameEntity implements Renderable {
     }
 
     @Override
-    public int zOrder() {
+    public int z() {
         return -1;
     }
 

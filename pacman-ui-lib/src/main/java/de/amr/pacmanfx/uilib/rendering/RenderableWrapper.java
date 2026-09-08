@@ -7,7 +7,7 @@ public class RenderableWrapper implements Renderable {
 
     private final RenderingLayer targetLayer;
     private final Renderable renderable;
-    private int z;
+    private final int z;
 
     public RenderableWrapper(Renderable renderable, RenderingLayer targetLayer, int z) {
         this.renderable = renderable;
@@ -28,6 +28,7 @@ public class RenderableWrapper implements Renderable {
         return targetLayer;
     }
 
+    @Override
     public int z() {
         return z;
     }

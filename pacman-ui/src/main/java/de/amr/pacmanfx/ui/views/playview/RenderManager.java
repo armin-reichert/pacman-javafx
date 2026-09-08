@@ -4,11 +4,8 @@
 
 package de.amr.pacmanfx.ui.views.playview;
 
-import de.amr.basics.InfoMap;
-import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
-import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
@@ -21,7 +18,6 @@ import org.tinylog.Logger;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
@@ -30,7 +26,7 @@ public class RenderManager {
 
     public static final Comparator<Renderable> RENDERING_ORDER = Comparator
         .comparingInt((Renderable r) -> r.layer().z())
-        .thenComparingInt(Renderable::zOrder);
+        .thenComparingInt(Renderable::z);
 
     private BaseRenderer entityRenderer;
     private BaseRenderer sceneRenderer;
@@ -85,36 +81,16 @@ public class RenderManager {
     }
 
     public void renderFrame(long tick, boolean debugMode) {
-        miniViewRenderer.levelRenderer().clearCanvas();
+        miniViewRenderer.clearCanvas();
         renderQueue.sort(RENDERING_ORDER);
         renderQueue.forEach(r -> {
             switch (r.layer()) {
                 case HUD -> hudRenderer.render(r, tick);
                 case SCENE -> renderGameScene(r, tick, debugMode);
-                case OVERLAY -> renderMiniView(r, tick);
+                case OVERLAY -> miniViewRenderer.render(r, tick);
                 default -> entityRenderer.render(r, tick);
             }
         });
-    }
-
-    private void renderMiniView(Renderable r, long tick) {
-        if (r instanceof RenderableWrapper wrapper) {
-            switch (wrapper.wrappedRenderable()) {
-                case GameLevel level -> {
-                    final InfoMap infoMap = new InfoMap();
-                    infoMap.putAll(Map.of(
-                        CommonRenderInfoKey.ENERGIZER_VISIBLE, level.heartbeat().state() == Pulse.State.ON,
-                        CommonRenderInfoKey.MAP_BRIGHT, false,
-                        CommonRenderInfoKey.MAP_EMPTY, level.food().remainingFoodCount() == 0,
-                        CommonRenderInfoKey.MAP_FLASHING, false,
-                        CommonRenderInfoKey.TICK, tick
-                    ));
-                    miniViewRenderer.levelRenderer().setInfoMap(infoMap);
-                    miniViewRenderer.levelRenderer().render(level, tick);
-                }
-                default -> miniViewRenderer.entityRenderer().render(wrapper.wrappedRenderable(), tick);
-            }
-        }
     }
 
     private void renderGameScene(Renderable r, long tick, boolean debugMode) {
@@ -144,11 +120,8 @@ public class RenderManager {
 
         final var miniViewRenderer = new MiniViewRenderer(miniView.canvas(), animController, renderConfig, viewModel);
 
-        miniViewRenderer.entityRenderer().backgroundColorProperty().bind(entityRenderer.backgroundColorProperty());
-        miniViewRenderer.entityRenderer().scalingProperty().bind(miniView.scalingProperty());
-
-        miniViewRenderer.levelRenderer().backgroundColorProperty().bind(entityRenderer.backgroundColorProperty());
-        miniViewRenderer.levelRenderer().scalingProperty().bind(miniView.scalingProperty());
+        miniViewRenderer.backgroundColorProperty().bind(entityRenderer.backgroundColorProperty());
+        miniViewRenderer.scalingProperty().bind(miniView.scalingProperty());
 
         return miniViewRenderer;
     }
