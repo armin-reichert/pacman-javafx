@@ -7,10 +7,16 @@ public class RenderableWrapper implements Renderable {
 
     private final RenderingLayer targetLayer;
     private final Renderable renderable;
+    private int z;
 
-    public RenderableWrapper(Renderable renderable, RenderingLayer targetLayer) {
+    public RenderableWrapper(Renderable renderable, RenderingLayer targetLayer, int z) {
         this.renderable = renderable;
         this.targetLayer = targetLayer;
+        this.z = z;
+    }
+
+    public RenderableWrapper(Renderable renderable, RenderingLayer targetLayer) {
+        this(renderable, targetLayer, 0);
     }
 
     public Renderable wrappedRenderable() {
@@ -20,5 +26,9 @@ public class RenderableWrapper implements Renderable {
     @Override
     public RenderingLayer layer() {
         return targetLayer;
+    }
+
+    public int z() {
+        return z;
     }
 }

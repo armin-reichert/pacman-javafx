@@ -170,14 +170,16 @@ public class GamePlayView implements GameView {
     }
 
     public void onLevelCreated(GameLevel level) {
-        showMiniView(level);
+        layers.miniViewLayer().setLevel(level);
+        layers.miniViewLayer().slideIn();
+
         // game scene size might have changed: re-embed
         final GameSceneManager gameSceneManager = app.ui().gameScenes();
         gameSceneManager.optCurrentGameScene().ifPresent(this::embedGameScene);
     }
 
     public void onLevelCompleted() {
-        hideMiniView();
+        layers.miniViewLayer().slideOut();
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -357,15 +359,6 @@ public class GamePlayView implements GameView {
 
         rootPane = new StackPane(gameScenePane, miniView.rootPane(), overlayPane, helpView, pausedIcon);
         rootPane.setId("game-play-view");
-    }
-
-    private void showMiniView(GameLevel level) {
-        layers.miniViewLayer().setWorldSizeInPixel(level.worldMap().terrainLayer().sizeInPixel());
-        layers.miniViewLayer().slideIn(app.ui().viewModel().miniViewSettings());
-    }
-
-    private void hideMiniView() {
-        layers.miniViewLayer().slideOut(app.ui().viewModel().miniViewSettings());
     }
 
     // 3D scenes or 2D scenes with camera
