@@ -7,7 +7,6 @@ package de.amr.pacmanfx.core.gamestate;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameVariantConfig;
-import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.pac.comp.PacState;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
@@ -25,7 +24,12 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
 
     @Override
     public void onEnterState(GameContext game) {
-        configureHUD(hud);
+        hud.gameScore().data().setEnabled(false);
+        hud.highScore().data().setEnabled(false);
+        hud.livesCounter().hide();
+        hud.levelCounter().show();
+        hud.creditDisplay().show();
+        session.setHudVisible(true);
 
         final GameLevel level = gamePlay.buildDemoLevel(game);
         session.setLevel(level);
@@ -82,15 +86,6 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
         game.session().level().entities().removeAll();
         game.session().setLevel(null);
         Logger.info("Demo level has been removed");
-    }
-
-    private void configureHUD(HUD hud) {
-        hud.gameScore().data().setEnabled(false);
-        hud.highScore().data().setEnabled(false);
-        hud.livesCounter().hide();
-        hud.levelCounter().show();
-        hud.creditDisplay().show();
-        hud.show();
     }
 
     private void startEnergizerBlinking(GameLevel level) {

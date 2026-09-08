@@ -29,13 +29,13 @@ public class Tengen_LevelIntermissionState extends AbstractGameState {
         final boolean isLastCutScene = cutSceneNumber.isPresent() && cutSceneNumber.getAsInt() == rules.lastCutSceneNumber();
 
         if (isLastCutScene) {
-            hud.hide();
+            session.setHudVisible(false);
         } else {
             hud.gameScore().hide();
             hud.levelCounter().show();
             hud.livesCounter().hide();
             hud.entities().ofType(LevelNumberDisplay.class).forEach(GameEntity::hide);
-            hud.show();
+            session.setHudVisible(true);
         }
         timer().resetToIndefiniteDuration();
     }
@@ -50,13 +50,13 @@ public class Tengen_LevelIntermissionState extends AbstractGameState {
     @Override
     public void onExit(GameContext game) {
         if (gameOptions(session).mapCategory() == MapCategory.ARCADE) {
-            hud.hide();
+            session.setHudVisible(false);
         } else {
             hud.entities().ofType(LevelNumberDisplay.class).forEach(GameEntity::hide);
             hud.gameScore().show();
             hud.levelCounter().show();
             hud.livesCounter().hide();
-            hud.show();
+            session.setHudVisible(true);
         }
     }
 }

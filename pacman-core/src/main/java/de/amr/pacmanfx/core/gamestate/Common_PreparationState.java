@@ -26,7 +26,7 @@ public final class Common_PreparationState extends AbstractGameState {
         hud.gameScore().show();
         hud.levelCounter().show();
         hud.livesCounter().hide();
-        hud.show();
+        session.setHudVisible(true);
     }
 
     @Override

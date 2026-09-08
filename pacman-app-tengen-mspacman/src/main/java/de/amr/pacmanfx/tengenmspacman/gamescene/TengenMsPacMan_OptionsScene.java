@@ -83,7 +83,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene {
     @Override
     public void onActivate() {
         final GameSession session = game().session();
-        session.hud().hide();
+        session.setHudVisible(false);
 
         final var actions = app().currentGameVariantUIConfig().extensionValue(
             TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);

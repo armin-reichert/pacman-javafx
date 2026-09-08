@@ -99,7 +99,7 @@ public class RenderManager {
         renderQueue.forEach(renderable -> {
             switch (renderable.layer()) {
                 case HUD -> {
-                    if (session.hud().isVisible()) { //TODO
+                    if (session.hudVisible()) {
                         hudRenderer.render(renderable, tick);
                     }
                 }

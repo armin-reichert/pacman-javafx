@@ -61,7 +61,7 @@ public class TengenMsPacMan_BootScene extends GameScene {
             gameVariant.spriteAnimContainer(),
             GhostPersonality.RED_GHOST_SHADOW);
 
-        game().session().hud().hide();
+        game().session().setHudVisible(false);
     }
 
     @Override

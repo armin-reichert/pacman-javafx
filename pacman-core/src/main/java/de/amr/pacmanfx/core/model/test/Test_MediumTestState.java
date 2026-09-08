@@ -82,7 +82,7 @@ public class Test_MediumTestState extends AbstractGameState {
         final GameLevel level = session.level();
         final Pac pac = level.entities().pac();
 
-        hud.show();
+        session.setHudVisible(true);
 
         pac.show();
         systems.actorSpriteAnimController().playSelected(pac);

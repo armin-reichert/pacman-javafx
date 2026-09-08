@@ -112,7 +112,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
         final HUD hud = session.hud();
         hud.levelCounter().show();
         hud.livesCounter().show();
-        hud.show();
+        session.setHudVisible(true);
 
         session.optLevel().ifPresent(level -> acceptGameLevel(session, level));
     }
@@ -125,7 +125,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
         hud.gameScore().show();
         hud.levelCounter().show();
         hud.livesCounter().show();
-        hud.show();
+        session.setHudVisible(true);
 
         resetRendering2D();
         updateScaling();

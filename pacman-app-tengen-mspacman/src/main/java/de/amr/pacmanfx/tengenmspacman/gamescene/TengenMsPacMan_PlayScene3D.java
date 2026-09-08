@@ -87,7 +87,6 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         canvas.getGraphicsContext2D().setImageSmoothing(false); // important for crisp image!
 
         final HUD hud = new HUD();
-        hud.show();
 
         final GameOptionsDisplay optionsDisplay = new GameOptionsDisplay();
         optionsDisplay.options().setBoosterMode(gameOptions(session).boosterMode());

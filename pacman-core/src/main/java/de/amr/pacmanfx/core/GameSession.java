@@ -40,6 +40,8 @@ public class GameSession {
 
     private boolean cutScenesEnabled;
 
+    private boolean hudVisible;
+
     public GameSession(String variantName, GameCheats cheats, int numLives) {
         requireNonNull(variantName);
         requireNonNull(cheats);
@@ -90,6 +92,14 @@ public class GameSession {
 
     public HUD hud() {
         return hud;
+    }
+
+    public boolean hudVisible() {
+        return hudVisible;
+    }
+
+    public void setHudVisible(boolean hudVisible) {
+        this.hudVisible = hudVisible;
     }
 
     public GameCheats cheats() {

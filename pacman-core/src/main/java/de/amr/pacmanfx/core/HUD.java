@@ -14,8 +14,6 @@ import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 
 public class HUD {
 
-    private boolean visible;
-
     private final QuerySet<GameEntity> entities = new QuerySet<>();
 
     public HUD() {}
@@ -40,18 +38,6 @@ public class HUD {
         return entities.all()
             .filter(GameEntity::isVisible)
             .filter(Renderable.class::isInstance).map(Renderable.class::cast);
-    }
-
-    public boolean isVisible() {
-        return visible;
-    }
-
-    public void show() {
-        visible = true;
-    }
-
-    public void hide() {
-        visible = false;
     }
 
     public CreditDisplay creditDisplay() {

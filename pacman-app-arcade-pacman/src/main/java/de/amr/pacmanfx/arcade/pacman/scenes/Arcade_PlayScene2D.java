@@ -56,7 +56,7 @@ public class Arcade_PlayScene2D extends GameScene implements Arcade_PlayScene2D_
         final HUD hud = game().session().hud();
         hud.levelCounter().show();
         hud.livesCounter().show();
-        hud.show();
+        game().session().setHudVisible(true);
     }
 
     @Override
