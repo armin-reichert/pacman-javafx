@@ -6,13 +6,13 @@ package de.amr.pacmanfx.tengenmspacman.gamescene;
 import de.amr.basics.fsm.State;
 import de.amr.basics.fsm.StateMachine;
 import de.amr.basics.math.Direction;
+import de.amr.basics.math.Vector2f;
 import de.amr.basics.timer.TickTimer;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.Renderable;
-import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
@@ -22,7 +22,6 @@ import de.amr.pacmanfx.core.entities.Marquee;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.game.GameVariant;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -68,8 +67,7 @@ public class TengenMsPacMan_IntroScene extends GameScene {
     private Pac msPacMan;
     private List<Ghost> ghosts;
 
-    private GameEntity presentsText;
-
+    public Vector2f presentsTextPosition;
     public int ghostIndex;
     private int waitBeforeRising;
     public boolean dark;
@@ -82,12 +80,8 @@ public class TengenMsPacMan_IntroScene extends GameScene {
         flow = new StateMachine<>(List.of(SceneState.values()));
     }
 
-    public List<Ghost> ghosts() {
-        return ghosts;
-    }
-
-    public GameEntity presentsText() {
-        return presentsText;
+    public Ghost currentGhost() {
+        return ghosts.get(ghostIndex);
     }
 
     @Override
@@ -119,6 +113,8 @@ public class TengenMsPacMan_IntroScene extends GameScene {
             .map(personality -> ghostSettings.get(personality.ordinal()).colors().normal().dressColor())
             .toArray(Color[]::new);
 
+        presentsTextPosition = new Vector2f(8 * TS, ANCHOR_Y - TS);
+
         createEntities();
         flow.restartState(this, SceneState.WAITING_FOR_START);
     }
@@ -132,9 +128,6 @@ public class TengenMsPacMan_IntroScene extends GameScene {
 
     private void createEntities() {
         marquee = createMarquee();
-
-        presentsText = new GameEntity();
-        presentsText.pos().set(8 * TS, ANCHOR_Y - TS);
 
         final var actorFactory = TengenMsPacMan_ActorFactory.instance();
 

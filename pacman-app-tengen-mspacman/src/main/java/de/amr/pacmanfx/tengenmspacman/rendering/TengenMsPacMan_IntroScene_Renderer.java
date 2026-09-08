@@ -91,8 +91,9 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
                 if (introScene.ghostIndex == 0) {
                     fillText(WITH, NES_Palette.color(0x20), ANCHOR_X + 12, ANCHOR_Y + 23);
                 }
-                final Ghost currentGhost = introScene.ghosts().get(introScene.ghostIndex);
-                final Color ghostColor = introScene.ghostColors[currentGhost.personality().ordinal()];
+                final Ghost currentGhost = introScene.currentGhost();
+                final int personalityIndex = currentGhost.personality().ordinal();
+                final Color ghostColor = introScene.ghostColors[personalityIndex];
                 fillText(currentGhost.name().toUpperCase(), ghostColor, ANCHOR_X + 44, ANCHOR_Y + 41);
             }
 
@@ -105,9 +106,8 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer
             case SceneState.WAITING_FOR_START -> {
                 if (!introScene.dark) {
                     final boolean bright = stateTick % 60 < 30; // 0.5s dark, 0.5s bright
-                    //TODO convert into Renderable and add to renderables stream
                     fillText(TENGEN_PRESENTS, shadeOfBlue(stateTick),
-                        introScene.presentsText().pos().x(), introScene.presentsText().pos().y());
+                        introScene.presentsTextPosition.x(), introScene.presentsTextPosition.y());
                     drawSprite(spriteSheet().findSprite(SpriteID.LARGE_MS_PAC_MAN_TEXT), 5 * TS, ANCHOR_Y, true);
                     if (bright) {
                         fillText(PRESS_START, NES_Palette.color(0x20), 10 * TS, ANCHOR_Y + 9 * TS);

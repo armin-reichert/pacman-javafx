@@ -87,7 +87,8 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
     private void configureHUD(HUD hud) {
         hud.gameScore().data().setEnabled(false);
         hud.highScore().data().setEnabled(false);
-        hud.levelCounter().hide();
+        hud.livesCounter().hide();
+        hud.levelCounter().show();
         hud.creditDisplay().show();
         hud.show();
     }
