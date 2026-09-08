@@ -165,7 +165,7 @@ public class GameUI implements GameEventListener {
         switch (gameEvent) {
             case LevelCreatedEvent e -> {
                 final GameContext game = app.game();
-                views.gamePlayView().onLevelCreated(game, e.level());
+                views.gamePlayView().onLevelCreated(e.level());
             }
             case GameStateChangeEvent e -> {
                 if (CommonGameStateID.GAME_LEVEL_COMPLETE.hasSameNameAs(e.newState())) {

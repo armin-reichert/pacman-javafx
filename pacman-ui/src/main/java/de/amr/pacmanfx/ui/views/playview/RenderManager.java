@@ -29,6 +29,7 @@ public class RenderManager {
     public static final Comparator<Renderable> RENDERING_ORDER = Comparator
         .comparingInt((Renderable r) -> r.layer().z())
         .thenComparingInt(Renderable::zOrder);
+
     private BaseRenderer entityRenderer;
     private BaseRenderer sceneRenderer;
     private BaseRenderer hudRenderer;
@@ -39,6 +40,9 @@ public class RenderManager {
         requireNonNull(app);
         requireNonNull(gameScene);
 
+        if (!gameScene.hasComp(SceneCanvasRenderingComp.class)) {
+            return;
+        }
         final SceneCanvasRenderingComp canvasRendering = gameScene.reqComp(SceneCanvasRenderingComp.class);
         final Canvas canvas = canvasRendering.canvas();
 

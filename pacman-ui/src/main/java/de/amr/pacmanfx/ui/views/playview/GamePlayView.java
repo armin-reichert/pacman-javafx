@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.ui.views.playview;
 
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
@@ -180,7 +179,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         gameSceneLayer.setCenter(gameSceneContent);
     }
 
-    public void onLevelCreated(GameContext game, GameLevel level) {
+    public void onLevelCreated(GameLevel level) {
         showMiniView(level);
         // game scene size might have changed: re-embed
         final GameSceneManager gameSceneManager = app.ui().gameScenes();
@@ -321,6 +320,7 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
             embedGameScene2D(config.gameSceneConfig(), gameScene);
         }
 
+        renderManager.updateRenderers(app, gameScene);
         gameScene.activate();
 
         Logger.info("Game scene {} EMBEDDED into play view!", gameScene.getClass().getSimpleName());
@@ -411,7 +411,6 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
             final SceneCanvasRenderingComp r2D = gameScene.reqComp(SceneCanvasRenderingComp.class);
             // use the canvas of the decorated pane for 2D scene even though the decoration is not used
             r2D.setCanvas(gameSceneFrame.canvas());
-            renderManager.updateRenderers(app, gameScene);
         }
         setGameSceneContent(subSceneFX);
     }
@@ -450,7 +449,6 @@ public class GamePlayView implements GameView, EventHandler<ContextMenuEvent> {
         }
 
         canvasRendering.setCanvas(gameSceneFrame.canvas());
-        renderManager.updateRenderers(app, gameScene);
         gameSceneFrame.clearCanvas();
     }
 

@@ -46,24 +46,9 @@ public class MarqueeRenderer extends BaseRenderer {
         final int bulbSize = layout.bulbSize();
         final double scaledBulbRadius = scaled(0.5 * bulbSize);
 
-        drawDarkBulbs(
-            area,
-            corners,
-            Color.valueOf(visualComp.bulbOffColor()),
-            numBulbs,
-            bulbSize,
-            scaledBulbRadius);
-
-        drawBrightBulbs(
-            area,
-            corners,
-            Color.valueOf(visualComp.bulbOnColor()),
-            numBulbs,
-            layout.brightBulbsCount(),
-            layout.brightBulbsDistance(),
-            (int) (tick % numBulbs),
-            bulbSize,
-            scaledBulbRadius);
+        drawDarkBulbs(area, corners, Color.valueOf(visualComp.bulbOffColor()), numBulbs, bulbSize, scaledBulbRadius);
+        drawBrightBulbs(area, corners, Color.valueOf(visualComp.bulbOnColor()), numBulbs, layout.brightBulbsCount(),
+            layout.brightBulbsDistance(), (int) (tick % numBulbs), bulbSize, scaledBulbRadius);
     }
 
     private void drawDarkBulbs(
