@@ -39,7 +39,7 @@ public final class Pac extends GameEntity implements Renderable {
     }
 
     @Override
-    public int layerPriority() {
+    public int zOrder() {
         return 1; // behind ghosts (these start at 10)
     }
 

@@ -51,7 +51,7 @@ public final class Ghost extends GameEntity implements Renderable {
     }
 
     @Override
-    public int layerPriority() {
+    public int zOrder() {
         return switch (personality) {
             case RED_GHOST_SHADOW   -> 13; // on top of all other ghosts
             case PINK_GHOST_SPEEDY  -> 12;

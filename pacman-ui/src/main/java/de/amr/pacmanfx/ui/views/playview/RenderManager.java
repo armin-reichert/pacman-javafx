@@ -18,6 +18,7 @@ import javafx.scene.canvas.Canvas;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -25,6 +26,9 @@ import static java.util.Objects.requireNonNull;
 
 public class RenderManager {
 
+    public static final Comparator<Renderable> RENDERING_ORDER = Comparator
+        .comparingInt((Renderable r) -> r.layer().z())
+        .thenComparingInt(Renderable::zOrder);
     private BaseRenderer entityRenderer;
     private BaseRenderer sceneRenderer;
     private BaseRenderer hudRenderer;
@@ -91,7 +95,7 @@ public class RenderManager {
     }
 
     public void renderFrame(GameSession session, long tick, boolean debugMode) {
-        renderQueue.sort(Renderable.RENDERING_ORDER);
+        renderQueue.sort(RENDERING_ORDER);
         renderQueue.forEach(renderable -> {
             switch (renderable.layer()) {
                 case HUD -> {

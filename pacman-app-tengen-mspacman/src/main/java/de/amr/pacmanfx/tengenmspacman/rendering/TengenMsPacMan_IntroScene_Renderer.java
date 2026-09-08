@@ -78,13 +78,13 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer implements 
             case SceneState.SHOWING_MARQUEE -> fillText(QUOTED_MS_PACMAN, NES_Palette.color(0x28), ANCHOR_X + 20, ANCHOR_Y - 18);
 
             case SceneState.GHOSTS_MARCHING_IN -> {
+                final Ghost currentGhost = introScene.currentGhost();
+                final int personalityIndex = currentGhost.personality().ordinal();
+                final Color ghostColor = introScene.ghostColors[personalityIndex];
                 fillText(QUOTED_MS_PACMAN, NES_Palette.color(0x28), ANCHOR_X + 20, ANCHOR_Y - 18);
                 if (introScene.ghostIndex == 0) {
                     fillText(WITH, NES_Palette.color(0x20), ANCHOR_X + 12, ANCHOR_Y + 23);
                 }
-                final Ghost currentGhost = introScene.currentGhost();
-                final int personalityIndex = currentGhost.personality().ordinal();
-                final Color ghostColor = introScene.ghostColors[personalityIndex];
                 fillText(currentGhost.name().toUpperCase(), ghostColor, ANCHOR_X + 44, ANCHOR_Y + 41);
             }
 
