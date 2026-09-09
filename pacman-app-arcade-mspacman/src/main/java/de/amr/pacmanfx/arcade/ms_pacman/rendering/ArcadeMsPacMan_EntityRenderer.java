@@ -93,7 +93,7 @@ public class ArcadeMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
             sprite = animController.currentSprite(ghost);
         }
         if (sprite == null) {
-            throw new IllegalStateException("Could not determine ghost sprite");
+            throw new IllegalStateException("No sprite could be computed for ghost %s".formatted(ghost));
         }
         return sprite;
     }

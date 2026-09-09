@@ -72,7 +72,7 @@ public class Arcade_PlayScene2D extends GameScene implements Arcade_PlayScene2D_
         onDeactivate();
         // Avoid game over sound being played
         soundManager().setEnabled(false);
-        gameFlow().enterGameState(game(), CommonGameStateID.GAME_OVER);
+        flow().enterGameState(game(), CommonGameStateID.GAME_OVER);
     }
 
     @Override

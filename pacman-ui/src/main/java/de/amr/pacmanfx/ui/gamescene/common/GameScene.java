@@ -36,12 +36,9 @@ import static java.util.Objects.requireNonNull;
  * Abstract base class for all game scenes (2D and 3D).
  */
 public abstract class GameScene extends Composition<GameSceneComponent>
-    implements Renderable, GameSceneController, DefaultGameEventListener, Disposable {
-
-    @Override
-    public RenderingLayer layer() {
-        return RenderingLayer.SCENE;
-    }
+    implements GameSceneController, DefaultGameEventListener, Disposable, Renderable
+{
+    //TODO Should a game scene really be a renderable itself or only produce renderables?
 
     private final GameAppContext app;
 
@@ -49,16 +46,26 @@ public abstract class GameScene extends Composition<GameSceneComponent>
         this.app = requireNonNull(app);
     }
 
+    @Override
+    public RenderingLayer layer() {
+        return RenderingLayer.SCENE;
+    }
+
+    /**
+     * @return the renderables produced by this game scene
+     */
+    public abstract Stream<Renderable> renderables();
+
     public Optional<SceneCanvasRenderingComp> optCanvasRendering() {
         return optComp(SceneCanvasRenderingComp.class);
     }
 
-    public boolean wantsClearCanvas() {
-        return true;
-    }
-
     public SceneCanvasRenderingComp reqCanvasRendering() {
         return reqComp(SceneCanvasRenderingComp.class);
+    }
+
+    public boolean wantsClearCanvas() {
+        return true;
     }
 
     public ActionBindingsSupport actionBindingsSupport() {
@@ -74,20 +81,20 @@ public abstract class GameScene extends Composition<GameSceneComponent>
         return app;
     }
 
-    public GameViewModel viewModel() {
-        return app.ui().viewModel();
+    public GameEventManager eventManager() {
+        return game().eventManager();
+    }
+
+    public GameFlowController flow() {
+        return game().variant().gameFlow();
     }
 
     public GameContext game() {
         return app.game();
     }
 
-    public GameEventManager eventManager() {
-        return game().eventManager();
-    }
-
-    public GameFlowController gameFlow() {
-        return game().variant().gameFlow();
+    public GameViewModel viewModel() {
+        return app.ui().viewModel();
     }
 
     /**
@@ -100,17 +107,15 @@ public abstract class GameScene extends Composition<GameSceneComponent>
      */
     protected void onDeactivate() {}
 
-    public abstract Stream<Renderable> renderables();
-
     /**
      * If a 3D-variant of this game scene is active when the game level gets created, this method has not yet been called,
      * but it gets called when the 3D->2D scene switch happens.
      */
     public void acceptGameLevel(GameSession session, GameLevel level) {
         optCanvasRendering().ifPresent(canvasRendering -> {
-            final Vector2i size = level.worldMap().terrainLayer().sizeInPixel();
-            canvasRendering.unscaledWidthProperty().set(size.x());
-            canvasRendering.unscaledHeightProperty().set(size.y());
+            final Vector2i terrainSize = level.worldMap().terrainLayer().sizeInPixel();
+            canvasRendering.unscaledWidthProperty().set(terrainSize.x());
+            canvasRendering.unscaledHeightProperty().set(terrainSize.y());
         });
     }
 

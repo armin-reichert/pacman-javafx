@@ -262,11 +262,11 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
                 final GameContext game = scene.app().game();
                 final boolean canPlay = !game.coinMechanism().isEmpty();
                 if (timer.atSecond(2.0) && !canPlay) {
-                    scene.gameFlow().enterGameState(game, CommonGameStateID.GAME_OR_LEVEL_STARTING); // play demo level after 2 seconds
+                    scene.flow().enterGameState(game, CommonGameStateID.GAME_OR_LEVEL_STARTING); // play demo level after 2 seconds
                 }
                 //TODO can this happen at all?
                 else if (timer.atSecond(5)) {
-                    scene.gameFlow().enterGameState(game, CommonGameStateID.GAME_PREPARATION);
+                    scene.flow().enterGameState(game, CommonGameStateID.GAME_PREPARATION);
                 }
             }
         };

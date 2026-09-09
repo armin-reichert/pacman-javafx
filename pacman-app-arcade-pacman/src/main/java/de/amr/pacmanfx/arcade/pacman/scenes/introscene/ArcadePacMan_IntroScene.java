@@ -426,7 +426,7 @@ public class ArcadePacMan_IntroScene extends GameScene {
 
                 if (timer.tickCount() == TICK_START_DEMO_LEVEL) {
                     scene.ghosts[GhostPersonality.ORANGE_GHOST_POKEY.ordinal()].hide();
-                    scene.gameFlow().enterGameState(game, CommonGameStateID.GAME_OR_LEVEL_STARTING);
+                    scene.flow().enterGameState(game, CommonGameStateID.GAME_OR_LEVEL_STARTING);
                 }
             }
         };

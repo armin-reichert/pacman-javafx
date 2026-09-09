@@ -233,7 +233,7 @@ public class PlayScene3D extends GameScene
     public void handleQuit(GameAppContext appContext) {
         onDeactivate();
         soundManager().setEnabled(false);
-        gameFlow().enterGameState(game(), CommonGameStateID.GAME_OVER);
+        flow().enterGameState(game(), CommonGameStateID.GAME_OVER);
     }
 
     // Other stuff

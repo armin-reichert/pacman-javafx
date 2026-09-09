@@ -141,8 +141,8 @@ public class MiniPlaySceneView {
         if (slideInAnimation != null) {
             slideInAnimation.stop();
         }
-        slideInAnimation = new TranslateTransition(
-            Duration.seconds(settingsViewModel.slideInSecondsProperty.get()), rootPane);
+        final Duration duration = Duration.seconds(settingsViewModel.slideInSecondsProperty.get());
+        slideInAnimation = new TranslateTransition(duration, rootPane);
         slideInAnimation.setToY(0);
         slideInAnimation.setByY(10);
         slideInAnimation.setDelay(Duration.seconds(1));
@@ -154,8 +154,8 @@ public class MiniPlaySceneView {
         if (slideOutAnimation != null) {
             slideOutAnimation.stop();
         }
-        slideOutAnimation = new TranslateTransition(
-            Duration.seconds(settingsViewModel.slideOutSecondsProperty.get()), rootPane);
+        final Duration duration = Duration.seconds(settingsViewModel.slideOutSecondsProperty.get());
+        slideOutAnimation = new TranslateTransition(duration, rootPane);
         slideOutAnimation.setToY(-rootPane.getHeight());
         slideOutAnimation.setByY(10);
         slideOutAnimation.setDelay(Duration.seconds(2));
@@ -167,5 +167,4 @@ public class MiniPlaySceneView {
         return slideInAnimation != null && slideInAnimation.getStatus() == Animation.Status.RUNNING
             || slideOutAnimation != null && slideOutAnimation.getStatus() == Animation.Status.RUNNING;
     }
-
 }

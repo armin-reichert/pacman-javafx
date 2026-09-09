@@ -80,12 +80,14 @@ public class ArcadePacMan_EntityRenderer extends BaseRenderer implements SpriteR
             final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.worldNavigation().wishDir());
             return SpriteSheet.spriteOrDefault(sprites, animController.currentFrame(ghost));
         }
-        else if (animController.isSelected(ghost, CommonSpriteAnimationID.GHOST_EYES)) {
+        if (animController.isSelected(ghost, CommonSpriteAnimationID.GHOST_EYES)) {
             return spriteSheet().ghostEyesSprite(ghost.worldNavigation().wishDir());
         }
-        else {
-            return animController.currentSprite(ghost);
+        final RectShort sprite = animController.currentSprite(ghost);
+        if (sprite == null) {
+            throw new IllegalStateException("No sprite could be computed for ghost %s".formatted(ghost));
         }
+        return sprite;
     }
 
     private RectShort computeSprite(BonusPoints bonusPoints) {
