@@ -142,11 +142,6 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public BaseRenderer createMessageViewRenderer(Canvas canvas) {
-        return new MessageViewRenderer(canvas, MESSAGE_TEXTS);
-    }
-
-    @Override
     public ArcadeMsPacMan_GameLevelRenderer createGameLevelRenderer(ActorSpriteAnimController animSystem, Canvas canvas) {
         requireNonNull(animSystem);
         requireNonNull(canvas);

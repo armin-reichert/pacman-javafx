@@ -30,7 +30,6 @@ import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.MessageViewRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -42,7 +41,7 @@ import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
 
-    private static final Map<MessageType, String> MESSAGE_TEXTS = new EnumMap<>(MessageType.class);
+    public static final Map<MessageType, String> MESSAGE_TEXTS = new EnumMap<>(MessageType.class);
     static {
         MESSAGE_TEXTS.put(MessageType.READY, "READY!");
         MESSAGE_TEXTS.put(MessageType.GAME_OVER, "GAME OVER");
@@ -158,11 +157,6 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     @Override
     public TengenMsPacMan_GameLevelRenderer createGameLevelRenderer(ActorSpriteAnimController animController, Canvas canvas) {
         return new TengenMsPacMan_GameLevelRenderer(canvas);
-    }
-
-    @Override
-    public BaseRenderer createMessageViewRenderer(Canvas canvas) {
-        return new MessageViewRenderer(canvas, MESSAGE_TEXTS);
     }
 
     @Override
