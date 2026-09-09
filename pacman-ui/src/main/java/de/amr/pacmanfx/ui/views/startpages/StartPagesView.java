@@ -82,7 +82,7 @@ public class StartPagesView implements GameView {
     }
 
     @Override
-    public void handleQuit(GameAppContext appContext) {}
+    public void onQuitGameScene() {}
 
     @Override
     public ActionBindingsRegistry actionBindings() {

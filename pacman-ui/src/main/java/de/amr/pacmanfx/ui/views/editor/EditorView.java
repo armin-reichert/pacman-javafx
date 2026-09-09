@@ -59,7 +59,7 @@ public class EditorView implements GameView {
     }
 
     @Override
-    public void handleQuit(GameAppContext app) {
+    public void onQuitGameScene() {
         editor.quit();
     }
 

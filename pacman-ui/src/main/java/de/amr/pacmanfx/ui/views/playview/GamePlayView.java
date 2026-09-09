@@ -208,8 +208,8 @@ public class GamePlayView implements GameView {
     }
 
     @Override
-    public void handleQuit(GameAppContext app) {
-        app.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.handleQuit(app));
+    public void onQuitGameScene() {
+        app.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onQuitGameScene());
         app.ui().views().selectStartPagesView();
     }
 
@@ -276,18 +276,18 @@ public class GamePlayView implements GameView {
     }
 
     public void embedGameScene(GameScene gameScene) {
+        requireNonNull(gameScene);
+
         final GameMainScene mainScene = app.ui().window().mainScene();
         final GameVariantUIConfig config = app.gameVariants().currentGameVariant().uiConfig();
 
-        contextMenuManager.hideContextMenu();
-
-        //TODO FIXME(We must discriminate 3D, 2D+subscene, 2D without subscene) here!
         if (gameScene.optSubSceneFX().isPresent()) {
             embedGameSceneWithSubSceneFX(mainScene, gameScene, gameScene.optSubSceneFX().get());
         } else {
             embedGameScene2D(decorationPane, mainScene, config.gameSceneConfig(), gameScene, app.ui().viewModel().common2DSettings());
         }
 
+        contextMenuManager.hideContextMenu();
         renderManager.updateRenderers(app, gameScene);
         gameScene.activate();
 

@@ -68,7 +68,7 @@ public class Arcade_PlayScene2D extends GameScene implements Arcade_PlayScene2D_
     }
 
     @Override
-    public void handleQuit(GameAppContext app) {
+    public void onQuitGameScene() {
         onDeactivate();
         // Avoid game over sound being played
         soundManager().setEnabled(false);
