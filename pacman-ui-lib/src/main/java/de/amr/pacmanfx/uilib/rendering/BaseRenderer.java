@@ -41,14 +41,6 @@ public abstract class BaseRenderer implements Renderer {
         info = new InfoMap();
     }
 
-    public InfoMap info() {
-        return info;
-    }
-
-    public Optional<BaseRenderer> optDebugInfoRenderer() {
-        return Optional.ofNullable(debugInfoRenderer);
-    }
-
     public void setDebugInfoRenderer(BaseRenderer debugInfoRenderer) {
         this.debugInfoRenderer = debugInfoRenderer;
     }
@@ -73,18 +65,16 @@ public abstract class BaseRenderer implements Renderer {
     }
 
     @Override
+    public InfoMap info() {
+        return info;
+    }
+
+    @Override
     public DoubleProperty scalingProperty() { return scaling; }
 
     @Override
     public double scaling() {
         return scaling.get();
-    }
-
-    public void setScaling(double value) {
-        if (value <= 0) {
-            throw new IllegalArgumentException("Scaling value must be positive but is %.2f".formatted(value));
-        }
-        scalingProperty().set(value);
     }
 
     @Override
@@ -95,6 +85,18 @@ public abstract class BaseRenderer implements Renderer {
     @Override
     public Color backgroundColor() {
         return backgroundColorProperty().get();
+    }
+
+    @Override
+    public Optional<BaseRenderer> optDebugInfoRenderer() {
+        return Optional.ofNullable(debugInfoRenderer);
+    }
+
+    public void setScaling(double value) {
+        if (value <= 0) {
+            throw new IllegalArgumentException("Scaling value must be positive but is %.2f".formatted(value));
+        }
+        scalingProperty().set(value);
     }
 
     /**

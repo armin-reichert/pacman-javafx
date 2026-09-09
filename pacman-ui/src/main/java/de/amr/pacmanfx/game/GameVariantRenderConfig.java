@@ -17,6 +17,7 @@ import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
@@ -30,15 +31,15 @@ public interface GameVariantRenderConfig {
 
     GenericWorldMapColorScheme colorScheme(WorldMap worldMap, WorldSettings worldSettings);
 
-    BaseRenderer createGameLevelRenderer(ActorSpriteAnimController animController, Canvas canvas);
-
-    BaseRenderer createGameSceneRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas);
-
     HUD_Style hudStyle();
 
-    BaseRenderer createHUDRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas);
+    Renderer createGameLevelRenderer(ActorSpriteAnimController animController, Canvas canvas);
 
-    BaseRenderer createEntityRenderer(ActorSpriteAnimController animController, Canvas canvas);
+    Renderer createGameSceneRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas);
+
+    Renderer createHUDRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas);
+
+    Renderer createEntityRenderer(ActorSpriteAnimController animController, Canvas canvas);
 
     Ghost createAnimatedGhost(ActorSpriteAnimController animController, SpriteAnimContainer container, GhostPersonality personality);
 

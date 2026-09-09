@@ -10,7 +10,6 @@ import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
-import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.scene.canvas.Canvas;
 import org.tinylog.Logger;
@@ -28,9 +27,9 @@ public class RenderManager {
         .comparing(Renderable::layer)
         .thenComparingInt(Renderable::z);
 
-    private BaseRenderer entityRenderer;
-    private BaseRenderer sceneRenderer;
-    private BaseRenderer hudRenderer;
+    private Renderer entityRenderer;
+    private Renderer sceneRenderer;
+    private Renderer hudRenderer;
     private MiniViewRenderer miniViewRenderer;
 
     private final List<Renderable> renderQueue = new ArrayList<>();

@@ -13,12 +13,13 @@ import de.amr.pacmanfx.ui.vm.GameViewModel;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.MapRenderInfoKey;
 import de.amr.pacmanfx.uilib.rendering.RenderableWrapper;
+import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.scene.canvas.Canvas;
 
 public class MiniViewRenderer extends BaseRenderer {
 
-    private final BaseRenderer levelRenderer;
-    private final BaseRenderer entityRenderer;
+    private final Renderer levelRenderer;
+    private final Renderer entityRenderer;
 
     public MiniViewRenderer(
         Canvas canvas,
@@ -48,9 +49,7 @@ public class MiniViewRenderer extends BaseRenderer {
                 levelRenderer.info().put(MapRenderInfoKey.FLASHING, false);
                 levelRenderer.render(level, tick);
             }
-            default -> {
-                entityRenderer.render(r, tick);
-            }
+            default -> entityRenderer.render(r, tick);
         }
     }
 }

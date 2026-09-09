@@ -10,7 +10,6 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
-import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
@@ -18,6 +17,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.MapRenderInfoKey;
+import de.amr.pacmanfx.uilib.rendering.Renderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 
@@ -32,9 +32,9 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements SpriteR
 
     private final SpriteSheet<?> spriteSheet;
 
-    private final BaseRenderer levelRenderer;
+    private final Renderer levelRenderer;
 
-    public Arcade_PlayScene2D_Renderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas, SpriteSheet spriteSheet) {
+    public Arcade_PlayScene2D_Renderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(canvas);
 
         requireNonNull(gameScene);
@@ -48,7 +48,7 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements SpriteR
     }
 
     @Override
-    public SpriteSheet spriteSheet() {
+    public SpriteSheet<?> spriteSheet() {
         return spriteSheet;
     }
 
