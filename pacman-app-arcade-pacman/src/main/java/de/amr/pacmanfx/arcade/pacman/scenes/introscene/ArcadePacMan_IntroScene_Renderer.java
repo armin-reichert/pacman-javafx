@@ -55,6 +55,7 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Sp
         if (!(r instanceof ArcadePacMan_IntroScene introScene)) {
             return;
         }
+        ctx.setImageSmoothing(true);
         drawGhostGallery(introScene);
         switch (introScene.flow.state()) {
             case SHOWING_POINTS -> drawPoints(introScene);
@@ -69,6 +70,7 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Sp
             }
             default -> {}
         }
+        ctx.setImageSmoothing(false);
     }
 
     private void drawGhostGallery(ArcadePacMan_IntroScene introScene) {
