@@ -11,11 +11,9 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.vm.GameViewModel;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
+import de.amr.pacmanfx.uilib.rendering.MapRenderInfoKey;
 import de.amr.pacmanfx.uilib.rendering.RenderableWrapper;
 import javafx.scene.canvas.Canvas;
-
-import java.util.Map;
 
 public class MiniViewRenderer extends BaseRenderer {
 
@@ -44,13 +42,10 @@ public class MiniViewRenderer extends BaseRenderer {
         switch (r) {
             case RenderableWrapper wrapper -> render(wrapper.wrappedRenderable(), tick);
             case GameLevel level -> {
-                levelRenderer.infoMap().putAll(Map.of(
-                    CommonRenderInfoKey.ENERGIZER_VISIBLE, level.heartbeat().state() == Pulse.State.ON,
-                    CommonRenderInfoKey.MAP_BRIGHT, false,
-                    CommonRenderInfoKey.MAP_EMPTY, level.food().remainingFoodCount() == 0,
-                    CommonRenderInfoKey.MAP_FLASHING, false,
-                    CommonRenderInfoKey.TICK, tick
-                ));
+                levelRenderer.infoMap().put(MapRenderInfoKey.ENERGIZER_VISIBLE, level.heartbeat().state() == Pulse.State.ON);
+                levelRenderer.infoMap().put(MapRenderInfoKey.BRIGHT, false);
+                levelRenderer.infoMap().put(MapRenderInfoKey.EMPTY, level.food().remainingFoodCount() == 0);
+                levelRenderer.infoMap().put(MapRenderInfoKey.FLASHING, false);
                 levelRenderer.render(level, tick);
             }
             default -> entityRenderer.render(r, tick);

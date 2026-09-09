@@ -20,7 +20,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
+import de.amr.pacmanfx.uilib.rendering.MapRenderInfoKey;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -101,7 +101,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends BaseRenderer implements
             ctx.save();
             ctx.translate(scaledIndent, 0);
 
-            configureRenderInfo(playScene, worldMap, tick);
+            configureRenderInfo(playScene, worldMap);
             levelRenderer.setInfoMap(infoMap);
             levelRenderer.render(level, tick);
             levelRenderer.drawDoor(house, worldMap); // ghosts appear under door, so draw door over again
@@ -121,16 +121,15 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends BaseRenderer implements
         });
     }
 
-    private void configureRenderInfo(TengenMsPacMan_PlayScene2D playScene2D, WorldMap worldMap, long tick) {
+    private void configureRenderInfo(TengenMsPacMan_PlayScene2D playScene2D, WorldMap worldMap) {
         infoMap.clear();
         // this is needed for drawing animated maze with different images:
-        infoMap.put(CommonRenderInfoKey.TICK, tick);
         infoMap.put(MapConfigKey.MAP_CATEGORY, worldMap.getConfigValue(MapConfigKey.MAP_CATEGORY));
-        infoMap.put(CommonRenderInfoKey.MAP_BRIGHT, false);
-        infoMap.put(CommonRenderInfoKey.MAZE_FLASHING_INDEX, -1);
+        infoMap.put(MapRenderInfoKey.BRIGHT, false);
+        infoMap.put(MapRenderInfoKey.FLASHING_INDEX, -1);
         playScene2D.optLevelCompletedAnimation().flatMap(LevelCompletedAnimation::flashingState).ifPresent(flashingState -> {
-            infoMap.put(CommonRenderInfoKey.MAP_BRIGHT, flashingState.isHighlighted());
-            infoMap.put(CommonRenderInfoKey.MAZE_FLASHING_INDEX, flashingState.flashingIndex());
+            infoMap.put(MapRenderInfoKey.BRIGHT, flashingState.isHighlighted());
+            infoMap.put(MapRenderInfoKey.FLASHING_INDEX, flashingState.flashingIndex());
         });
     }
 }

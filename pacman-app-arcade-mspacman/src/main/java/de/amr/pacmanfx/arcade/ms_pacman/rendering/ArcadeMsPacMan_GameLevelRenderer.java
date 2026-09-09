@@ -14,7 +14,7 @@ import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
+import de.amr.pacmanfx.uilib.rendering.MapRenderInfoKey;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -68,8 +68,8 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         ctx.save();
         ctx.scale(scaling(), scaling());
 
-        if (infoMap.getBoolean(CommonRenderInfoKey.MAP_FLASHING)) {
-            if (infoMap.getBoolean(CommonRenderInfoKey.MAP_BRIGHT)) {
+        if (infoMap.getBoolean(MapRenderInfoKey.FLASHING)) {
+            if (infoMap.getBoolean(MapRenderInfoKey.BRIGHT)) {
                 final Image brightMazeImage = assets.image("maze.bright.%d".formatted(colorMapIndex));
                 ctx.drawImage(brightMazeImage, 0, emptySpaceOverMazePixels);
                 hideGhostHouseDoors(house);
@@ -79,7 +79,7 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
                 drawSprite(emptyMazeSprite, 0, emptySpaceOverMazePixels, false);
             }
         }
-        else if (infoMap.getBoolean(CommonRenderInfoKey.MAP_EMPTY)) {
+        else if (infoMap.getBoolean(MapRenderInfoKey.EMPTY)) {
             final RectShort emptyMazeSprite = spriteSheet().findSpriteSequence(SpriteID.EMPTY_MAPS)[colorMapIndex];
             drawSprite(emptyMazeSprite, 0, emptySpaceOverMazePixels, false);
         }
@@ -95,7 +95,7 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
                 .forEach(tile -> fillSquareAtTileCenter(tile, 4));
             // Over-paint eaten and dark-phase energizers
             foodLayer.energizerTiles().stream()
-                .filter(tile -> !infoMap.getBoolean(CommonRenderInfoKey.ENERGIZER_VISIBLE) || level.food().hasEatenFoodAtTile(tile))
+                .filter(tile -> !infoMap.getBoolean(MapRenderInfoKey.ENERGIZER_VISIBLE) || level.food().hasEatenFoodAtTile(tile))
                 .forEach(tile -> fillSquareAtTileCenter(tile, 10));
         }
         ctx.restore();

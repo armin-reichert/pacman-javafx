@@ -17,7 +17,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
+import de.amr.pacmanfx.uilib.rendering.MapRenderInfoKey;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 
@@ -73,13 +73,13 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements SpriteR
         final var info = new InfoMap();
         final boolean energizerVisible = level.heartbeat().state() == Pulse.State.ON;
         final boolean mapIsEmpty = level.food().remainingFoodCount() == 0;
-        info.put(CommonRenderInfoKey.ENERGIZER_VISIBLE, energizerVisible);
-        info.put(CommonRenderInfoKey.MAP_EMPTY, mapIsEmpty);
-        info.put(CommonRenderInfoKey.MAP_BRIGHT, false);
-        info.put(CommonRenderInfoKey.MAP_FLASHING, false);
+        info.put(MapRenderInfoKey.ENERGIZER_VISIBLE, energizerVisible);
+        info.put(MapRenderInfoKey.EMPTY, mapIsEmpty);
+        info.put(MapRenderInfoKey.BRIGHT, false);
+        info.put(MapRenderInfoKey.FLASHING, false);
         playScene2D.optLevelCompletedAnimation().flatMap(LevelCompletedAnimation::flashingState).ifPresent(flashing -> {
-            info.put(CommonRenderInfoKey.MAP_BRIGHT,   flashing.isHighlighted());
-            info.put(CommonRenderInfoKey.MAP_FLASHING, flashing.isFlashing());
+            info.put(MapRenderInfoKey.BRIGHT,   flashing.isHighlighted());
+            info.put(MapRenderInfoKey.FLASHING, flashing.isFlashing());
         });
         return info;
     }

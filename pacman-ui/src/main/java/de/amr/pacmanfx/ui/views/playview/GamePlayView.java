@@ -171,6 +171,7 @@ public class GamePlayView implements GameView {
 
     public void onLevelCreated(GameLevel level) {
         layers.miniViewLayer().setLevel(level);
+        renderManager.setMiniViewRenderer(layers.miniViewLayer().createRenderer());
         layers.miniViewLayer().slideIn();
 
         // game scene size might have changed: re-embed
@@ -202,11 +203,10 @@ public class GamePlayView implements GameView {
     @Override
     public void onEnter() {
         rootPane.requestFocus();
-
         actionBindings.registerAllBindings(app.commonActions().bindings());
-        Logger.info(actionBindings);
-
         decorationPane.installBindings();
+
+        Logger.info(actionBindings);
     }
 
     @Override

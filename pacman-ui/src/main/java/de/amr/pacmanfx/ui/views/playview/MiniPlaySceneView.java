@@ -8,8 +8,10 @@ import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
+import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.vm.GameViewModel;
 import de.amr.pacmanfx.ui.vm.MiniViewSettingsVM;
@@ -51,6 +53,7 @@ public class MiniPlaySceneView {
 
     private MiniViewSettingsVM settingsViewModel;
 
+    private GameAppContext app;
     private GameLevel level;
 
     public MiniPlaySceneView() {
@@ -94,7 +97,21 @@ public class MiniPlaySceneView {
         return scaling;
     }
 
+    public MiniViewRenderer createRenderer() {
+        final GameViewModel viewModel = app.ui().viewModel();
+        final ActorSpriteAnimController animController = app.game().variant().systems().actorSpriteAnimController();
+        final GameVariantRenderConfig renderConfig = app.currentGameVariantUIConfig().renderConfig();
+
+        final var miniViewRenderer = new MiniViewRenderer(canvas, animController, renderConfig, viewModel);
+        miniViewRenderer.backgroundColorProperty().bind(viewModel.common2DSettings().canvasBackgroundColorProperty());
+        miniViewRenderer.scalingProperty().bind(scalingProperty());
+
+        return miniViewRenderer;
+    }
+
     public void setGameApp(GameAppContext app) {
+        this.app = requireNonNull(app);
+
         final GameViewModel viewModel = app.ui().viewModel();
         settingsViewModel = viewModel.miniViewSettings();
 

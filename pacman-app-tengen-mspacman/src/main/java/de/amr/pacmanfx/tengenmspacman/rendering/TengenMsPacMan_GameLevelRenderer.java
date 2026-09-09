@@ -19,7 +19,7 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.MapConfigKey;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.sprites.*;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.CommonRenderInfoKey;
+import de.amr.pacmanfx.uilib.rendering.MapRenderInfoKey;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
@@ -66,8 +66,8 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
             Logger.debug("Maze sprite set created: {}", mapImageSet);
         }
 
-        if (infoMap.getBoolean(CommonRenderInfoKey.MAP_BRIGHT)) {
-            final int flashingIndex = infoMap.get(CommonRenderInfoKey.MAZE_FLASHING_INDEX, Integer.class);
+        if (infoMap.getBoolean(MapRenderInfoKey.BRIGHT)) {
+            final int flashingIndex = infoMap.get(MapRenderInfoKey.FLASHING_INDEX, Integer.class);
             configureHighlightedMapRenderInfo(infoMap, worldMap, flashingIndex);
         }
         else {
@@ -75,8 +75,8 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
             configureNormalMapRenderInfo(infoMap, mapCategory, worldMap, tick);
         }
 
-        final Image mazeImage = infoMap.get(CommonRenderInfoKey.MAZE_IMAGE, Image.class);
-        final RectShort mazeSprite = infoMap.get(CommonRenderInfoKey.MAZE_SPRITE, RectShort.class);
+        final Image mazeImage = infoMap.get(MapRenderInfoKey.IMAGE, Image.class);
+        final RectShort mazeSprite = infoMap.get(MapRenderInfoKey.SPRITE, RectShort.class);
         final int x = 0, y = worldMap.terrainLayer().emptyRowsOverMaze() * WorldMap.TS;
         ctx.drawImage(mazeImage,
             mazeSprite.x(), mazeSprite.y(), mazeSprite.width(), mazeSprite.height(),
@@ -190,19 +190,19 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         final MapImageSet imageSet = worldMap.getConfigValue(MapConfigKey.MAP_IMAGE_SET);
         final int i = Math.clamp(flashingIndex, 0, imageSet.flashingMapImages().size() - 1);
         final ColorSchemedMapSprite flashingMapImage = imageSet.flashingMapImages().get(i);
-        info.put(CommonRenderInfoKey.MAZE_IMAGE, flashingMapImage.spriteSheetImage());
-        info.put(CommonRenderInfoKey.MAZE_SPRITE, flashingMapImage.sprite());
+        info.put(MapRenderInfoKey.IMAGE, flashingMapImage.spriteSheetImage());
+        info.put(MapRenderInfoKey.SPRITE, flashingMapImage.sprite());
     }
 
     private void configureNormalMapRenderInfo(InfoMap info, MapCategory mapCategory, WorldMap worldMap, long tick) {
         final MapImageSet imageSet = worldMap.getConfigValue(MapConfigKey.MAP_IMAGE_SET);
-        info.put(CommonRenderInfoKey.MAZE_IMAGE, imageSet.mapImage().spriteSheetImage());
+        info.put(MapRenderInfoKey.IMAGE, imageSet.mapImage().spriteSheetImage());
         final int mapNumber = worldMap.getConfigValue(WorldMapConfigKey.MAP_NUMBER);
         if (mapCategory == MapCategory.STRANGE && mapNumber == 15) {
             final int spriteIndex = strangeMap15AnimationFrame(tick);
-            info.put(CommonRenderInfoKey.MAZE_SPRITE, NonArcadeMapsSpriteSheet.instance().findSpriteSequence(MAP32_ANIMATED)[spriteIndex]);
+            info.put(MapRenderInfoKey.SPRITE, NonArcadeMapsSpriteSheet.instance().findSpriteSequence(MAP32_ANIMATED)[spriteIndex]);
         } else {
-            info.put(CommonRenderInfoKey.MAZE_SPRITE, imageSet.mapImage().sprite());
+            info.put(MapRenderInfoKey.SPRITE, imageSet.mapImage().sprite());
         }
     }
 
