@@ -26,7 +26,7 @@ public final class GameSimulation {
 
     public void start() {
         clock.setUpdateAction(this::simulate);
-        clock.setPermanentAction(this::renderCurrentView);
+        clock.setPermanentAction(() -> renderCurrentView(clock.currentTick()));
         clock.setErrorHandler(this::handleFatalError);
         clock.start();
     }
@@ -46,9 +46,9 @@ public final class GameSimulation {
         app.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(game));
     }
 
-    private void renderCurrentView() {
+    private void renderCurrentView(long tick) {
         try {
-            app.ui().views().assertCurrentView().render();
+            app.ui().views().assertCurrentView().render(tick);
         } catch (Exception x) {
             Logger.error(x);
         }

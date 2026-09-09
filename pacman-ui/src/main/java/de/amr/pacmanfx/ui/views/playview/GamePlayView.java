@@ -225,27 +225,30 @@ public class GamePlayView implements GameView {
     }
 
     @Override
-    public void render() {
-        final long tick = app.clock().currentTick();
+    public void render(long tick) {
         final GameViewModel viewModel = app.ui().viewModel();
         final boolean debugMode = viewModel.debugModeOnProperty().get();
-        final GameSession session = app.game().session();
-
-        final MiniPlaySceneView miniView = app.ui().views().gamePlayView().layers().miniViewLayer();
-        final GameScene currentGameScene = app.ui().gameScenes().optCurrentGameScene().orElse(null);
 
         renderManager.clearRenderQueue();
 
+        // Add HUD renderables
+        final GameSession session = app.game().session();
         if (session.isHUDVisible()) {
             renderManager.addAll(session.hud().renderables());
         }
+
+        // Add mini view renderables
+        final MiniPlaySceneView miniView = app.ui().views().gamePlayView().layers().miniViewLayer();
         renderManager.addAll(miniView.renderables());
 
+        // Add game scene renderables
+        final GameScene currentGameScene = app.ui().gameScenes().optCurrentGameScene().orElse(null);
         if (currentGameScene != null) {
             renderManager.add(currentGameScene); //TODO rethink this
             renderManager.addAll(currentGameScene.renderables());
         }
 
+        // Clear canvases
         miniView.clearCanvas();
         if (currentGameScene != null && currentGameScene.wantsClearCanvas()) {
             renderManager.clearSceneCanvas(currentGameScene);

@@ -32,5 +32,5 @@ public interface GameView extends QuitHandler {
 
     void onExit();
 
-    default void render() {}
+    default void render(long tick) {}
 }
