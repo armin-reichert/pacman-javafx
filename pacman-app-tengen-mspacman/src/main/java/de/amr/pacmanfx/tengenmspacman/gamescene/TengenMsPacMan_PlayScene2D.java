@@ -67,7 +67,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
         super(app);
 
         // Add canvas rendering capability, no canvas assigned yet!
-        setComp(SceneCanvasRenderingComp.class, new SceneCanvasRenderingComp());
+        setComp(SceneCanvasRenderingComp.class, createCanvasRendering());
 
         final GameViewModel vm = app.ui().viewModel();
         final TengenMsPacMan_UISettings uiSettings = uiSettings();
@@ -241,18 +241,21 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
     };
 
     private void resetRendering2D() {
-        // Replace component. TODO: Check why necessary
+        final SceneCanvasRenderingComp oldComp = reqCanvasRendering();
+        final SceneCanvasRenderingComp newComp = createCanvasRendering();
+        newComp.setCanvas(oldComp.canvas());
         removeComp(SceneCanvasRenderingComp.class);
-        setComp(SceneCanvasRenderingComp.class, new SceneCanvasRenderingComp());
+        setComp(SceneCanvasRenderingComp.class, newComp);
+        dynamicCamera.scalingProperty().bind(newComp.scalingProperty());
+    }
 
-        reqCanvasRendering().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
-        // Default height. Varies with map size.
-        reqCanvasRendering().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
-
-        reqCanvasRendering().scalingProperty().addListener(scalingListener);
-        reqCanvasRendering().canvasProperty().addListener(canvasListener);
-
-        dynamicCamera.scalingProperty().bind(reqCanvasRendering().scalingProperty());
+    private SceneCanvasRenderingComp createCanvasRendering() {
+        final var canvasRendering = new SceneCanvasRenderingComp();
+        canvasRendering.unscaledWidthProperty().set(NES_SCREEN_WIDTH);
+        canvasRendering.unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
+        canvasRendering.scalingProperty().addListener(scalingListener);
+        canvasRendering.canvasProperty().addListener(canvasListener);
+        return canvasRendering;
     }
 
     private TengenMsPacMan_Actions actions() {
