@@ -15,7 +15,6 @@ import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.vm.GameViewModel;
 import de.amr.pacmanfx.ui.vm.MiniViewSettingsVM;
-import de.amr.pacmanfx.uilib.rendering.RenderableWrapper;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
@@ -35,6 +34,7 @@ import javafx.util.Duration;
 
 import java.util.stream.Stream;
 
+import static de.amr.pacmanfx.uilib.rendering.RenderableWrapper.reassignLayer;
 import static java.util.Objects.requireNonNull;
 
 public class MiniPlaySceneView {
@@ -69,14 +69,11 @@ public class MiniPlaySceneView {
     }
 
     public Stream<Renderable> renderables() {
-        return level == null
-            ? Stream.empty()
-            : Ufx.streamOf(
-                new RenderableWrapper(level, RenderingLayer.OVERLAY, -1),
-                level.entities().all()
-                    .filter(Renderable.class::isInstance)
-                    .map(Renderable.class::cast)
-                    .map(r -> new RenderableWrapper(r, RenderingLayer.OVERLAY))
+        if (level == null) return Stream.empty();
+
+        return Ufx.streamOf(
+            reassignLayer(level, RenderingLayer.OVERLAY, -1),
+            level.renderableEntities().map(r -> reassignLayer(r, RenderingLayer.OVERLAY, r.z()))
         );
     }
 

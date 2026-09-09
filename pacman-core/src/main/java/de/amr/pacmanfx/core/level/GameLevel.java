@@ -132,6 +132,12 @@ public class GameLevel implements Renderable{
         return entities;
     }
 
+    public Stream<Renderable> renderableEntities() {
+        return entities.all()
+            .filter(Renderable.class::isInstance)
+            .map(Renderable.class::cast);
+    }
+
     public void clearBonusIndex() {
         currentBonusIndex = -1;
     }
