@@ -181,7 +181,7 @@ public abstract class GameScene extends Composition<GameSceneComponent>
     // --- Interface "QuitHandler"
 
     @Override
-    public void onQuitGameScene() {
+    public void onQuit() {
         deactivate();
     }
 

@@ -208,8 +208,8 @@ public class GamePlayView implements GameView {
     }
 
     @Override
-    public void onQuitGameScene() {
-        app.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onQuitGameScene());
+    public void onQuit() {
+        app.ui().gameScenes().optCurrentGameScene().ifPresent(GameScene::onQuit);
         app.ui().views().selectStartPagesView();
     }
 

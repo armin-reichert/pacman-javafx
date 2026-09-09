@@ -159,7 +159,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
     }
 
     @Override
-    public void onQuitGameScene() {
+    public void onQuit() {
         onDeactivate();
         flow().enterGameState(game(), CommonGameStateID.GAME_OVER);
     }
