@@ -10,7 +10,6 @@ import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
-import de.amr.pacmanfx.uilib.rendering.DrawWithoutClearingCanvas;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.scene.canvas.Canvas;
@@ -71,6 +70,14 @@ public class RenderManager {
         }
     }
 
+    public void clearSceneCanvas(GameScene gameScene) {
+        gameScene.optCanvasRendering().ifPresent(canvasRendering -> {
+            final var ctx = canvasRendering.canvas().getGraphicsContext2D();
+            ctx.setFill(canvasRendering.backgroundColor());
+            ctx.fillRect(0, 0, canvasRendering.canvas().getWidth(), canvasRendering.canvas().getHeight());
+        });
+    }
+
     public void setMiniViewRenderer(MiniViewRenderer miniViewRenderer) {
         this.miniViewRenderer = miniViewRenderer;
     }
@@ -88,15 +95,6 @@ public class RenderManager {
     }
 
     public void renderFrame(long tick, boolean debugMode) {
-        if (miniViewRenderer != null) {
-            miniViewRenderer.clearCanvas();
-        }
-
-        //TODO temp solution
-        if (sceneRenderer != null && !(sceneRenderer instanceof DrawWithoutClearingCanvas)) {
-            sceneRenderer.clearCanvas();
-        }
-
         renderQueue.sort(RENDERING_ORDER);
         renderQueue.forEach(r -> {
             switch (r.layer()) {

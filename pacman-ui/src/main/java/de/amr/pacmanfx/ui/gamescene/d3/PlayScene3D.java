@@ -177,7 +177,6 @@ public class PlayScene3D extends GameScene
                     }
                 });
             }
-
         });
     }
 

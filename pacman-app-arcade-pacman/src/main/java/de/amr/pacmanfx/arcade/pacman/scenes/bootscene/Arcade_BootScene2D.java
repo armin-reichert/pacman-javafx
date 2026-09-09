@@ -54,6 +54,11 @@ public class Arcade_BootScene2D extends GameScene implements Renderable {
     }
 
     @Override
+    public boolean wantsClearCanvas() {
+        return false;
+    }
+
+    @Override
     public Stream<Renderable> renderables() {
         return Stream.empty();
     }

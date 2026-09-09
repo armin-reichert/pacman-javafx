@@ -53,6 +53,10 @@ public abstract class GameScene extends Composition<GameSceneComponent>
         return optComp(SceneCanvasRenderingComp.class);
     }
 
+    public boolean wantsClearCanvas() {
+        return true;
+    }
+
     public SceneCanvasRenderingComp reqCanvasRendering() {
         return reqComp(SceneCanvasRenderingComp.class);
     }

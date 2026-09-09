@@ -232,6 +232,7 @@ public class GamePlayView implements GameView {
         final GameSession session = app.game().session();
 
         final MiniPlaySceneView miniView = app.ui().views().gamePlayView().layers().miniViewLayer();
+        final GameScene currentGameScene = app.ui().gameScenes().optCurrentGameScene().orElse(null);
 
         renderManager.clearRenderQueue();
 
@@ -240,10 +241,15 @@ public class GamePlayView implements GameView {
         }
         renderManager.addAll(miniView.renderables());
 
-        app.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
-            renderManager.add(gameScene);
-            renderManager.addAll(gameScene.renderables());
-        });
+        if (currentGameScene != null) {
+            renderManager.add(currentGameScene); //TODO rethink this
+            renderManager.addAll(currentGameScene.renderables());
+        }
+
+        miniView.clearCanvas();
+        if (currentGameScene != null && currentGameScene.wantsClearCanvas()) {
+            renderManager.clearSceneCanvas(currentGameScene);
+        }
 
         try {
             renderManager.renderFrame(tick, debugMode);

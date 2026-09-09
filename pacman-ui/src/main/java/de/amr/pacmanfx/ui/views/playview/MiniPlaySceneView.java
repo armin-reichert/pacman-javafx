@@ -72,7 +72,7 @@ public class MiniPlaySceneView {
         if (level == null) return Stream.empty();
 
         return Ufx.streamOf(
-            reassignLayer(level, RenderingLayer.OVERLAY, -1),
+            reassignLayer(level, RenderingLayer.OVERLAY, -100),
             level.renderableEntities().map(r -> reassignLayer(r, RenderingLayer.OVERLAY, r.z()))
         );
     }
@@ -92,6 +92,13 @@ public class MiniPlaySceneView {
 
     public DoubleProperty scalingProperty() {
         return scaling;
+    }
+
+    public void clearCanvas() {
+        final var ctx = canvas.getGraphicsContext2D();
+        final GameViewModel viewModel = app.ui().viewModel();
+        ctx.setFill(viewModel.common2DSettings().canvasBackgroundColorProperty().get());
+        ctx.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
 
     public MiniViewRenderer createRenderer() {
