@@ -14,6 +14,7 @@ import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.MessageViewRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 
@@ -28,10 +29,15 @@ public class ArcadePacMan_EntityRenderer extends BaseRenderer implements SpriteR
     private static final int[] BONUS_POINTS = { 100, 300, 500, 700, 1000, 2000, 3000, 5000 };
 
     private final ActorSpriteAnimController animController;
+    private final MessageViewRenderer messageViewRenderer;
 
     public ArcadePacMan_EntityRenderer(ActorSpriteAnimController animController, Canvas canvas) {
         super(canvas);
         this.animController = requireNonNull(animController);
+
+        messageViewRenderer = new MessageViewRenderer(canvas, ArcadePacMan_RenderConfig.MESSAGE_TEXTS);
+        messageViewRenderer.backgroundColorProperty().bind(backgroundColorProperty());
+        messageViewRenderer.scalingProperty().bind(scalingProperty());
     }
 
     @Override
@@ -55,7 +61,7 @@ public class ArcadePacMan_EntityRenderer extends BaseRenderer implements SpriteR
             case GhostPoints points -> drawSpriteCentered(computeSprite(points), center);
             case Bonus bonus -> drawSpriteCentered(computeSprite(bonus), center);
             case BonusPoints bonusPoints -> drawSpriteCentered(computeSprite(bonusPoints), center);
-
+            case MessageView _ -> messageViewRenderer.render(r, tick);
             default -> {
                 if (gameEntity.hasComp(SpriteAnimationComp.class)) {
                     drawSpriteCentered(animController.currentSprite(gameEntity), center);

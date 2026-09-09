@@ -48,7 +48,7 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
 
-    private static final Map<MessageType, String> MESSAGE_TEXTS = new EnumMap<>(MessageType.class);
+    public static final Map<MessageType, String> MESSAGE_TEXTS = new EnumMap<>(MessageType.class);
     static {
         MESSAGE_TEXTS.put(MessageType.READY, "READY!");
         MESSAGE_TEXTS.put(MessageType.GAME_OVER, "GAME  OVER");

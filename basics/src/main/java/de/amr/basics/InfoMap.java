@@ -16,7 +16,8 @@ public class InfoMap {
     public InfoMap() {}
 
     public boolean getBoolean(Object key) {
-        return get(key, Boolean.class);
+        final Boolean b = get(key, Boolean.class);
+        return b != null && b;
     }
 
     public <T> T get(Object key, Class<T> valueClass) {
@@ -37,6 +38,10 @@ public class InfoMap {
 
     public void put(Object key, Object value) {
         map.put(key, value);
+    }
+
+    public void putAll(InfoMap infoMap) {
+        map.putAll(infoMap.map);
     }
 
     public void putAll(Map<Object, Object> otherMap) {

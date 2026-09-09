@@ -72,9 +72,13 @@ public class RenderManager {
 
     public void clearSceneCanvas(GameScene gameScene) {
         gameScene.optCanvasRendering().ifPresent(canvasRendering -> {
-            final var ctx = canvasRendering.canvas().getGraphicsContext2D();
-            ctx.setFill(canvasRendering.backgroundColor());
-            ctx.fillRect(0, 0, canvasRendering.canvas().getWidth(), canvasRendering.canvas().getHeight());
+            if (canvasRendering.canvas() != null) {
+                final var ctx = canvasRendering.canvas().getGraphicsContext2D();
+                ctx.setFill(canvasRendering.backgroundColor());
+                ctx.fillRect(0, 0, canvasRendering.canvas().getWidth(), canvasRendering.canvas().getHeight());
+            } else {
+                Logger.error("Cannot create game scene canvas: no canvas has been assigned");
+            }
         });
     }
 

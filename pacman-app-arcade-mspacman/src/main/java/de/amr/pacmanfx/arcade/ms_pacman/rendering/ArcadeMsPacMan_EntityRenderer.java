@@ -10,6 +10,7 @@ import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.clapperboard.ClapperboardAnimationSystem;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.introscene.MarqueeRenderer;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.Copyright;
+import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_RenderConfig;
 import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
@@ -18,6 +19,7 @@ import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.MessageViewRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.text.Font;
@@ -40,6 +42,7 @@ public class ArcadeMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
 
     private final ActorSpriteAnimController animController;
     private final MarqueeRenderer marqueeRenderer;
+    private final MessageViewRenderer messageViewRenderer;
 
     public ArcadeMsPacMan_EntityRenderer(ActorSpriteAnimController animController, Canvas canvas) {
         super(canvas);
@@ -48,6 +51,10 @@ public class ArcadeMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
         this.marqueeRenderer = new MarqueeRenderer(canvas);
         marqueeRenderer.backgroundColorProperty().bind(backgroundColorProperty());
         marqueeRenderer.scalingProperty().bind(scalingProperty());
+
+        messageViewRenderer = new MessageViewRenderer(canvas, ArcadePacMan_RenderConfig.MESSAGE_TEXTS);
+        messageViewRenderer.backgroundColorProperty().bind(backgroundColorProperty());
+        messageViewRenderer.scalingProperty().bind(scalingProperty());
     }
 
     @Override
@@ -71,6 +78,7 @@ public class ArcadeMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
             case BonusPoints points        -> drawSpriteCentered(computeSprite(points), center);
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
             case Marquee marquee           -> drawMarquee(marquee, tick);
+            case MessageView _ -> messageViewRenderer.render(r, tick);
             case Copyright copyright -> drawMidwayCopyright(copyright);
             default -> {
                 if (actor.hasComp(SpriteAnimationComp.class)) {

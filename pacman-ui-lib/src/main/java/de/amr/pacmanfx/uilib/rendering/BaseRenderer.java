@@ -45,10 +45,6 @@ public abstract class BaseRenderer implements Renderer {
         return info;
     }
 
-    public void setInfo(InfoMap info) {
-        this.info = info;
-    }
-
     public Optional<BaseRenderer> optDebugInfoRenderer() {
         return Optional.ofNullable(debugInfoRenderer);
     }

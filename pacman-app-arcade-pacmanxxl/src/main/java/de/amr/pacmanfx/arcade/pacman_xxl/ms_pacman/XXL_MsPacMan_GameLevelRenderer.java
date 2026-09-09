@@ -41,8 +41,9 @@ public class XXL_MsPacMan_GameLevelRenderer extends ArcadeMsPacMan_GameLevelRend
             Color.valueOf(worldMapColorScheme.wallStroke()),
             Color.valueOf(worldMapColorScheme.door())
         );
-        infoMap.put(GenericLevelRenderer.RenderInfoKey.TERRAIN_MAP_COLORING, mapColoring);
-        genericLevelRenderer.setInfo(infoMap);
+
+        genericLevelRenderer.info().putAll(info);
+        genericLevelRenderer.info().put(GenericLevelRenderer.RenderInfoKey.TERRAIN_MAP_COLORING, mapColoring);
 
         genericLevelRenderer.render(r, tick);
     }

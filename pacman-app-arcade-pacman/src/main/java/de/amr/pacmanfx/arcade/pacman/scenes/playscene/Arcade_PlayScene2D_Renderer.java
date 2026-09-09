@@ -30,7 +30,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements SpriteRenderer {
 
-    private final SpriteSheet spriteSheet;
+    private final SpriteSheet<?> spriteSheet;
 
     private final BaseRenderer levelRenderer;
 
@@ -64,23 +64,18 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements SpriteR
         // Level creation happens by handling a game event after the play scene has been activated. Therefore,
         // the game level is not yet existing for the first two ticks after this scene got active.
         session.optLevel().ifPresent(level -> {
-            levelRenderer.setInfo(createLevelRenderInfo(level, playScene));
+            final boolean energizerVisible = level.heartbeat().state() == Pulse.State.ON;
+            final boolean mapIsEmpty = level.food().remainingFoodCount() == 0;
+            final InfoMap info = levelRenderer.info();
+            info.put(MapRenderInfoKey.ENERGIZER_VISIBLE, energizerVisible);
+            info.put(MapRenderInfoKey.EMPTY, mapIsEmpty);
+            info.put(MapRenderInfoKey.BRIGHT, false);
+            info.put(MapRenderInfoKey.FLASHING, false);
+            playScene.optLevelCompletedAnimation().flatMap(LevelCompletedAnimation::flashingState).ifPresent(flashing -> {
+                info.put(MapRenderInfoKey.BRIGHT,   flashing.isHighlighted());
+                info.put(MapRenderInfoKey.FLASHING, flashing.isFlashing());
+            });
             levelRenderer.render(level, tick);
         });
-    }
-
-    private InfoMap createLevelRenderInfo(GameLevel level, Arcade_PlayScene2D playScene2D) {
-        final var info = new InfoMap();
-        final boolean energizerVisible = level.heartbeat().state() == Pulse.State.ON;
-        final boolean mapIsEmpty = level.food().remainingFoodCount() == 0;
-        info.put(MapRenderInfoKey.ENERGIZER_VISIBLE, energizerVisible);
-        info.put(MapRenderInfoKey.EMPTY, mapIsEmpty);
-        info.put(MapRenderInfoKey.BRIGHT, false);
-        info.put(MapRenderInfoKey.FLASHING, false);
-        playScene2D.optLevelCompletedAnimation().flatMap(LevelCompletedAnimation::flashingState).ifPresent(flashing -> {
-            info.put(MapRenderInfoKey.BRIGHT,   flashing.isHighlighted());
-            info.put(MapRenderInfoKey.FLASHING, flashing.isFlashing());
-        });
-        return info;
     }
 }

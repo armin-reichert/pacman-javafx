@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
-import de.amr.basics.InfoMap;
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
@@ -30,20 +29,10 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
 
     protected final AssetMap assets;
 
-    protected InfoMap infoMap;
-
     public ArcadeMsPacMan_GameLevelRenderer(ActorSpriteAnimController animController, Canvas canvas, AssetMap assets) {
         super(canvas);
         this.animController = requireNonNull(animController);
         this.assets = assets; // may be NULL e.g. in Ms. Pac-Man XXL where maze is drawn without images
-    }
-
-    public InfoMap info() {
-        return infoMap;
-    }
-
-    public void setInfo(InfoMap info) {
-        this.infoMap = info;
     }
 
     @Override
@@ -68,8 +57,8 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         ctx.save();
         ctx.scale(scaling(), scaling());
 
-        if (infoMap.getBoolean(MapRenderInfoKey.FLASHING)) {
-            if (infoMap.getBoolean(MapRenderInfoKey.BRIGHT)) {
+        if (info.getBoolean(MapRenderInfoKey.FLASHING)) {
+            if (info.getBoolean(MapRenderInfoKey.BRIGHT)) {
                 final Image brightMazeImage = assets.image("maze.bright.%d".formatted(colorMapIndex));
                 ctx.drawImage(brightMazeImage, 0, emptySpaceOverMazePixels);
                 hideGhostHouseDoors(house);
@@ -79,7 +68,7 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
                 drawSprite(emptyMazeSprite, 0, emptySpaceOverMazePixels, false);
             }
         }
-        else if (infoMap.getBoolean(MapRenderInfoKey.EMPTY)) {
+        else if (info.getBoolean(MapRenderInfoKey.EMPTY)) {
             final RectShort emptyMazeSprite = spriteSheet().findSpriteSequence(SpriteID.EMPTY_MAPS)[colorMapIndex];
             drawSprite(emptyMazeSprite, 0, emptySpaceOverMazePixels, false);
         }
@@ -95,7 +84,7 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
                 .forEach(tile -> fillSquareAtTileCenter(tile, 4));
             // Over-paint eaten and dark-phase energizers
             foodLayer.energizerTiles().stream()
-                .filter(tile -> !infoMap.getBoolean(MapRenderInfoKey.ENERGIZER_VISIBLE) || level.food().hasEatenFoodAtTile(tile))
+                .filter(tile -> !info.getBoolean(MapRenderInfoKey.ENERGIZER_VISIBLE) || level.food().hasEatenFoodAtTile(tile))
                 .forEach(tile -> fillSquareAtTileCenter(tile, 10));
         }
         ctx.restore();

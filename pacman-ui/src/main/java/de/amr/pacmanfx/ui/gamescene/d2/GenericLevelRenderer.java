@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui.gamescene.d2;
 
-import de.amr.basics.InfoMap;
 import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -32,8 +31,6 @@ public class GenericLevelRenderer extends BaseRenderer {
     private TerrainMapColoring blinkingOnMapColoring;
     private TerrainMapColoring blinkingOffMapColoring;
 
-    private InfoMap infoMap;
-
     public GenericLevelRenderer(Canvas canvas) {
         super(canvas);
 
@@ -53,21 +50,17 @@ public class GenericLevelRenderer extends BaseRenderer {
         updateColors(backgroundColor());
     }
 
-    public void setInfo(InfoMap info) {
-        this.infoMap = info;
-    }
-
     @Override
     public void render(Renderable r, long tick) {
         if (!(r instanceof  GameLevel level)) {
             return;
         }
-        if (infoMap.getBoolean(MapRenderInfoKey.BRIGHT)) {
-            terrainRenderer.setMapColoring(infoMap.getBoolean(MapRenderInfoKey.ENERGIZER_VISIBLE) ? blinkingOnMapColoring : blinkingOffMapColoring);
+        if (info.getBoolean(MapRenderInfoKey.BRIGHT)) {
+            terrainRenderer.setMapColoring(info.getBoolean(MapRenderInfoKey.ENERGIZER_VISIBLE) ? blinkingOnMapColoring : blinkingOffMapColoring);
             terrainRenderer.render(level.worldMap(), tick);
         }
         else {
-            final TerrainMapColoring mapColoring = infoMap.get(RenderInfoKey.TERRAIN_MAP_COLORING, TerrainMapColoring.class);
+            final TerrainMapColoring mapColoring = info.get(RenderInfoKey.TERRAIN_MAP_COLORING, TerrainMapColoring.class);
             terrainRenderer.setMapColoring(mapColoring);
             terrainRenderer.render(level.worldMap(), tick);
 
@@ -86,7 +79,7 @@ public class GenericLevelRenderer extends BaseRenderer {
                 .filter(not(foodLayer::isEnergizerTile))
                 .forEach(foodRenderer::drawPellet);
 
-            if (infoMap.getBoolean(MapRenderInfoKey.ENERGIZER_VISIBLE)) {
+            if (info.getBoolean(MapRenderInfoKey.ENERGIZER_VISIBLE)) {
                 foodRenderer.setEnergizerColor(pelletColor);
                 foodLayer.energizerTiles().stream()
                     .filter(level.food()::hasFoodAtTile)

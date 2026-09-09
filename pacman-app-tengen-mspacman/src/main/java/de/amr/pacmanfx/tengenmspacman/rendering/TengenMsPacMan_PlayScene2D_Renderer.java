@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
-import de.amr.basics.InfoMap;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.Renderable;
@@ -65,7 +64,6 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends BaseRenderer implements
 
     private final ActorSpriteAnimController animController;
 
-    private final InfoMap infoMap = new InfoMap();
     private final TengenMsPacMan_GameLevelRenderer levelRenderer;
 
     public TengenMsPacMan_PlayScene2D_Renderer(
@@ -102,7 +100,6 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends BaseRenderer implements
             ctx.translate(scaledIndent, 0);
 
             configureRenderInfo(playScene, worldMap);
-            levelRenderer.setInfo(infoMap);
             levelRenderer.render(level, tick);
             levelRenderer.drawDoor(house, worldMap); // ghosts appear under door, so draw door over again
 
@@ -122,14 +119,14 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends BaseRenderer implements
     }
 
     private void configureRenderInfo(TengenMsPacMan_PlayScene2D playScene2D, WorldMap worldMap) {
-        infoMap.clear();
+        info.clear();
         // this is needed for drawing animated maze with different images:
-        infoMap.put(MapConfigKey.MAP_CATEGORY, worldMap.getConfigValue(MapConfigKey.MAP_CATEGORY));
-        infoMap.put(MapRenderInfoKey.BRIGHT, false);
-        infoMap.put(MapRenderInfoKey.FLASHING_INDEX, -1);
+        info.put(MapConfigKey.MAP_CATEGORY, worldMap.getConfigValue(MapConfigKey.MAP_CATEGORY));
+        info.put(MapRenderInfoKey.BRIGHT, false);
+        info.put(MapRenderInfoKey.FLASHING_INDEX, -1);
         playScene2D.optLevelCompletedAnimation().flatMap(LevelCompletedAnimation::flashingState).ifPresent(flashingState -> {
-            infoMap.put(MapRenderInfoKey.BRIGHT, flashingState.isHighlighted());
-            infoMap.put(MapRenderInfoKey.FLASHING_INDEX, flashingState.flashingIndex());
+            info.put(MapRenderInfoKey.BRIGHT, flashingState.isHighlighted());
+            info.put(MapRenderInfoKey.FLASHING_INDEX, flashingState.flashingIndex());
         });
     }
 }
