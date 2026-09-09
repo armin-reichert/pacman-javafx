@@ -30,7 +30,7 @@ public class RenderManager {
     private Renderer entityRenderer;
     private Renderer sceneRenderer;
     private Renderer hudRenderer;
-    private MiniViewRenderer miniViewRenderer;
+    private Renderer miniViewRenderer;
 
     private final List<Renderable> renderQueue = new ArrayList<>();
 
