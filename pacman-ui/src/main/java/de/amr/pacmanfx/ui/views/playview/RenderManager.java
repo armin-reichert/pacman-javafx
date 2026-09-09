@@ -48,6 +48,8 @@ public class RenderManager {
             final ActorSpriteAnimController animController = app.game().variant().systems().actorSpriteAnimController();
             final GameVariantRenderConfig config = app.currentGameVariantUIConfig().renderConfig();
 
+            canvas.getGraphicsContext2D().setImageSmoothing(false);
+
             entityRenderer = config.createEntityRenderer(animController, canvas);
             configureRenderer(entityRenderer, canvasRendering);
 

@@ -71,7 +71,6 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer implements 
 
         ctx.save();
         ctx.setFont(arcade8);
-        ctx.setImageSmoothing(false);
 
         switch (introScene.flow.state()) {
 
