@@ -70,6 +70,9 @@ public class ArcadeMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
         if (!actor.isVisible()) return;
 
         final Vector2f center = actor.pos().bodyCenter();
+
+        ctx.setImageSmoothing(true);
+
         switch (actor) {
             case Pac pac                   -> drawSpriteCentered(computeSprite(pac),    center);
             case Ghost ghost               -> drawSpriteCentered(computeSprite(ghost),  center);
@@ -86,6 +89,8 @@ public class ArcadeMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
                 }
             }
         }
+
+        ctx.setImageSmoothing(false);
     }
 
     private RectShort computeSprite(Ghost ghost) {

@@ -36,7 +36,7 @@ public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer 
     }
 
     @Override
-    public SpriteSheet spriteSheet() {
+    public SpriteSheet<?> spriteSheet() {
         return style.spriteSheet();
     }
 
@@ -47,6 +47,9 @@ public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer 
         }
 
         if (!entity.isVisible()) return;
+
+        ctx.setImageSmoothing(true);
+
         switch (entity) {
             case LevelCounter levelCounter -> drawLevelCounter(levelCounter);
             case LivesCounter livesCounter -> drawLivesCounter(livesCounter);
@@ -63,6 +66,9 @@ public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer 
             case CreditDisplay creditDisplay -> drawCreditDisplay(creditDisplay);
             default -> throw new IllegalStateException("Unexpected value: " + entity);
         }
+
+        ctx.setImageSmoothing(false);
+
     }
 
     private void drawCreditDisplay(CreditDisplay creditDisplay) {

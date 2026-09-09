@@ -71,6 +71,8 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
         ctx.save();
         ctx.translate(scaled(16), 0); // content indent of map
 
+        ctx.setImageSmoothing(true);
+
         final Vector2f center = actor.pos().bodyCenter();
         switch (actor) {
             case Bonus bonus -> drawSpriteCentered(computeSprite(bonus), center);
@@ -89,6 +91,7 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
             }
         }
 
+        ctx.setImageSmoothing(false);
         ctx.restore();
     }
 

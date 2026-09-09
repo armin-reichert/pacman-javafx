@@ -55,6 +55,7 @@ public class ArcadePacMan_EntityRenderer extends BaseRenderer implements SpriteR
 
         final Vector2f center = gameEntity.pos().bodyCenter();
 
+        ctx.setImageSmoothing(true);
         switch (r) {
             case Pac pac -> drawSpriteCentered(computeSprite(pac), center);
             case Ghost ghost -> drawSpriteCentered(computeSprite(ghost), center);
@@ -68,6 +69,7 @@ public class ArcadePacMan_EntityRenderer extends BaseRenderer implements SpriteR
                 }
             }
         }
+        ctx.setImageSmoothing(false);
     }
 
     private RectShort computeSprite(Pac pac) {
