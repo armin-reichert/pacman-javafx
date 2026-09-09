@@ -366,7 +366,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
         // Messages appear centered under house
         final Vector2i houseSize = house.sizeInTiles();
-        float x = TS * (house.floorplan().minTile().x() + houseSize.x() * 0.5f + 2.5f);
+        float x = TS * (house.floorplan().minTile().x() + houseSize.x() * 0.5f);
         float y = TS * (house.floorplan().minTile().y() + houseSize.y() + 1);
         messageView.pos().set(x, y);
 

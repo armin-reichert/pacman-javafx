@@ -205,5 +205,4 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
             info.put(MapRenderInfoKey.SPRITE, imageSet.mapImage().sprite());
         }
     }
-
 }
