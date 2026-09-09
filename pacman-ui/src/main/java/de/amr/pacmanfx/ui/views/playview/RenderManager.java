@@ -25,7 +25,7 @@ import static java.util.Objects.requireNonNull;
 public class RenderManager {
 
     public static final Comparator<Renderable> RENDERING_ORDER = Comparator
-        .comparingInt((Renderable r) -> r.layer().z())
+        .comparing(Renderable::layer)
         .thenComparingInt(Renderable::z);
 
     private BaseRenderer entityRenderer;
