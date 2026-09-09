@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.tengenmspacman.rendering;
+package de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene;
 
 import de.amr.basics.math.RectShort;
 import de.amr.basics.util.Ufx;
@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
-import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_OptionsScene;
+import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.GlobalAssets;
@@ -26,7 +26,7 @@ import javafx.scene.text.Font;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
-import static de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_OptionsScene.*;
+import static de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene.TengenMsPacMan_OptionsScene.*;
 import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SceneRendererUtils.drawHorizontalBar;
 import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SceneRendererUtils.drawJoypadKeyBinding;
 import static java.util.Objects.requireNonNull;

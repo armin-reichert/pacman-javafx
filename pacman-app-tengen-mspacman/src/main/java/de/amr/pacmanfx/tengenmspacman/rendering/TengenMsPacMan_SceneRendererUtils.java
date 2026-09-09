@@ -17,7 +17,7 @@ public final class TengenMsPacMan_SceneRendererUtils {
 
     private TengenMsPacMan_SceneRendererUtils() {}
 
-    static void drawHorizontalBar(GraphicsContext ctx, double scaling, Color edgeColor, Color innerColor, double width, double height, double topY) {
+    public static void drawHorizontalBar(GraphicsContext ctx, double scaling, Color edgeColor, Color innerColor, double width, double height, double topY) {
         requireNonNull(edgeColor);
         requireNonNull(innerColor);
         ctx.save();
@@ -29,7 +29,7 @@ public final class TengenMsPacMan_SceneRendererUtils {
         ctx.restore();
     }
 
-    static void drawJoypadKeyBinding(GraphicsContext ctx, double scaling, JoypadKeyBinding binding) {
+    public static void drawJoypadKeyBinding(GraphicsContext ctx, double scaling, JoypadKeyBinding binding) {
         ctx.save();
         requireNonNull(binding);
         ctx.setFont(Font.font(scaling*6));

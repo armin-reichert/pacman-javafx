@@ -2,13 +2,14 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.tengenmspacman.rendering;
+package de.amr.pacmanfx.tengenmspacman.gamescene.bootscene;
 
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
-import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_BootScene;
+import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
+import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_EntityRenderer;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;

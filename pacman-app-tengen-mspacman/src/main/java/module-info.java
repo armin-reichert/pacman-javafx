@@ -33,4 +33,10 @@ open module de.amr.pacmanfx.tengenmspacman {
     exports de.amr.pacmanfx.tengenmspacman.entities.gameoptionsdisplay;
     exports de.amr.pacmanfx.tengenmspacman.entities.levelnumberdisplay;
     exports de.amr.pacmanfx.tengenmspacman.entities.stork;
+    exports de.amr.pacmanfx.tengenmspacman.gamescene.cutscenes;
+    exports de.amr.pacmanfx.tengenmspacman.gamescene.bootscene;
+    exports de.amr.pacmanfx.tengenmspacman.gamescene.introscene;
+    exports de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene;
+    exports de.amr.pacmanfx.tengenmspacman.gamescene.playscene;
+    exports de.amr.pacmanfx.tengenmspacman.gamescene.creditsscene;
 }

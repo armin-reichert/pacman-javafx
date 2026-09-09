@@ -16,7 +16,20 @@ import de.amr.pacmanfx.core.model.world.map.WorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
-import de.amr.pacmanfx.tengenmspacman.gamescene.*;
+import de.amr.pacmanfx.tengenmspacman.gamescene.bootscene.TengenMsPacMan_BootScene;
+import de.amr.pacmanfx.tengenmspacman.gamescene.bootscene.TengenMsPacMan_BootScene_Renderer;
+import de.amr.pacmanfx.tengenmspacman.gamescene.creditsscene.TengenMsPacMan_CreditsScene;
+import de.amr.pacmanfx.tengenmspacman.gamescene.creditsscene.TengenMsPacMan_CreditsScene_Renderer;
+import de.amr.pacmanfx.tengenmspacman.gamescene.cutscenes.TengenMsPacMan_CutScene1;
+import de.amr.pacmanfx.tengenmspacman.gamescene.cutscenes.TengenMsPacMan_CutScene2;
+import de.amr.pacmanfx.tengenmspacman.gamescene.cutscenes.TengenMsPacMan_CutScene3;
+import de.amr.pacmanfx.tengenmspacman.gamescene.cutscenes.TengenMsPacMan_CutScene4;
+import de.amr.pacmanfx.tengenmspacman.gamescene.introscene.TengenMsPacMan_IntroScene;
+import de.amr.pacmanfx.tengenmspacman.gamescene.introscene.TengenMsPacMan_IntroScene_Renderer;
+import de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene.TengenMsPacMan_OptionsScene;
+import de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene.TengenMsPacMan_OptionsScene_Renderer;
+import de.amr.pacmanfx.tengenmspacman.gamescene.playscene.TengenMsPacMan_PlayScene2D;
+import de.amr.pacmanfx.tengenmspacman.gamescene.playscene.TengenMsPacMan_PlayScene2D_Renderer;
 import de.amr.pacmanfx.tengenmspacman.model.BonusSymbol;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
@@ -141,15 +154,15 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     @Override
     public BaseRenderer createGameSceneRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
         return switch (gameScene) {
-            case TengenMsPacMan_BootScene    ignored -> new TengenMsPacMan_BootScene_Renderer(this, gameScene, animController, canvas);
-            case TengenMsPacMan_IntroScene   ignored -> new TengenMsPacMan_IntroScene_Renderer(this, gameScene, canvas);
+            case TengenMsPacMan_BootScene ignored -> new TengenMsPacMan_BootScene_Renderer(this, gameScene, animController, canvas);
+            case TengenMsPacMan_IntroScene ignored -> new TengenMsPacMan_IntroScene_Renderer(this, gameScene, canvas);
             case TengenMsPacMan_OptionsScene ignored -> new TengenMsPacMan_OptionsScene_Renderer(gameScene, canvas);
-            case TengenMsPacMan_PlayScene2D  ignored -> new TengenMsPacMan_PlayScene2D_Renderer(this, gameScene, animController, canvas);
+            case TengenMsPacMan_PlayScene2D ignored -> new TengenMsPacMan_PlayScene2D_Renderer(this, gameScene, animController, canvas);
             case TengenMsPacMan_CreditsScene ignored -> new TengenMsPacMan_CreditsScene_Renderer(gameScene, canvas);
-            case TengenMsPacMan_CutScene1    ignored -> null;
-            case TengenMsPacMan_CutScene2    ignored -> null;
-            case TengenMsPacMan_CutScene3    ignored -> null;
-            case TengenMsPacMan_CutScene4    ignored -> null;
+            case TengenMsPacMan_CutScene1 ignored -> null;
+            case TengenMsPacMan_CutScene2 ignored -> null;
+            case TengenMsPacMan_CutScene3 ignored -> null;
+            case TengenMsPacMan_CutScene4 ignored -> null;
             default -> throw new IllegalStateException("Unexpected value: " + gameScene);
         };
     }

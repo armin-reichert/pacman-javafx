@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.tengenmspacman.rendering;
+package de.amr.pacmanfx.tengenmspacman.gamescene.introscene;
 
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.Renderable;
@@ -10,8 +10,8 @@ import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
-import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_IntroScene;
-import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_IntroScene.SceneState;
+import de.amr.pacmanfx.tengenmspacman.gamescene.introscene.TengenMsPacMan_IntroScene.SceneState;
+import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.GlobalAssets;
@@ -23,8 +23,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
-import static de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_IntroScene.ANCHOR_X;
-import static de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_IntroScene.ANCHOR_Y;
+import static de.amr.pacmanfx.tengenmspacman.gamescene.introscene.TengenMsPacMan_IntroScene.ANCHOR_X;
+import static de.amr.pacmanfx.tengenmspacman.gamescene.introscene.TengenMsPacMan_IntroScene.ANCHOR_Y;
 import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConfig.shadeOfBlue;
 import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SceneRendererUtils.drawJoypadKeyBinding;
 import static de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer.createDefaultSceneDebugRenderer;

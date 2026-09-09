@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.tengenmspacman.gamescene;
+package de.amr.pacmanfx.tengenmspacman.gamescene.cutscenes;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;

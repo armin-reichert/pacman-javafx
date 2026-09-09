@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.tengenmspacman.gamescene;
+package de.amr.pacmanfx.tengenmspacman.gamescene.introscene;
 
 import de.amr.basics.fsm.State;
 import de.amr.basics.fsm.StateMachine;
