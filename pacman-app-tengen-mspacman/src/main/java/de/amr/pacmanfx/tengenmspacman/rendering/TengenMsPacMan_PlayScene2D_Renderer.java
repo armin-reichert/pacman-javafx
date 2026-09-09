@@ -102,7 +102,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends BaseRenderer implements
             ctx.translate(scaledIndent, 0);
 
             configureRenderInfo(playScene, worldMap);
-            levelRenderer.setInfoMap(infoMap);
+            levelRenderer.setInfo(infoMap);
             levelRenderer.render(level, tick);
             levelRenderer.drawDoor(house, worldMap); // ghosts appear under door, so draw door over again
 

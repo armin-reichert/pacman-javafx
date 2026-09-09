@@ -66,17 +66,17 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
             Logger.debug("Maze sprite set created: {}", mapImageSet);
         }
 
-        if (infoMap.getBoolean(MapRenderInfoKey.BRIGHT)) {
-            final int flashingIndex = infoMap.get(MapRenderInfoKey.FLASHING_INDEX, Integer.class);
-            configureHighlightedMapRenderInfo(infoMap, worldMap, flashingIndex);
+        if (info.getBoolean(MapRenderInfoKey.BRIGHT)) {
+            final int flashingIndex = info.get(MapRenderInfoKey.FLASHING_INDEX, Integer.class);
+            configureHighlightedMapRenderInfo(info, worldMap, flashingIndex);
         }
         else {
-            final MapCategory mapCategory = infoMap.get(MapConfigKey.MAP_CATEGORY, MapCategory.class);
-            configureNormalMapRenderInfo(infoMap, mapCategory, worldMap, tick);
+            final MapCategory mapCategory = info.get(MapConfigKey.MAP_CATEGORY, MapCategory.class);
+            configureNormalMapRenderInfo(info, mapCategory, worldMap, tick);
         }
 
-        final Image mazeImage = infoMap.get(MapRenderInfoKey.IMAGE, Image.class);
-        final RectShort mazeSprite = infoMap.get(MapRenderInfoKey.SPRITE, RectShort.class);
+        final Image mazeImage = info.get(MapRenderInfoKey.IMAGE, Image.class);
+        final RectShort mazeSprite = info.get(MapRenderInfoKey.SPRITE, RectShort.class);
         final int x = 0, y = worldMap.terrainLayer().emptyRowsOverMaze() * WorldMap.TS;
         ctx.drawImage(mazeImage,
             mazeSprite.x(), mazeSprite.y(), mazeSprite.width(), mazeSprite.height(),

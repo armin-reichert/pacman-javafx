@@ -64,7 +64,7 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements SpriteR
         // Level creation happens by handling a game event after the play scene has been activated. Therefore,
         // the game level is not yet existing for the first two ticks after this scene got active.
         session.optLevel().ifPresent(level -> {
-            levelRenderer.setInfoMap(createLevelRenderInfo(level, playScene));
+            levelRenderer.setInfo(createLevelRenderInfo(level, playScene));
             levelRenderer.render(level, tick);
         });
     }

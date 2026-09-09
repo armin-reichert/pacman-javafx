@@ -43,8 +43,8 @@ public class XXL_PacMan_GameLevelRenderer extends ArcadePacMan_GameLevel_Rendere
             Color.valueOf(worldMapColorScheme.door())
         );
 
-        infoMap.put(GenericLevelRenderer.RenderInfoKey.TERRAIN_MAP_COLORING, mapColoring);
-        genericLevelRenderer.setInfoMap(infoMap);
+        info.put(GenericLevelRenderer.RenderInfoKey.TERRAIN_MAP_COLORING, mapColoring);
+        genericLevelRenderer.setInfo(info);
 
         genericLevelRenderer.render(r, tick);
     }

@@ -32,21 +32,21 @@ public abstract class BaseRenderer implements Renderer {
 
     protected final GraphicsContext ctx;
 
-    protected InfoMap infoMap;
+    protected InfoMap info;
 
     private BaseRenderer debugInfoRenderer;
 
     public BaseRenderer(Canvas canvas) {
         ctx = requireNonNull(canvas).getGraphicsContext2D();
-        infoMap = new InfoMap();
+        info = new InfoMap();
     }
 
-    public InfoMap infoMap() {
-        return infoMap;
+    public InfoMap info() {
+        return info;
     }
 
-    public void setInfoMap(InfoMap infoMap) {
-        this.infoMap = infoMap;
+    public void setInfo(InfoMap info) {
+        this.info = info;
     }
 
     public Optional<BaseRenderer> optDebugInfoRenderer() {

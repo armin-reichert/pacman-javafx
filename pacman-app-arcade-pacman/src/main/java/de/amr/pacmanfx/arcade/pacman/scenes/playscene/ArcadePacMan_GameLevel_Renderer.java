@@ -49,9 +49,9 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
         ctx.save();
         ctx.scale(scaling(), scaling());
 
-        if (infoMap.getBoolean(MapRenderInfoKey.EMPTY)) {
+        if (info.getBoolean(MapRenderInfoKey.EMPTY)) {
             // Empty maze is shown when level is complete and when the flashing animation is running
-            if (infoMap.getBoolean(MapRenderInfoKey.BRIGHT)) {
+            if (info.getBoolean(MapRenderInfoKey.BRIGHT)) {
                 // Flashing animation bright phase
                 if (brightMapImage != null) {
                     ctx.drawImage(brightMapImage, 0, emptySpaceOverMazePixels);
@@ -59,7 +59,7 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
             } else {
                 drawSprite(spriteSheet().findSpriteSequence(SpriteID.MAP_EMPTY)[0], 0, emptySpaceOverMazePixels, false);
             }
-            if (infoMap.getBoolean(MapRenderInfoKey.FLASHING)) {
+            if (info.getBoolean(MapRenderInfoKey.FLASHING)) {
                 // Hide ghost house doors while flashing
                 if (house != null) {
                     ctx.setFill(backgroundColor());
@@ -82,7 +82,7 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
                 .forEach(tile -> fillSquareAtTileCenter(tile, 4));
             // Over-paint eaten or dark-blinking energizer tiles
             foodLayer.energizerTiles().stream()
-                .filter(tile -> !infoMap.getBoolean(MapRenderInfoKey.ENERGIZER_VISIBLE) || level.food().hasEatenFoodAtTile(tile))
+                .filter(tile -> !info.getBoolean(MapRenderInfoKey.ENERGIZER_VISIBLE) || level.food().hasEatenFoodAtTile(tile))
                 .forEach(tile -> fillSquareAtTileCenter(tile, 10));
         }
         ctx.restore();

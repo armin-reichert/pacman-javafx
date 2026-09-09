@@ -38,12 +38,12 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         this.assets = assets; // may be NULL e.g. in Ms. Pac-Man XXL where maze is drawn without images
     }
 
-    public InfoMap infoMap() {
+    public InfoMap info() {
         return infoMap;
     }
 
-    public void setInfoMap(InfoMap infoMap) {
-        this.infoMap = infoMap;
+    public void setInfo(InfoMap info) {
+        this.infoMap = info;
     }
 
     @Override

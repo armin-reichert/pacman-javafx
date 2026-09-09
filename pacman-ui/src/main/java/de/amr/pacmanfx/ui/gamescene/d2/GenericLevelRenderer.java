@@ -53,8 +53,8 @@ public class GenericLevelRenderer extends BaseRenderer {
         updateColors(backgroundColor());
     }
 
-    public void setInfoMap(InfoMap infoMap) {
-        this.infoMap = infoMap;
+    public void setInfo(InfoMap info) {
+        this.infoMap = info;
     }
 
     @Override

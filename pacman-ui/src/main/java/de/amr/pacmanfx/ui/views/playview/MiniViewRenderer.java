@@ -42,10 +42,10 @@ public class MiniViewRenderer extends BaseRenderer {
         switch (r) {
             case RenderableWrapper wrapper -> render(wrapper.wrappedRenderable(), tick);
             case GameLevel level -> {
-                levelRenderer.infoMap().put(MapRenderInfoKey.ENERGIZER_VISIBLE, level.heartbeat().state() == Pulse.State.ON);
-                levelRenderer.infoMap().put(MapRenderInfoKey.BRIGHT, false);
-                levelRenderer.infoMap().put(MapRenderInfoKey.EMPTY, level.food().remainingFoodCount() == 0);
-                levelRenderer.infoMap().put(MapRenderInfoKey.FLASHING, false);
+                levelRenderer.info().put(MapRenderInfoKey.ENERGIZER_VISIBLE, level.heartbeat().state() == Pulse.State.ON);
+                levelRenderer.info().put(MapRenderInfoKey.BRIGHT, false);
+                levelRenderer.info().put(MapRenderInfoKey.EMPTY, level.food().remainingFoodCount() == 0);
+                levelRenderer.info().put(MapRenderInfoKey.FLASHING, false);
                 levelRenderer.render(level, tick);
             }
             default -> entityRenderer.render(r, tick);
