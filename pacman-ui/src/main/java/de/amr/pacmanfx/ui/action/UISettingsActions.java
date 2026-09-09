@@ -91,10 +91,12 @@ public class UISettingsActions {
         actionToggleMiniViewVisibility = new GameAction("toggle_mini_view_visibility") {
             @Override
             public void execute(GameAppContext app) {
-                toggleBooleanProperty(app.ui().viewModel().miniViewSettings().activeProperty);
+                final BooleanProperty miniViewActiveProperty = app.ui().viewModel().miniViewSettings().activeProperty;
+                toggleBooleanProperty(miniViewActiveProperty);
+                // Message?
                 if (!app.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D)) {
                     final String msg = app.ui().translations().translate(
-                        app.ui().viewModel().miniViewSettings().activeProperty.get() ? "flash.pip_on" : "flash.pip_off");
+                        miniViewActiveProperty.get() ? "flash.pip_on" : "flash.pip_off");
                     app.ui().shortMessage(msg);
                 }
             }

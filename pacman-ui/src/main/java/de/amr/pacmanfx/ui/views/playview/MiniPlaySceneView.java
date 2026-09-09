@@ -56,6 +56,8 @@ public class MiniPlaySceneView {
     private GameAppContext app;
     private GameLevel level;
 
+    private boolean expanded;
+
     public MiniPlaySceneView() {
         canvas = new Canvas();
 
@@ -70,7 +72,6 @@ public class MiniPlaySceneView {
 
     public Stream<Renderable> renderables() {
         if (level == null) return Stream.empty();
-
         return Ufx.streamOf(
             reassignLayer(level, RenderingLayer.OVERLAY, -100),
             level.renderableEntities().map(r -> reassignLayer(r, RenderingLayer.OVERLAY, r.z()))
@@ -135,30 +136,38 @@ public class MiniPlaySceneView {
             () -> canvas.getHeight() / worldSize.get().y(),
             canvas.heightProperty(), worldSize
         ));
+
+        rootPane.setTranslateY(-canvas.getHeight());
     }
 
-    public void slideIn() {
-        if (slideInAnimation != null) {
-            slideInAnimation.stop();
+    public void update() {
+        final boolean shouldBeActive = app.ui().viewModel().miniViewSettings().activeProperty.get();
+        if (shouldBeActive && !expanded && !isMoving()) {
+            rootPane.setVisible(true);
+            slideOut();
+        } else if (!shouldBeActive && expanded && !isMoving()) {
+            slideIn();
         }
+    }
+
+    private void slideIn() {
         final Duration duration = Duration.seconds(settingsViewModel.slideInSecondsProperty.get());
         slideInAnimation = new TranslateTransition(duration, rootPane);
+        slideInAnimation.setOnFinished(_ -> expanded = false);
         slideInAnimation.setToY(0);
         slideInAnimation.setByY(10);
-        slideInAnimation.setDelay(Duration.seconds(1));
+        slideInAnimation.setDelay(Duration.seconds(0.5));
         slideInAnimation.setInterpolator(Interpolator.EASE_OUT);
         slideInAnimation.play();
     }
 
-    public void slideOut() {
-        if (slideOutAnimation != null) {
-            slideOutAnimation.stop();
-        }
+    private void slideOut() {
         final Duration duration = Duration.seconds(settingsViewModel.slideOutSecondsProperty.get());
         slideOutAnimation = new TranslateTransition(duration, rootPane);
+        slideOutAnimation.setOnFinished(_ -> expanded = true);
         slideOutAnimation.setToY(-rootPane.getHeight());
         slideOutAnimation.setByY(10);
-        slideOutAnimation.setDelay(Duration.seconds(2));
+        slideOutAnimation.setDelay(Duration.seconds(0.5));
         slideOutAnimation.setInterpolator(Interpolator.EASE_IN);
         slideOutAnimation.play();
     }

@@ -12,7 +12,6 @@ import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
@@ -30,7 +29,6 @@ import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.controls.FontAwesomeIcon;
 import de.amr.pacmanfx.uilib.controls.FontAwesomeSymbol;
 import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
-import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -132,13 +130,6 @@ public class GamePlayView implements GameView {
         });
 
         layers.overlayLayer().visibleProperty().bind(dashboard.visibleProperty());
-
-        layers.miniViewLayer().rootPane().visibleProperty().bind(Bindings.createObjectBinding(
-            () -> viewModel.miniViewSettings().activeProperty.get()
-                && app.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D),
-            viewModel.miniViewSettings().activeProperty,
-            app.ui().gameScenes().currentGameSceneProperty()
-        ));
     }
 
     public GameDashboard dashboard() {
@@ -172,7 +163,6 @@ public class GamePlayView implements GameView {
     public void onLevelCreated(GameLevel level) {
         layers.miniViewLayer().setLevel(level);
         renderManager.setMiniViewRenderer(layers.miniViewLayer().createRenderer());
-        layers.miniViewLayer().slideIn();
 
         // game scene size might have changed: re-embed
         final GameSceneManager gameSceneManager = app.ui().gameScenes();
@@ -180,7 +170,6 @@ public class GamePlayView implements GameView {
     }
 
     public void onLevelCompleted() {
-        layers.miniViewLayer().slideOut();
     }
 
     // -----------------------------------------------------------------------------------------------------------------
@@ -265,6 +254,8 @@ public class GamePlayView implements GameView {
         if (layers.overlayLayer().isVisible()) {
             dashboard.update(app);
         }
+
+        miniView.update();
     }
 
     @Override

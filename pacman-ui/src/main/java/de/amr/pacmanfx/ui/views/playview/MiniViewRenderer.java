@@ -48,7 +48,9 @@ public class MiniViewRenderer extends BaseRenderer {
                 levelRenderer.info().put(MapRenderInfoKey.FLASHING, false);
                 levelRenderer.render(level, tick);
             }
-            default -> entityRenderer.render(r, tick);
+            default -> {
+                entityRenderer.render(r, tick);
+            }
         }
     }
 }
