@@ -35,6 +35,7 @@ public class DS_ActorInfo extends GameDashboardSection {
     public void setGameApp(GameAppContext app) {
         addDynamicInfo("Pac Name",  supplyPacStateAndName(app));
         addDynamicInfo("Lives",     supplyLivesCount(app));
+        addDynamicInfo("Visible",   supplyPacText(app, this::actorVisibilityText));
         addDynamicInfo("Movement",  supplyPacText(app, this::actorMovementText));
         addDynamicInfo("Tile",      supplyPacText(app, this::actorLocationText));
         addDynamicInfo("Power",     supplyPacPowerText(app));
@@ -93,6 +94,12 @@ public class DS_ActorInfo extends GameDashboardSection {
             tile.x(), tile.y(),
             tileOffset.x(), tileOffset.y(),
             worldNavigation.isNewTileEntered() ? " NEW" : "");
+    }
+
+    private String actorVisibilityText(GameLevel level, GameEntity actor) {
+        if (actor == null) return NO_INFO;
+
+        return actor.isVisible() ? "Visible" : "Hidden";
     }
 
     private String actorMovementText(GameLevel level, GameEntity actor) {
