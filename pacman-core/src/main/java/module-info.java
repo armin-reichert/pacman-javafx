@@ -37,6 +37,7 @@ module de.amr.pacmanfx.core {
     exports de.amr.pacmanfx.core.entities.bonus.comp;
     exports de.amr.pacmanfx.core.entities.clapperboard.comp;
     exports de.amr.pacmanfx.core.entities.clapperboard.system;
+    exports de.amr.pacmanfx.core.entities.door.comp;
     exports de.amr.pacmanfx.core.entities.ghost.comp;
     exports de.amr.pacmanfx.core.entities.house.comp;
     exports de.amr.pacmanfx.core.entities.livescounter.comp;

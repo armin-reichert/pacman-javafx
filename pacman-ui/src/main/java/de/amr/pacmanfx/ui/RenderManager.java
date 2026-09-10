@@ -12,6 +12,7 @@ import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.views.miniview.MiniPlaySceneView;
 import de.amr.pacmanfx.ui.views.miniview.MiniViewRenderer;
+import de.amr.pacmanfx.uilib.rendering.RenderableWrapper;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.scene.canvas.Canvas;
 import org.tinylog.Logger;
@@ -108,9 +109,19 @@ public class RenderManager {
                 case HUD -> hudRenderer.render(r, tick);
                 case SCENE -> renderGameScene(r, tick, debugMode);
                 case OVERLAY -> renderMiniView(r, tick);
-                default -> entityRenderer.render(r, tick);
+                default -> renderGameEntity(r, tick);
             }
         });
+    }
+
+    private void renderGameEntity(Renderable r, long tick) {
+        if (entityRenderer != null) {
+            if (r instanceof RenderableWrapper wrapper) {
+                renderGameEntity(wrapper.wrappedRenderable(), tick);
+            } else {
+                entityRenderer.render(r, tick);
+            }
+        }
     }
 
     private void renderMiniView(Renderable r, long tick) {

@@ -11,6 +11,7 @@ import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.entities.Door;
 import de.amr.pacmanfx.core.entities.House;
+import de.amr.pacmanfx.core.entities.door.comp.DoorLayoutComp;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.*;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
@@ -53,10 +54,10 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
     @Override
     public void render(Renderable r, long tick) {
         Objects.requireNonNull(r);
-        switch (r) {
-            case GameLevel level -> drawLevel(level, tick);
-            case Door door -> drawDoor(door);
-            default -> throw new IllegalArgumentException("Cannot draw object of class %s".formatted(r.getClass()));
+        if (r instanceof GameLevel level) {
+            drawLevel(level, tick);
+        } else {
+            throw new IllegalArgumentException("Cannot draw object of class %s".formatted(r.getClass()));
         }
     }
 
@@ -88,21 +89,6 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         final FoodState foodState = level.food();
         final boolean blinkingOn = level.heartbeat().state() == Pulse.State.ON;
         drawFood(worldMap, foodLayer, foodState, blinkingOn);
-    }
-
-    private void drawDoor(Door door) {
-
-    }
-
-    //TODO Door entity renderer
-    public void drawDoor(House house, WorldMap worldMap) {
-        final MapImageSet recoloredImageSet = worldMap.getConfigValue(TengenMsPacMan_GameLevelRendererKey.MAP_IMAGE_SET);
-        final Color strokeColor = Color.valueOf(recoloredImageSet.mapImage().colorScheme().wallStroke());
-        final double scaledTileSize = scaled(TS);
-        final double xMin = house.floorplan().leftDoorTile().x() * scaledTileSize;
-        final double yMin = house.floorplan().leftDoorTile().y() * scaledTileSize + scaled(5); // 5 pixels down
-        ctx.setFill(strokeColor);
-        ctx.fillRect(xMin, yMin, 2 * scaledTileSize, scaled(2));
     }
 
     private void drawMaze(int x, int y) {

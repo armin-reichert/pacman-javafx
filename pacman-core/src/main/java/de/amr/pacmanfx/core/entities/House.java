@@ -30,6 +30,7 @@ public class House extends GameEntity implements Renderable {
         door.reqComp(DoorLayoutComp.class).setLeftTile(floorplan.leftDoorTile());
         door.reqComp(DoorLayoutComp.class).setRightTile(floorplan.rightDoorTile());
         door.pos().set(doorPos);
+        door.show();
     }
 
     @Override

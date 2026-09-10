@@ -7,12 +7,14 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
+import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.*;
+import de.amr.pacmanfx.core.entities.door.comp.DoorLayoutComp;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimation;
 import de.amr.pacmanfx.tengenmspacman.entities.clapperboard.TengenMsPacMan_ClapperboardAnimationSystem;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
@@ -25,10 +27,12 @@ import de.amr.pacmanfx.uilib.rendering.FacingSprite;
 import de.amr.pacmanfx.uilib.rendering.MessageViewRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import java.util.Arrays;
 
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_EntityRenderer extends BaseRenderer implements SpriteRenderer {
@@ -84,6 +88,7 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
             case Stork stork -> drawStork(stork);
             case Marquee marquee -> drawMarquee(marquee, tick);
+            case Door door -> drawDoor(door);
             default -> {
                 if (actor.hasComp(SpriteAnimationComp.class)) {
                     drawSpriteCentered(animSystem.currentSprite(actor), center);
@@ -165,6 +170,20 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
     private RectShort computeSprite(BonusPoints bonusPoints) {
         final int index = Arrays.binarySearch(BONUS_POINTS, bonusPoints.points().number());
         return index >= 0 ? spriteSheet().findSpriteSequence(SpriteID.BONUS_VALUES)[index] : RectShort.NULL_RECTANGLE;
+    }
+
+    private void drawDoor(Door door) {
+        final Color strokeColor = Color.RED;
+
+//        final MapImageSet recoloredImageSet = worldMap.getConfigValue(TengenMsPacMan_GameLevelRendererKey.MAP_IMAGE_SET);
+//        final Color strokeColor = Color.valueOf(recoloredImageSet.mapImage().colorScheme().wallStroke());
+
+        final double scaledTileSize = scaled(TS);
+        final Vector2i leftDoorTile = door.reqComp(DoorLayoutComp.class).leftTile();
+        final double xMin = leftDoorTile.x() * scaledTileSize;
+        final double yMin = leftDoorTile.y() * scaledTileSize + scaled(5); // 5 pixels down
+        ctx.setFill(strokeColor);
+        ctx.fillRect(xMin, yMin, 2 * scaledTileSize, scaled(2));
     }
 
     private void drawClapperBoard(Clapperboard clapperboard) {

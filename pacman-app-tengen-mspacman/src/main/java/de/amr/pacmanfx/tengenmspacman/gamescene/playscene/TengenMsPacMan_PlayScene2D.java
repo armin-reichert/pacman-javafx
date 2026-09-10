@@ -5,10 +5,12 @@
 package de.amr.pacmanfx.tengenmspacman.gamescene.playscene;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.Renderable;
+import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
@@ -27,6 +29,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.vm.GameViewModel;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
+import de.amr.pacmanfx.uilib.rendering.RenderableWrapper;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
@@ -86,7 +89,13 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
 
     @Override
     public Stream<Renderable> renderables() {
-        return game().session().optLevel().map(GameLevel::visibleRenderables).orElse(Stream.empty());
+        final GameLevel level = game().session().optLevel().orElse(null);
+        if (level == null) return Stream.empty();
+        return Ufx.streamOf(
+            level.visibleRenderables(),
+            // In Tengen, ghosts appear under the house door, so reassign the door z layer:
+            RenderableWrapper.reassignLayer(level.entities().house().door(), RenderingLayer.ACTORS, 100)
+        );
     }
 
     @Override
