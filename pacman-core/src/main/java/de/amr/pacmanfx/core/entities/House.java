@@ -9,6 +9,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
+import de.amr.pacmanfx.core.entities.door.comp.DoorLayoutComp;
 import de.amr.pacmanfx.core.entities.house.comp.HouseFloorplanComp;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 
@@ -18,8 +19,17 @@ import static java.util.Objects.requireNonNull;
 
 public class House extends GameEntity implements Renderable {
 
-    public House() {
-        setComp(HouseFloorplanComp.class, new HouseFloorplanComp());
+    private final Door door;
+
+    public House(HouseFloorplanComp floorplan) {
+        requireNonNull(floorplan);
+        setComp(HouseFloorplanComp.class, floorplan);
+
+        final Vector2f doorPos = floorplan.leftDoorTile().toVector2f().scaled(WorldMap.TS);
+        door = new Door();
+        door.reqComp(DoorLayoutComp.class).setLeftTile(floorplan.leftDoorTile());
+        door.reqComp(DoorLayoutComp.class).setRightTile(floorplan.rightDoorTile());
+        door.pos().set(doorPos);
     }
 
     @Override
@@ -31,6 +41,10 @@ public class House extends GameEntity implements Renderable {
         return reqComp(HouseFloorplanComp.class);
     }
 
+    public Door door() {
+        return door;
+    }
+
     public Vector2i sizeInTiles() {
         final HouseFloorplanComp fp = reqComp(HouseFloorplanComp.class);
         return fp.maxTile().minus(fp.minTile()).plus(1, 1);
@@ -38,8 +52,8 @@ public class House extends GameEntity implements Renderable {
 
     public boolean isDoorAt(Vector2i tile) {
         requireNonNull(tile);
-        final HouseFloorplanComp fp = reqComp(HouseFloorplanComp.class);
-        return tile.equals(fp.leftDoorTile()) || tile.equals(fp.rightDoorTile());
+        final var doorLayout = door.reqComp(DoorLayoutComp.class);
+        return doorLayout.leftTile().equals(tile) || doorLayout.rightTile().equals(tile);
     }
 
     /**

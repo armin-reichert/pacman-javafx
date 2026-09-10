@@ -30,8 +30,8 @@ public class HouseFactory {
     };
 
     public static House createArcadeHouse(Vector2i minTile) {
-        final House house = new House();
-        final HouseFloorplanComp floorplan = house.floorplan();
+
+        final var floorplan = new HouseFloorplanComp();
 
         floorplan.setContent(Ufx.copyOf(ARCADE_HOUSE_TILES));
 
@@ -55,6 +55,6 @@ public class HouseFactory {
         floorplan.ghostStartDirectionMap().put(GhostPersonality.CYAN_GHOST_BASHFUL, Direction.UP);
         floorplan.ghostStartDirectionMap().put(GhostPersonality.ORANGE_GHOST_POKEY, Direction.UP);
 
-        return house;
+        return new House(floorplan);
     }
 }
