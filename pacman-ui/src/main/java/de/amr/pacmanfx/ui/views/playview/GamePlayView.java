@@ -233,14 +233,12 @@ public class GamePlayView implements GameView {
 
         renderManager.clearRenderQueue();
 
-        // Add HUD renderables
         final GameSession session = app.game().session();
         if (session.isHUDVisible()) {
             renderManager.addAll(session.hud().renderables());
         }
 
-        // Add mini view renderables
-        //renderManager.addAll(layers.miniViewLayer().renderables());
+        renderManager.addAll(layers.miniViewLayer().renderables());
         renderManager.setMiniViewRenderer(layers.miniViewLayer().createRenderer());
 
         // Add game scene renderables
