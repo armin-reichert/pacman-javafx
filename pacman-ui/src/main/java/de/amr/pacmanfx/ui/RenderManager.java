@@ -124,12 +124,6 @@ public class RenderManager {
         }
     }
 
-    private void renderMiniView(MiniPlaySceneView miniView, long tick) {
-        if (miniViewRenderer != null) {
-            miniViewRenderer.render(miniView, tick);
-        }
-    }
-
     private void renderGameScene(Renderable r, long tick, boolean debugMode) {
         if (sceneRenderer != null) {
             sceneRenderer.render(r, tick);
@@ -140,9 +134,8 @@ public class RenderManager {
     }
 
     public void renderOverlay(Renderable r, long tick) {
-        switch (r) {
-            case MiniPlaySceneView miniView -> renderMiniView(miniView, tick);
-            default -> renderGameEntity(r, tick);
+        if (miniViewRenderer != null) {
+            miniViewRenderer.render(r, tick);
         }
     }
 

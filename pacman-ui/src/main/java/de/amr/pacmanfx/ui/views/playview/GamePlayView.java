@@ -240,7 +240,7 @@ public class GamePlayView implements GameView {
         }
 
         // Add mini view renderables
-        renderManager.addAll(layers.miniViewLayer().renderables());
+        //renderManager.addAll(layers.miniViewLayer().renderables());
         renderManager.setMiniViewRenderer(layers.miniViewLayer().createRenderer());
 
         // Add game scene renderables
