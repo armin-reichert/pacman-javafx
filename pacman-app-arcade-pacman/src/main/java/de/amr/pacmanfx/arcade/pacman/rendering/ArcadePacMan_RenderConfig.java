@@ -34,6 +34,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.HUD_Style;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.CommonGameLevelRenderInfoKey;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -131,7 +132,9 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
     @Override
     public ArcadePacMan_GameLevel_Renderer createGameLevelRenderer(ActorSpriteAnimController animSystem, Canvas canvas) {
         requireNonNull(canvas);
-        return new ArcadePacMan_GameLevel_Renderer(canvas, assets.image("maze.bright"));
+        final var renderer = new ArcadePacMan_GameLevel_Renderer(canvas);
+        renderer.info().put(CommonGameLevelRenderInfoKey.BRIGHT_MAZE_IMAGE, assets.image("maze.bright"));
+        return renderer;
     }
 
     @Override

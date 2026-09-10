@@ -9,7 +9,6 @@ import de.amr.basics.timer.Pulse;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
-import de.amr.pacmanfx.core.Energizer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.HUD;
@@ -31,7 +30,6 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.ui.views.ContextMenuSupport.*;
-import static java.util.function.Predicate.not;
 
 /**
  * 2D play scene for Arcade game variants.

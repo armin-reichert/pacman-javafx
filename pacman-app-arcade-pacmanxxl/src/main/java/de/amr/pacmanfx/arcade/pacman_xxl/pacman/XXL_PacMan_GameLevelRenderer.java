@@ -21,7 +21,7 @@ public class XXL_PacMan_GameLevelRenderer extends ArcadePacMan_GameLevel_Rendere
     private final GenericLevelRenderer genericLevelRenderer;
 
     public XXL_PacMan_GameLevelRenderer(Canvas canvas) {
-        super(canvas, null);
+        super(canvas);
 
         genericLevelRenderer = new GenericLevelRenderer(canvas);
         genericLevelRenderer.scalingProperty().bind(scalingProperty());

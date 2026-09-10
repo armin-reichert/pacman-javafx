@@ -14,17 +14,14 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_GameLevelRendererKey;
-import de.amr.pacmanfx.tengenmspacman.sprites.MapImageSet;
-import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_MapRepository;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.Common_GameLevelRendererKey;
+import de.amr.pacmanfx.uilib.rendering.CommonGameLevelRenderInfoKey;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
-import org.tinylog.Logger;
 
 public class TengenMsPacMan_PlayScene2D_Renderer extends BaseRenderer implements SpriteRenderer {
 
@@ -98,11 +95,11 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends BaseRenderer implements
         info.put(TengenMsPacMan_GameLevelRendererKey.MAP_CATEGORY, mapCategory);
         info.put(TengenMsPacMan_GameLevelRendererKey.MAP_IMAGE_SET, worldMap.getConfigValue(TengenMsPacMan_GameLevelRendererKey.MAP_IMAGE_SET));
         if (flashingState == null) {
-            info.put(Common_GameLevelRendererKey.BRIGHT, false);
-            info.put(Common_GameLevelRendererKey.FLASHING_INDEX, -1);
+            info.put(CommonGameLevelRenderInfoKey.BRIGHT_PHASE_ON, false);
+            info.put(CommonGameLevelRenderInfoKey.FLASHING_INDEX, -1);
         } else {
-            info.put(Common_GameLevelRendererKey.BRIGHT, flashingState.isHighlighted());
-            info.put(Common_GameLevelRendererKey.FLASHING_INDEX, flashingState.flashingIndex());
+            info.put(CommonGameLevelRenderInfoKey.BRIGHT_PHASE_ON, flashingState.isHighlighted());
+            info.put(CommonGameLevelRenderInfoKey.FLASHING_INDEX, flashingState.flashingIndex());
         }
     }
 }
