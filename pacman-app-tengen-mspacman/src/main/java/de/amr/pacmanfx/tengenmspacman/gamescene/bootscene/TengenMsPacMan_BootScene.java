@@ -8,15 +8,14 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
-import de.amr.pacmanfx.core.rendering.ColoredRect;
-import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.TextDisplay;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.core.rendering.ColoredRect;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.game.GameVariant;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
-import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
@@ -28,6 +27,7 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
+import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConfig.shadeOfBlue;
 
 /**
  * Shows moving and color changing "TENGEN PRESENTS" text and ghost running through scene.
@@ -38,8 +38,7 @@ public class TengenMsPacMan_BootScene extends GameScene {
 
     private static final float GHOST_Y = tilesPx(21.5f);
 
-    public boolean gray;
-    public Color shadeOfBlue;
+    private boolean gray;
 
     private final ColoredRect grayRect;
     private final TextDisplay tengenPresentsText;
@@ -84,20 +83,18 @@ public class TengenMsPacMan_BootScene extends GameScene {
         final GameSystems systems = game.variant().systems();
 
         final int stateTick = (int) game().state().timer().tickCount();
-        shadeOfBlue = TengenMsPacMan_RenderConfig.shadeOfBlue(stateTick);
+        final Color shadeOfBlue = shadeOfBlue(stateTick);
 
         switch (stateTick) {
-            case   1 -> blackBackground();
-            case   7 -> grayBackground();
-            case  12 -> blackBackground();
+            case   1 -> grayScreen(false);
+            case   7 -> grayScreen(true);
+            case  12 -> grayScreen(false);
             case  21 -> {
                 tengenPresentsText.pos().set(NES_SCREEN_WIDTH / 2.0, reqCanvasRendering().unscaledHeight()); // lower border of screen
                 tengenPresentsText.show();
                 systems.motor().setVelocity(tengenPresentsText, 0, -WorldMap.HTS);
             }
-            case  55 -> {
-                systems.motor().setVelocity(tengenPresentsText, 0, 0);
-            }
+            case  55 -> systems.motor().setVelocity(tengenPresentsText, 0, 0);
             case 113 -> {
                 ghost.pos().set(reqCanvasRendering().unscaledWidth() - WorldMap.TS, GHOST_Y);
                 ghost.show();
@@ -110,8 +107,8 @@ public class TengenMsPacMan_BootScene extends GameScene {
                 tengenPresentsText.hide();
                 ghost.hide();
             }
-            case 204 -> grayBackground();
-            case 214 -> blackBackground();
+            case 204 -> grayScreen(true);
+            case 214 -> grayScreen(false);
             case 220 -> {
                 game().state().triggerTimeout();
                 return;
@@ -124,11 +121,7 @@ public class TengenMsPacMan_BootScene extends GameScene {
         systems.motor().move(ghost);
     }
 
-    private void blackBackground() {
-        gray = false;
-
-    }
-    private void grayBackground() {
-        gray = true;
+    private void grayScreen(boolean gray) {
+        this.gray = gray;
     }
 }
