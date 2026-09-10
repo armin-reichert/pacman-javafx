@@ -36,7 +36,7 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.uilib.rendering.RenderableWrapper.reassignLayer;
 import static java.util.Objects.requireNonNull;
 
-public class MiniPlaySceneView extends HBox{
+public class MiniPlaySceneView extends HBox implements Renderable {
 
     public static final Insets PADDING = new Insets(0, 10, 0, 10);
 
@@ -65,6 +65,11 @@ public class MiniPlaySceneView extends HBox{
         // Canvas size determines mini view size
         maxWidthProperty().bind(canvas.widthProperty().add(PADDING.getLeft() + PADDING.getRight()));
         maxHeightProperty().bind(canvas.heightProperty());
+    }
+
+    @Override
+    public RenderingLayer layer() {
+        return RenderingLayer.OVERLAY;
     }
 
     public Stream<Renderable> renderables() {

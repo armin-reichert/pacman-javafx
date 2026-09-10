@@ -108,7 +108,7 @@ public class RenderManager {
             switch (r.layer()) {
                 case HUD -> hudRenderer.render(r, tick);
                 case SCENE -> renderGameScene(r, tick, debugMode);
-                case OVERLAY -> renderMiniView(r, tick);
+                case OVERLAY -> renderOverlay(r, tick);
                 default -> renderGameEntity(r, tick);
             }
         });
@@ -124,9 +124,9 @@ public class RenderManager {
         }
     }
 
-    private void renderMiniView(Renderable r, long tick) {
+    private void renderMiniView(MiniPlaySceneView miniView, long tick) {
         if (miniViewRenderer != null) {
-            miniViewRenderer.render(r, tick);
+            miniViewRenderer.render(miniView, tick);
         }
     }
 
@@ -138,6 +138,14 @@ public class RenderManager {
             }
         }
     }
+
+    public void renderOverlay(Renderable r, long tick) {
+        switch (r) {
+            case MiniPlaySceneView miniView -> renderMiniView(miniView, tick);
+            default -> renderGameEntity(r, tick);
+        }
+    }
+
 
     private void configureRenderer(Renderer renderer, SceneCanvasRenderingComp canvasRendering) {
         renderer.backgroundColorProperty().bind(canvasRendering.backgroundColorProperty());
