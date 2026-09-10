@@ -9,7 +9,7 @@ import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneController;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
-import de.amr.pacmanfx.ui.views.playview.MiniPlaySceneView;
+import de.amr.pacmanfx.ui.views.miniview.MiniPlaySceneView;
 import de.amr.pacmanfx.ui.vm.GameViewModel;
 import javafx.scene.Camera;
 import javafx.scene.SubScene;

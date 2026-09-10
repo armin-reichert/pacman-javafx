@@ -9,6 +9,7 @@ import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
+import de.amr.pacmanfx.ui.RenderManager;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -22,6 +23,7 @@ import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
 import de.amr.pacmanfx.ui.views.dashboard.GameDashboard;
 import de.amr.pacmanfx.ui.views.dashboard.GameDashboardSection;
 import de.amr.pacmanfx.ui.views.help.HelpView;
+import de.amr.pacmanfx.ui.views.miniview.MiniPlaySceneView;
 import de.amr.pacmanfx.ui.vm.Game2DSettingsVM;
 import de.amr.pacmanfx.ui.vm.GameViewModel;
 import de.amr.pacmanfx.ui.window.GameMainScene;
@@ -29,6 +31,9 @@ import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.controls.FontAwesomeIcon;
 import de.amr.pacmanfx.uilib.controls.FontAwesomeSymbol;
 import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
+import de.amr.pacmanfx.uilib.widgets.decorationpane.DecorationPane;
+import de.amr.pacmanfx.uilib.widgets.decorationpane.DecorationPaneBorderConfig;
+import de.amr.pacmanfx.uilib.widgets.decorationpane.DecorationPaneConfig;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -59,10 +64,10 @@ public class GamePlayView implements GameView {
     public static final Border DEBUG_BORDER = Ufx.border(Color.LIGHTGREEN, 1);
 
     //TODO use FX controls + CSS
-    public static final DecorationPane.Config DECORATION_CONFIG = new DecorationPane.Config(
+    public static final DecorationPaneConfig DECORATION_CONFIG = new DecorationPaneConfig(
         0.85f, 0.93f, 0.5f, // scaling x,y, min
         20, 20, // padding x,y
-        new DecorationPane.FrameConfig(26, 10, 5, 55.0, ArcadePalette.ARCADE_WHITE)
+        new DecorationPaneBorderConfig(26, 10, 5, 55.0, ArcadePalette.ARCADE_WHITE)
     );
 
     public record Layers(

@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui.views.playview;
+package de.amr.pacmanfx.uilib.widgets.decorationpane;
 
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
@@ -21,33 +21,9 @@ import static java.util.Objects.requireNonNull;
 //TODO: Still too complicated for what it does
 public class DecorationPane extends StackPane {
 
-    public record FrameConfig(
-        int    arcDiameter,
-        int    cornerRadius,
-        int    minBorderWidth,
-        double borderWidthRatio,
-        Color borderColor) {}
-
-    public record Config(
-        float scalingX,
-        float scalingY,
-        float minScaling,
-        float paddingX,
-        float paddingY,
-        FrameConfig frameConfig) {}
-
-    public static final Config DEFAULT_CONFIG = new Config(
-        0.85f,
-        0.93f,
-        0.5f,
-        20,
-        20,
-        new FrameConfig(
-            26,
-            10,
-            5,
-            55.0,
-            Color.WHITE)
+    public static final DecorationPaneConfig DEFAULT_CONFIG = new DecorationPaneConfig(
+        0.85f, 0.93f, 0.5f, 20, 20,
+        new DecorationPaneBorderConfig(26, 10, 5, 55.0, Color.WHITE)
     );
 
     private static Border createRoundedBorder(Paint strokeColor, double borderWidth, double cornerRadius) {
@@ -63,17 +39,17 @@ public class DecorationPane extends StackPane {
 
     private final DoubleProperty unscaledHeight = new SimpleDoubleProperty(600);
 
-    private Canvas canvas = new Canvas();
-
-    private final Config config;
+    private final DecorationPaneConfig config;
 
     private final ChangeListener<? super Number> resizeHandler = (_, _, _) -> doLayout(getScaling(), true);
+
+    private Canvas canvas;
 
     public DecorationPane(double unscaledWidth, double unscaledHeight) {
         this(DEFAULT_CONFIG, unscaledWidth, unscaledHeight);
     }
 
-    public DecorationPane(Config config, double unscaledWidth, double unscaledHeight) {
+    public DecorationPane(DecorationPaneConfig config, double unscaledWidth, double unscaledHeight) {
         this.config = requireNonNull(config);
 
         unscaledWidthProperty().set(unscaledWidth);
@@ -90,7 +66,7 @@ public class DecorationPane extends StackPane {
         clipProperty().bind(Bindings.createObjectBinding(
             () -> {
                 final Dimension2D paneSize = computePaneSize();
-                final double arcDiameter = config.frameConfig().arcDiameter() * getScaling();
+                final double arcDiameter = config.decorationPaneBorderConfig().arcDiameter() * getScaling();
                 final var rect = new Rectangle(paneSize.getWidth(), paneSize.getHeight());
                 rect.setArcHeight(arcDiameter);
                 rect.setArcWidth(arcDiameter);
@@ -102,10 +78,10 @@ public class DecorationPane extends StackPane {
         borderProperty().bind(Bindings.createObjectBinding(
             () -> {
                 final Dimension2D paneSize = computePaneSize();
-                final double proposedBorderWidth = Math.ceil(paneSize.getHeight() / config.frameConfig().borderWidthRatio());
-                final double borderWidth = Math.max(config.frameConfig().minBorderWidth(), proposedBorderWidth);
-                final double cornerRadius = Math.ceil(config.frameConfig().cornerRadius() * getScaling());
-                return createRoundedBorder(config.frameConfig().borderColor(), borderWidth, cornerRadius);
+                final double proposedBorderWidth = Math.ceil(paneSize.getHeight() / config.decorationPaneBorderConfig().borderWidthRatio());
+                final double borderWidth = Math.max(config.decorationPaneBorderConfig().minBorderWidth(), proposedBorderWidth);
+                final double cornerRadius = Math.ceil(config.decorationPaneBorderConfig().cornerRadius() * getScaling());
+                return createRoundedBorder(config.decorationPaneBorderConfig().borderColor(), borderWidth, cornerRadius);
             },
             scalingProperty(), unscaledWidthProperty(), unscaledHeightProperty())
         );

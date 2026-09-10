@@ -1,4 +1,4 @@
-package de.amr.pacmanfx.uilib.widgets;
+package de.amr.pacmanfx.uilib.widgets.optionmenu;
 
 import javafx.scene.text.Font;
 import javafx.scene.text.FontPosture;

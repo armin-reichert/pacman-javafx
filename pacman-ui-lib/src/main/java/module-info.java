@@ -41,4 +41,5 @@ open module de.amr.pacmanfx.uilib {
     exports de.amr.pacmanfx.uilib.entities3D.messageview.comp;
     exports de.amr.pacmanfx.uilib.entities3D.messageview.system;
     exports de.amr.pacmanfx.uilib.entities3D.messageview;
+    exports de.amr.pacmanfx.uilib.widgets.decorationpane;
 }
