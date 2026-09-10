@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.uilib.rendering;
 
 import de.amr.basics.InfoMap;
-import de.amr.pacmanfx.core.Renderable;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.canvas.Canvas;

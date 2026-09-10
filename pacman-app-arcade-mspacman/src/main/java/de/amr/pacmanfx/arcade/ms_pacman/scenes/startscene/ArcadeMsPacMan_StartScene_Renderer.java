@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.scenes.startscene;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
-import de.amr.pacmanfx.core.Renderable;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;

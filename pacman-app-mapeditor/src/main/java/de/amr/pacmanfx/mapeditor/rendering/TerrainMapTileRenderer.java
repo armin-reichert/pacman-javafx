@@ -7,7 +7,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.Renderable;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.model.world.map.TerrainTile;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapParser;

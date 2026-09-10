@@ -9,7 +9,7 @@ import de.amr.basics.Disposable;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.Renderable;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventListener;

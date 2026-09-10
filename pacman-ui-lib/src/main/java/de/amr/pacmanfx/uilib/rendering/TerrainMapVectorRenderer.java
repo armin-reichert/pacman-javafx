@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.uilib.rendering;
 
-import de.amr.pacmanfx.core.Renderable;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.model.world.map.TerrainTile;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.obstacle.Obstacle;

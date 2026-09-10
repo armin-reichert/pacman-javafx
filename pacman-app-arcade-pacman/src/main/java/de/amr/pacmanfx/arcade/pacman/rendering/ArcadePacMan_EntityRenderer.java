@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
-import de.amr.pacmanfx.core.Renderable;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;

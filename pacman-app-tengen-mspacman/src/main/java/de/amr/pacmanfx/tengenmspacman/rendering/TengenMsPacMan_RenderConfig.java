@@ -17,7 +17,6 @@ import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.gamescene.bootscene.TengenMsPacMan_BootScene;
-import de.amr.pacmanfx.tengenmspacman.gamescene.bootscene.TengenMsPacMan_BootScene_Renderer;
 import de.amr.pacmanfx.tengenmspacman.gamescene.creditsscene.TengenMsPacMan_CreditsScene;
 import de.amr.pacmanfx.tengenmspacman.gamescene.creditsscene.TengenMsPacMan_CreditsScene_Renderer;
 import de.amr.pacmanfx.tengenmspacman.gamescene.cutscenes.TengenMsPacMan_CutScene1;
@@ -154,7 +153,7 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     @Override
     public BaseRenderer createGameSceneRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
         return switch (gameScene) {
-            case TengenMsPacMan_BootScene ignored -> new TengenMsPacMan_BootScene_Renderer(gameScene, canvas);
+            case TengenMsPacMan_BootScene ignored -> null;
             case TengenMsPacMan_IntroScene ignored -> new TengenMsPacMan_IntroScene_Renderer(this, gameScene, canvas);
             case TengenMsPacMan_OptionsScene ignored -> new TengenMsPacMan_OptionsScene_Renderer(gameScene, canvas);
             case TengenMsPacMan_PlayScene2D ignored -> new TengenMsPacMan_PlayScene2D_Renderer(this, gameScene, animController, canvas);

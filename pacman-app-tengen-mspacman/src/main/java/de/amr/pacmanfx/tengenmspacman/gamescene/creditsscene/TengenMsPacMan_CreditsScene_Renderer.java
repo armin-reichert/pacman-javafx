@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.tengenmspacman.gamescene.creditsscene;
 
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.core.Renderable;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;

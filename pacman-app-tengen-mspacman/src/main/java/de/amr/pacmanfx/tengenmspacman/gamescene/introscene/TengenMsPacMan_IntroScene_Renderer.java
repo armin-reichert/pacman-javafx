@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.tengenmspacman.gamescene.introscene;
 
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.core.Renderable;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;

@@ -11,7 +11,7 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.Renderable;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
 import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;

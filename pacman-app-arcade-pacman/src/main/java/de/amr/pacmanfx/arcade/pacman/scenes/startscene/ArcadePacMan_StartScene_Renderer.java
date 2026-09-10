@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.arcade.pacman.scenes.startscene;
 
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.core.Renderable;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;

@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.scenes.bootscene;
 
 import de.amr.basics.math.RandomNumbers;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.Renderable;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;

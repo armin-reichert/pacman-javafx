@@ -6,7 +6,7 @@ package de.amr.pacmanfx.uilib.rendering;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.core.Renderable;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.entities.MessageView;
 import de.amr.pacmanfx.core.level.MessageType;
 import de.amr.pacmanfx.uilib.entities.messageview.comp.MessageViewStyleComp;

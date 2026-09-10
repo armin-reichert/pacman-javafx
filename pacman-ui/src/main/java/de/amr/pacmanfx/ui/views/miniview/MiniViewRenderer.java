@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.views.miniview;
 
 import de.amr.basics.timer.Pulse;
-import de.amr.pacmanfx.core.Renderable;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;

@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.core.entities;
 
-import de.amr.pacmanfx.core.Renderable;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.MovementComp;
 import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;

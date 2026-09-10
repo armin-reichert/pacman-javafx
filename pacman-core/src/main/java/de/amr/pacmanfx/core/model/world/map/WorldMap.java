@@ -5,7 +5,7 @@ package de.amr.pacmanfx.core.model.world.map;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.Renderable;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import org.tinylog.Logger;
 

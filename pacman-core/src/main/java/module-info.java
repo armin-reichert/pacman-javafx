@@ -52,4 +52,5 @@ module de.amr.pacmanfx.core {
     exports de.amr.pacmanfx.core.entities.textdisplay.comp;
     exports de.amr.pacmanfx.core.gameplay.hunt;
     exports de.amr.pacmanfx.core.spriteanim;
+    exports de.amr.pacmanfx.core.rendering;
 }

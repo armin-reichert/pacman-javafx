@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.core.Renderable;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.entities.CreditDisplay;
 import de.amr.pacmanfx.core.entities.LevelCounter;

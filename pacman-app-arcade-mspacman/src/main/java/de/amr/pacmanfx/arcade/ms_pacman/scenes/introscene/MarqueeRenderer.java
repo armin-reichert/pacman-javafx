@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.scenes.introscene;
 
-import de.amr.pacmanfx.core.Renderable;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.entities.Marquee;
 import de.amr.pacmanfx.core.entities.marquee.comp.MarqueeArea;
 import de.amr.pacmanfx.core.entities.marquee.comp.MarqueeCorners;

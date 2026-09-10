@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.core.level;
 
 import de.amr.basics.timer.Pulse;
-import de.amr.pacmanfx.core.Renderable;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.gameplay.ArcadeHouseGateKeeper;

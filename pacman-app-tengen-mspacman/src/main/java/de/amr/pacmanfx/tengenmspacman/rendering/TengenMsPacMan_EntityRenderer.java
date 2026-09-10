@@ -9,12 +9,13 @@ import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.door.comp.DoorLayoutComp;
+import de.amr.pacmanfx.core.rendering.ColoredRect;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimation;
 import de.amr.pacmanfx.tengenmspacman.entities.clapperboard.TengenMsPacMan_ClapperboardAnimationSystem;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
@@ -65,11 +66,18 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
 
     @Override
     public void render(Renderable r, long tick) {
-        if (!(r instanceof GameEntity actor)) {
+        requireNonNull(r);
+
+        if (r instanceof ColoredRect rect) {
+            fillColoredRect(rect);
             return;
         }
 
-        if (!actor.isVisible()) return;
+        if (!(r instanceof GameEntity gameEntity)) {
+            return;
+        }
+
+        if (!gameEntity.isVisible()) return;
 
         ctx.save();
         ctx.setImageSmoothing(true);
@@ -77,8 +85,8 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
         //TODO REMOVE! This does not belong here and is complete crap!
         ctx.translate(scaled(16), 0); // content indent of map
 
-        final Vector2f center = actor.pos().bodyCenter();
-        switch (actor) {
+        final Vector2f center = gameEntity.pos().bodyCenter();
+        switch (gameEntity) {
             case Bonus bonus -> drawSpriteCentered(computeSprite(bonus), center);
             case BonusPoints points -> drawSpriteCentered(computeSprite(points), center);
             case Ghost ghost -> drawSpriteCentered(computeSprite(ghost), center);
@@ -89,11 +97,11 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
             case Stork stork -> drawStork(stork);
             case Marquee marquee -> drawMarquee(marquee, tick);
             case Door door -> drawDoor(door);
-            //TODO let base renderer handle text display
+            //TODO let base renderer handle these:
             case TextDisplay textDisplay-> drawCenteredText(textDisplay);
             default -> {
-                if (actor.hasComp(SpriteAnimationComp.class)) {
-                    drawSpriteCentered(animSystem.currentSprite(actor), center);
+                if (gameEntity.hasComp(SpriteAnimationComp.class)) {
+                    drawSpriteCentered(animSystem.currentSprite(gameEntity), center);
                 }
             }
         }
@@ -179,6 +187,14 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
             center.x(),
             center.y()
         );
+    }
+
+    private void fillColoredRect(ColoredRect coloredRect) {
+        final var rect = coloredRect.rect();
+        ctx.save();
+        ctx.setFill(coloredRect.color());
+        ctx.fillRect(scaled(rect.x()), scaled(rect.y()), scaled(rect.width()), scaled(rect.height()));
+        ctx.restore();
     }
 
     private void drawDoor(Door door) {

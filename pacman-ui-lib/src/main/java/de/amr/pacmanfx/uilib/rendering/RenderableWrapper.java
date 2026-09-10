@@ -1,6 +1,6 @@
 package de.amr.pacmanfx.uilib.rendering;
 
-import de.amr.pacmanfx.core.Renderable;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 
 public class RenderableWrapper implements Renderable {

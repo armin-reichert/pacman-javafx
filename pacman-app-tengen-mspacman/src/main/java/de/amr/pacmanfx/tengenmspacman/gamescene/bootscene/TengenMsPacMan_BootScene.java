@@ -8,19 +8,20 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
-import de.amr.pacmanfx.core.Renderable;
+import de.amr.pacmanfx.core.rendering.ColoredRect;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.TextDisplay;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariant;
+import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 import java.util.stream.Stream;
 
@@ -40,8 +41,10 @@ public class TengenMsPacMan_BootScene extends GameScene {
     public boolean gray;
     public Color shadeOfBlue;
 
-    private Ghost ghost;
+    private final ColoredRect grayRect;
     private final TextDisplay tengenPresentsText;
+
+    private Ghost ghost;
 
     public TengenMsPacMan_BootScene(GameAppContext app) {
         super(app);
@@ -51,6 +54,8 @@ public class TengenMsPacMan_BootScene extends GameScene {
         rendering.unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         rendering.unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
 
+        grayRect = new ColoredRect(0, 0, NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT, NES_Palette.color(0x10));
+
         tengenPresentsText = new TextDisplay();
         tengenPresentsText.data().setText(TENGEN_PRESENTS);
         tengenPresentsText.data().setFont(GlobalAssets.Fonts.ARCADE.font());
@@ -58,7 +63,9 @@ public class TengenMsPacMan_BootScene extends GameScene {
 
     @Override
     public Stream<Renderable> renderables() {
-        return Ufx.streamOf(tengenPresentsText, ghost);
+        return Ufx.streamOf(gray
+            ? grayRect
+            : tengenPresentsText, ghost);
     }
 
     @Override

@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.basics.math.RectShort;
-import de.amr.pacmanfx.core.Renderable;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.level.GameLevel;

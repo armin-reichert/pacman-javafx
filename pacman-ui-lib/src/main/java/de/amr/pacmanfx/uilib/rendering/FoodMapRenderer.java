@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.uilib.rendering;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.Renderable;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.model.world.map.FoodTile;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import javafx.beans.property.ObjectProperty;

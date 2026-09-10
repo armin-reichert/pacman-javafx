@@ -11,7 +11,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.entities.clapperboard.ClapperboardAnimat
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.introscene.MarqueeRenderer;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.Copyright;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_RenderConfig;
-import de.amr.pacmanfx.core.Renderable;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;

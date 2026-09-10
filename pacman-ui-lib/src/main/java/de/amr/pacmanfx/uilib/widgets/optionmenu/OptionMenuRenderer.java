@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.uilib.widgets.optionmenu;
 
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.core.Renderable;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCode;
