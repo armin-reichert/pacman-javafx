@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.core.level;
 
+import de.amr.pacmanfx.core.Energizer;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.GameEntityComp;
 import de.amr.pacmanfx.core.entities.*;
@@ -26,6 +27,7 @@ public class GameLevelEntities {
     private MessageView theMessage;  // Don't push me cause I'm close to the edge, I'm trying not to lose my head!
     private final List<GhostPoints> theGhostPoints = new ArrayList<>();
     private final List<BonusPoints> theBonusPoints = new ArrayList<>();
+    private final List<Energizer> theEnergizers = new ArrayList<>();
 
     public void add(GameEntity entity) {
         requireNonNull(entity);
@@ -62,6 +64,9 @@ public class GameLevelEntities {
                 }
                 theMessage = messageView;
             }
+            case Energizer energizer -> {
+                theEnergizers.add(energizer);
+            }
             default -> throw new IllegalArgumentException("Unknown entity type!");
         }
     }
@@ -75,7 +80,8 @@ public class GameLevelEntities {
             case Bonus _ -> theBonus = null;
             case BonusPoints bonusPoints -> theBonusPoints.remove(bonusPoints);
             case House _ -> theHouse = null;
-            case  MessageView _ -> theMessage = null;
+            case MessageView _ -> theMessage = null;
+            case Energizer energizer -> theEnergizers.remove(energizer);
             default -> throw new IllegalArgumentException("Unknown entity type!");
         }
     }
@@ -88,11 +94,13 @@ public class GameLevelEntities {
         return Stream.of(
             Optional.ofNullable(thePac).stream(),
             theGhosts.values().stream(),
+            theEnergizers.stream(),
             Optional.ofNullable(theBonus).stream(),
             Optional.ofNullable(theHouse).stream(),
             Optional.ofNullable(theMessage).stream(),
             theGhostPoints.stream(),
-            theBonusPoints.stream()).flatMap(Function.identity());
+            theBonusPoints.stream()).flatMap(Function.identity()
+        );
     }
 
     @SafeVarargs
@@ -148,5 +156,9 @@ public class GameLevelEntities {
 
     public MessageView theMessageView() {
         return theMessage;
+    }
+
+    public List<Energizer> theEnergizers() {
+        return theEnergizers;
     }
 }

@@ -5,8 +5,11 @@
 package de.amr.pacmanfx.arcade.pacman.scenes.playscene;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.basics.timer.Pulse;
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
+import de.amr.pacmanfx.core.Energizer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.HUD;
@@ -28,6 +31,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.ui.views.ContextMenuSupport.*;
+import static java.util.function.Predicate.not;
 
 /**
  * 2D play scene for Arcade game variants.
@@ -43,7 +47,13 @@ public class Arcade_PlayScene2D extends GameScene implements Arcade_PlayScene2D_
 
     @Override
     public Stream<Renderable> renderables() {
-        return game().session().optLevel().map(GameLevel::visibleRenderables).orElse(Stream.empty());
+        final GameLevel level = game().session().optLevel().orElse(null);
+        if (level == null) {
+            return Stream.empty();
+        }
+        return Ufx.streamOf(
+            level.visibleRenderables()
+        );
     }
 
     @Override
@@ -62,6 +72,11 @@ public class Arcade_PlayScene2D extends GameScene implements Arcade_PlayScene2D_
     @Override
     public void onTick(GameContext game) {
         game.session().optLevel().ifPresent(level -> {
+            level.entities().theEnergizers().forEach(energizer -> {
+                final boolean eaten = level.food().hasEatenFoodAtTile(energizer.tile());
+                final boolean pulse = level.heartbeat().state() == Pulse.State.ON;
+                energizer.setOn(!eaten && pulse);
+            });
             ActorAnimationManager.ensureActorAnimationsCreated(app(), level);
             optSoundEffects().ifPresent(sfx -> sfx.playAmbientGameLevelSound(game(), level));
         });

@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
+import de.amr.pacmanfx.core.Energizer;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
@@ -63,6 +64,7 @@ public class ArcadePacMan_EntityRenderer extends BaseRenderer implements SpriteR
             case Bonus bonus -> drawSpriteCentered(computeSprite(bonus), center);
             case BonusPoints bonusPoints -> drawSpriteCentered(computeSprite(bonusPoints), center);
             case MessageView _ -> messageViewRenderer.render(r, tick);
+            case Energizer energizer -> drawEnergizer(energizer);
             default -> {
                 if (gameEntity.hasComp(SpriteAnimationComp.class)) {
                     drawSpriteCentered(animController.currentSprite(gameEntity), center);
@@ -116,4 +118,13 @@ public class ArcadePacMan_EntityRenderer extends BaseRenderer implements SpriteR
         };
     }
 
+    private void drawEnergizer(Energizer energizer) {
+        if (!energizer.on()) {
+            final double size = scaled(9);
+            ctx.save();
+            ctx.setFill(backgroundColor());
+            ctx.fillRect(scaled(energizer.pos().x() - 0.5), scaled(energizer.pos().y() - 0.5), size, size);
+            ctx.restore();
+        }
+    }
 }

@@ -8,10 +8,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.arcade.pacman.gamestate.Arcade_GameState;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
-import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.GameSystems;
-import de.amr.pacmanfx.core.HUD;
+import de.amr.pacmanfx.core.*;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.ghost.comp.ElroyComp;
 import de.amr.pacmanfx.core.entities.levelCounter.comp.LevelCounterBehavior;
@@ -124,7 +121,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         final WorldMap worldMap = game.variant().worldMapManager().supplyWorldMap(levelNumber);
         final var entities = new GameLevelEntities();
 
-        createAndAddEntities(entities, worldMap.terrainLayer());
+        createAndAddEntities(entities, worldMap.terrainLayer(), worldMap.foodLayer());
 
         final var huntingTimer = new DefaultHuntingTimer("Arcade Hunting Timer", rules.numHuntingPhases());
         huntingTimer.setPhaseChangeCallback(newPhaseIndex -> {
@@ -283,7 +280,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         return messageView;
     }
 
-    protected void createAndAddEntities(GameLevelEntities entities, TerrainLayer terrain) {
+    protected void createAndAddEntities(GameLevelEntities entities, TerrainLayer terrain, FoodLayer foodLayer) {
         final Vector2i houseMinTile = terrain.getTilePropertyOrDefault(
             WorldMapPropertyName.POS_HOUSE_MIN_TILE, ARCADE_MAP_HOUSE_MIN_TILE);
         terrain.propertyMap().put(WorldMapPropertyName.POS_HOUSE_MIN_TILE,  String.valueOf(houseMinTile));
@@ -304,6 +301,13 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         entities.add(pinkGhost);
         entities.add(cyanGhost);
         entities.add(orangeGhost);
+
+        foodLayer.energizerTiles().forEach(energizerTile -> {
+            final Energizer energizer = new Energizer(energizerTile);
+            energizer.show();
+            energizer.pos().set(energizerTile.toVector2f().scaled(TS));
+            entities.add(energizer);
+        });
     }
 
     protected ArcadePacMan_ActorFactory actorFactory() {
