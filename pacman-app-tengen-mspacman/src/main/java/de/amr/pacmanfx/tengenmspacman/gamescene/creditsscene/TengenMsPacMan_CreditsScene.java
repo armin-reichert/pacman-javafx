@@ -47,7 +47,7 @@ public class TengenMsPacMan_CreditsScene extends GameScene {
         final var actions = app().currentGameVariantUIConfig().extensionValue(
             TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
 
-        final var bindingsMap = actionBindingsSupport().bindingsMap();
+        final var bindingsMap = actionBindingsSupport().registry();
         bindingsMap.selectAnyMatchingBinding(actions.actionEnterStartScreen(), actions.localBindings());
 
         fadeProgress = 0;

@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.RenderManager;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
-import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
+import de.amr.pacmanfx.ui.action.core.GameActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
@@ -79,7 +79,7 @@ public class GamePlayView implements GameView {
 
     // non-static members
 
-    private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Action Bindings for Play View");
+    private final ActionBindingsRegistry actionBindings = new GameActionBindingsRegistry("Action Bindings for Play View");
 
     private GameAppContext app;
 

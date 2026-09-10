@@ -46,7 +46,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene {
         final Arcade_Actions actions = app().currentGameVariantUIConfig()
             .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
-        final var bindingsMap = actionBindingsSupport().bindingsMap();
+        final var bindingsMap = actionBindingsSupport().registry();
         // Insert coin + start game actions
         bindingsMap.registerAllBindings(actions.gameStartActionBindings());
     }

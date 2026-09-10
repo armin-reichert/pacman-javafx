@@ -136,7 +136,7 @@ public class Arcade_PlayScene2D extends GameScene implements Arcade_PlayScene2D_
     }
 
     private void acceptNormalLevel(GameLevel level) {
-        final var bindingsMap = actionBindingsSupport().bindingsMap();
+        final var bindingsMap = actionBindingsSupport().registry();
         bindingsMap.registerAllBindings(app().commonActions().steeringActions().bindings());
         bindingsMap.registerAllBindings(app().commonActions().cheatActions().bindings());
 
@@ -150,7 +150,7 @@ public class Arcade_PlayScene2D extends GameScene implements Arcade_PlayScene2D_
         final Arcade_Actions actions = app().currentGameVariantUIConfig()
             .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
-        final var bindingsMap = actionBindingsSupport().bindingsMap();
+        final var bindingsMap = actionBindingsSupport().registry();
         bindingsMap.registerAllBindings(actions.gameStartActionBindings());
         Logger.info(bindingsMap);
 

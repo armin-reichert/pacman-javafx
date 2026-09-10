@@ -20,7 +20,7 @@ import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounter3DViewSystem;
-import de.amr.pacmanfx.ui.gamescene.common.ActionBindingsSupport;
+import de.amr.pacmanfx.ui.gamescene.common.ActionBindingsComp;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.PlaySceneFadeInAnimation;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.DronePerspective;
@@ -167,8 +167,8 @@ public class PlayScene3D extends GameScene
     @Override
     public void onInput() {
         final Keyboard keyboard = app().input().keyboard();
-        optComp(ActionBindingsSupport.class).ifPresent(comp -> {
-            final Optional<GameAction> matchingAction = comp.bindingsMap().executeMatchingAction(app());
+        optComp(ActionBindingsComp.class).ifPresent(comp -> {
+            final Optional<GameAction> matchingAction = comp.registry().executeMatchingAction(app());
             if (matchingAction.isEmpty()) {
                 // Handle CTRL-PLUS, CTRL_MINUS and CTRL-0
                 perspectiveManager.optPerspective(PerspectiveID.DRONE).ifPresent(perspective -> {
@@ -337,8 +337,8 @@ public class PlayScene3D extends GameScene
     protected void addAdditional3DLevelElements(GameLevel3D level3D) {}
 
     protected void bindActions() {
-        optComp(ActionBindingsSupport.class)
-            .ifPresent(comp -> comp.bindingsMap().registerAllBindings(actionBindings));
+        optComp(ActionBindingsComp.class)
+            .ifPresent(comp -> comp.registry().registerAllBindings(actionBindings));
     }
 
     private void replaceScoresView(String leftTitle, String rightTitle) {

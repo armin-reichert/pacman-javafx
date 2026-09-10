@@ -15,7 +15,7 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
-import de.amr.pacmanfx.ui.action.core.GameActionBindingsMap;
+import de.amr.pacmanfx.ui.action.core.GameActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationTimer;
@@ -63,7 +63,7 @@ public class GameUI implements GameEventListener {
     private final SoundManager soundManager;
     private final SpriteAnimationTimer spriteAnimationTimer;
     private final GameViewModel viewModel;
-    private final ActionBindingsRegistry actionBindings = new GameActionBindingsMap("Global Action Bindings");
+    private final ActionBindingsRegistry actionBindings = new GameActionBindingsRegistry("Global Action Bindings");
 
     private GameAppContext app;
 

@@ -9,7 +9,6 @@ import de.amr.basics.Disposable;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventListener;
@@ -17,6 +16,7 @@ import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.event.gameplay.CreditAddedEvent;
 import de.amr.pacmanfx.core.gamestate.GameFlowController;
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -25,7 +25,6 @@ import de.amr.pacmanfx.ui.vm.GameViewModel;
 import javafx.scene.SubScene;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.input.ScrollEvent;
-import org.tinylog.Logger;
 
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -68,13 +67,12 @@ public abstract class GameScene extends Composition<GameSceneComponent>
         return true;
     }
 
-    public ActionBindingsSupport actionBindingsSupport() {
-        ActionBindingsSupport actionBindings = optComp(ActionBindingsSupport.class).orElse(null);
+    public ActionBindingsComp actionBindingsSupport() {
+        ActionBindingsComp actionBindings = optComp(ActionBindingsComp.class).orElse(null);
         if (actionBindings == null) {
-            setComp(ActionBindingsSupport.class, new ActionBindingsSupport());
-            Logger.info("Added ActionBindingsSupport to " + getClass().getSimpleName());
+            setComp(ActionBindingsComp.class, new ActionBindingsComp(this));
         }
-        return reqComp(ActionBindingsSupport.class);
+        return reqComp(ActionBindingsComp.class);
     }
 
     public GameAppContext app() {
@@ -135,7 +133,7 @@ public abstract class GameScene extends Composition<GameSceneComponent>
     @Override
     public final void deactivate() {
         onDeactivate();
-        optComp(ActionBindingsSupport.class).ifPresent(comp -> comp.bindingsMap().dispose());
+        optComp(ActionBindingsComp.class).ifPresent(comp -> comp.registry().dispose());
         optSoundEffects().ifPresent(GameSoundEffects::stopAll);
     }
 
@@ -161,9 +159,9 @@ public abstract class GameScene extends Composition<GameSceneComponent>
 
     @Override
     public void onInput() {
-        if (hasComp(ActionBindingsSupport.class)) {
-            reqComp(ActionBindingsSupport.class)
-                .bindingsMap()
+        if (hasComp(ActionBindingsComp.class)) {
+            reqComp(ActionBindingsComp.class)
+                .registry()
                 .executeMatchingAction(app());
         }
     }

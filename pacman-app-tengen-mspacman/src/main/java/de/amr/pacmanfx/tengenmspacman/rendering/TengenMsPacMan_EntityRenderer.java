@@ -13,7 +13,7 @@ import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.*;
-import de.amr.pacmanfx.core.entities.door.comp.DoorLayoutComp;
+import de.amr.pacmanfx.core.entities.door.comp.DoorDataComp;
 import de.amr.pacmanfx.core.rendering.ColoredRect;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimation;
@@ -198,19 +198,15 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
     }
 
     private void drawDoor(Door door) {
-        final Color strokeColor = Color.RED;
-
-        //TODO make this work again!
-//        final MapImageSet recoloredImageSet = worldMap.getConfigValue(TengenMsPacMan_GameLevelRendererKey.MAP_IMAGE_SET);
-//        final Color strokeColor = Color.valueOf(recoloredImageSet.mapImage().colorScheme().wallStroke());
+        final var data = door.reqComp(DoorDataComp.class);
 
         final double scaledTileSize = scaled(TS);
-        final Vector2i leftDoorTile = door.reqComp(DoorLayoutComp.class).leftTile();
+        final Vector2i leftDoorTile = data.leftTile();
         final double xMin = leftDoorTile.x() * scaledTileSize;
         final double yMin = leftDoorTile.y() * scaledTileSize + scaled(5); // 5 pixels down
 
         ctx.save();
-        ctx.setFill(strokeColor);
+        ctx.setFill(Color.valueOf(data.color()));
         ctx.fillRect(xMin, yMin, 2 * scaledTileSize, scaled(2));
         ctx.restore();
     }

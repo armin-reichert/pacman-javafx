@@ -9,6 +9,8 @@ import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.HUD;
+import de.amr.pacmanfx.core.entities.door.comp.DoorDataComp;
+import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
@@ -23,6 +25,9 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.gamescene.SceneDisplay;
+import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_GameLevelRendererKey;
+import de.amr.pacmanfx.tengenmspacman.sprites.MapImageSet;
+import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_MapRepository;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
@@ -210,11 +215,24 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
 
     @Override
     public void acceptGameLevel(GameSession session, GameLevel level) {
-        final TerrainLayer terrain = level.worldMap().terrainLayer();
+        final WorldMap worldMap = level.worldMap();
+        final TerrainLayer terrain = worldMap.terrainLayer();
         final Vector2i size = terrain.sizeInPixel();
 
         reqCanvasRendering().unscaledWidthProperty().set(size.x());
         reqCanvasRendering().unscaledHeightProperty().set(size.y());
+
+        // Store the maze sprite set with the correct colors for this level in the map configuration:
+        if (!worldMap.hasConfigValue(TengenMsPacMan_GameLevelRendererKey.MAP_IMAGE_SET)) {
+            final int numFlashes = 3;
+            final MapImageSet mapImageSet = TengenMsPacMan_MapRepository.instance().createMapImageSet(worldMap, numFlashes);
+            worldMap.setConfigValue(TengenMsPacMan_GameLevelRendererKey.MAP_IMAGE_SET, mapImageSet);
+            Logger.info("Maze sprite set created: {}", mapImageSet);
+
+            final var doorData = level.entities().house().door().reqComp(DoorDataComp.class);
+            doorData.setColor(mapImageSet.mapImage().colorScheme().door());
+            Logger.info("Door color set to {}", doorData.color());
+        }
 
         dynamicCamera.enterTrackingMode();
         dynamicCamera.updateRange(terrain);
@@ -225,7 +243,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
             acceptNormalLevel();
         }
 
-        Logger.info(actionBindingsSupport());
+        Logger.info(actionBindingsSupport().registry());
         Logger.info("Scene {} accepted game level #{}", getClass().getSimpleName(), level.number());
     }
 
@@ -284,7 +302,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
         final var actions = actions();
 
         // Pac-Man is steered using keys simulating the NES "Joypad" buttons ("START", "SELECT", "B", "A" etc.)
-        final var bindingsMap = actionBindingsSupport().bindingsMap();
+        final var bindingsMap = actionBindingsSupport().registry();
 
         bindingsMap.registerAllBindings(actions.steeringBindings());
         bindingsMap.registerAllBindings(app().commonActions().cheatActions().bindings());
@@ -298,7 +316,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
 
         final var actions = actions();
 
-        final var bindingsMap = actionBindingsSupport().bindingsMap();
+        final var bindingsMap = actionBindingsSupport().registry();
         bindingsMap.selectAnyMatchingBinding(actions.actionTogglePlaySceneDisplayMode(), actions.localBindings());
         bindingsMap.selectAnyMatchingBinding(actions.actionQuitDemoLevel(), actions.localBindings());
     }

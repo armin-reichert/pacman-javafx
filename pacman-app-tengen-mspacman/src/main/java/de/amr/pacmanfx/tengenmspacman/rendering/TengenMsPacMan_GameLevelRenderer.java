@@ -64,13 +64,6 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         final TerrainLayer terrainLayer = worldMap.terrainLayer();
         final FoodLayer foodLayer = worldMap.foodLayer();
 
-        // store the maze sprite set with the correct colors for this level in the map configuration:
-        if (!worldMap.hasConfigValue(TengenMsPacMan_GameLevelRendererKey.MAP_IMAGE_SET)) {
-            final int numFlashes = 3;
-            final MapImageSet mapImageSet = TengenMsPacMan_MapRepository.instance().createMapImageSet(worldMap, numFlashes);
-            worldMap.setConfigValue(TengenMsPacMan_GameLevelRendererKey.MAP_IMAGE_SET, mapImageSet);
-            Logger.debug("Maze sprite set created: {}", mapImageSet);
-        }
 
         if (info.getBoolean(Common_GameLevelRendererKey.BRIGHT)) {
             final int flashingIndex = info.get(Common_GameLevelRendererKey.FLASHING_INDEX, Integer.class);
@@ -101,8 +94,8 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
     }
 
     private void drawFood(WorldMap worldMap, FoodLayer foodLayer, FoodState foodState, boolean blinkingOn) {
-        final MapImageSet recoloredMazeSprites = worldMap.getConfigValue(TengenMsPacMan_GameLevelRendererKey.MAP_IMAGE_SET);
-        final NES_WorldMapColorScheme colorScheme = recoloredMazeSprites.mapImage().colorScheme();
+        final MapImageSet mapImageSet = worldMap.getConfigValue(TengenMsPacMan_GameLevelRendererKey.MAP_IMAGE_SET);
+        final NES_WorldMapColorScheme colorScheme = mapImageSet.mapImage().colorScheme();
         final Color pelletColor = Color.valueOf(colorScheme.pellet());
 
         ctx.save();

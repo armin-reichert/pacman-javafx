@@ -13,12 +13,12 @@ import java.util.stream.Collectors;
 
 import static java.util.Objects.requireNonNull;
 
-public class GameActionBindingsMap implements ActionBindingsRegistry {
+public class GameActionBindingsRegistry implements ActionBindingsRegistry {
 
     private final String name;
     private final Map<KeyCodeCombination, GameAction> actionBindingsMap = new HashMap<>();
 
-    public GameActionBindingsMap(String name) {
+    public GameActionBindingsRegistry(String name) {
         this.name = requireNonNull(name);
     }
 

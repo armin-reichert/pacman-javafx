@@ -31,10 +31,7 @@ import de.amr.pacmanfx.tengenmspacman.gamescene.playscene.TengenMsPacMan_PlaySce
 import de.amr.pacmanfx.tengenmspacman.gamescene.playscene.TengenMsPacMan_PlayScene2D_Renderer;
 import de.amr.pacmanfx.tengenmspacman.model.BonusSymbol;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
-import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
-import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_GhostSAM;
-import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_PacSAM;
-import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
+import de.amr.pacmanfx.tengenmspacman.sprites.*;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.HUD_Style;
@@ -45,6 +42,7 @@ import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import org.tinylog.Logger;
 
 import java.util.EnumMap;
 import java.util.Map;
