@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.tengenmspacman.gamescene.playscene;
 
+import de.amr.basics.InfoMap;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.Renderable;
@@ -20,6 +21,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.MapRenderInfoKey;
+import de.amr.pacmanfx.uilib.rendering.Renderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -99,7 +101,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends BaseRenderer implements
             ctx.save();
             ctx.translate(scaledIndent, 0);
 
-            configureRenderInfo(playScene, worldMap);
+            configureLevelRenderer(levelRenderer, playScene, worldMap);
             levelRenderer.render(level, tick);
             levelRenderer.drawDoor(house, worldMap); // ghosts appear under door, so draw door over again
 
@@ -118,7 +120,8 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends BaseRenderer implements
         });
     }
 
-    private void configureRenderInfo(TengenMsPacMan_PlayScene2D playScene2D, WorldMap worldMap) {
+    private static void configureLevelRenderer(Renderer levelRenderer, TengenMsPacMan_PlayScene2D playScene2D, WorldMap worldMap) {
+        final InfoMap info = levelRenderer.info();
         info.clear();
         // this is needed for drawing animated maze with different images:
         info.put(MapConfigKey.MAP_CATEGORY, worldMap.getConfigValue(MapConfigKey.MAP_CATEGORY));

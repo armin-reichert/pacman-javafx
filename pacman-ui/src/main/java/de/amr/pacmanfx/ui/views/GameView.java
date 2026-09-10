@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.ui.views;
 
-import de.amr.pacmanfx.ui.RenderManager;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.action.core.QuitHandler;
@@ -32,6 +31,4 @@ public interface GameView extends QuitHandler {
     void onEnter();
 
     void onExit();
-
-    default void render(RenderManager renderManager, long tick) {}
 }

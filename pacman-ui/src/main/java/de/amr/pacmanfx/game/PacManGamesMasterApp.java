@@ -53,7 +53,7 @@ public final class PacManGamesMasterApp implements GameAppContext {
 
     private final CommonGameActions actions;
 
-    private final GameSimulation simulation;
+    private final GameLoop gameLoop;
 
     private GameUI ui;
 
@@ -65,7 +65,7 @@ public final class PacManGamesMasterApp implements GameAppContext {
 
     public PacManGamesMasterApp(GameBox gameBox) {
         this.gameBox = requireNonNull(gameBox);
-        simulation = new GameSimulation(this, gameBox.clock());
+        gameLoop = new GameLoop(this, gameBox.clock());
         actions = new CommonGameActions();
     }
 
@@ -164,7 +164,7 @@ public final class PacManGamesMasterApp implements GameAppContext {
         ui.window().mainScene().connect(game.session());
         ui.views().selectGamePlayView();
 
-        simulation.start();
+        gameLoop.start();
     }
 
     public void suspendGame() {
@@ -173,7 +173,7 @@ public final class PacManGamesMasterApp implements GameAppContext {
             ui.gameScenes().currentGameSceneProperty().set(null);
         });
         ui.soundManager().stopAll();
-        simulation.stop();
+        gameLoop.stop();
     }
 
     public void terminate() {

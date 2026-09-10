@@ -9,26 +9,26 @@ import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.ui.RenderManager;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.views.GameViewID;
 import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
-//TODO create interfaces for runtime and renderer and refine dependencies
-public final class GameSimulation {
+public final class GameLoop {
 
     private final GameAppContext app;
     private final GameClock clock;
     private final RenderManager renderManager = new RenderManager();
 
-    public GameSimulation(GameAppContext app, GameClock clock) {
+    public GameLoop(GameAppContext app, GameClock clock) {
         this.app = requireNonNull(app);
         this.clock = requireNonNull(clock);
     }
 
     public void start() {
         clock.setUpdateAction(this::simulate);
-        clock.setPermanentAction(() -> renderCurrentView(renderManager, clock.currentTick()));
+        clock.setPermanentAction(() -> render(renderManager, clock.currentTick()));
         clock.setErrorHandler(this::handleFatalError);
         clock.start();
     }
@@ -48,11 +48,9 @@ public final class GameSimulation {
         app.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(game));
     }
 
-    private void renderCurrentView(RenderManager renderManager, long tick) {
-        try {
-            app.ui().views().assertCurrentView().render(renderManager, tick);
-        } catch (Exception x) {
-            Logger.error(x);
+    private void render(RenderManager renderManager, long tick) {
+        if (app.ui().views().isSelected(GameViewID.GAMEPLAY)) {
+            app.ui().views().gamePlayView().render(renderManager, tick);
         }
     }
 

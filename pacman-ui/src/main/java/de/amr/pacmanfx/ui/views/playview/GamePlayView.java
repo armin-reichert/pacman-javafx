@@ -227,7 +227,6 @@ public class GamePlayView implements GameView {
         app.ui().views().selectStartPagesView();
     }
 
-    @Override
     public void render(RenderManager renderManager, long tick) {
         final GameViewModel viewModel = app.ui().viewModel();
         final boolean debugMode = viewModel.debugModeOnProperty().get();

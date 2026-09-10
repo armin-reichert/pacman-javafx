@@ -66,6 +66,7 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer implements SpriteR
         session.optLevel().ifPresent(level -> {
             final boolean energizerVisible = level.heartbeat().state() == Pulse.State.ON;
             final boolean mapIsEmpty = level.food().remainingFoodCount() == 0;
+
             final InfoMap info = levelRenderer.info();
             info.put(MapRenderInfoKey.ENERGIZER_VISIBLE, energizerVisible);
             info.put(MapRenderInfoKey.EMPTY, mapIsEmpty);
