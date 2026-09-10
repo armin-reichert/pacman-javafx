@@ -28,7 +28,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
@@ -37,7 +36,7 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.uilib.rendering.RenderableWrapper.reassignLayer;
 import static java.util.Objects.requireNonNull;
 
-public class MiniPlaySceneView {
+public class MiniPlaySceneView extends HBox{
 
     public static final Insets PADDING = new Insets(0, 10, 0, 10);
 
@@ -45,7 +44,6 @@ public class MiniPlaySceneView {
 
     private final ObjectProperty<Vector2i> worldSize = new SimpleObjectProperty<>(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS);
 
-    private final HBox rootPane;
     private final Canvas canvas;
 
     private TranslateTransition slideInAnimation;
@@ -60,14 +58,13 @@ public class MiniPlaySceneView {
 
     public MiniPlaySceneView() {
         canvas = new Canvas();
-
-        rootPane = new HBox(canvas);
-        rootPane.setBorder(Border.stroke(Color.grayRgb(66)));
-        rootPane.setPadding(PADDING);
+        getChildren().add(canvas);
+        setBorder(Border.stroke(Color.grayRgb(66)));
+        setPadding(PADDING);
 
         // Canvas size determines mini view size
-        rootPane.maxWidthProperty().bind(canvas.widthProperty().add(PADDING.getLeft() + PADDING.getRight()));
-        rootPane.maxHeightProperty().bind(canvas.heightProperty());
+        maxWidthProperty().bind(canvas.widthProperty().add(PADDING.getLeft() + PADDING.getRight()));
+        maxHeightProperty().bind(canvas.heightProperty());
     }
 
     public Stream<Renderable> renderables() {
@@ -81,10 +78,6 @@ public class MiniPlaySceneView {
     public void setLevel(GameLevel level) {
         this.level = requireNonNull(level);
         worldSize.set(level.worldMap().terrainLayer().sizeInPixel());
-    }
-
-    public Pane rootPane() {
-        return rootPane;
     }
 
     public Canvas canvas() {
@@ -120,8 +113,8 @@ public class MiniPlaySceneView {
         final GameViewModel viewModel = app.ui().viewModel();
         settingsViewModel = viewModel.miniViewSettings();
 
-        rootPane.backgroundProperty().bind(viewModel.common2DSettings().canvasBackgroundColorProperty().map(Background::fill));
-        rootPane.opacityProperty()   .bind(settingsViewModel.opacityPercentageProperty.divide(100.0));
+        backgroundProperty().bind(viewModel.common2DSettings().canvasBackgroundColorProperty().map(Background::fill));
+        opacityProperty()   .bind(settingsViewModel.opacityPercentageProperty.divide(100.0));
 
         canvas.heightProperty().bind(settingsViewModel.heightProperty);
         canvas.widthProperty() .bind(Bindings.createDoubleBinding(
@@ -137,13 +130,13 @@ public class MiniPlaySceneView {
             canvas.heightProperty(), worldSize
         ));
 
-        rootPane.setTranslateY(-canvas.getHeight());
+        setTranslateY(-canvas.getHeight());
     }
 
     public void update() {
         final boolean shouldBeActive = app.ui().viewModel().miniViewSettings().activeProperty.get();
         if (shouldBeActive && !expanded && !isMoving()) {
-            rootPane.setVisible(true);
+            setVisible(true);
             slideOut();
         } else if (!shouldBeActive && expanded && !isMoving()) {
             slideIn();
@@ -152,7 +145,7 @@ public class MiniPlaySceneView {
 
     private void slideIn() {
         final Duration duration = Duration.seconds(settingsViewModel.slideInSecondsProperty.get());
-        slideInAnimation = new TranslateTransition(duration, rootPane);
+        slideInAnimation = new TranslateTransition(duration, this);
         slideInAnimation.setOnFinished(_ -> expanded = false);
         slideInAnimation.setToY(0);
         slideInAnimation.setByY(10);
@@ -163,9 +156,9 @@ public class MiniPlaySceneView {
 
     private void slideOut() {
         final Duration duration = Duration.seconds(settingsViewModel.slideOutSecondsProperty.get());
-        slideOutAnimation = new TranslateTransition(duration, rootPane);
+        slideOutAnimation = new TranslateTransition(duration, this);
         slideOutAnimation.setOnFinished(_ -> expanded = true);
-        slideOutAnimation.setToY(-rootPane.getHeight());
+        slideOutAnimation.setToY(-getHeight());
         slideOutAnimation.setByY(10);
         slideOutAnimation.setDelay(Duration.seconds(0.5));
         slideOutAnimation.setInterpolator(Interpolator.EASE_IN);

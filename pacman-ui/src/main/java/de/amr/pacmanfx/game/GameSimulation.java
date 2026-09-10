@@ -7,6 +7,7 @@ package de.amr.pacmanfx.game;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.ui.RenderManager;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import javafx.util.Duration;
 import org.tinylog.Logger;
@@ -18,6 +19,7 @@ public final class GameSimulation {
 
     private final GameAppContext app;
     private final GameClock clock;
+    private final RenderManager renderManager = new RenderManager();
 
     public GameSimulation(GameAppContext app, GameClock clock) {
         this.app = requireNonNull(app);
@@ -26,7 +28,7 @@ public final class GameSimulation {
 
     public void start() {
         clock.setUpdateAction(this::simulate);
-        clock.setPermanentAction(() -> renderCurrentView(clock.currentTick()));
+        clock.setPermanentAction(() -> renderCurrentView(renderManager, clock.currentTick()));
         clock.setErrorHandler(this::handleFatalError);
         clock.start();
     }
@@ -46,9 +48,9 @@ public final class GameSimulation {
         app.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(game));
     }
 
-    private void renderCurrentView(long tick) {
+    private void renderCurrentView(RenderManager renderManager, long tick) {
         try {
-            app.ui().views().assertCurrentView().render(tick);
+            app.ui().views().assertCurrentView().render(renderManager, tick);
         } catch (Exception x) {
             Logger.error(x);
         }

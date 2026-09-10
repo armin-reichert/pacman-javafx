@@ -52,9 +52,16 @@ import static java.util.Objects.requireNonNull;
 
 /**
  * This view shows the game play and the overlays like dashboard and picture-in-picture view of the running play scene.
- *
  */
 public class GamePlayView implements GameView {
+
+    public record Layers(
+        BorderPane gameSceneLayer,
+        MiniPlaySceneView miniViewLayer,
+        BorderPane overlayLayer,
+        HelpView helpLayer,
+        StackPane iconLayer)
+    {}
 
     //TODO This class is too large and does too many different things
 
@@ -64,18 +71,11 @@ public class GamePlayView implements GameView {
     public static final Border DEBUG_BORDER = Ufx.border(Color.LIGHTGREEN, 1);
 
     //TODO use FX controls + CSS
-    public static final DecorationPaneConfig DECORATION_CONFIG = new DecorationPaneConfig(
+    public static final DecorationPaneConfig DECORATION_PANE_CONFIG = new DecorationPaneConfig(
         0.85f, 0.93f, 0.5f, // scaling x,y, min
         20, 20, // padding x,y
         new DecorationPaneBorderConfig(26, 10, 5, 55.0, ArcadePalette.ARCADE_WHITE)
     );
-
-    public record Layers(
-        BorderPane gameSceneLayer,
-        MiniPlaySceneView miniViewLayer,
-        BorderPane overlayLayer,
-        HelpView helpLayer,
-        FontAwesomeIcon pausedIcon) {}
 
     // non-static members
 
@@ -85,7 +85,7 @@ public class GamePlayView implements GameView {
 
     private ContextMenuManager contextMenuManager;
 
-    private StackPane rootPane;
+    private final StackPane rootPane;
 
     private Layers layers;
 
@@ -93,10 +93,20 @@ public class GamePlayView implements GameView {
 
     private GameDashboard dashboard;
 
-    private final RenderManager renderManager = new RenderManager();
-
     public GamePlayView() {
-        createLayout();
+        createLayers();
+
+        rootPane = new StackPane(
+            layers.gameSceneLayer(),
+            layers.miniViewLayer(),
+            layers.overlayLayer(),
+            layers.helpLayer(),
+            layers.iconLayer()
+        );
+        rootPane.setId("game-play-view");
+
+        StackPane.setAlignment(layers.miniViewLayer(), Pos.TOP_RIGHT);
+        StackPane.setAlignment(layers.iconLayer(), Pos.CENTER);
     }
 
     public Layers layers() {
@@ -125,7 +135,7 @@ public class GamePlayView implements GameView {
     private void initLayers(GameViewModel viewModel) {
         layers.miniViewLayer().setGameApp(app);
 
-        layers.pausedIcon().visibleProperty().bind(app.clock().updatesDisabledProperty());
+        layers.iconLayer().visibleProperty().bind(app.clock().updatesDisabledProperty());
 
 //        vm.common2DSettings().fontSmoothingOnProperty().addListener((_, _, smoothing) -> renderManager.setGameSceneFontSmoothing(smoothing));
 
@@ -167,7 +177,6 @@ public class GamePlayView implements GameView {
 
     public void onLevelCreated(GameLevel level) {
         layers.miniViewLayer().setLevel(level);
-        renderManager.setMiniViewRenderer(layers.miniViewLayer().createRenderer());
 
         // game scene size might have changed: re-embed
         final GameSceneManager gameSceneManager = app.ui().gameScenes();
@@ -219,7 +228,7 @@ public class GamePlayView implements GameView {
     }
 
     @Override
-    public void render(long tick) {
+    public void render(RenderManager renderManager, long tick) {
         final GameViewModel viewModel = app.ui().viewModel();
         final boolean debugMode = viewModel.debugModeOnProperty().get();
 
@@ -232,18 +241,19 @@ public class GamePlayView implements GameView {
         }
 
         // Add mini view renderables
-        final MiniPlaySceneView miniView = app.ui().views().gamePlayView().layers().miniViewLayer();
-        renderManager.addAll(miniView.renderables());
+        renderManager.addAll(layers.miniViewLayer().renderables());
+        renderManager.setMiniViewRenderer(layers.miniViewLayer().createRenderer());
 
         // Add game scene renderables
         final GameScene currentGameScene = app.ui().gameScenes().optCurrentGameScene().orElse(null);
         if (currentGameScene != null) {
+            renderManager.updateRenderers(app, currentGameScene);
             renderManager.add(currentGameScene); //TODO rethink this
             renderManager.addAll(currentGameScene.renderables());
         }
 
         // Clear canvases
-        miniView.clearCanvas();
+        layers.miniViewLayer().clearCanvas();
         if (currentGameScene != null && currentGameScene.wantsClearCanvas()) {
             renderManager.clearSceneCanvas(currentGameScene);
         }
@@ -260,7 +270,7 @@ public class GamePlayView implements GameView {
             dashboard.update(app);
         }
 
-        miniView.update();
+        layers.miniViewLayer().update();
     }
 
     @Override
@@ -293,7 +303,6 @@ public class GamePlayView implements GameView {
         }
 
         contextMenuManager.hideContextMenu();
-        renderManager.updateRenderers(app, gameScene);
         gameScene.activate();
 
         Logger.info("Game scene {} EMBEDDED into play view!", gameScene.getClass().getSimpleName());
@@ -329,41 +338,35 @@ public class GamePlayView implements GameView {
 
     // Private
 
-    private void createLayout() {
-
-        // Layer 1: Game scene with or without decoration
+    private void createLayers() {
+        // Layer 1: Game scene with optional decoration
+        final var gameScenePane = new BorderPane();
         decorationPane = new DecorationPane(
-            DECORATION_CONFIG,
+            DECORATION_PANE_CONFIG,
             WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.x(),
             WorldMap.ARCADE_MAP_SIZE_IN_PIXELS.y()
         );
-
-        final var gameScenePane = new BorderPane();
         gameScenePane.setCenter(decorationPane);
 
         // Layer 2: Mini view layer
         final var miniView = new MiniPlaySceneView();
-        StackPane.setAlignment(miniView.rootPane(), Pos.TOP_RIGHT);
 
         // Layer 3: Overlay layer with dashboard
+        final var overlayPane = new BorderPane();
         dashboard = new GameDashboard();
         dashboard.setVisible(false);
-
-        final var overlayPane = new BorderPane();
         overlayPane.setLeft(dashboard);
 
         // Layer 4: Help info
         final var helpView = new HelpView(gameScenePane);
 
         // Layer 4: "Paused" icon
+        final StackPane iconLayer = new StackPane();
         final var pausedIcon = new FontAwesomeIcon(FontAwesomeSymbol.PAUSE);
         pausedIcon.setId("paused-icon");
-        StackPane.setAlignment(pausedIcon, Pos.CENTER);
+        iconLayer.getChildren().add(pausedIcon);
 
-        layers = new Layers(gameScenePane, miniView, overlayPane, helpView, pausedIcon);
-
-        rootPane = new StackPane(gameScenePane, miniView.rootPane(), overlayPane, helpView, pausedIcon);
-        rootPane.setId("game-play-view");
+        layers = new Layers(gameScenePane, miniView, overlayPane, helpView, iconLayer);
     }
 
     // 3D scenes or 2D scenes with camera
