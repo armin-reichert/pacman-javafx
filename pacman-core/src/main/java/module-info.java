@@ -49,6 +49,7 @@ module de.amr.pacmanfx.core {
     exports de.amr.pacmanfx.core.entities.levelCounter.system;
     exports de.amr.pacmanfx.core.entities.score.comp;
     exports de.amr.pacmanfx.core.entities.score.system;
+    exports de.amr.pacmanfx.core.entities.textdisplay.comp;
     exports de.amr.pacmanfx.core.gameplay.hunt;
     exports de.amr.pacmanfx.core.spriteanim;
 }

@@ -15,6 +15,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
 import java.util.Optional;
@@ -25,6 +26,21 @@ import static java.util.Objects.requireNonNull;
  * Base renderer class providing support for scaling, background color and common font drawing.
  */
 public abstract class BaseRenderer implements Renderer {
+
+    private static final Text dummy = new Text();
+
+    /**
+     * Computes the layout width of the given string when rendered with the specified font.
+     *
+     * @param s    the text to measure
+     * @param font the font used for measurement
+     * @return the width in pixels
+     */
+    public static double textWidth(String s, Font font) {
+        dummy.setText(s);
+        dummy.setFont(font);
+        return dummy.getLayoutBounds().getWidth();
+    }
 
     private final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>(Color.BLACK);
 
@@ -55,8 +71,10 @@ public abstract class BaseRenderer implements Renderer {
     @Override
     public void fillCanvas(Color color) {
         requireNonNull(color);
+        ctx.save();
         ctx.setFill(color);
         ctx.fillRect(0, 0, canvas().getWidth(), canvas().getHeight());
+        ctx.restore();
     }
 
     @Override
@@ -124,9 +142,11 @@ public abstract class BaseRenderer implements Renderer {
      * @param y     unscaled y-position (baseline)
      */
     public void fillText(String text, Color color, Font font, double x, double y) {
+        ctx.save();
         ctx.setFont(font);
         ctx.setFill(color);
         ctx.fillText(text, scaled(x), scaled(y));
+        ctx.restore();
     }
 
     /**
@@ -134,12 +154,14 @@ public abstract class BaseRenderer implements Renderer {
      *
      * @param text  text
      * @param color text color
-     * @param x     unscaled x-position
-     * @param y     unscaled y-position (baseline)
+     * @param unscaledCenterX     unscaled x-position (center)
+     * @param unscaledBaselineY   unscaled y-position (baseline)
      */
-    public void fillText(String text, Color color, double x, double y) {
+    public void fillText(String text, Color color, double unscaledCenterX, double unscaledBaselineY) {
+        ctx.save();
         ctx.setFill(color);
-        ctx.fillText(text, scaled(x), scaled(y));
+        ctx.fillText(text, scaled(unscaledCenterX), scaled(unscaledBaselineY));
+        ctx.restore();
     }
 
     /**
@@ -148,13 +170,13 @@ public abstract class BaseRenderer implements Renderer {
      * @param text  text
      * @param color text color
      * @param font  text font
-     * @param centerX     unscaled x-position
-     * @param y     unscaled y-position (baseline)
+     * @param unscaledCenterX  unscaled center x-position
+     * @param unscaledBaselineY unscaled y-position (baseline)
      */
-    public void fillTextCentered(String text, Color color, Font font, double centerX, double y) {
+    public void fillTextCentered(String text, Color color, Font font, double unscaledCenterX, double unscaledBaselineY) {
         ctx.save();
         ctx.setTextAlign(TextAlignment.CENTER);
-        fillText(text, color, font, centerX, y);
+        fillText(text, color, font, unscaledCenterX, unscaledBaselineY);
         ctx.restore();
     }
 

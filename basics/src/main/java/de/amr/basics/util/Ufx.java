@@ -169,19 +169,6 @@ public final class Ufx {
     }
 
     /**
-     * Computes the layout width of the given string when rendered with the specified font.
-     *
-     * @param s    the text to measure
-     * @param font the font used for measurement
-     * @return the width in pixels
-     */
-    public static double textWidth(String s, Font font) {
-        final Text dummy = new Text(s);
-        dummy.setFont(font);
-        return dummy.getLayoutBounds().getWidth();
-    }
-
-    /**
      * Creates a {@link PhongMaterial} using the given color for both diffuse and specular components.
      * The specular color is automatically set.
      *

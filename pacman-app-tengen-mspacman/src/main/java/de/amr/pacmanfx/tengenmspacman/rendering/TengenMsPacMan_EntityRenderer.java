@@ -71,11 +71,11 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
 
         if (!actor.isVisible()) return;
 
-        //TODO This does not belong here
         ctx.save();
-        ctx.translate(scaled(16), 0); // content indent of map
-
         ctx.setImageSmoothing(true);
+
+        //TODO REMOVE! This does not belong here and is complete crap!
+        ctx.translate(scaled(16), 0); // content indent of map
 
         final Vector2f center = actor.pos().bodyCenter();
         switch (actor) {
@@ -89,6 +89,8 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
             case Stork stork -> drawStork(stork);
             case Marquee marquee -> drawMarquee(marquee, tick);
             case Door door -> drawDoor(door);
+            //TODO let base renderer handle text display
+            case TextDisplay textDisplay-> drawCenteredText(textDisplay);
             default -> {
                 if (actor.hasComp(SpriteAnimationComp.class)) {
                     drawSpriteCentered(animSystem.currentSprite(actor), center);
@@ -96,12 +98,7 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
             }
         }
 
-        ctx.setImageSmoothing(false);
         ctx.restore();
-    }
-
-    private void drawMarquee(Marquee marquee, long tick) {
-        marqueeRenderer.render(marquee, tick);
     }
 
     private FacingSprite computeSprite(Pac pac) {
@@ -172,9 +169,22 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
         return index >= 0 ? spriteSheet().findSpriteSequence(SpriteID.BONUS_VALUES)[index] : RectShort.NULL_RECTANGLE;
     }
 
+    private void drawCenteredText(TextDisplay textDisplay) {
+        final var center = textDisplay.pos();
+        final var data = textDisplay.data();
+        fillTextCentered(
+            data.text(),
+            data.fillColor(),
+            Ufx.scaleFontBy(data.font(), scaling()),
+            center.x(),
+            center.y()
+        );
+    }
+
     private void drawDoor(Door door) {
         final Color strokeColor = Color.RED;
 
+        //TODO make this work again!
 //        final MapImageSet recoloredImageSet = worldMap.getConfigValue(TengenMsPacMan_GameLevelRendererKey.MAP_IMAGE_SET);
 //        final Color strokeColor = Color.valueOf(recoloredImageSet.mapImage().colorScheme().wallStroke());
 
@@ -182,8 +192,15 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
         final Vector2i leftDoorTile = door.reqComp(DoorLayoutComp.class).leftTile();
         final double xMin = leftDoorTile.x() * scaledTileSize;
         final double yMin = leftDoorTile.y() * scaledTileSize + scaled(5); // 5 pixels down
+
+        ctx.save();
         ctx.setFill(strokeColor);
         ctx.fillRect(xMin, yMin, 2 * scaledTileSize, scaled(2));
+        ctx.restore();
+    }
+
+    private void drawMarquee(Marquee marquee, long tick) {
+        marqueeRenderer.render(marquee, tick);
     }
 
     private void drawClapperBoard(Clapperboard clapperboard) {
@@ -214,9 +231,11 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
     private void drawStork(Stork stork) {
         drawSpriteCentered(animSystem.currentSprite(stork), stork.pos().bodyCenter());
         if (stork.isBagReleasedFromBeak()) {
+            ctx.save();
             // Sprite sheet has no stork without bag under its beak so we over-paint the bag
             ctx.setFill(backgroundColor());
             ctx.fillRect(scaled(stork.pos().x() - 13), scaled(stork.pos().y() + 3), scaled(8), scaled(10));
+            ctx.restore();
         }
     }
 
