@@ -10,11 +10,9 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.door.comp.DoorDataComp;
-import de.amr.pacmanfx.core.rendering.ColoredRect;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimation;
 import de.amr.pacmanfx.tengenmspacman.entities.clapperboard.TengenMsPacMan_ClapperboardAnimationSystem;
@@ -67,24 +65,21 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
     @Override
     public void render(Renderable r, long tick) {
         requireNonNull(r);
-
-        if (r instanceof ColoredRect rect) {
-            fillColoredRect(rect);
-            return;
+        if (r instanceof GameEntity gameEntity) {
+            if (gameEntity.isVisible()) {
+                ctx.save();
+                ctx.setImageSmoothing(true);
+                //TODO REMOVE! This does not belong here and is complete crap!
+                ctx.translate(scaled(16), 0); // content indent of map
+                renderGameEntity(gameEntity, tick);
+                ctx.restore();
+            }
+        } else {
+            super.render(r, tick);
         }
+    }
 
-        if (!(r instanceof GameEntity gameEntity)) {
-            return;
-        }
-
-        if (!gameEntity.isVisible()) return;
-
-        ctx.save();
-        ctx.setImageSmoothing(true);
-
-        //TODO REMOVE! This does not belong here and is complete crap!
-        ctx.translate(scaled(16), 0); // content indent of map
-
+    private void renderGameEntity(GameEntity gameEntity, long tick) {
         final Vector2f center = gameEntity.pos().bodyCenter();
         switch (gameEntity) {
             case Bonus bonus -> drawSpriteCentered(computeSprite(bonus), center);
@@ -92,21 +87,13 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
             case Ghost ghost -> drawSpriteCentered(computeSprite(ghost), center);
             case GhostPoints points -> drawSpriteCentered(computeSprite(points), center);
             case Pac pac -> drawFacingSpriteCentered(computeSprite(pac), center);
-            case MessageView _ -> messageViewRenderer.render(r, tick);
+            case MessageView messageView -> messageViewRenderer.renderMessageView(messageView);
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
             case Stork stork -> drawStork(stork);
             case Marquee marquee -> drawMarquee(marquee, tick);
             case Door door -> drawDoor(door);
-            //TODO let base renderer handle these:
-            case TextDisplay textDisplay-> drawCenteredText(textDisplay);
-            default -> {
-                if (gameEntity.hasComp(SpriteAnimationComp.class)) {
-                    drawSpriteCentered(animSystem.currentSprite(gameEntity), center);
-                }
-            }
+            default -> {}
         }
-
-        ctx.restore();
     }
 
     private FacingSprite computeSprite(Pac pac) {
@@ -175,26 +162,6 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
     private RectShort computeSprite(BonusPoints bonusPoints) {
         final int index = Arrays.binarySearch(BONUS_POINTS, bonusPoints.points().number());
         return index >= 0 ? spriteSheet().findSpriteSequence(SpriteID.BONUS_VALUES)[index] : RectShort.NULL_RECTANGLE;
-    }
-
-    private void drawCenteredText(TextDisplay textDisplay) {
-        final var center = textDisplay.pos();
-        final var data = textDisplay.data();
-        fillTextCentered(
-            data.text(),
-            data.fillColor(),
-            Ufx.scaleFontBy(data.font(), scaling()),
-            center.x(),
-            center.y()
-        );
-    }
-
-    private void fillColoredRect(ColoredRect coloredRect) {
-        final var rect = coloredRect.rect();
-        ctx.save();
-        ctx.setFill(coloredRect.color());
-        ctx.fillRect(scaled(rect.x()), scaled(rect.y()), scaled(rect.width()), scaled(rect.height()));
-        ctx.restore();
     }
 
     private void drawDoor(Door door) {

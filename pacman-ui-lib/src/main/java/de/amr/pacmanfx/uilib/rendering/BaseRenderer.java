@@ -6,7 +6,11 @@ package de.amr.pacmanfx.uilib.rendering;
 
 import de.amr.basics.InfoMap;
 import de.amr.basics.math.Vector2i;
+import de.amr.basics.util.Ufx;
+import de.amr.pacmanfx.core.entities.TextDisplay;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.core.rendering.ColoredRect;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -62,6 +66,16 @@ public abstract class BaseRenderer implements Renderer {
     }
 
     // Renderer interface
+
+
+    @Override
+    public void render(Renderable r, long tick) {
+        switch (r) {
+            case ColoredRect coloredRect -> fillColoredRect(coloredRect);
+            case TextDisplay textDisplay-> drawCenteredText(textDisplay);
+            default -> throw new IllegalStateException("Unexpected value: " + r);
+        }
+    }
 
     @Override
     public void clearCanvas() {
@@ -199,6 +213,28 @@ public abstract class BaseRenderer implements Renderer {
             ctx.setLineWidth(col % 10 == 0 ? thick : col % 5 == 0? medium : thin);
             ctx.strokeLine(x, 0, x, height);
         }
+        ctx.restore();
+    }
+
+    // ----------------
+
+    private void drawCenteredText(TextDisplay textDisplay) {
+        final var center = textDisplay.pos();
+        final var data = textDisplay.data();
+        fillTextCentered(
+            data.text(),
+            data.fillColor(),
+            Ufx.scaleFontBy(data.font(), scaling()),
+            center.x(),
+            center.y()
+        );
+    }
+
+    private void fillColoredRect(ColoredRect coloredRect) {
+        final var rect = coloredRect.rect();
+        ctx.save();
+        ctx.setFill(coloredRect.color());
+        ctx.fillRect(scaled(rect.x()), scaled(rect.y()), scaled(rect.width()), scaled(rect.height()));
         ctx.restore();
     }
 }

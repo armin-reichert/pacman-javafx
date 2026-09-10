@@ -48,30 +48,31 @@ public class ArcadePacMan_EntityRenderer extends BaseRenderer implements SpriteR
 
     @Override
     public void render(Renderable r, long tick) {
-        if (!(r instanceof GameEntity gameEntity)) {
-            return;
+        requireNonNull(r);
+        if (r instanceof GameEntity gameEntity) {
+            if (gameEntity.isVisible()) {
+                ctx.save();
+                ctx.setImageSmoothing(true);
+                renderGameEntity(gameEntity);
+                ctx.restore();
+            }
+        } else {
+            super.render(r, tick);
         }
+    }
 
-        if (!gameEntity.isVisible()) return;
-
+    private void renderGameEntity(GameEntity gameEntity) {
         final Vector2f center = gameEntity.pos().bodyCenter();
-
-        ctx.setImageSmoothing(true);
-        switch (r) {
+        switch (gameEntity) {
             case Pac pac -> drawSpriteCentered(computeSprite(pac), center);
             case Ghost ghost -> drawSpriteCentered(computeSprite(ghost), center);
             case GhostPoints points -> drawSpriteCentered(computeSprite(points), center);
             case Bonus bonus -> drawSpriteCentered(computeSprite(bonus), center);
             case BonusPoints bonusPoints -> drawSpriteCentered(computeSprite(bonusPoints), center);
-            case MessageView _ -> messageViewRenderer.render(r, tick);
+            case MessageView messageView -> messageViewRenderer.renderMessageView(messageView);
             case Energizer energizer -> drawEnergizer(energizer);
-            default -> {
-                if (gameEntity.hasComp(SpriteAnimationComp.class)) {
-                    drawSpriteCentered(animController.currentSprite(gameEntity), center);
-                }
-            }
+            default -> {}
         }
-        ctx.setImageSmoothing(false);
     }
 
     private RectShort computeSprite(Pac pac) {

@@ -29,12 +29,12 @@ public class MessageViewRenderer extends BaseRenderer {
 
     @Override
     public void render(Renderable r, long tick) {
-        if (!(r instanceof MessageView messageView)) {
-            return;
+        if (r instanceof MessageView messageView && messageView.isVisible()) {
+            renderMessageView(messageView);
         }
-        if (!messageView.isVisible()) {
-            return;
-        }
+    }
+
+    public void renderMessageView(MessageView messageView) {
         messageView.optComp(MessageViewStyleComp.class).ifPresent(style -> {
             final MessageType messageType = messageView.type().messageType();
             final Font scaledFont = Ufx.scaleFontBy(style.messageFont(), scaling());

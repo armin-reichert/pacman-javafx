@@ -13,7 +13,6 @@ import de.amr.pacmanfx.arcade.ms_pacman.entities.Copyright;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_RenderConfig;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.ui.GlobalAssets;
@@ -64,16 +63,21 @@ public class ArcadeMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
 
     @Override
     public void render(Renderable r, long tick) {
-        if (!(r instanceof GameEntity actor)) {
-            return;
+        if (r instanceof GameEntity gameEntity) {
+            if (gameEntity.isVisible()) {
+                ctx.save();
+                ctx.setImageSmoothing(true);
+                renderGameEntity(gameEntity, tick);
+                ctx.setImageSmoothing(false);
+            }
+        } else {
+            super.render(r, tick);
         }
-        if (!actor.isVisible()) return;
+    }
 
-        final Vector2f center = actor.pos().bodyCenter();
-
-        ctx.setImageSmoothing(true);
-
-        switch (actor) {
+    private void renderGameEntity(GameEntity gameEntity, long tick) {
+        final Vector2f center = gameEntity.pos().bodyCenter();
+        switch (gameEntity) {
             case Pac pac                   -> drawSpriteCentered(computeSprite(pac),    center);
             case Ghost ghost               -> drawSpriteCentered(computeSprite(ghost),  center);
             case GhostPoints points        -> drawSpriteCentered(computeSprite(points), center);
@@ -81,16 +85,10 @@ public class ArcadeMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
             case BonusPoints points        -> drawSpriteCentered(computeSprite(points), center);
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
             case Marquee marquee           -> drawMarquee(marquee, tick);
-            case MessageView _ -> messageViewRenderer.render(r, tick);
+            case MessageView messageView -> messageViewRenderer.renderMessageView(messageView);
             case Copyright copyright -> drawMidwayCopyright(copyright);
-            default -> {
-                if (actor.hasComp(SpriteAnimationComp.class)) {
-                    drawSpriteCentered(animController.currentSprite(actor), center);
-                }
-            }
+            default -> {}
         }
-
-        ctx.setImageSmoothing(false);
     }
 
     private RectShort computeSprite(Ghost ghost) {
