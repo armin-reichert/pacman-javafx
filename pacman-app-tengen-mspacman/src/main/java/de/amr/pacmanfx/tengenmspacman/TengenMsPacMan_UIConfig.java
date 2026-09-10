@@ -30,9 +30,6 @@ import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.mediaPlayer;
 
 public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
 
-    public static final String GAME_OVER_TEXT = "GAME OVER";
-    public static final String READY_TEXT = "READY!";
-
     // Local resources are stored inside main resource folder subdirectories named after package name of this class
     private static final ResourceManager RM = TengenMsPacMan_ResourceManager.instance();
 
@@ -70,18 +67,6 @@ public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
     public static final String REL_PATH_SPRITE_SHEET_IMAGE = "graphics/spritesheet.png";
     public static final String REL_PATH_ARCADE_MAPS_IMAGE = "graphics/arcade_mazes.png";
     public static final String REL_PATH_NON_ARCADE_MAPS_IMAGE = "graphics/non_arcade_mazes.png";
-
-    /** Additional property keys used inside world map files. Values are set at runtime by the map selector. */
-    public enum MapConfigKey {
-        /** Map category. One of ARCADE, MINI, BIG, STRANGE. */
-        MAP_CATEGORY,
-        /** ID of correctly recolored maze sprite set */
-        MAP_ID,
-        /** The map image set (normal + flash images) used by the map renderer. */
-        MAP_IMAGE_SET,
-        /** Boolean value defining if multiple (random) flash colors are used. */
-        MULTIPLE_FLASH_COLORS,
-    }
 
     /** Size of NES screen in tiles (32x30). */
     public static final Vector2i NES_SCREEN_TILES = new Vector2i(32, 30);

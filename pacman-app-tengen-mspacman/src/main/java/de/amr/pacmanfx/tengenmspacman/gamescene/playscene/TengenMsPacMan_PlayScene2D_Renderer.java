@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.tengenmspacman.gamescene.playscene;
 
 import de.amr.basics.InfoMap;
@@ -8,75 +9,36 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
-import de.amr.pacmanfx.core.entities.House;
-import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.MapConfigKey;
-import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_GameLevelRenderer;
+import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
+import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_GameLevelRendererKey;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
-import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.MapRenderInfoKey;
+import de.amr.pacmanfx.uilib.rendering.Common_GameLevelRendererKey;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.paint.Color;
-
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
-import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_PlayScene2D_Renderer extends BaseRenderer implements SpriteRenderer {
+
     public static final int CONTENT_INDENT = 16;
 
-    private class PlaySceneDebugInfoRenderer extends BaseGameSceneDebugInfoRenderer {
-
-        public PlaySceneDebugInfoRenderer(ActorSpriteAnimController animController, Canvas canvas) {
-            super(animController, canvas);
-        }
-
-        @Override
-        public void render(Renderable r, long tick) {
-            if (!(r instanceof TengenMsPacMan_PlayScene2D playScene)) {
-                return;
-            }
-
-            final GameContext game = playScene.game();
-            final GameSession session = game.session();
-            final AbstractGameState gameState = game.state();
-
-            drawTileGrid(NES_SCREEN_WIDTH, playScene.canvasHeightUnscaled(), Color.LIGHTGRAY);
-
-            ctx.save();
-            ctx.translate(scaled(CONTENT_INDENT), 0);
-            ctx.setFill(debugTextFill);
-            ctx.setFont(debugTextFont);
-            ctx.fillText("%s %d".formatted(gameState.name(), gameState.timer().tickCount()), 0, scaled(3 * WorldMap.TS));
-            session.optLevel().ifPresent(level -> {
-                drawMovingActorInfo(animController, level.entities().pac());
-                level.entities().ghosts().forEach(ghost -> drawMovingActorInfo(animController, ghost));
-            });
-            ctx.fillText("Camera y=%.2f".formatted(playScene.dynamicCamera().getTranslateY()), scaled(11* WorldMap.TS), scaled(15* WorldMap.TS));
-            ctx.restore();
-        }
-    }
-
-    private final ActorSpriteAnimController animController;
-
-    private final TengenMsPacMan_GameLevelRenderer levelRenderer;
+    private final Renderer levelRenderer;
 
     public TengenMsPacMan_PlayScene2D_Renderer(
         GameVariantRenderConfig renderConfig, GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
         super(canvas);
 
-        final SceneCanvasRenderingComp r2D = gameScene.reqComp(SceneCanvasRenderingComp.class);
-        this.animController = requireNonNull(animController);
+        final var cr8 = gameScene.reqCanvasRendering();
 
-        levelRenderer = r2D.configureRenderer((TengenMsPacMan_GameLevelRenderer) renderConfig.createGameLevelRenderer(animController, canvas));
-        setDebugInfoRenderer(new PlaySceneDebugInfoRenderer(animController, canvas));
+        levelRenderer = renderConfig.createGameLevelRenderer(animController, canvas);
+        levelRenderer.scalingProperty().bind(cr8.scalingProperty());
+        levelRenderer.backgroundColorProperty().bind(backgroundColorProperty());
+
+        setDebugInfoRenderer(new TengenMsPacMan_PlaySceneDebugInfoRenderer(animController, canvas));
     }
 
     @Override
@@ -95,15 +57,17 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends BaseRenderer implements
 
         session.optLevel().ifPresent(level -> {
             final WorldMap worldMap = level.worldMap();
-            final House house = level.entities().house();
             final double scaledIndent = scaled(CONTENT_INDENT);
 
             ctx.save();
             ctx.translate(scaledIndent, 0);
 
-            configureLevelRenderer(levelRenderer, playScene, worldMap);
+            final LevelCompletedAnimation.FlashingState flashingState = playScene.optLevelCompletedAnimation()
+                .flatMap(LevelCompletedAnimation::flashingState)
+                .orElse(null);
+
+            configureLevelRenderer(levelRenderer, flashingState, worldMap);
             levelRenderer.render(level, tick);
-            levelRenderer.drawDoor(house, worldMap); // ghosts appear under door, so draw door over again
 
             ctx.restore();
 
@@ -120,16 +84,17 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends BaseRenderer implements
         });
     }
 
-    private static void configureLevelRenderer(Renderer levelRenderer, TengenMsPacMan_PlayScene2D playScene2D, WorldMap worldMap) {
+    private static void configureLevelRenderer(Renderer levelRenderer, LevelCompletedAnimation.FlashingState flashingState, WorldMap worldMap) {
+        final MapCategory mapCategory = worldMap.getConfigValue(TengenMsPacMan_GameLevelRendererKey.MAP_CATEGORY);
         final InfoMap info = levelRenderer.info();
         info.clear();
-        // this is needed for drawing animated maze with different images:
-        info.put(MapConfigKey.MAP_CATEGORY, worldMap.getConfigValue(MapConfigKey.MAP_CATEGORY));
-        info.put(MapRenderInfoKey.BRIGHT, false);
-        info.put(MapRenderInfoKey.FLASHING_INDEX, -1);
-        playScene2D.optLevelCompletedAnimation().flatMap(LevelCompletedAnimation::flashingState).ifPresent(flashingState -> {
-            info.put(MapRenderInfoKey.BRIGHT, flashingState.isHighlighted());
-            info.put(MapRenderInfoKey.FLASHING_INDEX, flashingState.flashingIndex());
-        });
+        // For drawing animated maze with different images:
+        info.put(TengenMsPacMan_GameLevelRendererKey.MAP_CATEGORY, mapCategory);
+        info.put(Common_GameLevelRendererKey.BRIGHT, false);
+        info.put(Common_GameLevelRendererKey.FLASHING_INDEX, -1);
+        if (flashingState != null) {
+            info.put(Common_GameLevelRendererKey.BRIGHT, flashingState.isHighlighted());
+            info.put(Common_GameLevelRendererKey.FLASHING_INDEX, flashingState.flashingIndex());
+        }
     }
 }

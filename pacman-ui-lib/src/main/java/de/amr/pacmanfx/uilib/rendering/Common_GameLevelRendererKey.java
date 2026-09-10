@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.uilib.rendering;
 
-public interface MapRenderInfoKey {
+public interface Common_GameLevelRendererKey {
     String ENERGIZER_VISIBLE = "blinking";
     String BRIGHT = "bright";
     String EMPTY = "empty";

@@ -57,7 +57,7 @@ public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
     protected Color debugTextStroke = Color.GRAY;
     protected Font debugTextFont = Font.font("Sans", 14.0f);
 
-    private final ActorSpriteAnimController animController;
+    protected final ActorSpriteAnimController animController;
     private final Text dummy = new Text();
 
     public BaseGameSceneDebugInfoRenderer(ActorSpriteAnimController animController, Canvas canvas) {

@@ -24,6 +24,7 @@ import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Extras;
 import de.amr.pacmanfx.tengenmspacman.gamestate.Tengen_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.MessageAnimation;
+import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConfig;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -34,7 +35,6 @@ import java.util.Optional;
 
 import static de.amr.basics.util.Ufx.textWidth;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.GAME_OVER_TEXT;
 
 public interface TengenMsPacMan_PlayScene2D_GameEventHandler extends DefaultGameEventListener {
 
@@ -101,10 +101,12 @@ public interface TengenMsPacMan_PlayScene2D_GameEventHandler extends DefaultGame
             final MessageAnimation messageAnimation = session.value(
                 TengenMsPacMan_Extras.GAME_OVER_MESSAGE_ANIMATION, MessageAnimation.class);
 
+            //TODO This does not belong here
             if (messageAnimation != null) {
                 // Compute exact message size and wrap position at right border
                 final Font font = GlobalAssets.Fonts.ARCADE.font();
-                final double width = textWidth(GAME_OVER_TEXT, font);
+                final String gameOverText = TengenMsPacMan_RenderConfig.MESSAGE_TEXTS.get(MessageType.GAME_OVER);
+                final double width = textWidth(gameOverText, font);
                 final double wrapX = gameScene().reqCanvasRendering().unscaledWidth() + 0.5 * width;
                 messageAnimation.setWidth(width);
                 messageAnimation.setWrapX(wrapX);

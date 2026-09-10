@@ -9,20 +9,22 @@ import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.Renderable;
+import de.amr.pacmanfx.core.entities.Door;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.*;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.MapConfigKey;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.sprites.*;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.MapRenderInfoKey;
+import de.amr.pacmanfx.uilib.rendering.Common_GameLevelRendererKey;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
+
+import java.util.Objects;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.tengenmspacman.sprites.NonArcadeMapsSpriteSheet.MapID.MAP32_ANIMATED;
@@ -50,44 +52,62 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
 
     @Override
     public void render(Renderable r, long tick) {
-        if ((!(r instanceof GameLevel level))) {
-            return;
+        Objects.requireNonNull(r);
+        switch (r) {
+            case GameLevel level -> drawLevel(level, tick);
+            case Door door -> drawDoor(door);
+            default -> throw new IllegalArgumentException("Cannot draw object of class %s".formatted(r.getClass()));
         }
+    }
 
+    private void drawLevel(GameLevel level, long tick) {
         final WorldMap worldMap = level.worldMap();
         final TerrainLayer terrainLayer = worldMap.terrainLayer();
         final FoodLayer foodLayer = worldMap.foodLayer();
 
         // store the maze sprite set with the correct colors for this level in the map configuration:
-        if (!worldMap.hasConfigValue(MapConfigKey.MAP_IMAGE_SET)) {
+        if (!worldMap.hasConfigValue(TengenMsPacMan_GameLevelRendererKey.MAP_IMAGE_SET)) {
             final int numFlashes = 3;
             final MapImageSet mapImageSet = TengenMsPacMan_MapRepository.instance().createMapImageSet(worldMap, numFlashes);
-            worldMap.setConfigValue(MapConfigKey.MAP_IMAGE_SET, mapImageSet);
+            worldMap.setConfigValue(TengenMsPacMan_GameLevelRendererKey.MAP_IMAGE_SET, mapImageSet);
             Logger.debug("Maze sprite set created: {}", mapImageSet);
         }
 
-        if (info.getBoolean(MapRenderInfoKey.BRIGHT)) {
-            final int flashingIndex = info.get(MapRenderInfoKey.FLASHING_INDEX, Integer.class);
+        if (info.getBoolean(Common_GameLevelRendererKey.BRIGHT)) {
+            final int flashingIndex = info.get(Common_GameLevelRendererKey.FLASHING_INDEX, Integer.class);
             configureHighlightedMapRenderInfo(info, worldMap, flashingIndex);
         }
         else {
-            final MapCategory mapCategory = info.get(MapConfigKey.MAP_CATEGORY, MapCategory.class);
+            final MapCategory mapCategory = info.get(TengenMsPacMan_GameLevelRendererKey.MAP_CATEGORY, MapCategory.class);
             configureNormalMapRenderInfo(info, mapCategory, worldMap, tick);
         }
 
         drawMaze(0, terrainLayer.emptyRowsOverMaze() * TS);
-
-        final House house = level.entities().house();
-        overPaintActorSprites(house, terrainLayer);
+        overPaintActorSprites(level.entities().house(), terrainLayer);
 
         final FoodState foodState = level.food();
         final boolean blinkingOn = level.heartbeat().state() == Pulse.State.ON;
         drawFood(worldMap, foodLayer, foodState, blinkingOn);
     }
 
+    private void drawDoor(Door door) {
+
+    }
+
+    //TODO Door entity renderer
+    public void drawDoor(House house, WorldMap worldMap) {
+        final MapImageSet recoloredImageSet = worldMap.getConfigValue(TengenMsPacMan_GameLevelRendererKey.MAP_IMAGE_SET);
+        final Color strokeColor = Color.valueOf(recoloredImageSet.mapImage().colorScheme().wallStroke());
+        final double scaledTileSize = scaled(TS);
+        final double xMin = house.floorplan().leftDoorTile().x() * scaledTileSize;
+        final double yMin = house.floorplan().leftDoorTile().y() * scaledTileSize + scaled(5); // 5 pixels down
+        ctx.setFill(strokeColor);
+        ctx.fillRect(xMin, yMin, 2 * scaledTileSize, scaled(2));
+    }
+
     private void drawMaze(int x, int y) {
-        final Image mazeImage = info.get(MapRenderInfoKey.IMAGE, Image.class);
-        final RectShort mazeSprite = info.get(MapRenderInfoKey.SPRITE, RectShort.class);
+        final Image mazeImage = info.get(Common_GameLevelRendererKey.IMAGE, Image.class);
+        final RectShort mazeSprite = info.get(Common_GameLevelRendererKey.SPRITE, RectShort.class);
         final int width = mazeSprite.width();
         final int height = mazeSprite.height();
         ctx.drawImage(mazeImage,
@@ -97,7 +117,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
     }
 
     private void drawFood(WorldMap worldMap, FoodLayer foodLayer, FoodState foodState, boolean blinkingOn) {
-        final MapImageSet recoloredMazeSprites = worldMap.getConfigValue(MapConfigKey.MAP_IMAGE_SET);
+        final MapImageSet recoloredMazeSprites = worldMap.getConfigValue(TengenMsPacMan_GameLevelRendererKey.MAP_IMAGE_SET);
         final NES_WorldMapColorScheme colorScheme = recoloredMazeSprites.mapImage().colorScheme();
         final Color pelletColor = Color.valueOf(colorScheme.pellet());
 
@@ -144,17 +164,6 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
         });
     }
 
-    //TODO Door entity renderer
-    public void drawDoor(House house, WorldMap worldMap) {
-        final MapImageSet recoloredImageSet = worldMap.getConfigValue(MapConfigKey.MAP_IMAGE_SET);
-        final Color strokeColor = Color.valueOf(recoloredImageSet.mapImage().colorScheme().wallStroke());
-        final double scaledTileSize = scaled(TS);
-        final double xMin = house.floorplan().leftDoorTile().x() * scaledTileSize;
-        final double yMin = house.floorplan().leftDoorTile().y() * scaledTileSize + scaled(5); // 5 pixels down
-        ctx.setFill(strokeColor);
-        ctx.fillRect(xMin, yMin, 2 * scaledTileSize, scaled(2));
-    }
-
     private void overPaintActorSprites(House house, TerrainLayer terrain) {
         // Over-paint area at house bottom where the ghost sprites are shown in map
         final double margin = scaling();
@@ -187,22 +196,22 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
     }
 
     private void configureHighlightedMapRenderInfo(InfoMap info, WorldMap worldMap, int flashingIndex) {
-        final MapImageSet imageSet = worldMap.getConfigValue(MapConfigKey.MAP_IMAGE_SET);
+        final MapImageSet imageSet = worldMap.getConfigValue(TengenMsPacMan_GameLevelRendererKey.MAP_IMAGE_SET);
         final int i = Math.clamp(flashingIndex, 0, imageSet.flashingMapImages().size() - 1);
         final ColorSchemedMapSprite flashingMapImage = imageSet.flashingMapImages().get(i);
-        info.put(MapRenderInfoKey.IMAGE, flashingMapImage.spriteSheetImage());
-        info.put(MapRenderInfoKey.SPRITE, flashingMapImage.sprite());
+        info.put(Common_GameLevelRendererKey.IMAGE, flashingMapImage.spriteSheetImage());
+        info.put(Common_GameLevelRendererKey.SPRITE, flashingMapImage.sprite());
     }
 
     private void configureNormalMapRenderInfo(InfoMap info, MapCategory mapCategory, WorldMap worldMap, long tick) {
-        final MapImageSet imageSet = worldMap.getConfigValue(MapConfigKey.MAP_IMAGE_SET);
-        info.put(MapRenderInfoKey.IMAGE, imageSet.mapImage().spriteSheetImage());
+        final MapImageSet imageSet = worldMap.getConfigValue(TengenMsPacMan_GameLevelRendererKey.MAP_IMAGE_SET);
+        info.put(Common_GameLevelRendererKey.IMAGE, imageSet.mapImage().spriteSheetImage());
         final int mapNumber = worldMap.getConfigValue(WorldMapConfigKey.MAP_NUMBER);
         if (mapCategory == MapCategory.STRANGE && mapNumber == 15) {
             final int spriteIndex = strangeMap15AnimationFrame(tick);
-            info.put(MapRenderInfoKey.SPRITE, NonArcadeMapsSpriteSheet.instance().findSpriteSequence(MAP32_ANIMATED)[spriteIndex]);
+            info.put(Common_GameLevelRendererKey.SPRITE, NonArcadeMapsSpriteSheet.instance().findSpriteSequence(MAP32_ANIMATED)[spriteIndex]);
         } else {
-            info.put(MapRenderInfoKey.SPRITE, imageSet.mapImage().sprite());
+            info.put(Common_GameLevelRendererKey.SPRITE, imageSet.mapImage().sprite());
         }
     }
 }
