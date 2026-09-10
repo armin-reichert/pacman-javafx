@@ -9,11 +9,11 @@ import de.amr.pacmanfx.core.Renderable;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
-import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_EntityRenderer;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.text.Font;
 
@@ -23,14 +23,16 @@ public class TengenMsPacMan_BootScene_Renderer extends BaseRenderer {
 
     public static final String TENGEN_PRESENTS = "TENGEN PRESENTS";
 
-    private final TengenMsPacMan_EntityRenderer actorRenderer;
+    private final Renderer entityRenderer;
 
     public TengenMsPacMan_BootScene_Renderer(
         GameVariantRenderConfig renderConfig, GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas) {
         super(canvas);
 
-        final SceneCanvasRenderingComp r2D = gameScene.reqComp(SceneCanvasRenderingComp.class);
-        actorRenderer = r2D.configureRenderer((TengenMsPacMan_EntityRenderer) renderConfig.createEntityRenderer(animSystem, canvas));
+        // set scaling and background color binding
+        final SceneCanvasRenderingComp canvasRendering = gameScene.reqComp(SceneCanvasRenderingComp.class);
+        entityRenderer = canvasRendering.configureRenderer(renderConfig.createEntityRenderer(animSystem, canvas));
+
         setDebugInfoRenderer(createDefaultSceneDebugRenderer(gameScene, canvas));
     }
 
@@ -41,14 +43,16 @@ public class TengenMsPacMan_BootScene_Renderer extends BaseRenderer {
         }
 
         if (bootScene.gray) {
+            // TODO let boot scene produce renderable for gray screen fill
             fillCanvas(NES_Palette.color(0x10));
         }
         else {
+            //TODO let boot scene produce renderable for color changing and moving text
             final Font arcade8 = Ufx.deriveFont(GlobalAssets.Fonts.ARCADE.font(), scaled(8));
-            fillText(TENGEN_PRESENTS, bootScene.shadeOfBlue, arcade8,
-                bootScene.movingText.pos().x(),
-                bootScene.movingText.pos().y());
-            actorRenderer.render(bootScene.ghost, tick);
+            fillText(TENGEN_PRESENTS, bootScene.shadeOfBlue, arcade8, bootScene.movingText.pos().x(), bootScene.movingText.pos().y());
+
+            //TODO let boot scene produce renderable for moving ghost
+            entityRenderer.render(bootScene.ghost, tick);
         }
     }
 }
