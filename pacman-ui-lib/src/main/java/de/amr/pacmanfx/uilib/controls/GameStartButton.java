@@ -70,6 +70,7 @@ public class GameStartButton extends Control {
         EventHandler<ActionEvent> handler = getOnAction();
         if (handler != null) {
             handler.handle(event);
+            event.consume();
         }
     }
 
