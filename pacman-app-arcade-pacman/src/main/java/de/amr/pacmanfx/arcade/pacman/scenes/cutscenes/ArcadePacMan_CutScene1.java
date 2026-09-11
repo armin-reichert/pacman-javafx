@@ -43,7 +43,6 @@ public class ArcadePacMan_CutScene1 extends GameScene {
     private Pac pacMan;
     private Ghost blinky;
 
-
     private CutSceneTimingComp timing() {
         return reqComp(CutSceneTimingComp.class);
     }

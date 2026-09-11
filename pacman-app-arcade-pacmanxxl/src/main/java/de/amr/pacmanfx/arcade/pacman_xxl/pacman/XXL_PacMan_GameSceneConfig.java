@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman_xxl.pacman;
 
 import de.amr.basics.Named;
 import de.amr.basics.fsm.State;
-import de.amr.pacmanfx.arcade.pacman.scenes.bootscene.Arcade_BootScene2D;
+import de.amr.pacmanfx.arcade.pacman.scenes.bootscene.Arcade_BootScene;
 import de.amr.pacmanfx.arcade.pacman.scenes.cutscenes.ArcadePacMan_CutScene1;
 import de.amr.pacmanfx.arcade.pacman.scenes.cutscenes.ArcadePacMan_CutScene2;
 import de.amr.pacmanfx.arcade.pacman.scenes.cutscenes.ArcadePacMan_CutScene3;
@@ -33,7 +33,7 @@ class XXL_PacMan_GameSceneConfig extends AbstractGameSceneConfig {
     protected GameScene createGameScene(GameAppContext appContext, Named sceneID) {
         requireNonNull(sceneID);
         return switch (sceneID) {
-            case CommonGameSceneID.BOOT_SCENE -> new Arcade_BootScene2D(appContext);
+            case CommonGameSceneID.BOOT_SCENE -> new Arcade_BootScene(appContext);
             case CommonGameSceneID.INTRO_SCENE -> new ArcadePacMan_IntroScene(appContext);
             case CommonGameSceneID.START_SCENE -> new ArcadePacMan_StartScene(appContext);
             case CommonGameSceneID.PLAY_SCENE_2D -> new Arcade_PlayScene2D(appContext);

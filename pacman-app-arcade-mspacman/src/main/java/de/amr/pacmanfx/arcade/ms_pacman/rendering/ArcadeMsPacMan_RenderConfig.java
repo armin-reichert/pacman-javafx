@@ -14,8 +14,8 @@ import de.amr.pacmanfx.arcade.ms_pacman.scenes.introscene.ArcadeMsPacMan_IntroSc
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.introscene.ArcadeMsPacMan_IntroScene_Renderer;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.startscene.ArcadeMsPacMan_StartScene;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.startscene.ArcadeMsPacMan_StartScene_Renderer;
-import de.amr.pacmanfx.arcade.pacman.scenes.bootscene.Arcade_BootScene2D;
-import de.amr.pacmanfx.arcade.pacman.scenes.bootscene.Arcade_BootScene2D_Renderer;
+import de.amr.pacmanfx.arcade.pacman.scenes.bootscene.Arcade_BootScene;
+import de.amr.pacmanfx.arcade.pacman.scenes.bootscene.Arcade_BootScene_Renderer;
 import de.amr.pacmanfx.arcade.pacman.scenes.playscene.Arcade_PlayScene2D;
 import de.amr.pacmanfx.arcade.pacman.scenes.playscene.Arcade_PlayScene2D_Renderer;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
@@ -119,7 +119,7 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
         requireNonNull(gameScene);
 
         return switch (gameScene) {
-            case Arcade_BootScene2D ignored        -> new Arcade_BootScene2D_Renderer(gameScene, canvas, spriteSheet());
+            case Arcade_BootScene ignored        -> new Arcade_BootScene_Renderer(gameScene, canvas, spriteSheet());
             case ArcadeMsPacMan_IntroScene ignored -> new ArcadeMsPacMan_IntroScene_Renderer(gameScene, canvas);
             case ArcadeMsPacMan_StartScene ignored -> new ArcadeMsPacMan_StartScene_Renderer(gameScene, canvas);
             case Arcade_PlayScene2D ignored        -> new Arcade_PlayScene2D_Renderer(gameScene, animController, canvas, spriteSheet());

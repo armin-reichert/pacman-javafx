@@ -24,13 +24,13 @@ import static java.util.Objects.requireNonNull;
  * and a grid before the intro scene starts. This scene is used by the Arcade and the XXL variants so we pass the
  * corresponding spritesheet as a parameter.
  */
-public class Arcade_BootScene2D_Renderer extends BaseRenderer implements SpriteRenderer {
+public class Arcade_BootScene_Renderer extends BaseRenderer implements SpriteRenderer {
 
     public static final int GRID_SIZE = 16;
 
     private final SpriteSheet<?> spriteSheet;
 
-    public Arcade_BootScene2D_Renderer(GameScene gameScene, Canvas canvas, SpriteSheet<?> spriteSheet) {
+    public Arcade_BootScene_Renderer(GameScene gameScene, Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(canvas);
         requireNonNull(gameScene);
         this.spriteSheet = requireNonNull(spriteSheet);

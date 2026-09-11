@@ -16,9 +16,9 @@ public record RandomHexCodeBlock(byte[] numbers, int width, int height) implemen
     }
 
     private static byte[] randomNoise() {
-        final byte[] numbers = new byte[Arcade_BootScene2D.TILE_WIDTH * Arcade_BootScene2D.TILE_HEIGHT];
+        final byte[] numbers = new byte[Arcade_BootScene.TILE_WIDTH * Arcade_BootScene.TILE_HEIGHT];
         for (int i = 0; i < numbers.length; i++) {
-            int row = i / Arcade_BootScene2D.TILE_WIDTH;
+            int row = i / Arcade_BootScene.TILE_WIDTH;
             //int col = i % Arcade_BootScene2D.TILE_WIDTH;
             if (RandomNumbers.chance(0.5) && row % 2 == 0) {
                 continue;
