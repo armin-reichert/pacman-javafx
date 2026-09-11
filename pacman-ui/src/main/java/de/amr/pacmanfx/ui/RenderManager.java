@@ -75,28 +75,16 @@ public class RenderManager {
         }
     }
 
-    public void clearSceneCanvas(GameScene gameScene) {
-        gameScene.optCanvasRendering().ifPresent(canvasRendering -> {
-            if (canvasRendering.canvas() != null) {
-                final var ctx = canvasRendering.canvas().getGraphicsContext2D();
-                ctx.setFill(canvasRendering.backgroundColor());
-                ctx.fillRect(0, 0, canvasRendering.canvas().getWidth(), canvasRendering.canvas().getHeight());
-            } else {
-                Logger.error("Cannot create game scene canvas: no canvas has been assigned");
-            }
-        });
-    }
-
     public void clearRenderQueue() {
         renderQueue.clear();
     }
 
-    public void add(Renderable renderable) {
+    public void addRenderable(Renderable renderable) {
         renderQueue.add(renderable);
     }
 
-    public void addAll(Stream<Renderable> renderables) {
-        renderables.forEach(this::add);
+    public void addRenderables(Stream<Renderable> renderables) {
+        renderables.forEach(this::addRenderable);
     }
 
     public void renderFrame(long tick, boolean debugMode) {
@@ -106,6 +94,18 @@ public class RenderManager {
                 case SCENE    -> renderGameScene(r, tick, debugMode);
                 case OVERLAY  -> renderOverlay(r, tick);
                 default       -> renderGameEntity(r, tick);
+            }
+        });
+    }
+
+    public void clearSceneCanvas(GameScene gameScene) {
+        gameScene.optCanvasRendering().ifPresent(canvasRendering -> {
+            if (canvasRendering.canvas() != null) {
+                final var ctx = canvasRendering.canvas().getGraphicsContext2D();
+                ctx.setFill(canvasRendering.backgroundColor());
+                ctx.fillRect(0, 0, canvasRendering.canvas().getWidth(), canvasRendering.canvas().getHeight());
+            } else {
+                Logger.error("Cannot create game scene canvas: no canvas has been assigned");
             }
         });
     }

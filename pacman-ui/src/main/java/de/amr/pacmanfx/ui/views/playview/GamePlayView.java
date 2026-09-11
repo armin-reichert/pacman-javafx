@@ -233,10 +233,10 @@ public class GamePlayView implements GameView {
 
         final GameSession session = app.game().session();
         if (session.isHUDVisible()) {
-            renderManager.addAll(session.hud().renderables());
+            renderManager.addRenderables(session.hud().renderables());
         }
 
-        renderManager.addAll(layers.miniViewLayer().renderables());
+        renderManager.addRenderables(layers.miniViewLayer().renderables());
 
         // Add game scene renderables
         final GameScene currentGameScene = app.ui().gameScenes().optCurrentGameScene().orElse(null);
@@ -247,8 +247,8 @@ public class GamePlayView implements GameView {
                 currentGameScene,
                 layers.miniViewLayer()
             );
-            renderManager.add(currentGameScene); //TODO rethink this
-            renderManager.addAll(currentGameScene.renderables());
+            renderManager.addRenderable(currentGameScene); //TODO rethink this
+            renderManager.addRenderables(currentGameScene.renderables());
         }
 
         // Clear canvases
