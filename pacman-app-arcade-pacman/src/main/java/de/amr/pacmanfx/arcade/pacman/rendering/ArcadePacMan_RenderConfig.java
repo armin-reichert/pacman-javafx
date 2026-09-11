@@ -118,7 +118,7 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
         requireNonNull(canvas);
 
         return switch (gameScene) {
-            case Arcade_BootScene2D ignored      -> new Arcade_BootScene2D_Renderer(gameScene, canvas, spriteSheet(), BOOT_SCENE_SPRITES);
+            case Arcade_BootScene2D ignored      -> new Arcade_BootScene2D_Renderer(gameScene, canvas, spriteSheet());
             case ArcadePacMan_IntroScene ignored -> new ArcadePacMan_IntroScene_Renderer(gameScene, canvas);
             case ArcadePacMan_StartScene ignored -> new ArcadePacMan_StartScene_Renderer(gameScene, canvas);
             case Arcade_PlayScene2D ignored      -> new Arcade_PlayScene2D_Renderer(gameScene, animController, canvas, spriteSheet());

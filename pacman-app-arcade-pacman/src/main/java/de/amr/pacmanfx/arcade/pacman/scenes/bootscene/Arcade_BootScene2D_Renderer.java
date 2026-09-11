@@ -3,12 +3,10 @@
  */
 package de.amr.pacmanfx.arcade.pacman.scenes.bootscene;
 
-import de.amr.basics.math.RectShort;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
@@ -16,14 +14,9 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.text.Font;
 
-import static de.amr.basics.math.MathAdds.lerp;
-import static de.amr.basics.math.RandomNumbers.randomFloat;
-import static de.amr.basics.math.RandomNumbers.randomInt;
-import static de.amr.basics.math.RectShort.sprite;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer.createDefaultSceneDebugRenderer;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
-import static java.lang.Math.clamp;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -36,13 +29,11 @@ public class Arcade_BootScene2D_Renderer extends BaseRenderer implements SpriteR
     public static final int GRID_SIZE = 16;
 
     private final SpriteSheet<?> spriteSheet;
-    private final Rectangle2D spriteRegion;
 
-    public Arcade_BootScene2D_Renderer(GameScene gameScene, Canvas canvas, SpriteSheet<?> spriteSheet, Rectangle2D spriteRegion) {
+    public Arcade_BootScene2D_Renderer(GameScene gameScene, Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(canvas);
         requireNonNull(gameScene);
         this.spriteSheet = requireNonNull(spriteSheet);
-        this.spriteRegion = requireNonNull(spriteRegion);
 
         setDebugInfoRenderer(createDefaultSceneDebugRenderer(gameScene, canvas));
     }
@@ -54,89 +45,55 @@ public class Arcade_BootScene2D_Renderer extends BaseRenderer implements SpriteR
 
     @Override
     public void render(Renderable r, long tick) {
-        if (!(r instanceof Arcade_BootScene2D bootScene)) {
-            return;
-        }
-
-        final SceneCanvasRenderingComp r2D = bootScene.reqComp(SceneCanvasRenderingComp.class);
-        final int width = r2D.unscaledWidth();
-        final int height = r2D.unscaledHeight();
-
-        switch (bootScene.sceneState) {
-            case BLANK -> clearCanvas();
-            case HEX_CODES -> {
-                if (tick % 4 == 0) {
-                    clearCanvas();
-                    drawRandomHexDigits(bootScene, width, height);
-                }
-            }
-            case RANDOM_SPRITE_FRAGMENTS -> {
-                if (tick % 4 == 0) {
-                    clearCanvas();
-                    drawRandomSpriteFragments(width, height);
-                }
-            }
-            case GRID -> {
-                clearCanvas();
-                drawGrid(width, height);
-            }
+        switch (r) {
+            case BlankCanvas _ -> clearCanvas();
+            case RandomHexCodeBlock hexBlock -> renderHexCodeBlock(hexBlock);
+            case SpriteNoise spriteNoise -> renderSpriteNoise(spriteNoise);
+            case GridPattern gridPattern -> renderGridPattern(gridPattern);
+            default -> {}
         }
     }
 
-    private void drawRandomHexDigits(Arcade_BootScene2D bootScene, int width, int height) {
+    private void renderHexCodeBlock(RandomHexCodeBlock block) {
         final Font arcade8 = Ufx.deriveFont(GlobalAssets.Fonts.ARCADE.font(), scaled(8));
-        final int numRows = height / TS;
-        final int numCols = width / TS;
+        final int numRows = block.height();
+        final int numCols = block.width();
         ctx.setFill(ARCADE_WHITE);
         ctx.setFont(arcade8);
         for (int row = 0; row < numRows; ++row) {
             final double y = scaled(TS * (row + 1));
             for (int col = 0; col < numCols; ++col) {
                 final double x = scaled(TS * col);
-                final int i = randomInt(0, bootScene.noise.length- 1);
-                ctx.fillText(bootScene.noise[i], x, y);
+                ctx.fillText(Integer.toHexString(block.hexDigits()[row * block.width() + col]), x, y);
             }
         }
     }
 
-    private void drawRandomSpriteFragments(int width, int height) {
-        final int numRows = height / GRID_SIZE;
-        final int numCols = width / GRID_SIZE;
-        for (int row = 0; row < numRows; ++row) {
-            if (randomInt(0, 100) < 33) continue;
-            final RectShort f1 = randomSpriteFragment();
-            final RectShort f2 = randomSpriteFragment();
-            final int splitCol = numCols / 8 + randomInt(0, numCols / 4);
-            for (int col = 0; col < numCols; ++col) {
-                drawSprite(col < splitCol ? f1 : f2, GRID_SIZE * col, GRID_SIZE * row, true);
+    private void renderSpriteNoise(SpriteNoise spriteNoise) {
+        for (int row = 0; row < spriteNoise.height(); ++row) {
+            for (int col = 0; col < spriteNoise.width(); ++col) {
+                int i = row * spriteNoise.width() + col;
+                drawSprite(spriteNoise.sprites()[i], GRID_SIZE * col, GRID_SIZE * row, true);
             }
         }
     }
 
-    private RectShort randomSpriteFragment() {
-        double xMin = lerp(spriteRegion.getMinX(), spriteRegion.getMaxX(), randomFloat(0, 1));
-        xMin = clamp(xMin, spriteRegion.getMinX(), spriteRegion.getMaxX() - GRID_SIZE);
-        double yMin = lerp(spriteRegion.getMinY(), spriteRegion.getMaxY(), randomFloat(0, 1));
-        yMin = clamp(yMin, spriteRegion.getMinY(), spriteRegion.getMaxY() - GRID_SIZE);
-        return sprite((short) xMin, (short) yMin, GRID_SIZE, GRID_SIZE);
-    }
-
-    private void drawGrid(int width, int height) {
-        final double gridWidth = scaled(width);
-        final double gridHeight = scaled(height);
-        final int numRows = (int) (gridHeight / GRID_SIZE);
-        final int numCols = (int) (gridWidth / GRID_SIZE);
+    private void renderGridPattern(GridPattern grid) {
+        final double widthPixels = scaled(grid.width() * TS);
+        final double heightPixels = scaled(grid.height() * TS);
+        final int numRows = (int) (heightPixels / GRID_SIZE);
+        final int numCols = (int) (widthPixels / GRID_SIZE);
         final double thin = scaled(2), thick = scaled(4);
         ctx.setStroke(ARCADE_WHITE);
         for (int row = 0; row <= numRows; ++row) {
             final double y = scaled(row * GRID_SIZE);
             ctx.setLineWidth(row == 0 || row == numRows ? thick : thin);
-            ctx.strokeLine(0, y, gridWidth, y);
+            ctx.strokeLine(0, y, widthPixels, y);
         }
         for (int col = 0; col <= numCols; ++col) {
             final double x = scaled(col * GRID_SIZE);
             ctx.setLineWidth(col == 0 || col == numCols ? thick : thin);
-            ctx.strokeLine(x, 0, x, gridHeight);
+            ctx.strokeLine(x, 0, x, heightPixels);
         }
     }
 }
