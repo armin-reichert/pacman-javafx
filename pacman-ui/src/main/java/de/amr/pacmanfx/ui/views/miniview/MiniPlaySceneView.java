@@ -30,7 +30,6 @@ import javafx.scene.layout.Border;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
-import org.tinylog.Logger;
 
 import java.util.stream.Stream;
 
@@ -100,11 +99,11 @@ public class MiniPlaySceneView extends HBox implements Renderable {
         final boolean shouldBeVisible = is3DPlaySceneActive && viewModel.miniViewSettings().activeProperty.get();
         if (shouldBeVisible) {
             if (!expanded()) {
-                playShowAnimation();
+                slideIntoView();
             }
         } else {
             if (expanded()) {
-                playHideAnimation();
+                slideOutOfView();
             }
         }
     }
@@ -142,10 +141,9 @@ public class MiniPlaySceneView extends HBox implements Renderable {
         ctx.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
 
-    public MiniViewRenderer createRenderer() {
-        final GameViewModel viewModel = app.ui().viewModel();
-        final ActorSpriteAnimController animController = app.game().variant().systems().actorSpriteAnimController();
-        final GameVariantRenderConfig renderConfig = app.currentGameVariantUIConfig().renderConfig();
+    public MiniViewRenderer createRenderer(GameVariantRenderConfig renderConfig, ActorSpriteAnimController animController) {
+//        final ActorSpriteAnimController animController = app.game().variant().systems().actorSpriteAnimController();
+//        final GameVariantRenderConfig renderConfig = app.currentGameVariantUIConfig().renderConfig();
 
         final var miniViewRenderer = new MiniViewRenderer(canvas, animController, renderConfig, viewModel);
         miniViewRenderer.backgroundColorProperty().bind(viewModel.common2DSettings().canvasBackgroundColorProperty());
@@ -158,7 +156,7 @@ public class MiniPlaySceneView extends HBox implements Renderable {
         return getTranslateY() == 0;
     }
 
-    private void playShowAnimation() {
+    private void slideIntoView() {
         if (slidingInAnimation != null && slidingInAnimation.getStatus() == Animation.Status.RUNNING) {
             return;
         }
@@ -170,7 +168,7 @@ public class MiniPlaySceneView extends HBox implements Renderable {
         slidingInAnimation.play();
     }
 
-    private void playHideAnimation() {
+    private void slideOutOfView() {
         if (slidingOutAnimation != null && slidingOutAnimation.getStatus() == Animation.Status.RUNNING) {
             return;
         }

@@ -239,7 +239,6 @@ public class GamePlayView implements GameView {
         }
 
         renderManager.addAll(layers.miniViewLayer().renderables());
-        renderManager.setMiniViewRenderer(layers.miniViewLayer().createRenderer());
 
         // Add game scene renderables
         final GameScene currentGameScene = app.ui().gameScenes().optCurrentGameScene().orElse(null);
@@ -274,9 +273,6 @@ public class GamePlayView implements GameView {
     public StackPane rootPane() {
         return rootPane;
     }
-
-    // Context menu handler
-
 
     public void replaceGameScene(GameScene currentGameScene, GameScene nextGameScene) {
         requireNonNull(nextGameScene);

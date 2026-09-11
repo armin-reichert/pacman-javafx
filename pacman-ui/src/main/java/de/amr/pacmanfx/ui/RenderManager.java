@@ -61,9 +61,9 @@ public class RenderManager {
                 sceneRenderer.optDebugInfoRenderer().ifPresent(debugRenderer -> configureRenderer(debugRenderer, canvasRendering));
             }
 
-            //TODO temp solution
+            //TODO temporary solution
             final MiniPlaySceneView miniView = app.ui().views().gamePlayView().layers().miniViewLayer();
-            miniView.createRenderer();
+            setMiniViewRenderer(miniView.createRenderer(config, animController));
         }
         else {
             Logger.error("Cannot create game scene and HUD renderer: no canvas has been assigned");
