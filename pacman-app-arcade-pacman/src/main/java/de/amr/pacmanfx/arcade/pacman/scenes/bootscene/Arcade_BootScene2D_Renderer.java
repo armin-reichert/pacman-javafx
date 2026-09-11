@@ -10,9 +10,9 @@ import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontSmoothingType;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer.createDefaultSceneDebugRenderer;
@@ -45,6 +45,8 @@ public class Arcade_BootScene2D_Renderer extends BaseRenderer implements SpriteR
 
     @Override
     public void render(Renderable r, long tick) {
+        ctx.save();
+        ctx.setFontSmoothingType(FontSmoothingType.LCD);
         switch (r) {
             case BlankCanvas _ -> clearCanvas();
             case RandomHexCodeBlock hexBlock -> renderHexCodeBlock(hexBlock);
@@ -52,19 +54,22 @@ public class Arcade_BootScene2D_Renderer extends BaseRenderer implements SpriteR
             case GridPattern gridPattern -> renderGridPattern(gridPattern);
             default -> {}
         }
+        ctx.restore();
     }
 
     private void renderHexCodeBlock(RandomHexCodeBlock block) {
-        final Font arcade8 = Ufx.deriveFont(GlobalAssets.Fonts.ARCADE.font(), scaled(8));
+        final Font arcade8 = Ufx.deriveFont(GlobalAssets.Fonts.ARCADE.font(), scaled(TS));
         final int numRows = block.height();
         final int numCols = block.width();
         ctx.setFill(ARCADE_WHITE);
         ctx.setFont(arcade8);
         for (int row = 0; row < numRows; ++row) {
-            final double y = scaled(TS * (row + 1));
+            final double y = scaled(TS * row);
             for (int col = 0; col < numCols; ++col) {
                 final double x = scaled(TS * col);
-                ctx.fillText(Integer.toHexString(block.hexDigits()[row * block.width() + col]), x, y);
+                final int i = block.width() * row + col;
+                final byte number = block.numbers()[i];
+                ctx.fillText(Integer.toHexString(number), x, y + scaled(TS)); // Note: y param is baseline!
             }
         }
     }

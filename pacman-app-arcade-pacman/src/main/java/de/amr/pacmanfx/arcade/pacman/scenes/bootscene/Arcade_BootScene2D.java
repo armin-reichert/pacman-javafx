@@ -87,7 +87,8 @@ public class Arcade_BootScene2D extends GameScene {
         }
 
         final long t = game().state().timer().tickCount();
-        final int byFour = (int) t % 4;
+        final int mod4 = (int) t % 4;
+        final int mod8 = (int) t % 8;
 
         // Start next state?
         for (var nextState : SceneState.values()) {
@@ -98,19 +99,19 @@ public class Arcade_BootScene2D extends GameScene {
 
         switch (currentState) {
             case HEX_CODES -> {
-                switch (byFour) {
+                switch (mod8) {
                     case 0 -> currentRenderable = new RandomHexCodeBlock(TILE_WIDTH, TILE_HEIGHT);
-                    case 3 -> currentRenderable = BLANK_CANVAS;
+                    case 7 -> currentRenderable = BLANK_CANVAS;
                 }
             }
             case SPRITE_NOISE -> {
-                switch (byFour) {
+                switch (mod4) {
                     case 0 -> currentRenderable = new SpriteNoise(TILE_WIDTH, TILE_HEIGHT);
                     case 3 -> currentRenderable = BLANK_CANVAS;
                 }
             }
             case GRID -> {
-                switch (byFour) {
+                switch (mod4) {
                     case 0 -> {
                         if (!(currentRenderable instanceof GridPattern)) {
                             currentRenderable = BLANK_CANVAS;
