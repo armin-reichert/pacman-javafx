@@ -133,11 +133,9 @@ public class GamePlayView implements GameView {
     }
 
     private void initLayers(GameViewModel viewModel) {
-        layers.miniViewLayer().setGameApp(app);
+        layers.miniViewLayer().setViewModel(viewModel);
 
         layers.iconLayer().visibleProperty().bind(app.clock().updatesDisabledProperty());
-
-//        vm.common2DSettings().fontSmoothingOnProperty().addListener((_, _, smoothing) -> renderManager.setGameSceneFontSmoothing(smoothing));
 
         viewModel.debugModeOnProperty().addListener((_, _, debug) -> {
             layers.gameSceneLayer().setBackground(debug ? DEBUG_BACKGROUND : null);
@@ -266,7 +264,7 @@ public class GamePlayView implements GameView {
             dashboard.update(app);
         }
 
-        layers.miniViewLayer().update();
+        layers.miniViewLayer().update(app.ui());
     }
 
     @Override

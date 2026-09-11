@@ -6,13 +6,13 @@ package de.amr.pacmanfx.ui.views.miniview;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.vm.GameViewModel;
 import javafx.animation.Animation;
@@ -50,8 +50,6 @@ public class MiniPlaySceneView extends HBox implements Renderable {
 
     private TranslateTransition slidingOutAnimation;
 
-    private GameAppContext app;
-
     private GameLevel level;
 
     private GameViewModel viewModel;
@@ -69,10 +67,8 @@ public class MiniPlaySceneView extends HBox implements Renderable {
         setTranslateY(-getHeight());
     }
 
-    public void setGameApp(GameAppContext app) {
-        this.app = requireNonNull(app);
-
-        viewModel = app.ui().viewModel();
+    public void setViewModel(GameViewModel viewModel) {
+        this.viewModel = requireNonNull(viewModel);
 
         backgroundProperty().bind(viewModel.common2DSettings().canvasBackgroundColorProperty().map(Background::fill));
         opacityProperty()   .bind(viewModel.miniViewSettings().opacityPercentageProperty.divide(100.0));
@@ -94,8 +90,8 @@ public class MiniPlaySceneView extends HBox implements Renderable {
         setTranslateY(-canvas.getHeight());
     }
 
-    public void update() {
-        final boolean is3DPlaySceneActive = app.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D);
+    public void update(GameUI ui) {
+        final boolean is3DPlaySceneActive = ui.gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D);
         final boolean shouldBeVisible = is3DPlaySceneActive && viewModel.miniViewSettings().activeProperty.get();
         if (shouldBeVisible) {
             if (!expanded()) {
@@ -136,15 +132,11 @@ public class MiniPlaySceneView extends HBox implements Renderable {
 
     public void clearCanvas() {
         final var ctx = canvas.getGraphicsContext2D();
-        final GameViewModel viewModel = app.ui().viewModel();
         ctx.setFill(viewModel.common2DSettings().canvasBackgroundColorProperty().get());
         ctx.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
 
     public MiniViewRenderer createRenderer(GameVariantRenderConfig renderConfig, ActorSpriteAnimController animController) {
-//        final ActorSpriteAnimController animController = app.game().variant().systems().actorSpriteAnimController();
-//        final GameVariantRenderConfig renderConfig = app.currentGameVariantUIConfig().renderConfig();
-
         final var miniViewRenderer = new MiniViewRenderer(canvas, animController, renderConfig, viewModel);
         miniViewRenderer.backgroundColorProperty().bind(viewModel.common2DSettings().canvasBackgroundColorProperty());
         miniViewRenderer.scalingProperty().bind(scalingProperty());
