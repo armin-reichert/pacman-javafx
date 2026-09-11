@@ -14,12 +14,12 @@ import de.amr.pacmanfx.uilib.rendering.CommonGameLevelRenderInfoKey;
 import de.amr.pacmanfx.uilib.rendering.RenderableWrapper;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 
-public class MiniViewRenderer extends BaseRenderer {
+public class MiniPlaySceneViewRenderer extends BaseRenderer {
 
     private final Renderer levelRenderer;
     private final Renderer entityRenderer;
 
-    public MiniViewRenderer(
+    public MiniPlaySceneViewRenderer(
         MiniPlaySceneView miniView,
         ActorSpriteAnimController animController,
         GameVariantRenderConfig renderConfig) {
