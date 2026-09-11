@@ -14,7 +14,6 @@ import de.amr.pacmanfx.arcade.ms_pacman.scenes.introscene.ArcadeMsPacMan_IntroSc
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.introscene.ArcadeMsPacMan_IntroScene_Renderer;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.startscene.ArcadeMsPacMan_StartScene;
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.startscene.ArcadeMsPacMan_StartScene_Renderer;
-import de.amr.pacmanfx.arcade.pacman.rendering.Arcade_HUD_Renderer;
 import de.amr.pacmanfx.arcade.pacman.scenes.bootscene.Arcade_BootScene2D;
 import de.amr.pacmanfx.arcade.pacman.scenes.bootscene.Arcade_BootScene2D_Renderer;
 import de.amr.pacmanfx.arcade.pacman.scenes.playscene.Arcade_PlayScene2D;
@@ -22,7 +21,6 @@ import de.amr.pacmanfx.arcade.pacman.scenes.playscene.Arcade_PlayScene2D_Rendere
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
-import de.amr.pacmanfx.core.level.MessageType;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -31,30 +29,22 @@ import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.uilib.entities.hud.comp.HUD_Style;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
+import de.amr.pacmanfx.uilib.entities.hud.comp.HUD_Style;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
-import java.util.EnumMap;
 import java.util.Map;
 
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
-
-    private static final Map<MessageType, String> MESSAGE_TEXTS = new EnumMap<>(MessageType.class);
-    static {
-        MESSAGE_TEXTS.put(MessageType.READY, "READY!");
-        MESSAGE_TEXTS.put(MessageType.GAME_OVER, "GAME  OVER");
-        MESSAGE_TEXTS.put(MessageType.NO_MESSAGE, "");
-    }
 
     private static final Rectangle2D BOOT_SCENE_SPRITES = new Rectangle2D(380, 0, 204, 208);
 
@@ -150,15 +140,6 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
     @Override
     public HUD_Style hudStyle() {
         return hudStyle;
-    }
-
-    @Override
-    public BaseRenderer createHUDRenderer(GameScene gameScene, ActorSpriteAnimController animSystem, Canvas canvas) {
-        requireNonNull(gameScene);
-        requireNonNull(animSystem);
-        requireNonNull(canvas);
-
-        return new Arcade_HUD_Renderer(canvas, spriteSheet());
     }
 
     @Override

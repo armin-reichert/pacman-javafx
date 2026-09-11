@@ -6,6 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.gamescene.playscene;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.HUD;
+import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
@@ -13,9 +14,7 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.entities.GameOptionsDisplay;
 import de.amr.pacmanfx.tengenmspacman.entities.LevelNumberDisplay;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
-import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_HUD_Renderer;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.uilib.entities.hud.comp.HUD_Style;
 import de.amr.pacmanfx.ui.gamescene.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.gamescene.d3.Maze3D;
 import de.amr.pacmanfx.ui.gamescene.d3.PlayScene3D;
@@ -46,14 +45,13 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         final GameSession session = game().session();
         session.optLevel().ifPresent(_ -> {
             if (!gameOptions(session).areInitial()) {
-                final HUD_Style style = app().currentGameVariantUIConfig().renderConfig().hudStyle();
-                final ImageView levelInfo = createLevelInfoView(level3D, style);
+                final ImageView levelInfo = createLevelInfoView(level3D);
                 level3D.root().getChildren().add(levelInfo);
             }
         });
     }
 
-    private ImageView createLevelInfoView(GameLevel3D level3D, HUD_Style hudStyle) {
+    private ImageView createLevelInfoView(GameLevel3D level3D) {
         final GameSession session = game().session();
         final GameLevel level = session.level();
 
@@ -63,7 +61,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         levelInfo.setFitWidth(infoWidth);
         levelInfo.setFitHeight(infoHeight);
         levelInfo.imageProperty().bind(app().ui().viewModel().maze3DSettings().floorColorProperty().map(
-            color -> createLevelInfoImage(hudStyle, level.number(), session, infoWidth, infoHeight, color))
+            color -> createLevelInfoImage(level.number(), session, infoWidth, infoHeight, color))
         );
 
         // Display the level info at front side of floor just over the surface
@@ -75,7 +73,6 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
     }
 
     private Image createLevelInfoImage(
-        HUD_Style style,
         int levelNumber,
         GameSession session,
         double width,
@@ -107,11 +104,13 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
         hud.entities().addAll(optionsDisplay, leftNumberDisplay, rightNumberDisplay);
 
-        final var hudRenderer = new TengenMsPacMan_HUD_Renderer(canvas);
-        hudRenderer.setScaling(quality);
-        hudRenderer.fillCanvas(backgroundColor);
+        final ActorSpriteAnimController animController = app().game().variant().systems().actorSpriteAnimController();
+        final var renderer = app().currentGameVariantUIConfig().renderConfig().createEntityRenderer(animController, canvas);
+        renderer.setScaling(quality);
+        renderer.fillCanvas(backgroundColor);
 
-        hud.renderables().forEach(renderable -> hudRenderer.render(renderable, 0));
+        // Note: the HUD entities above do not need a HUD style so we don't set one
+        hud.renderables().forEach(renderable -> renderer.render(renderable, 0));
 
         return canvas.snapshot(null, null);
     }

@@ -32,7 +32,6 @@ public class RenderManager {
 
     private Renderer entityRenderer;
     private Renderer sceneRenderer;
-    private Renderer hudRenderer;
     private Renderer miniViewRenderer;
 
     private final List<Renderable> renderQueue = new ArrayList<>();
@@ -61,9 +60,6 @@ public class RenderManager {
                 configureRenderer(sceneRenderer, canvasRendering);
                 sceneRenderer.optDebugInfoRenderer().ifPresent(debugRenderer -> configureRenderer(debugRenderer, canvasRendering));
             }
-
-            hudRenderer = config.createHUDRenderer(gameScene, animController, canvas);
-            configureRenderer(hudRenderer, canvasRendering);
 
             //TODO temp solution
             final MiniPlaySceneView miniView = app.ui().views().gamePlayView().layers().miniViewLayer();
@@ -106,10 +102,9 @@ public class RenderManager {
         renderQueue.sort(RENDERING_ORDER);
         renderQueue.forEach(r -> {
             switch (r.layer()) {
-                case HUD -> hudRenderer.render(r, tick);
-                case SCENE -> renderGameScene(r, tick, debugMode);
-                case OVERLAY -> renderOverlay(r, tick);
-                default -> renderGameEntity(r, tick);
+                case SCENE    -> renderGameScene(r, tick, debugMode);
+                case OVERLAY  -> renderOverlay(r, tick);
+                default       -> renderGameEntity(r, tick);
             }
         });
     }

@@ -36,8 +36,6 @@ public interface GameVariantRenderConfig {
 
     Renderer createGameSceneRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas);
 
-    Renderer createHUDRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas);
-
     Renderer createEntityRenderer(ActorSpriteAnimController animController, Canvas canvas);
 
     Ghost createAnimatedGhost(ActorSpriteAnimController animController, SpriteAnimContainer container, GhostPersonality personality);

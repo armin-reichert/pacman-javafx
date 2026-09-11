@@ -7,20 +7,28 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.Energizer;
-import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.*;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
+import de.amr.pacmanfx.uilib.entities.hud.comp.HUD_Style;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.MessageViewRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 import java.util.Arrays;
 
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
+import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
+import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_YELLOW;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_EntityRenderer extends BaseRenderer implements SpriteRenderer {
@@ -71,6 +79,17 @@ public class ArcadePacMan_EntityRenderer extends BaseRenderer implements SpriteR
             case BonusPoints bonusPoints -> drawSpriteCentered(computeSprite(bonusPoints), center);
             case MessageView messageView -> messageViewRenderer.renderMessageView(messageView);
             case Energizer energizer -> drawEnergizer(energizer);
+            case LevelCounter levelCounter -> drawLevelCounter(levelCounter);
+            case LivesCounter livesCounter -> drawLivesCounter(livesCounter);
+            case Score score -> {
+                if (score.type() == Score.Type.GAME_SCORE) {
+                    drawGameScore(score);
+                } else {
+                    drawHighScore(score);
+                }
+            }
+            case CreditDisplay creditDisplay -> drawCreditDisplay(creditDisplay);
+
             default -> {}
         }
     }
@@ -126,6 +145,70 @@ public class ArcadePacMan_EntityRenderer extends BaseRenderer implements SpriteR
             ctx.setFill(backgroundColor());
             ctx.fillRect(scaled(energizer.pos().x() - 0.5), scaled(energizer.pos().y() - 0.5), size, size);
             ctx.restore();
+        }
+    }
+
+    // --- HUD ---
+
+    private void drawCreditDisplay(CreditDisplay creditDisplay) {
+        final HUD_Style style = creditDisplay.reqComp(HUD_Style.class);
+        final int credit = creditDisplay.data().credit();
+        final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
+        final String text = style.creditTextFormat().formatted(credit);
+        final float baseline = creditDisplay.pos().y();
+        fillText(text, ARCADE_WHITE, scaledFont, creditDisplay.pos().x(), baseline);
+    }
+
+    private void drawGameScore(Score score) {
+        final HUD_Style style = score.reqComp(HUD_Style.class);
+        final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
+        drawScoreText(score, style.scoreText(), scaledFont, style.scoreTextColor());
+
+    }
+
+    private void drawHighScore(Score score) {
+        final HUD_Style style = score.reqComp(HUD_Style.class);
+        final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
+        final boolean disabled = !score.data().isEnabled();
+        final Color color = disabled ? style.scoreTextColorDisabled() : style.scoreTextColor();
+        drawScoreText(score, style.highScoreText(), scaledFont, color);
+    }
+
+    private void drawScoreText(Score score, String title, Font font, Color color) {
+        final float x = score.pos().x();
+        final float y = score.pos().y();
+        fillText(title, color, font, x, y);
+        fillText("%7s".formatted("%02d".formatted(score.data().points())), color, font, x, y + TS + 1);
+        if (score.data().points() != 0) {
+            fillText("L" + score.data().levelNumber(), color, font, x + tilesPx(8), y + TS + 1);
+        }
+    }
+
+    private void drawLivesCounter(LivesCounter livesCounter) {
+        final HUD_Style style = livesCounter.reqComp(HUD_Style.class);
+        final float x = livesCounter.pos().x();
+        final float y = livesCounter.pos().y();
+
+        final int numLives = livesCounter.data().numLives();
+
+        final int numLivesShown = livesCounter.data().numLivesShown();
+        for (int i = 0; i < numLivesShown; ++i) {
+            drawSprite(style.livesCounterSymbolSprite(), x + i * 2 * TS, y, true);
+        }
+
+        if (numLives > livesCounter.data().maxLivesShown()) {
+            final Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
+            fillText("%d".formatted(numLives), ARCADE_YELLOW, font, x - 14, y + TS);
+        }
+    }
+
+    private void drawLevelCounter(LevelCounter levelCounter) {
+        final HUD_Style style = levelCounter.reqComp(HUD_Style.class);
+        final float y = levelCounter.pos().y();
+        float x = levelCounter.pos().x();
+        for (int symbolCode : levelCounter.data().symbolCodes()) {
+            drawSprite(style.bonusSymbolSprites()[symbolCode], x, y, true);
+            x -= tilesPx(2); // symbols are drawn from right to left
         }
     }
 }

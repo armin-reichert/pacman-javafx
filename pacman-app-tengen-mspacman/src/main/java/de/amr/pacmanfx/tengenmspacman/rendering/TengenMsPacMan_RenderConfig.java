@@ -31,13 +31,16 @@ import de.amr.pacmanfx.tengenmspacman.gamescene.playscene.TengenMsPacMan_PlaySce
 import de.amr.pacmanfx.tengenmspacman.gamescene.playscene.TengenMsPacMan_PlayScene2D_Renderer;
 import de.amr.pacmanfx.tengenmspacman.model.BonusSymbol;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
-import de.amr.pacmanfx.tengenmspacman.sprites.*;
+import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
+import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_GhostSAM;
+import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_PacSAM;
+import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.uilib.entities.hud.comp.HUD_Style;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
+import de.amr.pacmanfx.uilib.entities.hud.comp.HUD_Style;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -174,17 +177,12 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public BaseRenderer createHUDRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
-        return new TengenMsPacMan_HUD_Renderer(canvas);
-    }
-
-    @Override
     public TengenMsPacMan_EntityRenderer createEntityRenderer(ActorSpriteAnimController animController, Canvas canvas) {
         return new TengenMsPacMan_EntityRenderer(animController, canvas);
     }
 
     @Override
-    public Ghost createAnimatedGhost(ActorSpriteAnimController animController, SpriteAnimContainer container, GhostPersonality personality) {
+    public Ghost createAnimatedGhost(ActorSpriteAnimController animController, SpriteAnimContainer animContainer, GhostPersonality personality) {
         final var factory = TengenMsPacMan_ActorFactory.instance();
         final Ghost ghost = switch (personality) {
             case RED_GHOST_SHADOW -> factory.createRedGhost();
@@ -193,20 +191,20 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
             case ORANGE_GHOST_POKEY -> factory.createOrangeGhost();
         };
 
-        animController.setAnimations(ghost, createGhostAnimations(container, personality));
+        animController.setAnimations(ghost, createGhostAnimations(animContainer, personality));
         animController.select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);
 
         return ghost;
     }
 
     @Override
-    public TengenMsPacMan_GhostSAM createGhostAnimations(SpriteAnimContainer container, GhostPersonality personality) {
-        return new TengenMsPacMan_GhostSAM(container, personality);
+    public TengenMsPacMan_GhostSAM createGhostAnimations(SpriteAnimContainer animContainer, GhostPersonality personality) {
+        return new TengenMsPacMan_GhostSAM(animContainer, personality);
     }
 
     @Override
-    public TengenMsPacMan_PacSAM createPacAnimations(SpriteAnimContainer container) {
-        return new TengenMsPacMan_PacSAM(container);
+    public TengenMsPacMan_PacSAM createPacAnimations(SpriteAnimContainer animContainer) {
+        return new TengenMsPacMan_PacSAM(animContainer);
     }
 
     @Override
@@ -216,23 +214,23 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public Image bonusSymbolImage(int symbolCode) {
+    public Image bonusSymbolImage(int bonusCode) {
         final RectShort[] symbolSprites = spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS);
-        return spriteSheet().image(symbolSprites[symbolCode]);
+        return spriteSheet().image(symbolSprites[bonusCode]);
     }
 
     @Override
-    public Image bonusValueImage(int symbolCode) {
-        final int spriteIndex = bonusValueSpriteIndex(symbolCode);
+    public Image bonusValueImage(int bonusCode) {
+        final int spriteIndex = bonusValueSpriteIndex(bonusCode);
         final RectShort sprite = spriteSheet().findSpriteSequence(SpriteID.BONUS_VALUES)[spriteIndex];
         return spriteSheet().image(sprite);
     }
 
-    public int bonusValueSpriteIndex(int bonusSymbolCode) {
-        if (bonusSymbolCode < 0 || bonusSymbolCode >= BonusSymbol.values().length) {
-            throw new IllegalArgumentException("Illegal bonus symbol code: " + bonusSymbolCode);
+    public int bonusValueSpriteIndex(int bonusCode) {
+        if (bonusCode < 0 || bonusCode >= BonusSymbol.values().length) {
+            throw new IllegalArgumentException("Illegal bonus symbol code: " + bonusCode);
         }
-        final BonusSymbol symbol = BonusSymbol.values()[bonusSymbolCode];
-        return BONUS_VALUE_SPRITE_INDEX.getOrDefault(symbol, bonusSymbolCode);
+        final BonusSymbol symbol = BonusSymbol.values()[bonusCode];
+        return BONUS_VALUE_SPRITE_INDEX.getOrDefault(symbol, bonusCode);
     }
 }
