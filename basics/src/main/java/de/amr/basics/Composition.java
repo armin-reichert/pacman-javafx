@@ -4,6 +4,8 @@
 
 package de.amr.basics;
 
+import org.tinylog.Logger;
+
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Optional;
@@ -44,7 +46,7 @@ public class Composition<C> implements Disposable {
     }
 
     /**
-     * Sets the entity component of the given type. Throws an exception if there is already such a component registered.
+     * Sets the entity component of the given type.
      *
      * @param type the component type
      * @param component the component to be registered
@@ -54,7 +56,7 @@ public class Composition<C> implements Disposable {
         requireNonNull(type);
         requireNonNull(component);
         if (componentsByType.containsKey(type)) {
-            throw new IllegalArgumentException("Component for class: " + type.getSimpleName() + " is already registered!");
+            Logger.warn("Component for class: " + type.getSimpleName() + " was already registered!");
         }
         componentsByType.put(type, component);
     }

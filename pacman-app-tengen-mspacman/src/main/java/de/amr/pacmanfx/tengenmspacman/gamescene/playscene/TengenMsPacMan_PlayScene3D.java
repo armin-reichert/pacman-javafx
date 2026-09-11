@@ -107,7 +107,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
         hud.entities().addAll(optionsDisplay, leftNumberDisplay, rightNumberDisplay);
 
-        final var hudRenderer = new TengenMsPacMan_HUD_Renderer(style, canvas);
+        final var hudRenderer = new TengenMsPacMan_HUD_Renderer(canvas);
         hudRenderer.setScaling(quality);
         hudRenderer.fillCanvas(backgroundColor);
 

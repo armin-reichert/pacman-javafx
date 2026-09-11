@@ -6,12 +6,12 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.math.RectShort;
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.entities.CreditDisplay;
 import de.amr.pacmanfx.core.entities.LevelCounter;
 import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Score;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.tengenmspacman.entities.GameOptionsDisplay;
 import de.amr.pacmanfx.tengenmspacman.entities.LevelNumberDisplay;
 import de.amr.pacmanfx.tengenmspacman.entities.gameoptionsdisplay.GameOptionsDataComp;
@@ -28,15 +28,11 @@ import javafx.scene.text.FontWeight;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
-import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteRenderer {
 
-    private final HUD_Style style;
-
-    public TengenMsPacMan_HUD_Renderer(HUD_Style style, Canvas canvas) {
+    public TengenMsPacMan_HUD_Renderer(Canvas canvas) {
         super(canvas);
-        this.style = requireNonNull(style);
     }
 
     @Override
@@ -58,10 +54,9 @@ public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteR
             case LevelCounter levelCounter -> drawLevelCounter(levelCounter);
             case LivesCounter livesCounter -> drawLivesCounter(livesCounter);
             case Score score -> {
-                final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
                 switch (score.type()) {
-                    case GAME_SCORE -> drawGameScore(score, scaledFont, tick);
-                    case HIGH_SCORE -> drawHighScore(score, scaledFont);
+                    case GAME_SCORE -> drawGameScore(score, tick);
+                    case HIGH_SCORE -> drawHighScore(score);
                 }
             }
             case GameOptionsDisplay gameOptionsDisplay -> drawGameOptionsDisplay(gameOptionsDisplay);
@@ -105,24 +100,29 @@ public class TengenMsPacMan_HUD_Renderer extends BaseRenderer implements SpriteR
         }
     }
 
-    private void drawGameScore(Score gameScore, Font scaledFont, long tick) {
+    private void drawGameScore(Score score, long tick) {
+        final HUD_Style style = score.reqComp(HUD_Style.class);
+        final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
         // Blink frequency = 1Hz (30 ticks on, 30 ticks off)
         if (tick % 60 < 30) {
-            fillText(style.scoreText(), style.scoreTextColor(), scaledFont, gameScore.pos().x(), gameScore.pos().y());
+            fillText(style.scoreText(), style.scoreTextColor(), scaledFont, score.pos().x(), score.pos().y());
         }
-        fillText("%6d".formatted(gameScore.data().points()),
-            style.scoreTextColor(), scaledFont, 2 * TS, gameScore.pos().y() + TS);
+        fillText("%6d".formatted(score.data().points()),
+            style.scoreTextColor(), scaledFont, 2 * TS, score.pos().y() + TS);
     }
 
-    private void drawHighScore(Score highScore, Font scaledFont) {
-        final Color color = highScore.data().isEnabled() ? style.scoreTextColor(): style.scoreTextColorDisabled();
-        fillText("HIGH SCORE", color, scaledFont, highScore.pos().x(), highScore.pos().y());
-        fillText("%6d".formatted(highScore.data().points()), color, scaledFont,
-            highScore.pos().x() + 2 * TS, highScore.pos().y() + TS
+    private void drawHighScore(Score score) {
+        final HUD_Style style = score.reqComp(HUD_Style.class);
+        final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
+        final Color color = score.data().isEnabled() ? style.scoreTextColor(): style.scoreTextColorDisabled();
+        fillText("HIGH SCORE", color, scaledFont, score.pos().x(), score.pos().y());
+        fillText("%6d".formatted(score.data().points()), color, scaledFont,
+            score.pos().x() + 2 * TS, score.pos().y() + TS
         );
     }
 
     private void drawLivesCounter(LivesCounter livesCounter) {
+        final HUD_Style style = livesCounter.reqComp(HUD_Style.class);
         final float x = livesCounter.pos().x();
         final float y = livesCounter.pos().y();
 

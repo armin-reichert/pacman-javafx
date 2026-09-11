@@ -8,6 +8,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.TextDisplay;
 import de.amr.pacmanfx.core.model.GhostPersonality;
@@ -20,6 +21,7 @@ import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
+import de.amr.pacmanfx.uilib.entities.hud.comp.HUD_Style;
 import javafx.scene.paint.Color;
 
 import java.util.stream.Stream;
@@ -76,6 +78,8 @@ public class TengenMsPacMan_BootScene extends GameScene {
             GhostPersonality.RED_GHOST_SHADOW);
 
         game().session().setHudVisible(false);
+        //TODO temporary solution
+        setHUDStyle(game().session().hud());
     }
 
     @Override
@@ -123,5 +127,14 @@ public class TengenMsPacMan_BootScene extends GameScene {
 
     private void grayScreen(boolean gray) {
         this.gray = gray;
+    }
+
+    private void setHUDStyle(HUD hud) {
+        final HUD_Style hudStyle = app().currentGameVariantUIConfig().renderConfig().hudStyle();
+        hud.levelCounter().setComp(HUD_Style.class, hudStyle);
+        hud.livesCounter().setComp(HUD_Style.class, hudStyle);
+        hud.gameScore().setComp(HUD_Style.class, hudStyle);
+        hud.highScore().setComp(HUD_Style.class, hudStyle);
+        hud.creditDisplay().setComp(HUD_Style.class, hudStyle);
     }
 }

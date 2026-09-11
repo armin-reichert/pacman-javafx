@@ -175,7 +175,7 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
 
     @Override
     public BaseRenderer createHUDRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
-        return new TengenMsPacMan_HUD_Renderer(hudStyle, canvas);
+        return new TengenMsPacMan_HUD_Renderer(canvas);
     }
 
     @Override
