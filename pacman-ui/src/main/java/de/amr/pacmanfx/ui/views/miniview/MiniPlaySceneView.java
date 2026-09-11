@@ -7,11 +7,9 @@ package de.amr.pacmanfx.ui.views.miniview;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
-import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.rendering.Renderable;
-import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.vm.GameViewModel;
@@ -125,6 +123,10 @@ public class MiniPlaySceneView extends HBox implements Renderable {
         return canvas;
     }
 
+    public GameViewModel viewModel() {
+        return viewModel;
+    }
+
     public DoubleProperty scalingProperty() {
         return scaling;
     }
@@ -133,14 +135,6 @@ public class MiniPlaySceneView extends HBox implements Renderable {
         final var ctx = canvas.getGraphicsContext2D();
         ctx.setFill(viewModel.common2DSettings().canvasBackgroundColorProperty().get());
         ctx.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
-    }
-
-    public MiniViewRenderer createRenderer(GameVariantRenderConfig renderConfig, ActorSpriteAnimController animController) {
-        final var miniViewRenderer = new MiniViewRenderer(canvas, animController, renderConfig, viewModel);
-        miniViewRenderer.backgroundColorProperty().bind(viewModel.common2DSettings().canvasBackgroundColorProperty());
-        miniViewRenderer.scalingProperty().bind(scalingProperty());
-
-        return miniViewRenderer;
     }
 
     private boolean expanded() {

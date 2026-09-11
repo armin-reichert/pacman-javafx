@@ -4,13 +4,12 @@
 
 package de.amr.pacmanfx.ui;
 
-import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
-import de.amr.pacmanfx.ui.views.miniview.MiniPlaySceneView;
 import de.amr.pacmanfx.ui.views.miniview.MiniViewRenderer;
 import de.amr.pacmanfx.uilib.rendering.RenderableWrapper;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
@@ -62,8 +61,8 @@ public class RenderManager {
             }
 
             //TODO temporary solution
-            final MiniPlaySceneView miniView = app.ui().views().gamePlayView().layers().miniViewLayer();
-            setMiniViewRenderer(miniView.createRenderer(config, animController));
+            final var miniView = app.ui().views().gamePlayView().layers().miniViewLayer();
+            miniViewRenderer = new MiniViewRenderer(miniView, animController, config);
         }
         else {
             Logger.error("Cannot create game scene and HUD renderer: no canvas has been assigned");
@@ -80,10 +79,6 @@ public class RenderManager {
                 Logger.error("Cannot create game scene canvas: no canvas has been assigned");
             }
         });
-    }
-
-    public void setMiniViewRenderer(MiniViewRenderer miniViewRenderer) {
-        this.miniViewRenderer = miniViewRenderer;
     }
 
     public void clearRenderQueue() {

@@ -5,16 +5,14 @@
 package de.amr.pacmanfx.ui.views.miniview;
 
 import de.amr.basics.timer.Pulse;
-import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
-import de.amr.pacmanfx.ui.vm.GameViewModel;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.CommonGameLevelRenderInfoKey;
 import de.amr.pacmanfx.uilib.rendering.RenderableWrapper;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
-import javafx.scene.canvas.Canvas;
 
 public class MiniViewRenderer extends BaseRenderer {
 
@@ -22,26 +20,27 @@ public class MiniViewRenderer extends BaseRenderer {
     private final Renderer entityRenderer;
 
     public MiniViewRenderer(
-        Canvas canvas,
+        MiniPlaySceneView miniView,
         ActorSpriteAnimController animController,
-        GameVariantRenderConfig renderConfig,
-        GameViewModel vm) {
+        GameVariantRenderConfig renderConfig) {
 
-        super(canvas);
+        super(miniView.canvas());
 
-        entityRenderer = renderConfig.createEntityRenderer(animController, canvas);
-        entityRenderer.backgroundColorProperty().bind(vm.common2DSettings().canvasBackgroundColorProperty());
+        backgroundColorProperty().bind(miniView.viewModel().common2DSettings().canvasBackgroundColorProperty());
+        scalingProperty().bind(miniView.scalingProperty());
+
+        entityRenderer = renderConfig.createEntityRenderer(animController, miniView.canvas());
+        entityRenderer.backgroundColorProperty().bind(backgroundColorProperty());
         entityRenderer.scalingProperty().bind(scalingProperty());
 
-        levelRenderer = renderConfig.createGameLevelRenderer(animController, canvas);
-        levelRenderer.backgroundColorProperty().bind(vm.common2DSettings().canvasBackgroundColorProperty());
+        levelRenderer = renderConfig.createGameLevelRenderer(animController, miniView.canvas());
+        levelRenderer.backgroundColorProperty().bind(backgroundColorProperty());
         levelRenderer.scalingProperty().bind(scalingProperty());
     }
 
     @Override
     public void render(Renderable r, long tick) {
         switch (r) {
-            case RenderableWrapper wrapper -> render(wrapper.wrappedRenderable(), tick);
             case GameLevel level -> {
                 levelRenderer.info().put(CommonGameLevelRenderInfoKey.ENERGIZER_VISIBLE, level.heartbeat().state() == Pulse.State.ON);
                 levelRenderer.info().put(CommonGameLevelRenderInfoKey.BRIGHT_PHASE_ON, false);
@@ -49,6 +48,7 @@ public class MiniViewRenderer extends BaseRenderer {
                 levelRenderer.info().put(CommonGameLevelRenderInfoKey.FLASHING, false);
                 levelRenderer.render(level, tick);
             }
+            case RenderableWrapper wrapper -> render(wrapper.wrappedRenderable(), tick);
             default -> entityRenderer.render(r, tick);
         }
     }
