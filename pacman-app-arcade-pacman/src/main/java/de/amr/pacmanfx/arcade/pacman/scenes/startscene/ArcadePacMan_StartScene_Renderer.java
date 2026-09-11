@@ -25,12 +25,5 @@ public class ArcadePacMan_StartScene_Renderer extends BaseRenderer {
 
     @Override
     public void render(Renderable r, long tick) {
-        final Font arcade6 = Ufx.deriveFont(GlobalAssets.Fonts.ARCADE.font(), scaled(6));
-        final Font arcade8 = Ufx.deriveFont(GlobalAssets.Fonts.ARCADE.font(), scaled(8));
-        fillText("PUSH START BUTTON",       ARCADE_ORANGE, arcade8, tilesPx(6),  tilesPx(17));
-        fillText("1 PLAYER ONLY",           ARCADE_CYAN,   arcade8, tilesPx(8),  tilesPx(21));
-        fillText("BONUS PAC-MAN FOR 10000", ARCADE_ROSE,   arcade8, tilesPx(1),  tilesPx(25));
-        fillText("PTS",                     ARCADE_ROSE,   arcade6, tilesPx(25), tilesPx(25));
-        fillText("© 1980 MIDWAY MFG.CO.",   ARCADE_PINK,   arcade8, tilesPx(4),  tilesPx(29));
     }
 }

@@ -91,7 +91,7 @@ public class RenderManager {
         renderQueue.sort(RENDERING_ORDER);
         renderQueue.forEach(r -> {
             switch (r.layer()) {
-                case SCENE    -> renderGameScene(r, tick, debugMode);
+                case SCENE    -> renderSceneLayer(r, tick, debugMode);
                 case OVERLAY  -> renderOverlay(r, tick);
                 default       -> renderGameEntity(r, tick);
             }
@@ -120,7 +120,7 @@ public class RenderManager {
         }
     }
 
-    private void renderGameScene(Renderable r, long tick, boolean debugMode) {
+    private void renderSceneLayer(Renderable r, long tick, boolean debugMode) {
         if (sceneRenderer != null) {
             sceneRenderer.render(r, tick);
             if (debugMode) {

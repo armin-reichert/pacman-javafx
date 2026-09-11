@@ -61,7 +61,7 @@ public class ArcadePacMan_EntityRenderer extends BaseRenderer implements SpriteR
             if (gameEntity.isVisible()) {
                 ctx.save();
                 ctx.setImageSmoothing(true);
-                renderGameEntity(gameEntity);
+                renderGameEntity(gameEntity, tick);
                 ctx.restore();
             }
         } else {
@@ -69,7 +69,7 @@ public class ArcadePacMan_EntityRenderer extends BaseRenderer implements SpriteR
         }
     }
 
-    private void renderGameEntity(GameEntity gameEntity) {
+    private void renderGameEntity(GameEntity gameEntity, long tick) {
         final Vector2f center = gameEntity.pos().bodyCenter();
         switch (gameEntity) {
             case Pac pac -> drawSpriteCentered(computeSprite(pac), center);
@@ -89,7 +89,7 @@ public class ArcadePacMan_EntityRenderer extends BaseRenderer implements SpriteR
                 }
             }
             case CreditDisplay creditDisplay -> drawCreditDisplay(creditDisplay);
-
+            case TextDisplay textDisplay -> super.render(textDisplay, tick);
             default -> {}
         }
     }

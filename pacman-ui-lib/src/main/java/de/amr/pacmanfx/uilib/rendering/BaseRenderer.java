@@ -72,7 +72,7 @@ public abstract class BaseRenderer implements Renderer {
     public void render(Renderable r, long tick) {
         switch (r) {
             case ColoredRect coloredRect -> fillColoredRect(coloredRect);
-            case TextDisplay textDisplay-> drawCenteredText(textDisplay);
+            case TextDisplay textDisplay-> renderTextDisplay(textDisplay);
             default -> throw new IllegalStateException("Unexpected value: " + r);
         }
     }
@@ -218,16 +218,16 @@ public abstract class BaseRenderer implements Renderer {
 
     // ----------------
 
-    private void drawCenteredText(TextDisplay textDisplay) {
-        final var center = textDisplay.pos();
+    private void renderTextDisplay(TextDisplay textDisplay) {
+        final var pos = textDisplay.pos();
         final var data = textDisplay.data();
-        fillTextCentered(
-            data.text(),
-            data.fillColor(),
-            Ufx.scaleFontBy(data.font(), scaling()),
-            center.x(),
-            center.y()
-        );
+
+        final Font scaledFont = Ufx.scaleFontBy(data.font(), scaling());
+        if (data.center()) {
+            fillTextCentered(data.text(), data.fillColor(), scaledFont, pos.x(), pos.y());
+        } else {
+            fillText(data.text(), data.fillColor(), scaledFont, pos.x(), pos.y());
+        }
     }
 
     private void fillColoredRect(ColoredRect coloredRect) {

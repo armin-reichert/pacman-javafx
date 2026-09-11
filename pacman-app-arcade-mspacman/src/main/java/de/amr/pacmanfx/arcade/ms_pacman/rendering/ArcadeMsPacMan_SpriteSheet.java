@@ -29,7 +29,7 @@ public final class ArcadeMsPacMan_SpriteSheet implements SpriteSheet<SpriteID> {
 
     private static final String SPRITESHEET_PNG = "graphics/mspacman_spritesheet.png";
 
-    // Map images are located left and sprites right of this x position
+    // Map images are located left and sprites right of this tileX position
     private static final int SPRITE_START_X = 456;
 
     private final SpriteMap<SpriteID> spriteMap = SpriteMap.createEnumSpriteMap(SpriteID.class);

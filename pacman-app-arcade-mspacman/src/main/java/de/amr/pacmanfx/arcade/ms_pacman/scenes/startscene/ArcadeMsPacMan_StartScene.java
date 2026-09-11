@@ -21,6 +21,7 @@ import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 
 public class ArcadeMsPacMan_StartScene extends GameScene {
 
+    private final StartSceneText startSceneText;
     private final Copyright copyright;
 
     public ArcadeMsPacMan_StartScene(GameAppContext app) {
@@ -30,15 +31,18 @@ public class ArcadeMsPacMan_StartScene extends GameScene {
         final GameVariant variant = app().gameVariants().currentGameVariant();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
 
+        startSceneText = new StartSceneText(6, 16);
+
         copyright = new Copyright();
         copyright.show();
         copyright.pos().set(tilesPx(6), tilesPx(28));
         copyright.image().setImage(renderConfig.assets().image("logo.midway"));
+
     }
 
     @Override
     public Stream<Renderable> renderables() {
-        return Ufx.streamOf(copyright);
+        return Ufx.streamOf(startSceneText, copyright);
     }
 
     @Override

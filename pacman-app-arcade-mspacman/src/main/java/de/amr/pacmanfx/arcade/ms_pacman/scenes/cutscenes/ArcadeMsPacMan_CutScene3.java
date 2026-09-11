@@ -207,7 +207,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene {
 
         // release bag from beak when stork reaches tile 20
         if (stork.pos().x() <= 20 * WorldMap.TS && !stork.isBagReleasedFromBeak()) {
-            motor.setAcceleration(bag, 0, 0.04f); // set y-gravity to let bag fall to ground
+            motor.setAcceleration(bag, 0, 0.04f); // set tileY-gravity to let bag fall to ground
             motor.setVelocity(stork, -1, 0); // fly faster without this heavy bag
             stork.setBagReleasedFromBeak(true);
         }

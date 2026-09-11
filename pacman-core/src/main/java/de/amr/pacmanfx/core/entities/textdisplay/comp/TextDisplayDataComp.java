@@ -18,6 +18,8 @@ public class TextDisplayDataComp implements GameEntityComp {
 
     private Color strokeColor;
 
+    private boolean center;
+
     public String text() {
         return text;
     }
@@ -48,5 +50,13 @@ public class TextDisplayDataComp implements GameEntityComp {
 
     public void setStrokeColor(Color strokeColor) {
         this.strokeColor = strokeColor;
+    }
+
+    public boolean center() {
+        return center;
+    }
+
+    public void setCenter(boolean center) {
+        this.center = center;
     }
 }

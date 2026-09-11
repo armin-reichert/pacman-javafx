@@ -15,10 +15,13 @@ import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.text.Font;
 
+import java.util.Objects;
+
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer.createDefaultSceneDebugRenderer;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_ORANGE;
+import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_StartScene_Renderer extends BaseRenderer implements SpriteRenderer {
 
@@ -34,17 +37,24 @@ public class ArcadeMsPacMan_StartScene_Renderer extends BaseRenderer implements 
 
     @Override
     public void render(Renderable r, long tick) {
+        if (r instanceof StartSceneText text) {
+            renderStartSceneText(text);
+        }
+    }
+
+    private void renderStartSceneText(StartSceneText text) {
+        final int tx = text.tileX();
+        final int ty = text.tileY();
+        final double STS = scaled(TS);
         final Font arcade6 = Ufx.deriveFont(GlobalAssets.Fonts.ARCADE.font(), scaled(6));
         final Font arcade8 = Ufx.deriveFont(GlobalAssets.Fonts.ARCADE.font(), scaled(8));
-        final double STS = scaled(TS);
-
         ctx.setFill(ARCADE_ORANGE);
         ctx.setFont(arcade8);
-        ctx.fillText("PUSH START BUTTON",      STS*6, STS*16);
-        ctx.fillText("1 PLAYER ONLY",          STS*8, STS*18);
-        ctx.fillText("ADDITIONAL    AT 10000", STS*2, STS*25);
+        ctx.fillText("PUSH START BUTTON",      STS * tx, STS * ty);
+        ctx.fillText("1 PLAYER ONLY",          STS * (tx + 2), STS * (ty + 2));
+        ctx.fillText("ADDITIONAL    AT 10000", STS * (tx - 4), STS * (ty + 9));
         ctx.setFont(arcade6);
-        ctx.fillText("PTS", STS*25, STS*25);
-        drawSprite(spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL), tilesPx(13), tilesPx(23) + 1, true);
+        ctx.fillText("PTS", STS * (tx + 19), STS * (ty + 9));
+        drawSprite(spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL), (tx + 7) * TS, (ty + 7) * TS + 1, true);
     }
 }
