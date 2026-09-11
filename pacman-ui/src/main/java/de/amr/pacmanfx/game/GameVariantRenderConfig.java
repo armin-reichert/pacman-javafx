@@ -46,8 +46,8 @@ public interface GameVariantRenderConfig {
 
     Image killedGhostPointsImage(int killedGhostIndex);
 
-    Image bonusSymbolImage(int symbolCode);
+    Image bonusSymbolImage(int bonusCode);
 
-    Image bonusValueImage(int symbolCode);
+    Image bonusValueImage(int bonusCode);
 }
 

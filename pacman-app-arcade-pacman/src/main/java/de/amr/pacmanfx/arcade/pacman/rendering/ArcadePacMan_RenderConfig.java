@@ -183,14 +183,14 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public Image bonusSymbolImage(int symbolCode) {
+    public Image bonusSymbolImage(int bonusCode) {
         final RectShort[] sprites = spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS);
-        return spriteSheet().image(sprites[symbolCode]);
+        return spriteSheet().image(sprites[bonusCode]);
     }
 
     @Override
-    public Image bonusValueImage(int symbolCode) {
+    public Image bonusValueImage(int bonusCode) {
         final RectShort[] sprites = spriteSheet().findSpriteSequence(SpriteID.BONUS_VALUES);
-        return spriteSheet().image(sprites[symbolCode]);
+        return spriteSheet().image(sprites[bonusCode]);
     }
 }
