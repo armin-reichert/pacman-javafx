@@ -73,9 +73,9 @@
     "maxHeight": 600,
     "height": 400,
     "active": false,
-    "opacityPercentage": 69,
+    "opacityPercentage": 80,
     "slideInSeconds": 1,
-    "slideOutSeconds": 2
+    "slideOutSeconds": 1
   },
 
   "common2D": {

@@ -40,11 +40,13 @@ public class MiniPlaySceneView extends HBox implements Renderable {
 
     public static final Insets PADDING = new Insets(0, 10, 0, 10);
 
+    public static final Border BORDER = Border.stroke(Color.grayRgb(66));
+
     private final DoubleProperty scaling = new SimpleDoubleProperty(1.0);
 
     private final ObjectProperty<Vector2i> worldSize = new SimpleObjectProperty<>(WorldMap.ARCADE_MAP_SIZE_IN_PIXELS);
 
-    private final Canvas canvas;
+    private final Canvas canvas = new Canvas();
 
     private TranslateTransition slidingInAnimation;
 
@@ -55,16 +57,9 @@ public class MiniPlaySceneView extends HBox implements Renderable {
     private GameViewModel viewModel;
 
     public MiniPlaySceneView() {
-        canvas = new Canvas();
-        getChildren().add(canvas);
-        setBorder(Border.stroke(Color.grayRgb(66)));
         setPadding(PADDING);
-
-        // Canvas size determines mini view size
-        maxWidthProperty().bind(canvas.widthProperty().add(PADDING.getLeft() + PADDING.getRight()));
-        maxHeightProperty().bind(canvas.heightProperty());
-
-        setTranslateY(-getHeight());
+        setBorder(BORDER);
+        getChildren().add(canvas);
     }
 
     public void setViewModel(GameViewModel viewModel) {
@@ -86,6 +81,10 @@ public class MiniPlaySceneView extends HBox implements Renderable {
             () -> canvas.getHeight() / worldSize.get().y(),
             canvas.heightProperty(), worldSize
         ));
+
+        // Canvas size determines mini view size
+        maxWidthProperty().bind(canvas.widthProperty().add(PADDING.getLeft() + PADDING.getRight()));
+        maxHeightProperty().bind(canvas.heightProperty().add(PADDING.getTop() + PADDING.getBottom()));
 
         setTranslateY(-canvas.getHeight());
     }
