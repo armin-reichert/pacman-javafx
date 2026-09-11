@@ -29,7 +29,6 @@ import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.core.steering.RouteGuidedSteering;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
 import de.amr.pacmanfx.ui.GlobalAssets;
-import de.amr.pacmanfx.uilib.entities.hud.comp.HUD_Style;
 import de.amr.pacmanfx.uilib.entities.messageview.comp.MessageViewStyleComp;
 import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
 import org.tinylog.Logger;
@@ -98,7 +97,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         requireNonNull(game);
 
         final GameSession session = game.session();
-        session.setNumLives(game.variant().initialLifeCount());
+        session.setNumLives(game.variantConfig().initialLifeCount());
         session.setCutScenesEnabled(true);
         session.setLevel(null);
         session.setGameRunning(false);
@@ -106,7 +105,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         configureHUD(game, null, session.hud());
         initScores(game);
 
-        game.variant().gameFlow().restartGameState(game, CommonGameStateID.BOOT);
+        game.variantConfig().gameFlow().restartGameState(game, CommonGameStateID.BOOT);
     }
 
     // Level building and level start
@@ -117,9 +116,9 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         requireValidLevelNumber(levelNumber);
 
         final GameSession session = game.session();
-        final GameRules rules = game.variant().rules();
-        final GameSystems systems = game.variant().systems();
-        final WorldMap worldMap = game.variant().worldMapManager().supplyWorldMap(levelNumber);
+        final GameRules rules = game.variantConfig().rules();
+        final GameSystems systems = game.variantConfig().systems();
+        final WorldMap worldMap = game.variantConfig().worldMapManager().supplyWorldMap(levelNumber);
         final var entities = new GameLevelEntities();
 
         createAndAddEntities(entities, worldMap.terrainLayer(), worldMap.foodLayer());
@@ -168,13 +167,13 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
             livesCounter.pos().set(2 * TS, bottom);
             levelCounter.pos().set(24 * TS, bottom + 2);
         } else {
-            livesCounter.data().setNumLivesShown(game.variant().initialLifeCount());
+            livesCounter.data().setNumLivesShown(game.variantConfig().initialLifeCount());
             livesCounter.data().setMaxLivesShown(5);
 
             levelCounter.data().setCapacity(7);
             levelCounter.data().setEnabled(true);
             levelCounter.data().setBehavior(LevelCounterBehavior.SHIFT_WHEN_FULL);
-            game.variant().systems().levelCounterSystem().clear(levelCounter);
+            game.variantConfig().systems().levelCounterSystem().clear(levelCounter);
         }
     }
 
@@ -182,7 +181,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     public GameLevel buildDemoLevel(GameContext game) {
         requireNonNull(game);
 
-        final GameSystems systems = game.variant().systems();
+        final GameSystems systems = game.variantConfig().systems();
         final GameSession session = game.session();
 
         final GameLevel level = createLevel(game, 1);
@@ -218,7 +217,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
         session.hud().gameScore().data().setEnabled(true);
 
-        final LevelCounterSystem levelCounterSystem = game.variant().systems().levelCounterSystem();
+        final LevelCounterSystem levelCounterSystem = game.variantConfig().systems().levelCounterSystem();
         final LevelCounter levelCounter = session.hud().levelCounter();
         levelCounterSystem.updateCounter(levelCounter, level.number(), level.bonusSymbolCode(0));
 
@@ -240,8 +239,8 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         requireNonNull(game);
         requireNonNull(level);
 
-        final GameSystems systems = game.variant().systems();
-        final GameRules rules = game.variant().rules();
+        final GameSystems systems = game.variantConfig().systems();
+        final GameRules rules = game.variantConfig().rules();
 
         level.selectNextBonus();
 

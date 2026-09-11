@@ -241,7 +241,12 @@ public class GamePlayView implements GameView {
         // Add game scene renderables
         final GameScene currentGameScene = app.ui().gameScenes().optCurrentGameScene().orElse(null);
         if (currentGameScene != null) {
-            renderManager.updateRenderers(app, currentGameScene);
+            renderManager.updateRenderers(
+                app.currentGameVariantConfig(),
+                app.currentGameVariantUIConfig().renderConfig(),
+                currentGameScene,
+                layers.miniViewLayer()
+            );
             renderManager.add(currentGameScene); //TODO rethink this
             renderManager.addAll(currentGameScene.renderables());
         }

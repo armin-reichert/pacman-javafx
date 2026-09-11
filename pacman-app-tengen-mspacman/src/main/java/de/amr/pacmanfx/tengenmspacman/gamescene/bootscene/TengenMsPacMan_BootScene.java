@@ -84,7 +84,7 @@ public class TengenMsPacMan_BootScene extends GameScene {
 
     @Override
     public void onTick(GameContext game) {
-        final GameSystems systems = game.variant().systems();
+        final GameSystems systems = game.variantConfig().systems();
 
         final int stateTick = (int) game().state().timer().tickCount();
         final Color shadeOfBlue = shadeOfBlue(stateTick);

@@ -49,9 +49,9 @@ public class XXL_MsPacMan_GamePlay extends ArcadeMsPacMan_GamePlay {
         requireNonNull(game);
 
         final GameSession session = game.session();
-        final GameSystems systems = game.variant().systems();
+        final GameSystems systems = game.variantConfig().systems();
 
-        final XXL_WorldMapManager mapManager = (XXL_WorldMapManager) game.variant().worldMapManager();
+        final XXL_WorldMapManager mapManager = (XXL_WorldMapManager) game.variantConfig().worldMapManager();
         mapManager.setSelectionMode(WorldMapSelectionMode.NO_CUSTOM_MAPS);
 
         // Select random (standard) level with different map and map color scheme for each choice

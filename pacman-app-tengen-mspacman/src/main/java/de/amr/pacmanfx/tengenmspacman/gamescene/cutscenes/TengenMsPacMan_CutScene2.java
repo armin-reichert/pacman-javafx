@@ -125,8 +125,8 @@ public class TengenMsPacMan_CutScene2 extends GameScene {
     }
 
     private void playCutScene(GameContext game, long tick) {
-        final WorldNavigationSystem navigator = game.variant().systems().navigator();
-        final ActorSpriteAnimController animSystem = game.variant().systems().actorSpriteAnimController();
+        final WorldNavigationSystem navigator = game.variantConfig().systems().navigator();
+        final ActorSpriteAnimController animSystem = game.variantConfig().systems().actorSpriteAnimController();
 
         letActorsMove(game);
 
@@ -193,7 +193,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene {
     }
 
     private void letActorsMove(GameContext game) {
-        final MovementSystem motor = game.variant().systems().motor();
+        final MovementSystem motor = game.variantConfig().systems().motor();
         motor.move(pacMan);
         motor.move(msPacMan);
     }

@@ -206,7 +206,7 @@ public final class ArcadeHouseGateKeeper {
     public void unlockGhostIfPossible(GameContext game, GameLevel level) {
         requireNonNull(game);
 
-        final GameSystems systems = game.variant().systems();
+        final GameSystems systems = game.variantConfig().systems();
         final PacDigestionSystem pacDigestionSystem = systems.pacDigestion();
 
         final House house = level.entities().house();

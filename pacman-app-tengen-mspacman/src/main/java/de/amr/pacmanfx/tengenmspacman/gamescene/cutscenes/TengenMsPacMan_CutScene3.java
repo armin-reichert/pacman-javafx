@@ -151,7 +151,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene {
     }
     
     private void playCutScene(GameContext game, long tick) {
-        final GameSystems systems = game.variant().systems();
+        final GameSystems systems = game.variantConfig().systems();
         final MovementSystem motor = systems.motor();
         final WorldNavigationSystem navigator = systems.navigator();
         final ActorSpriteAnimController animSystem = systems.actorSpriteAnimController();

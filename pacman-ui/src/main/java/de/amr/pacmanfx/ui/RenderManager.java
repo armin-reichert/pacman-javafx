@@ -4,12 +4,13 @@
 
 package de.amr.pacmanfx.ui;
 
+import de.amr.pacmanfx.core.GameVariantConfig;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
+import de.amr.pacmanfx.ui.views.miniview.MiniPlaySceneView;
 import de.amr.pacmanfx.ui.views.miniview.MiniPlaySceneViewRenderer;
 import de.amr.pacmanfx.uilib.rendering.RenderableWrapper;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
@@ -35,9 +36,16 @@ public class RenderManager {
 
     private final List<Renderable> renderQueue = new ArrayList<>();
 
-    public void updateRenderers(GameAppContext app, GameScene gameScene) {
-        requireNonNull(app);
+    public void updateRenderers(
+        GameVariantConfig gameVariantConfig,
+        GameVariantRenderConfig renderConfig,
+        GameScene gameScene,
+        MiniPlaySceneView miniView)
+    {
+        requireNonNull(gameVariantConfig);
+        requireNonNull(renderConfig);
         requireNonNull(gameScene);
+        requireNonNull(miniView);
 
         if (!gameScene.hasComp(SceneCanvasRenderingComp.class)) {
             return;
@@ -46,23 +54,21 @@ public class RenderManager {
         final Canvas canvas = canvasRendering.canvas();
 
         if (canvas != null) {
-            final ActorSpriteAnimController animController = app.game().variant().systems().actorSpriteAnimController();
-            final GameVariantRenderConfig config = app.currentGameVariantUIConfig().renderConfig();
+            final ActorSpriteAnimController animController = gameVariantConfig.systems().actorSpriteAnimController();
 
             canvas.getGraphicsContext2D().setImageSmoothing(false);
 
-            entityRenderer = config.createEntityRenderer(animController, canvas);
+            entityRenderer = renderConfig.createEntityRenderer(animController, canvas);
             configureRenderer(entityRenderer, canvasRendering);
 
-            sceneRenderer = config.createGameSceneRenderer(gameScene, animController, canvas); // may be null!
+            sceneRenderer = renderConfig.createGameSceneRenderer(gameScene, animController, canvas); // may be null!
             if (sceneRenderer != null) {
                 configureRenderer(sceneRenderer, canvasRendering);
                 sceneRenderer.optDebugInfoRenderer().ifPresent(debugRenderer -> configureRenderer(debugRenderer, canvasRendering));
             }
 
             //TODO temporary solution
-            final var miniView = app.ui().views().gamePlayView().layers().miniViewLayer();
-            miniViewRenderer = new MiniPlaySceneViewRenderer(miniView, animController, config);
+            miniViewRenderer = new MiniPlaySceneViewRenderer(miniView, animController, renderConfig);
         }
         else {
             Logger.error("Cannot create game scene and HUD renderer: no canvas has been assigned");

@@ -16,15 +16,15 @@ public class GameContext {
 
     private final CoinMechanism coinMechanism;
 
-    private final GameVariantConfig variant;
+    private final GameVariantConfig variantConfig;
 
     private final GameEventManager eventManager;
 
     private GameSession session;
 
-    public GameContext(CoinMechanism coinMechanism, GameVariantConfig variant, GameEventManager eventManager) {
+    public GameContext(CoinMechanism coinMechanism, GameVariantConfig variantConfig, GameEventManager eventManager) {
         this.coinMechanism = requireNonNull(coinMechanism);
-        this.variant = requireNonNull(variant);
+        this.variantConfig = requireNonNull(variantConfig);
         this.eventManager = requireNonNull(eventManager);
     }
 
@@ -36,8 +36,8 @@ public class GameContext {
         return session;
     }
 
-    public GameVariantConfig variant() {
-        return variant;
+    public GameVariantConfig variantConfig() {
+        return variantConfig;
     }
 
     public CoinMechanism coinMechanism() {
@@ -49,6 +49,6 @@ public class GameContext {
     }
 
     public AbstractGameState state() {
-        return variant.gameFlow().state();
+        return variantConfig.gameFlow().state();
     }
 }

@@ -254,7 +254,7 @@ public class TengenMsPacMan_IntroScene extends GameScene {
             }
 
             boolean letGhostMarchIn(TengenMsPacMan_IntroScene scene) {
-                final GameSystems systems = scene.game().variant().systems();
+                final GameSystems systems = scene.game().variantConfig().systems();
                 final MovementSystem motor = systems.motor();
                 final WorldNavigationSystem navigator = systems.navigator();
 
@@ -299,7 +299,7 @@ public class TengenMsPacMan_IntroScene extends GameScene {
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
                 final GameContext game = scene.game();
-                final GameSystems systems = game.variant().systems();
+                final GameSystems systems = game.variantConfig().systems();
                 final GameSession session = game.session();
 
                 systems.motor().move(scene.msPacMan);
@@ -311,9 +311,9 @@ public class TengenMsPacMan_IntroScene extends GameScene {
                     // start demo level or show options
                     if (gameOptions(session).areInitial()) {
                         gameOptions(session).setCanStartNewGame(false); // TODO check this
-                        game.variant().gameFlow().restartState(game, Tengen_GameState.GAME_OR_LEVEL_STARTING.state());
+                        game.variantConfig().gameFlow().restartState(game, Tengen_GameState.GAME_OR_LEVEL_STARTING.state());
                     } else {
-                        game.variant().gameFlow().enterState(game, Tengen_GameState.GAME_PREPARATION.state());
+                        game.variantConfig().gameFlow().enterState(game, Tengen_GameState.GAME_PREPARATION.state());
                     }
                 }
             }

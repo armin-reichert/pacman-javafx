@@ -62,7 +62,7 @@ public interface TengenMsPacMan_PlayScene2D_GameEventHandler extends DefaultGame
     @Override
     default void onGameContinued(GameContinuedEvent e) {
         final GameContext game = gameScene().game();
-        final GameSystems systems = game.variant().systems();
+        final GameSystems systems = game.variantConfig().systems();
         final GameSession session = game.session();
         session.optLevel().ifPresent(level -> {
             resetActorAnimations(systems.actorSpriteAnimController(), session, level);
@@ -88,7 +88,7 @@ public interface TengenMsPacMan_PlayScene2D_GameEventHandler extends DefaultGame
         final GameSession session = game.session();
         if (e.newState() == Tengen_GameState.GAME_LEVEL_COMPLETE.state()) {
             final GameLevel level = session.level();
-            final int numFlashes = game.variant().rules().numLevelFlashes(level.number());
+            final int numFlashes = game.variantConfig().rules().numLevelFlashes(level.number());
             optSoundEffects().ifPresent(GameSoundEffects::stopAll);
             gameScene().playLevelCompleteAnimation(level, numFlashes);
         }
@@ -133,7 +133,7 @@ public interface TengenMsPacMan_PlayScene2D_GameEventHandler extends DefaultGame
     default void onLevelStarted(LevelStartedEvent e) {
         final GameContext game = gameScene().game();
         final GameSession session = game.session();
-        final ActorSpriteAnimController animController = game.variant().systems().actorSpriteAnimController();
+        final ActorSpriteAnimController animController = game.variantConfig().systems().actorSpriteAnimController();
 
         session.optLevel().ifPresent(level -> resetActorAnimations(animController, session, level));
         gameScene().dynamicCamera().playIntroSequence();

@@ -209,7 +209,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
             }
 
             boolean letGhostWalkIn(ArcadeMsPacMan_IntroScene scene) {
-                final GameSystems sys = scene.game().variant().systems();
+                final GameSystems sys = scene.game().variantConfig().systems();
 
                 final Ghost ghost = scene.ghosts.get(scene.ghostPresented.ordinal());
                 if (ghost.worldNavigation().moveDir() == Direction.LEFT) {
@@ -244,7 +244,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
         MS_PACMAN_MARCHING_IN {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                final GameSystems sys = scene.game().variant().systems();
+                final GameSystems sys = scene.game().variantConfig().systems();
                 final Pac msPacMan = scene.msPacMan;
 
                 sys.motor().move(msPacMan);
