@@ -29,6 +29,7 @@ import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.core.steering.RouteGuidedSteering;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
 import de.amr.pacmanfx.ui.GlobalAssets;
+import de.amr.pacmanfx.uilib.entities.hud.comp.HUD_Style;
 import de.amr.pacmanfx.uilib.entities.messageview.comp.MessageViewStyleComp;
 import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
 import org.tinylog.Logger;

@@ -6,11 +6,12 @@ package de.amr.pacmanfx.arcade.pacman.scenes.bootscene;
 
 import de.amr.basics.math.RandomNumbers;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
+import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
+import de.amr.pacmanfx.uilib.entities.hud.comp.HUD_Style;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -68,6 +69,8 @@ public class Arcade_BootScene2D extends GameScene implements Renderable {
     public void onActivate() {
         sceneState = SceneState.BLANK;
         game().session().setHudVisible(false);
+        //TODO temporary solution
+        setHUDStyle(game().session().hud());
     }
 
     @Override
@@ -85,5 +88,14 @@ public class Arcade_BootScene2D extends GameScene implements Renderable {
         else if (tick == TICKS.get(SceneState.EXPIRATION)) {
             game().state().timer().expire();
         }
+    }
+
+    private void setHUDStyle(HUD hud) {
+        final HUD_Style hudStyle = app().currentGameVariantUIConfig().renderConfig().hudStyle();
+        hud.levelCounter().setComp(HUD_Style.class, hudStyle);
+        hud.livesCounter().setComp(HUD_Style.class, hudStyle);
+        hud.gameScore().setComp(HUD_Style.class, hudStyle);
+        hud.highScore().setComp(HUD_Style.class, hudStyle);
+        hud.creditDisplay().setComp(HUD_Style.class, hudStyle);
     }
 }

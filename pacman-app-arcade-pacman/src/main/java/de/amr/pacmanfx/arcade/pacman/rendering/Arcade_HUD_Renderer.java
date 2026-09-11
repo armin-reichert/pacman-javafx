@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.entities.CreditDisplay;
 import de.amr.pacmanfx.core.entities.LevelCounter;
 import de.amr.pacmanfx.core.entities.LivesCounter;
 import de.amr.pacmanfx.core.entities.Score;
-import de.amr.pacmanfx.ui.gamescene.d2.HUD_Style;
+import de.amr.pacmanfx.uilib.entities.hud.comp.HUD_Style;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
@@ -28,16 +28,16 @@ import static java.util.Objects.requireNonNull;
 
 public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer {
 
-    protected final HUD_Style style;
+    private final SpriteSheet<?> spriteSheet;
 
-    public Arcade_HUD_Renderer(HUD_Style style, Canvas canvas) {
+    public Arcade_HUD_Renderer(Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(canvas);
-        this.style = requireNonNull(style);
+        this.spriteSheet = spriteSheet;
     }
 
     @Override
     public SpriteSheet<?> spriteSheet() {
-        return style.spriteSheet();
+        return spriteSheet;
     }
 
     @Override
@@ -54,13 +54,10 @@ public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer 
             case LevelCounter levelCounter -> drawLevelCounter(levelCounter);
             case LivesCounter livesCounter -> drawLivesCounter(livesCounter);
             case Score score -> {
-                final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
                 if (score.type() == Score.Type.GAME_SCORE) {
-                    drawScoreText(score, style.scoreText(), scaledFont, style.scoreTextColor());
+                    drawGameScore(score);
                 } else {
-                    final boolean disabled = !score.data().isEnabled();
-                    final Color color = disabled ? style.scoreTextColorDisabled() : style.scoreTextColor();
-                    drawScoreText(score, style.highScoreText(), scaledFont, color);
+                    drawHighScore(score);
                 }
             }
             case CreditDisplay creditDisplay -> drawCreditDisplay(creditDisplay);
@@ -72,13 +69,27 @@ public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer 
     }
 
     private void drawCreditDisplay(CreditDisplay creditDisplay) {
-        if (creditDisplay.isVisible()) {
-            final int credit = creditDisplay.data().credit();
-            final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
-            final String text = style.creditTextFormat().formatted(credit);
-            final float baseline = creditDisplay.pos().y();
-            fillText(text, ARCADE_WHITE, scaledFont, creditDisplay.pos().x(), baseline);
-        }
+        final HUD_Style style = creditDisplay.reqComp(HUD_Style.class);
+        final int credit = creditDisplay.data().credit();
+        final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
+        final String text = style.creditTextFormat().formatted(credit);
+        final float baseline = creditDisplay.pos().y();
+        fillText(text, ARCADE_WHITE, scaledFont, creditDisplay.pos().x(), baseline);
+    }
+
+    private void drawGameScore(Score score) {
+        final HUD_Style style = score.reqComp(HUD_Style.class);
+        final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
+        drawScoreText(score, style.scoreText(), scaledFont, style.scoreTextColor());
+
+    }
+
+    private void drawHighScore(Score score) {
+        final HUD_Style style = score.reqComp(HUD_Style.class);
+        final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
+        final boolean disabled = !score.data().isEnabled();
+        final Color color = disabled ? style.scoreTextColorDisabled() : style.scoreTextColor();
+        drawScoreText(score, style.highScoreText(), scaledFont, color);
     }
 
     private void drawScoreText(Score score, String title, Font font, Color color) {
@@ -92,6 +103,7 @@ public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer 
     }
 
     private void drawLivesCounter(LivesCounter livesCounter) {
+        final HUD_Style style = livesCounter.reqComp(HUD_Style.class);
         final float x = livesCounter.pos().x();
         final float y = livesCounter.pos().y();
 
@@ -109,6 +121,7 @@ public class Arcade_HUD_Renderer extends BaseRenderer implements SpriteRenderer 
     }
 
     private void drawLevelCounter(LevelCounter levelCounter) {
+        final HUD_Style style = levelCounter.reqComp(HUD_Style.class);
         final float y = levelCounter.pos().y();
         float x = levelCounter.pos().x();
         for (int symbolCode : levelCounter.data().symbolCodes()) {
