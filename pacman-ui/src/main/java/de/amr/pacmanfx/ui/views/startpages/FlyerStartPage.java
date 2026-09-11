@@ -19,6 +19,7 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
+import org.tinylog.Logger;
 
 import java.net.URL;
 import java.util.stream.Stream;
@@ -96,9 +97,6 @@ public class FlyerStartPage implements StartPage {
                 app.ui().shortMessage(app.ui().translations().translate("flash.shut_up"));
             }
         }
-        else if (keyboard.isKeyPressed(KeyCode.ENTER) && startButton != null) {
-            startButton.fire();
-        }
     }
 
     @Override
@@ -140,7 +138,10 @@ public class FlyerStartPage implements StartPage {
 
     protected GameStartButton createStartButton() {
         final var button = new GameStartButton("START!");
-        button.setOnAction(_ -> app.runAction(app.commonActions().gameFlowActions().actionStartGame()));
+        button.setOnAction(_ -> {
+            app.runAction(app.commonActions().gameFlowActions().actionStartGame());
+            Logger.info("START BUTTON PRESSED!");
+        });
         rootPane.getChildren().add(button);
 
         StackPane.setAlignment(button, Pos.BOTTOM_CENTER);
