@@ -18,7 +18,6 @@ import de.amr.pacmanfx.arcade.pacman.scenes.playscene.ArcadePacMan_GameLevel_Ren
 import de.amr.pacmanfx.arcade.pacman.scenes.playscene.Arcade_PlayScene2D;
 import de.amr.pacmanfx.arcade.pacman.scenes.playscene.Arcade_PlayScene2D_Renderer;
 import de.amr.pacmanfx.arcade.pacman.scenes.startscene.ArcadePacMan_StartScene;
-import de.amr.pacmanfx.arcade.pacman.scenes.startscene.ArcadePacMan_StartScene_Renderer;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
@@ -120,7 +119,7 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
         return switch (gameScene) {
             case Arcade_BootScene ignored      -> new Arcade_BootScene_Renderer(gameScene, canvas, spriteSheet());
             case ArcadePacMan_IntroScene ignored -> new ArcadePacMan_IntroScene_Renderer(gameScene, canvas);
-            case ArcadePacMan_StartScene ignored -> new ArcadePacMan_StartScene_Renderer(gameScene, canvas);
+            case ArcadePacMan_StartScene ignored -> null;
             case Arcade_PlayScene2D ignored      -> new Arcade_PlayScene2D_Renderer(gameScene, animController, canvas, spriteSheet());
             case ArcadePacMan_CutScene1 ignored  -> null;
             case ArcadePacMan_CutScene2 ignored  -> null;
