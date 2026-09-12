@@ -33,24 +33,14 @@ public class ArcadePacMan_StartScene extends GameScene {
         super(app);
         setComp(SceneCanvasRenderingComp.class, new SceneCanvasRenderingComp());
 
-        final Font arcade6 = GlobalAssets.Fonts.ARCADE.font();
-        final Font arcade8 = GlobalAssets.Fonts.ARCADE.font();
+        final Font arcade6 = GlobalAssets.Fonts.ARCADE.font(6);
+        final Font arcade8 = GlobalAssets.Fonts.ARCADE.font(8);
 
         addText("PUSH START BUTTON",       ARCADE_ORANGE, arcade8, tilesPx(6),  tilesPx(17));
         addText("1 PLAYER ONLY",           ARCADE_CYAN,   arcade8, tilesPx(8),  tilesPx(21));
         addText("BONUS PAC-MAN FOR 10000", ARCADE_ROSE,   arcade8, tilesPx(1),  tilesPx(25));
         addText("PTS",                     ARCADE_ROSE,   arcade6, tilesPx(25), tilesPx(25));
         addText("© 1980 MIDWAY MFG.CO.",   ARCADE_PINK,   arcade8, tilesPx(4),  tilesPx(29));
-    }
-
-    private void addText(String text, Color color, Font font, float x, float y) {
-        final var textDisplay = new TextDisplay();
-        textDisplay.data().setFillColor(color);
-        textDisplay.data().setFont(font);
-        textDisplay.data().setText(text);
-        textDisplay.pos().set(x, y);
-        textDisplay.show();
-        texts.add(textDisplay);
     }
 
     @Override
@@ -70,5 +60,15 @@ public class ArcadePacMan_StartScene extends GameScene {
     @Override
     public void onDeactivate() {
         soundManager().voice().stop();
+    }
+
+    private void addText(String text, Color color, Font font, float x, float y) {
+        final var textDisplay = new TextDisplay();
+        textDisplay.data().setFillColor(color);
+        textDisplay.data().setFont(font);
+        textDisplay.data().setText(text);
+        textDisplay.pos().set(x, y);
+        textDisplay.show();
+        texts.add(textDisplay);
     }
 }
