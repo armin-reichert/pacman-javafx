@@ -8,6 +8,7 @@ import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameVariantConfig;
+import de.amr.pacmanfx.game.GameLoop;
 import de.amr.pacmanfx.game.GameVariantManager;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.GameUI;
@@ -27,6 +28,8 @@ public interface GameAppContext {
     boolean runAction(GameAction gameAction);
 
     CommonGameActions commonActions();
+
+    GameLoop gameLoop();
 
     GameVariantManager gameVariants();
 

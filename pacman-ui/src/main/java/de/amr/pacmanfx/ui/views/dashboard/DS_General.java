@@ -68,9 +68,9 @@ public class DS_General extends GameDashboardSection {
 
         addDynamicInfo("", () -> "FPS: %.1f (Target: %d)".formatted(gameClock.fps(), gameClock.targetFrameRate()));
         addDynamicInfo("Total Updates",  gameClock::pausableUpdatesCount);
-
+        addDynamicInfo("Render Queue Size: ", () -> app.gameLoop().renderManager().renderQueue().size());
         colorPicker("Canvas Color", viewModel.common2DSettings().canvasBackgroundColorProperty());
-        checkBox("Font Smoothing",  viewModel.common2DSettings().fontSmoothingOnProperty());
+        //checkBox("Font Smoothing",  viewModel.common2DSettings().fontSmoothingOnProperty());
         checkBox("Show Debug Info", viewModel.debugModeOnProperty());
         checkBox("Time Measured",   gameClock.timeMeasuredProperty());
     }

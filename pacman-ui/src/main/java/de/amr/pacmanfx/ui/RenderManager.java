@@ -18,6 +18,7 @@ import javafx.scene.canvas.Canvas;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
@@ -35,6 +36,9 @@ public class RenderManager {
     private Renderer miniViewRenderer;
 
     private final List<Renderable> renderQueue = new ArrayList<>();
+
+    public RenderManager() {
+    }
 
     public void updateRenderers(
         GameVariantConfig gameVariantConfig,
@@ -73,6 +77,10 @@ public class RenderManager {
         else {
             Logger.error("Cannot create game scene and HUD renderer: no canvas has been assigned");
         }
+    }
+
+    public List<Renderable> renderQueue() {
+        return Collections.unmodifiableList(renderQueue);
     }
 
     public void clearRenderQueue() {

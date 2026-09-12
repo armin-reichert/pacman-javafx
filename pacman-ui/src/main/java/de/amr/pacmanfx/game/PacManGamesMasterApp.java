@@ -69,6 +69,11 @@ public final class PacManGamesMasterApp implements GameAppContext {
         actions = new CommonGameActions();
     }
 
+    @Override
+    public GameLoop gameLoop() {
+        return gameLoop;
+    }
+
     public void setUI(GameUI ui) {
         this.ui = requireNonNull(ui);
         createVariantManager(ui);

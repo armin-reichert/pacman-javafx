@@ -38,6 +38,10 @@ public final class GameLoop {
         clock.setTargetFrameRate(GameConstants.SIMULATION_FPS);
     }
 
+    public RenderManager renderManager() {
+        return renderManager;
+    }
+
     // private
 
     private void simulate() {
