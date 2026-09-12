@@ -58,6 +58,7 @@ public class MiniPlaySceneView extends HBox implements Renderable {
         setPadding(PADDING);
         setBorder(BORDER);
         getChildren().add(canvas);
+        setVisible(false);
     }
 
     public void setViewModel(GameViewModel viewModel) {
@@ -151,6 +152,7 @@ public class MiniPlaySceneView extends HBox implements Renderable {
         slidingInAnimation.setByY(10);
         slidingInAnimation.setInterpolator(Interpolator.EASE_OUT);
         slidingInAnimation.play();
+        setVisible(true);
     }
 
     private void slideOutOfView() {
@@ -162,6 +164,7 @@ public class MiniPlaySceneView extends HBox implements Renderable {
         slidingOutAnimation.setToY(-getHeight());
         slidingOutAnimation.setByY(10);
         slidingOutAnimation.setInterpolator(Interpolator.EASE_IN);
+        slidingOutAnimation.setOnFinished(_ -> setVisible(false));
         slidingOutAnimation.play();
     }
 

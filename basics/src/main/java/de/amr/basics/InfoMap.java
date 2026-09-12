@@ -11,7 +11,8 @@ import static java.util.Objects.requireNonNull;
 
 public class InfoMap {
 
-    private final Map<Object, Object> map = new HashMap<>();
+    // create on-access
+    private Map<Object, Object> entries;
 
     public InfoMap() {}
 
@@ -21,7 +22,7 @@ public class InfoMap {
     }
 
     public <T> T get(Object key, Class<T> valueClass) {
-        Object value = map.get(key);
+        Object value = entries().get(key);
         if (value == null) {
             return null;
         }
@@ -33,19 +34,26 @@ public class InfoMap {
     }
 
     public void clear() {
-        map.clear();
+        entries().clear();
     }
 
     public void put(Object key, Object value) {
-        map.put(key, value);
+        entries().put(key, value);
     }
 
     public void putAll(InfoMap infoMap) {
-        map.putAll(infoMap.map);
+        entries().putAll(infoMap.entries());
     }
 
     public void putAll(Map<Object, Object> otherMap) {
         requireNonNull(otherMap);
-        map.putAll(otherMap);
+        entries().putAll(otherMap);
+    }
+
+    public Map<Object, Object> entries() {
+        if (entries == null) {
+            entries = new HashMap<>();
+        }
+        return entries;
     }
 }
