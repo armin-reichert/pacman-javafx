@@ -7,7 +7,7 @@ import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.bag.ArcadeMsPacMan_BagSAM;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.stork.ArcadeMsPacMan_StorkSAM;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
-import de.amr.pacmanfx.arcade.pacman.scenes.CutSceneTimingComp;
+import de.amr.pacmanfx.arcade.pacman.scenes.cutscenes.CutSceneTimingComp;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.rendering.Renderable;
