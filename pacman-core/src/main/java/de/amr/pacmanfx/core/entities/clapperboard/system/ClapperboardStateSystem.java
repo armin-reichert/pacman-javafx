@@ -11,11 +11,12 @@ import de.amr.pacmanfx.core.entities.clapperboard.comp.ClapperboardStateComp;
 public class ClapperboardStateSystem {
 
     public void startFlapAnimation(Clapperboard clapperboard) {
+        final ClapperboardStateComp state = clapperboard.state();
+        state.setTick(0);
+        state.setTextVisible(true);
+        state.setState(ClapperboardState.WIDE_OPEN);
+        state.setRunning(true);
         clapperboard.show();
-        clapperboard.state().setTick(0);
-        clapperboard.state().setTextVisible(true);
-        clapperboard.state().setState(ClapperboardState.WIDE_OPEN);
-        clapperboard.state().setRunning(true);
     }
 
     public void update(Clapperboard clapperboard) {
