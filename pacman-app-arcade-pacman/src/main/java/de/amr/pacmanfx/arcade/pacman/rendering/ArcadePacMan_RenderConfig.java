@@ -9,15 +9,11 @@ import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.scenes.bootscene.Arcade_BootScene;
 import de.amr.pacmanfx.arcade.pacman.scenes.bootscene.Arcade_BootScene_Renderer;
-import de.amr.pacmanfx.arcade.pacman.scenes.cutscenes.ArcadePacMan_CutScene1;
-import de.amr.pacmanfx.arcade.pacman.scenes.cutscenes.ArcadePacMan_CutScene2;
-import de.amr.pacmanfx.arcade.pacman.scenes.cutscenes.ArcadePacMan_CutScene3;
 import de.amr.pacmanfx.arcade.pacman.scenes.introscene.ArcadePacMan_IntroScene;
 import de.amr.pacmanfx.arcade.pacman.scenes.introscene.ArcadePacMan_IntroScene_Renderer;
 import de.amr.pacmanfx.arcade.pacman.scenes.playscene.ArcadePacMan_GameLevel_Renderer;
 import de.amr.pacmanfx.arcade.pacman.scenes.playscene.Arcade_PlayScene2D;
 import de.amr.pacmanfx.arcade.pacman.scenes.playscene.Arcade_PlayScene2D_Renderer;
-import de.amr.pacmanfx.arcade.pacman.scenes.startscene.ArcadePacMan_StartScene;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
@@ -33,7 +29,7 @@ import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.entities.hud.comp.HUD_Style;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
+import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -117,23 +113,16 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
         requireNonNull(canvas);
 
         return switch (gameScene) {
-            case Arcade_BootScene ignored      -> new Arcade_BootScene_Renderer(gameScene, canvas, spriteSheet());
+            case Arcade_BootScene ignored -> new Arcade_BootScene_Renderer(gameScene, canvas, spriteSheet());
             case ArcadePacMan_IntroScene ignored -> new ArcadePacMan_IntroScene_Renderer(gameScene, canvas);
-            case ArcadePacMan_StartScene ignored -> null;
-            case Arcade_PlayScene2D ignored      -> new Arcade_PlayScene2D_Renderer(gameScene, canvas, createGameLevelRenderer(animController, canvas));
-            case ArcadePacMan_CutScene1 ignored  -> null;
-            case ArcadePacMan_CutScene2 ignored  -> null;
-            case ArcadePacMan_CutScene3 ignored  -> null;
-            default -> throw new IllegalStateException("Illegal game scene: " + gameScene);
+            case Arcade_PlayScene2D ignored -> new Arcade_PlayScene2D_Renderer(gameScene, canvas, createGameLevelRenderer(animController, canvas));
+            default -> null;
         };
     }
 
     @Override
-    public ArcadePacMan_GameLevel_Renderer createGameLevelRenderer(ActorSpriteAnimController animController, Canvas canvas) {
-        requireNonNull(canvas);
-        final var renderer = new ArcadePacMan_GameLevel_Renderer(canvas);
-        renderer.info().put(LevelRenderInfoKey.BRIGHT_MAZE_IMAGE, assets.image("maze.bright"));
-        return renderer;
+    public Renderer createGameLevelRenderer(ActorSpriteAnimController animController, Canvas canvas) {
+        return new ArcadePacMan_GameLevel_Renderer(canvas);
     }
 
     @Override

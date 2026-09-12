@@ -13,15 +13,16 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.HUD;
-import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationManager;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
+import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
 import javafx.scene.control.CheckMenuItem;
@@ -132,17 +133,12 @@ public class Arcade_PlayScene2D extends GameScene implements Arcade_PlayScene2D_
         this.levelCompletedAnimation = levelCompletedAnimation;
     }
 
-    // Expose animation to scene renderer
-    public Optional<LevelCompletedAnimation> optLevelCompletedAnimation() {
-        return Optional.ofNullable(levelCompletedAnimation);
-    }
-
     @Override
     public void acceptGameLevel(GameSession session, GameLevel level) {
-        optCanvasRendering().ifPresent(canvasRendering -> {
+        optCanvasRendering().ifPresent(rendering -> {
             final Vector2i terrainSize = level.worldMap().terrainLayer().sizeInPixel();
-            canvasRendering.unscaledWidthProperty().set(terrainSize.x());
-            canvasRendering.unscaledHeightProperty().set(terrainSize.y());
+            rendering.unscaledWidthProperty().set(terrainSize.x());
+            rendering.unscaledHeightProperty().set(terrainSize.y());
         });
 
         if (session.isAttractMode()) {
@@ -157,10 +153,10 @@ public class Arcade_PlayScene2D extends GameScene implements Arcade_PlayScene2D_
         bindingsMap.registerAllBindings(app().commonActions().steeringActions().bindings());
         bindingsMap.registerAllBindings(app().commonActions().cheatActions().bindings());
 
-        Logger.info(bindingsMap);
-
         soundManager().setEnabled(true);
-        Logger.info("Game scene {} accepted game level #{}", getClass().getSimpleName(), level.number());
+
+        Logger.info("Game scene {} accepted level #{}", getClass().getSimpleName(), level.number());
+        Logger.info(bindingsMap);
     }
 
     private void acceptDemoLevel() {
@@ -169,10 +165,11 @@ public class Arcade_PlayScene2D extends GameScene implements Arcade_PlayScene2D_
 
         final var bindingsMap = actionBindingsSupport().registry();
         bindingsMap.registerAllBindings(actions.gameStartActionBindings());
-        Logger.info(bindingsMap);
 
         soundManager().setEnabled(false);
+
         Logger.info("Game scene {} accepted demo level", getClass().getSimpleName());
+        Logger.info(bindingsMap);
     }
 
     private Renderable createLevelRenderable(GameLevel level) {
@@ -184,16 +181,22 @@ public class Arcade_PlayScene2D extends GameScene implements Arcade_PlayScene2D_
         info.put(LevelRenderInfoKey.SHOW_EMPTY_MAZE,
             level.food().remainingFoodCount() == 0);
 
+        // TODO: This does not belong here
+        //       In Arcade Pac-Man, a dedicated image is used for painting the bright empty maze while flashing
+        final AssetMap assets = app().currentGameVariantUIConfig().assets();
+        if (assets.containsAsset("maze.bright")) {
+            info.put(LevelRenderInfoKey.BRIGHT_MAZE_IMAGE, assets.image("maze.bright"));
+        }
+
         info.put(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, false);
-
         info.put(LevelRenderInfoKey.MAZE_IS_FLASHING, false);
-
         if (levelCompletedAnimation != null) {
             levelCompletedAnimation.flashingState().ifPresent(flashing -> {
                 info.put(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, flashing.isHighlighted());
                 info.put(LevelRenderInfoKey.MAZE_IS_FLASHING, flashing.isFlashing());
             });
         }
-        return new GameLevelRenderable(info, level);
+
+        return new GameLevelRenderable(level, info);
     }
 }

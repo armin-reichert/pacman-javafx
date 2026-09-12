@@ -22,11 +22,11 @@ import static java.util.Objects.requireNonNull;
 public class AssetMap implements Disposable {
 
     private boolean frozen;
-    private final Map<String, Object> assetsByID = new HashMap<>();
+    private final Map<String, Object> assetsByKey = new HashMap<>();
 
     @Override
     public void dispose() {
-        assetsByID.clear();
+        assetsByKey.clear();
         frozen = false;
     }
 
@@ -36,7 +36,12 @@ public class AssetMap implements Disposable {
         if (frozen) {
             throw new IllegalStateException("Cannot add asset with key '%s': asset map is frozen!".formatted(key));
         }
-        assetsByID.put(key, asset);
+        assetsByKey.put(key, asset);
+    }
+
+    public boolean containsAsset(String key) {
+        requireNonNull(key);
+        return assetsByKey.containsKey(key);
     }
 
     /**
@@ -57,7 +62,7 @@ public class AssetMap implements Disposable {
      * @throws ClassCastException if specified type does not match asset value type
      */
     public <T> T asset(String key, Class<T> assetClass) {
-        Object value = assetsByID.get(key);
+        Object value = assetsByKey.get(key);
         if (value == null) {
             Logger.error("No asset value for key '{}' exists", key);
             return null;

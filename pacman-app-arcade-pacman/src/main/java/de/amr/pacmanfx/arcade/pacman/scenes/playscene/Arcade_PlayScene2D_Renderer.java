@@ -4,11 +4,10 @@
 
 package de.amr.pacmanfx.arcade.pacman.scenes.playscene;
 
-import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
+import de.amr.basics.InfoMap;
+import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.rendering.Renderable;
-import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.scene.canvas.Canvas;
@@ -38,9 +37,10 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer {
     @Override
     public void render(Renderable r, long tick) {
         requireNonNull(r);
-        if (r instanceof GameLevelRenderable levelRenderable) {
-            levelRenderer.info().putAll(levelRenderable.renderInfo());
-            levelRenderer.render(levelRenderable.level(), tick);
+        // This is the "record" type matching pattern
+        if (r instanceof GameLevelRenderable(GameLevel level, InfoMap renderInfo)) {
+            levelRenderer.info().putAll(renderInfo);
+            levelRenderer.render(level, tick);
         }
     }
 }
