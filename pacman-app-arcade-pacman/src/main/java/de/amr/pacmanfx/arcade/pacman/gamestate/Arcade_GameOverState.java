@@ -24,7 +24,7 @@ public class Arcade_GameOverState extends AbstractGameState {
         final GameLevel level = session.level();
 
         level.showMessage(MessageType.GAME_OVER);
-
+        session.hud().creditDisplay().show();
         session.setGameRunning(false);
         session.cheats().clear();
         try {

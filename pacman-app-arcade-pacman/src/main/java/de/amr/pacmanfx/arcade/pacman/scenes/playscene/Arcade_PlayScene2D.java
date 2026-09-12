@@ -42,6 +42,7 @@ public class Arcade_PlayScene2D extends GameScene implements Arcade_PlayScene2D_
 
     public Arcade_PlayScene2D(GameAppContext app) {
         super(app);
+        // Add 2D canvas rendering capability
         setComp(SceneCanvasRenderingComp.class, new SceneCanvasRenderingComp());
     }
 
@@ -58,7 +59,7 @@ public class Arcade_PlayScene2D extends GameScene implements Arcade_PlayScene2D_
     }
 
     @Override
-    public Arcade_PlayScene2D playScene() {
+    public Arcade_PlayScene2D theGameScene() {
         return this;
     }
 

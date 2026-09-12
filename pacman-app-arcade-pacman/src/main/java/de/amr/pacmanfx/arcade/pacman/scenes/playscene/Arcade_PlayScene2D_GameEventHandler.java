@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.arcade.pacman.scenes.playscene;
 
+import de.amr.basics.fsm.State;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
@@ -15,7 +16,6 @@ import de.amr.pacmanfx.core.event.bonus.BonusExpiredEvent;
 import de.amr.pacmanfx.core.event.gameplay.*;
 import de.amr.pacmanfx.core.event.ghost.GhostEatenEvent;
 import de.amr.pacmanfx.core.event.pac.*;
-import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.test.TestStateID;
@@ -29,16 +29,16 @@ import java.util.Optional;
 
 public interface Arcade_PlayScene2D_GameEventHandler extends DefaultGameEventListener {
 
-    Arcade_PlayScene2D playScene();
+    Arcade_PlayScene2D theGameScene();
 
     GameAppContext app();
 
-    default Optional<GameSoundEffects> optSoundEffects() {
-        return app().gameVariants().currentGameVariant().uiConfig().optSoundEffects();
-    }
-
     default GameContext game() {
         return app().game();
+    }
+
+    default Optional<GameSoundEffects> optSoundEffects() {
+        return app().currentGameVariantUIConfig().optSoundEffects();
     }
 
     @Override
@@ -59,16 +59,15 @@ public interface Arcade_PlayScene2D_GameEventHandler extends DefaultGameEventLis
 
     @Override
     default void onGameContinued(GameContinuedEvent e) {
-        final ActorSpriteAnimController animSystem = game().variantConfig().systems().actorSpriteAnimController();
-        //TODO make animation systems from animation manager class
-        game().session().optLevel().ifPresent(level -> ActorAnimationManager.resetActorAnimations(animSystem, level));
+        //TODO Does not belong here
+        final ActorSpriteAnimController animController = game().variantConfig().systems().actorSpriteAnimController();
+        game().session().optLevel().ifPresent(level -> ActorAnimationManager.resetActorAnimations(animController, level));
     }
 
     @Override
     default void onGameStarted(GameStartedEvent e) {
-        final GameContext game = e.game();
-        final GameSession session = game.session();
-        final boolean silent = session.isAttractMode() || game.state().id() instanceof TestStateID;
+        final GameSession session = game().session();
+        final boolean silent = session.isAttractMode() || game().state().id() instanceof TestStateID;
         if (!silent) {
             optSoundEffects().ifPresent(GameSoundEffects::playGameReadySound);
         }
@@ -76,8 +75,9 @@ public interface Arcade_PlayScene2D_GameEventHandler extends DefaultGameEventLis
 
     @Override
     default void onGameStateChange(GameStateChangeEvent e) {
-        Logger.info("Enter game state '{}'", e.newState().name());
-        final AbstractGameState newState = (AbstractGameState) e.newState();
+        final State<GameContext> newState = e.newState();
+
+        Logger.info("Entering game state '{}'", newState.name());
 
         if (CommonGameStateID.GAME_LEVEL_COMPLETE.hasSameNameAs(newState)) {
             final GameLevel level = game().session().level();
@@ -85,12 +85,11 @@ public interface Arcade_PlayScene2D_GameEventHandler extends DefaultGameEventLis
 
             optSoundEffects().ifPresent(GameSoundEffects::stopAll);
 
-            final var completedAnimation = new LevelCompletedAnimation(level, () -> game().state().triggerTimeout());
-            playScene().setLevelCompletedAnimation(completedAnimation);
-            completedAnimation.play(numFlashes);
+            final var animation = new LevelCompletedAnimation(level, () -> game().state().triggerTimeout());
+            theGameScene().setLevelCompletedAnimation(animation);
+            animation.play(numFlashes);
         }
         else if (CommonGameStateID.GAME_OVER.hasSameNameAs(newState)) {
-            game().session().hud().creditDisplay().show();
             optSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);
         }
     }
@@ -102,7 +101,7 @@ public interface Arcade_PlayScene2D_GameEventHandler extends DefaultGameEventLis
 
     @Override
     default void onLevelCreated(LevelCreatedEvent e) {
-        playScene().acceptGameLevel(game().session(), e.level());
+        theGameScene().acceptGameLevel(game().session(), e.level());
     }
 
     @Override
