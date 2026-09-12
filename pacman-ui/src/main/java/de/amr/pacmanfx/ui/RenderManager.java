@@ -91,9 +91,9 @@ public class RenderManager {
         renderQueue.sort(RENDERING_ORDER);
         renderQueue.forEach(r -> {
             switch (r.layer()) {
-                case SCENE    -> renderSceneLayer(r, tick, debugMode);
+                case SCENE    -> renderScene(r, tick, debugMode);
                 case OVERLAY  -> renderOverlay(r, tick);
-                default       -> renderGameEntity(r, tick);
+                default       -> renderEntity(r, tick);
             }
         });
     }
@@ -110,17 +110,17 @@ public class RenderManager {
         });
     }
 
-    private void renderGameEntity(Renderable r, long tick) {
+    private void renderEntity(Renderable r, long tick) {
         if (entityRenderer != null) {
             if (r instanceof RenderableWrapper wrapper) {
-                renderGameEntity(wrapper.wrappedRenderable(), tick);
+                renderEntity(wrapper.wrappedRenderable(), tick);
             } else {
                 entityRenderer.render(r, tick);
             }
         }
     }
 
-    private void renderSceneLayer(Renderable r, long tick, boolean debugMode) {
+    private void renderScene(Renderable r, long tick, boolean debugMode) {
         if (sceneRenderer != null) {
             sceneRenderer.render(r, tick);
             if (debugMode) {
@@ -134,7 +134,6 @@ public class RenderManager {
             miniViewRenderer.render(r, tick);
         }
     }
-
 
     private void configureRenderer(Renderer renderer, SceneCanvasRenderingComp canvasRendering) {
         renderer.backgroundColorProperty().bind(canvasRendering.backgroundColorProperty());
