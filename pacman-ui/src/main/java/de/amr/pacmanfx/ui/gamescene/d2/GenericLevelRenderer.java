@@ -55,8 +55,8 @@ public class GenericLevelRenderer extends BaseRenderer {
         if (!(r instanceof  GameLevel level)) {
             return;
         }
-        if (info.getBoolean(CommonGameLevelRenderInfoKey.BRIGHT_PHASE_ON)) {
-            terrainRenderer.setMapColoring(info.getBoolean(CommonGameLevelRenderInfoKey.ENERGIZER_VISIBLE) ? blinkingOnMapColoring : blinkingOffMapColoring);
+        if (info.getBoolean(LevelRenderInfoKey.SHOW_BRIGHT_MAZE)) {
+            terrainRenderer.setMapColoring(info.getBoolean(LevelRenderInfoKey.ENERGIZERS_SHOWN) ? blinkingOnMapColoring : blinkingOffMapColoring);
             terrainRenderer.render(level.worldMap(), tick);
         }
         else {
@@ -79,7 +79,7 @@ public class GenericLevelRenderer extends BaseRenderer {
                 .filter(not(foodLayer::isEnergizerTile))
                 .forEach(foodRenderer::drawPellet);
 
-            if (info.getBoolean(CommonGameLevelRenderInfoKey.ENERGIZER_VISIBLE)) {
+            if (info.getBoolean(LevelRenderInfoKey.ENERGIZERS_SHOWN)) {
                 foodRenderer.setEnergizerColor(pelletColor);
                 foodLayer.energizerTiles().stream()
                     .filter(level.food()::hasFoodAtTile)

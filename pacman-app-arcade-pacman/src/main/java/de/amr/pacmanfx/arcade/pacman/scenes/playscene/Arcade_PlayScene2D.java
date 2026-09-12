@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.arcade.pacman.scenes.playscene;
 
+import de.amr.basics.InfoMap;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.basics.util.Ufx;
@@ -22,6 +23,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationManager;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
+import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
 import org.tinylog.Logger;
@@ -50,6 +52,7 @@ public class Arcade_PlayScene2D extends GameScene implements Arcade_PlayScene2D_
             return Stream.empty();
         }
         return Ufx.streamOf(
+            createLevelRenderable(level),
             level.visibleRenderables()
         );
     }
@@ -169,5 +172,27 @@ public class Arcade_PlayScene2D extends GameScene implements Arcade_PlayScene2D_
 
         soundManager().setEnabled(false);
         Logger.info("Game scene {} accepted demo level", getClass().getSimpleName());
+    }
+
+    private Renderable createLevelRenderable(GameLevel level) {
+        final var info = new InfoMap();
+
+        info.put(LevelRenderInfoKey.ENERGIZERS_SHOWN,
+            level.heartbeat().state() == Pulse.State.ON);
+
+        info.put(LevelRenderInfoKey.SHOW_EMPTY_MAZE,
+            level.food().remainingFoodCount() == 0);
+
+        info.put(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, false);
+
+        info.put(LevelRenderInfoKey.MAZE_IS_FLASHING, false);
+
+        if (levelCompletedAnimation != null) {
+            levelCompletedAnimation.flashingState().ifPresent(flashing -> {
+                info.put(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, flashing.isHighlighted());
+                info.put(LevelRenderInfoKey.MAZE_IS_FLASHING, flashing.isFlashing());
+            });
+        }
+        return new GameLevelRenderable(info, level);
     }
 }

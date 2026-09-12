@@ -18,7 +18,7 @@ import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.CommonGameLevelRenderInfoKey;
+import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
@@ -95,11 +95,11 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends BaseRenderer implements
         info.put(TengenMsPacMan_GameLevelRendererKey.MAP_CATEGORY, mapCategory);
         info.put(TengenMsPacMan_GameLevelRendererKey.MAP_IMAGE_SET, worldMap.getConfigValue(TengenMsPacMan_GameLevelRendererKey.MAP_IMAGE_SET));
         if (flashingState == null) {
-            info.put(CommonGameLevelRenderInfoKey.BRIGHT_PHASE_ON, false);
-            info.put(CommonGameLevelRenderInfoKey.FLASHING_INDEX, -1);
+            info.put(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, false);
+            info.put(LevelRenderInfoKey.FLASHING_INDEX, -1);
         } else {
-            info.put(CommonGameLevelRenderInfoKey.BRIGHT_PHASE_ON, flashingState.isHighlighted());
-            info.put(CommonGameLevelRenderInfoKey.FLASHING_INDEX, flashingState.flashingIndex());
+            info.put(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, flashingState.isHighlighted());
+            info.put(LevelRenderInfoKey.FLASHING_INDEX, flashingState.flashingIndex());
         }
     }
 }

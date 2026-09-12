@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.CommonGameLevelRenderInfoKey;
+import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
 import de.amr.pacmanfx.uilib.rendering.RenderableWrapper;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 
@@ -42,10 +42,10 @@ public class MiniPlaySceneViewRenderer extends BaseRenderer {
     public void render(Renderable r, long tick) {
         switch (r) {
             case GameLevel level -> {
-                levelRenderer.info().put(CommonGameLevelRenderInfoKey.ENERGIZER_VISIBLE, level.heartbeat().state() == Pulse.State.ON);
-                levelRenderer.info().put(CommonGameLevelRenderInfoKey.BRIGHT_PHASE_ON, false);
-                levelRenderer.info().put(CommonGameLevelRenderInfoKey.MAZE_EMPTY, level.food().remainingFoodCount() == 0);
-                levelRenderer.info().put(CommonGameLevelRenderInfoKey.FLASHING, false);
+                levelRenderer.info().put(LevelRenderInfoKey.ENERGIZERS_SHOWN, level.heartbeat().state() == Pulse.State.ON);
+                levelRenderer.info().put(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, false);
+                levelRenderer.info().put(LevelRenderInfoKey.SHOW_EMPTY_MAZE, level.food().remainingFoodCount() == 0);
+                levelRenderer.info().put(LevelRenderInfoKey.MAZE_IS_FLASHING, false);
                 levelRenderer.render(level, tick);
             }
             case RenderableWrapper wrapper -> render(wrapper.wrappedRenderable(), tick);

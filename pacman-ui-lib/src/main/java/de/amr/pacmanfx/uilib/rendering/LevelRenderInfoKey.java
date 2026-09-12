@@ -4,11 +4,11 @@
 
 package de.amr.pacmanfx.uilib.rendering;
 
-public enum CommonGameLevelRenderInfoKey {
-    ENERGIZER_VISIBLE,
-    BRIGHT_PHASE_ON,
-    MAZE_EMPTY,
-    FLASHING,
+public enum LevelRenderInfoKey {
+    ENERGIZERS_SHOWN,
+    SHOW_BRIGHT_MAZE,
+    SHOW_EMPTY_MAZE,
+    MAZE_IS_FLASHING,
     FLASHING_INDEX,
     MAZE_IMAGE,
     BRIGHT_MAZE_IMAGE,

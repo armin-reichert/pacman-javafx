@@ -33,7 +33,7 @@ import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.entities.hud.comp.HUD_Style;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.CommonGameLevelRenderInfoKey;
+import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -120,7 +120,7 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
             case Arcade_BootScene ignored      -> new Arcade_BootScene_Renderer(gameScene, canvas, spriteSheet());
             case ArcadePacMan_IntroScene ignored -> new ArcadePacMan_IntroScene_Renderer(gameScene, canvas);
             case ArcadePacMan_StartScene ignored -> null;
-            case Arcade_PlayScene2D ignored      -> new Arcade_PlayScene2D_Renderer(gameScene, animController, canvas, spriteSheet());
+            case Arcade_PlayScene2D ignored      -> new Arcade_PlayScene2D_Renderer(gameScene, canvas, createGameLevelRenderer(animController, canvas));
             case ArcadePacMan_CutScene1 ignored  -> null;
             case ArcadePacMan_CutScene2 ignored  -> null;
             case ArcadePacMan_CutScene3 ignored  -> null;
@@ -132,7 +132,7 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
     public ArcadePacMan_GameLevel_Renderer createGameLevelRenderer(ActorSpriteAnimController animController, Canvas canvas) {
         requireNonNull(canvas);
         final var renderer = new ArcadePacMan_GameLevel_Renderer(canvas);
-        renderer.info().put(CommonGameLevelRenderInfoKey.BRIGHT_MAZE_IMAGE, assets.image("maze.bright"));
+        renderer.info().put(LevelRenderInfoKey.BRIGHT_MAZE_IMAGE, assets.image("maze.bright"));
         return renderer;
     }
 

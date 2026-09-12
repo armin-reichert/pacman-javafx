@@ -5,6 +5,8 @@ package de.amr.pacmanfx.arcade.pacman.scenes.playscene;
 
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
+import de.amr.pacmanfx.core.entities.Door;
+import de.amr.pacmanfx.core.entities.door.comp.DoorDataComp;
 import de.amr.pacmanfx.core.model.world.map.FoodState;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.entities.House;
@@ -13,7 +15,7 @@ import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.CommonGameLevelRenderInfoKey;
+import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -47,27 +49,25 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
         ctx.save();
         ctx.scale(scaling(), scaling());
 
-        if (info.getBoolean(CommonGameLevelRenderInfoKey.MAZE_EMPTY)) {
+        if (info.getBoolean(LevelRenderInfoKey.SHOW_EMPTY_MAZE)) {
             // Empty maze is shown when level is complete and when the flashing animation is running
-            if (info.getBoolean(CommonGameLevelRenderInfoKey.BRIGHT_PHASE_ON)) {
-                final var brightMazeImage = info.get(CommonGameLevelRenderInfoKey.BRIGHT_MAZE_IMAGE, Image.class);
+            if (info.getBoolean(LevelRenderInfoKey.SHOW_BRIGHT_MAZE)) {
+                final var brightMazeImage = info.get(LevelRenderInfoKey.BRIGHT_MAZE_IMAGE, Image.class);
                 if (brightMazeImage != null) {
                     ctx.drawImage(brightMazeImage, 0, emptyPixelsOverMaze);
                 }
             } else {
                 drawSprite(spriteSheet().findSpriteSequence(SpriteID.MAP_EMPTY)[0], 0, emptyPixelsOverMaze, false);
             }
-            if (info.getBoolean(CommonGameLevelRenderInfoKey.FLASHING)) {
+            if (info.getBoolean(LevelRenderInfoKey.MAZE_IS_FLASHING)) {
                 final House house = level.entities().house();
                 // Hide ghost house doors while flashing
                 if (house != null) {
+                    final Door door = house.door();
+                    final var doorData = door.reqComp(DoorDataComp.class);
                     ctx.setFill(backgroundColor());
-                    if (house.floorplan().leftDoorTile() != null) {
-                        fillSquareAtTileCenter(house.floorplan().leftDoorTile(), WorldMap.TS + 0.5);
-                    }
-                    if (house.floorplan().rightDoorTile() != null) {
-                        fillSquareAtTileCenter(house.floorplan().rightDoorTile(), WorldMap.TS + 0.5);
-                    }
+                    fillSquareAtTileCenter(doorData.leftTile(),  WorldMap.TS + 0.5);
+                    fillSquareAtTileCenter(doorData.rightTile(), WorldMap.TS + 0.5);
                 }
             }
         }
