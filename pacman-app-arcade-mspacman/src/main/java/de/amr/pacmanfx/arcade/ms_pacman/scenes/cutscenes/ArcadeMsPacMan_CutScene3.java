@@ -170,29 +170,29 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene {
 
     private void enterDeliverJuniorState(GameSystems systems) {
         final MovementSystem motor = systems.motor();
-        final WorldNavigationSystem worldNavigator = systems.navigator();
-        final ActorSpriteAnimController animSystem = systems.actorSpriteAnimController();
+        final WorldNavigationSystem nav = systems.navigator();
+        final ActorSpriteAnimController animController = systems.actorSpriteAnimController();
         
         pacMan.pos().set(TS * 3, GROUND_Y - 4);
         pacMan.show();
-        worldNavigator.setMoveDir(pacMan, Direction.RIGHT);
+        nav.setMoveDir(pacMan, Direction.RIGHT);
 
-        animSystem.select(pacMan, CommonSpriteAnimationID.MR_PAC_MAN_MUNCHING);
-        animSystem.stopSelected(pacMan);
+        animController.select(pacMan, CommonSpriteAnimationID.MR_PAC_MAN_MUNCHING);
+        animController.stopSelected(pacMan);
 
         msPacMan.pos().set(TS * 5, GROUND_Y - 4);
         msPacMan.show();
-        worldNavigator.setMoveDir(msPacMan, Direction.RIGHT);
+        nav.setMoveDir(msPacMan, Direction.RIGHT);
 
-        animSystem.select(msPacMan, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
-        animSystem.stopSelected(msPacMan);
+        animController.select(msPacMan, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
+        animController.stopSelected(msPacMan);
 
         stork.pos().set(TS * 30, TS * 12);
         stork.show();
         motor.setVelocity(stork, -0.8f, 0);
 
-        animSystem.select(stork, CommonSpriteAnimationID.STORK_FLYING);
-        animSystem.playSelected(stork);
+        animController.select(stork, CommonSpriteAnimationID.STORK_FLYING);
+        animController.playSelected(stork);
 
         bag.show();
         bag.pos().set(stork.pos().x() - 14, stork.pos().y() + 3);
