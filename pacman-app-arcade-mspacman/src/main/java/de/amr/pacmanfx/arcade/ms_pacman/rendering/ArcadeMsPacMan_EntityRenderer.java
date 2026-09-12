@@ -11,6 +11,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.entities.clapperboard.ClapperboardAnimat
 import de.amr.pacmanfx.arcade.ms_pacman.scenes.introscene.MarqueeRenderer;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.Copyright;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_RenderConfig;
+import de.amr.pacmanfx.core.Energizer;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
@@ -86,10 +87,11 @@ public class ArcadeMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
             case GhostPoints points        -> drawSpriteCentered(computeSprite(points), center);
             case Bonus bonus               -> drawSpriteCentered(computeSprite(bonus),  center);
             case BonusPoints points        -> drawSpriteCentered(computeSprite(points), center);
+            case Energizer energizer       -> drawEnergizer(energizer);
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
             case Marquee marquee           -> drawMarquee(marquee, tick);
-            case MessageView messageView -> messageViewRenderer.renderMessageView(messageView);
-            case Copyright copyright -> drawMidwayCopyright(copyright);
+            case MessageView messageView   -> messageViewRenderer.renderMessageView(messageView);
+            case Copyright copyright       -> drawMidwayCopyright(copyright);
             case LevelCounter levelCounter -> drawLevelCounter(levelCounter);
             case LivesCounter livesCounter -> drawLivesCounter(livesCounter);
             case Score score -> {
@@ -100,6 +102,7 @@ public class ArcadeMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
                 }
             }
             case CreditDisplay creditDisplay -> drawCreditDisplay(creditDisplay);
+            case TextDisplay textDisplay -> super.render(textDisplay, tick);
             default -> {}
         }
     }
@@ -157,6 +160,16 @@ public class ArcadeMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
     private RectShort computeSprite(GhostPoints ghostPoints) {
         final int index = Arrays.binarySearch(GHOST_POINTS, ghostPoints.points().number());
         return index >= 0 ? spriteSheet().findSpriteSequence(SpriteID.GHOST_NUMBERS)[index] : RectShort.NULL_RECTANGLE;
+    }
+
+    private void drawEnergizer(Energizer energizer) {
+        if (!energizer.on()) {
+            final double size = scaled(9);
+            ctx.save();
+            ctx.setFill(backgroundColor());
+            ctx.fillRect(scaled(energizer.pos().x() - 0.5), scaled(energizer.pos().y() - 0.5), size, size);
+            ctx.restore();
+        }
     }
 
     private void drawClapperBoard(Clapperboard clapperboard) {

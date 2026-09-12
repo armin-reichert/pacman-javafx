@@ -14,7 +14,6 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.FoodState;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
@@ -22,6 +21,7 @@ import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static java.util.function.Predicate.not;
 
 /**
@@ -49,10 +49,11 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
 
     private void renderGameLevel(GameLevel level) {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        final int emptyPixelsOverMaze = terrain.emptyRowsOverMaze() * WorldMap.TS;
+        final int emptyPixelsOverMaze = terrain.emptyRowsOverMaze() * TS;
 
         ctx.save();
         ctx.scale(scaling(), scaling());
+        ctx.setImageSmoothing(true);
 
         if (info.getBoolean(LevelRenderInfoKey.SHOW_EMPTY_MAZE)) {
             // Empty maze is shown when level is complete and when the flashing animation is running
@@ -64,15 +65,7 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
                 drawSprite(emptyMapSprite, 0, emptyPixelsOverMaze, false);
             }
             if (info.getBoolean(LevelRenderInfoKey.MAZE_IS_FLASHING)) {
-                // Hide ghost house doors while flashing
-                final House house = level.entities().house();
-                if (house != null) {
-                    final Door door = house.door();
-                    final var doorData = door.reqComp(DoorDataComp.class);
-                    ctx.setFill(backgroundColor());
-                    fillSquareAtTileCenter(doorData.leftTile(),  WorldMap.TS + 0.5);
-                    fillSquareAtTileCenter(doorData.rightTile(), WorldMap.TS + 0.5);
-                }
+                hideGhostHouseDoors(level.entities().house());
             }
         }
         else {
@@ -80,6 +73,14 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
             hideEatenPellets(level);
         }
         ctx.restore();
+    }
+
+    private void hideGhostHouseDoors(House house) {
+        final Door door = house.door();
+        final var doorData = door.reqComp(DoorDataComp.class);
+        ctx.setFill(backgroundColor());
+        fillSquareAtTileCenter(doorData.leftTile(),  TS + 0.5);
+        fillSquareAtTileCenter(doorData.rightTile(), TS + 0.5);
     }
 
     private void hideEatenPellets(GameLevel level) {

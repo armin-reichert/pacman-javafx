@@ -77,8 +77,8 @@ public class ArcadePacMan_EntityRenderer extends BaseRenderer implements SpriteR
             case GhostPoints points -> drawSpriteCentered(computeSprite(points), center);
             case Bonus bonus -> drawSpriteCentered(computeSprite(bonus), center);
             case BonusPoints bonusPoints -> drawSpriteCentered(computeSprite(bonusPoints), center);
-            case MessageView messageView -> messageViewRenderer.renderMessageView(messageView);
             case Energizer energizer -> drawEnergizer(energizer);
+            case MessageView messageView -> messageViewRenderer.renderMessageView(messageView);
             case LevelCounter levelCounter -> drawLevelCounter(levelCounter);
             case LivesCounter livesCounter -> drawLivesCounter(livesCounter);
             case Score score -> {
