@@ -62,6 +62,8 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene {
     private GameEntity heart;
     private Clapperboard clapperboard;
 
+    private final ClapperboardStateSystem clapperboardSystem = new ClapperboardStateSystem();
+
     public ArcadeMsPacMan_CutScene1(GameAppContext app) {
         super(app);
         setComp(SceneCanvasRenderingComp.class, new SceneCanvasRenderingComp());
@@ -114,7 +116,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene {
         clapperboard = new Clapperboard("1", "THEY MEET");
         clapperboard.pos().set(tilesPx(3), tilesPx(10));
 
-        ClapperboardStateSystem.startFlapAnimation(clapperboard);
+        clapperboardSystem.startFlapAnimation(clapperboard);
     }
 
     // Scene controller state machine
@@ -131,7 +133,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene {
     }
 
     private void updateStateClapperboard(GameSystems systems) {
-        ClapperboardStateSystem.update(clapperboard);
+        clapperboardSystem.update(clapperboard);
         if (sceneTimer.atSecond(1)) {
             soundManager().play(PacManGameSoundID.INTERMISSION_1);
         } else if (sceneTimer.hasExpired()) {

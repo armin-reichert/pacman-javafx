@@ -10,13 +10,13 @@ import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.scenes.cutscenes.CutSceneTimingComp;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
-import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.clapperboard.system.ClapperboardStateSystem;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.game.GameVariant;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -64,6 +64,8 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene {
     private Stork stork;
     private Bag bag;
     private Clapperboard clapperboard;
+
+    private final ClapperboardStateSystem clapperboardSystem = new ClapperboardStateSystem();
 
     private int numBagBounces;
 
@@ -117,7 +119,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene {
 
         clapperboard = new Clapperboard("3", "JUNIOR");
         clapperboard.pos().set(tilesPx(3), tilesPx(10));
-        ClapperboardStateSystem.startFlapAnimation(clapperboard);
+        clapperboardSystem.startFlapAnimation(clapperboard);
     }
 
     // Scene controller state machine
@@ -158,7 +160,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene {
     // State CLAPPERBOARD
 
     private void updateClapperboardState() {
-        ClapperboardStateSystem.update(clapperboard);
+        clapperboardSystem.update(clapperboard);
         if (timing().tick() ==  timing().animationStartTick() + 60) {
             soundManager().play(PacManGameSoundID.INTERMISSION_3);
         }

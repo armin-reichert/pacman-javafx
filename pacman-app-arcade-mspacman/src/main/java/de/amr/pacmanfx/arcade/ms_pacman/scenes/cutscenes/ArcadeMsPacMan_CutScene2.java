@@ -43,6 +43,8 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene {
     private Pac msPacMan;
     private Clapperboard clapperboard;
 
+    private final ClapperboardStateSystem clapperboardSystem = new ClapperboardStateSystem();
+
     public ArcadeMsPacMan_CutScene2(GameAppContext app) {
         super(app);
         setComp(SceneCanvasRenderingComp.class, new SceneCanvasRenderingComp());
@@ -56,11 +58,11 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene {
 
     @Override
     public void onTick(GameContext game) {
-        final GameSystems sys = game.variantConfig().systems();
+        final GameSystems systems = game.variantConfig().systems();
 
         switch (state) {
-            case SceneState.CLAPPERBOARD -> updateStateClapperboard(sys);
-            case SceneState.CHASING -> updateStateChasing(sys);
+            case SceneState.CLAPPERBOARD -> updateStateClapperboard(systems);
+            case SceneState.CHASING -> updateStateChasing(systems);
             default -> throw new IllegalStateException("Illegal scene state: " + state);
         }
         sceneTimer.doTick();
@@ -84,7 +86,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene {
 
         clapperboard = new Clapperboard("2", "THE CHASE");
         clapperboard.pos().set(tilesPx(3), tilesPx(10));
-        ClapperboardStateSystem.startFlapAnimation(clapperboard);
+        clapperboardSystem.startFlapAnimation(clapperboard);
     }
 
     // Scene controller state machine
@@ -101,7 +103,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene {
     }
 
     private void updateStateClapperboard(GameSystems systems) {
-        ClapperboardStateSystem.update(clapperboard);
+        clapperboardSystem.update(clapperboard);
         if (sceneTimer.hasExpired()) {
             soundManager().play(PacManGameSoundID.INTERMISSION_2);
             enterStateChasing(systems);

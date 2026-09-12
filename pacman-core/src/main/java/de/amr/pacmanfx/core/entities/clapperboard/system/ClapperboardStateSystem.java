@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.entities.clapperboard.comp.ClapperboardStateComp;
 
 public class ClapperboardStateSystem {
 
-    public static void startFlapAnimation(Clapperboard clapperboard) {
+    public void startFlapAnimation(Clapperboard clapperboard) {
         clapperboard.show();
         clapperboard.state().setTick(0);
         clapperboard.state().setTextVisible(true);
@@ -18,7 +18,7 @@ public class ClapperboardStateSystem {
         clapperboard.state().setRunning(true);
     }
 
-    public static void update(Clapperboard clapperboard) {
+    public void update(Clapperboard clapperboard) {
         final ClapperboardStateComp state = clapperboard.state();
 
         if (!state.running()) return;
