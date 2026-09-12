@@ -17,28 +17,17 @@ import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.scene.canvas.Canvas;
 import org.tinylog.Logger;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Stream;
-
 import static java.util.Objects.requireNonNull;
 
 public class RenderManager {
-
-    public static final Comparator<Renderable> RENDERING_ORDER = Comparator
-        .comparing(Renderable::layer)
-        .thenComparingInt(Renderable::z);
 
     private Renderer entityRenderer;
     private Renderer sceneRenderer;
     private Renderer miniViewRenderer;
 
-    private final List<Renderable> renderQueue = new ArrayList<>();
+    private final RenderQueue renderQueue = new RenderQueue();
 
-    public RenderManager() {
-    }
+    public RenderManager() {}
 
     public void updateRenderers(
         GameVariantConfig gameVariantConfig,
@@ -79,25 +68,12 @@ public class RenderManager {
         }
     }
 
-    public List<Renderable> renderQueue() {
-        return Collections.unmodifiableList(renderQueue);
-    }
-
-    public void clearRenderQueue() {
-        renderQueue.clear();
-    }
-
-    public void addRenderable(Renderable renderable) {
-        renderQueue.add(renderable);
-    }
-
-    public void addRenderables(Stream<Renderable> renderables) {
-        renderables.forEach(this::addRenderable);
+    public RenderQueue renderQueue() {
+        return renderQueue;
     }
 
     public void renderFrame(long tick, boolean debugMode) {
-        renderQueue.sort(RENDERING_ORDER);
-        renderQueue.forEach(r -> {
+        renderQueue.entriesInOrder().forEach(r -> {
             switch (r.layer()) {
                 case SCENE    -> renderScene(r, tick, debugMode);
                 case OVERLAY  -> renderOverlay(r, tick);
@@ -137,7 +113,7 @@ public class RenderManager {
         }
     }
 
-    public void renderOverlay(Renderable r, long tick) {
+    private void renderOverlay(Renderable r, long tick) {
         if (miniViewRenderer != null) {
             miniViewRenderer.render(r, tick);
         }

@@ -229,14 +229,14 @@ public class GamePlayView implements GameView {
         final GameViewModel viewModel = app.ui().viewModel();
         final boolean debugMode = viewModel.debugModeOnProperty().get();
 
-        renderManager.clearRenderQueue();
+        renderManager.renderQueue().clear();
 
         final GameSession session = app.game().session();
         if (session.isHUDVisible()) {
-            renderManager.addRenderables(session.hud().renderables());
+            renderManager.renderQueue().addAll(session.hud().renderables());
         }
 
-        renderManager.addRenderables(layers.miniViewLayer().renderables());
+        renderManager.renderQueue().addAll(layers.miniViewLayer().renderables());
 
         // Add game scene renderables
         final GameScene currentGameScene = app.ui().gameScenes().optCurrentGameScene().orElse(null);
@@ -247,8 +247,8 @@ public class GamePlayView implements GameView {
                 currentGameScene,
                 layers.miniViewLayer()
             );
-            renderManager.addRenderable(currentGameScene); //TODO rethink this
-            renderManager.addRenderables(currentGameScene.renderables());
+            renderManager.renderQueue().add(currentGameScene); //TODO rethink this
+            renderManager.renderQueue().addAll(currentGameScene.renderables());
         }
 
         // Clear canvases
