@@ -36,7 +36,7 @@ public class Common_LevelContinueState extends AbstractGameState {
             lockPacAndGhosts(level.entities(), true);
         }
         else if (stateTick == continuationRules.continuePlayingTicks()) {
-            game.eventManager().publishGameEvent(new GameContinuedEvent());
+            game.eventManager().publishEvent(new GameContinuedEvent());
         }
         else if (stateTick == continuationRules.resumeHuntingTicks()) {
             lockPacAndGhosts(level.entities(), false);

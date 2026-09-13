@@ -35,7 +35,7 @@ public class PacManAllGamesNoBuilderApp extends Application {
     static final float HEIGHT_FRACTION = 0.8f; // Use 80% of screen height
 
     private GameBox gameBox;
-    private PacManGamesMasterApp game;
+    private PacManGamesMasterApp app;
     private boolean includeTests;
 
     @Override
@@ -61,7 +61,7 @@ public class PacManAllGamesNoBuilderApp extends Application {
 
     @Override
     public void start(Stage stage) {
-        game = new PacManGamesMasterApp(gameBox);
+        app = new PacManGamesMasterApp(gameBox);
 
         final Vector2i sceneSize = Ufx.computeScreenSectionSize(ASPECT_RATIO, HEIGHT_FRACTION);
         final GameUI ui = new GameUI(
@@ -71,15 +71,15 @@ public class PacManAllGamesNoBuilderApp extends Application {
         );
 
         final StartPagesView startPages = ui.viewManager().assertView(GameViewID.START_PAGES, StartPagesView.class);
-        startPages.addStartPage(game, new ArcadePacMan_StartPage());
-        startPages.addStartPage(game, new ArcadeMsPacMan_StartPage());
-        startPages.addStartPage(game, new TengenMsPacMan_StartPage());
-        startPages.addStartPage(game, new XXL_StartPage());
+        startPages.addStartPage(app, new ArcadePacMan_StartPage());
+        startPages.addStartPage(app, new ArcadeMsPacMan_StartPage());
+        startPages.addStartPage(app, new TengenMsPacMan_StartPage());
+        startPages.addStartPage(app, new XXL_StartPage());
 
-        game.watchdog().addEventListener(XXL_WorldMapManager.instance());
+        app.watchdog().addEventListener(XXL_WorldMapManager.instance());
 
-        game.setUI(ui);
-        game.showGameVariant(GameVariantID.ARCADE_PACMAN);
+        app.setUI(ui);
+        app.showGameVariant(GameVariantID.ARCADE_PACMAN);
 
         // This must happen *after* UI has been set!
         startPages.rootPane().setSelectedIndex(0);
@@ -87,8 +87,8 @@ public class PacManAllGamesNoBuilderApp extends Application {
 
     @Override
     public void stop() {
-        if (game != null) {
-            game.terminate();
+        if (app != null) {
+            app.terminate();
         }
     }
 }

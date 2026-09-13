@@ -19,7 +19,7 @@ public class ArcadePacMan_App extends Application {
 
     private GameBox gameBox;
 
-    private PacManGamesMasterApp game;
+    private PacManGamesMasterApp app;
 
     @Override
     public void init() throws Exception {
@@ -32,7 +32,7 @@ public class ArcadePacMan_App extends Application {
 
     @Override
     public void start(Stage stage) {
-        game = new GameBuilder()
+        app = new GameBuilder()
             .cartridges(ArcadePacMan_Cartridge.CARTRIDGE)
             .uiSettings(getClass().getResource("/de/amr/pacmanfx/arcade/pacman/ui.json"))
             .startPage(ArcadePacMan_StartPage::new)
@@ -41,13 +41,13 @@ public class ArcadePacMan_App extends Application {
             .build(gameBox)
             .orElse(null);
 
-        if (game != null) {
-            game.showGameVariant(GameVariantID.ARCADE_PACMAN);
+        if (app != null) {
+            app.showGameVariant(GameVariantID.ARCADE_PACMAN);
         }
     }
 
     @Override
     public void stop() {
-        if (game != null) game.terminate();
+        if (app != null) app.terminate();
     }
 }

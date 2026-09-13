@@ -53,8 +53,8 @@ public class Tengen_GameStartingState extends AbstractGameState {
 
         hud.highScore().data().setEnabled(true);
 
-        game.eventManager().publishGameEvent(new LevelCreatedEvent(level));
-        game.eventManager().publishGameEvent(new GameStartedEvent(game));
+        game.eventManager().publishEvent(new LevelCreatedEvent(level));
+        game.eventManager().publishEvent(new GameStartedEvent(game));
     }
 
     @Override

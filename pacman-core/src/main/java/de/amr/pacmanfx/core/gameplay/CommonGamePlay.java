@@ -103,7 +103,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
         if (currentLevel.number() < lastLevelNumber) {
             final GameLevel nextLevel = buildNormalLevel(game, currentLevel.number() + 1);
-            game.eventManager().publishGameEvent(new LevelCreatedEvent(nextLevel));
+            game.eventManager().publishEvent(new LevelCreatedEvent(nextLevel));
             startLevel(game, nextLevel);
         } else {
             Logger.warn("Last level ({}) reached, cannot start next level", lastLevelNumber);
@@ -128,10 +128,10 @@ public abstract class CommonGamePlay implements GamePlay {
         level.gateKeeper().unlockGhostIfPossible(game, level);
 
         if (pac.power().ends()) {
-            game.eventManager().publishGameEvent(new PacPowerEndsEvent(pac));
+            game.eventManager().publishEvent(new PacPowerEndsEvent(pac));
         }
         else if (pac.power().isFadingStart()) {
-            game.eventManager().publishGameEvent(new PacPowerStartsFadingEvent(pac));
+            game.eventManager().publishEvent(new PacPowerStartsFadingEvent(pac));
         }
 
         collisionHandler.detectCollisions(level);
@@ -172,7 +172,7 @@ public abstract class CommonGamePlay implements GamePlay {
         points.setLifetimeSec(rules.eatenGhostDisplaySeconds());
         level.entities().add(points);
 
-        game.eventManager().publishGameEvent(new GhostEatenEvent(ghost));
+        game.eventManager().publishEvent(new GhostEatenEvent(ghost));
     }
 
     // Scoring
@@ -194,7 +194,7 @@ public abstract class CommonGamePlay implements GamePlay {
             // Do not forget to clear the flag!
             scoreSystem.clearExtraLife(gameScore);
             session.setNumLives(session.numLives() + 1);
-            game.eventManager().publishGameEvent(new SpecialScoreEvent(gameScore.data().points()));
+            game.eventManager().publishEvent(new SpecialScoreEvent(gameScore.data().points()));
         }
     }
 
@@ -210,7 +210,7 @@ public abstract class CommonGamePlay implements GamePlay {
             scoreSystem.load(highScore);
             highScore.data().setEnabled(true);
         } catch (IOException e) {
-            game.eventManager().publishGameEvent(new HighScoreAccessErrorEvent(e));
+            game.eventManager().publishEvent(new HighScoreAccessErrorEvent(e));
         }
 
         gameScore.pos().set(TS, TS);
@@ -230,7 +230,7 @@ public abstract class CommonGamePlay implements GamePlay {
             if (scoringRules.isBonusAwarded(level)) {
                 activateNextBonus(game, level);
             }
-            game.eventManager().publishGameEvent(
+            game.eventManager().publishEvent(
                 new PacEatsFoodEvent(pac, frameState.energizerFound(), false, game.session().thisFrame().tick()));
         }
         else {
@@ -238,7 +238,7 @@ public abstract class CommonGamePlay implements GamePlay {
         }
 
         if (frameState.foundEdibleBonus()) {
-            game.eventManager().publishGameEvent(new BonusEatenEvent(frameState.edibleBonus()));
+            game.eventManager().publishEvent(new BonusEatenEvent(frameState.edibleBonus()));
         }
     }
 

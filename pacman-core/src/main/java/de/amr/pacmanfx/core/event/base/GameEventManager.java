@@ -8,11 +8,11 @@ import de.amr.pacmanfx.core.event.GameEvent;
 
 public interface GameEventManager {
 
-    void addGameEventSubscriber(GameEventListener listener);
+    void addSubscriber(GameEventListener listener);
 
-    void removeGameEventSubscriber(GameEventListener listener);
+    void removeSubscriber(GameEventListener listener);
 
-    void clear();
+    void removeAllSubscribers();
 
-    void publishGameEvent(GameEvent event);
+    void publishEvent(GameEvent event);
 }

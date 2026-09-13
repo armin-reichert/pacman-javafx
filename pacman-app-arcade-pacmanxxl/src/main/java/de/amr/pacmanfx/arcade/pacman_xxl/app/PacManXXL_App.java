@@ -19,7 +19,7 @@ import javafx.stage.Stage;
 public class PacManXXL_App extends Application {
 
     private GameBox gameBox;
-    private PacManGamesMasterApp game;
+    private PacManGamesMasterApp app;
 
     @Override
     public void init() {
@@ -32,7 +32,7 @@ public class PacManXXL_App extends Application {
 
     @Override
     public void start(Stage stage) {
-        game = new GameBuilder()
+        app = new GameBuilder()
             .cartridges(
                 XXL_PacMan_Cartridge.CARTRIDGE,
                 XXL_MsPacMan_Cartridge.CARTRIDGE)
@@ -42,16 +42,16 @@ public class PacManXXL_App extends Application {
             .build(gameBox)
             .orElse(null);
 
-        if (game != null) {
-            game.watchdog().addEventListener(XXL_WorldMapManager.instance());
-            game.showGameVariant(GameVariantID.ARCADE_PACMAN_XXL);
+        if (app != null) {
+            app.watchdog().addEventListener(XXL_WorldMapManager.instance());
+            app.showGameVariant(GameVariantID.ARCADE_PACMAN_XXL);
         }
     }
 
     @Override
     public void stop() {
-        if (game != null) {
-            game.terminate();
+        if (app != null) {
+            app.terminate();
         }
     }
 }

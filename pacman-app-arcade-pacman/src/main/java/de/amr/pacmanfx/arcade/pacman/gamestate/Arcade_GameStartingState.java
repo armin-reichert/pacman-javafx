@@ -40,8 +40,8 @@ public class Arcade_GameStartingState extends AbstractGameState {
 
         lockPacAndGhosts(level.entities(), true);
 
-        game.eventManager().publishGameEvent(new LevelCreatedEvent(level));
-        game.eventManager().publishGameEvent(new GameStartedEvent(game));
+        game.eventManager().publishEvent(new LevelCreatedEvent(level));
+        game.eventManager().publishEvent(new GameStartedEvent(game));
     }
 
     @Override

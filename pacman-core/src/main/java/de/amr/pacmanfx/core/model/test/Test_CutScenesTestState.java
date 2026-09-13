@@ -30,7 +30,7 @@ public class Test_CutScenesTestState extends AbstractGameState {
                 testedCutSceneNumber += 1;
                 timer().resetToIndefiniteDuration();
                 //TODO find another solution and get rid of this event type
-                game.eventManager().publishGameEvent(new GenericChangeEvent("Cut Scene Test"));
+                game.eventManager().publishEvent(new GenericChangeEvent("Cut Scene Test"));
             } else {
                 flow.enterGameState(game, CommonGameStateID.GAME_INTRO);
             }

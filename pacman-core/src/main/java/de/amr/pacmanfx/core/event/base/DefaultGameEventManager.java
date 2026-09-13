@@ -17,7 +17,7 @@ public class DefaultGameEventManager implements GameEventManager {
     private final Set<GameEventListener> subscribers = new HashSet<>();
 
     @Override
-    public void addGameEventSubscriber(GameEventListener subscriber) {
+    public void addSubscriber(GameEventListener subscriber) {
         requireNonNull(subscriber);
         final boolean added = subscribers.add(subscriber);
         if (added) {
@@ -26,7 +26,7 @@ public class DefaultGameEventManager implements GameEventManager {
     }
 
     @Override
-    public void removeGameEventSubscriber(GameEventListener subscriber) {
+    public void removeSubscriber(GameEventListener subscriber) {
         requireNonNull(subscriber);
         boolean removed = subscribers.remove(subscriber);
         if (removed) {
@@ -37,12 +37,12 @@ public class DefaultGameEventManager implements GameEventManager {
     }
 
     @Override
-    public void clear() {
+    public void removeAllSubscribers() {
         subscribers.clear();
     }
 
     @Override
-    public void publishGameEvent(GameEvent event) {
+    public void publishEvent(GameEvent event) {
         requireNonNull(event);
         if (Logger.isTraceEnabled()) {
             Logger.trace("Publish game event: {}", event);

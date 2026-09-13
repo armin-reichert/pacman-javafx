@@ -47,7 +47,7 @@ public final class PacManGamesMasterApp implements GameAppContext {
 
         @Override
         public void onStateChange(State<GameContext> oldState, State<GameContext> newState) {
-            eventManager.publishGameEvent(new GameStateChangeEvent(oldState, newState));
+            eventManager.publishEvent(new GameStateChangeEvent(oldState, newState));
         }
     }
 
@@ -170,6 +170,7 @@ public final class PacManGamesMasterApp implements GameAppContext {
 
     // GameLifecycle
 
+    @Override
     public void startGame() {
         final GameSession session = new GameSession(
             gameVariantManager.currentVariantName(),
@@ -185,6 +186,7 @@ public final class PacManGamesMasterApp implements GameAppContext {
         gameLoop.start();
     }
 
+    @Override
     public void suspendGame() {
         gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> {
             ui.viewManager().gamePlayView().disembedGameScene(gameScene);
@@ -245,7 +247,8 @@ public final class PacManGamesMasterApp implements GameAppContext {
         ui.viewModel().maze3DSettings().init(gameVariantConfig.uiConfig().worldSettings().maze());
 
         ui.spriteAnimTimer().attachAnimContainer(gameVariantConfig.spriteAnimContainer());
-        //TODO do not start here
+
+        //TODO do not start animation timer here
         ui.spriteAnimTimer().start();
 
         game = new GameContext(
@@ -258,26 +261,25 @@ public final class PacManGamesMasterApp implements GameAppContext {
         stateChangeEventMapper = new StateChangeEventMapper(game.eventManager());
 
         // Just to be sure:
-        game.eventManager().clear();
-        game.eventManager().addGameEventSubscriber(ui);
-        game.eventManager().addGameEventSubscriber(new PacEatingEventHandler(game));
-        game.eventManager().addGameEventSubscriber(new PacPowerEventHandler(game));
+        game.eventManager().removeAllSubscribers();
+
+        game.eventManager().addSubscriber(ui);
+        game.eventManager().addSubscriber(new PacEatingEventHandler(game));
+        game.eventManager().addSubscriber(new PacPowerEventHandler(game));
 
         gameVariantConfig.playConfig().gameFlow().addStateChangeListener(stateChangeEventMapper);
     }
 
     private void exitGameVariant(GameVariantConfig gameVariantConfig) {
-        requireNonNull(gameVariantConfig);
-
         gameVariantConfig.playConfig().gameFlow().removeStateChangeListener(stateChangeEventMapper);
-        gameVariantConfig.spriteAnimContainer().clear();
 
         gameVariantConfig.uiConfig().unload(this);
 
+        gameVariantConfig.spriteAnimContainer().clear();
         ui.spriteAnimTimer().detachAnimationContainer();
         ui.soundManager().dispose();
 
-        game.eventManager().clear();
+        game.eventManager().removeAllSubscribers();
         game = null;
     }
 }

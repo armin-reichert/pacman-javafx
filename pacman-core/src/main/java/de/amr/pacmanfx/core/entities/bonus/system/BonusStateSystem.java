@@ -36,7 +36,7 @@ public class BonusStateSystem {
                 if (expired || tourComplete) {
                     state.setEdibleStateExpired(expired);
                     setInactive(bonus);
-                    game.eventManager().publishGameEvent(new BonusExpiredEvent(bonus));
+                    game.eventManager().publishEvent(new BonusExpiredEvent(bonus));
                 }
             }
 
@@ -44,7 +44,7 @@ public class BonusStateSystem {
                 final boolean expired = state.timer().hasExpired();
                 if (expired) {
                     setInactive(bonus);
-                    game.eventManager().publishGameEvent(new BonusExpiredEvent(bonus));
+                    game.eventManager().publishEvent(new BonusExpiredEvent(bonus));
                 }
             }
         }

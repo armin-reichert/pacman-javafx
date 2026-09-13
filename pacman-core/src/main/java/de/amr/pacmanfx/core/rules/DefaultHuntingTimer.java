@@ -61,7 +61,7 @@ public class DefaultHuntingTimer extends TickTimer implements HuntingTimer {
 
         startPhase(game.variantPlayConfig().rules(), levelNumber, 0);
 
-        game.eventManager().publishGameEvent(new HuntingPhaseStartedEvent(
+        game.eventManager().publishEvent(new HuntingPhaseStartedEvent(
             game,
             phaseIndex,
             currentHuntingPhase())

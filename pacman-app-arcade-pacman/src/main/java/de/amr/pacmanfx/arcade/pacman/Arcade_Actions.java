@@ -35,7 +35,7 @@ public final class Arcade_Actions {
                 app.ui().soundManager().voice().stop();
                 app.ui().soundManager().setEnabled(true);
                 coinMechanism.insertCoin();
-                app.game().eventManager().publishGameEvent(new CreditAddedEvent(1));
+                app.game().eventManager().publishEvent(new CreditAddedEvent(1));
                 app.game().variantPlayConfig().gameFlow().enterGameState(app.game(), CommonGameStateID.GAME_PREPARATION);
             }
 
