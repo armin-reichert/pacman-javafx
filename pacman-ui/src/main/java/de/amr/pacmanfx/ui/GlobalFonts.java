@@ -13,20 +13,23 @@ public enum GlobalFonts {
     MONOSPACED    ("/de/amr/pacmanfx/ui/fonts/fantasquesansmono-bold.otf", 12),
     PAC_FONT_GOOD ("/de/amr/pacmanfx/ui/fonts/PacfontGood.ttf", 8);
 
+    static {
+        loadAllFonts();
+    }
+
+    private static void loadAllFonts() {
+        final ResourceManager resourceManager = () -> GlobalFonts.class;
+        for (var gf : values()) {
+            gf.font = resourceManager.loadFont(gf.path, gf.defaultSize);
+        }
+    }
+
     GlobalFonts(String path, float defaultSize) {
         this.path = path;
         this.defaultSize = defaultSize;
     }
 
-    private void loadFont() {
-        final ResourceManager resourceManager = this::getClass;
-        font = resourceManager.loadFont(path, defaultSize);
-    }
-
     public Font font() {
-        if (font == null) {
-            loadFont();
-        }
         return font;
     }
 
@@ -36,6 +39,5 @@ public enum GlobalFonts {
 
     private final String path;
     private final float defaultSize;
-
     private Font font;
 }
