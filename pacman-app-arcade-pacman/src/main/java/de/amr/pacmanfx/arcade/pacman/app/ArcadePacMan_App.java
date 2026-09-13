@@ -7,7 +7,6 @@ package de.amr.pacmanfx.arcade.pacman.app;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_StartPage;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.game.CartridgeRepository;
 import de.amr.pacmanfx.game.GameBox;
 import de.amr.pacmanfx.game.GameBuilder;
 import de.amr.pacmanfx.game.PacManGamesMasterApp;
@@ -22,9 +21,8 @@ public class ArcadePacMan_App extends Application {
     private PacManGamesMasterApp app;
 
     @Override
-    public void init() throws Exception {
+    public void init() {
         gameBox = new GameBox(
-            new CartridgeRepository(),
             new CoinMechanism(99),
             new TimelineGameClock()
         );

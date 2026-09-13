@@ -13,6 +13,9 @@ import de.amr.pacmanfx.ui.input.Input;
 import org.tinylog.Logger;
 
 import java.io.File;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 import static java.util.Objects.requireNonNull;
 
@@ -24,14 +27,13 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameBox implements Disposable {
 
-    private final CartridgeRepository cartridgeRepository;
+    private final Set<Cartridge> cartridges = new HashSet<>(6);
     private final Input input = new Input();
     private final CoinMechanism coinMechanism;
     private final GameClock clock;
     private final DirectoryWatchdog watchdog;
 
-    public GameBox(CartridgeRepository cartridgeRepository, CoinMechanism coinMechanism, GameClock clock) {
-        this.cartridgeRepository = requireNonNull(cartridgeRepository);
+    public GameBox(CoinMechanism coinMechanism, GameClock clock) {
         this.coinMechanism = requireNonNull(coinMechanism);
         this.clock = requireNonNull(clock);
         clock.setTargetFrameRate(GameConstants.SIMULATION_FPS);
@@ -50,8 +52,39 @@ public class GameBox implements Disposable {
         watchdog.dispose();
     }
 
-    public CartridgeRepository cartridgeRepository() {
-        return cartridgeRepository;
+    private Optional<Cartridge> findCartridgeByName(String name) {
+        return cartridges.stream().filter(cartridge -> cartridge.id().name().equals(name)).findFirst();
+    }
+
+    public void insertCartridges(Cartridge... cartridgesToInsert) {
+        for (var cartridge : cartridgesToInsert) {
+            if (cartridge == null) {
+                Logger.error("NULL cartridge detected! Are you kidding me?");
+            } else {
+                final boolean added = cartridges.add(cartridge);
+                if (added) {
+                    Logger.info("Cartridge {} inserted into machine", cartridge.id().name());
+                } else {
+                    Logger.info("Cartridge {} already inserted", cartridge.id().name());
+                }
+            }
+        }
+    }
+
+    public Cartridge cartridgeByName(String name) {
+        requireNonNull(name);
+        return findCartridgeByName(name).orElseThrow(
+            () -> {
+                final String errorMessage = "No cartridge for game variant %s has been inserted!".formatted(name);
+                Logger.error(errorMessage);
+                return new IllegalArgumentException(errorMessage);
+            }
+        );
+    }
+
+    public boolean containsCartridgeWithName(String name) {
+        requireNonNull(name);
+        return findCartridgeByName(name).isPresent();
     }
 
     public CoinMechanism coinMechanism() {

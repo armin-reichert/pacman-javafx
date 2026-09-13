@@ -14,7 +14,6 @@ import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_StartPage;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_WorldMapManager;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.game.CartridgeRepository;
 import de.amr.pacmanfx.game.GameBox;
 import de.amr.pacmanfx.game.GameBuilder;
 import de.amr.pacmanfx.game.PacManGamesMasterApp;
@@ -34,11 +33,7 @@ public class PacManAllGamesApp extends Application {
     @Override
     public void init() {
         includeTests = Boolean.parseBoolean(getParameters().getNamed().get("include_tests"));
-        gameBox = new GameBox(
-            new CartridgeRepository(),
-            new CoinMechanism(99),
-            new TimelineGameClock()
-        );
+        gameBox = new GameBox(new CoinMechanism(99), new TimelineGameClock());
     }
 
     @Override

@@ -23,17 +23,14 @@ public class DefaultGameVariantManager implements GameVariantManager {
 
     private final GameBox gameBox;
 
-    private final CartridgeRepository cartridges;
-
     private final Map<String, GameVariantConfig> configsByName = new HashMap<>();
 
     private final StringProperty selectedVariantName = new SimpleStringProperty();
 
     private final GameViewModel viewModel;
 
-    public DefaultGameVariantManager(GameBox gameBox, CartridgeRepository cartridges, GameViewModel viewModel) {
+    public DefaultGameVariantManager(GameBox gameBox, GameViewModel viewModel) {
         this.gameBox = requireNonNull(gameBox);
-        this.cartridges = requireNonNull(cartridges);
         this.viewModel = requireNonNull(viewModel);
     }
 
@@ -91,7 +88,7 @@ public class DefaultGameVariantManager implements GameVariantManager {
     }
 
     private GameVariantConfig createGameVariant(GameBox gameBox, String variantName, boolean includeInteractiveTests) {
-        final Cartridge cartridge = cartridges.cartridgeByName(variantName);
+        final Cartridge cartridge = gameBox.cartridgeByName(variantName);
         final var variant = new GameVariantConfig(gameBox, cartridge);
         if (includeInteractiveTests) {
             final GameFlowController gameFlow = variant.playConfig().gameFlow();
