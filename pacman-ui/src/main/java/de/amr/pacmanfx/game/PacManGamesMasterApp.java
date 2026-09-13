@@ -236,10 +236,8 @@ public final class PacManGamesMasterApp implements GameAppContext {
     private void enterGameVariant(GameVariantConfig gameVariantConfig) {
         requireNonNull(gameVariantConfig);
 
-        //TODO rethink this
         final GameVariantUIConfig uiConfig = gameVariantConfig.uiConfig();
-        uiConfig.init(this);
-        uiConfig.loadSounds(ui.soundManager());
+        uiConfig.load(this);
 
         // Update game scene manager
         gameSceneManager.setGameSceneConfig(uiConfig.gameSceneConfig());
@@ -272,10 +270,10 @@ public final class PacManGamesMasterApp implements GameAppContext {
         requireNonNull(gameVariantConfig);
 
         gameVariantConfig.playConfig().gameFlow().removeStateChangeListener(stateChangeEventMapper);
-        gameVariantConfig.uiConfig().unloadSounds(ui.soundManager());
-        gameVariantConfig.uiConfig().dispose();
-
         gameVariantConfig.spriteAnimContainer().clear();
+
+        gameVariantConfig.uiConfig().unload(this);
+
         ui.spriteAnimTimer().detachAnimationContainer();
         ui.soundManager().dispose();
 

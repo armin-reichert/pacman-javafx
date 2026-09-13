@@ -62,40 +62,19 @@ public class ArcadePacMan_UIConfig implements GameVariantUIConfig {
     private final Map<Named, Object> extensions = new HashMap<>();
 
     @Override
-    public void init(GameAppContext app) {
+    public void load(GameAppContext app) {
         loadAssets();
         renderConfig = new ArcadePacMan_RenderConfig(assets);
         renderConfig.addAssets();
         assets.freeze();
+        loadSounds(app.ui().soundManager());
         extensions.put(Arcade_GameExtensions.ACTIONS, new Arcade_Actions());
     }
 
     @Override
-    public void loadSounds(SoundManager soundManager) {
-        for (SoundManager.SoundEntry entry : SOUND_ENTRIES) {
-            soundManager.add(entry);
-        }
-        soundEffects = new GameSoundEffects(soundManager);
-        soundEffects.setMunchingSoundDelay((byte) 9);
-        soundEffects.registerSirens(
-            RM.url("sound/siren_1.mp3"),
-            RM.url("sound/siren_2.mp3"),
-            RM.url("sound/siren_3.mp3"),
-            RM.url("sound/siren_4.mp3")
-        );
-        soundEffects.setSirenVolume(0.33f);
-    }
-
-    @Override
-    public void unloadSounds(SoundManager soundManager) {
-        Logger.info("Unload sounds");
-        for (SoundManager.SoundEntry entry : SOUND_ENTRIES) {
-            soundManager.remove(entry);
-        }
-        if (soundEffects != null) {
-            soundEffects.dispose();
-            soundEffects = null;
-        }
+    public void unload(GameAppContext app) {
+        unloadSounds(app.ui().soundManager());
+        dispose();
     }
 
     @Override
@@ -162,5 +141,31 @@ public class ArcadePacMan_UIConfig implements GameVariantUIConfig {
         assets = new AssetMap();
         assets.addAsset("app_icon", RM.loadImage("graphics/icons/pacman.png"));
         assets.addAsset("color.game_over_message", ARCADE_RED);
+    }
+
+    private void loadSounds(SoundManager soundManager) {
+        for (SoundManager.SoundEntry entry : SOUND_ENTRIES) {
+            soundManager.add(entry);
+        }
+        soundEffects = new GameSoundEffects(soundManager);
+        soundEffects.setMunchingSoundDelay((byte) 9);
+        soundEffects.registerSirens(
+            RM.url("sound/siren_1.mp3"),
+            RM.url("sound/siren_2.mp3"),
+            RM.url("sound/siren_3.mp3"),
+            RM.url("sound/siren_4.mp3")
+        );
+        soundEffects.setSirenVolume(0.33f);
+    }
+
+    private void unloadSounds(SoundManager soundManager) {
+        Logger.info("Unload sounds");
+        for (SoundManager.SoundEntry entry : SOUND_ENTRIES) {
+            soundManager.remove(entry);
+        }
+        if (soundEffects != null) {
+            soundEffects.dispose();
+            soundEffects = null;
+        }
     }
 }

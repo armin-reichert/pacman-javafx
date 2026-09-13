@@ -19,11 +19,9 @@ import java.util.Optional;
 
 public interface GameVariantUIConfig extends Disposable {
 
-    void init(GameAppContext app);
+    void load(GameAppContext app);
 
-    void loadSounds(SoundManager soundManager);
-
-    void unloadSounds(SoundManager soundManager);
+    void unload(GameAppContext app);
 
     /**
      * @return the game scene configuration mapping game states to scenes.

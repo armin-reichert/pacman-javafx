@@ -66,6 +66,7 @@ public class XXL_OptionMenu extends OptionMenu {
         chaseAnimation.scalingProperty().bind(scalingProperty());
     }
 
+    //TODO make animation work again!
     public void draw(long tick) {
         menuRenderer.render(this, tick);
         chaseAnimation.draw(tick);
@@ -171,8 +172,7 @@ public class XXL_OptionMenu extends OptionMenu {
         stopAnimation();
 
         final GameVariantUIConfig uiConfig = newVariant.uiConfig();
-        uiConfig.init(app);
-        uiConfig.loadSounds(app.ui().soundManager());
+        uiConfig.load(app);
 
         chaseAnimation.setGameVariant(game, newVariant, canvas);
         startAnimation();
