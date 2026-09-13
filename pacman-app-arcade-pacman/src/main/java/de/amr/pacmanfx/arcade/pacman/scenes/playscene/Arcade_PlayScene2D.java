@@ -75,7 +75,6 @@ public class Arcade_PlayScene2D extends GameScene implements Arcade_PlayScene2D_
     @Override
     public void onTick(GameContext game) {
         game.session().optLevel().ifPresent(level -> {
-            ActorAnimationManager.ensureActorAnimationsCreated(app(), level);
             optSoundEffects().ifPresent(sfx -> sfx.playAmbientGameLevelSound(game(), level));
         });
     }
@@ -141,6 +140,7 @@ public class Arcade_PlayScene2D extends GameScene implements Arcade_PlayScene2D_
         } else {
             acceptNormalLevel(level);
         }
+        ActorAnimationManager.ensureActorAnimationsCreated(app(), level);
     }
 
     private void acceptNormalLevel(GameLevel level) {
