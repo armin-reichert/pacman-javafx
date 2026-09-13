@@ -47,11 +47,11 @@ public final class GameLoop {
         game.session().newFrameState(clock.currentTick());
         game.variantPlayConfig().systems().updateSystem().updateEntities(game);
         game.variantPlayConfig().gameFlow().update(game);
-        app.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(game));
+        app.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(game));
     }
 
     private void render() {
-        final GameViewManager views = app.ui().views();
+        final GameViewManager views = app.ui().viewManager();
         try {
             if (views.isSelected(GameViewID.GAMEPLAY)) {
                 views.gamePlayView().render(renderManager, clock.currentTick());
@@ -63,7 +63,7 @@ public final class GameLoop {
 
     private void handleFatalError(Throwable reason) {
         app.suspendGame();
-        final String errorMessage = app.ui().translations().translate("error.oh_no_my_program");
+        final String errorMessage = app.ui().translationManager().translate("error.oh_no_my_program");
         app.ui().shortMessage(Duration.seconds(60), errorMessage + "\n" + reason.getMessage());
         Logger.error(reason, "*** KA-TAS-TROOPHE! SOMETHING VERY BAD HAPPENED!");
     }

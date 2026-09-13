@@ -63,7 +63,7 @@ public class HelpInfo {
     }
 
     private String translate(String key, Object... args) {
-        return appContext.ui().translations().translate(key, args);
+        return appContext.ui().translationManager().translate(key, args);
     }
 
     public Pane createPane(GameAppContext appContext, Color backgroundColor, Font font) {

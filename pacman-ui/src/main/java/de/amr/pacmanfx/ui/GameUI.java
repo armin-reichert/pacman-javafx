@@ -17,7 +17,6 @@ import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationTimer;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.settings.ui.GameUISettings;
@@ -57,9 +56,8 @@ public class GameUI implements GameEventListener {
     public static final GameUISettings DEFAULT_UI_SETTINGS = loadDefaultSettings();
 
     private final GameWindow window;
-    private final GameViewManager views;
-    private final GameSceneManager gameScenes;
-    private final TranslationManager translations;
+    private final GameViewManager viewManager;
+    private final TranslationManager translationManager;
     private final SoundManager soundManager;
     private final SpriteAnimationTimer spriteAnimationTimer;
     private final GameViewModel viewModel;
@@ -73,31 +71,54 @@ public class GameUI implements GameEventListener {
 
         spriteAnimationTimer = new SpriteAnimationTimer();
         window = new GameWindow(stage, width, height);
-        gameScenes = new GameSceneManager();
-        translations = new CommonTranslationManager();
-
-        views = createGameViews();
-        views.gamePlayView().populateDashboard(dashboardFactory, settings.dashboard(), translations);
 
         soundManager = new SoundManager();
         soundManager.muteProperty().bind(viewModel.muteProperty());
+
+        translationManager = new CommonTranslationManager();
+
+        viewManager = createViewManager();
+
+        //TODO Check this
+        viewManager.gamePlayView().populateDashboard(dashboardFactory, settings.dashboard(), translationManager);
     }
 
-    public GameWindow window() {
-        return window;
+    @Override
+    public void onGameEvent(GameEvent gameEvent) {
+        boolean forceGameSceneReload = false;
+        switch (gameEvent) {
+            case LevelCreatedEvent e -> viewManager.gamePlayView().onLevelCreated(e.level());
+            case GameStateChangeEvent e -> {
+                if (CommonGameStateID.GAME_LEVEL_COMPLETE.hasSameNameAs(e.newState())) {
+                    viewManager.gamePlayView().onLevelCompleted();
+                }
+            }
+            case GenericChangeEvent _ -> forceGameSceneReload = true;
+            case HighScoreAccessErrorEvent failure -> {
+                shortMessage(Duration.seconds(5), "Accessing high score failed!\n%s", failure.reason().getMessage());
+                return;
+            }
+            default -> {}
+        }
+        app.gameSceneManager().updateGameSceneAndForceReload(app, forceGameSceneReload);
+        app.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(gameEvent));
     }
 
-    public GameViewManager views() {
-        return views;
+
+    public void connectWithApp(GameAppContext app) {
+        this.app = requireNonNull(app);
+
+        viewManager.setGameApp(app);
+        window.setGameApp(app);
+
+        connectKeyboard(app.input().keyboard());
+        bindCommonActions(app.commonActions());
+
+        Logger.info("UI connected with application");
+        Logger.info(actionBindings);
     }
 
-    public GameSceneManager gameScenes() {
-        return gameScenes;
-    }
-
-    public TranslationManager translations() {
-        return translations;
-    }
+    // --- Accessors ---
 
     public SoundManager soundManager() {
         return soundManager;
@@ -107,25 +128,28 @@ public class GameUI implements GameEventListener {
         return spriteAnimationTimer;
     }
 
+    public TranslationManager translationManager() {
+        return translationManager;
+    }
+
+    public GameViewManager viewManager() {
+        return viewManager;
+    }
+
     public GameViewModel viewModel() {
         return viewModel;
     }
 
-    public void setApp(GameAppContext app) {
-        this.app = requireNonNull(app);
-
-        gameScenes.setGameApp(app);
-        views.setGameApp(app);
-        window.setGameApp(app);
-
-        connectKeyboard(app);
-        bindCommonActions(app);
+    public GameWindow window() {
+        return window;
     }
 
     public void terminate() {
         spriteAnimationTimer.stop();
         window.mainScene().flashMessageManager().stopAnimationTimer();
     }
+
+    // --- General commands ---
 
     /**
      * Displays a flash message.
@@ -154,71 +178,44 @@ public class GameUI implements GameEventListener {
         window.mainScene().flashMessageManager().clearMessage();
     }
 
-    public void setFullScreenMode(boolean fullScreen) {
-        window.stage().setFullScreen(fullScreen);
-    }
-
-    @Override
-    public void onGameEvent(GameEvent gameEvent) {
-        boolean forceGameSceneReload = false;
-        switch (gameEvent) {
-            case LevelCreatedEvent e -> views.gamePlayView().onLevelCreated(e.level());
-            case GameStateChangeEvent e -> {
-                if (CommonGameStateID.GAME_LEVEL_COMPLETE.hasSameNameAs(e.newState())) {
-                    views.gamePlayView().onLevelCompleted();
-                }
-            }
-            case GenericChangeEvent _ -> forceGameSceneReload = true;
-            case HighScoreAccessErrorEvent failure -> {
-                shortMessage(Duration.seconds(5), "Accessing high score failed!\n%s", failure.reason().getMessage());
-                return;
-            }
-            default -> {}
-        }
-        gameScenes.updateGameSceneAndForceReload(forceGameSceneReload);
-        gameScenes.optCurrentGameScene().ifPresent(gameScene -> gameScene.onGameEvent(gameEvent));
-    }
-
     // private
 
-    private GameViewManager createGameViews() {
-        final GameViewManager views = new GameViewManager();
-        views.registerView(GameViewID.START_PAGES, new StartPagesView());
-        views.registerView(GameViewID.GAMEPLAY, new GamePlayView());
-        views.registerView(GameViewID.EDITOR, new EditorView());
-        return views;
+    private static GameViewManager createViewManager() {
+        final var manager = new GameViewManager();
+        manager.registerView(GameViewID.START_PAGES, new StartPagesView());
+        manager.registerView(GameViewID.GAMEPLAY, new GamePlayView());
+        manager.registerView(GameViewID.EDITOR, new EditorView());
+        return manager;
     }
 
-    private void connectKeyboard(GameAppContext appContext) {
-        final Keyboard keyboard = appContext.input().keyboard();
-        keyboard.enabledProperty().bind(views.currentViewIDProperty().map(GameUI::isViewAcceptingKeyboardInput));
-        keyboard.addStateListener(_ -> handleKeyboardStateChange());
+    private void connectKeyboard(Keyboard keyboard) {
+        keyboard.enabledProperty().bind(viewManager.currentViewIDProperty().map(GameUI::viewAcceptsKeyboardInput));
+        keyboard.addStateListener(this::handleKeyboardStateChange);
         keyboard.filterKeyEventsFrom(window.mainScene());
     }
 
-    private void handleKeyboardStateChange() {
-        if (app.input().keyboard().anyNormalKeyPressed()) { // ignore modifier state change
-            final GameViewID currentViewID = views.currentViewID();
-            if (isViewAcceptingKeyboardInput(currentViewID)) {
+    private void handleKeyboardStateChange(Keyboard keyboard) {
+        if (keyboard.anyNormalKeyPressed()) { // ignore modifier state change
+            final GameViewID currentViewID = viewManager.currentViewID();
+            if (viewAcceptsKeyboardInput(currentViewID)) {
                 // Check for matching "global" action first, if none, let current view handle it.
                 if (actionBindings.executeMatchingAction(app).isEmpty()) {
-                    views.assertView(currentViewID).onInput(app);
+                    viewManager.assertView(currentViewID).onInput(app);
                 }
             }
         }
     }
 
-    private static boolean isViewAcceptingKeyboardInput(GameViewID viewID) {
+    //TODO improve
+    private static boolean viewAcceptsKeyboardInput(GameViewID viewID) {
         return viewID == GameViewID.START_PAGES || viewID == GameViewID.GAMEPLAY;
     }
 
-    private void bindCommonActions(GameAppContext appContext) {
-        final CommonGameActions actions = appContext.commonActions();
+    private void bindCommonActions(CommonGameActions actions) {
         final Set<ActionKeyBinding> bindings = actions.bindings();
         actionBindings.selectAnyMatchingBinding(actions.uiSettingsActions().actionToggleKeyboardMonitor(), bindings);
         actionBindings.selectAnyMatchingBinding(actions.uiSettingsActions().actionEnterFullScreen(), bindings);
         actionBindings.selectAnyMatchingBinding(actions.simulationActions().actionToggleMuted(), bindings);
         actionBindings.selectAnyMatchingBinding(actions.editorActions().actionOpenEditor(), bindings);
-        Logger.info(actionBindings);
     }
 }

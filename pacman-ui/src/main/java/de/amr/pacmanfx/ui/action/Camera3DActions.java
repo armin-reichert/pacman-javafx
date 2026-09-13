@@ -93,11 +93,11 @@ public class Camera3DActions {
     }
 
     private boolean is3DPlaySceneActive(GameAppContext app) {
-        return app.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D);
+        return app.gameSceneManager().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D);
     }
 
     private String translatedPerspectiveMessage(GameAppContext app, PerspectiveID perspectiveID) {
-        final TranslationManager translations = app.ui().translations();
+        final TranslationManager translations = app.ui().translationManager();
         return translations.translate(
             "camera_perspective",
             translations.translate("perspective_id_" + perspectiveID.name())

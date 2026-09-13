@@ -22,6 +22,7 @@ import de.amr.pacmanfx.ui.RenderManager;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.uilib.PacMan3DModel;
 import javafx.application.Platform;
@@ -58,6 +59,8 @@ public final class PacManGamesMasterApp implements GameAppContext {
 
     private final RenderManager renderManager;
 
+    private final GameSceneManager gameSceneManager;
+
     private GameUI ui;
 
     private GameContext game;
@@ -69,6 +72,7 @@ public final class PacManGamesMasterApp implements GameAppContext {
     public PacManGamesMasterApp(GameBox gameBox) {
         this.gameBox = requireNonNull(gameBox);
         renderManager = new RenderManager();
+        gameSceneManager = new GameSceneManager();
         gameLoop = new GameLoop(this, gameBox.clock(), renderManager);
         actions = new CommonGameActions();
     }
@@ -77,7 +81,7 @@ public final class PacManGamesMasterApp implements GameAppContext {
         this.ui = requireNonNull(ui);
         createVariantManager(ui);
 
-        ui.setApp(this);
+        ui.connectWithApp(this);
     }
 
     public void showGameVariant(GameVariantID variantID) {
@@ -85,9 +89,9 @@ public final class PacManGamesMasterApp implements GameAppContext {
         gameVariantManager.selectVariant(variantID.name());
 
         //TODO rethink this
-        ui.views().selectStartPagesView();
-        ui.views().startPagesView().rootPane().setSelectedIndex(0);
-        ui.views().gamePlayView().dashboard().setAppContext(this);
+        ui.viewManager().selectStartPagesView();
+        ui.viewManager().startPagesView().rootPane().setSelectedIndex(0);
+        ui.viewManager().gamePlayView().dashboard().setAppContext(this);
 
         ui.window().show(this);
 
@@ -107,13 +111,13 @@ public final class PacManGamesMasterApp implements GameAppContext {
     }
 
     @Override
-    public GameContext game() {
-        return game;
+    public GameSceneManager gameSceneManager() {
+        return gameSceneManager;
     }
 
     @Override
-    public GameLoop gameLoop() {
-        return gameLoop;
+    public GameContext game() {
+        return game;
     }
 
     @Override
@@ -176,15 +180,15 @@ public final class PacManGamesMasterApp implements GameAppContext {
         game.variantPlayConfig().gamePlay().startSession(game);
 
         ui.window().mainScene().connect(game.session());
-        ui.views().selectGamePlayView();
+        ui.viewManager().selectGamePlayView();
 
         gameLoop.start();
     }
 
     public void suspendGame() {
-        ui.gameScenes().optCurrentGameScene().ifPresent(gameScene -> {
-            ui.views().gamePlayView().disembedGameScene(gameScene);
-            ui.gameScenes().currentGameSceneProperty().set(null);
+        gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> {
+            ui.viewManager().gamePlayView().disembedGameScene(gameScene);
+            gameSceneManager.currentGameSceneProperty().set(null);
         });
         ui.soundManager().stopAll();
         gameLoop.stop();
@@ -236,6 +240,9 @@ public final class PacManGamesMasterApp implements GameAppContext {
         uiConfig.init();
         uiConfig.loadSounds(ui.soundManager());
         uiConfig.connectApp(this);
+
+        // Update game scene manager
+        gameSceneManager.setGameSceneConfig(uiConfig.gameSceneConfig());
 
         ui.viewModel().maze3DSettings().init(gameVariantConfig.uiConfig().worldSettings().maze());
 

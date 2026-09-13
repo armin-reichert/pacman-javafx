@@ -94,7 +94,7 @@ public class FlyerStartPage implements StartPage {
         else if (keyboard.isKeyPressed(KeyCode.S)) {
             if (app != null) {
                 app.ui().soundManager().voice().stop();
-                app.ui().shortMessage(app.ui().translations().translate("flash.shut_up"));
+                app.ui().shortMessage(app.ui().translationManager().translate("flash.shut_up"));
             }
         }
     }

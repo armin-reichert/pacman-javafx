@@ -43,7 +43,7 @@ public class DS_JoypadKeyBindings extends GameDashboardSection {
                 buttonKey(joypad, JoypadButton.LEFT),
                 buttonKey(joypad, JoypadButton.RIGHT))
         );
-        setText(appContext.ui().translations().translate("infobox.joypad.title"));
+        setText(appContext.ui().translationManager().translate("infobox.joypad.title"));
     }
 
     private static String buttonKey(Joypad joypad, JoypadButton button) {

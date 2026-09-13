@@ -81,9 +81,9 @@ public class EditorActions {
     }
 
     private Optional<TileMapEditor> openMapEditor(GameAppContext app) {
-        final EditorView editorView = app.ui().views().assertView(GameViewID.EDITOR, EditorView.class);
+        final EditorView editorView = app.ui().viewManager().assertView(GameViewID.EDITOR, EditorView.class);
         editorView.ensureEditorCreated(app);
-        if (!app.ui().views().trySelectEditorView(app)) {
+        if (!app.ui().viewManager().trySelectEditorView(app)) {
             app.ui().shortMessage("Cannot open the map editor.");
             return Optional.empty();
         }

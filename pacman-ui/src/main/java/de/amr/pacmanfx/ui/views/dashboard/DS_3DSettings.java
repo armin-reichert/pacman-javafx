@@ -54,7 +54,7 @@ public class DS_3DSettings extends GameDashboardSection {
         addDynamicInfo("Sub-scene Size", () -> subSceneSizeInfo(currentSubSceneFX(app)));
 
         addDynamicInfo("Scene Size", () -> sceneSizeInfo(
-            app.ui().gameScenes().optCurrentGameScene().orElse(null),
+            app.gameSceneManager().optCurrentGameScene().orElse(null),
             app.game().session().optLevel().orElse(null)
         ));
 
@@ -118,13 +118,13 @@ public class DS_3DSettings extends GameDashboardSection {
         cbWireframeMode .setSelected(vm.common3DSettings().drawModeProperty().get() == DrawMode.LINE);
 
         // Mini view
-        final MiniPlaySceneView miniView = app.ui().views().gamePlayView().layers().miniViewLayer();
+        final MiniPlaySceneView miniView = app.ui().viewManager().gamePlayView().layers().miniViewLayer();
         cbMiniViewVisible.setSelected(vm.miniViewSettings().activeProperty.getValue());
         sliderMiniViewHeight.setDisable(miniView.isMoving());
     }
 
     private static SubScene currentSubSceneFX(GameAppContext app) {
-        return app.ui().gameScenes().optCurrentGameScene().flatMap(GameSceneController::optSubSceneFX).orElse(null);
+        return app.gameSceneManager().optCurrentGameScene().flatMap(GameSceneController::optSubSceneFX).orElse(null);
     }
 
     private static String subSceneSizeInfo(SubScene subScene) {

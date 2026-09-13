@@ -14,6 +14,7 @@ import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounter3DViewSystem;
 import de.amr.pacmanfx.ui.gamescene.d3.PlayScene3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
+import de.amr.pacmanfx.ui.views.GameViewManager;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.tinylog.Logger;
@@ -24,73 +25,70 @@ import static java.util.Objects.requireNonNull;
 
 public class GameSceneManager {
 
-    private GameAppContext app;
-
     private final ObjectProperty<GameScene> currentGameScene = new SimpleObjectProperty<>();
 
-    public GameSceneManager() {
+    private GameSceneConfig gameSceneConfig;
+
+    public GameSceneManager() {}
+
+    public void setViewManager(GameViewManager viewManager) {
         currentGameScene.addListener((_, _, newGameScene) -> {
             if (newGameScene != null) {
-                app.ui().views().gamePlayView().embedGameScene(newGameScene);
+                viewManager.gamePlayView().embedGameScene(newGameScene);
             }
         });
     }
 
-    public void setGameApp(GameAppContext app) {
-        this.app = requireNonNull(app);
-    }
-
-    public Optional<GameScene> optCurrentGameScene() {
-        return Optional.ofNullable(currentGameScene.get());
+    public void setGameSceneConfig(GameSceneConfig gameSceneConfig) {
+        this.gameSceneConfig = requireNonNull(gameSceneConfig);
     }
 
     public ObjectProperty<GameScene> currentGameSceneProperty() {
         return currentGameScene;
     }
 
-    public void forceGameSceneUpdate() {
-        updateGameSceneAndForceReload(true);
+    public Optional<GameScene> optCurrentGameScene() {
+        return Optional.ofNullable(currentGameScene.get());
     }
 
-    public void updateGameSceneAndForceReload(boolean forceReload) {
-        final GameVariantUIConfig variantConfig = app.variantManager().currentVariantConfig().uiConfig();
+    public GameScene currentGameScene() {
+        return currentGameScene.get();
+    }
+
+    public void forceGameSceneUpdate(GameAppContext app) {
+        updateGameSceneAndForceReload(app, true);
+    }
+
+    public void updateGameSceneAndForceReload(GameAppContext app, boolean forceReload) {
+        final GameVariantUIConfig uiConfig = app.variantManager().currentVariantConfig().uiConfig();
         final GameContext game = app.game();
         final GameSession session = game.session();
-        final GameScene currentGameScene = optCurrentGameScene().orElse(null);
-        final GameScene nextGameScene = variantConfig.gameSceneConfig().selectGameScene(app).orElse(null);
+        final GameScene nextGameScene = uiConfig.gameSceneConfig().selectGameScene(app).orElse(null);
 
         if (nextGameScene == null) {
             throw new IllegalStateException("Could not determine next game scene");
         }
 
-        if (nextGameScene == currentGameScene) {
+        if (nextGameScene == currentGameScene()) {
             if (!forceReload) {
                 return;
             }
             Logger.info("No game scene change but reload requested");
         }
 
-        app.ui().views().gamePlayView().replaceGameScene(currentGameScene, nextGameScene);
+        app.ui().viewManager().gamePlayView().replaceGameScene(currentGameScene(), nextGameScene);
 
         //TODO rethink this
-        session.optLevel().ifPresent(_ -> handle2D3DSwitch(variantConfig, game, currentGameScene, nextGameScene));
+        session.optLevel().ifPresent(_ -> handle2D3DSwitch(uiConfig, game, currentGameScene(), nextGameScene));
 
         currentGameSceneProperty().set(nextGameScene);
     }
 
-    /**
-     * Checks whether the given game scene matches the given ID.
-     *
-     * @param gameScene game scene
-     * @param sceneID scene identifier
-     * @return {@code true} if the active scene has the given ID
-     */
-    public boolean hasGameSceneID(GameScene gameScene, Named sceneID) {
+    public boolean hasGameSceneID(GameSceneConfig gameSceneConfig, GameScene gameScene, Named sceneID) {
         requireNonNull(gameScene);
         requireNonNull(sceneID);
-
-        final GameVariantUIConfig config = app.variantManager().currentVariantConfig().uiConfig();
-        return config.gameSceneConfig().gameSceneHasID(gameScene, sceneID);
+        requireNonNull(sceneID);
+        return gameSceneConfig.gameSceneHasID(gameScene, sceneID);
     }
 
     /**
@@ -103,7 +101,7 @@ public class GameSceneManager {
         requireNonNull(sceneID);
 
         final GameScene currentGameScene = currentGameSceneProperty().get();
-        return currentGameScene != null && hasGameSceneID(currentGameScene, sceneID);
+        return currentGameScene != null && hasGameSceneID(gameSceneConfig, currentGameScene, sceneID);
     }
 
     // 2D-3D scene switch

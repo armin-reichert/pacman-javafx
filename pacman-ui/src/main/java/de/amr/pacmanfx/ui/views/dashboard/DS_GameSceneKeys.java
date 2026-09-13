@@ -22,7 +22,7 @@ public class DS_GameSceneKeys extends GameDashboardSection {
     @Override
     public void update(GameAppContext app) {
         super.update(app);
-        app.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> updateInfo(app, gameScene));
+        app.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> updateInfo(app, gameScene));
     }
 
     private void updateInfo(GameAppContext app, GameScene gameScene) {
@@ -37,7 +37,7 @@ public class DS_GameSceneKeys extends GameDashboardSection {
                     .forEach(entry -> {
                         final KeyCombination keyCombination = entry.getKey();
                         final GameAction action = entry.getValue();
-                        final String localizedActionText = app.ui().translations().translate(action.resourceBundleKey());
+                        final String localizedActionText = app.ui().translationManager().translate(action.resourceBundleKey());
                         addRow(keyCombination.getDisplayText(), createLabel(localizedActionText, action.isEnabled(app)));
                     });
             }

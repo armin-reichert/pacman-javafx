@@ -52,7 +52,7 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
 
         final GameUI ui = app.ui();
         final GameContext game = app.game();
-        final TranslationManager translations = ui.translations();
+        final TranslationManager translations = ui.translationManager();
         final Game3DSettingsVM settings3D = ui.viewModel().common3DSettings();
 
         addLocalizedTitleItem(this, translations, "context_menu.scene_display");

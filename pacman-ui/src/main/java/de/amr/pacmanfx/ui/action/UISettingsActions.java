@@ -40,37 +40,36 @@ public class UISettingsActions {
         actionEnterFullScreen = new GameAction("enter_fullscreen") {
             @Override
             public void execute(GameAppContext app) {
-                app.ui().setFullScreenMode(true);
+                app.ui().window().setFullScreen(true);
             }
         };
 
         actionShowHelp = new GameAction("show_help") {
             @Override
             public void execute(GameAppContext app) {
-                app.ui().views().gamePlayView().showHelp(app);
+                app.ui().viewManager().gamePlayView().showHelp(app);
             }
 
             @Override
             public boolean isEnabled(GameAppContext app) {
-                final GameSceneManager gameScenes = app.ui().gameScenes();
                 final String variantName = app.variantManager().currentVariantName();
                 final boolean isArcadeGame = GameVariantID.isArcadeGameName(variantName);
                 return isArcadeGame &&
-                    (gameScenes.currentGameSceneHasID(CommonGameSceneID.INTRO_SCENE)
-                        || gameScenes.currentGameSceneHasID(CommonGameSceneID.START_SCENE)
-                        || gameScenes.currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_2D));
+                      (app.gameSceneManager().currentGameSceneHasID(CommonGameSceneID.INTRO_SCENE)
+                    || app.gameSceneManager().currentGameSceneHasID(CommonGameSceneID.START_SCENE)
+                    || app.gameSceneManager().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_2D));
             }
         };
 
         actionToggleDashboard = new GameAction("toggle_dashboard") {
             @Override
             public void execute(GameAppContext app) {
-                app.ui().views().gamePlayView().dashboard().toggleVisibility();
+                app.ui().viewManager().gamePlayView().dashboard().toggleVisibility();
             }
 
             @Override
             public boolean isEnabled(GameAppContext app) {
-                return app.ui().views().isSelected(GameViewID.GAMEPLAY);
+                return app.ui().viewManager().isSelected(GameViewID.GAMEPLAY);
             }
         };
 
@@ -94,8 +93,8 @@ public class UISettingsActions {
                 final BooleanProperty miniViewActiveProperty = app.ui().viewModel().miniViewSettings().activeProperty;
                 toggleBooleanProperty(miniViewActiveProperty);
                 // Message?
-                if (!app.ui().gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D)) {
-                    final String msg = app.ui().translations().translate(
+                if (!app.gameSceneManager().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D)) {
+                    final String msg = app.ui().translationManager().translate(
                         miniViewActiveProperty.get() ? "flash.pip_on" : "flash.pip_off");
                     app.ui().shortMessage(msg);
                 }
@@ -109,23 +108,22 @@ public class UISettingsActions {
                 final BooleanProperty view3DEnabledProperty = app.ui().viewModel().common3DSettings().view3DEnabledProperty();
                 toggleBooleanProperty(view3DEnabledProperty);
                 final boolean enabled = view3DEnabledProperty.get();
-                if (!isPlaySceneRunning(app)) {
-                    app.ui().shortMessage(app.ui().translations().translate(enabled ? "flash.use_3D_scene" : "flash.use_2D_scene"));
+                if (!isPlaySceneRunning(app.gameSceneManager())) {
+                    app.ui().shortMessage(app.ui().translationManager().translate(enabled ? "flash.use_3D_scene" : "flash.use_2D_scene"));
                 }
                 if (isLevelPlaying(game.state())) {
-                    app.ui().gameScenes().forceGameSceneUpdate();
+                    app.gameSceneManager().forceGameSceneUpdate(app);
                 }
             }
 
             @Override
             public boolean isEnabled(GameAppContext app) {
-                return app.ui().views().isSelected(GameViewID.GAMEPLAY);
+                return app.ui().viewManager().isSelected(GameViewID.GAMEPLAY);
             }
 
-            private boolean isPlaySceneRunning(GameAppContext app) {
-                final GameSceneManager gameScenes = app.ui().gameScenes();
-                return gameScenes.currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_2D)
-                    || gameScenes.currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D);
+            private boolean isPlaySceneRunning(GameSceneManager gameSceneManager) {
+                return gameSceneManager.currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_2D)
+                    || gameSceneManager.currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D);
             }
 
             private boolean isLevelPlaying(AbstractGameState gameState) {

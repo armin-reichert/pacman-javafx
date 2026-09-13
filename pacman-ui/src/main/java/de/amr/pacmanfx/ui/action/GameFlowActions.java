@@ -39,8 +39,8 @@ public class GameFlowActions {
         actionQuit = new GameAction("quit") {
             @Override
             public void execute(GameAppContext app) {
-                Logger.info("Call QUIT handler for {}", app.ui().views().assertCurrentView());
-                app.ui().views().assertCurrentView().onQuit();
+                Logger.info("Call QUIT handler for {}", app.ui().viewManager().assertCurrentView());
+                app.ui().viewManager().assertCurrentView().onQuit();
             }
         };
 

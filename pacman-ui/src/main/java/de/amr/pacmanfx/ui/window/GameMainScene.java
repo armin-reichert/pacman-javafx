@@ -5,10 +5,10 @@
 package de.amr.pacmanfx.ui.window;
 
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
+import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.views.GameView;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Pos;
@@ -53,12 +53,12 @@ public class GameMainScene extends Scene {
 
     public void setGameApp(GameAppContext app) {
         // Delegate mouse scroll events to current game scene
-        setOnScroll(e -> app.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
+        setOnScroll(e -> app.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> gameScene.onScroll(e)));
 
         rootPane().backgroundProperty().bind(Bindings.createObjectBinding(
-            () -> selectBackground(app.ui()),
-            app.ui().views().currentViewIDProperty(),
-            app.ui().gameScenes().currentGameSceneProperty()
+            () -> selectBackground(app.gameSceneManager()),
+            app.ui().viewManager().currentViewIDProperty(),
+            app.gameSceneManager().currentGameSceneProperty()
         ));
 
         statusIconBox.setGameApp(app);
@@ -85,8 +85,8 @@ public class GameMainScene extends Scene {
         gameViewHolder.getChildren().setAll(gameView.rootPane());
     }
 
-    private Background selectBackground(GameUI ui) {
-        return ui.gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D)
+    private Background selectBackground(GameSceneManager gameSceneManager) {
+        return gameSceneManager.currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D)
             ? randomArrayEntry(GlobalAssets.GRADIENT_BACKGROUNDS)
             : GlobalAssets.BACKGROUND_PAC_MAN_WALLPAPER;
     }

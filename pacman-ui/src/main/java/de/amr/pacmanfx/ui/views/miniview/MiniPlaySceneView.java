@@ -10,8 +10,8 @@ import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.rendering.Renderable;
-import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
+import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.vm.GameViewModel;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
@@ -88,8 +88,8 @@ public class MiniPlaySceneView extends HBox implements Renderable {
         setTranslateY(-canvas.getHeight());
     }
 
-    public void update(GameUI ui) {
-        final boolean is3DPlaySceneActive = ui.gameScenes().currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D);
+    public void update(GameSceneManager gameSceneManager) {
+        final boolean is3DPlaySceneActive = gameSceneManager.currentGameSceneHasID(CommonGameSceneID.PLAY_SCENE_3D);
         final boolean shouldBeVisible = is3DPlaySceneActive && viewModel.miniViewSettings().activeProperty.get();
         if (shouldBeVisible) {
             if (!expanded()) {

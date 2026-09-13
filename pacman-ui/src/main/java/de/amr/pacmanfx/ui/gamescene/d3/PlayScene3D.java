@@ -85,7 +85,7 @@ public class PlayScene3D extends GameScene
 
         final GameViewModel viewModel = app.ui().viewModel();
 
-        textPicker = new RandomTextPicker(app.ui().translations().textBundle(), "game.over");
+        textPicker = new RandomTextPicker(app.ui().translationManager().textBundle(), "game.over");
 
         camera = new PerspectiveCamera(true);
         perspectiveManager = new PerspectiveManager(camera);
@@ -143,8 +143,8 @@ public class PlayScene3D extends GameScene
     @Override
     public void onBeforeEmbedded() {
         // TODO: reconsider whether scores need recreation here (variant/font change?)
-        final String scoreTitle = app().ui().translations().translate("score.score");
-        final String highScoreTitle = app().ui().translations().translate("score.high_score");
+        final String scoreTitle = app().ui().translationManager().translate("score.score");
+        final String highScoreTitle = app().ui().translationManager().translate("score.high_score");
         replaceScoresView(scoreTitle, highScoreTitle);
     }
 
@@ -273,7 +273,7 @@ public class PlayScene3D extends GameScene
             scoresView.showScore(score.data().points(), score.data().levelNumber());
         } else {
             scoresView.showTextForScore(
-                app().ui().translations().translate("score.game_over"),
+                app().ui().translationManager().translate("score.game_over"),
                 app().variantManager().currentVariantConfig().uiConfig().assets().color("color.game_over_message"));
         }
 

@@ -15,7 +15,6 @@ import de.amr.pacmanfx.ui.action.core.GameActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
-import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.settings.ui.DashboardSectionSettings;
 import de.amr.pacmanfx.ui.views.GameView;
@@ -177,8 +176,7 @@ public class GamePlayView implements GameView {
         layers.miniViewLayer().setLevel(level);
 
         // game scene size might have changed: re-embed
-        final GameSceneManager gameSceneManager = app.ui().gameScenes();
-        gameSceneManager.optCurrentGameScene().ifPresent(this::embedGameScene);
+        app.gameSceneManager().optCurrentGameScene().ifPresent(this::embedGameScene);
     }
 
     public void onLevelCompleted() {
@@ -197,7 +195,7 @@ public class GamePlayView implements GameView {
     public void onInput(GameAppContext app) {
         // First look for a matching action of the play view itself; if none found, delegate to the current game scene.
         if (actionBindings.executeMatchingAction(app).isEmpty()) {
-            app.ui().gameScenes().optCurrentGameScene().ifPresent(GameScene::onInput);
+            app.gameSceneManager().optCurrentGameScene().ifPresent(GameScene::onInput);
         }
     }
 
@@ -221,8 +219,8 @@ public class GamePlayView implements GameView {
 
     @Override
     public void onQuit() {
-        app.ui().gameScenes().optCurrentGameScene().ifPresent(GameScene::onQuit);
-        app.ui().views().selectStartPagesView();
+        app.gameSceneManager().optCurrentGameScene().ifPresent(GameScene::onQuit);
+        app.ui().viewManager().selectStartPagesView();
     }
 
     public void render(RenderManager renderManager, long tick) {
@@ -239,7 +237,7 @@ public class GamePlayView implements GameView {
         renderManager.renderQueue().addAll(layers.miniViewLayer().renderables());
 
         // Add game scene renderables
-        final GameScene currentGameScene = app.ui().gameScenes().optCurrentGameScene().orElse(null);
+        final GameScene currentGameScene = app.gameSceneManager().optCurrentGameScene().orElse(null);
         if (currentGameScene != null) {
             renderManager.updateRenderers(
                 app.currentGameVariantPlayConfig(),
@@ -264,7 +262,7 @@ public class GamePlayView implements GameView {
             dashboard.update(app);
         }
 
-        layers.miniViewLayer().update(app.ui());
+        layers.miniViewLayer().update(app.gameSceneManager());
     }
 
     @Override

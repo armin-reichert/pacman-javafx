@@ -14,6 +14,7 @@ import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.RenderManager;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
+import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.input.Input;
 
 public interface GameAppContext {
@@ -27,8 +28,6 @@ public interface GameAppContext {
     boolean runAction(GameAction gameAction);
 
     CommonGameActions commonActions();
-
-    GameLoop gameLoop();
 
     RenderManager renderManager();
 
@@ -47,6 +46,8 @@ public interface GameAppContext {
     GameContext game();
 
     GameUI ui();
+
+    GameSceneManager gameSceneManager();
 
     Input input();
 

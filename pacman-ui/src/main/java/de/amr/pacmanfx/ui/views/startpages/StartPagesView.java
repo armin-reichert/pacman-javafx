@@ -125,6 +125,6 @@ public class StartPagesView implements GameView {
 
     private String composeTitle() {
         final String nameOfTheGame = currentStartPage().map(StartPage::title).orElse("Unknown game");
-        return appContext != null ? appContext.ui().translations().translate("startpage.title.template", nameOfTheGame) : nameOfTheGame;
+        return appContext != null ? appContext.ui().translationManager().translate("startpage.title.template", nameOfTheGame) : nameOfTheGame;
     }
 }

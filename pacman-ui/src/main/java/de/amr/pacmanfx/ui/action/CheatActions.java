@@ -50,7 +50,7 @@ public final class CheatActions {
                 final GameSession session = app.game().session();
                 session.setNumLives(session.numLives() + 3);
                 session.cheats().notifyCheatUsed();
-                final String msg = app.ui().translations().translate("flash.cheat_add_lives", session.numLives());
+                final String msg = app.ui().translationManager().translate("flash.cheat_add_lives", session.numLives());
                 app.ui().shortMessage(msg);
             }
 
@@ -259,7 +259,7 @@ public final class CheatActions {
 
         cheats.pacUsingAutopilotProperty().set(auto);
 
-        final String message = ui.translations().translate(auto ? "flash.autopilot_on" : "flash.autopilot_off");
+        final String message = ui.translationManager().translate(auto ? "flash.autopilot_on" : "flash.autopilot_off");
         final Media voice = auto ? GlobalAssets.VoiceID.AUTOPILOT_ON.media() : GlobalAssets.VoiceID.AUTOPILOT_OFF.media();
 
         ui.shortMessage(message);
@@ -272,7 +272,7 @@ public final class CheatActions {
 
         cheats.pacImmuneProperty().set(immune);
 
-        final String message = ui.translations().translate(immune ? "flash.player_immunity_on" : "flash.player_immunity_off");
+        final String message = ui.translationManager().translate(immune ? "flash.player_immunity_on" : "flash.player_immunity_off");
         final Media voice = immune ? GlobalAssets.VoiceID.IMMUNITY_ON.media() : GlobalAssets.VoiceID.IMMUNITY_OFF.media();
 
         ui.shortMessage(message);

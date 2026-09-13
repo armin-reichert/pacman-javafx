@@ -114,7 +114,7 @@ public class GameBuilder {
     }
 
     private void addStartPages(GameAppContext appContext) {
-        final StartPagesView startPagesView = appContext.ui().views().assertView(GameViewID.START_PAGES, StartPagesView.class);
+        final StartPagesView startPagesView = appContext.ui().viewManager().assertView(GameViewID.START_PAGES, StartPagesView.class);
         for (var factory : startPageFactories) {
             final StartPage page = factory.get();
             if (page != null) {
