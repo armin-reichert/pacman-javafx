@@ -95,6 +95,10 @@ public class GameSceneManager {
         return currentGameScene != null && hasGameSceneID(gameSceneConfig, currentGameScene, sceneID);
     }
 
+    public void removeCurrentGameScene() {
+        currentGameSceneProperty().set(null);
+    }
+
     // 2D-3D scene switch
 
     private void handle2D3DSwitch(

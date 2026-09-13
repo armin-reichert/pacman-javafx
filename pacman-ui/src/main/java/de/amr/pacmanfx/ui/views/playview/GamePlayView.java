@@ -281,7 +281,7 @@ public class GamePlayView implements GameView {
         embedGameScene(nextGameScene);
     }
 
-    public void embedGameScene(GameScene gameScene) {
+    private void embedGameScene(GameScene gameScene) {
         requireNonNull(gameScene);
 
         final GameMainScene mainScene = app.ui().window().mainScene();

@@ -186,11 +186,9 @@ public final class PacManGamesMasterApp implements GameAppContext {
 
     @Override
     public void suspendGame() {
-        gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> {
-            ui.viewManager().gamePlayView().disembedGameScene(gameScene);
-            gameSceneManager.currentGameSceneProperty().set(null);
-        });
         ui.soundManager().stopAll();
+        gameSceneManager.optCurrentGameScene().ifPresent(gameScene -> ui.viewManager().onGameSuspended(gameScene));
+        gameSceneManager.removeCurrentGameScene();
         gameLoop.stop();
     }
 
