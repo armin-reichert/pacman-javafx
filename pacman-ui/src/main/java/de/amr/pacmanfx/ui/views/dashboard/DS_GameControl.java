@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.ui.views.dashboard;
 
-import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameVariantID;
@@ -45,10 +44,9 @@ public class DS_GameControl extends GameDashboardSection {
 
     @Override
     public void setGameApp(GameAppContext app) {
-        final CoinMechanism coinMechanism = app.game().coinMechanism();
         final CommonGameActions actions = app.commonActions();
 
-        spinnerCredit = intSpinner("Credit", 0, coinMechanism.maxCoins(), credit);
+        spinnerCredit = intSpinner("Credit", 0, 99, credit);
 
         choiceBoxInitialLives    = choiceBox("Initial Lives", new Integer[] {3, 5});
 

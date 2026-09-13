@@ -35,7 +35,7 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.tengenmspacman.rules.TengenMsPacMan_GameRules;
 import de.amr.pacmanfx.tengenmspacman.sprites.NES_WorldMapColorScheme;
-import de.amr.pacmanfx.ui.GlobalAssets;
+import de.amr.pacmanfx.ui.GlobalFonts;
 import de.amr.pacmanfx.uilib.entities.messageview.comp.MessageViewStyleComp;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
@@ -377,7 +377,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
     private MessageViewStyleComp createMessageViewStyleComp(GameSession session, NES_WorldMapColorScheme colorScheme) {
         final var style = new MessageViewStyleComp();
-        style.setMessageFont(GlobalAssets.Fonts.ARCADE.font());
+        style.setMessageFont(GlobalFonts.ARCADE.font());
         style.setMessageColor(type -> computeMessageColor(type, session, colorScheme));
         return style;
     }

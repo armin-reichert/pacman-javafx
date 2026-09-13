@@ -5,7 +5,7 @@ package de.amr.pacmanfx.arcade.pacman.scenes.bootscene;
 
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.rendering.Renderable;
-import de.amr.pacmanfx.ui.GlobalAssets;
+import de.amr.pacmanfx.ui.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
@@ -54,7 +54,7 @@ public class Arcade_BootScene_Renderer extends BaseRenderer implements SpriteRen
     }
 
     private void renderHexCodeBlock(HexDigitsBlock block) {
-        final Font arcade8 = Ufx.deriveFont(GlobalAssets.Fonts.ARCADE.font(), scaled(TS));
+        final Font arcade8 = Ufx.deriveFont(GlobalFonts.ARCADE.font(), scaled(TS));
         ctx.setFill(ARCADE_WHITE);
         ctx.setFont(arcade8);
         for (int row = 0; row < block.height(); ++row) {

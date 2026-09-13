@@ -89,9 +89,7 @@ public final class PacManGamesMasterApp implements GameAppContext {
         gameVariantManager.selectVariant(variantID.name());
 
         //TODO rethink this
-        ui.viewManager().selectStartPagesView();
-        ui.viewManager().startPagesView().rootPane().setSelectedIndex(0);
-        ui.viewManager().gamePlayView().dashboard().setAppContext(this);
+        ui.viewManager().onGameVariantChanged();
 
         ui.window().show(this);
 

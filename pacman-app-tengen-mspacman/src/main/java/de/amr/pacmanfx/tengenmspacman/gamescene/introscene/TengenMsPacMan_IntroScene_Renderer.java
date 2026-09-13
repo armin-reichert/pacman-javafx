@@ -14,7 +14,7 @@ import de.amr.pacmanfx.tengenmspacman.gamescene.introscene.TengenMsPacMan_IntroS
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
-import de.amr.pacmanfx.ui.GlobalAssets;
+import de.amr.pacmanfx.ui.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
@@ -67,7 +67,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer implements 
             return;
         }
 
-        final Font arcade8 = Ufx.deriveFont(GlobalAssets.Fonts.ARCADE.font(), scaled(8));
+        final Font arcade8 = Ufx.deriveFont(GlobalFonts.ARCADE.font(), scaled(8));
 
         ctx.save();
         ctx.setFont(arcade8);

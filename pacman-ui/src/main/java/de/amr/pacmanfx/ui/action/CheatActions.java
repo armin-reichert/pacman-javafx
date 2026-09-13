@@ -14,7 +14,7 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.GlobalAssets;
+import de.amr.pacmanfx.ui.VoiceID;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -260,7 +260,7 @@ public final class CheatActions {
         cheats.pacUsingAutopilotProperty().set(auto);
 
         final String message = ui.translationManager().translate(auto ? "flash.autopilot_on" : "flash.autopilot_off");
-        final Media voice = auto ? GlobalAssets.VoiceID.AUTOPILOT_ON.media() : GlobalAssets.VoiceID.AUTOPILOT_OFF.media();
+        final Media voice = auto ? VoiceID.AUTOPILOT_ON.media() : VoiceID.AUTOPILOT_OFF.media();
 
         ui.shortMessage(message);
         ui.soundManager().voice().playAfterSec(1, voice);
@@ -273,7 +273,7 @@ public final class CheatActions {
         cheats.pacImmuneProperty().set(immune);
 
         final String message = ui.translationManager().translate(immune ? "flash.player_immunity_on" : "flash.player_immunity_off");
-        final Media voice = immune ? GlobalAssets.VoiceID.IMMUNITY_ON.media() : GlobalAssets.VoiceID.IMMUNITY_OFF.media();
+        final Media voice = immune ? VoiceID.IMMUNITY_ON.media() : VoiceID.IMMUNITY_OFF.media();
 
         ui.shortMessage(message);
         ui.soundManager().voice().playAfterSec(1, voice);

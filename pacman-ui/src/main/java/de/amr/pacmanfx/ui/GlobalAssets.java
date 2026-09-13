@@ -22,58 +22,12 @@ public final class GlobalAssets {
 
     public static final String GAME_STYLESHEET = RESOURCE_ROOT + "css/game.css";
 
-    public static final ResourceManager RES_MGR = () -> GlobalAssets.class;
-
-    public enum Fonts {
-        ARCADE        ("fonts/emulogic.ttf", 8),
-        HANDWRITING   ("fonts/Molle-Italic.ttf", 9),
-        MONOSPACED    ("fonts/fantasquesansmono-bold.otf", 12),
-        PAC_FONT_GOOD ("fonts/PacfontGood.ttf", 8);
-
-        Fonts(String path, double size) {
-            font = RES_MGR.loadFont(RESOURCE_ROOT + path, size);
-        }
-
-        public javafx.scene.text.Font font() {
-            return font;
-        }
-
-        public javafx.scene.text.Font font(double size) {
-            return javafx.scene.text.Font.font(font.getFamily(), size);
-        }
-
-        private final javafx.scene.text.Font font;
-    }
-
-    public enum VoiceID {
-        AUTOPILOT_ON       ("sound/voice/autopilot-on.mp3"),
-        AUTOPILOT_OFF      ("sound/voice/autopilot-off.mp3"),
-        IMMUNITY_ON        ("sound/voice/immunity-on.mp3"),
-        IMMUNITY_OFF       ("sound/voice/immunity-off.mp3"),
-        EXPLAIN_GAME_START ("sound/voice/press-key.mp3");
-
-        VoiceID(String path) {
-            media = RES_MGR.loadMedia(path);
-        }
-
-        public Media media() {
-            return media;
-        }
-
-        private final Media media;
-    }
+    private static final ResourceManager RES_MGR = () -> GlobalAssets.class;
 
     public static final Background BACKGROUND_PAC_MAN_WALLPAPER = Ufx.createImageBackground(
         RES_MGR.loadImage(RESOURCE_ROOT + "graphics/pacman_wallpaper.png"));
 
     public static final Background[] GRADIENT_BACKGROUNDS = EggradientSamples.backgrounds();
-
-    static {
-        Logger.info("Loading predefined fonts");
-        for (var predefinedFont : Fonts.values()) {
-            Logger.info(predefinedFont.font());
-        }
-    }
 
     public static GenericWorldMapColorScheme enhanceContrast(WorldSettings worldSettings, GenericWorldMapColorScheme colorScheme) {
         final Color wallFillColor = Color.valueOf(colorScheme.wallFill());

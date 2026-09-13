@@ -17,7 +17,7 @@ import de.amr.pacmanfx.core.rendering.ColoredRect;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
-import de.amr.pacmanfx.ui.GlobalAssets;
+import de.amr.pacmanfx.ui.GlobalFonts;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
@@ -59,7 +59,7 @@ public class TengenMsPacMan_BootScene extends GameScene {
 
         tengenPresentsText = new TextDisplay();
         tengenPresentsText.data().setText(TENGEN_PRESENTS);
-        tengenPresentsText.data().setFont(GlobalAssets.Fonts.ARCADE.font());
+        tengenPresentsText.data().setFont(GlobalFonts.ARCADE.font());
     }
 
     @Override

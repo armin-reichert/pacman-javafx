@@ -28,7 +28,7 @@ import de.amr.pacmanfx.core.rules.DefaultHuntingTimer;
 import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.core.steering.RouteGuidedSteering;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
-import de.amr.pacmanfx.ui.GlobalAssets;
+import de.amr.pacmanfx.ui.GlobalFonts;
 import de.amr.pacmanfx.uilib.entities.messageview.comp.MessageViewStyleComp;
 import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
 import org.tinylog.Logger;
@@ -269,7 +269,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         messageView.pos().set(cx, cy);
 
         final var style = new MessageViewStyleComp();
-        style.setMessageFont(GlobalAssets.Fonts.ARCADE.font());
+        style.setMessageFont(GlobalFonts.ARCADE.font());
         style.setMessageColor(type -> switch (type) {
             case NO_MESSAGE -> null; //TODO delete this message type
             case READY -> ArcadePalette.ARCADE_YELLOW;

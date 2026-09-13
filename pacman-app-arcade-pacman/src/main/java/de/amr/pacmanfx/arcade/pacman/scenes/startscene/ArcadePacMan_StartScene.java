@@ -8,7 +8,7 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.entities.TextDisplay;
 import de.amr.pacmanfx.core.rendering.Renderable;
-import de.amr.pacmanfx.ui.GlobalAssets;
+import de.amr.pacmanfx.ui.GlobalFonts;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
@@ -33,8 +33,8 @@ public class ArcadePacMan_StartScene extends GameScene {
         super(app);
         setComp(SceneCanvasRenderingComp.class, new SceneCanvasRenderingComp());
 
-        final Font arcade6 = GlobalAssets.Fonts.ARCADE.font(6);
-        final Font arcade8 = GlobalAssets.Fonts.ARCADE.font(8);
+        final Font arcade6 = GlobalFonts.ARCADE.font(6);
+        final Font arcade8 = GlobalFonts.ARCADE.font(8);
 
         addText("PUSH START BUTTON",       ARCADE_ORANGE, arcade8, tilesPx(6),  tilesPx(17));
         addText("1 PLAYER ONLY",           ARCADE_CYAN,   arcade8, tilesPx(8),  tilesPx(21));

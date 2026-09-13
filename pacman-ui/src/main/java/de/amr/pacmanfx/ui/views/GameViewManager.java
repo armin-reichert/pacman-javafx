@@ -70,6 +70,11 @@ public final class GameViewManager {
         return (T) view;
     }
 
+    public void onGameVariantChanged() {
+        selectStartPagesView();
+        startPagesView().rootPane().setSelectedIndex(0);
+    }
+
     public ObjectProperty<GameViewID> currentViewIDProperty() {
         return currentViewID;
     }

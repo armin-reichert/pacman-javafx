@@ -30,7 +30,7 @@ import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
-import de.amr.pacmanfx.ui.GlobalAssets;
+import de.amr.pacmanfx.ui.GlobalFonts;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
@@ -269,7 +269,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
             messageView,
             level3D.root(),
             center,
-            GlobalAssets.Fonts.ARCADE.font(),
+            GlobalFonts.ARCADE.font(),
             level3D.animationManager().registry(),
             type,
             args);

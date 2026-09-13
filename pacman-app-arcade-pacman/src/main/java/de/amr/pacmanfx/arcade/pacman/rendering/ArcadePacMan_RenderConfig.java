@@ -24,6 +24,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
+import de.amr.pacmanfx.ui.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
@@ -76,7 +77,7 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
             "HIGH SCORE",
             ARCADE_WHITE,
             Color.GRAY,
-            GlobalAssets.Fonts.ARCADE.font(),
+            GlobalFonts.ARCADE.font(),
             "CREDIT %2d"
         );
     }

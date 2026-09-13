@@ -29,7 +29,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
-import de.amr.pacmanfx.ui.GlobalAssets;
+import de.amr.pacmanfx.ui.VoiceID;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
@@ -155,7 +155,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
             animController.playSelected(ghost);
         }
 
-        soundManager().voice().playAfterSec(1, GlobalAssets.VoiceID.EXPLAIN_GAME_START.media());
+        soundManager().voice().playAfterSec(1, VoiceID.START_HINT.media());
     }
 
     private void createMarquee() {

@@ -121,6 +121,8 @@ public class GamePlayView implements GameView {
 
         contextMenuManager = new ContextMenuManager(app, app.ui().window().mainScene());
         rootPane.setOnContextMenuRequested(contextMenuManager);
+
+        dashboard.setAppContext(app);
     }
 
     private void installResizeHandler() {

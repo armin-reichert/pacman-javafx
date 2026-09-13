@@ -23,7 +23,7 @@ import de.amr.pacmanfx.tengenmspacman.model.BoosterMode;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
-import de.amr.pacmanfx.ui.GlobalAssets;
+import de.amr.pacmanfx.ui.GlobalFonts;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.entities.hud.comp.HUD_Style;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
@@ -203,7 +203,7 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
 
     private void drawClapperBoard(Clapperboard clapperboard) {
         TengenMsPacMan_ClapperboardAnimationSystem.sprite(clapperboard).ifPresent(sprite -> {
-            final Font arcade8 = Ufx.deriveFont(GlobalAssets.Fonts.ARCADE.font(), scaled(8));
+            final Font arcade8 = Ufx.deriveFont(GlobalFonts.ARCADE.font(), scaled(8));
             double numberX = clapperboard.pos().x() + 8, numberY = clapperboard.pos().y() + 18; // baseline
             drawSpriteCentered(sprite, clapperboard.pos().bodyCenter());
             // over-paint number from sprite sheet

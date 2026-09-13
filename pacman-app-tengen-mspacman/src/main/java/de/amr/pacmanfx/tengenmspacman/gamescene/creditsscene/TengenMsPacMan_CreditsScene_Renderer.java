@@ -7,7 +7,7 @@ package de.amr.pacmanfx.tengenmspacman.gamescene.creditsscene;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
-import de.amr.pacmanfx.ui.GlobalAssets;
+import de.amr.pacmanfx.ui.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
@@ -86,7 +86,7 @@ public class TengenMsPacMan_CreditsScene_Renderer extends BaseRenderer {
         drawHorizontalBar(ctx, scaling(),NES_Palette.color(0x20), NES_Palette.color(0x13), width, TS, 20);
         drawHorizontalBar(ctx, scaling(),NES_Palette.color(0x20), NES_Palette.color(0x13), width, TS, 212);
 
-        final Font arcade8 = Ufx.deriveFont(GlobalAssets.Fonts.ARCADE.font(), scaled(8));
+        final Font arcade8 = Ufx.deriveFont(GlobalFonts.ARCADE.font(), scaled(8));
         ctx.setFont(arcade8);
         switch (creditsScene.displayMode) {
             case ORIGINAL_AUTHORS -> {

@@ -15,7 +15,7 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
-import de.amr.pacmanfx.ui.GlobalAssets;
+import de.amr.pacmanfx.ui.GlobalFonts;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -361,7 +361,7 @@ public class PlayScene3D extends GameScene
         }
         rightScore.reqComp(ScoreViewComp.class).titleDisplay().setText(rightTitle);
 
-        final Font arcade8 = Ufx.deriveFont(GlobalAssets.Fonts.ARCADE.font(), 8);
+        final Font arcade8 = Ufx.deriveFont(GlobalFonts.ARCADE.font(), 8);
         scoresView = new ScoresView(leftScore, rightScore);
         scoresView.setFont(arcade8);
 

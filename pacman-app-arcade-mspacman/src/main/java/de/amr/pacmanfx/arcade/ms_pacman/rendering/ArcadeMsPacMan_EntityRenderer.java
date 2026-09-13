@@ -16,7 +16,7 @@ import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.*;
-import de.amr.pacmanfx.ui.GlobalAssets;
+import de.amr.pacmanfx.ui.GlobalFonts;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.entities.hud.comp.HUD_Style;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
@@ -176,7 +176,7 @@ public class ArcadeMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
         ClapperboardAnimationSystem.sprite(clapperboard).ifPresent(sprite -> {
             drawSpriteCentered(sprite, clapperboard.pos().bodyCenter());
 
-            final Font arcade8 = Ufx.deriveFont(GlobalAssets.Fonts.ARCADE.font(), scaled(8));
+            final Font arcade8 = Ufx.deriveFont(GlobalFonts.ARCADE.font(), scaled(8));
             // Draw number and title
             final String number = clapperboard.inscription().number();
             final String text = clapperboard.inscription().text();
@@ -197,7 +197,7 @@ public class ArcadeMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
     private void drawMidwayCopyright(Copyright copyright) {
         final float x = copyright.pos().x();
         final float y = copyright.pos().y();
-        final Font arcade8 = Ufx.deriveFont(GlobalAssets.Fonts.ARCADE.font(), scaled(8));
+        final Font arcade8 = Ufx.deriveFont(GlobalFonts.ARCADE.font(), scaled(8));
         ctx.drawImage(copyright.image().image(), scaled(x), scaled(y + 2), scaled(tilesPx(4) - 2), scaled(tilesPx(4)));
         ctx.setFont(arcade8);
         ctx.setFill(ARCADE_RED);

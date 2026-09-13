@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.scenes.introscene;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.ui.GlobalAssets;
+import de.amr.pacmanfx.ui.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
@@ -36,7 +36,7 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer {
             return;
         }
 
-        final Font arcade8 = Ufx.deriveFont(GlobalAssets.Fonts.ARCADE.font(), scaled(8));
+        final Font arcade8 = Ufx.deriveFont(GlobalFonts.ARCADE.font(), scaled(8));
         ctx.setFont(arcade8);
         fillText(TITLE, ARCADE_ORANGE, TITLE_X, TITLE_Y);
 

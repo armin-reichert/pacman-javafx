@@ -26,7 +26,7 @@ import de.amr.pacmanfx.tengenmspacman.gamestate.Tengen_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.MessageAnimation;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConfig;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
-import de.amr.pacmanfx.ui.GlobalAssets;
+import de.amr.pacmanfx.ui.GlobalFonts;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.text.Font;
@@ -104,7 +104,7 @@ public interface TengenMsPacMan_PlayScene2D_GameEventHandler extends DefaultGame
             //TODO This does not belong here!
             if (messageAnimation != null) {
                 // Compute exact message size and wrap position at right border
-                final Font font = GlobalAssets.Fonts.ARCADE.font();
+                final Font font = GlobalFonts.ARCADE.font();
                 final String gameOverText = TengenMsPacMan_RenderConfig.MESSAGE_TEXTS.get(MessageType.GAME_OVER);
                 final double width = BaseRenderer.textWidth(gameOverText, font);
                 final double wrapX = gameScene().reqCanvasRendering().unscaledWidth() + 0.5 * width;

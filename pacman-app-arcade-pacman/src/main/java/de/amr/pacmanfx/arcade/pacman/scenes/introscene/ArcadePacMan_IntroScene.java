@@ -31,7 +31,7 @@ import de.amr.pacmanfx.core.rules.CollisionStrategy;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
-import de.amr.pacmanfx.ui.GlobalAssets;
+import de.amr.pacmanfx.ui.VoiceID;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
@@ -157,7 +157,7 @@ public class ArcadePacMan_IntroScene extends GameScene {
         lastGhostEatenTick = 0;
         numGhostsEaten = 0;
 
-        soundManager().voice().playAfterSec(1, GlobalAssets.VoiceID.EXPLAIN_GAME_START.media());
+        soundManager().voice().playAfterSec(1, VoiceID.START_HINT.media());
     }
 
     @Override

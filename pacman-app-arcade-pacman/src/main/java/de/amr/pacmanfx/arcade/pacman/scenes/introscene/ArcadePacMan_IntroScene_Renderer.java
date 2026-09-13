@@ -11,7 +11,7 @@ import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.ui.GlobalAssets;
+import de.amr.pacmanfx.ui.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
@@ -74,7 +74,7 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Sp
     }
 
     private void drawGhostGallery(ArcadePacMan_IntroScene introScene) {
-        final Font arcade8 = Ufx.deriveFont(GlobalAssets.Fonts.ARCADE.font(), scaled(8));
+        final Font arcade8 = Ufx.deriveFont(GlobalFonts.ARCADE.font(), scaled(8));
         ctx.setFont(arcade8);
         if (introScene.titleVisible) {
             fillText("CHARACTER / NICKNAME", ARCADE_WHITE, tilesPx(LEFT_TILE_X + 3), tilesPx(6));
@@ -96,13 +96,13 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Sp
     }
 
     private void drawCopyright() {
-        final Font arcade8 = Ufx.deriveFont(GlobalAssets.Fonts.ARCADE.font(), scaled(8));
+        final Font arcade8 = Ufx.deriveFont(GlobalFonts.ARCADE.font(), scaled(8));
         fillText(MIDWAY_MFG_CO, ARCADE_PINK, arcade8, tilesPx(4), tilesPx(32));
     }
 
     private void drawPoints(ArcadePacMan_IntroScene introScene) {
-        final Font arcade6 = Ufx.deriveFont(GlobalAssets.Fonts.ARCADE.font(), scaled(6));
-        final Font arcade8 = Ufx.deriveFont(GlobalAssets.Fonts.ARCADE.font(), scaled(8));
+        final Font arcade6 = Ufx.deriveFont(GlobalFonts.ARCADE.font(), scaled(6));
+        final Font arcade8 = Ufx.deriveFont(GlobalFonts.ARCADE.font(), scaled(8));
         ctx.setFill(ARCADE_ROSE);
         // normal pellet
         ctx.fillRect(scaled(tilesPx(LEFT_TILE_X + 6) + 4), scaled(tilesPx(24) + 4), scaled(2), scaled(2));

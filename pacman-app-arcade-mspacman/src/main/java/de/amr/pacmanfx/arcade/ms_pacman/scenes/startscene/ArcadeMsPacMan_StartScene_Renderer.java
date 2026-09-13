@@ -8,17 +8,14 @@ import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.rendering.Renderable;
-import de.amr.pacmanfx.ui.GlobalAssets;
+import de.amr.pacmanfx.ui.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.text.Font;
 
-import java.util.Objects;
-
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer.createDefaultSceneDebugRenderer;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_ORANGE;
 import static java.util.Objects.requireNonNull;
@@ -46,8 +43,8 @@ public class ArcadeMsPacMan_StartScene_Renderer extends BaseRenderer implements 
         final int tx = text.tileX();
         final int ty = text.tileY();
         final double STS = scaled(TS);
-        final Font arcade6 = Ufx.deriveFont(GlobalAssets.Fonts.ARCADE.font(), scaled(6));
-        final Font arcade8 = Ufx.deriveFont(GlobalAssets.Fonts.ARCADE.font(), scaled(8));
+        final Font arcade6 = Ufx.deriveFont(GlobalFonts.ARCADE.font(), scaled(6));
+        final Font arcade8 = Ufx.deriveFont(GlobalFonts.ARCADE.font(), scaled(8));
         ctx.setFill(ARCADE_ORANGE);
         ctx.setFont(arcade8);
         ctx.fillText("PUSH START BUTTON",      STS * tx, STS * ty);

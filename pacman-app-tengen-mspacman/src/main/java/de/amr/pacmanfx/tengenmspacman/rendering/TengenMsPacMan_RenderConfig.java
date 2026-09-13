@@ -36,6 +36,7 @@ import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_GhostSAM;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_PacSAM;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.GlobalAssets;
+import de.amr.pacmanfx.ui.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
@@ -121,7 +122,7 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
         "HIGH SCORE",
         NES_Palette.color(0x20),
         NES_Palette.color(0x10),
-        GlobalAssets.Fonts.ARCADE.font(),
+        GlobalFonts.ARCADE.font(),
         "CREDIT %d" // not used in Tengen
     );
 

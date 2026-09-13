@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.views.dashboard;
 
-import de.amr.pacmanfx.ui.GlobalAssets;
+import de.amr.pacmanfx.ui.GlobalFonts;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.geometry.Insets;
@@ -33,7 +33,7 @@ public class DS_About extends GameDashboardSection {
         madeBy.setFont(javafx.scene.text.Font.font("Helvetica", 16));
 
         final var signature = new Text("Armin Reichert");
-        signature.setFont(GlobalAssets.Fonts.HANDWRITING.font(20));
+        signature.setFont(GlobalFonts.HANDWRITING.font(20));
         signature.setFill(Color.grayRgb(66));
 
         final var tf = new TextFlow(madeBy, signature);
