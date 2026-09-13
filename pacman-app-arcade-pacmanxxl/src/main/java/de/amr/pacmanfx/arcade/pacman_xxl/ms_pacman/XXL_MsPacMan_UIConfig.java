@@ -68,11 +68,12 @@ public final class XXL_MsPacMan_UIConfig implements GameVariantUIConfig {
     private final Map<Named, Object> extensions = new HashMap<>();
 
     @Override
-    public void init() {
+    public void init(GameAppContext app) {
         loadAssets();
         renderConfig = new XXL_MsPacMan_RenderConfig(assets);
         renderConfig.addAssets();
         assets.freeze();
+
         extensions.put(Arcade_GameExtensions.ACTIONS, new Arcade_Actions());
     }
 

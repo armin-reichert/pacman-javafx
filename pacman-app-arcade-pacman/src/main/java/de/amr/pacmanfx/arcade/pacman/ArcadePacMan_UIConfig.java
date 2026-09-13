@@ -25,7 +25,6 @@ import java.util.*;
 import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.audioClip;
 import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.mediaPlayer;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
-import static java.util.Objects.requireNonNull;
 
 /**
  * The Arcade Pac‑Man game variant.
@@ -63,7 +62,7 @@ public class ArcadePacMan_UIConfig implements GameVariantUIConfig {
     private final Map<Named, Object> extensions = new HashMap<>();
 
     @Override
-    public void init() {
+    public void init(GameAppContext app) {
         loadAssets();
         renderConfig = new ArcadePacMan_RenderConfig(assets);
         renderConfig.addAssets();

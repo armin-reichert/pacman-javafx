@@ -91,11 +91,14 @@ public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
 
     private final Map<Named, Object> extensions = new HashMap<>();
 
-    public void init() {
+    @Override
+    public void init(GameAppContext app) {
         loadAssets();
         renderConfig = new TengenMsPacMan_RenderConfig(assets);
         renderConfig.addAssets();
         assets.freeze();
+        extensions.put(EXT_UI_SETTINGS, new TengenMsPacMan_UISettings(null));
+        extensions.put(EXT_ACTIONS, new TengenMsPacMan_Actions(app.input().joypad(), app.commonActions()));
     }
 
     @Override
@@ -131,12 +134,6 @@ public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
             soundEffects.dispose();
             soundEffects = null;
         }
-    }
-
-    @Override
-    public void installExtensions(GameAppContext app) {
-        extensions.put(EXT_UI_SETTINGS, new TengenMsPacMan_UISettings(null));
-        extensions.put(EXT_ACTIONS, new TengenMsPacMan_Actions(app.input().joypad(), app.commonActions()));
     }
 
     @Override

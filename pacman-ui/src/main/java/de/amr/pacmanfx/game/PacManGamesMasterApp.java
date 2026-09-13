@@ -238,9 +238,8 @@ public final class PacManGamesMasterApp implements GameAppContext {
 
         //TODO rethink this
         final GameVariantUIConfig uiConfig = gameVariantConfig.uiConfig();
-        uiConfig.init();
+        uiConfig.init(this);
         uiConfig.loadSounds(ui.soundManager());
-        uiConfig.installExtensions(this);
 
         // Update game scene manager
         gameSceneManager.setGameSceneConfig(uiConfig.gameSceneConfig());
