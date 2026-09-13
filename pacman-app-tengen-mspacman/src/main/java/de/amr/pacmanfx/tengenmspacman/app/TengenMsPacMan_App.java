@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.tengenmspacman.app;
 
-import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.game.GameBox;
 import de.amr.pacmanfx.game.GameBuilder;
 import de.amr.pacmanfx.game.PacManGamesMasterApp;
@@ -24,7 +23,7 @@ public class TengenMsPacMan_App extends Application {
 
     @Override
     public void init() {
-        gameBox = new GameBox(new CoinMechanism(0), new TimelineGameClock());
+        gameBox = new GameBox(0, new TimelineGameClock());
     }
 
     @Override

@@ -33,8 +33,8 @@ public class GameBox implements Disposable {
     private final GameClock clock;
     private final DirectoryWatchdog watchdog;
 
-    public GameBox(CoinMechanism coinMechanism, GameClock clock) {
-        this.coinMechanism = requireNonNull(coinMechanism);
+    public GameBox(int maxCoins, GameClock clock) {
+        this.coinMechanism = new CoinMechanism(maxCoins);
         this.clock = requireNonNull(clock);
         clock.setTargetFrameRate(GameConstants.SIMULATION_FPS);
 

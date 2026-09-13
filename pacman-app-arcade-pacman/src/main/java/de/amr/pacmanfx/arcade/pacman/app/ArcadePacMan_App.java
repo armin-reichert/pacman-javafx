@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.arcade.pacman.app;
 
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_StartPage;
-import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.game.GameBox;
 import de.amr.pacmanfx.game.GameBuilder;
@@ -22,10 +21,7 @@ public class ArcadePacMan_App extends Application {
 
     @Override
     public void init() {
-        gameBox = new GameBox(
-            new CoinMechanism(99),
-            new TimelineGameClock()
-        );
+        gameBox = new GameBox(99, new TimelineGameClock());
     }
 
     @Override

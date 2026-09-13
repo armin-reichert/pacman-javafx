@@ -14,7 +14,6 @@ import de.amr.pacmanfx.arcade.pacman_xxl.app.XXL_MsPacMan_Cartridge;
 import de.amr.pacmanfx.arcade.pacman_xxl.app.XXL_PacMan_Cartridge;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_StartPage;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_WorldMapManager;
-import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.game.GameBox;
 import de.amr.pacmanfx.game.PacManGamesMasterApp;
@@ -41,7 +40,7 @@ public class PacManAllGamesNoBuilderApp extends Application {
     public void init() {
         includeTests = Boolean.parseBoolean(getParameters().getNamed().get("include_tests"));
 
-        gameBox = new GameBox(new CoinMechanism(99), new TimelineGameClock());
+        gameBox = new GameBox(99, new TimelineGameClock());
 
         gameBox.insertCartridges(
             ArcadePacMan_Cartridge.CARTRIDGE,
