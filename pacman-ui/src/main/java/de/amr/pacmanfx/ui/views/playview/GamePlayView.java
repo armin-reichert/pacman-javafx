@@ -257,12 +257,7 @@ public class GamePlayView implements GameView {
             renderManager.clearSceneCanvas(currentGameScene);
         }
 
-        try {
-            renderManager.renderFrame(tick, debugMode);
-        }
-        catch (Exception x) {
-            Logger.error(x, "Exception during rendering!");
-        }
+        renderManager.renderFrame(tick, debugMode);
 
         // Dashboard must always be updated, so do it in the render step!
         if (layers.overlayLayer().isVisible()) {
