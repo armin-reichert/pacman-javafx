@@ -205,6 +205,7 @@ public final class PacManGamesMasterApp implements GameAppContext {
 
     private void createVariantManager(GameUI ui) {
         gameVariantManager = new DefaultGameVariantManager(
+            gameBox,
             gameBox.cartridgeRepository(),
             ui.viewModel()
         );
@@ -250,7 +251,6 @@ public final class PacManGamesMasterApp implements GameAppContext {
         ui.spriteAnimTimer().start();
 
         game = new GameContext(
-            gameBox.coinMechanism(),
             gameVariantConfig.playConfig(),
             new DefaultGameEventManager()
         );

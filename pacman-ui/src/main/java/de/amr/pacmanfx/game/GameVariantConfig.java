@@ -14,9 +14,11 @@ public class GameVariantConfig {
     private final GameVariantPlayConfig playConfig;
     private final GameVariantUIConfig uiConfig;
 
-    public GameVariantConfig(Cartridge cartridge) {
+    public GameVariantConfig(GameBox gameBox, Cartridge cartridge) {
+        requireNonNull(gameBox);
         requireNonNull(cartridge);
         playConfig = new GameVariantPlayConfig(
+            gameBox.coinMechanism(),
             cartridge.systemsFactory().get(),
             cartridge.gamePlayFactory().get(),
             cartridge.gameFlowFactory().get(),

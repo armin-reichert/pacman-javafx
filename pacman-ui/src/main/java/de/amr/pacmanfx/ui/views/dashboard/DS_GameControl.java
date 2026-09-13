@@ -77,7 +77,7 @@ public class DS_GameControl extends GameDashboardSection {
                 .set(cbCollisionCheckedTwice.isSelected()));
 
         spinnerCredit.getValueFactory().valueProperty().bindBidirectional(credit.asObject());
-        credit.addListener((_, _, newValue) -> app.game().coinMechanism().setNumCoins(newValue.intValue()));
+        credit.addListener((_, _, newValue) -> app.game().variantPlayConfig().coinMechanism().setNumCoins(newValue.intValue()));
     }
 
     @Override
@@ -93,7 +93,7 @@ public class DS_GameControl extends GameDashboardSection {
 
         final boolean creditDisabled = !state.nameIsOneOf(CommonGameStateID.GAME_INTRO, CommonGameStateID.GAME_PREPARATION);
         spinnerCredit.setDisable(creditDisabled);
-        credit.set(app.game().coinMechanism().numCoins());
+        credit.set(app.game().variantPlayConfig().coinMechanism().numCoins());
 
         final boolean booting = CommonGameStateID.BOOT.hasSameNameAs(state);
         //buttonGroupLevelActions[GAME_LEVEL_START].setDisable(booting || !canStartLevel(app, state));
@@ -109,7 +109,7 @@ public class DS_GameControl extends GameDashboardSection {
     private boolean canStartLevel(GameAppContext appContext, AbstractGameState gameState) {
         boolean isArcadeGame = GameVariantID.isArcadeGameName(appContext.variantManager().currentVariantName());
         if (!isArcadeGame) return true; //TODO not 100% correct but we cannot access Tengen game model from here
-        return !appContext.game().coinMechanism().isEmpty()
+        return !appContext.game().variantPlayConfig().coinMechanism().isEmpty()
             && gameState.nameIsOneOf(CommonGameStateID.GAME_INTRO, CommonGameStateID.GAME_PREPARATION);
     }
 

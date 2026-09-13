@@ -36,6 +36,6 @@ public class HUD_UpdateSystem {
         livesCounter.data().setNumLivesShown(numLivesShown);
 
         final CreditDisplay creditDisplay = hud.creditDisplay();
-        creditDisplay.data().setCredit(game.coinMechanism().numCoins());
+        creditDisplay.data().setCredit(game.variantPlayConfig().coinMechanism().numCoins());
     }
 }

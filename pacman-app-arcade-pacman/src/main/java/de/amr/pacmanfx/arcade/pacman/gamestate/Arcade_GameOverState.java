@@ -42,7 +42,7 @@ public class Arcade_GameOverState extends AbstractGameState {
             level.entities().theMessageView().hide();
             session.cheats().clear();
             session.setLevel(null);
-            flow.enterGameState(game, game.coinMechanism().isEmpty()
+            flow.enterGameState(game, game.variantPlayConfig().coinMechanism().isEmpty()
                 ? CommonGameStateID.GAME_INTRO
                 : CommonGameStateID.GAME_PREPARATION);
         }

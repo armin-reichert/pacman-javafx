@@ -231,7 +231,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
     @Override
     public boolean canStart(GameContext game) {
-        return !game.coinMechanism().isEmpty();
+        return !game.variantPlayConfig().coinMechanism().isEmpty();
     }
 
     @Override

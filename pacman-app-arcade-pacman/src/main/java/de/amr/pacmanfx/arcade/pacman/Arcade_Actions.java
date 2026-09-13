@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.pacmanfx.arcade.pacman.gamestate.Arcade_GameState;
-import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.event.gameplay.CreditAddedEvent;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
@@ -31,19 +30,18 @@ public final class Arcade_Actions {
         actionInsertCoin = new GameAction("insert_coin") {
             @Override
             public void execute(GameAppContext app) {
-                final CoinMechanism coinMechanism = app.game().coinMechanism();
                 app.ui().soundManager().voice().stop();
                 app.ui().soundManager().setEnabled(true);
-                coinMechanism.insertCoin();
-                app.game().eventManager().publishEvent(new CreditAddedEvent(1));
+                app.game().variantPlayConfig().coinMechanism().insertCoin();
                 app.game().variantPlayConfig().gameFlow().enterGameState(app.game(), CommonGameStateID.GAME_PREPARATION);
+                app.game().eventManager().publishEvent(new CreditAddedEvent(1));
             }
 
             @Override
             public boolean isEnabled(GameAppContext app) {
                 final GameSession session = app.game().session();
                 final AbstractGameState gameState = app.game().state();
-                if (app.game().coinMechanism().isFull()) {
+                if (app.game().variantPlayConfig().coinMechanism().isFull()) {
                     return false;
                 }
                 // In demo level, coin can always be inserted
@@ -64,7 +62,7 @@ public final class Arcade_Actions {
 
             @Override
             public boolean isEnabled(GameAppContext app) {
-                if (app.game().coinMechanism().isEmpty()) {
+                if (app.game().variantPlayConfig().coinMechanism().isEmpty()) {
                     return false;
                 }
                 final AbstractGameState state = app.game().state();

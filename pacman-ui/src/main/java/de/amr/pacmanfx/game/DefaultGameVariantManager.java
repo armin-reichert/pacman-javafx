@@ -21,6 +21,8 @@ import static java.util.Objects.requireNonNull;
 
 public class DefaultGameVariantManager implements GameVariantManager {
 
+    private final GameBox gameBox;
+
     private final CartridgeRepository cartridges;
 
     private final Map<String, GameVariantConfig> configsByName = new HashMap<>();
@@ -29,7 +31,8 @@ public class DefaultGameVariantManager implements GameVariantManager {
 
     private final GameViewModel viewModel;
 
-    public DefaultGameVariantManager(CartridgeRepository cartridges, GameViewModel viewModel) {
+    public DefaultGameVariantManager(GameBox gameBox, CartridgeRepository cartridges, GameViewModel viewModel) {
+        this.gameBox = requireNonNull(gameBox);
         this.cartridges = requireNonNull(cartridges);
         this.viewModel = requireNonNull(viewModel);
     }
@@ -38,7 +41,7 @@ public class DefaultGameVariantManager implements GameVariantManager {
     public void registerVariantConfig(String variantName) {
         requireNonNull(variantName);
         final boolean includeInteractiveTests = viewModel.testStatesIncludedProperty().get();
-        final GameVariantConfig gameVariantConfig = createGameVariant(variantName, includeInteractiveTests);
+        final GameVariantConfig gameVariantConfig = createGameVariant(gameBox, variantName, includeInteractiveTests);
         configsByName.put(variantName, gameVariantConfig);
     }
 
@@ -77,6 +80,8 @@ public class DefaultGameVariantManager implements GameVariantManager {
 
     @Override
     public void selectVariant(String variantName) {
+        requireNonNull(variantName);
+
         if (!isVariantRegistered(variantName)) {
             registerVariantConfig(variantName);
         }
@@ -85,9 +90,9 @@ public class DefaultGameVariantManager implements GameVariantManager {
         selectedVariantName.set(variantName);
     }
 
-    private GameVariantConfig createGameVariant(String variantName, boolean includeInteractiveTests) {
+    private GameVariantConfig createGameVariant(GameBox gameBox, String variantName, boolean includeInteractiveTests) {
         final Cartridge cartridge = cartridges.cartridgeByName(variantName);
-        final var variant = new GameVariantConfig(cartridge);
+        final var variant = new GameVariantConfig(gameBox, cartridge);
         if (includeInteractiveTests) {
             final GameFlowController gameFlow = variant.playConfig().gameFlow();
             gameFlow.addState(new Test_ShortTestState());

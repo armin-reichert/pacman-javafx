@@ -260,7 +260,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
                 final GameContext game = scene.app().game();
-                final boolean canPlay = !game.coinMechanism().isEmpty();
+                final boolean canPlay = !game.variantPlayConfig().coinMechanism().isEmpty();
                 if (timer.atSecond(2.0) && !canPlay) {
                     scene.flow().enterGameState(game, CommonGameStateID.GAME_OR_LEVEL_STARTING); // play demo level after 2 seconds
                 }

@@ -57,7 +57,7 @@ public class Arcade_GameStartingState extends AbstractGameState {
             lockPacAndGhosts(level.entities(), false);
             pac.state().setEnumValue(PacState.ACTIVE);
 
-            game.coinMechanism().consumeCoin();
+            game.variantPlayConfig().coinMechanism().consumeCoin();
             session.setGameRunning(true);
             flow.enterGameState(game, CommonGameStateID.GAME_LEVEL_PLAYING);
         }
