@@ -14,10 +14,6 @@ public enum GlobalFonts {
     PAC_FONT_GOOD ("/de/amr/pacmanfx/ui/fonts/PacfontGood.ttf", 8);
 
     static {
-        loadAllFonts();
-    }
-
-    private static void loadAllFonts() {
         final ResourceManager resourceManager = () -> GlobalFonts.class;
         for (var gf : values()) {
             gf.font = resourceManager.loadFont(gf.path, gf.defaultSize);
