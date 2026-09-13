@@ -288,12 +288,12 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
 
     private TengenMsPacMan_Actions actions() {
         return app().currentGameVariantUIConfig()
-            .extensionValue(TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
+            .extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
     }
 
     private TengenMsPacMan_UISettings uiSettings() {
         return app().currentGameVariantUIConfig()
-            .extensionValue(TengenMsPacMan_GameExtension.UI_SETTINGS, TengenMsPacMan_UISettings.class);
+            .extensionValue(TengenMsPacMan_GameExtension.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
     }
 
     private void acceptNormalLevel() {

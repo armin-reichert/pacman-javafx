@@ -21,9 +21,6 @@ public interface GameVariantUIConfig extends Disposable {
 
     void init();
 
-    //TODO remove
-    void connectApp(GameAppContext app);
-
     void loadSounds(SoundManager soundManager);
 
     void unloadSounds(SoundManager soundManager);
@@ -62,6 +59,8 @@ public interface GameVariantUIConfig extends Disposable {
      * @return the game level map ("world") settings
      */
     WorldSettings worldSettings();
+
+    default void installExtensions(GameAppContext app) {}
 
     <T> T extensionValue(Named id, Class<T> type);
 }

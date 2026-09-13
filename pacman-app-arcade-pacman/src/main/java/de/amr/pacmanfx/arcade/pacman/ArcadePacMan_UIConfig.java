@@ -100,11 +100,6 @@ public class ArcadePacMan_UIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public void connectApp(GameAppContext app) {
-        requireNonNull(app);
-    }
-
-    @Override
     public void dispose() {
         Logger.info("Dispose game variant configuration {}:", getClass().getSimpleName());
 

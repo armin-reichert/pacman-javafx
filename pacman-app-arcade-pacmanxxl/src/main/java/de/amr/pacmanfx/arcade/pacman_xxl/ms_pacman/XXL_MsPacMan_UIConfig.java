@@ -105,9 +105,6 @@ public final class XXL_MsPacMan_UIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public void connectApp(GameAppContext app) {}
-
-    @Override
     public void dispose() {
         Logger.info("Dispose game variant configuration {}:", getClass().getSimpleName());
 

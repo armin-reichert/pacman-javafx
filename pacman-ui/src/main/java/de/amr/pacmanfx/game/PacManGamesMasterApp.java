@@ -232,6 +232,7 @@ public final class PacManGamesMasterApp implements GameAppContext {
         PacMan3DModel.instance(); // loads 3D assets as side effect of accessing the singleton
     }
 
+    //TODO This method is messy and needs a cleanup!
     private void enterGameVariant(GameVariantConfig gameVariantConfig) {
         requireNonNull(gameVariantConfig);
 
@@ -239,7 +240,7 @@ public final class PacManGamesMasterApp implements GameAppContext {
         final GameVariantUIConfig uiConfig = gameVariantConfig.uiConfig();
         uiConfig.init();
         uiConfig.loadSounds(ui.soundManager());
-        uiConfig.connectApp(this);
+        uiConfig.installExtensions(this);
 
         // Update game scene manager
         gameSceneManager.setGameSceneConfig(uiConfig.gameSceneConfig());

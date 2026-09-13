@@ -86,7 +86,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene {
         session.setHudVisible(false);
 
         final var actions = app().currentGameVariantUIConfig().extensionValue(
-            TengenMsPacMan_GameExtension.ACTIONS, TengenMsPacMan_Actions.class);
+            TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
 
         final var bindingsMap = actionBindingsSupport().registry();
         bindingsMap.selectAnyMatchingBinding(actions.actionStartPlaying(), actions.localBindings());

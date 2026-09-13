@@ -25,6 +25,8 @@ import org.tinylog.Logger;
 
 import java.util.*;
 
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension.EXT_ACTIONS;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension.EXT_UI_SETTINGS;
 import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.audioClip;
 import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.mediaPlayer;
 
@@ -132,12 +134,9 @@ public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public void connectApp(GameAppContext app) {
-        //TODO get rid of this crap and of app dependency!
-        extensions.put(TengenMsPacMan_GameExtension.UI_SETTINGS, new TengenMsPacMan_UISettings(null));
-        extensions.put(TengenMsPacMan_GameExtension.ACTIONS, new TengenMsPacMan_Actions(
-            app.input().joypad(), app.commonActions())
-        );
+    public void installExtensions(GameAppContext app) {
+        extensions.put(EXT_UI_SETTINGS, new TengenMsPacMan_UISettings(null));
+        extensions.put(EXT_ACTIONS, new TengenMsPacMan_Actions(app.input().joypad(), app.commonActions()));
     }
 
     @Override
