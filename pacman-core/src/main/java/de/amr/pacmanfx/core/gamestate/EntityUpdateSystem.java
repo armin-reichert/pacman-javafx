@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.core.gamestate;
 
+import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;
@@ -25,11 +26,21 @@ public class EntityUpdateSystem {
         final GameSystems systems = game.variantPlayConfig().systems();
 
         level.heartbeat().triggerPulse();
+
         systems.pacUpdateSystem().update(game, level, level.entities().pac());
+
         systems.ghostUpdate().update(game, level);
+
+        level.entities().theEnergizers().forEach(energizer -> {
+            final boolean eaten = level.food().hasEatenFoodAtTile(energizer.tile());
+            final boolean pulse = level.heartbeat().state() == Pulse.State.ON;
+            energizer.setOn(!eaten && pulse);
+        });
+
+
         level.entities().optBonus().ifPresent(bonus -> systems.bonusUpdateSystem().update(game, level, bonus));
 
-        // Handle entities with limited lifetime like ghost points, bonus points etc.
+        // Updates lifetime of entities like ghost points, bonus points etc.
         systems.lifetime().update(level.entities());
     }
 }

@@ -75,11 +75,6 @@ public class Arcade_PlayScene2D extends GameScene implements Arcade_PlayScene2D_
     @Override
     public void onTick(GameContext game) {
         game.session().optLevel().ifPresent(level -> {
-            level.entities().theEnergizers().forEach(energizer -> {
-                final boolean eaten = level.food().hasEatenFoodAtTile(energizer.tile());
-                final boolean pulse = level.heartbeat().state() == Pulse.State.ON;
-                energizer.setOn(!eaten && pulse);
-            });
             ActorAnimationManager.ensureActorAnimationsCreated(app(), level);
             optSoundEffects().ifPresent(sfx -> sfx.playAmbientGameLevelSound(game(), level));
         });
