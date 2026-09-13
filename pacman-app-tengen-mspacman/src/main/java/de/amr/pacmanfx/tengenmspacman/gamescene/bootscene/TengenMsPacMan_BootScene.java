@@ -59,6 +59,7 @@ public class TengenMsPacMan_BootScene extends GameScene {
 
         tengenPresentsText = new TextDisplay();
         tengenPresentsText.data().setText(TENGEN_PRESENTS);
+        tengenPresentsText.data().setCenter(true);
         tengenPresentsText.data().setFont(GlobalFonts.ARCADE.font());
     }
 

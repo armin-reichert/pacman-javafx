@@ -76,8 +76,10 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
             if (gameEntity.isVisible()) {
                 ctx.save();
                 ctx.setImageSmoothing(true);
+
                 //TODO REMOVE! This does not belong here and is complete crap!
                 ctx.translate(scaled(16), 0); // content indent of map
+
                 renderGameEntity(gameEntity, tick);
                 ctx.restore();
             }
@@ -111,7 +113,11 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
             case LevelNumberDisplay levelNumberDisplay -> drawLevelNumberDisplay(levelNumberDisplay);
             case CreditDisplay _ -> { /* Not used in this game variant */}
 
-            default -> {}
+            default -> {
+                if (gameEntity instanceof Renderable r) {
+                    super.render(r, tick);
+                }
+            }
         }
     }
 
