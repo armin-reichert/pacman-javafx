@@ -14,7 +14,6 @@ import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounter3DViewSystem;
 import de.amr.pacmanfx.ui.gamescene.d3.PlayScene3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
-import de.amr.pacmanfx.ui.views.GameViewManager;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import org.tinylog.Logger;
@@ -30,14 +29,6 @@ public class GameSceneManager {
     private GameSceneConfig gameSceneConfig;
 
     public GameSceneManager() {}
-
-    public void setViewManager(GameViewManager viewManager) {
-        currentGameScene.addListener((_, _, newGameScene) -> {
-            if (newGameScene != null) {
-                viewManager.gamePlayView().embedGameScene(newGameScene);
-            }
-        });
-    }
 
     public void setGameSceneConfig(GameSceneConfig gameSceneConfig) {
         this.gameSceneConfig = requireNonNull(gameSceneConfig);
