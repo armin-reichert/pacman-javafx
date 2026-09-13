@@ -50,7 +50,7 @@ public class PacUpdateSystem {
             case ACTIVE -> pac.worldNavigation().setPaused(false);
         }
 
-        final GameRules rules = game.variantConfig().rules();
+        final GameRules rules = game.variantPlayConfig().rules();
 
         if (!pac.worldNavigation().isPaused()) {
             final GameSession session = game.session();
@@ -65,6 +65,6 @@ public class PacUpdateSystem {
 
         pacDigestionSystem.update(pac);
         pacPowerSystem.update(pac, rules.pacPowerFadingSeconds(level.number()));
-        pacAnimationSystem.update(pac, game.variantConfig().rules());
+        pacAnimationSystem.update(pac, game.variantPlayConfig().rules());
     }
 }

@@ -15,7 +15,7 @@ import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.rendering.ColoredRect;
 import de.amr.pacmanfx.core.rendering.Renderable;
-import de.amr.pacmanfx.game.GameVariant;
+import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -71,10 +71,10 @@ public class TengenMsPacMan_BootScene extends GameScene {
 
     @Override
     public void onActivate() {
-        final GameVariant gameVariant = app().gameVariants().currentGameVariant();
-        ghost = gameVariant.uiConfig().renderConfig().createAnimatedGhost(
-            gameVariant.config().systems().actorSpriteAnimController(),
-            gameVariant.spriteAnimContainer(),
+        final GameVariantConfig gameVariantConfig = app().variantManager().currentVariantConfig();
+        ghost = gameVariantConfig.uiConfig().renderConfig().createAnimatedGhost(
+            gameVariantConfig.playConfig().systems().actorSpriteAnimController(),
+            gameVariantConfig.spriteAnimContainer(),
             GhostPersonality.RED_GHOST_SHADOW);
 
         game().session().setHudVisible(false);
@@ -84,7 +84,7 @@ public class TengenMsPacMan_BootScene extends GameScene {
 
     @Override
     public void onTick(GameContext game) {
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variantPlayConfig().systems();
 
         final int stateTick = (int) game().state().timer().tickCount();
         final Color shadeOfBlue = shadeOfBlue(stateTick);

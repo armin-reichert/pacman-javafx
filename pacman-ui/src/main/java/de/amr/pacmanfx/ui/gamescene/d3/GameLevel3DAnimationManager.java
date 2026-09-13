@@ -8,7 +8,7 @@ import de.amr.basics.Disposable;
 import de.amr.basics.Named;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.math.Vector3f;
-import de.amr.pacmanfx.core.GameVariantConfig;
+import de.amr.pacmanfx.core.GameVariantPlayConfig;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.entities.Pac;
@@ -76,7 +76,7 @@ public class GameLevel3DAnimationManager implements Disposable {
     public GameLevel3DAnimationManager(
         AnimationRegistry registry,
         GameLevel3D level3D,
-        GameVariantConfig variantConfig,
+        GameVariantPlayConfig variantConfig,
         GameVariantUIConfig variantUIConfig)
     {
         this.registry = requireNonNull(registry);

@@ -25,7 +25,7 @@ public class PacPowerEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onPacPowerStarts(PacPowerStartsEvent e) {
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variantPlayConfig().systems();
         final long durationTicks = e.powerDurationTicks();
         final GameLevel level = game.session().level();
 

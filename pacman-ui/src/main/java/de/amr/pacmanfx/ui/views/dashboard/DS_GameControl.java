@@ -63,7 +63,7 @@ public class DS_GameControl extends GameDashboardSection {
         setAction(choiceBoxInitialLives,
             () -> {
                 final int lifeCount = choiceBoxInitialLives.getValue();
-                app.currentGameVariantConfig().setInitialLifeCount(lifeCount);
+                app.currentGameVariantPlayConfig().setInitialLifeCount(lifeCount);
                 Logger.info("Initial life count was set to: {}", lifeCount);
             });
 
@@ -75,7 +75,7 @@ public class DS_GameControl extends GameDashboardSection {
         setGameAction(app, buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT],  actions.gameFlowActions().actionRestartIntro());
 
         cbCollisionCheckedTwice.setOnAction(_ ->
-            app.game().variantConfig().rules().actorCollisionRules().collisionDoubleCheckedProperty()
+            app.game().variantPlayConfig().rules().actorCollisionRules().collisionDoubleCheckedProperty()
                 .set(cbCollisionCheckedTwice.isSelected()));
 
         spinnerCredit.getValueFactory().valueProperty().bindBidirectional(credit.asObject());
@@ -90,7 +90,7 @@ public class DS_GameControl extends GameDashboardSection {
         final GameSession session = game.session();
         final AbstractGameState state = game.state();
 
-        choiceBoxInitialLives.setValue(app.currentGameVariantConfig().initialLifeCount());
+        choiceBoxInitialLives.setValue(app.currentGameVariantPlayConfig().initialLifeCount());
         choiceBoxInitialLives.setDisable(!CommonGameStateID.GAME_INTRO.hasSameNameAs(state));
 
         final boolean creditDisabled = !state.nameIsOneOf(CommonGameStateID.GAME_INTRO, CommonGameStateID.GAME_PREPARATION);
@@ -105,11 +105,11 @@ public class DS_GameControl extends GameDashboardSection {
         buttonGroupCutScenesTest[CUT_SCENES_TEST_START].setDisable(booting || !CommonGameStateID.GAME_INTRO.hasSameNameAs(state));
         buttonGroupCutScenesTest[CUT_SCENES_TEST_QUIT].setDisable(booting || !(state instanceof Test_CutScenesTestState));
 
-        cbCollisionCheckedTwice.setSelected(game.variantConfig().rules().actorCollisionRules().isCollisionDoubleChecked());
+        cbCollisionCheckedTwice.setSelected(game.variantPlayConfig().rules().actorCollisionRules().isCollisionDoubleChecked());
     }
 
     private boolean canStartLevel(GameAppContext appContext, AbstractGameState gameState) {
-        boolean isArcadeGame = GameVariantID.isArcadeGameName(appContext.gameVariants().currentVariantName());
+        boolean isArcadeGame = GameVariantID.isArcadeGameName(appContext.variantManager().currentVariantName());
         if (!isArcadeGame) return true; //TODO not 100% correct but we cannot access Tengen game model from here
         return !appContext.game().coinMechanism().isEmpty()
             && gameState.nameIsOneOf(CommonGameStateID.GAME_INTRO, CommonGameStateID.GAME_PREPARATION);

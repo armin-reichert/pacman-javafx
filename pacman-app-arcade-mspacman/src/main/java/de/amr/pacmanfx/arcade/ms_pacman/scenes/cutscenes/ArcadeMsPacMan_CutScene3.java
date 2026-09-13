@@ -18,7 +18,7 @@ import de.amr.pacmanfx.core.entities.clapperboard.system.ClapperboardStateSystem
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
-import de.amr.pacmanfx.game.GameVariant;
+import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
@@ -98,7 +98,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene {
     }
 
     private void initScene() {
-        final GameVariant variant = app().gameVariants().currentGameVariant();
+        final GameVariantConfig variant = app().variantManager().currentVariantConfig();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimContainer animContainer    = variant.spriteAnimContainer();
         final var actorFactory = new ArcadeMsPacMan_ActorFactory();
@@ -125,7 +125,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene {
     // Scene controller state machine
 
     private void updateSceneState() {
-        final GameSystems systems = game().variantConfig().systems();
+        final GameSystems systems = game().variantPlayConfig().systems();
 
         switch (sceneState) {
             case CLAPPERBOARD -> {
@@ -205,7 +205,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene {
     }
 
     private void updateDeliverJuniorState() {
-        final MovementSystem motor = game().variantConfig().systems().motor();
+        final MovementSystem motor = game().variantPlayConfig().systems().motor();
 
         // release bag from beak when stork reaches tile 20
         if (stork.pos().x() <= 20 * WorldMap.TS && !stork.isBagReleasedFromBeak()) {

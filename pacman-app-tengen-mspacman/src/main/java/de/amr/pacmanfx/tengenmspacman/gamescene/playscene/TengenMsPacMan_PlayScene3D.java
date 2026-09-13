@@ -104,7 +104,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
         hud.entities().addAll(optionsDisplay, leftNumberDisplay, rightNumberDisplay);
 
-        final ActorSpriteAnimController animController = app().game().variantConfig().systems().actorSpriteAnimController();
+        final ActorSpriteAnimController animController = app().game().variantPlayConfig().systems().actorSpriteAnimController();
         final var renderer = app().currentGameVariantUIConfig().renderConfig().createEntityRenderer(animController, canvas);
         renderer.setScaling(quality);
         renderer.fillCanvas(backgroundColor);

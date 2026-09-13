@@ -6,7 +6,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 import de.amr.pacmanfx.core.rules.GameRules;
 import org.tinylog.Logger;
 
-public class GameVariantConfig {
+public class GameVariantPlayConfig {
 
     private final GameSystems systems;
     private final GamePlay gamePlay;
@@ -16,7 +16,7 @@ public class GameVariantConfig {
 
     private int initialLifeCount = 3;
 
-    public GameVariantConfig(
+    public GameVariantPlayConfig(
         GameSystems systems,
         GamePlay gamePlay,
         GameFlowController gameFlow,

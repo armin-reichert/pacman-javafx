@@ -60,7 +60,7 @@ public interface Arcade_PlayScene2D_GameEventHandler extends DefaultGameEventLis
     @Override
     default void onGameContinued(GameContinuedEvent e) {
         //TODO Does not belong here
-        final ActorSpriteAnimController animController = game().variantConfig().systems().actorSpriteAnimController();
+        final ActorSpriteAnimController animController = game().variantPlayConfig().systems().actorSpriteAnimController();
         game().session().optLevel().ifPresent(level -> ActorAnimationManager.resetActorAnimations(animController, level));
     }
 
@@ -81,7 +81,7 @@ public interface Arcade_PlayScene2D_GameEventHandler extends DefaultGameEventLis
 
         if (CommonGameStateID.GAME_LEVEL_COMPLETE.hasSameNameAs(newState)) {
             final GameLevel level = game().session().level();
-            final int numFlashes = game().variantConfig().rules().numLevelFlashes(level.number());
+            final int numFlashes = game().variantPlayConfig().rules().numLevelFlashes(level.number());
 
             optSoundEffects().ifPresent(GameSoundEffects::stopAll);
 

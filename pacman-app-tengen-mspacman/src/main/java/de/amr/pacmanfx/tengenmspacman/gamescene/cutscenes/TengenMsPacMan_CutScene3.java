@@ -13,7 +13,7 @@ import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
-import de.amr.pacmanfx.game.GameVariant;
+import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.entities.bag.BagAnimationSystem;
 import de.amr.pacmanfx.tengenmspacman.entities.bag.TengenMsPacMan_BagSAM;
@@ -82,7 +82,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene {
     }
     
     private void createActors() {
-        final GameVariant variant = app().gameVariants().currentGameVariant();
+        final GameVariantConfig variant = app().variantManager().currentVariantConfig();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimContainer animContainer    = variant.spriteAnimContainer();
 
@@ -151,7 +151,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene {
     }
     
     private void playCutScene(GameContext game, long tick) {
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variantPlayConfig().systems();
         final MovementSystem motor = systems.motor();
         final WorldNavigationSystem navigator = systems.navigator();
         final ActorSpriteAnimController animSystem = systems.actorSpriteAnimController();

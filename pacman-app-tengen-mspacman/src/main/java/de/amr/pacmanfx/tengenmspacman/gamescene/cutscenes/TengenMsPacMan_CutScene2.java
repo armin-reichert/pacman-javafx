@@ -14,7 +14,7 @@ import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
-import de.amr.pacmanfx.game.GameVariant;
+import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.entities.clapperboard.TengenMsPacMan_ClapperboardStateSystem;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
@@ -111,7 +111,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene {
 
     private void createActors() {
         final var actorFactory = TengenMsPacMan_ActorFactory.instance();
-        final GameVariant variant = app().gameVariants().currentGameVariant();
+        final GameVariantConfig variant = app().variantManager().currentVariantConfig();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimContainer animContainer    = variant.spriteAnimContainer();
 
@@ -125,8 +125,8 @@ public class TengenMsPacMan_CutScene2 extends GameScene {
     }
 
     private void playCutScene(GameContext game, long tick) {
-        final WorldNavigationSystem navigator = game.variantConfig().systems().navigator();
-        final ActorSpriteAnimController animSystem = game.variantConfig().systems().actorSpriteAnimController();
+        final WorldNavigationSystem navigator = game.variantPlayConfig().systems().navigator();
+        final ActorSpriteAnimController animSystem = game.variantPlayConfig().systems().actorSpriteAnimController();
 
         letActorsMove(game);
 
@@ -193,7 +193,7 @@ public class TengenMsPacMan_CutScene2 extends GameScene {
     }
 
     private void letActorsMove(GameContext game) {
-        final MovementSystem motor = game.variantConfig().systems().motor();
+        final MovementSystem motor = game.variantPlayConfig().systems().motor();
         motor.move(pacMan);
         motor.move(msPacMan);
     }

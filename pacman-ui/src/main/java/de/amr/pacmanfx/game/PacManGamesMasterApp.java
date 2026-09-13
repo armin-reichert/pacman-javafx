@@ -18,6 +18,7 @@ import de.amr.pacmanfx.core.gameplay.PacEatingEventHandler;
 import de.amr.pacmanfx.core.gameplay.PacPowerEventHandler;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.ui.GameUI;
+import de.amr.pacmanfx.ui.RenderManager;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -55,6 +56,8 @@ public final class PacManGamesMasterApp implements GameAppContext {
 
     private final GameLoop gameLoop;
 
+    private final RenderManager renderManager;
+
     private GameUI ui;
 
     private GameContext game;
@@ -65,13 +68,9 @@ public final class PacManGamesMasterApp implements GameAppContext {
 
     public PacManGamesMasterApp(GameBox gameBox) {
         this.gameBox = requireNonNull(gameBox);
-        gameLoop = new GameLoop(this, gameBox.clock());
+        renderManager = new RenderManager();
+        gameLoop = new GameLoop(this, gameBox.clock(), renderManager);
         actions = new CommonGameActions();
-    }
-
-    @Override
-    public GameLoop gameLoop() {
-        return gameLoop;
     }
 
     public void setUI(GameUI ui) {
@@ -98,13 +97,23 @@ public final class PacManGamesMasterApp implements GameAppContext {
     // GameAppContext
 
     @Override
-    public GameVariantManager gameVariants() {
+    public RenderManager renderManager() {
+        return renderManager;
+    }
+
+    @Override
+    public GameVariantManager variantManager() {
         return gameVariantManager;
     }
 
     @Override
     public GameContext game() {
         return game;
+    }
+
+    @Override
+    public GameLoop gameLoop() {
+        return gameLoop;
     }
 
     @Override
@@ -161,10 +170,10 @@ public final class PacManGamesMasterApp implements GameAppContext {
         final GameSession session = new GameSession(
             gameVariantManager.currentVariantName(),
             new GameCheats(),
-            game.variantConfig().initialLifeCount()
+            game.variantPlayConfig().initialLifeCount()
         );
         game.setSession(session);
-        game.variantConfig().gamePlay().startSession(game);
+        game.variantPlayConfig().gamePlay().startSession(game);
 
         ui.window().mainScene().connect(game.session());
         ui.views().selectGamePlayView();
@@ -200,11 +209,11 @@ public final class PacManGamesMasterApp implements GameAppContext {
 
             if (oldVariantName != null) {
                 Logger.info("<<< Exit Game variant '{}'", oldVariantName);
-                exitGameVariant(gameVariantManager.gameVariantByName(oldVariantName));
+                exitGameVariant(gameVariantManager.variantConfigByName(oldVariantName));
             }
             if (newVariantName != null) {
                 Logger.info(">>> Enter game variant '{}'", newVariantName);
-                enterGameVariant(gameVariantManager.gameVariantByName(newVariantName));
+                enterGameVariant(gameVariantManager.variantConfigByName(newVariantName));
             }
         });
     }
@@ -219,27 +228,27 @@ public final class PacManGamesMasterApp implements GameAppContext {
         PacMan3DModel.instance(); // loads 3D assets as side effect of accessing the singleton
     }
 
-    private void enterGameVariant(GameVariant gameVariant) {
-        requireNonNull(gameVariant);
+    private void enterGameVariant(GameVariantConfig gameVariantConfig) {
+        requireNonNull(gameVariantConfig);
 
         //TODO rethink this
-        final GameVariantUIConfig uiConfig = gameVariant.uiConfig();
+        final GameVariantUIConfig uiConfig = gameVariantConfig.uiConfig();
         uiConfig.init();
         uiConfig.loadSounds(ui.soundManager());
         uiConfig.connectApp(this);
 
-        ui.viewModel().maze3DSettings().init(gameVariant.uiConfig().worldSettings().maze());
+        ui.viewModel().maze3DSettings().init(gameVariantConfig.uiConfig().worldSettings().maze());
 
-        ui.spriteAnimTimer().attachAnimContainer(gameVariant.spriteAnimContainer());
+        ui.spriteAnimTimer().attachAnimContainer(gameVariantConfig.spriteAnimContainer());
         //TODO do not start here
         ui.spriteAnimTimer().start();
 
         game = new GameContext(
             gameBox.coinMechanism(),
-            gameVariant.config(),
+            gameVariantConfig.playConfig(),
             new DefaultGameEventManager()
         );
-        game.setSession(new GameSession(gameVariantManager.currentVariantName(), new GameCheats(), gameVariant.config().initialLifeCount()));
+        game.setSession(new GameSession(gameVariantManager.currentVariantName(), new GameCheats(), gameVariantConfig.playConfig().initialLifeCount()));
 
         stateChangeEventMapper = new StateChangeEventMapper(game.eventManager());
 
@@ -249,17 +258,17 @@ public final class PacManGamesMasterApp implements GameAppContext {
         game.eventManager().addGameEventSubscriber(new PacEatingEventHandler(game));
         game.eventManager().addGameEventSubscriber(new PacPowerEventHandler(game));
 
-        gameVariant.config().gameFlow().addStateChangeListener(stateChangeEventMapper);
+        gameVariantConfig.playConfig().gameFlow().addStateChangeListener(stateChangeEventMapper);
     }
 
-    private void exitGameVariant(GameVariant gameVariant) {
-        requireNonNull(gameVariant);
+    private void exitGameVariant(GameVariantConfig gameVariantConfig) {
+        requireNonNull(gameVariantConfig);
 
-        gameVariant.config().gameFlow().removeStateChangeListener(stateChangeEventMapper);
-        gameVariant.uiConfig().unloadSounds(ui.soundManager());
-        gameVariant.uiConfig().dispose();
+        gameVariantConfig.playConfig().gameFlow().removeStateChangeListener(stateChangeEventMapper);
+        gameVariantConfig.uiConfig().unloadSounds(ui.soundManager());
+        gameVariantConfig.uiConfig().dispose();
 
-        gameVariant.spriteAnimContainer().clear();
+        gameVariantConfig.spriteAnimContainer().clear();
         ui.spriteAnimTimer().detachAnimationContainer();
         ui.soundManager().dispose();
 

@@ -31,7 +31,7 @@ public class PacEatingEventHandler implements DefaultGameEventListener {
     private final GameContext game;
 
     private GameSystems systems() {
-        return game.variantConfig().systems();
+        return game.variantPlayConfig().systems();
     }
 
     public PacEatingEventHandler(GameContext game) {
@@ -50,11 +50,11 @@ public class PacEatingEventHandler implements DefaultGameEventListener {
     private void onPacEatsPellet(PacEatsFoodEvent e) {
         final GameSession session = game.session();
         final GameLevel level = session.level();
-        final GameRules rules = game.variantConfig().rules();
+        final GameRules rules = game.variantPlayConfig().rules();
         final Pac pac = e.pac();
 
         // Eating a pellet earns 10 points in Arcade Pac-Man
-        game.variantConfig().gamePlay().scorePoints(game, rules.scoringRules().pointsForPellet(), level.number());
+        game.variantPlayConfig().gamePlay().scorePoints(game, rules.scoringRules().pointsForPellet(), level.number());
 
         // The "gatekeeper" of the ghost house has counters for the eaten food driving its behavior
         level.gateKeeper().registerFoodEaten(level);
@@ -69,11 +69,11 @@ public class PacEatingEventHandler implements DefaultGameEventListener {
     private void onPacEatsEnergizer(PacEatsFoodEvent e) {
         final GameSession session = game.session();
         final GameLevel level = session.level();
-        final GameRules rules = game.variantConfig().rules();
+        final GameRules rules = game.variantPlayConfig().rules();
         final Pac pac = e.pac();
 
         // Eating an energizer earns 50 points in Arcade Pac-Man
-        game.variantConfig().gamePlay().scorePoints(game, rules.scoringRules().pointsForEnergizer(), level.number());
+        game.variantPlayConfig().gamePlay().scorePoints(game, rules.scoringRules().pointsForEnergizer(), level.number());
 
         // The "gatekeeper" of the ghost house has counters for the eaten food driving its behavior
         level.gateKeeper().registerFoodEaten(level);
@@ -98,8 +98,8 @@ public class PacEatingEventHandler implements DefaultGameEventListener {
 
     @Override
     public void onBonusEaten(BonusEatenEvent e) {
-        final GameRules rules = game.variantConfig().rules();
-        final GamePlay gamePlay = game.variantConfig().gamePlay();
+        final GameRules rules = game.variantPlayConfig().rules();
+        final GamePlay gamePlay = game.variantPlayConfig().gamePlay();
 
         final GameSession session = game.session();
         final GameLevel level = session.level();

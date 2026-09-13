@@ -18,11 +18,11 @@ public class EntityUpdateSystem {
         requireNonNull(game);
         final GameSession session = game.session();
         session.optLevel().ifPresent(level -> updateLevel(game, level));
-        game.variantConfig().systems().hudUpdateSystem().update(session.hud(), game);
+        game.variantPlayConfig().systems().hudUpdateSystem().update(session.hud(), game);
     }
 
     private void updateLevel(GameContext game, GameLevel level) {
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variantPlayConfig().systems();
 
         level.heartbeat().triggerPulse();
         systems.pacUpdateSystem().update(game, level, level.entities().pac());

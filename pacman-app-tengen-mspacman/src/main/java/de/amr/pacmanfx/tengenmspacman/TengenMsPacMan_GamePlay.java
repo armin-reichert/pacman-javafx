@@ -107,7 +107,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         options.setCanStartNewGame(false);
 
         session.setValue(GamePlayOptions.Key.GAME_PLAY_OPTIONS, options);
-        session.setNumLives(game.variantConfig().initialLifeCount());
+        session.setNumLives(game.variantPlayConfig().initialLifeCount());
         session.setCutScenesEnabled(true);
         session.setLevel(null);
         session.setGameRunning(false);
@@ -122,7 +122,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
         initScores(game);
 
-        game.variantConfig().gameFlow().restartGameState(game, CommonGameStateID.BOOT);
+        game.variantPlayConfig().gameFlow().restartGameState(game, CommonGameStateID.BOOT);
     }
 
     // Level building and level start
@@ -160,13 +160,13 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         else {
             // Called when session is started, initialize
 
-            livesCounter.data().setNumLivesShown(game.variantConfig().initialLifeCount());
+            livesCounter.data().setNumLivesShown(game.variantPlayConfig().initialLifeCount());
             livesCounter.data().setMaxLivesShown(5);
 
             levelCounter.data().setBehavior(LevelCounterBehavior.DISABLE_WHEN_FULL);
             levelCounter.data().setCapacity(7);
             levelCounter.data().setEnabled(true);
-            game.variantConfig().systems().levelCounterSystem().clear(levelCounter);
+            game.variantPlayConfig().systems().levelCounterSystem().clear(levelCounter);
         }
     }
 
@@ -178,11 +178,11 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final GameSession session = game.session();
         final MapCategory mapCategory = gameOptions(session).mapCategory();
 
-        final var rules = (TengenMsPacMan_GameRules) game.variantConfig().rules();
-        final GameSystems systems = game.variantConfig().systems();
+        final var rules = (TengenMsPacMan_GameRules) game.variantPlayConfig().rules();
+        final GameSystems systems = game.variantPlayConfig().systems();
         final var entities = new GameLevelEntities();
 
-        final WorldMap worldMap = game.variantConfig().worldMapManager().supplyWorldMap(levelNumber, mapCategory);
+        final WorldMap worldMap = game.variantPlayConfig().worldMapManager().supplyWorldMap(levelNumber, mapCategory);
 
         rules.setMapCategory(mapCategory);
         Logger.info("Using game rules for map category {}", mapCategory);
@@ -212,7 +212,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         level.setHeartbeat(new Pulse(10, Pulse.State.OFF));
         level.setBonusSymbolCodes(rules.bonusSymbols(levelNumber));
 
-        configurePacAndGhosts(entities, game.variantConfig().systems(), worldMap.terrainLayer());
+        configurePacAndGhosts(entities, game.variantPlayConfig().systems(), worldMap.terrainLayer());
         configureHUD(game, level, session.hud());
 
         session.setLevel(level);
@@ -262,7 +262,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         requireNonNull(game);
 
         final GameSession session = game.session();
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variantPlayConfig().systems();
 
         final GameLevel demoLevel = createLevel(game, 1);
 
@@ -295,7 +295,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         session.hud().gameScore().data().setEnabled(true);
         session.cheats().update(game);
 
-        final LevelCounterSystem levelCounterSystem = game.variantConfig().systems().levelCounterSystem();
+        final LevelCounterSystem levelCounterSystem = game.variantPlayConfig().systems().levelCounterSystem();
         final LevelCounter levelCounter = session.hud().levelCounter();
         levelCounterSystem.updateCounter(levelCounter, level.number(), level.bonusSymbolCode(0));
 
@@ -316,7 +316,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         requireNonNull(game);
         requireNonNull(level);
 
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variantPlayConfig().systems();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
         //TODO Find out how Tengen really implemented this
@@ -340,7 +340,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         level.selectNextBonus();
 
         final int symbolCode = level.bonusSymbolCode(level.currentBonusIndex());
-        final float speed = game.variantConfig().rules().actorSpeedRules().bonusSpeed(game, level);
+        final float speed = game.variantPlayConfig().rules().actorSpeedRules().bonusSpeed(game, level);
 
         final Bonus bonus = Bonus.createMovingBonus(symbolCode);
         level.entities().optBonus().ifPresent(oldBonus -> level.entities().remove(oldBonus));

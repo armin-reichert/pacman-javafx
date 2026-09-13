@@ -84,7 +84,7 @@ public abstract class GameScene extends Composition<GameSceneComponent>
     }
 
     public GameFlowController flow() {
-        return game().variantConfig().gameFlow();
+        return game().variantPlayConfig().gameFlow();
     }
 
     public GameContext game() {
@@ -149,7 +149,7 @@ public abstract class GameScene extends Composition<GameSceneComponent>
 
     @Override
     public Optional<GameSoundEffects> optSoundEffects() {
-        return app.gameVariants().currentGameVariant().uiConfig().optSoundEffects();
+        return app.variantManager().currentVariantConfig().uiConfig().optSoundEffects();
     }
 
     @Override

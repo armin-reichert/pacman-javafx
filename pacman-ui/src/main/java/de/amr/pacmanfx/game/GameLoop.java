@@ -20,11 +20,12 @@ public final class GameLoop {
 
     private final GameAppContext app;
     private final GameClock clock;
-    private final RenderManager renderManager = new RenderManager();
+    private final RenderManager renderManager;
 
-    public GameLoop(GameAppContext app, GameClock clock) {
+    public GameLoop(GameAppContext app, GameClock clock, RenderManager renderManager) {
         this.app = requireNonNull(app);
         this.clock = requireNonNull(clock);
+        this.renderManager = requireNonNull(renderManager);
     }
 
     public void start() {
@@ -39,17 +40,13 @@ public final class GameLoop {
         clock.setTargetFrameRate(GameConstants.SIMULATION_FPS);
     }
 
-    public RenderManager renderManager() {
-        return renderManager;
-    }
-
     // private
 
     private void simulate() {
         final GameContext game = app.game();
         game.session().newFrameState(clock.currentTick());
-        game.variantConfig().systems().updateSystem().updateEntities(game);
-        game.variantConfig().gameFlow().update(game);
+        game.variantPlayConfig().systems().updateSystem().updateEntities(game);
+        game.variantPlayConfig().gameFlow().update(game);
         app.ui().gameScenes().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(game));
     }
 

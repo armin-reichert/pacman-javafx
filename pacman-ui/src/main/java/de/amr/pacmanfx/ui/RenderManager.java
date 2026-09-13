@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui;
 
-import de.amr.pacmanfx.core.GameVariantConfig;
+import de.amr.pacmanfx.core.GameVariantPlayConfig;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -30,12 +30,12 @@ public class RenderManager {
     public RenderManager() {}
 
     public void updateRenderers(
-        GameVariantConfig gameVariantConfig,
+        GameVariantPlayConfig gameVariantPlayConfig,
         GameVariantRenderConfig renderConfig,
         GameScene gameScene,
         MiniPlaySceneView miniView)
     {
-        requireNonNull(gameVariantConfig);
+        requireNonNull(gameVariantPlayConfig);
         requireNonNull(renderConfig);
         requireNonNull(gameScene);
         requireNonNull(miniView);
@@ -47,7 +47,7 @@ public class RenderManager {
         final Canvas canvas = canvasRendering.canvas();
 
         if (canvas != null) {
-            final ActorSpriteAnimController animController = gameVariantConfig.systems().actorSpriteAnimController();
+            final ActorSpriteAnimController animController = gameVariantPlayConfig.systems().actorSpriteAnimController();
 
             canvas.getGraphicsContext2D().setImageSmoothing(false);
 

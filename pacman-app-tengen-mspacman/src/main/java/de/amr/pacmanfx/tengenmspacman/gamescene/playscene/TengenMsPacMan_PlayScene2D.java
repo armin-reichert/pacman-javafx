@@ -19,7 +19,7 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
-import de.amr.pacmanfx.game.GameVariant;
+import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
@@ -339,10 +339,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
     }
 
     private void ensureActorAnimationsCreated(GameSession session, GameLevel level) {
-        final GameVariant variant = app().gameVariants().currentGameVariant();
+        final GameVariantConfig variant = app().variantManager().currentVariantConfig();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimContainer animContainer    = variant.spriteAnimContainer();
-        final ActorSpriteAnimController animController  = variant.config().systems().actorSpriteAnimController();
+        final ActorSpriteAnimController animController  = variant.playConfig().systems().actorSpriteAnimController();
 
         final Pac pac = level.entities().pac();
         if (animController.hasNoAnimations(pac)) {

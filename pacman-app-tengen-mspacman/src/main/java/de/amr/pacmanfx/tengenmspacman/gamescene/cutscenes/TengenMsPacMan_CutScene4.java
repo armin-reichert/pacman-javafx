@@ -17,7 +17,7 @@ import de.amr.pacmanfx.core.entities.Clapperboard;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
-import de.amr.pacmanfx.game.GameVariant;
+import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
 import de.amr.pacmanfx.tengenmspacman.entities.clapperboard.TengenMsPacMan_ClapperboardStateSystem;
@@ -100,7 +100,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
             playMusic();
         }
         else if (tick == TICK_EXPIRES) {
-            game.variantConfig().gameFlow().enterState(game, Tengen_GameState.GAME_PREPARATION.state());
+            game.variantPlayConfig().gameFlow().enterState(game, Tengen_GameState.GAME_PREPARATION.state());
 
         }
         TengenMsPacMan_ClapperboardStateSystem.update(clapperboard);
@@ -117,7 +117,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
 
     private void createActors() {
         final var actorFactory = TengenMsPacMan_ActorFactory.instance();
-        final GameVariant variant = app().gameVariants().currentGameVariant();
+        final GameVariantConfig variant = app().variantManager().currentVariantConfig();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimContainer animContainer    = variant.spriteAnimContainer();
 
@@ -135,7 +135,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
     }
 
     private void letActorsMove(GameContext game, long tick) {
-        final MovementSystem motor = game.variantConfig().systems().motor();
+        final MovementSystem motor = game.variantPlayConfig().systems().motor();
         motor.move(pacMan);
         motor.move(msPacMan);
         for (int i = 0; i < juniors.size(); ++i) {
@@ -144,7 +144,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
     }
 
     private void playCutScene(GameContext game, long tick) {
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variantPlayConfig().systems();
         final WorldNavigationSystem navigator = systems.navigator();
         final ActorSpriteAnimController animSystem = systems.actorSpriteAnimController();
 
@@ -220,11 +220,11 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
 
     private void spawnJunior(long tick) {
         final var factory = TengenMsPacMan_ActorFactory.instance();
-        final GameVariant variant = app().gameVariants().currentGameVariant();
+        final GameVariantConfig variant = app().variantManager().currentVariantConfig();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimContainer animContainer    = variant.spriteAnimContainer();
-        final ActorSpriteAnimController animController  = variant.config().systems().actorSpriteAnimController();
-        final WorldNavigationSystem worldNavigationSystem = variant.config().systems().navigator();
+        final ActorSpriteAnimController animController  = variant.playConfig().systems().actorSpriteAnimController();
+        final WorldNavigationSystem worldNavigationSystem = variant.playConfig().systems().navigator();
 
         final Pac junior = factory.createPacMan();
         double randomX = 8 * TS + (8 * TS) * Math.random();
@@ -255,7 +255,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
     }
 
     private void updateJunior(GameContext game, long tick, int index) {
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variantPlayConfig().systems();
         final MovementSystem motor = systems.motor();
         final WorldNavigationSystem navigator = systems.navigator();
 

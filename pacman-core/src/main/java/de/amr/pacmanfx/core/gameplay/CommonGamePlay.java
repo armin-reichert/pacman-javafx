@@ -47,7 +47,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
     @Override
     public void prepareLevelForPlaying(GameContext game, GameLevel level) {
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variantPlayConfig().systems();
 
         final WorldMap worldMap = level.worldMap();
         final House house = level.entities().house();
@@ -60,7 +60,7 @@ public abstract class CommonGamePlay implements GamePlay {
         systems.motor().setVelocity(pac, 0, 0);
         systems.navigator().setMoveDir(pac, Direction.LEFT);
         systems.navigator().setWishDir(pac, Direction.LEFT);
-        systems.pacAnimation().update(pac, game.variantConfig().rules());
+        systems.pacAnimation().update(pac, game.variantPlayConfig().rules());
 
         level.entities().ghosts().forEach(ghost -> {
             ghost.reset(); // initially invisible and locked!
@@ -99,7 +99,7 @@ public abstract class CommonGamePlay implements GamePlay {
         final GameSession session = game.session();
 
         final GameLevel currentLevel = session.level();
-        final int lastLevelNumber = game.variantConfig().rules().lastLevelNumber();
+        final int lastLevelNumber = game.variantPlayConfig().rules().lastLevelNumber();
 
         if (currentLevel.number() < lastLevelNumber) {
             final GameLevel nextLevel = buildNormalLevel(game, currentLevel.number() + 1);
@@ -115,7 +115,7 @@ public abstract class CommonGamePlay implements GamePlay {
         requireNonNull(game);
         requireNonNull(level);
 
-        final GameRules rules = game.variantConfig().rules();
+        final GameRules rules = game.variantPlayConfig().rules();
         final GameSession session = game.session();
         final Pac pac = level.entities().pac();
 
@@ -137,7 +137,7 @@ public abstract class CommonGamePlay implements GamePlay {
         collisionHandler.detectCollisions(level);
 
         checkIfPacFoundEdibleItem(game, level, session.thisFrame());
-        checkIfPacGetsKilled(game.session(), game.variantConfig().rules(), session.thisFrame());
+        checkIfPacGetsKilled(game.session(), game.variantPlayConfig().rules(), session.thisFrame());
         if (session.thisFrame().pacKilled()) {
             fixPacPositionIfKilledInsidePortal(level);
         }
@@ -152,7 +152,7 @@ public abstract class CommonGamePlay implements GamePlay {
         requireNonNull(level);
         requireNonNull(ghost);
 
-        final GameRules rules = game.variantConfig().rules();
+        final GameRules rules = game.variantPlayConfig().rules();
 
         level.setGhostKillCount(level.ghostKillCount() + 1);
 
@@ -161,7 +161,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
         scorePoints(game, ghostValue, level.number());
 
-        game.variantConfig().systems().ghostState().setState(ghost, GhostState.EATEN);
+        game.variantPlayConfig().systems().ghostState().setState(ghost, GhostState.EATEN);
         //TODO use system
         ghost.state().setKillChainIndex(level.ghostKillCount() - 1);
 
@@ -184,11 +184,11 @@ public abstract class CommonGamePlay implements GamePlay {
 
         final GameSession session = game.session();
 
-        final ScoreSystem scoreSystem = game.variantConfig().systems().scoreSystem();
+        final ScoreSystem scoreSystem = game.variantPlayConfig().systems().scoreSystem();
         final Score gameScore = session.hud().gameScore();
         final Score highScore = session.hud().highScore();
 
-        scoreSystem.scorePoints(gameScore, highScore, points, levelNumber, game.variantConfig().rules().scoringRules());
+        scoreSystem.scorePoints(gameScore, highScore, points, levelNumber, game.variantPlayConfig().rules().scoringRules());
 
         if (gameScore.data().extraLifeReached()) {
             // Do not forget to clear the flag!
@@ -201,7 +201,7 @@ public abstract class CommonGamePlay implements GamePlay {
     // private
 
     protected void initScores(GameContext game) {
-        final ScoreSystem scoreSystem = game.variantConfig().systems().scoreSystem();
+        final ScoreSystem scoreSystem = game.variantPlayConfig().systems().scoreSystem();
         final Score gameScore = game.session().hud().gameScore();
         final Score highScore = game.session().hud().highScore();
 
@@ -219,9 +219,9 @@ public abstract class CommonGamePlay implements GamePlay {
 
     private void checkIfPacFoundEdibleItem(GameContext game, GameLevel level, FrameState frameState) {
         final Pac pac = level.entities().pac();
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variantPlayConfig().systems();
         final PacDigestionSystem digestionSystem = systems.pacDigestion();
-        final ScoringRules scoringRules = game.variantConfig().rules().scoringRules();
+        final ScoringRules scoringRules = game.variantPlayConfig().rules().scoringRules();
 
         if (frameState.foodFound()) {
             digestionSystem.endStarving(pac);

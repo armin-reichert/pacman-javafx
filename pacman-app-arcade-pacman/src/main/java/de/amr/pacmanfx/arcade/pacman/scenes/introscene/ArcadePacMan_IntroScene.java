@@ -29,7 +29,7 @@ import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.rules.CollisionStrategy;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
-import de.amr.pacmanfx.game.GameVariant;
+import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -129,10 +129,10 @@ public class ArcadePacMan_IntroScene extends GameScene {
     }
 
     private void initScene() {
-        final GameVariant variant = app().gameVariants().currentGameVariant();
+        final GameVariantConfig variant = app().variantManager().currentVariantConfig();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimContainer animContainer    = variant.spriteAnimContainer();
-        final ActorSpriteAnimController animController  = variant.config().systems().actorSpriteAnimController();
+        final ActorSpriteAnimController animController  = variant.playConfig().systems().actorSpriteAnimController();
 
         blinking = new Pulse(10, Pulse.State.ON);
 
@@ -166,7 +166,7 @@ public class ArcadePacMan_IntroScene extends GameScene {
     }
 
     private void startChasingPacMan(GameContext game) {
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variantPlayConfig().systems();
 
         blinking.start();
 
@@ -188,7 +188,7 @@ public class ArcadePacMan_IntroScene extends GameScene {
     }
 
     private void chasePacMan(long tick) {
-        final GameSystems systems = game().variantConfig().systems();
+        final GameSystems systems = game().variantPlayConfig().systems();
         final MovementSystem motor = systems.motor();
         final GhostAnimationSystem ghostSpriteAnimationSystem = systems.ghostAnimation();
 
@@ -217,7 +217,7 @@ public class ArcadePacMan_IntroScene extends GameScene {
     }
 
     private void turnCardsStopPacMan(GameContext game) {
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variantPlayConfig().systems();
 
         systems.navigator().setMoveDirSpeed(pacMan, 0);
         systems.actorSpriteAnimController().stopSelected(pacMan);
@@ -240,7 +240,7 @@ public class ArcadePacMan_IntroScene extends GameScene {
     }
 
     private void chaseGhosts(GameContext game, long tick) {
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variantPlayConfig().systems();
 
         blinking.triggerPulse();
         systems.motor().move(pacMan);
@@ -259,7 +259,7 @@ public class ArcadePacMan_IntroScene extends GameScene {
     }
 
     private void eatGhostAndStopChasing(GameContext game, Ghost victim, long tick) {
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variantPlayConfig().systems();
 
         victim.state().setEnumValue(GhostState.EATEN);
         victim.hide();
@@ -368,7 +368,7 @@ public class ArcadePacMan_IntroScene extends GameScene {
 
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
-                final GameSystems systems = scene.game().variantConfig().systems();
+                final GameSystems systems = scene.game().variantPlayConfig().systems();
 
                 final long tick = timer.tickCount();
                 if (tick == TICK_PAC_MAN_APPEARS) {
@@ -391,7 +391,7 @@ public class ArcadePacMan_IntroScene extends GameScene {
         CHASING_GHOSTS {
             @Override
             public void onEnter(ArcadePacMan_IntroScene scene) {
-                final GameSystems systems = scene.game().variantConfig().systems();
+                final GameSystems systems = scene.game().variantPlayConfig().systems();
 
                 timer.restartTicks(TICK_CHASING_GHOSTS_END);
 

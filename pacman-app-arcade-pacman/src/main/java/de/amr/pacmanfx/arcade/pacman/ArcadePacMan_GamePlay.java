@@ -97,7 +97,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         requireNonNull(game);
 
         final GameSession session = game.session();
-        session.setNumLives(game.variantConfig().initialLifeCount());
+        session.setNumLives(game.variantPlayConfig().initialLifeCount());
         session.setCutScenesEnabled(true);
         session.setLevel(null);
         session.setGameRunning(false);
@@ -105,7 +105,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         configureHUD(game, null, session.hud());
         initScores(game);
 
-        game.variantConfig().gameFlow().restartGameState(game, CommonGameStateID.BOOT);
+        game.variantPlayConfig().gameFlow().restartGameState(game, CommonGameStateID.BOOT);
     }
 
     // Level building and level start
@@ -116,9 +116,9 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         requireValidLevelNumber(levelNumber);
 
         final GameSession session = game.session();
-        final GameRules rules = game.variantConfig().rules();
-        final GameSystems systems = game.variantConfig().systems();
-        final WorldMap worldMap = game.variantConfig().worldMapManager().supplyWorldMap(levelNumber);
+        final GameRules rules = game.variantPlayConfig().rules();
+        final GameSystems systems = game.variantPlayConfig().systems();
+        final WorldMap worldMap = game.variantPlayConfig().worldMapManager().supplyWorldMap(levelNumber);
         final var entities = new GameLevelEntities();
 
         createAndAddEntities(entities, worldMap.terrainLayer(), worldMap.foodLayer());
@@ -167,13 +167,13 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
             livesCounter.pos().set(2 * TS, bottom);
             levelCounter.pos().set(24 * TS, bottom + 2);
         } else {
-            livesCounter.data().setNumLivesShown(game.variantConfig().initialLifeCount());
+            livesCounter.data().setNumLivesShown(game.variantPlayConfig().initialLifeCount());
             livesCounter.data().setMaxLivesShown(5);
 
             levelCounter.data().setCapacity(7);
             levelCounter.data().setEnabled(true);
             levelCounter.data().setBehavior(LevelCounterBehavior.SHIFT_WHEN_FULL);
-            game.variantConfig().systems().levelCounterSystem().clear(levelCounter);
+            game.variantPlayConfig().systems().levelCounterSystem().clear(levelCounter);
         }
     }
 
@@ -181,7 +181,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     public GameLevel buildDemoLevel(GameContext game) {
         requireNonNull(game);
 
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variantPlayConfig().systems();
         final GameSession session = game.session();
 
         final GameLevel level = createLevel(game, 1);
@@ -217,7 +217,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
         session.hud().gameScore().data().setEnabled(true);
 
-        final LevelCounterSystem levelCounterSystem = game.variantConfig().systems().levelCounterSystem();
+        final LevelCounterSystem levelCounterSystem = game.variantPlayConfig().systems().levelCounterSystem();
         final LevelCounter levelCounter = session.hud().levelCounter();
         levelCounterSystem.updateCounter(levelCounter, level.number(), level.bonusSymbolCode(0));
 
@@ -239,8 +239,8 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         requireNonNull(game);
         requireNonNull(level);
 
-        final GameSystems systems = game.variantConfig().systems();
-        final GameRules rules = game.variantConfig().rules();
+        final GameSystems systems = game.variantPlayConfig().systems();
+        final GameRules rules = game.variantPlayConfig().rules();
 
         level.selectNextBonus();
 

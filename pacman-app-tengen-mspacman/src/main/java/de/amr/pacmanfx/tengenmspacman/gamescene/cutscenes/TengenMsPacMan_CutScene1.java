@@ -17,7 +17,7 @@ import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
-import de.amr.pacmanfx.game.GameVariant;
+import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.entities.Heart;
 import de.amr.pacmanfx.tengenmspacman.entities.clapperboard.TengenMsPacMan_ClapperboardStateSystem;
@@ -101,7 +101,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene {
         final int tick = (int) game.state().timer().tickCount();
         switch (tick) {
             case TICK_CLAP -> {
-                getReady(game.variantConfig().systems().navigator());
+                getReady(game.variantPlayConfig().systems().navigator());
                 clapperboard.show();
                 TengenMsPacMan_ClapperboardStateSystem.startFlapAnimation(clapperboard);
                 playMusic();
@@ -118,10 +118,10 @@ public class TengenMsPacMan_CutScene1 extends GameScene {
 
     private void createActors() {
         final var actorFactory = TengenMsPacMan_ActorFactory.instance();
-        final GameVariant variant = app().gameVariants().currentGameVariant();
+        final GameVariantConfig variant = app().variantManager().currentVariantConfig();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimContainer animContainer    = variant.spriteAnimContainer();
-        final ActorSpriteAnimController animController  = variant.config().systems().actorSpriteAnimController();
+        final ActorSpriteAnimController animController  = variant.playConfig().systems().actorSpriteAnimController();
 
         clapperboard = new Clapperboard("1", "THEY MEET");
 
@@ -171,7 +171,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene {
     }
 
     private void letActorsMove(GameContext game) {
-        List.of(pacMan, msPacMan, inky, pinky).forEach(game.variantConfig().systems().motor()::move);
+        List.of(pacMan, msPacMan, inky, pinky).forEach(game.variantPlayConfig().systems().motor()::move);
         if (collided) {
             if (inky.pos().y() > MIDDLE_LANE) {
                 inky.pos().setY(MIDDLE_LANE);
@@ -183,8 +183,8 @@ public class TengenMsPacMan_CutScene1 extends GameScene {
     }
 
     private void playCutScene(GameContext game, int tick) {
-        final WorldNavigationSystem navigator = game.variantConfig().systems().navigator();
-        final ActorSpriteAnimController animSystem = game.variantConfig().systems().actorSpriteAnimController();
+        final WorldNavigationSystem navigator = game.variantPlayConfig().systems().navigator();
+        final ActorSpriteAnimController animSystem = game.variantPlayConfig().systems().actorSpriteAnimController();
 
         letActorsMove(game);
 

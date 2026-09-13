@@ -9,7 +9,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.entities.Copyright;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.rendering.Renderable;
-import de.amr.pacmanfx.game.GameVariant;
+import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
@@ -28,7 +28,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene {
         super(app);
         setComp(SceneCanvasRenderingComp.class, new SceneCanvasRenderingComp());
 
-        final GameVariant variant = app().gameVariants().currentGameVariant();
+        final GameVariantConfig variant = app().variantManager().currentVariantConfig();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
 
         startSceneText = new StartSceneText(6, 16);

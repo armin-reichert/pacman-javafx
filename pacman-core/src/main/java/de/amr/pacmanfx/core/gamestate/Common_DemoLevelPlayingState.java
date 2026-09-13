@@ -6,7 +6,7 @@ package de.amr.pacmanfx.core.gamestate;
 
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameVariantConfig;
+import de.amr.pacmanfx.core.GameVariantPlayConfig;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.pac.comp.PacState;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
@@ -47,7 +47,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
 
     @Override
     public void onUpdateState(GameContext game, long globalTick, long stateTick) {
-        final GameVariantConfig variantConfig = game.variantConfig();
+        final GameVariantPlayConfig variantConfig = game.variantPlayConfig();
         final GameLevel level = session.level();
 
         if (stateTick == 1) {
@@ -56,7 +56,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
         else if (stateTick == 2) {
             showPacAndGhosts(level.entities());
         }
-        else if (stateTick == game.variantConfig().rules().demoLevelHuntingStartTick()) {
+        else if (stateTick == game.variantPlayConfig().rules().demoLevelHuntingStartTick()) {
             startEnergizerBlinking(level);
 
             final Pac pac = level.entities().pac();
@@ -70,7 +70,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
             // This call fires a game event!
             level.huntingTimer().startFirstPhase(game, level.number());
         }
-        else if (stateTick >= game.variantConfig().rules().demoLevelHuntingStartTick()) {
+        else if (stateTick >= game.variantPlayConfig().rules().demoLevelHuntingStartTick()) {
             gamePlay.update(game, level);
         }
 
@@ -95,7 +95,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
     }
 
     private Optional<CommonGameStateID> computeNextState(GameContext game, GameLevel level) {
-        if (game.variantConfig().rules().isLevelCompleted(level)) {
+        if (game.variantPlayConfig().rules().isLevelCompleted(level)) {
             return Optional.of(CommonGameStateID.GAME_INTRO);
         }
         else if (game.session().thisFrame().pacKilled()) {

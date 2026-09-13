@@ -18,7 +18,7 @@ import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
-import de.amr.pacmanfx.game.GameVariant;
+import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationTimer;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
@@ -120,16 +120,16 @@ class XXL_ChaseAnimation {
         }
     }
 
-    private GameVariant variant;
+    private GameVariantConfig variant;
 
-    public void setGameVariant(GameContext game, GameVariant variant, Canvas canvas) {
+    public void setGameVariant(GameContext game, GameVariantConfig variant, Canvas canvas) {
         requireNonNull(game);
         this.variant = requireNonNull(variant);
         requireNonNull(canvas);
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
 
-        navigator = variant.config().systems().navigator();
-        motor     = variant.config().systems().motor();
+        navigator = variant.playConfig().systems().navigator();
+        motor     = variant.playConfig().systems().motor();
 
         actorRenderer = renderConfig.createEntityRenderer(animController, canvas);
         actorRenderer.scalingProperty().bind(scalingProperty());

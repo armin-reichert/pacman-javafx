@@ -47,14 +47,14 @@ public final class TengenMsPacMan_Actions {
         actionEnterStartScreen = new GameAction("enter_start_screen") {
             @Override
             public void execute(GameAppContext app) {
-                app.game().variantConfig().gameFlow().enterGameState(app.game(), CommonGameStateID.GAME_PREPARATION);
+                app.game().variantPlayConfig().gameFlow().enterGameState(app.game(), CommonGameStateID.GAME_PREPARATION);
             }
         };
 
         actionQuitDemoLevel = new GameAction("quit_demo_level") {
             @Override
             public void execute(GameAppContext app) {
-                app.game().variantConfig().gameFlow().enterGameState(app.game(), CommonGameStateID.GAME_PREPARATION);
+                app.game().variantPlayConfig().gameFlow().enterGameState(app.game(), CommonGameStateID.GAME_PREPARATION);
             }
 
             @Override
@@ -66,7 +66,7 @@ public final class TengenMsPacMan_Actions {
         actionStartPlaying = new GameAction("start_playing") {
             @Override
             public void execute(GameAppContext app) {
-                app.game().variantConfig().gameFlow().enterGameState(app.game(), CommonGameStateID.GAME_OR_LEVEL_STARTING);
+                app.game().variantPlayConfig().gameFlow().enterGameState(app.game(), CommonGameStateID.GAME_OR_LEVEL_STARTING);
             }
         };
 

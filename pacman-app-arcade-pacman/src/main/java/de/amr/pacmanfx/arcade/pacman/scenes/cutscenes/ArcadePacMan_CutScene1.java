@@ -17,7 +17,7 @@ import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
-import de.amr.pacmanfx.game.GameVariant;
+import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
@@ -48,10 +48,10 @@ public class ArcadePacMan_CutScene1 extends GameScene {
     
     @Override
     public void onActivate() {
-        final GameVariant variant = app().gameVariants().currentGameVariant();
+        final GameVariantConfig variant = app().variantManager().currentVariantConfig();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimContainer animContainer = variant.spriteAnimContainer();
-        final ActorSpriteAnimController animController = variant.config().systems().actorSpriteAnimController();
+        final ActorSpriteAnimController animController = variant.playConfig().systems().actorSpriteAnimController();
         final var factory = ArcadePacMan_ActorFactory.instance();
 
         pacMan = factory.createPacMan();
@@ -69,7 +69,7 @@ public class ArcadePacMan_CutScene1 extends GameScene {
 
     @Override
     public void onTick(GameContext game) {
-        final GameSystems systems = game.variantConfig().systems();
+        final GameSystems systems = game.variantPlayConfig().systems();
 
         final CutSceneTimingComp timing = timing();
         timing.setTick(timing().tick() + 1);

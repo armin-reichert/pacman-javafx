@@ -65,7 +65,7 @@ public class DS_GameInfo extends GameDashboardSection {
                     colorScheme = worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
                 }
                 else if (worldMap.hasConfigValue(WorldMapConfigKey.COLOR_MAP_INDEX)) {
-                    final GameVariantUIConfig variantConfig = app.gameVariants().currentGameVariant().uiConfig();
+                    final GameVariantUIConfig variantConfig = app.variantManager().currentVariantConfig().uiConfig();
                     colorScheme = variantConfig.renderConfig().colorScheme(worldMap, variantConfig.worldSettings());
                 }
                 if (colorScheme != null) {
@@ -94,7 +94,7 @@ public class DS_GameInfo extends GameDashboardSection {
     }
 
     private GameRules rules(GameAppContext app) {
-        return app.game().variantConfig().rules();
+        return app.game().variantPlayConfig().rules();
     }
 
     private Supplier<String> supplyLevelSpeedInfo(
@@ -102,7 +102,7 @@ public class DS_GameInfo extends GameDashboardSection {
         BiFunction<GameLevel, ActorSpeedRules, String> fnInfo) {
         return () -> {
             final GameContext game = appContext.game();
-            final ActorSpeedRules speedRules = game.variantConfig().rules().actorSpeedRules();
+            final ActorSpeedRules speedRules = game.variantPlayConfig().rules().actorSpeedRules();
             return game.session().optLevel()
                 .map(level -> fnInfo.apply(level, speedRules)).orElse(NO_INFO);
         };

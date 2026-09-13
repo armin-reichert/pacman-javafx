@@ -20,7 +20,7 @@ public final class Common_PreparationState extends AbstractGameState {
             session.setLevel(null);
         });
 
-        session.setNumLives(game.variantConfig().initialLifeCount());
+        session.setNumLives(game.variantPlayConfig().initialLifeCount());
 
         hud.creditDisplay().show();
         hud.gameScore().show();

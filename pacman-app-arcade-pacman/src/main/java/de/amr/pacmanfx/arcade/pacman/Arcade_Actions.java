@@ -36,7 +36,7 @@ public final class Arcade_Actions {
                 app.ui().soundManager().setEnabled(true);
                 coinMechanism.insertCoin();
                 app.game().eventManager().publishGameEvent(new CreditAddedEvent(1));
-                app.game().variantConfig().gameFlow().enterGameState(app.game(), CommonGameStateID.GAME_PREPARATION);
+                app.game().variantPlayConfig().gameFlow().enterGameState(app.game(), CommonGameStateID.GAME_PREPARATION);
             }
 
             @Override
@@ -59,7 +59,7 @@ public final class Arcade_Actions {
             @Override
             public void execute(GameAppContext app) {
                 app.ui().soundManager().voice().stop();
-                app.game().variantConfig().gameFlow().enterState(app.game(), Arcade_GameState.GAME_OR_LEVEL_STARTING.state());
+                app.game().variantPlayConfig().gameFlow().enterState(app.game(), Arcade_GameState.GAME_OR_LEVEL_STARTING.state());
             }
 
             @Override

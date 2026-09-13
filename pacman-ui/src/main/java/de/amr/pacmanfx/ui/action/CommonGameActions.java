@@ -55,7 +55,7 @@ public final class CommonGameActions {
             @Override
             public void execute(GameAppContext app) {
                 final GameContext game = app.game();
-                final ActorCollisionRules collisionRules = game.variantConfig().rules().actorCollisionRules();
+                final ActorCollisionRules collisionRules = game.variantPlayConfig().rules().actorCollisionRules();
                 final CollisionStrategy strategy = collisionRules.getCollisionStrategy();
                 final CollisionStrategy nextStrategy = Ufx.succ(strategy, CollisionStrategy.class);
                 collisionRules.collisionStrategyProperty().set(nextStrategy);

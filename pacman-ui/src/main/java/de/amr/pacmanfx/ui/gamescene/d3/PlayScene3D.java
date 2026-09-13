@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.gamescene.d3;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.GameVariantConfig;
+import de.amr.pacmanfx.core.GameVariantPlayConfig;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.Score;
@@ -274,7 +274,7 @@ public class PlayScene3D extends GameScene
         } else {
             scoresView.showTextForScore(
                 app().ui().translations().translate("score.game_over"),
-                app().gameVariants().currentGameVariant().uiConfig().assets().color("color.game_over_message"));
+                app().variantManager().currentVariantConfig().uiConfig().assets().color("color.game_over_message"));
         }
 
         // High score is always visible
@@ -305,7 +305,7 @@ public class PlayScene3D extends GameScene
         requireNonNull(game);
         requireNonNull(level);
 
-        final GameVariantConfig config     = app().currentGameVariantConfig();
+        final GameVariantPlayConfig config     = app().currentGameVariantPlayConfig();
         final GameVariantUIConfig uiConfig = app().currentGameVariantUIConfig();
         final GameViewModel viewModel      = app().ui().viewModel();
         final GameSession session          = game.session();

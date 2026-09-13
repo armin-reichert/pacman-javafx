@@ -4,18 +4,19 @@
 
 package de.amr.pacmanfx.game;
 
-import de.amr.pacmanfx.core.GameVariantConfig;
+import de.amr.pacmanfx.core.GameVariantPlayConfig;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
 
-public class GameVariant {
+import static java.util.Objects.requireNonNull;
 
-    private final GameVariantConfig config;
+public class GameVariantConfig {
+
+    private final GameVariantPlayConfig playConfig;
     private final GameVariantUIConfig uiConfig;
 
-    private final SpriteAnimContainer spriteAnimContainer = new SpriteAnimContainer();
-
-    public GameVariant(Cartridge cartridge) {
-        config = new GameVariantConfig(
+    public GameVariantConfig(Cartridge cartridge) {
+        requireNonNull(cartridge);
+        playConfig = new GameVariantPlayConfig(
             cartridge.systemsFactory().get(),
             cartridge.gamePlayFactory().get(),
             cartridge.gameFlowFactory().get(),
@@ -25,13 +26,16 @@ public class GameVariant {
         uiConfig = cartridge.uiConfigFactory().get();
     }
 
-    public GameVariantConfig config() {
-        return config;
+    public GameVariantPlayConfig playConfig() {
+        return playConfig;
     }
 
     public GameVariantUIConfig uiConfig() {
         return uiConfig;
     }
+
+    //TODO move elsewhere
+    private final SpriteAnimContainer spriteAnimContainer = new SpriteAnimContainer();
 
     public SpriteAnimContainer spriteAnimContainer() {
         return spriteAnimContainer;

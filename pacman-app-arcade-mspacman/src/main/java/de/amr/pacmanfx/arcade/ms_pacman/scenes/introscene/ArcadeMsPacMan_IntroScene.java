@@ -27,7 +27,7 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
-import de.amr.pacmanfx.game.GameVariant;
+import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -80,7 +80,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
 
     @Override
     public void onActivate() {
-        final Arcade_Actions actions = app().gameVariants().currentGameVariant().uiConfig()
+        final Arcade_Actions actions = app().variantManager().currentVariantConfig().uiConfig()
             .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         final var bindingsMap = actionBindingsSupport().registry();
@@ -102,11 +102,11 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
 
     private void initScene() {
         final var actorFactory = new ArcadeMsPacMan_ActorFactory();
-        final GameVariant variant = app().gameVariants().currentGameVariant();
+        final GameVariantConfig variant = app().variantManager().currentVariantConfig();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimContainer animContainer = variant.spriteAnimContainer();
-        final ActorSpriteAnimController animController = variant.config().systems().actorSpriteAnimController();
-        final GameSystems systems  = variant.config().systems();
+        final ActorSpriteAnimController animController = variant.playConfig().systems().actorSpriteAnimController();
+        final GameSystems systems  = variant.playConfig().systems();
         final WorldNavigationSystem worldNavigationSystem = systems.navigator();
 
         createMarquee();
@@ -209,7 +209,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
             }
 
             boolean letGhostWalkIn(ArcadeMsPacMan_IntroScene scene) {
-                final GameSystems sys = scene.game().variantConfig().systems();
+                final GameSystems sys = scene.game().variantPlayConfig().systems();
 
                 final Ghost ghost = scene.ghosts.get(scene.ghostPresented.ordinal());
                 if (ghost.worldNavigation().moveDir() == Direction.LEFT) {
@@ -244,7 +244,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
         MS_PACMAN_MARCHING_IN {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                final GameSystems sys = scene.game().variantConfig().systems();
+                final GameSystems sys = scene.game().variantPlayConfig().systems();
                 final Pac msPacMan = scene.msPacMan;
 
                 sys.motor().move(msPacMan);

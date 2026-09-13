@@ -166,7 +166,7 @@ public class GamePlayView implements GameView {
 
     public void showHelp(GameAppContext app) {
         final double scaling = decorationPane.scalingProperty().get();
-        layers.helpLayer().showHelpPopup(app, scaling, app.gameVariants().currentVariantName());
+        layers.helpLayer().showHelpPopup(app, scaling, app.variantManager().currentVariantName());
     }
 
     public void setGameSceneContent(Node gameSceneContent) {
@@ -242,7 +242,7 @@ public class GamePlayView implements GameView {
         final GameScene currentGameScene = app.ui().gameScenes().optCurrentGameScene().orElse(null);
         if (currentGameScene != null) {
             renderManager.updateRenderers(
-                app.currentGameVariantConfig(),
+                app.currentGameVariantPlayConfig(),
                 app.currentGameVariantUIConfig().renderConfig(),
                 currentGameScene,
                 layers.miniViewLayer()
@@ -285,7 +285,7 @@ public class GamePlayView implements GameView {
         requireNonNull(gameScene);
 
         final GameMainScene mainScene = app.ui().window().mainScene();
-        final GameVariantUIConfig config = app.gameVariants().currentGameVariant().uiConfig();
+        final GameVariantUIConfig config = app.variantManager().currentVariantConfig().uiConfig();
 
         if (gameScene.optSubSceneFX().isPresent()) {
             embedGameSceneWithSubSceneFX(mainScene, gameScene, gameScene.optSubSceneFX().get());

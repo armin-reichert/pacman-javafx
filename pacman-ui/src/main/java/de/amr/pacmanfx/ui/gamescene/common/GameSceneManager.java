@@ -53,7 +53,7 @@ public class GameSceneManager {
     }
 
     public void updateGameSceneAndForceReload(boolean forceReload) {
-        final GameVariantUIConfig variantConfig = app.gameVariants().currentGameVariant().uiConfig();
+        final GameVariantUIConfig variantConfig = app.variantManager().currentVariantConfig().uiConfig();
         final GameContext game = app.game();
         final GameSession session = game.session();
         final GameScene currentGameScene = optCurrentGameScene().orElse(null);
@@ -89,7 +89,7 @@ public class GameSceneManager {
         requireNonNull(gameScene);
         requireNonNull(sceneID);
 
-        final GameVariantUIConfig config = app.gameVariants().currentGameVariant().uiConfig();
+        final GameVariantUIConfig config = app.variantManager().currentVariantConfig().uiConfig();
         return config.gameSceneConfig().gameSceneHasID(gameScene, sceneID);
     }
 

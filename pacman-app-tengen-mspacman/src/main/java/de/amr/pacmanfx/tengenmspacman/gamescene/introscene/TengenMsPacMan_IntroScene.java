@@ -23,7 +23,7 @@ import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
-import de.amr.pacmanfx.game.GameVariant;
+import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
@@ -91,7 +91,7 @@ public class TengenMsPacMan_IntroScene extends GameScene {
 
     @Override
     public void onActivate() {
-        final GameVariantUIConfig variantConfig = app().gameVariants().currentGameVariant().uiConfig();
+        final GameVariantUIConfig variantConfig = app().variantManager().currentVariantConfig().uiConfig();
 
         game().session().setHudVisible(false);
 
@@ -131,10 +131,10 @@ public class TengenMsPacMan_IntroScene extends GameScene {
 
         final var actorFactory = TengenMsPacMan_ActorFactory.instance();
 
-        final GameVariant variant = app().gameVariants().currentGameVariant();
+        final GameVariantConfig variant = app().variantManager().currentVariantConfig();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimContainer animContainer    = variant.spriteAnimContainer();
-        final ActorSpriteAnimController animController  = variant.config().systems().actorSpriteAnimController();
+        final ActorSpriteAnimController animController  = variant.playConfig().systems().actorSpriteAnimController();
 
         msPacMan = actorFactory.createMsPacMan();
         animController.setAnimations(msPacMan, renderConfig.createPacAnimations(animContainer));
@@ -193,10 +193,10 @@ public class TengenMsPacMan_IntroScene extends GameScene {
         SHOWING_MARQUEE {
             @Override
             public void onEnter(TengenMsPacMan_IntroScene scene) {
-                final GameVariant variant = scene.app().gameVariants().currentGameVariant();
-                final ActorSpriteAnimController animController = variant.config().systems().actorSpriteAnimController();
+                final GameVariantConfig variant = scene.app().variantManager().currentVariantConfig();
+                final ActorSpriteAnimController animController = variant.playConfig().systems().actorSpriteAnimController();
 
-                final GameSystems systems = variant.config().systems();
+                final GameSystems systems = variant.playConfig().systems();
                 final WorldNavigationSystem worldNavigationSystem = systems.navigator();
 
                 timer.restartTicks(TickTimer.INDEFINITE);
@@ -254,7 +254,7 @@ public class TengenMsPacMan_IntroScene extends GameScene {
             }
 
             boolean letGhostMarchIn(TengenMsPacMan_IntroScene scene) {
-                final GameSystems systems = scene.game().variantConfig().systems();
+                final GameSystems systems = scene.game().variantPlayConfig().systems();
                 final MovementSystem motor = systems.motor();
                 final WorldNavigationSystem navigator = systems.navigator();
 
@@ -299,7 +299,7 @@ public class TengenMsPacMan_IntroScene extends GameScene {
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
                 final GameContext game = scene.game();
-                final GameSystems systems = game.variantConfig().systems();
+                final GameSystems systems = game.variantPlayConfig().systems();
                 final GameSession session = game.session();
 
                 systems.motor().move(scene.msPacMan);
@@ -311,9 +311,9 @@ public class TengenMsPacMan_IntroScene extends GameScene {
                     // start demo level or show options
                     if (gameOptions(session).areInitial()) {
                         gameOptions(session).setCanStartNewGame(false); // TODO check this
-                        game.variantConfig().gameFlow().restartState(game, Tengen_GameState.GAME_OR_LEVEL_STARTING.state());
+                        game.variantPlayConfig().gameFlow().restartState(game, Tengen_GameState.GAME_OR_LEVEL_STARTING.state());
                     } else {
-                        game.variantConfig().gameFlow().enterState(game, Tengen_GameState.GAME_PREPARATION.state());
+                        game.variantPlayConfig().gameFlow().enterState(game, Tengen_GameState.GAME_PREPARATION.state());
                     }
                 }
             }

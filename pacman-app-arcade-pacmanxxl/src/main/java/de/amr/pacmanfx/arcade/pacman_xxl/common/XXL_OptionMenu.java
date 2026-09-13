@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
-import de.amr.pacmanfx.game.GameVariant;
+import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenu;
@@ -84,10 +84,10 @@ public class XXL_OptionMenu extends OptionMenu {
     public void init(GameAppContext app) {
         this.app = requireNonNull(app);
 
-        final String variantName = app.gameVariants().currentVariantName();
-        final GameVariant variant = app.gameVariants().currentGameVariant();
+        final String variantName = app.variantManager().currentVariantName();
+        final GameVariantConfig variant = app.variantManager().currentVariantConfig();
 
-        final WorldMapManager mapManager = variant.config().worldMapManager();
+        final WorldMapManager mapManager = variant.playConfig().worldMapManager();
         if (!(mapManager instanceof XXL_WorldMapManager xxlMapManager)) {
             final String message = "Expected XXL map manager but found %s".formatted(mapManager.getClass().getSimpleName());
             throw new IllegalStateException(message);
@@ -153,7 +153,7 @@ public class XXL_OptionMenu extends OptionMenu {
     }
 
     private void onGameVariantNameChanged(ObservableValue<? extends GameVariantID> observable, GameVariantID oldID, GameVariantID newID) {
-        app.gameVariants().selectVariant(newID.name());
+        app.variantManager().selectVariant(newID.name());
     }
 
     private void onPlay3DSettingsChange(ObservableValue<? extends Boolean> obs,  Boolean oldValue, Boolean newValue) {
@@ -164,7 +164,7 @@ public class XXL_OptionMenu extends OptionMenu {
         app.game().session().setCutScenesEnabled(newValue);
     }
 
-    private void changeGameVariant(GameContext game, GameVariant newVariant) {
+    private void changeGameVariant(GameContext game, GameVariantConfig newVariant) {
         requireNonNull(game);
         requireNonNull(newVariant);
 
@@ -188,8 +188,8 @@ public class XXL_OptionMenu extends OptionMenu {
             @Override
             public void onValueChanged(GameVariantID oldVariantID, GameVariantID newVariantID) {
                 if (app != null) {
-                    final GameVariant newGameVariant = app.gameVariants().gameVariantByName(newVariantID.name());
-                    changeGameVariant(app.game(), newGameVariant);
+                    final GameVariantConfig newGameVariantConfig = app.variantManager().variantConfigByName(newVariantID.name());
+                    changeGameVariant(app.game(), newGameVariantConfig);
                 }
             }
         };
