@@ -15,7 +15,7 @@ import de.amr.pacmanfx.ui.action.core.GameActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
-import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.settings.ui.DashboardSectionSettings;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.ui.views.dashboard.DashboardFactory;
@@ -310,8 +310,8 @@ public class GamePlayView implements GameView {
             subSceneFX.heightProperty().unbind();
         });
 
-        if (gameScene.hasComp(SceneCanvasRenderingComp.class)) {
-            final SceneCanvasRenderingComp r2D = gameScene.reqComp(SceneCanvasRenderingComp.class);
+        if (gameScene.hasComp(GameSceneCanvasRenderingComp.class)) {
+            final GameSceneCanvasRenderingComp r2D = gameScene.reqComp(GameSceneCanvasRenderingComp.class);
 
             decorationPane.canvas().widthProperty().unbind();
             decorationPane.canvas().heightProperty().unbind();
@@ -366,8 +366,8 @@ public class GamePlayView implements GameView {
         subSceneFX.widthProperty().bind(mainScene.widthProperty());
         subSceneFX.heightProperty().bind(mainScene.heightProperty());
 
-        if (gameScene.hasComp(SceneCanvasRenderingComp.class)) {
-            final SceneCanvasRenderingComp r2D = gameScene.reqComp(SceneCanvasRenderingComp.class);
+        if (gameScene.hasComp(GameSceneCanvasRenderingComp.class)) {
+            final GameSceneCanvasRenderingComp r2D = gameScene.reqComp(GameSceneCanvasRenderingComp.class);
             // use the canvas of the decorated pane for 2D scene even though the decoration is not used
             r2D.setCanvas(decorationPane.canvas());
         }
@@ -382,7 +382,7 @@ public class GamePlayView implements GameView {
         GameScene gameScene,
         Game2DSettingsVM settingsViewModel)
     {
-        final SceneCanvasRenderingComp canvasRendering = gameScene.reqComp(SceneCanvasRenderingComp.class);
+        final GameSceneCanvasRenderingComp canvasRendering = gameScene.reqComp(GameSceneCanvasRenderingComp.class);
 
         canvasRendering.backgroundColorProperty().bind(settingsViewModel.canvasBackgroundColorProperty());
 

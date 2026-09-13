@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.views.miniview.MiniPlaySceneView;
 import de.amr.pacmanfx.ui.views.miniview.MiniPlaySceneViewRenderer;
 import de.amr.pacmanfx.uilib.rendering.RenderableWrapper;
@@ -29,42 +29,38 @@ public class RenderManager {
 
     public RenderManager() {}
 
-    public void updateRenderers(
-        GameVariantPlayConfig gameVariantPlayConfig,
-        GameVariantRenderConfig renderConfig,
-        GameScene gameScene,
-        MiniPlaySceneView miniView)
-    {
-        requireNonNull(gameVariantPlayConfig);
+    public void updateRenderers(GameVariantPlayConfig playConfig, GameVariantRenderConfig renderConfig,
+                                GameScene gameScene, MiniPlaySceneView miniView) {
+
+        requireNonNull(playConfig);
         requireNonNull(renderConfig);
         requireNonNull(gameScene);
         requireNonNull(miniView);
 
-        if (!gameScene.hasComp(SceneCanvasRenderingComp.class)) {
-            return;
+        final GameSceneCanvasRenderingComp sceneCanvasRendering = gameScene.optCanvasRendering().orElse(null);
+        if (sceneCanvasRendering == null) {
+            return; // This scene cannot be rendered inside a canvas, most probably the 3D play scene
         }
-        final SceneCanvasRenderingComp canvasRendering = gameScene.reqComp(SceneCanvasRenderingComp.class);
-        final Canvas canvas = canvasRendering.canvas();
+        final Canvas sceneCanvas = sceneCanvasRendering.canvas();
 
-        if (canvas != null) {
-            final ActorSpriteAnimController animController = gameVariantPlayConfig.systems().actorSpriteAnimController();
+        if (sceneCanvas != null) {
+            final ActorSpriteAnimController animController = playConfig.systems().actorSpriteAnimController();
 
-            canvas.getGraphicsContext2D().setImageSmoothing(false);
+            entityRenderer = renderConfig.createEntityRenderer(animController, sceneCanvas);
+            configureRenderer(entityRenderer, sceneCanvasRendering);
 
-            entityRenderer = renderConfig.createEntityRenderer(animController, canvas);
-            configureRenderer(entityRenderer, canvasRendering);
-
-            sceneRenderer = renderConfig.createGameSceneRenderer(gameScene, animController, canvas); // may be null!
+            sceneRenderer = renderConfig.createGameSceneRenderer(gameScene, animController, sceneCanvas); // may return null!
             if (sceneRenderer != null) {
-                configureRenderer(sceneRenderer, canvasRendering);
-                sceneRenderer.optDebugInfoRenderer().ifPresent(debugRenderer -> configureRenderer(debugRenderer, canvasRendering));
+                configureRenderer(sceneRenderer, sceneCanvasRendering);
+                sceneRenderer.optDebugInfoRenderer().ifPresent(debugRenderer -> configureRenderer(debugRenderer, sceneCanvasRendering));
             }
 
-            //TODO temporary solution
+            //TODO This is just a temporary solution
             miniViewRenderer = new MiniPlaySceneViewRenderer(miniView, animController, renderConfig);
+            // Mini view renderer has its own scaling and background
         }
         else {
-            Logger.error("Cannot create game scene and HUD renderer: no canvas has been assigned");
+            Logger.error("Cannot create renderers: no canvas has been defined!");
         }
     }
 
@@ -84,12 +80,11 @@ public class RenderManager {
 
     public void clearSceneCanvas(GameScene gameScene) {
         gameScene.optCanvasRendering().ifPresent(canvasRendering -> {
-            if (canvasRendering.canvas() != null) {
-                final var ctx = canvasRendering.canvas().getGraphicsContext2D();
+            final Canvas canvas = canvasRendering.canvas();
+            if (canvas != null) {
+                final var ctx = canvas.getGraphicsContext2D();
                 ctx.setFill(canvasRendering.backgroundColor());
-                ctx.fillRect(0, 0, canvasRendering.canvas().getWidth(), canvasRendering.canvas().getHeight());
-            } else {
-                Logger.error("Cannot create game scene canvas: no canvas has been assigned");
+                ctx.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
             }
         });
     }
@@ -119,8 +114,8 @@ public class RenderManager {
         }
     }
 
-    private void configureRenderer(Renderer renderer, SceneCanvasRenderingComp canvasRendering) {
-        renderer.backgroundColorProperty().bind(canvasRendering.backgroundColorProperty());
-        renderer.scalingProperty().bind(canvasRendering.scalingProperty());
+    private void configureRenderer(Renderer renderer, GameSceneCanvasRenderingComp rendering) {
+        renderer.backgroundColorProperty().bind(rendering.backgroundColorProperty());
+        renderer.scalingProperty().bind(rendering.scalingProperty());
     }
 }

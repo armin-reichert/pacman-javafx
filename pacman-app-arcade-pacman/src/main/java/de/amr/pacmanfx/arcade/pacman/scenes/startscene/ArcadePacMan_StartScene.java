@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.ui.GlobalFonts;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
@@ -31,7 +31,7 @@ public class ArcadePacMan_StartScene extends GameScene {
 
     public ArcadePacMan_StartScene(GameAppContext app) {
         super(app);
-        setComp(SceneCanvasRenderingComp.class, new SceneCanvasRenderingComp());
+        setComp(GameSceneCanvasRenderingComp.class, new GameSceneCanvasRenderingComp());
 
         final Font arcade6 = GlobalFonts.ARCADE.font(6);
         final Font arcade8 = GlobalFonts.ARCADE.font(8);

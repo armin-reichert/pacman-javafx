@@ -18,7 +18,7 @@ import de.amr.pacmanfx.core.gamestate.GameFlowController;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.vm.GameViewModel;
@@ -55,12 +55,12 @@ public abstract class GameScene extends Composition<GameSceneComponent>
      */
     public abstract Stream<Renderable> renderables();
 
-    public Optional<SceneCanvasRenderingComp> optCanvasRendering() {
-        return optComp(SceneCanvasRenderingComp.class);
+    public Optional<GameSceneCanvasRenderingComp> optCanvasRendering() {
+        return optComp(GameSceneCanvasRenderingComp.class);
     }
 
-    public SceneCanvasRenderingComp reqCanvasRendering() {
-        return reqComp(SceneCanvasRenderingComp.class);
+    public GameSceneCanvasRenderingComp reqCanvasRendering() {
+        return reqComp(GameSceneCanvasRenderingComp.class);
     }
 
     public boolean wantsClearCanvas() {

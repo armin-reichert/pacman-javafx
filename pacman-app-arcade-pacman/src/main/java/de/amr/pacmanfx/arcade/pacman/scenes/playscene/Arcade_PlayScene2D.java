@@ -21,7 +21,7 @@ import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationManager;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
-import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
@@ -44,7 +44,7 @@ public class Arcade_PlayScene2D extends GameScene implements Arcade_PlayScene2D_
     public Arcade_PlayScene2D(GameAppContext app) {
         super(app);
         // Add 2D canvas rendering capability
-        setComp(SceneCanvasRenderingComp.class, new SceneCanvasRenderingComp());
+        setComp(GameSceneCanvasRenderingComp.class, new GameSceneCanvasRenderingComp());
     }
 
     @Override

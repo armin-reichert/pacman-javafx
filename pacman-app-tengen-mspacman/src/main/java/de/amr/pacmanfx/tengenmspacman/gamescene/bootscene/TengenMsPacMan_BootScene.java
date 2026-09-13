@@ -20,7 +20,7 @@ import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.ui.GlobalFonts;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.entities.hud.comp.HUD_Style;
 import javafx.scene.paint.Color;
 
@@ -50,8 +50,8 @@ public class TengenMsPacMan_BootScene extends GameScene {
     public TengenMsPacMan_BootScene(GameAppContext app) {
         super(app);
 
-        final var rendering = new SceneCanvasRenderingComp();
-        setComp(SceneCanvasRenderingComp.class, rendering);
+        final var rendering = new GameSceneCanvasRenderingComp();
+        setComp(GameSceneCanvasRenderingComp.class, rendering);
         rendering.unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         rendering.unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
 

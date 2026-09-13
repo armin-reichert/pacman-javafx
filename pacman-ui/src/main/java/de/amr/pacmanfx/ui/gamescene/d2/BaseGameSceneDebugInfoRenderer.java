@@ -48,7 +48,7 @@ public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
     private static final List<Direction> CLOCK_WISE = List.of(Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT);
 
     public static BaseGameSceneDebugInfoRenderer createDefaultSceneDebugRenderer(GameScene gameScene, Canvas canvas) {
-        final SceneCanvasRenderingComp r2D = gameScene.reqComp(SceneCanvasRenderingComp.class);
+        final GameSceneCanvasRenderingComp r2D = gameScene.reqComp(GameSceneCanvasRenderingComp.class);
         final ActorSpriteAnimController animController = gameScene.game().variantPlayConfig().systems().actorSpriteAnimController();
         return r2D.configureRenderer(new BaseGameSceneDebugInfoRenderer(animController, canvas));
     }
@@ -72,7 +72,7 @@ public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
         }
 
         final GameSession session = gameScene.game().session();
-        final SceneCanvasRenderingComp canvasRendering = gameScene.reqComp(SceneCanvasRenderingComp.class);
+        final GameSceneCanvasRenderingComp canvasRendering = gameScene.reqComp(GameSceneCanvasRenderingComp.class);
 
         drawTileGrid(canvasRendering.unscaledWidth(), canvasRendering.unscaledHeight(), Color.LIGHTGRAY);
         drawGameStateInfo(gameScene.game());

@@ -31,7 +31,7 @@ import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_MapRepository;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
-import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.vm.GameViewModel;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.rendering.RenderableWrapper;
@@ -76,7 +76,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
         super(app);
 
         // Add canvas rendering capability, no canvas assigned yet!
-        setComp(SceneCanvasRenderingComp.class, createCanvasRendering());
+        setComp(GameSceneCanvasRenderingComp.class, createCanvasRendering());
 
         final GameViewModel vm = app.ui().viewModel();
         final TengenMsPacMan_UISettings uiSettings = uiSettings();
@@ -269,16 +269,16 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
     };
 
     private void resetRendering2D() {
-        final SceneCanvasRenderingComp oldComp = reqCanvasRendering();
-        final SceneCanvasRenderingComp newComp = createCanvasRendering();
+        final GameSceneCanvasRenderingComp oldComp = reqCanvasRendering();
+        final GameSceneCanvasRenderingComp newComp = createCanvasRendering();
         newComp.setCanvas(oldComp.canvas());
-        removeComp(SceneCanvasRenderingComp.class);
-        setComp(SceneCanvasRenderingComp.class, newComp);
+        removeComp(GameSceneCanvasRenderingComp.class);
+        setComp(GameSceneCanvasRenderingComp.class, newComp);
         dynamicCamera.scalingProperty().bind(newComp.scalingProperty());
     }
 
-    private SceneCanvasRenderingComp createCanvasRendering() {
-        final var canvasRendering = new SceneCanvasRenderingComp();
+    private GameSceneCanvasRenderingComp createCanvasRendering() {
+        final var canvasRendering = new GameSceneCanvasRenderingComp();
         canvasRendering.unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         canvasRendering.unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
         canvasRendering.scalingProperty().addListener(scalingListener);

@@ -34,7 +34,7 @@ import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.VoiceID;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 
 import java.util.Arrays;
 import java.util.List;
@@ -100,7 +100,7 @@ public class ArcadePacMan_IntroScene extends GameScene {
 
     public ArcadePacMan_IntroScene(GameAppContext app) {
         super(app);
-        setComp(SceneCanvasRenderingComp.class, new SceneCanvasRenderingComp());
+        setComp(GameSceneCanvasRenderingComp.class, new GameSceneCanvasRenderingComp());
         flow = new StateMachine<>(List.of(SceneState.values()));
     }
 

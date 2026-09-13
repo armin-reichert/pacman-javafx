@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.SceneCanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.entities.hud.comp.HUD_Style;
 
 import java.util.stream.Stream;
@@ -55,10 +55,10 @@ public class Arcade_BootScene extends GameScene {
     public Arcade_BootScene(GameAppContext app) {
         super(app);
 
-        final var rendering = new SceneCanvasRenderingComp();
+        final var rendering = new GameSceneCanvasRenderingComp();
         rendering.setUnscaledWidth(WIDTH_IN_TILES * TS);
         rendering.setUnscaledHeight(HEIGHT_IN_TILES * TS);
-        setComp(SceneCanvasRenderingComp.class, rendering);
+        setComp(GameSceneCanvasRenderingComp.class, rendering);
     }
 
     @Override
