@@ -174,12 +174,12 @@ public interface TengenMsPacMan_PlayScene2D_GameEventHandler extends DefaultGame
     //TODO This belongs into an animation system class
 
     default void resetActorAnimations(ActorSpriteAnimController animSystem, GameSession session, GameLevel level) {
-        gameScene().resetPacAnimation(animSystem, session, level.entities().pac());
+        gameScene().resetPacAnimation(animSystem, gameOptions(session).boosterEnabled(), level.entities().pac());
         level.entities().ghosts().forEach(ghost -> gameScene().resetGhostAnimation(animSystem, ghost));
     }
 
-    default void resetPacAnimation(ActorSpriteAnimController animSystem, GameSession session, Pac pac) {
-        animSystem.select(pac, gameOptions(session).boosterEnabled()
+    default void resetPacAnimation(ActorSpriteAnimController animSystem, boolean boosterEnabled, Pac pac) {
+        animSystem.select(pac, boosterEnabled
             ? TengenMsPacMan_AnimationID.MS_PAC_MAN_BOOSTER
             : CommonSpriteAnimationID.PAC_MOUTH_MOVING);
         animSystem.resetSelected(pac);

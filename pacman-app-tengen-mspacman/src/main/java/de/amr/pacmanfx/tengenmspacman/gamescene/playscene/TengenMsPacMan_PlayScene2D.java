@@ -9,6 +9,7 @@ import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.HUD;
+import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.door.comp.DoorDataComp;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.rendering.Renderable;
@@ -51,6 +52,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 import static de.amr.pacmanfx.tengenmspacman.gamescene.SceneDisplay.SCROLLING;
@@ -170,7 +172,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
             if (subScene.getCamera() == dynamicCamera) {
                 dynamicCamera.update(tilesPx(terrain.numRows()), level.entities().pac());
             }
-            ensureActorAnimationsCreated(session, level);
+            ensureActorAnimationsCreated(level, gameOptions(session).boosterEnabled());
             optSoundEffects().ifPresent(soundEffects -> {
                 soundEffects.setEnabled(!session.isAttractMode());
                 soundEffects.playAmbientGameLevelSound(game(), level);
@@ -344,23 +346,23 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
         levelCompletedAnimation.play(numFlashes);
     }
 
-    private void ensureActorAnimationsCreated(GameSession session, GameLevel level) {
-        final GameVariantConfig variant = app().variantManager().currentVariantConfig();
-        final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
-        final SpriteAnimContainer animContainer    = variant.spriteAnimContainer();
-        final ActorSpriteAnimController animController  = variant.playConfig().systems().actorSpriteAnimController();
+    private void ensureActorAnimationsCreated(GameLevel level, boolean boosterEnabled) {
+        final GameVariantConfig variantConfig = app().variantManager().currentVariantConfig();
+        final GameVariantRenderConfig renderConfig = variantConfig.uiConfig().renderConfig();
+        final SpriteAnimContainer animContainer = variantConfig.spriteAnimContainer();
+        final ActorSpriteAnimController animController = variantConfig.playConfig().systems().actorSpriteAnimController();
 
         final Pac pac = level.entities().pac();
         if (animController.hasNoAnimations(pac)) {
             animController.setAnimations(pac, renderConfig.createPacAnimations(animContainer));
-            resetPacAnimation(animController, session, pac);
+            resetPacAnimation(animController, boosterEnabled, pac);
         }
 
-        level.entities().ghosts().forEach(ghost -> {
+        for (Ghost ghost : level.entities().ghosts()) {
             if (animController.hasNoAnimations(ghost)) {
                 animController.setAnimations(ghost, renderConfig.createGhostAnimations(animContainer, ghost.personality()));
                 resetGhostAnimation(animController, ghost);
             }
-        });
+        }
     }
 }
