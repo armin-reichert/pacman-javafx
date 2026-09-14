@@ -65,7 +65,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends BaseRenderer implements
             case RenderableWrapper wrapper -> {
                 ctx.save();
                 ctx.translate(scaledSceneIndent, 0);
-                render(wrapper.wrappedRenderable(), tick);
+                render(wrapper.content(), tick);
                 ctx.restore();
             }
             default -> entityRenderer.render(r, tick);

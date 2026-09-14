@@ -48,7 +48,7 @@ public class MiniPlaySceneViewRenderer extends BaseRenderer {
                 levelRenderer.info().put(LevelRenderInfoKey.MAZE_IS_FLASHING, false);
                 levelRenderer.render(level, tick);
             }
-            case RenderableWrapper wrapper -> render(wrapper.wrappedRenderable(), tick);
+            case RenderableWrapper wrapper -> render(wrapper.content(), tick);
             default -> entityRenderer.render(r, tick);
         }
     }

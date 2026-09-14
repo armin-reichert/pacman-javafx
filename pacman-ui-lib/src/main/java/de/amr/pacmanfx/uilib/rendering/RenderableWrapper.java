@@ -1,7 +1,7 @@
 package de.amr.pacmanfx.uilib.rendering;
 
-import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
+import de.amr.pacmanfx.core.rendering.Renderable;
 
 public class RenderableWrapper implements Renderable {
 
@@ -23,11 +23,7 @@ public class RenderableWrapper implements Renderable {
         this.z = z;
     }
 
-    private RenderableWrapper(Renderable renderable, RenderingLayer targetLayer) {
-        this(renderable, targetLayer, 0);
-    }
-
-    public Renderable wrappedRenderable() {
+    public Renderable content() {
         return renderable;
     }
 

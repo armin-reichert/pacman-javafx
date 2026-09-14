@@ -92,7 +92,7 @@ public class RenderManager {
     private void renderEntity(Renderable r, long tick) {
         if (entityRenderer != null) {
             if (r instanceof RenderableWrapper wrapper) {
-                renderEntity(wrapper.wrappedRenderable(), tick);
+                renderEntity(wrapper.content(), tick);
             } else {
                 entityRenderer.render(r, tick);
             }
