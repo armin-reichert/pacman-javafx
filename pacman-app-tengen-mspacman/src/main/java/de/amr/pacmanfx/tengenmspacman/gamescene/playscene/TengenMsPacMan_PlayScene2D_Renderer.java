@@ -4,67 +4,70 @@
 
 package de.amr.pacmanfx.tengenmspacman.gamescene.playscene;
 
-import de.amr.basics.InfoMap;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
-import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_GameLevelRendererKey;
-import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
+import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_LevelRenderInfoKey;
+import de.amr.pacmanfx.tengenmspacman.sprites.MapImageSet;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
-import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation.FlashingState;
-import de.amr.pacmanfx.uilib.rendering.*;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
+import de.amr.pacmanfx.uilib.rendering.RenderableWrapper;
+import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.scene.canvas.Canvas;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 
-public class TengenMsPacMan_PlayScene2D_Renderer extends BaseRenderer implements SpriteRenderer {
+public class TengenMsPacMan_PlayScene2D_Renderer extends BaseRenderer {
 
     private final Renderer entityRenderer;
     private final Renderer levelRenderer;
 
     public TengenMsPacMan_PlayScene2D_Renderer(
         GameVariantRenderConfig renderConfig, GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
+
         super(canvas);
 
-        final var cr8 = gameScene.reqCanvasRendering();
+        final var cr7g = gameScene.reqCanvasRendering();
 
         entityRenderer = renderConfig.createEntityRenderer(animController, canvas);
-        entityRenderer.scalingProperty().bind(cr8.scalingProperty());
+        entityRenderer.scalingProperty().bind(cr7g.scalingProperty());
         entityRenderer.backgroundColorProperty().bind(backgroundColorProperty());
 
         levelRenderer = renderConfig.createGameLevelRenderer(animController, canvas);
-        levelRenderer.scalingProperty().bind(cr8.scalingProperty());
+        levelRenderer.scalingProperty().bind(cr7g.scalingProperty());
         levelRenderer.backgroundColorProperty().bind(backgroundColorProperty());
 
         setDebugInfoRenderer(new TengenMsPacMan_PlaySceneDebugInfoRenderer(animController, canvas));
     }
 
     @Override
-    public TengenMsPacMan_SpriteSheet spriteSheet() {
-        return TengenMsPacMan_SpriteSheet.instance();
-    }
-
-    @Override
     public void render(Renderable r, long tick) {
-        final double scaledSceneIndent = scaled(2*TS);
+        // NES screen width = 32 tiles but map width is only 28 tiles, so adjust:
+        final double xOffset = scaled(2*TS);
         switch (r) {
             case TengenMsPacMan_PlayScene2D playScene -> {
                 final GameLevel level = playScene.game().session().optLevel().orElse(null);
                 if (level != null) {
+                    final var flashing = playScene.flashingState();
+                    configureLevelRenderer(level.worldMap(),
+                        flashing != null && flashing.isHighlighted(),
+                        flashing != null ? flashing.flashingIndex() : -1);
+
                     ctx.save();
-                    ctx.translate(scaledSceneIndent, 0);
-                    configureLevelRenderer(level, playScene.optLevelCompletedAnimation().orElse(null));
+                    ctx.translate(xOffset, 0);
                     levelRenderer.render(level, tick);
                     ctx.restore();
                 }
             }
             case RenderableWrapper wrapper -> {
+                // Game entities are wrapped to SCENE layer so they are rendered using this renderer
+                // and not by the global entity renderer from the render manager
                 ctx.save();
-                ctx.translate(scaledSceneIndent, 0);
+                ctx.translate(xOffset, 0);
                 render(wrapper.content(), tick);
                 ctx.restore();
             }
@@ -72,27 +75,15 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends BaseRenderer implements
         }
     }
 
-    private void configureLevelRenderer(GameLevel level, LevelCompletedAnimation completedAnimation) {
-        final WorldMap worldMap = level.worldMap();
-
-        final InfoMap renderInfo = levelRenderer.info();
-        renderInfo.clear();
-
-        final MapCategory mapCategory = worldMap.getConfigValue(TengenMsPacMan_GameLevelRendererKey.MAP_CATEGORY);
-        renderInfo.put(TengenMsPacMan_GameLevelRendererKey.MAP_CATEGORY, mapCategory);
-        renderInfo.put(TengenMsPacMan_GameLevelRendererKey.MAP_IMAGE_SET, worldMap.getConfigValue(TengenMsPacMan_GameLevelRendererKey.MAP_IMAGE_SET));
-
-        final FlashingState flashingState = completedAnimation != null
-            ? completedAnimation.optFlashingState().orElse(null)
-            : null;
-
-        if (flashingState == null) {
-            renderInfo.put(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, false);
-            renderInfo.put(LevelRenderInfoKey.FLASHING_INDEX, -1);
-        } else {
-            renderInfo.put(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, flashingState.isHighlighted());
-            renderInfo.put(LevelRenderInfoKey.FLASHING_INDEX, flashingState.flashingIndex());
-        }
-
+    private void configureLevelRenderer(WorldMap worldMap, boolean highlighted, int flashingIndex) {
+        final MapCategory mapCategory = worldMap.getConfigValue(TengenMsPacMan_LevelRenderInfoKey.MAP_CATEGORY);
+        final MapImageSet mapImageSet = worldMap.getConfigValue(TengenMsPacMan_LevelRenderInfoKey.MAP_IMAGE_SET);
+        levelRenderer.info().clear();
+        levelRenderer.info().put(TengenMsPacMan_LevelRenderInfoKey.MAP_CATEGORY, mapCategory);
+        levelRenderer.info().put(TengenMsPacMan_LevelRenderInfoKey.MAP_IMAGE_SET, mapImageSet);
+        levelRenderer.info().put(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, highlighted);
+        levelRenderer.info().put(LevelRenderInfoKey.FLASHING_INDEX, flashingIndex);
+        levelRenderer.info().put(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, highlighted);
+        levelRenderer.info().put(LevelRenderInfoKey.FLASHING_INDEX, flashingIndex);
     }
 }

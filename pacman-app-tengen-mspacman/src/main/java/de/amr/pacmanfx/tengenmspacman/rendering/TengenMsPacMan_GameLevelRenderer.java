@@ -69,7 +69,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
             configureHighlightedMapRenderInfo(info, worldMap, flashingIndex);
         }
         else {
-            final MapCategory mapCategory = info.get(TengenMsPacMan_GameLevelRendererKey.MAP_CATEGORY, MapCategory.class);
+            final MapCategory mapCategory = info.get(TengenMsPacMan_LevelRenderInfoKey.MAP_CATEGORY, MapCategory.class);
             configureNormalMapRenderInfo(info, mapCategory, worldMap, tick);
         }
 
@@ -93,7 +93,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
     }
 
     private void drawFood(WorldMap worldMap, FoodLayer foodLayer, FoodState foodState, boolean blinkingOn) {
-        final MapImageSet mapImageSet = worldMap.getConfigValue(TengenMsPacMan_GameLevelRendererKey.MAP_IMAGE_SET);
+        final MapImageSet mapImageSet = worldMap.getConfigValue(TengenMsPacMan_LevelRenderInfoKey.MAP_IMAGE_SET);
         final NES_WorldMapColorScheme colorScheme = mapImageSet.mapImage().colorScheme();
         final Color pelletColor = Color.valueOf(colorScheme.pellet());
 
@@ -172,7 +172,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
     }
 
     private void configureHighlightedMapRenderInfo(InfoMap info, WorldMap worldMap, int flashingIndex) {
-        final MapImageSet imageSet = worldMap.getConfigValue(TengenMsPacMan_GameLevelRendererKey.MAP_IMAGE_SET);
+        final MapImageSet imageSet = worldMap.getConfigValue(TengenMsPacMan_LevelRenderInfoKey.MAP_IMAGE_SET);
         final int i = Math.clamp(flashingIndex, 0, imageSet.flashingMapImages().size() - 1);
         final ColorSchemedMapSprite flashingMapImage = imageSet.flashingMapImages().get(i);
         info.put(LevelRenderInfoKey.MAZE_IMAGE, flashingMapImage.spriteSheetImage());
@@ -180,7 +180,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
     }
 
     private void configureNormalMapRenderInfo(InfoMap info, MapCategory mapCategory, WorldMap worldMap, long tick) {
-        final MapImageSet imageSet = worldMap.getConfigValue(TengenMsPacMan_GameLevelRendererKey.MAP_IMAGE_SET);
+        final MapImageSet imageSet = worldMap.getConfigValue(TengenMsPacMan_LevelRenderInfoKey.MAP_IMAGE_SET);
         info.put(LevelRenderInfoKey.MAZE_IMAGE, imageSet.mapImage().spriteSheetImage());
         final int mapNumber = worldMap.getConfigValue(WorldMapConfigKey.MAP_NUMBER);
         if (mapCategory == MapCategory.STRANGE && mapNumber == 15) {

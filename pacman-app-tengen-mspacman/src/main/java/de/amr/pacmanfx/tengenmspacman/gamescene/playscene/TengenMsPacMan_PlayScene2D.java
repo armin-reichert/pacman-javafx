@@ -25,7 +25,7 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.gamescene.SceneDisplay;
-import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_GameLevelRendererKey;
+import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_LevelRenderInfoKey;
 import de.amr.pacmanfx.tengenmspacman.sprites.MapImageSet;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_MapRepository;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -34,7 +34,6 @@ import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.vm.GameViewModel;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
-import de.amr.pacmanfx.uilib.rendering.RenderableWrapper;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
@@ -120,8 +119,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
         return dynamicCamera;
     }
 
-    public Optional<LevelCompletedAnimation> optLevelCompletedAnimation() {
-        return Optional.ofNullable(levelCompletedAnimation);
+    public LevelCompletedAnimation.FlashingState flashingState() {
+        if (levelCompletedAnimation == null || levelCompletedAnimation.optFlashingState().isEmpty()) {
+            return null;
+        }
+        return levelCompletedAnimation.optFlashingState().get();
     }
 
     @Override
@@ -227,10 +229,10 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
         reqCanvasRendering().unscaledHeightProperty().set(size.y());
 
         // Store the maze sprite set with the correct colors for this level in the map configuration:
-        if (!worldMap.hasConfigValue(TengenMsPacMan_GameLevelRendererKey.MAP_IMAGE_SET)) {
+        if (!worldMap.hasConfigValue(TengenMsPacMan_LevelRenderInfoKey.MAP_IMAGE_SET)) {
             final int numFlashes = 3;
             final MapImageSet mapImageSet = TengenMsPacMan_MapRepository.instance().createMapImageSet(worldMap, numFlashes);
-            worldMap.setConfigValue(TengenMsPacMan_GameLevelRendererKey.MAP_IMAGE_SET, mapImageSet);
+            worldMap.setConfigValue(TengenMsPacMan_LevelRenderInfoKey.MAP_IMAGE_SET, mapImageSet);
             Logger.info("Maze sprite set created: {}", mapImageSet);
 
             final var doorData = level.entities().house().door().reqComp(DoorDataComp.class);

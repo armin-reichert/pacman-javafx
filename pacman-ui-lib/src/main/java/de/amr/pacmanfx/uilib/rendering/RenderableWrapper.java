@@ -7,11 +7,11 @@ public class RenderableWrapper implements Renderable {
 
     public static RenderableWrapper reassignLayer(Renderable r, RenderingLayer layer, int z) {
         return new RenderableWrapper(r, layer, z);
-    };
+    }
 
     public static RenderableWrapper reassignLayer(Renderable r, RenderingLayer layer) {
         return new RenderableWrapper(r, layer, 0);
-    };
+    }
 
     private final RenderingLayer targetLayer;
     private final Renderable renderable;
