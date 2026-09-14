@@ -97,7 +97,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
         final GameLevel level = game().session().optLevel().orElse(null);
         if (level == null) return Stream.empty();
         return Ufx.streamOf(
-            level.visibleRenderables(),
+            level.visibleRenderables().map(r -> RenderableWrapper.reassignLayer(r, RenderingLayer.SCENE)),
             // In Tengen, ghosts appear under the house door, so reassign the door z layer:
             RenderableWrapper.reassignLayer(level.entities().house().door(), RenderingLayer.ACTORS, 100)
         );

@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.tengenmspacman.gamescene.introscene;
 
 import de.amr.basics.fsm.State;
@@ -10,8 +11,8 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.timer.TickTimer;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.gamestate.GameFlowController;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
@@ -50,11 +51,11 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_
 public class TengenMsPacMan_IntroScene extends GameScene {
 
     // Anchor point for everything
-    public static final int ANCHOR_X = 60, ANCHOR_Y = 64;
+    public static final int ANCHOR_X = 76, ANCHOR_Y = 64;
 
     public static final int ACTOR_Y = ANCHOR_Y + 72;
-    public static final int GHOST_STOP_X = ANCHOR_X - 34;
-    public static final int MS_PAC_MAN_STOP_X = ANCHOR_X + 46;
+    public static final int GHOST_STOP_X = ANCHOR_X - 18;
+    public static final int MS_PAC_MAN_STOP_X = ANCHOR_X + 62;
     public static final float SPEED = 2.2f; //TODO check exact speed
 
     public final StateMachine<TengenMsPacMan_IntroScene> flow;
@@ -74,9 +75,11 @@ public class TengenMsPacMan_IntroScene extends GameScene {
 
     public TengenMsPacMan_IntroScene(GameAppContext app) {
         super(app);
+
         setComp(GameSceneCanvasRenderingComp.class, new GameSceneCanvasRenderingComp());
         reqCanvasRendering().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         reqCanvasRendering().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
+
         flow = new StateMachine<>(List.of(SceneState.values()));
     }
 
@@ -150,7 +153,7 @@ public class TengenMsPacMan_IntroScene extends GameScene {
     private Marquee createMarquee() {
         final var marquee = new Marquee();
 
-        marquee.pos().set(ANCHOR_X - 2 * TS, ANCHOR_Y);
+        marquee.pos().set(ANCHOR_X, ANCHOR_Y);
 
         marquee.layout().setNumBulbsHorizontally(34);
         marquee.layout().setNumBulbsVertically(16);
@@ -195,9 +198,8 @@ public class TengenMsPacMan_IntroScene extends GameScene {
             public void onEnter(TengenMsPacMan_IntroScene scene) {
                 final GameVariantConfig variant = scene.app().variantManager().currentVariantConfig();
                 final ActorSpriteAnimController animController = variant.playConfig().systems().actorSpriteAnimController();
-
                 final GameSystems systems = variant.playConfig().systems();
-                final WorldNavigationSystem worldNavigationSystem = systems.navigator();
+                final WorldNavigationSystem nav = systems.navigator();
 
                 timer.restartTicks(TickTimer.INDEFINITE);
 
@@ -206,8 +208,8 @@ public class TengenMsPacMan_IntroScene extends GameScene {
                 scene.msPacMan.pos().set(TS * 33, ACTOR_Y);
                 scene.msPacMan.show();
 
-                worldNavigationSystem.setMoveDir(scene.msPacMan, Direction.LEFT);
-                worldNavigationSystem.setMoveDirSpeed(scene.msPacMan, SPEED);
+                nav.setMoveDir(scene.msPacMan, Direction.LEFT);
+                nav.setMoveDirSpeed(scene.msPacMan, SPEED);
 
                 animController.select(scene.msPacMan, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
                 animController.playSelected(scene.msPacMan);
@@ -216,9 +218,9 @@ public class TengenMsPacMan_IntroScene extends GameScene {
                     ghost.pos().set(TS * 33, ACTOR_Y);
                     ghost.show();
 
-                    worldNavigationSystem.setMoveDir(ghost, Direction.LEFT);
-                    worldNavigationSystem.setWishDir(ghost, Direction.LEFT);
-                    worldNavigationSystem.setMoveDirSpeed(ghost, SPEED);
+                    nav.setMoveDir(ghost, Direction.LEFT);
+                    nav.setWishDir(ghost, Direction.LEFT);
+                    nav.setMoveDirSpeed(ghost, SPEED);
 
                     animController.playSelected(ghost);
                     systems.ghostState().setState(ghost, GhostState.HUNTING_PAC);
@@ -256,14 +258,14 @@ public class TengenMsPacMan_IntroScene extends GameScene {
             boolean letGhostMarchIn(TengenMsPacMan_IntroScene scene) {
                 final GameSystems systems = scene.game().variantPlayConfig().systems();
                 final MovementSystem motor = systems.motor();
-                final WorldNavigationSystem navigator = systems.navigator();
+                final WorldNavigationSystem nav = systems.navigator();
 
                 final Ghost ghost = scene.ghosts.get(scene.ghostIndex);
                 if (ghost.worldNavigation().moveDir() == Direction.LEFT) {
                     if (ghost.pos().x() <= GHOST_STOP_X) {
                         ghost.pos().setX(GHOST_STOP_X);
-                        navigator.setMoveDir(ghost, Direction.UP);
-                        navigator.setWishDir(ghost, Direction.UP);
+                        nav.setMoveDir(ghost, Direction.UP);
+                        nav.setWishDir(ghost, Direction.UP);
                         scene.waitBeforeRising = 2;
                     } else {
                         motor.move(ghost);
@@ -271,14 +273,14 @@ public class TengenMsPacMan_IntroScene extends GameScene {
                     }
                 }
                 else if (ghost.worldNavigation().moveDir() == Direction.UP) {
-                    int endPositionY = ANCHOR_Y + scene.ghostIndex * 16;
+                    final int endPositionY = ANCHOR_Y + scene.ghostIndex * 16;
                     if (scene.waitBeforeRising > 0) {
                         scene.waitBeforeRising--;
                     }
                     else if (ghost.pos().y() <= endPositionY) {
-                        navigator.setMoveDirSpeed(ghost, 0);
-                        navigator.setMoveDir(ghost, Direction.RIGHT);
-                        navigator.setWishDir(ghost, Direction.RIGHT);
+                        nav.setMoveDirSpeed(ghost, 0);
+                        nav.setMoveDir(ghost, Direction.RIGHT);
+                        nav.setWishDir(ghost, Direction.RIGHT);
                         return true;
                     }
                     else {
@@ -299,21 +301,24 @@ public class TengenMsPacMan_IntroScene extends GameScene {
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
                 final GameContext game = scene.game();
+                final GameFlowController flow = game.variantPlayConfig().gameFlow();
                 final GameSystems systems = game.variantPlayConfig().systems();
-                final GameSession session = game.session();
+                final ActorSpriteAnimController animController = systems.actorSpriteAnimController();
+                final MovementSystem motor = systems.motor();
+                final WorldNavigationSystem nav = systems.navigator();
 
-                systems.motor().move(scene.msPacMan);
+                motor.move(scene.msPacMan);
                 if (scene.msPacMan.pos().x() <= MS_PAC_MAN_STOP_X) {
-                    systems.navigator().setMoveDirSpeed(scene.msPacMan, 0);
-                    systems.actorSpriteAnimController().resetSelected(scene.msPacMan);
+                    nav.setMoveDirSpeed(scene.msPacMan, 0);
+                    animController.resetSelected(scene.msPacMan);
                 }
                 if (timer.atSecond(8)) {
                     // start demo level or show options
-                    if (gameOptions(session).areInitial()) {
-                        gameOptions(session).setCanStartNewGame(false); // TODO check this
-                        game.variantPlayConfig().gameFlow().restartState(game, Tengen_GameState.GAME_OR_LEVEL_STARTING.state());
+                    if (gameOptions(game.session()).areInitial()) {
+                        gameOptions(game.session()).setCanStartNewGame(false); // TODO check this
+                        flow.restartState(game, Tengen_GameState.GAME_OR_LEVEL_STARTING.state());
                     } else {
-                        game.variantPlayConfig().gameFlow().enterState(game, Tengen_GameState.GAME_PREPARATION.state());
+                        flow.enterState(game, Tengen_GameState.GAME_PREPARATION.state());
                     }
                 }
             }

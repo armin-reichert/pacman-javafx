@@ -5,28 +5,25 @@
 package de.amr.pacmanfx.tengenmspacman.gamescene.playscene;
 
 import de.amr.basics.InfoMap;
-import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
+import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_GameLevelRendererKey;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
-import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
-import de.amr.pacmanfx.uilib.rendering.Renderer;
-import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
+import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation.FlashingState;
+import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.scene.canvas.Canvas;
+
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 
 public class TengenMsPacMan_PlayScene2D_Renderer extends BaseRenderer implements SpriteRenderer {
 
-    public static final int CONTENT_INDENT = 16;
-
+    private final Renderer entityRenderer;
     private final Renderer levelRenderer;
 
     public TengenMsPacMan_PlayScene2D_Renderer(
@@ -34,6 +31,10 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends BaseRenderer implements
         super(canvas);
 
         final var cr8 = gameScene.reqCanvasRendering();
+
+        entityRenderer = renderConfig.createEntityRenderer(animController, canvas);
+        entityRenderer.scalingProperty().bind(cr8.scalingProperty());
+        entityRenderer.backgroundColorProperty().bind(backgroundColorProperty());
 
         levelRenderer = renderConfig.createGameLevelRenderer(animController, canvas);
         levelRenderer.scalingProperty().bind(cr8.scalingProperty());
@@ -49,57 +50,49 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends BaseRenderer implements
 
     @Override
     public void render(Renderable r, long tick) {
-        if (!(r instanceof TengenMsPacMan_PlayScene2D playScene)) {
-            return;
+        final double scaledSceneIndent = scaled(2*TS);
+        switch (r) {
+            case TengenMsPacMan_PlayScene2D playScene -> {
+                final GameLevel level = playScene.game().session().optLevel().orElse(null);
+                if (level != null) {
+                    ctx.save();
+                    ctx.translate(scaledSceneIndent, 0);
+                    configureLevelRenderer(level, playScene.optLevelCompletedAnimation().orElse(null));
+                    levelRenderer.render(level, tick);
+                    ctx.restore();
+                }
+            }
+            case RenderableWrapper wrapper -> {
+                ctx.save();
+                ctx.translate(scaledSceneIndent, 0);
+                render(wrapper.wrappedRenderable(), tick);
+                ctx.restore();
+            }
+            default -> entityRenderer.render(r, tick);
         }
-
-        final GameContext game = playScene.game();
-        final GameSession session = game.session();
-
-        session.optLevel().ifPresent(level -> {
-            final WorldMap worldMap = level.worldMap();
-            final double scaledIndent = scaled(CONTENT_INDENT);
-
-            ctx.save();
-            ctx.translate(scaledIndent, 0);
-
-            final LevelCompletedAnimation.FlashingState flashingState = playScene.optLevelCompletedAnimation()
-                .flatMap(LevelCompletedAnimation::flashingState)
-                .orElse(null);
-
-            configureLevelRenderer(levelRenderer, level, flashingState);
-            levelRenderer.render(level, tick);
-
-            ctx.restore();
-
-            // All maps are 28 tiles wide but the NES screen is 32 tiles wide.
-            // To accommodate, the maps are centered horizontally and 2 tiles on each side are clipped.
-            final double stripeHeight = ctx.getCanvas().getHeight();
-            ctx.save();
-
-            ctx.setFill(backgroundColor());
-            ctx.fillRect(0, 0, scaledIndent, stripeHeight);
-            ctx.fillRect(ctx.getCanvas().getWidth() - scaledIndent, 0, scaledIndent, stripeHeight);
-
-            ctx.restore();
-        });
     }
 
-    private static void configureLevelRenderer(Renderer levelRenderer, GameLevel level, LevelCompletedAnimation.FlashingState flashingState) {
-        final InfoMap info = levelRenderer.info();
-        info.clear();
-
+    private void configureLevelRenderer(GameLevel level, LevelCompletedAnimation completedAnimation) {
         final WorldMap worldMap = level.worldMap();
 
+        final InfoMap renderInfo = levelRenderer.info();
+        renderInfo.clear();
+
         final MapCategory mapCategory = worldMap.getConfigValue(TengenMsPacMan_GameLevelRendererKey.MAP_CATEGORY);
-        info.put(TengenMsPacMan_GameLevelRendererKey.MAP_CATEGORY, mapCategory);
-        info.put(TengenMsPacMan_GameLevelRendererKey.MAP_IMAGE_SET, worldMap.getConfigValue(TengenMsPacMan_GameLevelRendererKey.MAP_IMAGE_SET));
+        renderInfo.put(TengenMsPacMan_GameLevelRendererKey.MAP_CATEGORY, mapCategory);
+        renderInfo.put(TengenMsPacMan_GameLevelRendererKey.MAP_IMAGE_SET, worldMap.getConfigValue(TengenMsPacMan_GameLevelRendererKey.MAP_IMAGE_SET));
+
+        final FlashingState flashingState = completedAnimation != null
+            ? completedAnimation.optFlashingState().orElse(null)
+            : null;
+
         if (flashingState == null) {
-            info.put(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, false);
-            info.put(LevelRenderInfoKey.FLASHING_INDEX, -1);
+            renderInfo.put(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, false);
+            renderInfo.put(LevelRenderInfoKey.FLASHING_INDEX, -1);
         } else {
-            info.put(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, flashingState.isHighlighted());
-            info.put(LevelRenderInfoKey.FLASHING_INDEX, flashingState.flashingIndex());
+            renderInfo.put(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, flashingState.isHighlighted());
+            renderInfo.put(LevelRenderInfoKey.FLASHING_INDEX, flashingState.flashingIndex());
         }
+
     }
 }

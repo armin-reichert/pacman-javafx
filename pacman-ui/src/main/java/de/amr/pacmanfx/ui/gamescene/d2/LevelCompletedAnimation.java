@@ -121,7 +121,7 @@ public class LevelCompletedAnimation {
      *
      * @return optional flashing state (empty if the level has no flashing)
      */
-    public Optional<FlashingState> flashingState() {
+    public Optional<FlashingState> optFlashingState() {
         return Optional.ofNullable(flashingAnimation);
     }
 

@@ -186,7 +186,7 @@ public class Arcade_PlayScene2D extends GameScene implements Arcade_PlayScene2D_
         info.put(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, false);
         info.put(LevelRenderInfoKey.MAZE_IS_FLASHING, false);
         if (levelCompletedAnimation != null) {
-            levelCompletedAnimation.flashingState().ifPresent(flashing -> {
+            levelCompletedAnimation.optFlashingState().ifPresent(flashing -> {
                 info.put(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, flashing.isHighlighted());
                 info.put(LevelRenderInfoKey.MAZE_IS_FLASHING, flashing.isFlashing());
             });

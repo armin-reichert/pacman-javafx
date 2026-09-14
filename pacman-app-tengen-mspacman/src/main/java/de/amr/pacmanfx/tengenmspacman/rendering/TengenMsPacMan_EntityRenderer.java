@@ -74,14 +74,7 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
         requireNonNull(r);
         if (r instanceof GameEntity gameEntity) {
             if (gameEntity.isVisible()) {
-                ctx.save();
-                ctx.setImageSmoothing(true);
-
-                //TODO REMOVE! This does not belong here and is complete crap!
-                ctx.translate(scaled(16), 0); // content indent of map
-
                 renderGameEntity(gameEntity, tick);
-                ctx.restore();
             }
         } else {
             super.render(r, tick);
@@ -283,6 +276,9 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
         final float centerX = display.pos().x();
         final float y = display.pos().y();
 
+        ctx.save();
+        ctx.setImageSmoothing(false);
+
         drawSpriteCentered(spriteSheet().findSprite(SpriteID.INFO_FRAME), centerX, y);
 
         if (options.boosterMode() != BoosterMode.BOOSTER_OFF) {
@@ -294,6 +290,8 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
         if (mapCategorySprite != null) {
             drawSpriteCentered(mapCategorySprite, centerX + tilesPx(4.5f), y);
         }
+
+        ctx.restore();
     }
 
     private void drawGameScore(Score score, long tick) {
