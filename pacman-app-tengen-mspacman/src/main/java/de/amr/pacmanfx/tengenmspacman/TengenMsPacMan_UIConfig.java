@@ -89,8 +89,6 @@ public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
     private GameSoundEffects soundEffects;
     private AssetMap assets;
 
-    private final Map<Named, Object> extensions = new HashMap<>();
-
     @Override
     public void load(GameApp app) {
         loadAssets();
@@ -98,8 +96,14 @@ public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
         renderConfig.addAssets();
         assets.freeze();
         loadSounds(app.ui().soundManager());
-        extensions.put(EXT_UI_SETTINGS, new TengenMsPacMan_UISettings(null));
-        extensions.put(EXT_ACTIONS, new TengenMsPacMan_Actions(app.input().joypad(), app.commonActions()));
+    }
+
+    @Override
+    public Map<Named, Object> createExtensions(GameApp app) {
+        return Map.of(
+            EXT_UI_SETTINGS, new TengenMsPacMan_UISettings(app),
+            EXT_ACTIONS,     new TengenMsPacMan_Actions(app.input().joypad(), app.commonActions())
+        );
     }
 
     @Override
@@ -125,15 +129,6 @@ public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
     @Override
     public AssetMap assets() {
         return assets;
-    }
-
-    @Override
-    public <T> T extensionValue(Named id, Class<T> type) {
-        final Object value = extensions.get(id);
-        if (type.isInstance(value)) {
-            return type.cast(value);
-        }
-        throw new IllegalArgumentException("Extension value " + value + " of type " + type.getName() + " not found");
     }
 
     @Override

@@ -120,8 +120,8 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         final var bindingsMap = actionBindingsSupport().registry();
         bindingsMap.dispose();
 
-        final var actions = app().variantManager().currentVariantRuntime().uiConfig().extensionValue(
-            TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
+        final var actions = app().variantManager().currentVariantRuntime()
+            .extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
 
         if (session.isAttractMode()) {
             // In demo level, allow going back to options screen

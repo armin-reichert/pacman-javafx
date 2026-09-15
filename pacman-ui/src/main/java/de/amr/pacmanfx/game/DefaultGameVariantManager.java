@@ -8,6 +8,7 @@ import de.amr.pacmanfx.core.gamestate.GameFlow;
 import de.amr.pacmanfx.core.model.test.Test_CutScenesTestState;
 import de.amr.pacmanfx.core.model.test.Test_MediumTestState;
 import de.amr.pacmanfx.core.model.test.Test_ShortTestState;
+import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.vm.GameViewModel;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -23,14 +24,17 @@ public class DefaultGameVariantManager implements GameVariantManager {
 
     private final GameBox gameBox;
 
+    private final GameApp app;
+
     private final Map<String, GameVariantRuntime> configsByName = new HashMap<>();
 
     private final StringProperty selectedVariantName = new SimpleStringProperty();
 
     private final GameViewModel viewModel;
 
-    public DefaultGameVariantManager(GameBox gameBox, GameViewModel viewModel) {
+    public DefaultGameVariantManager(GameBox gameBox, GameApp app, GameViewModel viewModel) {
         this.gameBox = requireNonNull(gameBox);
+        this.app = requireNonNull(app);
         this.viewModel = requireNonNull(viewModel);
     }
 
@@ -38,7 +42,7 @@ public class DefaultGameVariantManager implements GameVariantManager {
     public void registerVariantConfig(String variantName) {
         requireNonNull(variantName);
         final boolean includeInteractiveTests = viewModel.testStatesIncludedProperty().get();
-        final GameVariantRuntime gameVariantRuntime = createGameVariantRuntime(gameBox, variantName, includeInteractiveTests);
+        final GameVariantRuntime gameVariantRuntime = createGameVariantRuntime(gameBox, app, variantName, includeInteractiveTests);
         configsByName.put(variantName, gameVariantRuntime);
     }
 
@@ -87,9 +91,9 @@ public class DefaultGameVariantManager implements GameVariantManager {
         selectedVariantName.set(variantName);
     }
 
-    private GameVariantRuntime createGameVariantRuntime(GameBox gameBox, String variantName, boolean includeInteractiveTests) {
+    private GameVariantRuntime createGameVariantRuntime(GameBox gameBox, GameApp app, String variantName, boolean includeInteractiveTests) {
         final Cartridge cartridge = gameBox.cartridgeByName(variantName);
-        final var variantRuntime = new GameVariantRuntime(gameBox, cartridge);
+        final var variantRuntime = new GameVariantRuntime(gameBox, cartridge, app);
         if (includeInteractiveTests) {
             final GameFlow gameFlow = variantRuntime.playConfig().gameFlow();
             gameFlow.addState(new Test_ShortTestState());

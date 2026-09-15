@@ -14,6 +14,7 @@ import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 
+import java.util.Map;
 import java.util.Optional;
 
 public interface GameVariantUIConfig extends Disposable {
@@ -21,6 +22,10 @@ public interface GameVariantUIConfig extends Disposable {
     void load(GameApp app);
 
     void unload(GameApp app);
+
+    default Map<Named, Object> createExtensions(GameApp app) {
+        return Map.of();
+    }
 
     /**
      * @return the game scene configuration mapping game states to scenes.
@@ -56,6 +61,4 @@ public interface GameVariantUIConfig extends Disposable {
      * @return the game level map ("world") settings
      */
     WorldSettings worldSettings();
-
-    <T> T extensionValue(Named id, Class<T> type);
 }

@@ -202,7 +202,7 @@ public final class PacManGamesMasterApp implements GameApp {
     // Private area, no trespassing!
 
     private void createVariantManager(GameUI ui) {
-        gameVariantManager = new DefaultGameVariantManager(gameBox, ui.viewModel());
+        gameVariantManager = new DefaultGameVariantManager(gameBox, this, ui.viewModel());
         gameVariantManager.selectedVariantNameProperty().addListener((_, oldVariantName, newVariantName) -> {
             Logger.info("Game variant name: {} -> {}", oldVariantName, newVariantName);
 

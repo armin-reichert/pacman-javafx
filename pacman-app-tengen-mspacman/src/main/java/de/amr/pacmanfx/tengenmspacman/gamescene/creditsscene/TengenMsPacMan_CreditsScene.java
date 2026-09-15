@@ -44,8 +44,8 @@ public class TengenMsPacMan_CreditsScene extends GameScene {
 
     @Override
     public void onActivate() {
-        final var actions = app().variantManager().currentVariantRuntime().uiConfig().extensionValue(
-            TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
+        final var actions = app().variantManager().currentVariantRuntime()
+            .extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
 
         final var bindingsMap = actionBindingsSupport().registry();
         bindingsMap.selectAnyMatchingBinding(actions.actionEnterStartScreen(), actions.localBindings());

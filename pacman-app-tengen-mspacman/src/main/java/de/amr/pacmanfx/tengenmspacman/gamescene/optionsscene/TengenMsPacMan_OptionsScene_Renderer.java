@@ -57,7 +57,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer implement
         }
 
         final TengenMsPacMan_UISettings uiSettings = optionsScene.app().variantManager().currentVariantRuntime()
-            .uiConfig().extensionValue(TengenMsPacMan_GameExtension.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
+            .extensionValue(TengenMsPacMan_GameExtension.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
 
         final GameContext game = optionsScene.game();
         final GameSession session = game.session();

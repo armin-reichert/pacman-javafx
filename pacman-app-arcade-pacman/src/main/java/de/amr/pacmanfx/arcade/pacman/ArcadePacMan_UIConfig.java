@@ -59,8 +59,6 @@ public class ArcadePacMan_UIConfig implements GameVariantUIConfig {
     private AssetMap assets;
     private GameSoundEffects soundEffects;
 
-    private final Map<Named, Object> extensions = new HashMap<>();
-
     @Override
     public void load(GameApp app) {
         loadAssets();
@@ -68,7 +66,11 @@ public class ArcadePacMan_UIConfig implements GameVariantUIConfig {
         renderConfig.addAssets();
         assets.freeze();
         loadSounds(app.ui().soundManager());
-        extensions.put(Arcade_GameExtensions.ACTIONS, new Arcade_Actions());
+    }
+
+    @Override
+    public Map<Named, Object> createExtensions(GameApp app) {
+        return Map.of(Arcade_GameExtensions.ACTIONS, new Arcade_Actions());
     }
 
     @Override
@@ -94,15 +96,6 @@ public class ArcadePacMan_UIConfig implements GameVariantUIConfig {
     @Override
     public AssetMap assets() {
         return assets;
-    }
-
-    @Override
-    public <T> T extensionValue(Named id, Class<T> type) {
-        final Object value = extensions.get(id);
-        if (type.isInstance(value)) {
-            return type.cast(value);
-        }
-        throw new IllegalArgumentException("Extension value " + value + " of type " + type.getName() + " not found");
     }
 
     @Override

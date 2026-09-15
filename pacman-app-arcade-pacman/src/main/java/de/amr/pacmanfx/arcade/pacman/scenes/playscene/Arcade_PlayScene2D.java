@@ -153,7 +153,7 @@ public class Arcade_PlayScene2D extends GameScene implements Arcade_PlayScene2D_
     }
 
     private void acceptDemoLevel() {
-        final Arcade_Actions actions = app().variantManager().currentVariantRuntime().uiConfig()
+        final Arcade_Actions actions = app().variantManager().currentVariantRuntime()
             .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         final var bindingsMap = actionBindingsSupport().registry();

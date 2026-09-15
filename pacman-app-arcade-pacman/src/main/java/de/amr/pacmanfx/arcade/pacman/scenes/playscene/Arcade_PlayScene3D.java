@@ -24,7 +24,7 @@ public class Arcade_PlayScene3D extends PlayScene3D {
 
         bindingsMap.dispose();
 
-        final Arcade_Actions actions = app().variantManager().currentVariantRuntime().uiConfig()
+        final Arcade_Actions actions = app().variantManager().currentVariantRuntime()
             .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         if (session.isAttractMode()) {
