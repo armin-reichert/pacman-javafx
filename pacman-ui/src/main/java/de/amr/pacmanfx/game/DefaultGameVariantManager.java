@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.game;
 
-import de.amr.pacmanfx.core.gamestate.GameFlowController;
+import de.amr.pacmanfx.core.gamestate.GameFlow;
 import de.amr.pacmanfx.core.model.test.Test_CutScenesTestState;
 import de.amr.pacmanfx.core.model.test.Test_MediumTestState;
 import de.amr.pacmanfx.core.model.test.Test_ShortTestState;
@@ -91,7 +91,7 @@ public class DefaultGameVariantManager implements GameVariantManager {
         final Cartridge cartridge = gameBox.cartridgeByName(variantName);
         final var variant = new GameVariantConfig(gameBox, cartridge);
         if (includeInteractiveTests) {
-            final GameFlowController gameFlow = variant.playConfig().gameFlow();
+            final GameFlow gameFlow = variant.playConfig().gameFlow();
             gameFlow.addState(new Test_ShortTestState());
             gameFlow.addState(new Test_MediumTestState());
             gameFlow.addState(new Test_CutScenesTestState());

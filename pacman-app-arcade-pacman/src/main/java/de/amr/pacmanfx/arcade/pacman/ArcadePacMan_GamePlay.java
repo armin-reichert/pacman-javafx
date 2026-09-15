@@ -18,7 +18,7 @@ import de.amr.pacmanfx.core.event.gameplay.LevelStartedEvent;
 import de.amr.pacmanfx.core.gameplay.ArcadeHouseGateKeeper;
 import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
-import de.amr.pacmanfx.core.gamestate.GameFlowController;
+import de.amr.pacmanfx.core.gamestate.GameFlow;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelEntities;
 import de.amr.pacmanfx.core.level.MessageType;
@@ -82,8 +82,8 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
     protected static final int GAME_OVER_STATE_TICKS = 90;
 
-    public static GameFlowController createGameFlow() {
-        final var gameFlow = new GameFlowController("Arcade Pac-Man Game Flow");
+    public static GameFlow createGameFlow() {
+        final var gameFlow = new GameFlow("Arcade Pac-Man Game Flow");
         for (Arcade_GameState gameState : Arcade_GameState.values()) {
             gameFlow.addState(gameState.state());
         }

@@ -1,7 +1,7 @@
 package de.amr.pacmanfx.core;
 
 import de.amr.pacmanfx.core.gameplay.GamePlay;
-import de.amr.pacmanfx.core.gamestate.GameFlowController;
+import de.amr.pacmanfx.core.gamestate.GameFlow;
 import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 import de.amr.pacmanfx.core.rules.GameRules;
 import org.tinylog.Logger;
@@ -11,7 +11,7 @@ public class GameVariantPlayConfig {
     private final CoinMechanism coinMechanism;
     private final GameSystems systems;
     private final GamePlay gamePlay;
-    private final GameFlowController gameFlow;
+    private final GameFlow gameFlow;
     private final GameRules gameRules;
     private final WorldMapManager worldMapManager;
 
@@ -20,7 +20,7 @@ public class GameVariantPlayConfig {
     public GameVariantPlayConfig(
         GameSystems systems,
         GamePlay gamePlay,
-        GameFlowController gameFlow,
+        GameFlow gameFlow,
         GameRules gameRules,
         WorldMapManager worldMapManager)
     {
@@ -54,7 +54,7 @@ public class GameVariantPlayConfig {
         return gamePlay;
     }
 
-    public GameFlowController gameFlow() {
+    public GameFlow gameFlow() {
         return gameFlow;
     }
 

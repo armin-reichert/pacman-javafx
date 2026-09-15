@@ -12,7 +12,7 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
-import de.amr.pacmanfx.core.gamestate.GameFlowController;
+import de.amr.pacmanfx.core.gamestate.GameFlow;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
@@ -301,7 +301,7 @@ public class TengenMsPacMan_IntroScene extends GameScene {
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
                 final GameContext game = scene.game();
-                final GameFlowController flow = game.variantPlayConfig().gameFlow();
+                final GameFlow flow = game.variantPlayConfig().gameFlow();
                 final GameSystems systems = game.variantPlayConfig().systems();
                 final ActorSpriteAnimController animController = systems.actorSpriteAnimController();
                 final MovementSystem motor = systems.motor();

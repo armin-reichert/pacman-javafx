@@ -16,9 +16,9 @@ import static java.util.Objects.requireNonNull;
 /**
  * A game flow implementation using a state machine.
  */
-public class GameFlowController extends StateMachine<GameContext> {
+public class GameFlow extends StateMachine<GameContext> {
 
-    public GameFlowController(String name) {
+    public GameFlow(String name) {
         setName(name);
     }
 

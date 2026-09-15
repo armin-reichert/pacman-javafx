@@ -27,7 +27,7 @@ public abstract class AbstractGameState implements State<GameContext>, Named {
 
     // State context variables
     protected GameRules rules;
-    protected GameFlowController flow;
+    protected GameFlow flow;
     protected GamePlay gamePlay;
     protected GameSystems systems;
     protected GameSession session;

@@ -7,7 +7,7 @@ package de.amr.pacmanfx.game;
 import de.amr.basics.Named;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.gameplay.GamePlay;
-import de.amr.pacmanfx.core.gamestate.GameFlowController;
+import de.amr.pacmanfx.core.gamestate.GameFlow;
 import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 import de.amr.pacmanfx.core.rules.GameRules;
 
@@ -17,7 +17,7 @@ public record Cartridge(
     Named id,
     Supplier<? extends GameSystems> systemsFactory,
     Supplier<? extends GamePlay> gamePlayFactory,
-    Supplier<? extends GameFlowController> gameFlowFactory,
+    Supplier<? extends GameFlow> gameFlowFactory,
     Supplier<? extends GameRules> gameRulesFactory,
     Supplier<? extends WorldMapManager> worldMapManagerFactory,
     Supplier<? extends GameVariantUIConfig> uiConfigFactory)

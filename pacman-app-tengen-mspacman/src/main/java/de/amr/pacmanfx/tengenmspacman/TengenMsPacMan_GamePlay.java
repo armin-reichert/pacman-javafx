@@ -19,7 +19,7 @@ import de.amr.pacmanfx.core.event.gameplay.LevelStartedEvent;
 import de.amr.pacmanfx.core.gameplay.ArcadeHouseGateKeeper;
 import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
-import de.amr.pacmanfx.core.gamestate.GameFlowController;
+import de.amr.pacmanfx.core.gamestate.GameFlow;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelEntities;
 import de.amr.pacmanfx.core.level.MessageType;
@@ -54,8 +54,8 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
     public static final int NON_ARCADE_MAP_GAME_OVER_TICKS = 600;
     public static final Vector2i HOUSE_MIN_TILE = WorldMap.tile(10, 15);
 
-    public static GameFlowController createGameFlow() {
-        final var gameFlow = new GameFlowController("Tengen Ms. Pac-Man Game Flow");
+    public static GameFlow createGameFlow() {
+        final var gameFlow = new GameFlow("Tengen Ms. Pac-Man Game Flow");
         for (Tengen_GameState gameState : Tengen_GameState.values()) {
             gameFlow.addState(gameState.state());
         }

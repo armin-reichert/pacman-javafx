@@ -14,7 +14,7 @@ import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventListener;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.event.gameplay.CreditAddedEvent;
-import de.amr.pacmanfx.core.gamestate.GameFlowController;
+import de.amr.pacmanfx.core.gamestate.GameFlow;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -83,7 +83,7 @@ public abstract class GameScene extends Composition<GameSceneComponent>
         return game().eventManager();
     }
 
-    public GameFlowController flow() {
+    public GameFlow flow() {
         return game().variantPlayConfig().gameFlow();
     }
 
