@@ -106,12 +106,12 @@ public class ArcadePacMan_IntroScene extends GameScene {
 
     @Override
     public void onActivate() {
-        final Arcade_Actions actions = app().variantManager().currentVariantRuntime()
+        final Arcade_Actions actions = app.variantManager().currentVariantRuntime()
             .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         final var bindingsMap = actionBindingsSupport().registry();
         bindingsMap.registerAllBindings(actions.gameStartActionBindings()); // insert coin + start game actions
-        bindingsMap.registerAllBindings(app().commonActions().sceneTestActions().bindings()); // actions for starting tests
+        bindingsMap.registerAllBindings(app.commonActions().sceneTestActions().bindings()); // actions for starting tests
 
         flow.restartState(this, SceneState.STARTING);
     }
@@ -129,7 +129,7 @@ public class ArcadePacMan_IntroScene extends GameScene {
     }
 
     private void initScene() {
-        final GameVariantRuntime variant = app().variantManager().currentVariantRuntime();
+        final GameVariantRuntime variant = app.variantManager().currentVariantRuntime();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimationContainer animContainer    = variant.spriteAnimContainer();
         final ActorSpriteAnimController animController  = variant.playConfig().systems().actorSpriteAnimController();

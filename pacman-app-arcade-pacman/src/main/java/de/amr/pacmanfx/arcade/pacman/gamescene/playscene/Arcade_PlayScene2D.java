@@ -90,30 +90,30 @@ public class Arcade_PlayScene2D extends GameScene {
 
     @Override
     public Optional<ContextMenu> optContextMenu() {
-        final TranslationManager translations = app().ui().translationManager();
-        final CheatActions cheatActions = app().commonActions().cheatActions();
+        final TranslationManager translations = app.ui().translationManager();
+        final CheatActions cheatActions = app.commonActions().cheatActions();
 
         final var contextMenu = new ContextMenu();
         addLocalizedTitleItem(contextMenu, translations, "context_menu.pacman");
         addLocalizedCheckBox(contextMenu, translations, game().session().cheats().pacUsingAutopilotProperty(), "context_menu.autopilot").setOnAction(e -> {
             final var checkBox = (CheckMenuItem) e.getSource();
             if (checkBox.isSelected()) {
-                app().runAction(cheatActions.actionActivateAutopilot());
+                app.runAction(cheatActions.actionActivateAutopilot());
             } else {
-                app().runAction(cheatActions.actionDeactivateAutopilot());
+                app.runAction(cheatActions.actionDeactivateAutopilot());
             }
         });
         addLocalizedCheckBox(contextMenu, translations, game().session().cheats().pacImmuneProperty(), "context_menu.immunity").setOnAction(e -> {
             final var checkBox = (CheckMenuItem) e.getSource();
             if (checkBox.isSelected()) {
-                app().runAction(cheatActions.actionActivateImmunity());
+                app.runAction(cheatActions.actionActivateImmunity());
             } else {
-                app().runAction(cheatActions.actionDeactivateImmunity());
+                app.runAction(cheatActions.actionDeactivateImmunity());
             }
         });
         addSeparator(contextMenu);
         addLocalizedCheckBox(contextMenu, translations, viewModel().muteProperty(), "context_menu.muted");
-        addLocalizedActionItem(app(), contextMenu, translations, app().commonActions().gameFlowActions().actionQuit(), "context_menu.quit");
+        addLocalizedActionItem(app, contextMenu, translations, app.commonActions().gameFlowActions().actionQuit(), "context_menu.quit");
 
         return Optional.of(contextMenu);
     }
@@ -141,13 +141,13 @@ public class Arcade_PlayScene2D extends GameScene {
         } else {
             acceptNormalLevel(level);
         }
-        ActorAnimationManager.ensureActorAnimationsCreated(app(), level);
+        ActorAnimationManager.ensureActorAnimationsCreated(app, level);
     }
 
     private void acceptNormalLevel(GameLevel level) {
         final var bindingsMap = actionBindingsSupport().registry();
-        bindingsMap.registerAllBindings(app().commonActions().steeringActions().bindings());
-        bindingsMap.registerAllBindings(app().commonActions().cheatActions().bindings());
+        bindingsMap.registerAllBindings(app.commonActions().steeringActions().bindings());
+        bindingsMap.registerAllBindings(app.commonActions().cheatActions().bindings());
 
         soundManager().setEnabled(true);
 
@@ -156,7 +156,7 @@ public class Arcade_PlayScene2D extends GameScene {
     }
 
     private void acceptDemoLevel() {
-        final Arcade_Actions actions = app().variantManager().currentVariantRuntime()
+        final Arcade_Actions actions = app.variantManager().currentVariantRuntime()
             .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         final var bindingsMap = actionBindingsSupport().registry();
@@ -179,7 +179,7 @@ public class Arcade_PlayScene2D extends GameScene {
 
         // TODO: This does not belong here
         //       In Arcade Pac-Man, a dedicated image is used for painting the bright empty maze while flashing
-        final AssetMap assets = app().variantManager().currentVariantRuntime().uiConfig().assets();
+        final AssetMap assets = app.variantManager().currentVariantRuntime().uiConfig().assets();
         if (assets.containsAsset("maze.bright")) {
             info.put(LevelRenderInfoKey.BRIGHT_MAZE_IMAGE, assets.image("maze.bright"));
         }

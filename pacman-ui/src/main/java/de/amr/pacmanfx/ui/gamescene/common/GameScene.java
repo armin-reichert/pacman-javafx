@@ -37,7 +37,7 @@ public abstract class GameScene extends Composition<GameSceneComponent>
 {
     //TODO Should a game scene really be a renderable itself or only produce renderables?
 
-    private final GameApp app;
+    protected final GameApp app;
 
     protected GameScene(GameApp app) {
         this.app = requireNonNull(app);

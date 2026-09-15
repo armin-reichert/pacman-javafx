@@ -76,7 +76,7 @@ public class ArcadeMsPacMan_CutScene2 extends GameScene {
     }
 
     private void initScene() {
-        final GameVariantRuntime variant = app().variantManager().currentVariantRuntime();
+        final GameVariantRuntime variant = app.variantManager().currentVariantRuntime();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimationContainer animContainer    = variant.spriteAnimContainer();
         final var actorFactory = new ArcadeMsPacMan_ActorFactory();

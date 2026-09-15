@@ -193,7 +193,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene {
     public Optional<ContextMenu> optContextMenu() {
         final var uiSettings = uiSettings();
 
-        final TranslationManager translations = app().ui().translationManager();
+        final TranslationManager translations = app.ui().translationManager();
         final SceneDisplay displayMode = uiSettings.playSceneDisplay.get();
         final var contextMenu = new ContextMenu();
 
@@ -213,8 +213,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene {
         addLocalizedCheckBox(contextMenu, translations, game().session().cheats().pacUsingAutopilotProperty(), "context_menu.autopilot");
         addLocalizedCheckBox(contextMenu, translations, game().session().cheats().pacImmuneProperty(), "context_menu.immunity");
         addSeparator(contextMenu);
-        addLocalizedCheckBox(contextMenu, translations, app().ui().viewModel().muteProperty(), "context_menu.muted");
-        addLocalizedActionItem(app(), contextMenu, translations, app().commonActions().gameFlowActions().actionQuit(), "context_menu.quit");
+        addLocalizedCheckBox(contextMenu, translations, app.ui().viewModel().muteProperty(), "context_menu.muted");
+        addLocalizedActionItem(app, contextMenu, translations, app.commonActions().gameFlowActions().actionQuit(), "context_menu.quit");
 
         return Optional.of(contextMenu);
     }
@@ -298,12 +298,12 @@ public class TengenMsPacMan_PlayScene2D extends GameScene {
     }
 
     private TengenMsPacMan_Actions actions() {
-        return app().variantManager().currentVariantRuntime()
+        return app.variantManager().currentVariantRuntime()
             .extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
     }
 
     private TengenMsPacMan_UISettings uiSettings() {
-        return app().variantManager().currentVariantRuntime()
+        return app.variantManager().currentVariantRuntime()
             .extensionValue(TengenMsPacMan_GameExtension.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
     }
 
@@ -316,7 +316,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene {
         final var bindingsMap = actionBindingsSupport().registry();
 
         bindingsMap.registerAllBindings(actions.steeringBindings());
-        bindingsMap.registerAllBindings(app().commonActions().cheatActions().bindings());
+        bindingsMap.registerAllBindings(app.commonActions().cheatActions().bindings());
 
         bindingsMap.selectAnyMatchingBinding(actions.actionTogglePlaySceneDisplayMode(), actions.localBindings());
         bindingsMap.selectAnyMatchingBinding(actions.actionTogglePacBooster(), actions.localBindings());
@@ -350,7 +350,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene {
     }
 
     private void ensureActorAnimationsCreated(GameLevel level, boolean boosterEnabled) {
-        final GameVariantRuntime variantConfig = app().variantManager().currentVariantRuntime();
+        final GameVariantRuntime variantConfig = app.variantManager().currentVariantRuntime();
         final GameVariantRenderConfig renderConfig = variantConfig.uiConfig().renderConfig();
         final SpriteAnimationContainer animContainer = variantConfig.spriteAnimContainer();
         final ActorSpriteAnimController animController = variantConfig.playConfig().systems().actorSpriteAnimController();

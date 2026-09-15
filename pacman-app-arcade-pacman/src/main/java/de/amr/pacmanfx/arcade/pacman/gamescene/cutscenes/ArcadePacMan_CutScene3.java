@@ -53,7 +53,7 @@ public class ArcadePacMan_CutScene3 extends GameScene {
 
     @Override
     public void onActivate() {
-        final GameVariantRuntime variant = app().variantManager().currentVariantRuntime();
+        final GameVariantRuntime variant = app.variantManager().currentVariantRuntime();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimationContainer animContainer    = variant.spriteAnimContainer();
         final ActorSpriteAnimController animController  = variant.playConfig().systems().actorSpriteAnimController();

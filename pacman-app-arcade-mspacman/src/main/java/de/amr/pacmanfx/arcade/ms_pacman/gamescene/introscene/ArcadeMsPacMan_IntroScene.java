@@ -80,12 +80,12 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
 
     @Override
     public void onActivate() {
-        final Arcade_Actions actions = app().variantManager().currentVariantRuntime()
+        final Arcade_Actions actions = app.variantManager().currentVariantRuntime()
             .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         final var bindingsMap = actionBindingsSupport().registry();
         bindingsMap.registerAllBindings(actions.gameStartActionBindings());
-        bindingsMap.registerAllBindings(app().commonActions().sceneTestActions().bindings());
+        bindingsMap.registerAllBindings(app.commonActions().sceneTestActions().bindings());
 
         sceneFlow.restartState(this, SceneState.STARTING);
     }
@@ -102,7 +102,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
 
     private void initScene() {
         final var actorFactory = new ArcadeMsPacMan_ActorFactory();
-        final GameVariantRuntime variant = app().variantManager().currentVariantRuntime();
+        final GameVariantRuntime variant = app.variantManager().currentVariantRuntime();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimationContainer animContainer = variant.spriteAnimContainer();
         final ActorSpriteAnimController animController = variant.playConfig().systems().actorSpriteAnimController();
@@ -259,7 +259,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
         READY_TO_PLAY {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                final GameContext game = scene.app().game();
+                final GameContext game = scene.app.game();
                 final boolean canPlay = !game.coinMechanism().isEmpty();
                 if (timer.atSecond(2.0) && !canPlay) {
                     scene.flow().enterGameState(game, CommonGameStateID.GAME_OR_LEVEL_STARTING); // play demo level after 2 seconds

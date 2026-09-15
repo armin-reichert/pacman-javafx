@@ -28,7 +28,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene {
         super(app);
         setComp(GameSceneCanvasRenderingComp.class, new GameSceneCanvasRenderingComp());
 
-        final GameVariantRuntime variant = app().variantManager().currentVariantRuntime();
+        final GameVariantRuntime variant = app.variantManager().currentVariantRuntime();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
 
         startSceneText = new StartSceneText(6, 16);
@@ -47,7 +47,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene {
 
     @Override
     public void onActivate() {
-        final Arcade_Actions actions = app().variantManager().currentVariantRuntime()
+        final Arcade_Actions actions = app.variantManager().currentVariantRuntime()
             .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         final var bindingsMap = actionBindingsSupport().registry();

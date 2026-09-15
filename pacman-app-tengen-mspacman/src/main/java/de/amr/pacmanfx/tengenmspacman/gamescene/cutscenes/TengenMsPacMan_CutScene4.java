@@ -78,10 +78,10 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
     @Override
     public void onActivate() {
         // Quit cut scene when "START" button on "joypad" is pressed
-        final GameAction quitAction = app().commonActions().gameFlowActions().actionLetGameStateExpire();
+        final GameAction quitAction = app.commonActions().gameFlowActions().actionLetGameStateExpire();
 
         final var bindingsMap = actionBindingsSupport().registry();
-        bindingsMap.bindActionToKeyCombination(quitAction, app().input().joypad().keyForButton(JoypadButton.START));
+        bindingsMap.bindActionToKeyCombination(quitAction, app.input().joypad().keyForButton(JoypadButton.START));
 
         createActors();
     }
@@ -117,7 +117,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
 
     private void createActors() {
         final var actorFactory = TengenMsPacMan_ActorFactory.instance();
-        final GameVariantRuntime variant = app().variantManager().currentVariantRuntime();
+        final GameVariantRuntime variant = app.variantManager().currentVariantRuntime();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimationContainer animContainer    = variant.spriteAnimContainer();
 
@@ -220,7 +220,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
 
     private void spawnJunior(long tick) {
         final var factory = TengenMsPacMan_ActorFactory.instance();
-        final GameVariantRuntime variant = app().variantManager().currentVariantRuntime();
+        final GameVariantRuntime variant = app.variantManager().currentVariantRuntime();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimationContainer animContainer    = variant.spriteAnimContainer();
         final ActorSpriteAnimController animController  = variant.playConfig().systems().actorSpriteAnimController();
