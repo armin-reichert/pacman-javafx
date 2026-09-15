@@ -101,7 +101,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene {
         final int tick = (int) game.state().timer().tickCount();
         switch (tick) {
             case TICK_CLAP -> {
-                getReady(game.variantPlayConfig().systems().navigator());
+                getReady(game.playConfig().systems().navigator());
                 clapperboard.show();
                 TengenMsPacMan_ClapperboardStateSystem.startFlapAnimation(clapperboard);
                 playMusic();
@@ -171,7 +171,7 @@ public class TengenMsPacMan_CutScene1 extends GameScene {
     }
 
     private void letActorsMove(GameContext game) {
-        List.of(pacMan, msPacMan, inky, pinky).forEach(game.variantPlayConfig().systems().motor()::move);
+        List.of(pacMan, msPacMan, inky, pinky).forEach(game.playConfig().systems().motor()::move);
         if (collided) {
             if (inky.pos().y() > MIDDLE_LANE) {
                 inky.pos().setY(MIDDLE_LANE);
@@ -183,8 +183,8 @@ public class TengenMsPacMan_CutScene1 extends GameScene {
     }
 
     private void playCutScene(GameContext game, int tick) {
-        final WorldNavigationSystem navigator = game.variantPlayConfig().systems().navigator();
-        final ActorSpriteAnimController animSystem = game.variantPlayConfig().systems().actorSpriteAnimController();
+        final WorldNavigationSystem navigator = game.playConfig().systems().navigator();
+        final ActorSpriteAnimController animSystem = game.playConfig().systems().actorSpriteAnimController();
 
         letActorsMove(game);
 

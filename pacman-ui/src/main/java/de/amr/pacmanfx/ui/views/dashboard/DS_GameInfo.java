@@ -94,7 +94,7 @@ public class DS_GameInfo extends GameDashboardSection {
     }
 
     private GameRules rules(GameApp app) {
-        return app.game().variantPlayConfig().rules();
+        return app.game().playConfig().rules();
     }
 
     private Supplier<String> supplyLevelSpeedInfo(
@@ -102,7 +102,7 @@ public class DS_GameInfo extends GameDashboardSection {
         BiFunction<GameLevel, ActorSpeedRules, String> fnInfo) {
         return () -> {
             final GameContext game = appContext.game();
-            final ActorSpeedRules speedRules = game.variantPlayConfig().rules().actorSpeedRules();
+            final ActorSpeedRules speedRules = game.playConfig().rules().actorSpeedRules();
             return game.session().optLevel()
                 .map(level -> fnInfo.apply(level, speedRules)).orElse(NO_INFO);
         };

@@ -52,7 +52,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
             livesCounter.pos().set(2 * TS, bottom);
             levelCounter.pos().set(24 * TS, bottom);
         } else {
-            livesCounter.data().setNumLivesShown(game.variantPlayConfig().initialLifeCount());
+            livesCounter.data().setNumLivesShown(game.playConfig().initialLifeCount());
             livesCounter.data().setMaxLivesShown(5);
 
             /* In Ms. Pac-Man, the level counter stays fixed from level 8 on and bonus symbols are created randomly
@@ -60,7 +60,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
             levelCounter.data().setBehavior(LevelCounterBehavior.DISABLE_WHEN_FULL);
             levelCounter.data().setCapacity(7);
             levelCounter.data().setEnabled(true);
-            game.variantPlayConfig().systems().levelCounterSystem().clear(levelCounter);
+            game.playConfig().systems().levelCounterSystem().clear(levelCounter);
         }
     }
 
@@ -87,7 +87,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         requireNonNull(game);
 
         final GameSession session = game.session();
-        final GameSystems systems = game.variantPlayConfig().systems();
+        final GameSystems systems = game.playConfig().systems();
 
         final GameLevel level = createLevel(game, 1);
 
@@ -142,7 +142,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
             : createStaticBonus(level, symbolCode, randomFloat(9, 10));
         level.entities().add(bonus);
 
-        game.variantPlayConfig().systems().bonusState().setEdible(bonus);
+        game.playConfig().systems().bonusState().setEdible(bonus);
 
         game.eventManager().publishEvent(new BonusActivatedEvent(bonus));
     }
@@ -162,8 +162,8 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
             throw new IllegalStateException("Moving bonus cannot be activated, no house exists in this level!");
         }
 
-        final GameSystems systems = game.variantPlayConfig().systems();
-        final GameRules rules = game.variantPlayConfig().rules();
+        final GameSystems systems = game.playConfig().systems();
+        final GameRules rules = game.playConfig().rules();
 
         final Bonus movingBonus = Bonus.createMovingBonus(symbolCode);
         systems.bonusState().setEdible(movingBonus);

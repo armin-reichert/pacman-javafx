@@ -14,7 +14,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class GameContext {
 
-    private final GameVariantPlayConfig variantPlayConfig;
+    private final GameVariantPlayConfig playConfig;
 
     private final CoinMechanism coinMechanism;
 
@@ -22,8 +22,8 @@ public class GameContext {
 
     private GameSession session;
 
-    public GameContext(GameVariantPlayConfig variantPlayConfig, CoinMechanism coinMechanism, GameEventManager eventManager) {
-        this.variantPlayConfig = requireNonNull(variantPlayConfig);
+    public GameContext(GameVariantPlayConfig playConfig, CoinMechanism coinMechanism, GameEventManager eventManager) {
+        this.playConfig = requireNonNull(playConfig);
         this.coinMechanism = requireNonNull(coinMechanism);
         this.eventManager = requireNonNull(eventManager);
     }
@@ -36,8 +36,8 @@ public class GameContext {
         return session;
     }
 
-    public GameVariantPlayConfig variantPlayConfig() {
-        return variantPlayConfig;
+    public GameVariantPlayConfig playConfig() {
+        return playConfig;
     }
 
     public CoinMechanism coinMechanism() {
@@ -49,6 +49,6 @@ public class GameContext {
     }
 
     public AbstractGameState state() {
-        return variantPlayConfig.gameFlow().state();
+        return playConfig.gameFlow().state();
     }
 }

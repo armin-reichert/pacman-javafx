@@ -84,7 +84,7 @@ public abstract class GameScene extends Composition<GameSceneComponent>
     }
 
     public GameFlow flow() {
-        return game().variantPlayConfig().gameFlow();
+        return game().playConfig().gameFlow();
     }
 
     public GameContext game() {

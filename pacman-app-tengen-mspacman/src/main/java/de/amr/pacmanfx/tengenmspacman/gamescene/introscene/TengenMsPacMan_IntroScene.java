@@ -256,7 +256,7 @@ public class TengenMsPacMan_IntroScene extends GameScene {
             }
 
             boolean letGhostMarchIn(TengenMsPacMan_IntroScene scene) {
-                final GameSystems systems = scene.game().variantPlayConfig().systems();
+                final GameSystems systems = scene.game().playConfig().systems();
                 final MovementSystem motor = systems.motor();
                 final WorldNavigationSystem nav = systems.navigator();
 
@@ -301,8 +301,8 @@ public class TengenMsPacMan_IntroScene extends GameScene {
             @Override
             public void onUpdate(TengenMsPacMan_IntroScene scene) {
                 final GameContext game = scene.game();
-                final GameFlow flow = game.variantPlayConfig().gameFlow();
-                final GameSystems systems = game.variantPlayConfig().systems();
+                final GameFlow flow = game.playConfig().gameFlow();
+                final GameSystems systems = game.playConfig().systems();
                 final ActorSpriteAnimController animController = systems.actorSpriteAnimController();
                 final MovementSystem motor = systems.motor();
                 final WorldNavigationSystem nav = systems.navigator();

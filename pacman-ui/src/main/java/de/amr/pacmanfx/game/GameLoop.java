@@ -45,8 +45,8 @@ public final class GameLoop {
     private void simulate() {
         final GameContext game = app.game();
         game.session().newFrameState(clock.currentTick());
-        game.variantPlayConfig().systems().updateSystem().updateEntities(game);
-        game.variantPlayConfig().gameFlow().update(game);
+        game.playConfig().systems().updateSystem().updateEntities(game);
+        game.playConfig().gameFlow().update(game);
         app.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> gameScene.onTick(game));
     }
 

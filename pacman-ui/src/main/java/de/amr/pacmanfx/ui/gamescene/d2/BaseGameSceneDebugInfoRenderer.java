@@ -49,7 +49,7 @@ public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
 
     public static BaseGameSceneDebugInfoRenderer createDefaultSceneDebugRenderer(GameScene gameScene, Canvas canvas) {
         final GameSceneCanvasRenderingComp r2D = gameScene.reqComp(GameSceneCanvasRenderingComp.class);
-        final ActorSpriteAnimController animController = gameScene.game().variantPlayConfig().systems().actorSpriteAnimController();
+        final ActorSpriteAnimController animController = gameScene.game().playConfig().systems().actorSpriteAnimController();
         return r2D.configureRenderer(new BaseGameSceneDebugInfoRenderer(animController, canvas));
     }
 

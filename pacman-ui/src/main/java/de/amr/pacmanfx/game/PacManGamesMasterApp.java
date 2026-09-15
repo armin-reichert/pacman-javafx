@@ -173,10 +173,10 @@ public final class PacManGamesMasterApp implements GameApp {
         final GameSession session = new GameSession(
             gameVariantManager.currentVariantName(),
             new GameCheats(),
-            game.variantPlayConfig().initialLifeCount()
+            game.playConfig().initialLifeCount()
         );
         game.setSession(session);
-        game.variantPlayConfig().gamePlay().startSession(game);
+        game.playConfig().gamePlay().startSession(game);
 
         ui.window().mainScene().connect(game.session());
         ui.viewManager().selectGamePlayView();

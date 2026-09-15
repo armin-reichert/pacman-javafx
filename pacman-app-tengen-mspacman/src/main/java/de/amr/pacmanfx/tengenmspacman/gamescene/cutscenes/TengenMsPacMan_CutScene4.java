@@ -100,7 +100,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
             playMusic();
         }
         else if (tick == TICK_EXPIRES) {
-            game.variantPlayConfig().gameFlow().enterState(game, Tengen_GameState.GAME_PREPARATION.state());
+            game.playConfig().gameFlow().enterState(game, Tengen_GameState.GAME_PREPARATION.state());
 
         }
         TengenMsPacMan_ClapperboardStateSystem.update(clapperboard);
@@ -135,7 +135,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
     }
 
     private void letActorsMove(GameContext game, long tick) {
-        final MovementSystem motor = game.variantPlayConfig().systems().motor();
+        final MovementSystem motor = game.playConfig().systems().motor();
         motor.move(pacMan);
         motor.move(msPacMan);
         for (int i = 0; i < juniors.size(); ++i) {
@@ -144,7 +144,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
     }
 
     private void playCutScene(GameContext game, long tick) {
-        final GameSystems systems = game.variantPlayConfig().systems();
+        final GameSystems systems = game.playConfig().systems();
         final WorldNavigationSystem navigator = systems.navigator();
         final ActorSpriteAnimController animSystem = systems.actorSpriteAnimController();
 
@@ -255,7 +255,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
     }
 
     private void updateJunior(GameContext game, long tick, int index) {
-        final GameSystems systems = game.variantPlayConfig().systems();
+        final GameSystems systems = game.playConfig().systems();
         final MovementSystem motor = systems.motor();
         final WorldNavigationSystem navigator = systems.navigator();
 

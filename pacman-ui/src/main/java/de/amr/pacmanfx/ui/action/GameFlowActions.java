@@ -63,7 +63,7 @@ public class GameFlowActions {
 
                 app.suspendGame();
                 app.clock().start();
-                game.variantPlayConfig().gameFlow().restartGameState(game, CommonGameStateID.GAME_INTRO);
+                game.playConfig().gameFlow().restartGameState(game, CommonGameStateID.GAME_INTRO);
             }
         };
 

@@ -152,7 +152,7 @@ public class ArcadePacMan_CutScene2 extends GameScene {
 
     @Override
     public void onTick(GameContext game) {
-        final GameSystems systems = game.variantPlayConfig().systems();
+        final GameSystems systems = game.playConfig().systems();
         final TimingComp timing = timing();
 
         timing.setTick(timing.tick() + 1);

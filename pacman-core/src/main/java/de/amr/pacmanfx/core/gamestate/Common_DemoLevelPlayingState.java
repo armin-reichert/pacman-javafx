@@ -47,7 +47,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
 
     @Override
     public void onUpdateState(GameContext game, long globalTick, long stateTick) {
-        final GameVariantPlayConfig variantConfig = game.variantPlayConfig();
+        final GameVariantPlayConfig variantConfig = game.playConfig();
         final GameLevel level = session.level();
 
         if (stateTick == 1) {
@@ -56,7 +56,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
         else if (stateTick == 2) {
             showPacAndGhosts(level.entities());
         }
-        else if (stateTick == game.variantPlayConfig().rules().demoLevelHuntingStartTick()) {
+        else if (stateTick == game.playConfig().rules().demoLevelHuntingStartTick()) {
             startEnergizerBlinking(level);
 
             final Pac pac = level.entities().pac();
@@ -70,7 +70,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
             // This call fires a game event!
             level.huntingTimer().startFirstPhase(game, level.number());
         }
-        else if (stateTick >= game.variantPlayConfig().rules().demoLevelHuntingStartTick()) {
+        else if (stateTick >= game.playConfig().rules().demoLevelHuntingStartTick()) {
             gamePlay.update(game, level);
         }
 
@@ -95,7 +95,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
     }
 
     private Optional<CommonGameStateID> computeNextState(GameContext game, GameLevel level) {
-        if (game.variantPlayConfig().rules().isLevelCompleted(level)) {
+        if (game.playConfig().rules().isLevelCompleted(level)) {
             return Optional.of(CommonGameStateID.GAME_INTRO);
         }
         else if (game.session().thisFrame().pacKilled()) {
