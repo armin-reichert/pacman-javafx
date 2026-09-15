@@ -24,6 +24,8 @@ import de.amr.pacmanfx.ui.gamescene.common.AbstractGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 
+import java.util.function.Function;
+
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
@@ -37,24 +39,29 @@ public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
     }
 
     @Override
-    protected GameScene createGameScene(GameAppContext app, Named sceneID) {
+    protected Function<GameAppContext, GameScene> getGameSceneFactory(Named sceneID) {
         return switch (sceneID) {
-            case CommonGameSceneID.BOOT_SCENE -> new TengenMsPacMan_BootScene(app);
-            case CommonGameSceneID.INTRO_SCENE -> new TengenMsPacMan_IntroScene(app);
-            case CommonGameSceneID.START_SCENE -> new TengenMsPacMan_OptionsScene(app);
-            case TengenSceneID.HALL_OF_FAME -> new TengenMsPacMan_CreditsScene(app);
-            case CommonGameSceneID.PLAY_SCENE_2D -> new TengenMsPacMan_PlayScene2D(app);
-            case CommonGameSceneID.PLAY_SCENE_3D -> new TengenMsPacMan_PlayScene3D(app);
-            case CommonGameSceneID.CUTSCENE_1 -> new TengenMsPacMan_CutScene1(app);
-            case CommonGameSceneID.CUTSCENE_2 -> new TengenMsPacMan_CutScene2(app);
-            case CommonGameSceneID.CUTSCENE_3 -> new TengenMsPacMan_CutScene3(app);
-            case CommonGameSceneID.CUTSCENE_4 -> new TengenMsPacMan_CutScene4(app);
+            case CommonGameSceneID.BOOT_SCENE -> TengenMsPacMan_BootScene::new;
+            case CommonGameSceneID.INTRO_SCENE -> TengenMsPacMan_IntroScene::new;
+            case CommonGameSceneID.START_SCENE -> TengenMsPacMan_OptionsScene::new;
+            case TengenSceneID.HALL_OF_FAME -> TengenMsPacMan_CreditsScene::new;
+            case CommonGameSceneID.PLAY_SCENE_2D -> TengenMsPacMan_PlayScene2D::new;
+            case CommonGameSceneID.PLAY_SCENE_3D -> TengenMsPacMan_PlayScene3D::new;
+            case CommonGameSceneID.CUTSCENE_1 -> TengenMsPacMan_CutScene1::new;
+            case CommonGameSceneID.CUTSCENE_2 -> TengenMsPacMan_CutScene2::new;
+            case CommonGameSceneID.CUTSCENE_3 -> TengenMsPacMan_CutScene3::new;
+            case CommonGameSceneID.CUTSCENE_4 -> TengenMsPacMan_CutScene4::new;
             default -> throw new IllegalArgumentException("Illegal scene ID: " + sceneID);
         };
     }
 
     @Override
-    protected Named determineSceneID(GameContext game, boolean select3D) {
+    protected GameScene createGameScene(GameAppContext app, Named sceneID) {
+        return getGameSceneFactory(sceneID).apply(app);
+    }
+
+    @Override
+    protected Named computeGameSceneID(GameContext game, boolean select3D) {
         final AbstractGameState state = game.state();
 
         if (state instanceof Test_CutScenesTestState testState) {

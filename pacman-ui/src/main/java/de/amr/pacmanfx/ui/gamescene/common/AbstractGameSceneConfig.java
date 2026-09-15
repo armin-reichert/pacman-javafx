@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalInt;
+import java.util.function.Function;
 
 import static java.util.Objects.requireNonNull;
 
@@ -31,11 +32,13 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
 
     protected final Map<Named, GameScene> scenesByID = new HashMap<>();
 
-    public AbstractGameSceneConfig() {}
+    protected AbstractGameSceneConfig() {}
 
     protected abstract GameScene createGameScene(GameAppContext appContext, Named sceneID);
 
-    protected abstract Named determineSceneID(GameContext game, boolean select3D);
+    protected abstract Function<GameAppContext, GameScene> getGameSceneFactory(Named sceneID);
+
+    protected abstract Named computeGameSceneID(GameContext game, boolean select3D);
 
     @Override
     public void dispose() {
@@ -63,7 +66,7 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
     @Override
     public final Optional<GameScene> selectGameScene(GameAppContext app, boolean select3D) {
         requireNonNull(app);
-        final Named sceneID = determineSceneID(app.game(), select3D);
+        final Named sceneID = computeGameSceneID(app.game(), select3D);
         final GameScene gameScene = scenesByID.computeIfAbsent(sceneID, id -> createGameScene(app, id));
         return Optional.of(gameScene);
     }

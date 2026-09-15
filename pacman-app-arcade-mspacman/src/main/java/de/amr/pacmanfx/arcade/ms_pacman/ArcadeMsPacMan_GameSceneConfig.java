@@ -21,7 +21,7 @@ import de.amr.pacmanfx.ui.gamescene.common.AbstractGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 
-import static java.util.Objects.requireNonNull;
+import java.util.function.Function;
 
 class ArcadeMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
 
@@ -29,21 +29,26 @@ class ArcadeMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
 
     @Override
     protected GameScene createGameScene(GameAppContext app, Named sceneID) {
+        return getGameSceneFactory(sceneID).apply(app);
+    }
+
+    @Override
+    protected Function<GameAppContext, GameScene> getGameSceneFactory(Named sceneID) {
         return switch (sceneID) {
-            case CommonGameSceneID.BOOT_SCENE -> new Arcade_BootScene(app);
-            case CommonGameSceneID.INTRO_SCENE -> new ArcadeMsPacMan_IntroScene(app);
-            case CommonGameSceneID.START_SCENE -> new ArcadeMsPacMan_StartScene(app);
-            case CommonGameSceneID.PLAY_SCENE_2D -> new Arcade_PlayScene2D(app);
-            case CommonGameSceneID.PLAY_SCENE_3D -> new Arcade_PlayScene3D(app);
-            case CommonGameSceneID.CUTSCENE_1 -> new ArcadeMsPacMan_CutScene1(app);
-            case CommonGameSceneID.CUTSCENE_2 -> new ArcadeMsPacMan_CutScene2(app);
-            case CommonGameSceneID.CUTSCENE_3 -> new ArcadeMsPacMan_CutScene3(app);
+            case CommonGameSceneID.BOOT_SCENE -> Arcade_BootScene::new;
+            case CommonGameSceneID.INTRO_SCENE -> ArcadeMsPacMan_IntroScene::new;
+            case CommonGameSceneID.START_SCENE -> ArcadeMsPacMan_StartScene::new;
+            case CommonGameSceneID.PLAY_SCENE_2D -> Arcade_PlayScene2D::new;
+            case CommonGameSceneID.PLAY_SCENE_3D -> Arcade_PlayScene3D::new;
+            case CommonGameSceneID.CUTSCENE_1 -> ArcadeMsPacMan_CutScene1::new;
+            case CommonGameSceneID.CUTSCENE_2 -> ArcadeMsPacMan_CutScene2::new;
+            case CommonGameSceneID.CUTSCENE_3 -> ArcadeMsPacMan_CutScene3::new;
             default -> throw new IllegalArgumentException("Illegal scene ID: " + sceneID);
         };
     }
 
     @Override
-    protected Named determineSceneID(GameContext game, boolean select3D) {
+    protected Named computeGameSceneID(GameContext game, boolean select3D) {
         final AbstractGameState state = game.state();
 
         if (state instanceof Test_CutScenesTestState testState) {
