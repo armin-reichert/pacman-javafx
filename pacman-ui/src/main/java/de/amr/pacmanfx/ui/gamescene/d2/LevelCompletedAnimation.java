@@ -6,10 +6,7 @@ package de.amr.pacmanfx.ui.gamescene.d2;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.level.GameLevel;
 import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
 import javafx.animation.SequentialTransition;
-import javafx.animation.Timeline;
-import javafx.util.Duration;
 
 import java.util.Optional;
 
@@ -35,40 +32,8 @@ import static de.amr.basics.util.Ufx.pauseSecThen;
  */
 public class LevelCompletedAnimation {
 
-    /**
-     * State of the flashing part of the level-complete animation. Used by renderers to query the current flashing status.
-     */
-    public record FlashingState(
-        /* Tells if the map should be drawn highlighted (bright) in the current frame */
-        boolean isHighlighted,
-        /* Tells if the flashing animation is currently running */
-        boolean isFlashing,
-        /* The current flashing cycle index (0-based) */
-        int flashingIndex) {}
-
     /** Default duration of a single flashing cycle in milliseconds (~1/3 sec). */
     public static final int DEFAULT_SINGLE_FLASH_MILLIS = 333;
-
-    private static class FlashingAnimation {
-
-        private final Timeline timeline;
-        private boolean highlighted;
-        private int index;
-
-        private FlashingAnimation(int numFlashes, long singleFlashMillis) {
-            timeline = new Timeline(
-                new KeyFrame(Duration.ZERO,                             _ -> highlighted = false),
-                new KeyFrame(Duration.millis(singleFlashMillis * 0.25), _ -> highlighted = true),
-                new KeyFrame(Duration.millis(singleFlashMillis * 0.75), _ -> highlighted = false),
-                new KeyFrame(Duration.millis(singleFlashMillis * 1.00), _ -> ++index)
-            );
-            timeline.setCycleCount(numFlashes);
-        }
-
-        public FlashingState flashingState() {
-            return new FlashingState(highlighted, timeline.getStatus() == Animation.Status.RUNNING, index);
-        }
-    }
 
     private final int singleFlashMillis;
 
@@ -76,7 +41,7 @@ public class LevelCompletedAnimation {
 
     private FlashingAnimation flashingAnimation;
 
-    private Animation animation;
+    private Animation animationSequence;
 
     public LevelCompletedAnimation(Runnable onFinished) {
         this(DEFAULT_SINGLE_FLASH_MILLIS, onFinished);
@@ -102,7 +67,7 @@ public class LevelCompletedAnimation {
     /** Starts (or restarts) the level-complete animation. */
     public void play(GameLevel level, int numFlashes) {
         createAnimation(level, numFlashes);
-        animation.playFromStart();
+        animationSequence.playFromStart();
     }
 
     private void createAnimation(GameLevel level, int numFlashes) {
@@ -112,17 +77,19 @@ public class LevelCompletedAnimation {
 
         if (numFlashes != 0) {
             flashingAnimation = new FlashingAnimation(numFlashes, singleFlashMillis);
-            animation = new SequentialTransition(
+            animationSequence = new SequentialTransition(
                 hideGhostsAnimation,
                 pauseSec(0.5),
-                flashingAnimation.timeline,
+                flashingAnimation.animation(),
                 pauseSec(1)
             );
-        } else {
-            animation = new SequentialTransition(hideGhostsAnimation, pauseSec(1.5));
         }
+        else {
+            animationSequence = new SequentialTransition(hideGhostsAnimation, pauseSec(1.5));
+        }
+
         if (onFinished != null) {
-            animation.setOnFinished(_ -> onFinished.run());
+            animationSequence.setOnFinished(_ -> onFinished.run());
         }
     }
 }

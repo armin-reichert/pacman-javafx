@@ -32,6 +32,7 @@ import de.amr.pacmanfx.tengenmspacman.sprites.MapImageSet;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_MapRepository;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.d2.FlashingState;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.vm.GameViewModel;
@@ -124,7 +125,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene {
         return dynamicCamera;
     }
 
-    public LevelCompletedAnimation.FlashingState flashingState() {
+    public FlashingState flashingState() {
         if (levelCompletedAnimation == null || levelCompletedAnimation.optFlashingState().isEmpty()) {
             return null;
         }
