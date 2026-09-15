@@ -82,11 +82,6 @@ public class GameBox implements Disposable {
         );
     }
 
-    public boolean containsCartridgeWithName(String name) {
-        requireNonNull(name);
-        return findCartridgeByName(name).isPresent();
-    }
-
     public CoinMechanism coinMechanism() {
         return coinMechanism;
     }
