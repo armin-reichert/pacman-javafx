@@ -29,7 +29,7 @@ import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.rules.CollisionStrategy;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.VoiceID;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -129,7 +129,7 @@ public class ArcadePacMan_IntroScene extends GameScene {
     }
 
     private void initScene() {
-        final GameVariantConfig variant = app().variantManager().currentVariantConfig();
+        final GameVariantRuntime variant = app().variantManager().currentVariantConfig();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimationContainer animContainer    = variant.spriteAnimContainer();
         final ActorSpriteAnimController animController  = variant.playConfig().systems().actorSpriteAnimController();

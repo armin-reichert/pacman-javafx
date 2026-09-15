@@ -23,7 +23,7 @@ public class DefaultGameVariantManager implements GameVariantManager {
 
     private final GameBox gameBox;
 
-    private final Map<String, GameVariantConfig> configsByName = new HashMap<>();
+    private final Map<String, GameVariantRuntime> configsByName = new HashMap<>();
 
     private final StringProperty selectedVariantName = new SimpleStringProperty();
 
@@ -38,8 +38,8 @@ public class DefaultGameVariantManager implements GameVariantManager {
     public void registerVariantConfig(String variantName) {
         requireNonNull(variantName);
         final boolean includeInteractiveTests = viewModel.testStatesIncludedProperty().get();
-        final GameVariantConfig gameVariantConfig = createGameVariant(gameBox, variantName, includeInteractiveTests);
-        configsByName.put(variantName, gameVariantConfig);
+        final GameVariantRuntime gameVariantRuntime = createGameVariant(gameBox, variantName, includeInteractiveTests);
+        configsByName.put(variantName, gameVariantRuntime);
     }
 
     @Override
@@ -59,12 +59,12 @@ public class DefaultGameVariantManager implements GameVariantManager {
     }
 
     @Override
-    public GameVariantConfig currentVariantConfig() {
+    public GameVariantRuntime currentVariantConfig() {
         return variantConfigByName(currentVariantName());
     }
 
     @Override
-    public GameVariantConfig variantConfigByName(String variantName) {
+    public GameVariantRuntime variantConfigByName(String variantName) {
         requireNonNull(variantName);
         return configsByName.get(variantName);
     }
@@ -87,9 +87,9 @@ public class DefaultGameVariantManager implements GameVariantManager {
         selectedVariantName.set(variantName);
     }
 
-    private GameVariantConfig createGameVariant(GameBox gameBox, String variantName, boolean includeInteractiveTests) {
+    private GameVariantRuntime createGameVariant(GameBox gameBox, String variantName, boolean includeInteractiveTests) {
         final Cartridge cartridge = gameBox.cartridgeByName(variantName);
-        final var variant = new GameVariantConfig(gameBox, cartridge);
+        final var variant = new GameVariantRuntime(gameBox, cartridge);
         if (includeInteractiveTests) {
             final GameFlow gameFlow = variant.playConfig().gameFlow();
             gameFlow.addState(new Test_ShortTestState());

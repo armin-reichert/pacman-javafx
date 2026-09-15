@@ -15,7 +15,7 @@ import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.rendering.ColoredRect;
 import de.amr.pacmanfx.core.rendering.Renderable;
-import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.ui.GlobalFonts;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -72,10 +72,10 @@ public class TengenMsPacMan_BootScene extends GameScene {
 
     @Override
     public void onActivate() {
-        final GameVariantConfig gameVariantConfig = app().variantManager().currentVariantConfig();
-        ghost = gameVariantConfig.uiConfig().renderConfig().createAnimatedGhost(
-            gameVariantConfig.playConfig().systems().actorSpriteAnimController(),
-            gameVariantConfig.spriteAnimContainer(),
+        final GameVariantRuntime gameVariantRuntime = app().variantManager().currentVariantConfig();
+        ghost = gameVariantRuntime.uiConfig().renderConfig().createAnimatedGhost(
+            gameVariantRuntime.playConfig().systems().actorSpriteAnimController(),
+            gameVariantRuntime.spriteAnimContainer(),
             GhostPersonality.RED_GHOST_SHADOW);
 
         game().session().setHudVisible(false);

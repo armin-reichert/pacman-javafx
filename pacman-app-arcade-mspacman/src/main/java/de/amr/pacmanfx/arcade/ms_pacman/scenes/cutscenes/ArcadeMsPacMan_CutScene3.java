@@ -18,7 +18,7 @@ import de.amr.pacmanfx.core.entities.clapperboard.system.ClapperboardStateSystem
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
@@ -98,7 +98,7 @@ public class ArcadeMsPacMan_CutScene3 extends GameScene {
     }
 
     private void initScene() {
-        final GameVariantConfig variant = app().variantManager().currentVariantConfig();
+        final GameVariantRuntime variant = app().variantManager().currentVariantConfig();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimationContainer animContainer    = variant.spriteAnimContainer();
         final var actorFactory = new ArcadeMsPacMan_ActorFactory();

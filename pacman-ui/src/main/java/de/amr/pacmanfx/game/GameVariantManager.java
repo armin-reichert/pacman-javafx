@@ -11,9 +11,9 @@ public interface GameVariantManager {
 
     void registerVariantConfig(String variantName);
 
-    GameVariantConfig variantConfigByName(String variantName);
+    GameVariantRuntime variantConfigByName(String variantName);
 
-    GameVariantConfig currentVariantConfig();
+    GameVariantRuntime currentVariantConfig();
 
     void selectVariant(String variantName);
 

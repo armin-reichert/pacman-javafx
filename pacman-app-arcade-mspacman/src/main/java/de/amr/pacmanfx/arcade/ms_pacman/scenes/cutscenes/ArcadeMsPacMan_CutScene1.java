@@ -24,7 +24,7 @@ import de.amr.pacmanfx.core.entities.clapperboard.system.ClapperboardStateSystem
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
@@ -96,7 +96,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene {
 
     private void initScene() {
         final var actorFactory = new ArcadeMsPacMan_ActorFactory();
-        final GameVariantConfig variant = app().variantManager().currentVariantConfig();
+        final GameVariantRuntime variant = app().variantManager().currentVariantConfig();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimationContainer animContainer = variant.spriteAnimContainer();
         final ActorSpriteAnimController animController = variant.playConfig().systems().actorSpriteAnimController();

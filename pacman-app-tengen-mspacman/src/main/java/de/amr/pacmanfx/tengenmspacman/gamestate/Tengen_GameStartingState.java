@@ -74,7 +74,7 @@ public class Tengen_GameStartingState extends AbstractGameState {
         }
         else if (stateTick == TICK_START_PLAYING) {
             lockPacAndGhosts(level.entities(), false);
-            game.variantPlayConfig().coinMechanism().consumeCoin();
+            game.coinMechanism().consumeCoin();
             session.setGameRunning(true);
             flow.enterGameState(game, CommonGameStateID.GAME_LEVEL_PLAYING);
         }

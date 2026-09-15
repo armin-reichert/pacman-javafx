@@ -32,7 +32,7 @@ public final class Arcade_Actions {
             public void execute(GameAppContext app) {
                 app.ui().soundManager().voice().stop();
                 app.ui().soundManager().setEnabled(true);
-                app.game().variantPlayConfig().coinMechanism().insertCoin();
+                app.game().coinMechanism().insertCoin();
                 app.game().variantPlayConfig().gameFlow().enterGameState(app.game(), CommonGameStateID.GAME_PREPARATION);
                 app.game().eventManager().publishEvent(new CreditAddedEvent(1));
             }
@@ -41,7 +41,7 @@ public final class Arcade_Actions {
             public boolean isEnabled(GameAppContext app) {
                 final GameSession session = app.game().session();
                 final AbstractGameState gameState = app.game().state();
-                if (app.game().variantPlayConfig().coinMechanism().isFull()) {
+                if (app.game().coinMechanism().isFull()) {
                     return false;
                 }
                 // In demo level, coin can always be inserted
@@ -62,7 +62,7 @@ public final class Arcade_Actions {
 
             @Override
             public boolean isEnabled(GameAppContext app) {
-                if (app.game().variantPlayConfig().coinMechanism().isEmpty()) {
+                if (app.game().coinMechanism().isEmpty()) {
                     return false;
                 }
                 final AbstractGameState state = app.game().state();

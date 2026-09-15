@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
-import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenu;
@@ -86,7 +86,7 @@ public class XXL_OptionMenu extends OptionMenu {
         this.app = requireNonNull(app);
 
         final String variantName = app.variantManager().currentVariantName();
-        final GameVariantConfig variant = app.variantManager().currentVariantConfig();
+        final GameVariantRuntime variant = app.variantManager().currentVariantConfig();
 
         final WorldMapManager mapManager = variant.playConfig().worldMapManager();
         if (!(mapManager instanceof XXL_WorldMapManager xxlMapManager)) {
@@ -165,7 +165,7 @@ public class XXL_OptionMenu extends OptionMenu {
         app.game().session().setCutScenesEnabled(newValue);
     }
 
-    private void changeGameVariant(GameContext game, GameVariantConfig newVariant) {
+    private void changeGameVariant(GameContext game, GameVariantRuntime newVariant) {
         requireNonNull(game);
         requireNonNull(newVariant);
 
@@ -187,8 +187,8 @@ public class XXL_OptionMenu extends OptionMenu {
             @Override
             public void onValueChanged(GameVariantID oldVariantID, GameVariantID newVariantID) {
                 if (app != null) {
-                    final GameVariantConfig newGameVariantConfig = app.variantManager().variantConfigByName(newVariantID.name());
-                    changeGameVariant(app.game(), newGameVariantConfig);
+                    final GameVariantRuntime newGameVariantRuntime = app.variantManager().variantConfigByName(newVariantID.name());
+                    changeGameVariant(app.game(), newGameVariantRuntime);
                 }
             }
         };

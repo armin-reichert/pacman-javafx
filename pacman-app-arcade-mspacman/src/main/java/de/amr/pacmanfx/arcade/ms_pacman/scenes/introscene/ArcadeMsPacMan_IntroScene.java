@@ -27,7 +27,7 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.VoiceID;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
@@ -102,7 +102,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
 
     private void initScene() {
         final var actorFactory = new ArcadeMsPacMan_ActorFactory();
-        final GameVariantConfig variant = app().variantManager().currentVariantConfig();
+        final GameVariantRuntime variant = app().variantManager().currentVariantConfig();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimationContainer animContainer = variant.spriteAnimContainer();
         final ActorSpriteAnimController animController = variant.playConfig().systems().actorSpriteAnimController();
@@ -260,7 +260,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
                 final GameContext game = scene.app().game();
-                final boolean canPlay = !game.variantPlayConfig().coinMechanism().isEmpty();
+                final boolean canPlay = !game.coinMechanism().isEmpty();
                 if (timer.atSecond(2.0) && !canPlay) {
                     scene.flow().enterGameState(game, CommonGameStateID.GAME_OR_LEVEL_STARTING); // play demo level after 2 seconds
                 }

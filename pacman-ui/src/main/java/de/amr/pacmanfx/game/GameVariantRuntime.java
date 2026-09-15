@@ -4,19 +4,25 @@
 
 package de.amr.pacmanfx.game;
 
+import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariantPlayConfig;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 
 import static java.util.Objects.requireNonNull;
 
-public class GameVariantConfig {
+public class GameVariantRuntime {
+
+   private final CoinMechanism coinMechanism = new CoinMechanism(99);
+
+    private final SpriteAnimationContainer spriteAnimationContainer = new SpriteAnimationContainer();
 
     private final GameVariantPlayConfig playConfig;
     private final GameVariantUIConfig uiConfig;
 
-    public GameVariantConfig(GameBox gameBox, Cartridge cartridge) {
+    public GameVariantRuntime(GameBox gameBox, Cartridge cartridge) {
         requireNonNull(gameBox);
         requireNonNull(cartridge);
+
         playConfig = new GameVariantPlayConfig(
             cartridge.systemsFactory().get(),
             cartridge.gamePlayFactory().get(),
@@ -24,6 +30,7 @@ public class GameVariantConfig {
             cartridge.gameRulesFactory().get(),
             cartridge.worldMapManagerFactory().get()
         );
+
         uiConfig = cartridge.uiConfigFactory().get();
     }
 
@@ -35,8 +42,9 @@ public class GameVariantConfig {
         return uiConfig;
     }
 
-    //TODO move elsewhere
-    private final SpriteAnimationContainer spriteAnimationContainer = new SpriteAnimationContainer();
+    public CoinMechanism coinMechanism() {
+        return coinMechanism;
+    }
 
     public SpriteAnimationContainer spriteAnimContainer() {
         return spriteAnimationContainer;

@@ -24,7 +24,7 @@ import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
@@ -134,7 +134,7 @@ public class TengenMsPacMan_IntroScene extends GameScene {
 
         final var actorFactory = TengenMsPacMan_ActorFactory.instance();
 
-        final GameVariantConfig variant = app().variantManager().currentVariantConfig();
+        final GameVariantRuntime variant = app().variantManager().currentVariantConfig();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimationContainer animContainer    = variant.spriteAnimContainer();
         final ActorSpriteAnimController animController  = variant.playConfig().systems().actorSpriteAnimController();
@@ -196,7 +196,7 @@ public class TengenMsPacMan_IntroScene extends GameScene {
         SHOWING_MARQUEE {
             @Override
             public void onEnter(TengenMsPacMan_IntroScene scene) {
-                final GameVariantConfig variant = scene.app().variantManager().currentVariantConfig();
+                final GameVariantRuntime variant = scene.app().variantManager().currentVariantConfig();
                 final ActorSpriteAnimController animController = variant.playConfig().systems().actorSpriteAnimController();
                 final GameSystems systems = variant.playConfig().systems();
                 final WorldNavigationSystem nav = systems.navigator();

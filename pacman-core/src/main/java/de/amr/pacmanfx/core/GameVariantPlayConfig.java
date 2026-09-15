@@ -8,7 +8,6 @@ import org.tinylog.Logger;
 
 public class GameVariantPlayConfig {
 
-    private final CoinMechanism coinMechanism;
     private final GameSystems systems;
     private final GamePlay gamePlay;
     private final GameFlow gameFlow;
@@ -29,8 +28,6 @@ public class GameVariantPlayConfig {
         this.gameFlow = gameFlow;
         this.gameRules = gameRules;
         this.worldMapManager = worldMapManager;
-
-        this.coinMechanism = new CoinMechanism(99);
     }
 
     public int initialLifeCount() {
@@ -40,10 +37,6 @@ public class GameVariantPlayConfig {
     public void setInitialLifeCount(int initialLifeCount) {
         this.initialLifeCount = initialLifeCount;
         Logger.info("Initial life count: {}", initialLifeCount);
-    }
-
-    public CoinMechanism coinMechanism() {
-        return coinMechanism;
     }
 
     public GameSystems systems() {

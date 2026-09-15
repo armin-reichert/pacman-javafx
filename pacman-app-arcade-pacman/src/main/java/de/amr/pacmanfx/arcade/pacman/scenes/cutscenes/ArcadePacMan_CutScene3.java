@@ -16,7 +16,7 @@ import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
@@ -53,7 +53,7 @@ public class ArcadePacMan_CutScene3 extends GameScene {
 
     @Override
     public void onActivate() {
-        final GameVariantConfig variant = app().variantManager().currentVariantConfig();
+        final GameVariantRuntime variant = app().variantManager().currentVariantConfig();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimationContainer animContainer    = variant.spriteAnimContainer();
         final ActorSpriteAnimController animController  = variant.playConfig().systems().actorSpriteAnimController();

@@ -18,7 +18,7 @@ import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.game.GameVariantConfig;
+import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationTimer;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
@@ -120,9 +120,9 @@ class XXL_ChaseAnimation {
         }
     }
 
-    private GameVariantConfig variant;
+    private GameVariantRuntime variant;
 
-    public void setGameVariant(GameContext game, GameVariantConfig variant, Canvas canvas) {
+    public void setGameVariant(GameContext game, GameVariantRuntime variant, Canvas canvas) {
         requireNonNull(game);
         this.variant = requireNonNull(variant);
         requireNonNull(canvas);
