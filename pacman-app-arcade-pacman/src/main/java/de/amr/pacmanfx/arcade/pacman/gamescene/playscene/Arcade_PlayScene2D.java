@@ -21,8 +21,8 @@ import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationManager;
-import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
@@ -50,6 +50,10 @@ public class Arcade_PlayScene2D extends GameScene {
         setComp(GameSceneCanvasRenderingComp.class, new GameSceneCanvasRenderingComp());
     }
 
+    public LevelCompletedAnimation levelCompletedAnimation() {
+        return levelCompletedAnimation;
+    }
+
     @Override
     public Optional<GameEventListener> optGameEventHandler() {
         return Optional.of(eventHandler);
@@ -73,6 +77,8 @@ public class Arcade_PlayScene2D extends GameScene {
         hud.levelCounter().show();
         hud.livesCounter().show();
         game().session().setHudVisible(true);
+
+        levelCompletedAnimation = new LevelCompletedAnimation(() -> game().state().triggerTimeout());
     }
 
     @Override
@@ -122,10 +128,6 @@ public class Arcade_PlayScene2D extends GameScene {
     public void onEnteredFrom3DScene() {
         final GameSession session = game().session();
         session.optLevel().ifPresent(level -> acceptGameLevel(session, level));
-    }
-
-    public void setLevelCompletedAnimation(LevelCompletedAnimation levelCompletedAnimation) {
-        this.levelCompletedAnimation = levelCompletedAnimation;
     }
 
     @Override

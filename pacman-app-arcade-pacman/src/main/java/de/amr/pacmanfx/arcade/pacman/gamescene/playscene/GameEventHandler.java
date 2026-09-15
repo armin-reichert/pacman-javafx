@@ -21,7 +21,6 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationManager;
-import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import org.tinylog.Logger;
 
@@ -86,14 +85,11 @@ class GameEventHandler implements DefaultGameEventListener {
 
         final GameContext game = gameScene.game();
         if (CommonGameStateID.GAME_LEVEL_COMPLETE.hasSameNameAs(newState)) {
-            final GameLevel level = game.session().level();
-            final int numFlashes = game.playConfig().rules().numLevelFlashes(level.number());
-
             optSoundEffects().ifPresent(GameSoundEffects::stopAll);
 
-            final var animation = new LevelCompletedAnimation(level, () -> game.state().triggerTimeout());
-            gameScene.setLevelCompletedAnimation(animation);
-            animation.play(numFlashes);
+            final GameLevel level = game.session().level();
+            final int numFlashes = game.playConfig().rules().numLevelFlashes(level.number());
+            gameScene.levelCompletedAnimation().play(level, numFlashes);
         }
         else if (CommonGameStateID.GAME_OVER.hasSameNameAs(newState)) {
             optSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);

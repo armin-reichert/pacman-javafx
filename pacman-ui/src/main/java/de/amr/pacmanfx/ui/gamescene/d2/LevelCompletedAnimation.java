@@ -15,7 +15,6 @@ import java.util.Optional;
 
 import static de.amr.basics.util.Ufx.pauseSec;
 import static de.amr.basics.util.Ufx.pauseSecThen;
-import static java.util.Objects.requireNonNull;
 
 /**
  * Animation played when a level is complete.
@@ -39,22 +38,18 @@ public class LevelCompletedAnimation {
     /**
      * State of the flashing part of the level-complete animation. Used by renderers to query the current flashing status.
      */
-    public interface FlashingState {
-
-        /** @return true if the map should be drawn highlighted (bright) in the current frame */
-        boolean isHighlighted();
-
-        /** @return true if the flashing animation is currently running */
-        boolean isFlashing();
-
-        /** @return the current flashing cycle index (0-based) */
-        int flashingIndex();
-    }
+    public record FlashingState(
+        /* Tells if the map should be drawn highlighted (bright) in the current frame */
+        boolean isHighlighted,
+        /* Tells if the flashing animation is currently running */
+        boolean isFlashing,
+        /* The current flashing cycle index (0-based) */
+        int flashingIndex) {}
 
     /** Default duration of a single flashing cycle in milliseconds (~1/3 sec). */
     public static final int DEFAULT_SINGLE_FLASH_MILLIS = 333;
 
-    private static class FlashingAnimation implements FlashingState {
+    private static class FlashingAnimation {
 
         private final Timeline timeline;
         private boolean highlighted;
@@ -70,48 +65,24 @@ public class LevelCompletedAnimation {
             timeline.setCycleCount(numFlashes);
         }
 
-        @Override
-        public boolean isHighlighted() {
-            return highlighted;
-        }
-
-        @Override
-        public boolean isFlashing() {
-            return timeline.getStatus() == Animation.Status.RUNNING;
-        }
-
-        @Override
-        public int flashingIndex() {
-            return index;
+        public FlashingState flashingState() {
+            return new FlashingState(highlighted, timeline.getStatus() == Animation.Status.RUNNING, index);
         }
     }
 
-    private final GameLevel level;
     private final int singleFlashMillis;
+
     private final Runnable onFinished;
 
     private FlashingAnimation flashingAnimation;
+
     private Animation animation;
 
-    /**
-     * Creates a level-complete animation for the given level using the default flashing duration.
-     *
-     * @param level      the game level
-     * @param onFinished callback executed when the animation finishes
-     */
-    public LevelCompletedAnimation(GameLevel level, Runnable onFinished) {
-        this(level, DEFAULT_SINGLE_FLASH_MILLIS, onFinished);
+    public LevelCompletedAnimation(Runnable onFinished) {
+        this(DEFAULT_SINGLE_FLASH_MILLIS, onFinished);
     }
 
-    /**
-     * Creates a level-complete animation for the given level.
-     *
-     * @param level             the game level
-     * @param singleFlashMillis duration of a single flashing cycle in milliseconds
-     * @param onFinished        callback executed when the animation finishes
-     */
-    public LevelCompletedAnimation(GameLevel level, int singleFlashMillis, Runnable onFinished) {
-        this.level = requireNonNull(level);
+    public LevelCompletedAnimation(int singleFlashMillis, Runnable onFinished) {
         this.singleFlashMillis = singleFlashMillis;
         this.onFinished = onFinished;
     }
@@ -122,36 +93,36 @@ public class LevelCompletedAnimation {
      * @return optional flashing state (empty if the level has no flashing)
      */
     public Optional<FlashingState> optFlashingState() {
-        return Optional.ofNullable(flashingAnimation);
+        if (flashingAnimation == null) {
+            return Optional.empty();
+        }
+        return Optional.of(flashingAnimation.flashingState());
     }
 
     /** Starts (or restarts) the level-complete animation. */
-    public void play(int numFlashes) {
-        if (animation == null) {
-            createAnimation(numFlashes);
-        }
+    public void play(GameLevel level, int numFlashes) {
+        createAnimation(level, numFlashes);
         animation.playFromStart();
     }
 
-    private void createAnimation(int numFlashes) {
-        final Animation hideGhosts = pauseSecThen(1.5, this::hideGhosts);
+    private void createAnimation(GameLevel level, int numFlashes) {
+        final Animation hideGhostsAnimation = pauseSecThen(1.5,
+            () ->level.entities().ghosts().forEach(GameEntity::hide)
+        );
+
         if (numFlashes != 0) {
             flashingAnimation = new FlashingAnimation(numFlashes, singleFlashMillis);
             animation = new SequentialTransition(
-                    hideGhosts,
-                    pauseSec(0.5),
-                    flashingAnimation.timeline,
-                    pauseSec(1)
+                hideGhostsAnimation,
+                pauseSec(0.5),
+                flashingAnimation.timeline,
+                pauseSec(1)
             );
         } else {
-            animation = new SequentialTransition(hideGhosts, pauseSec(1.5));
+            animation = new SequentialTransition(hideGhostsAnimation, pauseSec(1.5));
         }
         if (onFinished != null) {
             animation.setOnFinished(_ -> onFinished.run());
         }
-    }
-
-    private void hideGhosts() {
-        level.entities().ghosts().forEach(GameEntity::hide);
     }
 }

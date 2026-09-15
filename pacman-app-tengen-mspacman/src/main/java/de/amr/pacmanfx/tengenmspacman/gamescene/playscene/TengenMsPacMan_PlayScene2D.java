@@ -345,8 +345,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene {
     }
 
     void playLevelCompleteAnimation(GameLevel level, int numFlashes) {
-        levelCompletedAnimation = new LevelCompletedAnimation(level, () -> game().state().triggerTimeout());
-        levelCompletedAnimation.play(numFlashes);
+        levelCompletedAnimation = new LevelCompletedAnimation(() -> game().state().triggerTimeout());
+        levelCompletedAnimation.play(level, numFlashes);
     }
 
     private void ensureActorAnimationsCreated(GameLevel level, boolean boosterEnabled) {
