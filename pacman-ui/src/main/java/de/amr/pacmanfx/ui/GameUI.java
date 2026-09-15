@@ -16,7 +16,7 @@ import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsRegistry;
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationTimer;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.ui.settings.ui.GameUISettings;
@@ -63,7 +63,7 @@ public class GameUI implements GameEventListener {
     private final GameViewModel viewModel;
     private final ActionBindingsRegistry actionBindings = new GameActionBindingsRegistry("Global Action Bindings");
 
-    private GameAppContext app;
+    private GameApp app;
 
     public GameUI(Stage stage, int width, int height, GameUISettings settings, DashboardFactory dashboardFactory) {
         viewModel = new GameViewModel();
@@ -105,7 +105,7 @@ public class GameUI implements GameEventListener {
     }
 
 
-    public void connectWithApp(GameAppContext app) {
+    public void connectWithApp(GameApp app) {
         this.app = requireNonNull(app);
 
         viewManager.setGameApp(app);

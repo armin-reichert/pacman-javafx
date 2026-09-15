@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.model.test.Test_CutScenesTestState;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.action.core.GameApp;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.control.Button;
@@ -43,7 +43,7 @@ public class DS_GameControl extends GameDashboardSection {
     }
 
     @Override
-    public void setGameApp(GameAppContext app) {
+    public void setGameApp(GameApp app) {
         final CommonGameActions actions = app.commonActions();
 
         spinnerCredit = intSpinner("Credit", 0, 99, credit);
@@ -61,7 +61,7 @@ public class DS_GameControl extends GameDashboardSection {
         setAction(choiceBoxInitialLives,
             () -> {
                 final int lifeCount = choiceBoxInitialLives.getValue();
-                app.currentGameVariantPlayConfig().setInitialLifeCount(lifeCount);
+                app.variantManager().currentVariantRuntime().playConfig().setInitialLifeCount(lifeCount);
                 Logger.info("Initial life count was set to: {}", lifeCount);
             });
 
@@ -81,14 +81,14 @@ public class DS_GameControl extends GameDashboardSection {
     }
 
     @Override
-    public void update(GameAppContext app) {
+    public void update(GameApp app) {
         super.update(app);
 
         final GameContext game = app.game();
         final GameSession session = game.session();
         final AbstractGameState state = game.state();
 
-        choiceBoxInitialLives.setValue(app.currentGameVariantPlayConfig().initialLifeCount());
+        choiceBoxInitialLives.setValue(app.variantManager().currentVariantRuntime().playConfig().initialLifeCount());
         choiceBoxInitialLives.setDisable(!CommonGameStateID.GAME_INTRO.hasSameNameAs(state));
 
         final boolean creditDisabled = !state.nameIsOneOf(CommonGameStateID.GAME_INTRO, CommonGameStateID.GAME_PREPARATION);
@@ -106,7 +106,7 @@ public class DS_GameControl extends GameDashboardSection {
         cbCollisionCheckedTwice.setSelected(game.variantPlayConfig().rules().actorCollisionRules().isCollisionDoubleChecked());
     }
 
-    private boolean canStartLevel(GameAppContext appContext, AbstractGameState gameState) {
+    private boolean canStartLevel(GameApp appContext, AbstractGameState gameState) {
         boolean isArcadeGame = GameVariantID.isArcadeGameName(appContext.variantManager().currentVariantName());
         if (!isArcadeGame) return true; //TODO not 100% correct but we cannot access Tengen game model from here
         return !appContext.game().coinMechanism().isEmpty()

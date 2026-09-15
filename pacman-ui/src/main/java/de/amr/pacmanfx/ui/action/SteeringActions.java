@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.action.core.GameApp;
 import javafx.scene.input.KeyCode;
 
 import java.util.EnumMap;
@@ -36,14 +36,14 @@ public class SteeringActions {
         }
 
         @Override
-        public void execute(GameAppContext app) {
+        public void execute(GameApp app) {
             final GameContext game = app.game();
             final WorldNavigationSystem navigator = game.variantPlayConfig().systems().navigator();
             game.session().optLevel().ifPresent(level -> navigator.setWishDir(level.entities().pac(), dir));
         }
 
         @Override
-        public boolean isEnabled(GameAppContext app) {
+        public boolean isEnabled(GameApp app) {
             final GameSession session = app.game().session();
             return session.optLevel().isPresent()
                 && !session.isAttractMode()

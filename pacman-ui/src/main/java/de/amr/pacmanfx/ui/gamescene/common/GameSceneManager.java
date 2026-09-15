@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounter3DViewSystem;
 import de.amr.pacmanfx.ui.gamescene.d3.PlayScene3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -46,11 +46,11 @@ public class GameSceneManager {
         return currentGameScene.get();
     }
 
-    public void forceGameSceneUpdate(GameAppContext app) {
+    public void forceGameSceneUpdate(GameApp app) {
         updateGameSceneAndForceReload(app, true);
     }
 
-    public void updateGameSceneAndForceReload(GameAppContext app, boolean forceReload) {
+    public void updateGameSceneAndForceReload(GameApp app, boolean forceReload) {
         final GameVariantUIConfig uiConfig = app.variantManager().currentVariantRuntime().uiConfig();
         final GameContext game = app.game();
         final GameSession session = game.session();

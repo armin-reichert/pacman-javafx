@@ -14,7 +14,7 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.entities.GameOptionsDisplay;
 import de.amr.pacmanfx.tengenmspacman.entities.LevelNumberDisplay;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.gamescene.d3.Maze3D;
 import de.amr.pacmanfx.ui.gamescene.d3.PlayScene3D;
@@ -36,7 +36,7 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions
  */
 public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
-    public TengenMsPacMan_PlayScene3D(GameAppContext app) {
+    public TengenMsPacMan_PlayScene3D(GameApp app) {
         super(app);
     }
 
@@ -105,7 +105,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         hud.entities().addAll(optionsDisplay, leftNumberDisplay, rightNumberDisplay);
 
         final ActorSpriteAnimController animController = app().game().variantPlayConfig().systems().actorSpriteAnimController();
-        final var renderer = app().currentGameVariantUIConfig().renderConfig().createEntityRenderer(animController, canvas);
+        final var renderer = app().variantManager().currentVariantRuntime().uiConfig().renderConfig().createEntityRenderer(animController, canvas);
         renderer.setScaling(quality);
         renderer.fillCanvas(backgroundColor);
 
@@ -120,7 +120,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         final var bindingsMap = actionBindingsSupport().registry();
         bindingsMap.dispose();
 
-        final var actions = app().currentGameVariantUIConfig().extensionValue(
+        final var actions = app().variantManager().currentVariantRuntime().uiConfig().extensionValue(
             TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
 
         if (session.isAttractMode()) {

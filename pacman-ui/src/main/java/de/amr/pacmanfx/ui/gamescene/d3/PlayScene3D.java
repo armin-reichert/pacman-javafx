@@ -18,7 +18,7 @@ import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.GlobalFonts;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounter3DViewSystem;
 import de.amr.pacmanfx.ui.gamescene.common.ActionBindingsComp;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
@@ -80,7 +80,7 @@ public class PlayScene3D extends GameScene
     /**
      * Creates a new 3D play scene with default camera, sub-scene, axes, and perspective manager.
      */
-    public PlayScene3D(GameAppContext app) {
+    public PlayScene3D(GameApp app) {
         super(app);
 
         final GameViewModel viewModel = app.ui().viewModel();
@@ -305,8 +305,8 @@ public class PlayScene3D extends GameScene
         requireNonNull(game);
         requireNonNull(level);
 
-        final GameVariantPlayConfig config     = app().currentGameVariantPlayConfig();
-        final GameVariantUIConfig uiConfig = app().currentGameVariantUIConfig();
+        final GameVariantPlayConfig config = app().variantManager().currentVariantRuntime().playConfig();
+        final GameVariantUIConfig uiConfig = app().variantManager().currentVariantRuntime().uiConfig();
         final GameViewModel viewModel      = app().ui().viewModel();
         final GameSession session          = game.session();
 

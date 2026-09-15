@@ -17,7 +17,7 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.ui.action.CheatActions;
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationManager;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
@@ -41,7 +41,7 @@ public class Arcade_PlayScene2D extends GameScene implements Arcade_PlayScene2D_
 
     private LevelCompletedAnimation levelCompletedAnimation;
 
-    public Arcade_PlayScene2D(GameAppContext app) {
+    public Arcade_PlayScene2D(GameApp app) {
         super(app);
         // Add 2D canvas rendering capability
         setComp(GameSceneCanvasRenderingComp.class, new GameSceneCanvasRenderingComp());
@@ -74,9 +74,7 @@ public class Arcade_PlayScene2D extends GameScene implements Arcade_PlayScene2D_
 
     @Override
     public void onTick(GameContext game) {
-        game.session().optLevel().ifPresent(level -> {
-            optSoundEffects().ifPresent(sfx -> sfx.playAmbientGameLevelSound(game(), level));
-        });
+        game.session().optLevel().ifPresent(level -> optSoundEffects().ifPresent(sfx -> sfx.playAmbientGameLevelSound(game(), level)));
     }
 
     @Override
@@ -155,7 +153,7 @@ public class Arcade_PlayScene2D extends GameScene implements Arcade_PlayScene2D_
     }
 
     private void acceptDemoLevel() {
-        final Arcade_Actions actions = app().currentGameVariantUIConfig()
+        final Arcade_Actions actions = app().variantManager().currentVariantRuntime().uiConfig()
             .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         final var bindingsMap = actionBindingsSupport().registry();
@@ -178,7 +176,7 @@ public class Arcade_PlayScene2D extends GameScene implements Arcade_PlayScene2D_
 
         // TODO: This does not belong here
         //       In Arcade Pac-Man, a dedicated image is used for painting the bright empty maze while flashing
-        final AssetMap assets = app().currentGameVariantUIConfig().assets();
+        final AssetMap assets = app().variantManager().currentVariantRuntime().uiConfig().assets();
         if (assets.containsAsset("maze.bright")) {
             info.put(LevelRenderInfoKey.BRIGHT_MAZE_IMAGE, assets.image("maze.bright"));
         }

@@ -12,7 +12,7 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -69,7 +69,7 @@ public final class XXL_MsPacMan_UIConfig implements GameVariantUIConfig {
     private final Map<Named, Object> extensions = new HashMap<>();
 
     @Override
-    public void load(GameAppContext app) {
+    public void load(GameApp app) {
         loadAssets();
         renderConfig = new XXL_MsPacMan_RenderConfig(assets);
         renderConfig.addAssets();
@@ -79,7 +79,7 @@ public final class XXL_MsPacMan_UIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public void unload(GameAppContext app) {
+    public void unload(GameApp app) {
         unloadSounds(app.ui().soundManager());
         dispose();
     }

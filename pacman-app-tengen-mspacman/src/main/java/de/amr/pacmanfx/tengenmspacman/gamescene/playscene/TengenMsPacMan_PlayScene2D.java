@@ -29,7 +29,7 @@ import de.amr.pacmanfx.tengenmspacman.gamescene.SceneDisplay;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_LevelRenderInfoKey;
 import de.amr.pacmanfx.tengenmspacman.sprites.MapImageSet;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_MapRepository;
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
@@ -74,7 +74,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
 
     private LevelCompletedAnimation levelCompletedAnimation;
 
-    public TengenMsPacMan_PlayScene2D(GameAppContext app) {
+    public TengenMsPacMan_PlayScene2D(GameApp app) {
         super(app);
 
         // Add canvas rendering capability, no canvas assigned yet!
@@ -295,12 +295,12 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
     }
 
     private TengenMsPacMan_Actions actions() {
-        return app().currentGameVariantUIConfig()
+        return app().variantManager().currentVariantRuntime().uiConfig()
             .extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
     }
 
     private TengenMsPacMan_UISettings uiSettings() {
-        return app().currentGameVariantUIConfig()
+        return app().variantManager().currentVariantRuntime().uiConfig()
             .extensionValue(TengenMsPacMan_GameExtension.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
     }
 

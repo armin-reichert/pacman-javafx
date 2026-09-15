@@ -31,7 +31,7 @@ import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.GlobalFonts;
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.energizer.ParticlesAnimation3D;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -64,7 +64,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 
     double PELLET_EATING_DELAY_SEC = 0.05;
 
-    GameAppContext app();
+    GameApp app();
 
     default Optional<GameSoundEffects> optSoundEffects() {
         return app().variantManager().currentVariantRuntime().uiConfig().optSoundEffects();
@@ -306,7 +306,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 
     private void onGhostsKilled(GameLevel3D level3D) {
         final GameSession session = game().session();
-        final GameVariantUIConfig uiConfig = app().currentGameVariantUIConfig();
+        final GameVariantUIConfig uiConfig = app().variantManager().currentVariantRuntime().uiConfig();
         session.thisFrame().ghostsKilled().forEach(ghost -> {
             final int index = ghost.state().killChainIndex();
             level3D.addKilledGhostNumberBox(ghost, uiConfig, index);

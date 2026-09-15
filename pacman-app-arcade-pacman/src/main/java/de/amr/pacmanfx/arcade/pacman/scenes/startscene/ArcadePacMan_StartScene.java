@@ -9,7 +9,7 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.entities.TextDisplay;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.ui.GlobalFonts;
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import javafx.scene.paint.Color;
@@ -29,7 +29,7 @@ public class ArcadePacMan_StartScene extends GameScene {
 
     private final List<TextDisplay> texts = new ArrayList<>();
 
-    public ArcadePacMan_StartScene(GameAppContext app) {
+    public ArcadePacMan_StartScene(GameApp app) {
         super(app);
         setComp(GameSceneCanvasRenderingComp.class, new GameSceneCanvasRenderingComp());
 
@@ -50,7 +50,7 @@ public class ArcadePacMan_StartScene extends GameScene {
 
     @Override
     public void onActivate() {
-        final Arcade_Actions actions = app().currentGameVariantUIConfig()
+        final Arcade_Actions actions = app().variantManager().currentVariantRuntime().uiConfig()
             .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         final var bindingsMap = actionBindingsSupport().registry();

@@ -16,7 +16,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
 import de.amr.pacmanfx.core.rules.*;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.action.core.GameApp;
 import javafx.scene.paint.Color;
 
 import java.net.URLDecoder;
@@ -34,7 +34,7 @@ public class DS_GameInfo extends GameDashboardSection {
     }
 
     @Override
-    public void setGameApp(GameAppContext app) {
+    public void setGameApp(GameApp app) {
 
         addDynamicInfo("Game State",  () -> app.game().state().name());
 
@@ -93,12 +93,12 @@ public class DS_GameInfo extends GameDashboardSection {
         addDynamicInfo("Maze flashes",   fnLevelInfo(app, level -> fmtNumFlashes(rules(app), level)));
     }
 
-    private GameRules rules(GameAppContext app) {
+    private GameRules rules(GameApp app) {
         return app.game().variantPlayConfig().rules();
     }
 
     private Supplier<String> supplyLevelSpeedInfo(
-        GameAppContext appContext,
+        GameApp appContext,
         BiFunction<GameLevel, ActorSpeedRules, String> fnInfo) {
         return () -> {
             final GameContext game = appContext.game();

@@ -30,7 +30,7 @@ import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.VoiceID;
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 
@@ -67,7 +67,7 @@ public class ArcadeMsPacMan_IntroScene extends GameScene {
 
     private int numTicksBeforeRising;
 
-    public ArcadeMsPacMan_IntroScene(GameAppContext app) {
+    public ArcadeMsPacMan_IntroScene(GameApp app) {
         super(app);
         setComp(GameSceneCanvasRenderingComp.class, new GameSceneCanvasRenderingComp());
         sceneFlow = new StateMachine<>(List.of(SceneState.values()));

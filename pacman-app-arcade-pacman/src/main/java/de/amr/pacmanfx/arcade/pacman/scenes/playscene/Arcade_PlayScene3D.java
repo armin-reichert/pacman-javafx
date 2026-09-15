@@ -8,13 +8,13 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.d3.PlayScene3D;
 import org.tinylog.Logger;
 
 public class Arcade_PlayScene3D extends PlayScene3D {
 
-    public Arcade_PlayScene3D(GameAppContext appContext) {
+    public Arcade_PlayScene3D(GameApp appContext) {
         super(appContext);
     }
 
@@ -24,7 +24,7 @@ public class Arcade_PlayScene3D extends PlayScene3D {
 
         bindingsMap.dispose();
 
-        final Arcade_Actions actions = app().currentGameVariantUIConfig()
+        final Arcade_Actions actions = app().variantManager().currentVariantRuntime().uiConfig()
             .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         if (session.isAttractMode()) {

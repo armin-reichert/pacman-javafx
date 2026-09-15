@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.tengenmspacman.dashboard;
 
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.input.Joypad;
 import de.amr.pacmanfx.ui.input.JoypadButton;
 import de.amr.pacmanfx.ui.views.dashboard.GameDashboardSection;
@@ -17,7 +17,7 @@ public class DS_JoypadKeyBindings extends GameDashboardSection {
     }
 
     @Override
-    public void setGameApp(GameAppContext appContext) {
+    public void setGameApp(GameApp appContext) {
         final Joypad joypad = appContext.input().joypad();
 
         final ResourceManager resourceManager = this::getClass;

@@ -8,7 +8,7 @@ import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.ui.RenderManager;
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.views.GameViewManager;
 import javafx.util.Duration;
@@ -18,11 +18,11 @@ import static java.util.Objects.requireNonNull;
 
 public final class GameLoop {
 
-    private final GameAppContext app;
+    private final GameApp app;
     private final GameClock clock;
     private final RenderManager renderManager;
 
-    public GameLoop(GameAppContext app, GameClock clock, RenderManager renderManager) {
+    public GameLoop(GameApp app, GameClock clock, RenderManager renderManager) {
         this.app = requireNonNull(app);
         this.clock = requireNonNull(clock);
         this.renderManager = requireNonNull(renderManager);

@@ -17,7 +17,7 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.model.BoosterMode;
 import de.amr.pacmanfx.tengenmspacman.model.Difficulty;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.input.JoypadButton;
@@ -68,7 +68,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene {
     private int idleTicks;
     public int initialDelay;
 
-    public TengenMsPacMan_OptionsScene(GameAppContext app) {
+    public TengenMsPacMan_OptionsScene(GameApp app) {
         super(app);
         setComp(GameSceneCanvasRenderingComp.class, new GameSceneCanvasRenderingComp());
         reqCanvasRendering().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
@@ -85,7 +85,7 @@ public class TengenMsPacMan_OptionsScene extends GameScene {
         final GameSession session = game().session();
         session.setHudVisible(false);
 
-        final var actions = app().currentGameVariantUIConfig().extensionValue(
+        final var actions = app().variantManager().currentVariantRuntime().uiConfig().extensionValue(
             TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
 
         final var bindingsMap = actionBindingsSupport().registry();

@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.action.core.GameApp;
 import javafx.scene.input.KeyCode;
 
 import java.util.Set;
@@ -29,7 +29,7 @@ public final class Arcade_Actions {
 
         actionInsertCoin = new GameAction("insert_coin") {
             @Override
-            public void execute(GameAppContext app) {
+            public void execute(GameApp app) {
                 app.ui().soundManager().voice().stop();
                 app.ui().soundManager().setEnabled(true);
                 app.game().coinMechanism().insertCoin();
@@ -38,7 +38,7 @@ public final class Arcade_Actions {
             }
 
             @Override
-            public boolean isEnabled(GameAppContext app) {
+            public boolean isEnabled(GameApp app) {
                 final GameSession session = app.game().session();
                 final AbstractGameState gameState = app.game().state();
                 if (app.game().coinMechanism().isFull()) {
@@ -55,13 +55,13 @@ public final class Arcade_Actions {
 
         actionStartPlaying = new GameAction("start_playing") {
             @Override
-            public void execute(GameAppContext app) {
+            public void execute(GameApp app) {
                 app.ui().soundManager().voice().stop();
                 app.game().variantPlayConfig().gameFlow().enterState(app.game(), Arcade_GameState.GAME_OR_LEVEL_STARTING.state());
             }
 
             @Override
-            public boolean isEnabled(GameAppContext app) {
+            public boolean isEnabled(GameApp app) {
                 if (app.game().coinMechanism().isEmpty()) {
                     return false;
                 }

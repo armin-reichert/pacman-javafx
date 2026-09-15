@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.views.startpages;
 
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.views.GameView;
 import de.amr.pacmanfx.uilib.controls.Carousel;
 import org.tinylog.Logger;
@@ -27,7 +27,7 @@ public class StartPagesView implements GameView {
 
     private final List<StartPage> pages = new ArrayList<>();
 
-    private GameAppContext appContext;
+    private GameApp appContext;
 
     private final Carousel carousel;
 
@@ -59,7 +59,7 @@ public class StartPagesView implements GameView {
     }
 
     @Override
-    public void setApp(GameAppContext app) {
+    public void setApp(GameApp app) {
         this.appContext = requireNonNull(app);
     }
 
@@ -77,7 +77,7 @@ public class StartPagesView implements GameView {
     }
 
     @Override
-    public void onInput(GameAppContext app) {
+    public void onInput(GameApp app) {
         currentStartPage().ifPresent(StartPage::onInput);
     }
 
@@ -97,7 +97,7 @@ public class StartPagesView implements GameView {
         return Optional.of(this::composeTitle);
     }
 
-    public void addStartPage(GameAppContext appContext, StartPage startPage) {
+    public void addStartPage(GameApp appContext, StartPage startPage) {
         requireNonNull(startPage);
         if (pages.contains(startPage)) {
             Logger.warn("Start page already exists in list");

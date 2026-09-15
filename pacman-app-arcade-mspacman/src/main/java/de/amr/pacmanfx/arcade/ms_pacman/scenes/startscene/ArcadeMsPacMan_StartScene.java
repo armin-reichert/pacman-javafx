@@ -11,7 +11,7 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 
@@ -24,7 +24,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene {
     private final StartSceneText startSceneText;
     private final Copyright copyright;
 
-    public ArcadeMsPacMan_StartScene(GameAppContext app) {
+    public ArcadeMsPacMan_StartScene(GameApp app) {
         super(app);
         setComp(GameSceneCanvasRenderingComp.class, new GameSceneCanvasRenderingComp());
 
@@ -47,7 +47,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene {
 
     @Override
     public void onActivate() {
-        final Arcade_Actions actions = app().currentGameVariantUIConfig()
+        final Arcade_Actions actions = app().variantManager().currentVariantRuntime().uiConfig()
             .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         final var bindingsMap = actionBindingsSupport().registry();

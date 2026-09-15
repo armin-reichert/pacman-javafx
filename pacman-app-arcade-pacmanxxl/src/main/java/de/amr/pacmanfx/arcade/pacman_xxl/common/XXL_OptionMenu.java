@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenuEntry;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenuSettings;
@@ -36,7 +36,7 @@ public class XXL_OptionMenu extends OptionMenu {
 
     private final XXL_ChaseAnimation chaseAnimation;
 
-    private GameAppContext app;
+    private GameApp app;
 
     private ObservableValue<Double> scaling;
 
@@ -82,7 +82,7 @@ public class XXL_OptionMenu extends OptionMenu {
         );
     }
 
-    public void init(GameAppContext app) {
+    public void init(GameApp app) {
         this.app = requireNonNull(app);
 
         final String variantName = app.variantManager().currentVariantName();

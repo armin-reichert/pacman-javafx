@@ -56,8 +56,8 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer implement
             return;
         }
 
-        final TengenMsPacMan_UISettings uiSettings = optionsScene.app().currentGameVariantUIConfig().extensionValue(
-            TengenMsPacMan_GameExtension.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
+        final TengenMsPacMan_UISettings uiSettings = optionsScene.app().variantManager().currentVariantRuntime()
+            .uiConfig().extensionValue(TengenMsPacMan_GameExtension.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
 
         final GameContext game = optionsScene.game();
         final GameSession session = game.session();
@@ -122,7 +122,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer implement
         fillText(String.valueOf(startLevelNumber), NES_WHITE, COL_VALUE, y);
         if (numContinues < 4) {
             @SuppressWarnings("unchecked") final SpriteSheet<SpriteID> spriteSheet = (SpriteSheet<SpriteID>)
-                optionsScene.app().currentGameVariantUIConfig().renderConfig().spriteSheet();
+                optionsScene.app().variantManager().currentVariantRuntime().uiConfig().renderConfig().spriteSheet();
             final RectShort continuesSprite = spriteSheet.findSprite(switch (numContinues) {
                 case 0 -> SpriteID.CONTINUES_0;
                 case 1 -> SpriteID.CONTINUES_1;

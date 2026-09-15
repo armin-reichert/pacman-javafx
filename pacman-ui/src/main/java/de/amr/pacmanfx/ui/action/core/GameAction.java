@@ -33,7 +33,7 @@ public abstract class GameAction {
      *
      * @param app the application context
      */
-    public abstract void execute(GameAppContext app);
+    public abstract void execute(GameApp app);
 
     /**
      * This method may be implemented by subclasses to define when this action is enabled.
@@ -41,5 +41,5 @@ public abstract class GameAction {
      * @param app application context
      * @return {@code true} if this action can be executed
      */
-    public boolean isEnabled(GameAppContext app) { return true; }
+    public boolean isEnabled(GameApp app) { return true; }
 }

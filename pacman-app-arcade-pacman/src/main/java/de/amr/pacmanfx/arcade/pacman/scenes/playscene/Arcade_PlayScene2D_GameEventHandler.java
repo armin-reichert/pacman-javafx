@@ -19,7 +19,7 @@ import de.amr.pacmanfx.core.event.pac.*;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.test.TestStateID;
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationManager;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -31,14 +31,14 @@ public interface Arcade_PlayScene2D_GameEventHandler extends DefaultGameEventLis
 
     Arcade_PlayScene2D theGameScene();
 
-    GameAppContext app();
+    GameApp app();
 
     default GameContext game() {
         return app().game();
     }
 
     default Optional<GameSoundEffects> optSoundEffects() {
-        return app().currentGameVariantUIConfig().optSoundEffects();
+        return app().variantManager().currentVariantRuntime().uiConfig().optSoundEffects();
     }
 
     @Override

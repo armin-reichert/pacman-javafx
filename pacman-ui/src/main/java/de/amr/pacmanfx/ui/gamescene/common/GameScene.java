@@ -17,7 +17,7 @@ import de.amr.pacmanfx.core.event.gameplay.CreditAddedEvent;
 import de.amr.pacmanfx.core.gamestate.GameFlow;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.rendering.Renderable;
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundManager;
@@ -39,9 +39,9 @@ public abstract class GameScene extends Composition<GameSceneComponent>
 {
     //TODO Should a game scene really be a renderable itself or only produce renderables?
 
-    private final GameAppContext app;
+    private final GameApp app;
 
-    protected GameScene(GameAppContext app) {
+    protected GameScene(GameApp app) {
         this.app = requireNonNull(app);
     }
 
@@ -75,7 +75,7 @@ public abstract class GameScene extends Composition<GameSceneComponent>
         return reqComp(ActionBindingsComp.class);
     }
 
-    public GameAppContext app() {
+    public GameApp app() {
         return app;
     }
 

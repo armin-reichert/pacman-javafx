@@ -12,7 +12,7 @@ import de.amr.pacmanfx.tengenmspacman.config.TengenJsonConfigLoader;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.gamescene.TengenMsPacMan_GameSceneConfig;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConfig;
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
@@ -92,7 +92,7 @@ public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
     private final Map<Named, Object> extensions = new HashMap<>();
 
     @Override
-    public void load(GameAppContext app) {
+    public void load(GameApp app) {
         loadAssets();
         renderConfig = new TengenMsPacMan_RenderConfig(assets);
         renderConfig.addAssets();
@@ -103,7 +103,7 @@ public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public void unload(GameAppContext app) {
+    public void unload(GameApp app) {
         unloadSounds(app.ui().soundManager());
         dispose();
     }

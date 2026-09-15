@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.views.GameViewID;
@@ -39,19 +39,19 @@ public class UISettingsActions {
 
         actionEnterFullScreen = new GameAction("enter_fullscreen") {
             @Override
-            public void execute(GameAppContext app) {
+            public void execute(GameApp app) {
                 app.ui().window().setFullScreen(true);
             }
         };
 
         actionShowHelp = new GameAction("show_help") {
             @Override
-            public void execute(GameAppContext app) {
+            public void execute(GameApp app) {
                 app.ui().viewManager().gamePlayView().showHelp(app);
             }
 
             @Override
-            public boolean isEnabled(GameAppContext app) {
+            public boolean isEnabled(GameApp app) {
                 final String variantName = app.variantManager().currentVariantName();
                 final boolean isArcadeGame = GameVariantID.isArcadeGameName(variantName);
                 return isArcadeGame &&
@@ -63,33 +63,33 @@ public class UISettingsActions {
 
         actionToggleDashboard = new GameAction("toggle_dashboard") {
             @Override
-            public void execute(GameAppContext app) {
+            public void execute(GameApp app) {
                 app.ui().viewManager().gamePlayView().dashboard().toggleVisibility();
             }
 
             @Override
-            public boolean isEnabled(GameAppContext app) {
+            public boolean isEnabled(GameApp app) {
                 return app.ui().viewManager().isSelected(GameViewID.GAMEPLAY);
             }
         };
 
         actionToggleDebugInfo = new GameAction("toggle_debug_info") {
             @Override
-            public void execute(GameAppContext app) {
+            public void execute(GameApp app) {
                 toggleBooleanProperty(app.ui().viewModel().debugModeOnProperty());
             }
         };
 
         actionToggleKeyboardMonitor = new GameAction("toggle_keyboard_monitor") {
             @Override
-            public void execute(GameAppContext app) {
+            public void execute(GameApp app) {
                 toggleBooleanProperty(app.ui().viewModel().keyboardMonitorOnProperty());
             }
         };
 
         actionToggleMiniViewVisibility = new GameAction("toggle_mini_view_visibility") {
             @Override
-            public void execute(GameAppContext app) {
+            public void execute(GameApp app) {
                 final BooleanProperty miniViewActiveProperty = app.ui().viewModel().miniViewSettings().activeProperty;
                 toggleBooleanProperty(miniViewActiveProperty);
                 // Message?
@@ -103,7 +103,7 @@ public class UISettingsActions {
 
         actionTogglePlayScene2D3D = new GameAction("toggle_play_scene_2d_3d") {
             @Override
-            public void execute(GameAppContext app) {
+            public void execute(GameApp app) {
                 final GameContext game = app.game();
                 final BooleanProperty view3DEnabledProperty = app.ui().viewModel().common3DSettings().view3DEnabledProperty();
                 toggleBooleanProperty(view3DEnabledProperty);
@@ -117,7 +117,7 @@ public class UISettingsActions {
             }
 
             @Override
-            public boolean isEnabled(GameAppContext app) {
+            public boolean isEnabled(GameApp app) {
                 return app.ui().viewManager().isSelected(GameViewID.GAMEPLAY);
             }
 

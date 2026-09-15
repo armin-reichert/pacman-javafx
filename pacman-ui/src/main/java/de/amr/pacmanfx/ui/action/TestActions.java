@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.action;
 import de.amr.pacmanfx.core.model.test.TestStateID;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.action.core.GameApp;
 import javafx.scene.input.KeyCode;
 import javafx.util.Duration;
 
@@ -27,39 +27,39 @@ public class TestActions {
 
         actionTestCutScenes = new GameAction("test_cut_scenes") {
             @Override
-            public void execute(GameAppContext app) {
+            public void execute(GameApp app) {
                 app.game().variantPlayConfig().gameFlow().enterGameState(app.game(), TestStateID.CUT_SCENE_TEST);
                 app.ui().shortMessage("Cut scenes test"); //TODO localize
             }
 
             @Override
-            public boolean isEnabled(GameAppContext app) {
+            public boolean isEnabled(GameApp app) {
                 return app.game().variantPlayConfig().gameFlow().optGameState(TestStateID.CUT_SCENE_TEST).isPresent();
             }
         };
 
         actionTestLevelShort = new GameAction("short_level_test") {
             @Override
-            public void execute(GameAppContext app) {
+            public void execute(GameApp app) {
                 app.game().variantPlayConfig().gameFlow().restartGameState(app.game(), TestStateID.LEVEL_TEST_S);
                 app.ui().shortMessage(Duration.seconds(3), "Level Test Mode (Short tests)");
             }
 
             @Override
-            public boolean isEnabled(GameAppContext app) {
+            public boolean isEnabled(GameApp app) {
                 return app.game().variantPlayConfig().gameFlow().optGameState(TestStateID.LEVEL_TEST_S).isPresent();
             }
         };
 
         actionTestLevelMedium = new GameAction("medium_level_test") {
             @Override
-            public void execute(GameAppContext app) {
+            public void execute(GameApp app) {
                 app.game().variantPlayConfig().gameFlow().restartGameState(app.game(), TestStateID.LEVEL_TEST_M);
                 app.ui().shortMessage(Duration.seconds(3), "Level Test Mode (Medium tests)");
             }
 
             @Override
-            public boolean isEnabled(GameAppContext app) {
+            public boolean isEnabled(GameApp app) {
                 return app.game().variantPlayConfig().gameFlow().optGameState(TestStateID.LEVEL_TEST_M).isPresent();
             }
         };

@@ -22,7 +22,7 @@ import de.amr.pacmanfx.tengenmspacman.entities.stork.TengenMsPacMan_StorkSAM;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.input.JoypadButton;
@@ -57,7 +57,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene {
 
     private boolean darkness;
 
-    public TengenMsPacMan_CutScene3(GameAppContext app) {
+    public TengenMsPacMan_CutScene3(GameApp app) {
         super(app);
         setComp(GameSceneCanvasRenderingComp.class, new GameSceneCanvasRenderingComp());
         reqCanvasRendering().unscaledWidthProperty().set(NES_SCREEN_WIDTH);

@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.views.startpages;
 
 import de.amr.basics.json.JsonLoader;
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneController;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
@@ -43,7 +43,7 @@ public class FlyerStartPage implements StartPage {
     protected String title;
     protected String gameVariantName;
     protected GameStartButton startButton;
-    protected GameAppContext app;
+    protected GameApp app;
 
     protected GameSceneController gameScene;
 
@@ -100,12 +100,12 @@ public class FlyerStartPage implements StartPage {
     }
 
     @Override
-    public GameAppContext app() {
+    public GameApp app() {
         return app;
     }
 
     @Override
-    public void setGameApp(GameAppContext app) {
+    public void setGameApp(GameApp app) {
         this.app = requireNonNull(app);
     }
 

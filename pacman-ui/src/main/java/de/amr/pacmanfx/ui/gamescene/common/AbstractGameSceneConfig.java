@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.gamescene.common;
 import de.amr.basics.Named;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.action.core.GameApp;
 import org.tinylog.Logger;
 
 import java.util.HashMap;
@@ -34,7 +34,7 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
 
     protected AbstractGameSceneConfig() {}
 
-    protected abstract Function<GameAppContext, GameScene> getGameSceneFactory(Named sceneID);
+    protected abstract Function<GameApp, GameScene> getGameSceneFactory(Named sceneID);
 
     protected abstract Named computeGameSceneID(GameContext game, boolean select3D);
 
@@ -62,7 +62,7 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
     }
 
     @Override
-    public final Optional<GameScene> selectGameScene(GameAppContext app, boolean select3D) {
+    public final Optional<GameScene> selectGameScene(GameApp app, boolean select3D) {
         requireNonNull(app);
         final Named sceneID = computeGameSceneID(app.game(), select3D);
         final GameScene gameScene = scenesByID.computeIfAbsent(sceneID, id -> getGameSceneFactory(id).apply(app));

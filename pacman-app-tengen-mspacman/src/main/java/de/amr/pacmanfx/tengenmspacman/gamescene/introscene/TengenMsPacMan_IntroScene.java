@@ -33,7 +33,7 @@ import de.amr.pacmanfx.tengenmspacman.gamestate.Tengen_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.entities3D.ghost.comp.GhostSettings;
@@ -73,7 +73,7 @@ public class TengenMsPacMan_IntroScene extends GameScene {
     private int waitBeforeRising;
     public boolean dark;
 
-    public TengenMsPacMan_IntroScene(GameAppContext app) {
+    public TengenMsPacMan_IntroScene(GameApp app) {
         super(app);
 
         setComp(GameSceneCanvasRenderingComp.class, new GameSceneCanvasRenderingComp());
@@ -100,7 +100,7 @@ public class TengenMsPacMan_IntroScene extends GameScene {
 
         spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
-        final var actions = app().currentGameVariantUIConfig().extensionValue(
+        final var actions = app().variantManager().currentVariantRuntime().uiConfig().extensionValue(
             TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
 
         final var bindingsMap = actionBindingsSupport().registry();

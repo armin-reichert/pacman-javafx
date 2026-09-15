@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.gamescene.d3;
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.vm.Game3DSettingsVM;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
@@ -45,9 +45,9 @@ public class PlaySceneContextMenu extends ContextMenu implements Disposable {
         }
     };
 
-    private final GameAppContext appContext;
+    private final GameApp appContext;
 
-    public PlaySceneContextMenu(GameAppContext app) {
+    public PlaySceneContextMenu(GameApp app) {
         this.appContext = requireNonNull(app);
 
         final GameUI ui = app.ui();

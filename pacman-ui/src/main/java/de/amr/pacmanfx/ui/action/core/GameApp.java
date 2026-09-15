@@ -7,16 +7,17 @@ package de.amr.pacmanfx.ui.action.core;
 import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameVariantPlayConfig;
 import de.amr.pacmanfx.game.GameVariantManager;
-import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.RenderManager;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.input.Input;
 
-public interface GameAppContext {
+/**
+ * The game application context.
+ */
+public interface GameApp {
 
     void startGame();
 
@@ -33,14 +34,6 @@ public interface GameAppContext {
     GameClock clock();
 
     GameVariantManager variantManager();
-
-    default GameVariantPlayConfig currentGameVariantPlayConfig() {
-        return variantManager().currentVariantRuntime().playConfig();
-    }
-
-    default GameVariantUIConfig currentGameVariantUIConfig() {
-        return variantManager().currentVariantRuntime().uiConfig();
-    }
 
     GameContext game();
 

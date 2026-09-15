@@ -12,7 +12,7 @@ import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.RenderManager;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsRegistry;
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
@@ -80,7 +80,7 @@ public class GamePlayView implements GameView {
 
     private final ActionBindingsRegistry actionBindings = new GameActionBindingsRegistry("Action Bindings for Play View");
 
-    private GameAppContext app;
+    private GameApp app;
 
     private ContextMenuManager contextMenuManager;
 
@@ -113,7 +113,7 @@ public class GamePlayView implements GameView {
     }
 
     @Override
-    public void setApp(GameAppContext app) {
+    public void setApp(GameApp app) {
         this.app = requireNonNull(app);
 
         initLayers(app.ui().viewModel());
@@ -165,7 +165,7 @@ public class GamePlayView implements GameView {
         }
     }
 
-    public void showHelp(GameAppContext app) {
+    public void showHelp(GameApp app) {
         final double scaling = decorationPane.scalingProperty().get();
         layers.helpLayer().showHelpPopup(app, scaling, app.variantManager().currentVariantName());
     }
@@ -194,7 +194,7 @@ public class GamePlayView implements GameView {
     }
 
     @Override
-    public void onInput(GameAppContext app) {
+    public void onInput(GameApp app) {
         // First look for a matching action of the play view itself; if none found, delegate to the current game scene.
         if (actionBindings.executeMatchingAction(app).isEmpty()) {
             app.gameSceneManager().optCurrentGameScene().ifPresent(GameScene::onInput);
@@ -242,8 +242,8 @@ public class GamePlayView implements GameView {
         final GameScene currentGameScene = app.gameSceneManager().optCurrentGameScene().orElse(null);
         if (currentGameScene != null) {
             renderManager.updateRenderers(
-                app.currentGameVariantPlayConfig(),
-                app.currentGameVariantUIConfig().renderConfig(),
+                app.variantManager().currentVariantRuntime().playConfig(),
+                app.variantManager().currentVariantRuntime().uiConfig().renderConfig(),
                 currentGameScene,
                 layers.miniViewLayer()
             );

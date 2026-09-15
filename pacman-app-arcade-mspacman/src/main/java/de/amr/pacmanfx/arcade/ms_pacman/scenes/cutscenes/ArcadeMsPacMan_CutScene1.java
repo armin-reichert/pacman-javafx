@@ -26,7 +26,7 @@ import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
@@ -64,7 +64,7 @@ public class ArcadeMsPacMan_CutScene1 extends GameScene {
 
     private final ClapperboardStateSystem clapperboardSystem = new ClapperboardStateSystem();
 
-    public ArcadeMsPacMan_CutScene1(GameAppContext app) {
+    public ArcadeMsPacMan_CutScene1(GameApp app) {
         super(app);
         setComp(GameSceneCanvasRenderingComp.class, new GameSceneCanvasRenderingComp());
     }

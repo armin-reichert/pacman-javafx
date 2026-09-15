@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.views.GameView;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCodeCombination;
@@ -21,12 +21,12 @@ public class DS_GameViewKeys extends GameDashboardSection {
     }
 
     @Override
-    public void update(GameAppContext app) {
+    public void update(GameApp app) {
         super.update(app);
         app.ui().viewManager().optCurrentView().ifPresent(view -> updateInfo(app, view));
     }
 
-    private void updateInfo(GameAppContext app, GameView view) {
+    private void updateInfo(GameApp app, GameView view) {
         clearSection();
 
         final Map<KeyCodeCombination, GameAction> currentBindingMap = view.actionBindings().actionBindings();

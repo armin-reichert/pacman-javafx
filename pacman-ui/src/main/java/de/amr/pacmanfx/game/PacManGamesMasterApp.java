@@ -21,7 +21,7 @@ import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.RenderManager;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.input.Input;
 import de.amr.pacmanfx.uilib.PacMan3DModel;
@@ -33,7 +33,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * The Pac-Man games master app.
  */
-public final class PacManGamesMasterApp implements GameAppContext {
+public final class PacManGamesMasterApp implements GameApp {
 
     /**
      * A state change event from the current game flow state machine is converted

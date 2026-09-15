@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.views.playview;
 
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.window.GameMainScene;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
@@ -23,11 +23,11 @@ public class ContextMenuManager implements EventHandler<ContextMenuEvent> {
 
     private final ContextMenu contextMenu = new ContextMenu();
 
-    private final GameAppContext app;
+    private final GameApp app;
 
     private final GameMainScene mainScene;
 
-    public ContextMenuManager(GameAppContext app, GameMainScene mainScene) {
+    public ContextMenuManager(GameApp app, GameMainScene mainScene) {
         this.app = requireNonNull(app);
         this.mainScene = requireNonNull(mainScene);
         mainScene.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {

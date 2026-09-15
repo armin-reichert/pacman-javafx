@@ -6,7 +6,7 @@ package de.amr.pacmanfx.game;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.Named;
-import de.amr.pacmanfx.ui.action.core.GameAppContext;
+import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
@@ -18,9 +18,9 @@ import java.util.Optional;
 
 public interface GameVariantUIConfig extends Disposable {
 
-    void load(GameAppContext app);
+    void load(GameApp app);
 
-    void unload(GameAppContext app);
+    void unload(GameApp app);
 
     /**
      * @return the game scene configuration mapping game states to scenes.

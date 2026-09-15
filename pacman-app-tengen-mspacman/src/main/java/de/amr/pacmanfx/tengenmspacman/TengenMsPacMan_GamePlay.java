@@ -45,6 +45,7 @@ import java.util.List;
 import static de.amr.basics.math.RandomNumbers.randomBoolean;
 import static de.amr.basics.math.RandomNumbers.randomInt;
 import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.HTS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static java.util.Objects.requireNonNull;
 
@@ -143,7 +144,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         if (level != null) {
             // Called when level is created, adjust positions to map size
 
-            final int bottomPos = (level.worldMap().numRows() - 1) * TS;
+            final int bottomPos = (level.worldMap().numRows() - 1) * TS - HTS;
 
             final var levelNumberDisplays = hud.entities().ofType(LevelNumberDisplay.class).toList();
             levelNumberDisplays.forEach(levelNumberDisplay -> levelNumberDisplay.levelNumber().setNumber(level.number()));
