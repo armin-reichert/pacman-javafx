@@ -6,7 +6,6 @@ package de.amr.pacmanfx.game;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.filesystem.DirectoryWatchdog;
-import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.ui.input.Input;
@@ -28,13 +27,12 @@ import static java.util.Objects.requireNonNull;
 public class GameBox implements Disposable {
 
     private final Set<Cartridge> cartridges = new HashSet<>(6);
+
     private final Input input = new Input();
-    private final CoinMechanism coinMechanism;
     private final GameClock clock;
     private final DirectoryWatchdog watchdog;
 
-    public GameBox(int maxCoins, GameClock clock) {
-        this.coinMechanism = new CoinMechanism(maxCoins);
+    public GameBox(GameClock clock) {
         this.clock = requireNonNull(clock);
         clock.setTargetFrameRate(GameConstants.SIMULATION_FPS);
 
@@ -80,10 +78,6 @@ public class GameBox implements Disposable {
                 return new IllegalArgumentException(errorMessage);
             }
         );
-    }
-
-    public CoinMechanism coinMechanism() {
-        return coinMechanism;
     }
 
     public GameClock clock() {

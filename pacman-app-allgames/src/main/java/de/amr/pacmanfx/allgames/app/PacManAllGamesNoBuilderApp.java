@@ -40,7 +40,7 @@ public class PacManAllGamesNoBuilderApp extends Application {
     public void init() {
         includeTests = Boolean.parseBoolean(getParameters().getNamed().get("include_tests"));
 
-        gameBox = new GameBox(99, new TimelineGameClock());
+        gameBox = new GameBox(new TimelineGameClock());
 
         gameBox.insertCartridges(
             ArcadePacMan_Cartridge.CARTRIDGE,

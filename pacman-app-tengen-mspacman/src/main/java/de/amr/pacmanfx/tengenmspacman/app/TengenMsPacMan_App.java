@@ -23,7 +23,7 @@ public class TengenMsPacMan_App extends Application {
 
     @Override
     public void init() {
-        gameBox = new GameBox(0, new TimelineGameClock());
+        gameBox = new GameBox(new TimelineGameClock());
     }
 
     @Override

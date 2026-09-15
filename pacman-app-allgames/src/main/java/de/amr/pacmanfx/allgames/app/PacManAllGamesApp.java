@@ -32,7 +32,7 @@ public class PacManAllGamesApp extends Application {
     @Override
     public void init() {
         includeTests = Boolean.parseBoolean(getParameters().getNamed().get("include_tests"));
-        gameBox = new GameBox(99, new TimelineGameClock());
+        gameBox = new GameBox(new TimelineGameClock());
     }
 
     @Override

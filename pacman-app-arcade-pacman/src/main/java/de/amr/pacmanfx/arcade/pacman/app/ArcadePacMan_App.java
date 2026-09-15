@@ -21,7 +21,7 @@ public class ArcadePacMan_App extends Application {
 
     @Override
     public void init() {
-        gameBox = new GameBox(99, new TimelineGameClock());
+        gameBox = new GameBox(new TimelineGameClock());
     }
 
     @Override

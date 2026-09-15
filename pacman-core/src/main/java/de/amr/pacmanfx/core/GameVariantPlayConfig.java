@@ -18,19 +18,19 @@ public class GameVariantPlayConfig {
     private int initialLifeCount = 3;
 
     public GameVariantPlayConfig(
-        CoinMechanism coinMechanism,
         GameSystems systems,
         GamePlay gamePlay,
         GameFlowController gameFlow,
         GameRules gameRules,
         WorldMapManager worldMapManager)
     {
-        this.coinMechanism = coinMechanism;
         this.systems = systems;
         this.gamePlay = gamePlay;
         this.gameFlow = gameFlow;
         this.gameRules = gameRules;
         this.worldMapManager = worldMapManager;
+
+        this.coinMechanism = new CoinMechanism(99);
     }
 
     public int initialLifeCount() {
