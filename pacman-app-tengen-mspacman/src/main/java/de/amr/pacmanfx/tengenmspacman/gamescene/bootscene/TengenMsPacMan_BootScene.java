@@ -72,7 +72,7 @@ public class TengenMsPacMan_BootScene extends GameScene {
 
     @Override
     public void onActivate() {
-        final GameVariantRuntime gameVariantRuntime = app().variantManager().currentVariantConfig();
+        final GameVariantRuntime gameVariantRuntime = app().variantManager().currentVariantRuntime();
         ghost = gameVariantRuntime.uiConfig().renderConfig().createAnimatedGhost(
             gameVariantRuntime.playConfig().systems().actorSpriteAnimController(),
             gameVariantRuntime.spriteAnimContainer(),

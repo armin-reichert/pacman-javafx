@@ -41,7 +41,7 @@ public interface TengenMsPacMan_PlayScene2D_GameEventHandler extends DefaultGame
     TengenMsPacMan_PlayScene2D gameScene();
 
     default Optional<GameSoundEffects> optSoundEffects() {
-        return gameScene().app().variantManager().currentVariantConfig().uiConfig().optSoundEffects();
+        return gameScene().app().variantManager().currentVariantRuntime().uiConfig().optSoundEffects();
     }
 
     @Override

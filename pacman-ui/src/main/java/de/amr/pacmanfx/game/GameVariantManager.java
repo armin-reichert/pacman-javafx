@@ -13,7 +13,7 @@ public interface GameVariantManager {
 
     GameVariantRuntime variantConfigByName(String variantName);
 
-    GameVariantRuntime currentVariantConfig();
+    GameVariantRuntime currentVariantRuntime();
 
     void selectVariant(String variantName);
 

@@ -274,7 +274,7 @@ public class PlayScene3D extends GameScene
         } else {
             scoresView.showTextForScore(
                 app().ui().translationManager().translate("score.game_over"),
-                app().variantManager().currentVariantConfig().uiConfig().assets().color("color.game_over_message"));
+                app().variantManager().currentVariantRuntime().uiConfig().assets().color("color.game_over_message"));
         }
 
         // High score is always visible

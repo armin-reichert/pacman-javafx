@@ -18,10 +18,10 @@ import de.amr.pacmanfx.ui.action.core.GameAppContext;
 public class ActorAnimationManager {
 
     public static void ensureActorAnimationsCreated(GameAppContext app, GameLevel level) {
-        final GameVariantRuntime variant = app.variantManager().currentVariantConfig();
-        final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
-        final SpriteAnimationContainer animationContainer = variant.spriteAnimContainer();
-        final ActorSpriteAnimController animController = variant.playConfig().systems().actorSpriteAnimController();
+        final GameVariantRuntime variantRuntime = app.variantManager().currentVariantRuntime();
+        final GameVariantRenderConfig renderConfig = variantRuntime.uiConfig().renderConfig();
+        final SpriteAnimationContainer animationContainer = variantRuntime.spriteAnimContainer();
+        final ActorSpriteAnimController animController = variantRuntime.playConfig().systems().actorSpriteAnimController();
 
         final Pac pac = level.entities().pac();
         if (animController.hasNoAnimations(pac)) {

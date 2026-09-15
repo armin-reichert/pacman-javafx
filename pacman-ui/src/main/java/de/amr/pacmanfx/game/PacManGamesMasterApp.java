@@ -228,28 +228,28 @@ public final class PacManGamesMasterApp implements GameAppContext {
     }
 
     //TODO This method is messy and needs a cleanup!
-    private void enterGameVariant(GameVariantRuntime gameVariantRuntime) {
-        requireNonNull(gameVariantRuntime);
+    private void enterGameVariant(GameVariantRuntime variantRuntime) {
+        requireNonNull(variantRuntime);
 
-        final GameVariantUIConfig uiConfig = gameVariantRuntime.uiConfig();
+        final GameVariantUIConfig uiConfig = variantRuntime.uiConfig();
         uiConfig.load(this);
 
         // Update game scene manager
         gameSceneManager.setGameSceneConfig(uiConfig.gameSceneConfig());
 
-        ui.viewModel().maze3DSettings().init(gameVariantRuntime.uiConfig().worldSettings().maze());
+        ui.viewModel().maze3DSettings().init(variantRuntime.uiConfig().worldSettings().maze());
 
-        ui.spriteAnimTimer().attachAnimContainer(gameVariantRuntime.spriteAnimContainer());
+        ui.spriteAnimTimer().attachAnimContainer(variantRuntime.spriteAnimContainer());
 
         //TODO do not start animation timer here
         ui.spriteAnimTimer().start();
 
         game = new GameContext(
-            gameVariantRuntime.playConfig(),
-            gameVariantRuntime.coinMechanism(),
+            variantRuntime.playConfig(),
+            variantRuntime.coinMechanism(),
             new DefaultGameEventManager()
         );
-        game.setSession(new GameSession(gameVariantManager.currentVariantName(), new GameCheats(), gameVariantRuntime.playConfig().initialLifeCount()));
+        game.setSession(new GameSession(gameVariantManager.currentVariantName(), new GameCheats(), variantRuntime.playConfig().initialLifeCount()));
 
         stateChangeEventMapper = new StateChangeEventMapper(game.eventManager());
 
@@ -260,15 +260,15 @@ public final class PacManGamesMasterApp implements GameAppContext {
         game.eventManager().addSubscriber(new PacEatingEventHandler(game));
         game.eventManager().addSubscriber(new PacPowerEventHandler(game));
 
-        gameVariantRuntime.playConfig().gameFlow().addStateChangeListener(stateChangeEventMapper);
+        variantRuntime.playConfig().gameFlow().addStateChangeListener(stateChangeEventMapper);
     }
 
-    private void exitGameVariant(GameVariantRuntime gameVariantRuntime) {
-        gameVariantRuntime.playConfig().gameFlow().removeStateChangeListener(stateChangeEventMapper);
+    private void exitGameVariant(GameVariantRuntime variantRuntime) {
+        variantRuntime.playConfig().gameFlow().removeStateChangeListener(stateChangeEventMapper);
 
-        gameVariantRuntime.uiConfig().unload(this);
+        variantRuntime.uiConfig().unload(this);
 
-        gameVariantRuntime.spriteAnimContainer().clear();
+        variantRuntime.spriteAnimContainer().clear();
         ui.spriteAnimTimer().detachAnimationContainer();
         ui.soundManager().dispose();
 

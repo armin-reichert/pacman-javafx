@@ -285,7 +285,7 @@ public class GamePlayView implements GameView {
         requireNonNull(gameScene);
 
         final GameMainScene mainScene = app.ui().window().mainScene();
-        final GameVariantUIConfig config = app.variantManager().currentVariantConfig().uiConfig();
+        final GameVariantUIConfig config = app.variantManager().currentVariantRuntime().uiConfig();
 
         if (gameScene.optSubSceneFX().isPresent()) {
             embedGameSceneWithSubSceneFX(mainScene, gameScene, gameScene.optSubSceneFX().get());

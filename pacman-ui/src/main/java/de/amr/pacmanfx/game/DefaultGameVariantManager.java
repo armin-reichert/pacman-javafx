@@ -38,7 +38,7 @@ public class DefaultGameVariantManager implements GameVariantManager {
     public void registerVariantConfig(String variantName) {
         requireNonNull(variantName);
         final boolean includeInteractiveTests = viewModel.testStatesIncludedProperty().get();
-        final GameVariantRuntime gameVariantRuntime = createGameVariant(gameBox, variantName, includeInteractiveTests);
+        final GameVariantRuntime gameVariantRuntime = createGameVariantRuntime(gameBox, variantName, includeInteractiveTests);
         configsByName.put(variantName, gameVariantRuntime);
     }
 
@@ -59,7 +59,7 @@ public class DefaultGameVariantManager implements GameVariantManager {
     }
 
     @Override
-    public GameVariantRuntime currentVariantConfig() {
+    public GameVariantRuntime currentVariantRuntime() {
         return variantConfigByName(currentVariantName());
     }
 
@@ -87,17 +87,17 @@ public class DefaultGameVariantManager implements GameVariantManager {
         selectedVariantName.set(variantName);
     }
 
-    private GameVariantRuntime createGameVariant(GameBox gameBox, String variantName, boolean includeInteractiveTests) {
+    private GameVariantRuntime createGameVariantRuntime(GameBox gameBox, String variantName, boolean includeInteractiveTests) {
         final Cartridge cartridge = gameBox.cartridgeByName(variantName);
-        final var variant = new GameVariantRuntime(gameBox, cartridge);
+        final var variantRuntime = new GameVariantRuntime(gameBox, cartridge);
         if (includeInteractiveTests) {
-            final GameFlow gameFlow = variant.playConfig().gameFlow();
+            final GameFlow gameFlow = variantRuntime.playConfig().gameFlow();
             gameFlow.addState(new Test_ShortTestState());
             gameFlow.addState(new Test_MediumTestState());
             gameFlow.addState(new Test_CutScenesTestState());
         }
-        variant.playConfig().worldMapManager().loadMapPrototypes();
+        variantRuntime.playConfig().worldMapManager().loadMapPrototypes();
         Logger.info("Loaded world maps for game variant {}", variantName);
-        return variant;
+        return variantRuntime;
     }
 }

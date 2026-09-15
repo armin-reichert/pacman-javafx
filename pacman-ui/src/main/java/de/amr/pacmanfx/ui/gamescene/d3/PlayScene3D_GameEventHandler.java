@@ -67,7 +67,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     GameAppContext app();
 
     default Optional<GameSoundEffects> optSoundEffects() {
-        return app().variantManager().currentVariantConfig().uiConfig().optSoundEffects();
+        return app().variantManager().currentVariantRuntime().uiConfig().optSoundEffects();
     }
 
     default GameContext game() {

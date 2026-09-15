@@ -347,7 +347,7 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
     }
 
     private void ensureActorAnimationsCreated(GameLevel level, boolean boosterEnabled) {
-        final GameVariantRuntime variantConfig = app().variantManager().currentVariantConfig();
+        final GameVariantRuntime variantConfig = app().variantManager().currentVariantRuntime();
         final GameVariantRenderConfig renderConfig = variantConfig.uiConfig().renderConfig();
         final SpriteAnimationContainer animContainer = variantConfig.spriteAnimContainer();
         final ActorSpriteAnimController animController = variantConfig.playConfig().systems().actorSpriteAnimController();

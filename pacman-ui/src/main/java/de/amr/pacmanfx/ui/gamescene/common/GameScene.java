@@ -149,7 +149,7 @@ public abstract class GameScene extends Composition<GameSceneComponent>
 
     @Override
     public Optional<GameSoundEffects> optSoundEffects() {
-        return app.variantManager().currentVariantConfig().uiConfig().optSoundEffects();
+        return app.variantManager().currentVariantRuntime().uiConfig().optSoundEffects();
     }
 
     @Override

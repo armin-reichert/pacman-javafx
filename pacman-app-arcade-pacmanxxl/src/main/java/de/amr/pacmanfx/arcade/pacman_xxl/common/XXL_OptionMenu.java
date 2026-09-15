@@ -86,7 +86,7 @@ public class XXL_OptionMenu extends OptionMenu {
         this.app = requireNonNull(app);
 
         final String variantName = app.variantManager().currentVariantName();
-        final GameVariantRuntime variant = app.variantManager().currentVariantConfig();
+        final GameVariantRuntime variant = app.variantManager().currentVariantRuntime();
 
         final WorldMapManager mapManager = variant.playConfig().worldMapManager();
         if (!(mapManager instanceof XXL_WorldMapManager xxlMapManager)) {

@@ -94,7 +94,7 @@ public class TengenMsPacMan_IntroScene extends GameScene {
 
     @Override
     public void onActivate() {
-        final GameVariantUIConfig variantConfig = app().variantManager().currentVariantConfig().uiConfig();
+        final GameVariantUIConfig variantConfig = app().variantManager().currentVariantRuntime().uiConfig();
 
         game().session().setHudVisible(false);
 
@@ -134,7 +134,7 @@ public class TengenMsPacMan_IntroScene extends GameScene {
 
         final var actorFactory = TengenMsPacMan_ActorFactory.instance();
 
-        final GameVariantRuntime variant = app().variantManager().currentVariantConfig();
+        final GameVariantRuntime variant = app().variantManager().currentVariantRuntime();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimationContainer animContainer    = variant.spriteAnimContainer();
         final ActorSpriteAnimController animController  = variant.playConfig().systems().actorSpriteAnimController();
@@ -196,7 +196,7 @@ public class TengenMsPacMan_IntroScene extends GameScene {
         SHOWING_MARQUEE {
             @Override
             public void onEnter(TengenMsPacMan_IntroScene scene) {
-                final GameVariantRuntime variant = scene.app().variantManager().currentVariantConfig();
+                final GameVariantRuntime variant = scene.app().variantManager().currentVariantRuntime();
                 final ActorSpriteAnimController animController = variant.playConfig().systems().actorSpriteAnimController();
                 final GameSystems systems = variant.playConfig().systems();
                 final WorldNavigationSystem nav = systems.navigator();

@@ -28,7 +28,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene {
         super(app);
         setComp(GameSceneCanvasRenderingComp.class, new GameSceneCanvasRenderingComp());
 
-        final GameVariantRuntime variant = app().variantManager().currentVariantConfig();
+        final GameVariantRuntime variant = app().variantManager().currentVariantRuntime();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
 
         startSceneText = new StartSceneText(6, 16);
