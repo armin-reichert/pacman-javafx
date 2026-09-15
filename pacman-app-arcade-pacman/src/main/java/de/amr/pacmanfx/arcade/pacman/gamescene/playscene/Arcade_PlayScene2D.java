@@ -73,11 +73,6 @@ public class Arcade_PlayScene2D extends GameScene {
 
     @Override
     protected void onActivate() {
-        final HUD hud = game().session().hud();
-        hud.levelCounter().show();
-        hud.livesCounter().show();
-        game().session().setHudVisible(true);
-
         levelCompletedAnimation = new LevelCompletedAnimation(() -> game().state().triggerTimeout());
     }
 

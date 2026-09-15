@@ -15,7 +15,9 @@ public class Common_GameOrLevelStartingState extends AbstractGameState {
     @Override
     public void onEnterState(GameContext game) {
         hud.gameScore().show();
+        hud.highScore().show();
         hud.levelCounter().show();
+        hud.livesCounter().show();
         session.setHudVisible(true);
     }
 
