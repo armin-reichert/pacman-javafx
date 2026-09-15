@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.game;
 
 import de.amr.pacmanfx.core.GameVariantPlayConfig;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
+import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 
 import static java.util.Objects.requireNonNull;
 
@@ -36,9 +36,9 @@ public class GameVariantConfig {
     }
 
     //TODO move elsewhere
-    private final SpriteAnimContainer spriteAnimContainer = new SpriteAnimContainer();
+    private final SpriteAnimationContainer spriteAnimationContainer = new SpriteAnimationContainer();
 
-    public SpriteAnimContainer spriteAnimContainer() {
-        return spriteAnimContainer;
+    public SpriteAnimationContainer spriteAnimContainer() {
+        return spriteAnimationContainer;
     }
 }

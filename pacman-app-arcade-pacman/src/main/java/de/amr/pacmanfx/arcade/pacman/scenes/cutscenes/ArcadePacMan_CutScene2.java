@@ -22,7 +22,7 @@ import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.spriteanim.LazySAM;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
+import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimationBuilder;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -78,7 +78,7 @@ public class ArcadePacMan_CutScene2 extends GameScene {
 
     static class DressAnimation extends LazySAM {
 
-        public DressAnimation(SpriteAnimContainer container) {
+        public DressAnimation(SpriteAnimationContainer container) {
             setFactory(id -> switch (id) {
 
                 case SpriteID.RED_GHOST_STRETCHED -> new SpriteAnimationBuilder()
@@ -93,7 +93,7 @@ public class ArcadePacMan_CutScene2 extends GameScene {
 
     static class NailDress extends GameEntity implements Renderable {
 
-        public NailDress(SpriteAnimContainer animContainer) {
+        public NailDress(SpriteAnimationContainer animContainer) {
             setComp(SpriteAnimationComp.class, new SpriteAnimationComp());
 
             reqComp(SpriteAnimationComp.class).setSpriteAnimations(new DressAnimation(animContainer));
@@ -134,7 +134,7 @@ public class ArcadePacMan_CutScene2 extends GameScene {
     public void onActivate() {
         final GameVariantConfig variant = app().variantManager().currentVariantConfig();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
-        final SpriteAnimContainer animContainer = variant.spriteAnimContainer();
+        final SpriteAnimationContainer animContainer = variant.spriteAnimContainer();
         final ActorSpriteAnimController animController = variant.playConfig().systems().actorSpriteAnimController();
         final var actorFactory = ArcadePacMan_ActorFactory.instance();
 

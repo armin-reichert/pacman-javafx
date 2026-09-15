@@ -8,7 +8,7 @@ import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.spriteanim.LazySAM;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
+import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimation;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimationBuilder;
 
@@ -24,12 +24,12 @@ public class TengenMsPacMan_GhostSAM extends LazySAM {
 
     private final GhostPersonality personality;
 
-    public TengenMsPacMan_GhostSAM(SpriteAnimContainer container, GhostPersonality personality) {
+    public TengenMsPacMan_GhostSAM(SpriteAnimationContainer container, GhostPersonality personality) {
         this.personality = requireNonNull(personality);
         setFactory(id -> createAnimation(id, container));
     }
 
-    private SpriteAnimation createAnimation(Named animationID, SpriteAnimContainer container) {
+    private SpriteAnimation createAnimation(Named animationID, SpriteAnimationContainer container) {
 
         return switch (animationID) {
             case CommonSpriteAnimationID.GHOST_NORMAL -> new SpriteAnimationBuilder()

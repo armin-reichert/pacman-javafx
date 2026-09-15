@@ -16,7 +16,7 @@ import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.Clapperboard;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Pac;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
+import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
@@ -119,7 +119,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
         final var actorFactory = TengenMsPacMan_ActorFactory.instance();
         final GameVariantConfig variant = app().variantManager().currentVariantConfig();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
-        final SpriteAnimContainer animContainer    = variant.spriteAnimContainer();
+        final SpriteAnimationContainer animContainer    = variant.spriteAnimContainer();
 
         clapperboard = new Clapperboard("4", "THE END");
         clapperboard.pos().set(tilesPx(3), tilesPx(10));
@@ -222,7 +222,7 @@ public class TengenMsPacMan_CutScene4 extends GameScene {
         final var factory = TengenMsPacMan_ActorFactory.instance();
         final GameVariantConfig variant = app().variantManager().currentVariantConfig();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
-        final SpriteAnimContainer animContainer    = variant.spriteAnimContainer();
+        final SpriteAnimationContainer animContainer    = variant.spriteAnimContainer();
         final ActorSpriteAnimController animController  = variant.playConfig().systems().actorSpriteAnimController();
         final WorldNavigationSystem worldNavigationSystem = variant.playConfig().systems().navigator();
 

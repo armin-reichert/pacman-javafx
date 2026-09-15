@@ -8,7 +8,7 @@ import de.amr.basics.Named;
 import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.spriteanim.LazySAM;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
+import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimation;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimationBuilder;
 
@@ -16,11 +16,11 @@ public class ArcadeMsPacMan_PacSAM extends LazySAM {
 
     private final ArcadeMsPacMan_SpriteSheet spriteSheet = ArcadeMsPacMan_SpriteSheet.instance();
 
-    public ArcadeMsPacMan_PacSAM(SpriteAnimContainer container) {
+    public ArcadeMsPacMan_PacSAM(SpriteAnimationContainer container) {
         setFactory(id -> createAnimation(id, container));
     }
 
-    private SpriteAnimation createAnimation(Named animationID, SpriteAnimContainer container) {
+    private SpriteAnimation createAnimation(Named animationID, SpriteAnimationContainer container) {
 
         return switch (animationID) {
             case CommonSpriteAnimationID.PAC_MOUTH_SHUT -> new SpriteAnimationBuilder()

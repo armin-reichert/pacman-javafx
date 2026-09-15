@@ -25,7 +25,7 @@ import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
+import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.GlobalFonts;
@@ -152,18 +152,18 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public ArcadeMsPacMan_GhostSAM createGhostAnimations(SpriteAnimContainer container, GhostPersonality personality) {
+    public ArcadeMsPacMan_GhostSAM createGhostAnimations(SpriteAnimationContainer container, GhostPersonality personality) {
         requireNonNull(personality);
         return new ArcadeMsPacMan_GhostSAM(container, personality);
     }
 
     @Override
-    public ArcadeMsPacMan_PacSAM createPacAnimations(SpriteAnimContainer container) {
+    public ArcadeMsPacMan_PacSAM createPacAnimations(SpriteAnimationContainer container) {
         return new ArcadeMsPacMan_PacSAM(container);
     }
 
     @Override
-    public Ghost createAnimatedGhost(ActorSpriteAnimController animController, SpriteAnimContainer container, GhostPersonality personality) {
+    public Ghost createAnimatedGhost(ActorSpriteAnimController animController, SpriteAnimationContainer container, GhostPersonality personality) {
         final var factory = new ArcadeMsPacMan_ActorFactory();
 
         final Ghost ghost = switch (personality) {

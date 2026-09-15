@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.entities.bag;
 
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.spriteanim.LazySAM;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
+import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimationBuilder;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
@@ -15,7 +15,7 @@ public class TengenMsPacMan_BagSAM extends LazySAM {
 
     private final TengenMsPacMan_SpriteSheet spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
-    public TengenMsPacMan_BagSAM(SpriteAnimContainer container) {
+    public TengenMsPacMan_BagSAM(SpriteAnimationContainer container) {
         setFactory(id -> switch (id) {
             case CommonSpriteAnimationID.BAG -> new SpriteAnimationBuilder()
                 .singleSprite(spriteSheet.findSprite(SpriteID.BLUE_BAG))

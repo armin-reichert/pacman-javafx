@@ -8,7 +8,7 @@ package de.amr.pacmanfx.tengenmspacman.entities.stork;
 import de.amr.basics.Named;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.spriteanim.LazySAM;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
+import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimation;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimationBuilder;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
@@ -19,11 +19,11 @@ public class TengenMsPacMan_StorkSAM extends LazySAM {
 
     private final TengenMsPacMan_SpriteSheet spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
-    public TengenMsPacMan_StorkSAM(SpriteAnimContainer container) {
+    public TengenMsPacMan_StorkSAM(SpriteAnimationContainer container) {
         setFactory(id -> createAnimation(id, container));
     }
 
-    private SpriteAnimation createAnimation(Named animationID, SpriteAnimContainer container) {
+    private SpriteAnimation createAnimation(Named animationID, SpriteAnimationContainer container) {
         if (animationID.equals(CommonSpriteAnimationID.STORK_FLYING)) {
             return new SpriteAnimationBuilder()
                 .sprites(spriteSheet.findSpriteSequence(STORK))

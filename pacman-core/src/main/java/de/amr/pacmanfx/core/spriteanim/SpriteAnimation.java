@@ -14,7 +14,7 @@ import static java.util.Objects.requireNonNull;
  */
 public class SpriteAnimation {
 
-    private final SpriteAnimContainer container;
+    private final SpriteAnimationContainer container;
 
     private RectShort[] sprites;
     private int frame;
@@ -24,7 +24,7 @@ public class SpriteAnimation {
     private int frameDurationTicks;
     private int smallTick;
 
-    public SpriteAnimation(SpriteAnimContainer container) {
+    public SpriteAnimation(SpriteAnimationContainer container) {
         this.container = Objects.requireNonNull(container);
 
         sprites = new RectShort[0];

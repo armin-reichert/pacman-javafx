@@ -76,7 +76,7 @@ public class SpriteAnimationBuilder {
         return this;
     }
 
-    public SpriteAnimation build(SpriteAnimContainer container) {
+    public SpriteAnimation build(SpriteAnimationContainer container) {
         checkBuildPossible();
         if (data.sprites == null) {
             throw new IllegalArgumentException("No sprites defined");

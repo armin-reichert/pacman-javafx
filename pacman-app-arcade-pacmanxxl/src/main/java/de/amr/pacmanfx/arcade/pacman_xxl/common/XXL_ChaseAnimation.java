@@ -17,7 +17,7 @@ import de.amr.pacmanfx.core.entities.GhostPoints;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
+import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationTimer;
@@ -54,7 +54,7 @@ class XXL_ChaseAnimation {
     public static final float GHOST_CHASE_SPEED = 1.05f;
 
     private final SpriteAnimationTimer animationTimer = new SpriteAnimationTimer();
-    private final SpriteAnimContainer animContainer = new SpriteAnimContainer();
+    private final SpriteAnimationContainer animContainer = new SpriteAnimationContainer();
     private final ActorSpriteAnimController animController = new ActorSpriteAnimController();
 
     private final int numTilesX;

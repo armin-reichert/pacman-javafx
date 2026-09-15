@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
+import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.game.GameVariantConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.entities.bag.BagAnimationSystem;
@@ -84,7 +84,7 @@ public class TengenMsPacMan_CutScene3 extends GameScene {
     private void createActors() {
         final GameVariantConfig variant = app().variantManager().currentVariantConfig();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
-        final SpriteAnimContainer animContainer    = variant.spriteAnimContainer();
+        final SpriteAnimationContainer animContainer    = variant.spriteAnimContainer();
 
         clapperboard = new Clapperboard("3", "JUNIOR");
         clapperboard.pos().set(3 * WorldMap.TS, 10 * WorldMap.TS);

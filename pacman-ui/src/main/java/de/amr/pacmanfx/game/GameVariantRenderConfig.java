@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
+import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimFacade;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.uilib.entities.hud.comp.HUD_Style;
@@ -38,11 +38,11 @@ public interface GameVariantRenderConfig {
 
     Renderer createEntityRenderer(ActorSpriteAnimController animController, Canvas canvas);
 
-    Ghost createAnimatedGhost(ActorSpriteAnimController animController, SpriteAnimContainer container, GhostPersonality personality);
+    Ghost createAnimatedGhost(ActorSpriteAnimController animController, SpriteAnimationContainer container, GhostPersonality personality);
 
-    SpriteAnimFacade createGhostAnimations(SpriteAnimContainer container, GhostPersonality personality);
+    SpriteAnimFacade createGhostAnimations(SpriteAnimationContainer container, GhostPersonality personality);
 
-    SpriteAnimFacade createPacAnimations(SpriteAnimContainer container);
+    SpriteAnimFacade createPacAnimations(SpriteAnimationContainer container);
 
     Image killedGhostPointsImage(int killedGhostIndex);
 

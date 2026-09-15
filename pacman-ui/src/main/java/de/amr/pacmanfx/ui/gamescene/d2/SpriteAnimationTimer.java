@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.gamescene.d2;
 
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
+import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimation;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -27,7 +27,7 @@ public class SpriteAnimationTimer {
         animationTimer.setCycleCount(Animation.INDEFINITE);
     }
 
-    public void attachAnimContainer(SpriteAnimContainer animContainer) {
+    public void attachAnimContainer(SpriteAnimationContainer animContainer) {
         requireNonNull(animContainer);
 
         detachAnimationContainer();

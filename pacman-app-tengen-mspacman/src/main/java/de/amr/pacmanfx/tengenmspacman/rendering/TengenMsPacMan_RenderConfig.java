@@ -14,7 +14,7 @@ import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
+import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.gamescene.bootscene.TengenMsPacMan_BootScene;
 import de.amr.pacmanfx.tengenmspacman.gamescene.creditsscene.TengenMsPacMan_CreditsScene;
@@ -183,7 +183,7 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public Ghost createAnimatedGhost(ActorSpriteAnimController animController, SpriteAnimContainer animContainer, GhostPersonality personality) {
+    public Ghost createAnimatedGhost(ActorSpriteAnimController animController, SpriteAnimationContainer animContainer, GhostPersonality personality) {
         final var factory = TengenMsPacMan_ActorFactory.instance();
         final Ghost ghost = switch (personality) {
             case RED_GHOST_SHADOW -> factory.createRedGhost();
@@ -199,12 +199,12 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public TengenMsPacMan_GhostSAM createGhostAnimations(SpriteAnimContainer animContainer, GhostPersonality personality) {
+    public TengenMsPacMan_GhostSAM createGhostAnimations(SpriteAnimationContainer animContainer, GhostPersonality personality) {
         return new TengenMsPacMan_GhostSAM(animContainer, personality);
     }
 
     @Override
-    public TengenMsPacMan_PacSAM createPacAnimations(SpriteAnimContainer animContainer) {
+    public TengenMsPacMan_PacSAM createPacAnimations(SpriteAnimationContainer animContainer) {
         return new TengenMsPacMan_PacSAM(animContainer);
     }
 

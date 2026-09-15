@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.entities.bag;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.spriteanim.LazySAM;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
+import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimationBuilder;
 
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.BLUE_BAG;
@@ -17,7 +17,7 @@ public class ArcadeMsPacMan_BagSAM extends LazySAM {
 
     private final ArcadeMsPacMan_SpriteSheet spriteSheet = ArcadeMsPacMan_SpriteSheet.instance();
 
-    public ArcadeMsPacMan_BagSAM(SpriteAnimContainer container) {
+    public ArcadeMsPacMan_BagSAM(SpriteAnimationContainer container) {
         setFactory(id -> switch (id) {
             case CommonSpriteAnimationID.JUNIOR -> new SpriteAnimationBuilder()
                 .singleSprite(spriteSheet.findSprite(JUNIOR_PAC))

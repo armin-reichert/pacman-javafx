@@ -21,7 +21,7 @@ import de.amr.pacmanfx.core.level.MessageType;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimContainer;
+import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.GlobalFonts;
@@ -139,7 +139,7 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public Ghost createAnimatedGhost(ActorSpriteAnimController animController, SpriteAnimContainer container, GhostPersonality personality) {
+    public Ghost createAnimatedGhost(ActorSpriteAnimController animController, SpriteAnimationContainer container, GhostPersonality personality) {
         final var factory = ArcadePacMan_ActorFactory.instance();
         final Ghost ghost = switch (personality) {
             case RED_GHOST_SHADOW   -> factory.createRedGhost();
@@ -155,13 +155,13 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public ArcadePacMan_GhostSAM createGhostAnimations(SpriteAnimContainer container, GhostPersonality personality) {
+    public ArcadePacMan_GhostSAM createGhostAnimations(SpriteAnimationContainer container, GhostPersonality personality) {
         requireNonNull(personality);
         return new ArcadePacMan_GhostSAM(container, personality);
     }
 
     @Override
-    public ArcadePacMan_PacSAM createPacAnimations(SpriteAnimContainer container) {
+    public ArcadePacMan_PacSAM createPacAnimations(SpriteAnimationContainer container) {
         return new ArcadePacMan_PacSAM(container, spriteSheet());
     }
 
