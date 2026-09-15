@@ -12,7 +12,6 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -23,7 +22,6 @@ import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationManager;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
-import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
 import javafx.scene.control.CheckMenuItem;
@@ -66,7 +64,7 @@ public class Arcade_PlayScene2D extends GameScene {
             return Stream.empty();
         }
         return Ufx.streamOf(
-            createLevelRenderable(level),
+            new GameLevelRenderable(level, createLevelRenderInfo(level)),
             level.visibleRenderables()
         );
     }
@@ -133,63 +131,42 @@ public class Arcade_PlayScene2D extends GameScene {
             rendering.unscaledHeightProperty().set(terrainSize.y());
         });
 
+        final var bindingsRegistry = actionBindingsSupport().registry();
         if (session.isAttractMode()) {
-            acceptDemoLevel();
+            final Arcade_Actions actions = app.variantManager().currentVariantRuntime()
+                .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
+            bindingsRegistry.registerAllBindings(actions.gameStartActionBindings());
+            Logger.info("Game scene {} accepted demo level", getClass().getSimpleName());
+            soundManager().setEnabled(false);
         } else {
-            acceptNormalLevel(level);
+            bindingsRegistry.registerAllBindings(app.commonActions().steeringActions().bindings());
+            bindingsRegistry.registerAllBindings(app.commonActions().cheatActions().bindings());
+            Logger.info("Game scene {} accepted level #{}", getClass().getSimpleName(), level.number());
+            soundManager().setEnabled(true);
         }
+        Logger.info(bindingsRegistry);
         ActorAnimationManager.ensureActorAnimationsCreated(app, level);
     }
 
-    private void acceptNormalLevel(GameLevel level) {
-        final var bindingsMap = actionBindingsSupport().registry();
-        bindingsMap.registerAllBindings(app.commonActions().steeringActions().bindings());
-        bindingsMap.registerAllBindings(app.commonActions().cheatActions().bindings());
-
-        soundManager().setEnabled(true);
-
-        Logger.info("Game scene {} accepted level #{}", getClass().getSimpleName(), level.number());
-        Logger.info(bindingsMap);
+    private InfoMap createLevelRenderInfo(GameLevel level) {
+        final var renderInfo = new InfoMap();
+        renderInfo.put(LevelRenderInfoKey.ENERGIZERS_SHOWN, level.heartbeat().state() == Pulse.State.ON);
+        renderInfo.put(LevelRenderInfoKey.SHOW_EMPTY_MAZE, level.food().remainingFoodCount() == 0);
+        updateFlashingRenderInfo(renderInfo);
+        return renderInfo;
     }
 
-    private void acceptDemoLevel() {
-        final Arcade_Actions actions = app.variantManager().currentVariantRuntime()
-            .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
-
-        final var bindingsMap = actionBindingsSupport().registry();
-        bindingsMap.registerAllBindings(actions.gameStartActionBindings());
-
-        soundManager().setEnabled(false);
-
-        Logger.info("Game scene {} accepted demo level", getClass().getSimpleName());
-        Logger.info(bindingsMap);
-    }
-
-    private Renderable createLevelRenderable(GameLevel level) {
-        final var info = new InfoMap();
-
-        info.put(LevelRenderInfoKey.ENERGIZERS_SHOWN,
-            level.heartbeat().state() == Pulse.State.ON);
-
-        info.put(LevelRenderInfoKey.SHOW_EMPTY_MAZE,
-            level.food().remainingFoodCount() == 0);
-
-        // TODO: This does not belong here
-        //       In Arcade Pac-Man, a dedicated image is used for painting the bright empty maze while flashing
-        final AssetMap assets = app.variantManager().currentVariantRuntime().uiConfig().assets();
-        if (assets.containsAsset("maze.bright")) {
-            info.put(LevelRenderInfoKey.BRIGHT_MAZE_IMAGE, assets.image("maze.bright"));
-        }
-
-        info.put(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, false);
-        info.put(LevelRenderInfoKey.MAZE_IS_FLASHING, false);
+    private void updateFlashingRenderInfo(InfoMap renderInfo) {
+        boolean showBrightMaze = false;
+        boolean mazeIsFlashing = false;
         if (levelCompletedAnimation != null) {
-            levelCompletedAnimation.optFlashingState().ifPresent(flashing -> {
-                info.put(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, flashing.isHighlighted());
-                info.put(LevelRenderInfoKey.MAZE_IS_FLASHING, flashing.isFlashing());
-            });
+            final var flashingState = levelCompletedAnimation.optFlashingState().orElse(null);
+            if (flashingState != null) {
+                showBrightMaze = flashingState.isHighlighted();
+                mazeIsFlashing = flashingState.isFlashing();
+            }
         }
-
-        return new GameLevelRenderable(level, info);
+        renderInfo.put(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, showBrightMaze);
+        renderInfo.put(LevelRenderInfoKey.MAZE_IS_FLASHING, mazeIsFlashing);
     }
 }

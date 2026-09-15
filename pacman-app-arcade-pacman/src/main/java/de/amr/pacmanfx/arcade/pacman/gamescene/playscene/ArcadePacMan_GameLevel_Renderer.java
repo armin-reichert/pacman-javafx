@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.arcade.pacman.gamescene.playscene;
 
 import de.amr.basics.math.RectShort;
+import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_RenderConfig;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.entities.Door;
@@ -31,8 +32,11 @@ import static java.util.function.Predicate.not;
  */
 public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements SpriteRenderer {
 
-    public ArcadePacMan_GameLevel_Renderer(Canvas canvas) {
+    private final ArcadePacMan_RenderConfig renderConfig;
+
+    public ArcadePacMan_GameLevel_Renderer(Canvas canvas, ArcadePacMan_RenderConfig renderConfig) {
         super(canvas);
+        this.renderConfig = renderConfig;
     }
 
     @Override
@@ -58,6 +62,9 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
         if (info.getBoolean(LevelRenderInfoKey.SHOW_EMPTY_MAZE)) {
             // Empty maze is shown when level is complete and when the flashing animation is running
             if (info.getBoolean(LevelRenderInfoKey.SHOW_BRIGHT_MAZE)) {
+                if (renderConfig.assets().containsAsset("maze.bright")) {
+                    info.put(LevelRenderInfoKey.BRIGHT_MAZE_IMAGE, renderConfig.assets().image("maze.bright"));
+                }
                 final var brightMazeImage = info.get(LevelRenderInfoKey.BRIGHT_MAZE_IMAGE, Image.class);
                 ctx.drawImage(brightMazeImage, 0, emptyPixelsOverMaze);
             } else {

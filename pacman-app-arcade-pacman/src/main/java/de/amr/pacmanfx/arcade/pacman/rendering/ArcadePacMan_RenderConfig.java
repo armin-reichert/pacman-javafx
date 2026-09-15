@@ -123,7 +123,7 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
 
     @Override
     public Renderer createGameLevelRenderer(ActorSpriteAnimController animController, Canvas canvas) {
-        return new ArcadePacMan_GameLevel_Renderer(canvas);
+        return new ArcadePacMan_GameLevel_Renderer(canvas, this);
     }
 
     @Override
