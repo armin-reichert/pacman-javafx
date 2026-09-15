@@ -44,11 +44,6 @@ class XXL_PacMan_GameSceneConfig extends AbstractGameSceneConfig {
     }
 
     @Override
-    protected GameScene createGameScene(GameAppContext app, Named sceneID) {
-        return getGameSceneFactory(sceneID).apply(app);
-    }
-
-    @Override
     protected Named computeGameSceneID(GameContext game, boolean select3D) {
         final State<GameContext> state = game.state();
 

@@ -56,11 +56,6 @@ public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
     }
 
     @Override
-    protected GameScene createGameScene(GameAppContext app, Named sceneID) {
-        return getGameSceneFactory(sceneID).apply(app);
-    }
-
-    @Override
     protected Named computeGameSceneID(GameContext game, boolean select3D) {
         final AbstractGameState state = game.state();
 

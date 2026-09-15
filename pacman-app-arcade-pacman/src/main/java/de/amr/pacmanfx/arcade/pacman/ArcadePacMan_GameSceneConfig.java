@@ -28,11 +28,6 @@ class ArcadePacMan_GameSceneConfig extends AbstractGameSceneConfig {
     public ArcadePacMan_GameSceneConfig() {}
 
     @Override
-    protected GameScene createGameScene(GameAppContext app, Named sceneID) {
-        return getGameSceneFactory(sceneID).apply(app);
-    }
-
-    @Override
     protected Function<GameAppContext, GameScene> getGameSceneFactory(Named sceneID) {
         return switch (sceneID) {
             case CommonGameSceneID.BOOT_SCENE    -> Arcade_BootScene::new;

@@ -34,8 +34,6 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
 
     protected AbstractGameSceneConfig() {}
 
-    protected abstract GameScene createGameScene(GameAppContext appContext, Named sceneID);
-
     protected abstract Function<GameAppContext, GameScene> getGameSceneFactory(Named sceneID);
 
     protected abstract Named computeGameSceneID(GameContext game, boolean select3D);
@@ -67,7 +65,7 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
     public final Optional<GameScene> selectGameScene(GameAppContext app, boolean select3D) {
         requireNonNull(app);
         final Named sceneID = computeGameSceneID(app.game(), select3D);
-        final GameScene gameScene = scenesByID.computeIfAbsent(sceneID, id -> createGameScene(app, id));
+        final GameScene gameScene = scenesByID.computeIfAbsent(sceneID, id -> getGameSceneFactory(id).apply(app));
         return Optional.of(gameScene);
     }
 
