@@ -8,7 +8,6 @@ import de.amr.basics.Named;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.ui.action.core.GameAppContext;
-import de.amr.pacmanfx.ui.vm.GameViewModel;
 import org.tinylog.Logger;
 
 import java.util.HashMap;
@@ -36,7 +35,7 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
 
     protected abstract GameScene createGameScene(GameAppContext appContext, Named Identifier);
 
-    protected abstract Named determineSceneID(GameViewModel viewModel, GameContext game);
+    protected abstract Named determineSceneID(GameContext game, boolean select3D);
 
     @Override
     public void dispose() {
@@ -62,9 +61,9 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
     }
 
     @Override
-    public final Optional<GameScene> selectGameScene(GameAppContext app) {
+    public final Optional<GameScene> selectGameScene(GameAppContext app, boolean select3D) {
         requireNonNull(app);
-        final Named Identifier = determineSceneID(app.ui().viewModel(), app.game());
+        final Named Identifier = determineSceneID(app.game(), select3D);
         final GameScene gameScene = scenesByID.computeIfAbsent(Identifier, id -> createGameScene(app, id));
         return Optional.of(gameScene);
     }

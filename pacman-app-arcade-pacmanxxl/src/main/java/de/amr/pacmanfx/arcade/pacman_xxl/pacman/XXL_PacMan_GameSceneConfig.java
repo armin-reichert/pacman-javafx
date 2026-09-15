@@ -21,7 +21,6 @@ import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.vm.GameViewModel;
 
 import static java.util.Objects.requireNonNull;
 
@@ -46,7 +45,7 @@ class XXL_PacMan_GameSceneConfig extends AbstractGameSceneConfig {
     }
 
     @Override
-    protected Named determineSceneID(GameViewModel viewModel, GameContext game) {
+    protected Named determineSceneID(GameContext game, boolean select3D) {
         final State<GameContext> state = game.state();
 
         if (state instanceof Test_CutScenesTestState testState) {
@@ -65,7 +64,6 @@ class XXL_PacMan_GameSceneConfig extends AbstractGameSceneConfig {
         if (CommonGameStateID.GAME_PREPARATION.hasSameNameAs(state)) {
             return CommonGameSceneID.START_SCENE;
         }
-        return viewModel.common3DSettings().view3DEnabledProperty().get()
-            ? CommonGameSceneID.PLAY_SCENE_3D : CommonGameSceneID.PLAY_SCENE_2D;
+        return select3D ? CommonGameSceneID.PLAY_SCENE_3D : CommonGameSceneID.PLAY_SCENE_2D;
     }
 }

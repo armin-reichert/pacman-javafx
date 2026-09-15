@@ -20,7 +20,6 @@ import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.vm.GameViewModel;
 
 import static java.util.Objects.requireNonNull;
 
@@ -29,24 +28,24 @@ class ArcadePacMan_GameSceneConfig extends AbstractGameSceneConfig {
     public ArcadePacMan_GameSceneConfig() {}
 
     @Override
-    protected GameScene createGameScene(GameAppContext appContext, Named sceneID) {
-        requireNonNull(appContext);
+    protected GameScene createGameScene(GameAppContext app, Named sceneID) {
+        requireNonNull(app);
         requireNonNull(sceneID);
         return switch (sceneID) {
-            case CommonGameSceneID.BOOT_SCENE -> new Arcade_BootScene(appContext);
-            case CommonGameSceneID.INTRO_SCENE -> new ArcadePacMan_IntroScene(appContext);
-            case CommonGameSceneID.START_SCENE -> new ArcadePacMan_StartScene(appContext);
-            case CommonGameSceneID.PLAY_SCENE_2D -> new Arcade_PlayScene2D(appContext);
-            case CommonGameSceneID.PLAY_SCENE_3D -> new Arcade_PlayScene3D(appContext);
-            case CommonGameSceneID.CUTSCENE_1 -> new ArcadePacMan_CutScene1(appContext);
-            case CommonGameSceneID.CUTSCENE_2 -> new ArcadePacMan_CutScene2(appContext);
-            case CommonGameSceneID.CUTSCENE_3 -> new ArcadePacMan_CutScene3(appContext);
+            case CommonGameSceneID.BOOT_SCENE -> new Arcade_BootScene(app);
+            case CommonGameSceneID.INTRO_SCENE -> new ArcadePacMan_IntroScene(app);
+            case CommonGameSceneID.START_SCENE -> new ArcadePacMan_StartScene(app);
+            case CommonGameSceneID.PLAY_SCENE_2D -> new Arcade_PlayScene2D(app);
+            case CommonGameSceneID.PLAY_SCENE_3D -> new Arcade_PlayScene3D(app);
+            case CommonGameSceneID.CUTSCENE_1 -> new ArcadePacMan_CutScene1(app);
+            case CommonGameSceneID.CUTSCENE_2 -> new ArcadePacMan_CutScene2(app);
+            case CommonGameSceneID.CUTSCENE_3 -> new ArcadePacMan_CutScene3(app);
             default -> throw new IllegalArgumentException("Illegal scene ID: " + sceneID);
         };
     }
 
     @Override
-    protected Named determineSceneID(GameViewModel viewModel, GameContext game) {
+    protected Named determineSceneID(GameContext game, boolean select3D) {
         requireNonNull(game);
 
         final AbstractGameState state = game.state();
@@ -65,7 +64,6 @@ class ArcadePacMan_GameSceneConfig extends AbstractGameSceneConfig {
         if (CommonGameStateID.GAME_PREPARATION.hasSameNameAs(state)) {
             return CommonGameSceneID.START_SCENE;
         }
-        return viewModel.common3DSettings().view3DEnabledProperty().get()
-            ? CommonGameSceneID.PLAY_SCENE_3D : CommonGameSceneID.PLAY_SCENE_2D;
+        return select3D ? CommonGameSceneID.PLAY_SCENE_3D : CommonGameSceneID.PLAY_SCENE_2D;
     }
 }

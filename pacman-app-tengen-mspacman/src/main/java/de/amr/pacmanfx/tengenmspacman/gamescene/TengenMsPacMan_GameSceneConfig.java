@@ -23,7 +23,6 @@ import de.amr.pacmanfx.ui.action.core.GameAppContext;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.vm.GameViewModel;
 
 import static java.util.Objects.requireNonNull;
 
@@ -56,7 +55,7 @@ public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
     }
 
     @Override
-    protected Named determineSceneID(GameViewModel viewModel, GameContext game) {
+    protected Named determineSceneID(GameContext game, boolean select3D) {
         final AbstractGameState state = game.state();
 
         if (state instanceof Test_CutScenesTestState testState) {
@@ -78,7 +77,6 @@ public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
         if (TengenMsPacMan_GameStateID.SHOWING_HALL_OF_FAME.hasSameNameAs(state)) {
             return TengenSceneID.HALL_OF_FAME;
         }
-        return viewModel.common3DSettings().view3DEnabledProperty().get()
-            ? CommonGameSceneID.PLAY_SCENE_3D : CommonGameSceneID.PLAY_SCENE_2D;
+        return select3D ? CommonGameSceneID.PLAY_SCENE_3D : CommonGameSceneID.PLAY_SCENE_2D;
     }
 }

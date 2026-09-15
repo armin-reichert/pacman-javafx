@@ -54,7 +54,8 @@ public class GameSceneManager {
         final GameVariantUIConfig uiConfig = app.variantManager().currentVariantConfig().uiConfig();
         final GameContext game = app.game();
         final GameSession session = game.session();
-        final GameScene nextGameScene = uiConfig.gameSceneConfig().selectGameScene(app).orElse(null);
+        final boolean select3D = app.ui().viewModel().common3DSettings().view3DEnabledProperty().get();
+        final GameScene nextGameScene = uiConfig.gameSceneConfig().selectGameScene(app, select3D).orElse(null);
 
         if (nextGameScene == null) {
             throw new IllegalStateException("Could not determine next game scene");
