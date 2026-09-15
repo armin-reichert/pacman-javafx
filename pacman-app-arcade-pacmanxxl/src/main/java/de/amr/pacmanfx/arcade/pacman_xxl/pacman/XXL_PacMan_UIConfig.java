@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.arcade.pacman_xxl.pacman;
 
 import de.amr.basics.Named;
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GameSceneConfig;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
@@ -57,7 +58,7 @@ public final class XXL_PacMan_UIConfig implements GameVariantUIConfig {
 
     private final ResourceBundle textBundle = ResourceBundle.getBundle(XXL_PKG + "localized_texts_pacman");
     private final Factory3D factory3D = new DefaultFactory3D();
-    private final XXL_PacMan_GameSceneConfig gameSceneConfig = new XXL_PacMan_GameSceneConfig();
+    private final ArcadePacMan_GameSceneConfig gameSceneConfig = new ArcadePacMan_GameSceneConfig();
 
     private XXL_PacMan_RenderConfig renderConfig;
     private GameSoundEffects soundEffects;

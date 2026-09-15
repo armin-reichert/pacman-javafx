@@ -21,25 +21,28 @@ import de.amr.pacmanfx.ui.gamescene.common.AbstractGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.function.Function;
 
-class ArcadeMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
+public class ArcadeMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
 
     public ArcadeMsPacMan_GameSceneConfig() {}
 
+    private static final Map<CommonGameSceneID, Function<GameAppContext, GameScene>> FACTORY_MAP = new EnumMap<>(Map.of(
+        CommonGameSceneID.BOOT_SCENE   , Arcade_BootScene::new,
+        CommonGameSceneID.INTRO_SCENE  , ArcadeMsPacMan_IntroScene::new,
+        CommonGameSceneID.START_SCENE  , ArcadeMsPacMan_StartScene::new,
+        CommonGameSceneID.PLAY_SCENE_2D, Arcade_PlayScene2D::new,
+        CommonGameSceneID.PLAY_SCENE_3D, Arcade_PlayScene3D::new,
+        CommonGameSceneID.CUTSCENE_1   , ArcadeMsPacMan_CutScene1::new,
+        CommonGameSceneID.CUTSCENE_2   , ArcadeMsPacMan_CutScene2::new,
+        CommonGameSceneID.CUTSCENE_3   , ArcadeMsPacMan_CutScene3::new
+    ));
+
     @Override
     protected Function<GameAppContext, GameScene> getGameSceneFactory(Named sceneID) {
-        return switch (sceneID) {
-            case CommonGameSceneID.BOOT_SCENE -> Arcade_BootScene::new;
-            case CommonGameSceneID.INTRO_SCENE -> ArcadeMsPacMan_IntroScene::new;
-            case CommonGameSceneID.START_SCENE -> ArcadeMsPacMan_StartScene::new;
-            case CommonGameSceneID.PLAY_SCENE_2D -> Arcade_PlayScene2D::new;
-            case CommonGameSceneID.PLAY_SCENE_3D -> Arcade_PlayScene3D::new;
-            case CommonGameSceneID.CUTSCENE_1 -> ArcadeMsPacMan_CutScene1::new;
-            case CommonGameSceneID.CUTSCENE_2 -> ArcadeMsPacMan_CutScene2::new;
-            case CommonGameSceneID.CUTSCENE_3 -> ArcadeMsPacMan_CutScene3::new;
-            default -> throw new IllegalArgumentException("Illegal scene ID: " + sceneID);
-        };
+        return FACTORY_MAP.get((CommonGameSceneID) sceneID);
     }
 
     @Override

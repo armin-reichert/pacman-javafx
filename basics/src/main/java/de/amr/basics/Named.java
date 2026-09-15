@@ -12,6 +12,7 @@ public interface Named {
 
     default boolean hasSameNameAs(Named entity) {
         requireNonNull(entity);
+        requireNonNull(entity.name());
         return entity.name().equals(name());
     }
 }
