@@ -23,9 +23,9 @@ open module de.amr.pacmanfx.arcade.pacman {
     exports de.amr.pacmanfx.arcade.pacman.rendering;
     exports de.amr.pacmanfx.arcade.pacman.gamestate;
     exports de.amr.pacmanfx.arcade.pacman.rules;
-    exports de.amr.pacmanfx.arcade.pacman.scenes.bootscene;
-    exports de.amr.pacmanfx.arcade.pacman.scenes.introscene;
-    exports de.amr.pacmanfx.arcade.pacman.scenes.playscene;
-    exports de.amr.pacmanfx.arcade.pacman.scenes.cutscenes;
-    exports de.amr.pacmanfx.arcade.pacman.scenes.startscene;
+    exports de.amr.pacmanfx.arcade.pacman.gamescene.bootscene;
+    exports de.amr.pacmanfx.arcade.pacman.gamescene.introscene;
+    exports de.amr.pacmanfx.arcade.pacman.gamescene.playscene;
+    exports de.amr.pacmanfx.arcade.pacman.gamescene.cutscenes;
+    exports de.amr.pacmanfx.arcade.pacman.gamescene.startscene;
 }

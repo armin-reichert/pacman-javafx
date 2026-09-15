@@ -1,0 +1,245 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+package de.amr.pacmanfx.arcade.ms_pacman.gamescene.cutscenes;
+
+import de.amr.basics.math.Direction;
+import de.amr.pacmanfx.arcade.ms_pacman.entities.bag.ArcadeMsPacMan_BagSAM;
+import de.amr.pacmanfx.arcade.ms_pacman.entities.stork.ArcadeMsPacMan_StorkSAM;
+import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
+import de.amr.pacmanfx.arcade.pacman.gamescene.cutscenes.CutSceneTimingComp;
+import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
+import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
+import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
+import de.amr.pacmanfx.core.entities.*;
+import de.amr.pacmanfx.core.entities.clapperboard.system.ClapperboardStateSystem;
+import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.core.rendering.Renderable;
+import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
+import de.amr.pacmanfx.game.GameVariantRuntime;
+import de.amr.pacmanfx.game.GameVariantRenderConfig;
+import de.amr.pacmanfx.ui.action.core.GameApp;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
+import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
+
+import java.util.stream.Stream;
+
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
+
+/**
+ * Intermission scene 3: "Junior".
+ *
+ * <p>
+ * Pac-Man and Ms. Pac-Man gradually wait for a stork, who flies overhead with a little blue bundle. The stork drops the
+ * bundle, which falls to the ground in front of Pac-Man and Ms. Pac-Man, and finally opens up to reveal a tiny Pac-Man.
+ * (Played after rounds 9, 13, and 17)
+ */
+public class ArcadeMsPacMan_CutScene3 extends GameScene {
+
+    static class Timing extends CutSceneTimingComp {
+
+        public Timing(long animationStartTick) {
+            super(animationStartTick);
+        }
+
+        public boolean isDeliverJuniorTime() {
+            return tick() == 180;
+        }
+
+        public boolean isEndTime() {
+            return tick() == 540;
+        }
+    }
+
+    private enum SceneState { CLAPPERBOARD, DELIVER_JUNIOR, END }
+
+    private static final int GROUND_Y = TS * 24;
+
+    private Pac pacMan;
+    private Pac msPacMan;
+    private Stork stork;
+    private Bag bag;
+    private Clapperboard clapperboard;
+
+    private final ClapperboardStateSystem clapperboardSystem = new ClapperboardStateSystem();
+
+    private int numBagBounces;
+
+    private SceneState sceneState;
+
+    public ArcadeMsPacMan_CutScene3(GameApp app) {
+        super(app);
+        setComp(GameSceneCanvasRenderingComp.class, new GameSceneCanvasRenderingComp());
+        setComp(CutSceneTimingComp.class, new Timing(0));
+    }
+
+    private Timing timing() {
+        return (Timing) reqComp(CutSceneTimingComp.class);
+    }
+
+    @Override
+    public void onActivate() {
+        initScene();
+        timing().setTick(0);
+        changeState(SceneState.CLAPPERBOARD);
+    }
+
+    @Override
+    public void onTick(GameContext game) {
+        updateSceneState();
+    }
+
+    public Stream<Renderable> renderables() {
+        return Stream.of(clapperboard, msPacMan, pacMan, stork, bag);
+    }
+
+    private void initScene() {
+        final GameVariantRuntime variant = app().variantManager().currentVariantRuntime();
+        final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
+        final SpriteAnimationContainer animContainer    = variant.spriteAnimContainer();
+        final var actorFactory = new ArcadeMsPacMan_ActorFactory();
+
+        pacMan = actorFactory.createPacMan();
+        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animContainer));
+
+        msPacMan = actorFactory.createMsPacMan();
+        msPacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animContainer));
+
+        stork = new Stork();
+        stork.setBagReleasedFromBeak(false);
+        stork.spriteAnim().setSpriteAnimations(new ArcadeMsPacMan_StorkSAM(animContainer));
+
+        bag = new Bag();
+        bag.spriteAnim().setSpriteAnimations(new ArcadeMsPacMan_BagSAM(animContainer));
+        closeBag();
+
+        clapperboard = new Clapperboard("3", "JUNIOR");
+        clapperboard.pos().set(tilesPx(3), tilesPx(10));
+        clapperboardSystem.startFlapAnimation(clapperboard);
+    }
+
+    // Scene controller state machine
+
+    private void updateSceneState() {
+        final GameSystems systems = game().playConfig().systems();
+
+        switch (sceneState) {
+            case CLAPPERBOARD -> {
+                if (timing().isDeliverJuniorTime()) {
+                    changeState(SceneState.DELIVER_JUNIOR);
+                    enterDeliverJuniorState(systems);
+                } else {
+                    updateClapperboardState();
+                }
+            }
+
+            case DELIVER_JUNIOR -> {
+                if (timing().isEndTime()) {
+                    changeState(SceneState.END);
+                } else {
+                    updateDeliverJuniorState();
+                }
+            }
+
+            case END -> game().state().triggerTimeout();
+
+            default -> throw new IllegalStateException("Illegal scene state: " + sceneState);
+        }
+        timing().setTick(timing().tick() + 1);
+    }
+
+    // Generic state change
+    private void changeState(SceneState newState) {
+        sceneState = newState;
+    }
+
+    // State CLAPPERBOARD
+
+    private void updateClapperboardState() {
+        clapperboardSystem.update(clapperboard);
+        if (timing().tick() ==  timing().animationStartTick() + 60) {
+            soundManager().play(PacManGameSoundID.INTERMISSION_3);
+        }
+    }
+
+    // State DELIVER_JUNIOR
+
+    private void enterDeliverJuniorState(GameSystems systems) {
+        final MovementSystem motor = systems.motor();
+        final WorldNavigationSystem nav = systems.navigator();
+        final ActorSpriteAnimController animController = systems.actorSpriteAnimController();
+        
+        pacMan.pos().set(TS * 3, GROUND_Y - 4);
+        pacMan.show();
+        nav.setMoveDir(pacMan, Direction.RIGHT);
+
+        animController.select(pacMan, CommonSpriteAnimationID.MR_PAC_MAN_MUNCHING);
+        animController.stopSelected(pacMan);
+
+        msPacMan.pos().set(TS * 5, GROUND_Y - 4);
+        msPacMan.show();
+        nav.setMoveDir(msPacMan, Direction.RIGHT);
+
+        animController.select(msPacMan, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
+        animController.stopSelected(msPacMan);
+
+        stork.pos().set(TS * 30, TS * 12);
+        stork.show();
+        motor.setVelocity(stork, -0.8f, 0);
+
+        animController.select(stork, CommonSpriteAnimationID.STORK_FLYING);
+        animController.playSelected(stork);
+
+        bag.show();
+        bag.pos().set(stork.pos().x() - 14, stork.pos().y() + 3);
+        motor.setVelocityX(bag, stork.movement().velocityX());
+        motor.setAcceleration(bag, 0, 0);
+        closeBag();
+
+        stork.setBagReleasedFromBeak(false);
+        numBagBounces = 0;
+    }
+
+    private void updateDeliverJuniorState() {
+        final MovementSystem motor = game().playConfig().systems().motor();
+
+        // release bag from beak when stork reaches tile 20
+        if (stork.pos().x() <= 20 * WorldMap.TS && !stork.isBagReleasedFromBeak()) {
+            motor.setAcceleration(bag, 0, 0.04f); // set tileY-gravity to let bag fall to ground
+            motor.setVelocity(stork, -1, 0); // fly faster without this heavy bag
+            stork.setBagReleasedFromBeak(true);
+        }
+
+        if (!bag.isOpen()) {
+            motor.move(bag);
+            if (bag.pos().y() >= GROUND_Y) {
+                ++numBagBounces;
+                if (numBagBounces < 3) {
+                    bag.movement().setVelocity(-0.2f, -1.0f / numBagBounces); // add upwards velocity to bounce
+                    bag.pos().setY(GROUND_Y);
+                } else {
+                    openBag();
+                    bag.pos().setY(GROUND_Y);
+                    motor.setVelocity(bag, 0, 0);
+                    motor.setAcceleration(bag, 0, 0);
+                }
+            }
+        }
+
+        motor.move(stork);
+    }
+
+    private void closeBag() {
+        bag.setOpen(false);
+        bag.spriteAnim().spriteAnimations().select(CommonSpriteAnimationID.BAG);
+    }
+
+    private void openBag() {
+        bag.setOpen(true);
+        bag.spriteAnim().spriteAnimations().select(CommonSpriteAnimationID.JUNIOR);
+    }
+}

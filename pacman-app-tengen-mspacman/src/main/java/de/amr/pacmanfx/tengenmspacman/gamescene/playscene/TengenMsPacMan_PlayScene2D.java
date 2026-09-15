@@ -11,6 +11,7 @@ import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.door.comp.DoorDataComp;
+import de.amr.pacmanfx.core.event.base.GameEventListener;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
@@ -62,8 +63,8 @@ import static de.amr.pacmanfx.uilib.rendering.RenderableWrapper.reassignLayer;
 /**
  * Tengen Ms. Pac-Man play scene, uses vertical scrolling by default to accommodate to NES screen size.
  */
-public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPacMan_PlayScene2D_GameEventHandler
-{
+public class TengenMsPacMan_PlayScene2D extends GameScene {
+
     private final DoubleProperty canvasHeightUnscaled = new SimpleDoubleProperty(NES_SCREEN_HEIGHT);
 
     private final StackPane rootPane = new StackPane();
@@ -73,6 +74,8 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
     private final PlayScene2DCamera dynamicCamera = new PlayScene2DCamera();
 
     private LevelCompletedAnimation levelCompletedAnimation;
+
+    private final GameEventHandler eventHandler = new GameEventHandler(this);
 
     public TengenMsPacMan_PlayScene2D(GameApp app) {
         super(app);
@@ -95,6 +98,11 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
     }
 
     @Override
+    public Optional<GameEventListener> optGameEventHandler() {
+        return Optional.of(eventHandler);
+    }
+
+    @Override
     public Stream<Renderable> renderables() {
         final GameLevel level = game().session().optLevel().orElse(null);
         if (level == null) return Stream.empty();
@@ -106,11 +114,6 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
             // In Tengen, ghosts appear under the house door, so reassign the door z layer:
             reassignLayer(level.entities().house().door(), RenderingLayer.SCENE, 100)
         );
-    }
-
-    @Override
-    public TengenMsPacMan_PlayScene2D gameScene() {
-        return this;
     }
 
     public double canvasHeightUnscaled() {
@@ -355,13 +358,13 @@ public class TengenMsPacMan_PlayScene2D extends GameScene implements TengenMsPac
         final Pac pac = level.entities().pac();
         if (animController.hasNoAnimations(pac)) {
             animController.setAnimations(pac, renderConfig.createPacAnimations(animContainer));
-            resetPacAnimation(animController, boosterEnabled, pac);
+            eventHandler.resetPacAnimation(animController, boosterEnabled, pac);
         }
 
         for (Ghost ghost : level.entities().ghosts()) {
             if (animController.hasNoAnimations(ghost)) {
                 animController.setAnimations(ghost, renderConfig.createGhostAnimations(animContainer, ghost.personality()));
-                resetGhostAnimation(animController, ghost);
+                eventHandler.resetGhostAnimation(animController, ghost);
             }
         }
     }

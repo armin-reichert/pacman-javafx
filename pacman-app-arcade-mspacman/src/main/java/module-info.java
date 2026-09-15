@@ -28,8 +28,8 @@ open module de.amr.pacmanfx.arcade.ms_pacman {
     exports de.amr.pacmanfx.arcade.ms_pacman.entities.clapperboard;
     exports de.amr.pacmanfx.arcade.ms_pacman.entities.copyright.comp;
     exports de.amr.pacmanfx.arcade.ms_pacman.entities.stork;
-    exports de.amr.pacmanfx.arcade.ms_pacman.scenes.startscene;
-    exports de.amr.pacmanfx.arcade.ms_pacman.scenes.cutscenes;
-    exports de.amr.pacmanfx.arcade.ms_pacman.scenes.introscene;
+    exports de.amr.pacmanfx.arcade.ms_pacman.gamescene.startscene;
+    exports de.amr.pacmanfx.arcade.ms_pacman.gamescene.cutscenes;
+    exports de.amr.pacmanfx.arcade.ms_pacman.gamescene.introscene;
     exports de.amr.pacmanfx.arcade.ms_pacman.entities;
 }

@@ -4,14 +4,14 @@
 package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.basics.Named;
-import de.amr.pacmanfx.arcade.pacman.scenes.bootscene.Arcade_BootScene;
-import de.amr.pacmanfx.arcade.pacman.scenes.cutscenes.ArcadePacMan_CutScene1;
-import de.amr.pacmanfx.arcade.pacman.scenes.cutscenes.ArcadePacMan_CutScene2;
-import de.amr.pacmanfx.arcade.pacman.scenes.cutscenes.ArcadePacMan_CutScene3;
-import de.amr.pacmanfx.arcade.pacman.scenes.introscene.ArcadePacMan_IntroScene;
-import de.amr.pacmanfx.arcade.pacman.scenes.playscene.Arcade_PlayScene2D;
-import de.amr.pacmanfx.arcade.pacman.scenes.playscene.Arcade_PlayScene3D;
-import de.amr.pacmanfx.arcade.pacman.scenes.startscene.ArcadePacMan_StartScene;
+import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.Arcade_BootScene;
+import de.amr.pacmanfx.arcade.pacman.gamescene.cutscenes.ArcadePacMan_CutScene1;
+import de.amr.pacmanfx.arcade.pacman.gamescene.cutscenes.ArcadePacMan_CutScene2;
+import de.amr.pacmanfx.arcade.pacman.gamescene.cutscenes.ArcadePacMan_CutScene3;
+import de.amr.pacmanfx.arcade.pacman.gamescene.introscene.ArcadePacMan_IntroScene;
+import de.amr.pacmanfx.arcade.pacman.gamescene.playscene.Arcade_PlayScene2D;
+import de.amr.pacmanfx.arcade.pacman.gamescene.playscene.Arcade_PlayScene3D;
+import de.amr.pacmanfx.arcade.pacman.gamescene.startscene.ArcadePacMan_StartScene;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;

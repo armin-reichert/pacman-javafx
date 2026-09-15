@@ -1,0 +1,281 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
+package de.amr.pacmanfx.arcade.ms_pacman.gamescene.introscene;
+
+import de.amr.basics.fsm.State;
+import de.amr.basics.fsm.StateMachine;
+import de.amr.basics.math.Direction;
+import de.amr.basics.timer.TickTimer;
+import de.amr.basics.util.Ufx;
+import de.amr.pacmanfx.arcade.ms_pacman.entities.Copyright;
+import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
+import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
+import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
+import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.rendering.Renderable;
+import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
+import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
+import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
+import de.amr.pacmanfx.core.entities.Ghost;
+import de.amr.pacmanfx.core.entities.Marquee;
+import de.amr.pacmanfx.core.entities.Pac;
+import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
+import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
+import de.amr.pacmanfx.core.model.GhostPersonality;
+import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
+import de.amr.pacmanfx.game.GameVariantRuntime;
+import de.amr.pacmanfx.game.GameVariantRenderConfig;
+import de.amr.pacmanfx.ui.VoiceID;
+import de.amr.pacmanfx.ui.action.core.GameApp;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
+
+import java.util.List;
+import java.util.stream.Stream;
+
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
+import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
+import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
+
+/**
+ * Intro scene of the Ms. Pac-Man game.
+ * <p>
+ * The ghosts and Ms. Pac-Man are introduced on a billboard and are marching in one after another.
+ */
+public class ArcadeMsPacMan_IntroScene extends GameScene {
+
+    public static final int TITLE_X          = WorldMap.TS * 10;
+    public static final int TITLE_Y          = WorldMap.TS * 8;
+    public static final int TOP_Y            = WorldMap.TS * 11;
+    public static final int STOP_X_GHOST     = WorldMap.TS * 6 - WorldMap.HTS;
+    public static final int STOP_X_MS_PACMAN = WorldMap.TS * 15 + 2;
+
+    private static final float ACTOR_SPEED = 1.11f;
+
+    private final StateMachine<ArcadeMsPacMan_IntroScene> sceneFlow;
+
+    private Marquee marquee;
+    private Pac msPacMan;
+    private List<Ghost> ghosts;
+    private Copyright copyright;
+
+    public GhostPersonality ghostPresented;
+
+    private int numTicksBeforeRising;
+
+    public ArcadeMsPacMan_IntroScene(GameApp app) {
+        super(app);
+        setComp(GameSceneCanvasRenderingComp.class, new GameSceneCanvasRenderingComp());
+        sceneFlow = new StateMachine<>(List.of(SceneState.values()));
+    }
+
+    @Override
+    public Stream<Renderable> renderables() {
+        return Ufx.streamOf(marquee, msPacMan, ghosts, copyright);
+    }
+
+    @Override
+    public void onActivate() {
+        final Arcade_Actions actions = app().variantManager().currentVariantRuntime()
+            .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
+
+        final var bindingsMap = actionBindingsSupport().registry();
+        bindingsMap.registerAllBindings(actions.gameStartActionBindings());
+        bindingsMap.registerAllBindings(app().commonActions().sceneTestActions().bindings());
+
+        sceneFlow.restartState(this, SceneState.STARTING);
+    }
+
+    @Override
+    public void onDeactivate() {
+        soundManager().voice().stop();
+    }
+
+    @Override
+    public void onTick(GameContext game) {
+        sceneFlow.update(this);
+    }
+
+    private void initScene() {
+        final var actorFactory = new ArcadeMsPacMan_ActorFactory();
+        final GameVariantRuntime variant = app().variantManager().currentVariantRuntime();
+        final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
+        final SpriteAnimationContainer animContainer = variant.spriteAnimContainer();
+        final ActorSpriteAnimController animController = variant.playConfig().systems().actorSpriteAnimController();
+        final GameSystems systems  = variant.playConfig().systems();
+        final WorldNavigationSystem worldNavigationSystem = systems.navigator();
+
+        createMarquee();
+
+        msPacMan = actorFactory.createMsPacMan();
+        msPacMan.pos().set(WorldMap.TS * 31, WorldMap.TS * 20);
+        msPacMan.show();
+
+        systems.navigator().setMoveDir(msPacMan, Direction.LEFT);
+        systems.navigator().setMoveDirSpeed(msPacMan, ACTOR_SPEED);
+
+        animController.setAnimations(msPacMan, renderConfig.createPacAnimations(animContainer));
+
+        ghosts = List.of(
+            renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.RED_GHOST_SHADOW),
+            renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.PINK_GHOST_SPEEDY),
+            renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.CYAN_GHOST_BASHFUL),
+            renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.ORANGE_GHOST_POKEY)
+        );
+
+        for (Ghost ghost : ghosts) {
+            ghost.pos().set(WorldMap.TS * 33.5f, WorldMap.TS * 20);
+            ghost.show();
+
+            worldNavigationSystem.setMoveDir(ghost, Direction.LEFT);
+            worldNavigationSystem.setWishDir(ghost, Direction.LEFT);
+            worldNavigationSystem.setMoveDirSpeed(ghost, ACTOR_SPEED);
+            systems.ghostState().setState(ghost, GhostState.HUNTING_PAC);
+        }
+
+        ghostPresented = GhostPersonality.RED_GHOST_SHADOW;
+        numTicksBeforeRising = 0;
+
+        copyright = new Copyright();
+        copyright.show();
+        copyright.pos().set(tilesPx(6), tilesPx(28));
+        copyright.image().setImage(renderConfig.assets().image("logo.midway"));
+
+        // Start animations
+
+        animController.select(msPacMan, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
+        animController.playSelected(msPacMan);
+
+        for (Ghost ghost : ghosts) {
+            animController.select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);
+            animController.playSelected(ghost);
+        }
+
+        soundManager().voice().playAfterSec(1, VoiceID.START_HINT.media());
+    }
+
+    private void createMarquee() {
+        marquee = new Marquee();
+        marquee.show();
+        marquee.pos().set(60, 88);
+
+        marquee.layout().setNumBulbsHorizontally(35);
+        marquee.layout().setNumBulbsVertically(15);
+        marquee.layout().setBulbSize(4);
+        marquee.layout().setBrightBulbsCount(6);
+        marquee.layout().setBrightBulbsDistance(16);
+
+        marquee.visualization().setBulbOffColor(ARCADE_RED.toString());
+        marquee.visualization().setBulbOnColor(ARCADE_WHITE.toString());
+    }
+
+    // Scene flow state machine
+
+    public State<ArcadeMsPacMan_IntroScene> sceneState() {
+        return sceneFlow.state();
+    }
+
+    public enum SceneState implements State<ArcadeMsPacMan_IntroScene> {
+
+        STARTING {
+            @Override
+            public void onEnter(ArcadeMsPacMan_IntroScene scene) {
+                scene.initScene();
+            }
+
+            @Override
+            public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
+                if (timer.atSecond(1)) {
+                    scene.sceneFlow.enterState(scene, GHOSTS_MARCHING_IN);
+                }
+            }
+        },
+
+        GHOSTS_MARCHING_IN {
+            @Override
+            public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
+                boolean atEndPosition = letGhostWalkIn(scene);
+                if (atEndPosition) {
+                    if (scene.ghostPresented == GhostPersonality.ORANGE_GHOST_POKEY) {
+                        scene.sceneFlow.enterState(scene, MS_PACMAN_MARCHING_IN);
+                    } else {
+                        scene.ghostPresented = scene.ghostPresented.succ();
+                    }
+                }
+            }
+
+            boolean letGhostWalkIn(ArcadeMsPacMan_IntroScene scene) {
+                final GameSystems sys = scene.game().playConfig().systems();
+
+                final Ghost ghost = scene.ghosts.get(scene.ghostPresented.ordinal());
+                if (ghost.worldNavigation().moveDir() == Direction.LEFT) {
+                    if (ghost.pos().x() <= STOP_X_GHOST) {
+                        ghost.pos().setX(STOP_X_GHOST);
+                        sys.navigator().setMoveDir(ghost, Direction.UP);
+                        sys.navigator().setWishDir(ghost, Direction.UP);
+                        scene.numTicksBeforeRising = 2;
+                    } else {
+                        sys.motor().move(ghost);
+                    }
+                }
+                else if (ghost.worldNavigation().moveDir() == Direction.UP) {
+                    int endPositionY = TOP_Y + scene.ghostPresented.ordinal() * 16 + 1;
+                    if (scene.numTicksBeforeRising > 0) {
+                        scene.numTicksBeforeRising--;
+                    }
+                    else if (ghost.pos().y() <= endPositionY) {
+                        sys.navigator().setMoveDirSpeed(ghost, 0);
+                        sys.actorSpriteAnimController().stopSelected(ghost);
+                        sys.actorSpriteAnimController().resetSelected(ghost);
+                        return true;
+                    }
+                    else {
+                        sys.motor().move(ghost);
+                    }
+                }
+                return false;
+            }
+        },
+
+        MS_PACMAN_MARCHING_IN {
+            @Override
+            public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
+                final GameSystems sys = scene.game().playConfig().systems();
+                final Pac msPacMan = scene.msPacMan;
+
+                sys.motor().move(msPacMan);
+                if (msPacMan.pos().x() <= STOP_X_MS_PACMAN) {
+                    sys.navigator().setMoveDirSpeed(msPacMan, 0);
+                    sys.actorSpriteAnimController().resetSelected(msPacMan);
+                    scene.sceneFlow.enterState(scene, READY_TO_PLAY);
+                }
+            }
+        },
+
+        READY_TO_PLAY {
+            @Override
+            public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
+                final GameContext game = scene.app().game();
+                final boolean canPlay = !game.coinMechanism().isEmpty();
+                if (timer.atSecond(2.0) && !canPlay) {
+                    scene.flow().enterGameState(game, CommonGameStateID.GAME_OR_LEVEL_STARTING); // play demo level after 2 seconds
+                }
+                //TODO can this happen at all?
+                else if (timer.atSecond(5)) {
+                    scene.flow().enterGameState(game, CommonGameStateID.GAME_PREPARATION);
+                }
+            }
+        };
+
+        final TickTimer timer = new TickTimer("Timer-" + name());
+
+        @Override
+        public TickTimer timer() {
+            return timer;
+        }
+    }
+}

@@ -12,6 +12,7 @@ import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventListener;
+import de.amr.pacmanfx.core.event.base.GameEventListener;
 import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.event.gameplay.CreditAddedEvent;
 import de.amr.pacmanfx.core.gamestate.GameFlow;
@@ -35,7 +36,7 @@ import static java.util.Objects.requireNonNull;
  * Abstract base class for all game scenes (2D and 3D).
  */
 public abstract class GameScene extends Composition<GameSceneComponent>
-    implements GameSceneController, DefaultGameEventListener, Disposable, Renderable
+    implements GameSceneController, Disposable, Renderable
 {
     //TODO Should a game scene really be a renderable itself or only produce renderables?
 
@@ -43,6 +44,10 @@ public abstract class GameScene extends Composition<GameSceneComponent>
 
     protected GameScene(GameApp app) {
         this.app = requireNonNull(app);
+    }
+
+    public Optional<GameEventListener> optGameEventHandler() {
+        return Optional.empty();
     }
 
     @Override
@@ -183,15 +188,4 @@ public abstract class GameScene extends Composition<GameSceneComponent>
         deactivate();
     }
 
-    // --- Interface DefaultGameEventListener
-
-    @Override
-    public void onCreditAdded(CreditAddedEvent e) {
-        optSoundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
-    }
-
-    @Override
-    public void onStopAllSounds(StopAllSoundsEvent event) {
-        optSoundEffects().ifPresent(GameSoundEffects::stopAll);
-    }
 }

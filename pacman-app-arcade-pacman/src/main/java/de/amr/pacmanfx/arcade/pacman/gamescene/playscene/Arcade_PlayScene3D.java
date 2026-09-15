@@ -1,0 +1,39 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
+package de.amr.pacmanfx.arcade.pacman.gamescene.playscene;
+
+import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
+import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
+import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.ui.action.core.GameApp;
+import de.amr.pacmanfx.ui.gamescene.d3.PlayScene3D;
+import org.tinylog.Logger;
+
+public class Arcade_PlayScene3D extends PlayScene3D {
+
+    public Arcade_PlayScene3D(GameApp appContext) {
+        super(appContext);
+    }
+
+    @Override
+    public void replaceActionBindings(GameSession session, GameLevel level) {
+        final var bindingsMap = actionBindingsSupport().registry();
+
+        bindingsMap.dispose();
+
+        final Arcade_Actions actions = app().variantManager().currentVariantRuntime()
+            .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
+
+        if (session.isAttractMode()) {
+            bindingsMap.registerAllBindings(actions.gameStartActionBindings());
+        } else {
+            bindingsMap.registerAllBindings(app().commonActions().steeringActions().bindings());
+            bindingsMap.registerAllBindings(app().commonActions().cheatActions().bindings());
+        }
+        bindActions();
+        Logger.info(actionBindingsSupport());
+    }
+}

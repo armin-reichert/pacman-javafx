@@ -8,7 +8,7 @@ import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.clapperboard.ClapperboardAnimationSystem;
-import de.amr.pacmanfx.arcade.ms_pacman.scenes.introscene.MarqueeRenderer;
+import de.amr.pacmanfx.arcade.ms_pacman.gamescene.introscene.MarqueeRenderer;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.Copyright;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_RenderConfig;
 import de.amr.pacmanfx.core.Energizer;
