@@ -33,7 +33,7 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
 
     public AbstractGameSceneConfig() {}
 
-    protected abstract GameScene createGameScene(GameAppContext appContext, Named Identifier);
+    protected abstract GameScene createGameScene(GameAppContext appContext, Named sceneID);
 
     protected abstract Named determineSceneID(GameContext game, boolean select3D);
 
@@ -63,15 +63,15 @@ public abstract class AbstractGameSceneConfig implements GameSceneConfig {
     @Override
     public final Optional<GameScene> selectGameScene(GameAppContext app, boolean select3D) {
         requireNonNull(app);
-        final Named Identifier = determineSceneID(app.game(), select3D);
-        final GameScene gameScene = scenesByID.computeIfAbsent(Identifier, id -> createGameScene(app, id));
+        final Named sceneID = determineSceneID(app.game(), select3D);
+        final GameScene gameScene = scenesByID.computeIfAbsent(sceneID, id -> createGameScene(app, id));
         return Optional.of(gameScene);
     }
 
     @Override
-    public final boolean gameSceneHasID(GameScene gameScene, Named Identifier) {
+    public final boolean gameSceneHasID(GameScene gameScene, Named sceneID) {
         requireNonNull(gameScene);
-        requireNonNull(Identifier);
-        return scenesByID.get(Identifier) == gameScene;
+        requireNonNull(sceneID);
+        return scenesByID.get(sceneID) == gameScene;
     }
 }

@@ -29,7 +29,6 @@ public class XXL_MsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
 
     @Override
     protected GameScene createGameScene(GameAppContext appContext, Named sceneID) {
-        requireNonNull(sceneID);
         return switch (sceneID) {
             case CommonGameSceneID.BOOT_SCENE -> new Arcade_BootScene(appContext);
             case CommonGameSceneID.INTRO_SCENE -> new ArcadeMsPacMan_IntroScene(appContext);

@@ -29,8 +29,6 @@ class ArcadePacMan_GameSceneConfig extends AbstractGameSceneConfig {
 
     @Override
     protected GameScene createGameScene(GameAppContext app, Named sceneID) {
-        requireNonNull(app);
-        requireNonNull(sceneID);
         return switch (sceneID) {
             case CommonGameSceneID.BOOT_SCENE -> new Arcade_BootScene(app);
             case CommonGameSceneID.INTRO_SCENE -> new ArcadePacMan_IntroScene(app);
@@ -46,8 +44,6 @@ class ArcadePacMan_GameSceneConfig extends AbstractGameSceneConfig {
 
     @Override
     protected Named determineSceneID(GameContext game, boolean select3D) {
-        requireNonNull(game);
-
         final AbstractGameState state = game.state();
         if (state instanceof Test_CutScenesTestState testState) {
             return AbstractGameSceneConfig.cutSceneID(testState.testedCutSceneNumber);

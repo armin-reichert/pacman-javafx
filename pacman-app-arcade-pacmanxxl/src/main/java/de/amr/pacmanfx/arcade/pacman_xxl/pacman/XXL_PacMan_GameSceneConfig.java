@@ -29,17 +29,16 @@ class XXL_PacMan_GameSceneConfig extends AbstractGameSceneConfig {
     public XXL_PacMan_GameSceneConfig() {}
 
     @Override
-    protected GameScene createGameScene(GameAppContext appContext, Named sceneID) {
-        requireNonNull(sceneID);
+    protected GameScene createGameScene(GameAppContext app, Named sceneID) {
         return switch (sceneID) {
-            case CommonGameSceneID.BOOT_SCENE -> new Arcade_BootScene(appContext);
-            case CommonGameSceneID.INTRO_SCENE -> new ArcadePacMan_IntroScene(appContext);
-            case CommonGameSceneID.START_SCENE -> new ArcadePacMan_StartScene(appContext);
-            case CommonGameSceneID.PLAY_SCENE_2D -> new Arcade_PlayScene2D(appContext);
-            case CommonGameSceneID.PLAY_SCENE_3D -> new Arcade_PlayScene3D(appContext);
-            case CommonGameSceneID.CUTSCENE_1 -> new ArcadePacMan_CutScene1(appContext);
-            case CommonGameSceneID.CUTSCENE_2 -> new ArcadePacMan_CutScene2(appContext);
-            case CommonGameSceneID.CUTSCENE_3 -> new ArcadePacMan_CutScene3(appContext);
+            case CommonGameSceneID.BOOT_SCENE -> new Arcade_BootScene(app);
+            case CommonGameSceneID.INTRO_SCENE -> new ArcadePacMan_IntroScene(app);
+            case CommonGameSceneID.START_SCENE -> new ArcadePacMan_StartScene(app);
+            case CommonGameSceneID.PLAY_SCENE_2D -> new Arcade_PlayScene2D(app);
+            case CommonGameSceneID.PLAY_SCENE_3D -> new Arcade_PlayScene3D(app);
+            case CommonGameSceneID.CUTSCENE_1 -> new ArcadePacMan_CutScene1(app);
+            case CommonGameSceneID.CUTSCENE_2 -> new ArcadePacMan_CutScene2(app);
+            case CommonGameSceneID.CUTSCENE_3 -> new ArcadePacMan_CutScene3(app);
             default -> throw new IllegalArgumentException("Illegal scene ID: " + sceneID);
         };
     }
