@@ -18,6 +18,7 @@ import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
 import de.amr.pacmanfx.uilib.rendering.RenderableWrapper;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.shape.Rectangle;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 
@@ -71,8 +72,18 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends BaseRenderer {
                 render(wrapper.content(), tick);
                 ctx.restore();
             }
-            default -> entityRenderer.render(r, tick);
+            default -> {
+                ctx.save();
+                clipLeftAndRight(xOffset);
+                entityRenderer.render(r, tick);
+                ctx.restore();
+            }
         }
+    }
+
+    private void clipLeftAndRight(double margin) {
+        // -1 to clip 1 pixel wide vertical stripe on tne right (hide ugly map sprite border)
+        ctx.getCanvas().setClip(new Rectangle(margin, 0, canvas().getWidth() - 2 * margin - 1, canvas().getHeight()));
     }
 
     private void configureLevelRenderer(WorldMap worldMap, boolean highlighted, int flashingIndex) {
