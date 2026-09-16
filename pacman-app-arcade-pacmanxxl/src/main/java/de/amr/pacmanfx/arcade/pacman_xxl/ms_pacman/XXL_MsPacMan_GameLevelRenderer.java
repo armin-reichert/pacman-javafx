@@ -4,27 +4,19 @@
 
 package de.amr.pacmanfx.arcade.pacman_xxl.ms_pacman;
 
-import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_GameLevelRenderer;
-import de.amr.pacmanfx.core.rendering.Renderable;
-import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.ui.gamescene.d2.GenericLevelRenderer;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapColoring;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
-public class XXL_MsPacMan_GameLevelRenderer extends ArcadeMsPacMan_GameLevelRenderer {
+public class XXL_MsPacMan_GameLevelRenderer extends GenericLevelRenderer {
 
-    private final GenericLevelRenderer genericLevelRenderer;
-
-    public XXL_MsPacMan_GameLevelRenderer(ActorSpriteAnimController animSystem, Canvas canvas) {
-        super(animSystem, canvas, null);
-
-        genericLevelRenderer = new GenericLevelRenderer(canvas);
-        genericLevelRenderer.scalingProperty().bind(scalingProperty());
-        genericLevelRenderer.backgroundColorProperty().bind(backgroundColorProperty());
+    public XXL_MsPacMan_GameLevelRenderer(Canvas canvas) {
+        super(canvas);
     }
 
     @Override
@@ -42,9 +34,9 @@ public class XXL_MsPacMan_GameLevelRenderer extends ArcadeMsPacMan_GameLevelRend
             Color.valueOf(worldMapColorScheme.door())
         );
 
-        genericLevelRenderer.info().putAll(info);
-        genericLevelRenderer.info().put(GenericLevelRenderer.RenderInfoKey.TERRAIN_MAP_COLORING, mapColoring);
+        info().putAll(info);
+        info().put(GenericLevelRenderer.RenderInfoKey.TERRAIN_MAP_COLORING, mapColoring);
 
-        genericLevelRenderer.render(r, tick);
+        super.render(r, tick);
     }
 }

@@ -73,6 +73,8 @@ public final class XXL_PacMan_UIConfig implements GameVariantUIConfig {
 
     @Override
     public void load(GameApp app) {
+        assets.dispose();
+
         assets.addAsset("app_icon", XXL_RM.loadImage(XXL_PATH + "graphics/icons/pacman.png"));
         assets.addAsset("color.game_over_message", ARCADE_RED);
         assets.freeze();

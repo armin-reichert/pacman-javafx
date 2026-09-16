@@ -3,11 +3,10 @@
  */
 package de.amr.pacmanfx.arcade.pacman_xxl.pacman;
 
-import de.amr.pacmanfx.arcade.pacman.gamescene.playscene.ArcadePacMan_GameLevel_Renderer;
-import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.ui.gamescene.d2.GenericLevelRenderer;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapColoring;
 import javafx.scene.canvas.Canvas;
@@ -16,16 +15,10 @@ import javafx.scene.paint.Color;
 /**
  * Renderer for "Pac-Man XXL" game variant. Uses the vector graphics map renderer that can render any custom map.
  */
-public class XXL_PacMan_GameLevelRenderer extends ArcadePacMan_GameLevel_Renderer {
+public class XXL_PacMan_GameLevelRenderer extends GenericLevelRenderer {
 
-    private final GenericLevelRenderer genericLevelRenderer;
-
-    public XXL_PacMan_GameLevelRenderer(Canvas canvas, XXL_PacMan_RenderConfig renderConfig) {
-        super(canvas, renderConfig);
-
-        genericLevelRenderer = new GenericLevelRenderer(canvas);
-        genericLevelRenderer.scalingProperty().bind(scalingProperty());
-        genericLevelRenderer.backgroundColorProperty().bind(backgroundColorProperty());
+    public XXL_PacMan_GameLevelRenderer(Canvas canvas) {
+        super(canvas);
     }
 
     @Override
@@ -43,9 +36,9 @@ public class XXL_PacMan_GameLevelRenderer extends ArcadePacMan_GameLevel_Rendere
             Color.valueOf(worldMapColorScheme.door())
         );
 
-        genericLevelRenderer.info().putAll(info);
-        genericLevelRenderer.info().put(GenericLevelRenderer.RenderInfoKey.TERRAIN_MAP_COLORING, mapColoring);
+        info().putAll(info);
+        info().put(GenericLevelRenderer.RenderInfoKey.TERRAIN_MAP_COLORING, mapColoring);
 
-        genericLevelRenderer.render(r, tick);
+        super.render(r, tick);
     }
 }

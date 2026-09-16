@@ -35,7 +35,7 @@ public class XXL_PacMan_RenderConfig extends ArcadePacMan_RenderConfig {
         requireNonNull(animController);
         requireNonNull(canvas);
 
-        return new XXL_PacMan_GameLevelRenderer(canvas, this);
+        return new XXL_PacMan_GameLevelRenderer(canvas);
     }
 }
 

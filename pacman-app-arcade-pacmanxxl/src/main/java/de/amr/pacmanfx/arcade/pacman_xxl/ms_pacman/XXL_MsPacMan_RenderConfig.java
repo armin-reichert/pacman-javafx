@@ -12,6 +12,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
 import de.amr.pacmanfx.ui.GlobalAssets;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
+import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.scene.canvas.Canvas;
 
 import static java.util.Objects.requireNonNull;
@@ -31,10 +32,10 @@ public class XXL_MsPacMan_RenderConfig extends ArcadeMsPacMan_RenderConfig {
     }
 
     @Override
-    public XXL_MsPacMan_GameLevelRenderer createGameLevelRenderer(ActorSpriteAnimController animController, Canvas canvas) {
+    public Renderer createGameLevelRenderer(ActorSpriteAnimController animController, Canvas canvas) {
         requireNonNull(animController);
         requireNonNull(canvas);
 
-        return new XXL_MsPacMan_GameLevelRenderer(animController, canvas);
+        return new XXL_MsPacMan_GameLevelRenderer(canvas);
     }
 }

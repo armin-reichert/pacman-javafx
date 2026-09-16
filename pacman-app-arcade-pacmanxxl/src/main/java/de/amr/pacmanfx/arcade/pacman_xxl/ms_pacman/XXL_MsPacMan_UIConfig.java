@@ -80,6 +80,8 @@ public final class XXL_MsPacMan_UIConfig implements GameVariantUIConfig {
 
     @Override
     public void load(GameApp app) {
+        assets.dispose();
+
         assets.addAsset("app_icon", XXL_RM.loadImage(XXL_PATH + "graphics/icons/mspacman.png"));
         assets.addAsset("logo.midway", ARCADE_RM.loadImage("graphics/midway_logo.png"));
         assets.addAsset("color.game_over_message", ARCADE_RED);
