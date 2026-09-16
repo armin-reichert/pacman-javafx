@@ -13,7 +13,7 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.rules.ActorSpeedRules;
 
-public class Arcade_ActorSpeedRules implements ActorSpeedRules {
+public class ArcadePacMan_ActorSpeedRules implements ActorSpeedRules {
 
     /** Base speed is 75 px per second (=1.25 px/tick). */
     public static final float BASE_SPEED = 1.25f;

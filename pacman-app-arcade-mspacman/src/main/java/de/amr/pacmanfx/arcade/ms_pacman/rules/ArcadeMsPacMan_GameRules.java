@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.rules;
 
 import de.amr.basics.Named;
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.arcade.pacman.rules.ArcadePacMan_GameRules;
+import de.amr.pacmanfx.arcade.pacman.rules.Arcade_GameRules;
 import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 
@@ -15,12 +15,13 @@ import java.util.Optional;
 
 import static de.amr.basics.math.RandomNumbers.randomInt;
 
-public class ArcadeMsPacMan_GameRules extends ArcadePacMan_GameRules {
+public class ArcadeMsPacMan_GameRules extends Arcade_GameRules {
 
     public static final float DEMO_LEVEL_MIN_DURATION_SEC = 20;
 
     public ArcadeMsPacMan_GameRules() {
         actorSpeedRules = new ArcadeMsPacMan_ActorSpeedRules();
+        scoringRules = new ArcadeMsPacMan_ScoringRules();
     }
 
     @Override
