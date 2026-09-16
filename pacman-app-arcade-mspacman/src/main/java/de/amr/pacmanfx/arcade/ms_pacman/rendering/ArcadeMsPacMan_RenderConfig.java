@@ -5,8 +5,7 @@
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.basics.math.RectShort;
-import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
+import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
 import de.amr.pacmanfx.arcade.ms_pacman.gamescene.cutscenes.ArcadeMsPacMan_CutScene1;
 import de.amr.pacmanfx.arcade.ms_pacman.gamescene.cutscenes.ArcadeMsPacMan_CutScene2;
 import de.amr.pacmanfx.arcade.ms_pacman.gamescene.cutscenes.ArcadeMsPacMan_CutScene3;
@@ -14,6 +13,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.gamescene.introscene.ArcadeMsPacMan_Intr
 import de.amr.pacmanfx.arcade.ms_pacman.gamescene.introscene.ArcadeMsPacMan_IntroScene_Renderer;
 import de.amr.pacmanfx.arcade.ms_pacman.gamescene.startscene.ArcadeMsPacMan_StartScene;
 import de.amr.pacmanfx.arcade.ms_pacman.gamescene.startscene.ArcadeMsPacMan_StartScene_Renderer;
+import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.Arcade_BootScene;
 import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.Arcade_BootScene_Renderer;
 import de.amr.pacmanfx.arcade.pacman.gamescene.playscene.Arcade_PlayScene2D;
@@ -40,8 +40,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
-import java.util.Map;
-
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
 import static java.util.Objects.requireNonNull;
 
@@ -49,26 +47,12 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
 
     private static final Rectangle2D BOOT_SCENE_SPRITES = new Rectangle2D(380, 0, 204, 208);
 
-    /** Colors used by the six Ms. Pac-Man Arcade maps. */
-    private static final GenericWorldMapColorScheme[] MAP_COLOR_SCHEMES = {
-        new GenericWorldMapColorScheme("ffb7ae", "ff0000", "fcb5ff", "dedeff"),
-        new GenericWorldMapColorScheme("47b7ff", "dedeff", "fcb5ff", "ffff00"),
-        new GenericWorldMapColorScheme("de9751", "dedeff", "fcb5ff", "ff0000"),
-        new GenericWorldMapColorScheme("2121ff", "ffb751", "fcb5ff", "dedeff"),
-        new GenericWorldMapColorScheme("ffb7ff", "ffff00", "fcb5ff", "00ffff"),
-        new GenericWorldMapColorScheme("ffb7ae", "ff0000", "fcb5ff", "dedeff")
-    };
-
     protected final HUD_Style hudStyle;
 
     protected final AssetMap assets;
 
     public ArcadeMsPacMan_RenderConfig(AssetMap assets) {
         this.assets = assets;
-
-        for (int i = 0; i < MAP_COLOR_SCHEMES.length; ++i) {
-            assets.addAsset("maze.bright.%d".formatted(i), createBrightMazeImage(i));
-        }
 
         hudStyle = new HUD_Style(
             spriteSheet(),
@@ -80,18 +64,6 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
             Color.GRAY,
             GlobalFonts.ARCADE.font(),
             "CREDIT %2d");
-    }
-
-    // Creates the maze image used in the flash animation at the end of each level
-    private Image createBrightMazeImage(int index) {
-        final RectShort mazeSprite = spriteSheet().findSpriteSequence(SpriteID.EMPTY_MAPS)[index];
-        final Image mazeImage = spriteSheet().image(mazeSprite);
-        final GenericWorldMapColorScheme colorScheme = MAP_COLOR_SCHEMES[index];
-        final Map<Color, Color> colorChanges = Map.of(
-            Color.valueOf(colorScheme.wallStroke()), ARCADE_WHITE,
-            Color.valueOf(colorScheme.door()), Color.TRANSPARENT
-        );
-        return Ufx.recolorImage(mazeImage, colorChanges);
     }
 
     @Override
@@ -108,7 +80,7 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
     public GenericWorldMapColorScheme colorScheme(WorldMap worldMap, WorldSettings worldSettings) {
         requireNonNull(worldMap);
         final int index = worldMap.getConfigValue(WorldMapConfigKey.COLOR_MAP_INDEX);
-        return GlobalAssets.enhanceContrast(worldSettings, MAP_COLOR_SCHEMES[index]);
+        return GlobalAssets.enhanceContrast(worldSettings, ArcadeMsPacMan_UIConfig.MAP_COLOR_SCHEMES[index]);
     }
 
     @Override

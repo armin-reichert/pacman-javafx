@@ -53,13 +53,13 @@ public final class PacManGamesMasterApp implements GameApp {
 
     private final GameBox gameBox;
 
-    private final CommonGameActions actions;
-
     private final GameLoop gameLoop;
 
     private final RenderManager renderManager;
 
     private final GameSceneManager gameSceneManager;
+
+    private final CommonGameActions actions;
 
     private GameUI ui;
 

@@ -5,11 +5,16 @@
 package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.basics.Named;
+import de.amr.basics.math.RectShort;
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_RenderConfig;
+import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
+import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.arcade.pacman.gamestate.Arcade_GameState;
 import de.amr.pacmanfx.core.gamestate.GameFlow;
+import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.action.core.GameApp;
@@ -22,6 +27,8 @@ import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
+import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import java.util.*;
@@ -29,8 +36,19 @@ import java.util.*;
 import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.audioClip;
 import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.mediaPlayer;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
+import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
 
 public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
+
+    /** Colors used by the six Ms. Pac-Man Arcade maps. */
+    public static final GenericWorldMapColorScheme[] MAP_COLOR_SCHEMES = {
+        new GenericWorldMapColorScheme("ffb7ae", "ff0000", "fcb5ff", "dedeff"),
+        new GenericWorldMapColorScheme("47b7ff", "dedeff", "fcb5ff", "ffff00"),
+        new GenericWorldMapColorScheme("de9751", "dedeff", "fcb5ff", "ff0000"),
+        new GenericWorldMapColorScheme("2121ff", "ffb751", "fcb5ff", "dedeff"),
+        new GenericWorldMapColorScheme("ffb7ff", "ffff00", "fcb5ff", "00ffff"),
+        new GenericWorldMapColorScheme("ffb7ae", "ff0000", "fcb5ff", "dedeff")
+    };
 
     private static final ResourceManager RM = () -> ArcadeMsPacMan_UIConfig.class;
 
@@ -86,7 +104,11 @@ public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
         assets.addAsset("app_icon",    RM.loadImage("graphics/icons/mspacman.png"));
         assets.addAsset("logo.midway", RM.loadImage("graphics/midway_logo.png"));
         assets.addAsset("color.game_over_message", ARCADE_RED);
+        for (int i = 0; i < MAP_COLOR_SCHEMES.length; ++i) {
+            assets.addAsset("maze.bright.%d".formatted(i), createBrightMazeImage(i));
+        }
         assets.freeze();
+
         loadSounds(app.ui().soundManager());
         renderConfig = new ArcadeMsPacMan_RenderConfig(assets);
     }
@@ -189,5 +211,18 @@ public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
             soundEffects.dispose();
             soundEffects = null;
         }
+    }
+
+    // Creates the maze image used in the flash animation at the end of each level
+    private Image createBrightMazeImage(int index) {
+        final var spriteSheet = ArcadeMsPacMan_SpriteSheet.instance();
+        final RectShort mazeSprite = spriteSheet.findSpriteSequence(SpriteID.EMPTY_MAPS)[index];
+        final Image mazeImage = spriteSheet.image(mazeSprite);
+        final GenericWorldMapColorScheme colorScheme = ArcadeMsPacMan_UIConfig.MAP_COLOR_SCHEMES[index];
+        final Map<Color, Color> colorChanges = Map.of(
+            Color.valueOf(colorScheme.wallStroke()), ARCADE_WHITE,
+            Color.valueOf(colorScheme.door()), Color.TRANSPARENT
+        );
+        return Ufx.recolorImage(mazeImage, colorChanges);
     }
 }
