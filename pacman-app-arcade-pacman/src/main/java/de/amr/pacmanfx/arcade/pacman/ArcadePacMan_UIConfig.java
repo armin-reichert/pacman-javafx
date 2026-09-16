@@ -5,7 +5,11 @@
 package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.basics.Named;
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_RenderConfig;
+import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
+import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
+import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.action.core.GameApp;
@@ -18,13 +22,16 @@ import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
+import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
 import java.util.*;
 
 import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.audioClip;
 import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.mediaPlayer;
-import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
+import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
+import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_ROSE;
 
 /**
  * The Arcade Pac‑Man game variant.
@@ -32,6 +39,15 @@ import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
 public class ArcadePacMan_UIConfig implements GameVariantUIConfig {
 
     private final static ResourceManager RM = () -> ArcadePacMan_UIConfig.class;
+
+    public static final GenericWorldMapColorScheme WORLD_MAP_COLOR_SCHEME = new GenericWorldMapColorScheme(
+        ARCADE_BLACK.toString(), ARCADE_BLUE.toString(), ARCADE_PINK.toString(), ARCADE_ROSE.toString()
+    );
+
+    private static final Map<Color, Color> BRIGHT_MAZE_COLOR_CHANGES = Map.of(
+        Color.valueOf(WORLD_MAP_COLOR_SCHEME.wallStroke()), ARCADE_WHITE,   // wall color change
+        Color.valueOf(WORLD_MAP_COLOR_SCHEME.door()), Color.TRANSPARENT // door color change
+    );
 
     private static final List<SoundManager.SoundEntry> SOUND_ENTRIES = Arrays.asList(
         audioClip   (PacManGameSoundID.BONUS_EATEN,      RM.url("sound/eat_fruit.mp3")),
@@ -72,10 +88,14 @@ public class ArcadePacMan_UIConfig implements GameVariantUIConfig {
 
     @Override
     public void load(GameApp app) {
-        loadAssets();
-        renderConfig = new ArcadePacMan_RenderConfig(assets);
+        assets = new AssetMap();
+        assets.addAsset("app_icon", RM.loadImage("graphics/icons/pacman.png"));
+        assets.addAsset("color.game_over_message", ARCADE_RED);
+        assets.addAsset("maze.bright", createBrightEmptyMap());
         assets.freeze();
+
         loadSounds(app.ui().soundManager());
+        renderConfig = new ArcadePacMan_RenderConfig(assets);
     }
 
     @Override
@@ -135,12 +155,6 @@ public class ArcadePacMan_UIConfig implements GameVariantUIConfig {
 
     // private
 
-    private void loadAssets() {
-        assets = new AssetMap();
-        assets.addAsset("app_icon", RM.loadImage("graphics/icons/pacman.png"));
-        assets.addAsset("color.game_over_message", ARCADE_RED);
-    }
-
     private void loadSounds(SoundManager soundManager) {
         for (SoundManager.SoundEntry entry : SOUND_ENTRIES) {
             soundManager.add(entry);
@@ -165,5 +179,11 @@ public class ArcadePacMan_UIConfig implements GameVariantUIConfig {
             soundEffects.dispose();
             soundEffects = null;
         }
+    }
+
+    private Image createBrightEmptyMap() {
+        return Ufx.recolorImage(
+            ArcadePacMan_SpriteSheet.instance().image(SpriteID.MAP_EMPTY),
+            BRIGHT_MAZE_COLOR_CHANGES);
     }
 }

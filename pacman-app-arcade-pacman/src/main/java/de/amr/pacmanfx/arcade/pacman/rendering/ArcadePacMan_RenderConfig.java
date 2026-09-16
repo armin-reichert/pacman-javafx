@@ -6,8 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.math.RectShort;
-import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
+import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.Arcade_BootScene;
 import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.Arcade_BootScene_Renderer;
 import de.amr.pacmanfx.arcade.pacman.gamescene.introscene.ArcadePacMan_IntroScene;
@@ -15,6 +14,7 @@ import de.amr.pacmanfx.arcade.pacman.gamescene.introscene.ArcadePacMan_IntroScen
 import de.amr.pacmanfx.arcade.pacman.gamescene.playscene.ArcadePacMan_GameLevel_Renderer;
 import de.amr.pacmanfx.arcade.pacman.gamescene.playscene.Arcade_PlayScene2D;
 import de.amr.pacmanfx.arcade.pacman.gamescene.playscene.Arcade_PlayScene2D_Renderer;
+import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
@@ -40,7 +40,7 @@ import javafx.scene.paint.Color;
 import java.util.EnumMap;
 import java.util.Map;
 
-import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
+import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig, Disposable {
@@ -52,15 +52,6 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig, Dispo
         MESSAGE_TEXTS.put(MessageType.NO_MESSAGE, "");
     }
 
-    private static final GenericWorldMapColorScheme WORLD_MAP_COLOR_SCHEME = new GenericWorldMapColorScheme(
-        ARCADE_BLACK.toString(), ARCADE_BLUE.toString(), ARCADE_PINK.toString(), ARCADE_ROSE.toString()
-    );
-
-    private static final Map<Color, Color> BRIGHT_MAZE_COLOR_CHANGES = Map.of(
-        Color.valueOf(WORLD_MAP_COLOR_SCHEME.wallStroke()), ARCADE_WHITE,   // wall color change
-        Color.valueOf(WORLD_MAP_COLOR_SCHEME.door()), Color.TRANSPARENT // door color change
-    );
-
     private static final Rectangle2D BOOT_SCENE_SPRITES = new Rectangle2D(400, 0, 256, 160);
 
     private final AssetMap assets;
@@ -69,8 +60,6 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig, Dispo
 
     public ArcadePacMan_RenderConfig(AssetMap assets) {
         this.assets = assets;
-
-        assets.addAsset("maze.bright", createBrightEmptyMap());
 
         hudStyle = new HUD_Style(
             spriteSheet(),
@@ -89,10 +78,6 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig, Dispo
     public void dispose() {
     }
 
-    private Image createBrightEmptyMap() {
-        return Ufx.recolorImage(spriteSheet().image(SpriteID.MAP_EMPTY), BRIGHT_MAZE_COLOR_CHANGES);
-    }
-
     @Override
     public AssetMap assets() {
         return assets;
@@ -106,7 +91,7 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig, Dispo
     @Override
     public GenericWorldMapColorScheme colorScheme(WorldMap worldMap, WorldSettings worldSettings) {
         requireNonNull(worldMap);
-        return GlobalAssets.enhanceContrast(worldSettings, WORLD_MAP_COLOR_SCHEME);
+        return GlobalAssets.enhanceContrast(worldSettings, ArcadePacMan_UIConfig.WORLD_MAP_COLOR_SCHEME);
     }
 
     @Override

@@ -81,20 +81,30 @@ public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
 
     // Non-static members
 
-    private final ResourceBundle textBundle = ResourceBundle.getBundle("de.amr.pacmanfx.tengenmspacman.localized_texts");
-    private final TengenMsPacMan_Factory3D factory3D = new TengenMsPacMan_Factory3D();
-    private final TengenMsPacMan_GameSceneConfig gameSceneConfig = new TengenMsPacMan_GameSceneConfig();
+    private final AssetMap assets;
+    private final ResourceBundle textBundle;
+    private final TengenMsPacMan_Factory3D factory3D;
+    private final TengenMsPacMan_GameSceneConfig gameSceneConfig;
 
     private TengenMsPacMan_RenderConfig renderConfig;
     private GameSoundEffects soundEffects;
-    private AssetMap assets;
+
+    public TengenMsPacMan_UIConfig() {
+        assets = new AssetMap();
+        textBundle = ResourceBundle.getBundle("de.amr.pacmanfx.tengenmspacman.localized_texts");
+        factory3D = new TengenMsPacMan_Factory3D();
+        gameSceneConfig = new TengenMsPacMan_GameSceneConfig();
+    }
 
     @Override
     public void load(GameApp app) {
-        loadAssets();
-        renderConfig = new TengenMsPacMan_RenderConfig(assets);
+        assets.addAsset("app_icon",         RM.loadImage("graphics/icons/mspacman.png"));
+        assets.addAsset("startpage.image1", RM.loadImage("graphics/flyer-page-1.png"));
+        assets.addAsset("startpage.image2", RM.loadImage("graphics/flyer-page-2.png"));
         assets.freeze();
+
         loadSounds(app.ui().soundManager());
+        renderConfig = new TengenMsPacMan_RenderConfig(assets);
     }
 
     @Override
@@ -121,7 +131,6 @@ public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
         if (assets != null) {
             Logger.info("Dispose assets");
             assets.dispose();
-            assets = null;
         }
     }
 
@@ -158,13 +167,6 @@ public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
     @Override
     public WorldSettings worldSettings() {
         return WORLD_SETTINGS;
-    }
-
-    private void loadAssets()  {
-        assets = new AssetMap();
-        assets.addAsset("app_icon",                RM.loadImage("graphics/icons/mspacman.png"));
-        assets.addAsset("startpage.image1",        RM.loadImage("graphics/flyer-page-1.png"));
-        assets.addAsset("startpage.image2",        RM.loadImage("graphics/flyer-page-2.png"));
     }
 
     private void loadSounds(SoundManager soundManager) {

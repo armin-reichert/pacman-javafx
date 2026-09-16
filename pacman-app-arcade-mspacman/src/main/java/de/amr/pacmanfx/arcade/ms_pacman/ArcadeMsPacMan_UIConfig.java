@@ -66,21 +66,29 @@ public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
         return gameFlow;
     }
 
-    private final Factory3D factory3D = new ArcadeMsPacMan_Factory3D();
-    private final GameVariantGameSceneConfig gameSceneConfig  = new ArcadeMsPacMan_GameSceneConfig();
-    private final TranslationManager translations = () -> ResourceBundle.getBundle("de.amr.pacmanfx.arcade.ms_pacman.localized_texts");
-
-    private AssetMap assets;
+    private final AssetMap assets;
+    private final Factory3D factory3D;
+    private final GameVariantGameSceneConfig gameSceneConfig;
+    private final TranslationManager translations;
 
     private ArcadeMsPacMan_RenderConfig renderConfig;
     private GameSoundEffects soundEffects;
 
+    public ArcadeMsPacMan_UIConfig() {
+        assets = new AssetMap();
+        factory3D = new ArcadeMsPacMan_Factory3D();
+        gameSceneConfig = new ArcadeMsPacMan_GameSceneConfig();
+        translations = () -> ResourceBundle.getBundle("de.amr.pacmanfx.arcade.ms_pacman.localized_texts");
+    }
+
     @Override
     public void load(GameApp app) {
-        loadAssets();
-        renderConfig = new ArcadeMsPacMan_RenderConfig(assets);
+        assets.addAsset("app_icon",    RM.loadImage("graphics/icons/mspacman.png"));
+        assets.addAsset("logo.midway", RM.loadImage("graphics/midway_logo.png"));
+        assets.addAsset("color.game_over_message", ARCADE_RED);
         assets.freeze();
         loadSounds(app.ui().soundManager());
+        renderConfig = new ArcadeMsPacMan_RenderConfig(assets);
     }
 
     @Override
@@ -104,7 +112,6 @@ public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
         if (assets != null) {
             Logger.info("Dispose assets");
             assets.dispose();
-            assets = null;
         }
     }
 
@@ -182,12 +189,5 @@ public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
             soundEffects.dispose();
             soundEffects = null;
         }
-    }
-
-    private void loadAssets() {
-        assets = new AssetMap();
-        assets.addAsset("app_icon",    RM.loadImage("graphics/icons/mspacman.png"));
-        assets.addAsset("logo.midway", RM.loadImage("graphics/midway_logo.png"));
-        assets.addAsset("color.game_over_message", ARCADE_RED);
     }
 }

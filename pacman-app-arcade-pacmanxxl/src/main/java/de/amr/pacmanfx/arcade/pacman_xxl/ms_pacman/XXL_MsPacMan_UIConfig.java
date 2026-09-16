@@ -58,25 +58,35 @@ public final class XXL_MsPacMan_UIConfig implements GameVariantUIConfig {
         mediaPlayer(PacManGameSoundID.PAC_MAN_POWER,         ARCADE_RM.url("sound/ScaredGhost.mp3"))
     );
 
-    private final TranslationManager translations = () -> ResourceBundle.getBundle(XXL_PKG + "localized_texts_ms_pacman");
-    private final ArcadeMsPacMan_Factory3D factory3D = new ArcadeMsPacMan_Factory3D();
-    private final ArcadeMsPacMan_GameSceneConfig gameSceneConfig = new ArcadeMsPacMan_GameSceneConfig();
+    private final AssetMap assets;
+    private final TranslationManager translations;
+    private final ArcadeMsPacMan_Factory3D factory3D;
+    private final ArcadeMsPacMan_GameSceneConfig gameSceneConfig;
 
     private XXL_MsPacMan_RenderConfig renderConfig;
-    private AssetMap assets;
     private GameSoundEffects soundEffects;
 
-    @Override
-    public void load(GameApp app) {
-        loadAssets();
-        renderConfig = new XXL_MsPacMan_RenderConfig(assets);
-        assets.freeze();
-        loadSounds(app.ui().soundManager());
+    public XXL_MsPacMan_UIConfig() {
+        assets = new AssetMap();
+        translations = () -> ResourceBundle.getBundle(XXL_PKG + "localized_texts_ms_pacman");
+        factory3D = new ArcadeMsPacMan_Factory3D();
+        gameSceneConfig = new ArcadeMsPacMan_GameSceneConfig();
     }
 
     @Override
     public Map<Named, Object> createExtensions(GameApp app) {
         return Map.of(Arcade_GameExtensions.ACTIONS, new Arcade_Actions());
+    }
+
+    @Override
+    public void load(GameApp app) {
+        assets.addAsset("app_icon", XXL_RM.loadImage(XXL_PATH + "graphics/icons/mspacman.png"));
+        assets.addAsset("logo.midway", ARCADE_RM.loadImage("graphics/midway_logo.png"));
+        assets.addAsset("color.game_over_message", ARCADE_RED);
+        assets.freeze();
+
+        loadSounds(app.ui().soundManager());
+        renderConfig = new XXL_MsPacMan_RenderConfig(assets);
     }
 
     @Override
@@ -95,7 +105,6 @@ public final class XXL_MsPacMan_UIConfig implements GameVariantUIConfig {
         if (assets != null) {
             Logger.info("Dispose assets");
             assets.dispose();
-            assets = null;
         }
     }
 
@@ -135,13 +144,6 @@ public final class XXL_MsPacMan_UIConfig implements GameVariantUIConfig {
     }
 
     // private
-
-    private void loadAssets() {
-        assets = new AssetMap();
-        assets.addAsset("app_icon", XXL_RM.loadImage(XXL_PATH + "graphics/icons/mspacman.png"));
-        assets.addAsset("logo.midway", ARCADE_RM.loadImage("graphics/midway_logo.png"));
-        assets.addAsset("color.game_over_message", ARCADE_RED);
-    }
 
     private void loadSounds(SoundManager soundManager) {
         for (SoundEntry entry : SOUND_ENTRIES) {
