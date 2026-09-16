@@ -75,21 +75,17 @@ public class Arcade_BootScene_Renderer extends BaseRenderer implements SpriteRen
     }
 
     private void renderGridPattern(GridPattern grid) {
-        final double widthPixels = scaled(grid.width() * TS);
-        final double heightPixels = scaled(grid.height() * TS);
-        final int numRows = (int) (heightPixels / grid.cellSize());
-        final int numCols = (int) (widthPixels / grid.cellSize());
-        final double fineLine = scaled(2), normalLine = scaled(4);
+        ctx.save();
+        ctx.scale(scaling(), scaling());
         ctx.setStroke(ARCADE_WHITE);
-        for (int row = 0; row <= numRows; ++row) {
-            final double y = scaled(row * grid.cellSize());
-            ctx.setLineWidth(row == 0 || row == numRows ? normalLine : fineLine);
-            ctx.strokeLine(0, y, widthPixels, y);
+        for (int row = 0; row < grid.height(); ++row) {
+            final int y = row * grid.cellSize();
+            ctx.strokeLine(0, y, grid.width() * TS, y);
         }
-        for (int col = 0; col <= numCols; ++col) {
-            final double x = scaled(col * grid.cellSize());
-            ctx.setLineWidth(col == 0 || col == numCols ? normalLine : fineLine);
-            ctx.strokeLine(x, 0, x, heightPixels);
+        for (int col = 0; col < grid.width(); ++col) {
+            final int x = col * grid.cellSize();
+            ctx.strokeLine(x, 0, x, grid.height() * TS);
         }
+        ctx.restore();
     }
 }
