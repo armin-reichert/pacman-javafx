@@ -14,7 +14,7 @@ import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
+import de.amr.pacmanfx.ui.gamescene.common.GameVariantGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.settings.ui.DashboardSectionSettings;
 import de.amr.pacmanfx.ui.views.GameView;
@@ -378,7 +378,7 @@ public class GamePlayView implements GameView {
     private void embedGameScene2D(
         DecorationPane decorationPane,
         GameMainScene mainScene,
-        GameSceneConfig gameSceneConfig,
+        GameVariantGameSceneConfig gameSceneConfig,
         GameScene gameScene,
         Game2DSettingsVM settingsViewModel)
     {

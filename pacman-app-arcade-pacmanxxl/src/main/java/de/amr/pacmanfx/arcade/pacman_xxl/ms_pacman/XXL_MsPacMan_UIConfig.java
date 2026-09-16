@@ -13,7 +13,7 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.action.core.GameApp;
-import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
+import de.amr.pacmanfx.ui.gamescene.common.GameVariantGameSceneConfig;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
@@ -111,7 +111,7 @@ public final class XXL_MsPacMan_UIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public GameSceneConfig gameSceneConfig() {
+    public GameVariantGameSceneConfig gameSceneConfig() {
         return gameSceneConfig;
     }
 

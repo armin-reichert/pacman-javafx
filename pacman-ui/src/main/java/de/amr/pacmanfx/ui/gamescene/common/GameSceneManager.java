@@ -26,11 +26,11 @@ public class GameSceneManager {
 
     private final ObjectProperty<GameScene> currentGameScene = new SimpleObjectProperty<>();
 
-    private GameSceneConfig gameSceneConfig;
+    private GameVariantGameSceneConfig gameSceneConfig;
 
     public GameSceneManager() {}
 
-    public void setGameSceneConfig(GameSceneConfig gameSceneConfig) {
+    public void setGameSceneConfig(GameVariantGameSceneConfig gameSceneConfig) {
         this.gameSceneConfig = requireNonNull(gameSceneConfig);
     }
 
@@ -76,7 +76,7 @@ public class GameSceneManager {
         currentGameSceneProperty().set(nextGameScene);
     }
 
-    public boolean hasGameSceneID(GameSceneConfig gameSceneConfig, GameScene gameScene, Named sceneID) {
+    public boolean hasGameSceneID(GameVariantGameSceneConfig gameSceneConfig, GameScene gameScene, Named sceneID) {
         requireNonNull(gameScene);
         requireNonNull(sceneID);
         requireNonNull(sceneID);

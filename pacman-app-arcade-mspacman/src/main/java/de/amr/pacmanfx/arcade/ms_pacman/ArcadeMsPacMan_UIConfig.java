@@ -13,7 +13,7 @@ import de.amr.pacmanfx.core.gamestate.GameFlow;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.action.core.GameApp;
-import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
+import de.amr.pacmanfx.ui.gamescene.common.GameVariantGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -67,7 +67,7 @@ public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
     }
 
     private final Factory3D factory3D = new ArcadeMsPacMan_Factory3D();
-    private final GameSceneConfig gameSceneConfig  = new ArcadeMsPacMan_GameSceneConfig();
+    private final GameVariantGameSceneConfig gameSceneConfig  = new ArcadeMsPacMan_GameSceneConfig();
     private final TranslationManager translations = () -> ResourceBundle.getBundle("de.amr.pacmanfx.arcade.ms_pacman.localized_texts");
 
     private AssetMap assets;
@@ -120,7 +120,7 @@ public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public GameSceneConfig gameSceneConfig() {
+    public GameVariantGameSceneConfig gameSceneConfig() {
         return gameSceneConfig;
     }
 

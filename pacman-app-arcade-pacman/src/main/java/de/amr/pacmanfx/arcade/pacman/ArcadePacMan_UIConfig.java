@@ -9,7 +9,7 @@ import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_RenderConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.action.core.GameApp;
-import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
+import de.amr.pacmanfx.ui.gamescene.common.GameVariantGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -51,13 +51,19 @@ public class ArcadePacMan_UIConfig implements GameVariantUIConfig {
         mediaPlayer (PacManGameSoundID.PAC_MAN_POWER,    RM.url("sound/ghost-turn-to-blue.mp3"))
     );
 
-    private final TranslationManager translations = () -> ResourceBundle.getBundle("de.amr.pacmanfx.arcade.pacman.localized_texts");
-    private final Factory3D factory3D = new ArcadePacMan_Factory3D();
-    private final GameSceneConfig gameSceneConfig = new ArcadePacMan_GameSceneConfig();
+    private final TranslationManager translations;
+    private final Factory3D factory3D;
+    private final GameVariantGameSceneConfig gameSceneConfig;
 
     private ArcadePacMan_RenderConfig renderConfig;
     private AssetMap assets;
     private GameSoundEffects soundEffects;
+
+    public ArcadePacMan_UIConfig() {
+        translations = () -> ResourceBundle.getBundle("de.amr.pacmanfx.arcade.pacman.localized_texts");
+        factory3D = new ArcadePacMan_Factory3D();
+        gameSceneConfig = new ArcadePacMan_GameSceneConfig();
+    }
 
     @Override
     public void load(GameApp app) {
@@ -104,7 +110,7 @@ public class ArcadePacMan_UIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public GameSceneConfig gameSceneConfig() {
+    public GameVariantGameSceneConfig gameSceneConfig() {
         return gameSceneConfig;
     }
 

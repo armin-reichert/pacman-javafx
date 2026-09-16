@@ -11,7 +11,7 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.action.core.GameApp;
-import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
+import de.amr.pacmanfx.ui.gamescene.common.GameVariantGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.DefaultFactory3D;
 import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
@@ -109,7 +109,7 @@ public final class XXL_PacMan_UIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public GameSceneConfig gameSceneConfig() {
+    public GameVariantGameSceneConfig gameSceneConfig() {
         return gameSceneConfig;
     }
 

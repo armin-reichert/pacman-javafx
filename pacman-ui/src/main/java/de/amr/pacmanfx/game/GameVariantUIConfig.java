@@ -7,7 +7,7 @@ package de.amr.pacmanfx.game;
 import de.amr.basics.Disposable;
 import de.amr.basics.Named;
 import de.amr.pacmanfx.ui.action.core.GameApp;
-import de.amr.pacmanfx.ui.gamescene.common.GameSceneConfig;
+import de.amr.pacmanfx.ui.gamescene.common.GameVariantGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
@@ -28,9 +28,9 @@ public interface GameVariantUIConfig extends Disposable {
     }
 
     /**
-     * @return the game scene configuration mapping game states to scenes.
+     * @return the game scene configuration (mapping game states to game scenes).
      */
-    GameSceneConfig gameSceneConfig();
+    GameVariantGameSceneConfig gameSceneConfig();
 
     /**
      * @return the renderer configuration (spritesheets, sprite animations etc.)
