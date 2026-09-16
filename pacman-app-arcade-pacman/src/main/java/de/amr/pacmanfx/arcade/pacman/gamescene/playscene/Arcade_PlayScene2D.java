@@ -71,12 +71,14 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
 
     @Override
     protected void onActivate() {
-        levelCompletedAnimation = new LevelCompletedAnimation(() -> game().state().triggerTimeout());
+        levelCompletedAnimation = new LevelCompletedAnimation();
+        levelCompletedAnimation.setOnFinished(() -> game().state().triggerTimeout());
     }
 
     @Override
     public void onTick(GameContext game) {
-        game.session().optLevel().ifPresent(level -> optSoundEffects().ifPresent(sfx -> sfx.playAmbientGameLevelSound(game(), level)));
+        game.session().optLevel().ifPresent(
+            level -> optSoundEffects().ifPresent(sfx -> sfx.playAmbientGameLevelSound(game(), level)));
     }
 
     @Override

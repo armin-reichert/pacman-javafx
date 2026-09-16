@@ -7,11 +7,14 @@ import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.level.GameLevel;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
+import org.tinylog.Logger;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import static de.amr.basics.util.Ufx.pauseSec;
 import static de.amr.basics.util.Ufx.pauseSecThen;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Animation played when a level is complete.
@@ -37,19 +40,23 @@ public class LevelCompletedAnimation {
 
     private final int singleFlashMillis;
 
-    private final Runnable onFinished;
+    private Runnable onFinished;
 
     private FlashingAnimation flashingAnimation;
 
     private Animation animationSequence;
 
-    public LevelCompletedAnimation(Runnable onFinished) {
-        this(DEFAULT_SINGLE_FLASH_MILLIS, onFinished);
+    public LevelCompletedAnimation() {
+        this(DEFAULT_SINGLE_FLASH_MILLIS);
     }
 
-    public LevelCompletedAnimation(int singleFlashMillis, Runnable onFinished) {
+    public LevelCompletedAnimation(int singleFlashMillis) {
         this.singleFlashMillis = singleFlashMillis;
-        this.onFinished = onFinished;
+        onFinished = () -> Logger.info("Level Completed Animation finsihed");
+    }
+
+    public void setOnFinished(Runnable onFinished) {
+        this.onFinished = requireNonNull(onFinished);
     }
 
     /**
