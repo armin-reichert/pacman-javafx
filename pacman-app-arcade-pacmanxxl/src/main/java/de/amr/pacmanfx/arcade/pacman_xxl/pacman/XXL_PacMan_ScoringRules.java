@@ -2,12 +2,12 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.arcade.pacman_xxl.common;
+package de.amr.pacmanfx.arcade.pacman_xxl.pacman;
 
-import de.amr.pacmanfx.arcade.ms_pacman.rules.ArcadeMsPacMan_ScoringRules;
+import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ScoringRules;
 import de.amr.pacmanfx.core.level.GameLevel;
 
-public class XXL_ScoringRules extends ArcadeMsPacMan_ScoringRules {
+public class XXL_PacMan_ScoringRules extends ArcadePacMan_ScoringRules {
 
     @Override
     public boolean isBonusAwarded(GameLevel level) {

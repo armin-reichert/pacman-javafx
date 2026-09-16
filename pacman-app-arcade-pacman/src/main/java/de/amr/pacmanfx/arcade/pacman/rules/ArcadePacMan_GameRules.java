@@ -74,7 +74,7 @@ public class ArcadePacMan_GameRules implements GameRules {
 
     protected ActorSpeedRules actorSpeedRules;
 
-    protected ArcadePacMan_ScoringRules scoringRules;
+    protected ScoringRules scoringRules;
 
     public ArcadePacMan_GameRules() {
         actorCollisionRules = new ActorCollisionRules();
@@ -100,7 +100,7 @@ public class ArcadePacMan_GameRules implements GameRules {
     }
 
     @Override
-    public ArcadePacMan_ScoringRules scoringRules() {
+    public ScoringRules scoringRules() {
         return scoringRules;
     }
 
