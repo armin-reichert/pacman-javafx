@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
 package de.amr.pacmanfx.arcade.pacman.gamescene.bootscene;
 
 import de.amr.basics.math.RandomNumbers;
@@ -6,8 +10,8 @@ import de.amr.pacmanfx.core.rendering.Renderable;
 
 public record HexDigitsBlock(byte[][] digits, int width, int height) implements Renderable {
 
-    public HexDigitsBlock(int width, int height) {
-        this(randomBytesBlock(width, height), width, height);
+    public static HexDigitsBlock randomHexDigits(int width, int height) {
+        return new HexDigitsBlock(randomBytesBlock(width, height), width, height);
     }
 
     @Override

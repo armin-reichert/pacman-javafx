@@ -112,7 +112,7 @@ public class Arcade_BootScene extends GameScene {
                 if (mod4 == 0) {
                     renderable = BLANK_CANVAS;
                 } else if (mod4 == 1) {
-                    renderable = new HexDigitsBlock(WIDTH_IN_TILES, HEIGHT_IN_TILES);
+                    renderable = HexDigitsBlock.randomHexDigits(WIDTH_IN_TILES, HEIGHT_IN_TILES);
                 }
             }
 
