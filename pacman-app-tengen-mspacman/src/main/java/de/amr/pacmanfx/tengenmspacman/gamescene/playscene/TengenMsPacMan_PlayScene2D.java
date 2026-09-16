@@ -346,7 +346,8 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     }
 
     void playLevelCompleteAnimation(GameLevel level, int numFlashes) {
-        levelCompletedAnimation = new LevelCompletedAnimation(() -> game().state().triggerTimeout());
+        levelCompletedAnimation = new LevelCompletedAnimation();
+        levelCompletedAnimation.setOnFinished(() -> game().state().triggerTimeout());
         levelCompletedAnimation.play(level, numFlashes);
     }
 
