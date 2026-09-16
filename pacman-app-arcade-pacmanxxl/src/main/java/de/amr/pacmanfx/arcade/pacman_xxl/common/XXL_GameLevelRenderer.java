@@ -36,8 +36,7 @@ public class XXL_GameLevelRenderer extends GenericLevelRenderer {
             Color.valueOf(worldMapColorScheme.door())
         );
 
-        info().putAll(info);
-        info().put(GenericLevelRenderer.RenderInfoKey.TERRAIN_MAP_COLORING, mapColoring);
+        info.put(GenericLevelRenderer.RenderInfoKey.TERRAIN_MAP_COLORING, mapColoring);
 
         super.render(r, tick);
     }
