@@ -66,9 +66,9 @@ public class Arcade_BootScene_Renderer extends BaseRenderer implements SpriteRen
     }
 
     private void renderSpritesBlock(SpritesBlock block) {
-        for (int row = 0; row < block.height(); ++row) {
-            for (int col = 0; col < block.width(); ++col) {
-                int i = row * block.width() + col;
+        for (int row = 0; row < block.numSpritesY(); ++row) {
+            for (int col = 0; col < block.numSpritesX(); ++col) {
+                int i = row * block.numSpritesX() + col;
                 drawSprite(block.sprites()[i], block.spriteSize() * col, block.spriteSize() * row, true);
             }
         }

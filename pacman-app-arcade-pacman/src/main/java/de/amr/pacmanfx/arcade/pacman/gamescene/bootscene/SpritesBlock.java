@@ -3,46 +3,41 @@ package de.amr.pacmanfx.arcade.pacman.gamescene.bootscene;
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.rendering.Renderable;
-import javafx.geometry.Rectangle2D;
 
 import static de.amr.basics.math.MathAdds.lerp;
 import static de.amr.basics.math.RandomNumbers.randomFloat;
 import static de.amr.basics.math.RandomNumbers.randomInt;
-import static de.amr.basics.math.RectShort.sprite;
 import static java.lang.Math.clamp;
 
-public record SpritesBlock(RectShort[] sprites, int spriteSize, int width, int height) implements Renderable {
+public record SpritesBlock(RectShort[] sprites, int spriteSize, int numSpritesX, int numSpritesY) implements Renderable {
 
-    private static final Rectangle2D BOOT_SCENE_SPRITES = new Rectangle2D(400, 0, 256, 160);
-    public static final int GRID_SIZE = 16;
+    private static final RectShort BOOT_SCENE_SPRITES_REGION = RectShort.sprite(400, 0, 256, 160);
 
-    public SpritesBlock(int width, int height) {
-        this(randomSprites(width, height), 16, width, height);
+    public static SpritesBlock randomSpritesBlock(int spriteSize, int numSpritesX, int numSpritesY) {
+        final RectShort[] sprites = new RectShort[numSpritesX * numSpritesY];
+        for (int row = 0; row < numSpritesY; ++row) {
+            final RectShort s1 = randomSprite(BOOT_SCENE_SPRITES_REGION, spriteSize);
+            final RectShort s2 = randomSprite(BOOT_SCENE_SPRITES_REGION, spriteSize);
+            final int splitCol = numSpritesX / 8 + randomInt(0, numSpritesY / 4);
+            for (int col = 0; col < numSpritesX; ++col) {
+                sprites[row * numSpritesX + col] = col < splitCol ? s1 : s2;
+            }
+        }
+        return new SpritesBlock(sprites, spriteSize, numSpritesX, numSpritesY);
+    }
+
+    public static RectShort randomSprite(RectShort region, int spriteSize) {
+        final float xMin = region.x(), xMax = xMin + region.width();
+        final float yMin = region.y(), yMax = yMin + region.height();
+        float x = lerp(xMin, xMax, randomFloat(0, 1));
+        float y = lerp(yMin, yMax, randomFloat(0, 1));
+        x = clamp(x, xMin, xMax - spriteSize);
+        y = clamp(y, yMin, yMax - spriteSize);
+        return RectShort.sprite((int) clamp(x, xMin, xMax - spriteSize), (int) clamp(y, yMin, yMax - spriteSize), spriteSize, spriteSize);
     }
 
     @Override
     public RenderingLayer layer() {
         return RenderingLayer.SCENE;
-    }
-
-    private static RectShort[] randomSprites(int width, int height) {
-        final RectShort[] sprites = new RectShort[width * height];
-        for (int row = 0; row < width; ++row) {
-            final RectShort f1 = randomSpriteFragment();
-            final RectShort f2 = randomSpriteFragment();
-            final int splitCol = height / 8 + randomInt(0, height / 4);
-            for (int col = 0; col < height; ++col) {
-                sprites[row * height + col] = col < splitCol ? f1 : f2;
-            }
-        }
-        return sprites;
-    }
-
-    private static RectShort randomSpriteFragment() {
-        double xMin = lerp(BOOT_SCENE_SPRITES.getMinX(), BOOT_SCENE_SPRITES.getMaxX(), randomFloat(0, 1));
-        xMin = clamp(xMin, BOOT_SCENE_SPRITES.getMinX(), BOOT_SCENE_SPRITES.getMaxX() - GRID_SIZE);
-        double yMin = lerp(BOOT_SCENE_SPRITES.getMinY(), BOOT_SCENE_SPRITES.getMaxY(), randomFloat(0, 1));
-        yMin = clamp(yMin, BOOT_SCENE_SPRITES.getMinY(), BOOT_SCENE_SPRITES.getMaxY() - GRID_SIZE);
-        return sprite((short) xMin, (short) yMin, GRID_SIZE, GRID_SIZE);
     }
 }
