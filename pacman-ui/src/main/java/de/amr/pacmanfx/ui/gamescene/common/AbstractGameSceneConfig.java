@@ -30,18 +30,18 @@ public abstract class AbstractGameSceneConfig implements GameVariantGameSceneCon
         };
     }
 
-    protected final Map<Named, AbstractGameScene> scenesByID = new HashMap<>();
+    protected final Map<Named, GameScene> scenesByID = new HashMap<>();
 
     protected AbstractGameSceneConfig() {}
 
-    protected abstract Function<GameApp, AbstractGameScene> getGameSceneFactory(Named sceneID);
+    protected abstract Function<GameApp, GameScene> getGameSceneFactory(Named sceneID);
 
     protected abstract Named computeGameSceneID(GameContext game, boolean select3D);
 
     @Override
     public void dispose() {
         Logger.info("Dispose {} game scenes", scenesByID.size());
-        scenesByID.values().forEach(AbstractGameScene::dispose);
+        scenesByID.values().forEach(GameScene::dispose);
         scenesByID.clear();
     }
 
@@ -56,21 +56,21 @@ public abstract class AbstractGameSceneConfig implements GameVariantGameSceneCon
     }
 
     @Override
-    public boolean sceneDecorationRequested(AbstractGameScene gameScene) {
+    public boolean sceneDecorationRequested(GameScene gameScene) {
         requireNonNull(gameScene);
         return true;
     }
 
     @Override
-    public final Optional<AbstractGameScene> selectGameScene(GameApp app, boolean select3D) {
+    public final Optional<GameScene> selectGameScene(GameApp app, boolean select3D) {
         requireNonNull(app);
         final Named sceneID = computeGameSceneID(app.game(), select3D);
-        final AbstractGameScene gameScene = scenesByID.computeIfAbsent(sceneID, id -> getGameSceneFactory(id).apply(app));
+        final GameScene gameScene = scenesByID.computeIfAbsent(sceneID, id -> getGameSceneFactory(id).apply(app));
         return Optional.of(gameScene);
     }
 
     @Override
-    public final boolean gameSceneHasID(AbstractGameScene gameScene, Named sceneID) {
+    public final boolean gameSceneHasID(GameScene gameScene, Named sceneID) {
         requireNonNull(gameScene);
         requireNonNull(sceneID);
         return scenesByID.get(sceneID) == gameScene;

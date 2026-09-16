@@ -15,7 +15,7 @@ import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.GlobalFonts;
-import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
@@ -40,7 +40,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer implement
     private static final Color NES_YELLOW = NES_Palette.color(0x28);
     private static final Color NES_WHITE = NES_Palette.color(0x20);
 
-    public TengenMsPacMan_OptionsScene_Renderer(AbstractGameScene scene, Canvas canvas) {
+    public TengenMsPacMan_OptionsScene_Renderer(GameScene scene, Canvas canvas) {
         super(canvas);
         requireNonNull(scene);
     }

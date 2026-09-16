@@ -30,12 +30,14 @@ import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.rules.HuntingTimer;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import org.tinylog.Logger;
 
 import java.util.List;
 
@@ -47,8 +49,13 @@ public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
 
     private static final List<Direction> CLOCK_WISE = List.of(Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT);
 
-    public static BaseGameSceneDebugInfoRenderer createDefaultSceneDebugRenderer(AbstractGameScene gameScene, Canvas canvas) {
-        final GameSceneCanvasRenderingComp r2D = gameScene.reqComp(GameSceneCanvasRenderingComp.class);
+    public static BaseGameSceneDebugInfoRenderer createDefaultSceneDebugRenderer(GameScene gameScene, Canvas canvas) {
+        if (!(gameScene instanceof AbstractGameScene abstractGameScene)) {
+            Logger.error("Current game scene is not an AbstractGameScene");
+            return null;
+        }
+
+        final GameSceneCanvasRenderingComp r2D = abstractGameScene.reqComp(GameSceneCanvasRenderingComp.class);
         final ActorSpriteAnimController animController = gameScene.game().playConfig().systems().actorSpriteAnimController();
         return r2D.configureRenderer(new BaseGameSceneDebugInfoRenderer(animController, canvas));
     }

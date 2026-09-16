@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.window;
 
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.core.GameApp;
-import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.views.GameViewID;
 import de.amr.pacmanfx.ui.vm.GameViewModel;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
@@ -125,7 +125,7 @@ public class GameWindow {
     }
 
     private String titleForCurrentGameScene(GameApp app) {
-        final AbstractGameScene gameScene = app.gameSceneManager().optCurrentGameScene().orElse(null);
+        final GameScene gameScene = app.gameSceneManager().optCurrentGameScene().orElse(null);
         final GameViewModel viewModel = app.ui().viewModel();
 
         final boolean debug  = viewModel.debugModeOnProperty().get();

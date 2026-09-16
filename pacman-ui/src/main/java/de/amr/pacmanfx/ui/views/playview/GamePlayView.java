@@ -14,6 +14,7 @@ import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameVariantGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.settings.ui.DashboardSectionSettings;
@@ -197,7 +198,7 @@ public class GamePlayView implements GameView {
     public void onInput(GameApp app) {
         // First look for a matching action of the play view itself; if none found, delegate to the current game scene.
         if (actionBindings.executeMatchingAction(app).isEmpty()) {
-            app.gameSceneManager().optCurrentGameScene().ifPresent(AbstractGameScene::onInput);
+            app.gameSceneManager().optCurrentGameScene().ifPresent(GameScene::onInput);
         }
     }
 
@@ -221,7 +222,7 @@ public class GamePlayView implements GameView {
 
     @Override
     public void onQuit() {
-        app.gameSceneManager().optCurrentGameScene().ifPresent(AbstractGameScene::onQuit);
+        app.gameSceneManager().optCurrentGameScene().ifPresent(GameScene::onQuit);
         app.ui().viewManager().selectStartPagesView();
     }
 
@@ -239,22 +240,25 @@ public class GamePlayView implements GameView {
         renderManager.renderQueue().addAll(layers.miniViewLayer().renderables());
 
         // Add game scene renderables
-        final AbstractGameScene currentGameScene = app.gameSceneManager().optCurrentGameScene().orElse(null);
-        if (currentGameScene != null) {
-            renderManager.updateRenderers(
-                app.variantManager().currentVariantRuntime().playConfig(),
-                app.variantManager().currentVariantRuntime().uiConfig().renderConfig(),
-                currentGameScene,
-                layers.miniViewLayer()
-            );
-            renderManager.renderQueue().add(currentGameScene); //TODO rethink this
-            renderManager.renderQueue().addAll(currentGameScene.renderables());
+        final GameScene currentGameScene = app.gameSceneManager().optCurrentGameScene().orElse(null);
+        if (!(currentGameScene instanceof AbstractGameScene abstractGameScene)) {
+//            Logger.error("Current game scene is not an AbstractGameScene");
+            return;
         }
+
+        renderManager.updateRenderers(
+            app.variantManager().currentVariantRuntime().playConfig(),
+            app.variantManager().currentVariantRuntime().uiConfig().renderConfig(),
+            currentGameScene,
+            layers.miniViewLayer()
+        );
+        renderManager.renderQueue().add(abstractGameScene); //TODO rethink this
+        renderManager.renderQueue().addAll(currentGameScene.renderables());
 
         // Clear canvases
         layers.miniViewLayer().clearCanvas();
-        if (currentGameScene != null && currentGameScene.wantsClearCanvas()) {
-            renderManager.clearSceneCanvas(currentGameScene);
+        if (abstractGameScene.wantsClearCanvas()) {
+            renderManager.clearSceneCanvas(abstractGameScene);
         }
 
         renderManager.renderFrame(tick, debugMode);
@@ -272,7 +276,7 @@ public class GamePlayView implements GameView {
         return rootPane;
     }
 
-    public void replaceGameScene(AbstractGameScene currentGameScene, AbstractGameScene nextGameScene) {
+    public void replaceGameScene(GameScene currentGameScene, GameScene nextGameScene) {
         requireNonNull(nextGameScene);
         if (currentGameScene != null) {
             disembedGameScene(currentGameScene);
@@ -281,7 +285,7 @@ public class GamePlayView implements GameView {
         embedGameScene(nextGameScene);
     }
 
-    private void embedGameScene(AbstractGameScene gameScene) {
+    private void embedGameScene(GameScene gameScene) {
         requireNonNull(gameScene);
 
         final GameMainScene mainScene = app.ui().window().mainScene();
@@ -299,7 +303,7 @@ public class GamePlayView implements GameView {
         Logger.info("Game scene {} EMBEDDED into play view!", gameScene.getClass().getSimpleName());
     }
 
-    public void disembedGameScene(AbstractGameScene gameScene) {
+    public void disembedGameScene(GameScene gameScene) {
         requireNonNull(gameScene);
 
         gameScene.deactivate();
@@ -310,8 +314,13 @@ public class GamePlayView implements GameView {
             subSceneFX.heightProperty().unbind();
         });
 
-        if (gameScene.hasComp(GameSceneCanvasRenderingComp.class)) {
-            final GameSceneCanvasRenderingComp r2D = gameScene.reqComp(GameSceneCanvasRenderingComp.class);
+        if (!(gameScene instanceof AbstractGameScene abstractGameScene)) {
+            Logger.error("Current game scene is not an AbstractGameScene");
+            return;
+        }
+
+        if (abstractGameScene.hasComp(GameSceneCanvasRenderingComp.class)) {
+            final GameSceneCanvasRenderingComp r2D = abstractGameScene.reqComp(GameSceneCanvasRenderingComp.class);
 
             decorationPane.canvas().widthProperty().unbind();
             decorationPane.canvas().heightProperty().unbind();
@@ -361,13 +370,18 @@ public class GamePlayView implements GameView {
     }
 
     // 3D scenes or 2D scenes with camera
-    private void embedGameSceneWithSubSceneFX(GameMainScene mainScene, AbstractGameScene gameScene, SubScene subSceneFX) {
+    private void embedGameSceneWithSubSceneFX(GameMainScene mainScene, GameScene gameScene, SubScene subSceneFX) {
         // stretch sub scene to available space
         subSceneFX.widthProperty().bind(mainScene.widthProperty());
         subSceneFX.heightProperty().bind(mainScene.heightProperty());
 
-        if (gameScene.hasComp(GameSceneCanvasRenderingComp.class)) {
-            final GameSceneCanvasRenderingComp r2D = gameScene.reqComp(GameSceneCanvasRenderingComp.class);
+        if (!(gameScene instanceof AbstractGameScene abstractGameScene)) {
+            Logger.error("Current game scene is not an AbstractGameScene");
+            return;
+        }
+
+        if (abstractGameScene.hasComp(GameSceneCanvasRenderingComp.class)) {
+            final GameSceneCanvasRenderingComp r2D = abstractGameScene.reqComp(GameSceneCanvasRenderingComp.class);
             // use the canvas of the decorated pane for 2D scene even though the decoration is not used
             r2D.setCanvas(decorationPane.canvas());
         }
@@ -379,10 +393,15 @@ public class GamePlayView implements GameView {
         DecorationPane decorationPane,
         GameMainScene mainScene,
         GameVariantGameSceneConfig gameSceneConfig,
-        AbstractGameScene gameScene,
+        GameScene gameScene,
         Game2DSettingsVM settingsViewModel)
     {
-        final GameSceneCanvasRenderingComp canvasRendering = gameScene.reqComp(GameSceneCanvasRenderingComp.class);
+        if (!(gameScene instanceof AbstractGameScene abstractGameScene)) {
+            Logger.error("Current game scene is not an AbstractGameScene");
+            return;
+        }
+
+        final GameSceneCanvasRenderingComp canvasRendering = abstractGameScene.reqComp(GameSceneCanvasRenderingComp.class);
 
         canvasRendering.backgroundColorProperty().bind(settingsViewModel.canvasBackgroundColorProperty());
 

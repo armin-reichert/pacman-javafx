@@ -9,6 +9,7 @@ import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.ui.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -25,7 +26,7 @@ public class ArcadeMsPacMan_IntroScene_Renderer extends BaseRenderer {
     private static final String[] GHOST_NAMES = { "BLINKY", "PINKY", "INKY", "SUE" };
     private static final Color[] GHOST_COLORS = { ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE };
 
-    public ArcadeMsPacMan_IntroScene_Renderer(AbstractGameScene gameScene, Canvas canvas) {
+    public ArcadeMsPacMan_IntroScene_Renderer(GameScene gameScene, Canvas canvas) {
         super(canvas);
         setDebugInfoRenderer(createDefaultSceneDebugRenderer(gameScene, canvas));
     }

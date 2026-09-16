@@ -9,6 +9,7 @@ import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.views.miniview.MiniPlaySceneView;
 import de.amr.pacmanfx.ui.views.miniview.MiniPlaySceneViewRenderer;
@@ -29,15 +30,24 @@ public class RenderManager {
 
     public RenderManager() {}
 
-    public void updateRenderers(GameVariantPlayConfig playConfig, GameVariantRenderConfig renderConfig,
-                                AbstractGameScene gameScene, MiniPlaySceneView miniView) {
+    public void updateRenderers(
+        GameVariantPlayConfig playConfig,
+        GameVariantRenderConfig renderConfig,
+        GameScene gameScene,
+        MiniPlaySceneView miniView)
+    {
 
         requireNonNull(playConfig);
         requireNonNull(renderConfig);
         requireNonNull(gameScene);
         requireNonNull(miniView);
 
-        final GameSceneCanvasRenderingComp sceneCanvasRendering = gameScene.optCanvasRendering().orElse(null);
+        if (!(gameScene instanceof AbstractGameScene abstractGameScene)) {
+            Logger.error("GameScene is not an instance of AbstractGameScene");
+            return;
+        }
+
+        final GameSceneCanvasRenderingComp sceneCanvasRendering = abstractGameScene.optCanvasRendering().orElse(null);
         if (sceneCanvasRendering == null) {
             return; // This scene cannot be rendered inside a canvas, most probably the 3D play scene
         }

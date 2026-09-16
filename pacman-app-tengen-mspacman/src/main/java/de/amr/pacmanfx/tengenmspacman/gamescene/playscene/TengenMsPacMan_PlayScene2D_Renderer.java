@@ -13,6 +13,7 @@ import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_LevelRenderInfoKey;
 import de.amr.pacmanfx.tengenmspacman.sprites.MapImageSet;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
 import de.amr.pacmanfx.uilib.rendering.RenderableWrapper;
@@ -28,11 +29,15 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends BaseRenderer {
     private final Renderer levelRenderer;
 
     public TengenMsPacMan_PlayScene2D_Renderer(
-        GameVariantRenderConfig renderConfig, AbstractGameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
+        GameVariantRenderConfig renderConfig, GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
 
         super(canvas);
 
-        final var cr7g = gameScene.reqCanvasRendering();
+        if (!(gameScene instanceof AbstractGameScene abstractGameScene)) {
+            throw new IllegalStateException("Game scene is not an instance of AbstractGameScene");
+        }
+
+        final var cr7g = abstractGameScene.reqCanvasRendering();
 
         entityRenderer = renderConfig.createEntityRenderer(animController, canvas);
         entityRenderer.scalingProperty().bind(cr7g.scalingProperty());

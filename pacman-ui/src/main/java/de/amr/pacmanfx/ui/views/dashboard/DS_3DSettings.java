@@ -7,6 +7,7 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.views.miniview.MiniPlaySceneView;
 import de.amr.pacmanfx.ui.vm.GameViewModel;
@@ -123,7 +124,7 @@ public class DS_3DSettings extends GameDashboardSection {
     }
 
     private static SubScene currentSubSceneFX(GameApp app) {
-        return app.gameSceneManager().optCurrentGameScene().flatMap(AbstractGameScene::optSubSceneFX).orElse(null);
+        return app.gameSceneManager().optCurrentGameScene().flatMap(GameScene::optSubSceneFX).orElse(null);
     }
 
     private static String subSceneSizeInfo(SubScene subScene) {
@@ -144,11 +145,15 @@ public class DS_3DSettings extends GameDashboardSection {
             camera.getTranslateZ());
     }
 
-    private static String sceneSizeInfo(AbstractGameScene gameScene, GameLevel level) {
+    private static String sceneSizeInfo(GameScene gameScene, GameLevel level) {
         if (gameScene == null) return NO_INFO;
 
-        if (gameScene.optCanvasRendering().isPresent()) {
-            final var canvasRendering = gameScene.optCanvasRendering().get();
+        if (!(gameScene instanceof AbstractGameScene abstractGameScene)) {
+            return NO_INFO;
+        }
+
+        if (abstractGameScene.optCanvasRendering().isPresent()) {
+            final var canvasRendering = abstractGameScene.optCanvasRendering().get();
             return "%dx%d (scaled: %.0fx%.0f)".formatted(
                 canvasRendering.unscaledWidth(), canvasRendering.unscaledHeight(),
                 canvasRendering.scaledWidth(),   canvasRendering.scaledHeight());

@@ -1,10 +1,12 @@
 package de.amr.pacmanfx.ui.gamescene.common;
 
+import de.amr.basics.Disposable;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
 import de.amr.pacmanfx.core.gamestate.GameFlow;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.ui.action.core.GameApp;
+import de.amr.pacmanfx.ui.action.core.QuitHandler;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.pacmanfx.ui.vm.GameViewModel;
@@ -15,7 +17,7 @@ import javafx.scene.input.ScrollEvent;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-public interface GameScene {
+public interface GameScene extends Disposable, QuitHandler {
 
     GameApp app();
 

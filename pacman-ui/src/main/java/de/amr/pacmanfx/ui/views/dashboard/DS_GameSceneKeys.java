@@ -7,8 +7,9 @@ package de.amr.pacmanfx.ui.views.dashboard;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.GameApp;
-import de.amr.pacmanfx.ui.gamescene.common.ActionBindingsComp;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.gamescene.common.ActionBindingsComp;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import javafx.scene.input.KeyCombination;
 
 import java.util.Comparator;
@@ -25,10 +26,14 @@ public class DS_GameSceneKeys extends GameDashboardSection {
         app.gameSceneManager().optCurrentGameScene().ifPresent(gameScene -> updateInfo(app, gameScene));
     }
 
-    private void updateInfo(GameApp app, AbstractGameScene gameScene) {
+    private void updateInfo(GameApp app, GameScene gameScene) {
         clearSection();
-        if (gameScene.hasComp(ActionBindingsComp.class)) {
-            final ActionBindingsRegistry registry = gameScene.reqComp(ActionBindingsComp.class).registry();
+
+        if (!(gameScene instanceof AbstractGameScene abstractGameScene)) {
+            return;
+        }
+        if (abstractGameScene.hasComp(ActionBindingsComp.class)) {
+            final ActionBindingsRegistry registry = abstractGameScene.reqComp(ActionBindingsComp.class).registry();
             if (registry.actionBindings().isEmpty()) {
                 addRow(createLabel(NO_INFO, false));
             } else {

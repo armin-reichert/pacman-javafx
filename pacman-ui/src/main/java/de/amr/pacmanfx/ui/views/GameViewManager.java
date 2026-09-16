@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.views;
 
 import de.amr.pacmanfx.ui.action.core.GameApp;
-import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.views.editor.EditorView;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
@@ -76,7 +76,7 @@ public final class GameViewManager {
         startPagesView().rootPane().setSelectedIndex(0);
     }
 
-    public void onGameSuspended(AbstractGameScene currentGameScene) {
+    public void onGameSuspended(GameScene currentGameScene) {
         gamePlayView().disembedGameScene(currentGameScene);
     }
 

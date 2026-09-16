@@ -24,7 +24,7 @@ import static java.util.Objects.requireNonNull;
 
 public class GameSceneManager {
 
-    private final ObjectProperty<AbstractGameScene> currentGameScene = new SimpleObjectProperty<>();
+    private final ObjectProperty<GameScene> currentGameScene = new SimpleObjectProperty<>();
 
     private GameVariantGameSceneConfig gameSceneConfig;
 
@@ -34,15 +34,15 @@ public class GameSceneManager {
         this.gameSceneConfig = requireNonNull(gameSceneConfig);
     }
 
-    public ObjectProperty<AbstractGameScene> currentGameSceneProperty() {
+    public ObjectProperty<GameScene> currentGameSceneProperty() {
         return currentGameScene;
     }
 
-    public Optional<AbstractGameScene> optCurrentGameScene() {
+    public Optional<GameScene> optCurrentGameScene() {
         return Optional.ofNullable(currentGameScene.get());
     }
 
-    public AbstractGameScene currentGameScene() {
+    public GameScene currentGameScene() {
         return currentGameScene.get();
     }
 
@@ -55,7 +55,8 @@ public class GameSceneManager {
         final GameContext game = app.game();
         final GameSession session = game.session();
         final boolean select3D = app.ui().viewModel().common3DSettings().view3DEnabledProperty().get();
-        final AbstractGameScene nextGameScene = uiConfig.gameSceneConfig().selectGameScene(app, select3D).orElse(null);
+
+        final GameScene nextGameScene = uiConfig.gameSceneConfig().selectGameScene(app, select3D).orElse(null);
 
         if (nextGameScene == null) {
             throw new IllegalStateException("Could not determine next game scene");
@@ -71,12 +72,17 @@ public class GameSceneManager {
         app.ui().viewManager().gamePlayView().replaceGameScene(currentGameScene(), nextGameScene);
 
         //TODO rethink this
-        session.optLevel().ifPresent(_ -> handle2D3DSwitch(uiConfig, game, currentGameScene(), nextGameScene));
+        if (!(nextGameScene instanceof AbstractGameScene nextScene)) {
+            Logger.error("Next game scene is not an AbstractGameScene");
+            return;
+        }
+
+        session.optLevel().ifPresent(_ -> handle2D3DSwitch(uiConfig, game, currentGameScene(), nextScene));
 
         currentGameSceneProperty().set(nextGameScene);
     }
 
-    public boolean hasGameSceneID(GameVariantGameSceneConfig gameSceneConfig, AbstractGameScene gameScene, Named sceneID) {
+    public boolean hasGameSceneID(GameVariantGameSceneConfig gameSceneConfig, GameScene gameScene, Named sceneID) {
         requireNonNull(gameScene);
         requireNonNull(sceneID);
         requireNonNull(sceneID);
@@ -92,7 +98,7 @@ public class GameSceneManager {
     public boolean currentGameSceneHasID(Named sceneID) {
         requireNonNull(sceneID);
 
-        final AbstractGameScene currentGameScene = currentGameSceneProperty().get();
+        final GameScene currentGameScene = currentGameSceneProperty().get();
         return currentGameScene != null && hasGameSceneID(gameSceneConfig, currentGameScene, sceneID);
     }
 
@@ -105,8 +111,8 @@ public class GameSceneManager {
     private void handle2D3DSwitch(
         GameVariantUIConfig variantConfig,
         GameContext game,
-        AbstractGameScene currentGameScene,
-        AbstractGameScene nextGameScene)
+        GameScene currentGameScene,
+        GameScene nextGameScene)
     {
         final GameSceneSwitchType switchType = identifySwitchType(currentGameScene, nextGameScene);
         switch (switchType) {
@@ -120,8 +126,8 @@ public class GameSceneManager {
     private void switchPlaySceneTo3D(
         GameVariantUIConfig variantConfig,
         GameContext game,
-        AbstractGameScene currentGameScene,
-        AbstractGameScene nextGameScene)
+        GameScene currentGameScene,
+        GameScene nextGameScene)
     {
         if (!(nextGameScene instanceof PlayScene3D playScene3D)) {
             throw new IllegalArgumentException("Expected PlayScene3D, but scene has class %s"
@@ -147,11 +153,16 @@ public class GameSceneManager {
         Logger.info("3D scene {} entered from 2D game scene {}", playScene3D.getClass().getSimpleName(), currentGameScene.getClass().getSimpleName());
     }
 
-    private void switchPlaySceneTo2D(AbstractGameScene currentGameScene, AbstractGameScene nextGameScene) {
+    private void switchPlaySceneTo2D(GameScene currentGameScene, GameScene nextGameScene) {
         requireNonNull(currentGameScene);
         requireNonNull(nextGameScene);
 
-        if (nextGameScene.optCanvasRendering().isPresent()) {
+        if (!(nextGameScene instanceof AbstractGameScene abstractGameScene)) {
+            Logger.error("Current game scene is not an AbstractGameScene");
+            return;
+        }
+
+        if (abstractGameScene.optCanvasRendering().isPresent()) {
             nextGameScene.onEnteredFrom3DScene();
             Logger.info("2D scene {} entered from 3D scene {}",
                 nextGameScene.getClass().getSimpleName(), currentGameScene.getClass().getSimpleName());
@@ -161,16 +172,23 @@ public class GameSceneManager {
         }
     }
 
-    private GameSceneSwitchType identifySwitchType(AbstractGameScene currentGameScene, AbstractGameScene nextGameScene) {
+    private GameSceneSwitchType identifySwitchType(GameScene currentGameScene, GameScene nextGameScene) {
         requireNonNull(currentGameScene);
         requireNonNull(nextGameScene);
 
-        final boolean src2D = currentGameScene.optCanvasRendering().isPresent();
-        final boolean tgt2D = nextGameScene.optCanvasRendering().isPresent();
+        if (!(currentGameScene instanceof AbstractGameScene current)) {
+            throw new IllegalArgumentException("Current game scene is not an AbstractGameScene");
+        }
+        final boolean currentIs2D = current.optCanvasRendering().isPresent();
 
-        if (src2D == tgt2D) {
+        if (!(nextGameScene instanceof AbstractGameScene next)) {
+            throw new IllegalArgumentException("Next game scene is not an AbstractGameScene");
+        }
+        final boolean nextIs2D = next.optCanvasRendering().isPresent();
+
+        if (currentIs2D == nextIs2D) {
             return GameSceneSwitchType.NONE;
         }
-        return src2D ? GameSceneSwitchType.FROM_2D_TO_3D : GameSceneSwitchType.FROM_3D_TO_2D;
+        return currentIs2D ? GameSceneSwitchType.FROM_2D_TO_3D : GameSceneSwitchType.FROM_3D_TO_2D;
     }
 }
