@@ -66,6 +66,10 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
     public ArcadeMsPacMan_RenderConfig(AssetMap assets) {
         this.assets = assets;
 
+        for (int i = 0; i < MAP_COLOR_SCHEMES.length; ++i) {
+            assets.addAsset("maze.bright.%d".formatted(i), createBrightMazeImage(i));
+        }
+
         hudStyle = new HUD_Style(
             spriteSheet(),
             spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL),
@@ -76,13 +80,6 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
             Color.GRAY,
             GlobalFonts.ARCADE.font(),
             "CREDIT %2d");
-    }
-
-    @Override
-    public void addAssets() {
-        for (int i = 0; i < MAP_COLOR_SCHEMES.length; ++i) {
-            assets.addAsset("maze.bright.%d".formatted(i), createBrightMazeImage(i));
-        }
     }
 
     // Creates the maze image used in the flash animation at the end of each level

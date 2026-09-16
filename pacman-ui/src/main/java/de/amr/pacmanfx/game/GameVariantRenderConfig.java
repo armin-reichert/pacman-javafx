@@ -24,8 +24,6 @@ public interface GameVariantRenderConfig {
 
     AssetMap assets();
 
-    default void addAssets() {}
-
     SpriteSheet<?> spriteSheet();
 
     GenericWorldMapColorScheme colorScheme(WorldMap worldMap, WorldSettings worldSettings);

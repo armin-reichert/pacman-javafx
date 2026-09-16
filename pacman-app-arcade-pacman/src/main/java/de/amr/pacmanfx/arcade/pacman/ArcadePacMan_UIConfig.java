@@ -66,17 +66,16 @@ public class ArcadePacMan_UIConfig implements GameVariantUIConfig {
     }
 
     @Override
-    public void load(GameApp app) {
-        loadAssets();
-        renderConfig = new ArcadePacMan_RenderConfig(assets);
-        renderConfig.addAssets();
-        assets.freeze();
-        loadSounds(app.ui().soundManager());
+    public Map<Named, Object> createExtensions(GameApp app) {
+        return Map.of(Arcade_GameExtensions.ACTIONS, new Arcade_Actions());
     }
 
     @Override
-    public Map<Named, Object> createExtensions(GameApp app) {
-        return Map.of(Arcade_GameExtensions.ACTIONS, new Arcade_Actions());
+    public void load(GameApp app) {
+        loadAssets();
+        renderConfig = new ArcadePacMan_RenderConfig(assets);
+        assets.freeze();
+        loadSounds(app.ui().soundManager());
     }
 
     @Override

@@ -79,7 +79,6 @@ public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
     public void load(GameApp app) {
         loadAssets();
         renderConfig = new ArcadeMsPacMan_RenderConfig(assets);
-        renderConfig.addAssets();
         assets.freeze();
         loadSounds(app.ui().soundManager());
     }

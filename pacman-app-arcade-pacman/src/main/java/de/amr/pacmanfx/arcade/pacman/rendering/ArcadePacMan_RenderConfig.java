@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
+import de.amr.basics.Disposable;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
@@ -42,7 +43,7 @@ import java.util.Map;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
 import static java.util.Objects.requireNonNull;
 
-public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
+public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig, Disposable {
 
     public static final Map<MessageType, String> MESSAGE_TEXTS = new EnumMap<>(MessageType.class);
     static {
@@ -69,6 +70,8 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
     public ArcadePacMan_RenderConfig(AssetMap assets) {
         this.assets = assets;
 
+        assets.addAsset("maze.bright", createBrightEmptyMap());
+
         hudStyle = new HUD_Style(
             spriteSheet(),
             spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL),
@@ -83,8 +86,7 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public void addAssets() {
-        assets.addAsset("maze.bright", createBrightEmptyMap());
+    public void dispose() {
     }
 
     private Image createBrightEmptyMap() {

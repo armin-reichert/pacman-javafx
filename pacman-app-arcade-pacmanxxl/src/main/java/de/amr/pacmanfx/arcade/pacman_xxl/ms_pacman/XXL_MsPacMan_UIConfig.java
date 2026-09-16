@@ -70,7 +70,6 @@ public final class XXL_MsPacMan_UIConfig implements GameVariantUIConfig {
     public void load(GameApp app) {
         loadAssets();
         renderConfig = new XXL_MsPacMan_RenderConfig(assets);
-        renderConfig.addAssets();
         assets.freeze();
         loadSounds(app.ui().soundManager());
     }
