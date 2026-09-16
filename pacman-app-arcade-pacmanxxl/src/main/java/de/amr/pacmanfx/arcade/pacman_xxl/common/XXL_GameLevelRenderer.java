@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.arcade.pacman_xxl.pacman;
+package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
@@ -15,9 +15,9 @@ import javafx.scene.paint.Color;
 /**
  * Renderer for "Pac-Man XXL" game variant. Uses the vector graphics map renderer that can render any custom map.
  */
-public class XXL_PacMan_GameLevelRenderer extends GenericLevelRenderer {
+public class XXL_GameLevelRenderer extends GenericLevelRenderer {
 
-    public XXL_PacMan_GameLevelRenderer(Canvas canvas) {
+    public XXL_GameLevelRenderer(Canvas canvas) {
         super(canvas);
     }
 

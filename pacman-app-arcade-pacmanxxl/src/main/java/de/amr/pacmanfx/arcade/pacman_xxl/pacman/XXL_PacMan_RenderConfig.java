@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.arcade.pacman_xxl.pacman;
 
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_RenderConfig;
+import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_GameLevelRenderer;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -31,11 +32,11 @@ public class XXL_PacMan_RenderConfig extends ArcadePacMan_RenderConfig {
     }
 
     @Override
-    public XXL_PacMan_GameLevelRenderer createGameLevelRenderer(ActorSpriteAnimController animController, Canvas canvas) {
+    public XXL_GameLevelRenderer createGameLevelRenderer(ActorSpriteAnimController animController, Canvas canvas) {
         requireNonNull(animController);
         requireNonNull(canvas);
 
-        return new XXL_PacMan_GameLevelRenderer(canvas);
+        return new XXL_GameLevelRenderer(canvas);
     }
 }
 
