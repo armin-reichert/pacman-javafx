@@ -25,8 +25,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class Arcade_BootScene_Renderer extends BaseRenderer implements SpriteRenderer {
 
-    public static final int GRID_SIZE = 16;
-
     private final SpriteSheet<?> spriteSheet;
 
     public Arcade_BootScene_Renderer(GameScene gameScene, Canvas canvas, SpriteSheet<?> spriteSheet) {
@@ -71,7 +69,7 @@ public class Arcade_BootScene_Renderer extends BaseRenderer implements SpriteRen
         for (int row = 0; row < block.height(); ++row) {
             for (int col = 0; col < block.width(); ++col) {
                 int i = row * block.width() + col;
-                drawSprite(block.sprites()[i], GRID_SIZE * col, GRID_SIZE * row, true);
+                drawSprite(block.sprites()[i], block.spriteSize() * col, block.spriteSize() * row, true);
             }
         }
     }
@@ -79,17 +77,17 @@ public class Arcade_BootScene_Renderer extends BaseRenderer implements SpriteRen
     private void renderGridPattern(GridPattern grid) {
         final double widthPixels = scaled(grid.width() * TS);
         final double heightPixels = scaled(grid.height() * TS);
-        final int numRows = (int) (heightPixels / GRID_SIZE);
-        final int numCols = (int) (widthPixels / GRID_SIZE);
+        final int numRows = (int) (heightPixels / grid.cellSize());
+        final int numCols = (int) (widthPixels / grid.cellSize());
         final double fineLine = scaled(2), normalLine = scaled(4);
         ctx.setStroke(ARCADE_WHITE);
         for (int row = 0; row <= numRows; ++row) {
-            final double y = scaled(row * GRID_SIZE);
+            final double y = scaled(row * grid.cellSize());
             ctx.setLineWidth(row == 0 || row == numRows ? normalLine : fineLine);
             ctx.strokeLine(0, y, widthPixels, y);
         }
         for (int col = 0; col <= numCols; ++col) {
-            final double x = scaled(col * GRID_SIZE);
+            final double x = scaled(col * grid.cellSize());
             ctx.setLineWidth(col == 0 || col == numCols ? normalLine : fineLine);
             ctx.strokeLine(x, 0, x, heightPixels);
         }

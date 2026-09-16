@@ -43,8 +43,8 @@ public class ArcadePacMan_ScoringRules implements ScoringRules {
 
     @Override
     public boolean isBonusAwarded(GameLevel level) {
-        final int pelletsEaten = level.food().eatenFoodCount();
-        return pelletsEaten == 70 || pelletsEaten == 170;
+        final int eaten = level.food().eatenFoodCount();
+        return eaten == 70 || eaten == 170;
     }
 
     @Override

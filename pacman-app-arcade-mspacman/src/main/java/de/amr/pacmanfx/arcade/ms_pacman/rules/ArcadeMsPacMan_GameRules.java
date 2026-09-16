@@ -6,9 +6,11 @@ package de.amr.pacmanfx.arcade.ms_pacman.rules;
 
 import de.amr.basics.Named;
 import de.amr.basics.timer.TickTimer;
+import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ScoringRules;
 import de.amr.pacmanfx.arcade.pacman.rules.Arcade_GameRules;
 import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
+import de.amr.pacmanfx.core.level.GameLevel;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +23,29 @@ public class ArcadeMsPacMan_GameRules extends Arcade_GameRules {
 
     public ArcadeMsPacMan_GameRules() {
         actorSpeedRules = new ArcadeMsPacMan_ActorSpeedRules();
-        scoringRules = new ArcadeMsPacMan_ScoringRules();
+
+        scoringRules = new ArcadePacMan_ScoringRules() {
+            @Override
+            public boolean isBonusAwarded(GameLevel level) {
+                final int eaten = level.food().eatenFoodCount();
+                return eaten == 64 || eaten == 176;
+            }
+
+            @Override
+            public int pointsForBonus(int symbolCode) {
+                return switch (symbolCode) {
+                    case 0 -> 100;  // cherries
+                    case 1 -> 200;  // strawberry
+                    case 2 -> 500;  // orange
+                    case 3 -> 700;  // pretzel
+                    case 4 -> 1000; // apple
+                    case 5 -> 2000; // pear
+                    case 6 -> 5000; // banana
+                    default -> throw new IllegalArgumentException("Invalid symbol code: " + symbolCode);
+                };
+            }
+
+        };
     }
 
     @Override

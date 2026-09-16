@@ -24,11 +24,12 @@ import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
  */
 public class Arcade_BootScene extends GameScene {
 
+    public static final int GRID_SIZE = 16;
     public static final int WIDTH_IN_TILES  = 28;
     public static final int HEIGHT_IN_TILES = 36;
 
     private static final Renderable BLANK_CANVAS = new BlankCanvas();
-    private static final Renderable GRID = new GridPattern(WIDTH_IN_TILES, HEIGHT_IN_TILES);
+    private static final Renderable GRID = new GridPattern(GRID_SIZE, WIDTH_IN_TILES, HEIGHT_IN_TILES);
 
     public enum SceneState {
         DARK(0),

@@ -11,13 +11,13 @@ import static de.amr.basics.math.RandomNumbers.randomInt;
 import static de.amr.basics.math.RectShort.sprite;
 import static java.lang.Math.clamp;
 
-public record SpritesBlock(RectShort[] sprites, int width, int height) implements Renderable {
+public record SpritesBlock(RectShort[] sprites, int spriteSize, int width, int height) implements Renderable {
 
     private static final Rectangle2D BOOT_SCENE_SPRITES = new Rectangle2D(400, 0, 256, 160);
     public static final int GRID_SIZE = 16;
 
     public SpritesBlock(int width, int height) {
-        this(randomSprites(width, height), width, height);
+        this(randomSprites(width, height), 16, width, height);
     }
 
     @Override
