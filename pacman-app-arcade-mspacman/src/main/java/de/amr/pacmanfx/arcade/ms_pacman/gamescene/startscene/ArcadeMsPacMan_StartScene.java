@@ -8,6 +8,7 @@ import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.Copyright;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -59,4 +60,7 @@ public class ArcadeMsPacMan_StartScene extends GameScene {
     public void onDeactivate() {
         soundManager().voice().stop();
     }
+
+    @Override
+    public void onTick(GameContext game) {}
 }

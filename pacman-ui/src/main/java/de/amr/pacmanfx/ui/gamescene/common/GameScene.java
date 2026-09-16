@@ -11,11 +11,11 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
-import de.amr.pacmanfx.core.event.base.GameEventManager;
 import de.amr.pacmanfx.core.gamestate.GameFlow;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.ui.action.core.GameApp;
+import de.amr.pacmanfx.ui.action.core.QuitHandler;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.SoundManager;
@@ -33,7 +33,7 @@ import static java.util.Objects.requireNonNull;
  * Abstract base class for all game scenes (2D and 3D).
  */
 public abstract class GameScene extends Composition<GameSceneComponent>
-    implements GameSceneController, Disposable, Renderable
+    implements QuitHandler, Disposable, Renderable
 {
     //TODO Should a game scene really be a renderable itself or only produce renderables?
 
@@ -81,10 +81,6 @@ public abstract class GameScene extends Composition<GameSceneComponent>
         return app;
     }
 
-    public GameEventManager eventManager() {
-        return game().eventManager();
-    }
-
     public GameFlow flow() {
         return game().playConfig().gameFlow();
     }
@@ -125,41 +121,49 @@ public abstract class GameScene extends Composition<GameSceneComponent>
      */
     public void onEnteredFrom3DScene() {}
 
-    // --- Interface "GameSceneController"
-
-    @Override
+    /**
+     * Activates the scene and assigns keyboard bindings.
+     */
     public final void activate() {
         onActivate();
     }
 
-    @Override
+    /**
+     * Called when the scene is deactivated.
+     * Subclasses must:<br/>
+     * - unbind all properties<br/>
+     * - remove all listeners<br/>
+     * - stop all timers<br/>
+     * - release all UI references (canvas, subscene, etc.)
+     */
     public final void deactivate() {
         onDeactivate();
         optComp(ActionBindingsComp.class).ifPresent(comp -> comp.registry().dispose());
         optSoundEffects().ifPresent(GameSoundEffects::stopAll);
     }
 
-    @Override
     public Optional<SubScene> optSubSceneFX() {
         return Optional.empty();
     }
 
-    @Override
     public SoundManager soundManager() {
         return app.ui().soundManager();
     }
 
-    @Override
     public Optional<GameSoundEffects> optSoundEffects() {
         return app.variantManager().currentVariantRuntime().uiConfig().optSoundEffects();
     }
 
-    @Override
+    public abstract void onTick(GameContext game);
+
     public void onBeforeEmbedded() {
         //TODO remove this hook method
     }
 
-    @Override
+    /**
+     * Called when a key combination is pressed inside this scene.
+     * Executes the first matching action.
+     */
     public void onInput() {
         if (hasComp(ActionBindingsComp.class)) {
             reqComp(ActionBindingsComp.class)
@@ -168,12 +172,10 @@ public abstract class GameScene extends Composition<GameSceneComponent>
         }
     }
 
-    @Override
     public void onScroll(ScrollEvent scrollEvent) {
         // Used only by very few subclasses
     }
 
-    @Override
     public Optional<ContextMenu> optContextMenu() {
         return Optional.empty();
     }
@@ -184,5 +186,4 @@ public abstract class GameScene extends Composition<GameSceneComponent>
     public void onQuit() {
         deactivate();
     }
-
 }

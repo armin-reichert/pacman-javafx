@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.gamescene.startscene;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.entities.TextDisplay;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.ui.GlobalFonts;
@@ -61,6 +62,9 @@ public class ArcadePacMan_StartScene extends GameScene {
     public void onDeactivate() {
         soundManager().voice().stop();
     }
+
+    @Override
+    public void onTick(GameContext game) {}
 
     private void addText(String text, Color color, Font font, float x, float y) {
         final var textDisplay = new TextDisplay();

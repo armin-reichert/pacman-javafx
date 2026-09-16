@@ -7,7 +7,6 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.gamescene.common.GameSceneController;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.views.miniview.MiniPlaySceneView;
 import de.amr.pacmanfx.ui.vm.GameViewModel;
@@ -124,7 +123,7 @@ public class DS_3DSettings extends GameDashboardSection {
     }
 
     private static SubScene currentSubSceneFX(GameApp app) {
-        return app.gameSceneManager().optCurrentGameScene().flatMap(GameSceneController::optSubSceneFX).orElse(null);
+        return app.gameSceneManager().optCurrentGameScene().flatMap(GameScene::optSubSceneFX).orElse(null);
     }
 
     private static String subSceneSizeInfo(SubScene subScene) {
