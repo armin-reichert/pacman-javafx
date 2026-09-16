@@ -40,7 +40,6 @@ import de.amr.pacmanfx.ui.vm.GameViewModel;
 import de.amr.pacmanfx.ui.vm.Maze3DSettingsVM;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.assets.RandomTextPicker;
 import de.amr.pacmanfx.uilib.entities3D.bonus.system.Bonus3DViewSystem;
 import de.amr.pacmanfx.uilib.entities3D.house.system.House3DSystem;
 import de.amr.pacmanfx.uilib.entities3D.messageview.system.LevelMessageType;
@@ -60,30 +59,36 @@ import java.util.Optional;
 import static de.amr.basics.math.Vector2f.vec2_float;
 import static de.amr.basics.util.Ufx.pauseSecThen;
 
-public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
+public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
-    double PELLET_EATING_DELAY_SEC = 0.05;
+    public static final double PELLET_EATING_DELAY_SEC = 0.05;
 
-    GameApp app();
+    private final GameApp app;
+    private final PlayScene3D gameScene;
 
-    default Optional<GameSoundEffects> optSoundEffects() {
+    public PlayScene3D_GameEventHandler(GameApp app, PlayScene3D gameScene) {
+        this.app = app;
+        this.gameScene = gameScene;
+    }
+
+    public PlayScene3D gameScene() {
+        return gameScene;
+    }
+
+    private GameApp app() {
+        return app;
+    }
+
+    private GameContext game() {
+        return gameScene.game();
+    }
+
+    private Optional<GameSoundEffects> optSoundEffects() {
         return app().variantManager().currentVariantRuntime().uiConfig().optSoundEffects();
     }
 
-    default GameContext game() {
-        return app().game();
-    }
-
-    default GameSession session() {
-        return game().session();
-    }
-
-    RandomTextPicker textPicker();
-    
-    PlayScene3D gameScene();
-
     @Override
-    default void onGameStateChange(GameStateChangeEvent e) {
+    public void onGameStateChange(GameStateChangeEvent e) {
         Logger.info("Enter game state '{}'", e.newState().name());
         final var newState = e.newState();
 
@@ -92,7 +97,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
             return;
         }
         if (gameState.id() instanceof TestStateID) {
-            handleTestState(app().ui().viewModel().common3DSettings(), session().level());
+            handleTestState(app().ui().viewModel().common3DSettings(), game().session().level());
         }
         else if (CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(newState)) {
             onHuntingStart(assertLevel3D());
@@ -113,7 +118,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     }
 
     @Override
-    default void onBonusActivated(BonusActivatedEvent e) {
+    public void onBonusActivated(BonusActivatedEvent e) {
         final GameLevel3D level3D = assertLevel3D();
         final Bonus bonus = e.bonus();
 
@@ -124,28 +129,28 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 
 
     @Override
-    default void onBonusEaten(BonusEatenEvent e) {
+    public void onBonusEaten(BonusEatenEvent e) {
         final Bonus bonus = e.bonus();
         Bonus3DViewSystem.lookEaten(bonus, assertLevel3D().animationManager().registry());
         optSoundEffects().ifPresent(GameSoundEffects::playBonusEatenSound);
     }
 
     @Override
-    default void onBonusExpired(BonusExpiredEvent e) {
+    public void onBonusExpired(BonusExpiredEvent e) {
         final Bonus bonus = e.bonus();
         Bonus3DViewSystem.lookExpired(bonus, assertLevel3D().animationManager().registry());
         optSoundEffects().ifPresent(GameSoundEffects::playBonusExpiredSound);
     }
 
     @Override
-    default void onGameContinued(GameContinuedEvent ignoredEvent) {
+    public void onGameContinued(GameContinuedEvent ignoredEvent) {
         final GameLevel3D level3D = assertLevel3D();
-        final MessageView messageView = session().level().entities().theMessageView();
+        final MessageView messageView = game().session().level().entities().theMessageView();
         showMessage(level3D, messageView, LevelMessageType.READY);
     }
 
     @Override
-    default void onGameStarted(GameStartedEvent event) {
+    public void onGameStarted(GameStartedEvent event) {
         final GameSession session = game().session();
         final AbstractGameState state = game().state();
 
@@ -156,27 +161,27 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         }
 
         final GameLevel3D level3D = assertLevel3D();
-        final MessageView messageView = session().level().entities().theMessageView();
+        final MessageView messageView = game().session().level().entities().theMessageView();
         showMessage(level3D, messageView, LevelMessageType.READY);
     }
 
     @Override
-    default void onGhostEaten(GhostEatenEvent ignoredEvent) {
+    public void onGhostEaten(GhostEatenEvent ignoredEvent) {
         optSoundEffects().ifPresent(GameSoundEffects::playGhostEatenSound);
     }
 
     @Override
-    default void onLevelCreated(LevelCreatedEvent event) {
+    public void onLevelCreated(LevelCreatedEvent event) {
         gameScene().replaceGameLevel3D(game(), event.level());
     }
 
     @Override
-    default void onLevelStarted(LevelStartedEvent event) {
-        final GameLevel level = session().level();
+    public void onLevelStarted(LevelStartedEvent event) {
+        final GameLevel level = game().session().level();
         final GameLevel3D level3D = assertLevel3D();
         final State<GameContext> newState = game().state();
 
-        level3D.replaceLevelCounter3D(session().hud().levelCounter());
+        level3D.replaceLevelCounter3D(game().session().hud().levelCounter());
 
         //TODO rethink this
         if (newState instanceof AbstractGameState gameState && gameState.id() instanceof TestStateID) {
@@ -189,12 +194,12 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         //TODO: workaround, check cause for invisible Pac-Man 3D after cut scene
         level.entities().pac().reqComp(Pac3DViewComp.class).root().setVisible(true);
 
-        gameScene().replaceActionBindings(session(), level);
+        gameScene().replaceActionBindings(game().session(), level);
         gameScene().fadeIn();
     }
 
     @Override
-    default void onPacEatsFood(PacEatsFoodEvent event) {
+    public void onPacEatsFood(PacEatsFoodEvent event) {
         final GameLevel3D level3D = assertLevel3D();
         final long tick = app().clock().currentTick();
 
@@ -228,7 +233,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     }
 
     @Override
-    default void onPacPowerStarts(PacPowerStartsEvent e) {
+    public void onPacPowerStarts(PacPowerStartsEvent e) {
         final Pac pac = e.pac();
         final GameLevel level = game().session().level();
         final GameLevel3D level3D = assertLevel3D();
@@ -242,7 +247,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     }
 
     @Override
-    default void onPacPowerEnds(PacPowerEndsEvent e) {
+    public void onPacPowerEnds(PacPowerEndsEvent e) {
         final Pac pac = e.pac();
         final GameLevel3D level3D = assertLevel3D();
 
@@ -252,7 +257,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     }
 
     @Override
-    default void onSpecialScore(SpecialScoreEvent ignoredEvent) {
+    public void onSpecialScore(SpecialScoreEvent ignoredEvent) {
         optSoundEffects().ifPresent(GameSoundEffects::playExtraLifeSound);
     }
 
@@ -285,7 +290,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
     }
 
     private void onPacManDying(AnimationRegistry animationRegistry) {
-        final GameLevel level = session().level();
+        final GameLevel level = game().session().level();
         final GameLevel3D level3D = assertLevel3D();
 
         game().state().timer().resetToIndefiniteDuration();
@@ -315,9 +320,9 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
 
     private void onLevelComplete() {
         final GameViewModel viewModel = app().ui().viewModel();
-        final GameLevel level = session().level();
+        final GameLevel level = game().session().level();
         final House house = level.entities().house();
-        final boolean cutSceneFollows = !session().isAttractMode()
+        final boolean cutSceneFollows = !game().session().isAttractMode()
             && game().playConfig().rules().cutSceneAfterLevel(level.number()).isPresent();
 
         gameScene().scoreOpacity.set(0);
@@ -387,7 +392,7 @@ public interface PlayScene3D_GameEventHandler extends DefaultGameEventListener {
         final GameLevel3D level3D = assertLevel3D();
 
         if (!session.isAttractMode() && RandomNumbers.chance(0.25)) {
-            app().ui().shortMessage(Duration.seconds(2.5), textPicker().selectNextText());
+            app().ui().shortMessage(Duration.seconds(2.5), gameScene.textPicker().selectNextText());
         }
 
         level3D.animationManager().stopAll();

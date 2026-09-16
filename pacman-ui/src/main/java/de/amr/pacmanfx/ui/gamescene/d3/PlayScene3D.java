@@ -8,20 +8,21 @@ import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameVariantPlayConfig;
-import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.Score;
+import de.amr.pacmanfx.core.event.base.GameEventListener;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.GlobalFonts;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounter3DViewSystem;
-import de.amr.pacmanfx.ui.gamescene.common.ActionBindingsComp;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
+import de.amr.pacmanfx.ui.gamescene.common.ActionBindingsComp;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.PlaySceneFadeInAnimation;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.DronePerspective;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
@@ -56,8 +57,7 @@ import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
-public class PlayScene3D extends AbstractGameScene
-    implements PlayScene3D_GameEventHandler, DisposableGraphicsObject {
+public class PlayScene3D extends AbstractGameScene implements DisposableGraphicsObject {
 
     public final DoubleProperty scoreOpacity = new SimpleDoubleProperty(0);
 
@@ -76,6 +76,8 @@ public class PlayScene3D extends AbstractGameScene
     private ScoresView scoresView;
     private PlaySceneContextMenu contextMenu;
     private AmbientLight ambientLight;
+
+    private final PlayScene3D_GameEventHandler gameEventHandler;
 
     /**
      * Creates a new 3D play scene with default camera, sub-scene, axes, and perspective manager.
@@ -108,6 +110,12 @@ public class PlayScene3D extends AbstractGameScene
                 level3D.setDrawMode(drawMode);
             }
         };
+
+        gameEventHandler = new PlayScene3D_GameEventHandler(app, this);
+    }
+
+    public Optional<GameEventListener> optGameEventHandler() {
+        return Optional.of(gameEventHandler);
     }
 
     @Override
@@ -115,14 +123,8 @@ public class PlayScene3D extends AbstractGameScene
         return Stream.empty();
     }
 
-    @Override
     public RandomTextPicker textPicker() {
         return textPicker;
-    }
-
-    @Override
-    public PlayScene3D gameScene() {
-        return this;
     }
 
     @Override
@@ -392,4 +394,5 @@ public class PlayScene3D extends AbstractGameScene
             level3D.animationManager().startEnergizerPumping();
         }
     }
+
 }
