@@ -24,7 +24,7 @@ import static java.util.Objects.requireNonNull;
 
 public class GameSceneManager {
 
-    private final ObjectProperty<GameScene> currentGameScene = new SimpleObjectProperty<>();
+    private final ObjectProperty<AbstractGameScene> currentGameScene = new SimpleObjectProperty<>();
 
     private GameVariantGameSceneConfig gameSceneConfig;
 
@@ -34,15 +34,15 @@ public class GameSceneManager {
         this.gameSceneConfig = requireNonNull(gameSceneConfig);
     }
 
-    public ObjectProperty<GameScene> currentGameSceneProperty() {
+    public ObjectProperty<AbstractGameScene> currentGameSceneProperty() {
         return currentGameScene;
     }
 
-    public Optional<GameScene> optCurrentGameScene() {
+    public Optional<AbstractGameScene> optCurrentGameScene() {
         return Optional.ofNullable(currentGameScene.get());
     }
 
-    public GameScene currentGameScene() {
+    public AbstractGameScene currentGameScene() {
         return currentGameScene.get();
     }
 
@@ -55,7 +55,7 @@ public class GameSceneManager {
         final GameContext game = app.game();
         final GameSession session = game.session();
         final boolean select3D = app.ui().viewModel().common3DSettings().view3DEnabledProperty().get();
-        final GameScene nextGameScene = uiConfig.gameSceneConfig().selectGameScene(app, select3D).orElse(null);
+        final AbstractGameScene nextGameScene = uiConfig.gameSceneConfig().selectGameScene(app, select3D).orElse(null);
 
         if (nextGameScene == null) {
             throw new IllegalStateException("Could not determine next game scene");
@@ -76,7 +76,7 @@ public class GameSceneManager {
         currentGameSceneProperty().set(nextGameScene);
     }
 
-    public boolean hasGameSceneID(GameVariantGameSceneConfig gameSceneConfig, GameScene gameScene, Named sceneID) {
+    public boolean hasGameSceneID(GameVariantGameSceneConfig gameSceneConfig, AbstractGameScene gameScene, Named sceneID) {
         requireNonNull(gameScene);
         requireNonNull(sceneID);
         requireNonNull(sceneID);
@@ -92,7 +92,7 @@ public class GameSceneManager {
     public boolean currentGameSceneHasID(Named sceneID) {
         requireNonNull(sceneID);
 
-        final GameScene currentGameScene = currentGameSceneProperty().get();
+        final AbstractGameScene currentGameScene = currentGameSceneProperty().get();
         return currentGameScene != null && hasGameSceneID(gameSceneConfig, currentGameScene, sceneID);
     }
 
@@ -105,8 +105,8 @@ public class GameSceneManager {
     private void handle2D3DSwitch(
         GameVariantUIConfig variantConfig,
         GameContext game,
-        GameScene currentGameScene,
-        GameScene nextGameScene)
+        AbstractGameScene currentGameScene,
+        AbstractGameScene nextGameScene)
     {
         final GameSceneSwitchType switchType = identifySwitchType(currentGameScene, nextGameScene);
         switch (switchType) {
@@ -120,8 +120,8 @@ public class GameSceneManager {
     private void switchPlaySceneTo3D(
         GameVariantUIConfig variantConfig,
         GameContext game,
-        GameScene currentGameScene,
-        GameScene nextGameScene)
+        AbstractGameScene currentGameScene,
+        AbstractGameScene nextGameScene)
     {
         if (!(nextGameScene instanceof PlayScene3D playScene3D)) {
             throw new IllegalArgumentException("Expected PlayScene3D, but scene has class %s"
@@ -147,7 +147,7 @@ public class GameSceneManager {
         Logger.info("3D scene {} entered from 2D game scene {}", playScene3D.getClass().getSimpleName(), currentGameScene.getClass().getSimpleName());
     }
 
-    private void switchPlaySceneTo2D(GameScene currentGameScene, GameScene nextGameScene) {
+    private void switchPlaySceneTo2D(AbstractGameScene currentGameScene, AbstractGameScene nextGameScene) {
         requireNonNull(currentGameScene);
         requireNonNull(nextGameScene);
 
@@ -161,7 +161,7 @@ public class GameSceneManager {
         }
     }
 
-    private GameSceneSwitchType identifySwitchType(GameScene currentGameScene, GameScene nextGameScene) {
+    private GameSceneSwitchType identifySwitchType(AbstractGameScene currentGameScene, AbstractGameScene nextGameScene) {
         requireNonNull(currentGameScene);
         requireNonNull(nextGameScene);
 

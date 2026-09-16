@@ -12,7 +12,7 @@ import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_LevelRenderInfoKey;
 import de.amr.pacmanfx.tengenmspacman.sprites.MapImageSet;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
 import de.amr.pacmanfx.uilib.rendering.RenderableWrapper;
@@ -28,7 +28,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends BaseRenderer {
     private final Renderer levelRenderer;
 
     public TengenMsPacMan_PlayScene2D_Renderer(
-        GameVariantRenderConfig renderConfig, GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
+        GameVariantRenderConfig renderConfig, AbstractGameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
 
         super(canvas);
 

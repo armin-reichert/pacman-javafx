@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.views.startpages;
 
 import de.amr.basics.json.JsonLoader;
 import de.amr.pacmanfx.ui.action.core.GameApp;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.input.Keyboard;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.controls.GameStartButton;
@@ -45,7 +45,7 @@ public class FlyerStartPage implements StartPage {
     protected GameStartButton startButton;
     protected GameApp app;
 
-    protected GameScene gameScene;
+    protected AbstractGameScene gameScene;
 
     private final Media voiceMedia;
 

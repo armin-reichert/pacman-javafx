@@ -29,7 +29,7 @@ import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.rules.HuntingTimer;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
@@ -47,7 +47,7 @@ public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
 
     private static final List<Direction> CLOCK_WISE = List.of(Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT);
 
-    public static BaseGameSceneDebugInfoRenderer createDefaultSceneDebugRenderer(GameScene gameScene, Canvas canvas) {
+    public static BaseGameSceneDebugInfoRenderer createDefaultSceneDebugRenderer(AbstractGameScene gameScene, Canvas canvas) {
         final GameSceneCanvasRenderingComp r2D = gameScene.reqComp(GameSceneCanvasRenderingComp.class);
         final ActorSpriteAnimController animController = gameScene.game().playConfig().systems().actorSpriteAnimController();
         return r2D.configureRenderer(new BaseGameSceneDebugInfoRenderer(animController, canvas));
@@ -67,7 +67,7 @@ public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
 
     @Override
     public void render(Renderable r, long tick) {
-        if (!(r instanceof GameScene gameScene)) {
+        if (!(r instanceof AbstractGameScene gameScene)) {
             return;
         }
 

@@ -12,7 +12,7 @@ import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.ui.GlobalFonts;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
@@ -38,7 +38,7 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Sp
 
     private final RectShort energizerSprite;
 
-    public ArcadePacMan_IntroScene_Renderer(GameScene gameScene, Canvas canvas) {
+    public ArcadePacMan_IntroScene_Renderer(AbstractGameScene gameScene, Canvas canvas) {
         super(canvas);
 
         energizerSprite = spriteSheet().findSprite(SpriteID.ENERGIZER);

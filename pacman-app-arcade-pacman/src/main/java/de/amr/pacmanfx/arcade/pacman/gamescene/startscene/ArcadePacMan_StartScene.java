@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.entities.TextDisplay;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.ui.GlobalFonts;
 import de.amr.pacmanfx.ui.action.core.GameApp;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -26,7 +26,7 @@ import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
 /**
  * Scene shown after credit has been added and where game can be started.
  */
-public class ArcadePacMan_StartScene extends GameScene {
+public class ArcadePacMan_StartScene extends AbstractGameScene {
 
     private final List<TextDisplay> texts = new ArrayList<>();
 

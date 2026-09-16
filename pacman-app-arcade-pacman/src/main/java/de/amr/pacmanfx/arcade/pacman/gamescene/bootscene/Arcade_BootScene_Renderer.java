@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman.gamescene.bootscene;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.ui.GlobalFonts;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
@@ -27,7 +27,7 @@ public class Arcade_BootScene_Renderer extends BaseRenderer implements SpriteRen
 
     private final SpriteSheet<?> spriteSheet;
 
-    public Arcade_BootScene_Renderer(GameScene gameScene, Canvas canvas, SpriteSheet<?> spriteSheet) {
+    public Arcade_BootScene_Renderer(AbstractGameScene gameScene, Canvas canvas, SpriteSheet<?> spriteSheet) {
         super(canvas);
         requireNonNull(gameScene);
         this.spriteSheet = requireNonNull(spriteSheet);

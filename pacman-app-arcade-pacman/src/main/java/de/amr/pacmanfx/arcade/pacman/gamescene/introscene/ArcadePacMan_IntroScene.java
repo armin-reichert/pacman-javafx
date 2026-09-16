@@ -33,7 +33,7 @@ import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.VoiceID;
 import de.amr.pacmanfx.ui.action.core.GameApp;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 
 import java.util.Arrays;
@@ -46,7 +46,7 @@ import static de.amr.pacmanfx.core.entities.ghost.comp.GhostState.EATEN;
 /**
  * The ghosts are presented one by one, then Pac-Man is chased by the ghosts, turns the cards and hunts the ghosts himself.
  */
-public class ArcadePacMan_IntroScene extends GameScene {
+public class ArcadePacMan_IntroScene extends AbstractGameScene {
 
     public static final int NUM_GHOSTS = 4;
 

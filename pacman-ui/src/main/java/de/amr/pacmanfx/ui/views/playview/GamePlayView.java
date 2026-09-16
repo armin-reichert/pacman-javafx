@@ -13,7 +13,7 @@ import de.amr.pacmanfx.ui.RenderManager;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameApp;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameVariantGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.settings.ui.DashboardSectionSettings;
@@ -197,7 +197,7 @@ public class GamePlayView implements GameView {
     public void onInput(GameApp app) {
         // First look for a matching action of the play view itself; if none found, delegate to the current game scene.
         if (actionBindings.executeMatchingAction(app).isEmpty()) {
-            app.gameSceneManager().optCurrentGameScene().ifPresent(GameScene::onInput);
+            app.gameSceneManager().optCurrentGameScene().ifPresent(AbstractGameScene::onInput);
         }
     }
 
@@ -221,7 +221,7 @@ public class GamePlayView implements GameView {
 
     @Override
     public void onQuit() {
-        app.gameSceneManager().optCurrentGameScene().ifPresent(GameScene::onQuit);
+        app.gameSceneManager().optCurrentGameScene().ifPresent(AbstractGameScene::onQuit);
         app.ui().viewManager().selectStartPagesView();
     }
 
@@ -239,7 +239,7 @@ public class GamePlayView implements GameView {
         renderManager.renderQueue().addAll(layers.miniViewLayer().renderables());
 
         // Add game scene renderables
-        final GameScene currentGameScene = app.gameSceneManager().optCurrentGameScene().orElse(null);
+        final AbstractGameScene currentGameScene = app.gameSceneManager().optCurrentGameScene().orElse(null);
         if (currentGameScene != null) {
             renderManager.updateRenderers(
                 app.variantManager().currentVariantRuntime().playConfig(),
@@ -272,7 +272,7 @@ public class GamePlayView implements GameView {
         return rootPane;
     }
 
-    public void replaceGameScene(GameScene currentGameScene, GameScene nextGameScene) {
+    public void replaceGameScene(AbstractGameScene currentGameScene, AbstractGameScene nextGameScene) {
         requireNonNull(nextGameScene);
         if (currentGameScene != null) {
             disembedGameScene(currentGameScene);
@@ -281,7 +281,7 @@ public class GamePlayView implements GameView {
         embedGameScene(nextGameScene);
     }
 
-    private void embedGameScene(GameScene gameScene) {
+    private void embedGameScene(AbstractGameScene gameScene) {
         requireNonNull(gameScene);
 
         final GameMainScene mainScene = app.ui().window().mainScene();
@@ -299,7 +299,7 @@ public class GamePlayView implements GameView {
         Logger.info("Game scene {} EMBEDDED into play view!", gameScene.getClass().getSimpleName());
     }
 
-    public void disembedGameScene(GameScene gameScene) {
+    public void disembedGameScene(AbstractGameScene gameScene) {
         requireNonNull(gameScene);
 
         gameScene.deactivate();
@@ -361,7 +361,7 @@ public class GamePlayView implements GameView {
     }
 
     // 3D scenes or 2D scenes with camera
-    private void embedGameSceneWithSubSceneFX(GameMainScene mainScene, GameScene gameScene, SubScene subSceneFX) {
+    private void embedGameSceneWithSubSceneFX(GameMainScene mainScene, AbstractGameScene gameScene, SubScene subSceneFX) {
         // stretch sub scene to available space
         subSceneFX.widthProperty().bind(mainScene.widthProperty());
         subSceneFX.heightProperty().bind(mainScene.heightProperty());
@@ -379,7 +379,7 @@ public class GamePlayView implements GameView {
         DecorationPane decorationPane,
         GameMainScene mainScene,
         GameVariantGameSceneConfig gameSceneConfig,
-        GameScene gameScene,
+        AbstractGameScene gameScene,
         Game2DSettingsVM settingsViewModel)
     {
         final GameSceneCanvasRenderingComp canvasRendering = gameScene.reqComp(GameSceneCanvasRenderingComp.class);

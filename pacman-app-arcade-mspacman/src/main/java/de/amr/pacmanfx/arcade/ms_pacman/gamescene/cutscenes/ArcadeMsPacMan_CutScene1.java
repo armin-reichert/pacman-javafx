@@ -27,7 +27,7 @@ import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameApp;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
@@ -44,7 +44,7 @@ import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
  * upwards, causing Inky and Pinky to collide and vanish. Finally, Pac-Man and Ms. Pac-Man face each other at the top of
  * the screen and a big pink heart appears above them. (Played after round 2)
  */
-public class ArcadeMsPacMan_CutScene1 extends GameScene {
+public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene {
 
     static final int UPPER_Y  = TS * 12;
     static final int MIDDLE_Y = TS * 18;

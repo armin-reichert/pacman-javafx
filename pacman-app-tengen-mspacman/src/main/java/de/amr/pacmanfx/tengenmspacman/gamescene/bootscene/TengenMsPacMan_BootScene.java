@@ -19,7 +19,7 @@ import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.ui.GlobalFonts;
 import de.amr.pacmanfx.ui.action.core.GameApp;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.entities.hud.comp.HUD_Style;
 import javafx.scene.paint.Color;
@@ -34,7 +34,7 @@ import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConf
 /**
  * Shows moving and color changing "TENGEN PRESENTS" text and ghost running through scene.
  */
-public class TengenMsPacMan_BootScene extends GameScene {
+public class TengenMsPacMan_BootScene extends AbstractGameScene {
 
     public static final String TENGEN_PRESENTS = "TENGEN PRESENTS";
 

@@ -34,7 +34,7 @@ import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.action.core.GameApp;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.entities3D.ghost.comp.GhostSettings;
 import javafx.scene.paint.Color;
@@ -48,7 +48,7 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 
-public class TengenMsPacMan_IntroScene extends GameScene {
+public class TengenMsPacMan_IntroScene extends AbstractGameScene {
 
     // Anchor point for everything
     public static final int ANCHOR_X = 76, ANCHOR_Y = 64;

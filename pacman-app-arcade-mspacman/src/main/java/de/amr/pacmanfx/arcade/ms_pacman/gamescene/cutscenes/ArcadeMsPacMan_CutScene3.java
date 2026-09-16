@@ -21,7 +21,7 @@ import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameApp;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
@@ -38,7 +38,7 @@ import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
  * bundle, which falls to the ground in front of Pac-Man and Ms. Pac-Man, and finally opens up to reveal a tiny Pac-Man.
  * (Played after rounds 9, 13, and 17)
  */
-public class ArcadeMsPacMan_CutScene3 extends GameScene {
+public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene {
 
     static class Timing extends CutSceneTimingComp {
 

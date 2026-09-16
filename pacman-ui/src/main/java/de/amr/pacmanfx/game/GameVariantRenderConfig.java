@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimFacade;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.uilib.entities.hud.comp.HUD_Style;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
@@ -32,7 +32,7 @@ public interface GameVariantRenderConfig {
 
     Renderer createGameLevelRenderer(ActorSpriteAnimController animController, Canvas canvas);
 
-    Renderer createGameSceneRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas);
+    Renderer createGameSceneRenderer(AbstractGameScene gameScene, ActorSpriteAnimController animController, Canvas canvas);
 
     Renderer createEntityRenderer(ActorSpriteAnimController animController, Canvas canvas);
 

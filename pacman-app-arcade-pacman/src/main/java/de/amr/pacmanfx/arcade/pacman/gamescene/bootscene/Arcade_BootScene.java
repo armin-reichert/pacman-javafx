@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.ui.action.core.GameApp;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.entities.hud.comp.HUD_Style;
 
@@ -22,7 +22,7 @@ import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
  * The boot screen displays some strange hex codes, garbage from the graphics memory
  * and eventually a grid (maybe used to calibrate the screen?). This scene tries to mimic that to a certain degree.
  */
-public class Arcade_BootScene extends GameScene {
+public class Arcade_BootScene extends AbstractGameScene {
 
     public static final int GRID_SIZE = 16;
     public static final int WIDTH_IN_TILES  = 28;

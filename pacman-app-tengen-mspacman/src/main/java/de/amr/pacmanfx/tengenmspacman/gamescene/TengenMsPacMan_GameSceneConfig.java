@@ -22,7 +22,7 @@ import de.amr.pacmanfx.tengenmspacman.gamestate.TengenMsPacMan_GameStateID;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 
 import java.util.Map;
 import java.util.function.Function;
@@ -34,12 +34,12 @@ public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
     public TengenMsPacMan_GameSceneConfig() {}
 
     @Override
-    public boolean sceneDecorationRequested(GameScene gameScene) {
+    public boolean sceneDecorationRequested(AbstractGameScene gameScene) {
         requireNonNull(gameScene);
         return false;
     }
 
-    private static final Map<Named, Function<GameApp, GameScene>> FACTORY_MAP = Map.of(
+    private static final Map<Named, Function<GameApp, AbstractGameScene>> FACTORY_MAP = Map.of(
         CommonGameSceneID.BOOT_SCENE    , TengenMsPacMan_BootScene::new,
         CommonGameSceneID.INTRO_SCENE   , TengenMsPacMan_IntroScene::new,
         CommonGameSceneID.START_SCENE   , TengenMsPacMan_OptionsScene::new,
@@ -53,7 +53,7 @@ public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
     );
 
     @Override
-    protected Function<GameApp, GameScene> getGameSceneFactory(Named sceneID) {
+    protected Function<GameApp, AbstractGameScene> getGameSceneFactory(Named sceneID) {
         return FACTORY_MAP.get(sceneID);
     }
 

@@ -31,7 +31,7 @@ import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.VoiceID;
 import de.amr.pacmanfx.ui.action.core.GameApp;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 
 import java.util.List;
@@ -46,7 +46,7 @@ import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
  * <p>
  * The ghosts and Ms. Pac-Man are introduced on a billboard and are marching in one after another.
  */
-public class ArcadeMsPacMan_IntroScene extends GameScene {
+public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
 
     public static final int TITLE_X          = WorldMap.TS * 10;
     public static final int TITLE_Y          = WorldMap.TS * 8;

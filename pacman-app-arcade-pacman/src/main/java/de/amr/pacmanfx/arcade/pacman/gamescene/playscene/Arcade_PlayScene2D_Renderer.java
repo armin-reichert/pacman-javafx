@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.gamescene.playscene;
 import de.amr.basics.InfoMap;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.rendering.Renderable;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.scene.canvas.Canvas;
@@ -23,7 +23,7 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer {
 
     private final Renderer levelRenderer;
 
-    public Arcade_PlayScene2D_Renderer(GameScene gameScene, Canvas canvas, Renderer levelRenderer) {
+    public Arcade_PlayScene2D_Renderer(AbstractGameScene gameScene, Canvas canvas, Renderer levelRenderer) {
         super(canvas);
         requireNonNull(gameScene);
 

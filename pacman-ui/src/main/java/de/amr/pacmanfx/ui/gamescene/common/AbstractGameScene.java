@@ -32,14 +32,14 @@ import static java.util.Objects.requireNonNull;
 /**
  * Abstract base class for all game scenes (2D and 3D).
  */
-public abstract class GameScene extends Composition<GameSceneComponent>
+public abstract class AbstractGameScene extends Composition<GameSceneComponent>
     implements QuitHandler, Disposable, Renderable
 {
     //TODO Should a game scene really be a renderable itself or only produce renderables?
 
     protected final GameApp app;
 
-    protected GameScene(GameApp app) {
+    protected AbstractGameScene(GameApp app) {
         this.app = requireNonNull(app);
     }
 

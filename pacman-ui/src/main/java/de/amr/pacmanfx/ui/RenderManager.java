@@ -8,7 +8,7 @@ import de.amr.pacmanfx.core.GameVariantPlayConfig;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.views.miniview.MiniPlaySceneView;
 import de.amr.pacmanfx.ui.views.miniview.MiniPlaySceneViewRenderer;
@@ -30,7 +30,7 @@ public class RenderManager {
     public RenderManager() {}
 
     public void updateRenderers(GameVariantPlayConfig playConfig, GameVariantRenderConfig renderConfig,
-                                GameScene gameScene, MiniPlaySceneView miniView) {
+                                AbstractGameScene gameScene, MiniPlaySceneView miniView) {
 
         requireNonNull(playConfig);
         requireNonNull(renderConfig);
@@ -78,7 +78,7 @@ public class RenderManager {
         });
     }
 
-    public void clearSceneCanvas(GameScene gameScene) {
+    public void clearSceneCanvas(AbstractGameScene gameScene) {
         gameScene.optCanvasRendering().ifPresent(canvasRendering -> {
             final Canvas canvas = canvasRendering.canvas();
             if (canvas != null) {

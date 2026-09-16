@@ -17,11 +17,11 @@ import java.util.Optional;
  */
 public interface GameVariantGameSceneConfig extends Disposable {
 
-    boolean gameSceneHasID(GameScene gameScene, Named sceneID);
+    boolean gameSceneHasID(AbstractGameScene gameScene, Named sceneID);
 
-    Optional<GameScene> selectGameScene(GameApp app, boolean select3D);
+    Optional<AbstractGameScene> selectGameScene(GameApp app, boolean select3D);
 
     Named resolveCutSceneID(GameContext game);
 
-    boolean sceneDecorationRequested(GameScene gameScene);
+    boolean sceneDecorationRequested(AbstractGameScene gameScene);
 }

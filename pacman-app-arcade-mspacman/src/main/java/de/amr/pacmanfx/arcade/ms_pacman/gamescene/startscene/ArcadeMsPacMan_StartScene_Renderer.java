@@ -9,7 +9,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.ui.GlobalFonts;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
@@ -22,7 +22,7 @@ import static java.util.Objects.requireNonNull;
 
 public class ArcadeMsPacMan_StartScene_Renderer extends BaseRenderer implements SpriteRenderer {
 
-    public ArcadeMsPacMan_StartScene_Renderer(GameScene gameScene, Canvas canvas) {
+    public ArcadeMsPacMan_StartScene_Renderer(AbstractGameScene gameScene, Canvas canvas) {
         super(canvas);
         setDebugInfoRenderer(createDefaultSceneDebugRenderer(gameScene, canvas));
     }

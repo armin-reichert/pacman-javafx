@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.ui.action.core.GameApp;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 
 import java.util.stream.Stream;
@@ -21,7 +21,7 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_
 /**
  * Gives credit to the people that helped in making the game, original and remake authors.
  */
-public class TengenMsPacMan_CreditsScene extends GameScene {
+public class TengenMsPacMan_CreditsScene extends AbstractGameScene {
 
     public static final int DISPLAY_TICKS = 16 * 60;
 

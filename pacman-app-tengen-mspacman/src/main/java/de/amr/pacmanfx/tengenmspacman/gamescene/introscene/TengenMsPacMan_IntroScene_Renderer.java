@@ -15,7 +15,7 @@ import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.GlobalFonts;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
@@ -44,7 +44,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer implements 
 
     private final TengenMsPacMan_UISettings uiSettings;
 
-    public TengenMsPacMan_IntroScene_Renderer(GameVariantRenderConfig renderConfig, GameScene gameScene, Canvas canvas) {
+    public TengenMsPacMan_IntroScene_Renderer(GameVariantRenderConfig renderConfig, AbstractGameScene gameScene, Canvas canvas) {
         super(canvas);
         requireNonNull(renderConfig);
         requireNonNull(gameScene);
