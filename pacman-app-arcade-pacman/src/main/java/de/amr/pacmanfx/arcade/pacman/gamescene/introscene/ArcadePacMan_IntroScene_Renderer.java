@@ -51,6 +51,7 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer {
     public void render(Renderable r, long tick) {
         switch (r) {
             case ArcadePacMan_IntroScene scene -> renderScene(scene);
+            case ArcadePacMan_IntroScene.BlinkingEnergizer energizer -> renderBlinkingEnergizer(energizer);
             default -> super.render(r, tick);
         }
     }
@@ -60,7 +61,7 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer {
         switch (introScene.flow.state()) {
             case SHOWING_POINTS -> drawPoints(introScene);
             case CHASING_PAC_MAN -> {
-                drawBlinkingEnergizer(introScene.blinking, ENERGIZER_X, ENERGIZER_Y);
+                //drawBlinkingEnergizer(introScene.blinking, ENERGIZER_X, ENERGIZER_Y);
                 drawPoints(introScene);
                 drawCopyright();
             }
@@ -90,6 +91,15 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer {
         drawBlinkingEnergizer(introScene.blinking, tilesPx(LEFT_TILE_X + 6), tilesPx(26));
         fillText("50",  ARCADE_WHITE, arcade8, tilesPx(LEFT_TILE_X + 8), tilesPx(27));
         fillText("PTS", ARCADE_WHITE, arcade6, tilesPx(LEFT_TILE_X + 11), tilesPx(27));
+    }
+
+    private void renderBlinkingEnergizer(ArcadePacMan_IntroScene.BlinkingEnergizer energizer) {
+        if (energizer.isVisible() && energizer.pulse().state() == Pulse.State.ON) {
+            ctx.save();
+            ctx.setImageSmoothing(true);
+            drawSpriteCentered(energizerSprite, energizer.pos().x(), energizer.pos().y());
+            ctx.restore();
+        }
     }
 
     private void drawBlinkingEnergizer(Pulse blinking, double x, double y) {

@@ -17,6 +17,8 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
 import de.amr.pacmanfx.core.entities.*;
@@ -44,14 +46,34 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.arcade.pacman.rendering.SpriteID.GALLERY_GHOSTS;
 import static de.amr.pacmanfx.core.entities.ghost.comp.GhostState.EATEN;
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.*;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
 
 /**
  * The ghosts are presented one by one, then Pac-Man is chased by the ghosts, turns the cards and hunts the ghosts himself.
  */
 public class ArcadePacMan_IntroScene extends AbstractGameScene {
+
+    public static class BlinkingEnergizer extends GameEntity implements Renderable {
+
+        private Pulse pulse;
+
+        public BlinkingEnergizer() {
+        }
+
+        public Pulse pulse() {
+            return pulse;
+        }
+
+        public void setPulse(Pulse pulse) {
+            this.pulse = pulse;
+        }
+
+        @Override
+        public RenderingLayer layer() {
+            return RenderingLayer.SCENE;
+        }
+    }
 
     private static final String TITLE_TEXT = "CHARACTER / NICKNAME";
     private static final String MIDWAY_MFG_CO = "© 1980 MIDWAY MFG.CO.";
@@ -60,8 +82,8 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
     private static final Color[]  GHOST_COLORS     = { ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE };
 
     private static final byte LEFT_TILE_X = 4;
-    private static final short ENERGIZER_X = TS * LEFT_TILE_X;
-    private static final short ENERGIZER_Y = TS * 20;
+    private static final int ENERGIZER_CENTER_X = TS * LEFT_TILE_X + HTS;
+    private static final int ENERGIZER_CENTER_Y = TS * 20 + HTS;
 
     public static final int NUM_GHOSTS = 4;
 
@@ -113,7 +135,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
     private final ImageDisplay[] ghostImageDisplays = new ImageDisplay[NUM_GHOSTS];
     private final TextDisplay[] ghostNicknameTextDisplays = new TextDisplay[NUM_GHOSTS];
     private final TextDisplay[] ghostCharacterTextDisplays = new TextDisplay[NUM_GHOSTS];
-
+    private final BlinkingEnergizer energizer = new BlinkingEnergizer();
 
     public ArcadePacMan_IntroScene(GameApp app) {
         super(app);
@@ -154,7 +176,8 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
             Arrays.stream(ghostNicknameTextDisplays).filter(TextDisplay::isVisible),
             pacMan,
             ghosts,
-            points
+            points,
+            energizer
         );
     }
 
@@ -199,6 +222,9 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
         final ActorSpriteAnimController animController  = variant.playConfig().systems().actorSpriteAnimController();
 
         blinking = new Pulse(10, Pulse.State.ON);
+
+        energizer.setPulse(blinking);
+        energizer.pos().set(ENERGIZER_CENTER_X, ENERGIZER_CENTER_Y);
 
         final var actorFactory = ArcadePacMan_ActorFactory.instance();
 
@@ -422,6 +448,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
             public void onEnter(ArcadePacMan_IntroScene scene) {
                 timer.restartTicks(TICK_CHASING_PAC_MAN_END);
                 scene.pacMan.hide();
+                scene.energizer.show();
             }
 
             @Override
@@ -434,6 +461,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
                 }
                 else if (tick == TICK_PAC_MAN_REACHES_ENERGIZER) {
                     scene.turnCardsStopPacMan(scene.game());
+                    scene.energizer.hide();
                 }
                 else if (tick == TICK_PAC_MAN_MOVES_AGAIN) {
                     scene.turnCardsRestartPacMan(systems);
