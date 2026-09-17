@@ -9,7 +9,6 @@ import de.amr.basics.timer.Pulse;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.ui.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
@@ -23,15 +22,12 @@ import java.util.Optional;
 import static de.amr.pacmanfx.arcade.pacman.gamescene.introscene.ArcadePacMan_IntroScene.SceneState.*;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer.createDefaultSceneDebugRenderer;
-import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
+import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_ROSE;
+import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
 
 public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer {
 
-    private static final String MIDWAY_MFG_CO = "© 1980 MIDWAY MFG.CO.";
-
     private static final byte LEFT_TILE_X = 4;
-    private static final short ENERGIZER_X = WorldMap.TS * LEFT_TILE_X;
-    private static final short ENERGIZER_Y = WorldMap.TS * 20;
 
     private final RectShort energizerSprite;
 
@@ -59,27 +55,13 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer {
     private void renderScene(ArcadePacMan_IntroScene introScene) {
         ctx.setImageSmoothing(true);
         switch (introScene.flow.state()) {
-            case SHOWING_POINTS -> drawPoints(introScene);
-            case CHASING_PAC_MAN -> {
-                //drawBlinkingEnergizer(introScene.blinking, ENERGIZER_X, ENERGIZER_Y);
-                drawPoints(introScene);
-                drawCopyright();
-            }
-            case CHASING_GHOSTS, WAIT_FOR_DEMO_LEVEL -> {
-                drawPoints(introScene);
-                drawCopyright();
-            }
+            case SHOWING_POINTS, CHASING_PAC_MAN, CHASING_GHOSTS, WAIT_FOR_DEMO_LEVEL -> drawPoints();
             default -> {}
         }
         ctx.setImageSmoothing(false);
     }
 
-    private void drawCopyright() {
-        final Font arcade8 = Ufx.deriveFont(GlobalFonts.ARCADE.font(), scaled(8));
-        fillText(MIDWAY_MFG_CO, ARCADE_PINK, arcade8, tilesPx(4), tilesPx(32));
-    }
-
-    private void drawPoints(ArcadePacMan_IntroScene introScene) {
+    private void drawPoints() {
         final Font arcade6 = Ufx.deriveFont(GlobalFonts.ARCADE.font(), scaled(6));
         final Font arcade8 = Ufx.deriveFont(GlobalFonts.ARCADE.font(), scaled(8));
         ctx.setFill(ARCADE_ROSE);
@@ -88,7 +70,6 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer {
         fillText("10",  ARCADE_WHITE, arcade8, tilesPx(LEFT_TILE_X + 8), tilesPx(25));
         fillText("PTS", ARCADE_WHITE, arcade6, tilesPx(LEFT_TILE_X + 11), tilesPx(25));
         // energizer
-        drawBlinkingEnergizer(introScene.blinking, tilesPx(LEFT_TILE_X + 6), tilesPx(26));
         fillText("50",  ARCADE_WHITE, arcade8, tilesPx(LEFT_TILE_X + 8), tilesPx(27));
         fillText("PTS", ARCADE_WHITE, arcade6, tilesPx(LEFT_TILE_X + 11), tilesPx(27));
     }
@@ -99,12 +80,6 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer {
             ctx.setImageSmoothing(true);
             drawSpriteCentered(energizerSprite, energizer.pos().x(), energizer.pos().y());
             ctx.restore();
-        }
-    }
-
-    private void drawBlinkingEnergizer(Pulse blinking, double x, double y) {
-        if (blinking.state() == Pulse.State.ON) {
-            drawSpriteCentered(energizerSprite, x + 4, y + 4);
         }
     }
 }

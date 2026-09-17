@@ -136,6 +136,8 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
     private final TextDisplay[] ghostNicknameTextDisplays = new TextDisplay[NUM_GHOSTS];
     private final TextDisplay[] ghostCharacterTextDisplays = new TextDisplay[NUM_GHOSTS];
     private final BlinkingEnergizer energizer = new BlinkingEnergizer();
+    private final BlinkingEnergizer energizerPoints = new BlinkingEnergizer();
+    private final TextDisplay copyrightText = new TextDisplay();
 
     public ArcadePacMan_IntroScene(GameApp app) {
         super(app);
@@ -176,11 +178,12 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
             Arrays.stream(ghostNicknameTextDisplays).filter(TextDisplay::isVisible),
             pacMan,
             ghosts,
+            energizer,
             points,
-            energizer
+            energizerPoints,
+            copyrightText
         );
     }
-
 
     private void createTitleText() {
 //        fillText("CHARACTER / NICKNAME", ARCADE_WHITE, tilesPx(LEFT_TILE_X + 3), tilesPx(6));
@@ -225,6 +228,11 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
 
         energizer.setPulse(blinking);
         energizer.pos().set(ENERGIZER_CENTER_X, ENERGIZER_CENTER_Y);
+        energizer.hide();
+
+        energizerPoints.setPulse(blinking);
+        energizerPoints.pos().set(tilesPx(LEFT_TILE_X + 6) + HTS, tilesPx(26) + HTS);
+        energizerPoints.hide();
 
         final var actorFactory = ArcadePacMan_ActorFactory.instance();
 
@@ -240,6 +248,11 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
 
         createTitleText();
         createGhostGalleryComponents();
+
+        copyrightText.data().setText(MIDWAY_MFG_CO);
+        copyrightText.data().setFont(GlobalFonts.ARCADE.font(TS));
+        copyrightText.data().setFillColor(ARCADE_PINK);
+        copyrightText.pos().set(tilesPx(4), tilesPx(32));
 
         ghostIndex = 0;
         lastGhostEatenTick = 0;
@@ -449,6 +462,8 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
                 timer.restartTicks(TICK_CHASING_PAC_MAN_END);
                 scene.pacMan.hide();
                 scene.energizer.show();
+                scene.energizerPoints.show();
+                scene.copyrightText.show();
             }
 
             @Override
