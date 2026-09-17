@@ -49,15 +49,16 @@ import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
  */
 public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
 
-    private static final int TITLE_X          = TS * 10;
-    private static final int TITLE_Y          = TS * 8;
-    private static final int TOP_Y            = TS * 11;
-    private static final int STOP_X_GHOST     = TS * 6 - WorldMap.HTS;
+    private static final int TITLE_X             = TS * 10;
+    private static final int TITLE_Y             = TS * 8;
+    private static final int TOP_Y               = TS * 11;
+    private static final int GHOST_RAISE_POS_X   = TS * 6 - WorldMap.HTS;
     private static final int MS_PACMAN_END_POS_X = TS * 15 + 2;
 
     private static final Vector2f PAC_START_POS = new Vector2f(31 * TS, 20 * TS);
     private static final Vector2f GHOST_START_POS = new Vector2f(33.5f * TS, 20 * TS);
-    private static final float ACTOR_SPEED = 1.11f;
+
+    private static final float ACTOR_SPEED = 1.10f;
 
     private static final String MARQUEE_TITLE = "\"MS PAC-MAN\"";
     private static final String[] GHOST_NAMES = { "BLINKY", "PINKY", "INKY", "SUE" };
@@ -258,8 +259,8 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
 
         final Ghost ghost = ghosts.get(ghostInSpotlight);
         if (ghost.worldNavigation().moveDir() == Direction.LEFT) {
-            if (ghost.pos().x() <= STOP_X_GHOST) {
-                ghost.pos().setX(STOP_X_GHOST);
+            if (ghost.pos().x() <= GHOST_RAISE_POS_X) {
+                ghost.pos().setX(GHOST_RAISE_POS_X);
                 systems.navigator().setMoveDir(ghost, Direction.UP);
                 systems.navigator().setWishDir(ghost, Direction.UP);
                 numTicksBeforeRising = 2;
