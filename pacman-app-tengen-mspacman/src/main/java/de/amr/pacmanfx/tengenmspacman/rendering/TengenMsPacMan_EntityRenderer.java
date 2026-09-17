@@ -104,7 +104,7 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer {
                     case HIGH_SCORE -> drawHighScore(score);
                 }
             }
-            case GameOptionsDisplay gameOptionsDisplay -> drawGameOptionsDisplay(gameOptionsDisplay);
+            case GameOptionsDisplay gameOptionsDisplay -> renderGameOptionsDisplay(gameOptionsDisplay);
             case LevelNumberDisplay levelNumberDisplay -> drawLevelNumberDisplay(levelNumberDisplay);
             case CreditDisplay _ -> { /* Not used in this game variant */}
 
@@ -258,7 +258,7 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer {
 
     // --- HUD ---
 
-    private void drawGameOptionsDisplay(GameOptionsDisplay display) {
+    private void renderGameOptionsDisplay(GameOptionsDisplay display) {
         final GameOptionsDataComp options = display.options();
 
         final RectShort mapCategorySprite = switch (options.mapCategory()) {

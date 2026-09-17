@@ -32,7 +32,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Base renderer class providing support for scaling, background color and common font drawing.
  */
-public abstract class BaseRenderer implements Renderer {
+public class BaseRenderer implements Renderer {
 
     private static final Text dummy = new Text();
 
