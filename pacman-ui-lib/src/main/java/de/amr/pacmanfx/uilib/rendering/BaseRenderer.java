@@ -67,7 +67,6 @@ public abstract class BaseRenderer implements Renderer {
 
     // Renderer interface
 
-
     @Override
     public void render(Renderable r, long tick) {
         switch (r) {

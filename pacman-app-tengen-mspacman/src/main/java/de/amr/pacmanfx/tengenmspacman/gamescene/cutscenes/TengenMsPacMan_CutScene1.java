@@ -143,21 +143,21 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene {
 
         msPacMan.pos().set(RIGHT_BORDER, LOWER_LANE);
         navigator.setMoveDir(msPacMan, Direction.LEFT);
-        navigator.setMoveDirSpeed(msPacMan, 0);
+        navigator.setSpeed(msPacMan, 0);
 
         pacMan.pos().set(LEFT_BORDER, UPPER_LANE);
         navigator.setMoveDir(pacMan, Direction.RIGHT);
-        navigator.setMoveDirSpeed(pacMan, 0);
+        navigator.setSpeed(pacMan, 0);
 
         inky.pos().set(LEFT_BORDER, UPPER_LANE);
         navigator.setMoveDir(inky, Direction.RIGHT);
         navigator.setWishDir(inky, Direction.RIGHT);
-        navigator.setMoveDirSpeed(inky, 0);
+        navigator.setSpeed(inky, 0);
 
         pinky.pos().set(RIGHT_BORDER, LOWER_LANE);
         navigator.setMoveDir(pinky, Direction.LEFT);
         navigator.setWishDir(pinky, Direction.LEFT);
-        navigator.setMoveDirSpeed(pinky, 0);
+        navigator.setSpeed(pinky, 0);
 
         collided = false;
     }
@@ -190,23 +190,23 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene {
 
         if (tick == 130) {
             pacMan.show();
-            navigator.setMoveDirSpeed(pacMan, SPEED_CHASING);
+            navigator.setSpeed(pacMan, SPEED_CHASING);
             animSystem.select(pacMan, TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
             animSystem.playSelected(pacMan);
 
             msPacMan.show();
-            navigator.setMoveDirSpeed(msPacMan, SPEED_CHASING);
+            navigator.setSpeed(msPacMan, SPEED_CHASING);
             animSystem.select(msPacMan, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
             animSystem.playSelected(msPacMan);
         }
         else if (tick == 160) {
             inky.show();
-            navigator.setMoveDirSpeed(inky, SPEED_CHASING);
+            navigator.setSpeed(inky, SPEED_CHASING);
             animSystem.select(inky, CommonSpriteAnimationID.GHOST_NORMAL);
             animSystem.playSelected(inky);
 
             pinky.show();
-            navigator.setMoveDirSpeed(pinky, SPEED_CHASING);
+            navigator.setSpeed(pinky, SPEED_CHASING);
             animSystem.select(pinky, CommonSpriteAnimationID.GHOST_NORMAL);
             animSystem.playSelected(pinky);
         }
@@ -228,7 +228,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene {
         else if (tick == 454) {
             List.of(pacMan, msPacMan).forEach(pac -> {
                 navigator.setMoveDir(pac, Direction.UP);
-                navigator.setMoveDirSpeed(pac, SPEED_RISING);
+                navigator.setSpeed(pac, SPEED_RISING);
             });
         }
         else if (tick == 498) {
@@ -236,14 +236,14 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene {
 
             navigator.setMoveDir(inky, Direction.RIGHT);
             navigator.setWishDir(inky, Direction.RIGHT);
-            navigator.setMoveDirSpeed(inky, SPEED_AFTER_COLLISION);
+            navigator.setSpeed(inky, SPEED_AFTER_COLLISION);
 
             inky.movement().setVelocityY(inky.movement().velocityY() - 2.0f);
             inky.movement().setAcceleration(0, 0.4f);
 
             navigator.setMoveDir(pinky, Direction.LEFT);
             navigator.setWishDir(pinky, Direction.LEFT);
-            navigator.setMoveDirSpeed(pinky, SPEED_AFTER_COLLISION);
+            navigator.setSpeed(pinky, SPEED_AFTER_COLLISION);
 
             pinky.movement().setVelocityY(pinky.movement().velocityY() - 2.0f);
             pinky.movement().setAcceleration(0, 0.4f);
@@ -252,9 +252,9 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene {
             inky.hide();
             pinky.hide();
 
-            navigator.setMoveDirSpeed(pacMan, 0);
+            navigator.setSpeed(pacMan, 0);
             navigator.setMoveDir(pacMan, Direction.LEFT);
-            navigator.setMoveDirSpeed(msPacMan, 0);
+            navigator.setSpeed(msPacMan, 0);
             navigator.setMoveDir(msPacMan, Direction.RIGHT);
         }
         else if (tick == 545) {

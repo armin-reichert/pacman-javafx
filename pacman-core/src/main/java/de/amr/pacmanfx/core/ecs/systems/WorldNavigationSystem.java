@@ -176,7 +176,7 @@ public class WorldNavigationSystem {
      * @param actor an actor with navigation capability
      * @param speed the speed in pixels/tick
      */
-    public void setMoveDirSpeed(GameEntity actor, float speed) {
+    public void setSpeed(GameEntity actor, float speed) {
         requireNonNull(actor);
 
         final MovementComp movement = actor.reqComp(MovementComp.class);

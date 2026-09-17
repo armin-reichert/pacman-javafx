@@ -148,7 +148,7 @@ class XXL_ChaseAnimation {
 
         navigator.setMoveDir(pac, Direction.LEFT);
         navigator.setWishDir(pac, Direction.LEFT);
-        navigator.setMoveDirSpeed(pac, PAC_FLEEING_SPEED);
+        navigator.setSpeed(pac, PAC_FLEEING_SPEED);
 
         animController.setAnimations(pac, renderConfig.createPacAnimations(animContainer));
         animController.select(pac, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
@@ -201,7 +201,7 @@ class XXL_ChaseAnimation {
 
             navigator.setMoveDir(ghost, Direction.LEFT);
             navigator.setWishDir(ghost, Direction.LEFT);
-            navigator.setMoveDirSpeed(ghost, GHOST_CHASE_SPEED);
+            navigator.setSpeed(ghost, GHOST_CHASE_SPEED);
 
             animController.select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);
             animController.playSelected(ghost);
@@ -225,7 +225,7 @@ class XXL_ChaseAnimation {
 
                 navigator.setMoveDir(ghost, Direction.RIGHT);
                 navigator.setWishDir(ghost, Direction.RIGHT);
-                navigator.setMoveDirSpeed(ghost, 0.58f);
+                navigator.setSpeed(ghost, 0.58f);
 
                 animController.select(ghost, CommonSpriteAnimationID.GHOST_FRIGHTENED);
                 animController.playSelected(ghost);

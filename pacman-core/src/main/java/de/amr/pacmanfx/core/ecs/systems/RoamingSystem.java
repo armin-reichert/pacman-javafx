@@ -52,7 +52,7 @@ public class RoamingSystem {
             Logger.debug("Ghost {} takes random wish direction {}", actor.name(), dir);
         }
 
-        navigator.setMoveDirSpeed(actor, speed);
+        navigator.setSpeed(actor, speed);
         navigator.tryMovingOrTeleporting(level, actor, worldMovementPolicy);
     }
 

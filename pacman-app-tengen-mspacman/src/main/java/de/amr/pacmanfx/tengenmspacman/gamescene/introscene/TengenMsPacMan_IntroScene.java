@@ -209,7 +209,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
                 scene.msPacMan.show();
 
                 nav.setMoveDir(scene.msPacMan, Direction.LEFT);
-                nav.setMoveDirSpeed(scene.msPacMan, SPEED);
+                nav.setSpeed(scene.msPacMan, SPEED);
 
                 animController.select(scene.msPacMan, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
                 animController.playSelected(scene.msPacMan);
@@ -220,7 +220,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
 
                     nav.setMoveDir(ghost, Direction.LEFT);
                     nav.setWishDir(ghost, Direction.LEFT);
-                    nav.setMoveDirSpeed(ghost, SPEED);
+                    nav.setSpeed(ghost, SPEED);
 
                     animController.playSelected(ghost);
                     systems.ghostState().setState(ghost, GhostState.HUNTING_PAC);
@@ -278,7 +278,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
                         scene.waitBeforeRising--;
                     }
                     else if (ghost.pos().y() <= endPositionY) {
-                        nav.setMoveDirSpeed(ghost, 0);
+                        nav.setSpeed(ghost, 0);
                         nav.setMoveDir(ghost, Direction.RIGHT);
                         nav.setWishDir(ghost, Direction.RIGHT);
                         return true;
@@ -309,7 +309,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
 
                 motor.move(scene.msPacMan);
                 if (scene.msPacMan.pos().x() <= MS_PAC_MAN_STOP_X) {
-                    nav.setMoveDirSpeed(scene.msPacMan, 0);
+                    nav.setSpeed(scene.msPacMan, 0);
                     animController.resetSelected(scene.msPacMan);
                 }
                 if (timer.atSecond(8)) {

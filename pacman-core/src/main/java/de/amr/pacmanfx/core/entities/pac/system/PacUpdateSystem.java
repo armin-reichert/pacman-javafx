@@ -59,7 +59,7 @@ public class PacUpdateSystem {
                 ? speedRules.pacSpeedWhenHasPower(game, level)
                 : speedRules.pacSpeed(game, level);
             pacAutoSteeringSystem.update(session, pac);
-            navigator.setMoveDirSpeed(pac, speed);
+            navigator.setSpeed(pac, speed);
             navigator.tryMovingOrTeleporting(level, pac, movementPolicy);
         }
 

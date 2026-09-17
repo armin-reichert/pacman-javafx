@@ -31,7 +31,7 @@ public class ShadowHuntingStrategy implements GhostHuntingStrategy {
         final boolean chase = level.huntingTimer().inChasingPhase() || overrideChase;
         final Vector2i targetTile = chase ? computeChasingTargetTile(level) : computeScatterTile(level.worldMap(), ghost);
 
-        navigator.setMoveDirSpeed(ghost, speed);
+        navigator.setSpeed(ghost, speed);
         navigator.tryMovingTowardsTargetTile(ghost, level, targetTile, worldMovementPolicy);
     }
 

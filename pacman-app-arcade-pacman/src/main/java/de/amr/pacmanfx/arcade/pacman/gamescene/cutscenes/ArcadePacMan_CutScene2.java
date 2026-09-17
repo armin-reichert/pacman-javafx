@@ -209,12 +209,12 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene {
     }
 
     private void blinkyStopsMoving(GameSystems systems) {
-        systems.navigator().setMoveDirSpeed(blinky, 0);
+        systems.navigator().setSpeed(blinky, 0);
         systems.actorSpriteAnimController().stopSelected(blinky);
     }
 
     private void blinkyGetsCaughtOnNail(GameSystems systems) {
-        systems.navigator().setMoveDirSpeed(blinky, 0.09f);
+        systems.navigator().setSpeed(blinky, 0.09f);
         //TODO
         //blinkyAnimation(CommonAnimationID.GHOST_NORMAL).setFrameDurationTicks(32);
     }
@@ -225,7 +225,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene {
         systems.navigator().placeAtTile(blinky, 28, 20, -3, 0);
         systems.navigator().setMoveDir(blinky, Direction.LEFT);
         systems.navigator().setWishDir(blinky, Direction.LEFT);
-        systems.navigator().setMoveDirSpeed(blinky, 1.25f);
+        systems.navigator().setSpeed(blinky, 1.25f);
 
         systems.actorSpriteAnimController().select(blinky, CommonSpriteAnimationID.GHOST_NORMAL);
         systems.actorSpriteAnimController().playSelected(blinky);
@@ -236,7 +236,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene {
 
         systems.navigator().placeAtTile(pacMan, 28, 20);
         systems.navigator().setMoveDir(pacMan, Direction.LEFT);
-        systems.navigator().setMoveDirSpeed(pacMan, 1.15f);
+        systems.navigator().setSpeed(pacMan, 1.15f);
 
         systems.actorSpriteAnimController().select(pacMan, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
         systems.actorSpriteAnimController().playSelected(pacMan);

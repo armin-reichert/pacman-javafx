@@ -54,7 +54,7 @@ public abstract class ArcadeMsPacMan_RandomizedHuntingStrategy implements GhostH
             ? computeChasingTargetTile(level)
             : computeScatterTile(level.worldMap(), ghost);
 
-        navigator.setMoveDirSpeed(ghost, speed);
+        navigator.setSpeed(ghost, speed);
         navigator.tryMovingTowardsTargetTile(ghost, level, targetTile, worldMovementPolicy);
     }
     
@@ -64,7 +64,7 @@ public abstract class ArcadeMsPacMan_RandomizedHuntingStrategy implements GhostH
 
         final boolean teleporting = terrain.isTileInPortalSpace(tile);
         if (teleporting) {
-            navigator.setMoveDirSpeed(ghost, speed);
+            navigator.setSpeed(ghost, speed);
             navigator.tryMovingOrTeleporting(level, ghost, worldMovementPolicy);
             return;
         }
@@ -76,7 +76,7 @@ public abstract class ArcadeMsPacMan_RandomizedHuntingStrategy implements GhostH
         if (changeWishDirection) {
             selectRandomWishDir(ghost, level, worldMovementPolicy);
         }
-        navigator.setMoveDirSpeed(ghost, speed);
+        navigator.setSpeed(ghost, speed);
         navigator.tryMovingOrTeleporting(level, ghost, worldMovementPolicy);
     }
 

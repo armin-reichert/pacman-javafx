@@ -155,7 +155,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
             pacMan.show();
 
             navigator.setMoveDir(pacMan, Direction.RIGHT);
-            navigator.setMoveDirSpeed(pacMan, 1f);
+            navigator.setSpeed(pacMan, 1f);
 
             animSystem.select(pacMan, TengenMsPacMan_AnimationID.MR_PAC_MAN_MUNCHING);
             animSystem.playSelected(pacMan);
@@ -164,17 +164,17 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
             msPacMan.show();
 
             navigator.setMoveDir(msPacMan, Direction.LEFT);
-            navigator.setMoveDirSpeed(msPacMan, 1f);
+            navigator.setSpeed(msPacMan, 1f);
 
             animSystem.select(msPacMan, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
             animSystem.playSelected(msPacMan);
         }
         else if (tick == 230) {
-            navigator.setMoveDirSpeed(pacMan, 0);
+            navigator.setSpeed(pacMan, 0);
             animSystem.stopSelected(pacMan);
             animSystem.resetSelected(pacMan);
 
-            navigator.setMoveDirSpeed(msPacMan, 0);
+            navigator.setSpeed(msPacMan, 0);
             animSystem.stopSelected(msPacMan);
             animSystem.resetSelected(msPacMan);
         }
@@ -201,9 +201,9 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
             animSystem.playSelected(msPacMan);
         }
         else if (tick == 650) {
-            navigator.setMoveDirSpeed(pacMan, 1.5f); // TODO not sure
+            navigator.setSpeed(pacMan, 1.5f); // TODO not sure
             navigator.setMoveDir(pacMan, Direction.UP);
-            navigator.setMoveDirSpeed(msPacMan, 1.5f); // TODO not sure
+            navigator.setSpeed(msPacMan, 1.5f); // TODO not sure
             navigator.setMoveDir(msPacMan, Direction.UP);
         }
         else if (tick == 720) {
@@ -232,7 +232,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
         junior.show();
 
         worldNavigationSystem.setMoveDir(junior, Direction.UP);
-        worldNavigationSystem.setMoveDirSpeed(junior, 2);
+        worldNavigationSystem.setSpeed(junior, 2);
 
         animController.setAnimations(junior, renderConfig.createPacAnimations(animContainer));
         animController.select(junior, TengenMsPacMan_AnimationID.ANIM_JUNIOR);

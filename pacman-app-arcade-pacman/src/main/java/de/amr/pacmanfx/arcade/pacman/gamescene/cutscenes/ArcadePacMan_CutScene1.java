@@ -109,7 +109,7 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene {
         systems.navigator().placeAtTile(blinky, -2, 20, 4, 0);
         systems.navigator().setMoveDir(blinky, Direction.RIGHT);
         systems.navigator().setWishDir(blinky, Direction.RIGHT);
-        systems.navigator().setMoveDirSpeed(blinky, 0.75f);
+        systems.navigator().setSpeed(blinky, 0.75f);
 
         systems.actorSpriteAnimController().select(blinky, CommonSpriteAnimationID.GHOST_FRIGHTENED);
         systems.actorSpriteAnimController().playSelected(blinky);
@@ -120,7 +120,7 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene {
 
         systems.navigator().placeAtTile(pacMan, 29, 20);
         systems.navigator().setMoveDir(pacMan, Direction.LEFT);
-        systems.navigator().setMoveDirSpeed(pacMan, 1.25f);
+        systems.navigator().setSpeed(pacMan, 1.25f);
 
         systems.actorSpriteAnimController().select(pacMan, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
         systems.actorSpriteAnimController().playSelected(pacMan);
@@ -130,7 +130,7 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene {
         systems.navigator().placeAtTile(blinky, 32, 20);
         systems.navigator().setMoveDir(blinky, Direction.LEFT);
         systems.navigator().setWishDir(blinky, Direction.LEFT);
-        systems.navigator().setMoveDirSpeed(blinky, 1.3f);
+        systems.navigator().setSpeed(blinky, 1.3f);
 
         systems.actorSpriteAnimController().select(blinky, CommonSpriteAnimationID.GHOST_NORMAL);
         systems.actorSpriteAnimController().playSelected(blinky);

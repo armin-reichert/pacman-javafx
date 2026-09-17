@@ -153,7 +153,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene {
         pacMan.show();
 
         nav.setMoveDir(pacMan, Direction.RIGHT);
-        nav.setMoveDirSpeed(pacMan, SPEED_PAC_CHASING);
+        nav.setSpeed(pacMan, SPEED_PAC_CHASING);
 
         animController.select(pacMan, CommonSpriteAnimationID.MR_PAC_MAN_MUNCHING);
         animController.playSelected(pacMan);
@@ -163,7 +163,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene {
         inky.pos().set(pacMan.pos().x() - 6 * TS, pacMan.pos().y());
         inky.show();
 
-        nav.setMoveDirSpeed(inky, SPEED_GHOST_CHASING);
+        nav.setSpeed(inky, SPEED_GHOST_CHASING);
         nav.setMoveDir(inky, Direction.RIGHT);
         nav.setWishDir(inky, Direction.RIGHT);
 
@@ -175,7 +175,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene {
         msPacMan.show();
 
         nav.setMoveDir(msPacMan, Direction.LEFT);
-        nav.setMoveDirSpeed(msPacMan, SPEED_PAC_CHASING);
+        nav.setSpeed(msPacMan, SPEED_PAC_CHASING);
 
         animController.select(msPacMan, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
         animController.playSelected(msPacMan);
@@ -187,7 +187,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene {
 
         nav.setMoveDir(pinky, Direction.LEFT);
         nav.setWishDir(pinky, Direction.LEFT);
-        nav.setMoveDirSpeed(pinky, SPEED_GHOST_CHASING);
+        nav.setSpeed(pinky, SPEED_GHOST_CHASING);
 
         animController.select(pinky, CommonSpriteAnimationID.GHOST_NORMAL);
         animController.playSelected(pinky);
@@ -236,23 +236,23 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene {
         // Pac-Man and Ms. Pac-Man meet?
         else if (pacMan.worldNavigation().moveDir() == Direction.LEFT && pacMan.pos().x() - msPacMan.pos().x() < TS * 2) {
             nav.setMoveDir(pacMan, Direction.UP);
-            nav.setMoveDirSpeed(pacMan, SPEED_RISING);
+            nav.setSpeed(pacMan, SPEED_RISING);
             nav.setMoveDir(msPacMan, Direction.UP);
-            nav.setMoveDirSpeed(msPacMan, SPEED_RISING);
+            nav.setSpeed(msPacMan, SPEED_RISING);
         }
 
         // Inky and Pinky collide?
         else if (inky.worldNavigation().moveDir() == Direction.LEFT && inky.pos().x() - pinky.pos().x() < TS * 2) {
             nav.setMoveDir(inky, Direction.RIGHT);
             nav.setWishDir(inky, Direction.RIGHT);
-            nav.setMoveDirSpeed(inky, SPEED_GHOST_AFTER_COLLISION);
+            nav.setSpeed(inky, SPEED_GHOST_AFTER_COLLISION);
 
             motor.setVelocityY(inky, inky.movement().velocityY() - 2.0f);
             motor.setAcceleration(inky, 0, 0.4f);
 
             nav.setMoveDir(pinky, Direction.LEFT);
             nav.setWishDir(pinky, Direction.LEFT);
-            nav.setMoveDirSpeed(pinky, SPEED_GHOST_AFTER_COLLISION);
+            nav.setSpeed(pinky, SPEED_GHOST_AFTER_COLLISION);
 
             motor.setVelocityY(pinky, pinky.movement().velocityY() - 2.0f);
             motor.setAcceleration(pinky, 0, 0.4f);
@@ -280,13 +280,13 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene {
         final WorldNavigationSystem nav = systems.navigator();
         final ActorSpriteAnimController animController = systems.actorSpriteAnimController();
 
-        nav.setMoveDirSpeed(pacMan, 0);
+        nav.setSpeed(pacMan, 0);
         nav.setMoveDir(pacMan, Direction.LEFT);
 
         animController.stopSelected(pacMan);
         animController.resetSelected(pacMan);
 
-        nav.setMoveDirSpeed(msPacMan, 0);
+        nav.setSpeed(msPacMan, 0);
         nav.setMoveDir(msPacMan, Direction.RIGHT);
 
         animController.stopSelected(msPacMan);

@@ -65,7 +65,7 @@ public class GhostHouseAccessSystem {
                 navigator.setWishDir(ghost, UP);
             }
             position.setY(Math.clamp(position.y(), minY, maxY));
-            navigator.setMoveDirSpeed(ghost, speed);
+            navigator.setSpeed(ghost, speed);
             motor.move(ghost);
         }
     }
@@ -110,7 +110,7 @@ public class GhostHouseAccessSystem {
                 navigator.setWishDir(ghost, centerX < houseCenterX ? RIGHT : LEFT);
             }
 
-            navigator.setMoveDirSpeed(ghost, speed);
+            navigator.setSpeed(ghost, speed);
             motor.move(ghost);
 
             ghost.houseAccess().setLeftHouse(false);
@@ -151,7 +151,7 @@ public class GhostHouseAccessSystem {
             navigator.setMoveDir(ghost, RIGHT);
             navigator.setWishDir(ghost, RIGHT);
         }
-        navigator.setMoveDirSpeed(ghost, speed);
+        navigator.setSpeed(ghost, speed);
         motor.move(ghost);
 
         ghost.houseAccess().setReachedRevivalPosition(false);
@@ -171,7 +171,7 @@ public class GhostHouseAccessSystem {
         else {
             navigator.setTargetTile(ghost, house.floorplan().leftDoorTile());
             navigator.navigateActorTowardsCurrentTarget(ghost, level, movementPolicy);
-            navigator.setMoveDirSpeed(ghost, speed);
+            navigator.setSpeed(ghost, speed);
             navigator.tryMovingOrTeleporting(level, ghost, movementPolicy);
             ghost.houseAccess().setReachedHouseEntry(false);
         }

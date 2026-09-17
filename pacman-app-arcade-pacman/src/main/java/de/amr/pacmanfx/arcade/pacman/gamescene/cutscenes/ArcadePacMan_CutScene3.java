@@ -105,7 +105,7 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene {
 
         systems.navigator().placeAtTile(pacMan, 29, 20);
         systems.navigator().setMoveDir(pacMan, Direction.LEFT);
-        systems.navigator().setMoveDirSpeed(pacMan, 1.25f);
+        systems.navigator().setSpeed(pacMan, 1.25f);
 
         systems.actorSpriteAnimController().select(pacMan, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
         systems.actorSpriteAnimController().playSelected(pacMan);
@@ -115,7 +115,7 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene {
         systems.navigator().placeAtTile(blinky, 35, 20);
         systems.navigator().setMoveDir(blinky, Direction.LEFT);
         systems.navigator().setWishDir(blinky, Direction.LEFT);
-        systems.navigator().setMoveDirSpeed(blinky, 1.25f);
+        systems.navigator().setSpeed(blinky, 1.25f);
 
         systems.actorSpriteAnimController().select(blinky, CommonSpriteAnimationID.BLINKY_PATCHED);
         systems.actorSpriteAnimController().playSelected(blinky);
