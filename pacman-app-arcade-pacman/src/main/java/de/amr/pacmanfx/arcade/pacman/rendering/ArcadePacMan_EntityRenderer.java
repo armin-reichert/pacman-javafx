@@ -14,6 +14,7 @@ import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
+import de.amr.pacmanfx.uilib.entities.ImageDisplay;
 import de.amr.pacmanfx.uilib.entities.hud.comp.HUD_Style;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.MessageViewRenderer;
@@ -90,6 +91,8 @@ public class ArcadePacMan_EntityRenderer extends BaseRenderer {
                 }
             }
             case CreditDisplay creditDisplay -> drawCreditDisplay(creditDisplay);
+            //TODO change this!
+            case ImageDisplay imageDisplay -> super.render(imageDisplay, tick);
             case TextDisplay textDisplay -> super.render(textDisplay, tick);
             default -> {}
         }

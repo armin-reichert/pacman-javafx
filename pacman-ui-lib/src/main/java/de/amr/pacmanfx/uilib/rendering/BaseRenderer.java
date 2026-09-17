@@ -14,6 +14,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.rendering.ColoredRect;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
+import de.amr.pacmanfx.uilib.entities.ImageDisplay;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -74,6 +75,7 @@ public class BaseRenderer implements Renderer {
     public void render(Renderable r, long tick) {
         switch (r) {
             case ColoredRect coloredRect -> fillColoredRect(coloredRect);
+            case ImageDisplay imageDisplay -> renderImageDisplay(imageDisplay);
             case TextDisplay textDisplay-> renderTextDisplay(textDisplay);
             default -> throw new IllegalStateException("Unexpected value: " + r);
         }
@@ -268,7 +270,19 @@ public class BaseRenderer implements Renderer {
 
     // ----------------
 
+    private void renderImageDisplay(ImageDisplay imageDisplay) {
+        if (imageDisplay.isVisible()) {
+            ctx.save();
+            ctx.scale(scaling(), scaling());
+            ctx.drawImage(imageDisplay.image().image(), imageDisplay.pos().x(), imageDisplay.pos().y());
+            ctx.restore();
+        }
+    }
+
     private void renderTextDisplay(TextDisplay textDisplay) {
+        if (!textDisplay.isVisible()) {
+            return;
+        }
         final var pos = textDisplay.pos();
         final var data = textDisplay.data();
 
@@ -287,6 +301,4 @@ public class BaseRenderer implements Renderer {
         ctx.fillRect(scaled(rect.x()), scaled(rect.y()), scaled(rect.width()), scaled(rect.height()));
         ctx.restore();
     }
-
-
 }

@@ -24,7 +24,6 @@ import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostAnimationSystem;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.rules.CollisionStrategy;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
@@ -111,9 +110,9 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
 
     // NEW: Renderables
     private TextDisplay titleText;
-    private ImageDisplay[] ghostImageDisplays = new ImageDisplay[NUM_GHOSTS];
-    private TextDisplay[] ghostNicknameTextDisplays = new TextDisplay[NUM_GHOSTS];
-    private TextDisplay[] ghostCharacterTextDisplays = new TextDisplay[NUM_GHOSTS];
+    private final ImageDisplay[] ghostImageDisplays = new ImageDisplay[NUM_GHOSTS];
+    private final TextDisplay[] ghostNicknameTextDisplays = new TextDisplay[NUM_GHOSTS];
+    private final TextDisplay[] ghostCharacterTextDisplays = new TextDisplay[NUM_GHOSTS];
 
 
     public ArcadePacMan_IntroScene(GameApp app) {
@@ -174,24 +173,19 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
         final var spriteSheet = ArcadePacMan_SpriteSheet.instance();
         final int y = TS * 8;
         for (int i = 0; i < NUM_GHOSTS; ++i) {
-
-//            drawSpriteCentered(sprite, WorldMap.TS * 5, y + offsetY - WorldMap.HTS);
-            int offsetY = 3 * i * TS;
             ghostImageDisplays[i] = new ImageDisplay();
             RectShort sprite = spriteSheet.findSpriteSequence(GALLERY_GHOSTS)[i];
             ghostImageDisplays[i].image().setImage(spriteSheet.image(sprite));
-            ghostImageDisplays[i].pos().set(WorldMap.TS * 5, y + offsetY - WorldMap.HTS);
+            ghostImageDisplays[i].pos().set(TS * 4, y + 3 * i * TS - 1.5f * TS);
 
-//            fillText("-" + GHOST_CHARACTERS[p], GHOST_COLORS[p], WorldMap.TS * 7, y + offsetY);
             ghostCharacterTextDisplays[i] = new TextDisplay();
-            ghostCharacterTextDisplays[i].pos().set(TS * 7, y + offsetY);
+            ghostCharacterTextDisplays[i].pos().set(TS * 7, y + 3 * i * TS);
             ghostCharacterTextDisplays[i].data().setText("-" + GHOST_CHARACTERS[i]);
             ghostCharacterTextDisplays[i].data().setFillColor(GHOST_COLORS[i]);
             ghostCharacterTextDisplays[i].data().setFont(GlobalFonts.ARCADE.font(TS));
 
-//            fillText(GHOST_NICKNAMES[p], GHOST_COLORS[p], WorldMap.TS * 18, y + offsetY);
             ghostNicknameTextDisplays[i] = new TextDisplay();
-            ghostNicknameTextDisplays[i].pos().set(TS * 18, y + offsetY);
+            ghostNicknameTextDisplays[i].pos().set(TS * 18, y + 3 * i * TS);
             ghostNicknameTextDisplays[i].data().setText(GHOST_NICKNAMES[i]);
             ghostNicknameTextDisplays[i].data().setFillColor(GHOST_COLORS[i]);
             ghostNicknameTextDisplays[i].data().setFont(GlobalFonts.ARCADE.font(TS));

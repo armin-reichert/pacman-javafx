@@ -16,7 +16,6 @@ import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import java.util.Optional;
@@ -29,9 +28,6 @@ import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
 public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer {
 
     private static final String MIDWAY_MFG_CO = "© 1980 MIDWAY MFG.CO.";
-    private static final String[] GHOST_NICKNAMES  = { "\"BLINKY\"", "\"PINKY\"", "\"INKY\"", "\"CLYDE\"" };
-    private static final String[] GHOST_CHARACTERS = { "SHADOW", "SPEEDY", "BASHFUL", "POKEY" };
-    private static final Color[]  GHOST_COLORS     = { ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE };
 
     private static final byte LEFT_TILE_X = 4;
     private static final short ENERGIZER_X = WorldMap.TS * LEFT_TILE_X;
@@ -61,7 +57,6 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer {
 
     private void renderScene(ArcadePacMan_IntroScene introScene) {
         ctx.setImageSmoothing(true);
-        drawGhostGallery(introScene);
         switch (introScene.flow.state()) {
             case SHOWING_POINTS -> drawPoints(introScene);
             case CHASING_PAC_MAN -> {
@@ -76,9 +71,6 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer {
             default -> {}
         }
         ctx.setImageSmoothing(false);
-    }
-
-    private void drawGhostGallery(ArcadePacMan_IntroScene introScene) {
     }
 
     private void drawCopyright() {
