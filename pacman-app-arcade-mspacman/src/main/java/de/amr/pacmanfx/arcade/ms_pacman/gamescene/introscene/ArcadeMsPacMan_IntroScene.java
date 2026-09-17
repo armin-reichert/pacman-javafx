@@ -32,9 +32,9 @@ import de.amr.pacmanfx.ui.VoiceID;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
+import de.amr.pacmanfx.uilib.assets.AssetMap;
 import javafx.scene.paint.Color;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -68,7 +68,8 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
     private List<Ghost> ghosts;
     private ImageView copyright;
     private TextDisplay titleText;
-    private final List<Renderable> currentMarqueeText = new ArrayList<>();
+    private TextDisplay marqueeText1;
+    private TextDisplay marqueeText2;
 
     public int ghostInSpotlight;
 
@@ -82,7 +83,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
 
     @Override
     public Stream<Renderable> renderables() {
-        return Ufx.streamOf(titleText, marquee, currentMarqueeText, msPacMan, ghosts, copyright);
+        return Ufx.streamOf(titleText, marquee, marqueeText1, marqueeText2, msPacMan, ghosts, copyright);
     }
 
     @Override
@@ -112,22 +113,47 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
     private static final Vector2f GHOST_START_POS = new Vector2f(33.5f * TS, 20 * TS);
 
     private void initScene() {
-        final var actorFactory = new ArcadeMsPacMan_ActorFactory();
         final GameVariantRuntime runtime = app.variantManager().currentRuntime();
-        final GameVariantRenderConfig renderConfig = runtime.uiConfig().renderConfig();
-        final SpriteAnimationContainer animContainer = runtime.spriteAnimContainer();
-        final GameSystems systems = runtime.playConfig().systems();
-        final ActorSpriteAnimController animController = systems.actorSpriteAnimController();
-        final WorldNavigationSystem nav = systems.navigator();
+        final ActorSpriteAnimController animController = runtime.playConfig().systems().actorSpriteAnimController();
 
+        createTitleText();
+        createMarqueeTexts();
+        createMarquee();
+        createMsPacMan(runtime);
+        createGhosts(runtime);
+        createCopyrightImage(runtime);
+
+        ghostInSpotlight = GhostPersonality.RED_GHOST_SHADOW.ordinal();
+        numTicksBeforeRising = 0;
+
+        startAnimations(animController);
+        soundManager().voice().playAfterSec(1, VoiceID.START_HINT.media());
+    }
+
+    private void createTitleText() {
         titleText = new TextDisplay();
         titleText.data().setText(MARQUEE_TITLE);
         titleText.data().setFillColor(ARCADE_ORANGE);
         titleText.data().setFont(GlobalFonts.ARCADE.font(8));
         titleText.pos().set(TITLE_X, TITLE_Y);
         titleText.show();
+    }
 
-        createMarquee();
+    private void createCopyrightImage(GameVariantRuntime runtime) {
+        final AssetMap assets = runtime.uiConfig().assets();
+        copyright = new ImageView();
+        copyright.show();
+        copyright.pos().set(tilesPx(6), tilesPx(28));
+        copyright.image().setImage(assets.image("logo.midway"));
+    }
+
+    private void createMsPacMan(GameVariantRuntime runtime) {
+        final var actorFactory = new ArcadeMsPacMan_ActorFactory();
+        final GameVariantRenderConfig renderConfig = runtime.uiConfig().renderConfig();
+        final SpriteAnimationContainer animContainer = runtime.spriteAnimContainer();
+        final GameSystems systems = runtime.playConfig().systems();
+        final ActorSpriteAnimController animController = systems.actorSpriteAnimController();
+        final WorldNavigationSystem nav = systems.navigator();
 
         msPacMan = actorFactory.createMsPacMan();
         msPacMan.pos().set(PAC_START_POS);
@@ -135,6 +161,14 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
         nav.setSpeed(msPacMan, ACTOR_SPEED);
         animController.setAnimations(msPacMan, renderConfig.createPacAnimations(animContainer));
         msPacMan.show();
+    }
+
+    private void createGhosts(GameVariantRuntime runtime) {
+        final GameVariantRenderConfig renderConfig = runtime.uiConfig().renderConfig();
+        final SpriteAnimationContainer animContainer = runtime.spriteAnimContainer();
+        final GameSystems systems = runtime.playConfig().systems();
+        final ActorSpriteAnimController animController = systems.actorSpriteAnimController();
+        final WorldNavigationSystem nav = systems.navigator();
 
         ghosts = List.of(
             renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.RED_GHOST_SHADOW),
@@ -151,26 +185,6 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
             systems.ghostState().setState(ghost, GhostState.HUNTING_PAC);
             ghost.show();
         }
-
-        ghostInSpotlight = GhostPersonality.RED_GHOST_SHADOW.ordinal();
-        numTicksBeforeRising = 0;
-
-        copyright = new ImageView();
-        copyright.show();
-        copyright.pos().set(tilesPx(6), tilesPx(28));
-        copyright.image().setImage(renderConfig.assets().image("logo.midway"));
-
-        // Start animations
-
-        animController.select(msPacMan, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
-        animController.playSelected(msPacMan);
-
-        for (Ghost ghost : ghosts) {
-            animController.select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);
-            animController.playSelected(ghost);
-        }
-
-        soundManager().voice().playAfterSec(1, VoiceID.START_HINT.media());
     }
 
     private void createMarquee() {
@@ -189,53 +203,54 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
         marquee.show();
     }
 
+    private void createMarqueeTexts() {
+        marqueeText1 = new TextDisplay();
+        marqueeText1.data().setFont(GlobalFonts.ARCADE.font(TS));
+        marqueeText1.pos().set(TITLE_X, TOP_Y + tilesPx(3));
+        marqueeText1.show();
+
+        marqueeText2 = new TextDisplay();
+        marqueeText2.data().setFont(GlobalFonts.ARCADE.font(TS));
+        marqueeText2.show();
+    }
+
     private void updateMarqueeText(SceneState state) {
-        currentMarqueeText.clear();
         switch (state) {
             case GHOSTS_MARCHING_IN -> {
                 String ghostName = GHOST_NAMES[ghostInSpotlight];
                 Color ghostColor = GHOST_COLORS[ghostInSpotlight];
                 if (ghostInSpotlight == GhostPersonality.RED_GHOST_SHADOW.ordinal()) {
-                    //fillText("WITH", ARCADE_WHITE, TITLE_X, TOP_Y + tilesPx(3));
-                    final var withText = new TextDisplay();
-                    withText.data().setText("WITH");
-                    withText.data().setFillColor(ARCADE_WHITE);
-                    withText.data().setFont(GlobalFonts.ARCADE.font(TS));
-                    withText.pos().set(TITLE_X, TOP_Y + tilesPx(3));
-                    withText.show();
-                    currentMarqueeText.add(withText);
+                    marqueeText1.data().setText("WITH");
+                    marqueeText1.data().setFillColor(ARCADE_WHITE);
+                    marqueeText1.show();
+                } else {
+                    marqueeText1.hide();
                 }
                 double x = TITLE_X + (ghostName.length() < 4 ? tilesPx(4) : tilesPx(3));
                 double y = TOP_Y + tilesPx(6);
-                final var ghostText = new TextDisplay();
-                ghostText.data().setText(ghostName);
-                ghostText.data().setFillColor(ghostColor);
-                ghostText.data().setFont(GlobalFonts.ARCADE.font(TS));
-                ghostText.pos().set(x, y);
-                ghostText.show();
-                currentMarqueeText.add(ghostText);
+                marqueeText2.data().setText(ghostName);
+                marqueeText2.data().setFillColor(ghostColor);
+                marqueeText2.pos().set(x, y);
             }
 
             case MS_PACMAN_MARCHING_IN -> {
-//                fillText("STARRING", ARCADE_WHITE, TITLE_X, TOP_Y + tilesPx(3));
-                final var starring = new TextDisplay();
-                starring.data().setText("STARRING");
-                starring.data().setFillColor(ARCADE_WHITE);
-                starring.data().setFont(GlobalFonts.ARCADE.font(TS));
-                starring.pos().set(TITLE_X, TOP_Y + tilesPx(3));
-                starring.show();
+                marqueeText1.data().setText("STARRING");
+                marqueeText1.data().setFillColor(ARCADE_WHITE);
+                marqueeText1.show();
 
-                // fillText("MS PAC-MAN", ARCADE_YELLOW, TITLE_X, TOP_Y + tilesPx(6));
-                final var msPacManText = new TextDisplay();
-                msPacManText.data().setText("MS PAC-MAN");
-                msPacManText.data().setFillColor(ARCADE_YELLOW);
-                msPacManText.data().setFont(GlobalFonts.ARCADE.font(TS));
-                msPacManText.pos().set(TITLE_X, TOP_Y + tilesPx(6));
-                msPacManText.show();
-
-                currentMarqueeText.add(starring);
-                currentMarqueeText.add(msPacManText);
+                marqueeText2.data().setText("MS PAC-MAN");
+                marqueeText2.data().setFillColor(ARCADE_YELLOW);
+                marqueeText2.pos().set(TITLE_X, TOP_Y + tilesPx(6));
             }
+        }
+    }
+
+    private void startAnimations(ActorSpriteAnimController animController) {
+        animController.select(msPacMan, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
+        animController.playSelected(msPacMan);
+        for (Ghost ghost : ghosts) {
+            animController.select(ghost, CommonSpriteAnimationID.GHOST_NORMAL);
+            animController.playSelected(ghost);
         }
     }
 
