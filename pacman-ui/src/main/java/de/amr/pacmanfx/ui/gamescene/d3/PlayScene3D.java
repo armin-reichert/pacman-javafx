@@ -276,7 +276,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         } else {
             scoresView.showTextForScore(
                 app().ui().translationManager().translate("score.game_over"),
-                app().variantManager().currentVariantRuntime().uiConfig().assets().color("color.game_over_message"));
+                app().variantManager().currentRuntime().uiConfig().assets().color("color.game_over_message"));
         }
 
         // High score is always visible
@@ -307,8 +307,8 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         requireNonNull(game);
         requireNonNull(level);
 
-        final GameVariantPlayConfig config = app().variantManager().currentVariantRuntime().playConfig();
-        final GameVariantUIConfig uiConfig = app().variantManager().currentVariantRuntime().uiConfig();
+        final GameVariantPlayConfig config = app().variantManager().currentRuntime().playConfig();
+        final GameVariantUIConfig uiConfig = app().variantManager().currentRuntime().uiConfig();
         final GameViewModel viewModel      = app().ui().viewModel();
         final GameSession session          = game.session();
 

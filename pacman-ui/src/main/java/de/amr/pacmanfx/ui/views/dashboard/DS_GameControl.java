@@ -61,7 +61,7 @@ public class DS_GameControl extends GameDashboardSection {
         setAction(choiceBoxInitialLives,
             () -> {
                 final int lifeCount = choiceBoxInitialLives.getValue();
-                app.variantManager().currentVariantRuntime().playConfig().setInitialLifeCount(lifeCount);
+                app.variantManager().currentRuntime().playConfig().setInitialLifeCount(lifeCount);
                 Logger.info("Initial life count was set to: {}", lifeCount);
             });
 
@@ -88,7 +88,7 @@ public class DS_GameControl extends GameDashboardSection {
         final GameSession session = game.session();
         final AbstractGameState state = game.state();
 
-        choiceBoxInitialLives.setValue(app.variantManager().currentVariantRuntime().playConfig().initialLifeCount());
+        choiceBoxInitialLives.setValue(app.variantManager().currentRuntime().playConfig().initialLifeCount());
         choiceBoxInitialLives.setDisable(!CommonGameStateID.GAME_INTRO.hasSameNameAs(state));
 
         final boolean creditDisabled = !state.nameIsOneOf(CommonGameStateID.GAME_INTRO, CommonGameStateID.GAME_PREPARATION);

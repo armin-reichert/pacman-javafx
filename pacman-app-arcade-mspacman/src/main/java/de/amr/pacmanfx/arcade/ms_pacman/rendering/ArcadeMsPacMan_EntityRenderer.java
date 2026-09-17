@@ -9,7 +9,7 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.clapperboard.ClapperboardAnimationSystem;
 import de.amr.pacmanfx.arcade.ms_pacman.gamescene.introscene.MarqueeRenderer;
-import de.amr.pacmanfx.arcade.ms_pacman.entities.Copyright;
+import de.amr.pacmanfx.arcade.ms_pacman.entities.ImageView;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_RenderConfig;
 import de.amr.pacmanfx.core.Energizer;
 import de.amr.pacmanfx.core.rendering.Renderable;
@@ -91,7 +91,7 @@ public class ArcadeMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
             case Marquee marquee           -> drawMarquee(marquee, tick);
             case MessageView messageView   -> messageViewRenderer.renderMessageView(messageView);
-            case Copyright copyright       -> drawMidwayCopyright(copyright);
+            case ImageView copyright       -> drawMidwayCopyright(copyright);
             case LevelCounter levelCounter -> drawLevelCounter(levelCounter);
             case LivesCounter livesCounter -> drawLivesCounter(livesCounter);
             case Score score -> {
@@ -194,7 +194,7 @@ public class ArcadeMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
         marqueeRenderer.render(marquee, tick);
     }
 
-    private void drawMidwayCopyright(Copyright copyright) {
+    private void drawMidwayCopyright(ImageView copyright) {
         final float x = copyright.pos().x();
         final float y = copyright.pos().y();
         final Font arcade8 = Ufx.deriveFont(GlobalFonts.ARCADE.font(), scaled(8));

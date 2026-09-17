@@ -247,8 +247,8 @@ public class GamePlayView implements GameView {
         }
 
         renderManager.updateRenderers(
-            app.variantManager().currentVariantRuntime().playConfig(),
-            app.variantManager().currentVariantRuntime().uiConfig().renderConfig(),
+            app.variantManager().currentRuntime().playConfig(),
+            app.variantManager().currentRuntime().uiConfig().renderConfig(),
             currentGameScene,
             layers.miniViewLayer()
         );
@@ -289,7 +289,7 @@ public class GamePlayView implements GameView {
         requireNonNull(gameScene);
 
         final GameMainScene mainScene = app.ui().window().mainScene();
-        final GameVariantUIConfig config = app.variantManager().currentVariantRuntime().uiConfig();
+        final GameVariantUIConfig config = app.variantManager().currentRuntime().uiConfig();
 
         if (gameScene.optSubSceneFX().isPresent()) {
             embedGameSceneWithSubSceneFX(mainScene, gameScene, gameScene.optSubSceneFX().get());

@@ -5,16 +5,15 @@
 package de.amr.pacmanfx.arcade.ms_pacman.gamescene.startscene;
 
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.arcade.ms_pacman.entities.Copyright;
+import de.amr.pacmanfx.arcade.ms_pacman.entities.ImageView;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.rendering.Renderable;
-import de.amr.pacmanfx.game.GameVariantRuntime;
-import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
+import de.amr.pacmanfx.uilib.assets.AssetMap;
 
 import java.util.stream.Stream;
 
@@ -22,43 +21,43 @@ import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 
 public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
 
-    private final StartSceneText startSceneText;
-    private final Copyright copyright;
+    private final StartSceneText sceneText;
+    private final ImageView copyrightImage;
 
     public ArcadeMsPacMan_StartScene(GameApp app) {
         super(app);
+
+        // Add 2D rendering support
         setComp(GameSceneCanvasRenderingComp.class, new GameSceneCanvasRenderingComp());
 
-        final GameVariantRuntime variant = app.variantManager().currentVariantRuntime();
-        final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
+        final AssetMap assets = app.variantManager().currentRuntime().uiConfig().assets();
 
-        startSceneText = new StartSceneText(6, 16);
+        sceneText = new StartSceneText(6, 16);
 
-        copyright = new Copyright();
-        copyright.show();
-        copyright.pos().set(tilesPx(6), tilesPx(28));
-        copyright.image().setImage(renderConfig.assets().image("logo.midway"));
-
+        copyrightImage = new ImageView();
+        copyrightImage.show();
+        copyrightImage.pos().set(tilesPx(6), tilesPx(28));
+        copyrightImage.image().setImage(assets.image("logo.midway"));
     }
 
     @Override
     public Stream<Renderable> renderables() {
-        return Ufx.streamOf(startSceneText, copyright);
+        return Ufx.streamOf(sceneText, copyrightImage);
     }
 
     @Override
     public void onActivate() {
-        final Arcade_Actions actions = app.variantManager().currentVariantRuntime()
+        // Bind "insert coin" + "start game" actions
+        final Arcade_Actions actions = app.variantManager().currentRuntime()
             .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
-        final var bindingsMap = actionBindingsSupport().registry();
-        // Insert coin + start game actions
-        bindingsMap.registerAllBindings(actions.gameStartActionBindings());
+        actionBindings().registry().registerAllBindings(actions.gameStartActionBindings());
     }
 
     @Override
     public void onDeactivate() {
         soundManager().voice().stop();
+        actionBindings().registry().dispose();
     }
 
     @Override

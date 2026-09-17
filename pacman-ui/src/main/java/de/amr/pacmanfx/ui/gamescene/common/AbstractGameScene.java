@@ -49,7 +49,7 @@ public abstract class AbstractGameScene
         return true;
     }
 
-    public ActionBindingsComp actionBindingsSupport() {
+    public ActionBindingsComp actionBindings() {
         ActionBindingsComp actionBindings = optComp(ActionBindingsComp.class).orElse(null);
         if (actionBindings == null) {
             setComp(ActionBindingsComp.class, new ActionBindingsComp(this));

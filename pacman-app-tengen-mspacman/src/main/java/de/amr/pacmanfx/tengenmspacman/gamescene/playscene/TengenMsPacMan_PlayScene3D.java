@@ -105,7 +105,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         hud.entities().addAll(optionsDisplay, leftNumberDisplay, rightNumberDisplay);
 
         final ActorSpriteAnimController animController = app.game().playConfig().systems().actorSpriteAnimController();
-        final var renderer = app.variantManager().currentVariantRuntime().uiConfig().renderConfig().createEntityRenderer(animController, canvas);
+        final var renderer = app.variantManager().currentRuntime().uiConfig().renderConfig().createEntityRenderer(animController, canvas);
         renderer.setScaling(quality);
         renderer.fillCanvas(backgroundColor);
 
@@ -117,10 +117,10 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
 
     @Override
     public void replaceActionBindings(GameSession session, GameLevel level) {
-        final var bindingsMap = actionBindingsSupport().registry();
+        final var bindingsMap = actionBindings().registry();
         bindingsMap.dispose();
 
-        final var actions = app.variantManager().currentVariantRuntime()
+        final var actions = app.variantManager().currentRuntime()
             .extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
 
         if (session.isAttractMode()) {
@@ -133,7 +133,7 @@ public class TengenMsPacMan_PlayScene3D extends PlayScene3D {
         }
         bindActions();
 
-        Logger.info(actionBindingsSupport());
+        Logger.info(actionBindings());
     }
 
     @Override

@@ -46,7 +46,7 @@ class GameEventHandler implements DefaultGameEventListener {
     }
 
     public Optional<GameSoundEffects> optSoundEffects() {
-        return gameScene.app().variantManager().currentVariantRuntime().uiConfig().optSoundEffects();
+        return gameScene.app().variantManager().currentRuntime().uiConfig().optSoundEffects();
     }
 
     @Override

@@ -133,9 +133,9 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
             rendering.unscaledHeightProperty().set(terrainSize.y());
         });
 
-        final var bindingsRegistry = actionBindingsSupport().registry();
+        final var bindingsRegistry = actionBindings().registry();
         if (session.isAttractMode()) {
-            final Arcade_Actions actions = app.variantManager().currentVariantRuntime()
+            final Arcade_Actions actions = app.variantManager().currentRuntime()
                 .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
             bindingsRegistry.registerAllBindings(actions.gameStartActionBindings());
             Logger.info("Game scene {} accepted demo level", getClass().getSimpleName());

@@ -70,7 +70,7 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene {
         // Quit cut scene when "START" button on "joypad" is pressed
         final Joypad joypad = app.input().joypad();
 
-        final var bindingsMap = actionBindingsSupport().registry();
+        final var bindingsMap = actionBindings().registry();
         bindingsMap.bindActionToKeyCombination(
             app.commonActions().gameFlowActions().actionLetGameStateExpire(),
             joypad.keyForButton(JoypadButton.START));
@@ -111,7 +111,7 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene {
 
     private void createActors() {
         final var actorFactory = TengenMsPacMan_ActorFactory.instance();
-        final GameVariantRuntime variant = app.variantManager().currentVariantRuntime();
+        final GameVariantRuntime variant = app.variantManager().currentRuntime();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimationContainer animContainer    = variant.spriteAnimContainer();
 

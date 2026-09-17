@@ -84,7 +84,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
     }
 
     private Optional<GameSoundEffects> optSoundEffects() {
-        return app().variantManager().currentVariantRuntime().uiConfig().optSoundEffects();
+        return app().variantManager().currentRuntime().uiConfig().optSoundEffects();
     }
 
     @Override
@@ -311,7 +311,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
     private void onGhostsKilled(GameLevel3D level3D) {
         final GameSession session = game().session();
-        final GameVariantUIConfig uiConfig = app().variantManager().currentVariantRuntime().uiConfig();
+        final GameVariantUIConfig uiConfig = app().variantManager().currentRuntime().uiConfig();
         session.thisFrame().ghostsKilled().forEach(ghost -> {
             final int index = ghost.state().killChainIndex();
             level3D.addKilledGhostNumberBox(ghost, uiConfig, index);

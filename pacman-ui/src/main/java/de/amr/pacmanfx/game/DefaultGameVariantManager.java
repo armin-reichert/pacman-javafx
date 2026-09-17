@@ -63,7 +63,7 @@ public class DefaultGameVariantManager implements GameVariantManager {
     }
 
     @Override
-    public GameVariantRuntime currentVariantRuntime() {
+    public GameVariantRuntime currentRuntime() {
         return variantConfigByName(currentVariantName());
     }
 

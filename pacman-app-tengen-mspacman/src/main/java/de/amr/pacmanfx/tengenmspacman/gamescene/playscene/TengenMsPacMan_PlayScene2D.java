@@ -255,7 +255,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
             acceptNormalLevel();
         }
 
-        Logger.info(actionBindingsSupport().registry());
+        Logger.info(actionBindings().registry());
         Logger.info("Scene {} accepted game level #{}", getClass().getSimpleName(), level.number());
     }
 
@@ -299,12 +299,12 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     }
 
     private TengenMsPacMan_Actions actions() {
-        return app.variantManager().currentVariantRuntime()
+        return app.variantManager().currentRuntime()
             .extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
     }
 
     private TengenMsPacMan_UISettings uiSettings() {
-        return app.variantManager().currentVariantRuntime()
+        return app.variantManager().currentRuntime()
             .extensionValue(TengenMsPacMan_GameExtension.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
     }
 
@@ -314,7 +314,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         final var actions = actions();
 
         // Pac-Man is steered using keys simulating the NES "Joypad" buttons ("START", "SELECT", "B", "A" etc.)
-        final var bindingsMap = actionBindingsSupport().registry();
+        final var bindingsMap = actionBindings().registry();
 
         bindingsMap.registerAllBindings(actions.steeringBindings());
         bindingsMap.registerAllBindings(app.commonActions().cheatActions().bindings());
@@ -328,7 +328,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
 
         final var actions = actions();
 
-        final var bindingsMap = actionBindingsSupport().registry();
+        final var bindingsMap = actionBindings().registry();
         bindingsMap.selectAnyMatchingBinding(actions.actionTogglePlaySceneDisplayMode(), actions.localBindings());
         bindingsMap.selectAnyMatchingBinding(actions.actionQuitDemoLevel(), actions.localBindings());
     }
@@ -352,7 +352,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     }
 
     private void ensureActorAnimationsCreated(GameLevel level, boolean boosterEnabled) {
-        final GameVariantRuntime variantConfig = app.variantManager().currentVariantRuntime();
+        final GameVariantRuntime variantConfig = app.variantManager().currentRuntime();
         final GameVariantRenderConfig renderConfig = variantConfig.uiConfig().renderConfig();
         final SpriteAnimationContainer animContainer = variantConfig.spriteAnimContainer();
         final ActorSpriteAnimController animController = variantConfig.playConfig().systems().actorSpriteAnimController();

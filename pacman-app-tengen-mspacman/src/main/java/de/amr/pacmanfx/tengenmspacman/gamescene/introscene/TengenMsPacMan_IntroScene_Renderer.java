@@ -52,7 +52,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer implements 
 
         setDebugInfoRenderer(createDefaultSceneDebugRenderer(gameScene, canvas));
 
-        uiSettings = gameScene.app().variantManager().currentVariantRuntime()
+        uiSettings = gameScene.app().variantManager().currentRuntime()
             .extensionValue(TengenMsPacMan_GameExtension.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
     }
 

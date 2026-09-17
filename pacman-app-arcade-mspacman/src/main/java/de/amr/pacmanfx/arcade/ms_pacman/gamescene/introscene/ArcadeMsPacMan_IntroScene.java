@@ -9,7 +9,7 @@ import de.amr.basics.fsm.StateMachine;
 import de.amr.basics.math.Direction;
 import de.amr.basics.timer.TickTimer;
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.arcade.ms_pacman.entities.Copyright;
+import de.amr.pacmanfx.arcade.ms_pacman.entities.ImageView;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
@@ -61,7 +61,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
     private Marquee marquee;
     private Pac msPacMan;
     private List<Ghost> ghosts;
-    private Copyright copyright;
+    private ImageView copyright;
 
     public GhostPersonality ghostPresented;
 
@@ -80,10 +80,10 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
 
     @Override
     public void onActivate() {
-        final Arcade_Actions actions = app.variantManager().currentVariantRuntime()
+        final Arcade_Actions actions = app.variantManager().currentRuntime()
             .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
-        final var bindingsMap = actionBindingsSupport().registry();
+        final var bindingsMap = actionBindings().registry();
         bindingsMap.registerAllBindings(actions.gameStartActionBindings());
         bindingsMap.registerAllBindings(app.commonActions().sceneTestActions().bindings());
 
@@ -102,7 +102,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
 
     private void initScene() {
         final var actorFactory = new ArcadeMsPacMan_ActorFactory();
-        final GameVariantRuntime variant = app.variantManager().currentVariantRuntime();
+        final GameVariantRuntime variant = app.variantManager().currentRuntime();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimationContainer animContainer = variant.spriteAnimContainer();
         final ActorSpriteAnimController animController = variant.playConfig().systems().actorSpriteAnimController();
@@ -140,7 +140,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
         ghostPresented = GhostPersonality.RED_GHOST_SHADOW;
         numTicksBeforeRising = 0;
 
-        copyright = new Copyright();
+        copyright = new ImageView();
         copyright.show();
         copyright.pos().set(tilesPx(6), tilesPx(28));
         copyright.image().setImage(renderConfig.assets().image("logo.midway"));

@@ -18,7 +18,7 @@ import de.amr.pacmanfx.ui.action.core.GameApp;
 public class ActorAnimationManager {
 
     public static void ensureActorAnimationsCreated(GameApp app, GameLevel level) {
-        final GameVariantRuntime variantRuntime = app.variantManager().currentVariantRuntime();
+        final GameVariantRuntime variantRuntime = app.variantManager().currentRuntime();
         final GameVariantRenderConfig renderConfig = variantRuntime.uiConfig().renderConfig();
         final SpriteAnimationContainer animationContainer = variantRuntime.spriteAnimContainer();
         final ActorSpriteAnimController animController = variantRuntime.playConfig().systems().actorSpriteAnimController();

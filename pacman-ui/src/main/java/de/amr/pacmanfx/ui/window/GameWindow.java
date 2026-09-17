@@ -116,7 +116,7 @@ public class GameWindow {
     }
 
     private void updateStageIcon(GameApp appContext) {
-        final Image icon = appContext.variantManager().currentVariantRuntime().uiConfig().assets().image("app_icon");
+        final Image icon = appContext.variantManager().currentRuntime().uiConfig().assets().image("app_icon");
         if (icon != null) {
             stage.getIcons().setAll(icon);
         } else {
@@ -151,7 +151,7 @@ public class GameWindow {
         // app.title = Game Variant Name {0}
         // app.title = Game Variant Name {0} (paused)
 
-        final TranslationManager variantTranslations = appContext.variantManager().currentVariantRuntime().uiConfig().translations();
+        final TranslationManager variantTranslations = appContext.variantManager().currentRuntime().uiConfig().translations();
         final String titleKey = paused ? "app.title.paused" : "app.title";
         if (variantTranslations.textBundle() != null
             && variantTranslations.textBundle().containsKey(titleKey)) {

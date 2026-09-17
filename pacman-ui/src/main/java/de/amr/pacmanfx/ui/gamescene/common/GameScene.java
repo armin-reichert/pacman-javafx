@@ -97,6 +97,6 @@ public interface GameScene extends Disposable, QuitHandler {
     }
 
     default Optional<GameSoundEffects> optSoundEffects() {
-        return app().variantManager().currentVariantRuntime().uiConfig().optSoundEffects();
+        return app().variantManager().currentRuntime().uiConfig().optSoundEffects();
     }
 }

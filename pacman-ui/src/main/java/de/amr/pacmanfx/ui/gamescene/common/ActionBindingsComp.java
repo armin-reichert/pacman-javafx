@@ -1,17 +1,15 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
 package de.amr.pacmanfx.ui.gamescene.common;
 
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsRegistry;
 
-public class ActionBindingsComp implements GameSceneComponent {
+public record ActionBindingsComp(ActionBindingsRegistry registry) implements GameSceneComponent {
 
-    private final ActionBindingsRegistry registry;
-
-    public ActionBindingsComp(Object target) {
-        registry = new GameActionBindingsRegistry("Action Bindings for '%s'".formatted(target));
-    }
-
-    public ActionBindingsRegistry registry() {
-        return registry;
+    public ActionBindingsComp(GameScene gameScene) {
+        this(new GameActionBindingsRegistry("Action Bindings for '%s'".formatted(gameScene)));
     }
 }

@@ -94,16 +94,16 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
 
     @Override
     public void onActivate() {
-        final GameVariantUIConfig variantConfig = app.variantManager().currentVariantRuntime().uiConfig();
+        final GameVariantUIConfig variantConfig = app.variantManager().currentRuntime().uiConfig();
 
         game().session().setHudVisible(false);
 
         spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
-        final var actions = app.variantManager().currentVariantRuntime()
+        final var actions = app.variantManager().currentRuntime()
             .extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
 
-        final var bindingsMap = actionBindingsSupport().registry();
+        final var bindingsMap = actionBindings().registry();
         bindingsMap.selectAnyMatchingBinding(actions.actionEnterStartScreen(), actions.localBindings());
         bindingsMap.selectAnyMatchingBinding(actions.actionToggleJoypadBindingsDisplayed(), actions.localBindings());
 
@@ -134,7 +134,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
 
         final var actorFactory = TengenMsPacMan_ActorFactory.instance();
 
-        final GameVariantRuntime variant = app.variantManager().currentVariantRuntime();
+        final GameVariantRuntime variant = app.variantManager().currentRuntime();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimationContainer animContainer    = variant.spriteAnimContainer();
         final ActorSpriteAnimController animController  = variant.playConfig().systems().actorSpriteAnimController();
@@ -196,7 +196,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
         SHOWING_MARQUEE {
             @Override
             public void onEnter(TengenMsPacMan_IntroScene scene) {
-                final GameVariantRuntime variant = scene.app.variantManager().currentVariantRuntime();
+                final GameVariantRuntime variant = scene.app.variantManager().currentRuntime();
                 final ActorSpriteAnimController animController = variant.playConfig().systems().actorSpriteAnimController();
                 final GameSystems systems = variant.playConfig().systems();
                 final WorldNavigationSystem nav = systems.navigator();
