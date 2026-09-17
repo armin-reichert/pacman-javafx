@@ -10,15 +10,15 @@ import javafx.scene.text.Font;
 
 public class TextDisplayDataComp implements GameEntityComp {
 
-    private String text;
+    private String text = "";
 
-    private Font font;
+    private Font font = Font.font(8);
 
-    private Color fillColor;
+    private Color fillColor = Color.WHITE;
 
-    private Color strokeColor;
+    private Color strokeColor = Color.WHITE;
 
-    private boolean center;
+    private boolean center = false;
 
     public String text() {
         return text;
