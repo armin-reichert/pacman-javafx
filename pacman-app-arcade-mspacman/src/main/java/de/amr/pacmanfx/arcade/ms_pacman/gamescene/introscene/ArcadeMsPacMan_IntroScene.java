@@ -10,7 +10,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.timer.TickTimer;
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.arcade.ms_pacman.entities.ImageView;
+import de.amr.pacmanfx.uilib.entities.ImageDisplay;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
@@ -69,7 +69,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
     private Marquee marquee;
     private Pac msPacMan;
     private List<Ghost> ghosts;
-    private ImageView copyright;
+    private ImageDisplay copyright;
     private TextDisplay titleText;
     private TextDisplay marqueeText1;
     private TextDisplay marqueeText2;
@@ -141,7 +141,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
 
     private void createCopyrightImage(GameVariantRuntime runtime) {
         final AssetMap assets = runtime.uiConfig().assets();
-        copyright = new ImageView();
+        copyright = new ImageDisplay();
         copyright.show();
         copyright.pos().set(tilesPx(6), tilesPx(28));
         copyright.image().setImage(assets.image("logo.midway"));

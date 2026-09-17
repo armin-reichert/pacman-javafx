@@ -7,46 +7,62 @@ package de.amr.pacmanfx.arcade.pacman.gamescene.introscene;
 import de.amr.basics.fsm.State;
 import de.amr.basics.fsm.StateMachine;
 import de.amr.basics.math.Direction;
+import de.amr.basics.math.RectShort;
 import de.amr.basics.timer.Pulse;
 import de.amr.basics.timer.TickTimer;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
+import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
-import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
-import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
-import de.amr.pacmanfx.core.entities.Ghost;
-import de.amr.pacmanfx.core.entities.GhostPoints;
-import de.amr.pacmanfx.core.entities.Pac;
+import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostAnimationSystem;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.rules.CollisionStrategy;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
+import de.amr.pacmanfx.game.GameVariantRuntime;
+import de.amr.pacmanfx.ui.GlobalFonts;
 import de.amr.pacmanfx.ui.VoiceID;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
+import de.amr.pacmanfx.uilib.entities.ImageDisplay;
+import javafx.scene.paint.Color;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import static de.amr.pacmanfx.arcade.pacman.rendering.SpriteID.GALLERY_GHOSTS;
 import static de.amr.pacmanfx.core.entities.ghost.comp.GhostState.EATEN;
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
+import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
 
 /**
  * The ghosts are presented one by one, then Pac-Man is chased by the ghosts, turns the cards and hunts the ghosts himself.
  */
 public class ArcadePacMan_IntroScene extends AbstractGameScene {
+
+    private static final String TITLE_TEXT = "CHARACTER / NICKNAME";
+    private static final String MIDWAY_MFG_CO = "© 1980 MIDWAY MFG.CO.";
+    private static final String[] GHOST_NICKNAMES  = { "\"BLINKY\"", "\"PINKY\"", "\"INKY\"", "\"CLYDE\"" };
+    private static final String[] GHOST_CHARACTERS = { "SHADOW", "SPEEDY", "BASHFUL", "POKEY" };
+    private static final Color[]  GHOST_COLORS     = { ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE };
+
+    private static final byte LEFT_TILE_X = 4;
+    private static final short ENERGIZER_X = TS * LEFT_TILE_X;
+    private static final short ENERGIZER_Y = TS * 20;
 
     public static final int NUM_GHOSTS = 4;
 
@@ -83,20 +99,22 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
 
     // public access for renderer
     public final StateMachine<ArcadePacMan_IntroScene> flow;
-    public boolean titleVisible;
     public Pulse blinking;
 
     private Pac pacMan;
     private final Ghost[] ghosts = new Ghost[NUM_GHOSTS];
     private GhostPoints points;
 
-    public final boolean[] ghostImageVisible = new boolean[NUM_GHOSTS];
-    public final boolean[] ghostNicknameVisible = new boolean[NUM_GHOSTS];
-    public final boolean[] ghostCharacterVisible = new boolean[NUM_GHOSTS];
-
     private int numGhostsEaten;
     private int ghostIndex;
     private long lastGhostEatenTick;
+
+    // NEW: Renderables
+    private TextDisplay titleText;
+    private ImageDisplay[] ghostImageDisplays = new ImageDisplay[NUM_GHOSTS];
+    private TextDisplay[] ghostNicknameTextDisplays = new TextDisplay[NUM_GHOSTS];
+    private TextDisplay[] ghostCharacterTextDisplays = new TextDisplay[NUM_GHOSTS];
+
 
     public ArcadePacMan_IntroScene(GameApp app) {
         super(app);
@@ -128,6 +146,58 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
         flow.update(this);
     }
 
+    @Override
+    public Stream<Renderable> renderables() {
+        return Ufx.streamOf(
+            titleText,
+            Arrays.stream(ghostImageDisplays).filter(ImageDisplay::isVisible),
+            Arrays.stream(ghostCharacterTextDisplays).filter(TextDisplay::isVisible),
+            Arrays.stream(ghostNicknameTextDisplays).filter(TextDisplay::isVisible),
+            pacMan,
+            ghosts,
+            points
+        );
+    }
+
+
+    private void createTitleText() {
+//        fillText("CHARACTER / NICKNAME", ARCADE_WHITE, tilesPx(LEFT_TILE_X + 3), tilesPx(6));
+
+        titleText = new TextDisplay();
+        titleText.pos().set(tilesPx(LEFT_TILE_X + 3), tilesPx(6));
+        titleText.data().setFillColor(ARCADE_WHITE);
+        titleText.data().setFont(GlobalFonts.ARCADE.font(TS));
+        titleText.data().setText(TITLE_TEXT);
+    }
+
+    private void createGhostGalleryComponents() {
+        final var spriteSheet = ArcadePacMan_SpriteSheet.instance();
+        final int y = TS * 8;
+        for (int i = 0; i < NUM_GHOSTS; ++i) {
+
+//            drawSpriteCentered(sprite, WorldMap.TS * 5, y + offsetY - WorldMap.HTS);
+            int offsetY = 3 * i * TS;
+            ghostImageDisplays[i] = new ImageDisplay();
+            RectShort sprite = spriteSheet.findSpriteSequence(GALLERY_GHOSTS)[i];
+            ghostImageDisplays[i].image().setImage(spriteSheet.image(sprite));
+            ghostImageDisplays[i].pos().set(WorldMap.TS * 5, y + offsetY - WorldMap.HTS);
+
+//            fillText("-" + GHOST_CHARACTERS[p], GHOST_COLORS[p], WorldMap.TS * 7, y + offsetY);
+            ghostCharacterTextDisplays[i] = new TextDisplay();
+            ghostCharacterTextDisplays[i].pos().set(TS * 7, y + offsetY);
+            ghostCharacterTextDisplays[i].data().setText("-" + GHOST_CHARACTERS[i]);
+            ghostCharacterTextDisplays[i].data().setFillColor(GHOST_COLORS[i]);
+            ghostCharacterTextDisplays[i].data().setFont(GlobalFonts.ARCADE.font(TS));
+
+//            fillText(GHOST_NICKNAMES[p], GHOST_COLORS[p], WorldMap.TS * 18, y + offsetY);
+            ghostNicknameTextDisplays[i] = new TextDisplay();
+            ghostNicknameTextDisplays[i].pos().set(TS * 18, y + offsetY);
+            ghostNicknameTextDisplays[i].data().setText(GHOST_NICKNAMES[i]);
+            ghostNicknameTextDisplays[i].data().setFillColor(GHOST_COLORS[i]);
+            ghostNicknameTextDisplays[i].data().setFont(GlobalFonts.ARCADE.font(TS));
+        }
+    }
+
     private void initScene() {
         final GameVariantRuntime variant = app.variantManager().currentRuntime();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
@@ -148,11 +218,9 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
         ghosts[2] = renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.CYAN_GHOST_BASHFUL);
         ghosts[3] = renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.ORANGE_GHOST_POKEY);
 
-        Arrays.fill(ghostImageVisible, false);
-        Arrays.fill(ghostNicknameVisible, false);
-        Arrays.fill(ghostCharacterVisible, false);
+        createTitleText();
+        createGhostGalleryComponents();
 
-        titleVisible = false;
         ghostIndex = 0;
         lastGhostEatenTick = 0;
         numGhostsEaten = 0;
@@ -160,17 +228,12 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
         soundManager().voice().playAfterSec(1, VoiceID.START_HINT.media());
     }
 
-    @Override
-    public Stream<Renderable> renderables() {
-        return Ufx.streamOf(pacMan, ghosts, points);
-    }
-
     private void startChasingPacMan(GameContext game) {
         final GameSystems systems = game.playConfig().systems();
 
         blinking.start();
 
-        pacMan.pos().set(WorldMap.TS * 28, WorldMap.TS * 20);
+        pacMan.pos().set(TS * 28, TS * 20);
         pacMan.show();
 
         systems.navigator().setMoveDir(pacMan, Direction.LEFT);
@@ -315,7 +378,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
                 if (timer.tickCount() == TICK_TITLE_VISIBLE) {
-                    scene.titleVisible = true;
+                    scene.titleText.show();
                 } else if (timer.tickCount() == TICK_START_PRESENTING_GHOSTS) {
                     scene.flow.enterState(scene, PRESENTING_GHOSTS);
                 }
@@ -325,13 +388,14 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
         PRESENTING_GHOSTS {
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
-                if (timer.tickCount() > TICK_GHOST_PRESENTATION_END) {
+                final int t = (int) timer.tickCount();
+                if (t > TICK_GHOST_PRESENTATION_END) {
                     return;
                 }
-                switch ((int) timer.tickCount()) {
-                    case TICK_GHOST_SPRITE_VISIBLE    -> scene.ghostImageVisible[scene.ghostIndex] = true;
-                    case TICK_GHOST_CHARACTER_VISIBLE -> scene.ghostCharacterVisible[scene.ghostIndex] = true;
-                    case TICK_GHOST_NICKNAME_VISIBLE  -> scene.ghostNicknameVisible[scene.ghostIndex] = true;
+                switch (t) {
+                    case TICK_GHOST_SPRITE_VISIBLE    -> scene.ghostImageDisplays[scene.ghostIndex].show();
+                    case TICK_GHOST_CHARACTER_VISIBLE -> scene.ghostCharacterTextDisplays[scene.ghostIndex].show();
+                    case TICK_GHOST_NICKNAME_VISIBLE  -> scene.ghostNicknameTextDisplays[scene.ghostIndex].show();
                     case TICK_GHOST_PRESENT_NEXT      -> presentNextGhost(scene);
                     case TICK_GHOST_PRESENTATION_END  -> scene.flow.enterState(scene, SHOWING_POINTS);
                 }

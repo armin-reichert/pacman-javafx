@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.arcade.ms_pacman.gamescene.startscene;
 
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.arcade.ms_pacman.entities.ImageView;
+import de.amr.pacmanfx.uilib.entities.ImageDisplay;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
@@ -22,7 +22,7 @@ import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
 
     private final StartSceneText sceneText;
-    private final ImageView copyrightImage;
+    private final ImageDisplay copyrightImage;
 
     public ArcadeMsPacMan_StartScene(GameApp app) {
         super(app);
@@ -34,7 +34,7 @@ public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
 
         sceneText = new StartSceneText(6, 16);
 
-        copyrightImage = new ImageView();
+        copyrightImage = new ImageDisplay();
         copyrightImage.show();
         copyrightImage.pos().set(tilesPx(6), tilesPx(28));
         copyrightImage.image().setImage(assets.image("logo.midway"));

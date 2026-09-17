@@ -52,9 +52,13 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Sp
 
     @Override
     public void render(Renderable r, long tick) {
-        if (!(r instanceof ArcadePacMan_IntroScene introScene)) {
-            return;
+        switch (r) {
+            case ArcadePacMan_IntroScene scene -> renderScene(scene);
+            default -> super.render(r, tick);
         }
+    }
+
+    private void renderScene(ArcadePacMan_IntroScene introScene) {
         ctx.setImageSmoothing(true);
         drawGhostGallery(introScene);
         switch (introScene.flow.state()) {
@@ -74,25 +78,6 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Sp
     }
 
     private void drawGhostGallery(ArcadePacMan_IntroScene introScene) {
-        final Font arcade8 = Ufx.deriveFont(GlobalFonts.ARCADE.font(), scaled(8));
-        ctx.setFont(arcade8);
-        if (introScene.titleVisible) {
-            fillText("CHARACTER / NICKNAME", ARCADE_WHITE, tilesPx(LEFT_TILE_X + 3), tilesPx(6));
-        }
-        final int y = WorldMap.TS * 8;
-        for (byte p = 0; p < 4; ++p) {
-            int offsetY = 3 * p * WorldMap.TS;
-            if (introScene.ghostImageVisible[p]) {
-                RectShort sprite = spriteSheet().findSpriteSequence(GALLERY_GHOSTS)[p];
-                drawSpriteCentered(sprite, WorldMap.TS * 5, y + offsetY - WorldMap.HTS);
-            }
-            if (introScene.ghostCharacterVisible[p]) {
-                fillText("-" + GHOST_CHARACTERS[p], GHOST_COLORS[p], WorldMap.TS * 7, y + offsetY);
-            }
-            if (introScene.ghostNicknameVisible[p]) {
-                fillText(GHOST_NICKNAMES[p], GHOST_COLORS[p], WorldMap.TS * 18, y + offsetY);
-            }
-        }
     }
 
     private void drawCopyright() {
