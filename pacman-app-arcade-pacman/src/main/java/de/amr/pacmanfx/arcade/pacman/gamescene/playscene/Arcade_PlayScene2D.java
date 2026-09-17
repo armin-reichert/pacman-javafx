@@ -23,6 +23,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationManager;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
+import de.amr.pacmanfx.uilib.rendering.GameLevelRenderable;
 import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
