@@ -49,12 +49,14 @@ import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
  */
 public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
 
-    public static final int TITLE_X          = TS * 10;
-    public static final int TITLE_Y          = TS * 8;
-    public static final int TOP_Y            = TS * 11;
-    public static final int STOP_X_GHOST     = TS * 6 - WorldMap.HTS;
-    public static final int STOP_X_MS_PACMAN = TS * 15 + 2;
+    private static final int TITLE_X          = TS * 10;
+    private static final int TITLE_Y          = TS * 8;
+    private static final int TOP_Y            = TS * 11;
+    private static final int STOP_X_GHOST     = TS * 6 - WorldMap.HTS;
+    private static final int MS_PACMAN_END_POS_X = TS * 15 + 2;
 
+    private static final Vector2f PAC_START_POS = new Vector2f(31 * TS, 20 * TS);
+    private static final Vector2f GHOST_START_POS = new Vector2f(33.5f * TS, 20 * TS);
     private static final float ACTOR_SPEED = 1.11f;
 
     private static final String MARQUEE_TITLE = "\"MS PAC-MAN\"";
@@ -108,9 +110,6 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
     public void onTick(GameContext game) {
         sceneFlow.update(this);
     }
-
-    private static final Vector2f PAC_START_POS = new Vector2f(31 * TS, 20 * TS);
-    private static final Vector2f GHOST_START_POS = new Vector2f(33.5f * TS, 20 * TS);
 
     private void initScene() {
         final GameVariantRuntime runtime = app.variantManager().currentRuntime();
@@ -254,6 +253,49 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
         }
     }
 
+    private boolean letGhostWalkIn() {
+        final GameSystems systems = game().playConfig().systems();
+
+        final Ghost ghost = ghosts.get(ghostInSpotlight);
+        if (ghost.worldNavigation().moveDir() == Direction.LEFT) {
+            if (ghost.pos().x() <= STOP_X_GHOST) {
+                ghost.pos().setX(STOP_X_GHOST);
+                systems.navigator().setMoveDir(ghost, Direction.UP);
+                systems.navigator().setWishDir(ghost, Direction.UP);
+                numTicksBeforeRising = 2;
+            } else {
+                systems.motor().move(ghost);
+            }
+        }
+        else if (ghost.worldNavigation().moveDir() == Direction.UP) {
+            final int endPositionY = TOP_Y + ghostInSpotlight * 16 + 1;
+            if (numTicksBeforeRising > 0) {
+                numTicksBeforeRising--;
+            }
+            else if (ghost.pos().y() <= endPositionY) {
+                systems.navigator().setSpeed(ghost, 0);
+                systems.actorSpriteAnimController().stopSelected(ghost);
+                systems.actorSpriteAnimController().resetSelected(ghost);
+                return true;
+            }
+            else {
+                systems.motor().move(ghost);
+            }
+        }
+        return false;
+    }
+
+    private boolean letMsPacManWalkIn() {
+        final GameSystems systems = game().playConfig().systems();
+        systems.motor().move(msPacMan);
+        if (msPacMan.pos().x() <= MS_PACMAN_END_POS_X) {
+            systems.navigator().setSpeed(msPacMan, 0);
+            systems.actorSpriteAnimController().resetSelected(msPacMan);
+            return true;
+        }
+        return false;
+    }
+
     // Scene flow state machine
 
     public enum SceneState implements State<ArcadeMsPacMan_IntroScene> {
@@ -281,7 +323,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
 
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                boolean atEndPosition = letGhostWalkIn(scene);
+                final boolean atEndPosition = scene.letGhostWalkIn();
                 if (atEndPosition) {
                     if (scene.ghostInSpotlight == GhostPersonality.ORANGE_GHOST_POKEY.ordinal()) {
                         scene.sceneFlow.enterState(scene, MS_PACMAN_MARCHING_IN);
@@ -290,38 +332,6 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
                         scene.updateMarqueeText(this);
                     }
                 }
-            }
-
-            boolean letGhostWalkIn(ArcadeMsPacMan_IntroScene scene) {
-                final GameSystems systems = scene.game().playConfig().systems();
-
-                final Ghost ghost = scene.ghosts.get(scene.ghostInSpotlight);
-                if (ghost.worldNavigation().moveDir() == Direction.LEFT) {
-                    if (ghost.pos().x() <= STOP_X_GHOST) {
-                        ghost.pos().setX(STOP_X_GHOST);
-                        systems.navigator().setMoveDir(ghost, Direction.UP);
-                        systems.navigator().setWishDir(ghost, Direction.UP);
-                        scene.numTicksBeforeRising = 2;
-                    } else {
-                        systems.motor().move(ghost);
-                    }
-                }
-                else if (ghost.worldNavigation().moveDir() == Direction.UP) {
-                    int endPositionY = TOP_Y + scene.ghostInSpotlight * 16 + 1;
-                    if (scene.numTicksBeforeRising > 0) {
-                        scene.numTicksBeforeRising--;
-                    }
-                    else if (ghost.pos().y() <= endPositionY) {
-                        systems.navigator().setSpeed(ghost, 0);
-                        systems.actorSpriteAnimController().stopSelected(ghost);
-                        systems.actorSpriteAnimController().resetSelected(ghost);
-                        return true;
-                    }
-                    else {
-                        systems.motor().move(ghost);
-                    }
-                }
-                return false;
             }
         },
 
@@ -333,13 +343,8 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
 
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                final GameSystems sys = scene.game().playConfig().systems();
-                final Pac msPacMan = scene.msPacMan;
-
-                sys.motor().move(msPacMan);
-                if (msPacMan.pos().x() <= STOP_X_MS_PACMAN) {
-                    sys.navigator().setSpeed(msPacMan, 0);
-                    sys.actorSpriteAnimController().resetSelected(msPacMan);
+                final boolean atEndPosition = scene.letMsPacManWalkIn();
+                if (atEndPosition) {
                     scene.sceneFlow.enterState(scene, READY_TO_PLAY);
                 }
             }
