@@ -11,16 +11,20 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.ui.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.text.Font;
+
+import java.util.Optional;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer.createDefaultSceneDebugRenderer;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_ORANGE;
 
-public class ArcadeMsPacMan_StartScene_Renderer extends BaseRenderer implements SpriteRenderer {
+public class ArcadeMsPacMan_StartScene_Renderer extends BaseRenderer {
+
+    private final ArcadeMsPacMan_SpriteSheet spriteSheet = ArcadeMsPacMan_SpriteSheet.instance();
 
     public ArcadeMsPacMan_StartScene_Renderer(GameScene gameScene, Canvas canvas) {
         super(canvas);
@@ -28,8 +32,8 @@ public class ArcadeMsPacMan_StartScene_Renderer extends BaseRenderer implements 
     }
 
     @Override
-    public ArcadeMsPacMan_SpriteSheet spriteSheet() {
-        return ArcadeMsPacMan_SpriteSheet.instance();
+    public Optional<SpriteSheet<?>> optSpriteSheet() {
+        return Optional.of(spriteSheet);
     }
 
     @Override
@@ -45,7 +49,7 @@ public class ArcadeMsPacMan_StartScene_Renderer extends BaseRenderer implements 
         final double STS = scaled(TS);
         final Font arcade6 = Ufx.deriveFont(GlobalFonts.ARCADE.font(), scaled(6));
         final Font arcade8 = Ufx.deriveFont(GlobalFonts.ARCADE.font(), scaled(8));
-        final RectShort livesCounterSprite = spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL);
+        final RectShort livesCounterSprite = spriteSheet.findSprite(SpriteID.LIVES_COUNTER_SYMBOL);
 
         ctx.save();
         ctx.setFill(ARCADE_ORANGE);

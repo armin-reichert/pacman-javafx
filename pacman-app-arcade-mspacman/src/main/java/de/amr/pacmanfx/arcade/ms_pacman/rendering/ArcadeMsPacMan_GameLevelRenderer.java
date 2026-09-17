@@ -16,11 +16,13 @@ import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
-import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
+
+import java.util.Optional;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static java.util.Objects.requireNonNull;
@@ -29,8 +31,9 @@ import static java.util.function.Predicate.not;
 /**
  * Sprite sheet based renderer for Arcade Ms. Pac-Man.
  */
-public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements SpriteRenderer {
+public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer {
 
+    private final ArcadeMsPacMan_SpriteSheet spriteSheet = ArcadeMsPacMan_SpriteSheet.instance();
     protected final ActorSpriteAnimController animController;
 
     protected final AssetMap assets;
@@ -42,8 +45,8 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
     }
 
     @Override
-    public ArcadeMsPacMan_SpriteSheet spriteSheet() {
-        return ArcadeMsPacMan_SpriteSheet.instance();
+    public Optional<SpriteSheet<?>> optSpriteSheet() {
+        return Optional.of(spriteSheet);
     }
 
     @Override
@@ -73,16 +76,16 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer implements Sp
                 hideGhostHouseDoors(level.entities().house());
             }
             else {
-                final RectShort emptyMazeSprite = spriteSheet().findSpriteSequence(SpriteID.EMPTY_MAPS)[colorMapIndex];
+                final RectShort emptyMazeSprite = spriteSheet.findSpriteSequence(SpriteID.EMPTY_MAPS)[colorMapIndex];
                 drawSprite(emptyMazeSprite, 0, emptyPixelsOverMaze, false);
             }
         }
         else if (info.getBoolean(LevelRenderInfoKey.SHOW_EMPTY_MAZE)) {
-            final RectShort emptyMazeSprite = spriteSheet().findSpriteSequence(SpriteID.EMPTY_MAPS)[colorMapIndex];
+            final RectShort emptyMazeSprite = spriteSheet.findSpriteSequence(SpriteID.EMPTY_MAPS)[colorMapIndex];
             drawSprite(emptyMazeSprite, 0, emptyPixelsOverMaze, false);
         }
         else {
-            final RectShort mapSprite = spriteSheet().findSpriteSequence(SpriteID.FULL_MAPS)[colorMapIndex];
+            final RectShort mapSprite = spriteSheet.findSpriteSequence(SpriteID.FULL_MAPS)[colorMapIndex];
             drawSprite(mapSprite, 0, emptyPixelsOverMaze, false);
             hideEatenPellets(level);
         }

@@ -16,11 +16,13 @@ import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.FoodState;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.rendering.Renderable;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
-import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
+
+import java.util.Optional;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static java.util.function.Predicate.not;
@@ -30,8 +32,9 @@ import static java.util.function.Predicate.not;
  *
  * <p>The XXL game variants with custom-map support use a vector renderer instead.
  */
-public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements SpriteRenderer {
+public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer {
 
+    private final ArcadePacMan_SpriteSheet spriteSheet = ArcadePacMan_SpriteSheet.instance();
     private final ArcadePacMan_RenderConfig renderConfig;
 
     public ArcadePacMan_GameLevel_Renderer(Canvas canvas, ArcadePacMan_RenderConfig renderConfig) {
@@ -40,8 +43,8 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
     }
 
     @Override
-    public ArcadePacMan_SpriteSheet spriteSheet() {
-        return ArcadePacMan_SpriteSheet.instance();
+    public Optional<SpriteSheet<?>> optSpriteSheet() {
+        return Optional.of(spriteSheet);
     }
 
     @Override
@@ -68,7 +71,7 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
                 final var brightMazeImage = info.get(LevelRenderInfoKey.BRIGHT_MAZE_IMAGE, Image.class);
                 ctx.drawImage(brightMazeImage, 0, emptyPixelsOverMaze);
             } else {
-                final RectShort emptyMapSprite = spriteSheet().findSpriteSequence(SpriteID.MAP_EMPTY)[0];
+                final RectShort emptyMapSprite = spriteSheet.findSpriteSequence(SpriteID.MAP_EMPTY)[0];
                 drawSprite(emptyMapSprite, 0, emptyPixelsOverMaze, false);
             }
             if (info.getBoolean(LevelRenderInfoKey.MAZE_IS_FLASHING)) {
@@ -76,7 +79,7 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer implements Spr
             }
         }
         else {
-            drawSprite(spriteSheet().findSprite(SpriteID.MAP_FULL), 0, emptyPixelsOverMaze, false);
+            drawSprite(spriteSheet.findSprite(SpriteID.MAP_FULL), 0, emptyPixelsOverMaze, false);
             hideEatenPellets(level);
         }
         ctx.restore();

@@ -13,12 +13,10 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
-import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -31,7 +29,7 @@ import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SceneRende
 import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SceneRendererUtils.drawJoypadKeyBinding;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer implements SpriteRenderer {
+public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer {
     private static final int COL_ARROW = 2 * TS;
     private static final int COL_LABEL = 4 * TS;
     private static final int COL_COLON = 19 * TS;
@@ -43,11 +41,6 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer implement
     public TengenMsPacMan_OptionsScene_Renderer(GameScene scene, Canvas canvas) {
         super(canvas);
         requireNonNull(scene);
-    }
-
-    @Override
-    public TengenMsPacMan_SpriteSheet spriteSheet() {
-        return TengenMsPacMan_SpriteSheet.instance();
     }
 
     @Override

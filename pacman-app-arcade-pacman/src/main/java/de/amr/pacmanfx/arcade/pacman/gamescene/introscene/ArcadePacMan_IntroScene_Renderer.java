@@ -9,23 +9,24 @@ import de.amr.basics.timer.Pulse;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
-import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.ui.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import static de.amr.pacmanfx.arcade.pacman.rendering.SpriteID.GALLERY_GHOSTS;
+import java.util.Optional;
+
 import static de.amr.pacmanfx.arcade.pacman.gamescene.introscene.ArcadePacMan_IntroScene.SceneState.*;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer.createDefaultSceneDebugRenderer;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
 
-public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements SpriteRenderer {
+public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer {
 
     private static final String MIDWAY_MFG_CO = "© 1980 MIDWAY MFG.CO.";
     private static final String[] GHOST_NICKNAMES  = { "\"BLINKY\"", "\"PINKY\"", "\"INKY\"", "\"CLYDE\"" };
@@ -41,13 +42,13 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer implements Sp
     public ArcadePacMan_IntroScene_Renderer(GameScene gameScene, Canvas canvas) {
         super(canvas);
 
-        energizerSprite = spriteSheet().findSprite(SpriteID.ENERGIZER);
+        energizerSprite = ArcadePacMan_SpriteSheet.instance().findSprite(SpriteID.ENERGIZER);
         setDebugInfoRenderer(createDefaultSceneDebugRenderer(gameScene, canvas));
     }
 
     @Override
-    public ArcadePacMan_SpriteSheet spriteSheet() {
-        return ArcadePacMan_SpriteSheet.instance();
+    public Optional<SpriteSheet<?>> optSpriteSheet() {
+        return Optional.of(ArcadePacMan_SpriteSheet.instance());
     }
 
     @Override

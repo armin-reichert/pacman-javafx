@@ -21,13 +21,13 @@ import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.entities.hud.comp.HUD_Style;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.MessageViewRenderer;
-import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
@@ -37,12 +37,13 @@ import static java.util.Objects.requireNonNull;
 /**
  * Implements the rendering for all actor types occurring in the Arcade Ms. Pac-Man game.
  */
-public class ArcadeMsPacMan_EntityRenderer extends BaseRenderer implements SpriteRenderer {
+public class ArcadeMsPacMan_EntityRenderer extends BaseRenderer {
 
     // These arrays must be sorted!
     private static final int[] GHOST_POINTS = { 200, 400, 800, 1600 };
     private static final int[] BONUS_POINTS = { 100, 200, 500, 700, 1000, 2000, 5000 };
 
+    private final ArcadeMsPacMan_SpriteSheet spriteSheet = ArcadeMsPacMan_SpriteSheet.instance();
     private final ActorSpriteAnimController animController;
     private final MarqueeRenderer marqueeRenderer;
     private final MessageViewRenderer messageViewRenderer;
@@ -61,8 +62,8 @@ public class ArcadeMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
     }
 
     @Override
-    public ArcadeMsPacMan_SpriteSheet spriteSheet() {
-        return ArcadeMsPacMan_SpriteSheet.instance();
+    public Optional<SpriteSheet<?>> optSpriteSheet() {
+        return Optional.of(spriteSheet);
     }
 
     @Override
@@ -110,11 +111,11 @@ public class ArcadeMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
     private RectShort computeSprite(Ghost ghost) {
         RectShort sprite;
         if (animController.isSelected(ghost, CommonSpriteAnimationID.GHOST_NORMAL)) {
-            final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.worldNavigation().wishDir());
+            final RectShort[] sprites = spriteSheet.ghostNormalSprites(ghost.personality(), ghost.worldNavigation().wishDir());
             sprite = SpriteSheet.spriteOrDefault(sprites, animController.currentFrame(ghost));
         }
         else if (animController.isSelected(ghost, CommonSpriteAnimationID.GHOST_EYES)) {
-            sprite = spriteSheet().ghostEyesSprite(ghost.worldNavigation().wishDir());
+            sprite = spriteSheet.ghostEyesSprite(ghost.worldNavigation().wishDir());
         }
         else {
             sprite = animController.currentSprite(ghost);
@@ -128,11 +129,11 @@ public class ArcadeMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
     private RectShort computeSprite(Pac pac) {
         RectShort sprite;
         if (animController.isSelected(pac, CommonSpriteAnimationID.PAC_MOUTH_MOVING)) {
-            final RectShort[] sprites = spriteSheet().msPacManMunchingSprites(pac.worldNavigation().moveDir());
+            final RectShort[] sprites = spriteSheet.msPacManMunchingSprites(pac.worldNavigation().moveDir());
             sprite = SpriteSheet.spriteOrDefault(sprites, animController.currentFrame(pac));
         }
         else if (animController.isSelected(pac, CommonSpriteAnimationID.MR_PAC_MAN_MUNCHING)) {
-            final RectShort[] sprites = spriteSheet().mrPacManMunchingSprites(pac.worldNavigation().moveDir());
+            final RectShort[] sprites = spriteSheet.mrPacManMunchingSprites(pac.worldNavigation().moveDir());
             sprite = SpriteSheet.spriteOrDefault(sprites, animController.currentFrame(pac));
         }
         else {
@@ -147,19 +148,19 @@ public class ArcadeMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
     // TODO decouple symbol code from sprite index
     private RectShort computeSprite(Bonus bonus) {
         return switch (bonus.state().enumValue()) {
-            case EDIBLE -> SpriteSheet.spriteOrDefault(spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS), bonus.data().symbolCode());
+            case EDIBLE -> SpriteSheet.spriteOrDefault(spriteSheet.findSpriteSequence(SpriteID.BONUS_SYMBOLS), bonus.data().symbolCode());
             case EATEN, INACTIVE -> RectShort.NULL_RECTANGLE;
         };
     }
 
     private RectShort computeSprite(BonusPoints bonusPoints) {
         final int index = Arrays.binarySearch(BONUS_POINTS, bonusPoints.points().number());
-        return index >= 0 ? spriteSheet().findSpriteSequence(SpriteID.BONUS_VALUES)[index] : RectShort.NULL_RECTANGLE;
+        return index >= 0 ? spriteSheet.findSpriteSequence(SpriteID.BONUS_VALUES)[index] : RectShort.NULL_RECTANGLE;
     }
 
     private RectShort computeSprite(GhostPoints ghostPoints) {
         final int index = Arrays.binarySearch(GHOST_POINTS, ghostPoints.points().number());
-        return index >= 0 ? spriteSheet().findSpriteSequence(SpriteID.GHOST_NUMBERS)[index] : RectShort.NULL_RECTANGLE;
+        return index >= 0 ? spriteSheet.findSpriteSequence(SpriteID.GHOST_NUMBERS)[index] : RectShort.NULL_RECTANGLE;
     }
 
     private void drawEnergizer(Energizer energizer) {

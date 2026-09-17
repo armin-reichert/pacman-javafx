@@ -9,9 +9,10 @@ import de.amr.pacmanfx.ui.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.text.Font;
+
+import java.util.Optional;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer.createDefaultSceneDebugRenderer;
@@ -23,7 +24,7 @@ import static java.util.Objects.requireNonNull;
  * and a grid before the intro scene starts. This scene is used by the Arcade and the XXL variants so we pass the
  * corresponding spritesheet as a parameter.
  */
-public class Arcade_BootScene_Renderer extends BaseRenderer implements SpriteRenderer {
+public class Arcade_BootScene_Renderer extends BaseRenderer {
 
     private final SpriteSheet<?> spriteSheet;
 
@@ -36,8 +37,8 @@ public class Arcade_BootScene_Renderer extends BaseRenderer implements SpriteRen
     }
 
     @Override
-    public SpriteSheet<?> spriteSheet() {
-        return spriteSheet;
+    public Optional<SpriteSheet<?>> optSpriteSheet() {
+        return Optional.of(spriteSheet);
     }
 
     @Override

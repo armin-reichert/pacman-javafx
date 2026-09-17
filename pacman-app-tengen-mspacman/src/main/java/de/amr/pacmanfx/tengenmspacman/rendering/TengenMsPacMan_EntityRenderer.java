@@ -29,23 +29,25 @@ import de.amr.pacmanfx.uilib.entities.hud.comp.HUD_Style;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.FacingSprite;
 import de.amr.pacmanfx.uilib.rendering.MessageViewRenderer;
-import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_EntityRenderer extends BaseRenderer implements SpriteRenderer {
+public class TengenMsPacMan_EntityRenderer extends BaseRenderer {
 
     // These arrays must be sorted!
     private static final int[] GHOST_POINTS = { 200, 400, 800, 1600 };
     private static final int[] BONUS_POINTS = { 100, 200, 500, 700, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000 };
+
+    private final TengenMsPacMan_SpriteSheet spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
     private final ActorSpriteAnimController animSystem;
     private final MarqueeRenderer marqueeRenderer;
@@ -65,8 +67,8 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
     }
 
     @Override
-    public TengenMsPacMan_SpriteSheet spriteSheet() {
-        return TengenMsPacMan_SpriteSheet.instance();
+    public Optional<SpriteSheet<?>> optSpriteSheet() {
+        return Optional.of(spriteSheet);
     }
 
     @Override
@@ -132,7 +134,7 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
     }
 
     private FacingSprite facingSprite(SpriteID spriteArrayID, int frame, Direction dir) {
-        return new FacingSprite(SpriteSheet.spriteOrDefault(spriteSheet().findSpriteSequence(spriteArrayID), frame), dir);
+        return new FacingSprite(SpriteSheet.spriteOrDefault(spriteSheet.findSpriteSequence(spriteArrayID), frame), dir);
     }
 
     // Dying animation is realized by providing a sprite facing to the corresponding direction for each animation frame
@@ -154,11 +156,11 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
 
     private RectShort computeSprite(Ghost ghost) {
         if (animSystem.isSelected(ghost, CommonSpriteAnimationID.GHOST_NORMAL)) {
-            final RectShort[] sprites = spriteSheet().ghostNormalSprites(ghost.personality(), ghost.worldNavigation().wishDir());
+            final RectShort[] sprites = spriteSheet.ghostNormalSprites(ghost.personality(), ghost.worldNavigation().wishDir());
             return SpriteSheet.spriteOrDefault(sprites, animSystem.currentFrame(ghost));
         }
         if (animSystem.isSelected(ghost, CommonSpriteAnimationID.GHOST_EYES)) {
-            return spriteSheet().ghostEyesSprite(ghost.worldNavigation().wishDir());
+            return spriteSheet.ghostEyesSprite(ghost.worldNavigation().wishDir());
         }
         else {
             return animSystem.currentSprite(ghost);
@@ -167,19 +169,19 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
 
     private RectShort computeSprite(GhostPoints ghostPoints) {
         final int index = Arrays.binarySearch(GHOST_POINTS, ghostPoints.points().number());
-        return index >= 0 ? spriteSheet().findSpriteSequence(SpriteID.GHOST_NUMBERS)[index] : RectShort.NULL_RECTANGLE;
+        return index >= 0 ? spriteSheet.findSpriteSequence(SpriteID.GHOST_NUMBERS)[index] : RectShort.NULL_RECTANGLE;
     }
 
     private RectShort computeSprite(Bonus bonus) {
         return switch (bonus.state().enumValue()) {
-            case EDIBLE -> SpriteSheet.spriteOrDefault(spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS), bonus.data().symbolCode());
+            case EDIBLE -> SpriteSheet.spriteOrDefault(spriteSheet.findSpriteSequence(SpriteID.BONUS_SYMBOLS), bonus.data().symbolCode());
             case EATEN, INACTIVE -> RectShort.NULL_RECTANGLE;
         };
     }
 
     private RectShort computeSprite(BonusPoints bonusPoints) {
         final int index = Arrays.binarySearch(BONUS_POINTS, bonusPoints.points().number());
-        return index >= 0 ? spriteSheet().findSpriteSequence(SpriteID.BONUS_VALUES)[index] : RectShort.NULL_RECTANGLE;
+        return index >= 0 ? spriteSheet.findSpriteSequence(SpriteID.BONUS_VALUES)[index] : RectShort.NULL_RECTANGLE;
     }
 
     private void drawDoor(Door door) {
@@ -260,16 +262,16 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
         final GameOptionsDataComp options = display.options();
 
         final RectShort mapCategorySprite = switch (options.mapCategory()) {
-            case BIG     -> spriteSheet().findSprite(SpriteID.INFO_CATEGORY_BIG);
-            case MINI    -> spriteSheet().findSprite(SpriteID.INFO_CATEGORY_MINI);
-            case STRANGE -> spriteSheet().findSprite(SpriteID.INFO_CATEGORY_STRANGE);
+            case BIG     -> spriteSheet.findSprite(SpriteID.INFO_CATEGORY_BIG);
+            case MINI    -> spriteSheet.findSprite(SpriteID.INFO_CATEGORY_MINI);
+            case STRANGE -> spriteSheet.findSprite(SpriteID.INFO_CATEGORY_STRANGE);
             case ARCADE  -> null;
         };
 
         final RectShort difficultySprite = switch (options.difficulty()) {
-            case EASY   -> spriteSheet().findSprite(SpriteID.INFO_DIFFICULTY_EASY);
-            case HARD   -> spriteSheet().findSprite(SpriteID.INFO_DIFFICULTY_HARD);
-            case CRAZY  -> spriteSheet().findSprite(SpriteID.INFO_DIFFICULTY_CRAZY);
+            case EASY   -> spriteSheet.findSprite(SpriteID.INFO_DIFFICULTY_EASY);
+            case HARD   -> spriteSheet.findSprite(SpriteID.INFO_DIFFICULTY_HARD);
+            case CRAZY  -> spriteSheet.findSprite(SpriteID.INFO_DIFFICULTY_CRAZY);
             case NORMAL -> null;
         };
 
@@ -279,10 +281,10 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
         ctx.save();
         ctx.setImageSmoothing(false);
 
-        drawSpriteCentered(spriteSheet().findSprite(SpriteID.INFO_FRAME), centerX, y);
+        drawSpriteCentered(spriteSheet.findSprite(SpriteID.INFO_FRAME), centerX, y);
 
         if (options.boosterMode() != BoosterMode.BOOSTER_OFF) {
-            drawSpriteCentered(spriteSheet().findSprite(SpriteID.INFO_BOOSTER), centerX - tilesPx(5.5f), y);
+            drawSpriteCentered(spriteSheet.findSprite(SpriteID.INFO_BOOSTER), centerX - tilesPx(5.5f), y);
         }
         if (difficultySprite != null) {
             drawSpriteCentered(difficultySprite, centerX, y);
@@ -339,7 +341,7 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
         float y = levelCounter.pos().y();
 
         // Symbols are drawn from right to left!
-        final RectShort[] symbolSprites = spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS);
+        final RectShort[] symbolSprites = spriteSheet.findSpriteSequence(SpriteID.BONUS_SYMBOLS);
         for (int code : levelCounter.data().symbolCodes()) {
             if (0 <= code && code < symbolSprites.length) {
                 drawSprite(symbolSprites[code], x, y, true);
@@ -353,15 +355,15 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer implements Sprit
         final float y = display.pos().y();
         final int number = display.levelNumber().number();
 
-        drawSprite(spriteSheet().findSprite(SpriteID.LEVEL_NUMBER_BOX), x, y, true);
+        drawSprite(spriteSheet.findSprite(SpriteID.LEVEL_NUMBER_BOX), x, y, true);
 
         final int tens = number / 10;
         if (tens > 0) {
-            final RectShort tensSprite = spriteSheet().findDigitSprite(number / 10);
+            final RectShort tensSprite = spriteSheet.findDigitSprite(number / 10);
             drawSprite(tensSprite, x + 2, y + 2, true);
         }
 
-        final RectShort onesSprite = spriteSheet().findDigitSprite(number % 10);
+        final RectShort onesSprite = spriteSheet.findDigitSprite(number % 10);
         drawSprite(onesSprite, x + 10, y + 2, true);
     }
 

@@ -5,12 +5,15 @@
 package de.amr.pacmanfx.uilib.rendering;
 
 import de.amr.basics.InfoMap;
+import de.amr.basics.math.RectShort;
+import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.entities.TextDisplay;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.rendering.ColoredRect;
 import de.amr.pacmanfx.core.rendering.Renderable;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -122,6 +125,54 @@ public abstract class BaseRenderer implements Renderer {
     public Optional<BaseRenderer> optDebugInfoRenderer() {
         return Optional.ofNullable(debugInfoRenderer);
     }
+
+
+    // SpriteRenderer
+
+    public Optional<SpriteSheet<?>> optSpriteSheet() {
+        return Optional.empty();
+    }
+
+    /**
+     * Draws a sprite (region inside sprite sheet) at the given position.
+     *
+     * @param sprite      the sprite to draw
+     * @param x           x-coordinate of left-upper corner
+     * @param y           y-coordinate of left-upper corner
+     * @param scaled      tells is the destination rectangle's position and size will be scaled using the current scaling value
+     */
+    public void drawSprite(RectShort sprite, double x, double y, boolean scaled) {
+        requireNonNull(sprite);
+        optSpriteSheet().ifPresent(spriteSheet -> {
+            final double s = scaled ? scaling() : 1;
+            ctx().drawImage(spriteSheet.sourceImage(),
+                sprite.x(), sprite.y(), sprite.width(), sprite.height(),
+                s * x, s * y, s * sprite.width(), s * sprite.height());
+        });
+    }
+
+    /**
+     * Draws the sprite centered over the given position. The target position will be scaled using the current scaling value.
+     *
+     * @param sprite the actor sprite
+     * @param unscaledX unscaled x-position over which sprite gets drawn
+     * @param unscaledY unscaled y-position over which sprite gets drawn
+     */
+    public void drawSpriteCentered(RectShort sprite, double unscaledX, double unscaledY) {
+        drawSprite(sprite, unscaledX - 0.5 * sprite.width(), unscaledY - 0.5 * sprite.height(), true);
+    }
+
+    /**
+     * Draws the sprite centered over the given position. The target position will be scaled using the current scaling value.
+     *
+     * @param sprite the actor sprite
+     * @param centerUnscaled position over which sprite gets drawn
+     */
+    public void drawSpriteCentered(RectShort sprite, Vector2f centerUnscaled) {
+        drawSpriteCentered(sprite, centerUnscaled.x(), centerUnscaled.y());
+    }
+
+    // -----------
 
     public void setScaling(double value) {
         if (value <= 0) {
@@ -236,4 +287,6 @@ public abstract class BaseRenderer implements Renderer {
         ctx.fillRect(scaled(rect.x()), scaled(rect.y()), scaled(rect.width()), scaled(rect.height()));
         ctx.restore();
     }
+
+
 }

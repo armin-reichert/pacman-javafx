@@ -16,11 +16,13 @@ import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.SpriteRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+
+import java.util.Optional;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.tengenmspacman.gamescene.introscene.TengenMsPacMan_IntroScene.ANCHOR_X;
@@ -30,7 +32,7 @@ import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SceneRende
 import static de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer.createDefaultSceneDebugRenderer;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer implements SpriteRenderer {
+public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer {
 
     public static final String TENGEN_PRESENTS = "TENGEN PRESENTS";
     public static final String PRESS_START = "PRESS START";
@@ -42,6 +44,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer implements 
     public static final String MS_PAC_MAN = "MS PAC-MAN";
     public static final String QUOTED_MS_PACMAN = "\"MS PAC-MAN\"";
 
+    private final TengenMsPacMan_SpriteSheet spriteSheet = TengenMsPacMan_SpriteSheet.instance();
     private final TengenMsPacMan_UISettings uiSettings;
 
     public TengenMsPacMan_IntroScene_Renderer(GameVariantRenderConfig renderConfig, GameScene gameScene, Canvas canvas) {
@@ -57,8 +60,8 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer implements 
     }
 
     @Override
-    public TengenMsPacMan_SpriteSheet spriteSheet() {
-        return TengenMsPacMan_SpriteSheet.instance();
+    public Optional<SpriteSheet<?>> optSpriteSheet() {
+        return Optional.of(spriteSheet);
     }
 
     @Override
@@ -101,7 +104,7 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer implements 
                 final boolean bright = stateTick % 60 < 30; // 0.5s dark, 0.5s bright
                 fillText(TENGEN_PRESENTS, shadeOfBlue(stateTick),
                     introScene.presentsTextPosition.x(), introScene.presentsTextPosition.y());
-                drawSprite(spriteSheet().findSprite(SpriteID.LARGE_MS_PAC_MAN_TEXT), 7 * TS, ANCHOR_Y, true);
+                drawSprite(spriteSheet.findSprite(SpriteID.LARGE_MS_PAC_MAN_TEXT), 7 * TS, ANCHOR_Y, true);
                 if (bright) {
                     fillText(PRESS_START, NES_Palette.color(0x20), 10 * TS, ANCHOR_Y + 9 * TS);
                 }
