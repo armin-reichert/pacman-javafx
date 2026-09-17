@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.gamescene.startscene;
 
+import de.amr.basics.math.RectShort;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
@@ -33,17 +34,20 @@ public class ArcadeMsPacMan_StartScene_Renderer extends BaseRenderer implements 
 
     @Override
     public void render(Renderable r, long tick) {
-        if (r instanceof StartSceneText text) {
-            renderStartSceneText(text);
+        if (r instanceof StartSceneText sceneText) {
+            render(sceneText);
         }
     }
 
-    private void renderStartSceneText(StartSceneText text) {
+    private void render(StartSceneText text) {
         final int tx = text.tileX();
         final int ty = text.tileY();
         final double STS = scaled(TS);
         final Font arcade6 = Ufx.deriveFont(GlobalFonts.ARCADE.font(), scaled(6));
         final Font arcade8 = Ufx.deriveFont(GlobalFonts.ARCADE.font(), scaled(8));
+        final RectShort livesCounterSprite = spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL);
+
+        ctx.save();
         ctx.setFill(ARCADE_ORANGE);
         ctx.setFont(arcade8);
         ctx.fillText("PUSH START BUTTON",      STS * tx, STS * ty);
@@ -51,6 +55,7 @@ public class ArcadeMsPacMan_StartScene_Renderer extends BaseRenderer implements 
         ctx.fillText("ADDITIONAL    AT 10000", STS * (tx - 4), STS * (ty + 9));
         ctx.setFont(arcade6);
         ctx.fillText("PTS", STS * (tx + 19), STS * (ty + 9));
-        drawSprite(spriteSheet().findSprite(SpriteID.LIVES_COUNTER_SYMBOL), (tx + 7) * TS, (ty + 7) * TS + 1, true);
+        drawSprite(livesCounterSprite, (tx + 7) * TS, (ty + 7) * TS + 1, true);
+        ctx.restore();
     }
 }
