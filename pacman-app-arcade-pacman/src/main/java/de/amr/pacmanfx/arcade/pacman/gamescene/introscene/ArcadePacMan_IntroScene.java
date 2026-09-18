@@ -45,6 +45,8 @@ import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
  */
 public class ArcadePacMan_IntroScene extends AbstractGameScene {
 
+    private static final int[] GHOST_POINTS = { 200, 400, 800, 1600 };
+
     // State STARTING
     public static final int TICK_TITLE_VISIBLE           = 3;
     public static final int TICK_START_PRESENTING_GHOSTS = 60;
@@ -104,7 +106,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
 
     @Override
     public void onDeactivate() {
-//        pulse.stop();
+        view.pulse.stop();
         soundManager().voice().stop();
     }
 
@@ -250,17 +252,11 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
             systems.actorSpriteAnimController().stopSelected(ghost);
         }
 
-        ++numGhostsEaten;
-        view.points = new GhostPoints(switch (numGhostsEaten) {
-            case 1 -> 200;
-            case 2 -> 400;
-            case 3 -> 800;
-            case 4 -> 1600;
-            default -> throw new IllegalArgumentException("Illegal eaten ghosts value: " + numGhostsEaten);
-        });
+        view.points = new GhostPoints(GHOST_POINTS[numGhostsEaten]);
         view.points.pos().set(victim.pos().asVector2f());
         view.points.show();
 
+        ++numGhostsEaten;
         lastGhostEatenTick = tick;
     }
 
