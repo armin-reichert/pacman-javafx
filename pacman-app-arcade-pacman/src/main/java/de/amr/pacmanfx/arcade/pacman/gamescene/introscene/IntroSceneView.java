@@ -1,0 +1,235 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
+package de.amr.pacmanfx.arcade.pacman.gamescene.introscene;
+
+import de.amr.basics.math.RectShort;
+import de.amr.basics.timer.Pulse;
+import de.amr.basics.util.Ufx;
+import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
+import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
+import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
+import de.amr.pacmanfx.core.entities.*;
+import de.amr.pacmanfx.core.model.GhostPersonality;
+import de.amr.pacmanfx.core.rendering.Renderable;
+import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
+import de.amr.pacmanfx.game.GameVariantRenderConfig;
+import de.amr.pacmanfx.ui.GlobalFonts;
+import de.amr.pacmanfx.uilib.entities.ImageDisplay;
+import javafx.scene.paint.Color;
+
+import java.util.List;
+import java.util.stream.Stream;
+
+import static de.amr.pacmanfx.arcade.pacman.rendering.SpriteID.GALLERY_GHOSTS;
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.*;
+import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
+
+public class IntroSceneView {
+
+    public static final int NUM_GHOSTS = 4;
+
+    private static final String   TITLE_TEXT = "CHARACTER / NICKNAME";
+    private static final String   MIDWAY_MFG_CO = "© 1980 MIDWAY MFG.CO.";
+
+    private static final String[] GHOST_NICKNAMES  = { "\"BLINKY\"", "\"PINKY\"", "\"INKY\"", "\"CLYDE\"" };
+    private static final String[] GHOST_CHARACTERS = { "-SHADOW", "-SPEEDY", "-BASHFUL", "-POKEY" };
+    private static final Color[]  GHOST_COLORS     = { ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE };
+
+    private static final int LEFT_TILE_X = 4;
+    private static final int ENERGIZER_CENTER_X = TS * LEFT_TILE_X + HTS;
+    private static final int ENERGIZER_CENTER_Y = TS * 20 + HTS;
+
+    final Pulse pulse = new Pulse(10, Pulse.State.ON);
+
+    final TextDisplay titleText;
+
+    // Ghost presentation
+    final ImageDisplay[] ghostImageDisplays;
+    final TextDisplay[]  ghostNicknameDisplays;
+    final TextDisplay[]  ghostCharacterDisplays;
+
+    // Chase animation
+    final BlinkingEnergizer targetEnergizer;
+
+    Pac pacMan;
+    Ghost[] ghosts;
+    GhostPoints points;
+
+    // Points display
+    final BlinkingEnergizer energizer;
+    final Pellet pellet;
+    final TextDisplay text10;
+    final TextDisplay text10Pts;
+    final TextDisplay text50;
+    final TextDisplay text50Pts;
+    final TextDisplay copyrightText;
+
+    private List<Renderable> staticRenderables;
+
+    public IntroSceneView() {
+        titleText = new TextDisplay();
+        // Ghost presentation
+        ghostImageDisplays = new ImageDisplay[NUM_GHOSTS];
+        ghostNicknameDisplays = new TextDisplay[NUM_GHOSTS];
+        ghostCharacterDisplays = new TextDisplay[NUM_GHOSTS];
+
+        for (int i = 0; i < NUM_GHOSTS; ++i) {
+            ghostImageDisplays[i] = new ImageDisplay();
+            ghostCharacterDisplays[i] = new TextDisplay();
+            ghostNicknameDisplays[i] = new TextDisplay();
+        }
+
+        // Chase animation
+        targetEnergizer = new BlinkingEnergizer();
+        ghosts = new Ghost[NUM_GHOSTS];
+
+        // Points display
+        energizer = new BlinkingEnergizer();
+        pellet = new Pellet();
+        text10 = new TextDisplay();
+        text10Pts = new TextDisplay();
+        text50 = new TextDisplay();
+        text50Pts = new TextDisplay();
+        copyrightText = new TextDisplay();
+
+        staticRenderables = Ufx.streamOf(
+            titleText,
+            ghostImageDisplays,
+            ghostCharacterDisplays,
+            ghostNicknameDisplays,
+            targetEnergizer,
+            text10,
+            text10Pts,
+            text50,
+            text50Pts,
+            pellet,
+            energizer,
+            copyrightText)
+        .filter(Renderable.class::isInstance)
+        .map(Renderable.class::cast)
+        .toList();
+    }
+
+    void createGhosts(GameVariantRenderConfig renderConfig, ActorSpriteAnimController animController, SpriteAnimationContainer animContainer) {
+        ghosts[0] = renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.RED_GHOST_SHADOW);
+        ghosts[1] = renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.PINK_GHOST_SPEEDY);
+        ghosts[2] = renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.CYAN_GHOST_BASHFUL);
+        ghosts[3] = renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.ORANGE_GHOST_POKEY);
+    }
+
+    void createPacMan(ArcadePacMan_ActorFactory actorFactory, GameVariantRenderConfig renderConfig, SpriteAnimationContainer animContainer) {
+        pacMan = actorFactory.createPacMan();
+        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animContainer));
+        pacMan.spriteAnim().spriteAnimations().select(CommonSpriteAnimationID.PAC_MOUTH_MOVING);
+        pacMan.spriteAnim().spriteAnimations().playSelected();
+    }
+
+    Stream<Renderable> renderables() {
+        return Stream.concat(
+            staticRenderables.stream(),
+            Ufx.streamOf(pacMan, ghosts, points)
+        );
+    }
+
+    void initEntities() {
+        initTitleText();
+        initGhostGallery();
+        initPointsTexts();
+        initCopyrightText();
+        initTargetEnergizer();
+        initPointsEnergizer();
+        initPointsPellet();
+        points = null; // points for killed ghost
+    }
+
+    private void initPointsPellet() {
+        pellet.pos().set(tilesPx(LEFT_TILE_X + 6) + HTS, tilesPx(24) + 4);
+        pellet.hide();
+    }
+
+    private void initPointsEnergizer() {
+        energizer.setPulse(pulse);
+        energizer.pos().set(tilesPx(LEFT_TILE_X + 6) + HTS, tilesPx(26) + HTS);
+        energizer.hide();
+    }
+
+    private void initTargetEnergizer() {
+        targetEnergizer.setPulse(pulse);
+        targetEnergizer.pos().set(ENERGIZER_CENTER_X, ENERGIZER_CENTER_Y);
+        targetEnergizer.hide();
+    }
+
+    private void initTitleText() {
+        titleText.pos().set(tilesPx(LEFT_TILE_X + 3), tilesPx(6));
+        titleText.data().setFillColor(ARCADE_WHITE);
+        titleText.data().setFont(GlobalFonts.ARCADE.font(TS));
+        titleText.data().setText(TITLE_TEXT);
+    }
+
+    private void initGhostGallery() {
+        final var spriteSheet = ArcadePacMan_SpriteSheet.instance();
+        final int y = TS * 8;
+
+        for (int i = 0; i < NUM_GHOSTS; ++i) {
+            final int offsetY = 3 * i * TS;
+
+            final ImageDisplay imageDisplay = ghostImageDisplays[i];
+            final RectShort sprite = spriteSheet.findSpriteSequence(GALLERY_GHOSTS)[i];
+            imageDisplay.image().setImage(spriteSheet.image(sprite));
+            imageDisplay.pos().set(TS * 4, y + offsetY - 1.5f * TS);
+            imageDisplay.hide();
+
+            final TextDisplay characterDisplay = ghostCharacterDisplays[i];
+            characterDisplay.data().setText(GHOST_CHARACTERS[i]);
+            characterDisplay.data().setFillColor(GHOST_COLORS[i]);
+            characterDisplay.data().setFont(GlobalFonts.ARCADE.font(TS));
+            characterDisplay.pos().set(TS * 7, y + offsetY);
+            characterDisplay.hide();
+
+            final TextDisplay nicknameDisplay = ghostNicknameDisplays[i];
+            nicknameDisplay.data().setText(GHOST_NICKNAMES[i]);
+            nicknameDisplay.data().setFillColor(GHOST_COLORS[i]);
+            nicknameDisplay.data().setFont(GlobalFonts.ARCADE.font(TS));
+            nicknameDisplay.pos().set(TS * 18, y + offsetY);
+            nicknameDisplay.hide();
+        }
+    }
+
+    private void initCopyrightText() {
+        copyrightText.data().setText(MIDWAY_MFG_CO);
+        copyrightText.data().setFont(GlobalFonts.ARCADE.font(TS));
+        copyrightText.data().setFillColor(ARCADE_PINK);
+        copyrightText.pos().set(tilesPx(4), tilesPx(32));
+        copyrightText.hide();
+    }
+
+    private void initPointsTexts() {
+        text10.data().setText("10");
+        text10.pos().set(tilesPx(LEFT_TILE_X + 8), tilesPx(25));
+        text10.data().setFillColor(ARCADE_WHITE);
+        text10.data().setFont(GlobalFonts.ARCADE.font(TS));
+        text10.hide();
+
+        text10Pts.data().setText("PTS");
+        text10Pts.pos().set(tilesPx(LEFT_TILE_X + 11), tilesPx(25));
+        text10Pts.data().setFillColor(ARCADE_WHITE);
+        text10Pts.data().setFont(GlobalFonts.ARCADE.font(6));
+        text10Pts.hide();
+
+        text50.data().setText("50");
+        text50.pos().set(tilesPx(LEFT_TILE_X + 8), tilesPx(27));
+        text50.data().setFillColor(ARCADE_WHITE);
+        text50.data().setFont(GlobalFonts.ARCADE.font(TS));
+        text50.hide();
+
+        text50Pts.data().setText("PTS");
+        text50Pts.pos().set(tilesPx(LEFT_TILE_X + 11), tilesPx(27));
+        text50Pts.data().setFillColor(ARCADE_WHITE);
+        text50Pts.data().setFont(GlobalFonts.ARCADE.font(6));
+        text50Pts.hide();
+    }
+
+
+}
