@@ -3,7 +3,6 @@
  */
 package de.amr.pacmanfx.arcade.pacman.gamescene.startscene;
 
-import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
@@ -14,7 +13,6 @@ import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,19 +32,16 @@ public class ArcadePacMan_StartScene extends AbstractGameScene {
         super(app);
         setComp(GameSceneCanvasRenderingComp.class, new GameSceneCanvasRenderingComp());
 
-        final Font arcade6 = GlobalFonts.ARCADE.font(6);
-        final Font arcade8 = GlobalFonts.ARCADE.font(8);
-
-        addText("PUSH START BUTTON",       ARCADE_ORANGE, arcade8, tilesPx(6),  tilesPx(17));
-        addText("1 PLAYER ONLY",           ARCADE_CYAN,   arcade8, tilesPx(8),  tilesPx(21));
-        addText("BONUS PAC-MAN FOR 10000", ARCADE_ROSE,   arcade8, tilesPx(1),  tilesPx(25));
-        addText("PTS",                     ARCADE_ROSE,   arcade6, tilesPx(25), tilesPx(25));
-        addText("© 1980 MIDWAY MFG.CO.",   ARCADE_PINK,   arcade8, tilesPx(4),  tilesPx(29));
+        texts.add(createText("PUSH START BUTTON",       ARCADE_ORANGE, 8,  6, 17));
+        texts.add(createText("1 PLAYER ONLY",           ARCADE_CYAN,   8,  8, 21));
+        texts.add(createText("BONUS PAC-MAN FOR 10000", ARCADE_ROSE,   8,  1, 25));
+        texts.add(createText("PTS",                     ARCADE_ROSE,   6, 25, 25));
+        texts.add(createText("© 1980 MIDWAY MFG.CO.",   ARCADE_PINK,   8,  4, 29));
     }
 
     @Override
     public Stream<Renderable> renderables() {
-        return Ufx.streamOf(texts);
+        return texts.stream().map(Renderable.class::cast);
     }
 
     @Override
@@ -66,13 +61,13 @@ public class ArcadePacMan_StartScene extends AbstractGameScene {
     @Override
     public void onTick(GameContext game) {}
 
-    private void addText(String text, Color color, Font font, float x, float y) {
+    private static TextDisplay createText(String text, Color color, int fontSize, float tileX, float tileY) {
         final var textDisplay = new TextDisplay();
         textDisplay.data().setFillColor(color);
-        textDisplay.data().setFont(font);
+        textDisplay.data().setFont(GlobalFonts.ARCADE.font(fontSize));
         textDisplay.data().setText(text);
-        textDisplay.pos().set(x, y);
+        textDisplay.pos().set(tilesPx(tileX), tilesPx(tileY));
         textDisplay.show();
-        texts.add(textDisplay);
+        return textDisplay;
     }
 }
