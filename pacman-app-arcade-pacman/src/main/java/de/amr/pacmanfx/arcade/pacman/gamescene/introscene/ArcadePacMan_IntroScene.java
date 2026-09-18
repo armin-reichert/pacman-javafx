@@ -17,10 +17,9 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
-import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
+import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.entities.ghost.system.GhostAnimationSystem;
@@ -53,35 +52,6 @@ import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
  * The ghosts are presented one by one, then Pac-Man is chased by the ghosts, turns the cards and hunts the ghosts himself.
  */
 public class ArcadePacMan_IntroScene extends AbstractGameScene {
-
-    public static class BlinkingEnergizer extends GameEntity implements Renderable {
-
-        private Pulse pulse;
-
-        public BlinkingEnergizer() {
-        }
-
-        public Pulse pulse() {
-            return pulse;
-        }
-
-        public void setPulse(Pulse pulse) {
-            this.pulse = pulse;
-        }
-
-        @Override
-        public RenderingLayer layer() {
-            return RenderingLayer.SCENE;
-        }
-    }
-
-    public static class Pellet extends GameEntity implements Renderable {
-
-        @Override
-        public RenderingLayer layer() {
-            return RenderingLayer.SCENE;
-        }
-    }
 
     private static final String TITLE_TEXT = "CHARACTER / NICKNAME";
     private static final String MIDWAY_MFG_CO = "© 1980 MIDWAY MFG.CO.";
@@ -314,23 +284,22 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
 
     private void startChasingPacMan(GameContext game) {
         final GameSystems systems = game.playConfig().systems();
+        final WorldNavigationSystem nav = systems.navigator();
 
         blinking.start();
 
         pacMan.pos().set(TS * 28, TS * 20);
+        nav.setMoveDir(pacMan, Direction.LEFT);
+        nav.setSpeed(pacMan, CHASING_SPEED);
         pacMan.show();
-
-        systems.navigator().setMoveDir(pacMan, Direction.LEFT);
-        systems.navigator().setSpeed(pacMan, CHASING_SPEED);
 
         for (Ghost ghost : ghosts) {
             ghost.pos().set(pacMan.pos().x() + 16 * ghost.personality().ordinal() + 18, pacMan.pos().y());
-            ghost.show();
-
-            systems.navigator().setMoveDir(ghost, Direction.LEFT);
-            systems.navigator().setWishDir(ghost, Direction.LEFT);
-            systems.navigator().setSpeed(ghost, CHASING_SPEED);
+            nav.setMoveDir(ghost, Direction.LEFT);
+            nav.setWishDir(ghost, Direction.LEFT);
+            nav.setSpeed(ghost, CHASING_SPEED);
             systems.ghostState().setState(ghost, GhostState.HUNTING_PAC);
+            ghost.show();
         }
     }
 
@@ -340,6 +309,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
         final GhostAnimationSystem ghostSpriteAnimationSystem = systems.ghostAnimation();
 
         blinking.triggerPulse();
+
         motor.move(pacMan);
         for (Ghost ghost : ghosts) {
             motor.move(ghost);
@@ -365,19 +335,19 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
 
     private void turnCardsStopPacMan(GameContext game) {
         final GameSystems systems = game.playConfig().systems();
+        final WorldNavigationSystem nav = systems.navigator();
+        final ActorSpriteAnimController animController = systems.actorSpriteAnimController();
 
-        systems.navigator().setSpeed(pacMan, 0);
+        nav.setSpeed(pacMan, 0);
         systems.actorSpriteAnimController().stopSelected(pacMan);
 
         for (Ghost ghost : ghosts) {
-            systems.navigator().setMoveDir(ghost, Direction.RIGHT);
-            systems.navigator().setWishDir(ghost, Direction.RIGHT);
-            systems.navigator().setSpeed(ghost, GHOST_FRIGHTENED_SPEED);
-
+            nav.setMoveDir(ghost, Direction.RIGHT);
+            nav.setWishDir(ghost, Direction.RIGHT);
+            nav.setSpeed(ghost, GHOST_FRIGHTENED_SPEED);
             systems.ghostState().setState(ghost, GhostState.FRIGHTENED);
-
-            systems.actorSpriteAnimController().select(ghost, CommonSpriteAnimationID.GHOST_FRIGHTENED);
-            systems.actorSpriteAnimController().playSelected(ghost);
+            animController.select(ghost, CommonSpriteAnimationID.GHOST_FRIGHTENED);
+            animController.playSelected(ghost);
         }
     }
 
@@ -388,17 +358,22 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
 
     private void chaseGhosts(GameContext game, long tick) {
         final GameSystems systems = game.playConfig().systems();
+        final MovementSystem motor = systems.motor();
 
         blinking.triggerPulse();
-        systems.motor().move(pacMan);
-        for (Ghost ghost : ghosts) { systems.motor().move(ghost); }
-        edibleGhost().ifPresent(victim -> eatGhostAndStopChasing(game, victim, tick));
+
+        motor.move(pacMan);
+        for (Ghost ghost : ghosts) {
+            motor.move(ghost);
+        }
+
+        findNextEdibleGhost().ifPresent(victim -> eatGhostAndStopChasing(game, victim, tick));
         if (tick == lastGhostEatenTick + GHOST_EATING_TICKS) {
             continueChasing(systems);
         }
     }
 
-    private Optional<Ghost> edibleGhost() {
+    private Optional<Ghost> findNextEdibleGhost() {
         return Stream.of(ghosts)
             .filter(ghost -> ghost.state().enumValue() != GhostState.EATEN)
             .filter(ghost -> CollisionStrategy.SAME_TILE.collide(ghost, pacMan))
