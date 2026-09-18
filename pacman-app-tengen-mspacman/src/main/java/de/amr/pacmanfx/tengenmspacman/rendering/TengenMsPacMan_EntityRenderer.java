@@ -95,6 +95,7 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer {
             case MessageView messageView -> messageViewRenderer.renderMessageView(messageView);
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
             case Heart heart -> drawSpriteCentered(computeSprite(heart), center);
+            case Bag bag -> drawSpriteCentered(computeSprite(bag), center);
             case Stork stork -> drawStork(stork);
             case Marquee marquee -> drawMarquee(marquee, tick);
             case Door door -> drawDoor(door);
@@ -171,6 +172,10 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer {
 
     private RectShort computeSprite(Heart heart) {
         return animSystem.currentSprite(heart);
+    }
+
+    private RectShort computeSprite(Bag bag) {
+        return animSystem.currentSprite(bag);
     }
 
     private RectShort computeSprite(GhostPoints ghostPoints) {
