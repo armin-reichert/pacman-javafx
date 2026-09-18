@@ -29,7 +29,7 @@ public interface GameScene extends Disposable, QuitHandler {
         return app().game();
     }
 
-    default GameFlow flow() {
+    default GameFlow gameFlow() {
         return game().playConfig().gameFlow();
     }
 

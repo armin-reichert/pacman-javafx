@@ -187,7 +187,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     @Override
     public void onQuit() {
         onDeactivate();
-        flow().enterGameState(game(), CommonGameStateID.GAME_OVER);
+        gameFlow().enterGameState(game(), CommonGameStateID.GAME_OVER);
     }
 
     @Override

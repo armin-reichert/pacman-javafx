@@ -4,13 +4,9 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.gamescene.introscene;
 
-import de.amr.basics.fsm.State;
-import de.amr.basics.fsm.StateMachine;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
-import de.amr.basics.timer.TickTimer;
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.uilib.entities.ImageDisplay;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
@@ -20,7 +16,6 @@ import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
-import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.rendering.Renderable;
@@ -33,6 +28,7 @@ import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
+import de.amr.pacmanfx.uilib.entities.ImageDisplay;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -65,7 +61,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
     private static final String[] GHOST_NAMES = { "BLINKY", "PINKY", "INKY", "SUE" };
     private static final Color[] GHOST_COLORS = { ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE };
 
-    private final StateMachine<ArcadeMsPacMan_IntroScene> sceneFlow;
+    final IntroSceneController flow;
 
     private Marquee marquee;
     private Pac msPacMan;
@@ -76,14 +72,13 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
     private TextDisplay marqueeText1;
     private TextDisplay marqueeText2;
 
-    public int ghostInSpotlight;
-
-    private int numTicksBeforeRising;
+    int ghostInSpotlight;
+    int numTicksBeforeRising;
 
     public ArcadeMsPacMan_IntroScene(GameApp app) {
         super(app);
         setComp(GameSceneCanvasRenderingComp.class, new GameSceneCanvasRenderingComp());
-        sceneFlow = new StateMachine<>(List.of(SceneState.values()));
+        flow = new IntroSceneController();
     }
 
     @Override
@@ -100,7 +95,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
         bindingsMap.registerAllBindings(actions.gameStartActionBindings());
         bindingsMap.registerAllBindings(app.commonActions().sceneTestActions().bindings());
 
-        sceneFlow.restartState(this, SceneState.STARTING);
+        flow.restartState(this, IntroSceneController.SceneState.STARTING);
     }
 
     @Override
@@ -111,25 +106,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
 
     @Override
     public void onTick(GameContext game) {
-        sceneFlow.update(this);
-    }
-
-    private void initScene() {
-        final GameVariantRuntime runtime = app.variantManager().currentRuntime();
-        final ActorSpriteAnimController animController = runtime.playConfig().systems().actorSpriteAnimController();
-
-        createTitleText();
-        createMarqueeTexts();
-        createMarquee();
-        createMsPacMan(runtime);
-        createGhosts(runtime);
-        createCopyright(runtime);
-
-        ghostInSpotlight = GhostPersonality.RED_GHOST_SHADOW.ordinal();
-        numTicksBeforeRising = 0;
-
-        startAnimations(animController);
-        soundManager().voice().playAfterSec(1, VoiceID.START_HINT.media());
+        flow.update(this);
     }
 
     private void createTitleText() {
@@ -222,7 +199,25 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
         marqueeText2.show();
     }
 
-    private void updateMarqueeText(SceneState state) {
+    void initScene() {
+        final GameVariantRuntime runtime = app.variantManager().currentRuntime();
+        final ActorSpriteAnimController animController = runtime.playConfig().systems().actorSpriteAnimController();
+
+        createTitleText();
+        createMarqueeTexts();
+        createMarquee();
+        createMsPacMan(runtime);
+        createGhosts(runtime);
+        createCopyright(runtime);
+
+        ghostInSpotlight = GhostPersonality.RED_GHOST_SHADOW.ordinal();
+        numTicksBeforeRising = 0;
+
+        startAnimations(animController);
+        soundManager().voice().playAfterSec(1, VoiceID.START_HINT.media());
+    }
+
+    void updateMarqueeText(IntroSceneController.SceneState state) {
         switch (state) {
             case GHOSTS_MARCHING_IN -> {
                 String ghostName = GHOST_NAMES[ghostInSpotlight];
@@ -253,7 +248,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
         }
     }
 
-    private void startAnimations(ActorSpriteAnimController animController) {
+    void startAnimations(ActorSpriteAnimController animController) {
         animController.select(msPacMan, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
         animController.playSelected(msPacMan);
         for (Ghost ghost : ghosts) {
@@ -262,7 +257,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
         }
     }
 
-    private boolean letGhostWalkIn() {
+    boolean letGhostWalkIn() {
         final GameSystems systems = game().playConfig().systems();
 
         final Ghost ghost = ghosts.get(ghostInSpotlight);
@@ -294,7 +289,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
         return false;
     }
 
-    private boolean letMsPacManWalkIn() {
+    boolean letMsPacManWalkIn() {
         final GameSystems systems = game().playConfig().systems();
         systems.motor().move(msPacMan);
         if (msPacMan.pos().x() <= MS_PACMAN_END_POS_X) {
@@ -303,82 +298,5 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
             return true;
         }
         return false;
-    }
-
-    // Scene flow state machine
-
-    public enum SceneState implements State<ArcadeMsPacMan_IntroScene> {
-
-        STARTING {
-            @Override
-            public void onEnter(ArcadeMsPacMan_IntroScene scene) {
-                scene.initScene();
-                scene.updateMarqueeText(this);
-            }
-
-            @Override
-            public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                if (timer.atSecond(1)) {
-                    scene.sceneFlow.enterState(scene, GHOSTS_MARCHING_IN);
-                }
-            }
-        },
-
-        GHOSTS_MARCHING_IN {
-            @Override
-            public void onEnter(ArcadeMsPacMan_IntroScene scene) {
-                scene.updateMarqueeText(this);
-            }
-
-            @Override
-            public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                final boolean atEndPosition = scene.letGhostWalkIn();
-                if (atEndPosition) {
-                    if (scene.ghostInSpotlight == GhostPersonality.ORANGE_GHOST_POKEY.ordinal()) {
-                        scene.sceneFlow.enterState(scene, MS_PACMAN_MARCHING_IN);
-                    } else {
-                        ++scene.ghostInSpotlight;
-                        scene.updateMarqueeText(this);
-                    }
-                }
-            }
-        },
-
-        MS_PACMAN_MARCHING_IN {
-            @Override
-            public void onEnter(ArcadeMsPacMan_IntroScene scene) {
-                scene.updateMarqueeText(this);
-            }
-
-            @Override
-            public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                final boolean atEndPosition = scene.letMsPacManWalkIn();
-                if (atEndPosition) {
-                    scene.sceneFlow.enterState(scene, READY_TO_PLAY);
-                }
-            }
-        },
-
-        READY_TO_PLAY {
-            @Override
-            public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                final GameContext game = scene.app.game();
-                final boolean canPlay = !game.coinMechanism().isEmpty();
-                if (timer.atSecond(2.0) && !canPlay) {
-                    scene.flow().enterGameState(game, CommonGameStateID.GAME_OR_LEVEL_STARTING); // play demo level after 2 seconds
-                }
-                //TODO can this happen at all?
-                else if (timer.atSecond(5)) {
-                    scene.flow().enterGameState(game, CommonGameStateID.GAME_PREPARATION);
-                }
-            }
-        };
-
-        final TickTimer timer = new TickTimer("Timer-" + name());
-
-        @Override
-        public TickTimer timer() {
-            return timer;
-        }
     }
 }
