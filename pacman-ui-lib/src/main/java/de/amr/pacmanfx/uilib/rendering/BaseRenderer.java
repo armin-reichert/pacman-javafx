@@ -21,6 +21,7 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -272,9 +273,15 @@ public class BaseRenderer implements Renderer {
 
     private void renderImageDisplay(ImageDisplay imageDisplay) {
         if (imageDisplay.isVisible()) {
+            final Image imageFX = imageDisplay.image().image();
+            final double s = scaling();
+            final double width = imageFX.getWidth();
+            final double height =imageFX.getHeight();
+            final double x = imageDisplay.pos().x();
+            final double y = imageDisplay.pos().y();
             ctx.save();
-            ctx.scale(scaling(), scaling());
-            ctx.drawImage(imageDisplay.image().image(), imageDisplay.pos().x(), imageDisplay.pos().y());
+            ctx.scale(s, s);
+            ctx.drawImage(imageFX, x, y);
             ctx.restore();
         }
     }

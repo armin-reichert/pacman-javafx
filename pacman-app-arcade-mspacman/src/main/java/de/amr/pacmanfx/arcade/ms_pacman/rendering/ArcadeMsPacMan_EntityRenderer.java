@@ -9,13 +9,12 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.clapperboard.ClapperboardAnimationSystem;
 import de.amr.pacmanfx.arcade.ms_pacman.gamescene.introscene.MarqueeRenderer;
-import de.amr.pacmanfx.uilib.entities.ImageDisplay;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_RenderConfig;
 import de.amr.pacmanfx.core.Energizer;
-import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.*;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.ui.GlobalFonts;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.entities.hud.comp.HUD_Style;
@@ -31,7 +30,8 @@ import java.util.Optional;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
-import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
+import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
+import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_YELLOW;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -81,6 +81,7 @@ public class ArcadeMsPacMan_EntityRenderer extends BaseRenderer {
     }
 
     private void renderGameEntity(GameEntity gameEntity, long tick) {
+        ctx.save();
         final Vector2f center = gameEntity.pos().bodyCenter();
         switch (gameEntity) {
             case Pac pac                   -> drawSpriteCentered(computeSprite(pac),    center);
@@ -92,7 +93,6 @@ public class ArcadeMsPacMan_EntityRenderer extends BaseRenderer {
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
             case Marquee marquee           -> drawMarquee(marquee, tick);
             case MessageView messageView   -> messageViewRenderer.renderMessageView(messageView);
-            case ImageDisplay copyright       -> drawMidwayCopyright(copyright);
             case LevelCounter levelCounter -> drawLevelCounter(levelCounter);
             case LivesCounter livesCounter -> drawLivesCounter(livesCounter);
             case Score score -> {
@@ -104,8 +104,13 @@ public class ArcadeMsPacMan_EntityRenderer extends BaseRenderer {
             }
             case CreditDisplay creditDisplay -> drawCreditDisplay(creditDisplay);
             case TextDisplay textDisplay -> super.render(textDisplay, tick);
-            default -> {}
+            default -> {
+                if (gameEntity instanceof Renderable r) {
+                    super.render(r, tick);
+                }
+            }
         }
+        ctx.restore();
     }
 
     private RectShort computeSprite(Ghost ghost) {
@@ -193,18 +198,6 @@ public class ArcadeMsPacMan_EntityRenderer extends BaseRenderer {
 
     private void drawMarquee(Marquee marquee, long tick) {
         marqueeRenderer.render(marquee, tick);
-    }
-
-    private void drawMidwayCopyright(ImageDisplay copyright) {
-        final float x = copyright.pos().x();
-        final float y = copyright.pos().y();
-        final Font arcade8 = Ufx.deriveFont(GlobalFonts.ARCADE.font(), scaled(8));
-        ctx.drawImage(copyright.image().image(), scaled(x), scaled(y + 2), scaled(tilesPx(4) - 2), scaled(tilesPx(4)));
-        ctx.setFont(arcade8);
-        ctx.setFill(ARCADE_RED);
-        ctx.fillText("©",             scaled(x + tilesPx(5)), scaled(y + tilesPx(2)) + 2);
-        ctx.fillText("MIDWAY MFG CO", scaled(x + tilesPx(7)), scaled(y + tilesPx(2)));
-        ctx.fillText("1980/1981",     scaled(x + tilesPx(8)), scaled(y + tilesPx(4)));
     }
 
     // --- HUD ---

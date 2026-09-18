@@ -6,18 +6,14 @@ package de.amr.pacmanfx.arcade.pacman.gamescene.startscene;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.entities.TextDisplay;
 import de.amr.pacmanfx.core.rendering.Renderable;
-import de.amr.pacmanfx.ui.GlobalFonts;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
-import javafx.scene.paint.Color;
 
 import java.util.List;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
 
 /**
@@ -59,14 +55,4 @@ public class ArcadePacMan_StartScene extends AbstractGameScene {
 
     @Override
     public void onTick(GameContext game) {}
-
-    private static TextDisplay createText(String text, Color color, int fontSize, float tileX, float tileY) {
-        final var textDisplay = new TextDisplay();
-        textDisplay.data().setFillColor(color);
-        textDisplay.data().setFont(GlobalFonts.ARCADE.font(fontSize));
-        textDisplay.data().setText(text);
-        textDisplay.pos().set(tilesPx(tileX), tilesPx(tileY));
-        textDisplay.show();
-        return textDisplay;
-    }
 }

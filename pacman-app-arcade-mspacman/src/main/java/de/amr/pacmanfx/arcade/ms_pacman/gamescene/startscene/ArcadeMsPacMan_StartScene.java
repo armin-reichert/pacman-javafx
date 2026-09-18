@@ -5,6 +5,9 @@
 package de.amr.pacmanfx.arcade.ms_pacman.gamescene.startscene;
 
 import de.amr.basics.util.Ufx;
+import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
+import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
+import de.amr.pacmanfx.core.entities.TextDisplay;
 import de.amr.pacmanfx.uilib.entities.ImageDisplay;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
@@ -15,14 +18,27 @@ import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
+import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_ORANGE;
+import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
 
 public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
 
-    private final StartSceneText sceneText;
+    private final List<Renderable> texts = List.of(
+        createText("PUSH START BUTTON",      ARCADE_ORANGE, 8,  6, 16),
+        createText("1 PLAYER ONLY",          ARCADE_ORANGE, 8,  8, 18),
+        createText("ADDITIONAL    AT 10000", ARCADE_ORANGE, 8,  2, 25),
+        createText("PTS",                    ARCADE_ORANGE, 6, 25, 25)
+    );
+
+    private final ImageDisplay msPacManImage;
     private final ImageDisplay copyrightImage;
+    private final List<TextDisplay> copyrightTexts = new ArrayList<>();
 
     public ArcadeMsPacMan_StartScene(GameApp app) {
         super(app);
@@ -32,17 +48,30 @@ public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
 
         final AssetMap assets = app.variantManager().currentRuntime().uiConfig().assets();
 
-        sceneText = new StartSceneText(6, 16);
+        msPacManImage = new ImageDisplay();
+        msPacManImage.image().setImage(ArcadeMsPacMan_SpriteSheet.instance().image(SpriteID.LIVES_COUNTER_SYMBOL));
+        msPacManImage.pos().set(13 * TS, 23.5 * TS);
+        msPacManImage.show();
 
         copyrightImage = new ImageDisplay();
         copyrightImage.show();
         copyrightImage.pos().set(tilesPx(6), tilesPx(28));
         copyrightImage.image().setImage(assets.image("logo.midway"));
+
+        copyrightTexts.add(createText("©",             ARCADE_RED, 8, 11, 30.125f));
+        copyrightTexts.add(createText("MIDWAY MFG CO", ARCADE_RED, 8, 13, 30));
+        copyrightTexts.add(createText("1980/1981",     ARCADE_RED, 8, 14, 32));
+        copyrightTexts.forEach(TextDisplay::show);
+
     }
 
     @Override
     public Stream<Renderable> renderables() {
-        return Ufx.streamOf(sceneText, copyrightImage);
+        return Ufx.streamOf(
+            texts,
+            msPacManImage,
+            copyrightImage, copyrightTexts
+        );
     }
 
     @Override

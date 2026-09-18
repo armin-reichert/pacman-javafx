@@ -35,6 +35,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import javafx.scene.paint.Color;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -69,7 +70,8 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
     private Marquee marquee;
     private Pac msPacMan;
     private List<Ghost> ghosts;
-    private ImageDisplay copyright;
+    private ImageDisplay copyrightImage;
+    private final List<TextDisplay> copyrightTexts = new ArrayList<>();
     private TextDisplay titleText;
     private TextDisplay marqueeText1;
     private TextDisplay marqueeText2;
@@ -86,7 +88,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
 
     @Override
     public Stream<Renderable> renderables() {
-        return Ufx.streamOf(titleText, marquee, marqueeText1, marqueeText2, msPacMan, ghosts, copyright);
+        return Ufx.streamOf(titleText, marquee, marqueeText1, marqueeText2, msPacMan, ghosts, copyrightImage, copyrightTexts);
     }
 
     @Override
@@ -121,7 +123,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
         createMarquee();
         createMsPacMan(runtime);
         createGhosts(runtime);
-        createCopyrightImage(runtime);
+        createCopyright(runtime);
 
         ghostInSpotlight = GhostPersonality.RED_GHOST_SHADOW.ordinal();
         numTicksBeforeRising = 0;
@@ -139,12 +141,18 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
         titleText.show();
     }
 
-    private void createCopyrightImage(GameVariantRuntime runtime) {
+    private void createCopyright(GameVariantRuntime runtime) {
         final AssetMap assets = runtime.uiConfig().assets();
-        copyright = new ImageDisplay();
-        copyright.show();
-        copyright.pos().set(tilesPx(6), tilesPx(28));
-        copyright.image().setImage(assets.image("logo.midway"));
+
+        copyrightImage = new ImageDisplay();
+        copyrightImage.show();
+        copyrightImage.pos().set(tilesPx(6), tilesPx(28));
+        copyrightImage.image().setImage(assets.image("logo.midway"));
+
+        copyrightTexts.add(createText("©",             ARCADE_RED, 8, 11, 30.125f));
+        copyrightTexts.add(createText("MIDWAY MFG CO", ARCADE_RED, 8, 13, 30));
+        copyrightTexts.add(createText("1980/1981",     ARCADE_RED, 8, 14, 32));
+        copyrightTexts.forEach(TextDisplay::show);
     }
 
     private void createMsPacMan(GameVariantRuntime runtime) {

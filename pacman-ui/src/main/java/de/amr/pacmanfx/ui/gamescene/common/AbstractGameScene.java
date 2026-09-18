@@ -9,15 +9,19 @@ import de.amr.basics.Disposable;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
+import de.amr.pacmanfx.core.entities.TextDisplay;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.rendering.Renderable;
+import de.amr.pacmanfx.ui.GlobalFonts;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.action.core.QuitHandler;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
+import javafx.scene.paint.Color;
 
 import java.util.Optional;
 
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -27,6 +31,16 @@ public abstract class AbstractGameScene
     extends Composition<GameSceneComponent>
     implements GameScene, QuitHandler, Disposable, Renderable
 {
+    public static TextDisplay createText(String text, Color color, int fontSize, float tileX, float tileY) {
+        final var textDisplay = new TextDisplay();
+        textDisplay.data().setFillColor(color);
+        textDisplay.data().setFont(GlobalFonts.ARCADE.font(fontSize));
+        textDisplay.data().setText(text);
+        textDisplay.pos().set(tilesPx(tileX), tilesPx(tileY));
+        textDisplay.show();
+        return textDisplay;
+    }
+
     //TODO Should a game scene really be a renderable itself or only produce renderables?
 
     protected final GameApp app;
