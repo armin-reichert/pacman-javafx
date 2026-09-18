@@ -53,13 +53,14 @@ import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
  */
 public class ArcadePacMan_IntroScene extends AbstractGameScene {
 
-    private static final String TITLE_TEXT = "CHARACTER / NICKNAME";
-    private static final String MIDWAY_MFG_CO = "© 1980 MIDWAY MFG.CO.";
+    private static final String   TITLE_TEXT = "CHARACTER / NICKNAME";
+    private static final String   MIDWAY_MFG_CO = "© 1980 MIDWAY MFG.CO.";
+
     private static final String[] GHOST_NICKNAMES  = { "\"BLINKY\"", "\"PINKY\"", "\"INKY\"", "\"CLYDE\"" };
-    private static final String[] GHOST_CHARACTERS = { "SHADOW", "SPEEDY", "BASHFUL", "POKEY" };
+    private static final String[] GHOST_CHARACTERS = { "-SHADOW", "-SPEEDY", "-BASHFUL", "-POKEY" };
     private static final Color[]  GHOST_COLORS     = { ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE };
 
-    private static final byte LEFT_TILE_X = 4;
+    private static final int LEFT_TILE_X = 4;
     private static final int ENERGIZER_CENTER_X = TS * LEFT_TILE_X + HTS;
     private static final int ENERGIZER_CENTER_Y = TS * 20 + HTS;
 
@@ -97,32 +98,66 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
     public static final int TICK_START_DEMO_LEVEL = 60;
 
     private final StateMachine<ArcadePacMan_IntroScene> flow;
-    private final Pulse blinking = new Pulse(10, Pulse.State.ON);
+    private final Pulse pulse = new Pulse(10, Pulse.State.ON);
 
     private int numGhostsEaten;
     private int ghostIndex;
     private long lastGhostEatenTick;
 
-    // Renderables
+    private final TextDisplay titleText = new TextDisplay();
+
+    // Ghost presentation
+    private ImageDisplay[] ghostImageDisplays;
+    private TextDisplay[]  ghostNicknameDisplays;
+    private TextDisplay[]  ghostCharacterDisplays;
+
+    // Chase animation
+    private BlinkingEnergizer targetEnergizer;
     private Pac pacMan;
-    private final Ghost[] ghosts = new Ghost[NUM_GHOSTS];
+    private Ghost[] ghosts;
     private GhostPoints points;
-    private TextDisplay titleText;
-    private final ImageDisplay[] ghostImageDisplays = new ImageDisplay[NUM_GHOSTS];
-    private final TextDisplay[] ghostNicknameTextDisplays = new TextDisplay[NUM_GHOSTS];
-    private final TextDisplay[] ghostCharacterTextDisplays = new TextDisplay[NUM_GHOSTS];
-    private final BlinkingEnergizer targetEnergizer = new BlinkingEnergizer();
-    private final BlinkingEnergizer energizer = new BlinkingEnergizer();
-    private final Pellet pellet = new Pellet();
-    private final TextDisplay text10 = new TextDisplay();
-    private final TextDisplay text10Pts = new TextDisplay();
-    private final TextDisplay text50 = new TextDisplay();
-    private final TextDisplay text50Pts = new TextDisplay();
-    private final TextDisplay copyrightText = new TextDisplay();
+
+    // Points display
+    private BlinkingEnergizer energizer;
+    private Pellet pellet;
+    private TextDisplay text10;
+    private TextDisplay text10Pts;
+    private TextDisplay text50;
+    private TextDisplay text50Pts;
+    private TextDisplay copyrightText;
+
+    private void createEntities() {
+        // Ghost presentation
+        ghostImageDisplays = new ImageDisplay[NUM_GHOSTS];
+        ghostNicknameDisplays = new TextDisplay[NUM_GHOSTS];
+        ghostCharacterDisplays = new TextDisplay[NUM_GHOSTS];
+
+        for (int i = 0; i < NUM_GHOSTS; ++i) {
+            ghostImageDisplays[i] = new ImageDisplay();
+            ghostCharacterDisplays[i] = new TextDisplay();
+            ghostNicknameDisplays[i] = new TextDisplay();
+        }
+
+        // Chase animation
+        targetEnergizer = new BlinkingEnergizer();
+        ghosts = new Ghost[NUM_GHOSTS];
+
+        // Points display
+        energizer = new BlinkingEnergizer();
+        pellet = new Pellet();
+        text10 = new TextDisplay();
+        text10Pts = new TextDisplay();
+        text50 = new TextDisplay();
+        text50Pts = new TextDisplay();
+        copyrightText = new TextDisplay();
+    }
 
     public ArcadePacMan_IntroScene(GameApp app) {
         super(app);
         setComp(GameSceneCanvasRenderingComp.class, new GameSceneCanvasRenderingComp());
+
+        createEntities();
+
         flow = new StateMachine<>(List.of(SceneState.values()));
     }
 
@@ -141,7 +176,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
     @Override
     public void onDeactivate() {
         points = null;
-        blinking.stop();
+        pulse.stop();
         soundManager().voice().stop();
     }
 
@@ -155,8 +190,8 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
         return Ufx.streamOf(
             titleText,
             Arrays.stream(ghostImageDisplays).filter(ImageDisplay::isVisible),
-            Arrays.stream(ghostCharacterTextDisplays).filter(TextDisplay::isVisible),
-            Arrays.stream(ghostNicknameTextDisplays).filter(TextDisplay::isVisible),
+            Arrays.stream(ghostCharacterDisplays).filter(TextDisplay::isVisible),
+            Arrays.stream(ghostNicknameDisplays).filter(TextDisplay::isVisible),
             pacMan,
             ghosts,
             targetEnergizer,
@@ -171,34 +206,66 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
         );
     }
 
-    private void createTitleText() {
-        titleText = new TextDisplay();
+    private void initEntities() {
+        initTitleText();
+        initGhostGallery();
+        initPointsTexts();
+        initCopyrightText();
+        initTargetEnergizer();
+        initPointsEnergizer();
+        initPointsPellet();
+    }
+
+    private void initPointsPellet() {
+        pellet.pos().set(tilesPx(LEFT_TILE_X + 6) + HTS, tilesPx(24) + 4);
+        pellet.hide();
+    }
+
+    private void initPointsEnergizer() {
+        energizer.setPulse(pulse);
+        energizer.pos().set(tilesPx(LEFT_TILE_X + 6) + HTS, tilesPx(26) + HTS);
+        energizer.hide();
+    }
+
+    private void initTargetEnergizer() {
+        targetEnergizer.setPulse(pulse);
+        targetEnergizer.pos().set(ENERGIZER_CENTER_X, ENERGIZER_CENTER_Y);
+        targetEnergizer.hide();
+    }
+
+    private void initTitleText() {
         titleText.pos().set(tilesPx(LEFT_TILE_X + 3), tilesPx(6));
         titleText.data().setFillColor(ARCADE_WHITE);
         titleText.data().setFont(GlobalFonts.ARCADE.font(TS));
         titleText.data().setText(TITLE_TEXT);
     }
 
-    private void createGhostGalleryComponents() {
+    private void initGhostGallery() {
         final var spriteSheet = ArcadePacMan_SpriteSheet.instance();
         final int y = TS * 8;
+
         for (int i = 0; i < NUM_GHOSTS; ++i) {
-            ghostImageDisplays[i] = new ImageDisplay();
-            RectShort sprite = spriteSheet.findSpriteSequence(GALLERY_GHOSTS)[i];
-            ghostImageDisplays[i].image().setImage(spriteSheet.image(sprite));
-            ghostImageDisplays[i].pos().set(TS * 4, y + 3 * i * TS - 1.5f * TS);
+            final int offsetY = 3 * i * TS;
 
-            ghostCharacterTextDisplays[i] = new TextDisplay();
-            ghostCharacterTextDisplays[i].pos().set(TS * 7, y + 3 * i * TS);
-            ghostCharacterTextDisplays[i].data().setText("-" + GHOST_CHARACTERS[i]);
-            ghostCharacterTextDisplays[i].data().setFillColor(GHOST_COLORS[i]);
-            ghostCharacterTextDisplays[i].data().setFont(GlobalFonts.ARCADE.font(TS));
+            final ImageDisplay imageDisplay = ghostImageDisplays[i];
+            final RectShort sprite = spriteSheet.findSpriteSequence(GALLERY_GHOSTS)[i];
+            imageDisplay.image().setImage(spriteSheet.image(sprite));
+            imageDisplay.pos().set(TS * 4, y + offsetY - 1.5f * TS);
+            imageDisplay.hide();
 
-            ghostNicknameTextDisplays[i] = new TextDisplay();
-            ghostNicknameTextDisplays[i].pos().set(TS * 18, y + 3 * i * TS);
-            ghostNicknameTextDisplays[i].data().setText(GHOST_NICKNAMES[i]);
-            ghostNicknameTextDisplays[i].data().setFillColor(GHOST_COLORS[i]);
-            ghostNicknameTextDisplays[i].data().setFont(GlobalFonts.ARCADE.font(TS));
+            final TextDisplay characterDisplay = ghostCharacterDisplays[i];
+            characterDisplay.data().setText(GHOST_CHARACTERS[i]);
+            characterDisplay.data().setFillColor(GHOST_COLORS[i]);
+            characterDisplay.data().setFont(GlobalFonts.ARCADE.font(TS));
+            characterDisplay.pos().set(TS * 7, y + offsetY);
+            characterDisplay.hide();
+
+            final TextDisplay nicknameDisplay = ghostNicknameDisplays[i];
+            nicknameDisplay.data().setText(GHOST_NICKNAMES[i]);
+            nicknameDisplay.data().setFillColor(GHOST_COLORS[i]);
+            nicknameDisplay.data().setFont(GlobalFonts.ARCADE.font(TS));
+            nicknameDisplay.pos().set(TS * 18, y + offsetY);
+            nicknameDisplay.hide();
         }
     }
 
@@ -211,21 +278,8 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
 
         createPacMan(actorFactory, renderConfig, animContainer);
         createGhosts(renderConfig, animController, animContainer);
-        createTitleText();
-        createGhostGalleryComponents();
-        createPointsTexts();
-        createCopyrightText();
 
-        targetEnergizer.setPulse(blinking);
-        targetEnergizer.pos().set(ENERGIZER_CENTER_X, ENERGIZER_CENTER_Y);
-        targetEnergizer.hide();
-
-        energizer.setPulse(blinking);
-        energizer.pos().set(tilesPx(LEFT_TILE_X + 6) + HTS, tilesPx(26) + HTS);
-        energizer.hide();
-
-        pellet.pos().set(tilesPx(LEFT_TILE_X + 6) + HTS, tilesPx(24) + 4);
-        pellet.hide();
+        initEntities();
 
         ghostIndex = 0;
         lastGhostEatenTick = 0;
@@ -248,7 +302,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
         pacMan.spriteAnim().spriteAnimations().playSelected();
     }
 
-    private void createCopyrightText() {
+    private void initCopyrightText() {
         copyrightText.data().setText(MIDWAY_MFG_CO);
         copyrightText.data().setFont(GlobalFonts.ARCADE.font(TS));
         copyrightText.data().setFillColor(ARCADE_PINK);
@@ -256,7 +310,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
         copyrightText.hide();
     }
 
-    private void createPointsTexts() {
+    private void initPointsTexts() {
         text10.data().setText("10");
         text10.pos().set(tilesPx(LEFT_TILE_X + 8), tilesPx(25));
         text10.data().setFillColor(ARCADE_WHITE);
@@ -282,11 +336,13 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
         text50Pts.hide();
     }
 
+    // Animation
+
     private void startChasingPacMan(GameContext game) {
         final GameSystems systems = game.playConfig().systems();
         final WorldNavigationSystem nav = systems.navigator();
 
-        blinking.start();
+        pulse.start();
 
         pacMan.pos().set(TS * 28, TS * 20);
         nav.setMoveDir(pacMan, Direction.LEFT);
@@ -308,7 +364,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
         final MovementSystem motor = systems.motor();
         final GhostAnimationSystem ghostSpriteAnimationSystem = systems.ghostAnimation();
 
-        blinking.triggerPulse();
+        pulse.triggerPulse();
 
         motor.move(pacMan);
         for (Ghost ghost : ghosts) {
@@ -360,7 +416,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
         final GameSystems systems = game.playConfig().systems();
         final MovementSystem motor = systems.motor();
 
-        blinking.triggerPulse();
+        pulse.triggerPulse();
 
         motor.move(pacMan);
         for (Ghost ghost : ghosts) {
@@ -453,8 +509,8 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
                 }
                 switch (t) {
                     case TICK_GHOST_SPRITE_VISIBLE    -> scene.ghostImageDisplays[scene.ghostIndex].show();
-                    case TICK_GHOST_CHARACTER_VISIBLE -> scene.ghostCharacterTextDisplays[scene.ghostIndex].show();
-                    case TICK_GHOST_NICKNAME_VISIBLE  -> scene.ghostNicknameTextDisplays[scene.ghostIndex].show();
+                    case TICK_GHOST_CHARACTER_VISIBLE -> scene.ghostCharacterDisplays[scene.ghostIndex].show();
+                    case TICK_GHOST_NICKNAME_VISIBLE  -> scene.ghostNicknameDisplays[scene.ghostIndex].show();
                     case TICK_GHOST_PRESENT_NEXT      -> presentNextGhost(scene);
                     case TICK_GHOST_PRESENTATION_END  -> scene.flow.enterState(scene, SHOWING_POINTS);
                 }
@@ -471,7 +527,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
         SHOWING_POINTS {
             @Override
             public void onEnter(ArcadePacMan_IntroScene scene) {
-                scene.blinking.stopAndReset();
+                scene.pulse.stopAndReset();
                 scene.energizer.show();
                 scene.pellet.show();
                 scene.text10.show();
@@ -555,6 +611,8 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
                 final GameContext game = scene.game();
+
+                scene.pulse.triggerPulse();
 
                 if (timer.tickCount() == TICK_START_DEMO_LEVEL) {
                     scene.ghosts[GhostPersonality.ORANGE_GHOST_POKEY.ordinal()].hide();
