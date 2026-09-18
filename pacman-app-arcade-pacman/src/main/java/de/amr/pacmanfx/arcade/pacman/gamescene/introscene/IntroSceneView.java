@@ -117,7 +117,7 @@ public class IntroSceneView {
         initCopyrightText();
     }
 
-    void createPacManAndGhosts(GameVariantRenderConfig renderConfig, ActorSpriteAnimController animController, SpriteAnimationContainer animContainer) {
+    public void createPacManAndGhosts(GameVariantRenderConfig renderConfig, ActorSpriteAnimController animController, SpriteAnimationContainer animContainer) {
         final var actorFactory = ArcadePacMan_ActorFactory.instance();
 
         pacMan = actorFactory.createPacMan();
@@ -133,11 +133,11 @@ public class IntroSceneView {
         };
     }
 
-    Stream<Renderable> renderables() {
+    public Stream<Renderable> renderables() {
         return Stream.concat(staticRenderables.stream(), Ufx.streamOf(pacMan, ghosts, points));
     }
 
-    void hideEverything() {
+    public void hideEverything() {
         for (int i = 0; i < NUM_GHOSTS; ++i) {
             ghostImageDisplays[i].hide();
             ghostCharacterDisplays[i].hide();
@@ -168,10 +168,10 @@ public class IntroSceneView {
     }
 
     private void initTitleText() {
-        titleText.pos().set(tilesPx(LEFT_TILE_X + 3), tilesPx(6));
+        titleText.data().setText(TITLE_TEXT);
         titleText.data().setFillColor(ARCADE_WHITE);
         titleText.data().setFont(GlobalFonts.ARCADE.font(TS));
-        titleText.data().setText(TITLE_TEXT);
+        titleText.pos().set(tilesPx(LEFT_TILE_X + 3), tilesPx(6));
     }
 
     private void initGhostGallery() {
@@ -207,24 +207,24 @@ public class IntroSceneView {
         energizer.pos().set(tilesPx(LEFT_TILE_X + 6) + HTS, tilesPx(26) + HTS);
 
         text10.data().setText("10");
-        text10.pos().set(tilesPx(LEFT_TILE_X + 8), tilesPx(25));
         text10.data().setFillColor(ARCADE_WHITE);
         text10.data().setFont(GlobalFonts.ARCADE.font(TS));
+        text10.pos().set(tilesPx(LEFT_TILE_X + 8), tilesPx(25));
 
         text10Pts.data().setText("PTS");
-        text10Pts.pos().set(tilesPx(LEFT_TILE_X + 11), tilesPx(25));
         text10Pts.data().setFillColor(ARCADE_WHITE);
         text10Pts.data().setFont(GlobalFonts.ARCADE.font(6));
+        text10Pts.pos().set(tilesPx(LEFT_TILE_X + 11), tilesPx(25));
 
         text50.data().setText("50");
-        text50.pos().set(tilesPx(LEFT_TILE_X + 8), tilesPx(27));
         text50.data().setFillColor(ARCADE_WHITE);
         text50.data().setFont(GlobalFonts.ARCADE.font(TS));
+        text50.pos().set(tilesPx(LEFT_TILE_X + 8), tilesPx(27));
 
         text50Pts.data().setText("PTS");
-        text50Pts.pos().set(tilesPx(LEFT_TILE_X + 11), tilesPx(27));
         text50Pts.data().setFillColor(ARCADE_WHITE);
         text50Pts.data().setFont(GlobalFonts.ARCADE.font(6));
+        text50Pts.pos().set(tilesPx(LEFT_TILE_X + 11), tilesPx(27));
     }
 
     private void initTargetEnergizer() {
@@ -234,8 +234,8 @@ public class IntroSceneView {
 
     private void initCopyrightText() {
         copyrightText.data().setText(MIDWAY_MFG_CO);
-        copyrightText.data().setFont(GlobalFonts.ARCADE.font(TS));
         copyrightText.data().setFillColor(ARCADE_PINK);
+        copyrightText.data().setFont(GlobalFonts.ARCADE.font(TS));
         copyrightText.pos().set(tilesPx(4), tilesPx(32));
     }
 }
