@@ -66,15 +66,15 @@ public class IntroSceneView {
     final TextDisplay text50Pts;
     final TextDisplay copyrightText;
 
-    private List<Renderable> staticRenderables;
+    private final List<Renderable> staticRenderables;
 
     public IntroSceneView() {
         titleText = new TextDisplay();
-        // Ghost presentation
+
+        // Ghost gallery
         ghostImageDisplays = new ImageDisplay[NUM_GHOSTS];
         ghostNicknameDisplays = new TextDisplay[NUM_GHOSTS];
         ghostCharacterDisplays = new TextDisplay[NUM_GHOSTS];
-
         for (int i = 0; i < NUM_GHOSTS; ++i) {
             ghostImageDisplays[i] = new ImageDisplay();
             ghostCharacterDisplays[i] = new TextDisplay();
@@ -83,7 +83,6 @@ public class IntroSceneView {
 
         // Chase animation
         targetEnergizer = new BlinkingEnergizer();
-        ghosts = new Ghost[NUM_GHOSTS];
 
         // Points display
         energizer = new BlinkingEnergizer();
@@ -110,13 +109,17 @@ public class IntroSceneView {
         .filter(Renderable.class::isInstance)
         .map(Renderable.class::cast)
         .toList();
+
+        initStaticRenderables();
     }
 
     void createGhosts(GameVariantRenderConfig renderConfig, ActorSpriteAnimController animController, SpriteAnimationContainer animContainer) {
-        ghosts[0] = renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.RED_GHOST_SHADOW);
-        ghosts[1] = renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.PINK_GHOST_SPEEDY);
-        ghosts[2] = renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.CYAN_GHOST_BASHFUL);
-        ghosts[3] = renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.ORANGE_GHOST_POKEY);
+        ghosts = new Ghost[]{
+            renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.RED_GHOST_SHADOW),
+            renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.PINK_GHOST_SPEEDY),
+            renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.CYAN_GHOST_BASHFUL),
+            renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.ORANGE_GHOST_POKEY)
+        };
     }
 
     void createPacMan(ArcadePacMan_ActorFactory actorFactory, GameVariantRenderConfig renderConfig, SpriteAnimationContainer animContainer) {
@@ -133,32 +136,41 @@ public class IntroSceneView {
         );
     }
 
-    void initEntities() {
+    void initEntityVisibility() {
+        for (int i = 0; i < NUM_GHOSTS; ++i) {
+            ghostImageDisplays[i].hide();
+            ghostCharacterDisplays[i].hide();
+            ghostNicknameDisplays[i].hide();
+        }
+
+        if (pacMan != null) {
+            pacMan.hide();
+        }
+
+        if (ghosts != null) {
+            for (int i = 0; i < NUM_GHOSTS; ++i) {
+                ghosts[i].hide();
+            }
+        }
+        targetEnergizer.hide();
+        points = null; // points for killed ghost
+
+        pellet.hide();
+        energizer.hide();
+        text10.hide();
+        text10Pts.hide();
+        text50.hide();
+        text50Pts.hide();
+
+        copyrightText.hide();
+    }
+
+    private void initStaticRenderables() {
         initTitleText();
         initGhostGallery();
-        initPointsTexts();
         initCopyrightText();
         initTargetEnergizer();
-        initPointsEnergizer();
-        initPointsPellet();
-        points = null; // points for killed ghost
-    }
-
-    private void initPointsPellet() {
-        pellet.pos().set(tilesPx(LEFT_TILE_X + 6) + HTS, tilesPx(24) + 4);
-        pellet.hide();
-    }
-
-    private void initPointsEnergizer() {
-        energizer.setPulse(pulse);
-        energizer.pos().set(tilesPx(LEFT_TILE_X + 6) + HTS, tilesPx(26) + HTS);
-        energizer.hide();
-    }
-
-    private void initTargetEnergizer() {
-        targetEnergizer.setPulse(pulse);
-        targetEnergizer.pos().set(ENERGIZER_CENTER_X, ENERGIZER_CENTER_Y);
-        targetEnergizer.hide();
+        initPoints();
     }
 
     private void initTitleText() {
@@ -179,33 +191,25 @@ public class IntroSceneView {
             final RectShort sprite = spriteSheet.findSpriteSequence(GALLERY_GHOSTS)[i];
             imageDisplay.image().setImage(spriteSheet.image(sprite));
             imageDisplay.pos().set(TS * 4, y + offsetY - 1.5f * TS);
-            imageDisplay.hide();
 
             final TextDisplay characterDisplay = ghostCharacterDisplays[i];
             characterDisplay.data().setText(GHOST_CHARACTERS[i]);
             characterDisplay.data().setFillColor(GHOST_COLORS[i]);
             characterDisplay.data().setFont(GlobalFonts.ARCADE.font(TS));
             characterDisplay.pos().set(TS * 7, y + offsetY);
-            characterDisplay.hide();
 
             final TextDisplay nicknameDisplay = ghostNicknameDisplays[i];
             nicknameDisplay.data().setText(GHOST_NICKNAMES[i]);
             nicknameDisplay.data().setFillColor(GHOST_COLORS[i]);
             nicknameDisplay.data().setFont(GlobalFonts.ARCADE.font(TS));
             nicknameDisplay.pos().set(TS * 18, y + offsetY);
-            nicknameDisplay.hide();
         }
     }
 
-    private void initCopyrightText() {
-        copyrightText.data().setText(MIDWAY_MFG_CO);
-        copyrightText.data().setFont(GlobalFonts.ARCADE.font(TS));
-        copyrightText.data().setFillColor(ARCADE_PINK);
-        copyrightText.pos().set(tilesPx(4), tilesPx(32));
-        copyrightText.hide();
-    }
-
-    private void initPointsTexts() {
+    private void initPoints() {
+        pellet.pos().set(tilesPx(LEFT_TILE_X + 6) + HTS, tilesPx(24) + 4);
+        energizer.setPulse(pulse);
+        energizer.pos().set(tilesPx(LEFT_TILE_X + 6) + HTS, tilesPx(26) + HTS);
         text10.data().setText("10");
         text10.pos().set(tilesPx(LEFT_TILE_X + 8), tilesPx(25));
         text10.data().setFillColor(ARCADE_WHITE);
@@ -231,5 +235,17 @@ public class IntroSceneView {
         text50Pts.hide();
     }
 
+    private void initTargetEnergizer() {
+        targetEnergizer.setPulse(pulse);
+        targetEnergizer.pos().set(ENERGIZER_CENTER_X, ENERGIZER_CENTER_Y);
+    }
+
+    private void initCopyrightText() {
+        copyrightText.data().setText(MIDWAY_MFG_CO);
+        copyrightText.data().setFont(GlobalFonts.ARCADE.font(TS));
+        copyrightText.data().setFillColor(ARCADE_PINK);
+        copyrightText.pos().set(tilesPx(4), tilesPx(32));
+        copyrightText.hide();
+    }
 
 }

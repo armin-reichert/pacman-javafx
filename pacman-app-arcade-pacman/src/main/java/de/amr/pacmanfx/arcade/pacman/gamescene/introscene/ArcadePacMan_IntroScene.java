@@ -127,7 +127,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
 
         view.createPacMan(actorFactory, renderConfig, animContainer);
         view.createGhosts(renderConfig, animController, animContainer);
-        view.initEntities();
+        view.initEntityVisibility();
 
         ghostIndex = 0;
         lastGhostEatenTick = 0;
