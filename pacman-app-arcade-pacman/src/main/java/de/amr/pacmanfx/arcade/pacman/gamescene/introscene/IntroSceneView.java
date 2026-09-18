@@ -202,31 +202,29 @@ public class IntroSceneView {
 
     private void initPointsExplanation() {
         pellet.pos().set(tilesPx(LEFT_TILE_X + 6) + HTS, tilesPx(24) + 4);
+
         energizer.setPulse(pulse);
         energizer.pos().set(tilesPx(LEFT_TILE_X + 6) + HTS, tilesPx(26) + HTS);
+
         text10.data().setText("10");
         text10.pos().set(tilesPx(LEFT_TILE_X + 8), tilesPx(25));
         text10.data().setFillColor(ARCADE_WHITE);
         text10.data().setFont(GlobalFonts.ARCADE.font(TS));
-        text10.hide();
 
         text10Pts.data().setText("PTS");
         text10Pts.pos().set(tilesPx(LEFT_TILE_X + 11), tilesPx(25));
         text10Pts.data().setFillColor(ARCADE_WHITE);
         text10Pts.data().setFont(GlobalFonts.ARCADE.font(6));
-        text10Pts.hide();
 
         text50.data().setText("50");
         text50.pos().set(tilesPx(LEFT_TILE_X + 8), tilesPx(27));
         text50.data().setFillColor(ARCADE_WHITE);
         text50.data().setFont(GlobalFonts.ARCADE.font(TS));
-        text50.hide();
 
         text50Pts.data().setText("PTS");
         text50Pts.pos().set(tilesPx(LEFT_TILE_X + 11), tilesPx(27));
         text50Pts.data().setFillColor(ARCADE_WHITE);
         text50Pts.data().setFont(GlobalFonts.ARCADE.font(6));
-        text50Pts.hide();
     }
 
     private void initTargetEnergizer() {
@@ -239,6 +237,5 @@ public class IntroSceneView {
         copyrightText.data().setFont(GlobalFonts.ARCADE.font(TS));
         copyrightText.data().setFillColor(ARCADE_PINK);
         copyrightText.pos().set(tilesPx(4), tilesPx(32));
-        copyrightText.hide();
     }
 }
