@@ -57,7 +57,7 @@ public class IntroSceneController extends StateMachine<ArcadePacMan_IntroScene> 
         STARTING {
             @Override
             public void onEnter(ArcadePacMan_IntroScene scene) {
-                scene.initSceneState();
+                scene.initState();
             }
 
             @Override
@@ -198,5 +198,4 @@ public class IntroSceneController extends StateMachine<ArcadePacMan_IntroScene> 
             return timer;
         }
     }
-
 }

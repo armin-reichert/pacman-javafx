@@ -40,7 +40,6 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
 
     private static final int[] GHOST_POINTS = { 200, 400, 800, 1600 };
 
-
     final IntroSceneController flow;
     final IntroSceneView view;
 
@@ -83,7 +82,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
         return view.renderables();
     }
 
-    void initSceneState() {
+    void initState() {
         final GameVariantRuntime variant = app.variantManager().currentRuntime();
         view.createPacManAndGhosts(
             variant.uiConfig().renderConfig(),
@@ -98,8 +97,6 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
 
         soundManager().voice().playAfterSec(1, VoiceID.START_HINT.media());
     }
-
-    // Animation
 
     void startChasingPacMan(GameContext game) {
         final GameSystems systems = game.playConfig().systems();

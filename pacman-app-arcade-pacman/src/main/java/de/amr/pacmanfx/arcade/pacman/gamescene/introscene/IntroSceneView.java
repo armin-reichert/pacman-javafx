@@ -241,5 +241,4 @@ public class IntroSceneView {
         copyrightText.pos().set(tilesPx(4), tilesPx(32));
         copyrightText.hide();
     }
-
 }
