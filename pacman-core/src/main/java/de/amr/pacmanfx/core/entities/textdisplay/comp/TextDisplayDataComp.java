@@ -59,4 +59,15 @@ public class TextDisplayDataComp implements GameEntityComp {
     public void setCenter(boolean center) {
         this.center = center;
     }
+
+    @Override
+    public String toString() {
+        return "TextDisplayDataComp{" +
+            "text='" + text + '\'' +
+            ", font=" + font +
+            ", fillColor=" + fillColor +
+            ", strokeColor=" + strokeColor +
+            ", center=" + center +
+            '}';
+    }
 }
