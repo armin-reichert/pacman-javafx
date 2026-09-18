@@ -16,6 +16,7 @@ import de.amr.pacmanfx.core.entities.door.comp.DoorDataComp;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimation;
 import de.amr.pacmanfx.tengenmspacman.entities.GameOptionsDisplay;
+import de.amr.pacmanfx.tengenmspacman.entities.Heart;
 import de.amr.pacmanfx.tengenmspacman.entities.LevelNumberDisplay;
 import de.amr.pacmanfx.tengenmspacman.entities.clapperboard.TengenMsPacMan_ClapperboardAnimationSystem;
 import de.amr.pacmanfx.tengenmspacman.entities.gameoptionsdisplay.GameOptionsDataComp;
@@ -93,6 +94,7 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer {
             case Pac pac -> drawFacingSpriteCentered(computeSprite(pac), center);
             case MessageView messageView -> messageViewRenderer.renderMessageView(messageView);
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
+            case Heart heart -> drawSpriteCentered(computeSprite(heart), center);
             case Stork stork -> drawStork(stork);
             case Marquee marquee -> drawMarquee(marquee, tick);
             case Door door -> drawDoor(door);
@@ -165,6 +167,10 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer {
         else {
             return animSystem.currentSprite(ghost);
         }
+    }
+
+    private RectShort computeSprite(Heart heart) {
+        return animSystem.currentSprite(heart);
     }
 
     private RectShort computeSprite(GhostPoints ghostPoints) {
