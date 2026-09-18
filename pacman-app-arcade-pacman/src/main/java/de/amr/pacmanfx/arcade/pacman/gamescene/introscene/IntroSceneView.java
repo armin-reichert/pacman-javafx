@@ -110,11 +110,22 @@ public class IntroSceneView {
         .map(Renderable.class::cast)
         .toList();
 
-        initStaticRenderables();
+        initTitleText();
+        initGhostGallery();
+        initTargetEnergizer();
+        initPointsExplanation();
+        initCopyrightText();
     }
 
-    void createGhosts(GameVariantRenderConfig renderConfig, ActorSpriteAnimController animController, SpriteAnimationContainer animContainer) {
-        ghosts = new Ghost[]{
+    void createPacManAndGhosts(GameVariantRenderConfig renderConfig, ActorSpriteAnimController animController, SpriteAnimationContainer animContainer) {
+        final var actorFactory = ArcadePacMan_ActorFactory.instance();
+
+        pacMan = actorFactory.createPacMan();
+        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animContainer));
+        pacMan.spriteAnim().spriteAnimations().select(CommonSpriteAnimationID.PAC_MOUTH_MOVING);
+        pacMan.spriteAnim().spriteAnimations().playSelected();
+
+        ghosts = new Ghost[] {
             renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.RED_GHOST_SHADOW),
             renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.PINK_GHOST_SPEEDY),
             renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.CYAN_GHOST_BASHFUL),
@@ -122,21 +133,11 @@ public class IntroSceneView {
         };
     }
 
-    void createPacMan(ArcadePacMan_ActorFactory actorFactory, GameVariantRenderConfig renderConfig, SpriteAnimationContainer animContainer) {
-        pacMan = actorFactory.createPacMan();
-        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animContainer));
-        pacMan.spriteAnim().spriteAnimations().select(CommonSpriteAnimationID.PAC_MOUTH_MOVING);
-        pacMan.spriteAnim().spriteAnimations().playSelected();
-    }
-
     Stream<Renderable> renderables() {
-        return Stream.concat(
-            staticRenderables.stream(),
-            Ufx.streamOf(pacMan, ghosts, points)
-        );
+        return Stream.concat(staticRenderables.stream(), Ufx.streamOf(pacMan, ghosts, points));
     }
 
-    void initEntityVisibility() {
+    void hideEverything() {
         for (int i = 0; i < NUM_GHOSTS; ++i) {
             ghostImageDisplays[i].hide();
             ghostCharacterDisplays[i].hide();
@@ -156,21 +157,14 @@ public class IntroSceneView {
         points = null; // points for killed ghost
 
         pellet.hide();
-        energizer.hide();
         text10.hide();
         text10Pts.hide();
+
+        energizer.hide();
         text50.hide();
         text50Pts.hide();
 
         copyrightText.hide();
-    }
-
-    private void initStaticRenderables() {
-        initTitleText();
-        initGhostGallery();
-        initCopyrightText();
-        initTargetEnergizer();
-        initPoints();
     }
 
     private void initTitleText() {
@@ -206,7 +200,7 @@ public class IntroSceneView {
         }
     }
 
-    private void initPoints() {
+    private void initPointsExplanation() {
         pellet.pos().set(tilesPx(LEFT_TILE_X + 6) + HTS, tilesPx(24) + 4);
         energizer.setPulse(pulse);
         energizer.pos().set(tilesPx(LEFT_TILE_X + 6) + HTS, tilesPx(26) + HTS);

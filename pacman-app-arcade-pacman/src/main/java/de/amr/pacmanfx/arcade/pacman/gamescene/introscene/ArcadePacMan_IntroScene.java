@@ -10,7 +10,6 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
-import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
@@ -25,8 +24,6 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.rules.CollisionStrategy;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.ui.VoiceID;
 import de.amr.pacmanfx.ui.action.core.GameApp;
@@ -122,14 +119,12 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
 
     private void initSceneState() {
         final GameVariantRuntime variant = app.variantManager().currentRuntime();
-        final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
-        final SpriteAnimationContainer animContainer    = variant.spriteAnimContainer();
-        final ActorSpriteAnimController animController  = variant.playConfig().systems().actorSpriteAnimController();
-        final var actorFactory = ArcadePacMan_ActorFactory.instance();
-
-        view.createPacMan(actorFactory, renderConfig, animContainer);
-        view.createGhosts(renderConfig, animController, animContainer);
-        view.initEntityVisibility();
+        view.createPacManAndGhosts(
+            variant.uiConfig().renderConfig(),
+            variant.playConfig().systems().actorSpriteAnimController(),
+            variant.spriteAnimContainer()
+        );
+        view.hideEverything();
 
         ghostIndex = 0;
         lastGhostEatenTick = 0;
