@@ -14,7 +14,6 @@ import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import javafx.scene.paint.Color;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -26,22 +25,22 @@ import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
  */
 public class ArcadePacMan_StartScene extends AbstractGameScene {
 
-    private final List<TextDisplay> texts = new ArrayList<>();
+    private final List<Renderable> texts = List.of(
+        createText("PUSH START BUTTON",       ARCADE_ORANGE, 8,  6, 17),
+        createText("1 PLAYER ONLY",           ARCADE_CYAN,   8,  8, 21),
+        createText("BONUS PAC-MAN FOR 10000", ARCADE_ROSE,   8,  1, 25),
+        createText("PTS",                     ARCADE_ROSE,   6, 25, 25),
+        createText("© 1980 MIDWAY MFG.CO.",   ARCADE_PINK,   8,  4, 29)
+    );
 
     public ArcadePacMan_StartScene(GameApp app) {
         super(app);
         setComp(GameSceneCanvasRenderingComp.class, new GameSceneCanvasRenderingComp());
-
-        texts.add(createText("PUSH START BUTTON",       ARCADE_ORANGE, 8,  6, 17));
-        texts.add(createText("1 PLAYER ONLY",           ARCADE_CYAN,   8,  8, 21));
-        texts.add(createText("BONUS PAC-MAN FOR 10000", ARCADE_ROSE,   8,  1, 25));
-        texts.add(createText("PTS",                     ARCADE_ROSE,   6, 25, 25));
-        texts.add(createText("© 1980 MIDWAY MFG.CO.",   ARCADE_PINK,   8,  4, 29));
     }
 
     @Override
     public Stream<Renderable> renderables() {
-        return texts.stream().map(Renderable.class::cast);
+        return texts.stream();
     }
 
     @Override
