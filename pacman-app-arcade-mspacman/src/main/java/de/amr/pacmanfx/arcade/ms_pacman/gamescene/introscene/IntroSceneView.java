@@ -1,0 +1,151 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
+package de.amr.pacmanfx.arcade.ms_pacman.gamescene.introscene;
+
+
+import de.amr.basics.math.Direction;
+import de.amr.basics.util.Ufx;
+import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
+import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
+import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
+import de.amr.pacmanfx.core.entities.Ghost;
+import de.amr.pacmanfx.core.entities.Marquee;
+import de.amr.pacmanfx.core.entities.Pac;
+import de.amr.pacmanfx.core.entities.TextDisplay;
+import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
+import de.amr.pacmanfx.core.model.GhostPersonality;
+import de.amr.pacmanfx.core.rendering.Renderable;
+import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
+import de.amr.pacmanfx.game.GameVariantRenderConfig;
+import de.amr.pacmanfx.game.GameVariantRuntime;
+import de.amr.pacmanfx.ui.GlobalFonts;
+import de.amr.pacmanfx.uilib.assets.AssetMap;
+import de.amr.pacmanfx.uilib.entities.ImageDisplay;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
+import static de.amr.pacmanfx.arcade.ms_pacman.gamescene.introscene.ArcadeMsPacMan_IntroScene.*;
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
+import static de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene.createText;
+import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
+
+public class IntroSceneView {
+
+    Marquee marquee;
+    Pac msPacMan;
+    List<Ghost> ghosts;
+    ImageDisplay copyrightImage;
+    final List<TextDisplay> copyrightTexts = new ArrayList<>();
+    TextDisplay titleText;
+    TextDisplay marqueeText1;
+    TextDisplay marqueeText2;
+
+    public IntroSceneView(GameVariantRuntime runtime) {
+        createTitleText();
+        createMarqueeTexts();
+        createMarquee();
+        createMsPacMan(runtime);
+        createGhosts(runtime);
+        createCopyright(runtime);
+    }
+
+    public Stream<Renderable> renderables() {
+        return Ufx.streamOf(titleText, marquee, marqueeText1, marqueeText2, msPacMan, ghosts, copyrightImage, copyrightTexts);
+    }
+
+    private void createTitleText() {
+        titleText = new TextDisplay();
+        titleText.data().setText(MARQUEE_TITLE);
+        titleText.data().setFillColor(ARCADE_ORANGE);
+        titleText.data().setFont(GlobalFonts.ARCADE.font(8));
+        titleText.pos().set(TITLE_X, TITLE_Y);
+        titleText.show();
+    }
+
+    private void createCopyright(GameVariantRuntime runtime) {
+        final AssetMap assets = runtime.uiConfig().assets();
+
+        copyrightImage = new ImageDisplay();
+        copyrightImage.show();
+        copyrightImage.pos().set(tilesPx(6), tilesPx(28));
+        copyrightImage.image().setImage(assets.image("logo.midway"));
+
+        copyrightTexts.add(createText("©",             ARCADE_RED, 8, 11, 30.125f));
+        copyrightTexts.add(createText("MIDWAY MFG CO", ARCADE_RED, 8, 13, 30));
+        copyrightTexts.add(createText("1980/1981",     ARCADE_RED, 8, 14, 32));
+        copyrightTexts.forEach(TextDisplay::show);
+    }
+
+    private void createMsPacMan(GameVariantRuntime runtime) {
+        final var actorFactory = new ArcadeMsPacMan_ActorFactory();
+        final GameVariantRenderConfig renderConfig = runtime.uiConfig().renderConfig();
+        final SpriteAnimationContainer animContainer = runtime.spriteAnimContainer();
+        final GameSystems systems = runtime.playConfig().systems();
+        final ActorSpriteAnimController animController = systems.actorSpriteAnimController();
+        final WorldNavigationSystem nav = systems.navigator();
+
+        msPacMan = actorFactory.createMsPacMan();
+        msPacMan.pos().set(PAC_START_POS);
+        nav.setMoveDir(msPacMan, Direction.LEFT);
+        nav.setSpeed(msPacMan, ACTOR_SPEED);
+        animController.setAnimations(msPacMan, renderConfig.createPacAnimations(animContainer));
+        msPacMan.show();
+    }
+
+    private void createGhosts(GameVariantRuntime runtime) {
+        final GameVariantRenderConfig renderConfig = runtime.uiConfig().renderConfig();
+        final SpriteAnimationContainer animContainer = runtime.spriteAnimContainer();
+        final GameSystems systems = runtime.playConfig().systems();
+        final ActorSpriteAnimController animController = systems.actorSpriteAnimController();
+        final WorldNavigationSystem nav = systems.navigator();
+
+        ghosts = List.of(
+            renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.RED_GHOST_SHADOW),
+            renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.PINK_GHOST_SPEEDY),
+            renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.CYAN_GHOST_BASHFUL),
+            renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.ORANGE_GHOST_POKEY)
+        );
+
+        for (Ghost ghost : ghosts) {
+            ghost.pos().set(GHOST_START_POS);
+            nav.setMoveDir(ghost, Direction.LEFT);
+            nav.setWishDir(ghost, Direction.LEFT);
+            nav.setSpeed(ghost, ACTOR_SPEED);
+            systems.ghostState().setState(ghost, GhostState.HUNTING_PAC);
+            ghost.show();
+        }
+    }
+
+    private void createMarquee() {
+        marquee = new Marquee();
+        marquee.pos().set(60, 88);
+
+        marquee.layout().setNumBulbsHorizontally(34);
+        marquee.layout().setNumBulbsVertically(16);
+        marquee.layout().setBulbSize(4);
+        marquee.layout().setBrightBulbsCount(6);
+        marquee.layout().setBrightBulbsDistance(16);
+
+        marquee.visualization().setBulbOffColor(ARCADE_RED.toString());
+        marquee.visualization().setBulbOnColor(ARCADE_WHITE.toString());
+
+        marquee.show();
+    }
+
+    private void createMarqueeTexts() {
+        marqueeText1 = new TextDisplay();
+        marqueeText1.data().setFont(GlobalFonts.ARCADE.font(TS));
+        marqueeText1.pos().set(TITLE_X, TOP_Y + tilesPx(3));
+        marqueeText1.show();
+
+        marqueeText2 = new TextDisplay();
+        marqueeText2.data().setFont(GlobalFonts.ARCADE.font(TS));
+        marqueeText2.show();
+    }
+}

@@ -17,6 +17,9 @@ class IntroSceneController extends StateMachine<ArcadeMsPacMan_IntroScene> {
 
     public IntroSceneController() {
         super(List.of(SceneState.values()));
+        for (var state : SceneState.values()) {
+            state.controller = this;
+        }
     }
 
     public enum SceneState implements State<ArcadeMsPacMan_IntroScene> {
@@ -31,7 +34,7 @@ class IntroSceneController extends StateMachine<ArcadeMsPacMan_IntroScene> {
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
                 if (timer.atSecond(1)) {
-                    scene.flow.enterState(scene, GHOSTS_MARCHING_IN);
+                    controller.enterState(scene, GHOSTS_MARCHING_IN);
                 }
             }
         },
@@ -47,7 +50,7 @@ class IntroSceneController extends StateMachine<ArcadeMsPacMan_IntroScene> {
                 final boolean atEndPosition = scene.letGhostWalkIn();
                 if (atEndPosition) {
                     if (scene.ghostInSpotlight == GhostPersonality.ORANGE_GHOST_POKEY.ordinal()) {
-                        scene.flow.enterState(scene, MS_PACMAN_MARCHING_IN);
+                        controller.enterState(scene, MS_PACMAN_MARCHING_IN);
                     } else {
                         ++scene.ghostInSpotlight;
                         scene.updateMarqueeText(this);
@@ -66,7 +69,7 @@ class IntroSceneController extends StateMachine<ArcadeMsPacMan_IntroScene> {
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
                 final boolean atEndPosition = scene.letMsPacManWalkIn();
                 if (atEndPosition) {
-                    scene.flow.enterState(scene, READY_TO_PLAY);
+                    controller.enterState(scene, READY_TO_PLAY);
                 }
             }
         },
@@ -86,12 +89,13 @@ class IntroSceneController extends StateMachine<ArcadeMsPacMan_IntroScene> {
             }
         };
 
+        IntroSceneController controller;
         final TickTimer timer = new TickTimer("Timer-" + name());
+
 
         @Override
         public TickTimer timer() {
             return timer;
         }
     }
-
 }
