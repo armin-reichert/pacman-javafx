@@ -29,7 +29,6 @@ import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.entities.hud.comp.HUD_Style;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.FacingSprite;
-import de.amr.pacmanfx.uilib.rendering.MessageViewRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -52,7 +51,6 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer {
 
     private final ActorSpriteAnimController animSystem;
     private final MarqueeRenderer marqueeRenderer;
-    private final MessageViewRenderer messageViewRenderer;
 
     public TengenMsPacMan_EntityRenderer(ActorSpriteAnimController animSystem, Canvas canvas) {
         super(canvas);
@@ -61,10 +59,6 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer {
         marqueeRenderer = new MarqueeRenderer(canvas);
         marqueeRenderer.backgroundColorProperty().bind(backgroundColorProperty());
         marqueeRenderer.scalingProperty().bind(scalingProperty());
-
-        messageViewRenderer = new MessageViewRenderer(canvas, TengenMsPacMan_RenderConfig.MESSAGE_TEXTS);
-        messageViewRenderer.backgroundColorProperty().bind(backgroundColorProperty());
-        messageViewRenderer.scalingProperty().bind(scalingProperty());
     }
 
     @Override
@@ -84,7 +78,9 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer {
         }
     }
 
-    private void renderGameEntity(GameEntity gameEntity, long tick) {
+    @Override
+    protected void renderGameEntity(GameEntity gameEntity, long tick) {
+        ctx.save();
         final Vector2f center = gameEntity.pos().bodyCenter();
         switch (gameEntity) {
             case Bonus bonus -> drawSpriteCentered(computeSprite(bonus), center);
@@ -92,7 +88,6 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer {
             case Ghost ghost -> drawSpriteCentered(computeSprite(ghost), center);
             case GhostPoints points -> drawSpriteCentered(computeSprite(points), center);
             case Pac pac -> drawFacingSpriteCentered(computeSprite(pac), center);
-            case MessageView messageView -> messageViewRenderer.renderMessageView(messageView);
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
             case Heart heart -> drawSpriteCentered(computeSprite(heart), center);
             case Bag bag -> drawSpriteCentered(computeSprite(bag), center);
@@ -110,13 +105,9 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer {
             case GameOptionsDisplay gameOptionsDisplay -> renderGameOptionsDisplay(gameOptionsDisplay);
             case LevelNumberDisplay levelNumberDisplay -> drawLevelNumberDisplay(levelNumberDisplay);
             case CreditDisplay _ -> { /* Not used in this game variant */}
-
-            default -> {
-                if (gameEntity instanceof Renderable r) {
-                    super.render(r, tick);
-                }
-            }
+            default -> super.renderGameEntity(gameEntity, tick);
         }
+        ctx.restore();
     }
 
     private FacingSprite computeSprite(Pac pac) {

@@ -9,12 +9,16 @@ import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
+import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.entities.MessageView;
 import de.amr.pacmanfx.core.entities.TextDisplay;
+import de.amr.pacmanfx.core.level.MessageType;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.rendering.ColoredRect;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.entities.ImageDisplay;
+import de.amr.pacmanfx.uilib.entities.messageview.comp.MessageViewStyleComp;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -64,15 +68,24 @@ public class BaseRenderer implements Renderer {
         info = new InfoMap();
     }
 
+    protected void renderGameEntity(GameEntity gameEntity, long tick) {
+        switch (gameEntity) {
+            case ImageDisplay imageDisplay -> renderImageDisplay(imageDisplay);
+            case TextDisplay textDisplay -> renderTextDisplay(textDisplay);
+            case MessageView messageView -> renderMessageView(messageView);
+            default -> {}
+        }
+    }
+
     // Renderer interface
 
     @Override
     public void render(Renderable r, long tick) {
         switch (r) {
+            case null -> {}
+            case GameEntity gameEntity -> renderGameEntity(gameEntity, tick);
             case ColoredRect coloredRect -> fillColoredRect(coloredRect);
-            case ImageDisplay imageDisplay -> renderImageDisplay(imageDisplay);
-            case TextDisplay textDisplay-> renderTextDisplay(textDisplay);
-            default -> throw new IllegalStateException("Unexpected value: " + r);
+            default -> throw new IllegalStateException("Cannot render: " + r);
         }
     }
 
@@ -286,6 +299,18 @@ public class BaseRenderer implements Renderer {
             fillText(data.text(), data.fillColor(), scaledFont, pos.x(), pos.y());
         }
     }
+
+    private void renderMessageView(MessageView messageView) {
+        final var messageTexts = messageView.texts();
+        messageView.optComp(MessageViewStyleComp.class).ifPresent(style -> {
+            final MessageType messageType = messageView.type().messageType();
+            final Font scaledFont = Ufx.scaleFontBy(style.messageFont(), scaling());
+            final Color color = style.messageColor().apply(messageType);
+            final Vector2f pos = messageView.pos().asVector2f();
+            fillTextCentered(messageTexts.texts().get(messageType), color, scaledFont, pos.x(), pos.y());
+        });
+    }
+
 
     private void fillColoredRect(ColoredRect coloredRect) {
         final var rect = coloredRect.rect();

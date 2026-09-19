@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.core.entities;
 
+import de.amr.pacmanfx.core.entities.messageview.comp.MessageViewTextsComp;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
@@ -13,6 +14,7 @@ public class MessageView extends GameEntity implements Renderable {
 
     public MessageView() {
         setComp(MessageViewTypeComp.class, new MessageViewTypeComp());
+        setComp(MessageViewTextsComp.class, new MessageViewTextsComp());
     }
 
     @Override
@@ -22,5 +24,9 @@ public class MessageView extends GameEntity implements Renderable {
 
     public MessageViewTypeComp type() {
         return reqComp(MessageViewTypeComp.class);
+    }
+
+    public MessageViewTextsComp texts() {
+        return reqComp(MessageViewTextsComp.class);
     }
 }

@@ -14,10 +14,8 @@ import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
-import de.amr.pacmanfx.uilib.entities.ImageDisplay;
 import de.amr.pacmanfx.uilib.entities.hud.comp.HUD_Style;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.MessageViewRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -40,15 +38,10 @@ public class ArcadePacMan_EntityRenderer extends BaseRenderer {
 
     private final ArcadePacMan_SpriteSheet spriteSheet = ArcadePacMan_SpriteSheet.instance();
     private final ActorSpriteAnimController animController;
-    private final MessageViewRenderer messageViewRenderer;
 
     public ArcadePacMan_EntityRenderer(ActorSpriteAnimController animController, Canvas canvas) {
         super(canvas);
         this.animController = requireNonNull(animController);
-
-        messageViewRenderer = new MessageViewRenderer(canvas, ArcadePacMan_RenderConfig.MESSAGE_TEXTS);
-        messageViewRenderer.backgroundColorProperty().bind(backgroundColorProperty());
-        messageViewRenderer.scalingProperty().bind(scalingProperty());
     }
 
     @Override
@@ -61,17 +54,17 @@ public class ArcadePacMan_EntityRenderer extends BaseRenderer {
         requireNonNull(r);
         if (r instanceof GameEntity gameEntity) {
             if (gameEntity.isVisible()) {
-                ctx.save();
-                ctx.setImageSmoothing(true);
                 renderGameEntity(gameEntity, tick);
-                ctx.restore();
             }
         } else {
             super.render(r, tick);
         }
     }
 
-    private void renderGameEntity(GameEntity gameEntity, long tick) {
+    @Override
+    protected void renderGameEntity(GameEntity gameEntity, long tick) {
+        ctx.save();
+        ctx.setImageSmoothing(true);
         final Vector2f center = gameEntity.pos().bodyCenter();
         switch (gameEntity) {
             case Pac pac -> drawSpriteCentered(computeSprite(pac), center);
@@ -80,7 +73,6 @@ public class ArcadePacMan_EntityRenderer extends BaseRenderer {
             case Bonus bonus -> drawSpriteCentered(computeSprite(bonus), center);
             case BonusPoints bonusPoints -> drawSpriteCentered(computeSprite(bonusPoints), center);
             case Energizer energizer -> drawEnergizer(energizer);
-            case MessageView messageView -> messageViewRenderer.renderMessageView(messageView);
             case LevelCounter levelCounter -> drawLevelCounter(levelCounter);
             case LivesCounter livesCounter -> drawLivesCounter(livesCounter);
             case Score score -> {
@@ -91,11 +83,9 @@ public class ArcadePacMan_EntityRenderer extends BaseRenderer {
                 }
             }
             case CreditDisplay creditDisplay -> drawCreditDisplay(creditDisplay);
-            //TODO change this!
-            case ImageDisplay imageDisplay -> super.render(imageDisplay, tick);
-            case TextDisplay textDisplay -> super.render(textDisplay, tick);
-            default -> {}
+            default -> super.renderGameEntity(gameEntity, tick);
         }
+        ctx.restore();
     }
 
     private RectShort computeSprite(Pac pac) {

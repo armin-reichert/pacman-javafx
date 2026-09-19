@@ -10,7 +10,6 @@ import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.Heart;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.clapperboard.ClapperboardAnimationSystem;
 import de.amr.pacmanfx.arcade.ms_pacman.gamescene.introscene.MarqueeRenderer;
-import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_RenderConfig;
 import de.amr.pacmanfx.core.Energizer;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
@@ -21,7 +20,6 @@ import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.entities.hud.comp.HUD_Style;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.MessageViewRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -48,7 +46,6 @@ public class ArcadeMsPacMan_EntityRenderer extends BaseRenderer {
     private final ArcadeMsPacMan_SpriteSheet spriteSheet = ArcadeMsPacMan_SpriteSheet.instance();
     private final ActorSpriteAnimController animController;
     private final MarqueeRenderer marqueeRenderer;
-    private final MessageViewRenderer messageViewRenderer;
 
     public ArcadeMsPacMan_EntityRenderer(ActorSpriteAnimController animController, Canvas canvas) {
         super(canvas);
@@ -57,10 +54,6 @@ public class ArcadeMsPacMan_EntityRenderer extends BaseRenderer {
         this.marqueeRenderer = new MarqueeRenderer(canvas);
         marqueeRenderer.backgroundColorProperty().bind(backgroundColorProperty());
         marqueeRenderer.scalingProperty().bind(scalingProperty());
-
-        messageViewRenderer = new MessageViewRenderer(canvas, ArcadePacMan_RenderConfig.MESSAGE_TEXTS);
-        messageViewRenderer.backgroundColorProperty().bind(backgroundColorProperty());
-        messageViewRenderer.scalingProperty().bind(scalingProperty());
     }
 
     @Override
@@ -72,17 +65,15 @@ public class ArcadeMsPacMan_EntityRenderer extends BaseRenderer {
     public void render(Renderable r, long tick) {
         if (r instanceof GameEntity gameEntity) {
             if (gameEntity.isVisible()) {
-                ctx.save();
-                ctx.setImageSmoothing(true);
                 renderGameEntity(gameEntity, tick);
-                ctx.setImageSmoothing(false);
             }
         } else {
             super.render(r, tick);
         }
     }
 
-    private void renderGameEntity(GameEntity gameEntity, long tick) {
+    @Override
+    protected void renderGameEntity(GameEntity gameEntity, long tick) {
         ctx.save();
         final Vector2f center = gameEntity.pos().bodyCenter();
         switch (gameEntity) {
@@ -95,7 +86,6 @@ public class ArcadeMsPacMan_EntityRenderer extends BaseRenderer {
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
             case Heart heart               -> drawSpriteCentered(computeSprite(heart), center);
             case Marquee marquee           -> drawMarquee(marquee, tick);
-            case MessageView messageView   -> messageViewRenderer.renderMessageView(messageView);
             case LevelCounter levelCounter -> drawLevelCounter(levelCounter);
             case LivesCounter livesCounter -> drawLivesCounter(livesCounter);
             case Score score -> {
@@ -108,12 +98,7 @@ public class ArcadeMsPacMan_EntityRenderer extends BaseRenderer {
             case Bag bag -> drawSpriteCentered(computeSprite(bag), center);
             case Stork stork -> drawSpriteCentered(computeSprite(stork), center);
             case CreditDisplay creditDisplay -> drawCreditDisplay(creditDisplay);
-            //case TextDisplay textDisplay -> super.render(textDisplay, tick);
-            default -> {
-                if (gameEntity instanceof Renderable r) {
-                    super.render(r, tick);
-                }
-            }
+            default -> super.renderGameEntity(gameEntity, tick);
         }
         ctx.restore();
     }

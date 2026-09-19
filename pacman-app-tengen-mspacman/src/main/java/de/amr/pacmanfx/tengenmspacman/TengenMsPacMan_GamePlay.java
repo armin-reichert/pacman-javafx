@@ -33,6 +33,7 @@ import de.amr.pacmanfx.tengenmspacman.gamestate.Tengen_GameState;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
+import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConfig;
 import de.amr.pacmanfx.tengenmspacman.rules.TengenMsPacMan_GameRules;
 import de.amr.pacmanfx.tengenmspacman.sprites.NES_WorldMapColorScheme;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
@@ -364,6 +365,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
     private MessageView createMessageView(House house, GameSession session, NES_WorldMapColorScheme colorScheme) {
         final var messageView = new MessageView();
+        messageView.texts().setTexts(TengenMsPacMan_RenderConfig.MESSAGE_TEXTS);
 
         // Messages appear centered under house
         final Vector2i houseSize = house.sizeInTiles();

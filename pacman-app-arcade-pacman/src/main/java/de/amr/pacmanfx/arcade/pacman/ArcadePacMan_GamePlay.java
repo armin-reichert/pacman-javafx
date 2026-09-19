@@ -8,6 +8,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.arcade.pacman.gamestate.Arcade_GameState;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
+import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_RenderConfig;
 import de.amr.pacmanfx.core.*;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.ghost.comp.ElroyComp;
@@ -261,6 +262,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
     protected MessageView createMessageView(House house) {
         final var messageView = new MessageView();
+        messageView.texts().setTexts(ArcadePacMan_RenderConfig.MESSAGE_TEXTS);
 
         // Messages appear centered under house
         final Vector2i houseSize = house.sizeInTiles();
