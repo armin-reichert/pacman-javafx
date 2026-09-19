@@ -46,8 +46,8 @@ public class IntroSceneView {
     private TextDisplay marqueeText1;
     private TextDisplay marqueeText2;
 
-    Pac msPacMan;
-    List<Ghost> ghosts;
+    private Pac msPacMan;
+    private List<Ghost> ghosts;
 
     public IntroSceneView(GameVariantRuntime runtime) {
         createTitleText();
@@ -58,6 +58,14 @@ public class IntroSceneView {
 
     public Stream<Renderable> renderables() {
         return Ufx.streamOf(titleText, marquee, marqueeText1, marqueeText2, msPacMan, ghosts, copyrightImage, copyrightTexts);
+    }
+
+    public Pac msPacMan() {
+        return msPacMan;
+    }
+
+    public List<Ghost> ghosts() {
+        return ghosts;
     }
 
     public void showMarqueeText1(String text, Color color) {

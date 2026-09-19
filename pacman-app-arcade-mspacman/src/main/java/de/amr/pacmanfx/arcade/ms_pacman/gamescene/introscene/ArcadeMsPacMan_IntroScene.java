@@ -88,7 +88,7 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
         ghostInSpotlight = 0;
         numTicksBeforeRising = 0;
 
-        startAnimations(animController, view.msPacMan, view.ghosts);
+        startAnimations(animController, view.msPacMan(), view.ghosts());
         soundManager().voice().playAfterSec(1, VoiceID.START_HINT.media());
 
         flow.restartState(this, IntroSceneController.SceneState.STARTING);
