@@ -85,6 +85,19 @@ public class GameUI implements GameEventListener {
         viewManager.gamePlayView().populateDashboard(dashboardFactory, settings.dashboard(), translationManager);
     }
 
+    public void connectWithApp(GameApp app) {
+        this.app = requireNonNull(app);
+
+        viewManager.setGameApp(app);
+        window.setGameApp(app);
+
+        connectKeyboard(app.input().keyboard());
+        bindCommonActions(app.commonActions());
+
+        Logger.info("UI connected with application");
+        Logger.info(actionBindings);
+    }
+
     @Override
     public void onGameEvent(GameEvent gameEvent) {
         boolean forceGameSceneReload = false;
@@ -100,27 +113,24 @@ public class GameUI implements GameEventListener {
                 shortMessage(Duration.seconds(5), "Accessing high score failed!\n%s", failure.reason().getMessage());
                 return;
             }
-            default -> {}
+            default -> {
+            }
         }
-        app.gameSceneManager().updateGameSceneAndForceReload(app, forceGameSceneReload);
 
-        app.gameSceneManager().optCurrentGameScene()
-            .flatMap(GameScene::optGameEventHandler)
-            .ifPresent(handler -> handler.onGameEvent(gameEvent));
-    }
+        if (app != null) {
+            app.gameSceneManager().updateGameSceneAndForceReload(
+                this,
+                app.variantManager().currentRuntime().uiConfig(),
+                app.game(),
+                forceGameSceneReload);
 
-
-    public void connectWithApp(GameApp app) {
-        this.app = requireNonNull(app);
-
-        viewManager.setGameApp(app);
-        window.setGameApp(app);
-
-        connectKeyboard(app.input().keyboard());
-        bindCommonActions(app.commonActions());
-
-        Logger.info("UI connected with application");
-        Logger.info(actionBindings);
+            app.gameSceneManager().optCurrentGameScene()
+                .flatMap(GameScene::optGameEventHandler)
+                .ifPresent(handler -> handler.onGameEvent(gameEvent));
+        }
+        else {
+            Logger.error("Cannot update and reload game scene: UI not yet connected with app");
+        }
     }
 
     // --- Accessors ---

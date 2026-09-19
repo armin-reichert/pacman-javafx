@@ -11,7 +11,6 @@ import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
-import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
@@ -21,12 +20,12 @@ import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.spriteanim.LazySAM;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimationBuilder;
-import de.amr.pacmanfx.game.GameVariantRuntime;
+import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
-import de.amr.pacmanfx.ui.action.core.GameApp;
+import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
@@ -115,8 +114,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene {
     private Ghost blinky;
     private NailDress nailDress;
 
-    public ArcadePacMan_CutScene2(GameApp app) {
-        super(app);
+    public ArcadePacMan_CutScene2() {
         setComp(GameSceneCanvasRenderingComp.class, new GameSceneCanvasRenderingComp());
         setComp(CutSceneTimingComp.class, new TimingComp(120));
     }
@@ -132,7 +130,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene {
 
     @Override
     public void onActivate() {
-        final GameVariantRuntime variant = app.variantManager().currentRuntime();
+        final GameVariantRuntime variant = app().variantManager().currentRuntime();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimationContainer animContainer = variant.spriteAnimContainer();
         final ActorSpriteAnimController animController = variant.playConfig().systems().actorSpriteAnimController();

@@ -10,6 +10,7 @@ import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
+import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounter3DViewSystem;
 import de.amr.pacmanfx.ui.gamescene.d3.PlayScene3D;
@@ -28,7 +29,11 @@ public class GameSceneManager {
 
     private GameVariantGameSceneConfig gameSceneConfig;
 
-    public GameSceneManager() {}
+    private final GameApp app;
+
+    public GameSceneManager(GameApp app) {
+        this.app = requireNonNull(app);
+    }
 
     public void setGameSceneConfig(GameVariantGameSceneConfig gameSceneConfig) {
         this.gameSceneConfig = requireNonNull(gameSceneConfig);
@@ -46,21 +51,21 @@ public class GameSceneManager {
         return currentGameScene.get();
     }
 
-    public void forceGameSceneUpdate(GameApp app) {
-        updateGameSceneAndForceReload(app, true);
+    public void forceGameSceneUpdate(GameUI ui, GameVariantUIConfig variantUIConfig, GameContext game) {
+        updateGameSceneAndForceReload(ui, variantUIConfig, game, true);
     }
 
-    public void updateGameSceneAndForceReload(GameApp app, boolean forceReload) {
-        final GameVariantUIConfig uiConfig = app.variantManager().currentRuntime().uiConfig();
-        final GameContext game = app.game();
+    public void updateGameSceneAndForceReload(GameUI ui, GameVariantUIConfig variantUIConfig, GameContext game, boolean forceReload) {
+        final boolean select3D = ui.viewModel().common3DSettings().view3DEnabledProperty().get();
         final GameSession session = game.session();
-        final boolean select3D = app.ui().viewModel().common3DSettings().view3DEnabledProperty().get();
 
-        final GameScene nextGameScene = uiConfig.gameSceneConfig().selectGameScene(app, select3D).orElse(null);
+        final GameScene nextGameScene = variantUIConfig.gameSceneConfig().selectGameScene(game, select3D).orElse(null);
 
         if (nextGameScene == null) {
             throw new IllegalStateException("Could not determine next game scene");
         }
+
+        nextGameScene.setApp(app);
 
         if (nextGameScene == currentGameScene()) {
             if (!forceReload) {
@@ -68,16 +73,14 @@ public class GameSceneManager {
             }
             Logger.info("No game scene change but reload requested");
         }
-
-        app.ui().viewManager().gamePlayView().replaceGameScene(currentGameScene(), nextGameScene);
+        ui.viewManager().gamePlayView().replaceGameScene(currentGameScene(), nextGameScene);
 
         //TODO rethink this
         if (!(nextGameScene instanceof AbstractGameScene nextScene)) {
             Logger.error("Next game scene is not an AbstractGameScene");
             return;
         }
-
-        session.optLevel().ifPresent(_ -> handle2D3DSwitch(uiConfig, game, currentGameScene(), nextScene));
+        session.optLevel().ifPresent(_ -> handle2D3DSwitch(variantUIConfig, game, currentGameScene(), nextScene));
 
         currentGameSceneProperty().set(nextGameScene);
     }

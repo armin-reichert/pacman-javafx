@@ -9,7 +9,6 @@ import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.rendering.Renderable;
-import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.entities.hud.comp.HUD_Style;
@@ -53,9 +52,7 @@ public class Arcade_BootScene extends AbstractGameScene {
 
     private Renderable renderable;
 
-    public Arcade_BootScene(GameApp app) {
-        super(app);
-
+    public Arcade_BootScene() {
         final var rendering = new GameSceneCanvasRenderingComp();
         rendering.setUnscaledWidth(WIDTH_IN_TILES * TS);
         rendering.setUnscaledHeight(HEIGHT_IN_TILES * TS);
@@ -136,7 +133,7 @@ public class Arcade_BootScene extends AbstractGameScene {
     }
 
     private void setHUDStyle(HUD hud) {
-        final HUD_Style hudStyle = app.variantManager().currentRuntime().uiConfig().renderConfig().hudStyle();
+        final HUD_Style hudStyle = app().variantManager().currentRuntime().uiConfig().renderConfig().hudStyle();
         hud.levelCounter().setComp(HUD_Style.class, hudStyle);
         hud.livesCounter().setComp(HUD_Style.class, hudStyle);
         hud.gameScore().setComp(HUD_Style.class, hudStyle);

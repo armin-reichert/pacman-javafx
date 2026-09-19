@@ -17,9 +17,8 @@ import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.clapperboard.system.ClapperboardStateSystem;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
-import de.amr.pacmanfx.ui.action.core.GameApp;
+import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
@@ -48,8 +47,7 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene {
 
     private final ClapperboardStateSystem clapperboardSystem = new ClapperboardStateSystem();
 
-    public ArcadeMsPacMan_CutScene2(GameApp app) {
-        super(app);
+    public ArcadeMsPacMan_CutScene2() {
         setComp(GameSceneCanvasRenderingComp.class, new GameSceneCanvasRenderingComp());
     }
 
@@ -76,7 +74,7 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene {
     }
 
     private void initScene() {
-        final GameVariantRuntime variant = app.variantManager().currentRuntime();
+        final GameVariantRuntime variant = app().variantManager().currentRuntime();
         final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
         final SpriteAnimationContainer animContainer    = variant.spriteAnimContainer();
         final var actorFactory = new ArcadeMsPacMan_ActorFactory();

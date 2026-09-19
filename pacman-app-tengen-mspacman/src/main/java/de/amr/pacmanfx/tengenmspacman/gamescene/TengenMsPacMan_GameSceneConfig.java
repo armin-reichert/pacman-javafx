@@ -26,6 +26,7 @@ import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 
 import java.util.Map;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
 
@@ -39,7 +40,7 @@ public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
         return false;
     }
 
-    private static final Map<Named, Function<GameApp, GameScene>> FACTORY_MAP = Map.of(
+    private static final Map<Named, Supplier<GameScene>> FACTORY_MAP = Map.of(
         CommonGameSceneID.BOOT_SCENE    , TengenMsPacMan_BootScene::new,
         CommonGameSceneID.INTRO_SCENE   , TengenMsPacMan_IntroScene::new,
         CommonGameSceneID.START_SCENE   , TengenMsPacMan_OptionsScene::new,
@@ -53,7 +54,7 @@ public class TengenMsPacMan_GameSceneConfig extends AbstractGameSceneConfig {
     );
 
     @Override
-    protected Function<GameApp, GameScene> getGameSceneFactory(Named sceneID) {
+    protected Supplier<GameScene> getGameSceneFactory(Named sceneID) {
         return FACTORY_MAP.get(sceneID);
     }
 

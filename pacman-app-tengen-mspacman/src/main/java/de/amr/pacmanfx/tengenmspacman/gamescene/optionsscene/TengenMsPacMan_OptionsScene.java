@@ -6,18 +6,17 @@ package de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.entities.Score;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.event.HighScoreAccessErrorEvent;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.model.BoosterMode;
 import de.amr.pacmanfx.tengenmspacman.model.Difficulty;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
-import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.input.JoypadButton;
@@ -68,8 +67,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
     private int idleTicks;
     public int initialDelay;
 
-    public TengenMsPacMan_OptionsScene(GameApp app) {
-        super(app);
+    public TengenMsPacMan_OptionsScene() {
         setComp(GameSceneCanvasRenderingComp.class, new GameSceneCanvasRenderingComp());
         reqCanvasRendering().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         reqCanvasRendering().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
@@ -85,14 +83,14 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         final GameSession session = game().session();
         session.setHudVisible(false);
 
-        final var actions = app.variantManager().currentRuntime()
+        final var actions = app().variantManager().currentRuntime()
             .extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
 
         final var bindingsMap = actionBindings().registry();
         bindingsMap.selectAnyMatchingBinding(actions.actionStartPlaying(), actions.localBindings());
         bindingsMap.selectAnyMatchingBinding(actions.actionToggleJoypadBindingsDisplayed(), actions.localBindings());
         bindingsMap.bindActionToKeyCombination(actions.actionSelectNextJoypadKeyBinding(), combine().alt().key(KeyCode.J));
-        bindingsMap.registerAllBindings(app.commonActions().sceneTestActions().bindings());
+        bindingsMap.registerAllBindings(app().commonActions().sceneTestActions().bindings());
 
         selectedOption.set(OPTION_PAC_BOOSTER);
         gameOptions(session).setCanStartNewGame(true);
@@ -127,14 +125,14 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
     public void onInput() {
         final GameSession session = game().session();
 
-        if (app.input().joypad().isButtonPressed(JoypadButton.DOWN)) {
+        if (app().input().joypad().isButtonPressed(JoypadButton.DOWN)) {
             selectedOption.set(selectedOption() + 1 < NUM_OPTIONS ? selectedOption() + 1 : 0);
         }
-        else if (app.input().joypad().isButtonPressed(JoypadButton.UP)) {
+        else if (app().input().joypad().isButtonPressed(JoypadButton.UP)) {
             selectedOption.set(selectedOption() == 0 ? NUM_OPTIONS - 1 : selectedOption() - 1);
         }
         // Button "A" on the joypad is located right of "B": select next value
-        else if (app.input().joypad().isButtonPressed(JoypadButton.A) || app.input().keyboard().isKeyPressed(KeyCode.RIGHT)) {
+        else if (app().input().joypad().isButtonPressed(JoypadButton.A) || app().input().keyboard().isKeyPressed(KeyCode.RIGHT)) {
             switch (selectedOption()) {
                 case OPTION_PAC_BOOSTER    -> setNextPacBoosterValue(session);
                 case OPTION_DIFFICULTY     -> setNextDifficultyValue(session);
@@ -143,7 +141,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
             }
         }
         // Button "B" is left of "A": select previous value
-        else if (app.input().joypad().isButtonPressed(JoypadButton.B) || app.input().keyboard().isKeyPressed(KeyCode.LEFT)) {
+        else if (app().input().joypad().isButtonPressed(JoypadButton.B) || app().input().keyboard().isKeyPressed(KeyCode.LEFT)) {
             switch (selectedOption()) {
                 case OPTION_PAC_BOOSTER    -> setPrevPacBoosterValue(session);
                 case OPTION_DIFFICULTY     -> setPrevDifficultyValue(session);

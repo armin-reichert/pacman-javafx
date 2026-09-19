@@ -9,7 +9,6 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
-import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 
@@ -30,8 +29,7 @@ public class TengenMsPacMan_CreditsScene extends AbstractGameScene {
     public DisplayMode displayMode = DisplayMode.ORIGINAL_AUTHORS;
     public float fadeProgress = 0;
 
-    public TengenMsPacMan_CreditsScene(GameApp app) {
-        super(app);
+    public TengenMsPacMan_CreditsScene() {
         setComp(GameSceneCanvasRenderingComp.class, new GameSceneCanvasRenderingComp());
         reqCanvasRendering().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         reqCanvasRendering().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
@@ -44,7 +42,7 @@ public class TengenMsPacMan_CreditsScene extends AbstractGameScene {
 
     @Override
     public void onActivate() {
-        final var actions = app.variantManager().currentRuntime()
+        final var actions = app().variantManager().currentRuntime()
             .extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
 
         final var bindingsMap = actionBindings().registry();

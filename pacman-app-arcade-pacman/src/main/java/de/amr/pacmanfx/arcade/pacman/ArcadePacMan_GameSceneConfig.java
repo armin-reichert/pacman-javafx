@@ -16,18 +16,17 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.model.test.Test_CutScenesTestState;
-import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class ArcadePacMan_GameSceneConfig extends AbstractGameSceneConfig {
 
-    private static final Map<CommonGameSceneID, Function<GameApp, GameScene>> FACTORY_MAP = new EnumMap<>(Map.of(
+    private static final Map<CommonGameSceneID, Supplier<GameScene>> FACTORY_MAP = new EnumMap<>(Map.of(
         CommonGameSceneID.BOOT_SCENE   , Arcade_BootScene::new,
         CommonGameSceneID.INTRO_SCENE  , ArcadePacMan_IntroScene::new,
         CommonGameSceneID.START_SCENE  , ArcadePacMan_StartScene::new,
@@ -41,7 +40,7 @@ public class ArcadePacMan_GameSceneConfig extends AbstractGameSceneConfig {
     public ArcadePacMan_GameSceneConfig() {}
 
     @Override
-    protected Function<GameApp, GameScene> getGameSceneFactory(Named sceneID) {
+    protected Supplier<GameScene> getGameSceneFactory(Named sceneID) {
         return FACTORY_MAP.get((CommonGameSceneID) sceneID);
     }
 

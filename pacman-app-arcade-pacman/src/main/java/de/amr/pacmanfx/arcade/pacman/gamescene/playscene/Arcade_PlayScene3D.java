@@ -8,15 +8,12 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.d3.PlayScene3D;
 import org.tinylog.Logger;
 
 public class Arcade_PlayScene3D extends PlayScene3D {
 
-    public Arcade_PlayScene3D(GameApp appContext) {
-        super(appContext);
-    }
+    public Arcade_PlayScene3D() {}
 
     @Override
     public void replaceActionBindings(GameSession session, GameLevel level) {
@@ -24,14 +21,14 @@ public class Arcade_PlayScene3D extends PlayScene3D {
 
         bindingsMap.dispose();
 
-        final Arcade_Actions actions = app.variantManager().currentRuntime()
+        final Arcade_Actions actions = app().variantManager().currentRuntime()
             .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         if (session.isAttractMode()) {
             bindingsMap.registerAllBindings(actions.gameStartActionBindings());
         } else {
-            bindingsMap.registerAllBindings(app.commonActions().steeringActions().bindings());
-            bindingsMap.registerAllBindings(app.commonActions().cheatActions().bindings());
+            bindingsMap.registerAllBindings(app().commonActions().steeringActions().bindings());
+            bindingsMap.registerAllBindings(app().commonActions().cheatActions().bindings());
         }
         bindActions();
         Logger.info(actionBindings());

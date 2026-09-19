@@ -16,10 +16,9 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
-import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
-import de.amr.pacmanfx.ui.action.core.GameApp;
+import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounter3DViewSystem;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.ActionBindingsComp;
@@ -62,56 +61,54 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
     public final DoubleProperty scoreOpacity = new SimpleDoubleProperty(0);
 
     private final PerspectiveManager perspectiveManager;
-    private final Set<ActionKeyBinding> actionBindings;
     private final AnimationRegistry registry = new AnimationRegistry();
     private final SubScene subScene;
     private final Group subSceneRoot;
     private final PerspectiveCamera camera;
     private final Group level3DParent = new Group();
-    private final RandomTextPicker textPicker;
+    private final CoordinateSystem coordinateSystem;
+
     private final ChangeListener<DrawMode> drawModeChangeListener;
     private final ManagedAnimation fadeInAnimation = new PlaySceneFadeInAnimation(Duration.seconds(3), this);
+
+    private Set<ActionKeyBinding> actionBindings;
+    private PlayScene3D_GameEventHandler gameEventHandler;
+    private RandomTextPicker textPicker;
 
     private GameLevel3D level3D;
     private ScoresView scoresView;
     private PlaySceneContextMenu contextMenu;
     private AmbientLight ambientLight;
 
-    private final PlayScene3D_GameEventHandler gameEventHandler;
-
     /**
      * Creates a new 3D play scene with default camera, sub-scene, axes, and perspective manager.
      */
-    public PlayScene3D(GameApp app) {
-        super(app);
-
-        final GameViewModel viewModel = app.ui().viewModel();
-
-        textPicker = new RandomTextPicker(app.ui().translationManager().textBundle(), "game.over");
-
+    public PlayScene3D() {
         camera = new PerspectiveCamera(true);
         perspectiveManager = new PerspectiveManager(camera);
-
-        final var coordinateSystem = new CoordinateSystem();
-        coordinateSystem.visibleProperty().bind(viewModel.common3DSettings().axesVisibleProperty());
-
+        coordinateSystem = new CoordinateSystem();
         ambientLight = new AmbientLight();
-        ambientLight.colorProperty().bind(viewModel.maze3DSettings().lightColorProperty());
-
         subSceneRoot = new Group(level3DParent, coordinateSystem, ambientLight);
-
         subScene = new SubScene(subSceneRoot, 888, 666, true, SceneAntialiasing.BALANCED);
         subScene.setCamera(camera);
-
-        actionBindings = app.commonActions().camera3DActions().bindings();
 
         drawModeChangeListener = (_, _, drawMode) -> {
             if (level3D != null) {
                 level3D.setDrawMode(drawMode);
             }
         };
+    }
 
-        gameEventHandler = new PlayScene3D_GameEventHandler(app, this);
+    @Override
+    protected void onAppConnected() {
+        final GameViewModel viewModel = app().ui().viewModel();
+        coordinateSystem.visibleProperty().bind(viewModel.common3DSettings().axesVisibleProperty());
+        ambientLight.colorProperty().bind(viewModel.maze3DSettings().lightColorProperty());
+
+        textPicker = new RandomTextPicker(app().ui().translationManager().textBundle(), "game.over");
+
+        actionBindings = app().commonActions().camera3DActions().bindings();
+        gameEventHandler = new PlayScene3D_GameEventHandler(app(), this);
     }
 
     public Optional<GameEventListener> optGameEventHandler() {

@@ -18,12 +18,12 @@ import de.amr.pacmanfx.core.gameplay.PacEatingEventHandler;
 import de.amr.pacmanfx.core.gameplay.PacPowerEventHandler;
 import de.amr.pacmanfx.core.model.GameCheats;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.rendering.RenderManager;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.input.Input;
+import de.amr.pacmanfx.ui.rendering.RenderManager;
 import de.amr.pacmanfx.uilib.PacMan3DModel;
 import javafx.application.Platform;
 import org.tinylog.Logger;
@@ -72,7 +72,7 @@ public final class PacManGamesMasterApp implements GameApp {
     public PacManGamesMasterApp(GameBox gameBox) {
         this.gameBox = requireNonNull(gameBox);
         renderManager = new RenderManager();
-        gameSceneManager = new GameSceneManager();
+        gameSceneManager = new GameSceneManager(this);
         gameLoop = new GameLoop(this, gameBox.clock(), renderManager);
         actions = new CommonGameActions();
     }

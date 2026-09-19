@@ -18,7 +18,6 @@ import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
-import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.entities.hud.comp.HUD_Style;
@@ -47,9 +46,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
 
     private Ghost ghost;
 
-    public TengenMsPacMan_BootScene(GameApp app) {
-        super(app);
-
+    public TengenMsPacMan_BootScene() {
         final var rendering = new GameSceneCanvasRenderingComp();
         setComp(GameSceneCanvasRenderingComp.class, rendering);
         rendering.unscaledWidthProperty().set(NES_SCREEN_WIDTH);
@@ -72,7 +69,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
 
     @Override
     public void onActivate() {
-        final GameVariantRuntime gameVariantRuntime = app.variantManager().currentRuntime();
+        final GameVariantRuntime gameVariantRuntime = app().variantManager().currentRuntime();
         ghost = gameVariantRuntime.uiConfig().renderConfig().createAnimatedGhost(
             gameVariantRuntime.playConfig().systems().actorSpriteAnimController(),
             gameVariantRuntime.spriteAnimContainer(),
@@ -131,7 +128,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
     }
 
     private void setHUDStyle(HUD hud) {
-        final HUD_Style hudStyle = app.variantManager().currentRuntime().uiConfig().renderConfig().hudStyle();
+        final HUD_Style hudStyle = app().variantManager().currentRuntime().uiConfig().renderConfig().hudStyle();
         hud.levelCounter().setComp(HUD_Style.class, hudStyle);
         hud.livesCounter().setComp(HUD_Style.class, hudStyle);
         hud.gameScore().setComp(HUD_Style.class, hudStyle);

@@ -19,6 +19,8 @@ import java.util.stream.Stream;
 
 public interface GameScene extends Disposable, QuitHandler {
 
+    void setApp(GameApp app);
+
     GameApp app();
 
     default GameViewModel viewModel() {

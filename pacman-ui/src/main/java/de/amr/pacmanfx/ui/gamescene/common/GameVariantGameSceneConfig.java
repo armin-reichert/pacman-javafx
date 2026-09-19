@@ -7,7 +7,6 @@ package de.amr.pacmanfx.ui.gamescene.common;
 import de.amr.basics.Disposable;
 import de.amr.basics.Named;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.ui.action.core.GameApp;
 
 import java.util.Optional;
 
@@ -19,7 +18,7 @@ public interface GameVariantGameSceneConfig extends Disposable {
 
     boolean gameSceneHasID(GameScene gameScene, Named sceneID);
 
-    Optional<GameScene> selectGameScene(GameApp app, boolean select3D);
+    Optional<GameScene> selectGameScene(GameContext game, boolean select3D);
 
     Named resolveCutSceneID(GameContext game);
 

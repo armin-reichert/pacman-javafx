@@ -17,7 +17,6 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.ui.action.CheatActions;
-import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationManager;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
@@ -43,8 +42,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
 
     private LevelCompletedAnimation levelCompletedAnimation;
 
-    public Arcade_PlayScene2D(GameApp app) {
-        super(app);
+    public Arcade_PlayScene2D() {
         // Add 2D canvas rendering capability
         setComp(GameSceneCanvasRenderingComp.class, new GameSceneCanvasRenderingComp());
     }
@@ -92,30 +90,30 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
 
     @Override
     public Optional<ContextMenu> optContextMenu() {
-        final TranslationManager translations = app.ui().translationManager();
-        final CheatActions cheatActions = app.commonActions().cheatActions();
+        final TranslationManager translations = app().ui().translationManager();
+        final CheatActions cheatActions = app().commonActions().cheatActions();
 
         final var contextMenu = new ContextMenu();
         addLocalizedTitleItem(contextMenu, translations, "context_menu.pacman");
         addLocalizedCheckBox(contextMenu, translations, game().session().cheats().pacUsingAutopilotProperty(), "context_menu.autopilot").setOnAction(e -> {
             final var checkBox = (CheckMenuItem) e.getSource();
             if (checkBox.isSelected()) {
-                app.runAction(cheatActions.actionActivateAutopilot());
+                app().runAction(cheatActions.actionActivateAutopilot());
             } else {
-                app.runAction(cheatActions.actionDeactivateAutopilot());
+                app().runAction(cheatActions.actionDeactivateAutopilot());
             }
         });
         addLocalizedCheckBox(contextMenu, translations, game().session().cheats().pacImmuneProperty(), "context_menu.immunity").setOnAction(e -> {
             final var checkBox = (CheckMenuItem) e.getSource();
             if (checkBox.isSelected()) {
-                app.runAction(cheatActions.actionActivateImmunity());
+                app().runAction(cheatActions.actionActivateImmunity());
             } else {
-                app.runAction(cheatActions.actionDeactivateImmunity());
+                app().runAction(cheatActions.actionDeactivateImmunity());
             }
         });
         addSeparator(contextMenu);
         addLocalizedCheckBox(contextMenu, translations, viewModel().muteProperty(), "context_menu.muted");
-        addLocalizedActionItem(app, contextMenu, translations, app.commonActions().gameFlowActions().actionQuit(), "context_menu.quit");
+        addLocalizedActionItem(app(), contextMenu, translations, app().commonActions().gameFlowActions().actionQuit(), "context_menu.quit");
 
         return Optional.of(contextMenu);
     }
@@ -136,19 +134,19 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
 
         final var bindingsRegistry = actionBindings().registry();
         if (session.isAttractMode()) {
-            final Arcade_Actions actions = app.variantManager().currentRuntime()
+            final Arcade_Actions actions = app().variantManager().currentRuntime()
                 .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
             bindingsRegistry.registerAllBindings(actions.gameStartActionBindings());
             Logger.info("Game scene {} accepted demo level", getClass().getSimpleName());
             soundManager().setEnabled(false);
         } else {
-            bindingsRegistry.registerAllBindings(app.commonActions().steeringActions().bindings());
-            bindingsRegistry.registerAllBindings(app.commonActions().cheatActions().bindings());
+            bindingsRegistry.registerAllBindings(app().commonActions().steeringActions().bindings());
+            bindingsRegistry.registerAllBindings(app().commonActions().cheatActions().bindings());
             Logger.info("Game scene {} accepted level #{}", getClass().getSimpleName(), level.number());
             soundManager().setEnabled(true);
         }
         Logger.info(bindingsRegistry);
-        ActorAnimationManager.ensureActorAnimationsCreated(app, level);
+        ActorAnimationManager.ensureActorAnimationsCreated(app(), level);
     }
 
     private InfoMap createLevelRenderInfo(GameLevel level) {

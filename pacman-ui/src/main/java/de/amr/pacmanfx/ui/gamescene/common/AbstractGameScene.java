@@ -12,12 +12,13 @@ import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.entities.TextDisplay;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.rendering.Renderable;
-import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.action.core.QuitHandler;
+import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import javafx.scene.paint.Color;
+import org.tinylog.Logger;
 
 import java.util.Optional;
 
@@ -43,11 +44,7 @@ public abstract class AbstractGameScene
         return textDisplay;
     }
 
-    protected final GameApp app;
-
-    protected AbstractGameScene(GameApp app) {
-        this.app = requireNonNull(app);
-    }
+    private GameApp app;
 
     // Game scene components
 
@@ -73,10 +70,7 @@ public abstract class AbstractGameScene
 
     // GameScene
 
-    @Override
-    public GameApp app() {
-        return app;
-    }
+    protected void onAppConnected() {}
 
     /**
      * Hook method called when the game scene becomes active.
@@ -98,6 +92,24 @@ public abstract class AbstractGameScene
             canvasRendering.unscaledWidthProperty().set(terrainSize.x());
             canvasRendering.unscaledHeightProperty().set(terrainSize.y());
         });
+    }
+
+    // Interface GameScene
+
+    @Override
+    public final void setApp(GameApp app) {
+        requireNonNull(app);
+        if (this.app != null) {
+            return;
+        }
+        this.app = app;
+        onAppConnected();
+        Logger.info("Game scene {} connected with app", getClass().getSimpleName());
+    }
+
+    @Override
+    public GameApp app() {
+        return requireNonNull(app);
     }
 
     @Override

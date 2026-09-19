@@ -7,16 +7,15 @@ package de.amr.pacmanfx.arcade.ms_pacman.gamescene.startscene;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
-import de.amr.pacmanfx.core.entities.TextDisplay;
-import de.amr.pacmanfx.uilib.entities.ImageDisplay;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.entities.TextDisplay;
 import de.amr.pacmanfx.core.rendering.Renderable;
-import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
+import de.amr.pacmanfx.uilib.entities.ImageDisplay;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,13 +39,10 @@ public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
     private final ImageDisplay copyrightImage;
     private final List<TextDisplay> copyrightTexts = new ArrayList<>();
 
-    public ArcadeMsPacMan_StartScene(GameApp app) {
-        super(app);
-
+    public ArcadeMsPacMan_StartScene() {
         // Add 2D rendering support
         setComp(GameSceneCanvasRenderingComp.class, new GameSceneCanvasRenderingComp());
 
-        final AssetMap assets = app.variantManager().currentRuntime().uiConfig().assets();
 
         msPacManImage = new ImageDisplay();
         msPacManImage.image().setImage(ArcadeMsPacMan_SpriteSheet.instance().image(SpriteID.LIVES_COUNTER_SYMBOL));
@@ -56,13 +52,17 @@ public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
         copyrightImage = new ImageDisplay();
         copyrightImage.show();
         copyrightImage.pos().set(tilesPx(6), tilesPx(28));
-        copyrightImage.image().setImage(assets.image("logo.midway"));
 
         copyrightTexts.add(createText("©",             ARCADE_RED, 8, 11, 30.125f));
         copyrightTexts.add(createText("MIDWAY MFG CO", ARCADE_RED, 8, 13, 30));
         copyrightTexts.add(createText("1980/1981",     ARCADE_RED, 8, 14, 32));
         copyrightTexts.forEach(TextDisplay::show);
+    }
 
+    @Override
+    protected void onAppConnected() {
+        final AssetMap assets = app().variantManager().currentRuntime().uiConfig().assets();
+        copyrightImage.image().setImage(assets.image("logo.midway"));
     }
 
     @Override
@@ -77,7 +77,7 @@ public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
     @Override
     public void onActivate() {
         // Bind "insert coin" + "start game" actions
-        final Arcade_Actions actions = app.variantManager().currentRuntime()
+        final Arcade_Actions actions = app().variantManager().currentRuntime()
             .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         actionBindings().registry().registerAllBindings(actions.gameStartActionBindings());

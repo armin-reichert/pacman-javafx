@@ -22,7 +22,6 @@ import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.rules.CollisionStrategy;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.ui.assets.VoiceID;
-import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 
@@ -47,8 +46,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
     int ghostIndex;
     long lastGhostEatenTick;
 
-    public ArcadePacMan_IntroScene(GameApp app) {
-        super(app);
+    public ArcadePacMan_IntroScene() {
         setComp(GameSceneCanvasRenderingComp.class, new GameSceneCanvasRenderingComp());
         flow = new IntroSceneController();
         view = new IntroSceneView();
@@ -56,12 +54,12 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
 
     @Override
     public void onActivate() {
-        final Arcade_Actions actions = app.variantManager().currentRuntime()
+        final Arcade_Actions actions = app().variantManager().currentRuntime()
             .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         final var bindingsMap = actionBindings().registry();
         bindingsMap.registerAllBindings(actions.gameStartActionBindings()); // insert coin + start game actions
-        bindingsMap.registerAllBindings(app.commonActions().sceneTestActions().bindings()); // actions for starting tests
+        bindingsMap.registerAllBindings(app().commonActions().sceneTestActions().bindings()); // actions for starting tests
 
         flow.restartState(this, IntroSceneController.SceneState.STARTING);
     }
@@ -83,7 +81,7 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
     }
 
     void initState() {
-        final GameVariantRuntime variant = app.variantManager().currentRuntime();
+        final GameVariantRuntime variant = app().variantManager().currentRuntime();
         view.createPacManAndGhosts(
             variant.uiConfig().renderConfig(),
             variant.playConfig().systems().actorSpriteAnimController(),

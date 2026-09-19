@@ -7,14 +7,13 @@ package de.amr.pacmanfx.ui.gamescene.common;
 import de.amr.basics.Named;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.ui.action.core.GameApp;
 import org.tinylog.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalInt;
-import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
 
@@ -34,7 +33,7 @@ public abstract class AbstractGameSceneConfig implements GameVariantGameSceneCon
 
     protected AbstractGameSceneConfig() {}
 
-    protected abstract Function<GameApp, GameScene> getGameSceneFactory(Named sceneID);
+    protected abstract Supplier<GameScene> getGameSceneFactory(Named sceneID);
 
     protected abstract Named computeGameSceneID(GameContext game, boolean select3D);
 
@@ -62,10 +61,10 @@ public abstract class AbstractGameSceneConfig implements GameVariantGameSceneCon
     }
 
     @Override
-    public final Optional<GameScene> selectGameScene(GameApp app, boolean select3D) {
-        requireNonNull(app);
-        final Named sceneID = computeGameSceneID(app.game(), select3D);
-        final GameScene gameScene = scenesByID.computeIfAbsent(sceneID, id -> getGameSceneFactory(id).apply(app));
+    public final Optional<GameScene> selectGameScene(GameContext game, boolean select3D) {
+        requireNonNull(game);
+        final Named sceneID = computeGameSceneID(game, select3D);
+        final GameScene gameScene = scenesByID.computeIfAbsent(sceneID, id -> getGameSceneFactory(id).get());
         return Optional.of(gameScene);
     }
 

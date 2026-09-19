@@ -7,7 +7,6 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.rendering.Renderable;
-import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 
@@ -29,8 +28,7 @@ public class ArcadePacMan_StartScene extends AbstractGameScene {
         createText("© 1980 MIDWAY MFG.CO.",   ARCADE_PINK,   8,  4, 29)
     );
 
-    public ArcadePacMan_StartScene(GameApp app) {
-        super(app);
+    public ArcadePacMan_StartScene() {
         setComp(GameSceneCanvasRenderingComp.class, new GameSceneCanvasRenderingComp());
     }
 
@@ -41,7 +39,7 @@ public class ArcadePacMan_StartScene extends AbstractGameScene {
 
     @Override
     public void onActivate() {
-        final Arcade_Actions actions = app.variantManager().currentRuntime()
+        final Arcade_Actions actions = app().variantManager().currentRuntime()
             .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
 
         final var bindingsMap = actionBindings().registry();

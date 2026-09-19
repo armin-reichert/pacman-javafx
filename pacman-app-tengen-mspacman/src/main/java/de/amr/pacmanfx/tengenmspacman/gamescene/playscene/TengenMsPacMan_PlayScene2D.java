@@ -9,20 +9,20 @@ import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.HUD;
-import de.amr.pacmanfx.core.entities.Ghost;
-import de.amr.pacmanfx.core.entities.door.comp.DoorDataComp;
-import de.amr.pacmanfx.core.event.base.GameEventListener;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
+import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
+import de.amr.pacmanfx.core.entities.door.comp.DoorDataComp;
+import de.amr.pacmanfx.core.event.base.GameEventListener;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
+import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
+import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
@@ -30,11 +30,10 @@ import de.amr.pacmanfx.tengenmspacman.gamescene.SceneDisplay;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_LevelRenderInfoKey;
 import de.amr.pacmanfx.tengenmspacman.sprites.MapImageSet;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_MapRepository;
-import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.FlashingState;
-import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
 import javafx.beans.property.DoubleProperty;
@@ -78,24 +77,25 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
 
     private final GameEventHandler eventHandler = new GameEventHandler(this);
 
-    public TengenMsPacMan_PlayScene2D(GameApp app) {
-        super(app);
-
+    public TengenMsPacMan_PlayScene2D() {
         // Add canvas rendering capability, no canvas assigned yet!
         setComp(GameSceneCanvasRenderingComp.class, createCanvasRendering());
 
-        final GameViewModel vm = app.ui().viewModel();
+        // Scene size gets bound to parent scene when embedded in game view, initial size doesn't matter.
+        subScene = new SubScene(rootPane, 88, 88);
+        subScene.heightProperty().addListener((_, _, _) -> updateScaling());
+        subScene.cameraProperty().addListener((_, _, _) -> updateScaling());
+    }
+
+    @Override
+    protected void onAppConnected() {
+        final GameViewModel vm = app().ui().viewModel();
         final TengenMsPacMan_UISettings uiSettings = uiSettings();
 
         rootPane.backgroundProperty().bind(vm.common2DSettings().canvasBackgroundColorProperty().map(Background::fill));
 
-        // Scene size gets bound to parent scene when embedded in game view, initial size doesn't matter.
-        subScene = new SubScene(rootPane, 88, 88);
-        subScene.fillProperty().bind(vm.common2DSettings().canvasBackgroundColorProperty());
-        subScene.heightProperty().addListener((_, _, _) -> updateScaling());
-
         subScene.cameraProperty().bind(uiSettings.playSceneDisplay.map(mode -> mode == SCROLLING ? dynamicCamera : fixedCamera));
-        subScene.cameraProperty().addListener((_, _, _) -> updateScaling());
+        subScene.fillProperty().bind(vm.common2DSettings().canvasBackgroundColorProperty());
     }
 
     @Override
@@ -194,7 +194,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     public Optional<ContextMenu> optContextMenu() {
         final var uiSettings = uiSettings();
 
-        final TranslationManager translations = app.ui().translationManager();
+        final TranslationManager translations = app().ui().translationManager();
         final SceneDisplay displayMode = uiSettings.playSceneDisplay.get();
         final var contextMenu = new ContextMenu();
 
@@ -214,8 +214,8 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         addLocalizedCheckBox(contextMenu, translations, game().session().cheats().pacUsingAutopilotProperty(), "context_menu.autopilot");
         addLocalizedCheckBox(contextMenu, translations, game().session().cheats().pacImmuneProperty(), "context_menu.immunity");
         addSeparator(contextMenu);
-        addLocalizedCheckBox(contextMenu, translations, app.ui().viewModel().muteProperty(), "context_menu.muted");
-        addLocalizedActionItem(app, contextMenu, translations, app.commonActions().gameFlowActions().actionQuit(), "context_menu.quit");
+        addLocalizedCheckBox(contextMenu, translations, app().ui().viewModel().muteProperty(), "context_menu.muted");
+        addLocalizedActionItem(app(), contextMenu, translations, app().commonActions().gameFlowActions().actionQuit(), "context_menu.quit");
 
         return Optional.of(contextMenu);
     }
@@ -299,12 +299,12 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     }
 
     private TengenMsPacMan_Actions actions() {
-        return app.variantManager().currentRuntime()
+        return app().variantManager().currentRuntime()
             .extensionValue(TengenMsPacMan_GameExtension.EXT_ACTIONS, TengenMsPacMan_Actions.class);
     }
 
     private TengenMsPacMan_UISettings uiSettings() {
-        return app.variantManager().currentRuntime()
+        return app().variantManager().currentRuntime()
             .extensionValue(TengenMsPacMan_GameExtension.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
     }
 
@@ -317,7 +317,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         final var bindingsMap = actionBindings().registry();
 
         bindingsMap.registerAllBindings(actions.steeringBindings());
-        bindingsMap.registerAllBindings(app.commonActions().cheatActions().bindings());
+        bindingsMap.registerAllBindings(app().commonActions().cheatActions().bindings());
 
         bindingsMap.selectAnyMatchingBinding(actions.actionTogglePlaySceneDisplayMode(), actions.localBindings());
         bindingsMap.selectAnyMatchingBinding(actions.actionTogglePacBooster(), actions.localBindings());
@@ -352,7 +352,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
     }
 
     private void ensureActorAnimationsCreated(GameLevel level, boolean boosterEnabled) {
-        final GameVariantRuntime variantConfig = app.variantManager().currentRuntime();
+        final GameVariantRuntime variantConfig = app().variantManager().currentRuntime();
         final GameVariantRenderConfig renderConfig = variantConfig.uiConfig().renderConfig();
         final SpriteAnimationContainer animContainer = variantConfig.spriteAnimContainer();
         final ActorSpriteAnimController animController = variantConfig.playConfig().systems().actorSpriteAnimController();
