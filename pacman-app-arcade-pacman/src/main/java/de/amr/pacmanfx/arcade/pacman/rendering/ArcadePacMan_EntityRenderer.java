@@ -126,8 +126,6 @@ public class ArcadePacMan_EntityRenderer extends BaseRenderer {
         };
     }
 
-    // --- HUD ---
-
     private void render(CreditDisplay creditDisplay) {
         final HUD_Style style = creditDisplay.reqComp(HUD_Style.class);
         final int credit = creditDisplay.data().credit();
@@ -154,8 +152,6 @@ public class ArcadePacMan_EntityRenderer extends BaseRenderer {
             fillText("L" + score.data().levelNumber(), color, font, x + tilesPx(8), y + TS + 1);
         }
     }
-
-    // Entities
 
     private void render(Energizer energizer) {
         if (!energizer.on()) {
