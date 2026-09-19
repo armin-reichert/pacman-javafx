@@ -7,11 +7,13 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.util.Ufx;
+import de.amr.pacmanfx.arcade.ms_pacman.entities.Heart;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.clapperboard.ClapperboardAnimationSystem;
 import de.amr.pacmanfx.arcade.ms_pacman.gamescene.introscene.MarqueeRenderer;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_RenderConfig;
 import de.amr.pacmanfx.core.Energizer;
 import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.rendering.Renderable;
@@ -91,6 +93,7 @@ public class ArcadeMsPacMan_EntityRenderer extends BaseRenderer {
             case BonusPoints points        -> drawSpriteCentered(computeSprite(points), center);
             case Energizer energizer       -> drawEnergizer(energizer);
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
+            case Heart heart               -> drawSpriteCentered(computeSprite(heart), center);
             case Marquee marquee           -> drawMarquee(marquee, tick);
             case MessageView messageView   -> messageViewRenderer.renderMessageView(messageView);
             case LevelCounter levelCounter -> drawLevelCounter(levelCounter);
@@ -166,6 +169,10 @@ public class ArcadeMsPacMan_EntityRenderer extends BaseRenderer {
     private RectShort computeSprite(GhostPoints ghostPoints) {
         final int index = Arrays.binarySearch(GHOST_POINTS, ghostPoints.points().number());
         return index >= 0 ? spriteSheet.findSpriteSequence(SpriteID.GHOST_NUMBERS)[index] : RectShort.NULL_RECTANGLE;
+    }
+
+    private RectShort computeSprite(Heart heart) {
+        return heart.reqComp(SpriteAnimationComp.class).spriteAnimations().currentSprite();
     }
 
     private void drawEnergizer(Energizer energizer) {
