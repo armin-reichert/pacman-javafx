@@ -68,13 +68,13 @@ public class ArcadePacMan_EntityRenderer extends BaseRenderer {
         switch (gameEntity) {
             case Bonus bonus -> drawSpriteCentered(computeSprite(bonus), center);
             case BonusPoints bonusPoints -> drawSpriteCentered(computeSprite(bonusPoints), center);
-            case Energizer energizer -> render(energizer);
+            case Energizer energizer -> draw(energizer);
             case Ghost ghost -> drawSpriteCentered(computeSprite(ghost), center);
             case GhostPoints points -> drawSpriteCentered(computeSprite(points), center);
-            case LevelCounter levelCounter -> render(levelCounter);
-            case LivesCounter livesCounter -> render(livesCounter);
+            case LevelCounter levelCounter -> draw(levelCounter);
+            case LivesCounter livesCounter -> draw(livesCounter);
             case Pac pac -> drawSpriteCentered(computeSprite(pac), center);
-            case Score score -> render(score);
+            case Score score -> draw(score);
             default -> super.renderGameEntity(gameEntity, tick);
         }
         ctx.restore();
@@ -124,7 +124,7 @@ public class ArcadePacMan_EntityRenderer extends BaseRenderer {
         };
     }
 
-    private void render(Score score) {
+    private void draw(Score score) {
         final HUD_Style style = score.reqComp(HUD_Style.class);
         final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
         final boolean disabled = !score.data().isEnabled();
@@ -142,7 +142,7 @@ public class ArcadePacMan_EntityRenderer extends BaseRenderer {
         }
     }
 
-    private void render(Energizer energizer) {
+    private void draw(Energizer energizer) {
         if (!energizer.on()) {
             final double size = scaled(9);
             ctx.save();
@@ -152,7 +152,7 @@ public class ArcadePacMan_EntityRenderer extends BaseRenderer {
         }
     }
 
-    private void render(LivesCounter livesCounter) {
+    private void draw(LivesCounter livesCounter) {
         final HUD_Style style = livesCounter.reqComp(HUD_Style.class);
         final float x = livesCounter.pos().x();
         final float y = livesCounter.pos().y();
@@ -170,7 +170,7 @@ public class ArcadePacMan_EntityRenderer extends BaseRenderer {
         }
     }
 
-    private void render(LevelCounter levelCounter) {
+    private void draw(LevelCounter levelCounter) {
         final HUD_Style style = levelCounter.reqComp(HUD_Style.class);
         final float y = levelCounter.pos().y();
         float x = levelCounter.pos().x();
