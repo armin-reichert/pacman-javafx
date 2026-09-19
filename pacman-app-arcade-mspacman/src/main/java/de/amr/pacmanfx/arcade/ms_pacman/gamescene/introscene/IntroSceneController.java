@@ -27,7 +27,6 @@ class IntroSceneController extends StateMachine<ArcadeMsPacMan_IntroScene> {
         STARTING {
             @Override
             public void onEnter(ArcadeMsPacMan_IntroScene scene) {
-                scene.initScene();
                 scene.updateMarqueeText(this);
             }
 
@@ -47,7 +46,7 @@ class IntroSceneController extends StateMachine<ArcadeMsPacMan_IntroScene> {
 
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                final boolean atEndPosition = scene.letGhostWalkIn();
+                final boolean atEndPosition = scene.letGhostWalkIn(scene.view.ghosts.get(scene.ghostInSpotlight));
                 if (atEndPosition) {
                     if (scene.ghostInSpotlight == GhostPersonality.ORANGE_GHOST_POKEY.ordinal()) {
                         controller.enterState(scene, MS_PACMAN_MARCHING_IN);
@@ -67,7 +66,7 @@ class IntroSceneController extends StateMachine<ArcadeMsPacMan_IntroScene> {
 
             @Override
             public void onUpdate(ArcadeMsPacMan_IntroScene scene) {
-                final boolean atEndPosition = scene.letMsPacManWalkIn();
+                final boolean atEndPosition = scene.letMsPacManWalkIn(scene.view.msPacMan);
                 if (atEndPosition) {
                     controller.enterState(scene, READY_TO_PLAY);
                 }

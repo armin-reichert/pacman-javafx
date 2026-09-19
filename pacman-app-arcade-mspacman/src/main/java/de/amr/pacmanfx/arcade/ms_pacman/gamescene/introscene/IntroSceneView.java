@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.gamescene.introscene;
 
-
 import de.amr.basics.math.Direction;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
@@ -24,6 +23,7 @@ import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.ui.GlobalFonts;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.entities.ImageDisplay;
+import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,26 +37,47 @@ import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
 
 public class IntroSceneView {
 
-    Marquee marquee;
+    static final String MARQUEE_TITLE = "\"MS PAC-MAN\"";
+
+    private Marquee marquee;
+    private ImageDisplay copyrightImage;
+    private final List<TextDisplay> copyrightTexts = new ArrayList<>();
+    private TextDisplay titleText;
+    private TextDisplay marqueeText1;
+    private TextDisplay marqueeText2;
+
     Pac msPacMan;
     List<Ghost> ghosts;
-    ImageDisplay copyrightImage;
-    final List<TextDisplay> copyrightTexts = new ArrayList<>();
-    TextDisplay titleText;
-    TextDisplay marqueeText1;
-    TextDisplay marqueeText2;
 
     public IntroSceneView(GameVariantRuntime runtime) {
         createTitleText();
-        createMarqueeTexts();
         createMarquee();
-        createMsPacMan(runtime);
-        createGhosts(runtime);
+        createMsPacManAndTheGhosts(runtime);
         createCopyright(runtime);
     }
 
     public Stream<Renderable> renderables() {
         return Ufx.streamOf(titleText, marquee, marqueeText1, marqueeText2, msPacMan, ghosts, copyrightImage, copyrightTexts);
+    }
+
+    public void showMarqueeText1(String text, Color color) {
+        marqueeText1.data().setText(text);
+        marqueeText1.data().setFillColor(color);
+        marqueeText1.show();
+    }
+
+    public void hideMarqueeText1() {
+        marqueeText1.hide();
+    }
+
+    public void showMarqueeText2(String text, Color color) {
+        marqueeText2.data().setText(text);
+        marqueeText2.data().setFillColor(color);
+        marqueeText2.show();
+    }
+
+    public void placeMarqueeText2(float x, float y) {
+        marqueeText2.pos().set(x, y);
     }
 
     private void createTitleText() {
@@ -66,6 +87,28 @@ public class IntroSceneView {
         titleText.data().setFont(GlobalFonts.ARCADE.font(8));
         titleText.pos().set(TITLE_X, TITLE_Y);
         titleText.show();
+    }
+
+    private void createMarquee() {
+        marquee = new Marquee();
+        marquee.pos().set(60, 88);
+        marquee.show();
+
+        marquee.layout().setNumBulbsHorizontally(34);
+        marquee.layout().setNumBulbsVertically(16);
+        marquee.layout().setBulbSize(4);
+        marquee.layout().setBrightBulbsCount(6);
+        marquee.layout().setBrightBulbsDistance(16);
+
+        marquee.visualization().setBulbOffColor(ARCADE_RED.toString());
+        marquee.visualization().setBulbOnColor(ARCADE_WHITE.toString());
+
+        marqueeText1 = new TextDisplay();
+        marqueeText1.data().setFont(GlobalFonts.ARCADE.font(TS));
+        marqueeText1.pos().set(TITLE_X, TOP_Y + tilesPx(3));
+
+        marqueeText2 = new TextDisplay();
+        marqueeText2.data().setFont(GlobalFonts.ARCADE.font(TS));
     }
 
     private void createCopyright(GameVariantRuntime runtime) {
@@ -82,7 +125,7 @@ public class IntroSceneView {
         copyrightTexts.forEach(TextDisplay::show);
     }
 
-    private void createMsPacMan(GameVariantRuntime runtime) {
+    private void createMsPacManAndTheGhosts(GameVariantRuntime runtime) {
         final var actorFactory = new ArcadeMsPacMan_ActorFactory();
         final GameVariantRenderConfig renderConfig = runtime.uiConfig().renderConfig();
         final SpriteAnimationContainer animContainer = runtime.spriteAnimContainer();
@@ -96,14 +139,6 @@ public class IntroSceneView {
         nav.setSpeed(msPacMan, ACTOR_SPEED);
         animController.setAnimations(msPacMan, renderConfig.createPacAnimations(animContainer));
         msPacMan.show();
-    }
-
-    private void createGhosts(GameVariantRuntime runtime) {
-        final GameVariantRenderConfig renderConfig = runtime.uiConfig().renderConfig();
-        final SpriteAnimationContainer animContainer = runtime.spriteAnimContainer();
-        final GameSystems systems = runtime.playConfig().systems();
-        final ActorSpriteAnimController animController = systems.actorSpriteAnimController();
-        final WorldNavigationSystem nav = systems.navigator();
 
         ghosts = List.of(
             renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.RED_GHOST_SHADOW),
@@ -120,32 +155,5 @@ public class IntroSceneView {
             systems.ghostState().setState(ghost, GhostState.HUNTING_PAC);
             ghost.show();
         }
-    }
-
-    private void createMarquee() {
-        marquee = new Marquee();
-        marquee.pos().set(60, 88);
-
-        marquee.layout().setNumBulbsHorizontally(34);
-        marquee.layout().setNumBulbsVertically(16);
-        marquee.layout().setBulbSize(4);
-        marquee.layout().setBrightBulbsCount(6);
-        marquee.layout().setBrightBulbsDistance(16);
-
-        marquee.visualization().setBulbOffColor(ARCADE_RED.toString());
-        marquee.visualization().setBulbOnColor(ARCADE_WHITE.toString());
-
-        marquee.show();
-    }
-
-    private void createMarqueeTexts() {
-        marqueeText1 = new TextDisplay();
-        marqueeText1.data().setFont(GlobalFonts.ARCADE.font(TS));
-        marqueeText1.pos().set(TITLE_X, TOP_Y + tilesPx(3));
-        marqueeText1.show();
-
-        marqueeText2 = new TextDisplay();
-        marqueeText2.data().setFont(GlobalFonts.ARCADE.font(TS));
-        marqueeText2.show();
     }
 }
