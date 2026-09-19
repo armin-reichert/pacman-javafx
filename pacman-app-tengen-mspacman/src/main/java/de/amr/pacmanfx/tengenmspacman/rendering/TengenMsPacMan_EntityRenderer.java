@@ -104,7 +104,6 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer {
             }
             case GameOptionsDisplay gameOptionsDisplay -> renderGameOptionsDisplay(gameOptionsDisplay);
             case LevelNumberDisplay levelNumberDisplay -> drawLevelNumberDisplay(levelNumberDisplay);
-            case CreditDisplay _ -> { /* Not used in this game variant */}
             default -> super.renderGameEntity(gameEntity, tick);
         }
         ctx.restore();

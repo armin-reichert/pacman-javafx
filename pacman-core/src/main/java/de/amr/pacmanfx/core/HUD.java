@@ -2,10 +2,7 @@ package de.amr.pacmanfx.core;
 
 import de.amr.basics.QuerySet;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.entities.CreditDisplay;
-import de.amr.pacmanfx.core.entities.LevelCounter;
-import de.amr.pacmanfx.core.entities.LivesCounter;
-import de.amr.pacmanfx.core.entities.Score;
+import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
 import de.amr.pacmanfx.core.rendering.Renderable;
 
@@ -22,13 +19,15 @@ public class HUD {
     public HUD(String variantName) {
         final var levelCounter = new LevelCounter();
         final var livesCounter = new LivesCounter();
-        final var creditDisplay = new CreditDisplay();
+        final var creditDisplay = new TextDisplay();
         final var gameScore = new Score(Score.Type.GAME_SCORE);
         final var highScore = ScoreSystem.createHighScore(variantName);
 
+        creditDisplay.setName("Credits");
         creditDisplay.pos().set(2 * TS, 36 * TS);
 
         gameScore.pos().set(TS, TS);
+
         highScore.pos().set(14 * TS, TS);
         highScore.show();
 
@@ -41,8 +40,8 @@ public class HUD {
             .filter(Renderable.class::isInstance).map(Renderable.class::cast);
     }
 
-    public CreditDisplay creditDisplay() {
-        return entities.theOne(CreditDisplay.class);
+    public TextDisplay creditDisplay() {
+        return entities.ofTypeWhere(TextDisplay.class, e -> "Credits".equals(e.name())).findAny().orElseThrow();
     }
 
     public LevelCounter levelCounter() {

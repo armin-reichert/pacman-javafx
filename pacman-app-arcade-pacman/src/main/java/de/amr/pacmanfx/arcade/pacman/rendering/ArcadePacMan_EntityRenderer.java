@@ -26,7 +26,6 @@ import java.util.Optional;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
-import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_YELLOW;
 import static java.util.Objects.requireNonNull;
 
@@ -69,7 +68,6 @@ public class ArcadePacMan_EntityRenderer extends BaseRenderer {
         switch (gameEntity) {
             case Bonus bonus -> drawSpriteCentered(computeSprite(bonus), center);
             case BonusPoints bonusPoints -> drawSpriteCentered(computeSprite(bonusPoints), center);
-            case CreditDisplay creditDisplay -> render(creditDisplay);
             case Energizer energizer -> render(energizer);
             case Ghost ghost -> drawSpriteCentered(computeSprite(ghost), center);
             case GhostPoints points -> drawSpriteCentered(computeSprite(points), center);
@@ -124,15 +122,6 @@ public class ArcadePacMan_EntityRenderer extends BaseRenderer {
             case EDIBLE   -> SpriteSheet.spriteOrDefault(spriteSheet.findSpriteSequence(SpriteID.BONUS_SYMBOLS), bonus.data().symbolCode());
             case EATEN, INACTIVE  -> RectShort.NULL_RECTANGLE;
         };
-    }
-
-    private void render(CreditDisplay creditDisplay) {
-        final HUD_Style style = creditDisplay.reqComp(HUD_Style.class);
-        final int credit = creditDisplay.data().credit();
-        final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
-        final String text = style.creditTextFormat().formatted(credit);
-        final float baseline = creditDisplay.pos().y();
-        fillText(text, ARCADE_WHITE, scaledFont, creditDisplay.pos().x(), baseline);
     }
 
     private void render(Score score) {

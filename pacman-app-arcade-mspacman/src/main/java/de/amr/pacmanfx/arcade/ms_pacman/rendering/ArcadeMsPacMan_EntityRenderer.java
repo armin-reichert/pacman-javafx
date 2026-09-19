@@ -97,7 +97,6 @@ public class ArcadeMsPacMan_EntityRenderer extends BaseRenderer {
             }
             case Bag bag -> drawSpriteCentered(computeSprite(bag), center);
             case Stork stork -> drawSpriteCentered(computeSprite(stork), center);
-            case CreditDisplay creditDisplay -> drawCreditDisplay(creditDisplay);
             default -> super.renderGameEntity(gameEntity, tick);
         }
         ctx.restore();
@@ -203,15 +202,6 @@ public class ArcadeMsPacMan_EntityRenderer extends BaseRenderer {
     }
 
     // --- HUD ---
-
-    private void drawCreditDisplay(CreditDisplay creditDisplay) {
-        final HUD_Style style = creditDisplay.reqComp(HUD_Style.class);
-        final int credit = creditDisplay.data().credit();
-        final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
-        final String text = style.creditTextFormat().formatted(credit);
-        final float baseline = creditDisplay.pos().y();
-        fillText(text, ARCADE_WHITE, scaledFont, creditDisplay.pos().x(), baseline);
-    }
 
     private void drawGameScore(Score score) {
         final HUD_Style style = score.reqComp(HUD_Style.class);

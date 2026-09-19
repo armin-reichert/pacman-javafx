@@ -26,6 +26,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
 import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
+import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import org.tinylog.Logger;
 
 import java.util.List;
@@ -42,6 +43,9 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         requireNonNull(game);
         // level may be null!
         requireNonNull(hud);
+
+        final TextDisplay creditDisplay = hud.creditDisplay();
+        creditDisplay.data().setFont(GlobalFonts.ARCADE.font(TS));
 
         final LivesCounter livesCounter = hud.livesCounter();
         final LevelCounter levelCounter = hud.levelCounter();

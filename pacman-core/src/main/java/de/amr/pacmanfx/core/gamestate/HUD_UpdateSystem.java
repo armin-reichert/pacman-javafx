@@ -7,8 +7,8 @@ package de.amr.pacmanfx.core.gamestate;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.HUD;
-import de.amr.pacmanfx.core.entities.CreditDisplay;
 import de.amr.pacmanfx.core.entities.LivesCounter;
+import de.amr.pacmanfx.core.entities.TextDisplay;
 import de.amr.pacmanfx.core.level.GameLevel;
 
 public class HUD_UpdateSystem {
@@ -35,7 +35,7 @@ public class HUD_UpdateSystem {
         numLivesShown = Math.clamp(numLivesShown, 0, livesCounter.data().maxLivesShown());
         livesCounter.data().setNumLivesShown(numLivesShown);
 
-        final CreditDisplay creditDisplay = hud.creditDisplay();
-        creditDisplay.data().setCredit(game.coinMechanism().numCoins());
+        final TextDisplay creditDisplay = hud.creditDisplay();
+        creditDisplay.data().setText("CREDIT %2d".formatted(game.coinMechanism().numCoins()));
     }
 }

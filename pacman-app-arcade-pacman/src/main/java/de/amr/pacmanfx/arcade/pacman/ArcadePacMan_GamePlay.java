@@ -160,6 +160,9 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         // level may be null!
         requireNonNull(hud);
 
+        final TextDisplay creditDisplay = hud.creditDisplay();
+        creditDisplay.data().setFont(GlobalFonts.ARCADE.font(TS));
+
         final LivesCounter livesCounter = hud.livesCounter();
         final LevelCounter levelCounter = hud.levelCounter();
 
