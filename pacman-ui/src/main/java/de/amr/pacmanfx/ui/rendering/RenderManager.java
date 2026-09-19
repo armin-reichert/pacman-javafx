@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.ui.rendering;
 
 import de.amr.pacmanfx.core.GameVariantPlayConfig;
+import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
@@ -82,13 +83,22 @@ public class RenderManager {
     }
 
     public void renderFrame(long tick, boolean debugMode) {
-        renderQueue.entriesInOrder().forEach(r -> {
+        renderQueue.sort();
+
+        renderQueue.renderables().forEach(r -> {
             switch (r.layer()) {
-                case SCENE    -> renderScene(r, tick, debugMode);
+                case SCENE    -> renderScene(r, tick);
                 case OVERLAY  -> renderOverlay(r, tick);
                 default       -> renderEntity(r, tick);
             }
         });
+
+        if (debugMode) {
+            //TODO produce renderables at DEBUG layer instead of calling the debug renderer separately
+            renderQueue.renderables()
+                .filter(r -> r.layer() == RenderingLayer.SCENE)
+                .forEach(r -> sceneDebugRenderer.render(r, tick));
+        }
     }
 
     public void clearSceneCanvas(AbstractGameScene gameScene) {
@@ -112,12 +122,9 @@ public class RenderManager {
         }
     }
 
-    private void renderScene(Renderable r, long tick, boolean debugMode) {
+    private void renderScene(Renderable r, long tick) {
         if (sceneRenderer != null) {
             sceneRenderer.render(r, tick);
-        }
-        if (debugMode && sceneDebugRenderer != null) {
-            sceneDebugRenderer.render(r, tick);
         }
     }
 

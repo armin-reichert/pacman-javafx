@@ -35,8 +35,11 @@ public class RenderQueue {
         renderables.forEach(this::add);
     }
 
-    public Stream<Renderable> entriesInOrder() {
+    public void sort() {
         queue.sort(RENDERING_ORDER);
+    }
+
+    public Stream<Renderable> renderables() {
         return queue.stream();
     }
 }
