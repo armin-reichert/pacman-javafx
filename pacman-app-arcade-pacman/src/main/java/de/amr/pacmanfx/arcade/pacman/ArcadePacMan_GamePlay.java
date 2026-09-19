@@ -28,7 +28,7 @@ import de.amr.pacmanfx.core.rules.DefaultHuntingTimer;
 import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.core.steering.RouteGuidedSteering;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
-import de.amr.pacmanfx.ui.GlobalFonts;
+import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.uilib.entities.messageview.comp.MessageViewStyleComp;
 import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
 import org.tinylog.Logger;

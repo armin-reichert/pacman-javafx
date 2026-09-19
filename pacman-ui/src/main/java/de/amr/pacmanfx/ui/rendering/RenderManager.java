@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui;
+package de.amr.pacmanfx.ui.rendering;
 
 import de.amr.pacmanfx.core.GameVariantPlayConfig;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;

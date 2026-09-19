@@ -15,7 +15,7 @@ import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
-import de.amr.pacmanfx.ui.GlobalFonts;
+import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.uilib.entities.ImageDisplay;
 import javafx.scene.paint.Color;
 
@@ -51,14 +51,14 @@ public class IntroSceneView {
     final TextDisplay[]  ghostCharacterDisplays;
 
     // Chase animation
-    final BlinkingEnergizer targetEnergizer;
+    final Energizer targetEnergizer;
 
     Pac pacMan;
     Ghost[] ghosts;
     GhostPoints points;
 
     // Points display
-    final BlinkingEnergizer energizer;
+    final Energizer energizer;
     final Pellet pellet;
     final TextDisplay text10;
     final TextDisplay text10Pts;
@@ -82,10 +82,10 @@ public class IntroSceneView {
         }
 
         // Chase animation
-        targetEnergizer = new BlinkingEnergizer();
+        targetEnergizer = new Energizer();
 
         // Points display
-        energizer = new BlinkingEnergizer();
+        energizer = new Energizer();
         pellet = new Pellet();
         text10 = new TextDisplay();
         text10Pts = new TextDisplay();

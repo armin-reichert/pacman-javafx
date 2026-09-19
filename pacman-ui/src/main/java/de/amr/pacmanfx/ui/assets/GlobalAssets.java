@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.ui;
+package de.amr.pacmanfx.ui.assets;
 
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
@@ -10,9 +10,7 @@ import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import de.amr.pacmanfx.uilib.rendering.EggradientSamples;
 import javafx.scene.layout.Background;
-import javafx.scene.media.Media;
 import javafx.scene.paint.Color;
-import org.tinylog.Logger;
 
 public final class GlobalAssets {
 

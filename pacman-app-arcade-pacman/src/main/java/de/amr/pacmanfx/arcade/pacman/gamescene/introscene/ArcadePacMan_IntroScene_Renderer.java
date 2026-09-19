@@ -39,7 +39,7 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer {
     public void render(Renderable r, long tick) {
         switch (r) {
             case ArcadePacMan_IntroScene _ -> {}
-            case BlinkingEnergizer energizer -> renderBlinkingEnergizer(energizer);
+            case Energizer energizer -> renderEnergizer(energizer);
             case Pellet pellet -> renderPellet(pellet);
             default -> super.render(r, tick);
         }
@@ -54,7 +54,7 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer {
         ctx.restore();
     }
 
-    private void renderBlinkingEnergizer(BlinkingEnergizer energizer) {
+    private void renderEnergizer(Energizer energizer) {
         if (energizer.isVisible() && energizer.pulse().state() == Pulse.State.ON) {
             ctx.save();
             ctx.setImageSmoothing(true);

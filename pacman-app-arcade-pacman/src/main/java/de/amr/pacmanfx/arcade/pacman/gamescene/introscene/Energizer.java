@@ -9,11 +9,11 @@ import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.rendering.Renderable;
 
-class BlinkingEnergizer extends GameEntity implements Renderable {
+class Energizer extends GameEntity implements Renderable {
 
     private Pulse pulse;
 
-    public BlinkingEnergizer() {
+    public Energizer() {
     }
 
     public Pulse pulse() {
