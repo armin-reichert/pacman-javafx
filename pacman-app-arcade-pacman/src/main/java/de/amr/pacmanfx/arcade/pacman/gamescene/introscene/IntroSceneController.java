@@ -50,6 +50,9 @@ public class IntroSceneController extends StateMachine<ArcadePacMan_IntroScene> 
 
     public IntroSceneController() {
         super(List.of(SceneState.values()));
+        for (var state : SceneState.values()) {
+            state.controller = this;
+        }
     }
 
     public enum SceneState implements State<ArcadePacMan_IntroScene> {
@@ -65,7 +68,7 @@ public class IntroSceneController extends StateMachine<ArcadePacMan_IntroScene> 
                 if (timer.tickCount() == TICK_TITLE_VISIBLE) {
                     scene.view.titleText.show();
                 } else if (timer.tickCount() == TICK_START_PRESENTING_GHOSTS) {
-                    scene.flow.enterState(scene, PRESENTING_GHOSTS);
+                    controller.enterState(scene, PRESENTING_GHOSTS);
                 }
             }
         },
@@ -82,7 +85,7 @@ public class IntroSceneController extends StateMachine<ArcadePacMan_IntroScene> 
                     case TICK_GHOST_CHARACTER_VISIBLE -> scene.view.ghostCharacterDisplays[scene.ghostIndex].show();
                     case TICK_GHOST_NICKNAME_VISIBLE  -> scene.view.ghostNicknameDisplays[scene.ghostIndex].show();
                     case TICK_GHOST_PRESENT_NEXT      -> presentNextGhost(scene);
-                    case TICK_GHOST_PRESENTATION_END  -> scene.flow.enterState(scene, SHOWING_POINTS);
+                    case TICK_GHOST_PRESENTATION_END  -> controller.enterState(scene, SHOWING_POINTS);
                 }
             }
 
@@ -109,7 +112,7 @@ public class IntroSceneController extends StateMachine<ArcadePacMan_IntroScene> 
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
                 if (timer.tickCount() == TICK_SHOW_POINTS_DURATION) {
-                    scene.flow.enterState(scene, CHASING_PAC_MAN);
+                    controller.enterState(scene, CHASING_PAC_MAN);
                 }
             }
         },
@@ -139,7 +142,7 @@ public class IntroSceneController extends StateMachine<ArcadePacMan_IntroScene> 
                     scene.turnCardsRestartPacMan(systems);
                 }
                 else if (tick == TICK_CHASING_PAC_MAN_END) {
-                    scene.flow.enterState(scene, CHASING_GHOSTS);
+                    controller.enterState(scene, CHASING_GHOSTS);
                     return;
                 }
                 scene.chasePacMan(tick);
@@ -165,7 +168,7 @@ public class IntroSceneController extends StateMachine<ArcadePacMan_IntroScene> 
                 final long tick = timer.tickCount();
                 if (tick == TICK_CHASING_GHOSTS_END) {
                     scene.view.pacMan.hide();
-                    scene.flow.enterState(scene, WAIT_FOR_DEMO_LEVEL);
+                    controller.enterState(scene, WAIT_FOR_DEMO_LEVEL);
                 } else {
                     scene.chaseGhosts(scene.game(), tick);
                 }
@@ -190,6 +193,8 @@ public class IntroSceneController extends StateMachine<ArcadePacMan_IntroScene> 
                 }
             }
         };
+
+        IntroSceneController controller;
 
         final TickTimer timer = new TickTimer("Timer-" + name());
 
