@@ -43,6 +43,8 @@ import java.util.List;
 
 import static java.util.Objects.requireNonNull;
 
+//TODO Use renderables with suitable z order
+
 public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
 
     record AnimationInfo(Named animationID, int frame, boolean stopped, boolean locked) {}
@@ -67,7 +69,7 @@ public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
     protected final ActorSpriteAnimController animController;
     private final Text dummy = new Text();
 
-    public BaseGameSceneDebugInfoRenderer(ActorSpriteAnimController animController, Canvas canvas) {
+    protected BaseGameSceneDebugInfoRenderer(ActorSpriteAnimController animController, Canvas canvas) {
         super(canvas);
         this.animController = requireNonNull(animController);
     }
@@ -81,12 +83,14 @@ public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
         final GameSession session = gameScene.game().session();
         final GameSceneCanvasRenderingComp canvasRendering = gameScene.reqComp(GameSceneCanvasRenderingComp.class);
 
+        ctx.save();
         drawTileGrid(canvasRendering.unscaledWidth(), canvasRendering.unscaledHeight(), Color.LIGHTGRAY);
         drawGameStateInfo(gameScene.game());
         session.optLevel().ifPresent(level -> {
 //            drawTerrainDebugInfo(level);
             level.entities().all().forEach(actor -> drawMovingActorInfo(animController, actor));
         });
+        ctx.restore();
     }
 
     private void drawGameStateInfo(GameContext game) {

@@ -6,9 +6,8 @@ package de.amr.pacmanfx.arcade.pacman.gamescene.bootscene;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.rendering.BaseGameSceneRenderer;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.text.Font;
 
@@ -23,12 +22,12 @@ import static java.util.Objects.requireNonNull;
  * and a grid before the intro scene starts. This scene is used by the Arcade and the XXL variants so we pass the
  * corresponding spritesheet as a parameter.
  */
-public class Arcade_BootScene_Renderer extends BaseGameSceneRenderer {
+public class Arcade_BootScene_Renderer extends BaseRenderer {
 
     private final SpriteSheet<?> spriteSheet;
 
-    public Arcade_BootScene_Renderer(GameScene gameScene, Canvas canvas, SpriteSheet<?> spriteSheet) {
-        super(gameScene, canvas);
+    public Arcade_BootScene_Renderer(Canvas canvas, SpriteSheet<?> spriteSheet) {
+        super(canvas);
         this.spriteSheet = requireNonNull(spriteSheet);
     }
 

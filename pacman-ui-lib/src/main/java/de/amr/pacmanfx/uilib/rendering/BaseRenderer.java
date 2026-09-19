@@ -59,15 +59,9 @@ public class BaseRenderer implements Renderer {
 
     protected InfoMap info;
 
-    private BaseRenderer debugInfoRenderer;
-
     public BaseRenderer(Canvas canvas) {
         ctx = requireNonNull(canvas).getGraphicsContext2D();
         info = new InfoMap();
-    }
-
-    public void setDebugInfoRenderer(BaseRenderer debugInfoRenderer) {
-        this.debugInfoRenderer = debugInfoRenderer;
     }
 
     // Renderer interface
@@ -123,12 +117,6 @@ public class BaseRenderer implements Renderer {
     public Color backgroundColor() {
         return backgroundColorProperty().get();
     }
-
-    @Override
-    public Optional<BaseRenderer> optDebugInfoRenderer() {
-        return Optional.ofNullable(debugInfoRenderer);
-    }
-
 
     // SpriteRenderer
 

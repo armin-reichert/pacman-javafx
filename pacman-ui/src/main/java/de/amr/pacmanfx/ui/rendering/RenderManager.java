@@ -24,6 +24,7 @@ public class RenderManager {
 
     private Renderer entityRenderer;
     private Renderer sceneRenderer;
+    private Renderer sceneDebugRenderer;
     private Renderer miniViewRenderer;
 
     private final RenderQueue renderQueue = new RenderQueue();
@@ -62,8 +63,10 @@ public class RenderManager {
             sceneRenderer = renderConfig.createGameSceneRenderer(gameScene, animController, sceneCanvas); // may return null!
             if (sceneRenderer != null) {
                 configureRenderer(sceneRenderer, sceneCanvasRendering);
-                sceneRenderer.optDebugInfoRenderer().ifPresent(debugRenderer -> configureRenderer(debugRenderer, sceneCanvasRendering));
             }
+
+            sceneDebugRenderer = renderConfig.createGameSceneDebugRenderer(gameScene, animController, sceneCanvas);
+            configureRenderer(sceneDebugRenderer, sceneCanvasRendering);
 
             //TODO This is just a temporary solution
             miniViewRenderer = new MiniPlaySceneViewRenderer(miniView, animController, renderConfig);
@@ -112,9 +115,9 @@ public class RenderManager {
     private void renderScene(Renderable r, long tick, boolean debugMode) {
         if (sceneRenderer != null) {
             sceneRenderer.render(r, tick);
-            if (debugMode) {
-                sceneRenderer.optDebugInfoRenderer().ifPresent(debugRenderer -> debugRenderer.render(r, tick));
-            }
+        }
+        if (debugMode && sceneDebugRenderer != null) {
+            sceneDebugRenderer.render(r, tick);
         }
     }
 

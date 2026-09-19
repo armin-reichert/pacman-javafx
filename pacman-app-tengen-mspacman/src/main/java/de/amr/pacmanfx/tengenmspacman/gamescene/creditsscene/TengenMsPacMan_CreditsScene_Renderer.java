@@ -8,9 +8,8 @@ import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
-import de.amr.pacmanfx.ui.rendering.BaseGameSceneRenderer;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.text.Font;
 
@@ -18,7 +17,7 @@ import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SceneRendererUtils.drawHorizontalBar;
 
-public class TengenMsPacMan_CreditsScene_Renderer extends BaseGameSceneRenderer {
+public class TengenMsPacMan_CreditsScene_Renderer extends BaseRenderer {
 
     record Line(String text, int paletteIndex, int column, int skipTiles) {}
 
@@ -68,8 +67,8 @@ public class TengenMsPacMan_CreditsScene_Renderer extends BaseGameSceneRenderer 
 
     private final Pen pen = new Pen();
 
-    public TengenMsPacMan_CreditsScene_Renderer(GameScene gameScene, Canvas canvas) {
-        super(gameScene, canvas);
+    public TengenMsPacMan_CreditsScene_Renderer(Canvas canvas) {
+        super(canvas);
     }
 
     @Override

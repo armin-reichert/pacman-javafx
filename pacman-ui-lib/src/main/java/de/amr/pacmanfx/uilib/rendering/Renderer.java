@@ -12,8 +12,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-import java.util.Optional;
-
 public interface Renderer {
 
     void render(Renderable r, long tick);
@@ -42,9 +40,5 @@ public interface Renderer {
 
     default Color backgroundColor() {
         return backgroundColorProperty().get();
-    }
-
-    default Optional<BaseRenderer> optDebugInfoRenderer() {
-        return Optional.empty();
     }
 }

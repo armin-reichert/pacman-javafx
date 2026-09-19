@@ -24,6 +24,8 @@ import java.util.Optional;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static java.util.Objects.requireNonNull;
 
+//TODO Should a game scene really be a renderable itself or only produce renderables?
+
 /**
  * Abstract base class for all game scenes (2D and 3D).
  */
@@ -40,8 +42,6 @@ public abstract class AbstractGameScene
         textDisplay.show();
         return textDisplay;
     }
-
-    //TODO Should a game scene really be a renderable itself or only produce renderables?
 
     protected final GameApp app;
 

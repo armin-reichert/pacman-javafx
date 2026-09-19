@@ -12,9 +12,8 @@ import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_LevelRenderInfoKey;
 import de.amr.pacmanfx.tengenmspacman.sprites.MapImageSet;
-import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.ui.rendering.BaseGameSceneRenderer;
+import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
+import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
 import de.amr.pacmanfx.uilib.rendering.RenderableWrapper;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
@@ -23,30 +22,28 @@ import javafx.scene.shape.Rectangle;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 
-public class TengenMsPacMan_PlayScene2D_Renderer extends BaseGameSceneRenderer {
+public class TengenMsPacMan_PlayScene2D_Renderer extends BaseRenderer {
 
     private final Renderer entityRenderer;
     private final Renderer levelRenderer;
 
-    public TengenMsPacMan_PlayScene2D_Renderer(GameVariantRenderConfig renderConfig, GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
-        super(gameScene, canvas);
+    public TengenMsPacMan_PlayScene2D_Renderer(
+        TengenMsPacMan_PlayScene2D playScene,
+        GameVariantRenderConfig renderConfig,
+        ActorSpriteAnimController animController,
+        Canvas canvas) {
 
-        if (!(gameScene instanceof AbstractGameScene abstractGameScene)) {
-            throw new IllegalStateException("Game scene is not an instance of AbstractGameScene");
-        }
+        super(canvas);
 
-        final var cr7g = abstractGameScene.reqCanvasRendering();
+        final GameSceneCanvasRenderingComp canvasRendering = playScene.reqCanvasRendering();
 
         entityRenderer = renderConfig.createEntityRenderer(animController, canvas);
-        entityRenderer.scalingProperty().bind(cr7g.scalingProperty());
+        entityRenderer.scalingProperty().bind(canvasRendering.scalingProperty());
         entityRenderer.backgroundColorProperty().bind(backgroundColorProperty());
 
         levelRenderer = renderConfig.createGameLevelRenderer(animController, canvas);
-        levelRenderer.scalingProperty().bind(cr7g.scalingProperty());
+        levelRenderer.scalingProperty().bind(canvasRendering.scalingProperty());
         levelRenderer.backgroundColorProperty().bind(backgroundColorProperty());
-
-        // Special debug renderer
-        setDebugInfoRenderer(new TengenMsPacMan_PlaySceneDebugInfoRenderer(animController, canvas));
     }
 
     @Override

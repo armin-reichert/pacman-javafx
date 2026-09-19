@@ -29,6 +29,7 @@ import de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene.TengenMsPacMan_Opti
 import de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene.TengenMsPacMan_OptionsScene_Renderer;
 import de.amr.pacmanfx.tengenmspacman.gamescene.playscene.TengenMsPacMan_PlayScene2D;
 import de.amr.pacmanfx.tengenmspacman.gamescene.playscene.TengenMsPacMan_PlayScene2D_Renderer;
+import de.amr.pacmanfx.tengenmspacman.gamescene.playscene.TengenMsPacMan_PlaySceneDebugInfoRenderer;
 import de.amr.pacmanfx.tengenmspacman.model.BonusSymbol;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
@@ -43,6 +44,7 @@ import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.entities.hud.comp.HUD_Style;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -155,15 +157,23 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     public BaseRenderer createGameSceneRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
         return switch (gameScene) {
             case TengenMsPacMan_BootScene ignored -> null;
-            case TengenMsPacMan_IntroScene ignored -> new TengenMsPacMan_IntroScene_Renderer(this, gameScene, canvas);
-            case TengenMsPacMan_OptionsScene ignored -> new TengenMsPacMan_OptionsScene_Renderer(gameScene, canvas);
-            case TengenMsPacMan_PlayScene2D ignored -> new TengenMsPacMan_PlayScene2D_Renderer(this, gameScene, animController, canvas);
-            case TengenMsPacMan_CreditsScene ignored -> new TengenMsPacMan_CreditsScene_Renderer(gameScene, canvas);
+            case TengenMsPacMan_IntroScene ignored -> new TengenMsPacMan_IntroScene_Renderer(gameScene.app().variantManager().currentRuntime(), canvas);
+            case TengenMsPacMan_OptionsScene ignored -> new TengenMsPacMan_OptionsScene_Renderer(canvas);
+            case TengenMsPacMan_PlayScene2D playScene -> new TengenMsPacMan_PlayScene2D_Renderer(playScene, this, animController, canvas);
+            case TengenMsPacMan_CreditsScene ignored -> new TengenMsPacMan_CreditsScene_Renderer(canvas);
             case TengenMsPacMan_CutScene1 ignored -> null;
             case TengenMsPacMan_CutScene2 ignored -> null;
             case TengenMsPacMan_CutScene3 ignored -> null;
             case TengenMsPacMan_CutScene4 ignored -> null;
             default -> throw new IllegalStateException("Unexpected value: " + gameScene);
+        };
+    }
+
+    @Override
+    public Renderer createGameSceneDebugRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
+        return switch (gameScene) {
+            case TengenMsPacMan_PlayScene2D _ -> new TengenMsPacMan_PlaySceneDebugInfoRenderer(animController, canvas);
+            default -> GameVariantRenderConfig.super.createGameSceneDebugRenderer(gameScene, animController, canvas);
         };
     }
 
