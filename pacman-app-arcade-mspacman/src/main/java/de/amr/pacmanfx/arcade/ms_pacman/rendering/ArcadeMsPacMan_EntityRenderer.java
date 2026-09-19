@@ -105,8 +105,10 @@ public class ArcadeMsPacMan_EntityRenderer extends BaseRenderer {
                     drawHighScore(score);
                 }
             }
+            case Bag bag -> drawSpriteCentered(computeSprite(bag), center);
+            case Stork stork -> drawSpriteCentered(computeSprite(stork), center);
             case CreditDisplay creditDisplay -> drawCreditDisplay(creditDisplay);
-            case TextDisplay textDisplay -> super.render(textDisplay, tick);
+            //case TextDisplay textDisplay -> super.render(textDisplay, tick);
             default -> {
                 if (gameEntity instanceof Renderable r) {
                     super.render(r, tick);
@@ -171,8 +173,16 @@ public class ArcadeMsPacMan_EntityRenderer extends BaseRenderer {
         return index >= 0 ? spriteSheet.findSpriteSequence(SpriteID.GHOST_NUMBERS)[index] : RectShort.NULL_RECTANGLE;
     }
 
+    private RectShort computeSprite(Bag bag) {
+        return bag.reqComp(SpriteAnimationComp.class).spriteAnimations().currentSprite();
+    }
+
     private RectShort computeSprite(Heart heart) {
         return heart.reqComp(SpriteAnimationComp.class).spriteAnimations().currentSprite();
+    }
+
+    private RectShort computeSprite(Stork stork) {
+        return stork.reqComp(SpriteAnimationComp.class).spriteAnimations().currentSprite();
     }
 
     private void drawEnergizer(Energizer energizer) {
