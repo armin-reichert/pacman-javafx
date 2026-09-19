@@ -81,12 +81,14 @@ public class BaseRenderer implements Renderer {
 
     @Override
     public void render(Renderable r, long tick) {
+        ctx.save();
         switch (r) {
             case null -> {}
             case GameEntity gameEntity -> renderGameEntity(gameEntity, tick);
             case ColoredRect coloredRect -> fillColoredRect(coloredRect);
             default -> throw new IllegalStateException("Cannot render: " + r);
         }
+        ctx.restore();
     }
 
     @Override

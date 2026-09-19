@@ -83,27 +83,22 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer {
         ctx.save();
         final Vector2f center = gameEntity.pos().bodyCenter();
         switch (gameEntity) {
+            case Bag bag -> drawSpriteCentered(computeSprite(bag), center);
             case Bonus bonus -> drawSpriteCentered(computeSprite(bonus), center);
             case BonusPoints points -> drawSpriteCentered(computeSprite(points), center);
+            case Clapperboard clapperboard -> draw(clapperboard);
             case Ghost ghost -> drawSpriteCentered(computeSprite(ghost), center);
             case GhostPoints points -> drawSpriteCentered(computeSprite(points), center);
             case Pac pac -> drawFacingSpriteCentered(computeSprite(pac), center);
-            case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
             case Heart heart -> drawSpriteCentered(computeSprite(heart), center);
-            case Bag bag -> drawSpriteCentered(computeSprite(bag), center);
-            case Stork stork -> drawStork(stork);
-            case Marquee marquee -> drawMarquee(marquee, tick);
-            case Door door -> drawDoor(door);
-            case LevelCounter levelCounter -> drawLevelCounter(levelCounter);
-            case LivesCounter livesCounter -> drawLivesCounter(livesCounter);
-            case Score score -> {
-                switch (score.type()) {
-                    case GAME_SCORE -> drawGameScore(score, tick);
-                    case HIGH_SCORE -> drawHighScore(score);
-                }
-            }
-            case GameOptionsDisplay gameOptionsDisplay -> renderGameOptionsDisplay(gameOptionsDisplay);
-            case LevelNumberDisplay levelNumberDisplay -> drawLevelNumberDisplay(levelNumberDisplay);
+            case Stork stork -> draw(stork);
+            case Marquee marquee -> draw(marquee, tick);
+            case Door door -> draw(door);
+            case LevelCounter levelCounter -> draw(levelCounter);
+            case LivesCounter livesCounter -> draw(livesCounter);
+            case Score score -> draw(score, tick);
+            case GameOptionsDisplay gameOptionsDisplay -> draw(gameOptionsDisplay);
+            case LevelNumberDisplay levelNumberDisplay -> draw(levelNumberDisplay);
             default -> super.renderGameEntity(gameEntity, tick);
         }
         ctx.restore();
@@ -185,7 +180,7 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer {
         return index >= 0 ? spriteSheet.findSpriteSequence(SpriteID.BONUS_VALUES)[index] : RectShort.NULL_RECTANGLE;
     }
 
-    private void drawDoor(Door door) {
+    private void draw(Door door) {
         final var data = door.reqComp(DoorDataComp.class);
 
         final double scaledTileSize = scaled(TS);
@@ -199,11 +194,11 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer {
         ctx.restore();
     }
 
-    private void drawMarquee(Marquee marquee, long tick) {
+    private void draw(Marquee marquee, long tick) {
         marqueeRenderer.render(marquee, tick);
     }
 
-    private void drawClapperBoard(Clapperboard clapperboard) {
+    private void draw(Clapperboard clapperboard) {
         TengenMsPacMan_ClapperboardAnimationSystem.sprite(clapperboard).ifPresent(sprite -> {
             final Font arcade8 = Ufx.deriveFont(GlobalFonts.ARCADE.font(), scaled(8));
             double numberX = clapperboard.pos().x() + 8, numberY = clapperboard.pos().y() + 18; // baseline
@@ -228,7 +223,7 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer {
         });
     }
 
-    private void drawStork(Stork stork) {
+    private void draw(Stork stork) {
         drawSpriteCentered(animSystem.currentSprite(stork), stork.pos().bodyCenter());
         if (stork.isBagReleasedFromBeak()) {
             ctx.save();
@@ -257,9 +252,7 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer {
         ctx().restore();
     }
 
-    // --- HUD ---
-
-    private void renderGameOptionsDisplay(GameOptionsDisplay display) {
+    private void draw(GameOptionsDisplay display) {
         final GameOptionsDataComp options = display.options();
 
         final RectShort mapCategorySprite = switch (options.mapCategory()) {
@@ -297,6 +290,13 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer {
         ctx.restore();
     }
 
+    private void draw(Score score, long tick) {
+        switch (score.type()) {
+            case GAME_SCORE -> drawGameScore(score, tick);
+            case HIGH_SCORE -> drawHighScore(score);
+        }
+    }
+
     private void drawGameScore(Score score, long tick) {
         final HUD_Style style = score.reqComp(HUD_Style.class);
         final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
@@ -318,7 +318,7 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer {
         );
     }
 
-    private void drawLivesCounter(LivesCounter livesCounter) {
+    private void draw(LivesCounter livesCounter) {
         final HUD_Style style = livesCounter.reqComp(HUD_Style.class);
         final float x = livesCounter.pos().x();
         final float y = livesCounter.pos().y();
@@ -337,7 +337,7 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer {
         }
     }
 
-    private void drawLevelCounter(LevelCounter levelCounter) {
+    private void draw(LevelCounter levelCounter) {
         float x = levelCounter.pos().x();
         float y = levelCounter.pos().y();
 
@@ -351,7 +351,7 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer {
         }
     }
 
-    private void drawLevelNumberDisplay(LevelNumberDisplay display) {
+    private void draw(LevelNumberDisplay display) {
         final float x = display.pos().x();
         final float y = display.pos().y();
         final int number = display.levelNumber().number();
