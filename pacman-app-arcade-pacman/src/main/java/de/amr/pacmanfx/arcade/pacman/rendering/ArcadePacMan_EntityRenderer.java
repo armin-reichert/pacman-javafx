@@ -67,22 +67,16 @@ public class ArcadePacMan_EntityRenderer extends BaseRenderer {
         ctx.setImageSmoothing(true);
         final Vector2f center = gameEntity.pos().bodyCenter();
         switch (gameEntity) {
-            case Pac pac -> drawSpriteCentered(computeSprite(pac), center);
-            case Ghost ghost -> drawSpriteCentered(computeSprite(ghost), center);
-            case GhostPoints points -> drawSpriteCentered(computeSprite(points), center);
             case Bonus bonus -> drawSpriteCentered(computeSprite(bonus), center);
             case BonusPoints bonusPoints -> drawSpriteCentered(computeSprite(bonusPoints), center);
-            case Energizer energizer -> drawEnergizer(energizer);
-            case LevelCounter levelCounter -> drawLevelCounter(levelCounter);
-            case LivesCounter livesCounter -> drawLivesCounter(livesCounter);
-            case Score score -> {
-                if (score.type() == Score.Type.GAME_SCORE) {
-                    drawGameScore(score);
-                } else {
-                    drawHighScore(score);
-                }
-            }
-            case CreditDisplay creditDisplay -> drawCreditDisplay(creditDisplay);
+            case CreditDisplay creditDisplay -> render(creditDisplay);
+            case Energizer energizer -> render(energizer);
+            case Ghost ghost -> drawSpriteCentered(computeSprite(ghost), center);
+            case GhostPoints points -> drawSpriteCentered(computeSprite(points), center);
+            case LevelCounter levelCounter -> render(levelCounter);
+            case LivesCounter livesCounter -> render(livesCounter);
+            case Pac pac -> drawSpriteCentered(computeSprite(pac), center);
+            case Score score -> render(score);
             default -> super.renderGameEntity(gameEntity, tick);
         }
         ctx.restore();
@@ -132,25 +126,23 @@ public class ArcadePacMan_EntityRenderer extends BaseRenderer {
         };
     }
 
-    private void drawEnergizer(Energizer energizer) {
-        if (!energizer.on()) {
-            final double size = scaled(9);
-            ctx.save();
-            ctx.setFill(backgroundColor());
-            ctx.fillRect(scaled(energizer.pos().x() - 0.5), scaled(energizer.pos().y() - 0.5), size, size);
-            ctx.restore();
-        }
-    }
-
     // --- HUD ---
 
-    private void drawCreditDisplay(CreditDisplay creditDisplay) {
+    private void render(CreditDisplay creditDisplay) {
         final HUD_Style style = creditDisplay.reqComp(HUD_Style.class);
         final int credit = creditDisplay.data().credit();
         final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
         final String text = style.creditTextFormat().formatted(credit);
         final float baseline = creditDisplay.pos().y();
         fillText(text, ARCADE_WHITE, scaledFont, creditDisplay.pos().x(), baseline);
+    }
+
+    private void render(Score score) {
+        if (score.type() == Score.Type.GAME_SCORE) {
+            drawGameScore(score);
+        } else {
+            drawHighScore(score);
+        }
     }
 
     private void drawGameScore(Score score) {
@@ -178,7 +170,19 @@ public class ArcadePacMan_EntityRenderer extends BaseRenderer {
         }
     }
 
-    private void drawLivesCounter(LivesCounter livesCounter) {
+    // Entities
+
+    private void render(Energizer energizer) {
+        if (!energizer.on()) {
+            final double size = scaled(9);
+            ctx.save();
+            ctx.setFill(backgroundColor());
+            ctx.fillRect(scaled(energizer.pos().x() - 0.5), scaled(energizer.pos().y() - 0.5), size, size);
+            ctx.restore();
+        }
+    }
+
+    private void render(LivesCounter livesCounter) {
         final HUD_Style style = livesCounter.reqComp(HUD_Style.class);
         final float x = livesCounter.pos().x();
         final float y = livesCounter.pos().y();
@@ -196,7 +200,7 @@ public class ArcadePacMan_EntityRenderer extends BaseRenderer {
         }
     }
 
-    private void drawLevelCounter(LevelCounter levelCounter) {
+    private void render(LevelCounter levelCounter) {
         final HUD_Style style = levelCounter.reqComp(HUD_Style.class);
         final float y = levelCounter.pos().y();
         float x = levelCounter.pos().x();
