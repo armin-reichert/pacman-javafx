@@ -138,26 +138,11 @@ public class ArcadePacMan_EntityRenderer extends BaseRenderer {
     }
 
     private void render(Score score) {
-        if (score.type() == Score.Type.GAME_SCORE) {
-            drawGameScore(score);
-        } else {
-            drawHighScore(score);
-        }
-    }
-
-    private void drawGameScore(Score score) {
-        final HUD_Style style = score.reqComp(HUD_Style.class);
-        final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
-        drawScoreText(score, style.scoreText(), scaledFont, style.scoreTextColor());
-
-    }
-
-    private void drawHighScore(Score score) {
         final HUD_Style style = score.reqComp(HUD_Style.class);
         final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
         final boolean disabled = !score.data().isEnabled();
         final Color color = disabled ? style.scoreTextColorDisabled() : style.scoreTextColor();
-        drawScoreText(score, style.highScoreText(), scaledFont, color);
+        drawScoreText(score, score.type() == Score.Type.GAME_SCORE ? style.scoreText() : style.highScoreText(), scaledFont, color);
     }
 
     private void drawScoreText(Score score, String title, Font font, Color color) {
