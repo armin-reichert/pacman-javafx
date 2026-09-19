@@ -14,7 +14,7 @@ import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_LevelRenderInfoKe
 import de.amr.pacmanfx.tengenmspacman.sprites.MapImageSet;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.ui.rendering.BaseGameSceneRenderer;
 import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
 import de.amr.pacmanfx.uilib.rendering.RenderableWrapper;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
@@ -23,15 +23,13 @@ import javafx.scene.shape.Rectangle;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 
-public class TengenMsPacMan_PlayScene2D_Renderer extends BaseRenderer {
+public class TengenMsPacMan_PlayScene2D_Renderer extends BaseGameSceneRenderer {
 
     private final Renderer entityRenderer;
     private final Renderer levelRenderer;
 
-    public TengenMsPacMan_PlayScene2D_Renderer(
-        GameVariantRenderConfig renderConfig, GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
-
-        super(canvas);
+    public TengenMsPacMan_PlayScene2D_Renderer(GameVariantRenderConfig renderConfig, GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
+        super(gameScene, canvas);
 
         if (!(gameScene instanceof AbstractGameScene abstractGameScene)) {
             throw new IllegalStateException("Game scene is not an instance of AbstractGameScene");
@@ -47,6 +45,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends BaseRenderer {
         levelRenderer.scalingProperty().bind(cr7g.scalingProperty());
         levelRenderer.backgroundColorProperty().bind(backgroundColorProperty());
 
+        // Special debug renderer
         setDebugInfoRenderer(new TengenMsPacMan_PlaySceneDebugInfoRenderer(animController, canvas));
     }
 

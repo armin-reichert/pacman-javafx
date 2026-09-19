@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.tengenmspacman.gamescene.introscene;
 
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.entities.Ghost;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
@@ -16,8 +16,8 @@ import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.rendering.BaseGameSceneRenderer;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
-import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -29,10 +29,9 @@ import static de.amr.pacmanfx.tengenmspacman.gamescene.introscene.TengenMsPacMan
 import static de.amr.pacmanfx.tengenmspacman.gamescene.introscene.TengenMsPacMan_IntroScene.ANCHOR_Y;
 import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConfig.shadeOfBlue;
 import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SceneRendererUtils.drawJoypadKeyBinding;
-import static de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer.createDefaultSceneDebugRenderer;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer {
+public class TengenMsPacMan_IntroScene_Renderer extends BaseGameSceneRenderer {
 
     public static final String TENGEN_PRESENTS = "TENGEN PRESENTS";
     public static final String PRESS_START = "PRESS START";
@@ -48,13 +47,8 @@ public class TengenMsPacMan_IntroScene_Renderer extends BaseRenderer {
     private final TengenMsPacMan_UISettings uiSettings;
 
     public TengenMsPacMan_IntroScene_Renderer(GameVariantRenderConfig renderConfig, GameScene gameScene, Canvas canvas) {
-        super(canvas);
+        super(gameScene, canvas);
         requireNonNull(renderConfig);
-        requireNonNull(gameScene);
-        requireNonNull(canvas);
-
-        setDebugInfoRenderer(createDefaultSceneDebugRenderer(gameScene, canvas));
-
         uiSettings = gameScene.app().variantManager().currentRuntime()
             .extensionValue(TengenMsPacMan_GameExtension.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
     }

@@ -275,8 +275,6 @@ public class BaseRenderer implements Renderer {
         if (imageDisplay.isVisible()) {
             final Image imageFX = imageDisplay.image().image();
             final double s = scaling();
-            final double width = imageFX.getWidth();
-            final double height =imageFX.getHeight();
             final double x = imageDisplay.pos().x();
             final double y = imageDisplay.pos().y();
             ctx.save();

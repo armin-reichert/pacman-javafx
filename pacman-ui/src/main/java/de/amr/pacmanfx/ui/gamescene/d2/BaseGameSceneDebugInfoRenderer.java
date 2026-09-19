@@ -49,7 +49,7 @@ public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
 
     private static final List<Direction> CLOCK_WISE = List.of(Direction.UP, Direction.RIGHT, Direction.DOWN, Direction.LEFT);
 
-    public static BaseGameSceneDebugInfoRenderer createDefaultSceneDebugRenderer(GameScene gameScene, Canvas canvas) {
+    public static BaseGameSceneDebugInfoRenderer createDefaultGameSceneDebugRenderer(GameScene gameScene, Canvas canvas) {
         if (!(gameScene instanceof AbstractGameScene abstractGameScene)) {
             Logger.error("Current game scene is not an AbstractGameScene");
             return null;

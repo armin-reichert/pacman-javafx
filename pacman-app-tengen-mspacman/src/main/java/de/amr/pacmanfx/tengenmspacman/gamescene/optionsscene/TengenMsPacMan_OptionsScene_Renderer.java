@@ -15,8 +15,8 @@ import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.rendering.BaseGameSceneRenderer;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
-import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -27,9 +27,9 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions
 import static de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene.TengenMsPacMan_OptionsScene.*;
 import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SceneRendererUtils.drawHorizontalBar;
 import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SceneRendererUtils.drawJoypadKeyBinding;
-import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer {
+public class TengenMsPacMan_OptionsScene_Renderer extends BaseGameSceneRenderer {
+
     private static final int COL_ARROW = 2 * TS;
     private static final int COL_LABEL = 4 * TS;
     private static final int COL_COLON = 19 * TS;
@@ -38,9 +38,8 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer {
     private static final Color NES_YELLOW = NES_Palette.color(0x28);
     private static final Color NES_WHITE = NES_Palette.color(0x20);
 
-    public TengenMsPacMan_OptionsScene_Renderer(GameScene scene, Canvas canvas) {
-        super(canvas);
-        requireNonNull(scene);
+    public TengenMsPacMan_OptionsScene_Renderer(GameScene gameScene, Canvas canvas) {
+        super(gameScene, canvas);
     }
 
     @Override

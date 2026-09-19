@@ -7,15 +7,14 @@ import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
+import de.amr.pacmanfx.ui.rendering.BaseGameSceneRenderer;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
-import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.text.Font;
 
 import java.util.Optional;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
-import static de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer.createDefaultSceneDebugRenderer;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
 import static java.util.Objects.requireNonNull;
 
@@ -24,16 +23,13 @@ import static java.util.Objects.requireNonNull;
  * and a grid before the intro scene starts. This scene is used by the Arcade and the XXL variants so we pass the
  * corresponding spritesheet as a parameter.
  */
-public class Arcade_BootScene_Renderer extends BaseRenderer {
+public class Arcade_BootScene_Renderer extends BaseGameSceneRenderer {
 
     private final SpriteSheet<?> spriteSheet;
 
     public Arcade_BootScene_Renderer(GameScene gameScene, Canvas canvas, SpriteSheet<?> spriteSheet) {
-        super(canvas);
-        requireNonNull(gameScene);
+        super(gameScene, canvas);
         this.spriteSheet = requireNonNull(spriteSheet);
-
-        setDebugInfoRenderer(createDefaultSceneDebugRenderer(gameScene, canvas));
     }
 
     @Override
