@@ -15,13 +15,11 @@ import de.amr.pacmanfx.arcade.pacman.gamescene.playscene.ArcadePacMan_GameLevel_
 import de.amr.pacmanfx.arcade.pacman.gamescene.playscene.Arcade_PlayScene2D;
 import de.amr.pacmanfx.arcade.pacman.gamescene.playscene.Arcade_PlayScene2D_Renderer;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
+import de.amr.pacmanfx.core.Energizer;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
-import de.amr.pacmanfx.core.entities.Bonus;
-import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
-import de.amr.pacmanfx.core.entities.Ghost;
-import de.amr.pacmanfx.core.entities.Pac;
+import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.level.MessageType;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
@@ -105,6 +103,11 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig, Dispo
             case Pac pac     -> renderablePac(pac);
             case Ghost ghost -> renderableGhost(ghost);
             case Bonus bonus -> renderableBonus(bonus);
+            case Energizer energizer -> renderableGameEntity(energizer, RenderingLayer.WORLD, 0);
+            case House house -> renderableGameEntity(house, RenderingLayer.WORLD, 0);
+            case MessageView messageView -> renderableGameEntity(messageView, RenderingLayer.WORLD, 0);
+            case GhostPoints ghostPoints -> renderableGameEntity(ghostPoints, RenderingLayer.PROPS, 0);
+            case BonusPoints bonusPoints -> renderableGameEntity(bonusPoints, RenderingLayer.PROPS, 0);
             default -> renderableGameEntity(gameEntity, RenderingLayer.PROPS, 0);
         };
     }
