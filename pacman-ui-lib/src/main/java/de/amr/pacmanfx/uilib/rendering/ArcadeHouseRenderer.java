@@ -5,9 +5,10 @@
 package de.amr.pacmanfx.uilib.rendering;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.core.rendering.Renderable;
+import de.amr.pacmanfx.core.rendering.RenderableGameEntity;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -65,15 +66,19 @@ public class ArcadeHouseRenderer extends BaseRenderer {
 
     @Override
     public void render(Renderable r, long tick) {
-        if (!(r instanceof House house)) {
-            return;
+        switch (r) {
+            case RenderableGameEntity rge -> {
+                if (rge.gameEntity() instanceof House house) {
+                    drawHouse(
+                        house.floorplan().minTile(),
+                        house.sizeInTiles(),
+                        borderWallFullWidth(),
+                        borderWallInnerWidth()
+                    );
+                }
+            }
+            default -> {}
         }
-        drawHouse(
-            house.floorplan().minTile(),
-            house.sizeInTiles(),
-            borderWallFullWidth(),
-            borderWallInnerWidth()
-        );
     }
 
     public void drawHouse(

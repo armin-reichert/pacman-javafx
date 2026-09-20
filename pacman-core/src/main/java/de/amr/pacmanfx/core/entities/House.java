@@ -6,9 +6,7 @@ package de.amr.pacmanfx.core.entities;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.entities.door.comp.DoorDataComp;
 import de.amr.pacmanfx.core.entities.house.comp.HouseFloorplanComp;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -17,7 +15,7 @@ import static de.amr.basics.math.Vector2f.vec2_float;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.HTS;
 import static java.util.Objects.requireNonNull;
 
-public class House extends GameEntity implements Renderable {
+public class House extends GameEntity {
 
     private final Door door;
 
@@ -31,11 +29,6 @@ public class House extends GameEntity implements Renderable {
         door.reqComp(DoorDataComp.class).setRightTile(floorplan.rightDoorTile());
         door.pos().set(doorPos);
         door.show();
-    }
-
-    @Override
-    public RenderingLayer layer() {
-        return RenderingLayer.WORLD;
     }
 
     public HouseFloorplanComp floorplan() {

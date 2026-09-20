@@ -4,12 +4,14 @@
 
 package de.amr.pacmanfx.ui.gamescene.d2;
 
+import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
+import de.amr.pacmanfx.core.rendering.RenderableGameEntity;
 import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -66,7 +68,8 @@ public class GenericLevelRenderer extends BaseRenderer {
 
             final House house = level.entities().house();
             if (house != null) {
-                houseRenderer.render(house, tick);
+                final var hr = RenderableGameEntity.renderableGameEntity(house, RenderingLayer.WORLD, 0);
+                houseRenderer.render(hr, tick);
             }
 
             // Color scheme is set by the map selector
