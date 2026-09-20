@@ -38,7 +38,6 @@ public class RenderManager {
         GameScene gameScene,
         MiniPlaySceneView miniView)
     {
-
         requireNonNull(playConfig);
         requireNonNull(renderConfig);
         requireNonNull(gameScene);
@@ -53,28 +52,27 @@ public class RenderManager {
         if (sceneCanvasRendering == null) {
             return; // This scene cannot be rendered inside a canvas, most probably the 3D play scene
         }
-        final Canvas sceneCanvas = sceneCanvasRendering.canvas();
 
+        final Canvas sceneCanvas = sceneCanvasRendering.canvas();
         if (sceneCanvas != null) {
             final ActorSpriteAnimController animController = playConfig.systems().actorSpriteAnimController();
 
-            entityRenderer = renderConfig.createEntityRenderer(animController, sceneCanvas);
-            configureRenderer(entityRenderer, sceneCanvasRendering);
+            entityRenderer     = renderConfig.createGameEntityRenderer(animController, sceneCanvas);
+            sceneRenderer      = renderConfig.createGameSceneRenderer(gameScene, animController, sceneCanvas); // may return null!
+            sceneDebugRenderer = renderConfig.createGameSceneDebugRenderer(gameScene, animController, sceneCanvas);
 
-            sceneRenderer = renderConfig.createGameSceneRenderer(gameScene, animController, sceneCanvas); // may return null!
             if (sceneRenderer != null) {
                 configureRenderer(sceneRenderer, sceneCanvasRendering);
             }
-
-            sceneDebugRenderer = renderConfig.createGameSceneDebugRenderer(gameScene, animController, sceneCanvas);
+            configureRenderer(entityRenderer, sceneCanvasRendering);
             configureRenderer(sceneDebugRenderer, sceneCanvasRendering);
 
             //TODO This is just a temporary solution
-            miniViewRenderer = new MiniPlaySceneViewRenderer(miniView, animController, renderConfig);
             // Mini view renderer has its own scaling and background
+            miniViewRenderer = new MiniPlaySceneViewRenderer(miniView, animController, renderConfig);
         }
         else {
-            Logger.error("Cannot create renderers: no canvas has been defined!");
+            Logger.error("Cannot create renderers: no canvas has been assigned to game scene!");
         }
     }
 
@@ -94,7 +92,6 @@ public class RenderManager {
         });
 
         if (debugMode) {
-            //TODO produce renderables at DEBUG layer instead of calling the debug renderer separately
             renderQueue.renderables()
                 .filter(r -> r.layer() == RenderingLayer.SCENE)
                 .forEach(r -> sceneDebugRenderer.render(r, tick));
@@ -134,8 +131,8 @@ public class RenderManager {
         }
     }
 
-    private void configureRenderer(Renderer renderer, GameSceneCanvasRenderingComp rendering) {
-        renderer.backgroundColorProperty().bind(rendering.backgroundColorProperty());
-        renderer.scalingProperty().bind(rendering.scalingProperty());
+    private static void configureRenderer(Renderer renderer, GameSceneCanvasRenderingComp canvasRendering) {
+        renderer.backgroundColorProperty().bind(canvasRendering.backgroundColorProperty());
+        renderer.scalingProperty().bind(canvasRendering.scalingProperty());
     }
 }

@@ -119,7 +119,7 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig, Dispo
     }
 
     @Override
-    public BaseRenderer createEntityRenderer(ActorSpriteAnimController animController, Canvas canvas) {
+    public BaseRenderer createGameEntityRenderer(ActorSpriteAnimController animController, Canvas canvas) {
         requireNonNull(animController);
         requireNonNull(canvas);
         return new ArcadePacMan_EntityRenderer(animController, canvas);

@@ -131,7 +131,7 @@ class XXL_ChaseAnimation {
         navigator = variant.playConfig().systems().navigator();
         motor     = variant.playConfig().systems().motor();
 
-        actorRenderer = renderConfig.createEntityRenderer(animController, canvas);
+        actorRenderer = renderConfig.createGameEntityRenderer(animController, canvas);
         actorRenderer.scalingProperty().bind(scalingProperty());
 
         createPac(renderConfig);

@@ -29,7 +29,7 @@ public class MiniPlaySceneViewRenderer extends BaseRenderer {
         backgroundColorProperty().bind(miniView.viewModel().common2DSettings().canvasBackgroundColorProperty());
         scalingProperty().bind(miniView.scalingProperty());
 
-        entityRenderer = renderConfig.createEntityRenderer(animController, miniView.canvas());
+        entityRenderer = renderConfig.createGameEntityRenderer(animController, miniView.canvas());
         entityRenderer.backgroundColorProperty().bind(backgroundColorProperty());
         entityRenderer.scalingProperty().bind(scalingProperty());
 

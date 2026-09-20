@@ -39,7 +39,7 @@ public interface GameVariantRenderConfig {
         return BaseGameSceneDebugInfoRenderer.createDefaultGameSceneDebugRenderer(gameScene, canvas);
     }
 
-    Renderer createEntityRenderer(ActorSpriteAnimController animController, Canvas canvas);
+    Renderer createGameEntityRenderer(ActorSpriteAnimController animController, Canvas canvas);
 
     Ghost createAnimatedGhost(ActorSpriteAnimController animController, SpriteAnimationContainer container, GhostPersonality personality);
 
