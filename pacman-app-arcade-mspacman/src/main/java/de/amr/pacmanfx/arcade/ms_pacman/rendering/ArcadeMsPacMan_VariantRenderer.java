@@ -84,7 +84,6 @@ public class ArcadeMsPacMan_VariantRenderer extends BaseRenderer {
             case GhostPoints points        -> drawSpriteCentered(computeSprite(points), center);
             case Bonus bonus               -> drawSpriteCentered(computeSprite(bonus),  center);
             case BonusPoints points        -> drawSpriteCentered(computeSprite(points), center);
-            case Energizer energizer       -> drawEnergizer(energizer);
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
             case Heart heart               -> drawSpriteCentered(computeSprite(heart), center);
             case Marquee marquee           -> drawMarquee(marquee, tick);
@@ -169,16 +168,6 @@ public class ArcadeMsPacMan_VariantRenderer extends BaseRenderer {
 
     private RectShort computeSprite(Stork stork) {
         return stork.reqComp(SpriteAnimationComp.class).spriteAnimations().currentSprite();
-    }
-
-    private void drawEnergizer(Energizer energizer) {
-        if (!energizer.on()) {
-            final double size = scaled(9);
-            ctx.save();
-            ctx.setFill(backgroundColor());
-            ctx.fillRect(scaled(energizer.pos().x() - 0.5), scaled(energizer.pos().y() - 0.5), size, size);
-            ctx.restore();
-        }
     }
 
     private void drawClapperBoard(Clapperboard clapperboard) {
