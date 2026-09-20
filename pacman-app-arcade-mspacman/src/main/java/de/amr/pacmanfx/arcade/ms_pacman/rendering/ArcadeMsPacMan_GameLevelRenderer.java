@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
+import de.amr.basics.InfoMap;
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.Door;
@@ -19,6 +20,7 @@ import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
+import de.amr.pacmanfx.uilib.rendering.RenderableGameLevel;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
@@ -51,7 +53,8 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer {
 
     @Override
     public void render(Renderable r, long tick) {
-        if (r instanceof GameLevel level) {
+        if (r instanceof RenderableGameLevel(GameLevel level, InfoMap renderInfo)) {
+            info.putAll(renderInfo);
             renderGameLevel(level);
         }
     }
