@@ -4,8 +4,8 @@
 package de.amr.pacmanfx.core.model.test;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.entities.Ghost;
-import de.amr.pacmanfx.core.entities.Pac;
+import de.amr.pacmanfx.core.entities.ghost.Ghost;
+import de.amr.pacmanfx.core.entities.pac.Pac;
 import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;

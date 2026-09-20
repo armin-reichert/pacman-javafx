@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.ui.gamescene.d3;
 
-import de.amr.pacmanfx.core.entities.Ghost;
-import de.amr.pacmanfx.core.entities.Pac;
+import de.amr.pacmanfx.core.entities.ghost.Ghost;
+import de.amr.pacmanfx.core.entities.pac.Pac;
 import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Pellet3DSettings;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;

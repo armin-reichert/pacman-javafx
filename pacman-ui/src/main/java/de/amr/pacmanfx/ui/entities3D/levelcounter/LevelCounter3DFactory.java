@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.ui.entities3D.levelcounter;
 
-import de.amr.pacmanfx.core.entities.LevelCounter;
-import de.amr.pacmanfx.core.entities.levelCounter.comp.LevelCounterData;
+import de.amr.pacmanfx.core.hud.levelCounter.LevelCounter;
+import de.amr.pacmanfx.core.hud.levelCounter.LevelCounterData;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.uilib.entities3D.levelcounter.comp.LevelCounter3DSettings;
 import javafx.scene.Group;

@@ -8,8 +8,8 @@ import de.amr.basics.Named;
 import de.amr.basics.math.RandomNumbers;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
-import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
-import de.amr.pacmanfx.core.entities.Ghost;
+import de.amr.pacmanfx.core.spriteanim.CommonSpriteAnimationID;
+import de.amr.pacmanfx.core.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.rules.*;
 

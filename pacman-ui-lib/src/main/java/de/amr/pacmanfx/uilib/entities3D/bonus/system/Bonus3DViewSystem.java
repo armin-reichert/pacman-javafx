@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.uilib.entities3D.bonus.system;
 
-import de.amr.pacmanfx.core.entities.Bonus;
+import de.amr.pacmanfx.core.entities.bonus.Bonus;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3D.bonus.anim.Bonus3DAnimationID;

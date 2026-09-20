@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.core.gamestate;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.entities.Bonus;
-import de.amr.pacmanfx.core.entities.Ghost;
+import de.amr.pacmanfx.core.entities.bonus.Bonus;
+import de.amr.pacmanfx.core.entities.ghost.Ghost;
 
 import java.util.ArrayList;
 import java.util.HashSet;

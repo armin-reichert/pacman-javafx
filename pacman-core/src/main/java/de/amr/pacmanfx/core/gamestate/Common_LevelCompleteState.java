@@ -7,9 +7,9 @@ package de.amr.pacmanfx.core.gamestate;
 import de.amr.basics.Named;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.entities.Pac;
-import de.amr.pacmanfx.core.entities.bonus.comp.BonusMoveAndJumpComp;
-import de.amr.pacmanfx.core.entities.pac.comp.PacState;
+import de.amr.pacmanfx.core.entities.pac.Pac;
+import de.amr.pacmanfx.core.entities.bonus.BonusMoveAndJumpComp;
+import de.amr.pacmanfx.core.entities.pac.PacState;
 import de.amr.pacmanfx.core.level.GameLevel;
 
 public class Common_LevelCompleteState extends AbstractGameState {

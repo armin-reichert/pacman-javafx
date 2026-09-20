@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.uilib.entities3D.messageview.system;
 
-import de.amr.pacmanfx.core.entities.MessageView;
+import de.amr.pacmanfx.core.props.messageview.MessageView;
 import de.amr.pacmanfx.uilib.entities3D.messageview.comp.MessageView3DAnimationComp;
 import de.amr.pacmanfx.uilib.entities3D.messageview.comp.MessageView3DComp;
 

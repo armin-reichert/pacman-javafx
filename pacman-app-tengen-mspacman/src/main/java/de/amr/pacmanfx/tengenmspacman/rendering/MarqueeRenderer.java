@@ -4,11 +4,11 @@
 
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
-import de.amr.pacmanfx.core.entities.Marquee;
-import de.amr.pacmanfx.core.entities.marquee.comp.MarqueeArea;
-import de.amr.pacmanfx.core.entities.marquee.comp.MarqueeCorners;
-import de.amr.pacmanfx.core.entities.marquee.comp.MarqueeLayoutComp;
-import de.amr.pacmanfx.core.entities.marquee.comp.MarqueeVisualComp;
+import de.amr.pacmanfx.core.props.marquee.Marquee;
+import de.amr.pacmanfx.core.props.marquee.MarqueeArea;
+import de.amr.pacmanfx.core.props.marquee.MarqueeCorners;
+import de.amr.pacmanfx.core.props.marquee.MarqueeLayoutComp;
+import de.amr.pacmanfx.core.props.marquee.MarqueeVisualComp;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;

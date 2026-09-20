@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.entities.stork;
 
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
-import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
+import de.amr.pacmanfx.core.spriteanim.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.spriteanim.LazySAM;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimationBuilder;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;

@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.gamescene.d3;
 
-import de.amr.pacmanfx.core.entities.House;
+import de.amr.pacmanfx.core.entities.house.House;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.settings.world.House3DSettings;
 import de.amr.pacmanfx.uilib.entities3D.house.comp.House3DViewComp;

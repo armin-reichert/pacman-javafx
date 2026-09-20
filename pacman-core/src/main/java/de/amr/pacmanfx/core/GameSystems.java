@@ -5,16 +5,15 @@
 package de.amr.pacmanfx.core;
 
 import de.amr.pacmanfx.core.ecs.systems.*;
-import de.amr.pacmanfx.core.entities.Bonus;
-import de.amr.pacmanfx.core.entities.Pac;
-import de.amr.pacmanfx.core.entities.bonus.system.BonusMoveAndJumpSystem;
-import de.amr.pacmanfx.core.entities.bonus.system.BonusStateSystem;
-import de.amr.pacmanfx.core.entities.bonus.system.BonusUpdateSystem;
-import de.amr.pacmanfx.core.entities.bonus.system.BonusWorldMovementPolicy;
-import de.amr.pacmanfx.core.entities.ghost.system.*;
-import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
-import de.amr.pacmanfx.core.entities.pac.system.*;
-import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
+import de.amr.pacmanfx.core.entities.bonus.Bonus;
+import de.amr.pacmanfx.core.entities.ghost.*;
+import de.amr.pacmanfx.core.entities.pac.*;
+import de.amr.pacmanfx.core.entities.bonus.BonusMoveAndJumpSystem;
+import de.amr.pacmanfx.core.entities.bonus.BonusStateSystem;
+import de.amr.pacmanfx.core.entities.bonus.BonusUpdateSystem;
+import de.amr.pacmanfx.core.entities.bonus.BonusWorldMovementPolicy;
+import de.amr.pacmanfx.core.hud.levelCounter.LevelCounterSystem;
+import de.amr.pacmanfx.core.hud.score.ScoreSystem;
 import de.amr.pacmanfx.core.gameplay.hunt.*;
 import de.amr.pacmanfx.core.gamestate.EntityUpdateSystem;
 import de.amr.pacmanfx.core.gamestate.HUD_UpdateSystem;

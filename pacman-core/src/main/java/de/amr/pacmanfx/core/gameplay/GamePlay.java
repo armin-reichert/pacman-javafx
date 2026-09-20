@@ -6,7 +6,7 @@ package de.amr.pacmanfx.core.gameplay;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.HUD;
-import de.amr.pacmanfx.core.entities.Ghost;
+import de.amr.pacmanfx.core.entities.ghost.Ghost;
 import de.amr.pacmanfx.core.level.GameLevel;
 
 public interface GamePlay {

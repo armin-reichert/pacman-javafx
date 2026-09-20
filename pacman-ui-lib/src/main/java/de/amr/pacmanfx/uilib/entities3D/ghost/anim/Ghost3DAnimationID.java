@@ -6,7 +6,7 @@ package de.amr.pacmanfx.uilib.entities3D.ghost.anim;
 
 
 import de.amr.basics.Named;
-import de.amr.pacmanfx.core.entities.Ghost;
+import de.amr.pacmanfx.core.entities.ghost.Ghost;
 
 import static java.util.Objects.requireNonNull;
 

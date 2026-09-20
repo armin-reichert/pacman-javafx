@@ -1,9 +1,9 @@
 package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.pacmanfx.core.GameSystems;
-import de.amr.pacmanfx.core.entities.levelCounter.system.LevelCounterSystem;
-import de.amr.pacmanfx.core.entities.pac.system.*;
-import de.amr.pacmanfx.core.entities.score.system.ScoreSystem;
+import de.amr.pacmanfx.core.hud.levelCounter.LevelCounterSystem;
+import de.amr.pacmanfx.core.entities.pac.*;
+import de.amr.pacmanfx.core.hud.score.ScoreSystem;
 import de.amr.pacmanfx.tengenmspacman.entities.pac.system.TengenMsPacMan_PacAnimationSystem;
 
 public class TengenMsPacMan_GameSystems extends GameSystems {

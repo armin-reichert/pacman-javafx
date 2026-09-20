@@ -1,0 +1,36 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
+package de.amr.pacmanfx.core.props.clapperboard;
+
+import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
+import de.amr.pacmanfx.core.rendering.Renderable;
+
+/**
+ * Animated movie clapperboard.
+ */
+public class Clapperboard extends GameEntity implements Renderable {
+
+    public Clapperboard(String number, String text) {
+        setComp(ClapperboardStateComp.class, new ClapperboardStateComp());
+        setComp(ClapperboardInscriptionComp.class, new ClapperboardInscriptionComp());
+
+        inscription().setNumber(number);
+        inscription().setText(text);
+    }
+
+    @Override
+    public RenderingLayer layer() {
+        return RenderingLayer.PROPS;
+    }
+
+    public ClapperboardInscriptionComp inscription() {
+        return reqComp(ClapperboardInscriptionComp.class);
+    }
+
+    public ClapperboardStateComp state() {
+        return reqComp(ClapperboardStateComp.class);
+    }
+}

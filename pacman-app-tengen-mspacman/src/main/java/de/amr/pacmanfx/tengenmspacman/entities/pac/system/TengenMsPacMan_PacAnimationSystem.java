@@ -5,11 +5,11 @@
 package de.amr.pacmanfx.tengenmspacman.entities.pac.system;
 
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
-import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
-import de.amr.pacmanfx.core.entities.Pac;
-import de.amr.pacmanfx.core.entities.pac.comp.PacAnimationComp;
-import de.amr.pacmanfx.core.entities.pac.comp.PacStateComp;
-import de.amr.pacmanfx.core.entities.pac.system.PacAnimationSystem;
+import de.amr.pacmanfx.core.spriteanim.CommonSpriteAnimationID;
+import de.amr.pacmanfx.core.entities.pac.Pac;
+import de.amr.pacmanfx.core.entities.pac.PacAnimationComp;
+import de.amr.pacmanfx.core.entities.pac.PacStateComp;
+import de.amr.pacmanfx.core.entities.pac.PacAnimationSystem;
 import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.tengenmspacman.entities.pac.comp.PacBoosterComp;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;

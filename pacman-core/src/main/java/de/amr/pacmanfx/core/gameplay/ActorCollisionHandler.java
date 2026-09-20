@@ -6,10 +6,10 @@ package de.amr.pacmanfx.core.gameplay;
 
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.entities.Bonus;
-import de.amr.pacmanfx.core.entities.Ghost;
-import de.amr.pacmanfx.core.entities.Pac;
-import de.amr.pacmanfx.core.entities.bonus.comp.BonusState;
+import de.amr.pacmanfx.core.entities.bonus.Bonus;
+import de.amr.pacmanfx.core.entities.ghost.Ghost;
+import de.amr.pacmanfx.core.entities.pac.Pac;
+import de.amr.pacmanfx.core.entities.bonus.BonusState;
 import de.amr.pacmanfx.core.gamestate.FrameState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.rules.CollisionStrategy;

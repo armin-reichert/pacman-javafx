@@ -7,8 +7,8 @@ package de.amr.pacmanfx.arcade.ms_pacman.entities.clapperboard;
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
-import de.amr.pacmanfx.core.entities.Clapperboard;
-import de.amr.pacmanfx.core.entities.clapperboard.comp.ClapperboardStateComp;
+import de.amr.pacmanfx.core.props.clapperboard.Clapperboard;
+import de.amr.pacmanfx.core.props.clapperboard.ClapperboardStateComp;
 
 import java.util.Optional;
 

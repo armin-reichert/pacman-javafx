@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.uilib.entities3D.pac.anim;
 
-import de.amr.pacmanfx.core.entities.Pac;
+import de.amr.pacmanfx.core.entities.pac.Pac;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DViewComp;
 import javafx.animation.*;

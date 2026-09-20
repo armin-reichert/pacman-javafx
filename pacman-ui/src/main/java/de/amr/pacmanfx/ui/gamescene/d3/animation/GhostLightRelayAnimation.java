@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.ui.gamescene.d3.animation;
 
-import de.amr.pacmanfx.core.entities.Ghost;
-import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
+import de.amr.pacmanfx.core.entities.ghost.Ghost;
+import de.amr.pacmanfx.core.entities.ghost.GhostState;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DViewComp;

@@ -8,7 +8,7 @@ import de.amr.basics.Named;
 import de.amr.basics.math.RandomNumbers;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.Validations;
-import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
+import de.amr.pacmanfx.core.spriteanim.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.rules.*;
 import de.amr.pacmanfx.tengenmspacman.model.BonusSymbol;

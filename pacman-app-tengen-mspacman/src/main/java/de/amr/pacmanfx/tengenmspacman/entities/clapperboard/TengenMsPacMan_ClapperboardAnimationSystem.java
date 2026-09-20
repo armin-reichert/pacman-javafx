@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.tengenmspacman.entities.clapperboard;
 
 import de.amr.basics.math.RectShort;
-import de.amr.pacmanfx.core.entities.Clapperboard;
-import de.amr.pacmanfx.core.entities.clapperboard.comp.ClapperboardStateComp;
+import de.amr.pacmanfx.core.props.clapperboard.Clapperboard;
+import de.amr.pacmanfx.core.props.clapperboard.ClapperboardStateComp;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 

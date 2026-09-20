@@ -6,9 +6,9 @@ package de.amr.pacmanfx.arcade.pacman.rules;
 
 import de.amr.pacmanfx.arcade.pacman.model.LevelData;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.entities.Ghost;
-import de.amr.pacmanfx.core.entities.House;
-import de.amr.pacmanfx.core.entities.ghost.comp.ElroyComp;
+import de.amr.pacmanfx.core.entities.ghost.Ghost;
+import de.amr.pacmanfx.core.entities.house.House;
+import de.amr.pacmanfx.core.entities.ghost.ElroyComp;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.rules.ActorSpeedRules;

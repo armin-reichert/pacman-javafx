@@ -7,9 +7,15 @@ package de.amr.pacmanfx.core.level;
 import de.amr.pacmanfx.core.Energizer;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.GameEntityComp;
-import de.amr.pacmanfx.core.entities.*;
-import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
+import de.amr.pacmanfx.core.entities.bonus.Bonus;
+import de.amr.pacmanfx.core.entities.ghost.Ghost;
+import de.amr.pacmanfx.core.entities.ghost.GhostState;
+import de.amr.pacmanfx.core.entities.house.House;
+import de.amr.pacmanfx.core.entities.pac.Pac;
 import de.amr.pacmanfx.core.model.GhostPersonality;
+import de.amr.pacmanfx.core.props.bonuspoints.BonusPoints;
+import de.amr.pacmanfx.core.props.ghostpoints.GhostPoints;
+import de.amr.pacmanfx.core.props.messageview.MessageView;
 
 import java.util.*;
 import java.util.function.Function;
