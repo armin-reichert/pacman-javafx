@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.basics.Named;
-import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.tengenmspacman.config.TengenJsonConfigLoader;
@@ -62,22 +61,16 @@ public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
     private static final WorldSettings WORLD_SETTINGS = TengenJsonConfigLoader.load(
         TengenMsPacMan_UIConfig.class.getResource("/de/amr/pacmanfx/tengenmspacman/world.json"), WorldSettings.class);
 
-    /** Path inside resources folder where map files (.world) are stored. */
-    public static final String MAPS_FOLDER = "/de/amr/pacmanfx/tengenmspacman/maps/";
-
     // Relative paths under local resource folder
-    public static final String REL_PATH_SPRITE_SHEET_IMAGE = "graphics/spritesheet.png";
-    public static final String REL_PATH_ARCADE_MAPS_IMAGE = "graphics/arcade_mazes.png";
+    public static final String REL_PATH_SPRITE_SHEET_IMAGE    = "graphics/spritesheet.png";
+    public static final String REL_PATH_ARCADE_MAPS_IMAGE     = "graphics/arcade_mazes.png";
     public static final String REL_PATH_NON_ARCADE_MAPS_IMAGE = "graphics/non_arcade_mazes.png";
 
-    /** Size of NES screen in tiles (32x30). */
-    public static final Vector2i NES_SCREEN_TILES = new Vector2i(32, 30);
-
-    public static final int NES_SCREEN_WIDTH  = 256;
-    public static final int NES_SCREEN_HEIGHT = 240;
+    public static final int NES_SCREEN_WIDTH  = 256; // 32 tiles
+    public static final int NES_SCREEN_HEIGHT = 240; // 30 tiles
 
     /** Aspect ratio of NES screen (32/30 = 1.066...) */
-    public static final float NES_SCREEN_ASPECT_RATIO = 1.0666666666f;
+    public static final float NES_SCREEN_ASPECT_RATIO = (float) NES_SCREEN_WIDTH / (float) NES_SCREEN_HEIGHT;
 
     // Non-static members
 

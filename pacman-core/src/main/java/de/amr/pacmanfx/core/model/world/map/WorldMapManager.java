@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.core.model.world.map;
 
 import org.tinylog.Logger;
@@ -37,16 +38,16 @@ public interface WorldMapManager {
     void loadMapPrototypes();
 
     /**
-     * @param mapPattern path (pattern) to access the map files inside resources folder,
-     *                   counting from 1, e.g. <code>"maps/masonic_%d.world"</code>
+     * @param loaderClass Class relative to which maps are loaded
+     * @param pathPattern path (pattern) to access the map files inside resources folder, e.g. <code>"maps/masonic_%d.world"</code>
      * @param mapCount number of maps to be loaded
      * @throws IllegalArgumentException if a map cannot be accessed via a URL created from the pattern
      * @throws IOException if map loading fails
      */
-    static List<WorldMap> loadMaps(Class<?> loaderClass, String mapPattern, int mapCount) throws IOException, WorldMapParseException {
+    static List<WorldMap> loadMaps(Class<?> loaderClass, String pathPattern, int mapCount) throws IOException, WorldMapParseException {
         final var maps = new ArrayList<WorldMap>();
         for (int n = 1; n <= mapCount; ++n) {
-            final String name = mapPattern.formatted(n);
+            final String name = pathPattern.formatted(n);
             final URL url = loaderClass.getResource(name);
             if (url == null) {
                 Logger.error("Map not found for resource name='{}'", name);

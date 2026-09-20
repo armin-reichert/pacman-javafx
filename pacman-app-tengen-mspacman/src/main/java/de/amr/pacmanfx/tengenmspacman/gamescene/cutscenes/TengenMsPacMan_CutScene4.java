@@ -52,7 +52,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
     );
 
     private static final int LEFT_BORDER = TS;
-    private static final int RIGHT_BORDER = TS * (NES_SCREEN_TILES.x() - 2);
+    private static final int RIGHT_BORDER = NES_SCREEN_WIDTH - 2 * TS;
 
     private static final int LOWER_LANE = TS * 21; // TODO not sure
 

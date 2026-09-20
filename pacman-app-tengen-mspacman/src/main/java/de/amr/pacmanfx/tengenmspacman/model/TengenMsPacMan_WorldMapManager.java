@@ -9,7 +9,6 @@ import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
 import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 import de.amr.pacmanfx.core.model.world.map.WorldMapParseException;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_LevelRenderInfoKey;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.sprites.NES_WorldMapColorScheme;
 import de.amr.pacmanfx.tengenmspacman.sprites.NonArcadeMapsSpriteSheet;
 import org.tinylog.Logger;
@@ -30,23 +29,29 @@ import static de.amr.pacmanfx.tengenmspacman.sprites.NES_WorldMapColorScheme.*;
  */
 public class TengenMsPacMan_WorldMapManager implements WorldMapManager {
 
-    private record PrototypeConfig(String path, int numMaps) {}
+    private static final String PATH = "/de/amr/pacmanfx/tengenmspacman/maps/";
 
-    private static final Map<MapCategory, PrototypeConfig> PROTOTYPE_CONFIG_MAP = Map.of(
-        ARCADE,  new PrototypeConfig(TengenMsPacMan_UIConfig.MAPS_FOLDER + "arcade%d.world", 4),
-        MINI,    new PrototypeConfig(TengenMsPacMan_UIConfig.MAPS_FOLDER + "mini%d.world", 6),
-        BIG,     new PrototypeConfig(TengenMsPacMan_UIConfig.MAPS_FOLDER + "big%02d.world", 11),
-        STRANGE, new PrototypeConfig(TengenMsPacMan_UIConfig.MAPS_FOLDER + "strange%02d.world", 15)
-    );
+    private record MapPrototypeConfig(String pathPattern, int numMaps) {}
 
-    private final Map<MapCategory, List<WorldMap>> mapPrototypes = new EnumMap<>(MapCategory.class);
+    private final Map<MapCategory, MapPrototypeConfig> mapPrototypeConfigMap;
+
+    private final Map<MapCategory, List<WorldMap>> worldMapsByCategory = new EnumMap<>(MapCategory.class);
+
+    public TengenMsPacMan_WorldMapManager() {
+        mapPrototypeConfigMap = Map.of(
+            ARCADE,  new MapPrototypeConfig(PATH + "arcade%d.world", 4),
+            MINI,    new MapPrototypeConfig(PATH + "mini%d.world", 6),
+            BIG,     new MapPrototypeConfig(PATH + "big%02d.world", 11),
+            STRANGE, new MapPrototypeConfig(PATH + "strange%02d.world", 15)
+        );
+    }
 
     @Override
     public void loadMapPrototypes() {
-        if (mapPrototypes.isEmpty()) {
+        if (worldMapsByCategory.isEmpty()) {
             for (MapCategory category : MapCategory.values()) {
-                final PrototypeConfig cfg = PROTOTYPE_CONFIG_MAP.get(category);
-                mapPrototypes.put(category, loadMaps(cfg.path(), cfg.numMaps()));
+                final MapPrototypeConfig cfg = mapPrototypeConfigMap.get(category);
+                worldMapsByCategory.put(category, loadMaps(cfg.pathPattern(), cfg.numMaps()));
             }
         }
     }
@@ -79,9 +84,9 @@ public class TengenMsPacMan_WorldMapManager implements WorldMapManager {
 
     // Helpers
 
-    private List<WorldMap> loadMaps(String path, int n) {
+    private List<WorldMap> loadMaps(String pathPattern, int n) {
         try {
-            return WorldMapManager.loadMaps(getClass(), path, n);
+            return WorldMapManager.loadMaps(getClass(), pathPattern, n);
         } catch (IOException x) {
             Logger.error(x, "Could not open world map");
             throw new RuntimeException(x);
@@ -93,7 +98,7 @@ public class TengenMsPacMan_WorldMapManager implements WorldMapManager {
     }
 
     private WorldMap configuredMap(MapCategory mapCategory, int number, NES_WorldMapColorScheme nesColorScheme) {
-        final var worldMap = new WorldMap(mapPrototypes.get(mapCategory).get(number - 1));
+        final var worldMap = new WorldMap(worldMapsByCategory.get(mapCategory).get(number - 1));
         worldMap.setConfigValue(WorldMapConfigKey.MAP_NUMBER, number);
         worldMap.setConfigValue(TengenMsPacMan_LevelRenderInfoKey.MAP_CATEGORY, mapCategory);
         worldMap.setConfigValue(WorldMapConfigKey.COLOR_SCHEME, nesColorScheme);
