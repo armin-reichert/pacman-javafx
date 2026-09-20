@@ -16,7 +16,9 @@ public final class Common_IntroState extends AbstractGameState {
     public void onEnterState(GameContext game) {
         hud.levelCounter().show();
         hud.livesCounter().hide();
+        hud.gameScore().data().setEnabled(true);
         hud.gameScore().show();
+        hud.highScore().data().setEnabled(true);
         hud.highScore().show();
         hud.creditDisplay().show();
         session.setHudVisible(true);
