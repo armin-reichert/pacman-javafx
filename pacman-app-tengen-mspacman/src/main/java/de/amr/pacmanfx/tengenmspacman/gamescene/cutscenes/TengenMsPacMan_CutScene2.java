@@ -61,11 +61,7 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene {
 
     @Override
     public Stream<Renderable> renderables() {
-        return Ufx.streamOf(
-            clapperboard,
-            renderablePac(pacMan),
-            renderablePac(msPacMan)
-        );
+        return Ufx.streamOf(clapperboard, renderablePac(pacMan), renderablePac(msPacMan));
     }
 
     @Override
@@ -94,7 +90,7 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene {
         if (tick == TICK_CLAP) {
             clapperboard.show();
             clapperboard.pos().set(3 * WorldMap.TS, 10 * WorldMap.TS);
-            TengenMsPacMan_ClapperboardStateSystem.startFlapAnimation(clapperboard);
+            TengenMsPacMan_ClapperboardStateSystem.init(clapperboard);
             playMusic();
         }
         else if (tick == TICK_EXPIRES) {
@@ -102,7 +98,7 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene {
         }
 
         TengenMsPacMan_ClapperboardStateSystem.update(clapperboard);
-        playCutScene(game, tick);
+        updateScene(game, tick);
     }
 
     private void playMusic() {
@@ -113,22 +109,7 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene {
         soundManager().stop(PacManGameSoundID.INTERMISSION_2);
     }
 
-    private void createActors() {
-        final var actorFactory = TengenMsPacMan_ActorFactory.instance();
-        final GameVariantRuntime variant = app().variantManager().currentRuntime();
-        final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
-        final SpriteAnimationContainer animContainer    = variant.spriteAnimContainer();
-
-        clapperboard = new Clapperboard("2", "THE CHASE");
-
-        msPacMan = actorFactory.createMsPacMan();
-        msPacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animContainer));
-
-        pacMan = actorFactory.createPacMan();
-        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animContainer));
-    }
-
-    private void playCutScene(GameContext game, long tick) {
+    private void updateScene(GameContext game, long tick) {
         final WorldNavigationSystem navigator = game.playConfig().systems().navigator();
         final ActorSpriteAnimController animSystem = game.playConfig().systems().actorSpriteAnimController();
 
@@ -200,5 +181,20 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene {
         final MovementSystem motor = game.playConfig().systems().motor();
         motor.move(pacMan);
         motor.move(msPacMan);
+    }
+
+    private void createActors() {
+        final GameVariantRuntime variant = app().variantManager().currentRuntime();
+        final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
+        final SpriteAnimationContainer animContainer = variant.spriteAnimContainer();
+        final var actorFactory = TengenMsPacMan_ActorFactory.instance();
+
+        clapperboard = new Clapperboard("2", "THE CHASE");
+
+        msPacMan = actorFactory.createMsPacMan();
+        msPacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animContainer));
+
+        pacMan = actorFactory.createPacMan();
+        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animContainer));
     }
 }

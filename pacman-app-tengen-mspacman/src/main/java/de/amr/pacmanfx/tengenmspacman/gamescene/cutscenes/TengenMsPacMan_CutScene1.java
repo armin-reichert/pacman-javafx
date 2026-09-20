@@ -110,7 +110,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene {
             case TICK_CLAP -> {
                 getReady(game.playConfig().systems().navigator());
                 clapperboard.show();
-                TengenMsPacMan_ClapperboardStateSystem.startFlapAnimation(clapperboard);
+                TengenMsPacMan_ClapperboardStateSystem.init(clapperboard);
                 playMusic();
             }
             case TICK_EXPIRES -> {

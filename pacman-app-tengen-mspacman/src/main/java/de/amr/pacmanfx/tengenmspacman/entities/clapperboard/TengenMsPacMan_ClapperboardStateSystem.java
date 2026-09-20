@@ -4,35 +4,40 @@
 
 package de.amr.pacmanfx.tengenmspacman.entities.clapperboard;
 
-
 import de.amr.pacmanfx.core.entities.Clapperboard;
 import de.amr.pacmanfx.core.entities.clapperboard.comp.ClapperboardState;
 import de.amr.pacmanfx.core.entities.clapperboard.comp.ClapperboardStateComp;
 
+import static java.util.Objects.requireNonNull;
+
 public class TengenMsPacMan_ClapperboardStateSystem {
 
-    public static void startFlapAnimation(Clapperboard clapperboard) {
-        clapperboard.state().setTick(0);
-        clapperboard.state().setTextVisible(true);
-        clapperboard.state().setState(ClapperboardState.CLOSED);
-        clapperboard.state().setRunning(true);
+    public static void init(Clapperboard clapperboard) {
+        requireNonNull(clapperboard);
+        final ClapperboardStateComp state = clapperboard.state();
+
+        state.setEnumValue(ClapperboardState.CLOSED);
+        state.setTick(0);
+        state.setTextVisible(true);
+        state.setRunning(true);
     }
 
     public static void update(Clapperboard clapperboard) {
+        requireNonNull(clapperboard);
         final ClapperboardStateComp state = clapperboard.state();
 
         if (!state.running()) return;
 
         //TODO Verify exact tick values
         switch (state.tick()) {
-            case 3 -> state.setState(ClapperboardState.OPEN);
-            case 5 -> state.setState(ClapperboardState.WIDE_OPEN);
+            case 3 -> state.setEnumValue(ClapperboardState.OPEN);
+            case 5 -> state.setEnumValue(ClapperboardState.WIDE_OPEN);
             case 65 -> {
-                state.setState(ClapperboardState.CLOSED);
+                state.setEnumValue(ClapperboardState.CLOSED);
                 state.setTextVisible(false);
             }
-            case 69 -> state.setState(ClapperboardState.OPEN);
-            case 71 -> state.setState(ClapperboardState.WIDE_OPEN);
+            case 69 -> state.setEnumValue(ClapperboardState.OPEN);
+            case 71 -> state.setEnumValue(ClapperboardState.WIDE_OPEN);
             case 129 -> {
                 clapperboard.hide();
                 state.setRunning(false);

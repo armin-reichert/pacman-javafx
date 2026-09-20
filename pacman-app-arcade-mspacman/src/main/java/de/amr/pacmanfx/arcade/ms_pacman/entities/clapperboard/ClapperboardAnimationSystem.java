@@ -17,7 +17,7 @@ public class ClapperboardAnimationSystem {
     public static Optional<RectShort> sprite(Clapperboard clapperboard) {
         final ClapperboardStateComp state = clapperboard.state();
         final RectShort[] sprites = ArcadeMsPacMan_SpriteSheet.instance().findSpriteSequence(SpriteID.CLAPPERBOARD);
-        return switch (state.state()) {
+        return switch (state.enumValue()) {
             case WIDE_OPEN -> Optional.of(sprites[0]);
             case OPEN -> Optional.of(sprites[1]);
             case CLOSED -> Optional.of(sprites[2]);

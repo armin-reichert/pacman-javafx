@@ -8,17 +8,17 @@ import de.amr.pacmanfx.core.ecs.GameEntityComp;
 
 public class ClapperboardStateComp implements GameEntityComp {
 
-    private ClapperboardState state;
+    private ClapperboardState enumValue;
     private boolean textVisible;
     private int tick;
     private boolean running;
 
-    public ClapperboardState state() {
-        return state;
+    public ClapperboardState enumValue() {
+        return enumValue;
     }
 
-    public void setState(ClapperboardState state) {
-        this.state = state;
+    public void setEnumValue(ClapperboardState enumValue) {
+        this.enumValue = enumValue;
     }
 
     public boolean textVisible() {

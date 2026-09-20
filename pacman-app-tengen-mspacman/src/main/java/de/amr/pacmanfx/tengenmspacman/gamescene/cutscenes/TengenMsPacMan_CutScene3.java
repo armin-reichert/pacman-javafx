@@ -130,7 +130,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene {
 
         if (tick == TICK_CLAP) {
             clapperboard.show();
-            TengenMsPacMan_ClapperboardStateSystem.startFlapAnimation(clapperboard);
+            TengenMsPacMan_ClapperboardStateSystem.init(clapperboard);
             playMusic();
         }
         else if (tick == TICK_EXPIRES) {

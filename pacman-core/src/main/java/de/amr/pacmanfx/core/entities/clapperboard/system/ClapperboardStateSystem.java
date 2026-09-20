@@ -14,7 +14,7 @@ public class ClapperboardStateSystem {
         final ClapperboardStateComp state = clapperboard.state();
         state.setTick(0);
         state.setTextVisible(true);
-        state.setState(ClapperboardState.WIDE_OPEN);
+        state.setEnumValue(ClapperboardState.WIDE_OPEN);
         state.setRunning(true);
         clapperboard.show();
     }
@@ -26,9 +26,9 @@ public class ClapperboardStateSystem {
 
         //TODO Verify exact tick values
         switch (state.tick()) {
-            case 48 -> state.setState(ClapperboardState.OPEN);
-            case 54 -> state.setState(ClapperboardState.CLOSED);
-            case 59 -> state.setState(ClapperboardState.WIDE_OPEN);
+            case 48 -> state.setEnumValue(ClapperboardState.OPEN);
+            case 54 -> state.setEnumValue(ClapperboardState.CLOSED);
+            case 59 -> state.setEnumValue(ClapperboardState.WIDE_OPEN);
             case 88 -> {
                 clapperboard.hide();
                 state.setRunning(false);
