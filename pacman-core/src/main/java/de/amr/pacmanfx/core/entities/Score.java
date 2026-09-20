@@ -4,11 +4,11 @@
 
 package de.amr.pacmanfx.core.entities;
 
-import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.entities.score.comp.ScoreDataComp;
 import de.amr.pacmanfx.core.entities.score.comp.ScorePersistencyComp;
+import de.amr.pacmanfx.core.rendering.Renderable;
 
 import static java.util.Objects.requireNonNull;
 

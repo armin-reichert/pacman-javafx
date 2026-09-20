@@ -15,8 +15,8 @@ import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.views.miniview.MiniPlaySceneView;
 import de.amr.pacmanfx.ui.views.miniview.MiniPlaySceneViewRenderer;
-import de.amr.pacmanfx.uilib.rendering.RenderingReorderWrapper;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
+import de.amr.pacmanfx.uilib.rendering.RenderingReorderWrapper;
 import javafx.scene.canvas.Canvas;
 import org.tinylog.Logger;
 

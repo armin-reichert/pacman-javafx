@@ -5,9 +5,9 @@
 package de.amr.pacmanfx.uilib.widgets.optionmenu;
 
 import de.amr.basics.json.JsonLoader;
-import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.uilib.assets.ResourceManager;
 import javafx.animation.AnimationTimer;
 import javafx.beans.property.BooleanProperty;

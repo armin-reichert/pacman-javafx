@@ -4,11 +4,11 @@
 
 package de.amr.pacmanfx.core.entities;
 
-import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.MovementComp;
 import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
+import de.amr.pacmanfx.core.rendering.Renderable;
 
 public class Stork extends GameEntity implements Renderable {
 

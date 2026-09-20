@@ -9,7 +9,6 @@ import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 import org.tinylog.Logger;
 
-import java.util.Objects;
 import java.util.Optional;
 
 import static de.amr.basics.util.Ufx.pauseSec;

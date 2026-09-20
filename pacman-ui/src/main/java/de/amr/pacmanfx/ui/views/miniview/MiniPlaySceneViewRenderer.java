@@ -11,8 +11,8 @@ import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
-import de.amr.pacmanfx.uilib.rendering.RenderingReorderWrapper;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
+import de.amr.pacmanfx.uilib.rendering.RenderingReorderWrapper;
 
 public class MiniPlaySceneViewRenderer extends BaseRenderer {
 

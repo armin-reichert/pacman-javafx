@@ -9,7 +9,7 @@ import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.entities.pac.comp.PacAnimationComp;
 import de.amr.pacmanfx.core.entities.pac.comp.PacStateComp;
-import de.amr.pacmanfx.core.entities.pac.system.*;
+import de.amr.pacmanfx.core.entities.pac.system.PacAnimationSystem;
 import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.tengenmspacman.entities.pac.comp.PacBoosterComp;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;

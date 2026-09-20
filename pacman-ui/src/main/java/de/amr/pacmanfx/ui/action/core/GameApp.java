@@ -9,10 +9,10 @@ import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.game.GameVariantManager;
 import de.amr.pacmanfx.ui.GameUI;
-import de.amr.pacmanfx.ui.rendering.RenderManager;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.input.Input;
+import de.amr.pacmanfx.ui.rendering.RenderManager;
 
 /**
  * The game application context.

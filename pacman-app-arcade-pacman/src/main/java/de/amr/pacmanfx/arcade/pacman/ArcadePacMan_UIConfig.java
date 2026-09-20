@@ -31,7 +31,6 @@ import java.util.*;
 import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.audioClip;
 import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.mediaPlayer;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
-import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_ROSE;
 
 /**
  * The Arcade Pac‑Man game variant.

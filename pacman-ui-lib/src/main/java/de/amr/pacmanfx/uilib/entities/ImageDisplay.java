@@ -4,9 +4,9 @@
 
 package de.amr.pacmanfx.uilib.entities;
 
-import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.uilib.entities.imagedisplay.comp.ImageDisplayComp;
 
 public class ImageDisplay extends GameEntity implements Renderable {

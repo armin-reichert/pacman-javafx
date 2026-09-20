@@ -9,9 +9,9 @@ import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.spriteanim.LazySAM;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimation;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimationBuilder;
+import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.GHOST_FLASHING;
 import static de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID.GHOST_FRIGHTENED;

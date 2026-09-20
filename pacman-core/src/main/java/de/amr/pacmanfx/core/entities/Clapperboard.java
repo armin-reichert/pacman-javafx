@@ -4,11 +4,11 @@
 
 package de.amr.pacmanfx.core.entities;
 
-import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.entities.clapperboard.comp.ClapperboardInscriptionComp;
 import de.amr.pacmanfx.core.entities.clapperboard.comp.ClapperboardStateComp;
+import de.amr.pacmanfx.core.rendering.Renderable;
 
 /**
  * Animated movie clapperboard.

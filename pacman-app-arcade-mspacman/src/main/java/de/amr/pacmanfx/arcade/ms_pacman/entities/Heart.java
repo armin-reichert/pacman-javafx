@@ -6,10 +6,10 @@ package de.amr.pacmanfx.arcade.ms_pacman.entities;
 
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
-import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
+import de.amr.pacmanfx.core.rendering.Renderable;
 
 import static de.amr.pacmanfx.core.spriteanim.SpriteAnimFacade.singleSpriteAnimationFacade;
 
