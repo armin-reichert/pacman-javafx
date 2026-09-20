@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.arcade.ms_pacman.gamescene.cutscenes;
 
 import de.amr.basics.math.Direction;
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.bag.ArcadeMsPacMan_BagSAM;
 import de.amr.pacmanfx.arcade.ms_pacman.entities.stork.ArcadeMsPacMan_StorkSAM;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
@@ -28,6 +29,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
+import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderableActor;
 
 /**
  * Intermission scene 3: "Junior".
@@ -92,7 +94,12 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene {
     }
 
     public Stream<Renderable> renderables() {
-        return Stream.of(clapperboard, msPacMan, pacMan, stork, bag);
+        return Ufx.streamOf(
+            clapperboard,
+            renderableActor(msPacMan),
+            renderableActor(pacMan),
+            stork,
+            bag);
     }
 
     private void initScene() {

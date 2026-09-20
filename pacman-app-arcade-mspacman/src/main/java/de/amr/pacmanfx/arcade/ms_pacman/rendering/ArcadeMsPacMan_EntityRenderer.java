@@ -20,6 +20,7 @@ import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.entities.hud.comp.HUD_Style;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.pacmanfx.core.rendering.RenderableGameEntity;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -63,17 +64,18 @@ public class ArcadeMsPacMan_EntityRenderer extends BaseRenderer {
 
     @Override
     public void render(Renderable r, long tick) {
-        if (r instanceof GameEntity gameEntity) {
-            if (gameEntity.isVisible()) {
-                renderGameEntity(gameEntity, tick);
-            }
-        } else {
-            super.render(r, tick);
+        switch (r) {
+            case RenderableGameEntity rge -> renderGameEntity(rge.gameEntity(), tick);
+            // This case will disappear:
+            case GameEntity gameEntity -> renderGameEntity(gameEntity, tick);
+            default -> super.render(r, tick);
         }
     }
 
     @Override
     protected void renderGameEntity(GameEntity gameEntity, long tick) {
+        if (!gameEntity.isVisible()) return;
+
         ctx.save();
         final Vector2f center = gameEntity.pos().bodyCenter();
         switch (gameEntity) {

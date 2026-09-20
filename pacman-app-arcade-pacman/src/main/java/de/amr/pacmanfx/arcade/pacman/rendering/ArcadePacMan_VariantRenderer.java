@@ -13,6 +13,7 @@ import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.rendering.Renderable;
+import de.amr.pacmanfx.core.rendering.RenderableGameEntity;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.entities.hud.comp.HUD_Style;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
@@ -29,7 +30,7 @@ import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_YELLOW;
 import static java.util.Objects.requireNonNull;
 
-public class ArcadePacMan_EntityRenderer extends BaseRenderer {
+public class ArcadePacMan_VariantRenderer extends BaseRenderer {
 
     // These arrays must be sorted!
     private static final int[] GHOST_POINTS = { 200, 400, 800, 1600 };
@@ -38,7 +39,7 @@ public class ArcadePacMan_EntityRenderer extends BaseRenderer {
     private final ArcadePacMan_SpriteSheet spriteSheet = ArcadePacMan_SpriteSheet.instance();
     private final ActorSpriteAnimController animController;
 
-    public ArcadePacMan_EntityRenderer(ActorSpriteAnimController animController, Canvas canvas) {
+    public ArcadePacMan_VariantRenderer(ActorSpriteAnimController animController, Canvas canvas) {
         super(canvas);
         this.animController = requireNonNull(animController);
     }
@@ -51,17 +52,17 @@ public class ArcadePacMan_EntityRenderer extends BaseRenderer {
     @Override
     public void render(Renderable r, long tick) {
         requireNonNull(r);
-        if (r instanceof GameEntity gameEntity) {
-            if (gameEntity.isVisible()) {
-                renderGameEntity(gameEntity, tick);
-            }
-        } else {
-            super.render(r, tick);
+        switch (r) {
+            case RenderableGameEntity rge -> renderGameEntity(rge.gameEntity(), tick);
+            case GameEntity gameEntity ->    renderGameEntity(gameEntity, tick);
+            default -> super.render(r, tick);
         }
     }
 
     @Override
     protected void renderGameEntity(GameEntity gameEntity, long tick) {
+        if (!gameEntity.isVisible()) return;
+
         ctx.save();
         ctx.setImageSmoothing(true);
         final Vector2f center = gameEntity.pos().bodyCenter();

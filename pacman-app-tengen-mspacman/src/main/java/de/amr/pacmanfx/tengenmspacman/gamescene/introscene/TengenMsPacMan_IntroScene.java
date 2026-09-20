@@ -36,6 +36,7 @@ import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.entities3D.ghost.comp.GhostSettings;
+import de.amr.pacmanfx.core.rendering.RenderableGameEntity;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 
@@ -86,7 +87,11 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
 
     @Override
     public Stream<Renderable> renderables() {
-        return Ufx.streamOf(marquee, msPacMan, ghosts);
+        return Ufx.streamOf(
+            marquee,
+            RenderableGameEntity.renderableActor(msPacMan),
+            ghosts
+        );
     }
 
     @Override

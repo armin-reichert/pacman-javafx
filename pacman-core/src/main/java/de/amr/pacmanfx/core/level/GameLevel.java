@@ -11,6 +11,7 @@ import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.gameplay.ArcadeHouseGateKeeper;
 import de.amr.pacmanfx.core.model.world.map.FoodState;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.core.rendering.RenderableGameEntity;
 import de.amr.pacmanfx.core.rules.HuntingTimer;
 
 import java.util.ArrayList;
@@ -54,10 +55,11 @@ public class GameLevel implements Renderable{
         return RenderingLayer.WORLD;
     }
 
-    public Stream<Renderable> visibleRenderables() {
+    public Stream<Renderable> renderables() {
         return entities.all()
             .filter(GameEntity::isVisible)
-            .filter(Renderable.class::isInstance).map(Renderable.class::cast);
+            //TODO not all level entities are "actors" and rendered on actor layer
+            .map(RenderableGameEntity::renderableActor);
     }
 
     /**

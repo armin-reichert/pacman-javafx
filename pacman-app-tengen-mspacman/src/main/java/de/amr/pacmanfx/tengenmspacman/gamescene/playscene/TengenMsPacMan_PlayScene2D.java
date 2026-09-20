@@ -58,7 +58,7 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 import static de.amr.pacmanfx.tengenmspacman.gamescene.SceneDisplay.SCROLLING;
 import static de.amr.pacmanfx.ui.views.ContextMenuSupport.*;
-import static de.amr.pacmanfx.uilib.rendering.RenderableWrapper.reassignLayer;
+import static de.amr.pacmanfx.uilib.rendering.RenderableWrapper.assignLayer;
 
 /**
  * Tengen Ms. Pac-Man play scene, uses vertical scrolling by default to accommodate to NES screen size.
@@ -111,9 +111,9 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         // Reassign layer to SCENE such that scene-specific renderer draws the game entities and
         // can apply horizontal offset before rendering
         return Ufx.streamOf(
-            level.visibleRenderables().map(r -> reassignLayer(r, RenderingLayer.SCENE)),
+            level.renderables().map(r -> assignLayer(r, RenderingLayer.SCENE)),
             // In Tengen, ghosts appear under the house door, so reassign the door z layer:
-            reassignLayer(level.entities().house().door(), RenderingLayer.SCENE, 100)
+            assignLayer(level.entities().house().door(), RenderingLayer.SCENE, 100)
         );
     }
 

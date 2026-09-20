@@ -70,7 +70,8 @@ public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
         return Ufx.streamOf(
             texts,
             msPacManImage,
-            copyrightImage, copyrightTexts
+            copyrightImage,
+            copyrightTexts
         );
     }
 

@@ -35,6 +35,7 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
+import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderableActor;
 
 /**
  * Intermission scene 1: "They meet".
@@ -75,7 +76,14 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene {
 
     @Override
     public Stream<Renderable> renderables() {
-        return Ufx.streamOf(clapperboard, heart, pinky, msPacMan, pacMan, inky, pinky);
+        return Ufx.streamOf(
+            clapperboard,
+            heart,
+            renderableActor(msPacMan),
+            renderableActor(pacMan),
+            pinky,
+            inky
+        );
     }
 
     @Override

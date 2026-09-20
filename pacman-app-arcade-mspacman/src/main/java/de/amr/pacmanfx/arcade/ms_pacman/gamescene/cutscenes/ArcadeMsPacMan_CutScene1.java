@@ -35,6 +35,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
+import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderableActor;
 
 /**
  * Intermission scene 1: "They meet".
@@ -89,7 +90,11 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene {
 
     @Override
     public Stream<Renderable> renderables() {
-        return Ufx.streamOf(clapperboard, msPacMan, pacMan, inky, pinky, heart);
+        return Ufx.streamOf(
+            clapperboard,
+            renderableActor(msPacMan),
+            renderableActor(pacMan),
+            inky, pinky, heart);
     }
 
     private void initScene() {

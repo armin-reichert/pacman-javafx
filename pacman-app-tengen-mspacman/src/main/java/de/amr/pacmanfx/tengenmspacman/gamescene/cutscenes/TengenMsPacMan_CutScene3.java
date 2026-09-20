@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.tengenmspacman.gamescene.cutscenes;
 
 import de.amr.basics.math.Direction;
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
@@ -31,6 +32,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
+import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderableActor;
 
 /**
  * Intermission scene 3: "Junior".
@@ -64,7 +66,14 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene {
 
     @Override
     public Stream<Renderable> renderables() {
-        return darkness ? Stream.empty() : Stream.of(clapperboard, pacMan, msPacMan, stork, bag);
+        if (darkness) return Stream.empty();
+        return Ufx.streamOf(
+            clapperboard,
+            renderableActor(pacMan),
+            renderableActor(msPacMan),
+            stork,
+            bag
+        );
     }
 
     @Override

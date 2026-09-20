@@ -16,6 +16,7 @@ import de.amr.pacmanfx.core.level.MessageType;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.rendering.ColoredRect;
 import de.amr.pacmanfx.core.rendering.Renderable;
+import de.amr.pacmanfx.core.rendering.RenderableGameEntity;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.entities.ImageDisplay;
 import de.amr.pacmanfx.uilib.entities.messageview.comp.MessageViewStyleComp;
@@ -84,6 +85,7 @@ public class BaseRenderer implements Renderer {
         ctx.save();
         switch (r) {
             case null -> {}
+            case RenderableGameEntity rge -> renderGameEntity(rge.gameEntity(), tick);
             case GameEntity gameEntity -> renderGameEntity(gameEntity, tick);
             case ColoredRect coloredRect -> fillColoredRect(coloredRect);
             default -> throw new IllegalStateException("Cannot render: " + r);

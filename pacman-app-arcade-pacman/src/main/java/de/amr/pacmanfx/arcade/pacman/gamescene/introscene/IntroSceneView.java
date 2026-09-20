@@ -25,6 +25,7 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.arcade.pacman.rendering.SpriteID.GALLERY_GHOSTS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.*;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
+import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderableActor;
 
 public class IntroSceneView {
 
@@ -105,8 +106,8 @@ public class IntroSceneView {
             text50Pts,
             pellet,
             energizer,
-            copyrightText)
-        .filter(Renderable.class::isInstance)
+            copyrightText
+        ).filter(Renderable.class::isInstance)
         .map(Renderable.class::cast)
         .toList();
 
@@ -134,7 +135,14 @@ public class IntroSceneView {
     }
 
     public Stream<Renderable> renderables() {
-        return Stream.concat(staticRenderables.stream(), Ufx.streamOf(pacMan, ghosts, points));
+        return Stream.concat(
+            staticRenderables.stream(),
+            Ufx.streamOf(
+                renderableActor(pacMan),
+                ghosts,
+                points
+            )
+        );
     }
 
     public void hideEverything() {

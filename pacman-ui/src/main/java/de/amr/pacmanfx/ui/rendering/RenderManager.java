@@ -23,7 +23,7 @@ import static java.util.Objects.requireNonNull;
 
 public class RenderManager {
 
-    private Renderer entityRenderer;
+    private Renderer variantRenderer;
     private Renderer sceneRenderer;
     private Renderer sceneDebugRenderer;
     private Renderer miniViewRenderer;
@@ -57,14 +57,14 @@ public class RenderManager {
         if (sceneCanvas != null) {
             final ActorSpriteAnimController animController = playConfig.systems().actorSpriteAnimController();
 
-            entityRenderer     = renderConfig.createGameEntityRenderer(animController, sceneCanvas);
+            variantRenderer    = renderConfig.createRenderer(animController, sceneCanvas);
             sceneRenderer      = renderConfig.createGameSceneRenderer(gameScene, animController, sceneCanvas); // may return null!
             sceneDebugRenderer = renderConfig.createGameSceneDebugRenderer(gameScene, animController, sceneCanvas);
 
             if (sceneRenderer != null) {
                 configureRenderer(sceneRenderer, sceneCanvasRendering);
             }
-            configureRenderer(entityRenderer, sceneCanvasRendering);
+            configureRenderer(variantRenderer, sceneCanvasRendering);
             configureRenderer(sceneDebugRenderer, sceneCanvasRendering);
 
             //TODO This is just a temporary solution
@@ -87,7 +87,7 @@ public class RenderManager {
             switch (r.layer()) {
                 case SCENE    -> renderScene(r, tick);
                 case OVERLAY  -> renderOverlay(r, tick);
-                default       -> renderEntity(r, tick);
+                default       -> render(r, tick);
             }
         });
 
@@ -109,13 +109,10 @@ public class RenderManager {
         });
     }
 
-    private void renderEntity(Renderable r, long tick) {
-        if (entityRenderer != null) {
-            if (r instanceof RenderableWrapper wrapper) {
-                renderEntity(wrapper.content(), tick);
-            } else {
-                entityRenderer.render(r, tick);
-            }
+    private void render(Renderable r, long tick) {
+        switch (r) {
+            case RenderableWrapper wrapper -> render(wrapper.content(), tick);
+            default -> variantRenderer.render(r, tick);
         }
     }
 

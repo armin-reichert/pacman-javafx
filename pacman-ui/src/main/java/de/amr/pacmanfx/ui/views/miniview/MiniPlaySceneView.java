@@ -31,7 +31,7 @@ import javafx.util.Duration;
 
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.uilib.rendering.RenderableWrapper.reassignLayer;
+import static de.amr.pacmanfx.uilib.rendering.RenderableWrapper.assignLayer;
 import static java.util.Objects.requireNonNull;
 
 public class MiniPlaySceneView extends HBox implements Renderable {
@@ -110,8 +110,8 @@ public class MiniPlaySceneView extends HBox implements Renderable {
     public Stream<Renderable> renderables() {
         if (!isVisible() || level == null) return Stream.empty();
         return Ufx.streamOf(
-            reassignLayer(level, RenderingLayer.OVERLAY, -100),
-            level.renderableEntities().map(r -> reassignLayer(r, RenderingLayer.OVERLAY, r.z()))
+            assignLayer(level, RenderingLayer.OVERLAY, -100),
+            level.renderableEntities().map(r -> assignLayer(r, RenderingLayer.OVERLAY, r.z()))
         );
     }
 

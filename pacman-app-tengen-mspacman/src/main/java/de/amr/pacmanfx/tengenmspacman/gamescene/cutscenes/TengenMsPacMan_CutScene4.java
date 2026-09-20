@@ -31,6 +31,7 @@ import de.amr.pacmanfx.ui.input.JoypadButton;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import de.amr.pacmanfx.ui.sound.SoundID;
+import de.amr.pacmanfx.core.rendering.RenderableGameEntity;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
@@ -42,6 +43,7 @@ import static de.amr.basics.math.RandomNumbers.randomInt;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.*;
+import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderableActor;
 
 public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
 
@@ -70,7 +72,12 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
 
     @Override
     public Stream<Renderable> renderables() {
-        return Ufx.streamOf(clapperboard, pacMan, msPacMan, juniors);
+        return Ufx.streamOf(
+            clapperboard,
+            renderableActor(pacMan),
+            renderableActor(msPacMan),
+            juniors.stream().map(RenderableGameEntity::renderableActor)
+        );
     }
 
     @Override

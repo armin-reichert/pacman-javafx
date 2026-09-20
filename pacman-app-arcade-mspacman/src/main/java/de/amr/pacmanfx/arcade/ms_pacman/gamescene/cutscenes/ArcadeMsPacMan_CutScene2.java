@@ -5,6 +5,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.gamescene.cutscenes;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.timer.TickTimer;
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
@@ -28,6 +29,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
+import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderableActor;
 
 /**
  * Intermission scene 2: "The chase".
@@ -70,7 +72,11 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene {
     }
 
     public Stream<Renderable> renderables() {
-        return Stream.of(clapperboard, msPacMan, pacMan);
+        return Ufx.streamOf(
+            clapperboard,
+            renderableActor(msPacMan),
+            renderableActor(pacMan)
+        );
     }
 
     private void initScene() {

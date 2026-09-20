@@ -24,6 +24,8 @@ import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import java.util.stream.Stream;
 
+import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderableActor;
+
 /**
  * Third cut scene in Arcade Pac-Man game:<br>
  * Red ghost in damaged dress chases Pac-Man from right to left over the screen.
@@ -46,7 +48,9 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene {
 
     @Override
     public Stream<Renderable> renderables() {
-        return Ufx.streamOf(pacMan, blinky);
+        return Ufx.streamOf(
+            renderableActor(pacMan),
+            blinky);
     }
 
     @Override

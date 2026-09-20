@@ -34,6 +34,7 @@ import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene.createText;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
+import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderableActor;
 
 public class IntroSceneView {
 
@@ -57,7 +58,13 @@ public class IntroSceneView {
     }
 
     public Stream<Renderable> renderables() {
-        return Ufx.streamOf(titleText, marquee, marqueeText1, marqueeText2, msPacMan, ghosts, copyrightImage, copyrightTexts);
+        return Ufx.streamOf(
+            titleText,
+            marquee,
+            marqueeText1,
+            marqueeText2,
+            renderableActor(msPacMan),
+            ghosts, copyrightImage, copyrightTexts);
     }
 
     public Pac msPacMan() {

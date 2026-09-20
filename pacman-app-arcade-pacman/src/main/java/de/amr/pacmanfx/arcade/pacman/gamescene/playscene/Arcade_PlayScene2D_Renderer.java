@@ -8,7 +8,7 @@ import de.amr.basics.InfoMap;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.GameLevelRenderable;
+import de.amr.pacmanfx.uilib.rendering.RenderableGameLevel;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.scene.canvas.Canvas;
 
@@ -33,7 +33,7 @@ public class Arcade_PlayScene2D_Renderer extends BaseRenderer {
     public void render(Renderable r, long tick) {
         requireNonNull(r);
         // This is the "record" type matching pattern
-        if (r instanceof GameLevelRenderable(GameLevel level, InfoMap renderInfo)) {
+        if (r instanceof RenderableGameLevel(GameLevel level, InfoMap renderInfo)) {
             levelRenderer.info().putAll(renderInfo);
             levelRenderer.render(level, tick);
         }

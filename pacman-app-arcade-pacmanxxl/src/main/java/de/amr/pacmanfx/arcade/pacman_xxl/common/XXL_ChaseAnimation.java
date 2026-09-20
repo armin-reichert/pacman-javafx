@@ -21,6 +21,7 @@ import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationTimer;
+import de.amr.pacmanfx.core.rendering.RenderableGameEntity;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -88,7 +89,7 @@ class XXL_ChaseAnimation {
         ctx.save();
         ctx.translate(0, scaling.get() * y);
         ghosts.forEach(ghost -> actorRenderer.render(ghost, tick));
-        actorRenderer.render(pac, tick);
+        actorRenderer.render(RenderableGameEntity.renderableActor(pac), tick);
         if (ghostPoints != null) {
             actorRenderer.render(ghostPoints, tick);
         }
@@ -131,7 +132,7 @@ class XXL_ChaseAnimation {
         navigator = variant.playConfig().systems().navigator();
         motor     = variant.playConfig().systems().motor();
 
-        actorRenderer = renderConfig.createGameEntityRenderer(animController, canvas);
+        actorRenderer = renderConfig.createRenderer(animController, canvas);
         actorRenderer.scalingProperty().bind(scalingProperty());
 
         createPac(renderConfig);

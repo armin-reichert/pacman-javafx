@@ -4,9 +4,11 @@
 
 package de.amr.pacmanfx.core.entities;
 
-import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.comp.*;
+import de.amr.pacmanfx.core.ecs.comp.MovementComp;
+import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
+import de.amr.pacmanfx.core.ecs.comp.SteeringComp;
+import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.entities.pac.comp.*;
 
 import static java.util.Objects.requireNonNull;
@@ -14,7 +16,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Pac-Man / Ms. Pac-Man.
  */
-public final class Pac extends GameEntity implements Renderable {
+public final class Pac extends GameEntity {
 
     /**
      * @param name a readable name. Any honest Pac-Man and Pac-Woman should have a name! Period.
@@ -31,16 +33,6 @@ public final class Pac extends GameEntity implements Renderable {
         setComp(PacStateComp.class, new PacStateComp(male));
         setComp(SpriteAnimationComp.class, new SpriteAnimationComp());
         setComp(PacAnimationComp.class, new PacAnimationComp());
-    }
-
-    @Override
-    public RenderingLayer layer() {
-        return RenderingLayer.ACTORS;
-    }
-
-    @Override
-    public int z() {
-        return 1; // behind ghosts (these start at 10)
     }
 
     public MovementComp movement() {

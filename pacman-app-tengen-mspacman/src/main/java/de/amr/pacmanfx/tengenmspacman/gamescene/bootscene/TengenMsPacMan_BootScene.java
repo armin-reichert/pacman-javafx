@@ -62,9 +62,11 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
 
     @Override
     public Stream<Renderable> renderables() {
-        return Ufx.streamOf(gray
-            ? grayRect
-            : tengenPresentsText, ghost);
+        if (gray) return Stream.of(grayRect);
+        return Ufx.streamOf(
+            tengenPresentsText,
+            ghost
+        );
     }
 
     @Override
