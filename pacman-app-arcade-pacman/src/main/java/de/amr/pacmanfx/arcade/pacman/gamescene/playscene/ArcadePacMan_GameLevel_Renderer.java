@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.arcade.pacman.gamescene.playscene;
 
+import de.amr.basics.InfoMap;
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_RenderConfig;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
@@ -50,8 +51,9 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer {
 
     @Override
     public void render(Renderable r, long tick) {
-        if (r instanceof RenderableGameLevel rgl) {
-            renderGameLevel(rgl.level());
+        if (r instanceof RenderableGameLevel(GameLevel level, InfoMap renderInfo)) {
+            info.putAll(renderInfo);
+            renderGameLevel(level);
         }
     }
 

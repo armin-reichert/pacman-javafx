@@ -12,16 +12,10 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.entities.Bonus;
-import de.amr.pacmanfx.core.entities.Ghost;
-import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.level.GameLevelEntities;
 import de.amr.pacmanfx.core.rendering.Renderable;
-import de.amr.pacmanfx.core.rendering.RenderableGameEntity;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
@@ -38,8 +32,6 @@ import org.tinylog.Logger;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderableGameEntity;
-import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderableGhost;
 import static de.amr.pacmanfx.ui.views.ContextMenuSupport.*;
 
 /**
@@ -74,8 +66,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
 
         final GameVariantRenderConfig renderConfig = app().variantManager().currentRuntime().uiConfig().renderConfig();
         return Ufx.streamOf(
-            //TODO rethink this
-            new RenderableGameLevel(level, createLevelRenderInfo(level)),
+            createRenderableLevel(level),
             level.entities().all().map(renderConfig::renderable)
         );
     }
@@ -161,12 +152,12 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
         ActorAnimationManager.ensureActorAnimationsCreated(app(), level);
     }
 
-    private InfoMap createLevelRenderInfo(GameLevel level) {
+    private RenderableGameLevel createRenderableLevel(GameLevel level) {
         final var renderInfo = new InfoMap();
         renderInfo.put(LevelRenderInfoKey.ENERGIZERS_SHOWN, level.heartbeat().state() == Pulse.State.ON);
         renderInfo.put(LevelRenderInfoKey.SHOW_EMPTY_MAZE, level.food().remainingFoodCount() == 0);
         updateFlashingRenderInfo(renderInfo);
-        return renderInfo;
+        return new RenderableGameLevel(level, renderInfo);
     }
 
     private void updateFlashingRenderInfo(InfoMap renderInfo) {

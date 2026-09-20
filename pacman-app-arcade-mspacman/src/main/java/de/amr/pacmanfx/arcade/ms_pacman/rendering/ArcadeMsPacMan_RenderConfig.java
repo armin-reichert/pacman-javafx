@@ -6,16 +6,9 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
-import de.amr.pacmanfx.arcade.ms_pacman.gamescene.cutscenes.ArcadeMsPacMan_CutScene1;
-import de.amr.pacmanfx.arcade.ms_pacman.gamescene.cutscenes.ArcadeMsPacMan_CutScene2;
-import de.amr.pacmanfx.arcade.ms_pacman.gamescene.cutscenes.ArcadeMsPacMan_CutScene3;
-import de.amr.pacmanfx.arcade.ms_pacman.gamescene.introscene.ArcadeMsPacMan_IntroScene;
-import de.amr.pacmanfx.arcade.ms_pacman.gamescene.startscene.ArcadeMsPacMan_StartScene;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.Arcade_BootScene;
 import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.Arcade_BootScene_Renderer;
-import de.amr.pacmanfx.arcade.pacman.gamescene.playscene.Arcade_PlayScene2D;
-import de.amr.pacmanfx.arcade.pacman.gamescene.playscene.Arcade_PlayScene2D_Renderer;
 import de.amr.pacmanfx.core.Energizer;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
@@ -26,7 +19,6 @@ import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
 import de.amr.pacmanfx.core.rendering.Renderable;
-import de.amr.pacmanfx.core.rendering.RenderableGameEntity;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.assets.GlobalAssets;
@@ -44,7 +36,6 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.*;
-import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderableBonus;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
 import static java.util.Objects.requireNonNull;
 
@@ -109,14 +100,8 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
         requireNonNull(gameScene);
 
         return switch (gameScene) {
-            case Arcade_BootScene ignored        -> new Arcade_BootScene_Renderer(canvas, spriteSheet());
-            case ArcadeMsPacMan_IntroScene ignored -> null;
-            case ArcadeMsPacMan_StartScene ignored -> null;
-            case Arcade_PlayScene2D ignored        -> new Arcade_PlayScene2D_Renderer(canvas, createGameLevelRenderer(animController, canvas));
-            case ArcadeMsPacMan_CutScene1 ignored  -> null;
-            case ArcadeMsPacMan_CutScene2 ignored  -> null;
-            case ArcadeMsPacMan_CutScene3 ignored  -> null;
-            default -> throw new IllegalStateException("Illegal game scene: " + gameScene);
+            case Arcade_BootScene ignored -> new Arcade_BootScene_Renderer(canvas, spriteSheet());
+            default -> null;
         };
     }
 

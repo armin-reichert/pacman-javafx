@@ -12,8 +12,6 @@ import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.Arcade_BootScene_Render
 import de.amr.pacmanfx.arcade.pacman.gamescene.introscene.ArcadePacMan_IntroScene;
 import de.amr.pacmanfx.arcade.pacman.gamescene.introscene.ArcadePacMan_IntroScene_Renderer;
 import de.amr.pacmanfx.arcade.pacman.gamescene.playscene.ArcadePacMan_GameLevel_Renderer;
-import de.amr.pacmanfx.arcade.pacman.gamescene.playscene.Arcade_PlayScene2D;
-import de.amr.pacmanfx.arcade.pacman.gamescene.playscene.Arcade_PlayScene2D_Renderer;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.Energizer;
 import de.amr.pacmanfx.core.ecs.GameEntity;
@@ -121,7 +119,6 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig, Dispo
         return switch (gameScene) {
             case Arcade_BootScene ignored -> new Arcade_BootScene_Renderer(canvas, spriteSheet());
             case ArcadePacMan_IntroScene ignored -> new ArcadePacMan_IntroScene_Renderer(canvas);
-            case Arcade_PlayScene2D ignored -> new Arcade_PlayScene2D_Renderer(canvas, createGameLevelRenderer(animController, canvas));
             default -> null;
         };
     }
