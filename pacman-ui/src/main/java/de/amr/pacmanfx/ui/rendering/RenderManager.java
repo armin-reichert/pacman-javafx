@@ -64,7 +64,7 @@ public class RenderManager {
             sceneDebugRenderer = renderConfig.createGameSceneDebugRenderer(gameScene, animController, sceneCanvas);
             levelRenderer      = renderConfig.createGameLevelRenderer(animController, sceneCanvas);
 
-            final Vector2f offset = renderConfig.renderOffset();
+            final Vector2f offset = gameScene.renderOffset();
             if (sceneRenderer != null) {
                 configureRenderer(sceneRenderer, sceneCanvasRendering, offset);
             }
@@ -158,8 +158,8 @@ public class RenderManager {
     private static void configureRenderer(
         Renderer renderer,
         GameSceneCanvasRenderingComp canvasRendering,
-        Vector2f offset
-    ) {
+        Vector2f offset)
+    {
         renderer.backgroundColorProperty().bind(canvasRendering.backgroundColorProperty());
         renderer.scalingProperty().bind(canvasRendering.scalingProperty());
         renderer.info().put("offset", offset);

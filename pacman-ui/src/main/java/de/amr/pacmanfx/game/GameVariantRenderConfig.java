@@ -34,10 +34,6 @@ public interface GameVariantRenderConfig {
 
     HUD_Style hudStyle();
 
-    default Vector2f renderOffset() {
-        return Vector2f.ZERO;
-    }
-
     Renderable renderable(GameEntity gameEntity);
 
     Renderer createGameLevelRenderer(ActorSpriteAnimController animController, Canvas canvas);

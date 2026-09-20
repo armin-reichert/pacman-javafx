@@ -158,11 +158,6 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public Vector2f renderOffset() {
-        return new Vector2f(16, 0); // 2 tiles offset
-    }
-
-    @Override
     public Renderable renderable(GameEntity gameEntity) {
         return switch(gameEntity) {
             case Pac pac     -> renderablePac(pac);

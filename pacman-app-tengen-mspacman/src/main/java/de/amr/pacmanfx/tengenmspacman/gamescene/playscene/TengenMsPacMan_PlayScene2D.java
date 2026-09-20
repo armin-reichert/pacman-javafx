@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.tengenmspacman.gamescene.playscene;
 
 import de.amr.basics.InfoMap;
+import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
@@ -88,6 +89,11 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         subScene = new SubScene(rootPane, 88, 88);
         subScene.heightProperty().addListener((_, _, _) -> updateScaling());
         subScene.cameraProperty().addListener((_, _, _) -> updateScaling());
+    }
+
+    @Override
+    public Vector2f renderOffset() {
+        return new Vector2f(16, 0); // 2 tiles offset
     }
 
     @Override

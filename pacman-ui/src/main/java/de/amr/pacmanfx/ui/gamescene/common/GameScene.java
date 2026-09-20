@@ -1,6 +1,7 @@
 package de.amr.pacmanfx.ui.gamescene.common;
 
 import de.amr.basics.Disposable;
+import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
 import de.amr.pacmanfx.core.gamestate.GameFlow;
@@ -22,6 +23,10 @@ public interface GameScene extends Disposable, QuitHandler {
     void setApp(GameApp app);
 
     GameApp app();
+
+    default Vector2f renderOffset() {
+        return Vector2f.ZERO;
+    }
 
     default GameViewModel viewModel() {
         return app().ui().viewModel();
