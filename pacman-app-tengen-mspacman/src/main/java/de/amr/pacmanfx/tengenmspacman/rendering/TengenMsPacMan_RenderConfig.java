@@ -54,7 +54,7 @@ import javafx.scene.paint.Color;
 import java.util.EnumMap;
 import java.util.Map;
 
-import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.*;
+import static de.amr.pacmanfx.game.GameVariantRenderConfig.*;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {

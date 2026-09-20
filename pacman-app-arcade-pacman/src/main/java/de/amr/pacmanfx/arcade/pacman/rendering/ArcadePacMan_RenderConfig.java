@@ -40,7 +40,8 @@ import javafx.scene.paint.Color;
 import java.util.EnumMap;
 import java.util.Map;
 
-import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.*;
+import static de.amr.pacmanfx.game.GameVariantRenderConfig.*;
+import static de.amr.pacmanfx.game.GameVariantRenderConfig.renderableBonus;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
 import static java.util.Objects.requireNonNull;
 

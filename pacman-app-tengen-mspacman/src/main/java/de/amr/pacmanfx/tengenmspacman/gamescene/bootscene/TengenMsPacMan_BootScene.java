@@ -26,7 +26,7 @@ import javafx.scene.paint.Color;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
-import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderableGhost;
+import static de.amr.pacmanfx.game.GameVariantRenderConfig.renderableGhost;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConfig.shadeOfBlue;

@@ -28,7 +28,7 @@ import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderablePac;
+import static de.amr.pacmanfx.game.GameVariantRenderConfig.renderablePac;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 

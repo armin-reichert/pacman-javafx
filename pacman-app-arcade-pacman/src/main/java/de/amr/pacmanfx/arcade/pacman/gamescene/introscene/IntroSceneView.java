@@ -15,7 +15,6 @@ import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.rendering.Renderable;
-import de.amr.pacmanfx.core.rendering.RenderableGameEntity;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
@@ -27,8 +26,8 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.arcade.pacman.rendering.SpriteID.GALLERY_GHOSTS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.*;
-import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderableGameEntity;
-import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderablePac;
+import static de.amr.pacmanfx.game.GameVariantRenderConfig.renderableGameEntity;
+import static de.amr.pacmanfx.game.GameVariantRenderConfig.renderablePac;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
 
 public class IntroSceneView {
@@ -133,7 +132,7 @@ public class IntroSceneView {
             energizer.isVisible() ? energizer : null,
             copyrightText.isVisible() ? copyrightText : null,
             pacMan.isVisible() ? renderablePac(pacMan) : null,
-            Arrays.stream(ghosts).filter(Ghost::isVisible).map(RenderableGameEntity::renderableGhost),
+            Arrays.stream(ghosts).filter(Ghost::isVisible).map(GameVariantRenderConfig::renderableGhost),
             points != null && points.isVisible() ? renderableGameEntity(points, RenderingLayer.PROPS, 0) : null
         );
     }

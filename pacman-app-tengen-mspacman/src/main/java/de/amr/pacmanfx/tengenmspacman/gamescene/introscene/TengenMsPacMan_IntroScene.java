@@ -23,7 +23,6 @@ import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.gamestate.GameFlow;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.rendering.Renderable;
-import de.amr.pacmanfx.core.rendering.RenderableGameEntity;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantRuntime;
@@ -44,7 +43,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
-import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderablePac;
+import static de.amr.pacmanfx.game.GameVariantRenderConfig.renderablePac;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
@@ -91,7 +90,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
         return Ufx.streamOf(
             marquee,
             renderablePac(msPacMan),
-            ghosts.stream().map(RenderableGameEntity::renderableGhost)
+            ghosts.stream().map(GameVariantRenderConfig::renderableGhost)
         );
     }
 

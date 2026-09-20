@@ -11,11 +11,11 @@ import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
 import de.amr.pacmanfx.core.rendering.Renderable;
-import de.amr.pacmanfx.core.rendering.RenderableGameEntity;
 import de.amr.pacmanfx.uilib.rendering.*;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
+import static de.amr.pacmanfx.game.GameVariantRenderConfig.renderableGameEntity;
 import static java.util.function.Predicate.not;
 
 /**
@@ -68,7 +68,7 @@ public class GenericLevelRenderer extends BaseRenderer {
 
             final House house = level.entities().house();
             if (house != null) {
-                final var hr = RenderableGameEntity.renderableGameEntity(house, RenderingLayer.WORLD, 0);
+                final var hr = renderableGameEntity(house, RenderingLayer.WORLD, 0);
                 houseRenderer.render(hr, tick);
             }
 

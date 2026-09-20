@@ -29,7 +29,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
-import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderablePac;
+import static de.amr.pacmanfx.game.GameVariantRenderConfig.renderablePac;
 
 /**
  * Intermission scene 2: "The chase".

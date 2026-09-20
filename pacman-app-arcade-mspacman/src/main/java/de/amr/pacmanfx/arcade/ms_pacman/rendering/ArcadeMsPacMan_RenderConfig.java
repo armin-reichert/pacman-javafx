@@ -35,7 +35,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
-import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.*;
+import static de.amr.pacmanfx.game.GameVariantRenderConfig.*;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
 import static java.util.Objects.requireNonNull;
 
