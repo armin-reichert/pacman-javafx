@@ -27,7 +27,6 @@ import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.Shape3D;
 import javafx.scene.shape.TriangleMesh;
 import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Screen;
 import org.tinylog.Logger;
 
@@ -60,8 +59,7 @@ public final class Ufx {
             case Stream<?> s -> (Stream<T>) s;
             case Collection<?> c -> (Stream<T>) c.stream();
             case Optional<?> opt -> (Stream<T>) opt.stream();
-            default -> // Single object
-                Stream.of((T) source);
+            default -> Stream.of((T) source);
         });
     }
 

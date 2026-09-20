@@ -9,6 +9,7 @@ import de.amr.basics.timer.Pulse;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
+import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.model.GhostPersonality;
@@ -21,7 +22,6 @@ import de.amr.pacmanfx.uilib.entities.ImageDisplay;
 import javafx.scene.paint.Color;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.arcade.pacman.rendering.SpriteID.GALLERY_GHOSTS;
@@ -69,8 +69,6 @@ public class IntroSceneView {
     final TextDisplay text50Pts;
     final TextDisplay copyrightText;
 
-    private final List<Renderable> staticRenderables;
-
     public IntroSceneView() {
         titleText = new TextDisplay();
 
@@ -96,23 +94,6 @@ public class IntroSceneView {
         text50Pts = new TextDisplay();
         copyrightText = new TextDisplay();
 
-        staticRenderables = Ufx.streamOf(
-            titleText,
-            ghostImageDisplays,
-            ghostCharacterDisplays,
-            ghostNicknameDisplays,
-            targetEnergizer,
-            text10,
-            text10Pts,
-            text50,
-            text50Pts,
-            pellet,
-            energizer,
-            copyrightText
-        ).filter(Renderable.class::isInstance)
-        .map(Renderable.class::cast)
-        .toList();
-
         initTitleText();
         initGhostGallery();
         initTargetEnergizer();
@@ -137,13 +118,22 @@ public class IntroSceneView {
     }
 
     public Stream<Renderable> renderables() {
-        return Stream.concat(
-            staticRenderables.stream(),
-            Ufx.streamOf(
-                renderablePac(pacMan),
-                Arrays.stream(ghosts).map(RenderableGameEntity::renderableGhost),
-                points
-            )
+        return Ufx.streamOf(
+            titleText,
+            Arrays.stream(ghostImageDisplays).filter(GameEntity::isVisible),
+            Arrays.stream(ghostCharacterDisplays).filter(GameEntity::isVisible),
+            Arrays.stream(ghostNicknameDisplays).filter(GameEntity::isVisible),
+            targetEnergizer.isVisible() ? targetEnergizer :null,
+            text10,
+            text10Pts,
+            text50,
+            text50Pts,
+            pellet.isVisible() ? pellet : null,
+            energizer.isVisible() ? energizer : null,
+            copyrightText.isVisible() ? copyrightText : null,
+            pacMan.isVisible() ? renderablePac(pacMan) : null,
+            Arrays.stream(ghosts).filter(Ghost::isVisible).map(RenderableGameEntity::renderableGhost),
+            points
         );
     }
 
