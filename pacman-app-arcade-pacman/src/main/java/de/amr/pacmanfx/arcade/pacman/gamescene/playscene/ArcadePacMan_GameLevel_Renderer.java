@@ -9,6 +9,7 @@ import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_RenderConfig;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
+import de.amr.pacmanfx.core.Energizer;
 import de.amr.pacmanfx.core.entities.Door;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.entities.door.comp.DoorDataComp;
@@ -17,6 +18,7 @@ import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.FoodState;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.rendering.Renderable;
+import de.amr.pacmanfx.core.rendering.RenderableGameEntity;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
@@ -27,6 +29,7 @@ import javafx.scene.image.Image;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
+import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
 /**
@@ -54,6 +57,11 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer {
         if (r instanceof RenderableGameLevel(GameLevel level, InfoMap renderInfo)) {
             info.putAll(renderInfo);
             renderGameLevel(level);
+        }
+        else if (r instanceof RenderableGameEntity rge) {
+            if (requireNonNull(rge.gameEntity()) instanceof Energizer energizer) {
+                hideEnergizerIfOff(energizer);
+            }
         }
     }
 
@@ -86,6 +94,16 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer {
             hideEatenPellets(level);
         }
         ctx.restore();
+    }
+
+    private void hideEnergizerIfOff(Energizer energizer) {
+        if (!energizer.on()) {
+            final double size = scaled(9);
+            ctx.save();
+            ctx.setFill(backgroundColor());
+            ctx.fillRect(scaled(energizer.pos().x() - 0.5), scaled(energizer.pos().y() - 0.5), size, size);
+            ctx.restore();
+        }
     }
 
     private void hideGhostHouseDoors(House house) {

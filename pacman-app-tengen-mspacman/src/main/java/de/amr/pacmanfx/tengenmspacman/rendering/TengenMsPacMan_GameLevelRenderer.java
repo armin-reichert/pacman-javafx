@@ -8,10 +8,12 @@ import de.amr.basics.InfoMap;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
+import de.amr.pacmanfx.core.Energizer;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.*;
 import de.amr.pacmanfx.core.rendering.Renderable;
+import de.amr.pacmanfx.core.rendering.RenderableGameEntity;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.sprites.*;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
@@ -28,6 +30,7 @@ import java.util.Optional;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.tengenmspacman.sprites.NonArcadeMapsSpriteSheet.MapID.MAP32_ANIMATED;
+import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
 public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer {
@@ -54,14 +57,13 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer {
 
     @Override
     public void render(Renderable r, long tick) {
-        Objects.requireNonNull(r);
-        switch (r) {
-            case RenderableGameLevel rgl -> drawLevel(rgl.level(), tick);
-            default -> {}
+        if (r instanceof RenderableGameLevel(GameLevel level, InfoMap renderInfo)) {
+            info.putAll(renderInfo);
+            renderGameLevel(level, tick);
         }
     }
 
-    private void drawLevel(GameLevel level, long tick) {
+    private void renderGameLevel(GameLevel level, long tick) {
         final WorldMap worldMap = level.worldMap();
         final TerrainLayer terrainLayer = worldMap.terrainLayer();
         final FoodLayer foodLayer = worldMap.foodLayer();
