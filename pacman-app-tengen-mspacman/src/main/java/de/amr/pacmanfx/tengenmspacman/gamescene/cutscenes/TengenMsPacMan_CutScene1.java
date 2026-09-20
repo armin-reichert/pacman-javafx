@@ -20,7 +20,7 @@ import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.tengenmspacman.entities.Heart;
-import de.amr.pacmanfx.tengenmspacman.entities.clapperboard.TengenMsPacMan_ClapperboardStateSystem;
+import de.amr.pacmanfx.tengenmspacman.entities.clapperboard.ClapperboardStateSystem;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.action.core.GameAction;
@@ -110,7 +110,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene {
             case TICK_CLAP -> {
                 getReady(game.playConfig().systems().navigator());
                 clapperboard.show();
-                TengenMsPacMan_ClapperboardStateSystem.init(clapperboard);
+                ClapperboardStateSystem.init(clapperboard);
                 playMusic();
             }
             case TICK_EXPIRES -> {
@@ -119,30 +119,8 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene {
             }
         }
 
-        TengenMsPacMan_ClapperboardStateSystem.update(clapperboard);
-        playCutScene(game, tick);
-    }
-
-    private void createActors() {
-        final var actorFactory = TengenMsPacMan_ActorFactory.instance();
-        final GameVariantRuntime variant = app().variantManager().currentRuntime();
-        final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
-        final SpriteAnimationContainer animContainer    = variant.spriteAnimContainer();
-        final ActorSpriteAnimController animController  = variant.playConfig().systems().actorSpriteAnimController();
-
-        clapperboard = new Clapperboard("1", "THEY MEET");
-
-        msPacMan = actorFactory.createMsPacMan();
-        msPacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animContainer));
-
-        pacMan = actorFactory.createPacMan();
-        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animContainer));
-
-        inky = renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.CYAN_GHOST_BASHFUL);
-
-        pinky = renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.PINK_GHOST_SPEEDY);
-
-        heart = new Heart();
+        ClapperboardStateSystem.update(clapperboard);
+        updateScene(game, tick);
     }
 
     private void getReady(WorldNavigationSystem navigator) {
@@ -189,7 +167,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene {
         }
     }
 
-    private void playCutScene(GameContext game, int tick) {
+    private void updateScene(GameContext game, int tick) {
         final WorldNavigationSystem navigator = game.playConfig().systems().navigator();
         final ActorSpriteAnimController animSystem = game.playConfig().systems().actorSpriteAnimController();
 
@@ -278,4 +256,27 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene {
             heart.hide();
         }
     }
+
+    private void createActors() {
+        final var actorFactory = TengenMsPacMan_ActorFactory.instance();
+        final GameVariantRuntime variant = app().variantManager().currentRuntime();
+        final GameVariantRenderConfig renderConfig = variant.uiConfig().renderConfig();
+        final SpriteAnimationContainer animContainer    = variant.spriteAnimContainer();
+        final ActorSpriteAnimController animController  = variant.playConfig().systems().actorSpriteAnimController();
+
+        clapperboard = new Clapperboard("1", "THEY MEET");
+
+        msPacMan = actorFactory.createMsPacMan();
+        msPacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animContainer));
+
+        pacMan = actorFactory.createPacMan();
+        pacMan.spriteAnim().setSpriteAnimations(renderConfig.createPacAnimations(animContainer));
+
+        inky = renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.CYAN_GHOST_BASHFUL);
+
+        pinky = renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.PINK_GHOST_SPEEDY);
+
+        heart = new Heart();
+    }
+
 }

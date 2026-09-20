@@ -18,7 +18,7 @@ import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.tengenmspacman.entities.bag.BagAnimationSystem;
 import de.amr.pacmanfx.tengenmspacman.entities.bag.TengenMsPacMan_BagSAM;
-import de.amr.pacmanfx.tengenmspacman.entities.clapperboard.TengenMsPacMan_ClapperboardStateSystem;
+import de.amr.pacmanfx.tengenmspacman.entities.clapperboard.ClapperboardStateSystem;
 import de.amr.pacmanfx.tengenmspacman.entities.stork.TengenMsPacMan_StorkSAM;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
@@ -130,7 +130,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene {
 
         if (tick == TICK_CLAP) {
             clapperboard.show();
-            TengenMsPacMan_ClapperboardStateSystem.init(clapperboard);
+            ClapperboardStateSystem.init(clapperboard);
             playMusic();
         }
         else if (tick == TICK_EXPIRES) {
@@ -138,7 +138,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene {
             return;
         }
 
-        TengenMsPacMan_ClapperboardStateSystem.update(clapperboard);
+        ClapperboardStateSystem.update(clapperboard);
         playCutScene(game, tick);
         BagAnimationSystem.update(bag);
     }

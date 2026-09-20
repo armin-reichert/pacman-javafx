@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.entities.clapperboard.comp.ClapperboardStateComp;
 
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_ClapperboardStateSystem {
+public class ClapperboardStateSystem {
 
     public static void init(Clapperboard clapperboard) {
         requireNonNull(clapperboard);
