@@ -19,6 +19,7 @@ import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
+import de.amr.pacmanfx.uilib.rendering.RenderableGameLevel;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
@@ -49,8 +50,8 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer {
 
     @Override
     public void render(Renderable r, long tick) {
-        if (r instanceof GameLevel level) {
-            renderGameLevel(level);
+        if (r instanceof RenderableGameLevel rgl) {
+            renderGameLevel(rgl.level());
         }
     }
 

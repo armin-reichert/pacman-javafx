@@ -8,15 +8,16 @@ import de.amr.basics.InfoMap;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
-import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.entities.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.*;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.sprites.*;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
+import de.amr.pacmanfx.uilib.rendering.RenderableGameLevel;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -54,10 +55,9 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer {
     @Override
     public void render(Renderable r, long tick) {
         Objects.requireNonNull(r);
-        if (r instanceof GameLevel level) {
-            drawLevel(level, tick);
-        } else {
-            throw new IllegalArgumentException("Cannot draw object of class %s".formatted(r.getClass()));
+        switch (r) {
+            case RenderableGameLevel rgl -> drawLevel(rgl.level(), tick);
+            default -> {}
         }
     }
 

@@ -13,7 +13,6 @@ import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
-import de.amr.pacmanfx.uilib.rendering.RenderableGameLevel;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
@@ -32,7 +31,7 @@ import javafx.util.Duration;
 
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.uilib.rendering.RenderableWrapper.assignLayer;
+import static de.amr.pacmanfx.uilib.rendering.RenderingReorderWrapper.reorder;
 import static java.util.Objects.requireNonNull;
 
 public class MiniPlaySceneView extends HBox implements Renderable {

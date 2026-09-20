@@ -4,12 +4,12 @@
 
 package de.amr.pacmanfx.tengenmspacman.gamescene.playscene;
 
+import de.amr.basics.InfoMap;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.HUD;
-import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.entities.Pac;
@@ -27,6 +27,7 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.gamescene.SceneDisplay;
+import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_LevelRenderInfoKey;
 import de.amr.pacmanfx.tengenmspacman.sprites.MapImageSet;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_MapRepository;
@@ -36,6 +37,8 @@ import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.uilib.assets.TranslationManager;
+import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
+import de.amr.pacmanfx.uilib.rendering.RenderableGameLevel;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
@@ -58,7 +61,7 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 import static de.amr.pacmanfx.tengenmspacman.gamescene.SceneDisplay.SCROLLING;
 import static de.amr.pacmanfx.ui.views.ContextMenuSupport.*;
-import static de.amr.pacmanfx.uilib.rendering.RenderableWrapper.assignLayer;
+import static de.amr.pacmanfx.uilib.rendering.RenderingReorderWrapper.reorder;
 
 /**
  * Tengen Ms. Pac-Man play scene, uses vertical scrolling by default to accommodate to NES screen size.
@@ -109,13 +112,32 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         if (level == null) return Stream.empty();
 
         final GameVariantRenderConfig renderConfig = app().variantManager().currentRuntime().uiConfig().renderConfig();
-        // Reassign layer to SCENE such that scene-specific renderer draws the game entities and
-        // can apply horizontal offset before rendering
         return Ufx.streamOf(
-            level.entities().all().map(renderConfig::renderable).map(r -> assignLayer(r, RenderingLayer.SCENE)),
-            // In Tengen, ghosts appear under the house door, so reassign the door z layer:
-            assignLayer(level.entities().house().door(), RenderingLayer.SCENE, 100)
+            createRenderableLevel(level),
+            level.entities().all().map(renderConfig::renderable)
+            // In Tengen, ghosts appear under the house door, so reassign the door's z-index:
+//            assignLayer(level.entities().house().door(), RenderingLayer.SCENE, 100)
         );
+    }
+
+    private RenderableGameLevel createRenderableLevel(GameLevel level) {
+        final WorldMap worldMap = level.worldMap();
+        final MapCategory mapCategory = worldMap.getConfigValue(TengenMsPacMan_LevelRenderInfoKey.MAP_CATEGORY);
+        final MapImageSet mapImageSet = worldMap.getConfigValue(TengenMsPacMan_LevelRenderInfoKey.MAP_IMAGE_SET);
+        final InfoMap renderInfo = new InfoMap();
+        renderInfo.clear();
+        renderInfo.put(TengenMsPacMan_LevelRenderInfoKey.MAP_CATEGORY, mapCategory);
+        renderInfo.put(TengenMsPacMan_LevelRenderInfoKey.MAP_IMAGE_SET, mapImageSet);
+
+        final var flashing = flashingState();
+        final boolean highlighted = flashing != null && flashing.isHighlighted();
+        final int flashingIndex = flashing != null ? flashing.flashingIndex() : -1;
+        renderInfo.put(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, highlighted);
+        renderInfo.put(LevelRenderInfoKey.FLASHING_INDEX, flashingIndex);
+        renderInfo.put(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, highlighted);
+        renderInfo.put(LevelRenderInfoKey.FLASHING_INDEX, flashingIndex);
+
+        return new RenderableGameLevel(level, renderInfo);
     }
 
     public double canvasHeightUnscaled() {

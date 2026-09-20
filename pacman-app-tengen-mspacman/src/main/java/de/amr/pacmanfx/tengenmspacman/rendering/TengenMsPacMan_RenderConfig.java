@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.math.RectShort;
+import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.Energizer;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
@@ -31,7 +32,6 @@ import de.amr.pacmanfx.tengenmspacman.gamescene.introscene.TengenMsPacMan_IntroS
 import de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene.TengenMsPacMan_OptionsScene;
 import de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene.TengenMsPacMan_OptionsScene_Renderer;
 import de.amr.pacmanfx.tengenmspacman.gamescene.playscene.TengenMsPacMan_PlayScene2D;
-import de.amr.pacmanfx.tengenmspacman.gamescene.playscene.TengenMsPacMan_PlayScene2D_Renderer;
 import de.amr.pacmanfx.tengenmspacman.gamescene.playscene.TengenMsPacMan_PlaySceneDebugInfoRenderer;
 import de.amr.pacmanfx.tengenmspacman.model.BonusSymbol;
 import de.amr.pacmanfx.tengenmspacman.model.TengenMsPacMan_ActorFactory;
@@ -158,6 +158,11 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
+    public Vector2f renderOffset() {
+        return new Vector2f(16, 0); // 2 tiles offset
+    }
+
+    @Override
     public Renderable renderable(GameEntity gameEntity) {
         return switch(gameEntity) {
             case Pac pac     -> renderablePac(pac);
@@ -175,15 +180,15 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     @Override
     public BaseRenderer createGameSceneRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
         return switch (gameScene) {
-            case TengenMsPacMan_BootScene ignored -> null;
-            case TengenMsPacMan_IntroScene ignored -> new TengenMsPacMan_IntroScene_Renderer(gameScene.app().variantManager().currentRuntime(), canvas);
-            case TengenMsPacMan_OptionsScene ignored -> new TengenMsPacMan_OptionsScene_Renderer(canvas);
-            case TengenMsPacMan_PlayScene2D playScene -> new TengenMsPacMan_PlayScene2D_Renderer(playScene, this, animController, canvas);
-            case TengenMsPacMan_CreditsScene ignored -> new TengenMsPacMan_CreditsScene_Renderer(canvas);
-            case TengenMsPacMan_CutScene1 ignored -> null;
-            case TengenMsPacMan_CutScene2 ignored -> null;
-            case TengenMsPacMan_CutScene3 ignored -> null;
-            case TengenMsPacMan_CutScene4 ignored -> null;
+            case TengenMsPacMan_BootScene ignore    -> null;
+            case TengenMsPacMan_IntroScene ignore   -> new TengenMsPacMan_IntroScene_Renderer(gameScene.app().variantManager().currentRuntime(), canvas);
+            case TengenMsPacMan_OptionsScene ignore -> new TengenMsPacMan_OptionsScene_Renderer(canvas);
+            case TengenMsPacMan_PlayScene2D ignore  -> null;
+            case TengenMsPacMan_CreditsScene ignore -> new TengenMsPacMan_CreditsScene_Renderer(canvas);
+            case TengenMsPacMan_CutScene1 ignore    -> null;
+            case TengenMsPacMan_CutScene2 ignore    -> null;
+            case TengenMsPacMan_CutScene3 ignore    -> null;
+            case TengenMsPacMan_CutScene4 ignore    -> null;
             default -> throw new IllegalStateException("Unexpected value: " + gameScene);
         };
     }

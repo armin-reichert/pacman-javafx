@@ -3,21 +3,21 @@ package de.amr.pacmanfx.uilib.rendering;
 import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.rendering.Renderable;
 
-public class RenderableWrapper implements Renderable {
+public class RenderingReorderWrapper implements Renderable {
 
-    public static RenderableWrapper assignLayer(Renderable r, RenderingLayer layer, int z) {
-        return new RenderableWrapper(r, layer, z);
+    public static RenderingReorderWrapper reorder(Renderable r, RenderingLayer layer, int z) {
+        return new RenderingReorderWrapper(r, layer, z);
     }
 
-    public static RenderableWrapper assignLayer(Renderable r, RenderingLayer layer) {
-        return new RenderableWrapper(r, layer, 0);
+    public static RenderingReorderWrapper reorder(Renderable r, RenderingLayer layer) {
+        return new RenderingReorderWrapper(r, layer, 0);
     }
 
     private final RenderingLayer targetLayer;
     private final Renderable renderable;
     private final int z;
 
-    private RenderableWrapper(Renderable renderable, RenderingLayer targetLayer, int z) {
+    private RenderingReorderWrapper(Renderable renderable, RenderingLayer targetLayer, int z) {
         this.renderable = renderable;
         this.targetLayer = targetLayer;
         this.z = z;

@@ -13,6 +13,6 @@ public record RenderableGameLevel(GameLevel level, InfoMap renderInfo) implement
 
     @Override
     public RenderingLayer layer() {
-        return RenderingLayer.SCENE;
+        return RenderingLayer.WORLD;
     }
 }

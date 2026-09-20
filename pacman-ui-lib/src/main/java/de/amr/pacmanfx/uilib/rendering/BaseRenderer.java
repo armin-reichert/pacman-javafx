@@ -64,6 +64,7 @@ public class BaseRenderer implements Renderer {
 
     protected InfoMap info;
 
+
     public BaseRenderer(Canvas canvas) {
         ctx = requireNonNull(canvas).getGraphicsContext2D();
         info = new InfoMap();

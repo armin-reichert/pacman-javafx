@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
-import de.amr.pacmanfx.uilib.rendering.RenderableWrapper;
+import de.amr.pacmanfx.uilib.rendering.RenderingReorderWrapper;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 
 public class MiniPlaySceneViewRenderer extends BaseRenderer {
@@ -48,7 +48,7 @@ public class MiniPlaySceneViewRenderer extends BaseRenderer {
                 levelRenderer.info().put(LevelRenderInfoKey.MAZE_IS_FLASHING, false);
                 levelRenderer.render(level, tick);
             }
-            case RenderableWrapper wrapper -> render(wrapper.content(), tick);
+            case RenderingReorderWrapper wrapper -> render(wrapper.content(), tick);
             default -> entityRenderer.render(r, tick);
         }
     }

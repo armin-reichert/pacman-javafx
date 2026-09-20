@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.game;
 
+import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.Ghost;
@@ -32,6 +33,10 @@ public interface GameVariantRenderConfig {
     GenericWorldMapColorScheme colorScheme(WorldMap worldMap, WorldSettings worldSettings);
 
     HUD_Style hudStyle();
+
+    default Vector2f renderOffset() {
+        return Vector2f.ZERO;
+    }
 
     Renderable renderable(GameEntity gameEntity);
 

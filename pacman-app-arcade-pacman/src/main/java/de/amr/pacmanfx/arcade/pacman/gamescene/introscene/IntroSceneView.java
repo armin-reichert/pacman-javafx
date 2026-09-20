@@ -10,6 +10,7 @@ import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.model.GhostPersonality;
@@ -26,6 +27,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.arcade.pacman.rendering.SpriteID.GALLERY_GHOSTS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.*;
+import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderableGameEntity;
 import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderablePac;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
 
@@ -55,10 +57,9 @@ public class IntroSceneView {
 
     // Chase animation
     final Energizer targetEnergizer;
-
+    GhostPoints points;
     Pac pacMan;
     Ghost[] ghosts;
-    GhostPoints points;
 
     // Points display
     final Energizer energizer;
@@ -133,7 +134,7 @@ public class IntroSceneView {
             copyrightText.isVisible() ? copyrightText : null,
             pacMan.isVisible() ? renderablePac(pacMan) : null,
             Arrays.stream(ghosts).filter(Ghost::isVisible).map(RenderableGameEntity::renderableGhost),
-            points
+            points != null && points.isVisible() ? renderableGameEntity(points, RenderingLayer.PROPS, 0) : null
         );
     }
 
