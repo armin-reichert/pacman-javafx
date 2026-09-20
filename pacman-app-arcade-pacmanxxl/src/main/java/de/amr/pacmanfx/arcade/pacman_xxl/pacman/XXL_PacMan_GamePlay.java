@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.HUD;
-import de.amr.pacmanfx.core.entities.pac.Pac;
+import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;

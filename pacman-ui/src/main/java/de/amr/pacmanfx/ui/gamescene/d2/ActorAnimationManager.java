@@ -6,8 +6,8 @@ package de.amr.pacmanfx.ui.gamescene.d2;
 
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.spriteanim.CommonSpriteAnimationID;
-import de.amr.pacmanfx.core.entities.ghost.Ghost;
-import de.amr.pacmanfx.core.entities.pac.Pac;
+import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
+import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;

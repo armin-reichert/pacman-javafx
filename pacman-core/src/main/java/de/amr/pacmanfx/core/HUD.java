@@ -2,11 +2,11 @@ package de.amr.pacmanfx.core;
 
 import de.amr.basics.QuerySet;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.hud.levelCounter.LevelCounter;
-import de.amr.pacmanfx.core.hud.livescounter.LivesCounter;
-import de.amr.pacmanfx.core.hud.score.Score;
-import de.amr.pacmanfx.core.props.textdisplay.TextDisplay;
-import de.amr.pacmanfx.core.hud.score.ScoreSystem;
+import de.amr.pacmanfx.core.entities.hud.levelCounter.LevelCounter;
+import de.amr.pacmanfx.core.entities.hud.livescounter.LivesCounter;
+import de.amr.pacmanfx.core.entities.hud.score.Score;
+import de.amr.pacmanfx.core.entities.hud.score.ScoreSystem;
+import de.amr.pacmanfx.core.entities.props.textdisplay.TextDisplay;
 import de.amr.pacmanfx.core.rendering.Renderable;
 
 import java.util.stream.Stream;

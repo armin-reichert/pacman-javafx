@@ -1,0 +1,69 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
+package de.amr.pacmanfx.core.entities.actor.pac;
+
+import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.ecs.systems.WorldMovementPolicy;
+import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
+import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.rules.ActorSpeedRules;
+import de.amr.pacmanfx.core.rules.GameRules;
+
+import static java.util.Objects.requireNonNull;
+
+public class PacUpdateSystem {
+
+    private final WorldNavigationSystem navigator;
+    private final PacDigestionSystem pacDigestionSystem;
+    private final PacPowerSystem pacPowerSystem;
+    private final PacAutoSteeringSystem pacAutoSteeringSystem;
+    private final PacAnimationSystem pacAnimationSystem;
+    private final WorldMovementPolicy<Pac> movementPolicy;
+
+    public PacUpdateSystem(
+        PacDigestionSystem pacDigestionSystem,
+        PacPowerSystem pacPowerSystem,
+        PacAutoSteeringSystem pacAutoSteeringSystem,
+        PacAnimationSystem pacAnimationSystem,
+        WorldMovementPolicy<Pac> movementPolicy,
+        WorldNavigationSystem navigator)
+    {
+        this.pacDigestionSystem = requireNonNull(pacDigestionSystem);
+        this.pacPowerSystem = requireNonNull(pacPowerSystem);
+        this.pacAutoSteeringSystem = requireNonNull(pacAutoSteeringSystem);
+        this.pacAnimationSystem = requireNonNull(pacAnimationSystem);
+        this.movementPolicy = requireNonNull(movementPolicy);
+        this.navigator = requireNonNull(navigator);
+    }
+
+    public void update(GameContext game, GameLevel level, Pac pac) {
+        requireNonNull(game);
+        requireNonNull(level);
+        requireNonNull(pac);
+
+        switch (pac.state().enumValue()) {
+            case SLEEPING, DEAD -> pac.worldNavigation().setPaused(true);
+            case ACTIVE -> pac.worldNavigation().setPaused(false);
+        }
+
+        final GameRules rules = game.playConfig().rules();
+
+        if (!pac.worldNavigation().isPaused()) {
+            final GameSession session = game.session();
+            final ActorSpeedRules speedRules = rules.actorSpeedRules();
+            final float speed = pac.power().isActive()
+                ? speedRules.pacSpeedWhenHasPower(game, level)
+                : speedRules.pacSpeed(game, level);
+            pacAutoSteeringSystem.update(session, pac);
+            navigator.setSpeed(pac, speed);
+            navigator.tryMovingOrTeleporting(level, pac, movementPolicy);
+        }
+
+        pacDigestionSystem.update(pac);
+        pacPowerSystem.update(pac, rules.pacPowerFadingSeconds(level.number()));
+        pacAnimationSystem.update(pac, game.playConfig().rules());
+    }
+}

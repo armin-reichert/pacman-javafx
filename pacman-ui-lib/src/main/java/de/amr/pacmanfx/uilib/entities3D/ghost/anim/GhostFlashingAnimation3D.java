@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.uilib.entities3D.ghost.anim;
 
-import de.amr.pacmanfx.core.entities.ghost.Ghost;
+import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DViewComp;
 import de.amr.pacmanfx.uilib.entities3D.ghost.comp.GhostComponentColors;

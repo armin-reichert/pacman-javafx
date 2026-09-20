@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.gamescene.common;
 import de.amr.basics.Named;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.entities.pac.Pac;
+import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.GameUI;

@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.uilib.entities3D.ghost.system;
 
 import de.amr.basics.math.Vector2f;
-import de.amr.pacmanfx.core.entities.ghost.Ghost;
+import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DAnimationComp;
 import de.amr.pacmanfx.uilib.entities3D.ghost.comp.Ghost3DViewComp;
 

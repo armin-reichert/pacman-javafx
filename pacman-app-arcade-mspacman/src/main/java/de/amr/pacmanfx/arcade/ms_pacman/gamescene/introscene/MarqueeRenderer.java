@@ -4,11 +4,11 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.gamescene.introscene;
 
-import de.amr.pacmanfx.core.props.marquee.Marquee;
-import de.amr.pacmanfx.core.props.marquee.MarqueeArea;
-import de.amr.pacmanfx.core.props.marquee.MarqueeCorners;
-import de.amr.pacmanfx.core.props.marquee.MarqueeLayoutComp;
-import de.amr.pacmanfx.core.props.marquee.MarqueeVisualComp;
+import de.amr.pacmanfx.core.entities.props.marquee.Marquee;
+import de.amr.pacmanfx.core.entities.props.marquee.MarqueeArea;
+import de.amr.pacmanfx.core.entities.props.marquee.MarqueeCorners;
+import de.amr.pacmanfx.core.entities.props.marquee.MarqueeLayoutComp;
+import de.amr.pacmanfx.core.entities.props.marquee.MarqueeVisualComp;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;

@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.entities3D.levelcounter.system;
 
-import de.amr.pacmanfx.core.hud.levelCounter.LevelCounter;
+import de.amr.pacmanfx.core.entities.hud.levelCounter.LevelCounter;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.game.GameVariantUIConfig;

@@ -6,7 +6,7 @@ package de.amr.pacmanfx.core.model.world.map;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.entities.HPortal;
+import de.amr.pacmanfx.core.entities.world.HPortal;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.obstacle.Obstacle;
 import de.amr.pacmanfx.core.model.world.obstacle.ObstacleBuilder;

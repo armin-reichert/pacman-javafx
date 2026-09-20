@@ -6,8 +6,8 @@ package de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.hud.score.Score;
-import de.amr.pacmanfx.core.hud.score.ScoreSystem;
+import de.amr.pacmanfx.core.entities.hud.score.Score;
+import de.amr.pacmanfx.core.entities.hud.score.ScoreSystem;
 import de.amr.pacmanfx.core.event.HighScoreAccessErrorEvent;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.rendering.Renderable;

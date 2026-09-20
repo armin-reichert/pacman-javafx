@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.ui.entities3D.livescounter.system;
 
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.hud.livescounter.LivesCounter;
+import de.amr.pacmanfx.core.entities.hud.livescounter.LivesCounter;
 import de.amr.pacmanfx.ui.entities3D.livescounter.comp.LivesCounter3DViewComp;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.NodePositionTracker;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DViewComp;

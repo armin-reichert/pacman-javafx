@@ -20,11 +20,7 @@ open module de.amr.pacmanfx.uilib {
     exports de.amr.pacmanfx.uilib.controls;
     exports de.amr.pacmanfx.uilib.controls.skin;
 
-    exports de.amr.pacmanfx.uilib.entities;
-    exports de.amr.pacmanfx.uilib.entities.imagedisplay.comp;
-    exports de.amr.pacmanfx.uilib.entities.hud.comp;
-    exports de.amr.pacmanfx.uilib.entities.messageview.comp;
-
+    exports de.amr.pacmanfx.uilib.entities.hud;
     exports de.amr.pacmanfx.uilib.entities3D.animation;
     exports de.amr.pacmanfx.uilib.entities3D.ghost.comp;
     exports de.amr.pacmanfx.uilib.entities3D.bonus.anim;

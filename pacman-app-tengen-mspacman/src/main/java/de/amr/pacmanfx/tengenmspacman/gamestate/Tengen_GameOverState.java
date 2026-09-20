@@ -8,7 +8,7 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.entities.house.House;
+import de.amr.pacmanfx.core.entities.world.house.House;
 import de.amr.pacmanfx.core.event.HighScoreAccessErrorEvent;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;

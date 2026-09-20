@@ -3,7 +3,7 @@ package de.amr.pacmanfx.tengenmspacman;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.HUD;
-import de.amr.pacmanfx.core.hud.livescounter.LivesCounter;
+import de.amr.pacmanfx.core.entities.hud.livescounter.LivesCounter;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.HUD_UpdateSystem;
 import de.amr.pacmanfx.core.level.GameLevel;

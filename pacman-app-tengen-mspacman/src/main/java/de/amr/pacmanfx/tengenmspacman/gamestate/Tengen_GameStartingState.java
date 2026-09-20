@@ -6,8 +6,8 @@ package de.amr.pacmanfx.tengenmspacman.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.entities.pac.Pac;
-import de.amr.pacmanfx.core.entities.pac.PacState;
+import de.amr.pacmanfx.core.entities.actor.pac.Pac;
+import de.amr.pacmanfx.core.entities.actor.pac.PacState;
 import de.amr.pacmanfx.core.event.gameplay.GameStartedEvent;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;

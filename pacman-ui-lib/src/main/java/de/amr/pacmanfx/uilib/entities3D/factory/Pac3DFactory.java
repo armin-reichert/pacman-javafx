@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.uilib.entities3D.factory;
 
-import de.amr.pacmanfx.core.entities.pac.Pac;
+import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.uilib.PacMan3DModel;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DTransformComp;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DViewComp;

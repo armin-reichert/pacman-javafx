@@ -4,9 +4,9 @@
 
 package de.amr.pacmanfx.uilib.entities3D.pac.anim;
 
-import de.amr.pacmanfx.core.entities.pac.Pac;
-import de.amr.pacmanfx.core.entities.pac.PacState;
-import de.amr.pacmanfx.core.entities.pac.PacStateComp;
+import de.amr.pacmanfx.core.entities.actor.pac.Pac;
+import de.amr.pacmanfx.core.entities.actor.pac.PacState;
+import de.amr.pacmanfx.core.entities.actor.pac.PacStateComp;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3D.pac.comp.Pac3DViewComp;
 import javafx.animation.Animation;

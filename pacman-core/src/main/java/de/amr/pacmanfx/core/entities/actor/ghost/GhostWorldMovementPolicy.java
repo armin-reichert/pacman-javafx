@@ -1,0 +1,61 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
+package de.amr.pacmanfx.core.entities.actor.ghost;
+
+import de.amr.basics.math.Vector2i;
+import de.amr.pacmanfx.core.ecs.systems.WorldMovementPolicy;
+import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
+import de.amr.pacmanfx.core.model.world.map.TerrainTile;
+import org.tinylog.Logger;
+
+import java.util.Set;
+
+import static de.amr.basics.math.Direction.UP;
+import static de.amr.pacmanfx.core.Validations.isOneOf;
+import static java.util.Objects.requireNonNull;
+
+public class GhostWorldMovementPolicy implements WorldMovementPolicy<Ghost> {
+
+    private static final Set<GhostState> DOOR_PASSING_STATES = Set.of(GhostState.ENTERING_HOUSE, GhostState.LEAVING_HOUSE);
+    private static final Set<GhostState> TURN_BACK_STATES = Set.of(GhostState.HUNTING_PAC, GhostState.FRIGHTENED);
+
+    @Override
+    public boolean canAccessTile(GameLevel level, Ghost ghost, Vector2i tile) {
+        requireNonNull(level);
+        requireNonNull(ghost);
+        requireNonNull(tile);
+
+        final TerrainLayer terrainLayer = level.worldMap().terrainLayer();
+
+        // Portal tiles are the only tiles outside the world map that can be accessed
+        if (terrainLayer.outOfBounds(tile)) {
+            return terrainLayer.isTileInPortalSpace(tile);
+        }
+
+        final GhostWorldInfoComp worldInfo = ghost.reqComp(GhostWorldInfoComp.class);
+        final Vector2i myTile = ghost.pos().tile();
+
+        // Hunting ghosts cannot enter some tiles in Pac-Man game from below
+        // TODO: this is game-specific and does not belong here
+        if (worldInfo.specialTerrainTiles().contains(tile)
+            && ghost.state().enumValue() == GhostState.HUNTING_PAC
+            && terrainLayer.content(tile) == TerrainTile.ONE_WAY_DOWN.$
+            && tile.equals(myTile.plus(UP.vector()))
+        ) {
+            Logger.debug("Hunting {} cannot move up to special tile {}", ghost.name(), tile);
+            return false;
+        }
+        if (worldInfo.house() != null && worldInfo.house().isDoorAt(tile)) {
+            return isOneOf(ghost.state().enumValue(), DOOR_PASSING_STATES);
+        }
+        return !terrainLayer.isInaccessibleTile(tile);
+    }
+
+    @Override
+    public boolean canTurnBack(Ghost ghost) {
+        return ghost.worldNavigation().isNewTileEntered() && isOneOf(ghost.state().enumValue(), TURN_BACK_STATES);
+    }
+}

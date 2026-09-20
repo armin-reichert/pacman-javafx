@@ -1,6 +1,6 @@
 package de.amr.pacmanfx.uilib.widgets;
 
-import de.amr.pacmanfx.core.hud.score.Score;
+import de.amr.pacmanfx.core.entities.hud.score.Score;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.uilib.entities3D.score.comp.ScoreViewComp;
 import javafx.scene.layout.GridPane;

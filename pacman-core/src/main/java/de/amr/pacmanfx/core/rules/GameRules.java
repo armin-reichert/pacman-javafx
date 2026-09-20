@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.core.rules;
 
 import de.amr.basics.Named;
-import de.amr.pacmanfx.core.entities.ghost.Ghost;
+import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.level.GameLevel;
 
 import java.util.List;

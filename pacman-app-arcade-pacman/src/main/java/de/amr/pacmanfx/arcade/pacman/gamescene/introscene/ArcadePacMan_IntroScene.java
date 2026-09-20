@@ -13,10 +13,10 @@ import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.spriteanim.CommonSpriteAnimationID;
-import de.amr.pacmanfx.core.entities.ghost.Ghost;
-import de.amr.pacmanfx.core.props.ghostpoints.GhostPoints;
-import de.amr.pacmanfx.core.entities.ghost.GhostState;
-import de.amr.pacmanfx.core.entities.ghost.GhostAnimationSystem;
+import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
+import de.amr.pacmanfx.core.entities.props.ghostpoints.GhostPoints;
+import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;
+import de.amr.pacmanfx.core.entities.actor.ghost.GhostAnimationSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.rules.CollisionStrategy;
@@ -29,7 +29,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.arcade.pacman.gamescene.introscene.IntroSceneController.*;
-import static de.amr.pacmanfx.core.entities.ghost.GhostState.EATEN;
+import static de.amr.pacmanfx.core.entities.actor.ghost.GhostState.EATEN;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 
 /**
