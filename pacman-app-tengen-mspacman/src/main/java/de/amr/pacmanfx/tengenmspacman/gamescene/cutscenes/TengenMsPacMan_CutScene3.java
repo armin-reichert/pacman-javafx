@@ -30,9 +30,9 @@ import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import java.util.stream.Stream;
 
+import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderablePac;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
-import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderableActor;
 
 /**
  * Intermission scene 3: "Junior".
@@ -69,8 +69,8 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene {
         if (darkness) return Stream.empty();
         return Ufx.streamOf(
             clapperboard,
-            renderableActor(pacMan),
-            renderableActor(msPacMan),
+            renderablePac(pacMan),
+            renderablePac(msPacMan),
             stork,
             bag
         );

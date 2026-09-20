@@ -29,7 +29,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
-import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderableActor;
+import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderablePac;
 
 /**
  * Intermission scene 2: "The chase".
@@ -74,8 +74,8 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene {
     public Stream<Renderable> renderables() {
         return Ufx.streamOf(
             clapperboard,
-            renderableActor(msPacMan),
-            renderableActor(pacMan)
+            renderablePac(msPacMan),
+            renderablePac(pacMan)
         );
     }
 

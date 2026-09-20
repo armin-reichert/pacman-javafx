@@ -108,10 +108,11 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         final GameLevel level = game().session().optLevel().orElse(null);
         if (level == null) return Stream.empty();
 
+        final GameVariantRenderConfig renderConfig = app().variantManager().currentRuntime().uiConfig().renderConfig();
         // Reassign layer to SCENE such that scene-specific renderer draws the game entities and
         // can apply horizontal offset before rendering
         return Ufx.streamOf(
-            level.renderables().map(r -> assignLayer(r, RenderingLayer.SCENE)),
+            level.entities().all().map(renderConfig::renderable).map(r -> assignLayer(r, RenderingLayer.SCENE)),
             // In Tengen, ghosts appear under the house door, so reassign the door z layer:
             assignLayer(level.entities().house().door(), RenderingLayer.SCENE, 100)
         );

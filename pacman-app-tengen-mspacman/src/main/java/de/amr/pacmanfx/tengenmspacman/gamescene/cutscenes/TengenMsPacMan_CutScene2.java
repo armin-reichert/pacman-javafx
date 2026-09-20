@@ -28,9 +28,9 @@ import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import java.util.stream.Stream;
 
+import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderablePac;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
-import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderableActor;
 
 /**
  * Intermission scene 2: "The chase".
@@ -63,8 +63,8 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene {
     public Stream<Renderable> renderables() {
         return Ufx.streamOf(
             clapperboard,
-            renderableActor(pacMan),
-            renderableActor(msPacMan)
+            renderablePac(pacMan),
+            renderablePac(msPacMan)
         );
     }
 

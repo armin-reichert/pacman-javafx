@@ -21,7 +21,7 @@ import java.util.Optional;
  *
  * <p>TODO: That's not exactly the original Ms. Pac-Man behaviour with predefined "fruit paths".
  */
-public final class Bonus extends GameEntity implements Renderable {
+public final class Bonus extends GameEntity {
 
     public static Bonus createStaticBonus(int symbolCode) {
         return new Bonus(symbolCode);
@@ -40,16 +40,6 @@ public final class Bonus extends GameEntity implements Renderable {
     public Bonus(int symbolCode) {
         setComp(BonusDataComp.class, new BonusDataComp(symbolCode));
         setComp(BonusStateComp.class, new BonusStateComp());
-    }
-
-    @Override
-    public RenderingLayer layer() {
-        return RenderingLayer.ACTORS;
-    }
-
-    @Override
-    public int z() {
-        return -1;
     }
 
     public BonusDataComp data() {

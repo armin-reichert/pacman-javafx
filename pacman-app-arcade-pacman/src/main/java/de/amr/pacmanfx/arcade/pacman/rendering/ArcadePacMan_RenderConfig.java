@@ -15,13 +15,18 @@ import de.amr.pacmanfx.arcade.pacman.gamescene.playscene.ArcadePacMan_GameLevel_
 import de.amr.pacmanfx.arcade.pacman.gamescene.playscene.Arcade_PlayScene2D;
 import de.amr.pacmanfx.arcade.pacman.gamescene.playscene.Arcade_PlayScene2D_Renderer;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
+import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
+import de.amr.pacmanfx.core.entities.Bonus;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
+import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.level.MessageType;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.assets.GlobalAssets;
@@ -32,7 +37,6 @@ import de.amr.pacmanfx.uilib.assets.AssetMap;
 import de.amr.pacmanfx.uilib.entities.hud.comp.HUD_Style;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -40,6 +44,7 @@ import javafx.scene.paint.Color;
 import java.util.EnumMap;
 import java.util.Map;
 
+import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.*;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
 import static java.util.Objects.requireNonNull;
 
@@ -52,7 +57,7 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig, Dispo
         MESSAGE_TEXTS.put(MessageType.NO_MESSAGE, "");
     }
 
-    private static final Rectangle2D BOOT_SCENE_SPRITES = new Rectangle2D(400, 0, 256, 160);
+//    private static final Rectangle2D BOOT_SCENE_SPRITES = new Rectangle2D(400, 0, 256, 160);
 
     private final AssetMap assets;
 
@@ -92,6 +97,16 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig, Dispo
     public GenericWorldMapColorScheme colorScheme(WorldMap worldMap, WorldSettings worldSettings) {
         requireNonNull(worldMap);
         return GlobalAssets.enhanceContrast(worldSettings, ArcadePacMan_UIConfig.WORLD_MAP_COLOR_SCHEME);
+    }
+
+    @Override
+    public Renderable renderable(GameEntity gameEntity) {
+        return switch(gameEntity) {
+            case Pac pac     -> renderablePac(pac);
+            case Ghost ghost -> renderableGhost(ghost);
+            case Bonus bonus -> renderableBonus(bonus);
+            default -> renderableGameEntity(gameEntity, RenderingLayer.PROPS, 0);
+        };
     }
 
     @Override

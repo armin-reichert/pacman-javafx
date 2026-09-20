@@ -12,10 +12,17 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
+import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.entities.Bonus;
+import de.amr.pacmanfx.core.entities.Ghost;
+import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
+import de.amr.pacmanfx.core.level.GameLevelEntities;
 import de.amr.pacmanfx.core.rendering.Renderable;
+import de.amr.pacmanfx.core.rendering.RenderableGameEntity;
+import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.action.CheatActions;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationManager;
@@ -31,6 +38,8 @@ import org.tinylog.Logger;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderableGameEntity;
+import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderableGhost;
 import static de.amr.pacmanfx.ui.views.ContextMenuSupport.*;
 
 /**
@@ -62,9 +71,12 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
         if (level == null) {
             return Stream.empty();
         }
+
+        final GameVariantRenderConfig renderConfig = app().variantManager().currentRuntime().uiConfig().renderConfig();
         return Ufx.streamOf(
+            //TODO rethink this
             new RenderableGameLevel(level, createLevelRenderInfo(level)),
-            level.renderables() //TODO
+            level.entities().all().map(renderConfig::renderable)
         );
     }
 

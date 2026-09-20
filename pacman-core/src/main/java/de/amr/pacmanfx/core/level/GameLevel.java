@@ -5,23 +5,26 @@
 package de.amr.pacmanfx.core.level;
 
 import de.amr.basics.timer.Pulse;
-import de.amr.pacmanfx.core.rendering.Renderable;
-import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.gameplay.ArcadeHouseGateKeeper;
 import de.amr.pacmanfx.core.model.world.map.FoodState;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.core.rendering.RenderableGameEntity;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.rules.HuntingTimer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
 import static java.util.Objects.requireNonNull;
 
-public class GameLevel implements Renderable{
+//TODO Do NOT implement Renderable, use wrapper
+public class GameLevel implements Renderable {
+
+    @Override
+    public RenderingLayer layer() {
+        return RenderingLayer.SCENE;
+    }
 
     private final int number; // 1=first level
 
@@ -48,18 +51,6 @@ public class GameLevel implements Renderable{
         this.gateKeeper = new ArcadeHouseGateKeeper(number);
         this.foodState = new FoodState(worldMap.foodLayer());
         this.heartbeat = new Pulse(10, Pulse.State.OFF);
-    }
-
-    @Override
-    public RenderingLayer layer() {
-        return RenderingLayer.WORLD;
-    }
-
-    public Stream<Renderable> renderables() {
-        return entities.all()
-            .filter(GameEntity::isVisible)
-            //TODO not all level entities are "actors" and rendered on actor layer
-            .map(RenderableGameEntity::renderableActor);
     }
 
     /**
@@ -132,12 +123,6 @@ public class GameLevel implements Renderable{
 
     public GameLevelEntities entities() {
         return entities;
-    }
-
-    public Stream<Renderable> renderableEntities() {
-        return entities.all()
-            .filter(Renderable.class::isInstance)
-            .map(Renderable.class::cast);
     }
 
     public void clearBonusIndex() {

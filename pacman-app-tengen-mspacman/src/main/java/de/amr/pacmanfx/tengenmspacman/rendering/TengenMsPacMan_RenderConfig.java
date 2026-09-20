@@ -5,15 +5,20 @@
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.math.RectShort;
+import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
+import de.amr.pacmanfx.core.entities.Bonus;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Ghost;
+import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.level.MessageType;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.tengenmspacman.gamescene.bootscene.TengenMsPacMan_BootScene;
@@ -52,6 +57,7 @@ import javafx.scene.paint.Color;
 import java.util.EnumMap;
 import java.util.Map;
 
+import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.*;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
@@ -151,6 +157,16 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
         final GenericWorldMapColorScheme colorScheme = new GenericWorldMapColorScheme(
             spec.wallFill(), spec.wallStroke(), spec.door(), spec.pellet());
         return GlobalAssets.enhanceContrast(worldSettings, colorScheme);
+    }
+
+    @Override
+    public Renderable renderable(GameEntity gameEntity) {
+        return switch(gameEntity) {
+            case Pac pac -> renderablePac(pac);
+            case Ghost ghost -> renderableGhost(ghost);
+            case Bonus bonus -> renderableBonus(bonus);
+            default -> renderableGameEntity(gameEntity, RenderingLayer.PROPS, 0);
+        };
     }
 
     @Override

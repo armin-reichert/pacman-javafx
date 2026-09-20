@@ -32,8 +32,8 @@ import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderableActor;
 import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderableGhost;
+import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderablePac;
 
 
 /**
@@ -125,7 +125,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene {
     @Override
     public Stream<Renderable> renderables() {
         return Ufx.streamOf(
-            renderableActor(pacMan),
+            renderablePac(pacMan),
             renderableGhost(blinky),
             nailDress
         );

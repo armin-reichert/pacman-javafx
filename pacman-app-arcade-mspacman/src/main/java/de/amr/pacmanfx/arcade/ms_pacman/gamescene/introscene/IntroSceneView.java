@@ -17,6 +17,7 @@ import de.amr.pacmanfx.core.entities.TextDisplay;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostState;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.rendering.Renderable;
+import de.amr.pacmanfx.core.rendering.RenderableGameEntity;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantRuntime;
@@ -32,9 +33,9 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.arcade.ms_pacman.gamescene.introscene.ArcadeMsPacMan_IntroScene.*;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
+import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderablePac;
 import static de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene.createText;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
-import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderableActor;
 
 public class IntroSceneView {
 
@@ -63,8 +64,9 @@ public class IntroSceneView {
             marquee,
             marqueeText1,
             marqueeText2,
-            renderableActor(msPacMan),
-            ghosts, copyrightImage, copyrightTexts);
+            renderablePac(msPacMan),
+            ghosts.stream().map(RenderableGameEntity::renderableGhost),
+            copyrightImage, copyrightTexts);
     }
 
     public Pac msPacMan() {

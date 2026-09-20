@@ -13,6 +13,7 @@ import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
+import de.amr.pacmanfx.uilib.rendering.RenderableGameLevel;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
@@ -109,9 +110,10 @@ public class MiniPlaySceneView extends HBox implements Renderable {
 
     public Stream<Renderable> renderables() {
         if (!isVisible() || level == null) return Stream.empty();
+
         return Ufx.streamOf(
-            assignLayer(level, RenderingLayer.OVERLAY, -100),
-            level.renderableEntities().map(r -> assignLayer(r, RenderingLayer.OVERLAY, r.z()))
+            //assignLayer(level, RenderingLayer.OVERLAY, -100),
+            //level.renderableEntities().map(r -> assignLayer(r, RenderingLayer.OVERLAY, r.z()))
         );
     }
 

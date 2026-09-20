@@ -17,11 +17,11 @@ import de.amr.pacmanfx.core.entities.GhostPoints;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.game.GameVariantRuntime;
-import de.amr.pacmanfx.game.GameVariantRenderConfig;
-import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationTimer;
 import de.amr.pacmanfx.core.rendering.RenderableGameEntity;
+import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
+import de.amr.pacmanfx.game.GameVariantRenderConfig;
+import de.amr.pacmanfx.game.GameVariantRuntime;
+import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationTimer;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -36,7 +36,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderableActor;
+import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderablePac;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -90,7 +90,7 @@ class XXL_ChaseAnimation {
         ctx.save();
         ctx.translate(0, scaling.get() * y);
 
-        variantRenderer.render(renderableActor(pac), tick);
+        variantRenderer.render(renderablePac(pac), tick);
 
         ghosts.stream()
             .map(RenderableGameEntity::renderableGhost)

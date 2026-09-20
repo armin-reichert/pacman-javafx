@@ -64,9 +64,7 @@ public class GameLevelEntities {
                 }
                 theMessage = messageView;
             }
-            case Energizer energizer -> {
-                theEnergizers.add(energizer);
-            }
+            case Energizer energizer -> theEnergizers.add(energizer);
             default -> throw new IllegalArgumentException("Unknown entity type!");
         }
     }

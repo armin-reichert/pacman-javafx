@@ -4,10 +4,8 @@
 
 package de.amr.pacmanfx.core.entities;
 
-import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.MovementComp;
-import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
 import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.entities.ghost.comp.GhostAnimationComp;
@@ -22,23 +20,6 @@ import static java.util.Objects.requireNonNull;
  * A ghost. Ghosts differ in their personality which defines attack behavior and look.
  */
 public final class Ghost extends GameEntity {
-
-    /*
-    @Override
-    public RenderingLayer layer() {
-        return RenderingLayer.ACTORS;
-    }
-
-    @Override
-    public int z() {
-        return switch (personality) {
-            case RED_GHOST_SHADOW   -> 13; // on top of all other ghosts
-            case PINK_GHOST_SPEEDY  -> 12;
-            case CYAN_GHOST_BASHFUL -> 11;
-            case ORANGE_GHOST_POKEY -> 10; // behind all other ghosts
-        };
-    }
-*/
 
     private final GhostPersonality personality;
 

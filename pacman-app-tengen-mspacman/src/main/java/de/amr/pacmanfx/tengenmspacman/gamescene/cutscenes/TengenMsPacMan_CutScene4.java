@@ -16,6 +16,7 @@ import de.amr.pacmanfx.core.entities.Clapperboard;
 import de.amr.pacmanfx.core.entities.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.Pac;
 import de.amr.pacmanfx.core.rendering.Renderable;
+import de.amr.pacmanfx.core.rendering.RenderableGameEntity;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantRuntime;
@@ -31,7 +32,6 @@ import de.amr.pacmanfx.ui.input.JoypadButton;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import de.amr.pacmanfx.ui.sound.SoundID;
-import de.amr.pacmanfx.core.rendering.RenderableGameEntity;
 import org.tinylog.Logger;
 
 import java.util.ArrayList;
@@ -42,8 +42,9 @@ import java.util.stream.Stream;
 import static de.amr.basics.math.RandomNumbers.randomInt;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.*;
-import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderableActor;
+import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderablePac;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
+import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 
 public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
 
@@ -74,9 +75,9 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
     public Stream<Renderable> renderables() {
         return Ufx.streamOf(
             clapperboard,
-            renderableActor(pacMan),
-            renderableActor(msPacMan),
-            juniors.stream().map(RenderableGameEntity::renderableActor)
+            renderablePac(pacMan),
+            renderablePac(msPacMan),
+            juniors.stream().map(RenderableGameEntity::renderablePac)
         );
     }
 

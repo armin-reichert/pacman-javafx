@@ -26,8 +26,8 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.arcade.pacman.rendering.SpriteID.GALLERY_GHOSTS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.*;
+import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderablePac;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
-import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderableActor;
 
 public class IntroSceneView {
 
@@ -140,7 +140,7 @@ public class IntroSceneView {
         return Stream.concat(
             staticRenderables.stream(),
             Ufx.streamOf(
-                renderableActor(pacMan),
+                renderablePac(pacMan),
                 Arrays.stream(ghosts).map(RenderableGameEntity::renderableGhost),
                 points
             )

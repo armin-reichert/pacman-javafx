@@ -4,11 +4,13 @@
 
 package de.amr.pacmanfx.game;
 
+import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.Ghost;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimFacade;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
@@ -30,6 +32,8 @@ public interface GameVariantRenderConfig {
     GenericWorldMapColorScheme colorScheme(WorldMap worldMap, WorldSettings worldSettings);
 
     HUD_Style hudStyle();
+
+    Renderable renderable(GameEntity gameEntity);
 
     Renderer createGameLevelRenderer(ActorSpriteAnimController animController, Canvas canvas);
 
