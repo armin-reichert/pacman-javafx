@@ -13,12 +13,14 @@ import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.rendering.Renderable;
+import de.amr.pacmanfx.core.rendering.RenderableGameEntity;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.uilib.entities.ImageDisplay;
 import javafx.scene.paint.Color;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -139,7 +141,7 @@ public class IntroSceneView {
             staticRenderables.stream(),
             Ufx.streamOf(
                 renderableActor(pacMan),
-                ghosts,
+                Arrays.stream(ghosts).map(RenderableGameEntity::renderableGhost),
                 points
             )
         );

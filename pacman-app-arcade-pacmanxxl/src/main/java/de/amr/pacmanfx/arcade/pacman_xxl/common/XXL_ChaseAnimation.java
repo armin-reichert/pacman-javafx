@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderableActor;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -66,7 +67,7 @@ class XXL_ChaseAnimation {
     private Pac pac;
     private List<Ghost> ghosts;
     private GhostPoints ghostPoints;
-    private Renderer actorRenderer;
+    private Renderer variantRenderer;
     private ChasingState state;
 
     private int collisionCount;
@@ -82,16 +83,22 @@ class XXL_ChaseAnimation {
     }
 
     public void draw(long tick) {
-        if (actorRenderer == null) {
+        if (variantRenderer == null) {
             return;
         }
-        final GraphicsContext ctx = actorRenderer.ctx();
+        final GraphicsContext ctx = variantRenderer.ctx();
         ctx.save();
         ctx.translate(0, scaling.get() * y);
-        ghosts.forEach(ghost -> actorRenderer.render(ghost, tick));
-        actorRenderer.render(RenderableGameEntity.renderableActor(pac), tick);
+
+        variantRenderer.render(renderableActor(pac), tick);
+
+        ghosts.stream()
+            .map(RenderableGameEntity::renderableGhost)
+            .forEach(rg -> variantRenderer.render(rg, tick));
+
+
         if (ghostPoints != null) {
-            actorRenderer.render(ghostPoints, tick);
+            variantRenderer.render(ghostPoints, tick);
         }
         ctx.restore();
     }
@@ -132,8 +139,8 @@ class XXL_ChaseAnimation {
         navigator = variant.playConfig().systems().navigator();
         motor     = variant.playConfig().systems().motor();
 
-        actorRenderer = renderConfig.createRenderer(animController, canvas);
-        actorRenderer.scalingProperty().bind(scalingProperty());
+        variantRenderer = renderConfig.createVariantRenderer(animController, canvas);
+        variantRenderer.scalingProperty().bind(scalingProperty());
 
         createPac(renderConfig);
         createGhosts(renderConfig);

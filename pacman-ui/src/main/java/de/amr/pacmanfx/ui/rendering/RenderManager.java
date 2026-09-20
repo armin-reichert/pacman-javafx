@@ -57,7 +57,7 @@ public class RenderManager {
         if (sceneCanvas != null) {
             final ActorSpriteAnimController animController = playConfig.systems().actorSpriteAnimController();
 
-            variantRenderer    = renderConfig.createRenderer(animController, sceneCanvas);
+            variantRenderer    = renderConfig.createVariantRenderer(animController, sceneCanvas);
             sceneRenderer      = renderConfig.createGameSceneRenderer(gameScene, animController, sceneCanvas); // may return null!
             sceneDebugRenderer = renderConfig.createGameSceneDebugRenderer(gameScene, animController, sceneCanvas);
 

@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
+import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderableGhost;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderableActor;
@@ -81,8 +82,8 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene {
             heart,
             renderableActor(msPacMan),
             renderableActor(pacMan),
-            pinky,
-            inky
+            renderableGhost(pinky),
+            renderableGhost(inky)
         );
     }
 

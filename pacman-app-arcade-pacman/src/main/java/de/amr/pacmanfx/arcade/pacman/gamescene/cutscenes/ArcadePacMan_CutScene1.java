@@ -26,6 +26,7 @@ import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderableActor;
+import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderableGhost;
 
 /**
  * First cut scene in Arcade Pac-Man game:<br>
@@ -66,7 +67,8 @@ public class ArcadePacMan_CutScene1 extends AbstractGameScene {
     public Stream<Renderable> renderables() {
         return Ufx.streamOf(
             renderableActor(pacMan),
-            blinky);
+            renderableGhost(blinky)
+        );
     }
 
     @Override

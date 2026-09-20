@@ -38,7 +38,7 @@ import static java.util.Objects.requireNonNull;
 /**
  * Implements the rendering for all actor types occurring in the Arcade Ms. Pac-Man game.
  */
-public class ArcadeMsPacMan_EntityRenderer extends BaseRenderer {
+public class ArcadeMsPacMan_VariantRenderer extends BaseRenderer {
 
     // These arrays must be sorted!
     private static final int[] GHOST_POINTS = { 200, 400, 800, 1600 };
@@ -48,7 +48,7 @@ public class ArcadeMsPacMan_EntityRenderer extends BaseRenderer {
     private final ActorSpriteAnimController animController;
     private final MarqueeRenderer marqueeRenderer;
 
-    public ArcadeMsPacMan_EntityRenderer(ActorSpriteAnimController animController, Canvas canvas) {
+    public ArcadeMsPacMan_VariantRenderer(ActorSpriteAnimController animController, Canvas canvas) {
         super(canvas);
         this.animController = requireNonNull(animController);
 

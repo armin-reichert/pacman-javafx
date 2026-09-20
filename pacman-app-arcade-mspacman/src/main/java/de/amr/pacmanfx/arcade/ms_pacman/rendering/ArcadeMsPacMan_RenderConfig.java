@@ -112,11 +112,11 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public BaseRenderer createRenderer(ActorSpriteAnimController animController, Canvas canvas) {
+    public BaseRenderer createVariantRenderer(ActorSpriteAnimController animController, Canvas canvas) {
         requireNonNull(animController);
         requireNonNull(canvas);
 
-        return new ArcadeMsPacMan_EntityRenderer(animController, canvas);
+        return new ArcadeMsPacMan_VariantRenderer(animController, canvas);
     }
 
     @Override

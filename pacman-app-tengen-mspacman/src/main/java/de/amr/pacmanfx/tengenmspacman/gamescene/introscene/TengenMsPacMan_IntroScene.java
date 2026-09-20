@@ -90,7 +90,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
         return Ufx.streamOf(
             marquee,
             RenderableGameEntity.renderableActor(msPacMan),
-            ghosts
+            ghosts.stream().map(RenderableGameEntity::renderableGhost)
         );
     }
 

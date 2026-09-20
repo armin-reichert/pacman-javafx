@@ -14,6 +14,7 @@ import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.*;
 import de.amr.pacmanfx.core.entities.door.comp.DoorDataComp;
 import de.amr.pacmanfx.core.rendering.Renderable;
+import de.amr.pacmanfx.core.rendering.RenderableGameEntity;
 import de.amr.pacmanfx.core.spriteanim.SpriteAnimation;
 import de.amr.pacmanfx.tengenmspacman.entities.GameOptionsDisplay;
 import de.amr.pacmanfx.tengenmspacman.entities.Heart;
@@ -41,7 +42,7 @@ import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static java.util.Objects.requireNonNull;
 
-public class TengenMsPacMan_EntityRenderer extends BaseRenderer {
+public class TengenMsPacMan_VariantRenderer extends BaseRenderer {
 
     // These arrays must be sorted!
     private static final int[] GHOST_POINTS = { 200, 400, 800, 1600 };
@@ -52,7 +53,7 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer {
     private final ActorSpriteAnimController animSystem;
     private final MarqueeRenderer marqueeRenderer;
 
-    public TengenMsPacMan_EntityRenderer(ActorSpriteAnimController animSystem, Canvas canvas) {
+    public TengenMsPacMan_VariantRenderer(ActorSpriteAnimController animSystem, Canvas canvas) {
         super(canvas);
         this.animSystem = requireNonNull(animSystem);
 
@@ -69,17 +70,17 @@ public class TengenMsPacMan_EntityRenderer extends BaseRenderer {
     @Override
     public void render(Renderable r, long tick) {
         requireNonNull(r);
-        if (r instanceof GameEntity gameEntity) {
-            if (gameEntity.isVisible()) {
-                renderGameEntity(gameEntity, tick);
-            }
-        } else {
-            super.render(r, tick);
+        switch (r) {
+            case RenderableGameEntity rge -> renderGameEntity(rge.gameEntity(), tick);
+            case GameEntity gameEntity    -> renderGameEntity(gameEntity, tick);
+            default -> super.render(r, tick);
         }
     }
 
     @Override
     protected void renderGameEntity(GameEntity gameEntity, long tick) {
+        if (!gameEntity.isVisible()) return;
+
         ctx.save();
         final Vector2f center = gameEntity.pos().bodyCenter();
         switch (gameEntity) {

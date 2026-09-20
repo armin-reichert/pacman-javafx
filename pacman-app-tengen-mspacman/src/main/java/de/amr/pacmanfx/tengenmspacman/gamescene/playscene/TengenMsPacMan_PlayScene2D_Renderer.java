@@ -37,7 +37,7 @@ public class TengenMsPacMan_PlayScene2D_Renderer extends BaseRenderer {
 
         final GameSceneCanvasRenderingComp canvasRendering = playScene.reqCanvasRendering();
 
-        entityRenderer = renderConfig.createRenderer(animController, canvas);
+        entityRenderer = renderConfig.createVariantRenderer(animController, canvas);
         entityRenderer.scalingProperty().bind(canvasRendering.scalingProperty());
         entityRenderer.backgroundColorProperty().bind(backgroundColorProperty());
 
