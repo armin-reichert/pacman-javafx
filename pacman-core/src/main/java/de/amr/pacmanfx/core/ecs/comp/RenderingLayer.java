@@ -8,10 +8,9 @@ public enum RenderingLayer {
     BACKGROUND,
     SCENE,
     WORLD,
-    PROPS,
     MESSAGE,
+    PROPS,
     ACTORS,
     HUD,
-    OVERLAY,
-    DEBUG
+    OVERLAY
 }

@@ -165,7 +165,7 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
             case Bonus bonus -> renderableBonus(bonus);
             case Energizer energizer -> renderableGameEntity(energizer, RenderingLayer.WORLD, 0);
             case House house -> renderableGameEntity(house, RenderingLayer.WORLD, 0);
-            case MessageView messageView -> renderableGameEntity(messageView, RenderingLayer.WORLD, 0);
+            case MessageView messageView -> renderableGameEntity(messageView, RenderingLayer.MESSAGE, 0);
             case GhostPoints ghostPoints -> renderableGameEntity(ghostPoints, RenderingLayer.PROPS, 0);
             case BonusPoints bonusPoints -> renderableGameEntity(bonusPoints, RenderingLayer.PROPS, 0);
             default -> renderableGameEntity(gameEntity, RenderingLayer.PROPS, 0);

@@ -8,6 +8,7 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.MovementComp;
+import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
@@ -36,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderableGameEntity;
 import static de.amr.pacmanfx.core.rendering.RenderableGameEntity.renderablePac;
 import static java.util.Objects.requireNonNull;
 
@@ -67,13 +69,14 @@ class XXL_ChaseAnimation {
     private Pac pac;
     private List<Ghost> ghosts;
     private GhostPoints ghostPoints;
-    private Renderer variantRenderer;
     private ChasingState state;
 
     private int collisionCount;
 
     private WorldNavigationSystem navigator;
     private MovementSystem motor;
+
+    private Renderer variantRenderer;
 
     public XXL_ChaseAnimation(int numTilesX) {
         this.numTilesX = numTilesX;
@@ -98,7 +101,8 @@ class XXL_ChaseAnimation {
 
 
         if (ghostPoints != null) {
-            variantRenderer.render(ghostPoints, tick);
+            final var r = renderableGameEntity(ghostPoints, RenderingLayer.PROPS, 0);
+            variantRenderer.render(r, tick);
         }
         ctx.restore();
     }
