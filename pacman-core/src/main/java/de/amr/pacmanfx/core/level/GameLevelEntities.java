@@ -14,9 +14,8 @@ import de.amr.pacmanfx.core.model.GhostPersonality;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.EnumMap;
+import java.util.Comparator;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -26,27 +25,14 @@ public class GameLevelEntities {
 
     private final QuerySet<GameEntity> entities = new QuerySet<>();
 
-    private final EnumMap<GhostPersonality, Ghost> theGhosts = new EnumMap<>(GhostPersonality.class);
-
     public void add(GameEntity entity) {
         requireNonNull(entity);
-        switch (entity) {
-            case Ghost ghost -> {
-                if (theGhosts.containsKey(ghost.personality())) {
-                    throw new IllegalArgumentException("Ghost %s already added to entity set!".formatted(ghost.name()));
-                }
-                theGhosts.put(ghost.personality(), ghost);
-            }
-            default -> entities.add(entity);
-        }
+        entities.add(entity);
     }
 
     public void remove(GameEntity entity) {
         requireNonNull(entity);
-        switch (entity) {
-            case Ghost ghost -> theGhosts.remove(ghost.personality());
-            default -> entities.remove(entity);
-        }
+        entities.remove(entity);
     }
 
     public void removeAll() {
@@ -54,11 +40,7 @@ public class GameLevelEntities {
     }
 
     public Stream<? extends GameEntity> all() {
-        return Stream.of(
-            theGhosts.values().stream(),
-            entities.all()
-        )
-        .flatMap(Function.identity());
+        return entities.all();
     }
 
     @SafeVarargs
@@ -71,12 +53,17 @@ public class GameLevelEntities {
     }
 
     public List<Ghost> ghosts() {
-        return List.copyOf(theGhosts.values());
+        return entities.ofType(Ghost.class).sorted(Comparator.comparing(Ghost::personality)).toList();
     }
 
     public Stream<Ghost> ghostsInState(GhostState state) {
         requireNonNull(state);
-        return theGhosts.values().stream().filter(ghost -> state.equals(ghost.state().enumValue()));
+        return entities.ofType(Ghost.class).filter(ghost -> state.equals(ghost.state().enumValue()));
+    }
+
+    public Stream<Ghost> ghostsInAnyOfStates(Collection<GhostState> stateAlternatives) {
+        requireNonNull(stateAlternatives);
+        return entities.ofType(Ghost.class).filter(ghost -> stateAlternatives.contains(ghost.state().enumValue()));
     }
 
     /**
@@ -85,15 +72,10 @@ public class GameLevelEntities {
      */
     public Ghost ghost(GhostPersonality personality) {
         requireNonNull(personality);
-        if (!theGhosts.containsKey(personality)) {
-            throw new IllegalArgumentException("Ghost %s not added to entity set!".formatted(personality.name()));
-        }
-        return theGhosts.get(personality);
-    }
-
-    public Stream<Ghost> ghostsInAnyOfStates(Collection<GhostState> states) {
-        requireNonNull(states);
-        return theGhosts.values().stream().filter(ghost -> states.contains(ghost.state().enumValue()));
+        return entities.ofType(Ghost.class)
+            .filter(ghost -> ghost.personality() == personality)
+            .findFirst()
+            .orElseThrow();
     }
 
     public Pac pac() {
