@@ -31,7 +31,7 @@ public class TengenMsPacMan_HUD_UpdateSystem extends HUD_UpdateSystem {
             final GameLevel level = session.level();
             final boolean starting = game.state().id() == CommonGameStateID.GAME_STARTING
                 || game.state().id() == CommonGameStateID.GAME_OR_LEVEL_STARTING;
-            if (starting && !level.entities().pac().isVisible()) {
+            if (starting && !level.entitySet().pac().isVisible()) {
                 ++numLivesShown;
             }
         }

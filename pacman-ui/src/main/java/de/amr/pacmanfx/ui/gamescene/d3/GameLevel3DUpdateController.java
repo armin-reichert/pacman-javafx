@@ -41,7 +41,7 @@ public class GameLevel3DUpdateController {
 
     private static void updatePac3D(GameLevel3D level3D) {
         final GameLevel level = level3D.level();
-        final Pac pac = level.entities().pac();
+        final Pac pac = level.entitySet().pac();
         Pac3DTransformSystem.update(pac, level);
         Pac3DAnimationSystem.update(pac);
         Pac3DAnimationSystem.updatePowerLight(pac);
@@ -54,7 +54,7 @@ public class GameLevel3DUpdateController {
 
     private static void updateGhosts3D(GameLevel3D level3D) {
         final GameLevel level = level3D.level();
-        level.entities().ghosts().forEach(ghost -> {
+        level.entitySet().ghosts().forEach(ghost -> {
             Ghost3DMovementSystem.update(ghost);
             Ghost3DAppearanceSystem.update(ghost);
         });
@@ -62,13 +62,13 @@ public class GameLevel3DUpdateController {
 
     private static void updateHouse3D(GameLevel3D level3D) {
         final GameLevel level = level3D.level();
-        final House house = level.entities().otherEntities().theOne(House.class);
+        final House house = level.entitySet().entities().theOne(House.class);
 
-        boolean accessRequested = level.entities().ghostsInAnyOfStates(GHOST_STATES_WITH_ACCESS_TO_HOUSE)
+        boolean accessRequested = level.entitySet().ghostsInAnyOfStates(GHOST_STATES_WITH_ACCESS_TO_HOUSE)
             .filter(ghost -> house.isDoorAt(ghost.pos().tile()))
             .anyMatch(GameEntity::isVisible);
 
-        boolean ghostNearHouseDoor = level.entities().ghostsInAnyOfStates(GHOST_STATES_REQUIRING_HOUSE_LIGHTING)
+        boolean ghostNearHouseDoor = level.entitySet().ghostsInAnyOfStates(GHOST_STATES_REQUIRING_HOUSE_LIGHTING)
             .filter(ghost -> ghostIsNearHouseDoor(house, ghost))
             .anyMatch(GameEntity::isVisible);
 
@@ -84,7 +84,7 @@ public class GameLevel3DUpdateController {
 
     private static void updateBonus3D(GameLevel3D level3D) {
         final GameLevel level = level3D.level();
-        final Bonus bonus = level.entities().otherEntities().anyOfTypeOrNull(Bonus.class);
+        final Bonus bonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
         if (bonus != null) {
             level3D.ensureBonus3DViewAddedToSceneGraph(bonus);
             switch (bonus.state().enumValue()) {

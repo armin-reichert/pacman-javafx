@@ -30,12 +30,12 @@ public final class Common_EatingGhostState extends AbstractGameState {
         timer().restartTicks(TickTimer.secToTicks(rules.eatenGhostDisplaySeconds()));
 
         level = session.level();
-        pac = level.entities().pac();
+        pac = level.entitySet().pac();
 
         pac.state().setEnumValue(PacState.SLEEPING);
         pac.hide();
 
-        level.entities().ghostsInState(GhostState.EATEN).forEach(Ghost::hide);
+        level.entitySet().ghostsInState(GhostState.EATEN).forEach(Ghost::hide);
     }
 
     @Override
@@ -50,7 +50,7 @@ public final class Common_EatingGhostState extends AbstractGameState {
     public void onExit(GameContext game) {
         pac.state().setEnumValue(PacState.ACTIVE);
         pac.show();
-        level.entities().ghostsInState(GhostState.EATEN).forEach(ghost -> {
+        level.entitySet().ghostsInState(GhostState.EATEN).forEach(ghost -> {
             ghost.show();
             systems.ghostState().setState(ghost, GhostState.RETURNING_HOME);
         });

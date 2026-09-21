@@ -70,12 +70,12 @@ public class LevelCompletedAnimation extends ManagedAnimation {
     private Animation createAnimationFX(int numFlashes) {
         final GameLevel level = level3D.level();
         final Maze3D maze3D = level3D.maze3D();
-        final House house = level.entities().otherEntities().theOne(House.class);
+        final House house = level.entitySet().entities().theOne(House.class);
         final Point3D rotationAxis = chance(0.5) ? Rotate.X_AXIS : Rotate.Z_AXIS;
         return new SequentialTransition(
-            pauseSecThen(0.5, () -> level.entities().ghosts().forEach(GameEntity::hide)),
+            pauseSecThen(0.5, () -> level.entitySet().ghosts().forEach(GameEntity::hide)),
             createMazeWallsSwingingAnimation(maze3D, numFlashes),
-            pauseSecThen(0.5, () -> level.entities().pac().hide()),
+            pauseSecThen(0.5, () -> level.entitySet().pac().hide()),
             pauseSec(0.5),
             levelRotation(rotationAxis),
             pauseSecThen(0.5, () -> level3D.optSoundEffects().ifPresent(GameSoundEffects::playLevelCompleteSound)),

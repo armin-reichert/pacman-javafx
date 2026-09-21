@@ -97,7 +97,7 @@ public class GameLevel3DAnimationManager implements Disposable {
 
         registry.register(AnimationID.LEVEL_COMPLETED_SHORT, new LevelCompletedAnimationShort(level3D, numFlashes));
 
-        final House house = level.entities().otherEntities().theOne(House.class);
+        final House house = level.entitySet().entities().theOne(House.class);
         createHouseAnimations(house);
 
         createEnergizerAnimations(variantUIConfig.worldSettings().energizer());
@@ -106,7 +106,7 @@ public class GameLevel3DAnimationManager implements Disposable {
 
         createGhostLightAnimation(variantUIConfig, level, level3D.ghostHunterLight());
 
-        final Pac pac = level.entities().pac();
+        final Pac pac = level.entitySet().pac();
         if (pac.state().isMale()) {
             createPacManAnimations(pac);
         }
@@ -204,7 +204,7 @@ public class GameLevel3DAnimationManager implements Disposable {
     }
 
     private void createGhostAnimations(GameLevel level, List<GhostSettings> settingsByPersonality, int numFlashes) {
-        level.entities().ghosts().forEach(ghost -> {
+        level.entitySet().ghosts().forEach(ghost -> {
             final GhostSettings settings = settingsByPersonality.get(ghost.personality().ordinal());
             createGhostAnimations(ghost, settings, numFlashes);
         });
@@ -226,7 +226,7 @@ public class GameLevel3DAnimationManager implements Disposable {
     private void createEnergizerParticlesAnimation(Maze3D maze3D, GameLevel level) {
         final ExplosionConfig explosionConfig = particlesAnimationConfig.explosion();
 
-        final List<PhongMaterial> ghostDressMaterials = level.entities().ghosts().stream()
+        final List<PhongMaterial> ghostDressMaterials = level.entitySet().ghosts().stream()
             .map(ghost -> ghost.reqComp(Ghost3DViewComp.class))
             .map(ghostView3D -> ghostView3D.appearanceMaterialSet().normal().dress())
             .toList();
@@ -244,7 +244,7 @@ public class GameLevel3DAnimationManager implements Disposable {
             }
         );
 
-        final House house = level.entities().otherEntities().theOne(House.class);
+        final House house = level.entitySet().entities().theOne(House.class);
 
         registry.register(AnimationID.PARTICLES, new ParticlesAnimation3D(
             house,
@@ -258,7 +258,7 @@ public class GameLevel3DAnimationManager implements Disposable {
     }
 
     private void createGhostLightAnimation(GameVariantUIConfig gameVariantConfig, GameLevel level, PointLight ghostHunterLight) {
-        final var animation = new GhostLightRelayAnimation(ghostHunterLight, level.entities().ghosts(),
+        final var animation = new GhostLightRelayAnimation(ghostHunterLight, level.entitySet().ghosts(),
             gameVariantConfig.worldSettings().ghosts());
         registry.register(AnimationID.GHOST_LIGHT, animation);
     }

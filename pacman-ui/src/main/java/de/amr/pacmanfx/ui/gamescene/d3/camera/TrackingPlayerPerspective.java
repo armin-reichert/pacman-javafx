@@ -32,7 +32,7 @@ public class TrackingPlayerPerspective implements Perspective<GameLevel> {
 
     @Override
     public void update(GameLevel level) {
-        final Pac pac = level.entities().pac();
+        final Pac pac = level.entitySet().pac();
         double speedX = 0.03;
         double speedY = 0.06;
         double worldWidth = level.worldMap().numCols() * WorldMap.TS;

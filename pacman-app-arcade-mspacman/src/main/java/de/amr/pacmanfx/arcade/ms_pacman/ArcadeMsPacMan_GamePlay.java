@@ -85,7 +85,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
             systems.navigator(), systems.pacWorldMovementPolicy()
         ));
 
-        final House house = entities.otherEntities().theOne(House.class);
+        final House house = entities.entities().theOne(House.class);
         entities.ghost(GhostPersonality.RED_GHOST_SHADOW)  .worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_1_RED);
         entities.ghost(GhostPersonality.PINK_GHOST_SPEEDY) .worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK);
         entities.ghost(GhostPersonality.CYAN_GHOST_BASHFUL).worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN);
@@ -104,7 +104,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         session.setLevel(level);
         session.setAttractMode(true);
 
-        final Pac pac = level.entities().pac();
+        final Pac pac = level.entitySet().pac();
         pac.cheats().setImmune(false);
         pac.cheats().setUsingAutopilot(true);
         pac.autoSteering().setSteering(
@@ -132,14 +132,14 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         requireNonNull(game);
         requireNonNull(level);
 
-        final Bonus prevBonus = level.entities().otherEntities().anyOfTypeOrNull(Bonus.class);
+        final Bonus prevBonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
         if (prevBonus != null) {
             if (prevBonus.state().enumValue() == BonusState.EDIBLE) {
                 //TODO Can this happen in original game?
                 Logger.info("Previous bonus is still edible, skip new bonus creation");
                 return;
             }
-            level.entities().remove(prevBonus);
+            level.entitySet().remove(prevBonus);
         }
 
         level.selectNextBonus();
@@ -150,7 +150,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         final Bonus bonus = portalExists
             ? createMovingBonus(game, level, symbolCode)
             : createStaticBonus(level, symbolCode, randomFloat(9, 10));
-        level.entities().add(bonus);
+        level.entitySet().add(bonus);
 
         game.playConfig().systems().bonusState().setEdible(bonus);
 
@@ -167,7 +167,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
     }
 
     private Bonus createMovingBonus(GameContext game, GameLevel level, int symbolCode) {
-        final House house = level.entities().otherEntities().theOne(House.class);
+        final House house = level.entitySet().entities().theOne(House.class);
         if (house == null) {
             throw new IllegalStateException("Moving bonus cannot be activated, no house exists in this level!");
         }

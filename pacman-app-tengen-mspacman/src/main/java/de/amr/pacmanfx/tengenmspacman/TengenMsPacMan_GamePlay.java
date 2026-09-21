@@ -263,7 +263,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
             systems.navigator(), systems.pacWorldMovementPolicy()
         ));
 
-        final House house = entities.otherEntities().theOne(House.class);
+        final House house = entities.entities().theOne(House.class);
         entities.ghost(GhostPersonality.RED_GHOST_SHADOW)  .worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_1_RED);
         entities.ghost(GhostPersonality.PINK_GHOST_SPEEDY) .worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK);
         entities.ghost(GhostPersonality.CYAN_GHOST_BASHFUL).worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN);
@@ -281,7 +281,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
         session.setGameOverStateTicks(120);
 
-        final Pac pac = demoLevel.entities().pac();
+        final Pac pac = demoLevel.entitySet().pac();
         // There are maps that cannot be handled with Arcade-steering logic
         pac.autoSteering().setSteering(new RuleGuidedPacSteering(systems.navigator(), systems.pacWorldMovementPolicy()));
         pac.cheats().setImmune(false);
@@ -315,8 +315,8 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         level.showMessage(MessageType.READY);
 
         //TODO Check in emulator the sequence when actors etc. get visible
-        level.entities().pac().show();
-        level.entities().ghosts().forEach(GameEntity::show);
+        level.entitySet().pac().show();
+        level.entitySet().ghosts().forEach(GameEntity::show);
 
         // Note: This event is very important because it triggers the creation of the actor animations!
         game.eventManager().publishEvent(new LevelStartedEvent(level.number()));
@@ -333,16 +333,16 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
 
         //TODO Find out how Tengen really implemented this
-        final Bonus prevBonus = level.entities().otherEntities().anyOfTypeOrNull(Bonus.class);
+        final Bonus prevBonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
         if (prevBonus != null) {
             if (prevBonus.state().enumValue() == BonusState.EDIBLE) {
                 Logger.info("Previous bonus is still active, skip new bonus");
                 return;
             }
-            level.entities().remove(prevBonus);
+            level.entitySet().remove(prevBonus);
         }
 
-        final House house = level.entities().otherEntities().theOne(House.class);
+        final House house = level.entitySet().entities().theOne(House.class);
         final Vector2i houseEntry = PositionSystem.computeTileAt(house.floorplan().entryPosition());
         final Vector2i houseEntryOpposite = houseEntry.plus(0, house.sizeInTiles().y() + 1);
 
@@ -355,12 +355,12 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         final int symbolCode = level.bonusSymbolCode(level.currentBonusIndex());
         final float speed = game.playConfig().rules().actorSpeedRules().bonusSpeed(game, level);
 
-        final Bonus oldBonus = level.entities().otherEntities().anyOfTypeOrNull(Bonus.class);
+        final Bonus oldBonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
         if (oldBonus != null) {
-            level.entities().remove(oldBonus);
+            level.entitySet().remove(oldBonus);
         }
         final Bonus bonus = Bonus.createMovingBonus(symbolCode);
-        level.entities().add(bonus);
+        level.entitySet().add(bonus);
         systems.bonusState().setEdible(bonus);
         bonus.show();
 

@@ -57,7 +57,7 @@ public class GameCheats {
         if (session.isAttractMode() || !game.session().isGameRunning()) {
             return;
         }
-        final Pac pac = level.entities().pac();
+        final Pac pac = level.entitySet().pac();
         pac.cheats().immuneProperty().set(isPacImmune());
         pac.cheats().usingAutopilotProperty().set(isPacUsingAutopilot());
         if (isPacImmune() || isPacUsingAutopilot()) {

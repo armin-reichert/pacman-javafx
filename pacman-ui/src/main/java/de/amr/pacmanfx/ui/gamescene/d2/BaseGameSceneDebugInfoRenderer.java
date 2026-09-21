@@ -88,7 +88,7 @@ public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
         drawGameStateInfo(gameScene.game());
         session.optLevel().ifPresent(level -> {
 //            drawTerrainDebugInfo(level);
-            level.entities().all().forEach(actor -> drawMovingActorInfo(animController, actor));
+            level.entitySet().all().forEach(actor -> drawMovingActorInfo(animController, actor));
         });
         ctx.restore();
     }
@@ -233,7 +233,7 @@ public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
 
     public void drawTerrainDebugInfo(GameLevel level) {
         // We assume all ghosts have the same set of special terrain tiles
-        level.entities().ghost(GhostPersonality.RED_GHOST_SHADOW).worldInfo().specialTerrainTiles().forEach(tile -> {
+        level.entitySet().ghost(GhostPersonality.RED_GHOST_SHADOW).worldInfo().specialTerrainTiles().forEach(tile -> {
             final double x = scaled(tile.x() * WorldMap.TS);
             final double y = scaled(tile.y() * WorldMap.TS + WorldMap.HTS), size = scaled(WorldMap.TS);
             ctx.setFill(Color.RED);
@@ -242,7 +242,7 @@ public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
 
         // Mark intersection tiles
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        final House house = level.entities().otherEntities().theOne(House.class);
+        final House house = level.entitySet().entities().theOne(House.class);
         terrain.tiles()
             .filter(tile -> tile.y() >= terrain.emptyRowsOverMaze())
             .filter(tile -> tile.y() < terrain.numRows() - terrain.emptyRowsBelowMaze())

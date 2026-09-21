@@ -125,7 +125,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         final GameVariantRenderConfig renderConfig = app().variantManager().currentRuntime().uiConfig().renderConfig();
         return Ufx.streamOf(
             createRenderableLevel(level, tick),
-            level.entities().all().map(renderConfig::renderable)
+            level.entitySet().all().map(renderConfig::renderable)
 
             // In Tengen, the ghosts are drawn under(!) the house door, so reassign the door's z-index:
 //            assignLayer(level.entities().house().door(), RenderingLayer.SCENE, 100)
@@ -189,7 +189,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
             final int numRows = terrain.numRows();
             canvasHeightUnscaled.set(tilesPx(numRows + 2)); // 2 additional rows for level counter below maze
             if (subScene.getCamera() == dynamicCamera) {
-                dynamicCamera.update(tilesPx(terrain.numRows()), level.entities().pac());
+                dynamicCamera.update(tilesPx(terrain.numRows()), level.entitySet().pac());
             }
             ensureActorAnimationsCreated(level, gameOptions(session).boosterEnabled());
             optSoundEffects().ifPresent(soundEffects -> {
@@ -256,7 +256,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
             worldMap.setConfigValue(TengenMsPacMan_LevelRenderInfoKey.MAP_IMAGE_SET, mapImageSet);
             Logger.info("Maze sprite set created: {}", mapImageSet);
 
-            final House house = level.entities().otherEntities().theOne(House.class);
+            final House house = level.entitySet().entities().theOne(House.class);
             final var doorData = house.door().reqComp(DoorDataComp.class);
             doorData.setColor(mapImageSet.mapImage().colorScheme().door());
             Logger.info("Door color set to {}", doorData.color());
@@ -373,13 +373,13 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         final SpriteAnimationContainer animContainer = variantConfig.spriteAnimContainer();
         final ActorSpriteAnimController animController = variantConfig.playConfig().systems().actorSpriteAnimController();
 
-        final Pac pac = level.entities().pac();
+        final Pac pac = level.entitySet().pac();
         if (animController.hasNoAnimations(pac)) {
             animController.setAnimations(pac, renderConfig.createPacAnimations(animContainer));
             eventHandler.resetPacAnimation(animController, boosterEnabled, pac);
         }
 
-        for (Ghost ghost : level.entities().ghosts()) {
+        for (Ghost ghost : level.entitySet().ghosts()) {
             if (animController.hasNoAnimations(ghost)) {
                 animController.setAnimations(ghost, renderConfig.createGhostAnimations(animContainer, ghost.personality()));
                 eventHandler.resetGhostAnimation(animController, ghost);

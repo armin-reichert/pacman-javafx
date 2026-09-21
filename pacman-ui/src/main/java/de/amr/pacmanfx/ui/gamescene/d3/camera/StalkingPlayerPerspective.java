@@ -31,7 +31,7 @@ public class StalkingPlayerPerspective implements Perspective<GameLevel> {
 
     @Override
     public void update(GameLevel level) {
-        final Pac pac = level.entities().pac();
+        final Pac pac = level.entitySet().pac();
         double speedX = 0.04;
         double speedY = 0.04;
         double worldWidth = level.worldMap().numCols() * WorldMap.TS;

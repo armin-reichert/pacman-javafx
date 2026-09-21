@@ -87,7 +87,7 @@ public class GhostStateSystem {
 
     public void updateElroyState(GameContext game) {
         final GameLevel level = game.session().level();
-        final Ghost ghost = level.entities().ghost(GhostPersonality.RED_GHOST_SHADOW);
+        final Ghost ghost = level.entitySet().ghost(GhostPersonality.RED_GHOST_SHADOW);
         final GameRules rules = game.playConfig().rules();
         ghost.optComp(ElroyComp.class).ifPresent(elroy -> {
             if (rules.ghostBecomesElroy1(level, ghost)) {

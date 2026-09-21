@@ -40,7 +40,7 @@ public class Arcade_GameOverState extends AbstractGameState {
     public void onUpdateState(GameContext game, long globalTick, long stateTick) {
         if (timer().hasExpired()) {
             final GameLevel level = session.level();
-            level.entities().otherEntities().theOne(MessageView.class).hide();
+            level.entitySet().entities().theOne(MessageView.class).hide();
             session.cheats().clear();
             session.setLevel(null);
             flow.enterGameState(game, game.coinMechanism().isEmpty()

@@ -47,8 +47,8 @@ public class ActorCollisionHandler {
     }
 
     public void detectPacGhostCollision(GameLevel level) {
-        final Pac pac = level.entities().pac();
-        final List<Ghost> ghosts = level.entities().ghosts();
+        final Pac pac = level.entitySet().pac();
+        final List<Ghost> ghosts = level.entitySet().ghosts();
         frameState.ghostsCollidingWithPac().clear();
         ghosts.stream()
             .filter(ghost -> strategy.collide(pac, ghost))
@@ -56,8 +56,8 @@ public class ActorCollisionHandler {
     }
 
     public void detectEdibleBonusCollision(GameLevel level) {
-        final Pac pac = level.entities().pac();
-        final Bonus bonus = level.entities().otherEntities().anyOfTypeOrNull(Bonus.class);
+        final Pac pac = level.entitySet().pac();
+        final Bonus bonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
         frameState.setEdibleBonus(null);
         if (bonus != null && bonus.state().enumValue() == BonusState.EDIBLE && strategy.collide(pac, bonus)) {
             frameState.setEdibleBonus(bonus);
@@ -65,7 +65,7 @@ public class ActorCollisionHandler {
     }
 
     public void detectFoodCollision(GameLevel level) {
-        final Pac pac = level.entities().pac();
+        final Pac pac = level.entitySet().pac();
         final Vector2i pacTile = pac.pos().tile();
         if (level.food().hasFoodAtTile(pacTile)) {
             frameState.setFoodFoundTile(pacTile);

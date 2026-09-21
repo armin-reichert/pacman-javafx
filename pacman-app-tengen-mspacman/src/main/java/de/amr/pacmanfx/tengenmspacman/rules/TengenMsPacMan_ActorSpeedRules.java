@@ -60,13 +60,13 @@ public class TengenMsPacMan_ActorSpeedRules implements ActorSpeedRules {
     @Override
     public float pacSpeedWhenHasPower(GameContext game, GameLevel level) {
         //TODO correct?
-        return level.entities().pac() != null ? 1.1f * pacSpeed(game, level) : 0;
+        return level.entitySet().pac() != null ? 1.1f * pacSpeed(game, level) : 0;
     }
 
     @Override
     public float ghostSpeed(GameContext game, Ghost ghost) {
         final GameLevel level = game.session().level();
-        final House house = level.entities().otherEntities().theOne(House.class);
+        final House house = level.entitySet().entities().theOne(House.class);
         final int levelNumber = level.number();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final Vector2i ghostTile = ghost.pos().tile();

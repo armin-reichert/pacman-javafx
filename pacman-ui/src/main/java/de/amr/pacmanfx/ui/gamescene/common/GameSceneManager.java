@@ -139,7 +139,7 @@ public class GameSceneManager {
 
         final GameSession session = game.session();
         final GameLevel level = session.level();
-        final Pac pac = level.entities().pac();
+        final Pac pac = level.entitySet().pac();
 
         playScene3D.replaceGameLevel3D(game, level);
         playScene3D.replaceActionBindings(session, level);

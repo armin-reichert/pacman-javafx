@@ -54,8 +54,8 @@ public abstract class CommonGamePlay implements GamePlay {
         final GameSystems systems = game.playConfig().systems();
 
         final WorldMap worldMap = level.worldMap();
-        final House house = level.entities().otherEntities().theOne(House.class);
-        final Pac pac = level.entities().pac();
+        final House house = level.entitySet().entities().theOne(House.class);
+        final Pac pac = level.entitySet().pac();
 
         pac.reset(); // initially invisible!
         pac.pos().set(worldMap.terrainLayer().pacStartPosition());
@@ -66,7 +66,7 @@ public abstract class CommonGamePlay implements GamePlay {
         systems.navigator().setWishDir(pac, Direction.LEFT);
         systems.pacAnimation().update(pac, game.playConfig().rules());
 
-        level.entities().ghosts().forEach(ghost -> {
+        level.entitySet().ghosts().forEach(ghost -> {
             ghost.reset(); // initially invisible and locked!
             ghost.pos().set(ghost.worldInfo().startPosition());
             final Direction direction = house.floorplan().ghostStartDirection(ghost.personality());
@@ -121,7 +121,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
         final GameRules rules = game.playConfig().rules();
         final GameSession session = game.session();
-        final Pac pac = level.entities().pac();
+        final Pac pac = level.entitySet().pac();
 
         final ActorCollisionHandler collisionHandler = new ActorCollisionHandler(session.thisFrame());
         collisionHandler.setStrategy(rules.actorCollisionRules().getCollisionStrategy());
@@ -174,7 +174,7 @@ public abstract class CommonGamePlay implements GamePlay {
         points.show();
         points.pos().set(ghost.pos().asVector2f());
         points.setLifetimeSec(rules.eatenGhostDisplaySeconds());
-        level.entities().add(points);
+        level.entitySet().add(points);
 
         game.eventManager().publishEvent(new GhostEatenEvent(ghost));
     }
@@ -222,7 +222,7 @@ public abstract class CommonGamePlay implements GamePlay {
     }
 
     private void checkIfPacFoundEdibleItem(GameContext game, GameLevel level, FrameState frameState) {
-        final Pac pac = level.entities().pac();
+        final Pac pac = level.entitySet().pac();
         final GameSystems systems = game.playConfig().systems();
         final PacDigestionSystem digestionSystem = systems.pacDigestion();
         final ScoringRules scoringRules = game.playConfig().rules().scoringRules();
@@ -257,7 +257,7 @@ public abstract class CommonGamePlay implements GamePlay {
                 }
             }
         }
-        else if (session.level().entities().pac().cheats().isImmune()) {
+        else if (session.level().entitySet().pac().cheats().isImmune()) {
             return;
         }
 
@@ -280,7 +280,7 @@ public abstract class CommonGamePlay implements GamePlay {
 
     // If collision happened while teleporting (horizontally), move collided actors into visible world
     private void fixPacPositionIfKilledInsidePortal(GameLevel level) {
-        final Pac pac = level.entities().pac();
+        final Pac pac = level.entitySet().pac();
 
         level.worldMap().terrainLayer().hPortalContainingTile(pac.pos().tile()).ifPresent(hPortal -> {
             final Direction moveDir = pac.worldNavigation().moveDir();

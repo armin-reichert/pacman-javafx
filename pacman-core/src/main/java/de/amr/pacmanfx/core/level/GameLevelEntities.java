@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.core.level;
 
 import de.amr.basics.QuerySet;
-import de.amr.pacmanfx.core.Energizer;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.GameEntityComp;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
@@ -13,7 +12,10 @@ import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.EnumMap;
+import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -22,40 +24,28 @@ import static java.util.Objects.requireNonNull;
 
 public class GameLevelEntities {
 
-    private Pac thePac;
+    private final QuerySet<GameEntity> entities = new QuerySet<>();
+
     private final EnumMap<GhostPersonality, Ghost> theGhosts = new EnumMap<>(GhostPersonality.class);
-
-    private final QuerySet<GameEntity> otherEntities = new QuerySet<>();
-
-    private final List<Energizer> theEnergizers = new ArrayList<>();
 
     public void add(GameEntity entity) {
         requireNonNull(entity);
         switch (entity) {
-            case Pac pac -> {
-                if (thePac != null) {
-                    throw new IllegalArgumentException("Pac %s already added to entity set!".formatted(pac.name()));
-                }
-                thePac = pac;
-            }
             case Ghost ghost -> {
                 if (theGhosts.containsKey(ghost.personality())) {
                     throw new IllegalArgumentException("Ghost %s already added to entity set!".formatted(ghost.name()));
                 }
                 theGhosts.put(ghost.personality(), ghost);
             }
-            case Energizer energizer -> theEnergizers.add(energizer);
-            default -> otherEntities.add(entity);
+            default -> entities.add(entity);
         }
     }
 
     public void remove(GameEntity entity) {
         requireNonNull(entity);
         switch (entity) {
-            case Pac   _ -> thePac = null;
             case Ghost ghost -> theGhosts.remove(ghost.personality());
-            case Energizer energizer -> theEnergizers.remove(energizer);
-            default -> otherEntities.remove(entity);
+            default -> entities.remove(entity);
         }
     }
 
@@ -65,10 +55,8 @@ public class GameLevelEntities {
 
     public Stream<? extends GameEntity> all() {
         return Stream.of(
-            Optional.ofNullable(thePac).stream(),
             theGhosts.values().stream(),
-            theEnergizers.stream(),
-            otherEntities.all()
+            entities.all()
         )
         .flatMap(Function.identity());
     }
@@ -78,12 +66,8 @@ public class GameLevelEntities {
         return all().filter(entity -> Stream.of(componentClasses).allMatch(entity::hasComp));
     }
 
-    public QuerySet<GameEntity> otherEntities() {
-        return otherEntities;
-    }
-
-    public Pac pac() {
-        return thePac;
+    public QuerySet<GameEntity> entities() {
+        return entities;
     }
 
     public List<Ghost> ghosts() {
@@ -112,7 +96,7 @@ public class GameLevelEntities {
         return theGhosts.values().stream().filter(ghost -> states.contains(ghost.state().enumValue()));
     }
 
-    public List<Energizer> theEnergizers() {
-        return theEnergizers;
+    public Pac pac() {
+        return entities.theOne(Pac.class);
     }
 }

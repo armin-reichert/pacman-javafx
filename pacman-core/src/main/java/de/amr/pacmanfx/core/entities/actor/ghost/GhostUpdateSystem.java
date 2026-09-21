@@ -34,8 +34,8 @@ public class GhostUpdateSystem {
     public void update(GameContext game, GameLevel level) {
         final boolean ghostEatenState = game.state().id().equals(CommonGameStateID.GAME_LEVEL_EATING_GHOST);
         final List<Ghost> ghostsToUpdate = ghostEatenState
-            ? level.entities().ghostsInAnyOfStates(GhostStateSystem.UPDATED_GHOST_STATES_WHILE_EATEN).toList()
-            : level.entities().ghosts();
+            ? level.entitySet().ghostsInAnyOfStates(GhostStateSystem.UPDATED_GHOST_STATES_WHILE_EATEN).toList()
+            : level.entitySet().ghosts();
 
         final GameRules rules = game.playConfig().rules();
         final ActorSpeedRules speedRules = rules.actorSpeedRules();

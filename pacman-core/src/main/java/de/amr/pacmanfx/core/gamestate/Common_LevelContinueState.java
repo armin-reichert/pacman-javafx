@@ -24,7 +24,7 @@ public class Common_LevelContinueState extends AbstractGameState {
         level = session.level();
         gamePlay.prepareLevelForPlaying(game, level);
         level.showMessage(MessageType.READY);
-        level.entities().pac().state().setEnumValue(PacState.SLEEPING);
+        level.entitySet().pac().state().setEnumValue(PacState.SLEEPING);
         timer().restartIndefinitely();
     }
 
@@ -32,14 +32,14 @@ public class Common_LevelContinueState extends AbstractGameState {
     public void onUpdateState(GameContext game, long globalTick, long stateTick) {
         final LevelContinuationRules continuationRules = rules.levelContinuation();
         if (stateTick == 1) {
-            showPacAndGhosts(level.entities());
-            lockPacAndGhosts(level.entities(), true);
+            showPacAndGhosts(level.entitySet());
+            lockPacAndGhosts(level.entitySet(), true);
         }
         else if (stateTick == continuationRules.continuePlayingTicks()) {
             game.eventManager().publishEvent(new GameContinuedEvent());
         }
         else if (stateTick == continuationRules.resumeHuntingTicks()) {
-            lockPacAndGhosts(level.entities(), false);
+            lockPacAndGhosts(level.entitySet(), false);
             flow.enterGameState(game, CommonGameStateID.GAME_LEVEL_PLAYING);
         }
     }

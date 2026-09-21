@@ -96,7 +96,7 @@ public class RuleGuidedPacSteering implements Steering<Pac> {
     }
 
     private CollectedData collectData(GameLevel level) {
-        final Pac pac = level.entities().pac();
+        final Pac pac = level.entitySet().pac();
         final Vector2i pacTile = pac.pos().tile();
         
         var data = new CollectedData();
@@ -115,7 +115,7 @@ public class RuleGuidedPacSteering implements Steering<Pac> {
             data.hunterBehindDistance = pacTile.manhattanDist(tile);
         }
 
-        data.frightenedGhosts = level.entities().ghostsInState(GhostState.FRIGHTENED)
+        data.frightenedGhosts = level.entitySet().ghostsInState(GhostState.FRIGHTENED)
             .filter(ghost -> ghost.pos().tile().manhattanDist(pacTile) <= CollectedData.MAX_GHOST_CHASE_DIST)
             .collect(Collectors.toList());
 
@@ -126,7 +126,7 @@ public class RuleGuidedPacSteering implements Steering<Pac> {
     }
 
     private void takeAction(GameLevel level, CollectedData data) {
-        final Pac pac = level.entities().pac();
+        final Pac pac = level.entitySet().pac();
         final WorldNavigationComp worldNavigation = pac.worldNavigation();
 
         if (data.hunterAhead != null) {
@@ -148,7 +148,7 @@ public class RuleGuidedPacSteering implements Steering<Pac> {
 
         // when not escaping ghost, keep move direction at least until next intersection
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        final House house = level.entities().otherEntities().theOne(House.class);
+        final House house = level.entitySet().entities().theOne(House.class);
         final boolean intersection = terrain.isRealIntersectionTile(pacTile, house::contains);
         if (worldNavigation.info().moved && !intersection)
             return;
@@ -162,7 +162,7 @@ public class RuleGuidedPacSteering implements Steering<Pac> {
         } 
         else if (isEdibleBonusNearPac(level, pac)) {
             Logger.trace("Active bonus detected, get it!");
-            final Bonus bonus = level.entities().otherEntities().anyOfTypeOrNull(Bonus.class);
+            final Bonus bonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
             if (bonus != null) {
                 worldNavigation.setTargetTile(bonus.pos().tile());
             }
@@ -180,7 +180,7 @@ public class RuleGuidedPacSteering implements Steering<Pac> {
 
     private boolean isEdibleBonusNearPac(GameLevel level, Pac pac) {
         final Vector2i pacTile = pac.pos().tile();
-        final Bonus bonus = level.entities().otherEntities().anyOfTypeOrNull(Bonus.class);
+        final Bonus bonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
         if (bonus != null) {
             final Vector2i bonusTile = bonus.pos().tile();
             return bonus.state().enumValue() == BonusState.EDIBLE
@@ -190,7 +190,7 @@ public class RuleGuidedPacSteering implements Steering<Pac> {
     }
 
     private Ghost findHuntingGhostAhead(GameLevel level) {
-        final Pac pac = level.entities().pac();
+        final Pac pac = level.entitySet().pac();
         final WorldNavigationComp worldNavigation = pac.worldNavigation();
         final Vector2i pacManTile = pac.pos().tile();
 
@@ -206,7 +206,7 @@ public class RuleGuidedPacSteering implements Steering<Pac> {
             }
             final Vector2i aheadLeft = ahead.plus(worldNavigation.moveDir().nextCounterClockwise().vector());
             final Vector2i aheadRight = ahead.plus(worldNavigation.moveDir().nextClockwise().vector());
-            final List<Ghost> huntingGhosts = level.entities().ghostsInState(GhostState.HUNTING_PAC).toList();
+            final List<Ghost> huntingGhosts = level.entitySet().ghostsInState(GhostState.HUNTING_PAC).toList();
             for (var ghost : huntingGhosts) {
                 final Vector2i ghostTile = ghost.pos().tile();
                 if (ghostTile.equals(ahead) || ghostTile.equals(aheadLeft) || ghostTile.equals(aheadRight)) {
@@ -230,7 +230,7 @@ public class RuleGuidedPacSteering implements Steering<Pac> {
             if (!worldMovementPolicy.canAccessTile(level, pac, behind)) {
                 break;
             }
-            Iterable<Ghost> huntingGhosts = level.entities().ghostsInState(GhostState.HUNTING_PAC)::iterator;
+            Iterable<Ghost> huntingGhosts = level.entitySet().ghostsInState(GhostState.HUNTING_PAC)::iterator;
             for (Ghost ghost : huntingGhosts) {
                 final Vector2i ghostTile = ghost.pos().tile();
                 if (ghostTile.equals(behind)) {
@@ -242,7 +242,7 @@ public class RuleGuidedPacSteering implements Steering<Pac> {
     }
 
     private Direction findEscapeDirectionExcluding(GameLevel level, Collection<Direction> forbidden) {
-        final Pac pac = level.entities().pac();
+        final Pac pac = level.entitySet().pac();
         final Vector2i pacTile = pac.pos().tile();
         final List<Direction> escapes = new ArrayList<>(4);
         for (Direction dir : Direction.shuffled()) {
@@ -266,7 +266,7 @@ public class RuleGuidedPacSteering implements Steering<Pac> {
     private List<Vector2i> findNearestFoodTiles(GameLevel level) {
         final WorldMap worldMap = level.worldMap();
         final FoodLayer foodLayer = worldMap.foodLayer();
-        final Pac pac = level.entities().pac();
+        final Pac pac = level.entitySet().pac();
         final Vector2i pacTile = pac.pos().tile();
         final long powerTicksRemaining = pac.power().ticksRemaining();
         final boolean enoughTimeLeft = powerTicksRemaining > 2L * GameConstants.SIMULATION_FPS;
@@ -319,7 +319,7 @@ public class RuleGuidedPacSteering implements Steering<Pac> {
 
     private float minDistanceFromGhosts(GameLevel level, Pac pac) {
         final Vector2i pacTile = pac.pos().tile();
-        return (float) level.entities().ghosts().stream()
+        return (float) level.entitySet().ghosts().stream()
             .map(ghost -> ghost.pos().tile())
             .mapToDouble(pacTile::manhattanDist)
             .min()

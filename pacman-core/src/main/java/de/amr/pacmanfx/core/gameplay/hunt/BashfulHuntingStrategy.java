@@ -42,8 +42,8 @@ public class BashfulHuntingStrategy implements GhostHuntingStrategy {
     // 2. Draw an arrow from Blinky's (red ghost) current tile to that position and double the arrow.
     //    The target tile for the "bashful" (cyan) ghost is the position where the arrow ends.
     private Vector2i computeChasingTargetTile(GameLevel level) {
-        final Pac pac = level.entities().pac();
-        final Ghost redGhost = level.entities().ghost(GhostPersonality.RED_GHOST_SHADOW);
+        final Pac pac = level.entitySet().pac();
+        final Ghost redGhost = level.entitySet().ghost(GhostPersonality.RED_GHOST_SHADOW);
         final Vector2i pacAhead2 = tilesAheadWithOverflowBug(pac, 2);
         final Vector2i redGhostTile = redGhost.pos().tile();
         final Vector2i arrow = pacAhead2.minus(redGhostTile).scaled(2);

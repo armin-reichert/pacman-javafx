@@ -23,13 +23,13 @@ public class ActorAnimationManager {
         final SpriteAnimationContainer animationContainer = variantRuntime.spriteAnimContainer();
         final ActorSpriteAnimController animController = variantRuntime.playConfig().systems().actorSpriteAnimController();
 
-        final Pac pac = level.entities().pac();
+        final Pac pac = level.entitySet().pac();
         if (animController.hasNoAnimations(pac)) {
             animController.setAnimations(pac, renderConfig.createPacAnimations(animationContainer));
             resetPacAnimation(animController, pac);
         }
 
-        level.entities().ghosts().forEach(ghost -> {
+        level.entitySet().ghosts().forEach(ghost -> {
             if (animController.hasNoAnimations(ghost)) {
                 animController.setAnimations(ghost,
                     renderConfig.createGhostAnimations(animationContainer, ghost.personality()));
@@ -40,8 +40,8 @@ public class ActorAnimationManager {
 
     // Called from game event handler
     public static void resetActorAnimations(ActorSpriteAnimController animController, GameLevel level) {
-        resetPacAnimation(animController, level.entities().pac());
-        level.entities().ghosts().forEach(ghost -> resetGhostAnimation(animController, ghost));
+        resetPacAnimation(animController, level.entitySet().pac());
+        level.entitySet().ghosts().forEach(ghost -> resetGhostAnimation(animController, ghost));
     }
 
     public static void resetPacAnimation(ActorSpriteAnimController animController, Pac pac) {

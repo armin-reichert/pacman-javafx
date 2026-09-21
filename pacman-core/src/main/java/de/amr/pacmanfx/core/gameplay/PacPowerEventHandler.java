@@ -31,7 +31,7 @@ public class PacPowerEventHandler implements DefaultGameEventListener {
 
         level.huntingTimer().stop();
 
-        level.entities().ghosts().forEach(ghost -> {
+        level.entitySet().ghosts().forEach(ghost -> {
             ghost.state().setPacPower(true);
             ghost.state().setPacPowerFading(false);
             ghost.state().setKillChainIndex(-1);
@@ -45,7 +45,7 @@ public class PacPowerEventHandler implements DefaultGameEventListener {
     @Override
     public void onPacPowerStartsFading(PacPowerStartsFadingEvent e) {
         final GameLevel level = game.session().level();
-        level.entities().ghosts().forEach(ghost -> ghost.state().setPacPowerFading(true));
+        level.entitySet().ghosts().forEach(ghost -> ghost.state().setPacPowerFading(true));
 
         Logger.info("Pac power started fading. Power ticks remaining: {}", e.pac().power().ticksRemaining());
     }
@@ -54,7 +54,7 @@ public class PacPowerEventHandler implements DefaultGameEventListener {
     public void onPacPowerEnds(PacPowerEndsEvent e) {
         final GameLevel level = game.session().level();
 
-        level.entities().ghosts().forEach(ghost -> {
+        level.entitySet().ghosts().forEach(ghost -> {
             ghost.state().setPacPower(false);
             ghost.state().setPacPowerFading(false);
             ghost.state().setKillChainIndex(-1);

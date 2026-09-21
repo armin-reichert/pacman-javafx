@@ -96,13 +96,13 @@ public class GameLevel3D implements DisposableGraphicsObject {
         this.level = session.level();
 
         final WorldMap worldMap = level.worldMap();
-        final House house = level.entities().otherEntities().theOne(House.class);
-        final Pac pac = level.entities().pac();
-        final List<Ghost> ghosts = level.entities().ghosts();
+        final House house = level.entitySet().entities().theOne(House.class);
+        final Pac pac = level.entitySet().pac();
+        final List<Ghost> ghosts = level.entitySet().ghosts();
 
         final LevelCounter levelCounter = session.hud().levelCounter();
         final LivesCounter livesCounter = session.hud().livesCounter();
-        final MessageView messageView   = level.entities().otherEntities().theOne(MessageView.class);
+        final MessageView messageView   = level.entitySet().entities().theOne(MessageView.class);
 
         final WorldMapColorScheme colorScheme = uiConfig.renderConfig().colorScheme(level.worldMap(), uiConfig.worldSettings());
 
@@ -183,8 +183,8 @@ public class GameLevel3D implements DisposableGraphicsObject {
 
     public void setDrawMode(DrawMode drawMode) {
         requireNonNull(drawMode);
-        Ufx.setDrawMode(level.entities().pac().reqComp(Pac3DViewComp.class).root(), drawMode);
-        for (var ghost : level.entities().ghosts()) {
+        Ufx.setDrawMode(level.entitySet().pac().reqComp(Pac3DViewComp.class).root(), drawMode);
+        for (var ghost : level.entitySet().ghosts()) {
             Ufx.setDrawMode(ghost.reqComp(Ghost3DViewComp.class).root(), drawMode);
         }
         Ufx.setDrawMode(maze3D.root(), drawMode);

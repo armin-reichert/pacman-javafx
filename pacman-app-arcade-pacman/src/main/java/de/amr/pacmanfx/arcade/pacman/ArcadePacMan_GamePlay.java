@@ -198,7 +198,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
         final GameLevel level = createLevel(game, 1);
 
-        final Pac pac = level.entities().pac();
+        final Pac pac = level.entitySet().pac();
         pac.cheats().setImmune(false);
         pac.cheats().setUsingAutopilot(true);
 
@@ -258,7 +258,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
 
         final int symbolCode = level.bonusSymbolCode(level.currentBonusIndex());
         final Bonus bonus = Bonus.createStaticBonus(symbolCode);
-        level.entities().add(bonus);
+        level.entitySet().add(bonus);
 
         // In XXL game variant, the bonus position is stored inside the terrain map
         final Vector2i tile = level.worldMap().terrainLayer().getTilePropertyOrDefault(
@@ -337,7 +337,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
             .filter(tile -> terrain.content(tile) == TerrainTile.ONE_WAY_DOWN.$)
             .collect(Collectors.toUnmodifiableSet());
 
-        final House house = entities.otherEntities().theOne(House.class);
+        final House house = entities.entities().theOne(House.class);
         entities.ghost(GhostPersonality.RED_GHOST_SHADOW)  .worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_1_RED,    oneWayTiles);
         entities.ghost(GhostPersonality.PINK_GHOST_SPEEDY) .worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK,   oneWayTiles);
         entities.ghost(GhostPersonality.CYAN_GHOST_BASHFUL).worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN,   oneWayTiles);
@@ -345,7 +345,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
     }
 
     protected void onGhostReleasedFromHouse(GameLevel level, Ghost prisoner) {
-        final Ghost redGhost = level.entities().ghost(GhostPersonality.RED_GHOST_SHADOW);
+        final Ghost redGhost = level.entitySet().ghost(GhostPersonality.RED_GHOST_SHADOW);
         // Disabled elroy mode of Blinky is re-enabled when Clyde is released from house
         redGhost.optComp(ElroyComp.class).ifPresent(elroy -> {
             if (prisoner.personality() == GhostPersonality.ORANGE_GHOST_POKEY) {

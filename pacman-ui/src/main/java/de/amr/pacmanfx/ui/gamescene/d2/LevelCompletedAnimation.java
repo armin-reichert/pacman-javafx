@@ -78,7 +78,7 @@ public class LevelCompletedAnimation {
 
     private void createAnimation(GameLevel level, int numFlashes) {
         final Animation hideGhostsAnimation = pauseSecThen(1.5,
-            () ->level.entities().ghosts().forEach(GameEntity::hide)
+            () ->level.entitySet().ghosts().forEach(GameEntity::hide)
         );
 
         if (numFlashes != 0) {

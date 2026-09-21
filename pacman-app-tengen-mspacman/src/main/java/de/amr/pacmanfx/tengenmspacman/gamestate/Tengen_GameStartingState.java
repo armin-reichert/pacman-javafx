@@ -40,7 +40,7 @@ public class Tengen_GameStartingState extends AbstractGameState {
         gameOptions(session).setBoosterEnabled(boosterInitiallyEnabled);
 
         //TODO Hack. Should be done by entity update system
-        final Pac pac = level.entities().pac();
+        final Pac pac = level.entitySet().pac();
         pac.state().setEnumValue(PacState.SLEEPING);
         pac.reqComp(PacBoosterComp.class).setBoosterEnabled(boosterInitiallyEnabled);
 
@@ -59,21 +59,21 @@ public class Tengen_GameStartingState extends AbstractGameState {
 
     @Override
     public void onUpdateState(GameContext game, long globalTick, long stateTick) {
-        final Pac pac = level.entities().pac();
+        final Pac pac = level.entitySet().pac();
 
         if (stateTick == 0) {
             game.playConfig().systems().pacAnimation().update(pac, game.playConfig().rules());
-            lockGhosts(level.entities(), true);
+            lockGhosts(level.entitySet(), true);
         }
 
         if (stateTick == TICK_START_LEVEL) {
             gamePlay.startLevel(game, level);
         }
         else if (stateTick == TICK_SHOW_GUYS) {
-            showPacAndGhosts(level.entities());
+            showPacAndGhosts(level.entitySet());
         }
         else if (stateTick == TICK_START_PLAYING) {
-            lockPacAndGhosts(level.entities(), false);
+            lockPacAndGhosts(level.entitySet(), false);
             game.coinMechanism().consumeCoin();
             session.setGameRunning(true);
             flow.enterGameState(game, CommonGameStateID.GAME_LEVEL_PLAYING);

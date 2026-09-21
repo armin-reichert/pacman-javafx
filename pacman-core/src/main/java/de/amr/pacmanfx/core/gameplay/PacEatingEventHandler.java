@@ -85,7 +85,7 @@ public class PacEatingEventHandler implements DefaultGameEventListener {
         level.setGhostKillCount(0);
 
         // Ghosts turn back even if the Pac power time is zero and no event is published!
-        level.entities().ghostsInAnyOfStates(GHOST_TURNBACK_STATES).forEach(systems().navigator()::requestTurnBack);
+        level.entitySet().ghostsInAnyOfStates(GHOST_TURNBACK_STATES).forEach(systems().navigator()::requestTurnBack);
 
         // Pac-Man "digests" and takes a 3 tick nap
         systems().pacDigestion().digestEnergizer(pac, rules);
@@ -110,13 +110,13 @@ public class PacEatingEventHandler implements DefaultGameEventListener {
         gamePlay.scorePoints(game, bonusValue, level.number());
         Logger.info("Scored {} points for eating bonus {}", bonusValue, bonus);
 
-        level.entities().remove(bonus);
+        level.entitySet().remove(bonus);
 
         // Eaten bonus is displayed as points for short time
         final var bonusPoints = new BonusPoints(bonusValue);
         bonusPoints.pos().set(bonus.pos().asVector2f());
         bonusPoints.setLifetimeSec(rules.eatenBonusDisplaySeconds());
         bonusPoints.show();
-        level.entities().add(bonusPoints);
+        level.entitySet().add(bonusPoints);
     }
 }

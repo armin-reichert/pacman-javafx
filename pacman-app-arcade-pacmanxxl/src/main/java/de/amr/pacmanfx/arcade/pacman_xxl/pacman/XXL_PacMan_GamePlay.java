@@ -58,7 +58,7 @@ public class XXL_PacMan_GamePlay extends ArcadePacMan_GamePlay {
         final int levelNumber = DEMO_LEVEL_NUMBERS[randomInt(0, DEMO_LEVEL_NUMBERS.length)];
         final GameLevel level = createLevel(game, levelNumber);
 
-        final Pac pac = level.entities().pac();
+        final Pac pac = level.entitySet().pac();
         // Demo level map could be a custom map, so use auto-steering that also can cope with dead-ends:
         pac.autoSteering().setSteering(new RuleGuidedPacSteering(systems.navigator(), systems.pacWorldMovementPolicy()));
         pac.cheats().setImmune(false);

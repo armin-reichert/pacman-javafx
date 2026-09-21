@@ -37,7 +37,7 @@ public class SpeedyHuntingStrategy implements GhostHuntingStrategy {
     }
 
     private Vector2i computeChasingTargetTile(GameLevel level) {
-        final Pac pac = level.entities().pac();
+        final Pac pac = level.entitySet().pac();
         return WorldNavigationSystem.tilesAheadWithOverflowBug(pac, 4);
     }
 }

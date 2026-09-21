@@ -17,7 +17,7 @@ public final class Common_PreparationState extends AbstractGameState {
     public void onEnterState(GameContext game) {
         // We might enter this state from the demo level playing state
         session.optLevel().ifPresent(level -> {
-            level.entities().otherEntities().theOne(MessageView.class).hide();
+            level.entitySet().entities().theOne(MessageView.class).hide();
             session.setLevel(null);
         });
 

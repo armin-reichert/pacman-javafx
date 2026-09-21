@@ -35,7 +35,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
         session.setLevel(level);
         session.setNumLives(1);
 
-        level.entities().ghosts().forEach(ghost -> {
+        level.entitySet().ghosts().forEach(ghost -> {
             ghost.worldNavigation().setPaused(true);
             ghost.animation().setStopped(true);
         });
@@ -54,15 +54,15 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
             gamePlay.prepareLevelForPlaying(game, level);
         }
         else if (stateTick == 2) {
-            showPacAndGhosts(level.entities());
+            showPacAndGhosts(level.entitySet());
         }
         else if (stateTick == game.playConfig().rules().demoLevelHuntingStartTick()) {
             startEnergizerBlinking(level);
 
-            final Pac pac = level.entities().pac();
+            final Pac pac = level.entitySet().pac();
             pac.state().setEnumValue(PacState.ACTIVE);
 
-            level.entities().ghosts().forEach(ghost -> {
+            level.entitySet().ghosts().forEach(ghost -> {
                 ghost.worldNavigation().setPaused(false);
                 ghost.animation().setStopped(false);
             });
@@ -83,7 +83,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
     }
 
     private void clear(GameContext game) {
-        game.session().level().entities().removeAll();
+        game.session().level().entitySet().removeAll();
         game.session().setLevel(null);
         Logger.info("Demo level has been removed");
     }

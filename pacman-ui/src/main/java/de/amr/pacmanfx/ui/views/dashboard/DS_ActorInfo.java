@@ -52,7 +52,7 @@ public class DS_ActorInfo extends GameDashboardSection {
 
     private Supplier<String> supplyPacStateAndName(GameApp app) {
         return () -> app.game().session().optLevel()
-            .map(level -> level.entities().pac())
+            .map(level -> level.entitySet().pac())
             .map(pac -> "%s (%s)".formatted(pac.name(), pac.state().enumValue()))
             .orElse(NO_INFO);
     }
@@ -118,7 +118,7 @@ public class DS_ActorInfo extends GameDashboardSection {
 
     private Supplier<String> supplyPacPowerText(GameApp appContext) {
         return () -> appContext.game().session().optLevel()
-            .map(level -> level.entities().pac())
+            .map(level -> level.entitySet().pac())
             .map(this::pacPowerText)
             .orElse(NO_INFO);
     }
@@ -130,7 +130,7 @@ public class DS_ActorInfo extends GameDashboardSection {
     }
 
     private Supplier<?> supplyPacText(GameApp appContext, BiFunction<GameLevel, Pac, String> infoSupplier) {
-        return fnLevelInfo(appContext, level -> infoSupplier.apply(level, level.entities().pac()));
+        return fnLevelInfo(appContext, level -> infoSupplier.apply(level, level.entitySet().pac()));
     }
 
     private Supplier<?> supplyGhostText(
@@ -138,8 +138,8 @@ public class DS_ActorInfo extends GameDashboardSection {
         BiFunction<GameLevel, Ghost, String> infoSupplier, GhostPersonality personality) {
 
         return fnLevelInfo(appContext, level -> {
-            if (!level.entities().ghosts().isEmpty()) {
-                return infoSupplier.apply(level, level.entities().ghost(personality));
+            if (!level.entitySet().ghosts().isEmpty()) {
+                return infoSupplier.apply(level, level.entitySet().ghost(personality));
             }
             return NO_INFO;
         });
@@ -152,7 +152,7 @@ public class DS_ActorInfo extends GameDashboardSection {
     private Supplier<String> supplyPacAnimationText(GameApp app) {
         return () -> app.game().session().optLevel().map(level -> {
             final ActorSpriteAnimController animSystem = app.game().playConfig().systems().actorSpriteAnimController();
-            final Pac pac = level.entities().pac();
+            final Pac pac = level.entitySet().pac();
             final boolean stopped = pac.animation().isStopped();
             final boolean locked = pac.animation().isLocked();
             String statusText = "";

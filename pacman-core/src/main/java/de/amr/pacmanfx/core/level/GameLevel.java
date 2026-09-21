@@ -122,7 +122,7 @@ public class GameLevel implements Renderable {
         this.entities = entities;
     }
 
-    public GameLevelEntities entities() {
+    public GameLevelEntities entitySet() {
         return entities;
     }
 
@@ -164,14 +164,14 @@ public class GameLevel implements Renderable {
 
     public void clearMessage() {
         requireNonNull(entities);
-        final MessageView messageView = entities.otherEntities().theOne(MessageView.class);
+        final MessageView messageView = entities.entities().theOne(MessageView.class);
         messageView.type().setMessageType(MessageType.NO_MESSAGE);
     }
 
     public void showMessage(MessageType messageType) {
         requireNonNull(entities);
         requireNonNull(messageType);
-        final MessageView messageView = entities.otherEntities().theOne(MessageView.class);
+        final MessageView messageView = entities.entities().theOne(MessageView.class);
         messageView.type().setMessageType(messageType);
         messageView.show();
     }

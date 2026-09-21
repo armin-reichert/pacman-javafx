@@ -188,8 +188,8 @@ class GameEventHandler implements DefaultGameEventListener {
     //TODO This belongs into an animation system class
 
     public void resetActorAnimations(ActorSpriteAnimController animSystem, GameSession session, GameLevel level) {
-        resetPacAnimation(animSystem, gameOptions(session).boosterEnabled(), level.entities().pac());
-        level.entities().ghosts().forEach(ghost -> resetGhostAnimation(animSystem, ghost));
+        resetPacAnimation(animSystem, gameOptions(session).boosterEnabled(), level.entitySet().pac());
+        level.entitySet().ghosts().forEach(ghost -> resetGhostAnimation(animSystem, ghost));
     }
 
     public void resetPacAnimation(ActorSpriteAnimController animSystem, boolean boosterEnabled, Pac pac) {

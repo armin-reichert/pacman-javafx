@@ -80,7 +80,7 @@ public class Test_MediumTestState extends AbstractGameState {
 
     private void configureLevelForTest(GameContext game) {
         final GameLevel level = session.level();
-        final Pac pac = level.entities().pac();
+        final Pac pac = level.entitySet().pac();
 
         session.setHudVisible(true);
 
@@ -90,7 +90,7 @@ public class Test_MediumTestState extends AbstractGameState {
         pac.cheats().usingAutopilotProperty().unbind();
         pac.cheats().setUsingAutopilot(true);
 
-        final List<Ghost> ghosts = level.entities().ghosts();
+        final List<Ghost> ghosts = level.entitySet().ghosts();
         ghosts.forEach(ghost -> {
             ghost.show();
             systems.actorSpriteAnimController().playSelected(ghost);

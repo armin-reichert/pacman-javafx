@@ -37,8 +37,8 @@ public class Test_ShortTestState extends AbstractGameState {
         final GameLevel level = gamePlay.buildNormalLevel(game, 1);
         game.eventManager().publishEvent(new LevelCreatedEvent(level));
 
-        level.entities().pac().show();
-        level.entities().ghosts().forEach(GameEntity::show);
+        level.entitySet().pac().show();
+        level.entitySet().ghosts().forEach(GameEntity::show);
 
         timer().resetToIndefiniteDuration();
 
@@ -55,8 +55,8 @@ public class Test_ShortTestState extends AbstractGameState {
             hud.livesCounter().show();
 
             level.heartbeat().restart();
-            level.entities().pac().show();
-            level.entities().ghosts().forEach(GameEntity::show);
+            level.entitySet().pac().show();
+            level.entitySet().ghosts().forEach(GameEntity::show);
 
             gamePlay.prepareLevelForPlaying(game, level);
 
@@ -65,13 +65,13 @@ public class Test_ShortTestState extends AbstractGameState {
             game.eventManager().publishEvent(new TestStartedEvent(level));
         }
         else if (timer().atSecond(START + 1)) {
-            level.entities().otherEntities().theOne(MessageView.class).hide();
+            level.entitySet().entities().theOne(MessageView.class).hide();
         }
         else if (timer().atSecond(START + 3)) {
             gamePlay.activateNextBonus(game, level);
         }
         else if (timer().atSecond(START + 5)) {
-            final Bonus bonus = level.entities().otherEntities().anyOfTypeOrNull(Bonus.class);
+            final Bonus bonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
             if (bonus != null) {
                 eatBonus(game, level, bonus);
             }
@@ -80,14 +80,14 @@ public class Test_ShortTestState extends AbstractGameState {
             gamePlay.activateNextBonus(game, level);
         }
         else if (timer().atSecond(START + 8)) {
-            final Bonus bonus = level.entities().otherEntities().anyOfTypeOrNull(Bonus.class);
+            final Bonus bonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
             if (bonus != null) {
                 eatBonus(game, level, bonus);
             }
         }
         else if (timer().atSecond(START + 9)) {
-            level.entities().pac().hide();
-            level.entities().ghosts().forEach(GameEntity::hide);
+            level.entitySet().pac().hide();
+            level.entitySet().ghosts().forEach(GameEntity::hide);
             level.heartbeat().stop();
             finishLevel(level, systems);
         }
@@ -107,14 +107,14 @@ public class Test_ShortTestState extends AbstractGameState {
         gamePlay.scorePoints(game, bonusValue, level.number());
         Logger.info("Scored {} points for eating bonus {}", bonusValue, bonus);
 
-        level.entities().remove(bonus);
+        level.entitySet().remove(bonus);
 
         // Eaten bonus is displayed as points for short time
         final var points = new BonusPoints(bonusValue);
         points.pos().set(bonus.pos().asVector2f());
         points.setLifetimeSec(rules.eatenBonusDisplaySeconds());
         points.show();
-        level.entities().add(points);
+        level.entitySet().add(points);
 
         game.eventManager().publishEvent(new BonusEatenEvent(bonus));
     }
@@ -134,18 +134,18 @@ public class Test_ShortTestState extends AbstractGameState {
         level.food().eatAll();
 
         // Pac-Man stops and stands still
-        final Pac pac = level.entities().pac();
+        final Pac pac = level.entitySet().pac();
         pac.state().setEnumValue(PacState.SLEEPING);
         systems.pacPower().stopAndReset(pac);
 
         // Ghosts stop
-        level.entities().ghosts().forEach(ghost -> ghost.worldNavigation().setPaused(true));
+        level.entitySet().ghosts().forEach(ghost -> ghost.worldNavigation().setPaused(true));
 
-        final Bonus bonus = level.entities().otherEntities().anyOfTypeOrNull(Bonus.class);
+        final Bonus bonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
         if (bonus != null) {
             systems.bonusState().setInactive(bonus);
             bonus.optComp(BonusMoveAndJumpComp.class).ifPresent(_-> systems.bonusMoveAndJump().setBonusInactive(bonus));
-            level.entities().remove(bonus);
+            level.entitySet().remove(bonus);
         }
         level.clearBonusIndex();
 

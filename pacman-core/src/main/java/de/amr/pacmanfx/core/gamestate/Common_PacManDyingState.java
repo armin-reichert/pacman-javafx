@@ -27,7 +27,7 @@ public final class Common_PacManDyingState extends AbstractGameState {
     @Override
     public void onEnterState(GameContext game) {
         level = session.level();
-        pac = level.entities().pac();
+        pac = level.entitySet().pac();
 
         level.gateKeeper().resetCounterAndSetEnabled(true);
         level.huntingTimer().stop();
@@ -38,7 +38,7 @@ public final class Common_PacManDyingState extends AbstractGameState {
         // Note: This does not immediately change the sprite but stops world movement
         pac.state().setEnumValue(PacState.DEAD);
 
-        level.entities().ghosts().forEach(ghost -> {
+        level.entitySet().ghosts().forEach(ghost -> {
             // Copilot claims that eaten ghosts returning to the house continue even when Pac-Man dies
             if (ghost.state().enumValue() != GhostState.RETURNING_HOME) {
                 ghost.worldNavigation().setPaused(true);
@@ -48,7 +48,7 @@ public final class Common_PacManDyingState extends AbstractGameState {
         });
 
         // Stop bonus movement. Note: this works also if the bonus has no movement component!
-        final Bonus bonus = level.entities().otherEntities().anyOfTypeOrNull(Bonus.class);
+        final Bonus bonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
         if (bonus != null) {
             systems.bonusMoveAndJump().setBonusInactive(bonus);
         }
@@ -63,7 +63,7 @@ public final class Common_PacManDyingState extends AbstractGameState {
     @Override
     public void onUpdateState(GameContext game, long globalTick, long stateTick) {
         if (stateTick == rules.pacDyingTiming().hideGhostsTick()) {
-            level.entities().ghosts().forEach(GameEntity::hide);
+            level.entitySet().ghosts().forEach(GameEntity::hide);
             systems.pacAnimation().lockAnimation(pac, false);
             systems.pacAnimation().selectDyingAnimation(pac);
         }
@@ -75,15 +75,15 @@ public final class Common_PacManDyingState extends AbstractGameState {
             pac.hide();
         }
         else if (stateTick == rules.pacDyingTiming().pacDeadTick()) {
-            final Bonus bonus = level.entities().otherEntities().anyOfTypeOrNull(Bonus.class);
+            final Bonus bonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
             if (bonus != null) {
-                level.entities().remove(bonus);
+                level.entitySet().remove(bonus);
             }
             game.eventManager().publishEvent(new PacDeadEvent(pac));
         }
 
         if (timer().hasExpired()) {
-            level.entities().ghosts().forEach(ghost -> ghost.worldNavigation().setPaused(false));
+            level.entitySet().ghosts().forEach(ghost -> ghost.worldNavigation().setPaused(false));
             session.setNumLives(session.numLives() - 1);
             flow.enterGameState(game, session.numLives() == 0
                 ? CommonGameStateID.GAME_OVER

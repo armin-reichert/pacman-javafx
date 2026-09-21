@@ -35,7 +35,7 @@ public class PokeyHuntingStrategy implements GhostHuntingStrategy {
     }
 
     private Vector2i computeChasingTargetTile(GameLevel level, Ghost ghost) {
-        final Vector2i pacTile = level.entities().pac().pos().tile();
+        final Vector2i pacTile = level.entitySet().pac().pos().tile();
         final Vector2i ghostTile = ghost.pos().tile();
         final Vector2i scatterTile = level.worldMap().terrainLayer().ghostScatterTile(ghost.personality());
         return ghostTile.euclideanDist(pacTile) < 8 ? scatterTile : pacTile;

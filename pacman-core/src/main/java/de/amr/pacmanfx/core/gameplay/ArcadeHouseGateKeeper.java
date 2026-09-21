@@ -167,7 +167,7 @@ public final class ArcadeHouseGateKeeper {
         }
 
         // check Pac-Man starving ticks
-        final Pac pac = level.entities().pac();
+        final Pac pac = level.entitySet().pac();
         if (pac.digestion().starvingTicks() >= pacStarvingLimit) {
             digestionSystem.endStarving(pac);
             return Optional.of(String.format("%s reached starving limit (%d ticks)", pac.name(), pacStarvingLimit));
@@ -184,19 +184,19 @@ public final class ArcadeHouseGateKeeper {
     public void registerFoodEaten(GameLevel level) {
         requireNonNull(level);
 
-        final House house = level.entities().otherEntities().theOne(House.class);
+        final House house = level.entitySet().entities().theOne(House.class);
 
         if (globalCounterEnabled) {
-            if (level.entities().ghost(GhostPersonality.ORANGE_GHOST_POKEY).state().enumValue() == GhostState.LOCKED && globalCounterValue == 32) {
+            if (level.entitySet().ghost(GhostPersonality.ORANGE_GHOST_POKEY).state().enumValue() == GhostState.LOCKED && globalCounterValue == 32) {
                 Logger.info("{} inside house when global counter reached {}",
-                    level.entities().ghost(GhostPersonality.ORANGE_GHOST_POKEY).name(), globalCounterValue);
+                    level.entitySet().ghost(GhostPersonality.ORANGE_GHOST_POKEY).name(), globalCounterValue);
                 resetCounterAndSetEnabled(false);
             } else {
                 globalCounterValue++;
                 Logger.trace("Global dot counter = {}", globalCounterValue);
             }
         } else {
-            level.entities().ghostsInState(GhostState.LOCKED).filter(house::isVisitedBy).findFirst().ifPresent(ghost -> {
+            level.entitySet().ghostsInState(GhostState.LOCKED).filter(house::isVisitedBy).findFirst().ifPresent(ghost -> {
                 ghostCounters[ghost.personality().ordinal()]++;
                 Logger.trace("{} dot counter = {}", ghost.name(), ghostCounters[ghost.personality().ordinal()]);
             });
@@ -209,8 +209,8 @@ public final class ArcadeHouseGateKeeper {
         final GameSystems systems = game.playConfig().systems();
         final PacDigestionSystem pacDigestionSystem = systems.pacDigestion();
 
-        final House house = level.entities().otherEntities().theOne(House.class);
-        final Ghost blinky = level.entities().ghost(GhostPersonality.RED_GHOST_SHADOW);
+        final House house = level.entitySet().entities().theOne(House.class);
+        final Ghost blinky = level.entitySet().ghost(GhostPersonality.RED_GHOST_SHADOW);
 
         if (blinky.state().enumValue() == GhostState.LOCKED) {
             if (house.isVisitedBy(blinky)) {
@@ -226,7 +226,7 @@ public final class ArcadeHouseGateKeeper {
             systems.ghostHouseAccess().requestUnlock(blinky);
         }
         Stream.of(GhostPersonality.PINK_GHOST_SPEEDY, GhostPersonality.CYAN_GHOST_BASHFUL, GhostPersonality.ORANGE_GHOST_POKEY)
-            .map(level.entities()::ghost)
+            .map(level.entitySet()::ghost)
             .filter(ghost -> ghost.state().enumValue() == GhostState.LOCKED)
             .findFirst()
             .ifPresent(prisoner -> checkReleaseOfGhost(level, prisoner, pacDigestionSystem).ifPresent(_ -> {

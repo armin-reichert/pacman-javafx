@@ -39,7 +39,7 @@ public class SteeringActions {
         public void execute(GameApp app) {
             final GameContext game = app.game();
             final WorldNavigationSystem navigator = game.playConfig().systems().navigator();
-            game.session().optLevel().ifPresent(level -> navigator.setWishDir(level.entities().pac(), dir));
+            game.session().optLevel().ifPresent(level -> navigator.setWishDir(level.entitySet().pac(), dir));
         }
 
         @Override
@@ -47,7 +47,7 @@ public class SteeringActions {
             final GameSession session = app.game().session();
             return session.optLevel().isPresent()
                 && !session.isAttractMode()
-                && !session.level().entities().pac().cheats().isUsingAutopilot();
+                && !session.level().entitySet().pac().cheats().isUsingAutopilot();
         }
     }
 

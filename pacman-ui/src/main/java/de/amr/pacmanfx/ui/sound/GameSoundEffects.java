@@ -197,7 +197,7 @@ public class GameSoundEffects implements Disposable {
         }
         if (CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(game.state())) {
             playSiren(game);
-            playGhostSounds(level.entities().pac(), level.entities().ghosts());
+            playGhostSounds(level.entitySet().pac(), level.entitySet().ghosts());
         }
     }
 
@@ -297,7 +297,7 @@ public class GameSoundEffects implements Disposable {
     // siren numbers are 1..4, hunting phase index = 0..7
     private int computeSirenNumber(GameContext game) {
         final GameLevel level = game.session().level();
-        final Pac pac = level.entities().pac();
+        final Pac pac = level.entitySet().pac();
         if (pac.power().isActive()) {
             return NO_SIREN;
         }

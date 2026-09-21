@@ -145,8 +145,8 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
     @Override
     public void onGameContinued(GameContinuedEvent ignoredEvent) {
         final GameLevel3D level3D = assertLevel3D();
-        final MessageView messageView = game().session().level().entities()
-            .otherEntities().theOne(MessageView.class);
+        final MessageView messageView = game().session().level().entitySet()
+            .entities().theOne(MessageView.class);
         showMessage(level3D, messageView, LevelMessageType.READY);
     }
 
@@ -162,8 +162,8 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         }
 
         final GameLevel3D level3D = assertLevel3D();
-        final MessageView messageView = game().session().level().entities()
-            .otherEntities().theOne(MessageView.class);
+        final MessageView messageView = game().session().level().entitySet()
+            .entities().theOne(MessageView.class);
         showMessage(level3D, messageView, LevelMessageType.READY);
     }
 
@@ -189,12 +189,12 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         if (newState instanceof AbstractGameState gameState && gameState.id() instanceof TestStateID) {
             gameScene().replaceGameLevel3D(game(), level);
             level3D.animationManager().startEnergizerPumping();
-            final MessageView messageView = level.entities().otherEntities().theOne(MessageView.class);
+            final MessageView messageView = level.entitySet().entities().theOne(MessageView.class);
             showMessage(level3D, messageView, LevelMessageType.TEST, level.number());
         }
 
         //TODO: workaround, check cause for invisible Pac-Man 3D after cut scene
-        level.entities().pac().reqComp(Pac3DViewComp.class).root().setVisible(true);
+        level.entitySet().pac().reqComp(Pac3DViewComp.class).root().setVisible(true);
 
         gameScene().replaceActionBindings(game().session(), level);
         gameScene().fadeIn();
@@ -270,7 +270,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final var center = switch (type) {
             case READY -> {
-                final House house = level.entities().otherEntities().theOne(House.class);
+                final House house = level.entitySet().entities().theOne(House.class);
                 yield house.centerPositionUnderHouse();
             }
             case TEST -> vec2_float(terrain.numCols() * WorldMap.HTS, (terrain.numRows() - 2) * WorldMap.TS);
@@ -287,7 +287,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
     private void onHuntingStart(GameLevel3D level3D) {
         final GameLevel level = level3D.level();
-        gameScene().initPac3DProperties(level, level.entities().pac());
+        gameScene().initPac3DProperties(level, level.entitySet().pac());
 
         level3D.animationManager().startEnergizerPumping();
         level3D.animationManager().startParticlesAnimation();
@@ -302,14 +302,14 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
         optSoundEffects().ifPresent(GameSoundEffects::stopAll);
 
-        final Bonus bonus = level.entities().otherEntities().anyOfTypeOrNull(Bonus.class);
+        final Bonus bonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
         if (bonus != null) {
             Bonus3DViewSystem.lookExpired(bonus, animationRegistry);
         }
 
         level3D.animationManager().stopAnimationsBeforePacManDies();
         Pac3DAnimationSystem.playDyingAnimation(
-            level.entities().pac(),
+            level.entitySet().pac(),
             () -> optSoundEffects().ifPresent(GameSoundEffects::playPacDeadSound),
             game().state()::triggerTimeout
         );
@@ -327,7 +327,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
     private void onLevelComplete() {
         final GameViewModel viewModel = app().ui().viewModel();
         final GameLevel level = game().session().level();
-        final House house = level.entities().otherEntities().theOne(House.class);
+        final House house = level.entitySet().entities().theOne(House.class);
         final boolean cutSceneFollows = !game().session().isAttractMode()
             && game().playConfig().rules().cutSceneAfterLevel(level.number()).isPresent();
 
@@ -339,12 +339,12 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final GameLevel3D level3D = assertLevel3D();
         level3D.animationManager().stopAll();
         level3D.cleanupFoodAndParticles();
-        final Bonus bonus = level.entities().otherEntities().anyOfTypeOrNull(Bonus.class);
+        final Bonus bonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
         if (bonus != null) {
             Bonus3DViewSystem.lookExpired(bonus, level3D.animationManager().registry());
         }
 
-        final MessageView messageView = level.entities().otherEntities().theOne(MessageView.class);
+        final MessageView messageView = level.entitySet().entities().theOne(MessageView.class);
         MessageView3DAnimationSystem.hideMessageView(messageView);
 
         playLevelEndAnimation(level3D.animationManager().registry(),
@@ -405,7 +405,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
         level3D.animationManager().stopAll();
         level3D.cleanupFoodAndParticles();
-        final Bonus bonus = level.entities().otherEntities().anyOfTypeOrNull(Bonus.class);
+        final Bonus bonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
         if (bonus != null) {
             Bonus3DViewSystem.lookExpired(bonus, level3D.animationManager().registry());
         }
@@ -413,7 +413,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
     }
 
     private void handleTestState(Game3DSettingsVM globals3D, GameLevel level) {
-        final MessageView messageView = level.entities().otherEntities().theOne(MessageView.class);
+        final MessageView messageView = level.entitySet().entities().theOne(MessageView.class);
         gameScene().optGameLevel3D().ifPresent(level3D -> {
             gameScene().replaceGameLevel3D(game(), level);
             showMessage(level3D, messageView, LevelMessageType.TEST, level.number());

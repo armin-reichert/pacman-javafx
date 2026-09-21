@@ -58,7 +58,7 @@ public class XXL_MsPacMan_GamePlay extends ArcadeMsPacMan_GamePlay {
         final int levelNumber = DEMO_LEVEL_NUMBERS[randomInt(0, DEMO_LEVEL_NUMBERS.length)];
         final GameLevel level = createLevel(game, levelNumber);
 
-        final Pac pac = level.entities().pac();
+        final Pac pac = level.entitySet().pac();
         pac.autoSteering().setSteering(new RuleGuidedPacSteering(systems.navigator(), systems.pacWorldMovementPolicy()));
         pac.cheats().setImmune(false);
         pac.cheats().setUsingAutopilot(true);

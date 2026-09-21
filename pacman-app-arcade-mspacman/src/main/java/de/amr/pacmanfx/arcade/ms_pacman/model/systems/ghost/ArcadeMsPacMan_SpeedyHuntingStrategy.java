@@ -22,7 +22,7 @@ public class ArcadeMsPacMan_SpeedyHuntingStrategy extends ArcadeMsPacMan_Randomi
 
     @Override
     protected Vector2i computeChasingTargetTile(GameLevel level) {
-        final Pac pac = level.entities().pac();
+        final Pac pac = level.entitySet().pac();
         return WorldNavigationSystem.tilesAheadWithOverflowBug(pac, 4);
     }
 }

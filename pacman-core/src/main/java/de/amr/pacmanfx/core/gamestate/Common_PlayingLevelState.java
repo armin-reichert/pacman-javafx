@@ -25,12 +25,12 @@ public final class Common_PlayingLevelState extends AbstractGameState {
     public void onEnterState(GameContext game) {
         level = game.session().level();
 
-        level.entities().otherEntities().theOne(MessageView.class).hide();
+        level.entitySet().entities().theOne(MessageView.class).hide();
 
         level.heartbeat().setStartState(Pulse.State.ON);
         level.heartbeat().restart();
 
-        level.entities().pac().state().setEnumValue(PacState.ACTIVE);
+        level.entitySet().pac().state().setEnumValue(PacState.ACTIVE);
 
         // This call fires a game event!
         level.huntingTimer().startFirstPhase(game, level.number());

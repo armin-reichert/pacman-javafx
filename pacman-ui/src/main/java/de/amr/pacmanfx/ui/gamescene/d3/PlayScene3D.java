@@ -323,7 +323,7 @@ public class PlayScene3D extends AbstractGameScene implements DisposableGraphics
         level3DParent.getChildren().setAll(level3D.root());
 
         //TODO check this
-        final Pac pac = level.entities().pac();
+        final Pac pac = level.entitySet().pac();
         initPac3DProperties(level, pac);
 
         LivesCounter3DViewSystem.startTracking(session.hud().livesCounter(), pac);

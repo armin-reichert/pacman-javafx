@@ -67,7 +67,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
         final GameVariantRenderConfig renderConfig = app().variantManager().currentRuntime().uiConfig().renderConfig();
         return Ufx.streamOf(
             createRenderableLevel(level),
-            level.entities().all().map(renderConfig::renderable)
+            level.entitySet().all().map(renderConfig::renderable)
         );
     }
 

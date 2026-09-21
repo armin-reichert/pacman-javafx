@@ -36,6 +36,6 @@ public class ShadowHuntingStrategy implements GhostHuntingStrategy {
     }
 
     private Vector2i computeChasingTargetTile(GameLevel level) {
-        return level.entities().pac().pos().tile();
+        return level.entitySet().pac().pos().tile();
     }
 }

@@ -68,7 +68,7 @@ public final class CheatActions {
                 level.food().eatPellets();
                 session.cheats().notifyCheatUsed();
                 app.game().eventManager().publishEvent(
-                    new PacEatsFoodEvent(level.entities().pac(), false, true, app.clock().currentTick()));
+                    new PacEatsFoodEvent(level.entitySet().pac(), false, true, app.clock().currentTick()));
             }
 
             @Override
@@ -87,7 +87,7 @@ public final class CheatActions {
                 
                 session.cheats().notifyCheatUsed();
 
-                final List<Ghost> killableGhosts = level.entities().ghosts().stream()
+                final List<Ghost> killableGhosts = level.entitySet().ghosts().stream()
                     .filter(ghost -> GhostState.FRIGHTENED == ghost.state().enumValue()
                         || GhostState.HUNTING_PAC == ghost.state().enumValue())
                     .toList();

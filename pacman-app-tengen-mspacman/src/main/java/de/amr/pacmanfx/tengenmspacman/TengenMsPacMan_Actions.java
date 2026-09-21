@@ -109,7 +109,7 @@ public final class TengenMsPacMan_Actions {
                         app.ui().shortMessage("Booster ON!"); //TODO localize
                     }
                     //TODO hack: this should be done by entity update system!
-                    level.entities().pac().reqComp(PacBoosterComp.class).setBoosterEnabled(nextEnabledState);
+                    level.entitySet().pac().reqComp(PacBoosterComp.class).setBoosterEnabled(nextEnabledState);
                 });
             }
 

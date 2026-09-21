@@ -25,7 +25,7 @@ public class Common_LevelCompleteState extends AbstractGameState {
     @Override
     public void onEnterState(GameContext game) {
         level = session.level();
-        pac = level.entities().pac();
+        pac = level.entitySet().pac();
 
         level.heartbeat().setStartState(Pulse.State.OFF);
         level.heartbeat().stopAndReset();
@@ -38,11 +38,11 @@ public class Common_LevelCompleteState extends AbstractGameState {
         systems.pacPower().stopAndReset(pac);
         pac.state().setEnumValue(PacState.SLEEPING);
 
-        final Bonus bonus = level.entities().otherEntities().anyOfTypeOrNull(Bonus.class);
+        final Bonus bonus = level.entitySet().entities().anyOfTypeOrNull(Bonus.class);
         if (bonus != null) {
             systems.bonusState().setInactive(bonus);
             bonus.optComp(BonusMoveAndJumpComp.class).ifPresent(_-> systems.bonusMoveAndJump().setBonusInactive(bonus));
-            level.entities().remove(bonus);
+            level.entitySet().remove(bonus);
         }
 
         timer().resetToIndefiniteDuration();
@@ -50,13 +50,13 @@ public class Common_LevelCompleteState extends AbstractGameState {
 
     @Override
     public void onExit(GameContext context) {
-        level.entities().ghosts().forEach(ghost -> ghost.worldNavigation().setPaused(false));
+        level.entitySet().ghosts().forEach(ghost -> ghost.worldNavigation().setPaused(false));
     }
 
     @Override
     public void onUpdateState(GameContext game, long globalTick, long stateTick) {
         if (stateTick == 1) {
-            lockPacAndGhosts(level.entities(), true);
+            lockPacAndGhosts(level.entitySet(), true);
         }
         if (timer().hasExpired()) {
             flow.enterGameState(game, computeNextStateID());
