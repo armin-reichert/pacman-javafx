@@ -2,24 +2,21 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.uilib.rendering;
+package de.amr.basics.ui.rendering;
 
 import de.amr.basics.InfoMap;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
+import de.amr.basics.ui.assets.SpriteSheet;
 import de.amr.basics.ui.ecs.GameEntity;
 import de.amr.basics.ui.entities.props.ColoredRect;
 import de.amr.basics.ui.entities.props.imagedisplay.ImageDisplay;
+import de.amr.basics.ui.entities.props.messageview.MessageType;
+import de.amr.basics.ui.entities.props.messageview.MessageView;
+import de.amr.basics.ui.entities.props.messageview.MessageViewStyleComp;
 import de.amr.basics.ui.entities.props.textdisplay.TextDisplay;
 import de.amr.basics.util.Ufx;
-import de.amr.basics.ui.entities.props.messageview.MessageView;
-import de.amr.basics.ui.entities.props.messageview.MessageType;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.basics.ui.rendering.Renderable;
-import de.amr.basics.ui.rendering.RenderableGameEntity;
-import de.amr.basics.ui.assets.SpriteSheet;
-import de.amr.basics.ui.entities.props.messageview.MessageViewStyleComp;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -40,6 +37,10 @@ import static java.util.Objects.requireNonNull;
  * Base renderer class providing support for scaling, background color and common font drawing.
  */
 public class BaseRenderer implements Renderer {
+
+    private static final int HTS = 4; // half tile size
+
+    private static final int TS = 8;
 
     private static final Text dummy = new Text();
 
@@ -199,8 +200,8 @@ public class BaseRenderer implements Renderer {
      */
     public void fillSquareAtTileCenter(Vector2i tile, double sideLength) {
         requireNonNull(tile);
-        final double centerX = tile.x() * WorldMap.TS + WorldMap.HTS;
-        final double centerY = tile.y() * WorldMap.TS + WorldMap.HTS;
+        final double centerX = tile.x() * TS + HTS;
+        final double centerY = tile.y() * TS + HTS;
         final double halfSideLength = 0.5f * sideLength;
         ctx.fillRect(centerX - halfSideLength, centerY - halfSideLength, sideLength, sideLength);
     }
@@ -254,9 +255,9 @@ public class BaseRenderer implements Renderer {
     }
 
     public void drawTileGrid(double sizeX, double sizeY, Color gridColor) {
-        final double scaledTileSize = scaled(WorldMap.TS);
+        final double scaledTileSize = scaled(TS);
         final double thin = 0.2, medium = 0.4, thick = 0.8;
-        final int numCols = (int) (sizeX / WorldMap.TS), numRows = (int) (sizeY / WorldMap.TS);
+        final int numCols = (int) (sizeX / TS), numRows = (int) (sizeY / TS);
         final double width = numCols * scaledTileSize, height = numRows * scaledTileSize;
         ctx.save();
         ctx.setStroke(Color.YELLOW);

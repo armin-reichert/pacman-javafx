@@ -23,7 +23,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.assets.SpriteSheet;
-import de.amr.pacmanfx.uilib.rendering.Renderer;
+import de.amr.basics.ui.rendering.Renderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 

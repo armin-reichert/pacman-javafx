@@ -2,10 +2,9 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.uilib.rendering;
+package de.amr.basics.ui.rendering;
 
 import de.amr.basics.InfoMap;
-import de.amr.basics.ui.rendering.Renderable;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.canvas.Canvas;

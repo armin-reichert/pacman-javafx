@@ -20,12 +20,11 @@ import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.rendering.RenderableGameEntity;
 import de.amr.basics.ui.assets.SpriteSheet;
-import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.basics.ui.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
 import de.amr.pacmanfx.uilib.rendering.RenderableGameLevel;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 
 import java.util.Optional;
 

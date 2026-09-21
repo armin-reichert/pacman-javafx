@@ -10,7 +10,7 @@ import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.assets.SpriteSheet;
-import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.basics.ui.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 
 import java.util.Optional;

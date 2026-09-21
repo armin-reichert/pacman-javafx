@@ -9,7 +9,7 @@ import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
-import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.basics.ui.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.text.Font;
 

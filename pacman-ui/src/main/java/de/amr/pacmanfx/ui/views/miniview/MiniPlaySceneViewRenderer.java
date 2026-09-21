@@ -9,9 +9,9 @@ import de.amr.basics.ui.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
-import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.basics.ui.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
-import de.amr.pacmanfx.uilib.rendering.Renderer;
+import de.amr.basics.ui.rendering.Renderer;
 import de.amr.pacmanfx.uilib.rendering.RenderingReorderWrapper;
 
 public class MiniPlaySceneViewRenderer extends BaseRenderer {

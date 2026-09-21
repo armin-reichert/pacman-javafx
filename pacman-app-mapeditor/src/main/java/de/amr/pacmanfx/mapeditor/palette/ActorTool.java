@@ -10,7 +10,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
 import de.amr.pacmanfx.mapeditor.TileMapEditor;
 import de.amr.pacmanfx.mapeditor.actions.Action_SetTerrainProperty;
-import de.amr.pacmanfx.uilib.rendering.Renderer;
+import de.amr.basics.ui.rendering.Renderer;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 

@@ -14,7 +14,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
 import de.amr.pacmanfx.core.model.world.obstacle.Obstacle;
 import de.amr.pacmanfx.core.model.world.obstacle.ObstacleSegment;
 import de.amr.basics.ui.rendering.Renderable;
-import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.basics.ui.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapColoring;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapRenderer;
 import de.amr.pacmanfx.uilib.rendering.TileRenderer;

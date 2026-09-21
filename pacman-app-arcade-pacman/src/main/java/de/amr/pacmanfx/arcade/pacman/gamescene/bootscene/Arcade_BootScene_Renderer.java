@@ -7,7 +7,7 @@ import de.amr.basics.util.Ufx;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.basics.ui.assets.SpriteSheet;
-import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.basics.ui.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.text.Font;
 

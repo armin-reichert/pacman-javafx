@@ -3,6 +3,7 @@
  */
 package de.amr.pacmanfx.uilib.rendering;
 
+import de.amr.basics.ui.rendering.Renderer;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.paint.Color;
 

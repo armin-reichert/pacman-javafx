@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.gamescene.d2;
 
+import de.amr.basics.ui.rendering.BaseRenderer;
 import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.pacmanfx.core.entities.world.house.House;
 import de.amr.pacmanfx.core.level.GameLevel;

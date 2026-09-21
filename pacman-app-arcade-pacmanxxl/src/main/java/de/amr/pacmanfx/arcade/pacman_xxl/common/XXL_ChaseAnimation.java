@@ -22,7 +22,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationTimer;
-import de.amr.pacmanfx.uilib.rendering.Renderer;
+import de.amr.basics.ui.rendering.Renderer;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;

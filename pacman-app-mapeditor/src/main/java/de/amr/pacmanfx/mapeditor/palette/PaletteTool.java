@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.mapeditor.palette;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.uilib.rendering.Renderer;
+import de.amr.basics.ui.rendering.Renderer;
 
 import java.util.function.Consumer;
 

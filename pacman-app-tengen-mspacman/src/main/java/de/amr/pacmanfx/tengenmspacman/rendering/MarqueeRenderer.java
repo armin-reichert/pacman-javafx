@@ -7,7 +7,7 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.entities.props.marquee.*;
 import de.amr.basics.ui.rendering.RenderableGameEntity;
-import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.basics.ui.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 

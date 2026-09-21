@@ -31,7 +31,7 @@ import de.amr.basics.ui.rendering.RenderableGameEntity;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.basics.ui.assets.SpriteSheet;
 import de.amr.basics.ui.entities.hud.HUD_Style;
-import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
+import de.amr.basics.ui.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
