@@ -52,11 +52,7 @@ public class GenericLevelRenderer extends BaseRenderer {
         updateColors(backgroundColor());
     }
 
-    @Override
-    public void render(Renderable r, long tick) {
-        if (!(r instanceof  GameLevel level)) {
-            return;
-        }
+    public void renderLevel(GameLevel level, long tick) {
         if (info.getBoolean(LevelRenderInfoKey.SHOW_BRIGHT_MAZE)) {
             terrainRenderer.setMapColoring(info.getBoolean(LevelRenderInfoKey.ENERGIZERS_SHOWN) ? blinkingOnMapColoring : blinkingOffMapColoring);
             terrainRenderer.render(level.worldMap(), tick);

@@ -3,11 +3,13 @@
  */
 package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
+import de.amr.basics.InfoMap;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
 import de.amr.basics.rendering.Renderable;
 import de.amr.pacmanfx.ui.gamescene.d2.GenericLevelRenderer;
+import de.amr.pacmanfx.uilib.rendering.RenderableGameLevel;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapColoring;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -23,21 +25,20 @@ public class XXL_GameLevelRenderer extends GenericLevelRenderer {
 
     @Override
     public void render(Renderable r, long tick) {
-        if (!(r instanceof GameLevel level)) {
-            return;
+        switch (r) {
+            case RenderableGameLevel(GameLevel level, InfoMap renderInfo) -> {
+                //TODO don't do this in every render frame
+                final GenericWorldMapColorScheme worldMapColorScheme = level.worldMap().getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
+                final var mapColoring = new TerrainMapColoring(
+                    backgroundColor(),
+                    Color.valueOf(worldMapColorScheme.wallFill()),
+                    Color.valueOf(worldMapColorScheme.wallStroke()),
+                    Color.valueOf(worldMapColorScheme.door())
+                );
+                info.put(GenericLevelRenderer.RenderInfoKey.TERRAIN_MAP_COLORING, mapColoring);
+                renderLevel(level, tick);
+            }
+            default -> {}
         }
-
-        //TODO don't do this in every render frame
-        final GenericWorldMapColorScheme worldMapColorScheme = level.worldMap().getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
-        final var mapColoring = new TerrainMapColoring(
-            backgroundColor(),
-            Color.valueOf(worldMapColorScheme.wallFill()),
-            Color.valueOf(worldMapColorScheme.wallStroke()),
-            Color.valueOf(worldMapColorScheme.door())
-        );
-
-        info.put(GenericLevelRenderer.RenderInfoKey.TERRAIN_MAP_COLORING, mapColoring);
-
-        super.render(r, tick);
     }
 }
