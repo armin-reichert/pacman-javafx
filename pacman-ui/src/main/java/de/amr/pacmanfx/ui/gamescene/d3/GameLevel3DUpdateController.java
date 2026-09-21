@@ -10,15 +10,15 @@ import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.ui.entities3D.livescounter.system.LivesCounter3DViewSystem;
-import de.amr.pacmanfx.uilib.entities3D.bonus.system.Bonus3DMovementSystem;
-import de.amr.pacmanfx.uilib.entities3D.bonus.system.Bonus3DViewSystem;
-import de.amr.pacmanfx.uilib.entities3D.ghost.system.Ghost3DAppearanceSystem;
-import de.amr.pacmanfx.uilib.entities3D.ghost.system.Ghost3DMovementSystem;
-import de.amr.pacmanfx.uilib.entities3D.house.comp.House3DViewComp;
-import de.amr.pacmanfx.uilib.entities3D.house.system.House3DAnimationSystem;
-import de.amr.pacmanfx.uilib.entities3D.house.system.House3DSystem;
-import de.amr.pacmanfx.uilib.entities3D.pac.system.Pac3DAnimationSystem;
-import de.amr.pacmanfx.uilib.entities3D.pac.system.Pac3DTransformSystem;
+import de.amr.pacmanfx.uilib.entities.d3.bonus.system.Bonus3DMovementSystem;
+import de.amr.pacmanfx.uilib.entities.d3.bonus.system.Bonus3DViewSystem;
+import de.amr.pacmanfx.uilib.entities.d3.ghost.system.Ghost3DAppearanceSystem;
+import de.amr.pacmanfx.uilib.entities.d3.ghost.system.Ghost3DMovementSystem;
+import de.amr.pacmanfx.uilib.entities.d3.house.comp.House3DViewComp;
+import de.amr.pacmanfx.uilib.entities.d3.house.system.House3DAnimationSystem;
+import de.amr.pacmanfx.uilib.entities.d3.house.system.House3DSystem;
+import de.amr.pacmanfx.uilib.entities.d3.pac.system.Pac3DAnimationSystem;
+import de.amr.pacmanfx.uilib.entities.d3.pac.system.Pac3DTransformSystem;
 
 import java.util.Set;
 

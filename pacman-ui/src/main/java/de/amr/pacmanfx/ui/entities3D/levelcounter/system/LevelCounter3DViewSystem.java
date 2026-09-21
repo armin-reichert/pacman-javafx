@@ -9,8 +9,8 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.entities3D.levelcounter.LevelCounter3DFactory;
-import de.amr.pacmanfx.uilib.entities3D.levelcounter.comp.LevelCounter3DAnimationComp;
-import de.amr.pacmanfx.uilib.entities3D.levelcounter.comp.LevelCounter3DViewComp;
+import de.amr.pacmanfx.uilib.entities.d3.levelcounter.comp.LevelCounter3DAnimationComp;
+import de.amr.pacmanfx.uilib.entities.d3.levelcounter.comp.LevelCounter3DViewComp;
 import javafx.scene.Group;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;

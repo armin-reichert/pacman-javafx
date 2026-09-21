@@ -23,7 +23,7 @@ import de.amr.pacmanfx.arcade.ms_pacman.props.bag.Bag;
 import de.amr.pacmanfx.core.entities.props.bonuspoints.BonusPoints;
 import de.amr.pacmanfx.core.entities.props.clapperboard.Clapperboard;
 import de.amr.pacmanfx.core.entities.props.ghostpoints.GhostPoints;
-import de.amr.pacmanfx.core.entities.props.marquee.Marquee;
+import de.amr.pacmanfx.uilib.entities.props.marquee.Marquee;
 import de.amr.pacmanfx.core.entities.props.stork.Stork;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.rendering.RenderableGameEntity;

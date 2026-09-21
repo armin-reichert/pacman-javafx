@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
-import de.amr.pacmanfx.core.entities.props.marquee.Marquee;
+import de.amr.pacmanfx.uilib.entities.props.marquee.Marquee;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.props.textdisplay.TextDisplay;
 import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;

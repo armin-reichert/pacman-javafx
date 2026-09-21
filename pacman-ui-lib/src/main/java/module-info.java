@@ -21,27 +21,27 @@ open module de.amr.pacmanfx.uilib {
     exports de.amr.pacmanfx.uilib.controls.skin;
 
     exports de.amr.pacmanfx.uilib.entities.hud;
-    exports de.amr.pacmanfx.uilib.entities3D.animation;
-    exports de.amr.pacmanfx.uilib.entities3D.ghost.comp;
-    exports de.amr.pacmanfx.uilib.entities3D.bonus.anim;
-    exports de.amr.pacmanfx.uilib.entities3D.ghost.system;
-    exports de.amr.pacmanfx.uilib.entities3D.house.comp;
-    exports de.amr.pacmanfx.uilib.entities3D.house.system;
-    exports de.amr.pacmanfx.uilib.entities3D.pac.anim;
-    exports de.amr.pacmanfx.uilib.entities3D.pac.comp;
-    exports de.amr.pacmanfx.uilib.entities3D.pac.system;
-    exports de.amr.pacmanfx.uilib.entities3D.ghost.anim;
-    exports de.amr.pacmanfx.uilib.entities3D.bonus.system;
-    exports de.amr.pacmanfx.uilib.entities3D.bonus.comp;
-    exports de.amr.pacmanfx.uilib.entities3D.factory;
-    exports de.amr.pacmanfx.uilib.entities3D.score.comp;
-    exports de.amr.pacmanfx.uilib.entities3D.levelcounter.comp;
-    exports de.amr.pacmanfx.uilib.entities3D.messageview.comp;
-    exports de.amr.pacmanfx.uilib.entities3D.messageview.system;
-    exports de.amr.pacmanfx.uilib.entities3D.messageview;
-    exports de.amr.pacmanfx.uilib.entities3D.world;
+    exports de.amr.pacmanfx.uilib.entities.d3.ghost.comp;
+    exports de.amr.pacmanfx.uilib.entities.d3.bonus.anim;
+    exports de.amr.pacmanfx.uilib.entities.d3.ghost.system;
+    exports de.amr.pacmanfx.uilib.entities.d3.house.comp;
+    exports de.amr.pacmanfx.uilib.entities.d3.house.system;
+    exports de.amr.pacmanfx.uilib.entities.d3.pac.anim;
+    exports de.amr.pacmanfx.uilib.entities.d3.pac.comp;
+    exports de.amr.pacmanfx.uilib.entities.d3.pac.system;
+    exports de.amr.pacmanfx.uilib.entities.d3.ghost.anim;
+    exports de.amr.pacmanfx.uilib.entities.d3.bonus.system;
+    exports de.amr.pacmanfx.uilib.entities.d3.bonus.comp;
+    exports de.amr.pacmanfx.uilib.entities.d3.score.comp;
+    exports de.amr.pacmanfx.uilib.entities.d3.levelcounter.comp;
+    exports de.amr.pacmanfx.uilib.entities.d3.messageview.comp;
+    exports de.amr.pacmanfx.uilib.entities.d3.messageview.system;
+    exports de.amr.pacmanfx.uilib.entities.d3.messageview;
+    exports de.amr.pacmanfx.uilib.entities.d3.world;
 
     exports de.amr.pacmanfx.uilib.widgets;
     exports de.amr.pacmanfx.uilib.widgets.decorationpane;
     exports de.amr.pacmanfx.uilib.widgets.optionmenu;
+    exports de.amr.pacmanfx.uilib.entities.d3;
+    exports de.amr.pacmanfx.uilib.entities.props.marquee;
 }

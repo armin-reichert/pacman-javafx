@@ -18,7 +18,7 @@ import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.spriteanim.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
-import de.amr.pacmanfx.core.entities.props.marquee.Marquee;
+import de.amr.pacmanfx.uilib.entities.props.marquee.Marquee;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;
 import de.amr.pacmanfx.core.gamestate.GameFlow;
@@ -36,7 +36,7 @@ import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
-import de.amr.pacmanfx.uilib.entities3D.ghost.comp.GhostSettings;
+import de.amr.pacmanfx.uilib.entities.d3.ghost.comp.GhostSettings;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
 

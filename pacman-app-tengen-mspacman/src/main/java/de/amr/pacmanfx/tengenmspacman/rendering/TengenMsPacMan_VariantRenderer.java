@@ -20,7 +20,7 @@ import de.amr.pacmanfx.core.entities.hud.score.Score;
 import de.amr.pacmanfx.core.entities.props.bonuspoints.BonusPoints;
 import de.amr.pacmanfx.core.entities.props.clapperboard.Clapperboard;
 import de.amr.pacmanfx.core.entities.props.ghostpoints.GhostPoints;
-import de.amr.pacmanfx.core.entities.props.marquee.Marquee;
+import de.amr.pacmanfx.uilib.entities.props.marquee.Marquee;
 import de.amr.pacmanfx.core.entities.props.stork.Stork;
 import de.amr.pacmanfx.core.entities.world.door.Door;
 import de.amr.pacmanfx.core.entities.world.door.DoorDataComp;

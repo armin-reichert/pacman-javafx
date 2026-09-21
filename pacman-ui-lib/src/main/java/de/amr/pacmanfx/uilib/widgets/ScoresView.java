@@ -2,7 +2,7 @@ package de.amr.pacmanfx.uilib.widgets;
 
 import de.amr.pacmanfx.core.entities.hud.score.Score;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.uilib.entities3D.score.comp.ScoreViewComp;
+import de.amr.pacmanfx.uilib.entities.d3.score.comp.ScoreViewComp;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;

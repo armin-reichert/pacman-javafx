@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.gamescene.d3;
 import de.amr.pacmanfx.core.entities.world.house.House;
 import de.amr.pacmanfx.core.model.world.map.WorldMapColorScheme;
 import de.amr.pacmanfx.ui.settings.world.House3DSettings;
-import de.amr.pacmanfx.uilib.entities3D.house.comp.House3DViewComp;
+import de.amr.pacmanfx.uilib.entities.d3.house.comp.House3DViewComp;
 import javafx.scene.paint.Color;
 
 public class HouseFactory3D {

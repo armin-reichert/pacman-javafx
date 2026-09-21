@@ -11,7 +11,7 @@ import de.amr.pacmanfx.ui.gamescene.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.gamescene.d3.Maze3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
-import de.amr.pacmanfx.uilib.entities3D.house.comp.House3DViewComp;
+import de.amr.pacmanfx.uilib.entities.d3.house.comp.House3DViewComp;
 import javafx.animation.*;
 import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Point3D;

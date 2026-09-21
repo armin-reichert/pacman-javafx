@@ -4,9 +4,9 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.gamescene.introscene;
 
-import de.amr.pacmanfx.core.entities.props.marquee.*;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.rendering.RenderableGameEntity;
+import de.amr.pacmanfx.uilib.entities.props.marquee.*;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
