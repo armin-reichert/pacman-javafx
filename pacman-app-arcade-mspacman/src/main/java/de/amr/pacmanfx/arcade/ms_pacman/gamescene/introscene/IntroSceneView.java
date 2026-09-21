@@ -23,7 +23,7 @@ import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
-import de.amr.pacmanfx.core.entities.props.imagedisplay.ImageDisplay;
+import de.amr.pacmanfx.uilib.entities.props.imagedisplay.ImageDisplay;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;

@@ -43,7 +43,6 @@ module de.amr.pacmanfx.core {
     exports de.amr.pacmanfx.core.entities.actor.bonus;
     exports de.amr.pacmanfx.core.entities.actor.ghost;
     exports de.amr.pacmanfx.core.entities.world;
-    exports de.amr.pacmanfx.core.entities.props.imagedisplay;
     exports de.amr.pacmanfx.core.entities.props.textdisplay;
     exports de.amr.pacmanfx.core.entities.props;
 }

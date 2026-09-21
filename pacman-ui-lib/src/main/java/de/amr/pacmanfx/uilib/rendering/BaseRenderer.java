@@ -10,7 +10,7 @@ import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.entities.props.imagedisplay.ImageDisplay;
+import de.amr.pacmanfx.uilib.entities.props.imagedisplay.ImageDisplay;
 import de.amr.pacmanfx.core.entities.props.messageview.MessageView;
 import de.amr.pacmanfx.core.entities.props.textdisplay.TextDisplay;
 import de.amr.pacmanfx.core.level.MessageType;
