@@ -5,12 +5,13 @@
 package de.amr.pacmanfx.core.level;
 
 import de.amr.basics.timer.Pulse;
-import de.amr.basics.rendering.RenderingLayer;
-import de.amr.pacmanfx.core.entities.props.messageview.MessageView;
+import de.amr.basics.ui.entities.props.messageview.MessageType;
+import de.amr.basics.ui.entities.props.messageview.MessageView;
+import de.amr.basics.ui.rendering.Renderable;
+import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.pacmanfx.core.gameplay.ArcadeHouseGateKeeper;
 import de.amr.pacmanfx.core.model.world.map.FoodState;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.basics.rendering.Renderable;
 import de.amr.pacmanfx.core.rules.HuntingTimer;
 
 import java.util.ArrayList;

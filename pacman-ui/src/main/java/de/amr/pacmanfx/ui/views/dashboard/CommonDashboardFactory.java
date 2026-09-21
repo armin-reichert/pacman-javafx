@@ -6,7 +6,7 @@ package de.amr.pacmanfx.ui.views.dashboard;
 
 
 import de.amr.basics.Named;
-import de.amr.pacmanfx.uilib.assets.TranslationManager;
+import de.amr.basics.ui.assets.TranslationManager;
 
 import java.util.Optional;
 

@@ -4,8 +4,8 @@
 
 package de.amr.basics.ui.entities.props.imagedisplay;
 
-import de.amr.basics.rendering.Renderable;
-import de.amr.basics.rendering.RenderingLayer;
+import de.amr.basics.ui.rendering.Renderable;
+import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.ui.ecs.GameEntity;
 
 public class ImageDisplay extends GameEntity implements Renderable {

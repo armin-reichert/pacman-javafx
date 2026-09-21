@@ -6,11 +6,11 @@ package de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.entities.hud.score.Score;
-import de.amr.pacmanfx.core.entities.hud.score.ScoreSystem;
+import de.amr.basics.ui.entities.hud.score.Score;
+import de.amr.pacmanfx.core.entities.hud.ScoreSystem;
 import de.amr.pacmanfx.core.event.HighScoreAccessErrorEvent;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
-import de.amr.basics.rendering.Renderable;
+import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;

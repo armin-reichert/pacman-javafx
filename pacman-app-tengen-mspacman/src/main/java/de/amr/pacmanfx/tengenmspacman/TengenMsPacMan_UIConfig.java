@@ -16,9 +16,9 @@ import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
-import de.amr.pacmanfx.uilib.assets.AssetMap;
-import de.amr.pacmanfx.uilib.assets.ResourceManager;
-import de.amr.pacmanfx.uilib.assets.TranslationManager;
+import de.amr.basics.ui.assets.AssetMap;
+import de.amr.basics.ui.assets.ResourceManager;
+import de.amr.basics.ui.assets.TranslationManager;
 import javafx.scene.media.MediaPlayer;
 import org.tinylog.Logger;
 

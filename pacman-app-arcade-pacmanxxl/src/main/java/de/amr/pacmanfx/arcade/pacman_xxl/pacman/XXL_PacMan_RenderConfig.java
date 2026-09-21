@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
 import de.amr.pacmanfx.ui.assets.GlobalAssets;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
-import de.amr.pacmanfx.uilib.assets.AssetMap;
+import de.amr.basics.ui.assets.AssetMap;
 import javafx.scene.canvas.Canvas;
 
 import static java.util.Objects.requireNonNull;

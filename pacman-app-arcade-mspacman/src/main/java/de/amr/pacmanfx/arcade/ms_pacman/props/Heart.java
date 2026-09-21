@@ -8,8 +8,8 @@ import de.amr.basics.ui.ecs.GameEntity;
 import de.amr.basics.ui.ecs.comp.SpriteAnimationComp;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
-import de.amr.basics.rendering.RenderingLayer;
-import de.amr.basics.rendering.Renderable;
+import de.amr.basics.ui.rendering.RenderingLayer;
+import de.amr.basics.ui.rendering.Renderable;
 
 import static de.amr.basics.ui.spriteanim.SpriteAnimFacade.singleSpriteAnimationFacade;
 

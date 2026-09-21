@@ -7,7 +7,7 @@ import de.amr.basics.InfoMap;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
-import de.amr.basics.rendering.Renderable;
+import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.ui.gamescene.d2.GenericLevelRenderer;
 import de.amr.pacmanfx.uilib.rendering.RenderableGameLevel;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapColoring;

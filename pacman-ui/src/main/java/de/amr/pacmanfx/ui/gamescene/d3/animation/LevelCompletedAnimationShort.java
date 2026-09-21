@@ -8,7 +8,7 @@ import de.amr.basics.ui.ecs.GameEntity;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.ui.gamescene.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.gamescene.d3.Maze3D;
-import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
+import de.amr.basics.ui.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;
 

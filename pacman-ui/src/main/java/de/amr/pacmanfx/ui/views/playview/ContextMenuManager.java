@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.views.playview;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.window.GameMainScene;
-import de.amr.pacmanfx.uilib.assets.TranslationManager;
+import de.amr.basics.ui.assets.TranslationManager;
 import javafx.event.EventHandler;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.input.ContextMenuEvent;

@@ -8,18 +8,18 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.basics.ui.ecs.GameEntity;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
-import de.amr.pacmanfx.core.entities.props.bonuspoints.BonusPoints;
+import de.amr.basics.ui.entities.props.bonuspoints.BonusPoints;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.actor.bonus.BonusMoveAndJumpComp;
 import de.amr.pacmanfx.core.entities.actor.pac.PacState;
-import de.amr.pacmanfx.core.entities.props.messageview.MessageView;
+import de.amr.basics.ui.entities.props.messageview.MessageView;
 import de.amr.pacmanfx.core.event.TestStartedEvent;
 import de.amr.pacmanfx.core.event.bonus.BonusEatenEvent;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.level.MessageType;
+import de.amr.basics.ui.entities.props.messageview.MessageType;
 import org.tinylog.Logger;
 
 public class Test_ShortTestState extends AbstractGameState {

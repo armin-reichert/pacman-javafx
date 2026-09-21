@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.assets;
 
-import de.amr.pacmanfx.uilib.assets.ResourceManager;
+import de.amr.basics.ui.assets.ResourceManager;
 import javafx.scene.text.Font;
 
 public enum GlobalFonts {

@@ -12,10 +12,10 @@ import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.basics.rendering.Renderable;
+import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
-import de.amr.pacmanfx.uilib.assets.AssetMap;
+import de.amr.basics.ui.assets.AssetMap;
 
 import java.util.ArrayList;
 import java.util.List;

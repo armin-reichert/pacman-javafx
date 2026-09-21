@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.tengenmspacman;
 
-import de.amr.pacmanfx.uilib.assets.ResourceManager;
+import de.amr.basics.ui.assets.ResourceManager;
 
 public class TengenMsPacMan_ResourceManager implements ResourceManager {
 

@@ -6,8 +6,8 @@ package de.amr.pacmanfx.tengenmspacman;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.ui.gamescene.d3.DefaultFactory3D;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
-import de.amr.pacmanfx.uilib.entities.d3.Pac3DFactory;
-import de.amr.pacmanfx.uilib.entities.d3.pac.comp.PacSettings;
+import de.amr.pacmanfx.uilib.entities3d.Pac3DFactory;
+import de.amr.pacmanfx.uilib.entities3d.pac.comp.PacSettings;
 import javafx.scene.Group;
 
 import static java.util.Objects.requireNonNull;

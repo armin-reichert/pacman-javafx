@@ -7,9 +7,9 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.uilib.assets.ResourceManager;
-import de.amr.pacmanfx.uilib.assets.SpriteMap;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
+import de.amr.basics.ui.assets.ResourceManager;
+import de.amr.basics.ui.assets.SpriteMap;
+import de.amr.basics.ui.assets.SpriteSheet;
 import javafx.scene.image.Image;
 
 import java.util.stream.IntStream;

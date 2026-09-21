@@ -5,7 +5,7 @@ package de.amr.pacmanfx.ui.gamescene.d3.animation;
 
 import de.amr.pacmanfx.ui.gamescene.d3.PlayScene3D;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.Perspective;
-import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
+import de.amr.basics.ui.animation.ManagedAnimation;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;

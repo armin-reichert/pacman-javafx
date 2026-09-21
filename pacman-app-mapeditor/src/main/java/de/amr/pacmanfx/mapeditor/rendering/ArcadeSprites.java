@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.mapeditor.rendering;
 
 import de.amr.basics.math.RectShort;
-import de.amr.pacmanfx.uilib.assets.ResourceManager;
+import de.amr.basics.ui.assets.ResourceManager;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 

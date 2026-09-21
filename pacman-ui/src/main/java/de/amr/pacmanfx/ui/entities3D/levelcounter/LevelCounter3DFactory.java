@@ -4,10 +4,10 @@
 
 package de.amr.pacmanfx.ui.entities3D.levelcounter;
 
-import de.amr.pacmanfx.core.entities.hud.levelCounter.LevelCounter;
-import de.amr.pacmanfx.core.entities.hud.levelCounter.LevelCounterData;
+import de.amr.basics.ui.entities.hud.levelCounter.LevelCounter;
+import de.amr.basics.ui.entities.hud.levelCounter.LevelCounterData;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
-import de.amr.pacmanfx.uilib.entities.d3.levelcounter.comp.LevelCounter3DSettings;
+import de.amr.pacmanfx.uilib.entities3d.levelcounter.comp.LevelCounter3DSettings;
 import javafx.scene.Group;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;

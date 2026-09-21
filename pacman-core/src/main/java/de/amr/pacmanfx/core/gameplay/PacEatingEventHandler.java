@@ -5,11 +5,11 @@
 package de.amr.pacmanfx.core.gameplay;
 
 import de.amr.basics.timer.TickTimer;
+import de.amr.basics.ui.entities.props.bonuspoints.BonusPoints;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
-import de.amr.pacmanfx.core.entities.props.bonuspoints.BonusPoints;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventListener;

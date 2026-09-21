@@ -31,7 +31,7 @@ import de.amr.pacmanfx.ui.views.editor.EditorView;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
 import de.amr.pacmanfx.ui.window.GameWindow;
-import de.amr.pacmanfx.uilib.assets.TranslationManager;
+import de.amr.basics.ui.assets.TranslationManager;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;

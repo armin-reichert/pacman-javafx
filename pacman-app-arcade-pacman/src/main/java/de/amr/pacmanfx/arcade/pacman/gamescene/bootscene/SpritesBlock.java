@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.arcade.pacman.gamescene.bootscene;
 
 import de.amr.basics.math.RectShort;
-import de.amr.basics.rendering.RenderingLayer;
-import de.amr.basics.rendering.Renderable;
+import de.amr.basics.ui.rendering.RenderingLayer;
+import de.amr.basics.ui.rendering.Renderable;
 
 import static de.amr.basics.math.MathAdds.lerp;
 import static de.amr.basics.math.RandomNumbers.randomFloat;

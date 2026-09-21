@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.actor.pac.PacState;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.level.MessageType;
+import de.amr.basics.ui.entities.props.messageview.MessageType;
 import org.tinylog.Logger;
 
 import java.util.Optional;

@@ -15,5 +15,4 @@ module de.amr.basics {
     exports de.amr.basics.timer;
     exports de.amr.basics.json;
     exports de.amr.basics.util;
-    exports de.amr.basics.rendering;
 }

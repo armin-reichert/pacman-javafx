@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.assets;
 
-import de.amr.pacmanfx.uilib.assets.TranslationManager;
+import de.amr.basics.ui.assets.TranslationManager;
 
 import java.util.ResourceBundle;
 

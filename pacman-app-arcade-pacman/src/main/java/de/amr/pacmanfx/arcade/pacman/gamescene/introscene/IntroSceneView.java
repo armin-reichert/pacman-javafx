@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.arcade.pacman.gamescene.introscene;
 
 import de.amr.basics.math.RectShort;
-import de.amr.basics.rendering.Renderable;
-import de.amr.basics.rendering.RenderingLayer;
+import de.amr.basics.ui.rendering.Renderable;
+import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.timer.Pulse;
 import de.amr.basics.ui.ecs.GameEntity;
 import de.amr.basics.ui.ecs.systems.ActorSpriteAnimController;
@@ -19,7 +19,7 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
-import de.amr.pacmanfx.core.entities.props.ghostpoints.GhostPoints;
+import de.amr.basics.ui.entities.props.ghostpoints.GhostPoints;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;

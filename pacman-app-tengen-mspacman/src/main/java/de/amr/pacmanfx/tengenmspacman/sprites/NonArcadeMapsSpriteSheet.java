@@ -6,8 +6,8 @@ package de.amr.pacmanfx.tengenmspacman.sprites;
 import de.amr.basics.Named;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ResourceManager;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
-import de.amr.pacmanfx.uilib.assets.SpriteMap;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
+import de.amr.basics.ui.assets.SpriteMap;
+import de.amr.basics.ui.assets.SpriteSheet;
 import javafx.scene.image.Image;
 
 import static de.amr.basics.math.RectShort.sprite;

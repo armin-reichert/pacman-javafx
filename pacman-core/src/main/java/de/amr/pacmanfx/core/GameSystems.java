@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.core;
 
 import de.amr.basics.ui.ecs.systems.*;
+import de.amr.basics.ui.entities.hud.levelCounter.LevelCounterSystem;
 import de.amr.pacmanfx.core.entities.RoamingSystem;
 import de.amr.pacmanfx.core.entities.WorldMovementPolicy;
 import de.amr.pacmanfx.core.entities.WorldNavigationSystem;
@@ -15,8 +16,7 @@ import de.amr.pacmanfx.core.entities.actor.bonus.BonusMoveAndJumpSystem;
 import de.amr.pacmanfx.core.entities.actor.bonus.BonusStateSystem;
 import de.amr.pacmanfx.core.entities.actor.bonus.BonusUpdateSystem;
 import de.amr.pacmanfx.core.entities.actor.bonus.BonusWorldMovementPolicy;
-import de.amr.pacmanfx.core.entities.hud.levelCounter.LevelCounterSystem;
-import de.amr.pacmanfx.core.entities.hud.score.ScoreSystem;
+import de.amr.pacmanfx.core.entities.hud.ScoreSystem;
 import de.amr.pacmanfx.core.gameplay.hunt.*;
 import de.amr.pacmanfx.core.gamestate.EntityUpdateSystem;
 import de.amr.pacmanfx.core.gamestate.HUD_UpdateSystem;

@@ -1,7 +1,7 @@
 package de.amr.pacmanfx.uilib.rendering;
 
-import de.amr.basics.rendering.RenderingLayer;
-import de.amr.basics.rendering.Renderable;
+import de.amr.basics.ui.rendering.RenderingLayer;
+import de.amr.basics.ui.rendering.Renderable;
 
 public class RenderingReorderWrapper implements Renderable {
 

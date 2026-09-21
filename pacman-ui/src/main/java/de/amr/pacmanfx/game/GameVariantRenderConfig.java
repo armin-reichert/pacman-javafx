@@ -4,7 +4,8 @@
 
 package de.amr.pacmanfx.game;
 
-import de.amr.basics.rendering.RenderingLayer;
+import de.amr.basics.ui.entities.hud.HUD_Style;
+import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.ui.ecs.GameEntity;
 import de.amr.basics.ui.ecs.systems.ActorSpriteAnimController;
 import de.amr.basics.ui.spriteanim.SpriteAnimFacade;
@@ -15,14 +16,13 @@ import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.basics.rendering.Renderable;
-import de.amr.pacmanfx.core.RenderableGameEntity;
+import de.amr.basics.ui.rendering.Renderable;
+import de.amr.basics.ui.rendering.RenderableGameEntity;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
-import de.amr.pacmanfx.uilib.assets.AssetMap;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
-import de.amr.pacmanfx.uilib.entities.hud.HUD_Style;
+import de.amr.basics.ui.assets.AssetMap;
+import de.amr.basics.ui.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.Renderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;

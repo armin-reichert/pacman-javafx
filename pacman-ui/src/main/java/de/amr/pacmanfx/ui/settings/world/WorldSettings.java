@@ -6,10 +6,10 @@ package de.amr.pacmanfx.ui.settings.world;
 
 import de.amr.basics.json.JsonLoader;
 import de.amr.pacmanfx.ui.entities3D.livescounter.comp.LivesCounter3DSettings;
-import de.amr.pacmanfx.uilib.entities.d3.bonus.comp.Bonus3DSettings;
-import de.amr.pacmanfx.uilib.entities.d3.ghost.comp.GhostSettings;
-import de.amr.pacmanfx.uilib.entities.d3.levelcounter.comp.LevelCounter3DSettings;
-import de.amr.pacmanfx.uilib.entities.d3.pac.comp.PacSettings;
+import de.amr.pacmanfx.uilib.entities3d.bonus.comp.Bonus3DSettings;
+import de.amr.pacmanfx.uilib.entities3d.ghost.comp.GhostSettings;
+import de.amr.pacmanfx.uilib.entities3d.levelcounter.comp.LevelCounter3DSettings;
+import de.amr.pacmanfx.uilib.entities3d.pac.comp.PacSettings;
 
 import java.util.List;
 

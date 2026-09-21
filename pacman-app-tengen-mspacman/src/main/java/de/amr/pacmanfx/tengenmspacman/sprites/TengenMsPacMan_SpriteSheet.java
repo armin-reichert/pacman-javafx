@@ -8,8 +8,8 @@ import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ResourceManager;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
-import de.amr.pacmanfx.uilib.assets.SpriteMap;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
+import de.amr.basics.ui.assets.SpriteMap;
+import de.amr.basics.ui.assets.SpriteSheet;
 import javafx.scene.image.Image;
 
 import java.util.stream.IntStream;

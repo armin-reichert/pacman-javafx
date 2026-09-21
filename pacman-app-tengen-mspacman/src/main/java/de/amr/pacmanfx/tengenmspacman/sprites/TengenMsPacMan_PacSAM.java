@@ -8,7 +8,7 @@ import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.ui.spriteanim.LazySAM;
 import de.amr.basics.ui.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
-import de.amr.pacmanfx.uilib.assets.SpriteSheet;
+import de.amr.basics.ui.assets.SpriteSheet;
 
 import java.util.Arrays;
 
