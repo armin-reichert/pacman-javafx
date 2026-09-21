@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.core.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.entities.props.messageview.MessageView;
 
 public final class Common_PreparationState extends AbstractGameState {
 
@@ -16,7 +17,7 @@ public final class Common_PreparationState extends AbstractGameState {
     public void onEnterState(GameContext game) {
         // We might enter this state from the demo level playing state
         session.optLevel().ifPresent(level -> {
-            level.entities().theMessageView().hide();
+            level.entities().otherEntities().theOne(MessageView.class).hide();
             session.setLevel(null);
         });
 

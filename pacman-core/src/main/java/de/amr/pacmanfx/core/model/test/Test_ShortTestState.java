@@ -12,6 +12,7 @@ import de.amr.pacmanfx.core.entities.props.bonuspoints.BonusPoints;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.actor.bonus.BonusMoveAndJumpComp;
 import de.amr.pacmanfx.core.entities.actor.pac.PacState;
+import de.amr.pacmanfx.core.entities.props.messageview.MessageView;
 import de.amr.pacmanfx.core.event.TestStartedEvent;
 import de.amr.pacmanfx.core.event.bonus.BonusEatenEvent;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
@@ -64,7 +65,7 @@ public class Test_ShortTestState extends AbstractGameState {
             game.eventManager().publishEvent(new TestStartedEvent(level));
         }
         else if (timer().atSecond(START + 1)) {
-            level.entities().theMessageView().hide();
+            level.entities().otherEntities().theOne(MessageView.class).hide();
         }
         else if (timer().atSecond(START + 3)) {
             gamePlay.activateNextBonus(game, level);

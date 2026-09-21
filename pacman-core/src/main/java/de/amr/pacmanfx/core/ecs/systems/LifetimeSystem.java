@@ -6,7 +6,7 @@ import de.amr.pacmanfx.core.level.GameLevelEntities;
 public class LifetimeSystem {
 
     public void update(GameLevelEntities entitySet) {
-        final var list = entitySet.allWith(LifetimeComp.class).toList();
+        final var list = entitySet.allWithComponents(LifetimeComp.class).toList();
         list.forEach(entity -> {
             entity.lifetime().becomeOlder();
             if (entity.lifetime().ends()) {

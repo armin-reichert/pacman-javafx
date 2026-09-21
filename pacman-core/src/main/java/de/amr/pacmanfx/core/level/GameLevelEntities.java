@@ -12,7 +12,6 @@ import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
-import de.amr.pacmanfx.core.entities.props.messageview.MessageView;
 import de.amr.pacmanfx.core.entities.world.house.House;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 
@@ -29,7 +28,6 @@ public class GameLevelEntities {
     private final EnumMap<GhostPersonality, Ghost> theGhosts = new EnumMap<>(GhostPersonality.class);
     private Bonus theBonus;
     private House theHouse;
-    private MessageView theMessage;  // Don't push me cause I'm close to the edge, I'm trying not to lose my head!
 
     private final QuerySet<GameEntity> otherEntities = new QuerySet<>();
 
@@ -62,12 +60,6 @@ public class GameLevelEntities {
                 }
                 theHouse = house;
             }
-            case MessageView messageView -> {
-                if (theMessage != null) {
-                    throw new IllegalArgumentException("MessageView %s already added to entity set!".formatted(theMessage.name()));
-                }
-                theMessage = messageView;
-            }
             case Energizer energizer -> theEnergizers.add(energizer);
             default -> otherEntities.add(entity);
         }
@@ -80,7 +72,6 @@ public class GameLevelEntities {
             case Ghost ghost -> theGhosts.remove(ghost.personality());
             case Bonus _ -> theBonus = null;
             case House _ -> theHouse = null;
-            case MessageView _ -> theMessage = null;
             case Energizer energizer -> theEnergizers.remove(energizer);
             default -> otherEntities.remove(entity);
         }
@@ -97,15 +88,18 @@ public class GameLevelEntities {
             theEnergizers.stream(),
             Optional.ofNullable(theBonus).stream(),
             Optional.ofNullable(theHouse).stream(),
-            Optional.ofNullable(theMessage).stream(),
             otherEntities.all()
         )
         .flatMap(Function.identity());
     }
 
     @SafeVarargs
-    public final Stream<? extends GameEntity> allWith(Class<? extends GameEntityComp>... componentClasses) {
+    public final Stream<? extends GameEntity> allWithComponents(Class<? extends GameEntityComp>... componentClasses) {
         return all().filter(entity -> Stream.of(componentClasses).allMatch(entity::hasComp));
+    }
+
+    public QuerySet<GameEntity> otherEntities() {
+        return otherEntities;
     }
 
     public Pac pac() {
@@ -144,10 +138,6 @@ public class GameLevelEntities {
 
     public House house() {
         return theHouse;
-    }
-
-    public MessageView theMessageView() {
-        return theMessage;
     }
 
     public List<Energizer> theEnergizers() {

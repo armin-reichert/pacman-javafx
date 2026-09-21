@@ -6,6 +6,7 @@ package de.amr.pacmanfx.core.level;
 
 import de.amr.basics.timer.Pulse;
 import de.amr.basics.rendering.RenderingLayer;
+import de.amr.pacmanfx.core.entities.props.messageview.MessageView;
 import de.amr.pacmanfx.core.gameplay.ArcadeHouseGateKeeper;
 import de.amr.pacmanfx.core.model.world.map.FoodState;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -163,14 +164,15 @@ public class GameLevel implements Renderable {
 
     public void clearMessage() {
         requireNonNull(entities);
-        entities.theMessageView().type().setMessageType(MessageType.NO_MESSAGE);
+        final MessageView messageView = entities.otherEntities().theOne(MessageView.class);
+        messageView.type().setMessageType(MessageType.NO_MESSAGE);
     }
 
     public void showMessage(MessageType messageType) {
         requireNonNull(entities);
         requireNonNull(messageType);
-
-        entities.theMessageView().type().setMessageType(messageType);
-        entities.theMessageView().show();
+        final MessageView messageView = entities.otherEntities().theOne(MessageView.class);
+        messageView.type().setMessageType(messageType);
+        messageView.show();
     }
 }

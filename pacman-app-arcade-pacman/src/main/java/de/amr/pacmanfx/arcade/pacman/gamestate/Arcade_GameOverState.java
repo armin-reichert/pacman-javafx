@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.arcade.pacman.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.entities.props.messageview.MessageView;
 import de.amr.pacmanfx.core.event.HighScoreAccessErrorEvent;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
@@ -39,7 +40,7 @@ public class Arcade_GameOverState extends AbstractGameState {
     public void onUpdateState(GameContext game, long globalTick, long stateTick) {
         if (timer().hasExpired()) {
             final GameLevel level = session.level();
-            level.entities().theMessageView().hide();
+            level.entities().otherEntities().theOne(MessageView.class).hide();
             session.cheats().clear();
             session.setLevel(null);
             flow.enterGameState(game, game.coinMechanism().isEmpty()

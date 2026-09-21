@@ -102,7 +102,7 @@ public class GameLevel3D implements DisposableGraphicsObject {
 
         final LevelCounter levelCounter = session.hud().levelCounter();
         final LivesCounter livesCounter = session.hud().livesCounter();
-        final MessageView messageView   = level.entities().theMessageView();
+        final MessageView messageView   = level.entities().otherEntities().theOne(MessageView.class);
 
         final WorldMapColorScheme colorScheme = uiConfig.renderConfig().colorScheme(level.worldMap(), uiConfig.worldSettings());
 

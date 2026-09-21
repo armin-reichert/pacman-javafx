@@ -145,7 +145,8 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
     @Override
     public void onGameContinued(GameContinuedEvent ignoredEvent) {
         final GameLevel3D level3D = assertLevel3D();
-        final MessageView messageView = game().session().level().entities().theMessageView();
+        final MessageView messageView = game().session().level().entities()
+            .otherEntities().theOne(MessageView.class);
         showMessage(level3D, messageView, LevelMessageType.READY);
     }
 
@@ -161,7 +162,8 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         }
 
         final GameLevel3D level3D = assertLevel3D();
-        final MessageView messageView = game().session().level().entities().theMessageView();
+        final MessageView messageView = game().session().level().entities()
+            .otherEntities().theOne(MessageView.class);
         showMessage(level3D, messageView, LevelMessageType.READY);
     }
 
@@ -187,7 +189,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         if (newState instanceof AbstractGameState gameState && gameState.id() instanceof TestStateID) {
             gameScene().replaceGameLevel3D(game(), level);
             level3D.animationManager().startEnergizerPumping();
-            final MessageView messageView = level.entities().theMessageView();
+            final MessageView messageView = level.entities().otherEntities().theOne(MessageView.class);
             showMessage(level3D, messageView, LevelMessageType.TEST, level.number());
         }
 
@@ -336,7 +338,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         level.entities().optBonus().ifPresent(bonus ->
             Bonus3DViewSystem.lookExpired(bonus, level3D.animationManager().registry()));
 
-        final MessageView messageView = level.entities().theMessageView();
+        final MessageView messageView = level.entities().otherEntities().theOne(MessageView.class);
         MessageView3DAnimationSystem.hideMessageView(messageView);
 
         playLevelEndAnimation(level3D.animationManager().registry(),
@@ -403,7 +405,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
     }
 
     private void handleTestState(Game3DSettingsVM globals3D, GameLevel level) {
-        final MessageView messageView = level.entities().theMessageView();
+        final MessageView messageView = level.entities().otherEntities().theOne(MessageView.class);
         gameScene().optGameLevel3D().ifPresent(level3D -> {
             gameScene().replaceGameLevel3D(game(), level);
             showMessage(level3D, messageView, LevelMessageType.TEST, level.number());
