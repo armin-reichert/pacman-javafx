@@ -29,6 +29,7 @@ import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.game.GameVariantRenderConfig.renderablePac;
+import static de.amr.pacmanfx.game.GameVariantRenderConfig.renderableProp;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 
@@ -61,7 +62,7 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene {
 
     @Override
     public Stream<Renderable> renderables() {
-        return Ufx.streamOf(clapperboard, renderablePac(pacMan), renderablePac(msPacMan));
+        return Ufx.streamOf(renderableProp(clapperboard), renderablePac(pacMan), renderablePac(msPacMan));
     }
 
     @Override

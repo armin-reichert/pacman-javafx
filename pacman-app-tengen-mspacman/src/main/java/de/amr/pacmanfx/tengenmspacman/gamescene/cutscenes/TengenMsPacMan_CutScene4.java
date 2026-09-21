@@ -42,6 +42,7 @@ import static de.amr.basics.math.RandomNumbers.randomInt;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.game.GameVariantRenderConfig.renderablePac;
+import static de.amr.pacmanfx.game.GameVariantRenderConfig.renderableProp;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 
@@ -73,7 +74,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
     @Override
     public Stream<Renderable> renderables() {
         return Ufx.streamOf(
-            clapperboard,
+            renderableProp(clapperboard),
             renderablePac(pacMan),
             renderablePac(msPacMan),
             juniors.stream().map(GameVariantRenderConfig::renderablePac)

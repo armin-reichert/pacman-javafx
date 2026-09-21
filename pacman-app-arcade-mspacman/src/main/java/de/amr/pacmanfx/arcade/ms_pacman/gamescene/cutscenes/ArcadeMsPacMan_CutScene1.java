@@ -13,6 +13,7 @@ import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
@@ -35,8 +36,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
-import static de.amr.pacmanfx.game.GameVariantRenderConfig.renderableGhost;
-import static de.amr.pacmanfx.game.GameVariantRenderConfig.renderablePac;
+import static de.amr.pacmanfx.game.GameVariantRenderConfig.*;
 
 /**
  * Intermission scene 1: "They meet".
@@ -92,7 +92,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene {
     @Override
     public Stream<Renderable> renderables() {
         return Ufx.streamOf(
-            clapperboard,
+            renderableProp(clapperboard),
             renderablePac(msPacMan),
             renderablePac(pacMan),
             renderableGhost(inky),

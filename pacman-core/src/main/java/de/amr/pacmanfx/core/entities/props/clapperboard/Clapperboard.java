@@ -5,13 +5,11 @@
 package de.amr.pacmanfx.core.entities.props.clapperboard;
 
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
-import de.amr.pacmanfx.core.rendering.Renderable;
 
 /**
  * Animated movie clapperboard.
  */
-public class Clapperboard extends GameEntity implements Renderable {
+public class Clapperboard extends GameEntity {
 
     public Clapperboard(String number, String text) {
         setComp(ClapperboardStateComp.class, new ClapperboardStateComp());
@@ -19,11 +17,6 @@ public class Clapperboard extends GameEntity implements Renderable {
 
         inscription().setNumber(number);
         inscription().setText(text);
-    }
-
-    @Override
-    public RenderingLayer layer() {
-        return RenderingLayer.PROPS;
     }
 
     public ClapperboardInscriptionComp inscription() {

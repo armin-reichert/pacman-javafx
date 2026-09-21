@@ -45,6 +45,10 @@ public interface GameVariantRenderConfig {
         return new RenderableGameEntity(gameEntity, layer, z);
     }
 
+    static RenderableGameEntity renderableProp(GameEntity gameEntity) {
+        return renderableGameEntity(gameEntity, RenderingLayer.PROPS, 0);
+    }
+
     static RenderableGameEntity renderablePac(Pac pac) {
         return renderableGameEntity(pac, RenderingLayer.ACTORS, PAC_Z);
     }
