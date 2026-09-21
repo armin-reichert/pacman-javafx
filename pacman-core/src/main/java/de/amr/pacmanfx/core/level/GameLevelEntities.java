@@ -4,18 +4,17 @@
 
 package de.amr.pacmanfx.core.level;
 
+import de.amr.basics.QuerySet;
 import de.amr.pacmanfx.core.Energizer;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.GameEntityComp;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;
-import de.amr.pacmanfx.core.entities.world.house.House;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
-import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.entities.props.bonuspoints.BonusPoints;
-import de.amr.pacmanfx.core.entities.props.ghostpoints.GhostPoints;
 import de.amr.pacmanfx.core.entities.props.messageview.MessageView;
+import de.amr.pacmanfx.core.entities.world.house.House;
+import de.amr.pacmanfx.core.model.GhostPersonality;
 
 import java.util.*;
 import java.util.function.Function;
@@ -31,8 +30,9 @@ public class GameLevelEntities {
     private Bonus theBonus;
     private House theHouse;
     private MessageView theMessage;  // Don't push me cause I'm close to the edge, I'm trying not to lose my head!
-    private final List<GhostPoints> theGhostPoints = new ArrayList<>();
-    private final List<BonusPoints> theBonusPoints = new ArrayList<>();
+
+    private final QuerySet<GameEntity> otherEntities = new QuerySet<>();
+
     private final List<Energizer> theEnergizers = new ArrayList<>();
 
     public void add(GameEntity entity) {
@@ -50,14 +50,12 @@ public class GameLevelEntities {
                 }
                 theGhosts.put(ghost.personality(), ghost);
             }
-            case GhostPoints points -> theGhostPoints.add(points);
             case Bonus bonus -> {
                 if (theBonus != null) {
                     throw new IllegalArgumentException("Bonus %s already added to entity set!".formatted(bonus.name()));
                 }
                 theBonus = bonus;
             }
-            case BonusPoints bonusPoints -> theBonusPoints.add(bonusPoints);
             case House house -> {
                 if (theHouse != null) {
                     throw new IllegalArgumentException("House %s already added to entity set!".formatted(house.name()));
@@ -71,7 +69,7 @@ public class GameLevelEntities {
                 theMessage = messageView;
             }
             case Energizer energizer -> theEnergizers.add(energizer);
-            default -> throw new IllegalArgumentException("Unknown entity type!");
+            default -> otherEntities.add(entity);
         }
     }
 
@@ -80,13 +78,11 @@ public class GameLevelEntities {
         switch (entity) {
             case Pac   _ -> thePac = null;
             case Ghost ghost -> theGhosts.remove(ghost.personality());
-            case GhostPoints points -> theGhostPoints.remove(points);
             case Bonus _ -> theBonus = null;
-            case BonusPoints bonusPoints -> theBonusPoints.remove(bonusPoints);
             case House _ -> theHouse = null;
             case MessageView _ -> theMessage = null;
             case Energizer energizer -> theEnergizers.remove(energizer);
-            default -> throw new IllegalArgumentException("Unknown entity type!");
+            default -> otherEntities.remove(entity);
         }
     }
 
@@ -102,9 +98,9 @@ public class GameLevelEntities {
             Optional.ofNullable(theBonus).stream(),
             Optional.ofNullable(theHouse).stream(),
             Optional.ofNullable(theMessage).stream(),
-            theGhostPoints.stream(),
-            theBonusPoints.stream()).flatMap(Function.identity()
-        );
+            otherEntities.all()
+        )
+        .flatMap(Function.identity());
     }
 
     @SafeVarargs
@@ -146,16 +142,8 @@ public class GameLevelEntities {
         return Optional.ofNullable(theBonus);
     }
 
-    public List<BonusPoints> theBonusPoints() {
-        return theBonusPoints;
-    }
-
     public House house() {
         return theHouse;
-    }
-
-    public List<GhostPoints> theGhostPoints() {
-        return theGhostPoints;
     }
 
     public MessageView theMessageView() {
