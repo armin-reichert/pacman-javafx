@@ -5,8 +5,8 @@ package de.amr.pacmanfx.core.model.world.map;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.rendering.RenderingLayer;
-import de.amr.pacmanfx.core.rendering.Renderable;
+import de.amr.basics.rendering.RenderingLayer;
+import de.amr.basics.rendering.Renderable;
 import org.tinylog.Logger;
 
 import java.io.*;

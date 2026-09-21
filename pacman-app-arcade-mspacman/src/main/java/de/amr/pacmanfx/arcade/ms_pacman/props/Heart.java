@@ -7,9 +7,9 @@ package de.amr.pacmanfx.arcade.ms_pacman.props;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.rendering.RenderingLayer;
+import de.amr.basics.rendering.RenderingLayer;
 import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
-import de.amr.pacmanfx.core.rendering.Renderable;
+import de.amr.basics.rendering.Renderable;
 
 import static de.amr.pacmanfx.core.spriteanim.SpriteAnimFacade.singleSpriteAnimationFacade;
 

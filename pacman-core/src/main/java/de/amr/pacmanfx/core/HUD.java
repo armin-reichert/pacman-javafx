@@ -7,7 +7,7 @@ import de.amr.pacmanfx.core.entities.hud.livescounter.LivesCounter;
 import de.amr.pacmanfx.core.entities.hud.score.Score;
 import de.amr.pacmanfx.core.entities.hud.score.ScoreSystem;
 import de.amr.pacmanfx.core.entities.props.textdisplay.TextDisplay;
-import de.amr.pacmanfx.core.rendering.Renderable;
+import de.amr.basics.rendering.Renderable;
 
 import java.util.stream.Stream;
 

@@ -5,9 +5,9 @@
 package de.amr.pacmanfx.tengenmspacman.entities;
 
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.rendering.RenderingLayer;
+import de.amr.basics.rendering.RenderingLayer;
 import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
-import de.amr.pacmanfx.core.rendering.Renderable;
+import de.amr.basics.rendering.Renderable;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 

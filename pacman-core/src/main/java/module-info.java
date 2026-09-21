@@ -33,7 +33,6 @@ module de.amr.pacmanfx.core {
     exports de.amr.pacmanfx.core.entities.hud.livescounter;
     exports de.amr.pacmanfx.core.gameplay.hunt;
     exports de.amr.pacmanfx.core.spriteanim;
-    exports de.amr.pacmanfx.core.rendering;
     exports de.amr.pacmanfx.core.entities.props.bonuspoints;
     exports de.amr.pacmanfx.core.entities.props.ghostpoints;
     exports de.amr.pacmanfx.core.entities.props.messageview;

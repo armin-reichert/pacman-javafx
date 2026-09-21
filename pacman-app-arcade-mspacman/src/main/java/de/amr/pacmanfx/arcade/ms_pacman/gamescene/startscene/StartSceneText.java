@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.gamescene.startscene;
 
-import de.amr.pacmanfx.core.rendering.RenderingLayer;
-import de.amr.pacmanfx.core.rendering.Renderable;
+import de.amr.basics.rendering.RenderingLayer;
+import de.amr.basics.rendering.Renderable;
 
 public record StartSceneText(int tileX, int tileY) implements Renderable {
 

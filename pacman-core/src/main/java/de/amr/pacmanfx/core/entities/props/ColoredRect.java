@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.core.entities.props;
 
 import de.amr.basics.math.RectShort;
-import de.amr.pacmanfx.core.rendering.RenderingLayer;
-import de.amr.pacmanfx.core.rendering.Renderable;
+import de.amr.basics.rendering.RenderingLayer;
+import de.amr.basics.rendering.Renderable;
 import javafx.scene.paint.Color;
 
 public class ColoredRect implements Renderable {

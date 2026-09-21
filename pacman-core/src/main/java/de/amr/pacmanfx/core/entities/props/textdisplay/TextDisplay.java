@@ -6,8 +6,8 @@ package de.amr.pacmanfx.core.entities.props.textdisplay;
 
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.MovementComp;
-import de.amr.pacmanfx.core.rendering.RenderingLayer;
-import de.amr.pacmanfx.core.rendering.Renderable;
+import de.amr.basics.rendering.RenderingLayer;
+import de.amr.basics.rendering.Renderable;
 
 public class TextDisplay extends GameEntity implements Renderable {
 

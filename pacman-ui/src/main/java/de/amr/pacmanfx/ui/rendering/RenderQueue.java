@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.rendering;
 
-import de.amr.pacmanfx.core.rendering.Renderable;
+import de.amr.basics.rendering.Renderable;
 
 import java.util.ArrayList;
 import java.util.Comparator;

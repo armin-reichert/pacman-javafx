@@ -2,8 +2,8 @@ package de.amr.pacmanfx.core;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.rendering.RenderingLayer;
-import de.amr.pacmanfx.core.rendering.Renderable;
+import de.amr.basics.rendering.RenderingLayer;
+import de.amr.basics.rendering.Renderable;
 
 public class Energizer extends GameEntity implements Renderable {
 
