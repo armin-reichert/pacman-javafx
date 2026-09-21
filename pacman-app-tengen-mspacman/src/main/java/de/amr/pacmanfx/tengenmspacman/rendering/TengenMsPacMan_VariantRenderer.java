@@ -18,7 +18,7 @@ import de.amr.pacmanfx.core.entities.hud.levelCounter.LevelCounter;
 import de.amr.pacmanfx.core.entities.hud.livescounter.LivesCounter;
 import de.amr.pacmanfx.core.entities.hud.score.Score;
 import de.amr.pacmanfx.core.entities.props.bonuspoints.BonusPoints;
-import de.amr.pacmanfx.core.entities.props.clapperboard.Clapperboard;
+import de.amr.pacmanfx.uilib.entities.props.clapperboard.Clapperboard;
 import de.amr.pacmanfx.core.entities.props.ghostpoints.GhostPoints;
 import de.amr.pacmanfx.uilib.entities.props.marquee.Marquee;
 import de.amr.pacmanfx.core.entities.props.stork.Stork;

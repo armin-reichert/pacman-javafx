@@ -4,9 +4,9 @@
 
 package de.amr.pacmanfx.tengenmspacman.entities.clapperboard;
 
-import de.amr.pacmanfx.core.entities.props.clapperboard.Clapperboard;
-import de.amr.pacmanfx.core.entities.props.clapperboard.ClapperboardState;
-import de.amr.pacmanfx.core.entities.props.clapperboard.ClapperboardStateComp;
+import de.amr.pacmanfx.uilib.entities.props.clapperboard.Clapperboard;
+import de.amr.pacmanfx.uilib.entities.props.clapperboard.ClapperboardState;
+import de.amr.pacmanfx.uilib.entities.props.clapperboard.ClapperboardStateComp;
 
 import static java.util.Objects.requireNonNull;
 

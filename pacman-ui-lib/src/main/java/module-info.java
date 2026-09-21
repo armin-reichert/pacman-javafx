@@ -44,4 +44,5 @@ open module de.amr.pacmanfx.uilib {
     exports de.amr.pacmanfx.uilib.widgets.optionmenu;
     exports de.amr.pacmanfx.uilib.entities.d3;
     exports de.amr.pacmanfx.uilib.entities.props.marquee;
+    exports de.amr.pacmanfx.uilib.entities.props.clapperboard;
 }
