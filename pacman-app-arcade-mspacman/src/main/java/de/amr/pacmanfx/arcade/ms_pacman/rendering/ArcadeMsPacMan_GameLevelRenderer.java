@@ -55,18 +55,20 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer {
 
     @Override
     public void render(Renderable r, long tick) {
-        if (r instanceof RenderableGameLevel(GameLevel level, InfoMap renderInfo)) {
-            info.putAll(renderInfo);
-            renderGameLevel(level);
-        }
-        else if (r instanceof RenderableGameEntity rge) {
-            if (requireNonNull(rge.gameEntity()) instanceof Energizer energizer) {
-                hideEnergizerIfOff(energizer);
+        switch (r) {
+            case RenderableGameLevel(GameLevel level, InfoMap renderInfo) -> renderGameLevel(level, renderInfo);
+            case RenderableGameEntity rge -> {
+                switch (rge.gameEntity()) {
+                    case Energizer energizer -> hideEnergizerIfOff(energizer);
+                    case House house -> {} //TODO not yet used
+                    default -> {}
+                }
             }
+            default -> {}
         }
     }
 
-    private void renderGameLevel(GameLevel level) {
+    private void renderGameLevel(GameLevel level, InfoMap info) {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final int emptyPixelsOverMaze = terrain.emptyRowsOverMaze() * TS;
 

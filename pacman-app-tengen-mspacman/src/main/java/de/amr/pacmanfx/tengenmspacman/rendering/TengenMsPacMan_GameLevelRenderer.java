@@ -12,8 +12,9 @@ import de.amr.pacmanfx.core.entities.world.house.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.*;
 import de.amr.pacmanfx.core.rendering.Renderable;
-import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
-import de.amr.pacmanfx.tengenmspacman.sprites.*;
+import de.amr.pacmanfx.tengenmspacman.sprites.MapImageSet;
+import de.amr.pacmanfx.tengenmspacman.sprites.NES_WorldMapColorScheme;
+import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
@@ -26,19 +27,9 @@ import javafx.scene.paint.Color;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
-import static de.amr.pacmanfx.tengenmspacman.sprites.NonArcadeMapsSpriteSheet.MapID.MAP32_ANIMATED;
 import static java.util.function.Predicate.not;
 
 public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer {
-
-    /**
-     * Strange map #15 (maze #32) has a "psychedelic" animation:
-     * Frame pattern: (00000000 11111111 22222222 11111111)+, numFrames = 4, frameDuration = 8
-     */
-    private static int strangeMap15AnimationFrame(long tick) {
-        final long phase = (tick % 32) / 8;
-        return (int) (phase < 3 ? phase : 1);
-    }
 
     private final TengenMsPacMan_SpriteSheet spriteSheet = TengenMsPacMan_SpriteSheet.instance();
 
@@ -54,27 +45,16 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer {
     @Override
     public void render(Renderable r, long tick) {
         if (r instanceof RenderableGameLevel(GameLevel level, InfoMap renderInfo)) {
-            info.putAll(renderInfo);
-            renderGameLevel(level, tick);
+            renderGameLevel(level, renderInfo);
         }
     }
 
-    private void renderGameLevel(GameLevel level, long tick) {
+    private void renderGameLevel(GameLevel level, InfoMap renderInfo) {
         final WorldMap worldMap = level.worldMap();
         final TerrainLayer terrainLayer = worldMap.terrainLayer();
         final FoodLayer foodLayer = worldMap.foodLayer();
 
-
-        if (info.getBoolean(LevelRenderInfoKey.SHOW_BRIGHT_MAZE)) {
-            final int flashingIndex = info.get(LevelRenderInfoKey.FLASHING_INDEX, Integer.class);
-            configureHighlightedMapRenderInfo(info, worldMap, flashingIndex);
-        }
-        else {
-            final MapCategory mapCategory = info.get(TengenMsPacMan_LevelRenderInfoKey.MAP_CATEGORY, MapCategory.class);
-            configureNormalMapRenderInfo(info, mapCategory, worldMap, tick);
-        }
-
-        drawMaze(0, terrainLayer.emptyRowsOverMaze() * TS);
+        drawMaze(renderInfo, 0, terrainLayer.emptyRowsOverMaze() * TS);
         overPaintActorSprites(level.entities().house(), terrainLayer);
 
         final FoodState foodState = level.food();
@@ -82,9 +62,9 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer {
         drawFood(worldMap, foodLayer, foodState, blinkingOn);
     }
 
-    private void drawMaze(int x, int y) {
-        final Image mazeImage = info.get(LevelRenderInfoKey.MAZE_IMAGE, Image.class);
-        final RectShort mazeSprite = info.get(LevelRenderInfoKey.MAZE_SPRITE, RectShort.class);
+    private void drawMaze(InfoMap renderInfo, int x, int y) {
+        final Image mazeImage = renderInfo.get(LevelRenderInfoKey.MAZE_IMAGE, Image.class);
+        final RectShort mazeSprite = renderInfo.get(LevelRenderInfoKey.MAZE_SPRITE, RectShort.class);
         final int width = mazeSprite.width();
         final int height = mazeSprite.height();
         ctx.drawImage(mazeImage,
@@ -170,25 +150,5 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer {
             halfMargin + scaled(tile.x() * TS),
             halfMargin + scaled(tile.y() * TS - WorldMap.HTS),
             overPaintSize, overPaintSize);
-    }
-
-    private void configureHighlightedMapRenderInfo(InfoMap info, WorldMap worldMap, int flashingIndex) {
-        final MapImageSet imageSet = worldMap.getConfigValue(TengenMsPacMan_LevelRenderInfoKey.MAP_IMAGE_SET);
-        final int i = Math.clamp(flashingIndex, 0, imageSet.flashingMapImages().size() - 1);
-        final ColorSchemedMapSprite flashingMapImage = imageSet.flashingMapImages().get(i);
-        info.put(LevelRenderInfoKey.MAZE_IMAGE, flashingMapImage.spriteSheetImage());
-        info.put(LevelRenderInfoKey.MAZE_SPRITE, flashingMapImage.sprite());
-    }
-
-    private void configureNormalMapRenderInfo(InfoMap info, MapCategory mapCategory, WorldMap worldMap, long tick) {
-        final MapImageSet imageSet = worldMap.getConfigValue(TengenMsPacMan_LevelRenderInfoKey.MAP_IMAGE_SET);
-        info.put(LevelRenderInfoKey.MAZE_IMAGE, imageSet.mapImage().spriteSheetImage());
-        final int mapNumber = worldMap.getConfigValue(WorldMapConfigKey.MAP_NUMBER);
-        if (mapCategory == MapCategory.STRANGE && mapNumber == 15) {
-            final int spriteIndex = strangeMap15AnimationFrame(tick);
-            info.put(LevelRenderInfoKey.MAZE_SPRITE, NonArcadeMapsSpriteSheet.instance().findSpriteSequence(MAP32_ANIMATED)[spriteIndex]);
-        } else {
-            info.put(LevelRenderInfoKey.MAZE_SPRITE, imageSet.mapImage().sprite());
-        }
     }
 }

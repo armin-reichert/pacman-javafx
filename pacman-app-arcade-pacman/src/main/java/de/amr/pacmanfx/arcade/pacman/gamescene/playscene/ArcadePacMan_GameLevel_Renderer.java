@@ -11,8 +11,8 @@ import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.Energizer;
 import de.amr.pacmanfx.core.entities.world.door.Door;
-import de.amr.pacmanfx.core.entities.world.house.House;
 import de.amr.pacmanfx.core.entities.world.door.DoorDataComp;
+import de.amr.pacmanfx.core.entities.world.house.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.FoodState;
@@ -29,7 +29,6 @@ import javafx.scene.image.Image;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
-import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
 /**
@@ -54,18 +53,20 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer {
 
     @Override
     public void render(Renderable r, long tick) {
-        if (r instanceof RenderableGameLevel(GameLevel level, InfoMap renderInfo)) {
-            info.putAll(renderInfo);
-            renderGameLevel(level);
-        }
-        else if (r instanceof RenderableGameEntity rge) {
-            if (requireNonNull(rge.gameEntity()) instanceof Energizer energizer) {
-                hideEnergizerIfOff(energizer);
+        switch (r) {
+            case RenderableGameLevel(GameLevel level, InfoMap renderInfo) -> renderGameLevel(level, renderInfo);
+            case RenderableGameEntity rge -> {
+                switch (rge.gameEntity()) {
+                    case Energizer energizer -> hideEnergizerIfOff(energizer);
+                    case House house -> drawHouse(house); //TODO not yet used
+                    default -> {}
+                }
             }
+            default -> {}
         }
     }
 
-    private void renderGameLevel(GameLevel level) {
+    private void renderGameLevel(GameLevel level, InfoMap info) {
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final int emptyPixelsOverMaze = terrain.emptyRowsOverMaze() * TS;
 
@@ -104,6 +105,10 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer {
             ctx.fillRect(scaled(energizer.pos().x() - 0.5), scaled(energizer.pos().y() - 0.5), size, size);
             ctx.restore();
         }
+    }
+
+    private void drawHouse(House house) {
+        hideGhostHouseDoors(house);
     }
 
     private void hideGhostHouseDoors(House house) {
