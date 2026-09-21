@@ -108,7 +108,7 @@ public class Tengen_GameOverState extends AbstractGameState {
     }
 
     private Vector2f computeMessageStartPosition() {
-        final House house = level.entities().house();
+        final House house = level.entities().otherEntities().theOne(House.class);
         final Vector2i houseSize = house.sizeInTiles();
         // Compute center position under house
         return house.floorplan().minTile()

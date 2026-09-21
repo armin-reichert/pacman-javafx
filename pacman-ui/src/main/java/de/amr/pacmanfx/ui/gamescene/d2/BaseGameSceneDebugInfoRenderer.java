@@ -242,7 +242,7 @@ public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
 
         // Mark intersection tiles
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        final House house = level.entities().house();
+        final House house = level.entities().otherEntities().theOne(House.class);
         terrain.tiles()
             .filter(tile -> tile.y() >= terrain.emptyRowsOverMaze())
             .filter(tile -> tile.y() < terrain.numRows() - terrain.emptyRowsBelowMaze())

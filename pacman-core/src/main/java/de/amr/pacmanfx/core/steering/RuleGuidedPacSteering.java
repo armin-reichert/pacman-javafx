@@ -148,7 +148,7 @@ public class RuleGuidedPacSteering implements Steering<Pac> {
 
         // when not escaping ghost, keep move direction at least until next intersection
         final TerrainLayer terrain = level.worldMap().terrainLayer();
-        final House house = level.entities().house();
+        final House house = level.entities().otherEntities().theOne(House.class);
         final boolean intersection = terrain.isRealIntersectionTile(pacTile, house::contains);
         if (worldNavigation.info().moved && !intersection)
             return;

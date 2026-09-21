@@ -15,6 +15,7 @@ import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.door.DoorDataComp;
+import de.amr.pacmanfx.core.entities.world.house.House;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -255,7 +256,8 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
             worldMap.setConfigValue(TengenMsPacMan_LevelRenderInfoKey.MAP_IMAGE_SET, mapImageSet);
             Logger.info("Maze sprite set created: {}", mapImageSet);
 
-            final var doorData = level.entities().house().door().reqComp(DoorDataComp.class);
+            final House house = level.entities().otherEntities().theOne(House.class);
+            final var doorData = house.door().reqComp(DoorDataComp.class);
             doorData.setColor(mapImageSet.mapImage().colorScheme().door());
             Logger.info("Door color set to {}", doorData.color());
         }

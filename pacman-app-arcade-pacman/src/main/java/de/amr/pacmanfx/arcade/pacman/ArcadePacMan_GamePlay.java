@@ -337,7 +337,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
             .filter(tile -> terrain.content(tile) == TerrainTile.ONE_WAY_DOWN.$)
             .collect(Collectors.toUnmodifiableSet());
 
-        final House house = entities.house();
+        final House house = entities.otherEntities().theOne(House.class);
         entities.ghost(GhostPersonality.RED_GHOST_SHADOW)  .worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_1_RED,    oneWayTiles);
         entities.ghost(GhostPersonality.PINK_GHOST_SPEEDY) .worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK,   oneWayTiles);
         entities.ghost(GhostPersonality.CYAN_GHOST_BASHFUL).worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN,   oneWayTiles);

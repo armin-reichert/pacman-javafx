@@ -55,7 +55,8 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer {
         final FoodLayer foodLayer = worldMap.foodLayer();
 
         drawMaze(renderInfo, 0, terrainLayer.emptyRowsOverMaze() * TS);
-        overPaintActorSprites(level.entities().house(), terrainLayer);
+        final House house = level.entities().otherEntities().theOne(House.class);
+        overPaintActorSprites(house, terrainLayer);
 
         final FoodState foodState = level.food();
         final boolean blinkingOn = level.heartbeat().state() == Pulse.State.ON;

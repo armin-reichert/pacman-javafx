@@ -66,7 +66,7 @@ public class GenericLevelRenderer extends BaseRenderer {
             terrainRenderer.setMapColoring(mapColoring);
             terrainRenderer.render(level.worldMap(), tick);
 
-            final House house = level.entities().house();
+            final House house = level.entities().otherEntities().theOne(House.class);
             if (house != null) {
                 final var hr = renderableGameEntity(house, RenderingLayer.WORLD, 0);
                 houseRenderer.render(hr, tick);

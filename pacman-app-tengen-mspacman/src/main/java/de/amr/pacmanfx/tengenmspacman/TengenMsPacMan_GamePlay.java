@@ -263,7 +263,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
             systems.navigator(), systems.pacWorldMovementPolicy()
         ));
 
-        final House house = entities.house();
+        final House house = entities.otherEntities().theOne(House.class);
         entities.ghost(GhostPersonality.RED_GHOST_SHADOW)  .worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_1_RED);
         entities.ghost(GhostPersonality.PINK_GHOST_SPEEDY) .worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_2_PINK);
         entities.ghost(GhostPersonality.CYAN_GHOST_BASHFUL).worldInfo().init(terrain, house, WorldMapPropertyName.POS_GHOST_3_CYAN);
@@ -342,7 +342,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
             level.entities().remove(prevBonus);
         }
 
-        final House house = level.entities().house();
+        final House house = level.entities().otherEntities().theOne(House.class);
         final Vector2i houseEntry = PositionSystem.computeTileAt(house.floorplan().entryPosition());
         final Vector2i houseEntryOpposite = houseEntry.plus(0, house.sizeInTiles().y() + 1);
 

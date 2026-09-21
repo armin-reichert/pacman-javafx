@@ -12,7 +12,6 @@ import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
-import de.amr.pacmanfx.core.entities.world.house.House;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 
 import java.util.*;
@@ -27,7 +26,6 @@ public class GameLevelEntities {
     private Pac thePac;
     private final EnumMap<GhostPersonality, Ghost> theGhosts = new EnumMap<>(GhostPersonality.class);
     private Bonus theBonus;
-    private House theHouse;
 
     private final QuerySet<GameEntity> otherEntities = new QuerySet<>();
 
@@ -54,12 +52,6 @@ public class GameLevelEntities {
                 }
                 theBonus = bonus;
             }
-            case House house -> {
-                if (theHouse != null) {
-                    throw new IllegalArgumentException("House %s already added to entity set!".formatted(house.name()));
-                }
-                theHouse = house;
-            }
             case Energizer energizer -> theEnergizers.add(energizer);
             default -> otherEntities.add(entity);
         }
@@ -71,7 +63,6 @@ public class GameLevelEntities {
             case Pac   _ -> thePac = null;
             case Ghost ghost -> theGhosts.remove(ghost.personality());
             case Bonus _ -> theBonus = null;
-            case House _ -> theHouse = null;
             case Energizer energizer -> theEnergizers.remove(energizer);
             default -> otherEntities.remove(entity);
         }
@@ -87,7 +78,6 @@ public class GameLevelEntities {
             theGhosts.values().stream(),
             theEnergizers.stream(),
             Optional.ofNullable(theBonus).stream(),
-            Optional.ofNullable(theHouse).stream(),
             otherEntities.all()
         )
         .flatMap(Function.identity());
@@ -134,10 +124,6 @@ public class GameLevelEntities {
 
     public Optional<Bonus> optBonus() {
         return Optional.ofNullable(theBonus);
-    }
-
-    public House house() {
-        return theHouse;
     }
 
     public List<Energizer> theEnergizers() {

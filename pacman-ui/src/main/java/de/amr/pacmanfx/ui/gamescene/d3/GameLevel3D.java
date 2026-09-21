@@ -96,7 +96,7 @@ public class GameLevel3D implements DisposableGraphicsObject {
         this.level = session.level();
 
         final WorldMap worldMap = level.worldMap();
-        final House house = level.entities().house();
+        final House house = level.entities().otherEntities().theOne(House.class);
         final Pac pac = level.entities().pac();
         final List<Ghost> ghosts = level.entities().ghosts();
 

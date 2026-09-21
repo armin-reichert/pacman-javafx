@@ -269,7 +269,10 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final GameLevel level = level3D.level();
         final TerrainLayer terrain = level.worldMap().terrainLayer();
         final var center = switch (type) {
-            case READY -> level.entities().house().centerPositionUnderHouse();
+            case READY -> {
+                final House house = level.entities().otherEntities().theOne(House.class);
+                yield house.centerPositionUnderHouse();
+            }
             case TEST -> vec2_float(terrain.numCols() * WorldMap.HTS, (terrain.numRows() - 2) * WorldMap.TS);
         };
         MessageView3DDisplaySystem.showMessage(
@@ -323,7 +326,7 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
     private void onLevelComplete() {
         final GameViewModel viewModel = app().ui().viewModel();
         final GameLevel level = game().session().level();
-        final House house = level.entities().house();
+        final House house = level.entities().otherEntities().theOne(House.class);
         final boolean cutSceneFollows = !game().session().isAttractMode()
             && game().playConfig().rules().cutSceneAfterLevel(level.number()).isPresent();
 

@@ -69,7 +69,7 @@ public abstract class ArcadeMsPacMan_RandomizedHuntingStrategy implements GhostH
             return;
         }
 
-        final House house = level.entities().house();
+        final House house = level.entities().otherEntities().theOne(House.class);
 
         final boolean changeWishDirection = !ghost.worldNavigation().info().moved
           || ( ghost.worldNavigation().isNewTileEntered() && terrain.isRealIntersectionTile(tile, house::contains) );

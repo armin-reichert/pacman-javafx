@@ -61,7 +61,7 @@ public class GameLevel3DUpdateController {
 
     private static void updateHouse3D(GameLevel3D level3D) {
         final GameLevel level = level3D.level();
-        final House house = level.entities().house();
+        final House house = level.entities().otherEntities().theOne(House.class);
 
         boolean accessRequested = level.entities().ghostsInAnyOfStates(GHOST_STATES_WITH_ACCESS_TO_HOUSE)
             .filter(ghost -> house.isDoorAt(ghost.pos().tile()))
