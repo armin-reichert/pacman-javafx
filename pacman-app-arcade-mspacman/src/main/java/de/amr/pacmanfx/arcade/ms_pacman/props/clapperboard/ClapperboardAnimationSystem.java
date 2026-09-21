@@ -5,10 +5,10 @@
 package de.amr.pacmanfx.arcade.ms_pacman.props.clapperboard;
 
 import de.amr.basics.math.RectShort;
+import de.amr.basics.ui.entities.props.clapperboard.Clapperboard;
+import de.amr.basics.ui.entities.props.clapperboard.ClapperboardStateComp;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
-import de.amr.pacmanfx.uilib.entities.props.clapperboard.Clapperboard;
-import de.amr.pacmanfx.uilib.entities.props.clapperboard.ClapperboardStateComp;
 
 import java.util.Optional;
 

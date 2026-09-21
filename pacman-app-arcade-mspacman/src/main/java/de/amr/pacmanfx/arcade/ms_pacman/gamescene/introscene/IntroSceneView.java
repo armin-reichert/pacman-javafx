@@ -5,25 +5,25 @@
 package de.amr.pacmanfx.arcade.ms_pacman.gamescene.introscene;
 
 import de.amr.basics.math.Direction;
+import de.amr.basics.ui.ecs.systems.ActorSpriteAnimController;
+import de.amr.basics.ui.entities.props.imagedisplay.ImageDisplay;
+import de.amr.basics.ui.entities.props.marquee.Marquee;
+import de.amr.basics.ui.entities.props.textdisplay.TextDisplay;
+import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.basics.rendering.RenderingLayer;
-import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
-import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
+import de.amr.pacmanfx.core.entities.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
-import de.amr.pacmanfx.uilib.entities.props.marquee.Marquee;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
-import de.amr.pacmanfx.core.entities.props.textdisplay.TextDisplay;
 import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.basics.rendering.Renderable;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.uilib.assets.AssetMap;
-import de.amr.pacmanfx.uilib.entities.props.imagedisplay.ImageDisplay;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;

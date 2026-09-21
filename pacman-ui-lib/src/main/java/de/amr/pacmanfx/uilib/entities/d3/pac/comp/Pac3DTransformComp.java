@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.uilib.entities.d3.pac.comp;
 
 
-import de.amr.pacmanfx.core.ecs.GameEntityComp;
+import de.amr.basics.ui.ecs.GameEntityComp;
 
 public class Pac3DTransformComp implements GameEntityComp {
 }

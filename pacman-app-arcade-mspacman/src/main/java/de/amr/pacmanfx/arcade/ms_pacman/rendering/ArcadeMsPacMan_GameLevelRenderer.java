@@ -6,8 +6,8 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.basics.InfoMap;
 import de.amr.basics.math.RectShort;
+import de.amr.basics.ui.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.Energizer;
-import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.world.door.Door;
 import de.amr.pacmanfx.core.entities.world.house.House;
 import de.amr.pacmanfx.core.entities.world.door.DoorDataComp;

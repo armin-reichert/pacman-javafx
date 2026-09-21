@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.core.entities.world.door;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.ecs.GameEntityComp;
+import de.amr.basics.ui.ecs.GameEntityComp;
 
 public class DoorDataComp implements GameEntityComp {
 

@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.core.entities.hud.levelCounter;
 
-import de.amr.pacmanfx.core.ecs.GameEntityComp;
+import de.amr.basics.ui.ecs.GameEntityComp;
 
 import java.util.ArrayList;
 import java.util.List;

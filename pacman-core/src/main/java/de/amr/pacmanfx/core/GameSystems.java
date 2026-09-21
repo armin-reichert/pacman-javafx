@@ -4,7 +4,10 @@
 
 package de.amr.pacmanfx.core;
 
-import de.amr.pacmanfx.core.ecs.systems.*;
+import de.amr.basics.ui.ecs.systems.*;
+import de.amr.pacmanfx.core.entities.RoamingSystem;
+import de.amr.pacmanfx.core.entities.WorldMovementPolicy;
+import de.amr.pacmanfx.core.entities.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.ghost.*;
 import de.amr.pacmanfx.core.entities.actor.pac.*;

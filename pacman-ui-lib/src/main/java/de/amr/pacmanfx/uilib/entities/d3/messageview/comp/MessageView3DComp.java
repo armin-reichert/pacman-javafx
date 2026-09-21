@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.uilib.entities.d3.messageview.comp;
 
-import de.amr.pacmanfx.core.ecs.GameEntityComp;
+import de.amr.basics.ui.ecs.GameEntityComp;
 import de.amr.pacmanfx.uilib.DisposableGraphicsObject;
 import javafx.scene.Group;
 import javafx.scene.image.ImageView;

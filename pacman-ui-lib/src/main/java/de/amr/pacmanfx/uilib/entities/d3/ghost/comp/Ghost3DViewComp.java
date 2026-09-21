@@ -1,6 +1,6 @@
 package de.amr.pacmanfx.uilib.entities.d3.ghost.comp;
 
-import de.amr.pacmanfx.core.ecs.GameEntityComp;
+import de.amr.basics.ui.ecs.GameEntityComp;
 import de.amr.pacmanfx.uilib.PacMan3DModel;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;

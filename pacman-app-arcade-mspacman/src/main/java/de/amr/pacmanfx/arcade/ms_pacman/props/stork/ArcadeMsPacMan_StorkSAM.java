@@ -4,12 +4,12 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.props.stork;
 
+import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
+import de.amr.basics.ui.spriteanim.LazySAM;
+import de.amr.basics.ui.spriteanim.SpriteAnimationBuilder;
+import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
-import de.amr.pacmanfx.core.spriteanim.CommonSpriteAnimationID;
-import de.amr.pacmanfx.core.spriteanim.LazySAM;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimationBuilder;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 
 public class ArcadeMsPacMan_StorkSAM extends LazySAM {
 

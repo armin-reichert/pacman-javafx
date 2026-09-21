@@ -5,6 +5,7 @@
 module de.amr.pacmanfx.core {
 
     requires de.amr.basics;
+    requires de.amr.basics.ui;
     requires org.tinylog.api;
     requires javafx.base;
     requires javafx.graphics;
@@ -25,14 +26,10 @@ module de.amr.pacmanfx.core {
     exports de.amr.pacmanfx.core.event.gameplay;
     exports de.amr.pacmanfx.core.model.world.map;
     exports de.amr.pacmanfx.core.model.world.obstacle;
-    exports de.amr.pacmanfx.core.ecs;
-    exports de.amr.pacmanfx.core.ecs.comp;
-    exports de.amr.pacmanfx.core.ecs.systems;
     exports de.amr.pacmanfx.core.entities.world.door;
     exports de.amr.pacmanfx.core.entities.world.house;
     exports de.amr.pacmanfx.core.entities.hud.livescounter;
     exports de.amr.pacmanfx.core.gameplay.hunt;
-    exports de.amr.pacmanfx.core.spriteanim;
     exports de.amr.pacmanfx.core.entities.props.bonuspoints;
     exports de.amr.pacmanfx.core.entities.props.ghostpoints;
     exports de.amr.pacmanfx.core.entities.props.messageview;
@@ -43,6 +40,5 @@ module de.amr.pacmanfx.core {
     exports de.amr.pacmanfx.core.entities.actor.bonus;
     exports de.amr.pacmanfx.core.entities.actor.ghost;
     exports de.amr.pacmanfx.core.entities.world;
-    exports de.amr.pacmanfx.core.entities.props.textdisplay;
-    exports de.amr.pacmanfx.core.entities.props;
+    exports de.amr.pacmanfx.core.entities;
 }

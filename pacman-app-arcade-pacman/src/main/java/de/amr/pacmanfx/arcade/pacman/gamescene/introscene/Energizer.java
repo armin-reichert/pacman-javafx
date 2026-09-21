@@ -5,9 +5,9 @@
 package de.amr.pacmanfx.arcade.pacman.gamescene.introscene;
 
 import de.amr.basics.timer.Pulse;
-import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.basics.rendering.RenderingLayer;
 import de.amr.basics.rendering.Renderable;
+import de.amr.basics.ui.ecs.GameEntity;
 
 class Energizer extends GameEntity implements Renderable {
 

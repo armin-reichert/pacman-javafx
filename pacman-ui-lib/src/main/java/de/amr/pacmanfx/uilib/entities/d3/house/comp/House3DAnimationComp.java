@@ -1,7 +1,7 @@
 package de.amr.pacmanfx.uilib.entities.d3.house.comp;
 
 import de.amr.basics.Disposable;
-import de.amr.pacmanfx.core.ecs.GameEntityComp;
+import de.amr.basics.ui.ecs.GameEntityComp;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import javafx.animation.KeyFrame;

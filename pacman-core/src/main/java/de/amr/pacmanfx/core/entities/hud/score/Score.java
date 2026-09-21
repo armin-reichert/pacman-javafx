@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.core.entities.hud.score;
 
-import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.basics.ui.ecs.GameEntity;
 import de.amr.basics.rendering.RenderingLayer;
 import de.amr.basics.rendering.Renderable;
 

@@ -4,14 +4,14 @@
 
 package de.amr.pacmanfx.tengenmspacman.entities;
 
-import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.basics.rendering.RenderingLayer;
-import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
 import de.amr.basics.rendering.Renderable;
+import de.amr.basics.ui.ecs.GameEntity;
+import de.amr.basics.ui.ecs.comp.SpriteAnimationComp;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 
-import static de.amr.pacmanfx.core.spriteanim.SpriteAnimFacade.singleSpriteAnimationFacade;
+import static de.amr.basics.ui.spriteanim.SpriteAnimFacade.singleSpriteAnimationFacade;
 
 public class Heart extends GameEntity implements Renderable {
 

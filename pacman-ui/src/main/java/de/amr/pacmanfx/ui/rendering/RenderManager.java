@@ -5,9 +5,9 @@
 package de.amr.pacmanfx.ui.rendering;
 
 import de.amr.basics.math.Vector2f;
+import de.amr.basics.ui.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.GameVariantPlayConfig;
 import de.amr.basics.rendering.RenderingLayer;
-import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.basics.rendering.Renderable;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;

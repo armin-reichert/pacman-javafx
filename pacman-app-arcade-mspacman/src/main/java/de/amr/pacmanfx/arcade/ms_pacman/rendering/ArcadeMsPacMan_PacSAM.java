@@ -6,11 +6,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.basics.Named;
 import de.amr.basics.math.Direction;
-import de.amr.pacmanfx.core.spriteanim.CommonSpriteAnimationID;
-import de.amr.pacmanfx.core.spriteanim.LazySAM;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimation;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimationBuilder;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
+import de.amr.basics.ui.spriteanim.*;
 
 public class ArcadeMsPacMan_PacSAM extends LazySAM {
 

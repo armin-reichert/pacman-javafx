@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.core.entities.props.messageview;
 
-import de.amr.pacmanfx.core.ecs.GameEntityComp;
+import de.amr.basics.ui.ecs.GameEntityComp;
 import de.amr.pacmanfx.core.level.MessageType;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;

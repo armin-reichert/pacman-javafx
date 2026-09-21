@@ -4,9 +4,9 @@
 
 package de.amr.pacmanfx.core.entities.actor.bonus;
 
-import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.comp.MovementComp;
-import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
+import de.amr.basics.ui.ecs.GameEntity;
+import de.amr.basics.ui.ecs.comp.MovementComp;
+import de.amr.basics.ui.ecs.comp.WorldNavigationComp;
 
 import java.util.Optional;
 

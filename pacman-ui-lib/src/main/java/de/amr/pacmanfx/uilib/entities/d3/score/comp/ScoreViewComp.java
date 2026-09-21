@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.uilib.entities.d3.score.comp;
 
-import de.amr.pacmanfx.core.ecs.GameEntityComp;
+import de.amr.basics.ui.ecs.GameEntityComp;
 import javafx.scene.text.Text;
 
 /**

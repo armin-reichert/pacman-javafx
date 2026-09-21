@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.core.entities.actor.bonus;
 
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.core.ecs.GameEntityComp;
+import de.amr.basics.ui.ecs.GameEntityComp;
 
 import java.util.Objects;
 

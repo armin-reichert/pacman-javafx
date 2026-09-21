@@ -5,12 +5,8 @@ package de.amr.pacmanfx.tengenmspacman.sprites;
 
 import de.amr.basics.Named;
 import de.amr.basics.math.Direction;
-import de.amr.pacmanfx.core.spriteanim.CommonSpriteAnimationID;
+import de.amr.basics.ui.spriteanim.*;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.spriteanim.LazySAM;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimation;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimationBuilder;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 
 import static java.util.Objects.requireNonNull;
 

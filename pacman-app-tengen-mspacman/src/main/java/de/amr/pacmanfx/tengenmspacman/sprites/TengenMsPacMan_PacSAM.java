@@ -4,10 +4,10 @@
 package de.amr.pacmanfx.tengenmspacman.sprites;
 
 import de.amr.basics.math.RectShort;
-import de.amr.pacmanfx.core.spriteanim.CommonSpriteAnimationID;
-import de.amr.pacmanfx.core.spriteanim.LazySAM;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimationBuilder;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
+import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
+import de.amr.basics.ui.spriteanim.LazySAM;
+import de.amr.basics.ui.spriteanim.SpriteAnimationBuilder;
+import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 
 import java.util.Arrays;

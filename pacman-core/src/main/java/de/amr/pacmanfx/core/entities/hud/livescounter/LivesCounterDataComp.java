@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.core.entities.hud.livescounter;
 
-import de.amr.pacmanfx.core.ecs.GameEntityComp;
+import de.amr.basics.ui.ecs.GameEntityComp;
 
 public class LivesCounterDataComp implements GameEntityComp {
 

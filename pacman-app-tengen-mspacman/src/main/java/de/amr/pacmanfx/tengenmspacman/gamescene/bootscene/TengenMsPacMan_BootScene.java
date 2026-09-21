@@ -5,15 +5,15 @@
 package de.amr.pacmanfx.tengenmspacman.gamescene.bootscene;
 
 import de.amr.basics.math.Direction;
+import de.amr.basics.ui.entities.props.ColoredRect;
+import de.amr.basics.ui.entities.props.textdisplay.TextDisplay;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
-import de.amr.pacmanfx.core.entities.props.textdisplay.TextDisplay;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.core.entities.props.ColoredRect;
 import de.amr.basics.rendering.Renderable;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;

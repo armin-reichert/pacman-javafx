@@ -5,14 +5,14 @@
 package de.amr.pacmanfx.arcade.pacman.gamescene.introscene;
 
 import de.amr.basics.math.Direction;
+import de.amr.basics.ui.ecs.systems.ActorSpriteAnimController;
+import de.amr.basics.ui.ecs.systems.MovementSystem;
+import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
-import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
-import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
-import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
-import de.amr.pacmanfx.core.spriteanim.CommonSpriteAnimationID;
+import de.amr.pacmanfx.core.entities.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.props.ghostpoints.GhostPoints;
 import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;

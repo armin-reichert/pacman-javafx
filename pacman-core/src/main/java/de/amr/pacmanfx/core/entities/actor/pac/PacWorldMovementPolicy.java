@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.core.entities.actor.pac;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.ecs.systems.WorldMovementPolicy;
+import de.amr.pacmanfx.core.entities.WorldMovementPolicy;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.TerrainTile;

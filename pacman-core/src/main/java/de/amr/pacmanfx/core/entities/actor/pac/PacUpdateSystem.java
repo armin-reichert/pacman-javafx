@@ -6,8 +6,8 @@ package de.amr.pacmanfx.core.entities.actor.pac;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.ecs.systems.WorldMovementPolicy;
-import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
+import de.amr.pacmanfx.core.entities.WorldMovementPolicy;
+import de.amr.pacmanfx.core.entities.WorldNavigationSystem;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.rules.ActorSpeedRules;
 import de.amr.pacmanfx.core.rules.GameRules;

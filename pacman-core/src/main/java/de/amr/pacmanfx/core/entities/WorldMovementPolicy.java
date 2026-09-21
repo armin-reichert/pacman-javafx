@@ -1,0 +1,16 @@
+/*
+ * Copyright (c) 2021-2026 Armin Reichert (MIT License)
+ */
+
+package de.amr.pacmanfx.core.entities;
+
+import de.amr.basics.math.Vector2i;
+import de.amr.basics.ui.ecs.GameEntity;
+import de.amr.pacmanfx.core.level.GameLevel;
+
+public interface WorldMovementPolicy<E extends GameEntity> {
+
+    boolean canAccessTile(GameLevel level, E entity, Vector2i tile);
+
+    boolean canTurnBack(E entity);
+}

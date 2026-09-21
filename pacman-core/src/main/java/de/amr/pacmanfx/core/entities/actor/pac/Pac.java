@@ -4,11 +4,11 @@
 
 package de.amr.pacmanfx.core.entities.actor.pac;
 
-import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.comp.MovementComp;
-import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
-import de.amr.pacmanfx.core.ecs.comp.SteeringComp;
-import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
+import de.amr.basics.ui.ecs.GameEntity;
+import de.amr.basics.ui.ecs.comp.MovementComp;
+import de.amr.basics.ui.ecs.comp.SpriteAnimationComp;
+import de.amr.pacmanfx.core.entities.SteeringComp;
+import de.amr.basics.ui.ecs.comp.WorldNavigationComp;
 
 import static java.util.Objects.requireNonNull;
 

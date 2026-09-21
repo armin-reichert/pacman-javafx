@@ -5,10 +5,10 @@
 package de.amr.pacmanfx.core.steering;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
-import de.amr.pacmanfx.core.ecs.systems.WorldMovementPolicy;
-import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
+import de.amr.basics.ui.ecs.GameEntity;
+import de.amr.basics.ui.ecs.comp.WorldNavigationComp;
+import de.amr.pacmanfx.core.entities.WorldMovementPolicy;
+import de.amr.pacmanfx.core.entities.WorldNavigationSystem;
 import de.amr.pacmanfx.core.level.GameLevel;
 
 import java.util.List;

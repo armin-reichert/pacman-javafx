@@ -5,9 +5,9 @@
 package de.amr.pacmanfx.game;
 
 import de.amr.basics.Named;
+import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.CoinMechanism;
 import de.amr.pacmanfx.core.GameVariantPlayConfig;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import org.tinylog.Logger;
 

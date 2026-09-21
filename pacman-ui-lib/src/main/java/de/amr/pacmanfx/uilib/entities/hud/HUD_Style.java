@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.uilib.entities.hud;
 
 import de.amr.basics.math.RectShort;
-import de.amr.pacmanfx.core.ecs.GameEntityComp;
+import de.amr.basics.ui.ecs.GameEntityComp;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;

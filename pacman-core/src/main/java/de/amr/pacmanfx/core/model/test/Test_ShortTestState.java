@@ -6,7 +6,7 @@ package de.amr.pacmanfx.core.model.test;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
-import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.basics.ui.ecs.GameEntity;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.props.bonuspoints.BonusPoints;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;

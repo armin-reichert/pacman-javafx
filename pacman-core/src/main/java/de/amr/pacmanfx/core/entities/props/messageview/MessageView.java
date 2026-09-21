@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.core.entities.props.messageview;
 
-import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.basics.ui.ecs.GameEntity;
 
 public class MessageView extends GameEntity {
 

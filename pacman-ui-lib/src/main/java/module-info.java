@@ -12,6 +12,7 @@ open module de.amr.pacmanfx.uilib {
     requires de.amr.meshbuilder;
     requires de.amr.objparser;
     requires de.amr.pacmanfx.core;
+    requires de.amr.basics.ui;
 
     exports de.amr.pacmanfx.uilib;
     exports de.amr.pacmanfx.uilib.animation;
@@ -43,7 +44,4 @@ open module de.amr.pacmanfx.uilib {
     exports de.amr.pacmanfx.uilib.widgets.decorationpane;
     exports de.amr.pacmanfx.uilib.widgets.optionmenu;
     exports de.amr.pacmanfx.uilib.entities.d3;
-    exports de.amr.pacmanfx.uilib.entities.props.marquee;
-    exports de.amr.pacmanfx.uilib.entities.props.clapperboard;
-    exports de.amr.pacmanfx.uilib.entities.props.imagedisplay;
 }

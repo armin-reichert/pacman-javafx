@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.core.level;
 
 import de.amr.basics.QuerySet;
-import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.GameEntityComp;
+import de.amr.basics.ui.ecs.GameEntity;
+import de.amr.basics.ui.ecs.GameEntityComp;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;

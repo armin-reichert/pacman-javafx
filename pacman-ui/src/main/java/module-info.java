@@ -13,6 +13,7 @@ open module de.amr.pacmanfx.ui {
     requires org.tinylog.api;
     requires com.google.gson;
     requires de.amr.basics;
+    requires de.amr.basics.ui;
     requires de.amr.pacmanfx.core;
     requires de.amr.pacmanfx.uilib;
     requires de.amr.pacmanfx.mapeditor;

@@ -4,9 +4,9 @@
 
 package de.amr.pacmanfx.arcade.pacman.gamescene.introscene;
 
-import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.basics.rendering.RenderingLayer;
 import de.amr.basics.rendering.Renderable;
+import de.amr.basics.ui.ecs.GameEntity;
 
 class Pellet extends GameEntity implements Renderable {
 

@@ -1,9 +1,9 @@
 package de.amr.pacmanfx.ui.gamescene.d3;
 
 import de.amr.basics.math.Vector2f;
+import de.amr.basics.ui.ecs.GameEntity;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.world.house.House;

@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.uilib.entities.d3.pac.comp;
 
-import de.amr.pacmanfx.core.ecs.GameEntityComp;
+import de.amr.basics.ui.ecs.GameEntityComp;
 import de.amr.pacmanfx.uilib.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities.d3.pac.anim.Pac3DAnimationID;

@@ -1,8 +1,8 @@
 package de.amr.pacmanfx.core.entities.actor.pac;
 
 import de.amr.basics.Named;
-import de.amr.pacmanfx.core.ecs.GameEntityComp;
-import de.amr.pacmanfx.core.spriteanim.CommonSpriteAnimationID;
+import de.amr.basics.ui.ecs.GameEntityComp;
+import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 
 public class PacAnimationComp implements GameEntityComp {
 

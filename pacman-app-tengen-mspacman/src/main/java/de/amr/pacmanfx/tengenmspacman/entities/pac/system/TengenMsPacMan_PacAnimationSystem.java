@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.tengenmspacman.entities.pac.system;
 
-import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
-import de.amr.pacmanfx.core.spriteanim.CommonSpriteAnimationID;
+import de.amr.basics.ui.ecs.systems.ActorSpriteAnimController;
+import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.actor.pac.PacAnimationComp;
 import de.amr.pacmanfx.core.entities.actor.pac.PacStateComp;

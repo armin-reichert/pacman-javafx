@@ -5,10 +5,10 @@
 package de.amr.pacmanfx.core.rules;
 
 import de.amr.basics.math.Vector2f;
-import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.basics.ui.ecs.GameEntity;
 import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.core.ecs.systems.PositionSystem.boundingBox;
+import static de.amr.basics.ui.ecs.systems.PositionSystem.boundingBox;
 import static java.util.Objects.requireNonNull;
 
 public enum CollisionStrategy {

@@ -5,9 +5,9 @@
 package de.amr.pacmanfx.core.entities.actor.ghost;
 
 import de.amr.basics.math.Vector2f;
-import de.amr.pacmanfx.core.ecs.comp.PositionComp;
-import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
-import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
+import de.amr.basics.ui.ecs.comp.PositionComp;
+import de.amr.basics.ui.ecs.systems.MovementSystem;
+import de.amr.pacmanfx.core.entities.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.world.house.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;

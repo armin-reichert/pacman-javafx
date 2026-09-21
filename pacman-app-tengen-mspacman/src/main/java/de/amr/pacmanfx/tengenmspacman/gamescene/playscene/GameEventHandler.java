@@ -4,11 +4,11 @@
 
 package de.amr.pacmanfx.tengenmspacman.gamescene.playscene;
 
+import de.amr.basics.ui.ecs.systems.ActorSpriteAnimController;
+import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;
-import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
-import de.amr.pacmanfx.core.spriteanim.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.event.StopAllSoundsEvent;

@@ -6,18 +6,18 @@ package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.basics.Named;
 import de.amr.basics.math.Vector2i;
+import de.amr.basics.ui.ecs.GameEntity;
+import de.amr.basics.ui.ecs.comp.MovementComp;
+import de.amr.basics.ui.ecs.comp.WorldNavigationComp;
+import de.amr.basics.ui.ecs.systems.ActorSpriteAnimController;
+import de.amr.basics.ui.spriteanim.SpriteAnimation;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.comp.MovementComp;
-import de.amr.pacmanfx.core.ecs.comp.WorldNavigationComp;
-import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimation;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 
 import java.util.function.BiFunction;

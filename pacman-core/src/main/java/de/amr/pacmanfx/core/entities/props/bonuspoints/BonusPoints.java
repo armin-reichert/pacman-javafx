@@ -1,6 +1,6 @@
 package de.amr.pacmanfx.core.entities.props.bonuspoints;
 
-import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.basics.ui.ecs.GameEntity;
 
 public class BonusPoints extends GameEntity {
 

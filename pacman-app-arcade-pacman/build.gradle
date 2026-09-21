@@ -7,6 +7,7 @@ plugins {
 dependencies {
     implementation(
         project(":basics"),
+        project(":basics-ui"),
         project(":pacman-core"),
         project(":pacman-ui-lib"),
         project(":pacman-ui"),

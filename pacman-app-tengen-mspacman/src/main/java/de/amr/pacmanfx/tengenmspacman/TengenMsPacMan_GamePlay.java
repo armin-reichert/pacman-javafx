@@ -6,12 +6,12 @@ package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
+import de.amr.basics.ui.ecs.GameEntity;
+import de.amr.basics.ui.ecs.systems.PositionSystem;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.HUD;
-import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.systems.PositionSystem;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.bonus.BonusRouteInfo;
 import de.amr.pacmanfx.core.entities.actor.bonus.BonusState;

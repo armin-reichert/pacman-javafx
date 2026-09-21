@@ -6,10 +6,10 @@ package de.amr.pacmanfx.arcade.ms_pacman.rules;
 
 import de.amr.basics.Named;
 import de.amr.basics.timer.TickTimer;
+import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ScoringRules;
 import de.amr.pacmanfx.arcade.pacman.rules.Arcade_GameRules;
 import de.amr.pacmanfx.core.Validations;
-import de.amr.pacmanfx.core.spriteanim.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.level.GameLevel;
 
 import java.util.List;

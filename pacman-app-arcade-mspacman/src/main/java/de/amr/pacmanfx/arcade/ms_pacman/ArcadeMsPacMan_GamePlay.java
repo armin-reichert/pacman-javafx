@@ -5,6 +5,8 @@
 package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.basics.math.Vector2i;
+import de.amr.basics.ui.ecs.systems.PositionSystem;
+import de.amr.basics.ui.entities.props.textdisplay.TextDisplay;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GamePlay;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
@@ -12,7 +14,6 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.HUD;
-import de.amr.pacmanfx.core.ecs.systems.PositionSystem;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.bonus.BonusRouteInfo;
 import de.amr.pacmanfx.core.entities.actor.bonus.BonusState;
@@ -29,7 +30,6 @@ import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
-import de.amr.pacmanfx.core.entities.props.textdisplay.TextDisplay;
 import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;

@@ -4,6 +4,6 @@
 
 package de.amr.pacmanfx.core.entities.actor.bonus;
 
-import de.amr.pacmanfx.core.ecs.GameEntityComp;
+import de.amr.basics.ui.ecs.GameEntityComp;
 
 public record BonusDataComp(int symbolCode) implements GameEntityComp {}

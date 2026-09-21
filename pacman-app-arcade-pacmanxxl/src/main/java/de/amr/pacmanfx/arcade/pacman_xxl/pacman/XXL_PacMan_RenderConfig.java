@@ -4,9 +4,9 @@
 
 package de.amr.pacmanfx.arcade.pacman_xxl.pacman;
 
+import de.amr.basics.ui.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_RenderConfig;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_GameLevelRenderer;
-import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;

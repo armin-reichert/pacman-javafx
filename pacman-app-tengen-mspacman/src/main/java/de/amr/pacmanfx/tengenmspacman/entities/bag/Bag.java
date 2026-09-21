@@ -3,11 +3,11 @@
  */
 package de.amr.pacmanfx.tengenmspacman.entities.bag;
 
-import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.comp.MovementComp;
 import de.amr.basics.rendering.RenderingLayer;
-import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
 import de.amr.basics.rendering.Renderable;
+import de.amr.basics.ui.ecs.GameEntity;
+import de.amr.basics.ui.ecs.comp.MovementComp;
+import de.amr.basics.ui.ecs.comp.SpriteAnimationComp;
 
 public class Bag extends GameEntity implements Renderable {
 

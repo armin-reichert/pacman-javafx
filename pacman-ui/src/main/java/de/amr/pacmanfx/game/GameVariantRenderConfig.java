@@ -4,9 +4,11 @@
 
 package de.amr.pacmanfx.game;
 
-import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.basics.rendering.RenderingLayer;
-import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
+import de.amr.basics.ui.ecs.GameEntity;
+import de.amr.basics.ui.ecs.systems.ActorSpriteAnimController;
+import de.amr.basics.ui.spriteanim.SpriteAnimFacade;
+import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
@@ -15,8 +17,6 @@ import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.basics.rendering.Renderable;
 import de.amr.pacmanfx.core.RenderableGameEntity;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimFacade;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;

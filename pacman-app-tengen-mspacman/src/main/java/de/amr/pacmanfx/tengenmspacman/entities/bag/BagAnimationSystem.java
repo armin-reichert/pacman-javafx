@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.tengenmspacman.entities.bag;
 
 
-import de.amr.pacmanfx.core.spriteanim.CommonSpriteAnimationID;
+import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 
 public final class BagAnimationSystem {
 

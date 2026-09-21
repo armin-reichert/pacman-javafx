@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.core.entities.actor.ghost;
 
 import de.amr.basics.Named;
-import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
-import de.amr.pacmanfx.core.spriteanim.CommonSpriteAnimationID;
+import de.amr.basics.ui.ecs.systems.ActorSpriteAnimController;
+import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 
 import static java.util.Objects.requireNonNull;
 

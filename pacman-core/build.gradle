@@ -17,5 +17,6 @@ javafx {
 dependencies {
     implementation(
         project(":basics"),
+        project(":basics-ui"),
         libs.bundles.tinylog)
 }

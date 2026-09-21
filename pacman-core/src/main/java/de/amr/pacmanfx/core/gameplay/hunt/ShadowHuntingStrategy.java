@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.core.gameplay.hunt;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.ecs.systems.WorldMovementPolicy;
-import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
+import de.amr.pacmanfx.core.entities.WorldMovementPolicy;
+import de.amr.pacmanfx.core.entities.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.ghost.ElroyComp;
 import de.amr.pacmanfx.core.level.GameLevel;

@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
+import de.amr.basics.ui.entities.props.textdisplay.TextDisplay;
 import de.amr.pacmanfx.arcade.pacman.gamestate.Arcade_GameState;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_RenderConfig;
@@ -31,7 +32,6 @@ import de.amr.pacmanfx.core.level.GameLevelEntities;
 import de.amr.pacmanfx.core.level.MessageType;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.*;
-import de.amr.pacmanfx.core.entities.props.textdisplay.TextDisplay;
 import de.amr.pacmanfx.core.entities.props.messageview.MessageView;
 import de.amr.pacmanfx.core.rules.DefaultHuntingTimer;
 import de.amr.pacmanfx.core.rules.GameRules;

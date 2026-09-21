@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.ui.gamescene.d2;
 
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimation;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
+import de.amr.basics.ui.spriteanim.SpriteAnimation;
+import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;

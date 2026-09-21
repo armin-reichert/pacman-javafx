@@ -43,6 +43,6 @@ public class EntityUpdateSystem {
         level.entitySet().entities().anyOfType(Bonus.class).ifPresent(bonus -> systems.bonusUpdateSystem().update(game, level, bonus));
 
         // Updates lifetime of entities like ghost points, bonus points etc.
-        systems.lifetime().update(level.entitySet());
+        systems.lifetime().update(level.entitySet().entities());
     }
 }

@@ -4,10 +4,10 @@
 
 package de.amr.pacmanfx.tengenmspacman.entities.bag;
 
-import de.amr.pacmanfx.core.spriteanim.CommonSpriteAnimationID;
-import de.amr.pacmanfx.core.spriteanim.LazySAM;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimationBuilder;
-import de.amr.pacmanfx.core.spriteanim.SpriteAnimationContainer;
+import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
+import de.amr.basics.ui.spriteanim.LazySAM;
+import de.amr.basics.ui.spriteanim.SpriteAnimationBuilder;
+import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 

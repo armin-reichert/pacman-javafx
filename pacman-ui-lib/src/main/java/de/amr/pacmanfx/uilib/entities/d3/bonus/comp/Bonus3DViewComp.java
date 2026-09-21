@@ -1,6 +1,6 @@
 package de.amr.pacmanfx.uilib.entities.d3.bonus.comp;
 
-import de.amr.pacmanfx.core.ecs.GameEntityComp;
+import de.amr.basics.ui.ecs.GameEntityComp;
 import de.amr.pacmanfx.uilib.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.entities.d3.bonus.anim.BonusEatenAnimation3D;
 import de.amr.pacmanfx.uilib.entities.d3.bonus.anim.BonusRollingTransform;

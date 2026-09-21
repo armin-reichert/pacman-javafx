@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.core.entities.actor.ghost;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.ecs.systems.RoamingSystem;
+import de.amr.pacmanfx.core.entities.RoamingSystem;
 import de.amr.pacmanfx.core.gameplay.hunt.GhostHuntingStrategy;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.rules.ActorSpeedRules;
