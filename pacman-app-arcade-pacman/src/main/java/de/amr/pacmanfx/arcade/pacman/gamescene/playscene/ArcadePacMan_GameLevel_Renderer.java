@@ -25,6 +25,7 @@ import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
 import de.amr.pacmanfx.uilib.rendering.RenderableGameLevel;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 
 import java.util.Optional;
 
@@ -58,7 +59,6 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer {
             case RenderableGameEntity rge -> {
                 switch (rge.gameEntity()) {
                     case Energizer energizer -> hideEnergizerIfOff(energizer);
-                    case House house -> drawHouse(house); //TODO not yet used
                     default -> {}
                 }
             }
@@ -108,16 +108,15 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer {
         }
     }
 
-    private void drawHouse(House house) {
-        hideGhostHouseDoors(house);
-    }
-
     private void hideGhostHouseDoors(House house) {
         final Door door = house.door();
         final var doorData = door.reqComp(DoorDataComp.class);
+        ctx.save();
+        ctx.scale(scaling(), scaling());
         ctx.setFill(backgroundColor());
         fillSquareAtTileCenter(doorData.leftTile(),  TS + 0.5);
         fillSquareAtTileCenter(doorData.rightTile(), TS + 0.5);
+        ctx.restore();
     }
 
     private void hideEatenPellets(GameLevel level) {
