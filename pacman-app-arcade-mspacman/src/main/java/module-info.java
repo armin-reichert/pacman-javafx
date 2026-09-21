@@ -24,11 +24,11 @@ open module de.amr.pacmanfx.arcade.ms_pacman {
     exports de.amr.pacmanfx.arcade.ms_pacman.model;
     exports de.amr.pacmanfx.arcade.ms_pacman.rendering;
     exports de.amr.pacmanfx.arcade.ms_pacman.rules;
-    exports de.amr.pacmanfx.arcade.ms_pacman.entities.bag;
-    exports de.amr.pacmanfx.arcade.ms_pacman.entities.clapperboard;
-    exports de.amr.pacmanfx.arcade.ms_pacman.entities.stork;
+    exports de.amr.pacmanfx.arcade.ms_pacman.props.bag;
+    exports de.amr.pacmanfx.arcade.ms_pacman.props.clapperboard;
+    exports de.amr.pacmanfx.arcade.ms_pacman.props.stork;
     exports de.amr.pacmanfx.arcade.ms_pacman.gamescene.startscene;
     exports de.amr.pacmanfx.arcade.ms_pacman.gamescene.cutscenes;
     exports de.amr.pacmanfx.arcade.ms_pacman.gamescene.introscene;
-    exports de.amr.pacmanfx.arcade.ms_pacman.entities;
+    exports de.amr.pacmanfx.arcade.ms_pacman.props;
 }

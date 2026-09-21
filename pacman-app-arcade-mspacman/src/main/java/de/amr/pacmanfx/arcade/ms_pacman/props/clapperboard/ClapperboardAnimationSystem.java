@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.arcade.ms_pacman.entities.clapperboard;
+package de.amr.pacmanfx.arcade.ms_pacman.props.clapperboard;
 
 import de.amr.basics.math.RectShort;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;

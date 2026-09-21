@@ -12,6 +12,7 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.MovementSystem;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
@@ -43,6 +44,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
+import static de.amr.pacmanfx.game.GameVariantRenderConfig.renderableGameEntity;
 import static de.amr.pacmanfx.game.GameVariantRenderConfig.renderablePac;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
@@ -88,7 +90,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
     @Override
     public Stream<Renderable> renderables() {
         return Ufx.streamOf(
-            marquee,
+            renderableGameEntity(marquee, RenderingLayer.PROPS, 0),
             renderablePac(msPacMan),
             ghosts.stream().map(GameVariantRenderConfig::renderableGhost)
         );

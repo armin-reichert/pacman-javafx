@@ -7,8 +7,8 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.arcade.ms_pacman.entities.Heart;
-import de.amr.pacmanfx.arcade.ms_pacman.entities.clapperboard.ClapperboardAnimationSystem;
+import de.amr.pacmanfx.arcade.ms_pacman.props.Heart;
+import de.amr.pacmanfx.arcade.ms_pacman.props.clapperboard.ClapperboardAnimationSystem;
 import de.amr.pacmanfx.arcade.ms_pacman.gamescene.introscene.MarqueeRenderer;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.comp.SpriteAnimationComp;
@@ -19,7 +19,7 @@ import de.amr.pacmanfx.core.entities.hud.levelCounter.LevelCounter;
 import de.amr.pacmanfx.core.entities.hud.livescounter.LivesCounter;
 import de.amr.pacmanfx.core.entities.hud.score.Score;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
-import de.amr.pacmanfx.core.entities.props.bag.Bag;
+import de.amr.pacmanfx.arcade.ms_pacman.props.bag.Bag;
 import de.amr.pacmanfx.core.entities.props.bonuspoints.BonusPoints;
 import de.amr.pacmanfx.core.entities.props.clapperboard.Clapperboard;
 import de.amr.pacmanfx.core.entities.props.ghostpoints.GhostPoints;
@@ -97,7 +97,7 @@ public class ArcadeMsPacMan_VariantRenderer extends BaseRenderer {
             case BonusPoints points        -> drawSpriteCentered(computeSprite(points), center);
             case Clapperboard clapperboard -> drawClapperBoard(clapperboard);
             case Heart heart               -> drawSpriteCentered(computeSprite(heart), center);
-            case Marquee marquee           -> drawMarquee(marquee, tick);
+            case Marquee marquee           -> marqueeRenderer.renderMarquee(marquee, tick);
             case LevelCounter levelCounter -> drawLevelCounter(levelCounter);
             case LivesCounter livesCounter -> drawLivesCounter(livesCounter);
             case Score score -> {
@@ -197,10 +197,6 @@ public class ArcadeMsPacMan_VariantRenderer extends BaseRenderer {
             ctx.fillText(number, numberX, y);
             ctx.fillText(text, textX, y);
         });
-    }
-
-    private void drawMarquee(Marquee marquee, long tick) {
-        marqueeRenderer.render(marquee, tick);
     }
 
     // --- HUD ---

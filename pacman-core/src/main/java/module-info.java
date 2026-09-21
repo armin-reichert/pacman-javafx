@@ -38,7 +38,6 @@ module de.amr.pacmanfx.core {
     exports de.amr.pacmanfx.core.entities.props.ghostpoints;
     exports de.amr.pacmanfx.core.entities.props.marquee;
     exports de.amr.pacmanfx.core.entities.props.messageview;
-    exports de.amr.pacmanfx.core.entities.props.bag;
     exports de.amr.pacmanfx.core.entities.props.clapperboard;
     exports de.amr.pacmanfx.core.entities.props.stork;
     exports de.amr.pacmanfx.core.entities.hud.score;

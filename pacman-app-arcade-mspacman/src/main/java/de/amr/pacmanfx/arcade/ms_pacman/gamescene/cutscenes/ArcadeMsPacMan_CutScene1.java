@@ -7,7 +7,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.gamescene.cutscenes;
 import de.amr.basics.math.Direction;
 import de.amr.basics.timer.TickTimer;
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.arcade.ms_pacman.entities.Heart;
+import de.amr.pacmanfx.arcade.ms_pacman.props.Heart;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;

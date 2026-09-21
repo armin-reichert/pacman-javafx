@@ -8,6 +8,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.ecs.systems.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
@@ -32,6 +33,7 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.arcade.ms_pacman.gamescene.introscene.ArcadeMsPacMan_IntroScene.*;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
+import static de.amr.pacmanfx.game.GameVariantRenderConfig.renderableGameEntity;
 import static de.amr.pacmanfx.game.GameVariantRenderConfig.renderablePac;
 import static de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene.createText;
 import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
@@ -60,7 +62,7 @@ public class IntroSceneView {
     public Stream<Renderable> renderables() {
         return Ufx.streamOf(
             titleText,
-            marquee,
+            renderableGameEntity(marquee, RenderingLayer.PROPS, 0),
             marqueeText1,
             marqueeText2,
             renderablePac(msPacMan),

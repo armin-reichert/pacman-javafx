@@ -10,6 +10,7 @@ import de.amr.pacmanfx.core.entities.props.marquee.MarqueeCorners;
 import de.amr.pacmanfx.core.entities.props.marquee.MarqueeLayoutComp;
 import de.amr.pacmanfx.core.entities.props.marquee.MarqueeVisualComp;
 import de.amr.pacmanfx.core.rendering.Renderable;
+import de.amr.pacmanfx.core.rendering.RenderableGameEntity;
 import de.amr.pacmanfx.uilib.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -33,9 +34,14 @@ public class MarqueeRenderer extends BaseRenderer {
      */
     @Override
     public void render(Renderable r, long tick) {
-        if (!(r instanceof Marquee marquee)) {
-            return;
+        if (r instanceof RenderableGameEntity rge) {
+            if (rge.gameEntity() instanceof Marquee marquee) {
+                renderMarquee(marquee, tick);
+            }
         }
+    }
+
+    public void renderMarquee(Marquee marquee, long tick) {
         final MarqueeLayoutComp layout = marquee.layout();
         final MarqueeVisualComp visualComp = marquee.visualization();
 

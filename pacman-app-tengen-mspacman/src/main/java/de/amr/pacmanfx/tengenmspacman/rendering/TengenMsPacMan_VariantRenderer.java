@@ -12,19 +12,18 @@ import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.systems.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
-import de.amr.pacmanfx.core.entities.world.door.Door;
-import de.amr.pacmanfx.core.entities.world.door.DoorDataComp;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
+import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.hud.levelCounter.LevelCounter;
 import de.amr.pacmanfx.core.entities.hud.livescounter.LivesCounter;
 import de.amr.pacmanfx.core.entities.hud.score.Score;
-import de.amr.pacmanfx.core.entities.actor.pac.Pac;
-import de.amr.pacmanfx.core.entities.props.bag.Bag;
 import de.amr.pacmanfx.core.entities.props.bonuspoints.BonusPoints;
 import de.amr.pacmanfx.core.entities.props.clapperboard.Clapperboard;
 import de.amr.pacmanfx.core.entities.props.ghostpoints.GhostPoints;
 import de.amr.pacmanfx.core.entities.props.marquee.Marquee;
 import de.amr.pacmanfx.core.entities.props.stork.Stork;
+import de.amr.pacmanfx.core.entities.world.door.Door;
+import de.amr.pacmanfx.core.entities.world.door.DoorDataComp;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.rendering.RenderableGameEntity;
 import de.amr.pacmanfx.core.spriteanim.CommonSpriteAnimationID;
@@ -32,6 +31,7 @@ import de.amr.pacmanfx.core.spriteanim.SpriteAnimation;
 import de.amr.pacmanfx.tengenmspacman.entities.GameOptionsDisplay;
 import de.amr.pacmanfx.tengenmspacman.entities.Heart;
 import de.amr.pacmanfx.tengenmspacman.entities.LevelNumberDisplay;
+import de.amr.pacmanfx.tengenmspacman.entities.bag.Bag;
 import de.amr.pacmanfx.tengenmspacman.entities.clapperboard.TengenMsPacMan_ClapperboardAnimationSystem;
 import de.amr.pacmanfx.tengenmspacman.entities.gameoptionsdisplay.GameOptionsDataComp;
 import de.amr.pacmanfx.tengenmspacman.model.BoosterMode;
@@ -106,7 +106,7 @@ public class TengenMsPacMan_VariantRenderer extends BaseRenderer {
             case Pac pac -> drawFacingSpriteCentered(computeSprite(pac), center);
             case Heart heart -> drawSpriteCentered(computeSprite(heart), center);
             case Stork stork -> draw(stork);
-            case Marquee marquee -> draw(marquee, tick);
+            case Marquee marquee -> marqueeRenderer.renderMarquee(marquee, tick);
             case Door door -> draw(door);
             case LevelCounter levelCounter -> draw(levelCounter);
             case LivesCounter livesCounter -> draw(livesCounter);
@@ -206,10 +206,6 @@ public class TengenMsPacMan_VariantRenderer extends BaseRenderer {
         ctx.setFill(Color.valueOf(data.color()));
         ctx.fillRect(xMin, yMin, 2 * scaledTileSize, scaled(2));
         ctx.restore();
-    }
-
-    private void draw(Marquee marquee, long tick) {
-        marqueeRenderer.render(marquee, tick);
     }
 
     private void draw(Clapperboard clapperboard) {
