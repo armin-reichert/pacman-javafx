@@ -2,10 +2,11 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core.rendering;
+package de.amr.pacmanfx.core.entities.props;
 
 import de.amr.basics.math.RectShort;
-import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
+import de.amr.pacmanfx.core.rendering.RenderingLayer;
+import de.amr.pacmanfx.core.rendering.Renderable;
 import javafx.scene.paint.Color;
 
 public class ColoredRect implements Renderable {

@@ -8,7 +8,7 @@ import de.amr.basics.Composition;
 import de.amr.basics.Disposable;
 import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
+import de.amr.pacmanfx.core.rendering.RenderingLayer;
 import de.amr.pacmanfx.core.entities.props.textdisplay.TextDisplay;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.rendering.Renderable;

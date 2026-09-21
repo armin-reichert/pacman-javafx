@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.core.entities.world.door;
 
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
+import de.amr.pacmanfx.core.rendering.RenderingLayer;
 import de.amr.pacmanfx.core.rendering.Renderable;
 
 public class Door extends GameEntity implements Renderable {

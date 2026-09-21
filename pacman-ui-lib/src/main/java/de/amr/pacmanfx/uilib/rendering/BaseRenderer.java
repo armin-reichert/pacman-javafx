@@ -15,7 +15,7 @@ import de.amr.pacmanfx.core.entities.props.messageview.MessageView;
 import de.amr.pacmanfx.core.entities.props.textdisplay.TextDisplay;
 import de.amr.pacmanfx.core.level.MessageType;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.core.rendering.ColoredRect;
+import de.amr.pacmanfx.core.entities.props.ColoredRect;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.core.rendering.RenderableGameEntity;
 import de.amr.pacmanfx.uilib.assets.SpriteSheet;

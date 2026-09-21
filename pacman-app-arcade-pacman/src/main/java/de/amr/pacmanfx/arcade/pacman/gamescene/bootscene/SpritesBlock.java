@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.arcade.pacman.gamescene.bootscene;
 
 import de.amr.basics.math.RectShort;
-import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
+import de.amr.pacmanfx.core.rendering.RenderingLayer;
 import de.amr.pacmanfx.core.rendering.Renderable;
 
 import static de.amr.basics.math.MathAdds.lerp;

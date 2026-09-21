@@ -1,6 +1,6 @@
 package de.amr.pacmanfx.uilib.rendering;
 
-import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
+import de.amr.pacmanfx.core.rendering.RenderingLayer;
 import de.amr.pacmanfx.core.rendering.Renderable;
 
 public class RenderingReorderWrapper implements Renderable {

@@ -1,7 +1,7 @@
 package de.amr.pacmanfx.tengenmspacman.entities;
 
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
+import de.amr.pacmanfx.core.rendering.RenderingLayer;
 import de.amr.pacmanfx.core.rendering.Renderable;
 import de.amr.pacmanfx.tengenmspacman.entities.levelnumberdisplay.LevelNumberComp;
 

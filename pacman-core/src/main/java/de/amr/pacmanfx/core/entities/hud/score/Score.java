@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.core.entities.hud.score;
 
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
+import de.amr.pacmanfx.core.rendering.RenderingLayer;
 import de.amr.pacmanfx.core.rendering.Renderable;
 
 import static java.util.Objects.requireNonNull;

@@ -4,8 +4,6 @@
 
 package de.amr.pacmanfx.core.rendering;
 
-import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
-
 public interface Renderable {
 
     RenderingLayer layer();

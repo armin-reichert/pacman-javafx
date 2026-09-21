@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.core.rendering;
 
 import de.amr.pacmanfx.core.ecs.GameEntity;
-import de.amr.pacmanfx.core.ecs.comp.RenderingLayer;
 
 import static java.util.Objects.requireNonNull;
 
