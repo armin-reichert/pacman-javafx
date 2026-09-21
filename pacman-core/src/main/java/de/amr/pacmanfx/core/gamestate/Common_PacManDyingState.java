@@ -6,6 +6,7 @@ package de.amr.pacmanfx.core.gamestate;
 
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;
 import de.amr.pacmanfx.core.entities.actor.pac.PacState;
@@ -47,7 +48,10 @@ public final class Common_PacManDyingState extends AbstractGameState {
         });
 
         // Stop bonus movement. Note: this works also if the bonus has no movement component!
-        level.entities().optBonus().ifPresent(bonus -> systems.bonusMoveAndJump().setBonusInactive(bonus));
+        final Bonus bonus = level.entities().otherEntities().anyOfTypeOrNull(Bonus.class);
+        if (bonus != null) {
+            systems.bonusMoveAndJump().setBonusInactive(bonus);
+        }
 
         // End of dying animation triggers state timeout
         timer().resetToIndefiniteDuration();
@@ -71,7 +75,10 @@ public final class Common_PacManDyingState extends AbstractGameState {
             pac.hide();
         }
         else if (stateTick == rules.pacDyingTiming().pacDeadTick()) {
-            level.entities().optBonus().ifPresent(bonus -> level.entities().remove(bonus));
+            final Bonus bonus = level.entities().otherEntities().anyOfTypeOrNull(Bonus.class);
+            if (bonus != null) {
+                level.entities().remove(bonus);
+            }
             game.eventManager().publishEvent(new PacDeadEvent(pac));
         }
 

@@ -8,6 +8,7 @@ import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;
+import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.level.GameLevel;
 
 import static java.util.Objects.requireNonNull;
@@ -38,7 +39,7 @@ public class EntityUpdateSystem {
         });
 
 
-        level.entities().optBonus().ifPresent(bonus -> systems.bonusUpdateSystem().update(game, level, bonus));
+        level.entities().otherEntities().anyOfType(Bonus.class).ifPresent(bonus -> systems.bonusUpdateSystem().update(game, level, bonus));
 
         // Updates lifetime of entities like ghost points, bonus points etc.
         systems.lifetime().update(level.entities());

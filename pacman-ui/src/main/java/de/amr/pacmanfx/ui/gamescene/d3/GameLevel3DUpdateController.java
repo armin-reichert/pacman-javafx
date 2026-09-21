@@ -4,6 +4,7 @@ import de.amr.basics.math.Vector2f;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.ecs.GameEntity;
+import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.world.house.House;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
@@ -83,7 +84,8 @@ public class GameLevel3DUpdateController {
 
     private static void updateBonus3D(GameLevel3D level3D) {
         final GameLevel level = level3D.level();
-        level.entities().optBonus().ifPresent(bonus -> {
+        final Bonus bonus = level.entities().otherEntities().anyOfTypeOrNull(Bonus.class);
+        if (bonus != null) {
             level3D.ensureBonus3DViewAddedToSceneGraph(bonus);
             switch (bonus.state().enumValue()) {
                 case EDIBLE -> Bonus3DViewSystem.lookEdible(bonus);
@@ -91,6 +93,6 @@ public class GameLevel3DUpdateController {
                 case INACTIVE -> {}
             }
             Bonus3DMovementSystem.update(bonus);
-        });
+        }
     }
 }

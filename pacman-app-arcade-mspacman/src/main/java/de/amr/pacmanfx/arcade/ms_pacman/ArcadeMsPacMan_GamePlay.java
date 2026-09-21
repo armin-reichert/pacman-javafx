@@ -132,7 +132,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         requireNonNull(game);
         requireNonNull(level);
 
-        final Bonus prevBonus = level.entities().optBonus().orElse(null);
+        final Bonus prevBonus = level.entities().otherEntities().anyOfTypeOrNull(Bonus.class);
         if (prevBonus != null) {
             if (prevBonus.state().enumValue() == BonusState.EDIBLE) {
                 //TODO Can this happen in original game?

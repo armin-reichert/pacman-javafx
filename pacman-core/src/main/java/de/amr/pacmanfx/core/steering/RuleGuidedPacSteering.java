@@ -162,7 +162,10 @@ public class RuleGuidedPacSteering implements Steering<Pac> {
         } 
         else if (isEdibleBonusNearPac(level, pac)) {
             Logger.trace("Active bonus detected, get it!");
-            level.entities().optBonus().ifPresent(bonus -> worldNavigation.setTargetTile(bonus.pos().tile()));
+            final Bonus bonus = level.entities().otherEntities().anyOfTypeOrNull(Bonus.class);
+            if (bonus != null) {
+                worldNavigation.setTargetTile(bonus.pos().tile());
+            }
         } 
         else {
             worldNavigation.setTargetTile(findTileFarthestFromGhosts(
@@ -177,8 +180,8 @@ public class RuleGuidedPacSteering implements Steering<Pac> {
 
     private boolean isEdibleBonusNearPac(GameLevel level, Pac pac) {
         final Vector2i pacTile = pac.pos().tile();
-        if (level.entities().optBonus().isPresent()) {
-            final Bonus bonus = level.entities().optBonus().get();
+        final Bonus bonus = level.entities().otherEntities().anyOfTypeOrNull(Bonus.class);
+        if (bonus != null) {
             final Vector2i bonusTile = bonus.pos().tile();
             return bonus.state().enumValue() == BonusState.EDIBLE
                 && bonusTile.manhattanDist(pacTile) <= CollectedData.MAX_BONUS_HARVEST_DIST;

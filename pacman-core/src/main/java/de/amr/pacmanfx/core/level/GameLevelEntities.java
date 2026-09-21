@@ -8,7 +8,6 @@ import de.amr.basics.QuerySet;
 import de.amr.pacmanfx.core.Energizer;
 import de.amr.pacmanfx.core.ecs.GameEntity;
 import de.amr.pacmanfx.core.ecs.GameEntityComp;
-import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
@@ -25,7 +24,6 @@ public class GameLevelEntities {
 
     private Pac thePac;
     private final EnumMap<GhostPersonality, Ghost> theGhosts = new EnumMap<>(GhostPersonality.class);
-    private Bonus theBonus;
 
     private final QuerySet<GameEntity> otherEntities = new QuerySet<>();
 
@@ -46,12 +44,6 @@ public class GameLevelEntities {
                 }
                 theGhosts.put(ghost.personality(), ghost);
             }
-            case Bonus bonus -> {
-                if (theBonus != null) {
-                    throw new IllegalArgumentException("Bonus %s already added to entity set!".formatted(bonus.name()));
-                }
-                theBonus = bonus;
-            }
             case Energizer energizer -> theEnergizers.add(energizer);
             default -> otherEntities.add(entity);
         }
@@ -62,7 +54,6 @@ public class GameLevelEntities {
         switch (entity) {
             case Pac   _ -> thePac = null;
             case Ghost ghost -> theGhosts.remove(ghost.personality());
-            case Bonus _ -> theBonus = null;
             case Energizer energizer -> theEnergizers.remove(energizer);
             default -> otherEntities.remove(entity);
         }
@@ -77,7 +68,6 @@ public class GameLevelEntities {
             Optional.ofNullable(thePac).stream(),
             theGhosts.values().stream(),
             theEnergizers.stream(),
-            Optional.ofNullable(theBonus).stream(),
             otherEntities.all()
         )
         .flatMap(Function.identity());
@@ -120,10 +110,6 @@ public class GameLevelEntities {
     public Stream<Ghost> ghostsInAnyOfStates(Collection<GhostState> states) {
         requireNonNull(states);
         return theGhosts.values().stream().filter(ghost -> states.contains(ghost.state().enumValue()));
-    }
-
-    public Optional<Bonus> optBonus() {
-        return Optional.ofNullable(theBonus);
     }
 
     public List<Energizer> theEnergizers() {

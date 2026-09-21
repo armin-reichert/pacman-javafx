@@ -71,13 +71,19 @@ public class Test_ShortTestState extends AbstractGameState {
             gamePlay.activateNextBonus(game, level);
         }
         else if (timer().atSecond(START + 5)) {
-            level.entities().optBonus().ifPresent(bonus -> eatBonus(game, level, bonus));
+            final Bonus bonus = level.entities().otherEntities().anyOfTypeOrNull(Bonus.class);
+            if (bonus != null) {
+                eatBonus(game, level, bonus);
+            }
         }
         else if (timer().atSecond(START + 6)) {
             gamePlay.activateNextBonus(game, level);
         }
         else if (timer().atSecond(START + 8)) {
-            level.entities().optBonus().ifPresent(bonus -> eatBonus(game, level, bonus));
+            final Bonus bonus = level.entities().otherEntities().anyOfTypeOrNull(Bonus.class);
+            if (bonus != null) {
+                eatBonus(game, level, bonus);
+            }
         }
         else if (timer().atSecond(START + 9)) {
             level.entities().pac().hide();
@@ -135,11 +141,12 @@ public class Test_ShortTestState extends AbstractGameState {
         // Ghosts stop
         level.entities().ghosts().forEach(ghost -> ghost.worldNavigation().setPaused(true));
 
-        level.entities().optBonus().ifPresent(bonus -> {
+        final Bonus bonus = level.entities().otherEntities().anyOfTypeOrNull(Bonus.class);
+        if (bonus != null) {
             systems.bonusState().setInactive(bonus);
             bonus.optComp(BonusMoveAndJumpComp.class).ifPresent(_-> systems.bonusMoveAndJump().setBonusInactive(bonus));
             level.entities().remove(bonus);
-        });
+        }
         level.clearBonusIndex();
 
         timer().resetToIndefiniteDuration();

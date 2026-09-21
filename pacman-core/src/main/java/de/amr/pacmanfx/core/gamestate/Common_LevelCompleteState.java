@@ -7,6 +7,7 @@ package de.amr.pacmanfx.core.gamestate;
 import de.amr.basics.Named;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
+import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.actor.bonus.BonusMoveAndJumpComp;
 import de.amr.pacmanfx.core.entities.actor.pac.PacState;
@@ -37,11 +38,12 @@ public class Common_LevelCompleteState extends AbstractGameState {
         systems.pacPower().stopAndReset(pac);
         pac.state().setEnumValue(PacState.SLEEPING);
 
-        level.entities().optBonus().ifPresent(bonus -> {
+        final Bonus bonus = level.entities().otherEntities().anyOfTypeOrNull(Bonus.class);
+        if (bonus != null) {
             systems.bonusState().setInactive(bonus);
             bonus.optComp(BonusMoveAndJumpComp.class).ifPresent(_-> systems.bonusMoveAndJump().setBonusInactive(bonus));
             level.entities().remove(bonus);
-        });
+        }
 
         timer().resetToIndefiniteDuration();
     }

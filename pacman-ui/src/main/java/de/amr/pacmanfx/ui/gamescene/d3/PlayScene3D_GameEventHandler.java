@@ -302,9 +302,10 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
         optSoundEffects().ifPresent(GameSoundEffects::stopAll);
 
-        level.entities().optBonus().ifPresent(
-            bonus -> Bonus3DViewSystem.lookExpired(bonus, animationRegistry)
-        );
+        final Bonus bonus = level.entities().otherEntities().anyOfTypeOrNull(Bonus.class);
+        if (bonus != null) {
+            Bonus3DViewSystem.lookExpired(bonus, animationRegistry);
+        }
 
         level3D.animationManager().stopAnimationsBeforePacManDies();
         Pac3DAnimationSystem.playDyingAnimation(
@@ -338,8 +339,10 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
         final GameLevel3D level3D = assertLevel3D();
         level3D.animationManager().stopAll();
         level3D.cleanupFoodAndParticles();
-        level.entities().optBonus().ifPresent(bonus ->
-            Bonus3DViewSystem.lookExpired(bonus, level3D.animationManager().registry()));
+        final Bonus bonus = level.entities().otherEntities().anyOfTypeOrNull(Bonus.class);
+        if (bonus != null) {
+            Bonus3DViewSystem.lookExpired(bonus, level3D.animationManager().registry());
+        }
 
         final MessageView messageView = level.entities().otherEntities().theOne(MessageView.class);
         MessageView3DAnimationSystem.hideMessageView(messageView);
@@ -402,8 +405,10 @@ public class PlayScene3D_GameEventHandler implements DefaultGameEventListener {
 
         level3D.animationManager().stopAll();
         level3D.cleanupFoodAndParticles();
-        level.entities().optBonus().ifPresent(bonus ->
-            Bonus3DViewSystem.lookExpired(bonus, level3D.animationManager().registry()));
+        final Bonus bonus = level.entities().otherEntities().anyOfTypeOrNull(Bonus.class);
+        if (bonus != null) {
+            Bonus3DViewSystem.lookExpired(bonus, level3D.animationManager().registry());
+        }
         level3D.optSoundEffects().ifPresent(GameSoundEffects::playGameOverSound);
     }
 
