@@ -4,13 +4,17 @@
 
 package de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene;
 
+import de.amr.basics.math.Vector2f;
+import de.amr.basics.ui.entities.hud.score.Score;
+import de.amr.basics.ui.rendering.Renderable;
+import de.amr.basics.ui.rendering.Renderer;
+import de.amr.basics.ui.rendering.RenderingLayer;
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
-import de.amr.basics.ui.entities.hud.score.Score;
 import de.amr.pacmanfx.core.entities.hud.ScoreSystem;
 import de.amr.pacmanfx.core.event.HighScoreAccessErrorEvent;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
-import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
@@ -73,9 +77,32 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         reqCanvasRendering().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
     }
 
+    public record RenderableMenuOption(
+        boolean selected, String label, String value,
+        RenderingLayer layer, int z, Vector2f offset) implements Renderable {
+    }
+
+    private RenderableMenuOption renderableBoosterModeOption() {
+        final BoosterMode boosterMode = gameOptions(game().session()).boosterMode();
+        return new RenderableMenuOption(
+            selectedOption() == OPTION_PAC_BOOSTER,
+            "PAC BOOSTER",
+            switch (boosterMode) {
+                case BOOSTER_OFF -> "OFF";
+                case BOOSTER_ALWAYS_ON -> "ALWAYS ON";
+                case ACTIVATE_WITH_A_OR_B -> "USE A OR B";
+            },
+            RenderingLayer.SCENE, 0, new Vector2f(0, 6 * Renderer.TS)
+        );
+    }
+
     @Override
     public Stream<Renderable> renderables() {
-        return Stream.empty();
+        if (initialDelay > 0) return Stream.empty();
+
+        return Ufx.streamOf(
+            renderableBoosterModeOption()
+        );
     }
 
     @Override

@@ -5,6 +5,8 @@
 package de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene;
 
 import de.amr.basics.math.RectShort;
+import de.amr.basics.math.Vector2f;
+import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
@@ -19,6 +21,7 @@ import de.amr.basics.ui.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import org.tinylog.Logger;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
@@ -37,16 +40,39 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer {
     private static final Color NES_YELLOW = NES_Palette.color(0x28);
     private static final Color NES_WHITE = NES_Palette.color(0x20);
 
+
     public TengenMsPacMan_OptionsScene_Renderer(Canvas canvas) {
         super(canvas);
     }
 
     @Override
     public void render(Renderable r, long tick) {
-        if (!(r instanceof TengenMsPacMan_OptionsScene optionsScene)) {
-            return;
+        switch (r) {
+            case TengenMsPacMan_OptionsScene optionsScene -> renderMenu(optionsScene);
+            case RenderableMenuOption menuOption -> renderMenuOption(menuOption);
+            default -> {}
         }
+    }
 
+    private void renderMenuOption(RenderableMenuOption menuOption) {
+        final float y = menuOption.offset().y();
+        final Font arcade8 = Ufx.deriveFont(GlobalFonts.ARCADE.font(), scaled(8));
+
+        ctx.save();
+        ctx.setFont(arcade8);
+        if (menuOption.selected()) {
+            ctx.setFill(NES_YELLOW);
+            ctx.fillRect(scaled(COL_ARROW + 2.25), scaled(y - 4.5), scaled(7.5), scaled(1.75));
+            fillText(">", NES_YELLOW, arcade8, COL_ARROW + 3, y);
+        }
+        fillText(menuOption.label(), NES_YELLOW, COL_LABEL, y);
+        fillText(":", NES_YELLOW, COL_COLON, y);
+        fillText(menuOption.value(), NES_WHITE, COL_VALUE, y);
+        ctx.restore();
+    }
+
+    //TODO refactor
+    private void renderMenu(TengenMsPacMan_OptionsScene optionsScene) {
         final TengenMsPacMan_UISettings uiSettings = optionsScene.app().variantManager().currentRuntime()
             .extensionValue(TengenMsPacMan_GameExtension.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
 
@@ -77,7 +103,9 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer {
         fillText("1 PLAYER", NES_Palette.color(0x10), COL_LABEL + 6 * TS, y);
 
         y += tilesPx(3);
+
         // Pac-Booster
+/*
         drawMarkerIfSelected(optionsScene, OPTION_PAC_BOOSTER, y, arcade8);
         fillText("PAC BOOSTER", NES_YELLOW, COL_LABEL, y);
         fillText(":", NES_YELLOW, COL_COLON, y);
@@ -87,7 +115,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer {
             case ACTIVATE_WITH_A_OR_B -> "USE A OR B";
         };
         fillText(pacBoosterText, NES_WHITE, COL_VALUE, y);
-
+*/
         y += tilesPx(3);
         // Game difficulty
         drawMarkerIfSelected(optionsScene, OPTION_DIFFICULTY, y, arcade8);
