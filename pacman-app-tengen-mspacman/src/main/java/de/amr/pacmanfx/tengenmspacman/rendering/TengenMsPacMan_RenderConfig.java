@@ -179,18 +179,12 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public BaseRenderer createGameSceneRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
+    public Renderer createGameSceneRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
         return switch (gameScene) {
-            case TengenMsPacMan_BootScene ignore    -> null;
             case TengenMsPacMan_IntroScene ignore   -> new TengenMsPacMan_IntroScene_Renderer(gameScene.app().variantManager().currentRuntime(), canvas);
             case TengenMsPacMan_OptionsScene ignore -> new TengenMsPacMan_OptionsScene_Renderer(canvas);
-            case TengenMsPacMan_PlayScene2D ignore  -> null;
             case TengenMsPacMan_CreditsScene ignore -> new TengenMsPacMan_CreditsScene_Renderer(canvas);
-            case TengenMsPacMan_CutScene1 ignore    -> null;
-            case TengenMsPacMan_CutScene2 ignore    -> null;
-            case TengenMsPacMan_CutScene3 ignore    -> null;
-            case TengenMsPacMan_CutScene4 ignore    -> null;
-            default -> throw new IllegalStateException("Unexpected value: " + gameScene);
+            default -> Renderer.NULL_RENDERER;
         };
     }
 

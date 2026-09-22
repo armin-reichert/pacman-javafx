@@ -12,14 +12,18 @@ import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.pacmanfx.core.GameVariantPlayConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
-import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.views.miniview.MiniPlaySceneView;
 import de.amr.pacmanfx.ui.views.miniview.MiniViewOverlayRenderer;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.paint.Color;
 
 import static java.util.Objects.requireNonNull;
 
 public class RenderManager {
+
+    private final RenderQueue renderQueue = new RenderQueue();
 
     private Renderer variantRenderer;
     private Renderer levelRenderer;
@@ -27,11 +31,18 @@ public class RenderManager {
     private Renderer sceneDebugRenderer;
     private Renderer miniViewOverlayRenderer;
 
-    private final RenderQueue renderQueue = new RenderQueue();
+    private Vector2f currentOffset = Vector2f.ZERO;
 
-    private GameSceneCanvasRenderingComp sceneCanvasRendering;
+    public RenderManager() {
+        clearAllRenderers();
+    }
 
-    public RenderManager() {}
+    private void clearAllRenderers() {
+        variantRenderer = Renderer.NULL_RENDERER;
+        levelRenderer = Renderer.NULL_RENDERER;
+        sceneRenderer = Renderer.NULL_RENDERER;
+        sceneDebugRenderer = Renderer.NULL_RENDERER;
+    }
 
     public void createRenderers(
         GameVariantPlayConfig playConfig,
@@ -44,35 +55,35 @@ public class RenderManager {
         requireNonNull(gameScene);
         requireNonNull(miniView);
 
+        clearAllRenderers();
+
         final ActorSpriteAnimController animController = playConfig.systems().actorSpriteAnimController();
 
         //TODO This is just a temporary solution
         miniViewOverlayRenderer = new MiniViewOverlayRenderer(miniView, animController, renderConfig);
 
         // If this scene has 2D rendering support, create and configure renderers
-
-        sceneCanvasRendering = gameScene.optCanvasRendering().orElse(null);
-        if (sceneCanvasRendering == null) {
+        final var rendering2D = gameScene.optCanvasRendering().orElse(null);
+        if (rendering2D == null) {
             return;
         }
 
-        final Canvas sceneCanvas = sceneCanvasRendering.canvas();
+        final Canvas sceneCanvas = rendering2D.canvas();
         if (sceneCanvas == null) {
             return;
         }
+
+        currentOffset = gameScene.renderOffset();
 
         variantRenderer    = renderConfig.createVariantRenderer(animController, sceneCanvas);
         sceneRenderer      = renderConfig.createGameSceneRenderer(gameScene, animController, sceneCanvas); // may return null!
         sceneDebugRenderer = renderConfig.createGameSceneDebugRenderer(gameScene, animController, sceneCanvas);
         levelRenderer      = renderConfig.createGameLevelRenderer(animController, sceneCanvas);
 
-        final Vector2f offset = gameScene.renderOffset();
-        if (sceneRenderer != null) {
-            configureRenderer(sceneRenderer, sceneCanvasRendering, offset);
-        }
-        configureRenderer(variantRenderer, sceneCanvasRendering, offset);
-        configureRenderer(sceneDebugRenderer, sceneCanvasRendering, offset);
-        configureRenderer(levelRenderer, sceneCanvasRendering, offset);
+        bindRendererProperties(sceneRenderer, rendering2D.backgroundColorProperty(), rendering2D.scalingProperty());
+        bindRendererProperties(variantRenderer, rendering2D.backgroundColorProperty(), rendering2D.scalingProperty());
+        bindRendererProperties(sceneDebugRenderer, rendering2D.backgroundColorProperty(), rendering2D.scalingProperty());
+        bindRendererProperties(levelRenderer, rendering2D.backgroundColorProperty(), rendering2D.scalingProperty());
     }
 
     public RenderQueue renderQueue() {
@@ -94,13 +105,12 @@ public class RenderManager {
         renderQueue.sort();
 
         renderQueue.renderables().forEach(r -> {
-
             switch (r.layer()) {
-                case WORLD    -> renderWorld(r, tick);
-                case SCENE    -> renderScene(r, tick);
-                case MINIVIEW_OVERLAY -> renderOverlay(r, tick);
-                case HUD      -> renderHUD(r, tick);
-                default       -> renderAnything(r, tick);
+                case MINIVIEW_OVERLAY -> miniViewOverlayRenderer.render(r, tick);
+                case SCENE -> renderWithOffset(r, sceneRenderer, tick);
+                case WORLD -> renderWithOffset(r, levelRenderer, tick);
+                case HUD -> variantRenderer.render(r, tick);
+                default -> renderWithOffset(r, variantRenderer, tick);
             }
         });
 
@@ -111,46 +121,21 @@ public class RenderManager {
         }
     }
 
-
-    private static void renderWithOffset(Renderable r, Renderer renderer, long tick) {
-        final Vector2f offset = renderer.info().get("offset", Vector2f.class).scaled(renderer.scaling());
-        renderer.ctx().save();
-        renderer.ctx().translate(offset.x(), offset.y());
-        renderer.render(r, tick);
-        renderer.ctx().restore();
-    }
-
-    private void renderAnything(Renderable r, long tick) {
-        renderWithOffset(r, variantRenderer, tick);
-    }
-
-    private void renderScene(Renderable r, long tick) {
-        if (sceneRenderer != null) {
-            renderWithOffset(r, sceneRenderer, tick);
+    private void renderWithOffset(Renderable r, Renderer renderer, long tick) {
+        if (renderer != Renderer.NULL_RENDERER) {
+            final Vector2f offset = currentOffset.scaled(renderer.scaling());
+            renderer.info().put("offset", offset);
+            renderer.ctx().save();
+            renderer.ctx().translate(offset.x(), offset.y());
+            renderer.render(r, tick);
+            renderer.ctx().restore();
         }
     }
 
-    private void renderWorld(Renderable r, long tick) {
-        renderWithOffset(r, levelRenderer, tick);
-    }
-
-    private void renderHUD(Renderable r, long tick) {
-        variantRenderer.render(r, tick);
-    }
-
-    private void renderOverlay(Renderable r, long tick) {
-        if (miniViewOverlayRenderer != null) {
-            miniViewOverlayRenderer.render(r, tick);
+    private void bindRendererProperties(Renderer renderer, ObjectProperty<Color> backgroundColorProperty, DoubleProperty scalingProperty) {
+        if (renderer != Renderer.NULL_RENDERER) {
+            renderer.backgroundColorProperty().bind(backgroundColorProperty);
+            renderer.scalingProperty().bind(scalingProperty);
         }
-    }
-
-    private static void configureRenderer(
-        Renderer renderer,
-        GameSceneCanvasRenderingComp canvasRendering,
-        Vector2f offset)
-    {
-        renderer.backgroundColorProperty().bind(canvasRendering.backgroundColorProperty());
-        renderer.scalingProperty().bind(canvasRendering.scalingProperty());
-        renderer.info().put("offset", offset);
     }
 }

@@ -119,7 +119,7 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig, Dispo
     }
 
     @Override
-    public BaseRenderer createGameSceneRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
+    public Renderer createGameSceneRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
         requireNonNull(gameScene);
         requireNonNull(animController);
         requireNonNull(canvas);
@@ -127,7 +127,7 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig, Dispo
         return switch (gameScene) {
             case Arcade_BootScene ignored -> new Arcade_BootScene_Renderer(canvas, spriteSheet());
             case ArcadePacMan_IntroScene ignored -> new ArcadePacMan_IntroScene_Renderer(canvas);
-            default -> null;
+            default -> Renderer.NULL_RENDERER;
         };
     }
 

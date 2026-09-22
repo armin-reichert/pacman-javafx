@@ -5,8 +5,18 @@
 package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.basics.math.RectShort;
+import de.amr.basics.ui.assets.AssetMap;
+import de.amr.basics.ui.assets.SpriteSheet;
 import de.amr.basics.ui.ecs.GameEntity;
 import de.amr.basics.ui.ecs.systems.ActorSpriteAnimController;
+import de.amr.basics.ui.entities.hud.HUD_Style;
+import de.amr.basics.ui.entities.props.bonuspoints.BonusPoints;
+import de.amr.basics.ui.entities.props.ghostpoints.GhostPoints;
+import de.amr.basics.ui.entities.props.messageview.MessageView;
+import de.amr.basics.ui.rendering.BaseRenderer;
+import de.amr.basics.ui.rendering.Renderable;
+import de.amr.basics.ui.rendering.Renderer;
+import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
@@ -14,29 +24,19 @@ import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.Arcade_BootScene;
 import de.amr.pacmanfx.arcade.pacman.gamescene.bootscene.Arcade_BootScene_Renderer;
 import de.amr.pacmanfx.core.Energizer;
-import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
-import de.amr.pacmanfx.core.entities.world.house.House;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
+import de.amr.pacmanfx.core.entities.world.house.House;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
-import de.amr.basics.ui.entities.props.bonuspoints.BonusPoints;
-import de.amr.basics.ui.entities.props.ghostpoints.GhostPoints;
-import de.amr.basics.ui.entities.props.messageview.MessageView;
-import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.assets.GlobalAssets;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
-import de.amr.basics.ui.assets.AssetMap;
-import de.amr.basics.ui.assets.SpriteSheet;
-import de.amr.basics.ui.entities.hud.HUD_Style;
-import de.amr.basics.ui.rendering.BaseRenderer;
-import de.amr.basics.ui.rendering.Renderer;
 import de.amr.pacmanfx.uilib.ArcadeColor;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
@@ -102,13 +102,13 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public BaseRenderer createGameSceneRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
+    public Renderer createGameSceneRenderer(GameScene gameScene, ActorSpriteAnimController animController, Canvas canvas) {
         requireNonNull(canvas);
         requireNonNull(gameScene);
 
         return switch (gameScene) {
             case Arcade_BootScene ignored -> new Arcade_BootScene_Renderer(canvas, spriteSheet());
-            default -> null;
+            default -> Renderer.NULL_RENDERER;
         };
     }
 
