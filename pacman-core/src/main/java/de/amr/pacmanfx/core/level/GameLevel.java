@@ -7,8 +7,6 @@ package de.amr.pacmanfx.core.level;
 import de.amr.basics.timer.Pulse;
 import de.amr.basics.ui.entities.props.messageview.MessageType;
 import de.amr.basics.ui.entities.props.messageview.MessageView;
-import de.amr.basics.ui.rendering.Renderable;
-import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.pacmanfx.core.gameplay.ArcadeHouseGateKeeper;
 import de.amr.pacmanfx.core.model.world.map.FoodState;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -20,13 +18,7 @@ import java.util.List;
 import static de.amr.pacmanfx.core.Validations.requireValidLevelNumber;
 import static java.util.Objects.requireNonNull;
 
-//TODO Do NOT implement Renderable, use wrapper
-public class GameLevel implements Renderable {
-
-    @Override
-    public RenderingLayer layer() {
-        return RenderingLayer.SCENE;
-    }
+public class GameLevel {
 
     private final int number; // 1=first level
 

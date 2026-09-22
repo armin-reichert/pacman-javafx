@@ -16,7 +16,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.views.miniview.MiniPlaySceneView;
 import de.amr.pacmanfx.ui.views.miniview.MiniPlaySceneViewRenderer;
 import de.amr.basics.ui.rendering.Renderer;
-import de.amr.basics.ui.rendering.RenderingReorderWrapper;
+import de.amr.basics.ui.rendering.RenderableObject;
 import javafx.scene.canvas.Canvas;
 import org.tinylog.Logger;
 
@@ -100,11 +100,6 @@ public class RenderManager {
         renderQueue.sort();
 
         renderQueue.renderables().forEach(r -> {
-
-            // After sorting, wrapper has done its duty
-            if (r instanceof RenderingReorderWrapper wrapper) {
-                r = wrapper.content();
-            }
 
             switch (r.layer()) {
                 case WORLD    -> renderWorld(r, tick);

@@ -1,20 +1,20 @@
 package de.amr.basics.ui.rendering;
 
-public class RenderingReorderWrapper implements Renderable {
+public class RenderableObject implements Renderable {
 
-    public static RenderingReorderWrapper reorder(Renderable r, RenderingLayer layer, int z) {
-        return new RenderingReorderWrapper(r, layer, z);
+    public static RenderableObject reordered(Renderable r, RenderingLayer layer, int z) {
+        return new RenderableObject(r, layer, z);
     }
 
-    public static RenderingReorderWrapper reorder(Renderable r, RenderingLayer layer) {
-        return new RenderingReorderWrapper(r, layer, 0);
+    public static RenderableObject reordered(Renderable r, RenderingLayer layer) {
+        return new RenderableObject(r, layer, 0);
     }
 
     private final RenderingLayer targetLayer;
     private final Renderable renderable;
     private final int z;
 
-    private RenderingReorderWrapper(Renderable renderable, RenderingLayer targetLayer, int z) {
+    private RenderableObject(Renderable renderable, RenderingLayer targetLayer, int z) {
         this.renderable = renderable;
         this.targetLayer = targetLayer;
         this.z = z;

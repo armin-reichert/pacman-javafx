@@ -4,15 +4,13 @@
 
 package de.amr.pacmanfx.ui.views.miniview;
 
-import de.amr.basics.timer.Pulse;
 import de.amr.basics.ui.ecs.systems.ActorSpriteAnimController;
-import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.basics.ui.rendering.Renderable;
-import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.basics.ui.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
+import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.rendering.Renderer;
-import de.amr.basics.ui.rendering.RenderingReorderWrapper;
+import de.amr.basics.ui.rendering.RenderableObject;
+import de.amr.pacmanfx.game.GameVariantRenderConfig;
+import de.amr.pacmanfx.uilib.rendering.RenderableGameLevel;
 
 public class MiniPlaySceneViewRenderer extends BaseRenderer {
 
@@ -41,14 +39,8 @@ public class MiniPlaySceneViewRenderer extends BaseRenderer {
     @Override
     public void render(Renderable r, long tick) {
         switch (r) {
-            case GameLevel level -> {
-                levelRenderer.info().put(LevelRenderInfoKey.ENERGIZERS_SHOWN, level.heartbeat().state() == Pulse.State.ON);
-                levelRenderer.info().put(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, false);
-                levelRenderer.info().put(LevelRenderInfoKey.SHOW_EMPTY_MAZE, level.food().remainingFoodCount() == 0);
-                levelRenderer.info().put(LevelRenderInfoKey.MAZE_IS_FLASHING, false);
-                levelRenderer.render(level, tick);
-            }
-            case RenderingReorderWrapper wrapper -> render(wrapper.content(), tick);
+            case RenderableGameLevel _ -> levelRenderer.render(r, tick);
+            case RenderableObject wrapper -> render(wrapper.content(), tick);
             default -> entityRenderer.render(r, tick);
         }
     }
