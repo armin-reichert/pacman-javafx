@@ -24,6 +24,7 @@ import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.basics.ui.assets.AssetMap;
+import de.amr.pacmanfx.uilib.ArcadeColor;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -36,7 +37,6 @@ import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.game.GameVariantRenderConfig.renderableGameEntity;
 import static de.amr.pacmanfx.game.GameVariantRenderConfig.renderablePac;
 import static de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene.createText;
-import static de.amr.pacmanfx.uilib.ArcadePalette.*;
 
 public class IntroSceneView {
 
@@ -101,7 +101,7 @@ public class IntroSceneView {
     private void createTitleText() {
         titleText = new TextDisplay();
         titleText.data().setText(MARQUEE_TITLE);
-        titleText.data().setFillColor(ARCADE_ORANGE);
+        titleText.data().setFillColor(ArcadeColor.ORANGE.color());
         titleText.data().setFont(GlobalFonts.ARCADE.font(8));
         titleText.pos().set(TITLE_X, TITLE_Y);
         titleText.show();
@@ -118,8 +118,8 @@ public class IntroSceneView {
         marquee.layout().setBrightBulbsCount(6);
         marquee.layout().setBrightBulbsDistance(16);
 
-        marquee.visualization().setBulbOffColor(ARCADE_RED.toString());
-        marquee.visualization().setBulbOnColor(ARCADE_WHITE.toString());
+        marquee.visualization().setBulbOffColor(ArcadeColor.RED.toString());
+        marquee.visualization().setBulbOnColor(ArcadeColor.WHITE.toString());
 
         marqueeText1 = new TextDisplay();
         marqueeText1.data().setFont(GlobalFonts.ARCADE.font(TS));
@@ -137,9 +137,9 @@ public class IntroSceneView {
         copyrightImage.pos().set(tilesPx(6), tilesPx(28));
         copyrightImage.image().setImage(assets.image("logo.midway"));
 
-        copyrightTexts.add(createText("©",             ARCADE_RED, 8, 11, 30.125f));
-        copyrightTexts.add(createText("MIDWAY MFG CO", ARCADE_RED, 8, 13, 30));
-        copyrightTexts.add(createText("1980/1981",     ARCADE_RED, 8, 14, 32));
+        copyrightTexts.add(createText("©",             ArcadeColor.RED.color(), 8, 11, 30.125f));
+        copyrightTexts.add(createText("MIDWAY MFG CO", ArcadeColor.RED.color(), 8, 13, 30));
+        copyrightTexts.add(createText("1980/1981",     ArcadeColor.RED.color(), 8, 14, 32));
         copyrightTexts.forEach(TextDisplay::show);
     }
 

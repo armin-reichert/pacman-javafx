@@ -23,7 +23,7 @@ import de.amr.basics.ui.entities.props.ghostpoints.GhostPoints;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
-import javafx.scene.paint.Color;
+import de.amr.pacmanfx.uilib.ArcadeColor;
 
 import java.util.Arrays;
 import java.util.stream.Stream;
@@ -32,7 +32,6 @@ import static de.amr.pacmanfx.arcade.pacman.rendering.SpriteID.GALLERY_GHOSTS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.*;
 import static de.amr.pacmanfx.game.GameVariantRenderConfig.renderableGameEntity;
 import static de.amr.pacmanfx.game.GameVariantRenderConfig.renderablePac;
-import static de.amr.pacmanfx.uilib.ArcadePalette.*;
 
 public class IntroSceneView {
 
@@ -43,7 +42,7 @@ public class IntroSceneView {
 
     private static final String[] GHOST_NICKNAMES  = { "\"BLINKY\"", "\"PINKY\"", "\"INKY\"", "\"CLYDE\"" };
     private static final String[] GHOST_CHARACTERS = { "-SHADOW", "-SPEEDY", "-BASHFUL", "-POKEY" };
-    private static final Color[]  GHOST_COLORS     = { ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE };
+    private static final ArcadeColor[] GHOST_COLORS = { ArcadeColor.RED, ArcadeColor.PINK, ArcadeColor.CYAN, ArcadeColor.ORANGE };
 
     private static final int LEFT_TILE_X = 4;
     private static final int ENERGIZER_CENTER_X = TS * LEFT_TILE_X + HTS;
@@ -173,7 +172,7 @@ public class IntroSceneView {
 
     private void initTitleText() {
         titleText.data().setText(TITLE_TEXT);
-        titleText.data().setFillColor(ARCADE_WHITE);
+        titleText.data().setFillColor(ArcadeColor.WHITE.color());
         titleText.data().setFont(GlobalFonts.ARCADE.font(TS));
         titleText.pos().set(tilesPx(LEFT_TILE_X + 3), tilesPx(6));
     }
@@ -192,13 +191,13 @@ public class IntroSceneView {
 
             final TextDisplay characterDisplay = ghostCharacterDisplays[i];
             characterDisplay.data().setText(GHOST_CHARACTERS[i]);
-            characterDisplay.data().setFillColor(GHOST_COLORS[i]);
+            characterDisplay.data().setFillColor(GHOST_COLORS[i].color());
             characterDisplay.data().setFont(GlobalFonts.ARCADE.font(TS));
             characterDisplay.pos().set(TS * 7, y + offsetY);
 
             final TextDisplay nicknameDisplay = ghostNicknameDisplays[i];
             nicknameDisplay.data().setText(GHOST_NICKNAMES[i]);
-            nicknameDisplay.data().setFillColor(GHOST_COLORS[i]);
+            nicknameDisplay.data().setFillColor(GHOST_COLORS[i].color());
             nicknameDisplay.data().setFont(GlobalFonts.ARCADE.font(TS));
             nicknameDisplay.pos().set(TS * 18, y + offsetY);
         }
@@ -211,22 +210,22 @@ public class IntroSceneView {
         energizer.pos().set(tilesPx(LEFT_TILE_X + 6) + HTS, tilesPx(26) + HTS);
 
         text10.data().setText("10");
-        text10.data().setFillColor(ARCADE_WHITE);
+        text10.data().setFillColor(ArcadeColor.WHITE.color());
         text10.data().setFont(GlobalFonts.ARCADE.font(TS));
         text10.pos().set(tilesPx(LEFT_TILE_X + 8), tilesPx(25));
 
         text10Pts.data().setText("PTS");
-        text10Pts.data().setFillColor(ARCADE_WHITE);
+        text10Pts.data().setFillColor(ArcadeColor.WHITE.color());
         text10Pts.data().setFont(GlobalFonts.ARCADE.font(6));
         text10Pts.pos().set(tilesPx(LEFT_TILE_X + 11), tilesPx(25));
 
         text50.data().setText("50");
-        text50.data().setFillColor(ARCADE_WHITE);
+        text50.data().setFillColor(ArcadeColor.WHITE.color());
         text50.data().setFont(GlobalFonts.ARCADE.font(TS));
         text50.pos().set(tilesPx(LEFT_TILE_X + 8), tilesPx(27));
 
         text50Pts.data().setText("PTS");
-        text50Pts.data().setFillColor(ARCADE_WHITE);
+        text50Pts.data().setFillColor(ArcadeColor.WHITE.color());
         text50Pts.data().setFont(GlobalFonts.ARCADE.font(6));
         text50Pts.pos().set(tilesPx(LEFT_TILE_X + 11), tilesPx(27));
     }
@@ -238,7 +237,7 @@ public class IntroSceneView {
 
     private void initCopyrightText() {
         copyrightText.data().setText(MIDWAY_MFG_CO);
-        copyrightText.data().setFillColor(ARCADE_PINK);
+        copyrightText.data().setFillColor(ArcadeColor.PINK.color());
         copyrightText.data().setFont(GlobalFonts.ARCADE.font(TS));
         copyrightText.pos().set(tilesPx(4), tilesPx(32));
     }

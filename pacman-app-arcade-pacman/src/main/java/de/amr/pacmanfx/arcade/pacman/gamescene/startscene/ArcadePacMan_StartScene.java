@@ -9,11 +9,10 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
+import de.amr.pacmanfx.uilib.ArcadeColor;
 
 import java.util.List;
 import java.util.stream.Stream;
-
-import static de.amr.pacmanfx.uilib.ArcadePalette.*;
 
 /**
  * Scene shown after credit has been added and where game can be started.
@@ -21,11 +20,11 @@ import static de.amr.pacmanfx.uilib.ArcadePalette.*;
 public class ArcadePacMan_StartScene extends AbstractGameScene {
 
     private final List<Renderable> texts = List.of(
-        createText("PUSH START BUTTON",       ARCADE_ORANGE, 8,  6, 17),
-        createText("1 PLAYER ONLY",           ARCADE_CYAN,   8,  8, 21),
-        createText("BONUS PAC-MAN FOR 10000", ARCADE_ROSE,   8,  1, 25),
-        createText("PTS",                     ARCADE_ROSE,   6, 25, 25),
-        createText("© 1980 MIDWAY MFG.CO.",   ARCADE_PINK,   8,  4, 29)
+        createText("PUSH START BUTTON",       ArcadeColor.ORANGE.color(), 8,  6, 17),
+        createText("1 PLAYER ONLY",           ArcadeColor.CYAN.color(),   8,  8, 21),
+        createText("BONUS PAC-MAN FOR 10000", ArcadeColor.ROSE.color(),   8,  1, 25),
+        createText("PTS",                     ArcadeColor.ROSE.color(),   6, 25, 25),
+        createText("© 1980 MIDWAY MFG.CO.",   ArcadeColor.PINK.color(),   8,  4, 29)
     );
 
     public ArcadePacMan_StartScene() {

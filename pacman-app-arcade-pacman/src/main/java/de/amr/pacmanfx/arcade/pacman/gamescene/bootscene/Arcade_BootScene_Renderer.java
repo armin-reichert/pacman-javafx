@@ -8,13 +8,13 @@ import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.basics.ui.assets.SpriteSheet;
 import de.amr.basics.ui.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.ArcadeColor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.text.Font;
 
 import java.util.Optional;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
-import static de.amr.pacmanfx.uilib.ArcadePalette.ARCADE_WHITE;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -49,7 +49,7 @@ public class Arcade_BootScene_Renderer extends BaseRenderer {
 
     private void renderHexCodeBlock(HexDigitsBlock block) {
         final Font arcade8 = Ufx.deriveFont(GlobalFonts.ARCADE.font(), scaled(TS));
-        ctx.setFill(ARCADE_WHITE);
+        ctx.setFill(ArcadeColor.WHITE.color());
         ctx.setFont(arcade8);
         for (int row = 0; row < block.height(); ++row) {
             final double y = scaled(TS * row);
@@ -73,7 +73,7 @@ public class Arcade_BootScene_Renderer extends BaseRenderer {
     private void renderGridPattern(GridPattern grid) {
         ctx.save();
         ctx.scale(scaling(), scaling());
-        ctx.setStroke(ARCADE_WHITE);
+        ctx.setStroke(ArcadeColor.WHITE.color());
         for (int row = 0; row < grid.height(); ++row) {
             final int y = row * grid.cellSize();
             ctx.strokeLine(0, y, grid.width() * TS, y);

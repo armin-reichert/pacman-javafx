@@ -25,6 +25,7 @@ import de.amr.basics.ui.rendering.RenderableGameEntity;
 import de.amr.basics.ui.assets.SpriteSheet;
 import de.amr.basics.ui.entities.hud.HUD_Style;
 import de.amr.basics.ui.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.ArcadeColor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -35,7 +36,6 @@ import java.util.Optional;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
-import static de.amr.pacmanfx.uilib.ArcadePalette.ARCADE_YELLOW;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_VariantRenderer extends BaseRenderer {
@@ -175,7 +175,7 @@ public class ArcadePacMan_VariantRenderer extends BaseRenderer {
 
         if (numLives > livesCounter.data().maxLivesShown()) {
             final Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
-            fillText("%d".formatted(numLives), ARCADE_YELLOW, font, x - 14, y + TS);
+            fillText("%d".formatted(numLives), ArcadeColor.YELLOW.color(), font, x - 14, y + TS);
         }
     }
 

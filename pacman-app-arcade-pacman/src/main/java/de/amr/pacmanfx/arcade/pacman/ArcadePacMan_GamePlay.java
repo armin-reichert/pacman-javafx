@@ -39,7 +39,7 @@ import de.amr.pacmanfx.core.steering.RouteGuidedSteering;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.basics.ui.entities.props.messageview.MessageViewStyleComp;
-import de.amr.pacmanfx.uilib.ArcadePalette;
+import de.amr.pacmanfx.uilib.ArcadeColor;
 import org.tinylog.Logger;
 
 import java.util.List;
@@ -285,8 +285,8 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         style.setMessageFont(GlobalFonts.ARCADE.font());
         style.setMessageColor(type -> switch (type) {
             case NO_MESSAGE -> null; //TODO delete this message type
-            case READY -> ArcadePalette.ARCADE_YELLOW;
-            case GAME_OVER -> ArcadePalette.ARCADE_RED;
+            case READY -> ArcadeColor.YELLOW.color();
+            case GAME_OVER -> ArcadeColor.RED.color();
         });
         messageView.setComp(MessageViewStyleComp.class, style);
 

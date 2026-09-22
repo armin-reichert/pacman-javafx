@@ -23,6 +23,7 @@ import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.ui.assets.VoiceID;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
+import de.amr.pacmanfx.uilib.ArcadeColor;
 import javafx.scene.paint.Color;
 
 import java.util.List;
@@ -30,7 +31,6 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
-import static de.amr.pacmanfx.uilib.ArcadePalette.*;
 
 /**
  * Intro scene of the Ms. Pac-Man game.
@@ -40,7 +40,7 @@ import static de.amr.pacmanfx.uilib.ArcadePalette.*;
 public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
 
     static final String[] GHOST_NAMES = { "BLINKY", "PINKY", "INKY", "SUE" };
-    static final Color[] GHOST_COLORS = { ARCADE_RED, ARCADE_PINK, ARCADE_CYAN, ARCADE_ORANGE };
+    static final ArcadeColor[] GHOST_COLORS = { ArcadeColor.RED, ArcadeColor.PINK, ArcadeColor.CYAN, ArcadeColor.ORANGE };
 
     static final int TITLE_X             = TS * 10;
      static final int TITLE_Y             = TS * 8;
@@ -107,13 +107,13 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
         switch (state) {
             case GHOSTS_MARCHING_IN -> {
                 if (ghostInSpotlight == GhostPersonality.RED_GHOST_SHADOW.ordinal()) {
-                    view.showMarqueeText1("WITH", ARCADE_WHITE);
+                    view.showMarqueeText1("WITH", ArcadeColor.WHITE.color());
                 } else {
                     view.hideMarqueeText1();
                 }
 
                 final String ghostName = GHOST_NAMES[ghostInSpotlight];
-                final Color ghostColor = GHOST_COLORS[ghostInSpotlight];
+                final Color ghostColor = GHOST_COLORS[ghostInSpotlight].color();
                 final float x = TITLE_X + (ghostName.length() < 4 ? tilesPx(4) : tilesPx(3));
                 final float y = TOP_Y + tilesPx(6);
                 view.placeMarqueeText2(x, y);
@@ -121,10 +121,10 @@ public class ArcadeMsPacMan_IntroScene extends AbstractGameScene {
             }
 
             case MS_PACMAN_MARCHING_IN -> {
-                view.showMarqueeText1("STARRING", ARCADE_WHITE);
+                view.showMarqueeText1("STARRING", ArcadeColor.WHITE.color());
 
                 view.placeMarqueeText2(TITLE_X, TOP_Y + tilesPx(6));
-                view.showMarqueeText2("MS PAC-MAN", ARCADE_YELLOW);
+                view.showMarqueeText2("MS PAC-MAN", ArcadeColor.YELLOW.color());
             }
         }
     }

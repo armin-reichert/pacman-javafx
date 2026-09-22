@@ -16,6 +16,7 @@ import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.basics.ui.assets.AssetMap;
+import de.amr.pacmanfx.uilib.ArcadeColor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,16 +24,14 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
-import static de.amr.pacmanfx.uilib.ArcadePalette.ARCADE_ORANGE;
-import static de.amr.pacmanfx.uilib.ArcadePalette.ARCADE_RED;
 
 public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
 
     private final List<Renderable> texts = List.of(
-        createText("PUSH START BUTTON",      ARCADE_ORANGE, 8,  6, 16),
-        createText("1 PLAYER ONLY",          ARCADE_ORANGE, 8,  8, 18),
-        createText("ADDITIONAL    AT 10000", ARCADE_ORANGE, 8,  2, 25),
-        createText("PTS",                    ARCADE_ORANGE, 6, 25, 25)
+        createText("PUSH START BUTTON",      ArcadeColor.ORANGE.color(), 8,  6, 16),
+        createText("1 PLAYER ONLY",          ArcadeColor.ORANGE.color(), 8,  8, 18),
+        createText("ADDITIONAL    AT 10000", ArcadeColor.ORANGE.color(), 8,  2, 25),
+        createText("PTS",                    ArcadeColor.ORANGE.color(), 6, 25, 25)
     );
 
     private final ImageDisplay msPacManImage;
@@ -53,9 +52,9 @@ public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
         copyrightImage.show();
         copyrightImage.pos().set(tilesPx(6), tilesPx(28));
 
-        copyrightTexts.add(createText("©",             ARCADE_RED, 8, 11, 30.125f));
-        copyrightTexts.add(createText("MIDWAY MFG CO", ARCADE_RED, 8, 13, 30));
-        copyrightTexts.add(createText("1980/1981",     ARCADE_RED, 8, 14, 32));
+        copyrightTexts.add(createText("©",             ArcadeColor.RED.color(), 8, 11, 30.125f));
+        copyrightTexts.add(createText("MIDWAY MFG CO", ArcadeColor.RED.color(), 8, 13, 30));
+        copyrightTexts.add(createText("1980/1981",     ArcadeColor.RED.color(), 8, 14, 32));
         copyrightTexts.forEach(TextDisplay::show);
     }
 

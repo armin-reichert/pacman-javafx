@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.views.help;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
-import de.amr.pacmanfx.uilib.ArcadePalette;
+import de.amr.pacmanfx.uilib.ArcadeColor;
 import de.amr.pacmanfx.uilib.widgets.FadingPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -36,7 +36,7 @@ public class HelpView extends Pane {
     public void showHelpPopup(GameApp appContext, double scaling, String variantName) {
         final boolean msPacMan = variantName.equals(GameVariantID.ARCADE_MS_PACMAN.name())
                 || variantName.equals(GameVariantID.ARCADE_MS_PACMAN_XXL.name());
-        final Color bgColor = msPacMan ? ArcadePalette.ARCADE_RED : ArcadePalette.ARCADE_BLUE;
+        final Color bgColor = msPacMan ? ArcadeColor.RED.color() : ArcadeColor.BLUE.color();
         final var font = GlobalFonts.MONOSPACED.font(Math.max(6, 14 * scaling));
         final var infoPane = HelpInfo.build(appContext).createPane(appContext, colorWithOpacity(bgColor, 0.8), font);
         popup.setTranslateX(10 * scaling);

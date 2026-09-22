@@ -27,6 +27,7 @@ import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.assets.ResourceManager;
 import de.amr.basics.ui.assets.TranslationManager;
+import de.amr.pacmanfx.uilib.ArcadeColor;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
@@ -35,8 +36,6 @@ import java.util.*;
 
 import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.audioClip;
 import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.mediaPlayer;
-import static de.amr.pacmanfx.uilib.ArcadePalette.ARCADE_RED;
-import static de.amr.pacmanfx.uilib.ArcadePalette.ARCADE_WHITE;
 
 public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
 
@@ -103,7 +102,7 @@ public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
     public void load(GameApp app) {
         assets.addAsset("app_icon",    RM.loadImage("graphics/icons/mspacman.png"));
         assets.addAsset("logo.midway", RM.loadImage("graphics/midway_logo.png"));
-        assets.addAsset("color.game_over_message", ARCADE_RED);
+        assets.addAsset("color.game_over_message", ArcadeColor.RED.color());
         for (int i = 0; i < MAP_COLOR_SCHEMES.length; ++i) {
             assets.addAsset("maze.bright.%d".formatted(i), createBrightMazeImage(i));
         }
@@ -220,7 +219,7 @@ public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
         final Image mazeImage = spriteSheet.image(mazeSprite);
         final GenericWorldMapColorScheme colorScheme = ArcadeMsPacMan_UIConfig.MAP_COLOR_SCHEMES[index];
         final Map<Color, Color> colorChanges = Map.of(
-            Color.valueOf(colorScheme.wallStroke()), ARCADE_WHITE,
+            Color.valueOf(colorScheme.wallStroke()), ArcadeColor.WHITE.color(),
             Color.valueOf(colorScheme.door()), Color.TRANSPARENT
         );
         return Ufx.recolorImage(mazeImage, colorChanges);

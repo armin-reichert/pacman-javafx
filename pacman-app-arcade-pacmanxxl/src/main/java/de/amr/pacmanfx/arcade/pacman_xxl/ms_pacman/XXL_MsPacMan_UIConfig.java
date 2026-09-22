@@ -21,6 +21,7 @@ import de.amr.pacmanfx.ui.sound.SoundManager;
 import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.assets.ResourceManager;
 import de.amr.basics.ui.assets.TranslationManager;
+import de.amr.pacmanfx.uilib.ArcadeColor;
 import org.tinylog.Logger;
 
 import java.util.*;
@@ -28,7 +29,6 @@ import java.util.*;
 import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry;
 import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.audioClip;
 import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.mediaPlayer;
-import static de.amr.pacmanfx.uilib.ArcadePalette.ARCADE_RED;
 
 public final class XXL_MsPacMan_UIConfig implements GameVariantUIConfig {
 
@@ -84,7 +84,7 @@ public final class XXL_MsPacMan_UIConfig implements GameVariantUIConfig {
 
         assets.addAsset("app_icon", XXL_RM.loadImage(XXL_PATH + "graphics/icons/mspacman.png"));
         assets.addAsset("logo.midway", ARCADE_RM.loadImage("graphics/midway_logo.png"));
-        assets.addAsset("color.game_over_message", ARCADE_RED);
+        assets.addAsset("color.game_over_message", ArcadeColor.RED.color());
         assets.freeze();
 
         loadSounds(app.ui().soundManager());

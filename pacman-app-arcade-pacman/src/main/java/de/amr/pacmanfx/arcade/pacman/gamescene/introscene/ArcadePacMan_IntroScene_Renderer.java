@@ -11,11 +11,10 @@ import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.assets.SpriteSheet;
 import de.amr.basics.ui.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.ArcadeColor;
 import javafx.scene.canvas.Canvas;
 
 import java.util.Optional;
-
-import static de.amr.pacmanfx.uilib.ArcadePalette.ARCADE_ROSE;
 
 public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer {
 
@@ -45,7 +44,7 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer {
         if (!pellet.isVisible()) return;
         ctx.save();
         ctx.setImageSmoothing(true);
-        ctx.setFill(ARCADE_ROSE);
+        ctx.setFill(ArcadeColor.ROSE.color());
         ctx.fillRect(scaled(pellet.pos().x()), scaled(pellet.pos().y()), scaled(2), scaled(2));
         ctx.restore();
     }
@@ -54,7 +53,7 @@ public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer {
         if (energizer.isVisible() && energizer.pulse().state() == Pulse.State.ON) {
             ctx.save();
             ctx.setImageSmoothing(true);
-            ctx.setFill(ARCADE_ROSE);
+            ctx.setFill(ArcadeColor.ROSE.color());
             drawSpriteCentered(energizerSprite, energizer.pos().x(), energizer.pos().y());
             ctx.restore();
         }

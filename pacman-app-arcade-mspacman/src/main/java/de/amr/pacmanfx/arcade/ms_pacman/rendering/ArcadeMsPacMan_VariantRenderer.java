@@ -32,6 +32,7 @@ import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.basics.ui.assets.SpriteSheet;
 import de.amr.basics.ui.entities.hud.HUD_Style;
 import de.amr.basics.ui.rendering.BaseRenderer;
+import de.amr.pacmanfx.uilib.ArcadeColor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -42,8 +43,6 @@ import java.util.Optional;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
-import static de.amr.pacmanfx.uilib.ArcadePalette.ARCADE_WHITE;
-import static de.amr.pacmanfx.uilib.ArcadePalette.ARCADE_YELLOW;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -193,7 +192,7 @@ public class ArcadeMsPacMan_VariantRenderer extends BaseRenderer {
             final double textX = scaled(clapperboard.pos().x() + sprite.width());
             final double y = scaled(clapperboard.pos().y() + 18);
             ctx.setFont(arcade8);
-            ctx.setFill(ARCADE_WHITE);
+            ctx.setFill(ArcadeColor.WHITE.color());
             ctx.fillText(number, numberX, y);
             ctx.fillText(text, textX, y);
         });
@@ -240,7 +239,7 @@ public class ArcadeMsPacMan_VariantRenderer extends BaseRenderer {
 
         if (numLives > livesCounter.data().maxLivesShown()) {
             final Font font = Font.font("Serif", FontWeight.BOLD, scaled(8));
-            fillText("%d".formatted(numLives), ARCADE_YELLOW, font, x - 14, y + TS);
+            fillText("%d".formatted(numLives), ArcadeColor.YELLOW.color(), font, x - 14, y + TS);
         }
     }
 

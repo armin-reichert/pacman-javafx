@@ -40,6 +40,7 @@ import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.entities.hud.HUD_Style;
 import de.amr.basics.ui.rendering.BaseRenderer;
 import de.amr.basics.ui.rendering.Renderer;
+import de.amr.pacmanfx.uilib.ArcadeColor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -49,7 +50,6 @@ import java.util.Map;
 
 import static de.amr.pacmanfx.game.GameVariantRenderConfig.*;
 import static de.amr.pacmanfx.game.GameVariantRenderConfig.renderableBonus;
-import static de.amr.pacmanfx.uilib.ArcadePalette.ARCADE_WHITE;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig, Disposable {
@@ -76,7 +76,7 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig, Dispo
             spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS),
             "SCORE",
             "HIGH SCORE",
-            ARCADE_WHITE,
+            ArcadeColor.WHITE.color(),
             Color.GRAY,
             GlobalFonts.ARCADE.font(),
             "CREDIT %2d"

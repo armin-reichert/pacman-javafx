@@ -5,6 +5,9 @@
 package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.basics.Named;
+import de.amr.basics.ui.assets.AssetMap;
+import de.amr.basics.ui.assets.ResourceManager;
+import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_RenderConfig;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
@@ -19,9 +22,7 @@ import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import de.amr.pacmanfx.ui.sound.SoundManager;
-import de.amr.basics.ui.assets.AssetMap;
-import de.amr.basics.ui.assets.ResourceManager;
-import de.amr.basics.ui.assets.TranslationManager;
+import de.amr.pacmanfx.uilib.ArcadeColor;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
@@ -30,7 +31,6 @@ import java.util.*;
 
 import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.audioClip;
 import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.mediaPlayer;
-import static de.amr.pacmanfx.uilib.ArcadePalette.*;
 
 /**
  * The Arcade Pac‑Man game variant.
@@ -40,11 +40,14 @@ public class ArcadePacMan_UIConfig implements GameVariantUIConfig {
     private final static ResourceManager RM = () -> ArcadePacMan_UIConfig.class;
 
     public static final GenericWorldMapColorScheme WORLD_MAP_COLOR_SCHEME = new GenericWorldMapColorScheme(
-        ARCADE_BLACK.toString(), ARCADE_BLUE.toString(), ARCADE_PINK.toString(), ARCADE_ROSE.toString()
+        ArcadeColor.BLACK.toString(),
+        ArcadeColor.BLUE.toString(),
+        ArcadeColor.PINK.toString(),
+        ArcadeColor.ROSE.toString()
     );
 
     private static final Map<Color, Color> BRIGHT_MAZE_COLOR_CHANGES = Map.of(
-        Color.valueOf(WORLD_MAP_COLOR_SCHEME.wallStroke()), ARCADE_WHITE,   // wall color change
+        Color.valueOf(WORLD_MAP_COLOR_SCHEME.wallStroke()), ArcadeColor.WHITE.color(),   // wall color change
         Color.valueOf(WORLD_MAP_COLOR_SCHEME.door()), Color.TRANSPARENT // door color change
     );
 
@@ -89,7 +92,7 @@ public class ArcadePacMan_UIConfig implements GameVariantUIConfig {
     public void load(GameApp app) {
         assets = new AssetMap();
         assets.addAsset("app_icon", RM.loadImage("graphics/icons/pacman.png"));
-        assets.addAsset("color.game_over_message", ARCADE_RED);
+        assets.addAsset("color.game_over_message", ArcadeColor.RED.color());
         assets.addAsset("maze.bright", createBrightEmptyMap());
         assets.freeze();
 

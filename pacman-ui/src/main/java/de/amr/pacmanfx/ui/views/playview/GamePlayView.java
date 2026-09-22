@@ -30,7 +30,7 @@ import de.amr.pacmanfx.ui.window.GameMainScene;
 import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.controls.FontAwesomeIcon;
 import de.amr.pacmanfx.uilib.controls.FontAwesomeSymbol;
-import de.amr.pacmanfx.uilib.ArcadePalette;
+import de.amr.pacmanfx.uilib.ArcadeColor;
 import de.amr.pacmanfx.uilib.widgets.decorationpane.DecorationPane;
 import de.amr.pacmanfx.uilib.widgets.decorationpane.DecorationPaneBorderConfig;
 import de.amr.pacmanfx.uilib.widgets.decorationpane.DecorationPaneConfig;
@@ -74,7 +74,7 @@ public class GamePlayView implements GameView {
     public static final DecorationPaneConfig DECORATION_PANE_CONFIG = new DecorationPaneConfig(
         0.85f, 0.93f, 0.5f, // scaling x,y, min
         20, 20, // padding x,y
-        new DecorationPaneBorderConfig(26, 10, 5, 55.0, ArcadePalette.ARCADE_WHITE)
+        new DecorationPaneBorderConfig(26, 10, 5, 55.0, ArcadeColor.WHITE.color())
     );
 
     // non-static members
