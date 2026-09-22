@@ -15,7 +15,7 @@ import javafx.scene.canvas.Canvas;
 
 import java.util.Optional;
 
-import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_ROSE;
+import static de.amr.pacmanfx.uilib.ArcadePalette.ARCADE_ROSE;
 
 public class ArcadePacMan_IntroScene_Renderer extends BaseRenderer {
 

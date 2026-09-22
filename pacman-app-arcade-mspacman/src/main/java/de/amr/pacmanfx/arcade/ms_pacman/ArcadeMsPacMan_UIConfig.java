@@ -35,8 +35,8 @@ import java.util.*;
 
 import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.audioClip;
 import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.mediaPlayer;
-import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
-import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
+import static de.amr.pacmanfx.uilib.ArcadePalette.ARCADE_RED;
+import static de.amr.pacmanfx.uilib.ArcadePalette.ARCADE_WHITE;
 
 public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
 

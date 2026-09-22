@@ -39,7 +39,7 @@ import de.amr.pacmanfx.core.steering.RouteGuidedSteering;
 import de.amr.pacmanfx.core.steering.RuleGuidedPacSteering;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.basics.ui.entities.props.messageview.MessageViewStyleComp;
-import de.amr.pacmanfx.uilib.rendering.ArcadePalette;
+import de.amr.pacmanfx.uilib.ArcadePalette;
 import org.tinylog.Logger;
 
 import java.util.List;

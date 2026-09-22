@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
-package de.amr.pacmanfx.uilib.rendering;
+package de.amr.pacmanfx.uilib.renderer;
 
 import de.amr.basics.ui.rendering.BaseRenderer;
 import de.amr.pacmanfx.core.model.world.map.TerrainTile;
@@ -9,6 +9,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.obstacle.Obstacle;
 import de.amr.pacmanfx.core.model.world.obstacle.ObstacleSegment;
 import de.amr.basics.ui.rendering.Renderable;
+import de.amr.pacmanfx.uilib.rendering.TerrainMapColoring;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;

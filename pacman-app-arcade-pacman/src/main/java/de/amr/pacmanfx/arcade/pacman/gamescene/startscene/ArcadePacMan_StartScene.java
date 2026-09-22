@@ -13,7 +13,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
+import static de.amr.pacmanfx.uilib.ArcadePalette.*;
 
 /**
  * Scene shown after credit has been added and where game can be started.

@@ -43,4 +43,5 @@ open module de.amr.pacmanfx.uilib {
     exports de.amr.pacmanfx.uilib.widgets.optionmenu;
     exports de.amr.pacmanfx.uilib.entities3d;
     exports de.amr.pacmanfx.uilib.dashboard;
+    exports de.amr.pacmanfx.uilib.renderer;
 }

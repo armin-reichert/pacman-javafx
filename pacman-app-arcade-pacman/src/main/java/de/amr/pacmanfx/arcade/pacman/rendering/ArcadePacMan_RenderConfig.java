@@ -49,7 +49,7 @@ import java.util.Map;
 
 import static de.amr.pacmanfx.game.GameVariantRenderConfig.*;
 import static de.amr.pacmanfx.game.GameVariantRenderConfig.renderableBonus;
-import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
+import static de.amr.pacmanfx.uilib.ArcadePalette.ARCADE_WHITE;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig, Disposable {

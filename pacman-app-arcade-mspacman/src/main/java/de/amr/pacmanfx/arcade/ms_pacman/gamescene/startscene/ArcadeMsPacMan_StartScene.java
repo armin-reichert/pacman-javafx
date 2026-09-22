@@ -23,8 +23,8 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
-import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_ORANGE;
-import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
+import static de.amr.pacmanfx.uilib.ArcadePalette.ARCADE_ORANGE;
+import static de.amr.pacmanfx.uilib.ArcadePalette.ARCADE_RED;
 
 public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
 

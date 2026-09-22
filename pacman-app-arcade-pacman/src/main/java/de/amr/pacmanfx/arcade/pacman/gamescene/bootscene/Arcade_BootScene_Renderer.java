@@ -14,7 +14,7 @@ import javafx.scene.text.Font;
 import java.util.Optional;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
-import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_WHITE;
+import static de.amr.pacmanfx.uilib.ArcadePalette.ARCADE_WHITE;
 import static java.util.Objects.requireNonNull;
 
 /**

@@ -1,4 +1,4 @@
-package de.amr.pacmanfx.uilib.rendering;
+package de.amr.pacmanfx.uilib;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.RectShort;

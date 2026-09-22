@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.mapeditor.palette;
 
-import de.amr.pacmanfx.uilib.rendering.TileRenderer;
+import de.amr.pacmanfx.uilib.renderer.TileRenderer;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.scene.canvas.Canvas;

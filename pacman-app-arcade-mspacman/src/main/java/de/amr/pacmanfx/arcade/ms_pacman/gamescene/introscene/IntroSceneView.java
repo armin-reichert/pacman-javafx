@@ -36,7 +36,7 @@ import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.game.GameVariantRenderConfig.renderableGameEntity;
 import static de.amr.pacmanfx.game.GameVariantRenderConfig.renderablePac;
 import static de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene.createText;
-import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.*;
+import static de.amr.pacmanfx.uilib.ArcadePalette.*;
 
 public class IntroSceneView {
 

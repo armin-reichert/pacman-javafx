@@ -42,7 +42,7 @@ import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.basics.ui.assets.SpriteSheet;
 import de.amr.basics.ui.entities.hud.HUD_Style;
 import de.amr.basics.ui.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.FacingSprite;
+import de.amr.pacmanfx.uilib.FacingSprite;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;

@@ -27,7 +27,7 @@ import java.util.*;
 
 import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.audioClip;
 import static de.amr.pacmanfx.ui.sound.SoundManager.SoundEntry.mediaPlayer;
-import static de.amr.pacmanfx.uilib.rendering.ArcadePalette.ARCADE_RED;
+import static de.amr.pacmanfx.uilib.ArcadePalette.ARCADE_RED;
 
 public final class XXL_PacMan_UIConfig implements GameVariantUIConfig {
 
