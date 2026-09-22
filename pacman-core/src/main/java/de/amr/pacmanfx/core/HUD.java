@@ -74,20 +74,13 @@ public class HUD {
             highScore,
             additionalEntities.all()
         )
-            .filter(e -> e instanceof GameEntity)
-            .map(e -> (GameEntity) e)
-            .map(e -> new RenderableGameEntity(e, RenderingLayer.HUD, 0))
+            .map(e -> new RenderableGameEntity((GameEntity) e, RenderingLayer.HUD, 0))
             .map(Renderable.class::cast)
             .toList();
     }
 
     public TextDisplay creditDisplay() {
         return creditDisplay;
-    }
-
-    public void addAdditionalEntity(GameEntity entity) {
-        additionalEntities.add(entity);
-        updateRenderables();
     }
 
     public void addAdditionalEntities(GameEntity... entities) {
