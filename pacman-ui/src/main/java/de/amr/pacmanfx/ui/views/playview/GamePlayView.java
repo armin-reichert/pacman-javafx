@@ -240,18 +240,19 @@ public class GamePlayView implements GameView {
         renderManager.renderQueue().addAll(layers.miniViewLayer().renderables());
 
         // Add game scene renderables
-        final GameScene currentGameScene = app.gameSceneManager().optCurrentGameScene().orElse(null);
+        final GameScene currentGameScene = app.gameSceneManager().optCurrentGameScene().orElseThrow();
         if (!(currentGameScene instanceof AbstractGameScene abstractGameScene)) {
 //            Logger.error("Current game scene is not an AbstractGameScene");
             return;
         }
 
-        renderManager.updateRenderers(
+        renderManager.createRenderers(
             app.variantManager().currentRuntime().playConfig(),
             app.variantManager().currentRuntime().uiConfig().renderConfig(),
-            currentGameScene,
+            abstractGameScene,
             layers.miniViewLayer()
         );
+
         renderManager.renderQueue().add(abstractGameScene); //TODO rethink this
         renderManager.renderQueue().addAll(currentGameScene.renderables());
 

@@ -6,18 +6,16 @@ package de.amr.pacmanfx.ui.rendering;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.ui.ecs.systems.ActorSpriteAnimController;
-import de.amr.pacmanfx.core.GameVariantPlayConfig;
-import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.ui.rendering.Renderable;
+import de.amr.basics.ui.rendering.Renderer;
+import de.amr.basics.ui.rendering.RenderingLayer;
+import de.amr.pacmanfx.core.GameVariantPlayConfig;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
-import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.views.miniview.MiniPlaySceneView;
 import de.amr.pacmanfx.ui.views.miniview.MiniViewOverlayRenderer;
-import de.amr.basics.ui.rendering.Renderer;
 import javafx.scene.canvas.Canvas;
-import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;
 
@@ -31,12 +29,14 @@ public class RenderManager {
 
     private final RenderQueue renderQueue = new RenderQueue();
 
+    private GameSceneCanvasRenderingComp sceneCanvasRendering;
+
     public RenderManager() {}
 
-    public void updateRenderers(
+    public void createRenderers(
         GameVariantPlayConfig playConfig,
         GameVariantRenderConfig renderConfig,
-        GameScene gameScene,
+        AbstractGameScene gameScene,
         MiniPlaySceneView miniView)
     {
         requireNonNull(playConfig);
@@ -44,40 +44,35 @@ public class RenderManager {
         requireNonNull(gameScene);
         requireNonNull(miniView);
 
-        if (!(gameScene instanceof AbstractGameScene abstractGameScene)) {
-            Logger.error("GameScene is not an instance of AbstractGameScene");
+        final ActorSpriteAnimController animController = playConfig.systems().actorSpriteAnimController();
+
+        //TODO This is just a temporary solution
+        miniViewOverlayRenderer = new MiniViewOverlayRenderer(miniView, animController, renderConfig);
+
+        // If this scene has 2D rendering support, create and configure renderers
+
+        sceneCanvasRendering = gameScene.optCanvasRendering().orElse(null);
+        if (sceneCanvasRendering == null) {
             return;
         }
 
-        final GameSceneCanvasRenderingComp sceneCanvasRendering = abstractGameScene.optCanvasRendering().orElse(null);
-        if (sceneCanvasRendering == null) {
-            return; // This scene cannot be rendered inside a canvas, most probably the 3D play scene
-        }
-
         final Canvas sceneCanvas = sceneCanvasRendering.canvas();
-        if (sceneCanvas != null) {
-            final ActorSpriteAnimController animController = playConfig.systems().actorSpriteAnimController();
-
-            variantRenderer    = renderConfig.createVariantRenderer(animController, sceneCanvas);
-            sceneRenderer      = renderConfig.createGameSceneRenderer(gameScene, animController, sceneCanvas); // may return null!
-            sceneDebugRenderer = renderConfig.createGameSceneDebugRenderer(gameScene, animController, sceneCanvas);
-            levelRenderer      = renderConfig.createGameLevelRenderer(animController, sceneCanvas);
-
-            final Vector2f offset = gameScene.renderOffset();
-            if (sceneRenderer != null) {
-                configureRenderer(sceneRenderer, sceneCanvasRendering, offset);
-            }
-            configureRenderer(variantRenderer, sceneCanvasRendering, offset);
-            configureRenderer(sceneDebugRenderer, sceneCanvasRendering, offset);
-            configureRenderer(levelRenderer, sceneCanvasRendering, offset);
-
-            //TODO This is just a temporary solution
-            // Mini view renderer has its own scaling and background
-            miniViewOverlayRenderer = new MiniViewOverlayRenderer(miniView, animController, renderConfig);
+        if (sceneCanvas == null) {
+            return;
         }
-        else {
-            Logger.error("Cannot create renderers: no canvas has been assigned to game scene!");
+
+        variantRenderer    = renderConfig.createVariantRenderer(animController, sceneCanvas);
+        sceneRenderer      = renderConfig.createGameSceneRenderer(gameScene, animController, sceneCanvas); // may return null!
+        sceneDebugRenderer = renderConfig.createGameSceneDebugRenderer(gameScene, animController, sceneCanvas);
+        levelRenderer      = renderConfig.createGameLevelRenderer(animController, sceneCanvas);
+
+        final Vector2f offset = gameScene.renderOffset();
+        if (sceneRenderer != null) {
+            configureRenderer(sceneRenderer, sceneCanvasRendering, offset);
         }
+        configureRenderer(variantRenderer, sceneCanvasRendering, offset);
+        configureRenderer(sceneDebugRenderer, sceneCanvasRendering, offset);
+        configureRenderer(levelRenderer, sceneCanvasRendering, offset);
     }
 
     public RenderQueue renderQueue() {
