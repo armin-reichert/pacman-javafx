@@ -28,7 +28,7 @@ import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameFlow;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.level.GameLevelEntities;
+import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 import de.amr.basics.ui.entities.props.messageview.MessageType;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.*;
@@ -128,7 +128,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         final GameRules rules = game.playConfig().rules();
         final GameSystems systems = game.playConfig().systems();
         final WorldMap worldMap = game.playConfig().worldMapManager().supplyWorldMap(levelNumber);
-        final var entities = new GameLevelEntities();
+        final var entities = new GameLevelEntitySet();
 
         createAndAddEntities(entities, worldMap.terrainLayer(), worldMap.foodLayer());
 
@@ -293,7 +293,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         return messageView;
     }
 
-    protected void createAndAddEntities(GameLevelEntities entities, TerrainLayer terrain, FoodLayer foodLayer) {
+    protected void createAndAddEntities(GameLevelEntitySet entities, TerrainLayer terrain, FoodLayer foodLayer) {
         final Vector2i houseMinTile = terrain.getTilePropertyOrDefault(
             WorldMapPropertyName.POS_HOUSE_MIN_TILE, ARCADE_MAP_HOUSE_MIN_TILE);
         terrain.propertyMap().put(WorldMapPropertyName.POS_HOUSE_MIN_TILE,  String.valueOf(houseMinTile));
@@ -327,7 +327,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         return ArcadePacMan_ActorFactory.instance();
     }
 
-    protected void configurePacAndGhosts(GameLevelEntities entities, GameSystems systems, TerrainLayer terrain) {
+    protected void configurePacAndGhosts(GameLevelEntitySet entities, GameSystems systems, TerrainLayer terrain) {
         entities.pac().autoSteering().setSteering(new RuleGuidedPacSteering(
             systems.navigator(), systems.pacWorldMovementPolicy()
         ));

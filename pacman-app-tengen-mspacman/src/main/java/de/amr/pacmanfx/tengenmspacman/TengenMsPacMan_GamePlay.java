@@ -31,7 +31,7 @@ import de.amr.pacmanfx.core.gameplay.CommonGamePlay;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.gamestate.GameFlow;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.level.GameLevelEntities;
+import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 import de.amr.basics.ui.entities.props.messageview.MessageType;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.*;
@@ -193,7 +193,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
         final var rules = (TengenMsPacMan_GameRules) game.playConfig().rules();
         final GameSystems systems = game.playConfig().systems();
-        final var entities = new GameLevelEntities();
+        final var entities = new GameLevelEntitySet();
 
         final WorldMap worldMap = game.playConfig().worldMapManager().supplyWorldMap(levelNumber, mapCategory);
 
@@ -237,7 +237,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         return level;
     }
 
-    private void createAndAddEntities(GameLevelEntities entities, GameSession session, WorldMap worldMap) {
+    private void createAndAddEntities(GameLevelEntitySet entities, GameSession session, WorldMap worldMap) {
         final House house = HouseFactory.createArcadeHouse(HOUSE_MIN_TILE);
         final NES_WorldMapColorScheme colorScheme = worldMap.getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
         final MessageView messageView = createMessageView(house, session, colorScheme);
@@ -258,7 +258,7 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         entities.add(orangeGhost);
     }
 
-    private void configurePacAndGhosts(GameLevelEntities entities, GameSystems systems, TerrainLayer terrain) {
+    private void configurePacAndGhosts(GameLevelEntitySet entities, GameSystems systems, TerrainLayer terrain) {
         entities.pac().autoSteering().setSteering(new RuleGuidedPacSteering(
             systems.navigator(), systems.pacWorldMovementPolicy()
         ));

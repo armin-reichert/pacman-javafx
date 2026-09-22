@@ -31,7 +31,7 @@ public class GameLevel implements Renderable {
     private final int number; // 1=first level
 
     private WorldMap worldMap;
-    private GameLevelEntities entities;
+    private GameLevelEntitySet entities;
     private Pulse heartbeat;
     private List<Integer> bonusSymbolCodes;
     private HuntingTimer huntingTimer;
@@ -45,7 +45,7 @@ public class GameLevel implements Renderable {
         this.number = requireValidLevelNumber(number);
     }
 
-    public GameLevel(int number, WorldMap worldMap, GameLevelEntities entities, HuntingTimer huntingTimer) {
+    public GameLevel(int number, WorldMap worldMap, GameLevelEntitySet entities, HuntingTimer huntingTimer) {
         this.number = requireValidLevelNumber(number);
         this.worldMap = requireNonNull(worldMap);
         this.entities = requireNonNull(entities);
@@ -119,11 +119,11 @@ public class GameLevel implements Renderable {
         return ghostKillCount;
     }
 
-    public void setEntities(GameLevelEntities entities) {
+    public void setEntities(GameLevelEntitySet entities) {
         this.entities = entities;
     }
 
-    public GameLevelEntities entitySet() {
+    public GameLevelEntitySet entitySet() {
         return entities;
     }
 

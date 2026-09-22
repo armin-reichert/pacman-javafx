@@ -25,7 +25,7 @@ import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.core.level.GameLevelEntities;
+import de.amr.pacmanfx.core.level.GameLevelEntitySet;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
@@ -80,7 +80,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
     }
 
     @Override
-    protected void configurePacAndGhosts(GameLevelEntities entities, GameSystems systems, TerrainLayer terrain) {
+    protected void configurePacAndGhosts(GameLevelEntitySet entities, GameSystems systems, TerrainLayer terrain) {
         entities.pac().autoSteering().setSteering(new RuleGuidedPacSteering(
             systems.navigator(), systems.pacWorldMovementPolicy()
         ));

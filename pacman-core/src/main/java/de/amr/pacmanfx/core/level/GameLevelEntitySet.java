@@ -21,7 +21,7 @@ import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
 
-public class GameLevelEntities {
+public class GameLevelEntitySet {
 
     private final QuerySet<GameEntity> entities = new QuerySet<>();
 
