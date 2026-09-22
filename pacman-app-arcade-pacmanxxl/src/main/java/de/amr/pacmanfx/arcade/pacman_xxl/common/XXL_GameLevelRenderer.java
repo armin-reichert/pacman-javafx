@@ -4,6 +4,7 @@
 package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
 import de.amr.basics.InfoMap;
+import de.amr.basics.math.Vector2f;
 import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
@@ -27,7 +28,7 @@ public class XXL_GameLevelRenderer extends GenericLevelRenderer {
     @Override
     public void render(Renderable r, long tick) {
         switch (r) {
-            case RenderableGameLevel(GameLevel level, InfoMap _, RenderingLayer _, int _) -> {
+            case RenderableGameLevel(GameLevel level, InfoMap _, RenderingLayer _, int _, Vector2f _) -> {
                 //TODO don't do this in every render frame
                 final GenericWorldMapColorScheme worldMapColorScheme = level.worldMap().getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
                 final var mapColoring = new TerrainMapColoring(

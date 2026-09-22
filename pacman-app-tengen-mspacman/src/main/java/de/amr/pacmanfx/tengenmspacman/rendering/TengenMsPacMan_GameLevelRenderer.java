@@ -6,6 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.InfoMap;
 import de.amr.basics.math.RectShort;
+import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.basics.ui.rendering.RenderingLayer;
@@ -27,7 +28,6 @@ import javafx.scene.paint.Color;
 
 import java.util.Optional;
 
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static java.util.function.Predicate.not;
 
 public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer {
@@ -45,7 +45,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer {
 
     @Override
     public void render(Renderable r, long tick) {
-        if (r instanceof RenderableGameLevel(GameLevel level, InfoMap renderInfo, RenderingLayer _, int _)) {
+        if (r instanceof RenderableGameLevel(GameLevel level, InfoMap renderInfo, RenderingLayer _, int _, Vector2f _)) {
             renderGameLevel(level, renderInfo);
         }
     }
@@ -55,6 +55,8 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer {
         final TerrainLayer terrainLayer = worldMap.terrainLayer();
         final FoodLayer foodLayer = worldMap.foodLayer();
 
+        ctx.save();
+
         drawMaze(renderInfo, 0, terrainLayer.emptyRowsOverMaze() * TS);
         final House house = level.entitySet().entities().theOne(House.class);
         overPaintActorSprites(house, terrainLayer);
@@ -62,6 +64,8 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer {
         final FoodState foodState = level.food();
         final boolean blinkingOn = level.heartbeat().state() == Pulse.State.ON;
         drawFood(worldMap, foodLayer, foodState, blinkingOn);
+
+        ctx.restore();
     }
 
     private void drawMaze(InfoMap renderInfo, int x, int y) {

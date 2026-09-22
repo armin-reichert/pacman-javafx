@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.basics.InfoMap;
 import de.amr.basics.math.RectShort;
+import de.amr.basics.math.Vector2f;
 import de.amr.basics.ui.ecs.systems.ActorSpriteAnimController;
 import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.pacmanfx.core.Energizer;
@@ -56,8 +57,8 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer {
     @Override
     public void render(Renderable r, long tick) {
         switch (r) {
-            case RenderableGameLevel(GameLevel level, InfoMap renderInfo, RenderingLayer _, int _) -> renderGameLevel(level, renderInfo);
-            case RenderableGameEntity(Energizer energizer, RenderingLayer _, int _) -> hideEnergizerIfOff(energizer);
+            case RenderableGameLevel(GameLevel level, InfoMap renderInfo, RenderingLayer _, int _, Vector2f _) -> renderGameLevel(level, renderInfo);
+            case RenderableGameEntity(Energizer energizer, RenderingLayer _, int _, Vector2f _) -> hideEnergizerIfOff(energizer);
             default -> {}
         }
     }

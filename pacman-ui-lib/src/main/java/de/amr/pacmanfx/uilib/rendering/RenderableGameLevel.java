@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.uilib.rendering;
 
 import de.amr.basics.InfoMap;
+import de.amr.basics.math.Vector2f;
 import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.basics.ui.rendering.Renderable;
@@ -17,4 +18,4 @@ import de.amr.basics.ui.rendering.Renderable;
  * @param layer the rendering layer e.g. {@link RenderingLayer#LEVEL}
  * @param z the z-layer value
  */
-public record RenderableGameLevel(GameLevel level, InfoMap renderInfo, RenderingLayer layer, int z) implements Renderable {}
+public record RenderableGameLevel(GameLevel level, InfoMap renderInfo, RenderingLayer layer, int z, Vector2f offset) implements Renderable {}

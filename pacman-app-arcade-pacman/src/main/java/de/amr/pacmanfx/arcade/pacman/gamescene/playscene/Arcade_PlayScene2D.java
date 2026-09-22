@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.arcade.pacman.gamescene.playscene;
 
 import de.amr.basics.InfoMap;
+import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.basics.ui.rendering.RenderingLayer;
@@ -158,7 +159,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
         renderInfo.put(LevelRenderInfoKey.ENERGIZERS_SHOWN, level.heartbeat().state() == Pulse.State.ON);
         renderInfo.put(LevelRenderInfoKey.SHOW_EMPTY_MAZE, level.food().remainingFoodCount() == 0);
         updateFlashingRenderInfo(renderInfo);
-        return new RenderableGameLevel(level, renderInfo, RenderingLayer.LEVEL, 0);
+        return new RenderableGameLevel(level, renderInfo, RenderingLayer.LEVEL, 0, Vector2f.ZERO);
     }
 
     private void updateFlashingRenderInfo(InfoMap renderInfo) {

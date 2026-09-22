@@ -8,6 +8,7 @@ import de.amr.basics.InfoMap;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.ui.ecs.systems.ActorSpriteAnimController;
+import de.amr.basics.ui.rendering.RenderableGameEntity;
 import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.util.Ufx;
@@ -73,6 +74,8 @@ import static de.amr.pacmanfx.ui.views.ContextMenuSupport.*;
  */
 public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
 
+    static final Vector2f RENDER_OFFSET = new Vector2f(2 * WorldMap.TS, 0);
+
     private final DoubleProperty canvasHeightUnscaled = new SimpleDoubleProperty(NES_SCREEN_HEIGHT);
 
     private final StackPane rootPane = new StackPane();
@@ -93,11 +96,6 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         subScene = new SubScene(rootPane, 88, 88);
         subScene.heightProperty().addListener((_, _, _) -> updateScaling());
         subScene.cameraProperty().addListener((_, _, _) -> updateScaling());
-    }
-
-    @Override
-    public Vector2f renderOffset() {
-        return new Vector2f(16, 0); // 2 tiles offset
     }
 
     @Override
@@ -125,7 +123,13 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
         final GameVariantRenderConfig renderConfig = app().variantManager().currentRuntime().uiConfig().renderConfig();
         return Ufx.streamOf(
             createRenderableLevel(level, tick),
-            level.entitySet().all().map(renderConfig::renderable)
+
+            //TODO simplify!
+            level.entitySet().all()
+                .map(renderConfig::renderable)
+                .filter(r -> r instanceof RenderableGameEntity rge)
+                .map(r -> (RenderableGameEntity) r)
+                .map(rge -> rge.offset(RENDER_OFFSET))
 
             // In Tengen, the ghosts are drawn under(!) the house door, so reassign the door's z-index:
 //            assignLayer(level.entities().house().door(), RenderingLayer.SCENE, 100)
@@ -425,7 +429,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
             }
         }
 
-        return new RenderableGameLevel(level, renderInfo, RenderingLayer.LEVEL, 0);
+        return new RenderableGameLevel(level, renderInfo, RenderingLayer.LEVEL, 0, RENDER_OFFSET);
     }
 
     /**

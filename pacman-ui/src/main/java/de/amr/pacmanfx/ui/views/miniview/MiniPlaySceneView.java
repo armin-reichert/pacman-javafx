@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.ui.views.miniview;
 
 import de.amr.basics.InfoMap;
+import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.basics.ui.rendering.Renderable;
@@ -180,6 +181,6 @@ public class MiniPlaySceneView extends HBox {
         info.put(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, false);
         info.put(LevelRenderInfoKey.SHOW_EMPTY_MAZE, level.food().remainingFoodCount() == 0);
         info.put(LevelRenderInfoKey.MAZE_IS_FLASHING, false);
-        return new RenderableGameLevel(level, info, RenderingLayer.MINIVIEW_OVERLAY, 0);
+        return new RenderableGameLevel(level, info, RenderingLayer.MINIVIEW_OVERLAY, 0, Vector2f.ZERO);
     }
 }

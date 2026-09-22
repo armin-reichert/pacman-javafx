@@ -32,8 +32,6 @@ public class RenderManager {
     private Renderer sceneDebugRenderer;
     private Renderer miniViewOverlayRenderer;
 
-    private Vector2f currentOffset = Vector2f.ZERO;
-
     public RenderManager() {
         clearAllRenderers();
     }
@@ -74,8 +72,6 @@ public class RenderManager {
             return;
         }
 
-        currentOffset = gameScene.renderOffset();
-
         variantRenderer    = renderConfig.createVariantRenderer(animController, sceneCanvas);
         sceneRenderer      = renderConfig.createGameSceneRenderer(gameScene, animController, sceneCanvas); // may return null!
         sceneDebugRenderer = renderConfig.createGameSceneDebugRenderer(gameScene, animController, sceneCanvas);
@@ -108,10 +104,10 @@ public class RenderManager {
         renderQueue.renderables().forEach(r -> {
             switch (r.layer()) {
                 case MINIVIEW_OVERLAY -> miniViewOverlayRenderer.render(r, tick);
-                case SCENE -> renderWithOffset(r, sceneRenderer, tick); //TODO get rid of scene renderers
-                case LEVEL -> renderWithOffset(r, levelRenderer, tick);
+                case SCENE -> render(r, sceneRenderer, tick); //TODO get rid of scene renderers
+                case LEVEL -> render(r, levelRenderer, tick);
                 case HUD -> variantRenderer.render(r, tick);
-                default -> renderWithOffset(r, variantRenderer, tick);
+                default -> render(r, variantRenderer, tick);
             }
         });
 
@@ -122,10 +118,10 @@ public class RenderManager {
         }
     }
 
-    private void renderWithOffset(Renderable r, Renderer renderer, long tick) {
+    private void render(Renderable r, Renderer renderer, long tick) {
         if (renderer != Renderer.NULL_RENDERER) {
+            final Vector2f offset = r.offset().scaled(renderer.scaling());
             final GraphicsContext ctx = renderer.ctx();
-            final Vector2f offset = currentOffset.scaled(renderer.scaling());
             ctx.save();
             ctx.translate(offset.x(), offset.y());
             renderer.render(r, tick);
