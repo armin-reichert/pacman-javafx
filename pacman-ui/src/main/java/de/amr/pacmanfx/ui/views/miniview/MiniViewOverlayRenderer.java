@@ -8,7 +8,7 @@ import de.amr.basics.ui.ecs.systems.ActorSpriteAnimController;
 import de.amr.basics.ui.rendering.BaseRenderer;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.rendering.Renderer;
-import de.amr.basics.ui.rendering.RenderableObject;
+import de.amr.basics.ui.rendering.RenderableWrapper;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.uilib.rendering.RenderableGameLevel;
 
@@ -40,7 +40,7 @@ public class MiniViewOverlayRenderer extends BaseRenderer {
     public void render(Renderable r, long tick) {
         switch (r) {
             case RenderableGameLevel _ -> levelRenderer.render(r, tick);
-            case RenderableObject wrapper -> render(wrapper.content(), tick);
+            case RenderableWrapper wrapper -> render(wrapper.content(), tick);
             default -> entityRenderer.render(r, tick);
         }
     }

@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 import de.amr.basics.InfoMap;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.ui.ecs.systems.ActorSpriteAnimController;
+import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.pacmanfx.core.Energizer;
 import de.amr.pacmanfx.core.entities.world.door.Door;
 import de.amr.pacmanfx.core.entities.world.house.House;
@@ -28,7 +29,6 @@ import javafx.scene.image.Image;
 
 import java.util.Optional;
 
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
@@ -56,14 +56,8 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer {
     @Override
     public void render(Renderable r, long tick) {
         switch (r) {
-            case RenderableGameLevel(GameLevel level, InfoMap renderInfo) -> renderGameLevel(level, renderInfo);
-            case RenderableGameEntity rge -> {
-                switch (rge.gameEntity()) {
-                    case Energizer energizer -> hideEnergizerIfOff(energizer);
-                    case House house -> {} //TODO not yet used
-                    default -> {}
-                }
-            }
+            case RenderableGameLevel(GameLevel level, InfoMap renderInfo, RenderingLayer _, int _) -> renderGameLevel(level, renderInfo);
+            case RenderableGameEntity(Energizer energizer, RenderingLayer _, int _) -> hideEnergizerIfOff(energizer);
             default -> {}
         }
     }

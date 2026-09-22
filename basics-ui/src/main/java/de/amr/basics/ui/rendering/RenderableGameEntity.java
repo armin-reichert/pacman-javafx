@@ -15,4 +15,12 @@ public record RenderableGameEntity(GameEntity gameEntity, RenderingLayer layer, 
         this.layer = requireNonNull(layer);
         this.z = z;
     }
+
+    public RenderableGameEntity change(RenderingLayer newLayer) {
+        return new RenderableGameEntity(gameEntity, newLayer, z);
+    }
+
+    public RenderableGameEntity change(RenderingLayer newLayer, int newZ) {
+        return new RenderableGameEntity(gameEntity, newLayer, newZ);
+    }
 }

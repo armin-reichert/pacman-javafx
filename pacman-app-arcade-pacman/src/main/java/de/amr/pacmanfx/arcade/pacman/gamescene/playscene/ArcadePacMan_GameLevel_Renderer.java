@@ -6,6 +6,11 @@ package de.amr.pacmanfx.arcade.pacman.gamescene.playscene;
 
 import de.amr.basics.InfoMap;
 import de.amr.basics.math.RectShort;
+import de.amr.basics.ui.assets.SpriteSheet;
+import de.amr.basics.ui.rendering.BaseRenderer;
+import de.amr.basics.ui.rendering.Renderable;
+import de.amr.basics.ui.rendering.RenderableGameEntity;
+import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_RenderConfig;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
@@ -17,10 +22,6 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.FoodState;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
-import de.amr.basics.ui.rendering.Renderable;
-import de.amr.basics.ui.rendering.RenderableGameEntity;
-import de.amr.basics.ui.assets.SpriteSheet;
-import de.amr.basics.ui.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
 import de.amr.pacmanfx.uilib.rendering.RenderableGameLevel;
 import javafx.scene.canvas.Canvas;
@@ -28,7 +29,6 @@ import javafx.scene.image.Image;
 
 import java.util.Optional;
 
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static java.util.function.Predicate.not;
 
 /**
@@ -54,13 +54,8 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer {
     @Override
     public void render(Renderable r, long tick) {
         switch (r) {
-            case RenderableGameLevel(GameLevel level, InfoMap renderInfo) -> renderGameLevel(level, renderInfo);
-            case RenderableGameEntity rge -> {
-                switch (rge.gameEntity()) {
-                    case Energizer energizer -> hideEnergizerIfOff(energizer);
-                    default -> {}
-                }
-            }
+            case RenderableGameLevel(GameLevel level, InfoMap renderInfo, RenderingLayer _, int _) -> renderGameLevel(level, renderInfo);
+            case RenderableGameEntity(Energizer energizer, RenderingLayer _, int _) -> hideEnergizerIfOff(energizer);
             default -> {}
         }
     }

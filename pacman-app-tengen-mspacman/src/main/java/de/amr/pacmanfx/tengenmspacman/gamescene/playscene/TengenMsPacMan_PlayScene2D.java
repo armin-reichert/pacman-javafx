@@ -8,6 +8,7 @@ import de.amr.basics.InfoMap;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.ui.ecs.systems.ActorSpriteAnimController;
+import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
@@ -424,7 +425,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
             }
         }
 
-        return new RenderableGameLevel(level, renderInfo);
+        return new RenderableGameLevel(level, renderInfo, RenderingLayer.WORLD, 0);
     }
 
     /**

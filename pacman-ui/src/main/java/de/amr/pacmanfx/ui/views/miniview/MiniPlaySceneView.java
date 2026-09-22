@@ -35,7 +35,6 @@ import javafx.util.Duration;
 
 import java.util.stream.Stream;
 
-import static de.amr.basics.ui.rendering.RenderableObject.assignLayer;
 import static de.amr.pacmanfx.game.GameVariantRenderConfig.renderableGameEntity;
 import static java.util.Objects.requireNonNull;
 
@@ -111,8 +110,9 @@ public class MiniPlaySceneView extends HBox {
         if (!isVisible() || level == null) return Stream.empty();
 
         return Ufx.streamOf(
-            assignLayer(createRenderableLevel(level), RenderingLayer.MINIVIEW_OVERLAY, 0),
-            level.entitySet().entities().all().map(entity -> renderableGameEntity(entity, RenderingLayer.MINIVIEW_OVERLAY, 0))
+            createRenderableLevel(level),
+            level.entitySet().entities().all()
+                .map(entity -> renderableGameEntity(entity, RenderingLayer.MINIVIEW_OVERLAY, 0))
         );
     }
 
@@ -180,6 +180,6 @@ public class MiniPlaySceneView extends HBox {
         info.put(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, false);
         info.put(LevelRenderInfoKey.SHOW_EMPTY_MAZE, level.food().remainingFoodCount() == 0);
         info.put(LevelRenderInfoKey.MAZE_IS_FLASHING, false);
-        return new RenderableGameLevel(level, info);
+        return new RenderableGameLevel(level, info, RenderingLayer.MINIVIEW_OVERLAY, 0);
     }
 }

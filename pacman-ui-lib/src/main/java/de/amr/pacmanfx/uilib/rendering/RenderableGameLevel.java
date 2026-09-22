@@ -9,10 +9,12 @@ import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.basics.ui.rendering.Renderable;
 
-public record RenderableGameLevel(GameLevel level, InfoMap renderInfo) implements Renderable {
-
-    @Override
-    public RenderingLayer layer() {
-        return RenderingLayer.WORLD;
-    }
-}
+/**
+ * Renderable game level object.
+ *
+ * @param level the game level
+ * @param renderInfo information for the game level renderer
+ * @param layer the rendering layer e.g. {@link RenderingLayer#WORLD}
+ * @param z the z-layer value
+ */
+public record RenderableGameLevel(GameLevel level, InfoMap renderInfo, RenderingLayer layer, int z) implements Renderable {}

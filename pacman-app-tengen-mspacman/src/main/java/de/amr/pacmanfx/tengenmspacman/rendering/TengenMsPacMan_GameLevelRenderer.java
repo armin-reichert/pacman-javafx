@@ -8,6 +8,7 @@ import de.amr.basics.InfoMap;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
+import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.pacmanfx.core.entities.world.house.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.*;
@@ -44,7 +45,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer {
 
     @Override
     public void render(Renderable r, long tick) {
-        if (r instanceof RenderableGameLevel(GameLevel level, InfoMap renderInfo)) {
+        if (r instanceof RenderableGameLevel(GameLevel level, InfoMap renderInfo, RenderingLayer _, int _)) {
             renderGameLevel(level, renderInfo);
         }
     }
