@@ -6,17 +6,13 @@ package de.amr.pacmanfx.core.level;
 
 import de.amr.basics.QuerySet;
 import de.amr.basics.ui.ecs.GameEntity;
-import de.amr.basics.ui.ecs.GameEntityComp;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static java.util.Objects.requireNonNull;
@@ -35,25 +31,20 @@ public class GameLevelEntitySet {
         entities.remove(entity);
     }
 
-    public void removeAll() {
-        all().collect(Collectors.toCollection(ArrayList::new)).forEach(this::remove);
+    public void clear() {
+        entities.clear();
     }
 
     public Stream<? extends GameEntity> all() {
         return entities.all();
     }
 
-    @SafeVarargs
-    public final Stream<? extends GameEntity> allWithComponents(Class<? extends GameEntityComp>... componentClasses) {
-        return all().filter(entity -> Stream.of(componentClasses).allMatch(entity::hasComp));
-    }
-
     public QuerySet<GameEntity> entities() {
         return entities;
     }
 
-    public List<Ghost> ghosts() {
-        return entities.ofType(Ghost.class).sorted(Comparator.comparing(Ghost::personality)).toList();
+    public Stream<Ghost> ghosts() {
+        return entities.ofType(Ghost.class).sorted(Comparator.comparing(Ghost::personality));
     }
 
     public Stream<Ghost> ghostsInState(GhostState state) {

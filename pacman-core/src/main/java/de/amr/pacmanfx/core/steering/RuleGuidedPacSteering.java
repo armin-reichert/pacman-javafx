@@ -319,7 +319,7 @@ public class RuleGuidedPacSteering implements Steering<Pac> {
 
     private float minDistanceFromGhosts(GameLevel level, Pac pac) {
         final Vector2i pacTile = pac.pos().tile();
-        return (float) level.entitySet().ghosts().stream()
+        return (float) level.entitySet().ghosts()
             .map(ghost -> ghost.pos().tile())
             .mapToDouble(pacTile::manhattanDist)
             .min()

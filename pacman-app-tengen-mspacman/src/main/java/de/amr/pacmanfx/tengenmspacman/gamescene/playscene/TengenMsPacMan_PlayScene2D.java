@@ -13,7 +13,6 @@ import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.HUD;
-import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.door.DoorDataComp;
 import de.amr.pacmanfx.core.entities.world.house.House;
@@ -379,12 +378,12 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
             eventHandler.resetPacAnimation(animController, boosterEnabled, pac);
         }
 
-        for (Ghost ghost : level.entitySet().ghosts()) {
+        level.entitySet().ghosts().forEach(ghost -> {
             if (animController.hasNoAnimations(ghost)) {
                 animController.setAnimations(ghost, renderConfig.createGhostAnimations(animContainer, ghost.personality()));
                 eventHandler.resetGhostAnimation(animController, ghost);
             }
-        }
+        });
     }
 
     private RenderableGameLevel createRenderableLevel(GameLevel level, long tick) {

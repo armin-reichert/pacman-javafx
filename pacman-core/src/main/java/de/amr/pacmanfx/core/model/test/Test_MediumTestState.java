@@ -4,15 +4,12 @@
 package de.amr.pacmanfx.core.model.test;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.event.StopAllSoundsEvent;
 import de.amr.pacmanfx.core.event.gameplay.LevelCreatedEvent;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
-
-import java.util.List;
 
 public class Test_MediumTestState extends AbstractGameState {
 
@@ -90,8 +87,7 @@ public class Test_MediumTestState extends AbstractGameState {
         pac.cheats().usingAutopilotProperty().unbind();
         pac.cheats().setUsingAutopilot(true);
 
-        final List<Ghost> ghosts = level.entitySet().ghosts();
-        ghosts.forEach(ghost -> {
+        level.entitySet().ghosts().forEach(ghost -> {
             ghost.show();
             systems.actorSpriteAnimController().playSelected(ghost);
         });

@@ -226,7 +226,7 @@ public class GameLevel3DAnimationManager implements Disposable {
     private void createEnergizerParticlesAnimation(Maze3D maze3D, GameLevel level) {
         final ExplosionConfig explosionConfig = particlesAnimationConfig.explosion();
 
-        final List<PhongMaterial> ghostDressMaterials = level.entitySet().ghosts().stream()
+        final List<PhongMaterial> ghostDressMaterials = level.entitySet().ghosts()
             .map(ghost -> ghost.reqComp(Ghost3DViewComp.class))
             .map(ghostView3D -> ghostView3D.appearanceMaterialSet().normal().dress())
             .toList();
@@ -258,7 +258,7 @@ public class GameLevel3DAnimationManager implements Disposable {
     }
 
     private void createGhostLightAnimation(GameVariantUIConfig gameVariantConfig, GameLevel level, PointLight ghostHunterLight) {
-        final var animation = new GhostLightRelayAnimation(ghostHunterLight, level.entitySet().ghosts(),
+        final var animation = new GhostLightRelayAnimation(ghostHunterLight, level.entitySet().ghosts().toList(),
             gameVariantConfig.worldSettings().ghosts());
         registry.register(AnimationID.GHOST_LIGHT, animation);
     }

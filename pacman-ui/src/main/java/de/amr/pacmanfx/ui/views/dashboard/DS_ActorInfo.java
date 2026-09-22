@@ -138,7 +138,7 @@ public class DS_ActorInfo extends GameDashboardSection {
         BiFunction<GameLevel, Ghost, String> infoSupplier, GhostPersonality personality) {
 
         return fnLevelInfo(appContext, level -> {
-            if (!level.entitySet().ghosts().isEmpty()) {
+            if (level.entitySet().ghosts().findAny().isPresent()) {
                 return infoSupplier.apply(level, level.entitySet().ghost(personality));
             }
             return NO_INFO;
@@ -173,7 +173,7 @@ public class DS_ActorInfo extends GameDashboardSection {
         if (id == null) {
             return NO_INFO;
         }
-        if (animSystem.animation(ghost, id) instanceof SpriteAnimation spriteAnimation) {
+        if (animSystem.animation(ghost, id) instanceof SpriteAnimation) {
             final boolean stopped = ghost.animation().isStopped();
             final boolean locked = ghost.animation().isLocked();
             String statusText = "";

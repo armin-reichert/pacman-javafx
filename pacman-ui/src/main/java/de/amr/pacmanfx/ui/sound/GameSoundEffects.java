@@ -197,7 +197,7 @@ public class GameSoundEffects implements Disposable {
         }
         if (CommonGameStateID.GAME_LEVEL_PLAYING.hasSameNameAs(game.state())) {
             playSiren(game);
-            playGhostSounds(level.entitySet().pac(), level.entitySet().ghosts());
+            playGhostSounds(level.entitySet().pac(), level.entitySet().ghosts().toList());
         }
     }
 

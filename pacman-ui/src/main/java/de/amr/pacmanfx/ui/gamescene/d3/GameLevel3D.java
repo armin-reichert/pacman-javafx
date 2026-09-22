@@ -98,7 +98,7 @@ public class GameLevel3D implements DisposableGraphicsObject {
         final WorldMap worldMap = level.worldMap();
         final House house = level.entitySet().entities().theOne(House.class);
         final Pac pac = level.entitySet().pac();
-        final List<Ghost> ghosts = level.entitySet().ghosts();
+        final List<Ghost> ghosts = level.entitySet().ghosts().toList();
 
         final LevelCounter levelCounter = session.hud().levelCounter();
         final LivesCounter livesCounter = session.hud().livesCounter();
@@ -184,9 +184,7 @@ public class GameLevel3D implements DisposableGraphicsObject {
     public void setDrawMode(DrawMode drawMode) {
         requireNonNull(drawMode);
         Ufx.setDrawMode(level.entitySet().pac().reqComp(Pac3DViewComp.class).root(), drawMode);
-        for (var ghost : level.entitySet().ghosts()) {
-            Ufx.setDrawMode(ghost.reqComp(Ghost3DViewComp.class).root(), drawMode);
-        }
+        level.entitySet().ghosts().forEach(ghost -> Ufx.setDrawMode(ghost.reqComp(Ghost3DViewComp.class).root(), drawMode));
         Ufx.setDrawMode(maze3D.root(), drawMode);
     }
 

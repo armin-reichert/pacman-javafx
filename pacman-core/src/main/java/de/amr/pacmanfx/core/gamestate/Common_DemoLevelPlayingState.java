@@ -83,7 +83,7 @@ public final class Common_DemoLevelPlayingState extends AbstractGameState {
     }
 
     private void clear(GameContext game) {
-        game.session().level().entitySet().removeAll();
+        game.session().level().entitySet().clear();
         game.session().setLevel(null);
         Logger.info("Demo level has been removed");
     }

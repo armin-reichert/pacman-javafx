@@ -48,7 +48,7 @@ public class ActorCollisionHandler {
 
     public void detectPacGhostCollision(GameLevel level) {
         final Pac pac = level.entitySet().pac();
-        final List<Ghost> ghosts = level.entitySet().ghosts();
+        final List<Ghost> ghosts = level.entitySet().ghosts().toList();
         frameState.ghostsCollidingWithPac().clear();
         ghosts.stream()
             .filter(ghost -> strategy.collide(pac, ghost))
