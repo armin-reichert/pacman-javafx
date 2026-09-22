@@ -5,12 +5,10 @@
 package de.amr.basics.ui.entities.hud.score;
 
 import de.amr.basics.ui.ecs.GameEntity;
-import de.amr.basics.ui.rendering.RenderingLayer;
-import de.amr.basics.ui.rendering.Renderable;
 
 import static java.util.Objects.requireNonNull;
 
-public class Score extends GameEntity implements Renderable {
+public class Score extends GameEntity {
 
     public enum Type { GAME_SCORE, HIGH_SCORE }
 
@@ -19,11 +17,6 @@ public class Score extends GameEntity implements Renderable {
     public Score(Type type) {
         this.type = requireNonNull(type);
         setComp(ScoreDataComp.class, new ScoreDataComp());
-    }
-
-    @Override
-    public RenderingLayer layer() {
-        return RenderingLayer.HUD;
     }
 
     public Type type() {

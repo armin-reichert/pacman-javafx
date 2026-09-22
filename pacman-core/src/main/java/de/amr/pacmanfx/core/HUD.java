@@ -2,12 +2,14 @@ package de.amr.pacmanfx.core;
 
 import de.amr.basics.QuerySet;
 import de.amr.basics.ui.ecs.GameEntity;
-import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
-import de.amr.basics.ui.entities.props.textdisplay.TextDisplay;
 import de.amr.basics.ui.entities.hud.levelCounter.LevelCounter;
+import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
 import de.amr.basics.ui.entities.hud.score.Score;
-import de.amr.pacmanfx.core.entities.hud.ScoreSystem;
+import de.amr.basics.ui.entities.props.textdisplay.TextDisplay;
 import de.amr.basics.ui.rendering.Renderable;
+import de.amr.basics.ui.rendering.RenderableGameEntity;
+import de.amr.basics.ui.rendering.RenderingLayer;
+import de.amr.pacmanfx.core.entities.hud.ScoreSystem;
 
 import java.util.stream.Stream;
 
@@ -38,9 +40,9 @@ public class HUD {
     }
 
     public Stream<Renderable> renderables() {
-        return entities.all()
-            .filter(GameEntity::isVisible)
-            .filter(Renderable.class::isInstance).map(Renderable.class::cast);
+        return entities.all().filter(GameEntity::isVisible)
+            .map(e -> new RenderableGameEntity(e, RenderingLayer.HUD, 0)
+        );
     }
 
     public TextDisplay creditDisplay() {

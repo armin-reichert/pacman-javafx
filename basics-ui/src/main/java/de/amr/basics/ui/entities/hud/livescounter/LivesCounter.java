@@ -5,18 +5,11 @@
 package de.amr.basics.ui.entities.hud.livescounter;
 
 import de.amr.basics.ui.ecs.GameEntity;
-import de.amr.basics.ui.rendering.RenderingLayer;
-import de.amr.basics.ui.rendering.Renderable;
 
-public class LivesCounter extends GameEntity implements Renderable {
+public class LivesCounter extends GameEntity {
 
     public LivesCounter() {
         setComp(LivesCounterDataComp.class, new LivesCounterDataComp());
-    }
-
-    @Override
-    public RenderingLayer layer() {
-        return RenderingLayer.HUD;
     }
 
     public LivesCounterDataComp data() {
