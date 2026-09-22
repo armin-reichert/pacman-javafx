@@ -49,7 +49,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
     public static final byte OPTION_PLAYERS = 0;
     public static final byte OPTION_PAC_BOOSTER = 1;
     public static final byte OPTION_DIFFICULTY = 2;
-    public static final byte OPTION_MAZE_SELECTION = 3;
+    public static final byte OPTION_MAP_CATEGORY = 3;
     public static final byte OPTION_STARTING_LEVEL = 4;
 
     public static final byte NUM_OPTIONS = 5;
@@ -96,12 +96,34 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         );
     }
 
+    private RenderableMenuOption renderableGameDifficultyOption() {
+        final Difficulty difficulty = gameOptions(game().session()).difficulty();
+        return new RenderableMenuOption(
+            selectedOption() == OPTION_DIFFICULTY,
+            "GAME DIFFICULTY",
+            difficulty.name(),
+            RenderingLayer.SCENE, 0, new Vector2f(0, 7.5f * Renderer.TS)
+        );
+    }
+
+    private RenderableMenuOption renderableMapCategoryOption() {
+        final MapCategory mapCategory = gameOptions(game().session()).mapCategory();
+        return new RenderableMenuOption(
+            selectedOption() == OPTION_MAP_CATEGORY,
+            "MAZE SELECTION",
+            mapCategory.name(),
+            RenderingLayer.SCENE, 0, new Vector2f(0, 9f * Renderer.TS)
+        );
+    }
+
     @Override
     public Stream<Renderable> renderables() {
         if (initialDelay > 0) return Stream.empty();
 
         return Ufx.streamOf(
-            renderableBoosterModeOption()
+            renderableBoosterModeOption(),
+            renderableGameDifficultyOption(),
+            renderableMapCategoryOption()
         );
     }
 
@@ -163,7 +185,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
             switch (selectedOption()) {
                 case OPTION_PAC_BOOSTER    -> setNextPacBoosterValue(session);
                 case OPTION_DIFFICULTY     -> setNextDifficultyValue(session);
-                case OPTION_MAZE_SELECTION -> setNextMapCategoryValue(session);
+                case OPTION_MAP_CATEGORY -> setNextMapCategoryValue(session);
                 case OPTION_STARTING_LEVEL -> setNextStartLevelValue();
             }
         }
@@ -172,7 +194,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
             switch (selectedOption()) {
                 case OPTION_PAC_BOOSTER    -> setPrevPacBoosterValue(session);
                 case OPTION_DIFFICULTY     -> setPrevDifficultyValue(session);
-                case OPTION_MAZE_SELECTION -> setPrevMapCategoryValue(session);
+                case OPTION_MAP_CATEGORY -> setPrevMapCategoryValue(session);
                 case OPTION_STARTING_LEVEL -> setPrevStartLevelValue();
             }
         }

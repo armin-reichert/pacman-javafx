@@ -5,8 +5,6 @@
 package de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene;
 
 import de.amr.basics.math.RectShort;
-import de.amr.basics.math.Vector2f;
-import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
@@ -21,9 +19,7 @@ import de.amr.basics.ui.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import org.tinylog.Logger;
 
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
 import static de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene.TengenMsPacMan_OptionsScene.*;
@@ -117,18 +113,24 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer {
         fillText(pacBoosterText, NES_WHITE, COL_VALUE, y);
 */
         y += tilesPx(3);
+
+        /*
         // Game difficulty
         drawMarkerIfSelected(optionsScene, OPTION_DIFFICULTY, y, arcade8);
         fillText("GAME DIFFICULTY", NES_YELLOW, COL_LABEL, y);
         fillText(":", NES_YELLOW, COL_COLON, y);
         fillText(gameOptions(session).difficulty().name(), NES_WHITE, COL_VALUE, y);
+         */
 
         y += tilesPx(3);
+
+        /*
         // Maze (type) selection
-        drawMarkerIfSelected(optionsScene, OPTION_MAZE_SELECTION, y, arcade8);
+        drawMarkerIfSelected(optionsScene, OPTION_MAP_CATEGORY, y, arcade8);
         fillText("MAZE SELECTION", NES_YELLOW, COL_LABEL, y);
         fillText(":", NES_YELLOW, COL_COLON, y);
         fillText(gameOptions(session).mapCategory().name(), NES_WHITE, COL_VALUE, y);
+        */
 
         y += tilesPx(3);
 
