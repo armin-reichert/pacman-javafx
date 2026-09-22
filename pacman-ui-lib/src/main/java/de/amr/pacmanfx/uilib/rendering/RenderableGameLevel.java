@@ -14,7 +14,7 @@ import de.amr.basics.ui.rendering.Renderable;
  *
  * @param level the game level
  * @param renderInfo information for the game level renderer
- * @param layer the rendering layer e.g. {@link RenderingLayer#WORLD}
+ * @param layer the rendering layer e.g. {@link RenderingLayer#LEVEL}
  * @param z the z-layer value
  */
 public record RenderableGameLevel(GameLevel level, InfoMap renderInfo, RenderingLayer layer, int z) implements Renderable {}

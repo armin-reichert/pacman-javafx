@@ -163,7 +163,7 @@ public class WorldMap implements Renderable {
 
     @Override
     public RenderingLayer layer() {
-        return RenderingLayer.WORLD;
+        return RenderingLayer.LEVEL;
     }
 
     //TODO What happens with the entries in the config map if the map coordinates change?

@@ -425,7 +425,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
             }
         }
 
-        return new RenderableGameLevel(level, renderInfo, RenderingLayer.WORLD, 0);
+        return new RenderableGameLevel(level, renderInfo, RenderingLayer.LEVEL, 0);
     }
 
     /**

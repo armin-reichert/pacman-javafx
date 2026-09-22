@@ -7,7 +7,7 @@ package de.amr.basics.ui.rendering;
 public enum RenderingLayer {
     BACKGROUND,
     SCENE,
-    WORLD,
+    LEVEL,
     MESSAGE,
     PROPS,
     ACTORS,

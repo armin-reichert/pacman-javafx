@@ -17,7 +17,7 @@ public class Energizer extends GameEntity implements Renderable {
 
     @Override
     public RenderingLayer layer() {
-        return RenderingLayer.WORLD;
+        return RenderingLayer.LEVEL;
     }
 
     public boolean on() {

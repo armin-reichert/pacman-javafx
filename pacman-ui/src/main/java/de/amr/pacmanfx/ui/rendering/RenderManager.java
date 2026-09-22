@@ -17,6 +17,7 @@ import de.amr.pacmanfx.ui.views.miniview.MiniViewOverlayRenderer;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
 import static java.util.Objects.requireNonNull;
@@ -107,8 +108,8 @@ public class RenderManager {
         renderQueue.renderables().forEach(r -> {
             switch (r.layer()) {
                 case MINIVIEW_OVERLAY -> miniViewOverlayRenderer.render(r, tick);
-                case SCENE -> renderWithOffset(r, sceneRenderer, tick);
-                case WORLD -> renderWithOffset(r, levelRenderer, tick);
+                case SCENE -> renderWithOffset(r, sceneRenderer, tick); //TODO get rid of scene renderers
+                case LEVEL -> renderWithOffset(r, levelRenderer, tick);
                 case HUD -> variantRenderer.render(r, tick);
                 default -> renderWithOffset(r, variantRenderer, tick);
             }
@@ -123,12 +124,12 @@ public class RenderManager {
 
     private void renderWithOffset(Renderable r, Renderer renderer, long tick) {
         if (renderer != Renderer.NULL_RENDERER) {
+            final GraphicsContext ctx = renderer.ctx();
             final Vector2f offset = currentOffset.scaled(renderer.scaling());
-            renderer.info().put("offset", offset);
-            renderer.ctx().save();
-            renderer.ctx().translate(offset.x(), offset.y());
+            ctx.save();
+            ctx.translate(offset.x(), offset.y());
             renderer.render(r, tick);
-            renderer.ctx().restore();
+            ctx.restore();
         }
     }
 

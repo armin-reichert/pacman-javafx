@@ -92,8 +92,8 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
             case Pac pac     -> renderablePac(pac);
             case Ghost ghost -> renderableGhost(ghost);
             case Bonus bonus -> renderableBonus(bonus);
-            case Energizer energizer -> renderableGameEntity(energizer, RenderingLayer.WORLD, 0);
-            case House house -> renderableGameEntity(house, RenderingLayer.WORLD, 0);
+            case Energizer energizer -> renderableGameEntity(energizer, RenderingLayer.LEVEL, 0);
+            case House house -> renderableGameEntity(house, RenderingLayer.LEVEL, 0);
             case MessageView messageView -> renderableGameEntity(messageView, RenderingLayer.MESSAGE, 0);
             case GhostPoints ghostPoints -> renderableGameEntity(ghostPoints, RenderingLayer.PROPS, 0);
             case BonusPoints bonusPoints -> renderableGameEntity(bonusPoints, RenderingLayer.PROPS, 0);

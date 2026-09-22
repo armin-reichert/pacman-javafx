@@ -158,7 +158,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
         renderInfo.put(LevelRenderInfoKey.ENERGIZERS_SHOWN, level.heartbeat().state() == Pulse.State.ON);
         renderInfo.put(LevelRenderInfoKey.SHOW_EMPTY_MAZE, level.food().remainingFoodCount() == 0);
         updateFlashingRenderInfo(renderInfo);
-        return new RenderableGameLevel(level, renderInfo, RenderingLayer.WORLD, 0);
+        return new RenderableGameLevel(level, renderInfo, RenderingLayer.LEVEL, 0);
     }
 
     private void updateFlashingRenderInfo(InfoMap renderInfo) {
