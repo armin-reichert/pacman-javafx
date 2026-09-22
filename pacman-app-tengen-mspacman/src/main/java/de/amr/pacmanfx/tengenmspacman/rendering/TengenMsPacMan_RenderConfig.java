@@ -178,7 +178,7 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
             case TengenMsPacMan_IntroScene ignore   -> new TengenMsPacMan_IntroScene_Renderer(gameScene.app().variantManager().currentRuntime(), canvas);
             case TengenMsPacMan_OptionsScene ignore -> new TengenMsPacMan_OptionsScene_Renderer(canvas);
             case TengenMsPacMan_CreditsScene ignore -> new TengenMsPacMan_CreditsScene_Renderer(canvas);
-            default -> Renderer.NULL_RENDERER;
+            default -> null;
         };
     }
 

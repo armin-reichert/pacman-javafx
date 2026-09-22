@@ -127,7 +127,7 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig, Dispo
         return switch (gameScene) {
             case Arcade_BootScene ignored -> new Arcade_BootScene_Renderer(canvas, spriteSheet());
             case ArcadePacMan_IntroScene ignored -> new ArcadePacMan_IntroScene_Renderer(canvas);
-            default -> Renderer.NULL_RENDERER;
+            default -> null;
         };
     }
 

@@ -108,7 +108,7 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
 
         return switch (gameScene) {
             case Arcade_BootScene ignored -> new Arcade_BootScene_Renderer(canvas, spriteSheet());
-            default -> Renderer.NULL_RENDERER;
+            default -> null;
         };
     }
 

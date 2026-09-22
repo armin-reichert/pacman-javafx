@@ -13,36 +13,6 @@ import javafx.scene.paint.Color;
 
 public interface Renderer {
 
-    Renderer NULL_RENDERER = new Renderer() {
-
-        @Override
-        public void render(Renderable r, long tick) {}
-
-        @Override
-        public InfoMap info() {return null;}
-
-        @Override
-        public GraphicsContext ctx() {return null;}
-
-        @Override
-        public void clearCanvas() {}
-
-        @Override
-        public void fillCanvas(Color color) {}
-
-        @Override
-        public DoubleProperty scalingProperty() {return null;}
-
-        @Override
-        public double scaling() {return 0;}
-
-        @Override
-        public void setScaling(double value) {}
-
-        @Override
-        public ObjectProperty<Color> backgroundColorProperty() {return null;}
-    };
-
     int HTS = 4; // half tile size
 
     int TS = 8;

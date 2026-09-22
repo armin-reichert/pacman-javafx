@@ -37,10 +37,10 @@ public class RenderManager {
     }
 
     private void clearAllRenderers() {
-        variantRenderer = Renderer.NULL_RENDERER;
-        levelRenderer = Renderer.NULL_RENDERER;
-        sceneRenderer = Renderer.NULL_RENDERER;
-        sceneDebugRenderer = Renderer.NULL_RENDERER;
+        variantRenderer = null;
+        levelRenderer = null;
+        sceneRenderer = null;
+        sceneDebugRenderer = null;
     }
 
     public void createRenderers(
@@ -106,7 +106,6 @@ public class RenderManager {
                 case MINIVIEW_OVERLAY -> miniViewOverlayRenderer.render(r, tick);
                 case SCENE -> render(r, sceneRenderer, tick); //TODO get rid of scene renderers
                 case LEVEL -> render(r, levelRenderer, tick);
-                case HUD -> variantRenderer.render(r, tick);
                 default -> render(r, variantRenderer, tick);
             }
         });
@@ -119,7 +118,7 @@ public class RenderManager {
     }
 
     private void render(Renderable r, Renderer renderer, long tick) {
-        if (renderer != Renderer.NULL_RENDERER) {
+        if (renderer != null) {
             final Vector2f offset = r.offset().scaled(renderer.scaling());
             final GraphicsContext ctx = renderer.ctx();
             ctx.save();
@@ -130,7 +129,7 @@ public class RenderManager {
     }
 
     private void bindRendererProperties(Renderer renderer, ObjectProperty<Color> backgroundColorProperty, DoubleProperty scalingProperty) {
-        if (renderer != Renderer.NULL_RENDERER) {
+        if (renderer != null) {
             renderer.backgroundColorProperty().bind(backgroundColorProperty);
             renderer.scalingProperty().bind(scalingProperty);
         }
