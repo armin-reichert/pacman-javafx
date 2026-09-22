@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.uilib.dashboard;
+package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.basics.Named;
 import javafx.scene.Node;

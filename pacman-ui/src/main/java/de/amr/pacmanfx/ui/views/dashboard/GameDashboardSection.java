@@ -10,8 +10,6 @@ import de.amr.pacmanfx.core.rules.GameRules;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.pacmanfx.uilib.dashboard.DashboardSection;
-import de.amr.pacmanfx.uilib.dashboard.DashboardSectionCreator;
 import javafx.scene.control.Button;
 
 import java.util.ArrayList;
