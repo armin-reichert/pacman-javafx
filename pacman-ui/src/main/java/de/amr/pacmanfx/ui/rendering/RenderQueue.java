@@ -17,18 +17,18 @@ public class RenderQueue {
         .comparing(Renderable::layer)
         .thenComparingInt(Renderable::z);
 
-    private final List<Renderable> queue = new ArrayList<>();
+    private final List<Renderable> renderables = new ArrayList<>();
 
     public void clear() {
-        queue.clear();
+        renderables.clear();
     }
 
     public int size() {
-        return queue.size();
+        return renderables.size();
     }
 
     public void add(Renderable renderable) {
-        queue.add(renderable);
+        renderables.add(renderable);
     }
 
     public void addAll(Stream<Renderable> renderables) {
@@ -36,10 +36,10 @@ public class RenderQueue {
     }
 
     public void sort() {
-        queue.sort(RENDERING_ORDER);
+        renderables.sort(RENDERING_ORDER);
     }
 
     public Stream<Renderable> renderables() {
-        return queue.stream();
+        return renderables.stream();
     }
 }
