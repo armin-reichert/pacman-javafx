@@ -104,9 +104,9 @@ public class RenderManager {
         renderQueue.renderables().forEach(r -> {
             switch (r.layer()) {
                 case MINIVIEW_OVERLAY -> miniViewOverlayRenderer.render(r, tick);
-                case SCENE -> render(r, sceneRenderer, tick); //TODO get rid of scene renderers
-                case LEVEL -> render(r, levelRenderer, tick);
-                default -> render(r, variantRenderer, tick);
+                case SCENE -> doRender(r, sceneRenderer, tick); //TODO get rid of scene renderers
+                case LEVEL -> doRender(r, levelRenderer, tick);
+                default -> doRender(r, variantRenderer, tick);
             }
         });
 
@@ -117,7 +117,8 @@ public class RenderManager {
         }
     }
 
-    private void render(Renderable r, Renderer renderer, long tick) {
+    // Takes offset of renderable into account (in Tengen for example, the game level has horizontal offset)
+    private void doRender(Renderable r, Renderer renderer, long tick) {
         if (renderer != null) {
             final Vector2f offset = r.offset().scaled(renderer.scaling());
             final GraphicsContext ctx = renderer.ctx();
