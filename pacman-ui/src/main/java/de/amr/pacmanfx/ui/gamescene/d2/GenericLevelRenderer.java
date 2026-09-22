@@ -5,7 +5,6 @@
 package de.amr.pacmanfx.ui.gamescene.d2;
 
 import de.amr.basics.ui.rendering.BaseRenderer;
-import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.pacmanfx.core.entities.world.house.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
@@ -14,11 +13,11 @@ import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
 import de.amr.pacmanfx.uilib.renderer.ArcadeHouseRenderer;
 import de.amr.pacmanfx.uilib.renderer.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.renderer.TerrainMapVectorRenderer;
-import de.amr.pacmanfx.uilib.rendering.*;
+import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
+import de.amr.pacmanfx.uilib.rendering.TerrainMapColoring;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
-import static de.amr.pacmanfx.game.GameVariantRenderConfig.renderableGameEntity;
 import static java.util.function.Predicate.not;
 
 /**
@@ -65,10 +64,9 @@ public class GenericLevelRenderer extends BaseRenderer {
             terrainRenderer.setMapColoring(mapColoring);
             terrainRenderer.render(level.worldMap(), tick);
 
-            final House house = level.entitySet().entities().theOne(House.class);
-            if (house != null) {
-                final var hr = renderableGameEntity(house, RenderingLayer.WORLD, 0);
-                houseRenderer.render(hr, tick);
+            if (level.entitySet().entities().anyOfType(House.class).isPresent()) {
+                final House house = level.entitySet().entities().theOne(House.class);
+                houseRenderer.renderHouse(house);
             }
 
             // Color scheme is set by the map selector
