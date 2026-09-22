@@ -6,4 +6,9 @@ package de.amr.pacmanfx.uilib.rendering;
 
 import javafx.scene.paint.Color;
 
-public record TerrainMapColoring(Color floorColor, Color wallFillColor, Color wallStrokeColor, Color doorColor) {}
+public record TerrainMapColoring(
+    Color floorColor,
+    Color wallFillColor,
+    Color wallStrokeColor,
+    Color doorColor)
+{}

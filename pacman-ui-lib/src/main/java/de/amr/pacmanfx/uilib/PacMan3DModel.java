@@ -32,6 +32,8 @@ import static java.util.Objects.requireNonNull;
  */
 public class PacMan3DModel {
 
+    static final String PAC_MAN_WORLD_OBJ_FILE = "/de/amr/pacmanfx/uilib/entities3d/pacmanworld/pacman.obj";
+
     private static class LazyThreadSafeSingletonHolder {
         static final PacMan3DModel SINGLETON = new PacMan3DModel();
     }
@@ -41,8 +43,6 @@ public class PacMan3DModel {
     }
 
     public static final Rotate ORIENTATION_ADJUSTMENT = new Rotate(270, Rotate.X_AXIS);
-
-    private static final String PAC_MAN_WORLD_OBJ_FILE = "/de/amr/pacmanfx/uilib/entities3D/pacmanworld/pacman.obj";
 
     // Strange IDs but it is what it is and it isn't what it isn't.
 
