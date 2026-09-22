@@ -42,4 +42,5 @@ open module de.amr.pacmanfx.uilib {
     exports de.amr.pacmanfx.uilib.widgets.decorationpane;
     exports de.amr.pacmanfx.uilib.widgets.optionmenu;
     exports de.amr.pacmanfx.uilib.entities3d;
+    exports de.amr.pacmanfx.uilib.dashboard;
 }

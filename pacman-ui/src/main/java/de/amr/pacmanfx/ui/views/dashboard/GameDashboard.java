@@ -6,8 +6,8 @@ package de.amr.pacmanfx.ui.views.dashboard;
 
 import de.amr.basics.Named;
 import de.amr.pacmanfx.ui.action.core.GameApp;
-import de.amr.pacmanfx.uilib.widgets.Dashboard;
-import de.amr.pacmanfx.uilib.widgets.DashboardSection;
+import de.amr.pacmanfx.uilib.dashboard.Dashboard;
+import de.amr.pacmanfx.uilib.dashboard.DashboardSection;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -37,7 +37,7 @@ import de.amr.pacmanfx.uilib.entities3d.pac.system.Pac3DAnimationSystem;
 import de.amr.pacmanfx.uilib.entities3d.pac.system.Pac3DTransformSystem;
 import de.amr.pacmanfx.uilib.entities3d.score.comp.ScoreViewComp;
 import de.amr.pacmanfx.uilib.widgets.CoordinateSystem;
-import de.amr.pacmanfx.uilib.widgets.ScoresView;
+import de.amr.pacmanfx.uilib.entities3d.score.comp.ScoresView;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
