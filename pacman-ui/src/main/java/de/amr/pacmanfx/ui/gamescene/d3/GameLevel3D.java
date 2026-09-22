@@ -30,7 +30,7 @@ import de.amr.pacmanfx.ui.settings.world.Energizer3DSettings;
 import de.amr.pacmanfx.ui.settings.world.Pellet3DSettings;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
-import de.amr.pacmanfx.uilib.DisposableGraphicsObject;
+import de.amr.basics.ui.assets.DisposableGraphicsObject;
 import de.amr.basics.ui.animation.AnimationRegistry;
 import de.amr.pacmanfx.uilib.entities3d.bonus.anim.Bonus3DAnimationID;
 import de.amr.pacmanfx.uilib.entities3d.bonus.comp.Bonus3DSettings;

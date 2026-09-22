@@ -6,7 +6,7 @@ import de.amr.basics.ui.ecs.GameEntityComp;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.entities.world.house.HouseFloorplanComp;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.uilib.DisposableGraphicsObject;
+import de.amr.basics.ui.assets.DisposableGraphicsObject;
 import de.amr.pacmanfx.uilib.entities3d.world.TerrainRenderer3D;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;

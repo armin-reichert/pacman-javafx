@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.uilib.entities3d.messageview.comp;
 
 import de.amr.basics.ui.ecs.GameEntityComp;
-import de.amr.pacmanfx.uilib.DisposableGraphicsObject;
+import de.amr.basics.ui.assets.DisposableGraphicsObject;
 import javafx.scene.Group;
 import javafx.scene.image.ImageView;
 import javafx.scene.transform.Rotate;
