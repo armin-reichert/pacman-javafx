@@ -92,7 +92,7 @@ public class House3DViewComp implements GameEntityComp, DisposableGraphicsObject
         Vector2f p5 = vec2_float(xMax, yMax);
 
         // Configure wall creation callback
-        r3D.setOnWallCreated(wall3D -> {
+        r3D.setOnWallCreatedCallback(wall3D -> {
             wall3D.bindBaseHeight(wallBaseHeightProperty);
             wall3D.setBaseMaterial(wallBaseMaterial);
             wall3D.setTopMaterial(wallTopMaterial);
@@ -229,7 +229,7 @@ public class House3DViewComp implements GameEntityComp, DisposableGraphicsObject
 
     @Override
     public void dispose() {
-        r3D.setOnWallCreated(null);
+        r3D.setOnWallCreatedCallback(null);
         wallBaseHeightProperty().unbind();
         barMaterial = wallBaseMaterial = wallTopMaterial = null;
         cleanupGroup(doors, true);

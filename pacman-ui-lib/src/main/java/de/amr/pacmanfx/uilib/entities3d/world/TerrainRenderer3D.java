@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.uilib.entities3d.world;
 
 import de.amr.basics.math.Vector2f;
@@ -12,6 +13,8 @@ import javafx.util.Callback;
 import org.tinylog.Logger;
 
 import java.util.List;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * Renders 3D terrain. To add the created walls to some group, use the callback function.
@@ -32,12 +35,12 @@ import java.util.List;
  */
 public class TerrainRenderer3D {
 
-    private static Wall3D keepUnchanged(Wall3D wall3D) {
+    private static Wall3D reportWallCreation(Wall3D wall3D) {
         Logger.trace("Wall3D created: {}", wall3D);
         return wall3D;
     }
 
-    private Callback<Wall3D, Wall3D> onWallCreated = TerrainRenderer3D::keepUnchanged;
+    private Callback<Wall3D, Wall3D> onWallCreatedCallback = TerrainRenderer3D::reportWallCreation;
 
     public TerrainRenderer3D() {}
 
@@ -45,37 +48,47 @@ public class TerrainRenderer3D {
      * @param callback a callback function which is applied to each wall on creation
      *                 or {@code null} if no action is required on creation
      */
-    public void setOnWallCreated(Callback<Wall3D, Wall3D> callback) {
-        onWallCreated = callback != null ? callback : TerrainRenderer3D::keepUnchanged;
+    public void setOnWallCreatedCallback(Callback<Wall3D, Wall3D> callback) {
+        onWallCreatedCallback = callback != null ? callback : TerrainRenderer3D::reportWallCreation;
     }
 
     public Wall3D createBoxWall(Vector2f center, double sizeX, double sizeY) {
-        final Wall3D wall3D = Wall3D.createBoxWall(center, sizeX, sizeY);
-        return onWallCreated.call(wall3D);
+        requireNonNull(center);
+        final Wall3D wall = Wall3D.createBoxWall(center, sizeX, sizeY);
+        return onWallCreatedCallback.call(wall);
     }
 
     public Wall3D createCylinderWall(Vector2f center, double radius) {
-        final Wall3D wall3D = Wall3D.createCylinderWall(center, radius);
-        return onWallCreated.call(wall3D);
+        requireNonNull(center);
+        final Wall3D wall = Wall3D.createCylinderWall(center, radius);
+        return onWallCreatedCallback.call(wall);
     }
 
     public void createWallBetween(Vector2f p1, Vector2f p2, double wallThickness) {
+        requireNonNull(p1);
+        requireNonNull(p2);
         if (p1.x() == p2.x()) { // vertical wall
             createBoxWall(p1.midpoint(p2), wallThickness, p1.manhattanDist(p2));
-        } else if (p1.y() == p2.y()) { // horizontal wall
+        }
+        else if (p1.y() == p2.y()) { // horizontal wall
             createBoxWall(p1.midpoint(p2), p1.manhattanDist(p2), wallThickness);
-        } else {
+        }
+        else {
             Logger.error("Cannot add horizontal/vertical wall between {} and {}", p1, p2);
         }
     }
 
     public Wall3D createWallBetweenTileCoordinates(Vector2i t1, Vector2i t2, double wallThickness) {
+        requireNonNull(t1);
+        requireNonNull(t2);
         final Vector2f center = t1.midpoint(t2).scaled(WorldMap.TS).plus(WorldMap.HTS, WorldMap.HTS);
         if (t1.x() == t2.x()) { // vertical wall
             return createBoxWall(center, wallThickness, WorldMap.TS * t1.manhattanDist(t2));
-        } else if (t1.y() == t2.y()) { // horizontal wall
+        }
+        else if (t1.y() == t2.y()) { // horizontal wall
             return createBoxWall(center, WorldMap.TS * t1.manhattanDist(t2) + wallThickness, wallThickness);
-        } else {
+        }
+        else {
             throw new IllegalArgumentException("Cannot build wall between tiles %s and %s".formatted(t1, t2));
         }
     }
@@ -86,12 +99,8 @@ public class TerrainRenderer3D {
      * For each closed obstacle, a group of Cylinder and Box primitives is created. For all other obstacles,
      * a sequence of walls with cylinders as corners is created.
      */
-    public void renderObstacle3D(
-        Obstacle obstacle,
-        boolean border,
-        double wallThickness,
-        double cornerRadius)
-    {
+    public void renderObstacle3D(Obstacle obstacle, boolean border, double wallThickness, double cornerRadius) {
+        requireNonNull(obstacle);
         if (obstacle.isClosed() && !border) {
             //TODO provide general solution for obstacles with holes
             if ("dcgbfceb".equals(obstacle.encoding())) { // O-shape with hole

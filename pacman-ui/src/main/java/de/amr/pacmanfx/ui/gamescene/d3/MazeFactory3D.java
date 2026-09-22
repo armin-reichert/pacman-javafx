@@ -75,7 +75,7 @@ public class MazeFactory3D {
         final float wallThickness = maze3DSettings.obstacleWallThickness();
         final TerrainRenderer3D renderer3D = new TerrainRenderer3D();
         final AtomicInteger wallCount = new AtomicInteger(0);
-        renderer3D.setOnWallCreated(wall3D -> {
+        renderer3D.setOnWallCreatedCallback(wall3D -> {
             wallCount.incrementAndGet();
             wall3D.setBaseMaterial(maze3D.materials().wallBaseMaterial());
             wall3D.setTopMaterial(maze3D.materials().wallTopMaterial());

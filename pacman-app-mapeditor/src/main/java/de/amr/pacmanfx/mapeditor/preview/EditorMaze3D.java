@@ -174,7 +174,7 @@ public class EditorMaze3D extends Group {
         PhongMaterial wallBaseMaterial = Ufx.coloredPhongMaterial(wallBaseColor);
         PhongMaterial wallTopMaterial = Ufx.coloredPhongMaterial(wallTopColor);
 
-        r3D.setOnWallCreated(wall3D -> {
+        r3D.setOnWallCreatedCallback(wall3D -> {
             wall3D.setBaseHeight(OBSTACLE_HEIGHT);
             wall3D.setBaseMaterial(wallBaseMaterial);
             wall3D.setTopMaterial(wallTopMaterial);
@@ -187,7 +187,7 @@ public class EditorMaze3D extends Group {
             boolean worldBorder = ObstacleBuilder.isBorderObstacle(obstacle, worldMap());
             r3D.renderObstacle3D(obstacle, worldBorder, 2, WorldMap.HTS);
         }
-        r3D.setOnWallCreated(null);
+        r3D.setOnWallCreatedCallback(null);
 
         addHouse(wallBaseColor, wallTopColor);
 
@@ -248,7 +248,7 @@ public class EditorMaze3D extends Group {
         PhongMaterial wallBaseMaterial = Ufx.coloredPhongMaterial(colorWithOpacity(wallBaseColor, 0.4));
         PhongMaterial wallTopMaterial = Ufx.coloredPhongMaterial(wallTopColor);
 
-        r3D.setOnWallCreated(wall3D -> {
+        r3D.setOnWallCreatedCallback(wall3D -> {
             wall3D.setBaseMaterial(wallBaseMaterial);
             wall3D.setTopMaterial(wallTopMaterial);
             wall3D.setBaseHeight(HOUSE_WALL_HEIGHT);
