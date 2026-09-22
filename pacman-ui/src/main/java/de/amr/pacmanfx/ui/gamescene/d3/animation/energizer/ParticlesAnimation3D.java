@@ -12,7 +12,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3d.world.EnergizerParticle3D;
 import de.amr.pacmanfx.uilib.entities3d.world.EnergizerParticle3D.ParticleState;
-import de.amr.pacmanfx.uilib.entities3d.world.Pool;
+import de.amr.basics.Pool;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;

@@ -2,10 +2,8 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.uilib.entities3d.world;
+package de.amr.basics;
 
-import de.amr.basics.Disposable;
-import de.amr.pacmanfx.core.Validations;
 import org.tinylog.Logger;
 
 import java.util.ArrayDeque;
@@ -24,7 +22,7 @@ public class Pool<T> implements Disposable {
     private final Consumer<T> onItemRecycled;
 
     public Pool(int initialSize, int itemIncrease, Supplier<T> itemFactory, Consumer<T> onItemRecycled) {
-        this.itemIncrease = Validations.requireNonNegativeInt(itemIncrease);
+        this.itemIncrease = itemIncrease;
         this.itemFactory = itemFactory;
         this.onItemRecycled = onItemRecycled;
         growBy(initialSize);

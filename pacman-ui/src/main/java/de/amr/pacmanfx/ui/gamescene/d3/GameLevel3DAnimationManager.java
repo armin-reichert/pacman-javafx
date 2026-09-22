@@ -28,7 +28,7 @@ import de.amr.pacmanfx.ui.viewmodel.Game3DSettingsVM;
 import de.amr.basics.ui.animation.AnimationRegistry;
 import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3d.world.EnergizerParticle3D;
-import de.amr.pacmanfx.uilib.entities3d.world.Pool;
+import de.amr.basics.Pool;
 import de.amr.pacmanfx.uilib.entities3d.ghost.comp.Ghost3DAnimationComp;
 import de.amr.pacmanfx.uilib.entities3d.ghost.comp.Ghost3DViewComp;
 import de.amr.pacmanfx.uilib.entities3d.ghost.comp.GhostSettings;
