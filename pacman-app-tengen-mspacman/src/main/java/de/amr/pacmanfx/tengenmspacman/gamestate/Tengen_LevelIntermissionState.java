@@ -34,7 +34,7 @@ public class Tengen_LevelIntermissionState extends AbstractGameState {
             hud.gameScore().hide();
             hud.levelCounter().show();
             hud.livesCounter().hide();
-            hud.entities().ofType(LevelNumberDisplay.class).forEach(GameEntity::hide);
+            hud.additionalEntities().ofType(LevelNumberDisplay.class).forEach(GameEntity::hide);
             session.setHudVisible(true);
         }
         timer().resetToIndefiniteDuration();
@@ -52,7 +52,7 @@ public class Tengen_LevelIntermissionState extends AbstractGameState {
         if (gameOptions(session).mapCategory() == MapCategory.ARCADE) {
             session.setHudVisible(false);
         } else {
-            hud.entities().ofType(LevelNumberDisplay.class).forEach(GameEntity::hide);
+            hud.additionalEntities().ofType(LevelNumberDisplay.class).forEach(GameEntity::hide);
             hud.gameScore().show();
             hud.levelCounter().show();
             hud.livesCounter().hide();

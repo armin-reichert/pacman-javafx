@@ -125,11 +125,9 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
         session.setLevel(null);
         session.setGameRunning(false);
 
+        // Add game options display on top of maze and level number boxes at left and right side below the maze
         final HUD hud = session.hud();
-        hud.addEntity(new GameOptionsDisplay());
-        // Level number boxes left and right side
-        hud.addEntity(new LevelNumberDisplay());
-        hud.addEntity(new LevelNumberDisplay());
+        hud.addAdditionalEntities(new GameOptionsDisplay(), new LevelNumberDisplay(), new LevelNumberDisplay());
 
         configureHUD(game, null, hud);
 
@@ -151,14 +149,14 @@ public class TengenMsPacMan_GamePlay extends CommonGamePlay {
 
         hud.gameScore().pos().set(4 * TS, TS);
         hud.highScore().pos().set(11 * TS, TS);
-        hud.entities().theOne(GameOptionsDisplay.class).pos().set(16 * TS, 2.5f * TS); // horizontally centered
+        hud.additionalEntities().theOne(GameOptionsDisplay.class).pos().set(16 * TS, 2.5f * TS); // horizontally centered
 
         if (level != null) {
             // Called when level is created, adjust positions to map size
 
             final int bottomPos = (level.worldMap().numRows() - 1) * TS - HTS;
 
-            final var levelNumberDisplays = hud.entities().ofType(LevelNumberDisplay.class).toList();
+            final var levelNumberDisplays = hud.additionalEntities().ofType(LevelNumberDisplay.class).toList();
             levelNumberDisplays.forEach(levelNumberDisplay -> levelNumberDisplay.levelNumber().setNumber(level.number()));
             if (levelNumberDisplays.size() != 2) {
                 Logger.error("There should exist exactly 2 level number displays in this HUD!");

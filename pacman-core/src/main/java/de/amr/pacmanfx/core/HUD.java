@@ -9,71 +9,93 @@ import de.amr.basics.ui.entities.props.textdisplay.TextDisplay;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.rendering.RenderableGameEntity;
 import de.amr.basics.ui.rendering.RenderingLayer;
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.entities.hud.ScoreSystem;
 
+import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 
 public class HUD {
 
-    private final QuerySet<GameEntity> entities = new QuerySet<>();
+    private final LevelCounter levelCounter = new LevelCounter();
+    private final LivesCounter livesCounter = new LivesCounter();
+    private final TextDisplay creditDisplay = new TextDisplay();
+    private final Score gameScore = new Score(Score.Type.GAME_SCORE);
+    private Score highScore;
 
-    public HUD() {}
+    private final QuerySet<GameEntity> additionalEntities = new QuerySet<>();
+
+    private List<Renderable> renderables = List.of();
+
+    public HUD() {
+    }
 
     public HUD(String variantName) {
-        final var levelCounter = new LevelCounter();
-        final var livesCounter = new LivesCounter();
-        final var creditDisplay = new TextDisplay();
-        final var gameScore = new Score(Score.Type.GAME_SCORE);
-        final var highScore = ScoreSystem.createHighScore(variantName);
-
         creditDisplay.setName("Credits");
         creditDisplay.pos().set(2 * TS, 36 * TS);
 
         gameScore.pos().set(TS, TS);
 
+        highScore = ScoreSystem.createHighScore(variantName);
         highScore.pos().set(14 * TS, TS);
         highScore.show();
 
-        entities.addAll(levelCounter, livesCounter, gameScore, highScore, creditDisplay);
-    }
-
-    public Stream<Renderable> renderables() {
-        return entities.all().filter(GameEntity::isVisible)
-            .map(e -> new RenderableGameEntity(e, RenderingLayer.HUD, 0)
-        );
-    }
-
-    public TextDisplay creditDisplay() {
-        return entities.ofTypeWhere(TextDisplay.class, e -> "Credits".equals(e.name())).findAny().orElseThrow();
+        updateRenderables();
     }
 
     public LevelCounter levelCounter() {
-        return entities.theOne(LevelCounter.class);
+        return levelCounter;
     }
 
     public LivesCounter livesCounter() {
-        return entities.theOne(LivesCounter.class);
+        return livesCounter;
     }
 
     public Score gameScore() {
-        return entities.ofTypeWhere(Score.class, score -> score.type() == Score.Type.GAME_SCORE).findFirst().orElseThrow();
+        return gameScore;
     }
 
     public Score highScore() {
-        return entities.ofTypeWhere(Score.class, score -> score.type() == Score.Type.HIGH_SCORE).findFirst().orElseThrow();
+        return highScore;
     }
 
-    public QuerySet<GameEntity> entities() {
-        return entities;
+    public Stream<Renderable> renderables() {
+        return renderables.stream();
     }
 
-    public void addEntity(GameEntity entity) {
-        entities.add(entity);
+    public void updateRenderables() {
+        renderables = Ufx.streamOf(
+            levelCounter,
+            livesCounter,
+            creditDisplay,
+            gameScore,
+            highScore,
+            additionalEntities.all()
+        )
+            .filter(e -> e instanceof GameEntity)
+            .map(e -> (GameEntity) e)
+            .map(e -> new RenderableGameEntity(e, RenderingLayer.HUD, 0))
+            .map(Renderable.class::cast)
+            .toList();
     }
 
-    public void removeEntity(GameEntity entity) {
-        entities.remove(entity);
+    public TextDisplay creditDisplay() {
+        return creditDisplay;
+    }
+
+    public void addAdditionalEntity(GameEntity entity) {
+        additionalEntities.add(entity);
+        updateRenderables();
+    }
+
+    public void addAdditionalEntities(GameEntity... entities) {
+        additionalEntities.addAll(entities);
+        updateRenderables();
+    }
+
+    public QuerySet<GameEntity> additionalEntities() {
+        return additionalEntities;
     }
 }

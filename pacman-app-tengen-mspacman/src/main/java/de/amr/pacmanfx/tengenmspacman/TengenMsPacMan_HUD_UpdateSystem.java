@@ -38,7 +38,7 @@ public class TengenMsPacMan_HUD_UpdateSystem extends HUD_UpdateSystem {
         numLivesShown = Math.clamp(numLivesShown, 0, livesCounter.data().maxLivesShown());
         livesCounter.data().setNumLivesShown(numLivesShown);
 
-        final GameOptionsDisplay optionsDisplay = hud.entities().theOne(GameOptionsDisplay.class);
+        final GameOptionsDisplay optionsDisplay = hud.additionalEntities().theOne(GameOptionsDisplay.class);
         if (gameOptions(session).areInitial()) {
             optionsDisplay.hide();
         } else {
@@ -51,7 +51,7 @@ public class TengenMsPacMan_HUD_UpdateSystem extends HUD_UpdateSystem {
         options.setMapCategory(gameOptions(session).mapCategory());
 
         final boolean showLevelNumber = gameOptions(session).mapCategory() != MapCategory.ARCADE;
-        session.hud().entities().ofType(LevelNumberDisplay.class).forEach(display -> {
+        session.hud().additionalEntities().ofType(LevelNumberDisplay.class).forEach(display -> {
             if (showLevelNumber) {
                 display.show();
             } else {
