@@ -38,10 +38,6 @@ import static java.util.Objects.requireNonNull;
  */
 public class BaseRenderer implements Renderer {
 
-    private static final int HTS = 4; // half tile size
-
-    private static final int TS = 8;
-
     private static final Text dummy = new Text();
 
     /**

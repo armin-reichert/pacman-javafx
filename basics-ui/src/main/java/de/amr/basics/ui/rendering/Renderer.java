@@ -13,6 +13,10 @@ import javafx.scene.paint.Color;
 
 public interface Renderer {
 
+    int HTS = 4; // half tile size
+
+    int TS = 8;
+
     void render(Renderable r, long tick);
 
     InfoMap info();

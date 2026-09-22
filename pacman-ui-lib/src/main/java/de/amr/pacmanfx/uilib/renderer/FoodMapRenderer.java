@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.uilib.renderer;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.ui.rendering.BaseRenderer;
-import de.amr.pacmanfx.core.model.world.map.FoodTile;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.basics.ui.rendering.Renderable;
+import de.amr.pacmanfx.core.model.world.map.FoodTile;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
@@ -42,9 +42,7 @@ public class FoodMapRenderer extends BaseRenderer implements TileRenderer {
     }
 
     @Override
-    public void render(Renderable r, long tick) {
-        //TODO implement
-    }
+    public void render(Renderable r, long tick) {}
 
     @Override
     public void drawTile(Vector2i tile, byte content) {
@@ -53,23 +51,23 @@ public class FoodMapRenderer extends BaseRenderer implements TileRenderer {
     }
 
     public void drawPellet(Vector2i tile) {
-        double offset = 0.5 * (WorldMap.TS - PELLET_SIZE);
+        double offset = 0.5 * (TS - PELLET_SIZE);
         ctx.save();
         ctx.scale(scaling(), scaling());
         ctx.setFill(pelletColor.get());
-        ctx.fillRect(tile.x() * WorldMap.TS + offset, tile.y() * WorldMap.TS + offset, PELLET_SIZE, PELLET_SIZE);
+        ctx.fillRect(tile.x() * TS + offset, tile.y() * TS + offset, PELLET_SIZE, PELLET_SIZE);
         ctx.restore();
     }
 
     public void drawEnergizer(Vector2i tile) {
-        double offset = 0.5 * WorldMap.HTS;
-        double x = tile.x() * WorldMap.TS, y = tile.y() * WorldMap.TS;
+        double offset = 0.5 * HTS;
+        double x = tile.x() * TS, y = tile.y() * TS;
         ctx.save();
         ctx.scale(scaling(), scaling());
         ctx.setFill(energizerColor.get());
         // draw pixelated "circle"
-        ctx.fillRect(x + offset, y, WorldMap.HTS, ENERGIZER_SIZE);
-        ctx.fillRect(x, y + offset, ENERGIZER_SIZE, WorldMap.HTS);
+        ctx.fillRect(x + offset, y, HTS, ENERGIZER_SIZE);
+        ctx.fillRect(x, y + offset, ENERGIZER_SIZE, HTS);
         ctx.fillRect(x + 1, y + 1, ENERGIZER_SIZE - 2, ENERGIZER_SIZE - 2);
         ctx.restore();
     }

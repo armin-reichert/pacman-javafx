@@ -46,6 +46,7 @@ import static java.util.function.Predicate.not;
 public class TerrainMapTileRenderer extends BaseRenderer implements TerrainMapRenderer, TileRenderer {
 
     public static final Font SYMBOL_FONT = Font.font("Monospace", FontWeight.NORMAL, 8);
+
     public static final Color SYMBOL_COLOR = Color.gray(0.6);
 
     public static final Font INNER_RECT_FONT = Font.font("Sans", FontWeight.BOLD, 3.5);
