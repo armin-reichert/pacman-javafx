@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.uilib.entities3d.bonus.anim;
 
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.uilib.entities3d.world.MaterialColorAnimation3D;
+import de.amr.pacmanfx.uilib.entities3d.world.MaterialColorAnimations;
 import de.amr.pacmanfx.uilib.entities3d.world.NumberBox3D;
 import javafx.animation.*;
 import javafx.scene.paint.PhongMaterial;
@@ -48,7 +48,7 @@ public class NumberBoxRisingAnimation3D {
         return new SequentialTransition(
             Ufx.pauseSec(0.5),
             new ParallelTransition(rotate, rise),
-            MaterialColorAnimation3D.fadeOut(1, (PhongMaterial) numberBox3D.box().getMaterial())
+            MaterialColorAnimations.fadeOut(1, (PhongMaterial) numberBox3D.box().getMaterial())
         );
     }
 }

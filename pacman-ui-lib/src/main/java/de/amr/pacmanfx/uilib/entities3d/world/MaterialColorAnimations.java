@@ -12,7 +12,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.util.Duration;
 
-public class MaterialColorAnimation3D {
+public class MaterialColorAnimations {
 
     public static Animation colorTransition(double seconds, PhongMaterial material, Color fromColor, Color toColor) {
         return new Timeline(
