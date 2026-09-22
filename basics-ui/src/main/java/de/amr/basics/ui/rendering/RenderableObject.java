@@ -2,11 +2,11 @@ package de.amr.basics.ui.rendering;
 
 public class RenderableObject implements Renderable {
 
-    public static RenderableObject reordered(Renderable r, RenderingLayer layer, int z) {
+    public static RenderableObject assignLayer(Renderable r, RenderingLayer layer, int z) {
         return new RenderableObject(r, layer, z);
     }
 
-    public static RenderableObject reordered(Renderable r, RenderingLayer layer) {
+    public static RenderableObject assignLayer(Renderable r, RenderingLayer layer) {
         return new RenderableObject(r, layer, 0);
     }
 

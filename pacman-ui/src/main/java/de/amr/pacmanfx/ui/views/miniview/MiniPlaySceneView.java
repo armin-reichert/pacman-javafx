@@ -8,7 +8,6 @@ import de.amr.basics.InfoMap;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
 import de.amr.basics.ui.rendering.Renderable;
-import de.amr.basics.ui.rendering.RenderableObject;
 import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -36,6 +35,7 @@ import javafx.util.Duration;
 
 import java.util.stream.Stream;
 
+import static de.amr.basics.ui.rendering.RenderableObject.assignLayer;
 import static de.amr.pacmanfx.game.GameVariantRenderConfig.renderableGameEntity;
 import static java.util.Objects.requireNonNull;
 
@@ -111,9 +111,8 @@ public class MiniPlaySceneView extends HBox {
         if (!isVisible() || level == null) return Stream.empty();
 
         return Ufx.streamOf(
-            createRenderableGameLevel(level),
-            level.entitySet().entities().all()
-                .map(entity -> renderableGameEntity(entity, RenderingLayer.MINIVIEW_OVERLAY, 0))
+            assignLayer(createRenderableLevel(level), RenderingLayer.MINIVIEW_OVERLAY, 0),
+            level.entitySet().entities().all().map(entity -> renderableGameEntity(entity, RenderingLayer.MINIVIEW_OVERLAY, 0))
         );
     }
 
@@ -175,15 +174,12 @@ public class MiniPlaySceneView extends HBox {
             || slidingOutAnimation != null && slidingOutAnimation.getStatus() == Animation.Status.RUNNING;
     }
 
-    private Renderable createRenderableGameLevel(GameLevel level) {
+    private RenderableGameLevel createRenderableLevel(GameLevel level) {
         final InfoMap info = new InfoMap();
         info.put(LevelRenderInfoKey.ENERGIZERS_SHOWN, level.heartbeat().state() == Pulse.State.ON);
         info.put(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, false);
         info.put(LevelRenderInfoKey.SHOW_EMPTY_MAZE, level.food().remainingFoodCount() == 0);
         info.put(LevelRenderInfoKey.MAZE_IS_FLASHING, false);
-        return RenderableObject.reordered(
-            new RenderableGameLevel(level, info),
-            RenderingLayer.MINIVIEW_OVERLAY,
-            0);
+        return new RenderableGameLevel(level, info);
     }
 }
