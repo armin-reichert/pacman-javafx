@@ -113,7 +113,7 @@ public class MiniPlaySceneView extends HBox {
         return Ufx.streamOf(
             createRenderableGameLevel(level),
             level.entitySet().entities().all()
-                .map(entity -> renderableGameEntity(entity, RenderingLayer.OVERLAY, 0))
+                .map(entity -> renderableGameEntity(entity, RenderingLayer.MINIVIEW_OVERLAY, 0))
         );
     }
 
@@ -183,7 +183,7 @@ public class MiniPlaySceneView extends HBox {
         info.put(LevelRenderInfoKey.MAZE_IS_FLASHING, false);
         return RenderableObject.reordered(
             new RenderableGameLevel(level, info),
-            RenderingLayer.OVERLAY,
+            RenderingLayer.MINIVIEW_OVERLAY,
             0);
     }
 }

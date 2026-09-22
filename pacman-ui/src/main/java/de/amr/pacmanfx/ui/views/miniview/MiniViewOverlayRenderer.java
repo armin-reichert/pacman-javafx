@@ -12,12 +12,12 @@ import de.amr.basics.ui.rendering.RenderableObject;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.uilib.rendering.RenderableGameLevel;
 
-public class MiniPlaySceneViewRenderer extends BaseRenderer {
+public class MiniViewOverlayRenderer extends BaseRenderer {
 
     private final Renderer levelRenderer;
     private final Renderer entityRenderer;
 
-    public MiniPlaySceneViewRenderer(
+    public MiniViewOverlayRenderer(
         MiniPlaySceneView miniView,
         ActorSpriteAnimController animController,
         GameVariantRenderConfig renderConfig) {

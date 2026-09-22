@@ -14,9 +14,8 @@ import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.views.miniview.MiniPlaySceneView;
-import de.amr.pacmanfx.ui.views.miniview.MiniPlaySceneViewRenderer;
+import de.amr.pacmanfx.ui.views.miniview.MiniViewOverlayRenderer;
 import de.amr.basics.ui.rendering.Renderer;
-import de.amr.basics.ui.rendering.RenderableObject;
 import javafx.scene.canvas.Canvas;
 import org.tinylog.Logger;
 
@@ -28,7 +27,7 @@ public class RenderManager {
     private Renderer levelRenderer;
     private Renderer sceneRenderer;
     private Renderer sceneDebugRenderer;
-    private Renderer miniViewRenderer;
+    private Renderer miniViewOverlayRenderer;
 
     private final RenderQueue renderQueue = new RenderQueue();
 
@@ -74,7 +73,7 @@ public class RenderManager {
 
             //TODO This is just a temporary solution
             // Mini view renderer has its own scaling and background
-            miniViewRenderer = new MiniPlaySceneViewRenderer(miniView, animController, renderConfig);
+            miniViewOverlayRenderer = new MiniViewOverlayRenderer(miniView, animController, renderConfig);
         }
         else {
             Logger.error("Cannot create renderers: no canvas has been assigned to game scene!");
@@ -104,7 +103,7 @@ public class RenderManager {
             switch (r.layer()) {
                 case WORLD    -> renderWorld(r, tick);
                 case SCENE    -> renderScene(r, tick);
-                case OVERLAY  -> renderOverlay(r, tick);
+                case MINIVIEW_OVERLAY -> renderOverlay(r, tick);
                 case HUD      -> renderHUD(r, tick);
                 default       -> renderAnything(r, tick);
             }
@@ -145,8 +144,8 @@ public class RenderManager {
     }
 
     private void renderOverlay(Renderable r, long tick) {
-        if (miniViewRenderer != null) {
-            miniViewRenderer.render(r, tick);
+        if (miniViewOverlayRenderer != null) {
+            miniViewOverlayRenderer.render(r, tick);
         }
     }
 
