@@ -35,8 +35,8 @@ import static de.amr.pacmanfx.game.GameVariantRenderConfig.createPropView;
  */
 public class ArcadePacMan_CutScene2 extends AbstractGameScene {
 
-    public final int nailX = WorldMap.TS * 15 - 1;
-    public final int nailY = WorldMap.TS * 20 - 1;
+    public final float nailX = WorldMap.TS * 14;
+    public final float nailY = WorldMap.TS * 19.5f - 2;
 
     private Pac pacMan;
     private Ghost blinky;
@@ -52,7 +52,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene {
         return Ufx.streamOf(
             createPropView(pacMan),
             createPropView(blinky),
-            createPropView(nailDressRapturing)
+            createPropView(nailDressRapturing, -1) // behind ghost
         );
     }
 

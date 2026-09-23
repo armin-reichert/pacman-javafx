@@ -191,7 +191,6 @@ public class ArcadePacMan_VariantRenderer extends BaseRenderer {
     }
 
     private void draw(NailDressRapturing nailDressRapturing) {
-        final Vector2f center = nailDressRapturing.pos().bodyCenter();
-        drawSprite(animController.currentSprite(nailDressRapturing), center.x(), center.y(), true);
+        drawSprite(animController.currentSprite(nailDressRapturing), nailDressRapturing.pos().x(), nailDressRapturing.pos().y(), true);
     }
 }

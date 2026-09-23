@@ -253,8 +253,10 @@ public class GamePlayView implements GameView {
             layers.miniViewLayer()
         );
 
-        renderManager.renderQueue().add(abstractGameScene); //TODO rethink this
         renderManager.renderQueue().addAll(currentGameScene.renderables());
+        if (debugMode) {
+            renderManager.renderQueue().add(abstractGameScene); //TODO change this
+        }
 
         // Clear canvases
         layers.miniViewLayer().clearCanvas();

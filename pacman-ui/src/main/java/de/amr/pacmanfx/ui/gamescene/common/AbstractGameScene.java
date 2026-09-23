@@ -144,5 +144,4 @@ public abstract class AbstractGameScene
     public RenderingLayer layer() {
         return RenderingLayer.SCENE;
     }
-
 }

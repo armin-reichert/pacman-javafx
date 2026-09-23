@@ -44,8 +44,12 @@ public interface GameVariantRenderConfig {
         return new GameEntityView(gameEntity, layer, z);
     }
 
+    static GameEntityView createPropView(GameEntity gameEntity, int z) {
+        return createEntityView(gameEntity, RenderingLayer.PROPS, z);
+    }
+
     static GameEntityView createPropView(GameEntity gameEntity) {
-        return createEntityView(gameEntity, RenderingLayer.PROPS, 0);
+        return createPropView(gameEntity, 0);
     }
 
     static GameEntityView createPacView(Pac pac) {
