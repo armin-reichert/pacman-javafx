@@ -13,6 +13,11 @@ public record RenderableMenuOption(
     String label,
     String value,
     int separatorTileX,
-    RenderingLayer layer, int z,
     Vector2f offset
-) implements Renderable {}
+) implements Renderable
+{
+    @Override
+    public RenderingLayer layer() {
+        return RenderingLayer.HUD;
+    }
+}

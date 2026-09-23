@@ -10,7 +10,6 @@ import de.amr.basics.ui.entities.hud.score.Score;
 import de.amr.basics.ui.entities.props.imagedisplay.ImageDisplay;
 import de.amr.basics.ui.entities.props.textdisplay.TextDisplay;
 import de.amr.basics.ui.rendering.Renderable;
-import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
@@ -339,7 +338,6 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
             "TYPE",
             "1 PLAYER",
             8,
-            RenderingLayer.HUD, 0,
             new Vector2f(0, 4.5f * TS)
         );
     }
@@ -355,7 +353,6 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
                 case ACTIVATE_WITH_A_OR_B -> "USE A OR B";
             },
             19,
-            RenderingLayer.HUD, 0,
             new Vector2f(0, 6 * TS)
         );
     }
@@ -367,7 +364,6 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
             "GAME DIFFICULTY",
             difficulty.name(),
             19,
-            RenderingLayer.HUD, 0,
             new Vector2f(0, 7.5f * TS)
         );
     }
@@ -379,7 +375,6 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
             "MAZE SELECTION",
             mapCategory.name(),
             19,
-            RenderingLayer.HUD, 0,
             new Vector2f(0, 9f * TS)
         );
     }
@@ -391,7 +386,6 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
             "STARTING LEVEL",
             String.valueOf(startLevelNumber),
             19,
-            RenderingLayer.HUD, 0,
             new Vector2f(0, 10.5f * TS)
         );
     }
