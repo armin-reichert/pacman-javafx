@@ -17,9 +17,11 @@ import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.hud.ScoreSystem;
 import de.amr.pacmanfx.core.event.HighScoreAccessErrorEvent;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
+import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacManSoundID;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
+import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.model.BoosterMode;
 import de.amr.pacmanfx.tengenmspacman.model.Difficulty;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
@@ -145,7 +147,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
             "TYPE",
             "1 PLAYER",
             8,
-            RenderingLayer.SCENE, 0,
+            RenderingLayer.HUD, 0,
             new Vector2f(0, 4.5f * TS)
         );
     }
@@ -161,7 +163,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
                 case ACTIVATE_WITH_A_OR_B -> "USE A OR B";
             },
             19,
-            RenderingLayer.SCENE, 0,
+            RenderingLayer.HUD, 0,
             new Vector2f(0, 6 * TS)
         );
     }
@@ -173,7 +175,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
             "GAME DIFFICULTY",
             difficulty.name(),
             19,
-            RenderingLayer.SCENE, 0,
+            RenderingLayer.HUD, 0,
             new Vector2f(0, 7.5f * TS)
         );
     }
@@ -185,7 +187,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
             "MAZE SELECTION",
             mapCategory.name(),
             19,
-            RenderingLayer.SCENE, 0,
+            RenderingLayer.HUD, 0,
             new Vector2f(0, 9f * TS)
         );
     }
@@ -197,7 +199,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
             "STARTING LEVEL",
             String.valueOf(startLevelNumber),
             19,
-            RenderingLayer.SCENE, 0,
+            RenderingLayer.HUD, 0,
             new Vector2f(0, 10.5f * TS)
         );
     }
@@ -229,6 +231,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         if (initialDelay > 0) return Stream.empty();
 
         return Ufx.streamOf(
+            renderableJoyPadKeyBindings(),
             topBar,
             titleTextDisplay,
             renderablePlayModeOption(),
@@ -241,6 +244,16 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
             pressStartTextDisplay,
             botBar
         );
+    }
+
+    private RenderableJoypadKeyBindings renderableJoyPadKeyBindings() {
+        final GameVariantRuntime runtime = app().variantManager().currentRuntime();
+        final var uiSettings = runtime.extensionValue(
+            TengenMsPacMan_GameExtension.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
+
+        return uiSettings.joypadBindingsDisplayed.get()
+            ? new RenderableJoypadKeyBindings(app().input().joypad().currentKeyBinding(), new Vector2f(0,0))
+            : null;
     }
 
     @Override

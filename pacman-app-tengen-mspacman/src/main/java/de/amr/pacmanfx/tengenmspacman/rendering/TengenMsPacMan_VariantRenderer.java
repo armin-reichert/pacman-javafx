@@ -34,6 +34,9 @@ import de.amr.pacmanfx.tengenmspacman.entities.LevelNumberDisplay;
 import de.amr.pacmanfx.tengenmspacman.entities.bag.Bag;
 import de.amr.pacmanfx.tengenmspacman.entities.clapperboard.TengenMsPacMan_ClapperboardAnimationSystem;
 import de.amr.pacmanfx.tengenmspacman.entities.gameoptionsdisplay.GameOptionsDataComp;
+import de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene.RenderableJoypadKeyBindings;
+import de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene.RenderableMenuOption;
+import de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene.RenderableMenuSeparatorBar;
 import de.amr.pacmanfx.tengenmspacman.model.BoosterMode;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
@@ -42,6 +45,7 @@ import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.basics.ui.assets.SpriteSheet;
 import de.amr.basics.ui.entities.hud.HUD_Style;
 import de.amr.basics.ui.rendering.BaseRenderer;
+import de.amr.pacmanfx.ui.input.JoypadKeyBinding;
 import de.amr.pacmanfx.uilib.FacingSprite;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -53,6 +57,7 @@ import java.util.Optional;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
+import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SceneRendererUtils.drawJoypadKeyBinding;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_VariantRenderer extends BaseRenderer {
@@ -86,6 +91,9 @@ public class TengenMsPacMan_VariantRenderer extends BaseRenderer {
         switch (r) {
             case RenderableGameEntity rge -> renderGameEntity(rge.gameEntity(), tick);
             case GameEntity gameEntity    -> renderGameEntity(gameEntity, tick);
+            case RenderableJoypadKeyBindings(JoypadKeyBinding joypadKeyBinding, Vector2f _) -> drawJoypadKeyBinding(ctx, scaling(), joypadKeyBinding);
+            case RenderableMenuOption menuOption -> renderMenuOption(menuOption);
+            case RenderableMenuSeparatorBar bar -> renderBar(bar);
             default -> super.render(r, tick);
         }
     }
@@ -376,6 +384,39 @@ public class TengenMsPacMan_VariantRenderer extends BaseRenderer {
 
         final RectShort onesSprite = spriteSheet.findDigitSprite(number % 10);
         drawSprite(onesSprite, x + 10, y + 2, true);
+    }
+
+    private void renderMenuOption(RenderableMenuOption menuOption) {
+        final float y = menuOption.offset().y();
+        final double sepX = menuOption.separatorTileX() * TS;
+        final double valueX = sepX + 2 * TS;
+        final Font arcade8 = Ufx.deriveFont(GlobalFonts.ARCADE.font(), scaled(8));
+        final Color yellow = NES_Palette.color(0x28);
+        final Color white = NES_Palette.color(0x20);
+
+        ctx.save();
+
+        ctx.setFont(arcade8);
+        if (menuOption.selected()) {
+            ctx.setFill(yellow);
+            ctx.fillRect(scaled(2 * TS + 2.25), scaled(y - 4.5), scaled(7.5), scaled(1.75));
+            fillText(">", yellow, arcade8, 2 * TS + 3, y);
+        }
+        fillText(menuOption.label(), yellow, 4 * TS, y);
+        fillText(":", yellow, sepX, y);
+        fillText(menuOption.value(), white, valueX, y);
+
+        ctx.restore();
+    }
+
+    private void renderBar(RenderableMenuSeparatorBar bar) {
+        ctx.save();
+        ctx.scale(scaling(), scaling());
+        ctx.setFill(NES_Palette.color(0x20));
+        ctx.fillRect(0, 0, bar.width(), bar.height());
+        ctx.setFill(NES_Palette.color(0x21));
+        ctx.fillRect(0, 1, bar.width(), bar.height() - 2);
+        ctx.restore();
     }
 
 }
