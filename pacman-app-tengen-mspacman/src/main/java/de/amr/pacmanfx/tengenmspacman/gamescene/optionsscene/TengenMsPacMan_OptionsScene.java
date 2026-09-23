@@ -46,7 +46,16 @@ import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
  */
 public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
 
-    public static final byte OPTION_PLAYERS = 0;
+    public record RenderableMenuOption(
+        boolean selected,
+        String label,
+        String value,
+        int separatorTileX,
+        RenderingLayer layer, int z,
+        Vector2f offset) implements Renderable {
+    }
+
+    public static final byte OPTION_PLAY_MODE = 0;
     public static final byte OPTION_PAC_BOOSTER = 1;
     public static final byte OPTION_DIFFICULTY = 2;
     public static final byte OPTION_MAP_CATEGORY = 3;
@@ -77,9 +86,15 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         reqCanvasRendering().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
     }
 
-    public record RenderableMenuOption(
-        boolean selected, String label, String value,
-        RenderingLayer layer, int z, Vector2f offset) implements Renderable {
+    private RenderableMenuOption renderablePlayModeOption() {
+        return new RenderableMenuOption(
+            selectedOption() == OPTION_PLAY_MODE,
+            "TYPE",
+            "1 PLAYER",
+            8,
+            RenderingLayer.SCENE, 0,
+            new Vector2f(0, 4.5f * Renderer.TS)
+        );
     }
 
     private RenderableMenuOption renderableBoosterModeOption() {
@@ -92,7 +107,9 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
                 case BOOSTER_ALWAYS_ON -> "ALWAYS ON";
                 case ACTIVATE_WITH_A_OR_B -> "USE A OR B";
             },
-            RenderingLayer.SCENE, 0, new Vector2f(0, 6 * Renderer.TS)
+            19,
+            RenderingLayer.SCENE, 0,
+            new Vector2f(0, 6 * Renderer.TS)
         );
     }
 
@@ -102,7 +119,9 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
             selectedOption() == OPTION_DIFFICULTY,
             "GAME DIFFICULTY",
             difficulty.name(),
-            RenderingLayer.SCENE, 0, new Vector2f(0, 7.5f * Renderer.TS)
+            19,
+            RenderingLayer.SCENE, 0,
+            new Vector2f(0, 7.5f * Renderer.TS)
         );
     }
 
@@ -112,7 +131,9 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
             selectedOption() == OPTION_MAP_CATEGORY,
             "MAZE SELECTION",
             mapCategory.name(),
-            RenderingLayer.SCENE, 0, new Vector2f(0, 9f * Renderer.TS)
+            19,
+            RenderingLayer.SCENE, 0,
+            new Vector2f(0, 9f * Renderer.TS)
         );
     }
 
@@ -121,6 +142,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         if (initialDelay > 0) return Stream.empty();
 
         return Ufx.streamOf(
+            renderablePlayModeOption(),
             renderableBoosterModeOption(),
             renderableGameDifficultyOption(),
             renderableMapCategoryOption()

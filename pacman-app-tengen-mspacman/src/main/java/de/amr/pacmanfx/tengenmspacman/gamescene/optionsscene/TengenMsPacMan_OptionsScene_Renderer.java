@@ -52,6 +52,8 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer {
 
     private void renderMenuOption(RenderableMenuOption menuOption) {
         final float y = menuOption.offset().y();
+        final double sepX = menuOption.separatorTileX() * TS;
+        final double valueX = sepX + 2 * TS;
         final Font arcade8 = Ufx.deriveFont(GlobalFonts.ARCADE.font(), scaled(8));
 
         ctx.save();
@@ -62,8 +64,8 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer {
             fillText(">", NES_YELLOW, arcade8, COL_ARROW + 3, y);
         }
         fillText(menuOption.label(), NES_YELLOW, COL_LABEL, y);
-        fillText(":", NES_YELLOW, COL_COLON, y);
-        fillText(menuOption.value(), NES_WHITE, COL_VALUE, y);
+        fillText(":", NES_YELLOW, sepX, y);
+        fillText(menuOption.value(), NES_WHITE, valueX, y);
         ctx.restore();
     }
 
@@ -91,12 +93,15 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer {
         fillText("MS PAC-MAN OPTIONS", NES_YELLOW, COL_LABEL + 3 * TS, 48);
 
         y += tilesPx(3);
+
         // Players (not implemented)
-        drawMarkerIfSelected(optionsScene, OPTION_PLAYERS, y, arcade8);
+        /*
+        drawMarkerIfSelected(optionsScene, OPTION_PLAY_MODE, y, arcade8);
         fillText("TYPE", NES_YELLOW, COL_LABEL, y);
         fillText(":", NES_YELLOW, COL_LABEL + 4 * TS + 4, y);
         // gray out
         fillText("1 PLAYER", NES_Palette.color(0x10), COL_LABEL + 6 * TS, y);
+         */
 
         y += tilesPx(3);
 
