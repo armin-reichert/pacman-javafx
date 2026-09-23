@@ -4,7 +4,9 @@
 
 package de.amr.pacmanfx.core;
 
-import de.amr.basics.ui.ecs.systems.*;
+import de.amr.basics.ecs.system.LifetimeSystem;
+import de.amr.basics.ecs.system.MovementSystem;
+import de.amr.basics.ui.ecs.system.*;
 import de.amr.basics.ui.entities.hud.levelCounter.LevelCounterSystem;
 import de.amr.pacmanfx.core.entities.RoamingSystem;
 import de.amr.pacmanfx.core.entities.WorldMovementPolicy;

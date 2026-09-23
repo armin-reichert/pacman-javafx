@@ -6,7 +6,7 @@ package de.amr.basics.ui.entities.hud;
 
 import de.amr.basics.math.RectShort;
 import de.amr.basics.ui.assets.SpriteSheet;
-import de.amr.basics.ui.ecs.GameEntityComp;
+import de.amr.basics.ecs.GameEntityComp;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 

@@ -4,15 +4,15 @@
 
 package de.amr.pacmanfx.core.entities;
 
+import de.amr.basics.ecs.GameEntity;
+import de.amr.basics.ecs.comp.MovementComp;
+import de.amr.basics.ecs.comp.PositionComp;
+import de.amr.basics.ecs.system.MovementSystem;
+import de.amr.basics.ecs.system.PositionSystem;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
-import de.amr.basics.ui.ecs.GameEntity;
-import de.amr.basics.ui.ecs.comp.MovementComp;
-import de.amr.basics.ui.ecs.comp.PositionComp;
 import de.amr.basics.ui.ecs.comp.WorldNavigationComp;
-import de.amr.basics.ui.ecs.systems.MovementSystem;
-import de.amr.basics.ui.ecs.systems.PositionSystem;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;

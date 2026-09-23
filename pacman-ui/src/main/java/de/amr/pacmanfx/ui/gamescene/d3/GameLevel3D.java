@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.gamescene.d3;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.basics.ui.ecs.systems.PositionSystem;
+import de.amr.basics.ecs.system.PositionSystem;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;

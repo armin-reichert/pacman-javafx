@@ -4,7 +4,7 @@
 
 package de.amr.basics.ui.entities.hud.livescounter;
 
-import de.amr.basics.ui.ecs.GameEntityComp;
+import de.amr.basics.ecs.GameEntityComp;
 
 public class LivesCounterDataComp implements GameEntityComp {
 

@@ -1,7 +1,7 @@
 package de.amr.pacmanfx.core;
 
 import de.amr.basics.QuerySet;
-import de.amr.basics.ui.ecs.GameEntity;
+import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.ui.entities.hud.levelCounter.LevelCounter;
 import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
 import de.amr.basics.ui.entities.hud.score.Score;

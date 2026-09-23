@@ -6,8 +6,8 @@ package de.amr.pacmanfx.tengenmspacman;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
-import de.amr.basics.ui.ecs.GameEntity;
-import de.amr.basics.ui.ecs.systems.PositionSystem;
+import de.amr.basics.ecs.GameEntity;
+import de.amr.basics.ecs.system.PositionSystem;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.GameSystems;

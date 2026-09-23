@@ -4,7 +4,7 @@
 
 package de.amr.basics.ui.entities.hud.score;
 
-import de.amr.basics.ui.ecs.GameEntity;
+import de.amr.basics.ecs.GameEntity;
 
 import static java.util.Objects.requireNonNull;
 

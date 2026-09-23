@@ -4,7 +4,7 @@
 package de.amr.pacmanfx.mapeditor.actions;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.basics.ui.ecs.systems.PositionSystem;
+import de.amr.basics.ecs.system.PositionSystem;
 import de.amr.pacmanfx.core.model.world.map.FoodTile;
 import de.amr.pacmanfx.core.model.world.map.TerrainTile;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;

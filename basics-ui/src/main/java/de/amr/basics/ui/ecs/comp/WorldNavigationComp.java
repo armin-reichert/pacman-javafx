@@ -6,7 +6,7 @@ package de.amr.basics.ui.ecs.comp;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
-import de.amr.basics.ui.ecs.GameEntityComp;
+import de.amr.basics.ecs.GameEntityComp;
 
 import java.util.Optional;
 

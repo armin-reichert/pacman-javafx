@@ -1,7 +1,7 @@
 package de.amr.pacmanfx.core;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.basics.ui.ecs.GameEntity;
+import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.rendering.RenderingLayer;
 

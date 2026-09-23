@@ -2,15 +2,15 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.basics.ui.ecs;
+package de.amr.basics.ecs;
 
 import de.amr.basics.Composition;
 import de.amr.basics.Disposable;
+import de.amr.basics.ecs.comp.LifetimeComp;
+import de.amr.basics.ecs.comp.MovementComp;
+import de.amr.basics.ecs.comp.PositionComp;
+import de.amr.basics.ecs.comp.VisibilityComp;
 import de.amr.basics.timer.TickTimer;
-import de.amr.basics.ui.ecs.comp.LifetimeComp;
-import de.amr.basics.ui.ecs.comp.MovementComp;
-import de.amr.basics.ui.ecs.comp.PositionComp;
-import de.amr.basics.ui.ecs.comp.VisibilityComp;
 
 import java.util.Optional;
 

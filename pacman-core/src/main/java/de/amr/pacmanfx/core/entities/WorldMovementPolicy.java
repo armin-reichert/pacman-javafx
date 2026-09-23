@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.core.entities;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.basics.ui.ecs.GameEntity;
+import de.amr.basics.ecs.GameEntity;
 import de.amr.pacmanfx.core.level.GameLevel;
 
 public interface WorldMovementPolicy<E extends GameEntity> {

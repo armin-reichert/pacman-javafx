@@ -4,7 +4,7 @@
 
 package de.amr.basics.ui.entities.hud.levelCounter;
 
-import de.amr.basics.ui.ecs.GameEntity;
+import de.amr.basics.ecs.GameEntity;
 
 public class LevelCounter extends GameEntity {
 

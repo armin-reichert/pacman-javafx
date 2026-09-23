@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.tengenmspacman.gamestate;
 
-import de.amr.basics.ui.ecs.GameEntity;
+import de.amr.basics.ecs.GameEntity;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;

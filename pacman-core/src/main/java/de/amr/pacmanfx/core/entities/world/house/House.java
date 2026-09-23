@@ -6,7 +6,7 @@ package de.amr.pacmanfx.core.entities.world.house;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
-import de.amr.basics.ui.ecs.GameEntity;
+import de.amr.basics.ecs.GameEntity;
 import de.amr.pacmanfx.core.entities.world.door.Door;
 import de.amr.pacmanfx.core.entities.world.door.DoorDataComp;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;

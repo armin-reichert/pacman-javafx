@@ -1,7 +1,7 @@
 package de.amr.pacmanfx.core.entities.actor.pac;
 
 import de.amr.basics.Named;
-import de.amr.basics.ui.ecs.systems.ActorSpriteAnimController;
+import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.pacmanfx.core.rules.GameRules;
 

@@ -4,7 +4,7 @@
 
 package de.amr.basics.ui.entities.props.messageview;
 
-import de.amr.basics.ui.ecs.GameEntityComp;
+import de.amr.basics.ecs.GameEntityComp;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 

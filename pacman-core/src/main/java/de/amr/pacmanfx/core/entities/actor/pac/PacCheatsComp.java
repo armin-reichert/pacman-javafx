@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.core.entities.actor.pac;
 
-import de.amr.basics.ui.ecs.GameEntityComp;
+import de.amr.basics.ecs.GameEntityComp;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 

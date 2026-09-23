@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.entities3D.livescounter.comp;
 
 
-import de.amr.basics.ui.ecs.GameEntityComp;
+import de.amr.basics.ecs.GameEntityComp;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.NodePositionTracker;

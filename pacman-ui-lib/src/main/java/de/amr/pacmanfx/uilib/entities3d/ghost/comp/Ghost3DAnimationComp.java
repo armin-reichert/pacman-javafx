@@ -1,6 +1,6 @@
 package de.amr.pacmanfx.uilib.entities3d.ghost.comp;
 
-import de.amr.basics.ui.ecs.GameEntityComp;
+import de.amr.basics.ecs.GameEntityComp;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.basics.ui.animation.AnimationRegistry;
 import de.amr.basics.ui.animation.ManagedAnimation;

@@ -2,11 +2,11 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.basics.ui.ecs.systems;
+package de.amr.basics.ui.ecs.system;
 
 import de.amr.basics.Named;
 import de.amr.basics.math.RectShort;
-import de.amr.basics.ui.ecs.GameEntity;
+import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.ui.ecs.comp.SpriteAnimationComp;
 import de.amr.basics.ui.spriteanim.SpriteAnimFacade;
 

@@ -4,8 +4,8 @@
 package de.amr.pacmanfx.tengenmspacman.gamescene.cutscenes;
 
 import de.amr.basics.math.Direction;
-import de.amr.basics.ui.ecs.systems.ActorSpriteAnimController;
-import de.amr.basics.ui.ecs.systems.MovementSystem;
+import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
+import de.amr.basics.ecs.system.MovementSystem;
 import de.amr.basics.ui.entities.props.clapperboard.Clapperboard;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
@@ -28,7 +28,6 @@ import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.game.GameVariantRenderConfig.createPacView;
 import static de.amr.pacmanfx.game.GameVariantRenderConfig.createPropView;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;

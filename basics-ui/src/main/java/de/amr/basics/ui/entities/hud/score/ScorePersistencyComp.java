@@ -1,6 +1,6 @@
 package de.amr.basics.ui.entities.hud.score;
 
-import de.amr.basics.ui.ecs.GameEntityComp;
+import de.amr.basics.ecs.GameEntityComp;
 
 import java.io.File;
 import java.time.format.DateTimeFormatter;

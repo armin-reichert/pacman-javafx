@@ -6,9 +6,9 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
-import de.amr.basics.ui.ecs.GameEntity;
+import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.ui.ecs.comp.SpriteAnimationComp;
-import de.amr.basics.ui.ecs.systems.ActorSpriteAnimController;
+import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.entities.props.clapperboard.Clapperboard;
 import de.amr.basics.ui.entities.props.marquee.Marquee;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;

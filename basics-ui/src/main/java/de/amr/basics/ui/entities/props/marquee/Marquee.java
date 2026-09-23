@@ -4,7 +4,7 @@
 
 package de.amr.basics.ui.entities.props.marquee;
 
-import de.amr.basics.ui.ecs.GameEntity;
+import de.amr.basics.ecs.GameEntity;
 
 public final class Marquee extends GameEntity {
 

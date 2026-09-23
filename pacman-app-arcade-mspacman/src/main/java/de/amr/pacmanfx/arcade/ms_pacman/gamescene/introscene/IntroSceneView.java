@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.arcade.ms_pacman.gamescene.introscene;
 
 import de.amr.basics.math.Direction;
-import de.amr.basics.ui.ecs.systems.ActorSpriteAnimController;
+import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.entities.props.imagedisplay.ImageView;
 import de.amr.basics.ui.entities.props.marquee.Marquee;
 import de.amr.basics.ui.entities.props.textdisplay.TextView;

@@ -5,8 +5,8 @@
 package de.amr.basics.ui.entities.props.marquee;
 
 
-import de.amr.basics.ui.ecs.GameEntityComp;
-import de.amr.basics.ui.ecs.comp.PositionComp;
+import de.amr.basics.ecs.GameEntityComp;
+import de.amr.basics.ecs.comp.PositionComp;
 
 public class MarqueeLayoutComp implements GameEntityComp {
 

@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.arcade.pacman.gamescene.playscene;
 
 import de.amr.basics.fsm.State;
-import de.amr.basics.ui.ecs.systems.ActorSpriteAnimController;
+import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.event.StopAllSoundsEvent;

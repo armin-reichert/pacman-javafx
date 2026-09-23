@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.core.entities.actor.ghost;
 
-import de.amr.basics.ui.ecs.GameEntity;
-import de.amr.basics.ui.ecs.comp.MovementComp;
+import de.amr.basics.ecs.GameEntity;
+import de.amr.basics.ecs.comp.MovementComp;
 import de.amr.basics.ui.ecs.comp.SpriteAnimationComp;
 import de.amr.basics.ui.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.model.GhostPersonality;

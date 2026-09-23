@@ -2,7 +2,7 @@ package de.amr.pacmanfx.uilib.entities3d.house.comp;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
-import de.amr.basics.ui.ecs.GameEntityComp;
+import de.amr.basics.ecs.GameEntityComp;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.entities.world.house.HouseFloorplanComp;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;

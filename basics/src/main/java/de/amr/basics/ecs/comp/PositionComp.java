@@ -2,12 +2,12 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.basics.ui.ecs.comp;
+package de.amr.basics.ecs.comp;
 
+import de.amr.basics.ecs.GameEntityComp;
+import de.amr.basics.ecs.system.PositionSystem;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
-import de.amr.basics.ui.ecs.GameEntityComp;
-import de.amr.basics.ui.ecs.systems.PositionSystem;
 
 import static java.util.Objects.requireNonNull;
 

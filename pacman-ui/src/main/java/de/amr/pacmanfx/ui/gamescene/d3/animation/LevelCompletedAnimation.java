@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.ui.gamescene.d3.animation;
 
-import de.amr.basics.ui.ecs.GameEntity;
+import de.amr.basics.ecs.GameEntity;
 import de.amr.pacmanfx.core.entities.world.house.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.ui.gamescene.d3.GameLevel3D;

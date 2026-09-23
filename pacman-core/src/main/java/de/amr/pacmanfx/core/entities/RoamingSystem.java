@@ -7,7 +7,7 @@ package de.amr.pacmanfx.core.entities;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.RandomNumbers;
 import de.amr.basics.math.Vector2i;
-import de.amr.basics.ui.ecs.GameEntity;
+import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.ui.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.level.GameLevel;
 import org.tinylog.Logger;

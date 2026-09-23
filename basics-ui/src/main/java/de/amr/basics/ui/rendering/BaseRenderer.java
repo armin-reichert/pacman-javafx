@@ -9,7 +9,7 @@ import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.ui.assets.SpriteSheet;
-import de.amr.basics.ui.ecs.GameEntity;
+import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.ui.entities.props.ColoredRect;
 import de.amr.basics.ui.entities.props.imagedisplay.ImageView;
 import de.amr.basics.ui.entities.props.messageview.MessageType;

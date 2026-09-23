@@ -4,7 +4,7 @@
 
 package de.amr.basics.ui.entities.hud.levelCounter;
 
-import de.amr.basics.ui.ecs.GameEntityComp;
+import de.amr.basics.ecs.GameEntityComp;
 
 import java.util.ArrayList;
 import java.util.List;

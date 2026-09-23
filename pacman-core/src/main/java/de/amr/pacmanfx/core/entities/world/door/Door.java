@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.core.entities.world.door;
 
-import de.amr.basics.ui.ecs.GameEntity;
+import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.ui.rendering.Renderable;
 

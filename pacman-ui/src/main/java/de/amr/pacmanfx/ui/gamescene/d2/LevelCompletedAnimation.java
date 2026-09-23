@@ -3,7 +3,7 @@
  */
 package de.amr.pacmanfx.ui.gamescene.d2;
 
-import de.amr.basics.ui.ecs.GameEntity;
+import de.amr.basics.ecs.GameEntity;
 import de.amr.pacmanfx.core.level.GameLevel;
 import javafx.animation.Animation;
 import javafx.animation.SequentialTransition;

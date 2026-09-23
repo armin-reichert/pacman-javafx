@@ -4,7 +4,7 @@
 
 package de.amr.basics.ui.entities.props.clapperboard;
 
-import de.amr.basics.ui.ecs.GameEntity;
+import de.amr.basics.ecs.GameEntity;
 
 /**
  * Animated movie clapperboard.

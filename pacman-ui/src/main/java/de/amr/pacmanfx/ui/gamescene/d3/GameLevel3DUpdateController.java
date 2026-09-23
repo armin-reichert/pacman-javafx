@@ -1,7 +1,7 @@
 package de.amr.pacmanfx.ui.gamescene.d3;
 
 import de.amr.basics.math.Vector2f;
-import de.amr.basics.ui.ecs.GameEntity;
+import de.amr.basics.ecs.GameEntity;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;

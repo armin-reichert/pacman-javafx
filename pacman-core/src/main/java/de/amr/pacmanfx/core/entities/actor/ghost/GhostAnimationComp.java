@@ -1,7 +1,7 @@
 package de.amr.pacmanfx.core.entities.actor.ghost;
 
 import de.amr.basics.Named;
-import de.amr.basics.ui.ecs.GameEntityComp;
+import de.amr.basics.ecs.GameEntityComp;
 
 public class GhostAnimationComp implements GameEntityComp {
 

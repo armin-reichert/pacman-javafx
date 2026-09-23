@@ -4,7 +4,7 @@
 
 package de.amr.basics.ui.entities.props.imagedisplay;
 
-import de.amr.basics.ui.ecs.GameEntityComp;
+import de.amr.basics.ecs.GameEntityComp;
 import javafx.scene.image.Image;
 
 public class ImageViewComp implements GameEntityComp {

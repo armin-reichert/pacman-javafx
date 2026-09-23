@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.arcade.pacman.gamescene.cutscenes;
 
 import de.amr.basics.math.Direction;
-import de.amr.basics.ui.ecs.systems.ActorSpriteAnimController;
+import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.util.Ufx;

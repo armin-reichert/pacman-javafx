@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.core.entities.actor.ghost;
 
-import de.amr.basics.ui.ecs.GameEntityComp;
+import de.amr.basics.ecs.GameEntityComp;
 
 import static java.util.Objects.requireNonNull;
 

@@ -10,9 +10,8 @@ module de.amr.basics.ui {
 
     exports de.amr.basics.ui.animation;
     exports de.amr.basics.ui.assets;
-    exports de.amr.basics.ui.ecs;
     exports de.amr.basics.ui.ecs.comp;
-    exports de.amr.basics.ui.ecs.systems;
+    exports de.amr.basics.ui.ecs.system;
     exports de.amr.basics.ui.entities.hud;
     exports de.amr.basics.ui.entities.hud.levelCounter;
     exports de.amr.basics.ui.entities.hud.livescounter;

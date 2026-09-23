@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.tengenmspacman.entities.pac.comp;
 
-import de.amr.basics.ui.ecs.GameEntityComp;
+import de.amr.basics.ecs.GameEntityComp;
 
 public class PacBoosterComp implements GameEntityComp {
 

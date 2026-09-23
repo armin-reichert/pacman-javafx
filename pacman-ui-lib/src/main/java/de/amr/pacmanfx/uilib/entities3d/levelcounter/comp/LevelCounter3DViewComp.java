@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.uilib.entities3d.levelcounter.comp;
 
-import de.amr.basics.ui.ecs.GameEntityComp;
+import de.amr.basics.ecs.GameEntityComp;
 import de.amr.basics.ui.assets.DisposableGraphicsObject;
 import javafx.scene.Group;
 

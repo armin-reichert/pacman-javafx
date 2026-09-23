@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.tengenmspacman.gamescene.playscene;
 
-import de.amr.basics.ui.ecs.systems.ActorSpriteAnimController;
+import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
@@ -13,7 +13,6 @@ import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 
 public class TengenMsPacMan_PlaySceneDebugInfoRenderer extends BaseGameSceneDebugInfoRenderer {

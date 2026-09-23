@@ -6,8 +6,8 @@ package de.amr.basics.ui.entities.props.textdisplay;
 
 import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.ui.rendering.Renderable;
-import de.amr.basics.ui.ecs.GameEntity;
-import de.amr.basics.ui.ecs.comp.MovementComp;
+import de.amr.basics.ecs.GameEntity;
+import de.amr.basics.ecs.comp.MovementComp;
 
 public class TextView extends GameEntity implements Renderable {
 

@@ -6,8 +6,8 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.math.RectShort;
-import de.amr.basics.ui.ecs.GameEntity;
-import de.amr.basics.ui.ecs.systems.ActorSpriteAnimController;
+import de.amr.basics.ecs.GameEntity;
+import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;

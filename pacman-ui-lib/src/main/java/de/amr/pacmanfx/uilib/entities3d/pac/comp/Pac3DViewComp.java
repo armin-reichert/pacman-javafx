@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.uilib.entities3d.pac.comp;
 
 import de.amr.basics.math.Vector3f;
-import de.amr.basics.ui.ecs.GameEntityComp;
+import de.amr.basics.ecs.GameEntityComp;
 import de.amr.basics.util.Ufx;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;

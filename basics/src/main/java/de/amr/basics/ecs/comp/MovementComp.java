@@ -2,10 +2,10 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.basics.ui.ecs.comp;
+package de.amr.basics.ecs.comp;
 
 import de.amr.basics.math.Vector2f;
-import de.amr.basics.ui.ecs.GameEntityComp;
+import de.amr.basics.ecs.GameEntityComp;
 
 public class MovementComp implements GameEntityComp {
 

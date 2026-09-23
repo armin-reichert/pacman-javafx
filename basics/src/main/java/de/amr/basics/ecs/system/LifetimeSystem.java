@@ -1,8 +1,8 @@
-package de.amr.basics.ui.ecs.systems;
+package de.amr.basics.ecs.system;
 
 import de.amr.basics.QuerySet;
-import de.amr.basics.ui.ecs.GameEntity;
-import de.amr.basics.ui.ecs.comp.LifetimeComp;
+import de.amr.basics.ecs.GameEntity;
+import de.amr.basics.ecs.comp.LifetimeComp;
 
 import java.util.List;
 

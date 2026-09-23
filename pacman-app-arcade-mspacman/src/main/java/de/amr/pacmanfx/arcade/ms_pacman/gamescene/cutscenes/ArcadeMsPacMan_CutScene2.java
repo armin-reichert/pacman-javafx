@@ -5,8 +5,8 @@ package de.amr.pacmanfx.arcade.ms_pacman.gamescene.cutscenes;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.timer.TickTimer;
-import de.amr.basics.ui.ecs.systems.ActorSpriteAnimController;
-import de.amr.basics.ui.ecs.systems.MovementSystem;
+import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
+import de.amr.basics.ecs.system.MovementSystem;
 import de.amr.basics.ui.entities.props.clapperboard.Clapperboard;
 import de.amr.basics.ui.entities.props.clapperboard.ClapperboardStateSystem;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;

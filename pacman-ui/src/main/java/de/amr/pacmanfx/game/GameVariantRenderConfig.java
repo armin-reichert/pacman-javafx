@@ -6,8 +6,8 @@ package de.amr.pacmanfx.game;
 
 import de.amr.basics.ui.entities.hud.HUD_Style;
 import de.amr.basics.ui.rendering.RenderingLayer;
-import de.amr.basics.ui.ecs.GameEntity;
-import de.amr.basics.ui.ecs.systems.ActorSpriteAnimController;
+import de.amr.basics.ecs.GameEntity;
+import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.spriteanim.SpriteAnimFacade;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;

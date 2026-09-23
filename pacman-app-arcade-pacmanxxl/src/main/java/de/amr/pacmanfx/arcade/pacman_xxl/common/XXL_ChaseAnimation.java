@@ -4,10 +4,10 @@
 package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
 import de.amr.basics.math.Direction;
-import de.amr.basics.ui.ecs.GameEntity;
-import de.amr.basics.ui.ecs.comp.MovementComp;
-import de.amr.basics.ui.ecs.systems.ActorSpriteAnimController;
-import de.amr.basics.ui.ecs.systems.MovementSystem;
+import de.amr.basics.ecs.GameEntity;
+import de.amr.basics.ecs.comp.MovementComp;
+import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
+import de.amr.basics.ecs.system.MovementSystem;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;

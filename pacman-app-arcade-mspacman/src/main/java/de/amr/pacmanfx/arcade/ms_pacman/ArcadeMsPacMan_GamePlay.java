@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.basics.ui.ecs.systems.PositionSystem;
+import de.amr.basics.ecs.system.PositionSystem;
 import de.amr.basics.ui.entities.props.textdisplay.TextView;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GamePlay;

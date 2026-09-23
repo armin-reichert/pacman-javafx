@@ -1,6 +1,6 @@
-package de.amr.basics.ui.ecs.comp;
+package de.amr.basics.ecs.comp;
 
-import de.amr.basics.ui.ecs.GameEntityComp;
+import de.amr.basics.ecs.GameEntityComp;
 
 public class LifetimeComp implements GameEntityComp {
 

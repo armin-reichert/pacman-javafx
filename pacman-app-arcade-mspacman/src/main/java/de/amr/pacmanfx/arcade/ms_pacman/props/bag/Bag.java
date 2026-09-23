@@ -5,8 +5,8 @@ package de.amr.pacmanfx.arcade.ms_pacman.props.bag;
 
 import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.ui.rendering.Renderable;
-import de.amr.basics.ui.ecs.GameEntity;
-import de.amr.basics.ui.ecs.comp.MovementComp;
+import de.amr.basics.ecs.GameEntity;
+import de.amr.basics.ecs.comp.MovementComp;
 import de.amr.basics.ui.ecs.comp.SpriteAnimationComp;
 
 public class Bag extends GameEntity implements Renderable {
