@@ -69,7 +69,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
             return PlayOption.values()[succ];
         }
 
-        public int count() {
+        public static int count() {
             return values().length;
         }
     }
