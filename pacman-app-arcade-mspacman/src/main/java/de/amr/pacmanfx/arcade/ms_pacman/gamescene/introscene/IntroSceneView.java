@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.gamescene.introscene;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.ui.ecs.systems.ActorSpriteAnimController;
-import de.amr.basics.ui.entities.props.imagedisplay.ImageDisplay;
+import de.amr.basics.ui.entities.props.imagedisplay.ImageView;
 import de.amr.basics.ui.entities.props.marquee.Marquee;
 import de.amr.basics.ui.entities.props.textdisplay.TextDisplay;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
@@ -43,7 +43,7 @@ public class IntroSceneView {
     static final String MARQUEE_TITLE = "\"MS PAC-MAN\"";
 
     private Marquee marquee;
-    private ImageDisplay copyrightImage;
+    private ImageView copyrightImageView;
     private final List<TextDisplay> copyrightTexts = new ArrayList<>();
     private TextDisplay titleText;
     private TextDisplay marqueeText1;
@@ -67,7 +67,7 @@ public class IntroSceneView {
             marqueeText2,
             createPacView(msPacMan),
             ghosts.stream().map(GameVariantRenderConfig::createGhostView),
-            copyrightImage, copyrightTexts);
+            copyrightImageView, copyrightTexts);
     }
 
     public Pac msPacMan() {
@@ -132,10 +132,10 @@ public class IntroSceneView {
     private void createCopyright(GameVariantRuntime runtime) {
         final AssetMap assets = runtime.uiConfig().assets();
 
-        copyrightImage = new ImageDisplay();
-        copyrightImage.show();
-        copyrightImage.pos().set(tilesPx(6), tilesPx(28));
-        copyrightImage.image().setImage(assets.image("logo.midway"));
+        copyrightImageView = new ImageView();
+        copyrightImageView.show();
+        copyrightImageView.pos().set(tilesPx(6), tilesPx(28));
+        copyrightImageView.image().setImage(assets.image("logo.midway"));
 
         copyrightTexts.add(createText("©",             ArcadeColor.RED.color(), 8, 11, 30.125f));
         copyrightTexts.add(createText("MIDWAY MFG CO", ArcadeColor.RED.color(), 8, 13, 30));

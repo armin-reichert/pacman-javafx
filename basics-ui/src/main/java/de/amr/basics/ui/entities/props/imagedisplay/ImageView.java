@@ -8,14 +8,14 @@ import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.ui.ecs.GameEntity;
 
-public class ImageDisplay extends GameEntity implements Renderable {
+public class ImageView extends GameEntity implements Renderable {
 
-    public ImageDisplay() {
-        setComp(ImageDisplayComp.class, new ImageDisplayComp());
+    public ImageView() {
+        setComp(ImageViewComp.class, new ImageViewComp());
     }
 
-    public ImageDisplayComp image() {
-        return reqComp(ImageDisplayComp.class);
+    public ImageViewComp image() {
+        return reqComp(ImageViewComp.class);
     }
 
     @Override

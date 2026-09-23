@@ -11,7 +11,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.basics.ui.assets.SpriteSheet;
 import de.amr.basics.ui.ecs.GameEntity;
 import de.amr.basics.ui.entities.props.ColoredRect;
-import de.amr.basics.ui.entities.props.imagedisplay.ImageDisplay;
+import de.amr.basics.ui.entities.props.imagedisplay.ImageView;
 import de.amr.basics.ui.entities.props.messageview.MessageType;
 import de.amr.basics.ui.entities.props.messageview.MessageView;
 import de.amr.basics.ui.entities.props.messageview.MessageViewStyleComp;
@@ -69,7 +69,7 @@ public class BaseRenderer implements Renderer {
 
     protected void renderGameEntity(GameEntity gameEntity, long tick) {
         switch (gameEntity) {
-            case ImageDisplay imageDisplay -> renderImageDisplay(imageDisplay);
+            case ImageView imageView -> renderImageDisplay(imageView);
             case TextDisplay textDisplay -> renderTextDisplay(textDisplay);
             case MessageView messageView -> renderMessageView(messageView);
             default -> {}
@@ -274,12 +274,12 @@ public class BaseRenderer implements Renderer {
 
     // ----------------
 
-    private void renderImageDisplay(ImageDisplay imageDisplay) {
-        if (imageDisplay.isVisible()) {
-            final Image imageFX = imageDisplay.image().image();
+    private void renderImageDisplay(ImageView imageView) {
+        if (imageView.isVisible()) {
+            final Image imageFX = imageView.image().image();
             final double s = scaling();
-            final double x = imageDisplay.pos().x();
-            final double y = imageDisplay.pos().y();
+            final double x = imageView.pos().x();
+            final double y = imageView.pos().y();
             ctx.save();
             ctx.scale(s, s);
             ctx.drawImage(imageFX, x, y);

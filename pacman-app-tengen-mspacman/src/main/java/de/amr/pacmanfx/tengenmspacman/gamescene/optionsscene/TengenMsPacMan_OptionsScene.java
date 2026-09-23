@@ -8,7 +8,7 @@ import de.amr.basics.EnumMethods;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.ui.entities.hud.score.Score;
-import de.amr.basics.ui.entities.props.imagedisplay.ImageDisplay;
+import de.amr.basics.ui.entities.props.imagedisplay.ImageView;
 import de.amr.basics.ui.entities.props.textdisplay.TextDisplay;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.util.Ufx;
@@ -110,11 +110,11 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
             renderableJoyPadKeyBindings(),
             topBar,
             titleTextDisplay,
-            renderablePlayModeOption(),
-            renderableBoosterModeOption(),
-            renderableGameDifficultyOption(),
-            renderableMapCategoryOption(),
-            renderableStartingLevelOption(), createNumContinuesImageDisplay(),
+            createPlayModeOptionView(),
+            createBoosterModeOptionView(),
+            createGameDifficultyOptionView(),
+            createMapCategoryOptionView(),
+            createStartingLevelOptionView(), createNumContinuesImageDisplay(),
             moveArrowTextDisplay,
             chooseOptionsTextDisplay,
             pressStartTextDisplay,
@@ -322,13 +322,13 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         return textDisplay;
     }
 
-    private MenuOptionView renderablePlayModeOption() {
+    private MenuOptionView createPlayModeOptionView() {
         return new MenuOptionView(selectedOption.get() == PlayOption.PLAY_MODE,
             "TYPE", "1 PLAYER", 8, new Vector2f(0, 4.5f * TS)
         );
     }
 
-    private MenuOptionView renderableBoosterModeOption() {
+    private MenuOptionView createBoosterModeOptionView() {
         final BoosterMode boosterMode = gameOptions(game().session()).boosterMode();
         return new MenuOptionView(selectedOption.get() == PlayOption.PAC_BOOSTER,
             "PAC BOOSTER",
@@ -341,31 +341,31 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         );
     }
 
-    private MenuOptionView renderableGameDifficultyOption() {
+    private MenuOptionView createGameDifficultyOptionView() {
         final Difficulty difficulty = gameOptions(game().session()).difficulty();
         return new MenuOptionView(selectedOption.get() == PlayOption.DIFFICULTY,
             "GAME DIFFICULTY", difficulty.name(), 19, new Vector2f(0, 7.5f * TS)
         );
     }
 
-    private MenuOptionView renderableMapCategoryOption() {
+    private MenuOptionView createMapCategoryOptionView() {
         final MapCategory mapCategory = gameOptions(game().session()).mapCategory();
         return new MenuOptionView(selectedOption.get() == PlayOption.MAP_CATEGORY,
             "MAZE SELECTION", mapCategory.name(), 19, new Vector2f(0, 9f * TS)
         );
     }
 
-    private MenuOptionView renderableStartingLevelOption() {
+    private MenuOptionView createStartingLevelOptionView() {
         final int startLevelNumber = gameOptions(game().session()).startLevelNumber();
         return new MenuOptionView(selectedOption.get() == PlayOption.STARTING_LEVEL,
             "STARTING LEVEL", String.valueOf(startLevelNumber), 19, new Vector2f(0, 10.5f * TS)
         );
     }
 
-    private ImageDisplay createNumContinuesImageDisplay() {
+    private ImageView createNumContinuesImageDisplay() {
         final int numContinues = gameOptions(game().session()).numContinues();
-        final ImageDisplay imageDisplay = new ImageDisplay();
-        imageDisplay.pos().set(24 * TS, 20 * TS);
+        final ImageView imageView = new ImageView();
+        imageView.pos().set(24 * TS, 20 * TS);
         if (numContinues < 4) {
             final var spriteSheet = TengenMsPacMan_SpriteSheet.instance();
             final RectShort sprite = spriteSheet.findSprite(switch (numContinues) {
@@ -375,13 +375,13 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
                 case 3 -> SpriteID.CONTINUES_3;
                 default -> throw new IllegalArgumentException("Illegal number of continues: " + numContinues);
             });
-            imageDisplay.image().setImage(spriteSheet.createImage(sprite));
-            imageDisplay.show();
+            imageView.image().setImage(spriteSheet.createImage(sprite));
+            imageView.show();
         }
         else {
-            imageDisplay.hide();
+            imageView.hide();
         }
-        return imageDisplay;
+        return imageView;
     }
 
     private JoypadKeyBindingsView renderableJoyPadKeyBindings() {

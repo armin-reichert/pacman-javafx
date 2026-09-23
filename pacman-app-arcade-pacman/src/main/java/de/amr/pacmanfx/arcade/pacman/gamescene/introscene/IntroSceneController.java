@@ -81,7 +81,7 @@ public class IntroSceneController extends StateMachine<ArcadePacMan_IntroScene> 
                     return;
                 }
                 switch (t) {
-                    case TICK_GHOST_SPRITE_VISIBLE    -> scene.view.ghostImageDisplays[scene.ghostIndex].show();
+                    case TICK_GHOST_SPRITE_VISIBLE    -> scene.view.ghostImageViews[scene.ghostIndex].show();
                     case TICK_GHOST_CHARACTER_VISIBLE -> scene.view.ghostCharacterDisplays[scene.ghostIndex].show();
                     case TICK_GHOST_NICKNAME_VISIBLE  -> scene.view.ghostNicknameDisplays[scene.ghostIndex].show();
                     case TICK_GHOST_PRESENT_NEXT      -> presentNextGhost(scene);

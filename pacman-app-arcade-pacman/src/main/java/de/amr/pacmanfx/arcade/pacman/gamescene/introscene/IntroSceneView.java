@@ -10,7 +10,7 @@ import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.timer.Pulse;
 import de.amr.basics.ui.ecs.GameEntity;
 import de.amr.basics.ui.ecs.systems.ActorSpriteAnimController;
-import de.amr.basics.ui.entities.props.imagedisplay.ImageDisplay;
+import de.amr.basics.ui.entities.props.imagedisplay.ImageView;
 import de.amr.basics.ui.entities.props.textdisplay.TextDisplay;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
@@ -53,7 +53,7 @@ public class IntroSceneView {
     final TextDisplay titleText;
 
     // Ghost presentation
-    final ImageDisplay[] ghostImageDisplays;
+    final ImageView[] ghostImageViews;
     final TextDisplay[]  ghostNicknameDisplays;
     final TextDisplay[]  ghostCharacterDisplays;
 
@@ -76,11 +76,11 @@ public class IntroSceneView {
         titleText = new TextDisplay();
 
         // Ghost gallery
-        ghostImageDisplays = new ImageDisplay[NUM_GHOSTS];
+        ghostImageViews = new ImageView[NUM_GHOSTS];
         ghostNicknameDisplays = new TextDisplay[NUM_GHOSTS];
         ghostCharacterDisplays = new TextDisplay[NUM_GHOSTS];
         for (int i = 0; i < NUM_GHOSTS; ++i) {
-            ghostImageDisplays[i] = new ImageDisplay();
+            ghostImageViews[i] = new ImageView();
             ghostCharacterDisplays[i] = new TextDisplay();
             ghostNicknameDisplays[i] = new TextDisplay();
         }
@@ -123,7 +123,7 @@ public class IntroSceneView {
     public Stream<Renderable> renderables() {
         return Ufx.streamOf(
             titleText,
-            Arrays.stream(ghostImageDisplays).filter(GameEntity::isVisible),
+            Arrays.stream(ghostImageViews).filter(GameEntity::isVisible),
             Arrays.stream(ghostCharacterDisplays).filter(GameEntity::isVisible),
             Arrays.stream(ghostNicknameDisplays).filter(GameEntity::isVisible),
             targetEnergizer.isVisible() ? targetEnergizer :null,
@@ -142,7 +142,7 @@ public class IntroSceneView {
 
     public void hideEverything() {
         for (int i = 0; i < NUM_GHOSTS; ++i) {
-            ghostImageDisplays[i].hide();
+            ghostImageViews[i].hide();
             ghostCharacterDisplays[i].hide();
             ghostNicknameDisplays[i].hide();
         }
@@ -184,10 +184,10 @@ public class IntroSceneView {
         for (int i = 0; i < NUM_GHOSTS; ++i) {
             final int offsetY = 3 * i * TS;
 
-            final ImageDisplay imageDisplay = ghostImageDisplays[i];
+            final ImageView imageView = ghostImageViews[i];
             final RectShort sprite = spriteSheet.findSpriteSequence(GALLERY_GHOSTS)[i];
-            imageDisplay.image().setImage(spriteSheet.createImage(sprite));
-            imageDisplay.pos().set(TS * 4, y + offsetY - 1.5f * TS);
+            imageView.image().setImage(spriteSheet.createImage(sprite));
+            imageView.pos().set(TS * 4, y + offsetY - 1.5f * TS);
 
             final TextDisplay characterDisplay = ghostCharacterDisplays[i];
             characterDisplay.data().setText(GHOST_CHARACTERS[i]);

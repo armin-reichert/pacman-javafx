@@ -4,7 +4,7 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.gamescene.startscene;
 
-import de.amr.basics.ui.entities.props.imagedisplay.ImageDisplay;
+import de.amr.basics.ui.entities.props.imagedisplay.ImageView;
 import de.amr.basics.ui.entities.props.textdisplay.TextDisplay;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
@@ -34,8 +34,8 @@ public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
         createText("PTS",                    ArcadeColor.ORANGE.color(), 6, 25, 25)
     );
 
-    private final ImageDisplay msPacManImage;
-    private final ImageDisplay copyrightImage;
+    private final ImageView msPacManImageView;
+    private final ImageView copyrightImageView;
     private final List<TextDisplay> copyrightTexts = new ArrayList<>();
 
     public ArcadeMsPacMan_StartScene() {
@@ -43,14 +43,14 @@ public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
         setComp(GameSceneCanvasRenderingComp.class, new GameSceneCanvasRenderingComp());
 
 
-        msPacManImage = new ImageDisplay();
-        msPacManImage.image().setImage(ArcadeMsPacMan_SpriteSheet.instance().createImage(SpriteID.LIVES_COUNTER_SYMBOL));
-        msPacManImage.pos().set(13 * TS, 23.5 * TS);
-        msPacManImage.show();
+        msPacManImageView = new ImageView();
+        msPacManImageView.image().setImage(ArcadeMsPacMan_SpriteSheet.instance().createImage(SpriteID.LIVES_COUNTER_SYMBOL));
+        msPacManImageView.pos().set(13 * TS, 23.5 * TS);
+        msPacManImageView.show();
 
-        copyrightImage = new ImageDisplay();
-        copyrightImage.show();
-        copyrightImage.pos().set(tilesPx(6), tilesPx(28));
+        copyrightImageView = new ImageView();
+        copyrightImageView.show();
+        copyrightImageView.pos().set(tilesPx(6), tilesPx(28));
 
         copyrightTexts.add(createText("©",             ArcadeColor.RED.color(), 8, 11, 30.125f));
         copyrightTexts.add(createText("MIDWAY MFG CO", ArcadeColor.RED.color(), 8, 13, 30));
@@ -61,15 +61,15 @@ public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
     @Override
     protected void onAppConnected() {
         final AssetMap assets = app().variantManager().currentRuntime().uiConfig().assets();
-        copyrightImage.image().setImage(assets.image("logo.midway"));
+        copyrightImageView.image().setImage(assets.image("logo.midway"));
     }
 
     @Override
     public Stream<Renderable> renderables() {
         return Ufx.streamOf(
             texts,
-            msPacManImage,
-            copyrightImage,
+            msPacManImageView,
+            copyrightImageView,
             copyrightTexts
         );
     }
