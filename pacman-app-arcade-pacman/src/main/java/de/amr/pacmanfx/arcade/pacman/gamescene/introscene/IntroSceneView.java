@@ -30,8 +30,8 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.arcade.pacman.rendering.SpriteID.GALLERY_GHOSTS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.*;
-import static de.amr.pacmanfx.game.GameVariantRenderConfig.renderableGameEntity;
-import static de.amr.pacmanfx.game.GameVariantRenderConfig.renderablePac;
+import static de.amr.pacmanfx.game.GameVariantRenderConfig.createEntityView;
+import static de.amr.pacmanfx.game.GameVariantRenderConfig.createPacView;
 
 public class IntroSceneView {
 
@@ -134,9 +134,9 @@ public class IntroSceneView {
             pellet.isVisible() ? pellet : null,
             energizer.isVisible() ? energizer : null,
             copyrightText.isVisible() ? copyrightText : null,
-            pacMan.isVisible() ? renderablePac(pacMan) : null,
-            Arrays.stream(ghosts).filter(Ghost::isVisible).map(GameVariantRenderConfig::renderableGhost),
-            points != null && points.isVisible() ? renderableGameEntity(points, RenderingLayer.PROPS, 0) : null
+            pacMan.isVisible() ? createPacView(pacMan) : null,
+            Arrays.stream(ghosts).filter(Ghost::isVisible).map(GameVariantRenderConfig::createGhostView),
+            points != null && points.isVisible() ? createEntityView(points, RenderingLayer.PROPS, 0) : null
         );
     }
 

@@ -156,17 +156,17 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public Renderable renderable(GameEntity gameEntity) {
+    public Renderable createEntityView(GameEntity gameEntity) {
         return switch(gameEntity) {
-            case Pac pac     -> renderablePac(pac);
-            case Ghost ghost -> renderableGhost(ghost);
-            case Bonus bonus -> renderableBonus(bonus);
-            case Energizer energizer -> renderableGameEntity(energizer, RenderingLayer.LEVEL, 0);
-            case House house -> renderableGameEntity(house, RenderingLayer.LEVEL, 0);
-            case MessageView messageView -> renderableGameEntity(messageView, RenderingLayer.MESSAGE, 0);
-            case GhostPoints ghostPoints -> renderableGameEntity(ghostPoints, RenderingLayer.PROPS, 0);
-            case BonusPoints bonusPoints -> renderableGameEntity(bonusPoints, RenderingLayer.PROPS, 0);
-            default -> renderableGameEntity(gameEntity, RenderingLayer.PROPS, 0);
+            case Pac pac     -> createPacView(pac);
+            case Ghost ghost -> createGhostView(ghost);
+            case Bonus bonus -> createBonusView(bonus);
+            case Energizer energizer -> GameVariantRenderConfig.createEntityView(energizer, RenderingLayer.LEVEL, 0);
+            case House house -> GameVariantRenderConfig.createEntityView(house, RenderingLayer.LEVEL, 0);
+            case MessageView messageView -> GameVariantRenderConfig.createEntityView(messageView, RenderingLayer.MESSAGE, 0);
+            case GhostPoints ghostPoints -> GameVariantRenderConfig.createEntityView(ghostPoints, RenderingLayer.PROPS, 0);
+            case BonusPoints bonusPoints -> GameVariantRenderConfig.createEntityView(bonusPoints, RenderingLayer.PROPS, 0);
+            default -> GameVariantRenderConfig.createEntityView(gameEntity, RenderingLayer.PROPS, 0);
         };
     }
 

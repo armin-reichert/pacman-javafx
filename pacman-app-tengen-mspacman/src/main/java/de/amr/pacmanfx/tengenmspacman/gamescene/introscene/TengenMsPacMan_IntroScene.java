@@ -44,8 +44,8 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
-import static de.amr.pacmanfx.game.GameVariantRenderConfig.renderableGameEntity;
-import static de.amr.pacmanfx.game.GameVariantRenderConfig.renderablePac;
+import static de.amr.pacmanfx.game.GameVariantRenderConfig.createEntityView;
+import static de.amr.pacmanfx.game.GameVariantRenderConfig.createPacView;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
@@ -90,9 +90,9 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
     @Override
     public Stream<Renderable> renderables() {
         return Ufx.streamOf(
-            renderableGameEntity(marquee, RenderingLayer.PROPS, 0),
-            renderablePac(msPacMan),
-            ghosts.stream().map(GameVariantRenderConfig::renderableGhost)
+            createEntityView(marquee, RenderingLayer.PROPS, 0),
+            createPacView(msPacMan),
+            ghosts.stream().map(GameVariantRenderConfig::createGhostView)
         );
     }
 

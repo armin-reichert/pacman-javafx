@@ -36,7 +36,7 @@ import javafx.util.Duration;
 
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.game.GameVariantRenderConfig.renderableGameEntity;
+import static de.amr.pacmanfx.game.GameVariantRenderConfig.createEntityView;
 import static java.util.Objects.requireNonNull;
 
 public class MiniPlaySceneView extends HBox {
@@ -113,7 +113,7 @@ public class MiniPlaySceneView extends HBox {
         return Ufx.streamOf(
             createRenderableLevel(level),
             level.entitySet().entities().all()
-                .map(entity -> renderableGameEntity(entity, RenderingLayer.MINIVIEW_OVERLAY, 0))
+                .map(entity -> createEntityView(entity, RenderingLayer.MINIVIEW_OVERLAY, 0))
         );
     }
 

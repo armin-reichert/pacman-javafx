@@ -34,8 +34,8 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.arcade.ms_pacman.gamescene.introscene.ArcadeMsPacMan_IntroScene.*;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
-import static de.amr.pacmanfx.game.GameVariantRenderConfig.renderableGameEntity;
-import static de.amr.pacmanfx.game.GameVariantRenderConfig.renderablePac;
+import static de.amr.pacmanfx.game.GameVariantRenderConfig.createEntityView;
+import static de.amr.pacmanfx.game.GameVariantRenderConfig.createPacView;
 import static de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene.createText;
 
 public class IntroSceneView {
@@ -62,11 +62,11 @@ public class IntroSceneView {
     public Stream<Renderable> renderables() {
         return Ufx.streamOf(
             titleText,
-            renderableGameEntity(marquee, RenderingLayer.PROPS, 0),
+            createEntityView(marquee, RenderingLayer.PROPS, 0),
             marqueeText1,
             marqueeText2,
-            renderablePac(msPacMan),
-            ghosts.stream().map(GameVariantRenderConfig::renderableGhost),
+            createPacView(msPacMan),
+            ghosts.stream().map(GameVariantRenderConfig::createGhostView),
             copyrightImage, copyrightTexts);
     }
 

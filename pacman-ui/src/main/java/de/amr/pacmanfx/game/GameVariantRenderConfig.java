@@ -41,24 +41,24 @@ public interface GameVariantRenderConfig {
         };
     }
 
-    static GameEntityView renderableGameEntity(GameEntity gameEntity, RenderingLayer layer, int z) {
+    static GameEntityView createEntityView(GameEntity gameEntity, RenderingLayer layer, int z) {
         return new GameEntityView(gameEntity, layer, z);
     }
 
-    static GameEntityView renderableProp(GameEntity gameEntity) {
-        return renderableGameEntity(gameEntity, RenderingLayer.PROPS, 0);
+    static GameEntityView createPropView(GameEntity gameEntity) {
+        return createEntityView(gameEntity, RenderingLayer.PROPS, 0);
     }
 
-    static GameEntityView renderablePac(Pac pac) {
-        return renderableGameEntity(pac, RenderingLayer.ACTORS, PAC_Z);
+    static GameEntityView createPacView(Pac pac) {
+        return createEntityView(pac, RenderingLayer.ACTORS, PAC_Z);
     }
 
-    static GameEntityView renderableGhost(Ghost ghost) {
-        return renderableGameEntity(ghost, RenderingLayer.ACTORS, ghostZ(ghost.personality()));
+    static GameEntityView createGhostView(Ghost ghost) {
+        return createEntityView(ghost, RenderingLayer.ACTORS, ghostZ(ghost.personality()));
     }
 
-    static GameEntityView renderableBonus(Bonus bonus) {
-        return renderableGameEntity(bonus, RenderingLayer.ACTORS, BONUS_Z);
+    static GameEntityView createBonusView(Bonus bonus) {
+        return createEntityView(bonus, RenderingLayer.ACTORS, BONUS_Z);
     }
 
     AssetMap assets();
@@ -69,7 +69,7 @@ public interface GameVariantRenderConfig {
 
     HUD_Style hudStyle();
 
-    Renderable renderable(GameEntity gameEntity);
+    Renderable createEntityView(GameEntity gameEntity);
 
     Renderer createGameLevelRenderer(ActorSpriteAnimController animController, Canvas canvas);
 

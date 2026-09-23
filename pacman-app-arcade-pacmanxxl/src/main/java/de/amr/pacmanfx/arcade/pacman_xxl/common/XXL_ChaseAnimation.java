@@ -36,8 +36,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static de.amr.pacmanfx.game.GameVariantRenderConfig.renderableGameEntity;
-import static de.amr.pacmanfx.game.GameVariantRenderConfig.renderablePac;
+import static de.amr.pacmanfx.game.GameVariantRenderConfig.createEntityView;
+import static de.amr.pacmanfx.game.GameVariantRenderConfig.createPacView;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -92,15 +92,15 @@ class XXL_ChaseAnimation {
         ctx.save();
         ctx.translate(0, scaling.get() * y);
 
-        variantRenderer.render(renderablePac(pac), tick);
+        variantRenderer.render(createPacView(pac), tick);
 
         ghosts.stream()
-            .map(GameVariantRenderConfig::renderableGhost)
+            .map(GameVariantRenderConfig::createGhostView)
             .forEach(rg -> variantRenderer.render(rg, tick));
 
 
         if (ghostPoints != null) {
-            final var r = renderableGameEntity(ghostPoints, RenderingLayer.PROPS, 0);
+            final var r = createEntityView(ghostPoints, RenderingLayer.PROPS, 0);
             variantRenderer.render(r, tick);
         }
         ctx.restore();

@@ -126,7 +126,7 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
 
             //TODO simplify!
             level.entitySet().all()
-                .map(renderConfig::renderable)
+                .map(renderConfig::createEntityView)
                 .filter(r -> r instanceof GameEntityView rge)
                 .map(r -> (GameEntityView) r)
                 .map(rge -> rge.newOffset(RENDER_OFFSET))
