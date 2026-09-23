@@ -54,15 +54,15 @@ public class GenericLevelRenderer extends BaseRenderer {
         updateColors(backgroundColor());
     }
 
-    public void renderLevel(GameLevel level, long tick) {
+    public void draw(GameLevel level) {
         if (info.getBoolean(LevelRenderInfoKey.SHOW_BRIGHT_MAZE)) {
             terrainRenderer.setMapColoring(info.getBoolean(LevelRenderInfoKey.ENERGIZERS_SHOWN) ? blinkingOnMapColoring : blinkingOffMapColoring);
-            terrainRenderer.render(level.worldMap(), tick);
+            terrainRenderer.draw(level.worldMap());
         }
         else {
             final TerrainMapColoring mapColoring = info.get(RenderInfoKey.TERRAIN_MAP_COLORING, TerrainMapColoring.class);
             terrainRenderer.setMapColoring(mapColoring);
-            terrainRenderer.render(level.worldMap(), tick);
+            terrainRenderer.draw(level.worldMap());
 
             if (level.entitySet().entities().anyOfType(House.class).isPresent()) {
                 final House house = level.entitySet().entities().theOne(House.class);

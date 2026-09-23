@@ -7,7 +7,7 @@ import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
 import de.amr.basics.ui.entities.hud.score.Score;
 import de.amr.basics.ui.entities.props.textdisplay.TextDisplay;
 import de.amr.basics.ui.rendering.Renderable;
-import de.amr.basics.ui.rendering.RenderableGameEntity;
+import de.amr.basics.ui.rendering.GameEntityView;
 import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.entities.hud.ScoreSystem;
@@ -74,7 +74,7 @@ public class HUD {
             highScore,
             additionalEntities.all()
         )
-            .map(e -> new RenderableGameEntity((GameEntity) e, RenderingLayer.HUD, 0))
+            .map(e -> new GameEntityView((GameEntity) e, RenderingLayer.HUD, 0))
             .map(Renderable.class::cast)
             .toList();
     }

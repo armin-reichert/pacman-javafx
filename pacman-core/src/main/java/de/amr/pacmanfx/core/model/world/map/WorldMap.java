@@ -5,8 +5,6 @@ package de.amr.pacmanfx.core.model.world.map;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
-import de.amr.basics.ui.rendering.RenderingLayer;
-import de.amr.basics.ui.rendering.Renderable;
 import org.tinylog.Logger;
 
 import java.io.*;
@@ -22,7 +20,7 @@ import static de.amr.basics.math.Vector2f.vec2_float;
 import static de.amr.pacmanfx.core.Validations.requireNonNegativeInt;
 import static java.util.Objects.requireNonNull;
 
-public class WorldMap implements Renderable {
+public class WorldMap {
 
     // Tile coordinates
 
@@ -159,11 +157,6 @@ public class WorldMap implements Renderable {
         terrainLayer = new TerrainLayer(prototype.terrainLayer);
         foodLayer = new FoodLayer(prototype.foodLayer);
         configMap = new HashMap<>(prototype.configMap);
-    }
-
-    @Override
-    public RenderingLayer layer() {
-        return RenderingLayer.LEVEL;
     }
 
     //TODO What happens with the entries in the config map if the map coordinates change?

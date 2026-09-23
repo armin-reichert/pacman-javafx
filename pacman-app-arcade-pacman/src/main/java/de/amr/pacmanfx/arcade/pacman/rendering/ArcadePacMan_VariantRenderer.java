@@ -21,7 +21,7 @@ import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.basics.ui.entities.props.bonuspoints.BonusPoints;
 import de.amr.basics.ui.entities.props.ghostpoints.GhostPoints;
 import de.amr.basics.ui.rendering.Renderable;
-import de.amr.basics.ui.rendering.RenderableGameEntity;
+import de.amr.basics.ui.rendering.GameEntityView;
 import de.amr.basics.ui.assets.SpriteSheet;
 import de.amr.basics.ui.entities.hud.HUD_Style;
 import de.amr.basics.ui.rendering.BaseRenderer;
@@ -34,7 +34,6 @@ import javafx.scene.text.FontWeight;
 import java.util.Arrays;
 import java.util.Optional;
 
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static java.util.Objects.requireNonNull;
 
@@ -61,7 +60,7 @@ public class ArcadePacMan_VariantRenderer extends BaseRenderer {
     public void render(Renderable r, long tick) {
         requireNonNull(r);
         switch (r) {
-            case RenderableGameEntity rge -> renderGameEntity(rge.gameEntity(), tick);
+            case GameEntityView rge -> renderGameEntity(rge.entity(), tick);
             case GameEntity gameEntity ->    renderGameEntity(gameEntity, tick);
             default -> super.render(r, tick);
         }

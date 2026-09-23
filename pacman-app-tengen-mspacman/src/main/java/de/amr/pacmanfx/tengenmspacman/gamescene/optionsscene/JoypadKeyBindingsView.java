@@ -9,7 +9,7 @@ import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.pacmanfx.ui.input.JoypadKeyBinding;
 
-public record RenderableJoypadKeyBindings(
+public record JoypadKeyBindingsView(
     JoypadKeyBinding joypadKeyBinding,
     Vector2f offset
 ) implements Renderable {

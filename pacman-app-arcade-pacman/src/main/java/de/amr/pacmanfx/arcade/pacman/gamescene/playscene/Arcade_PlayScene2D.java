@@ -26,7 +26,7 @@ import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
-import de.amr.pacmanfx.uilib.rendering.RenderableGameLevel;
+import de.amr.pacmanfx.uilib.rendering.GameLevelView;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
 import org.tinylog.Logger;
@@ -154,12 +154,12 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
         ActorAnimationManager.ensureActorAnimationsCreated(app(), level);
     }
 
-    private RenderableGameLevel createRenderableLevel(GameLevel level) {
+    private GameLevelView createRenderableLevel(GameLevel level) {
         final var renderInfo = new InfoMap();
         renderInfo.put(LevelRenderInfoKey.ENERGIZERS_SHOWN, level.heartbeat().state() == Pulse.State.ON);
         renderInfo.put(LevelRenderInfoKey.SHOW_EMPTY_MAZE, level.food().remainingFoodCount() == 0);
         updateFlashingRenderInfo(renderInfo);
-        return new RenderableGameLevel(level, renderInfo, RenderingLayer.LEVEL, 0, Vector2f.ZERO);
+        return new GameLevelView(level, renderInfo, RenderingLayer.LEVEL, 0, Vector2f.ZERO);
     }
 
     private void updateFlashingRenderInfo(InfoMap renderInfo) {

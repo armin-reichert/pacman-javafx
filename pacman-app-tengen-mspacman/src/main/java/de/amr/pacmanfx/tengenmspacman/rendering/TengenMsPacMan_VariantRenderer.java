@@ -22,7 +22,7 @@ import de.amr.basics.ui.entities.props.marquee.Marquee;
 import de.amr.basics.ui.entities.props.stork.Stork;
 import de.amr.basics.ui.rendering.BaseRenderer;
 import de.amr.basics.ui.rendering.Renderable;
-import de.amr.basics.ui.rendering.RenderableGameEntity;
+import de.amr.basics.ui.rendering.GameEntityView;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.ui.spriteanim.SpriteAnimation;
 import de.amr.basics.util.Ufx;
@@ -37,9 +37,9 @@ import de.amr.pacmanfx.tengenmspacman.entities.LevelNumberDisplay;
 import de.amr.pacmanfx.tengenmspacman.entities.bag.Bag;
 import de.amr.pacmanfx.tengenmspacman.entities.clapperboard.TengenMsPacMan_ClapperboardAnimationSystem;
 import de.amr.pacmanfx.tengenmspacman.entities.gameoptionsdisplay.GameOptionsDataComp;
-import de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene.RenderableJoypadKeyBindings;
-import de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene.RenderableMenuOption;
-import de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene.RenderableMenuSeparatorBar;
+import de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene.JoypadKeyBindingsView;
+import de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene.MenuOptionView;
+import de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene.MenuSeparatorBarView;
 import de.amr.pacmanfx.tengenmspacman.model.BoosterMode;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
@@ -88,11 +88,10 @@ public class TengenMsPacMan_VariantRenderer extends BaseRenderer {
     public void render(Renderable r, long tick) {
         requireNonNull(r);
         switch (r) {
-            case RenderableGameEntity rge -> renderGameEntity(rge.gameEntity(), tick);
-            case GameEntity gameEntity    -> renderGameEntity(gameEntity, tick);
-            case RenderableJoypadKeyBindings(JoypadKeyBinding joypadKeyBinding, Vector2f _) -> drawJoypadKeyBinding(ctx, scaling(), joypadKeyBinding);
-            case RenderableMenuOption menuOption -> renderMenuOption(menuOption);
-            case RenderableMenuSeparatorBar bar -> renderBar(bar);
+            case GameEntityView gameEntityView -> renderGameEntity(gameEntityView.entity(), tick);
+            case JoypadKeyBindingsView(JoypadKeyBinding joypadKeyBinding, Vector2f _) -> drawJoypadKeyBinding(ctx, scaling(), joypadKeyBinding);
+            case MenuOptionView menuOptionView -> draw(menuOptionView);
+            case MenuSeparatorBarView barView -> draw(barView);
             default -> super.render(r, tick);
         }
     }
@@ -201,6 +200,25 @@ public class TengenMsPacMan_VariantRenderer extends BaseRenderer {
         return index >= 0 ? spriteSheet.findSpriteSequence(SpriteID.BONUS_VALUES)[index] : RectShort.NULL_RECTANGLE;
     }
 
+    // Assumes the unrotated sprite is facing left (like Ms. Pac-Man sprite in the current sprite sheet).
+    // When facing up or down, Ms. Pac-Man top of head is on the right.
+    private void drawFacingSpriteCentered(FacingSprite facingSprite, Vector2f centerUnscaled) {
+        ctx().save();
+        ctx().translate(centerUnscaled.x() * scaling(), centerUnscaled.y() * scaling());
+        switch (facingSprite.facing()) {
+            case LEFT  -> { /* sprite facing direction in sprite sheet */ }
+            case UP    -> ctx().rotate(90);
+            case RIGHT -> ctx().scale(-1, 1); // mirror at y-axis
+            case DOWN  -> {
+                ctx().scale(-1, 1); // mirror at y-axis
+                ctx().rotate(-90); // rotate 90 degrees clockwise
+            }
+        }
+        drawSpriteCentered(facingSprite.sprite(), 0, 0);
+        ctx().restore();
+    }
+
+
     private void draw(Door door) {
         final var data = door.reqComp(DoorDataComp.class);
 
@@ -251,24 +269,6 @@ public class TengenMsPacMan_VariantRenderer extends BaseRenderer {
         }
     }
 
-    // Assumes the unrotated sprite is facing left (like Ms. Pac-Man sprite in the current sprite sheet).
-    // When facing up or down, Ms. Pac-Man top of head is on the right.
-    private void drawFacingSpriteCentered(FacingSprite facingSprite, Vector2f centerUnscaled) {
-        ctx().save();
-        ctx().translate(centerUnscaled.x() * scaling(), centerUnscaled.y() * scaling());
-        switch (facingSprite.facing()) {
-            case LEFT  -> { /* sprite facing direction in sprite sheet */ }
-            case UP    -> ctx().rotate(90);
-            case RIGHT -> ctx().scale(-1, 1); // mirror at y-axis
-            case DOWN  -> {
-                ctx().scale(-1, 1); // mirror at y-axis
-                ctx().rotate(-90); // rotate 90 degrees clockwise
-            }
-        }
-        drawSpriteCentered(facingSprite.sprite(), 0, 0);
-        ctx().restore();
-    }
-
     private void draw(GameOptionsDisplay display) {
         final GameOptionsDataComp options = display.options();
 
@@ -308,31 +308,25 @@ public class TengenMsPacMan_VariantRenderer extends BaseRenderer {
     }
 
     private void draw(Score score, long tick) {
+        final HUD_Style style = score.reqComp(HUD_Style.class);
+        final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
         switch (score.type()) {
-            case GAME_SCORE -> drawGameScore(score, tick);
-            case HIGH_SCORE -> drawHighScore(score);
+            case GAME_SCORE -> {
+                // Blink frequency = 1Hz (30 ticks on, 30 ticks off)
+                if (tick % 60 < 30) {
+                    fillText(style.scoreText(), style.scoreTextColor(), scaledFont, score.pos().x(), score.pos().y());
+                }
+                fillText("%6d".formatted(score.data().points()),
+                    style.scoreTextColor(), scaledFont, 2 * TS, score.pos().y() + TS);
+            }
+            case HIGH_SCORE -> {
+                final Color color = score.data().isEnabled() ? style.scoreTextColor(): style.scoreTextColorDisabled();
+                fillText("HIGH SCORE", color, scaledFont, score.pos().x(), score.pos().y());
+                fillText("%6d".formatted(score.data().points()), color, scaledFont,
+                    score.pos().x() + 2 * TS, score.pos().y() + TS
+                );
+            }
         }
-    }
-
-    private void drawGameScore(Score score, long tick) {
-        final HUD_Style style = score.reqComp(HUD_Style.class);
-        final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
-        // Blink frequency = 1Hz (30 ticks on, 30 ticks off)
-        if (tick % 60 < 30) {
-            fillText(style.scoreText(), style.scoreTextColor(), scaledFont, score.pos().x(), score.pos().y());
-        }
-        fillText("%6d".formatted(score.data().points()),
-            style.scoreTextColor(), scaledFont, 2 * TS, score.pos().y() + TS);
-    }
-
-    private void drawHighScore(Score score) {
-        final HUD_Style style = score.reqComp(HUD_Style.class);
-        final Font scaledFont = Ufx.scaleFontBy(style.scoreTextFont(), scaling());
-        final Color color = score.data().isEnabled() ? style.scoreTextColor(): style.scoreTextColorDisabled();
-        fillText("HIGH SCORE", color, scaledFont, score.pos().x(), score.pos().y());
-        fillText("%6d".formatted(score.data().points()), color, scaledFont,
-            score.pos().x() + 2 * TS, score.pos().y() + TS
-        );
     }
 
     private void draw(LivesCounter livesCounter) {
@@ -385,9 +379,9 @@ public class TengenMsPacMan_VariantRenderer extends BaseRenderer {
         drawSprite(onesSprite, x + 10, y + 2, true);
     }
 
-    private void renderMenuOption(RenderableMenuOption menuOption) {
-        final float y = menuOption.offset().y();
-        final double sepX = menuOption.separatorTileX() * TS;
+    private void draw(MenuOptionView menuOptionView) {
+        final float y = menuOptionView.offset().y();
+        final double sepX = menuOptionView.separatorTileX() * TS;
         final double valueX = sepX + 2 * TS;
         final Font arcade8 = Ufx.deriveFont(GlobalFonts.ARCADE.font(), scaled(8));
         final Color yellow = NES_Palette.color(0x28);
@@ -396,19 +390,19 @@ public class TengenMsPacMan_VariantRenderer extends BaseRenderer {
         ctx.save();
 
         ctx.setFont(arcade8);
-        if (menuOption.selected()) {
+        if (menuOptionView.selected()) {
             ctx.setFill(yellow);
             ctx.fillRect(scaled(2 * TS + 2.25), scaled(y - 4.5), scaled(7.5), scaled(1.75));
             fillText(">", yellow, arcade8, 2 * TS + 3, y);
         }
-        fillText(menuOption.label(), yellow, 4 * TS, y);
+        fillText(menuOptionView.label(), yellow, 4 * TS, y);
         fillText(":", yellow, sepX, y);
-        fillText(menuOption.value(), white, valueX, y);
+        fillText(menuOptionView.value(), white, valueX, y);
 
         ctx.restore();
     }
 
-    private void renderBar(RenderableMenuSeparatorBar bar) {
+    private void draw(MenuSeparatorBarView bar) {
         ctx.save();
         ctx.scale(scaling(), scaling());
         ctx.setFill(NES_Palette.color(0x20));
@@ -417,5 +411,4 @@ public class TengenMsPacMan_VariantRenderer extends BaseRenderer {
         ctx.fillRect(0, 1, bar.width(), bar.height() - 2);
         ctx.restore();
     }
-
 }

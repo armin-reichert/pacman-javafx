@@ -9,7 +9,7 @@ import de.amr.basics.ui.rendering.BaseRenderer;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.rendering.Renderer;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
-import de.amr.pacmanfx.uilib.rendering.RenderableGameLevel;
+import de.amr.pacmanfx.uilib.rendering.GameLevelView;
 
 public class MiniViewOverlayRenderer extends BaseRenderer {
 
@@ -38,7 +38,7 @@ public class MiniViewOverlayRenderer extends BaseRenderer {
     @Override
     public void render(Renderable r, long tick) {
         switch (r) {
-            case RenderableGameLevel _ -> levelRenderer.render(r, tick);
+            case GameLevelView _ -> levelRenderer.render(r, tick);
             default -> entityRenderer.render(r, tick);
         }
     }

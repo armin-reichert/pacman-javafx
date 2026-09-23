@@ -7,7 +7,7 @@ package de.amr.pacmanfx.uilib.renderer;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.ui.rendering.BaseRenderer;
 import de.amr.basics.ui.rendering.Renderable;
-import de.amr.basics.ui.rendering.RenderableGameEntity;
+import de.amr.basics.ui.rendering.GameEntityView;
 import de.amr.pacmanfx.core.entities.world.house.House;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapColoring;
 import javafx.beans.property.DoubleProperty;
@@ -73,8 +73,8 @@ public class ArcadeHouseRenderer extends BaseRenderer {
 
     @Override
     public void render(Renderable r, long tick) {
-        if (r instanceof RenderableGameEntity rge
-            && rge.gameEntity() instanceof House house) {
+        if (r instanceof GameEntityView rge
+            && rge.entity() instanceof House house) {
             renderHouse(house);
         }
     }

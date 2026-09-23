@@ -125,8 +125,8 @@ public class Preview2D extends Canvas {
         if (terrainVisible.get()) {
             terrainRenderer.setMapColoring(colorScheme);
             terrainTileRenderer.setMapColoring(colorScheme);
-            terrainTileRenderer.render(worldMap, 0);
-            terrainRenderer.render(worldMap, 0);
+            terrainTileRenderer.draw(worldMap);
+            terrainRenderer.draw(worldMap);
             drawHouse(worldMap);
         }
         if (foodVisible.get()) {

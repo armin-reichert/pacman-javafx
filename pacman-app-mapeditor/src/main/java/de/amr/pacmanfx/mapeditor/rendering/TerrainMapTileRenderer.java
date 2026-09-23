@@ -7,17 +7,19 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
+import de.amr.basics.ui.rendering.BaseRenderer;
+import de.amr.basics.ui.rendering.Renderable;
+import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.pacmanfx.core.model.world.map.TerrainTile;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapParser;
 import de.amr.pacmanfx.core.model.world.map.WorldMapPropertyName;
 import de.amr.pacmanfx.core.model.world.obstacle.Obstacle;
 import de.amr.pacmanfx.core.model.world.obstacle.ObstacleSegment;
-import de.amr.basics.ui.rendering.Renderable;
-import de.amr.basics.ui.rendering.BaseRenderer;
-import de.amr.pacmanfx.uilib.rendering.TerrainMapColoring;
 import de.amr.pacmanfx.uilib.renderer.TerrainMapRenderer;
 import de.amr.pacmanfx.uilib.renderer.TileRenderer;
+import de.amr.pacmanfx.uilib.rendering.TerrainMapColoring;
+import de.amr.pacmanfx.uilib.rendering.WorldMapView;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Point2D;
@@ -36,7 +38,6 @@ import java.util.Set;
 import java.util.function.BiPredicate;
 
 import static de.amr.basics.math.RandomNumbers.randomInt;
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.HTS;
 import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
 
@@ -129,9 +130,13 @@ public class TerrainMapTileRenderer extends BaseRenderer implements TerrainMapRe
 
     @Override
     public void render(Renderable r, long tick) {
-        if (!(r instanceof WorldMap worldMap)) {
-            return;
+        switch (r) {
+            case WorldMapView(WorldMap worldMap, RenderingLayer _, int _, Vector2f _) -> draw(worldMap);
+            default -> {}
         }
+    }
+
+    public void draw(WorldMap worldMap) {
         ctx.save();
         ctx.scale(scaling(), scaling());
         worldMap.terrainLayer().tiles().filter(tile -> terrainFilter.test(worldMap, tile)).forEach(tile -> {

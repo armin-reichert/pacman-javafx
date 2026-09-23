@@ -20,7 +20,7 @@ import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.basics.ui.assets.SpriteSheet;
 import de.amr.basics.ui.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
-import de.amr.pacmanfx.uilib.rendering.RenderableGameLevel;
+import de.amr.pacmanfx.uilib.rendering.GameLevelView;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -45,7 +45,7 @@ public class TengenMsPacMan_GameLevelRenderer extends BaseRenderer {
 
     @Override
     public void render(Renderable r, long tick) {
-        if (r instanceof RenderableGameLevel(GameLevel level, InfoMap renderInfo, RenderingLayer _, int _, Vector2f _)) {
+        if (r instanceof GameLevelView(GameLevel level, InfoMap renderInfo, RenderingLayer _, int _, Vector2f _)) {
             renderGameLevel(level, renderInfo);
         }
     }

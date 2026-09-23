@@ -17,8 +17,8 @@ import de.amr.pacmanfx.mapeditor.TileMapEditorUtils;
 import de.amr.pacmanfx.mapeditor.actions.*;
 import de.amr.pacmanfx.mapeditor.palette.PaletteID;
 import de.amr.pacmanfx.mapeditor.rendering.ArcadeSprites;
-import de.amr.pacmanfx.mapeditor.rendering.TerrainMapTileRenderer;
 import de.amr.basics.ui.assets.ResourceManager;
+import de.amr.pacmanfx.mapeditor.rendering.TerrainMapTileRenderer;
 import de.amr.pacmanfx.uilib.renderer.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapColoring;
 import javafx.beans.binding.Bindings;
@@ -328,7 +328,7 @@ public class EditCanvas extends Canvas {
             renderer.setMapColoring(colors);
             renderer.setSegmentNumbersDisplayed(segmentNumbersVisible.get());
             renderer.setObstacleInnerAreaDisplayed(obstacleInnerAreaDisplayed.get());
-            renderer.render(worldMap(), 0);
+            renderer.draw(worldMap());
             obstacleEditor.draw(renderer);
         }
 

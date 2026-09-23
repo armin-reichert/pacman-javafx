@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.gamescene.introscene;
 
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.entities.props.marquee.*;
-import de.amr.basics.ui.rendering.RenderableGameEntity;
+import de.amr.basics.ui.rendering.GameEntityView;
 import de.amr.basics.ui.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -30,8 +30,8 @@ public class MarqueeRenderer extends BaseRenderer {
      */
     @Override
     public void render(Renderable r, long tick) {
-        if (r instanceof RenderableGameEntity rge) {
-            if (rge.gameEntity() instanceof Marquee marquee) {
+        if (r instanceof GameEntityView rge) {
+            if (rge.entity() instanceof Marquee marquee) {
                 renderMarquee(marquee, tick);
             }
         }

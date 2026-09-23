@@ -17,7 +17,7 @@ import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
-import de.amr.pacmanfx.uilib.rendering.RenderableGameLevel;
+import de.amr.pacmanfx.uilib.rendering.GameLevelView;
 import javafx.animation.Animation;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
@@ -175,12 +175,12 @@ public class MiniPlaySceneView extends HBox {
             || slidingOutAnimation != null && slidingOutAnimation.getStatus() == Animation.Status.RUNNING;
     }
 
-    private RenderableGameLevel createRenderableLevel(GameLevel level) {
+    private GameLevelView createRenderableLevel(GameLevel level) {
         final InfoMap info = new InfoMap();
         info.put(LevelRenderInfoKey.ENERGIZERS_SHOWN, level.heartbeat().state() == Pulse.State.ON);
         info.put(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, false);
         info.put(LevelRenderInfoKey.SHOW_EMPTY_MAZE, level.food().remainingFoodCount() == 0);
         info.put(LevelRenderInfoKey.MAZE_IS_FLASHING, false);
-        return new RenderableGameLevel(level, info, RenderingLayer.MINIVIEW_OVERLAY, 0, Vector2f.ZERO);
+        return new GameLevelView(level, info, RenderingLayer.MINIVIEW_OVERLAY, 0, Vector2f.ZERO);
     }
 }

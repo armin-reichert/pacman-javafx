@@ -17,7 +17,7 @@ import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.basics.ui.rendering.Renderable;
-import de.amr.basics.ui.rendering.RenderableGameEntity;
+import de.amr.basics.ui.rendering.GameEntityView;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.BaseGameSceneDebugInfoRenderer;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
@@ -41,23 +41,23 @@ public interface GameVariantRenderConfig {
         };
     }
 
-    static RenderableGameEntity renderableGameEntity(GameEntity gameEntity, RenderingLayer layer, int z) {
-        return new RenderableGameEntity(gameEntity, layer, z);
+    static GameEntityView renderableGameEntity(GameEntity gameEntity, RenderingLayer layer, int z) {
+        return new GameEntityView(gameEntity, layer, z);
     }
 
-    static RenderableGameEntity renderableProp(GameEntity gameEntity) {
+    static GameEntityView renderableProp(GameEntity gameEntity) {
         return renderableGameEntity(gameEntity, RenderingLayer.PROPS, 0);
     }
 
-    static RenderableGameEntity renderablePac(Pac pac) {
+    static GameEntityView renderablePac(Pac pac) {
         return renderableGameEntity(pac, RenderingLayer.ACTORS, PAC_Z);
     }
 
-    static RenderableGameEntity renderableGhost(Ghost ghost) {
+    static GameEntityView renderableGhost(Ghost ghost) {
         return renderableGameEntity(ghost, RenderingLayer.ACTORS, ghostZ(ghost.personality()));
     }
 
-    static RenderableGameEntity renderableBonus(Bonus bonus) {
+    static GameEntityView renderableBonus(Bonus bonus) {
         return renderableGameEntity(bonus, RenderingLayer.ACTORS, BONUS_Z);
     }
 

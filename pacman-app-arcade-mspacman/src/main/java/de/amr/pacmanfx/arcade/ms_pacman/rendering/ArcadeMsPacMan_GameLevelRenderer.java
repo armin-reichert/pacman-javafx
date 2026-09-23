@@ -19,12 +19,12 @@ import de.amr.pacmanfx.core.model.world.map.FoodState;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
 import de.amr.basics.ui.rendering.Renderable;
-import de.amr.basics.ui.rendering.RenderableGameEntity;
+import de.amr.basics.ui.rendering.GameEntityView;
 import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.assets.SpriteSheet;
 import de.amr.basics.ui.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
-import de.amr.pacmanfx.uilib.rendering.RenderableGameLevel;
+import de.amr.pacmanfx.uilib.rendering.GameLevelView;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
 
@@ -57,8 +57,8 @@ public class ArcadeMsPacMan_GameLevelRenderer extends BaseRenderer {
     @Override
     public void render(Renderable r, long tick) {
         switch (r) {
-            case RenderableGameLevel(GameLevel level, InfoMap renderInfo, RenderingLayer _, int _, Vector2f _) -> renderGameLevel(level, renderInfo);
-            case RenderableGameEntity(Energizer energizer, RenderingLayer _, int _, Vector2f _) -> hideEnergizerIfOff(energizer);
+            case GameLevelView(GameLevel level, InfoMap renderInfo, RenderingLayer _, int _, Vector2f _) -> renderGameLevel(level, renderInfo);
+            case GameEntityView(Energizer energizer, RenderingLayer _, int _, Vector2f _) -> hideEnergizerIfOff(energizer);
             default -> {}
         }
     }

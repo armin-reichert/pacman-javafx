@@ -85,8 +85,8 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
     private final TextDisplay moveArrowTextDisplay;
     private final TextDisplay chooseOptionsTextDisplay;
     private final TextDisplay pressStartTextDisplay;
-    private final RenderableMenuSeparatorBar topBar;
-    private final RenderableMenuSeparatorBar botBar;
+    private final MenuSeparatorBarView topBar;
+    private final MenuSeparatorBarView botBar;
 
     public TengenMsPacMan_OptionsScene() {
         setComp(GameSceneCanvasRenderingComp.class, new GameSceneCanvasRenderingComp());
@@ -98,8 +98,8 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         chooseOptionsTextDisplay = createChooseOptionsTextDisplay();
         pressStartTextDisplay = createPressStartTextDisplay();
 
-        topBar = new RenderableMenuSeparatorBar(NES_SCREEN_WIDTH, 8, new Vector2f(0,  2.5f * TS));
-        botBar = new RenderableMenuSeparatorBar(NES_SCREEN_WIDTH, 8, new Vector2f(0, 26.5f * TS));
+        topBar = new MenuSeparatorBarView(NES_SCREEN_WIDTH, 8, new Vector2f(0,  2.5f * TS));
+        botBar = new MenuSeparatorBarView(NES_SCREEN_WIDTH, 8, new Vector2f(0, 26.5f * TS));
     }
 
     @Override
@@ -322,15 +322,15 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         return textDisplay;
     }
 
-    private RenderableMenuOption renderablePlayModeOption() {
-        return new RenderableMenuOption(selectedOption.get() == PlayOption.PLAY_MODE,
+    private MenuOptionView renderablePlayModeOption() {
+        return new MenuOptionView(selectedOption.get() == PlayOption.PLAY_MODE,
             "TYPE", "1 PLAYER", 8, new Vector2f(0, 4.5f * TS)
         );
     }
 
-    private RenderableMenuOption renderableBoosterModeOption() {
+    private MenuOptionView renderableBoosterModeOption() {
         final BoosterMode boosterMode = gameOptions(game().session()).boosterMode();
-        return new RenderableMenuOption(selectedOption.get() == PlayOption.PAC_BOOSTER,
+        return new MenuOptionView(selectedOption.get() == PlayOption.PAC_BOOSTER,
             "PAC BOOSTER",
             switch (boosterMode) {
                 case BOOSTER_OFF -> "OFF";
@@ -341,23 +341,23 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         );
     }
 
-    private RenderableMenuOption renderableGameDifficultyOption() {
+    private MenuOptionView renderableGameDifficultyOption() {
         final Difficulty difficulty = gameOptions(game().session()).difficulty();
-        return new RenderableMenuOption(selectedOption.get() == PlayOption.DIFFICULTY,
+        return new MenuOptionView(selectedOption.get() == PlayOption.DIFFICULTY,
             "GAME DIFFICULTY", difficulty.name(), 19, new Vector2f(0, 7.5f * TS)
         );
     }
 
-    private RenderableMenuOption renderableMapCategoryOption() {
+    private MenuOptionView renderableMapCategoryOption() {
         final MapCategory mapCategory = gameOptions(game().session()).mapCategory();
-        return new RenderableMenuOption(selectedOption.get() == PlayOption.MAP_CATEGORY,
+        return new MenuOptionView(selectedOption.get() == PlayOption.MAP_CATEGORY,
             "MAZE SELECTION", mapCategory.name(), 19, new Vector2f(0, 9f * TS)
         );
     }
 
-    private RenderableMenuOption renderableStartingLevelOption() {
+    private MenuOptionView renderableStartingLevelOption() {
         final int startLevelNumber = gameOptions(game().session()).startLevelNumber();
-        return new RenderableMenuOption(selectedOption.get() == PlayOption.STARTING_LEVEL,
+        return new MenuOptionView(selectedOption.get() == PlayOption.STARTING_LEVEL,
             "STARTING LEVEL", String.valueOf(startLevelNumber), 19, new Vector2f(0, 10.5f * TS)
         );
     }
@@ -384,11 +384,11 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         return imageDisplay;
     }
 
-    private RenderableJoypadKeyBindings renderableJoyPadKeyBindings() {
+    private JoypadKeyBindingsView renderableJoyPadKeyBindings() {
         final GameVariantRuntime runtime = app().variantManager().currentRuntime();
         final var uiSettings = runtime.extensionValue(TengenMsPacMan_GameExtension.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
         return uiSettings.joypadBindingsDisplayed.get()
-            ? new RenderableJoypadKeyBindings(app().input().joypad().currentKeyBinding(), new Vector2f(0,0))
+            ? new JoypadKeyBindingsView(app().input().joypad().currentKeyBinding(), new Vector2f(0,0))
             : null;
     }
 }

@@ -11,7 +11,7 @@ import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.ui.gamescene.d2.GenericLevelRenderer;
-import de.amr.pacmanfx.uilib.rendering.RenderableGameLevel;
+import de.amr.pacmanfx.uilib.rendering.GameLevelView;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapColoring;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -28,7 +28,7 @@ public class XXL_GameLevelRenderer extends GenericLevelRenderer {
     @Override
     public void render(Renderable r, long tick) {
         switch (r) {
-            case RenderableGameLevel(GameLevel level, InfoMap _, RenderingLayer _, int _, Vector2f _) -> {
+            case GameLevelView(GameLevel level, InfoMap _, RenderingLayer _, int _, Vector2f _) -> {
                 //TODO don't do this in every render frame
                 final GenericWorldMapColorScheme worldMapColorScheme = level.worldMap().getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
                 final var mapColoring = new TerrainMapColoring(
@@ -38,7 +38,7 @@ public class XXL_GameLevelRenderer extends GenericLevelRenderer {
                     Color.valueOf(worldMapColorScheme.door())
                 );
                 info.put(GenericLevelRenderer.RenderInfoKey.TERRAIN_MAP_COLORING, mapColoring);
-                renderLevel(level, tick);
+                draw(level);
             }
             default -> {}
         }
