@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.ms_pacman;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.ui.ecs.systems.PositionSystem;
-import de.amr.basics.ui.entities.props.textdisplay.TextDisplay;
+import de.amr.basics.ui.entities.props.textdisplay.TextView;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GamePlay;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
@@ -50,7 +50,7 @@ public class ArcadeMsPacMan_GamePlay extends ArcadePacMan_GamePlay {
         // level may be null!
         requireNonNull(hud);
 
-        final TextDisplay creditDisplay = hud.creditDisplay();
+        final TextView creditDisplay = hud.creditDisplay();
         creditDisplay.data().setFont(GlobalFonts.ARCADE.font(TS));
 
         final LivesCounter livesCounter = hud.livesCounter();

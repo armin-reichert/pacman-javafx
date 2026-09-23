@@ -5,7 +5,7 @@ import de.amr.basics.ui.ecs.GameEntity;
 import de.amr.basics.ui.entities.hud.levelCounter.LevelCounter;
 import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
 import de.amr.basics.ui.entities.hud.score.Score;
-import de.amr.basics.ui.entities.props.textdisplay.TextDisplay;
+import de.amr.basics.ui.entities.props.textdisplay.TextView;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.rendering.GameEntityView;
 import de.amr.basics.ui.rendering.RenderingLayer;
@@ -21,7 +21,7 @@ public class HUD {
 
     private final LevelCounter levelCounter = new LevelCounter();
     private final LivesCounter livesCounter = new LivesCounter();
-    private final TextDisplay creditDisplay = new TextDisplay();
+    private final TextView creditDisplay = new TextView();
     private final Score gameScore = new Score(Score.Type.GAME_SCORE);
     private Score highScore;
 
@@ -79,7 +79,7 @@ public class HUD {
             .toList();
     }
 
-    public TextDisplay creditDisplay() {
+    public TextView creditDisplay() {
         return creditDisplay;
     }
 

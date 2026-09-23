@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.gamescene.common;
 import de.amr.basics.Composition;
 import de.amr.basics.Disposable;
 import de.amr.basics.math.Vector2i;
-import de.amr.basics.ui.entities.props.textdisplay.TextDisplay;
+import de.amr.basics.ui.entities.props.textdisplay.TextView;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -34,8 +34,8 @@ public abstract class AbstractGameScene
     extends Composition<GameSceneComponent>
     implements GameScene, QuitHandler, Disposable, Renderable
 {
-    public static TextDisplay createText(String text, Color color, int fontSize, float tileX, float tileY) {
-        final var textDisplay = new TextDisplay();
+    public static TextView createText(String text, Color color, int fontSize, float tileX, float tileY) {
+        final var textDisplay = new TextView();
         textDisplay.data().setFillColor(color);
         textDisplay.data().setFont(GlobalFonts.ARCADE.font(fontSize));
         textDisplay.data().setText(text);

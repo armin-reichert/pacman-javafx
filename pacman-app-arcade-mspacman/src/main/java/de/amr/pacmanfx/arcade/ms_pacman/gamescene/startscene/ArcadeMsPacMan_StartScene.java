@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.arcade.ms_pacman.gamescene.startscene;
 
 import de.amr.basics.ui.entities.props.imagedisplay.ImageView;
-import de.amr.basics.ui.entities.props.textdisplay.TextDisplay;
+import de.amr.basics.ui.entities.props.textdisplay.TextView;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.ArcadeMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.arcade.ms_pacman.rendering.SpriteID;
@@ -36,7 +36,7 @@ public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
 
     private final ImageView msPacManImageView;
     private final ImageView copyrightImageView;
-    private final List<TextDisplay> copyrightTexts = new ArrayList<>();
+    private final List<TextView> copyrightTexts = new ArrayList<>();
 
     public ArcadeMsPacMan_StartScene() {
         // Add 2D rendering support
@@ -55,7 +55,7 @@ public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
         copyrightTexts.add(createText("©",             ArcadeColor.RED.color(), 8, 11, 30.125f));
         copyrightTexts.add(createText("MIDWAY MFG CO", ArcadeColor.RED.color(), 8, 13, 30));
         copyrightTexts.add(createText("1980/1981",     ArcadeColor.RED.color(), 8, 14, 32));
-        copyrightTexts.forEach(TextDisplay::show);
+        copyrightTexts.forEach(TextView::show);
     }
 
     @Override

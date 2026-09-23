@@ -9,15 +9,15 @@ import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.ecs.GameEntity;
 import de.amr.basics.ui.ecs.comp.MovementComp;
 
-public class TextDisplay extends GameEntity implements Renderable {
+public class TextView extends GameEntity implements Renderable {
 
-    public TextDisplay() {
-        setComp(TextDisplayDataComp.class, new TextDisplayDataComp());
+    public TextView() {
+        setComp(TextViewDataComp.class, new TextViewDataComp());
         setComp(MovementComp.class, new MovementComp());
     }
 
-    public TextDisplayDataComp data() {
-        return reqComp(TextDisplayDataComp.class);
+    public TextViewDataComp data() {
+        return reqComp(TextViewDataComp.class);
     }
 
     public MovementComp movement() {

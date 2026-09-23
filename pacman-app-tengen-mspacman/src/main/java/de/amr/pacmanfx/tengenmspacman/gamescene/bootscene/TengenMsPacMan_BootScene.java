@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.gamescene.bootscene;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.ui.entities.props.ColoredRect;
-import de.amr.basics.ui.entities.props.textdisplay.TextDisplay;
+import de.amr.basics.ui.entities.props.textdisplay.TextView;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
@@ -43,7 +43,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
     private boolean gray;
 
     private final ColoredRect grayRect;
-    private final TextDisplay tengenPresentsText;
+    private final TextView tengenPresentsTextView;
 
     private Ghost ghost;
 
@@ -55,17 +55,17 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
 
         grayRect = new ColoredRect(0, 0, NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT, NES_Palette.color(0x10));
 
-        tengenPresentsText = new TextDisplay();
-        tengenPresentsText.data().setText(TENGEN_PRESENTS);
-        tengenPresentsText.data().setCenter(true);
-        tengenPresentsText.data().setFont(GlobalFonts.ARCADE.font());
+        tengenPresentsTextView = new TextView();
+        tengenPresentsTextView.data().setText(TENGEN_PRESENTS);
+        tengenPresentsTextView.data().setCenter(true);
+        tengenPresentsTextView.data().setFont(GlobalFonts.ARCADE.font());
     }
 
     @Override
     public Stream<Renderable> renderables() {
         if (gray) return Stream.of(grayRect);
         return Ufx.streamOf(
-            tengenPresentsText,
+            tengenPresentsTextView,
             createGhostView(ghost)
         );
     }
@@ -95,11 +95,11 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
             case   7 -> grayScreen(true);
             case  12 -> grayScreen(false);
             case  21 -> {
-                tengenPresentsText.pos().set(NES_SCREEN_WIDTH / 2.0, reqCanvasRendering().unscaledHeight()); // lower border of screen
-                tengenPresentsText.show();
-                systems.motor().setVelocity(tengenPresentsText, 0, -WorldMap.HTS);
+                tengenPresentsTextView.pos().set(NES_SCREEN_WIDTH / 2.0, reqCanvasRendering().unscaledHeight()); // lower border of screen
+                tengenPresentsTextView.show();
+                systems.motor().setVelocity(tengenPresentsTextView, 0, -WorldMap.HTS);
             }
-            case  55 -> systems.motor().setVelocity(tengenPresentsText, 0, 0);
+            case  55 -> systems.motor().setVelocity(tengenPresentsTextView, 0, 0);
             case 113 -> {
                 ghost.pos().set(reqCanvasRendering().unscaledWidth() - WorldMap.TS, GHOST_Y);
                 ghost.show();
@@ -107,9 +107,9 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
                 systems.navigator().setWishDir(ghost, Direction.LEFT);
                 systems.navigator().setSpeed(ghost, WorldMap.TS);
             }
-            case 181 -> systems.motor().setVelocity(tengenPresentsText, 0, WorldMap.TS);
+            case 181 -> systems.motor().setVelocity(tengenPresentsTextView, 0, WorldMap.TS);
             case 203 -> {
-                tengenPresentsText.hide();
+                tengenPresentsTextView.hide();
                 ghost.hide();
             }
             case 204 -> grayScreen(true);
@@ -120,8 +120,8 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
             }
         }
 
-        tengenPresentsText.data().setFillColor(shadeOfBlue);
-        systems.motor().move(tengenPresentsText);
+        tengenPresentsTextView.data().setFillColor(shadeOfBlue);
+        systems.motor().move(tengenPresentsTextView);
 
         systems.motor().move(ghost);
     }

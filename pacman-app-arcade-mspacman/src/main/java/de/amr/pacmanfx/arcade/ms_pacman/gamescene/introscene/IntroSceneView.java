@@ -8,7 +8,7 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.ui.ecs.systems.ActorSpriteAnimController;
 import de.amr.basics.ui.entities.props.imagedisplay.ImageView;
 import de.amr.basics.ui.entities.props.marquee.Marquee;
-import de.amr.basics.ui.entities.props.textdisplay.TextDisplay;
+import de.amr.basics.ui.entities.props.textdisplay.TextView;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
@@ -44,10 +44,10 @@ public class IntroSceneView {
 
     private Marquee marquee;
     private ImageView copyrightImageView;
-    private final List<TextDisplay> copyrightTexts = new ArrayList<>();
-    private TextDisplay titleText;
-    private TextDisplay marqueeText1;
-    private TextDisplay marqueeText2;
+    private final List<TextView> copyrightTexts = new ArrayList<>();
+    private TextView titleTextView;
+    private TextView marqueeTextView1;
+    private TextView marqueeTextView2;
 
     private Pac msPacMan;
     private List<Ghost> ghosts;
@@ -61,10 +61,10 @@ public class IntroSceneView {
 
     public Stream<Renderable> renderables() {
         return Ufx.streamOf(
-            titleText,
+            titleTextView,
             createEntityView(marquee, RenderingLayer.PROPS, 0),
-            marqueeText1,
-            marqueeText2,
+            marqueeTextView1,
+            marqueeTextView2,
             createPacView(msPacMan),
             ghosts.stream().map(GameVariantRenderConfig::createGhostView),
             copyrightImageView, copyrightTexts);
@@ -79,32 +79,32 @@ public class IntroSceneView {
     }
 
     public void showMarqueeText1(String text, Color color) {
-        marqueeText1.data().setText(text);
-        marqueeText1.data().setFillColor(color);
-        marqueeText1.show();
+        marqueeTextView1.data().setText(text);
+        marqueeTextView1.data().setFillColor(color);
+        marqueeTextView1.show();
     }
 
     public void hideMarqueeText1() {
-        marqueeText1.hide();
+        marqueeTextView1.hide();
     }
 
     public void showMarqueeText2(String text, Color color) {
-        marqueeText2.data().setText(text);
-        marqueeText2.data().setFillColor(color);
-        marqueeText2.show();
+        marqueeTextView2.data().setText(text);
+        marqueeTextView2.data().setFillColor(color);
+        marqueeTextView2.show();
     }
 
     public void placeMarqueeText2(float x, float y) {
-        marqueeText2.pos().set(x, y);
+        marqueeTextView2.pos().set(x, y);
     }
 
     private void createTitleText() {
-        titleText = new TextDisplay();
-        titleText.data().setText(MARQUEE_TITLE);
-        titleText.data().setFillColor(ArcadeColor.ORANGE.color());
-        titleText.data().setFont(GlobalFonts.ARCADE.font(8));
-        titleText.pos().set(TITLE_X, TITLE_Y);
-        titleText.show();
+        titleTextView = new TextView();
+        titleTextView.data().setText(MARQUEE_TITLE);
+        titleTextView.data().setFillColor(ArcadeColor.ORANGE.color());
+        titleTextView.data().setFont(GlobalFonts.ARCADE.font(8));
+        titleTextView.pos().set(TITLE_X, TITLE_Y);
+        titleTextView.show();
     }
 
     private void createMarquee() {
@@ -121,12 +121,12 @@ public class IntroSceneView {
         marquee.visualization().setBulbOffColor(ArcadeColor.RED.toString());
         marquee.visualization().setBulbOnColor(ArcadeColor.WHITE.toString());
 
-        marqueeText1 = new TextDisplay();
-        marqueeText1.data().setFont(GlobalFonts.ARCADE.font(TS));
-        marqueeText1.pos().set(TITLE_X, TOP_Y + tilesPx(3));
+        marqueeTextView1 = new TextView();
+        marqueeTextView1.data().setFont(GlobalFonts.ARCADE.font(TS));
+        marqueeTextView1.pos().set(TITLE_X, TOP_Y + tilesPx(3));
 
-        marqueeText2 = new TextDisplay();
-        marqueeText2.data().setFont(GlobalFonts.ARCADE.font(TS));
+        marqueeTextView2 = new TextView();
+        marqueeTextView2.data().setFont(GlobalFonts.ARCADE.font(TS));
     }
 
     private void createCopyright(GameVariantRuntime runtime) {
@@ -140,7 +140,7 @@ public class IntroSceneView {
         copyrightTexts.add(createText("©",             ArcadeColor.RED.color(), 8, 11, 30.125f));
         copyrightTexts.add(createText("MIDWAY MFG CO", ArcadeColor.RED.color(), 8, 13, 30));
         copyrightTexts.add(createText("1980/1981",     ArcadeColor.RED.color(), 8, 14, 32));
-        copyrightTexts.forEach(TextDisplay::show);
+        copyrightTexts.forEach(TextView::show);
     }
 
     private void createMsPacManAndTheGhosts(GameVariantRuntime runtime) {

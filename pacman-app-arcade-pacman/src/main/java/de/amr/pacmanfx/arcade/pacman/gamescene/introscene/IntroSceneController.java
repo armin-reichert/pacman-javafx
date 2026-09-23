@@ -66,7 +66,7 @@ public class IntroSceneController extends StateMachine<ArcadePacMan_IntroScene> 
             @Override
             public void onUpdate(ArcadePacMan_IntroScene scene) {
                 if (timer.tickCount() == TICK_TITLE_VISIBLE) {
-                    scene.view.titleText.show();
+                    scene.view.titleTextView.show();
                 } else if (timer.tickCount() == TICK_START_PRESENTING_GHOSTS) {
                     controller.enterState(scene, PRESENTING_GHOSTS);
                 }

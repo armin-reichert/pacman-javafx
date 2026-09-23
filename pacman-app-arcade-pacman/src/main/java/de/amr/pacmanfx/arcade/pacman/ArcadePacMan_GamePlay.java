@@ -6,7 +6,7 @@ package de.amr.pacmanfx.arcade.pacman;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.timer.Pulse;
-import de.amr.basics.ui.entities.props.textdisplay.TextDisplay;
+import de.amr.basics.ui.entities.props.textdisplay.TextView;
 import de.amr.pacmanfx.arcade.pacman.gamestate.Arcade_GameState;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_RenderConfig;
@@ -168,7 +168,7 @@ public class ArcadePacMan_GamePlay extends CommonGamePlay {
         // level may be null!
         requireNonNull(hud);
 
-        final TextDisplay creditDisplay = hud.creditDisplay();
+        final TextView creditDisplay = hud.creditDisplay();
         creditDisplay.data().setFont(GlobalFonts.ARCADE.font(TS));
 
         final LivesCounter livesCounter = hud.livesCounter();

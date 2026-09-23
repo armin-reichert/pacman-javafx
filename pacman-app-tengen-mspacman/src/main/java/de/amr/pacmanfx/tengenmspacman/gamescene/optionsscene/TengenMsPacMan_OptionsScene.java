@@ -9,7 +9,7 @@ import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.ui.entities.hud.score.Score;
 import de.amr.basics.ui.entities.props.imagedisplay.ImageView;
-import de.amr.basics.ui.entities.props.textdisplay.TextDisplay;
+import de.amr.basics.ui.entities.props.textdisplay.TextView;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
@@ -81,10 +81,10 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
     private int idleTicks;
     public int initialDelay;
 
-    private final TextDisplay titleTextDisplay;
-    private final TextDisplay moveArrowTextDisplay;
-    private final TextDisplay chooseOptionsTextDisplay;
-    private final TextDisplay pressStartTextDisplay;
+    private final TextView titleTextView;
+    private final TextView moveArrowTextView;
+    private final TextView chooseOptionsTextView;
+    private final TextView pressStartTextView;
     private final MenuSeparatorBarView topBar;
     private final MenuSeparatorBarView botBar;
 
@@ -93,10 +93,10 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         reqCanvasRendering().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         reqCanvasRendering().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
 
-        titleTextDisplay = createTitleTextDisplay();
-        moveArrowTextDisplay = createMoveArrowTextDisplay();
-        chooseOptionsTextDisplay = createChooseOptionsTextDisplay();
-        pressStartTextDisplay = createPressStartTextDisplay();
+        titleTextView = createTitleTextDisplay();
+        moveArrowTextView = createMoveArrowTextDisplay();
+        chooseOptionsTextView = createChooseOptionsTextDisplay();
+        pressStartTextView = createPressStartTextDisplay();
 
         topBar = new MenuSeparatorBarView(NES_SCREEN_WIDTH, 8, new Vector2f(0,  2.5f * TS));
         botBar = new MenuSeparatorBarView(NES_SCREEN_WIDTH, 8, new Vector2f(0, 26.5f * TS));
@@ -109,15 +109,15 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         return Ufx.streamOf(
             renderableJoyPadKeyBindings(),
             topBar,
-            titleTextDisplay,
+            titleTextView,
             createPlayModeOptionView(),
             createBoosterModeOptionView(),
             createGameDifficultyOptionView(),
             createMapCategoryOptionView(),
             createStartingLevelOptionView(), createNumContinuesImageDisplay(),
-            moveArrowTextDisplay,
-            chooseOptionsTextDisplay,
-            pressStartTextDisplay,
+            moveArrowTextView,
+            chooseOptionsTextView,
+            pressStartTextView,
             botBar
         );
     }
@@ -282,44 +282,44 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         }
     }
 
-    private TextDisplay createTitleTextDisplay() {
-        final TextDisplay textDisplay = new TextDisplay();
-        textDisplay.pos().set(7 * TS, 6 * TS);
-        textDisplay.data().setFont(GlobalFonts.ARCADE.font(TS));
-        textDisplay.data().setText("MS PAC-MAN OPTIONS");
-        textDisplay.data().setFillColor(NES_Palette.color(0x28));
-        textDisplay.show();
-        return textDisplay;
+    private TextView createTitleTextDisplay() {
+        final TextView textView = new TextView();
+        textView.pos().set(7 * TS, 6 * TS);
+        textView.data().setFont(GlobalFonts.ARCADE.font(TS));
+        textView.data().setText("MS PAC-MAN OPTIONS");
+        textView.data().setFillColor(NES_Palette.color(0x28));
+        textView.show();
+        return textView;
     }
 
-    private TextDisplay createMoveArrowTextDisplay() {
-        final TextDisplay textDisplay = new TextDisplay();
-        textDisplay.pos().set(4 * TS, 24 * TS);
-        textDisplay.data().setFont(GlobalFonts.ARCADE.font(TS));
-        textDisplay.data().setText("MOVE ARROW WITH JOYPAD");
-        textDisplay.data().setFillColor(NES_Palette.color(0x28));
-        textDisplay.show();
-        return textDisplay;
+    private TextView createMoveArrowTextDisplay() {
+        final TextView textView = new TextView();
+        textView.pos().set(4 * TS, 24 * TS);
+        textView.data().setFont(GlobalFonts.ARCADE.font(TS));
+        textView.data().setText("MOVE ARROW WITH JOYPAD");
+        textView.data().setFillColor(NES_Palette.color(0x28));
+        textView.show();
+        return textView;
     }
 
-    private TextDisplay createChooseOptionsTextDisplay() {
-        final TextDisplay textDisplay = new TextDisplay();
-        textDisplay.pos().set(2 * TS, 25 * TS);
-        textDisplay.data().setFont(GlobalFonts.ARCADE.font(TS));
-        textDisplay.data().setText("CHOOSE OPTIONS WITH A AND B");
-        textDisplay.data().setFillColor(NES_Palette.color(0x28));
-        textDisplay.show();
-        return textDisplay;
+    private TextView createChooseOptionsTextDisplay() {
+        final TextView textView = new TextView();
+        textView.pos().set(2 * TS, 25 * TS);
+        textView.data().setFont(GlobalFonts.ARCADE.font(TS));
+        textView.data().setText("CHOOSE OPTIONS WITH A AND B");
+        textView.data().setFillColor(NES_Palette.color(0x28));
+        textView.show();
+        return textView;
     }
 
-    private TextDisplay createPressStartTextDisplay() {
-        final TextDisplay textDisplay = new TextDisplay();
-        textDisplay.pos().set(3 * TS, 26 * TS);
-        textDisplay.data().setFont(GlobalFonts.ARCADE.font(TS));
-        textDisplay.data().setText("PRESS START TO START GAME");
-        textDisplay.data().setFillColor(NES_Palette.color(0x28));
-        textDisplay.show();
-        return textDisplay;
+    private TextView createPressStartTextDisplay() {
+        final TextView textView = new TextView();
+        textView.pos().set(3 * TS, 26 * TS);
+        textView.data().setFont(GlobalFonts.ARCADE.font(TS));
+        textView.data().setText("PRESS START TO START GAME");
+        textView.data().setFillColor(NES_Palette.color(0x28));
+        textView.show();
+        return textView;
     }
 
     private MenuOptionView createPlayModeOptionView() {

@@ -8,7 +8,7 @@ import de.amr.basics.ui.ecs.GameEntityComp;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-public class TextDisplayDataComp implements GameEntityComp {
+public class TextViewDataComp implements GameEntityComp {
 
     private String text = "";
 

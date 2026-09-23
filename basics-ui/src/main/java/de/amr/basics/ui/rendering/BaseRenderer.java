@@ -15,7 +15,7 @@ import de.amr.basics.ui.entities.props.imagedisplay.ImageView;
 import de.amr.basics.ui.entities.props.messageview.MessageType;
 import de.amr.basics.ui.entities.props.messageview.MessageView;
 import de.amr.basics.ui.entities.props.messageview.MessageViewStyleComp;
-import de.amr.basics.ui.entities.props.textdisplay.TextDisplay;
+import de.amr.basics.ui.entities.props.textdisplay.TextView;
 import de.amr.basics.util.Ufx;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -70,7 +70,7 @@ public class BaseRenderer implements Renderer {
     protected void renderGameEntity(GameEntity gameEntity, long tick) {
         switch (gameEntity) {
             case ImageView imageView -> renderImageDisplay(imageView);
-            case TextDisplay textDisplay -> renderTextDisplay(textDisplay);
+            case TextView textView -> renderTextDisplay(textView);
             case MessageView messageView -> renderMessageView(messageView);
             default -> {}
         }
@@ -287,12 +287,12 @@ public class BaseRenderer implements Renderer {
         }
     }
 
-    private void renderTextDisplay(TextDisplay textDisplay) {
-        if (!textDisplay.isVisible()) {
+    private void renderTextDisplay(TextView textView) {
+        if (!textView.isVisible()) {
             return;
         }
-        final var pos = textDisplay.pos();
-        final var data = textDisplay.data();
+        final var pos = textView.pos();
+        final var data = textView.data();
 
         final Font scaledFont = Ufx.scaleFontBy(data.font(), scaling());
         if (data.center()) {

@@ -11,7 +11,7 @@ import de.amr.basics.timer.Pulse;
 import de.amr.basics.ui.ecs.GameEntity;
 import de.amr.basics.ui.ecs.systems.ActorSpriteAnimController;
 import de.amr.basics.ui.entities.props.imagedisplay.ImageView;
-import de.amr.basics.ui.entities.props.textdisplay.TextDisplay;
+import de.amr.basics.ui.entities.props.textdisplay.TextView;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.util.Ufx;
@@ -50,12 +50,12 @@ public class IntroSceneView {
 
     final Pulse pulse = new Pulse(10, Pulse.State.ON);
 
-    final TextDisplay titleText;
+    final TextView titleTextView;
 
     // Ghost presentation
     final ImageView[] ghostImageViews;
-    final TextDisplay[]  ghostNicknameDisplays;
-    final TextDisplay[]  ghostCharacterDisplays;
+    final TextView[]  ghostNicknameDisplays;
+    final TextView[]  ghostCharacterDisplays;
 
     // Chase animation
     final Energizer targetEnergizer;
@@ -66,23 +66,23 @@ public class IntroSceneView {
     // Points display
     final Energizer energizer;
     final Pellet pellet;
-    final TextDisplay text10;
-    final TextDisplay text10Pts;
-    final TextDisplay text50;
-    final TextDisplay text50Pts;
-    final TextDisplay copyrightText;
+    final TextView text10;
+    final TextView text10Pts;
+    final TextView text50;
+    final TextView text50Pts;
+    final TextView copyrightText;
 
     public IntroSceneView() {
-        titleText = new TextDisplay();
+        titleTextView = new TextView();
 
         // Ghost gallery
         ghostImageViews = new ImageView[NUM_GHOSTS];
-        ghostNicknameDisplays = new TextDisplay[NUM_GHOSTS];
-        ghostCharacterDisplays = new TextDisplay[NUM_GHOSTS];
+        ghostNicknameDisplays = new TextView[NUM_GHOSTS];
+        ghostCharacterDisplays = new TextView[NUM_GHOSTS];
         for (int i = 0; i < NUM_GHOSTS; ++i) {
             ghostImageViews[i] = new ImageView();
-            ghostCharacterDisplays[i] = new TextDisplay();
-            ghostNicknameDisplays[i] = new TextDisplay();
+            ghostCharacterDisplays[i] = new TextView();
+            ghostNicknameDisplays[i] = new TextView();
         }
 
         // Chase animation
@@ -91,11 +91,11 @@ public class IntroSceneView {
         // Points display
         energizer = new Energizer();
         pellet = new Pellet();
-        text10 = new TextDisplay();
-        text10Pts = new TextDisplay();
-        text50 = new TextDisplay();
-        text50Pts = new TextDisplay();
-        copyrightText = new TextDisplay();
+        text10 = new TextView();
+        text10Pts = new TextView();
+        text50 = new TextView();
+        text50Pts = new TextView();
+        copyrightText = new TextView();
 
         initTitleText();
         initGhostGallery();
@@ -122,7 +122,7 @@ public class IntroSceneView {
 
     public Stream<Renderable> renderables() {
         return Ufx.streamOf(
-            titleText,
+            titleTextView,
             Arrays.stream(ghostImageViews).filter(GameEntity::isVisible),
             Arrays.stream(ghostCharacterDisplays).filter(GameEntity::isVisible),
             Arrays.stream(ghostNicknameDisplays).filter(GameEntity::isVisible),
@@ -171,10 +171,10 @@ public class IntroSceneView {
     }
 
     private void initTitleText() {
-        titleText.data().setText(TITLE_TEXT);
-        titleText.data().setFillColor(ArcadeColor.WHITE.color());
-        titleText.data().setFont(GlobalFonts.ARCADE.font(TS));
-        titleText.pos().set(tilesPx(LEFT_TILE_X + 3), tilesPx(6));
+        titleTextView.data().setText(TITLE_TEXT);
+        titleTextView.data().setFillColor(ArcadeColor.WHITE.color());
+        titleTextView.data().setFont(GlobalFonts.ARCADE.font(TS));
+        titleTextView.pos().set(tilesPx(LEFT_TILE_X + 3), tilesPx(6));
     }
 
     private void initGhostGallery() {
@@ -189,13 +189,13 @@ public class IntroSceneView {
             imageView.image().setImage(spriteSheet.createImage(sprite));
             imageView.pos().set(TS * 4, y + offsetY - 1.5f * TS);
 
-            final TextDisplay characterDisplay = ghostCharacterDisplays[i];
+            final TextView characterDisplay = ghostCharacterDisplays[i];
             characterDisplay.data().setText(GHOST_CHARACTERS[i]);
             characterDisplay.data().setFillColor(GHOST_COLORS[i].color());
             characterDisplay.data().setFont(GlobalFonts.ARCADE.font(TS));
             characterDisplay.pos().set(TS * 7, y + offsetY);
 
-            final TextDisplay nicknameDisplay = ghostNicknameDisplays[i];
+            final TextView nicknameDisplay = ghostNicknameDisplays[i];
             nicknameDisplay.data().setText(GHOST_NICKNAMES[i]);
             nicknameDisplay.data().setFillColor(GHOST_COLORS[i].color());
             nicknameDisplay.data().setFont(GlobalFonts.ARCADE.font(TS));
