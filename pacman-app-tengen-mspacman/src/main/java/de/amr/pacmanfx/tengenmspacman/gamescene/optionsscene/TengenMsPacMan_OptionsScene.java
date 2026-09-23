@@ -6,8 +6,8 @@ package de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.ui.entities.hud.score.Score;
+import de.amr.basics.ui.entities.props.textdisplay.TextDisplay;
 import de.amr.basics.ui.rendering.Renderable;
-import de.amr.basics.ui.rendering.Renderer;
 import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
@@ -21,6 +21,8 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.model.BoosterMode;
 import de.amr.pacmanfx.tengenmspacman.model.Difficulty;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
+import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
+import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.input.JoypadButton;
@@ -31,6 +33,7 @@ import javafx.scene.input.KeyCode;
 import java.io.IOException;
 import java.util.stream.Stream;
 
+import static de.amr.basics.ui.rendering.Renderer.TS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
@@ -80,10 +83,60 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
     private int idleTicks;
     public int initialDelay;
 
+    private final TextDisplay titleTextDisplay;
+    private final TextDisplay moveArrowTextDisplay;
+    private final TextDisplay chooseOptionsTextDisplay;
+    private final TextDisplay pressStartTextDisplay;
+
     public TengenMsPacMan_OptionsScene() {
         setComp(GameSceneCanvasRenderingComp.class, new GameSceneCanvasRenderingComp());
         reqCanvasRendering().unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         reqCanvasRendering().unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
+
+        titleTextDisplay = createTitleTextDisplay();
+        moveArrowTextDisplay = createMoveArrowTextDisplay();
+        chooseOptionsTextDisplay = createChooseOptionsTextDisplay();
+        pressStartTextDisplay = createPressStartTextDisplay();
+    }
+
+    private TextDisplay createTitleTextDisplay() {
+        final TextDisplay textDisplay = new TextDisplay();
+        textDisplay.pos().set(7 * TS, 6 * TS);
+        textDisplay.data().setFont(GlobalFonts.ARCADE.font(TS));
+        textDisplay.data().setText("MS PAC-MAN OPTIONS");
+        textDisplay.data().setFillColor(NES_Palette.color(0x28));
+        textDisplay.show();
+        return textDisplay;
+    }
+
+    private TextDisplay createMoveArrowTextDisplay() {
+        final TextDisplay textDisplay = new TextDisplay();
+        textDisplay.pos().set(4 * TS, 24 * TS);
+        textDisplay.data().setFont(GlobalFonts.ARCADE.font(TS));
+        textDisplay.data().setText("MOVE ARROW WITH JOYPAD");
+        textDisplay.data().setFillColor(NES_Palette.color(0x28));
+        textDisplay.show();
+        return textDisplay;
+    }
+
+    private TextDisplay createChooseOptionsTextDisplay() {
+        final TextDisplay textDisplay = new TextDisplay();
+        textDisplay.pos().set(2 * TS, 25 * TS);
+        textDisplay.data().setFont(GlobalFonts.ARCADE.font(TS));
+        textDisplay.data().setText("CHOOSE OPTIONS WITH A AND B");
+        textDisplay.data().setFillColor(NES_Palette.color(0x28));
+        textDisplay.show();
+        return textDisplay;
+    }
+
+    private TextDisplay createPressStartTextDisplay() {
+        final TextDisplay textDisplay = new TextDisplay();
+        textDisplay.pos().set(3 * TS, 26 * TS);
+        textDisplay.data().setFont(GlobalFonts.ARCADE.font(TS));
+        textDisplay.data().setText("PRESS START TO START GAME");
+        textDisplay.data().setFillColor(NES_Palette.color(0x28));
+        textDisplay.show();
+        return textDisplay;
     }
 
     private RenderableMenuOption renderablePlayModeOption() {
@@ -93,7 +146,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
             "1 PLAYER",
             8,
             RenderingLayer.SCENE, 0,
-            new Vector2f(0, 4.5f * Renderer.TS)
+            new Vector2f(0, 4.5f * TS)
         );
     }
 
@@ -109,7 +162,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
             },
             19,
             RenderingLayer.SCENE, 0,
-            new Vector2f(0, 6 * Renderer.TS)
+            new Vector2f(0, 6 * TS)
         );
     }
 
@@ -121,7 +174,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
             difficulty.name(),
             19,
             RenderingLayer.SCENE, 0,
-            new Vector2f(0, 7.5f * Renderer.TS)
+            new Vector2f(0, 7.5f * TS)
         );
     }
 
@@ -133,7 +186,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
             mapCategory.name(),
             19,
             RenderingLayer.SCENE, 0,
-            new Vector2f(0, 9f * Renderer.TS)
+            new Vector2f(0, 9f * TS)
         );
     }
 
@@ -142,10 +195,16 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         if (initialDelay > 0) return Stream.empty();
 
         return Ufx.streamOf(
+            titleTextDisplay,
             renderablePlayModeOption(),
             renderableBoosterModeOption(),
             renderableGameDifficultyOption(),
-            renderableMapCategoryOption()
+            renderableMapCategoryOption(),
+            //TODO START LEVEL
+            moveArrowTextDisplay,
+            chooseOptionsTextDisplay,
+            pressStartTextDisplay
+
         );
     }
 

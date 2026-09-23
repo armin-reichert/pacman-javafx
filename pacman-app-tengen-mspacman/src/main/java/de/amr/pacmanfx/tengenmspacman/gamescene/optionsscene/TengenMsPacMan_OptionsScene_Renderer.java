@@ -36,7 +36,6 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer {
     private static final Color NES_YELLOW = NES_Palette.color(0x28);
     private static final Color NES_WHITE = NES_Palette.color(0x20);
 
-
     public TengenMsPacMan_OptionsScene_Renderer(Canvas canvas) {
         super(canvas);
     }
@@ -90,7 +89,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer {
             optionsScene.reqCanvasRendering().unscaledWidth(), TS, 20);
 
         float y = 48;
-        fillText("MS PAC-MAN OPTIONS", NES_YELLOW, COL_LABEL + 3 * TS, 48);
+//        fillText("MS PAC-MAN OPTIONS", NES_YELLOW, COL_LABEL + 3 * TS, 48);
 
         y += tilesPx(3);
 
@@ -160,13 +159,13 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer {
         }
 
         y += tilesPx(3);
-        fillText("MOVE ARROW WITH JOYPAD",      NES_YELLOW, tilesPx(4), y);
+        //fillText("MOVE ARROW WITH JOYPAD",      NES_YELLOW, tilesPx(4), y);
 
         y += tilesPx(1);
-        fillText("CHOOSE OPTIONS WITH A AND B", NES_YELLOW, tilesPx(2), y);
+        //fillText("CHOOSE OPTIONS WITH A AND B", NES_YELLOW, tilesPx(2), y);
 
         y += tilesPx(1);
-        fillText("PRESS START TO START GAME",   NES_YELLOW, tilesPx(3), y);
+        //fillText("PRESS START TO START GAME",   NES_YELLOW, tilesPx(3), y);
 
         drawHorizontalBar(ctx, scaling(), NES_Palette.color(0x20), NES_Palette.color(0x21),
             optionsScene.reqCanvasRendering().unscaledWidth(), TS, 212);
