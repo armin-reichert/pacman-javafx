@@ -76,8 +76,8 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene {
             createPropView(clapperboard),
             createPacView(pacMan),
             createPacView(msPacMan),
-            stork,
-            bag
+            createPropView(stork),
+            createPropView(bag)
         );
     }
 
