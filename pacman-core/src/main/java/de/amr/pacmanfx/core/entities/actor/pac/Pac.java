@@ -7,8 +7,8 @@ package de.amr.pacmanfx.core.entities.actor.pac;
 import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.ecs.comp.MovementComp;
 import de.amr.basics.ui.ecs.comp.SpriteAnimationComp;
-import de.amr.pacmanfx.core.entities.SteeringComp;
-import de.amr.basics.ui.ecs.comp.WorldNavigationComp;
+import de.amr.pacmanfx.core.entities.actor.SteeringComp;
+import de.amr.pacmanfx.core.entities.world.WorldNavigationComp;
 
 import static java.util.Objects.requireNonNull;
 

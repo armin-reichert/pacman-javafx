@@ -5,8 +5,6 @@ package de.amr.pacmanfx.core.entities.world;
 
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.ecs.GameEntity;
-import de.amr.basics.ui.ecs.comp.WorldNavigationComp;
-import de.amr.pacmanfx.core.entities.WorldNavigationSystem;
 import org.tinylog.Logger;
 
 import static java.util.Objects.requireNonNull;

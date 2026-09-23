@@ -11,7 +11,7 @@ import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
-import de.amr.pacmanfx.core.entities.world.house.House;
+import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.basics.ui.entities.props.messageview.MessageView;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.event.base.DefaultGameEventListener;

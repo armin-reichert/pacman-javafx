@@ -2,7 +2,7 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.basics.ui.ecs.comp;
+package de.amr.pacmanfx.core.entities.world;
 
 //TODO integrate into WorldNavigationComp
 public class WorldNavigationInfo {

@@ -8,7 +8,7 @@ import de.amr.basics.math.Vector2i;
 import de.amr.basics.ui.rendering.BaseRenderer;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.rendering.GameEntityView;
-import de.amr.pacmanfx.core.entities.world.house.House;
+import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapColoring;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;

@@ -2,13 +2,11 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core.entities.world.house;
+package de.amr.pacmanfx.core.entities.world;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.ecs.GameEntity;
-import de.amr.pacmanfx.core.entities.world.door.Door;
-import de.amr.pacmanfx.core.entities.world.door.DoorDataComp;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 
 import static de.amr.basics.math.Vector2f.vec2_float;

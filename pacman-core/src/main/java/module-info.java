@@ -26,13 +26,11 @@ module de.amr.pacmanfx.core {
     exports de.amr.pacmanfx.core.event.gameplay;
     exports de.amr.pacmanfx.core.model.world.map;
     exports de.amr.pacmanfx.core.model.world.obstacle;
-    exports de.amr.pacmanfx.core.entities.world.door;
-    exports de.amr.pacmanfx.core.entities.world.house;
     exports de.amr.pacmanfx.core.gameplay.hunt;
     exports de.amr.pacmanfx.core.entities.actor.pac;
     exports de.amr.pacmanfx.core.entities.actor.bonus;
     exports de.amr.pacmanfx.core.entities.actor.ghost;
     exports de.amr.pacmanfx.core.entities.world;
-    exports de.amr.pacmanfx.core.entities;
     exports de.amr.pacmanfx.core.entities.hud;
+    exports de.amr.pacmanfx.core.entities.actor;
 }

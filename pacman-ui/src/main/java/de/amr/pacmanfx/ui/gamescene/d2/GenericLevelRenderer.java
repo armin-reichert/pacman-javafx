@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.ui.gamescene.d2;
 
 import de.amr.basics.ui.rendering.BaseRenderer;
-import de.amr.pacmanfx.core.entities.world.house.House;
+import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;

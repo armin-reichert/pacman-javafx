@@ -5,14 +5,14 @@
 package de.amr.pacmanfx.core.gameplay.hunt;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.entities.WorldMovementPolicy;
-import de.amr.pacmanfx.core.entities.WorldNavigationSystem;
+import de.amr.pacmanfx.core.entities.world.WorldMovementPolicy;
+import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 
-import static de.amr.pacmanfx.core.entities.WorldNavigationSystem.tilesAheadWithOverflowBug;
+import static de.amr.pacmanfx.core.entities.world.WorldNavigationSystem.tilesAheadWithOverflowBug;
 import static java.util.Objects.requireNonNull;
 
 public class BashfulHuntingStrategy implements GhostHuntingStrategy {

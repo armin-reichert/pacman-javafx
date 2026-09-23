@@ -6,10 +6,10 @@ package de.amr.pacmanfx.arcade.ms_pacman.model.systems.ghost;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.entities.WorldMovementPolicy;
-import de.amr.pacmanfx.core.entities.WorldNavigationSystem;
+import de.amr.pacmanfx.core.entities.world.WorldMovementPolicy;
+import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
-import de.amr.pacmanfx.core.entities.world.house.House;
+import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.entities.actor.ghost.ElroyComp;
 import de.amr.pacmanfx.core.gameplay.hunt.GhostHuntingStrategy;
 import de.amr.pacmanfx.core.level.GameLevel;

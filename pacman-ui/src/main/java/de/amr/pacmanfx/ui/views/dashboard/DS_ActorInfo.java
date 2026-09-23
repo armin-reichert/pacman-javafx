@@ -8,7 +8,7 @@ import de.amr.basics.Named;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.ecs.comp.MovementComp;
-import de.amr.basics.ui.ecs.comp.WorldNavigationComp;
+import de.amr.pacmanfx.core.entities.world.WorldNavigationComp;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.spriteanim.SpriteAnimation;
 import de.amr.pacmanfx.core.GameConstants;

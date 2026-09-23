@@ -8,9 +8,9 @@ import de.amr.basics.ecs.system.LifetimeSystem;
 import de.amr.basics.ecs.system.MovementSystem;
 import de.amr.basics.ui.ecs.system.*;
 import de.amr.basics.ui.entities.hud.levelCounter.LevelCounterSystem;
-import de.amr.pacmanfx.core.entities.RoamingSystem;
-import de.amr.pacmanfx.core.entities.WorldMovementPolicy;
-import de.amr.pacmanfx.core.entities.WorldNavigationSystem;
+import de.amr.pacmanfx.core.entities.world.WorldRoamingSystem;
+import de.amr.pacmanfx.core.entities.world.WorldMovementPolicy;
+import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.ghost.*;
 import de.amr.pacmanfx.core.entities.actor.pac.*;
@@ -33,7 +33,7 @@ public class GameSystems {
     protected LifetimeSystem lifetime = new LifetimeSystem();
     protected MovementSystem motor =  new MovementSystem();
     protected WorldNavigationSystem navigator = new WorldNavigationSystem(motor);
-    protected RoamingSystem roamingSystem = new RoamingSystem(navigator);
+    protected WorldRoamingSystem roamingSystem = new WorldRoamingSystem(navigator);
 
     protected HUD_UpdateSystem hudUpdateSystem;
 
@@ -146,7 +146,7 @@ public class GameSystems {
         return navigator;
     }
 
-    public RoamingSystem roaming() {
+    public WorldRoamingSystem roaming() {
         return roamingSystem;
     }
 

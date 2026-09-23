@@ -2,13 +2,12 @@
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
 
-package de.amr.pacmanfx.core.entities;
+package de.amr.pacmanfx.core.entities.world;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.RandomNumbers;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.ecs.GameEntity;
-import de.amr.basics.ui.ecs.comp.WorldNavigationComp;
 import de.amr.pacmanfx.core.level.GameLevel;
 import org.tinylog.Logger;
 
@@ -25,11 +24,11 @@ import static java.util.Objects.requireNonNull;
     ...                , without anything but the love we feel!
  </cite>
  */
-public class RoamingSystem {
+public class WorldRoamingSystem {
 
     private final WorldNavigationSystem navigator;
 
-    public RoamingSystem(WorldNavigationSystem navigator) {
+    public WorldRoamingSystem(WorldNavigationSystem navigator) {
         this.navigator = requireNonNull(navigator);
     }
 

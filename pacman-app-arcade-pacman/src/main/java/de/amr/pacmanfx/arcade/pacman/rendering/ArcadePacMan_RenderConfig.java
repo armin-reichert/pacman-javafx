@@ -21,7 +21,7 @@ import de.amr.pacmanfx.core.Energizer;
 import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
-import de.amr.pacmanfx.core.entities.world.house.House;
+import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.basics.ui.entities.props.messageview.MessageType;
 import de.amr.pacmanfx.core.model.GhostPersonality;

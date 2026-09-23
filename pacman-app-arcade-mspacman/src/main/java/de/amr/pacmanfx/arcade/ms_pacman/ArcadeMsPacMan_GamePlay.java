@@ -17,7 +17,7 @@ import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.bonus.BonusRouteInfo;
 import de.amr.pacmanfx.core.entities.actor.bonus.BonusState;
-import de.amr.pacmanfx.core.entities.world.house.House;
+import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.entities.world.HPortal;
 import de.amr.basics.ui.entities.hud.levelCounter.LevelCounter;
 import de.amr.basics.ui.entities.hud.levelCounter.LevelCounterBehavior;

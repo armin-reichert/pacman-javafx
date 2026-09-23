@@ -5,7 +5,7 @@
 package de.amr.pacmanfx.core.entities.actor.ghost;
 
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.entities.RoamingSystem;
+import de.amr.pacmanfx.core.entities.world.WorldRoamingSystem;
 import de.amr.pacmanfx.core.gameplay.hunt.GhostHuntingStrategy;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.rules.ActorSpeedRules;
@@ -13,9 +13,9 @@ import de.amr.pacmanfx.core.rules.ActorSpeedRules;
 public class GhostHuntingSystem {
 
     private final GhostWorldMovementPolicy movementPolicy;
-    private final RoamingSystem roamingSystem;
+    private final WorldRoamingSystem roamingSystem;
 
-    public GhostHuntingSystem(GhostWorldMovementPolicy movementPolicy, RoamingSystem roamingSystem) {
+    public GhostHuntingSystem(GhostWorldMovementPolicy movementPolicy, WorldRoamingSystem roamingSystem) {
         this.movementPolicy = movementPolicy;
         this.roamingSystem = roamingSystem;
     }
