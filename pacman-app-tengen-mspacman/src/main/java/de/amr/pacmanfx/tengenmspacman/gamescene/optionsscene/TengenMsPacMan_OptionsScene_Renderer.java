@@ -4,26 +4,18 @@
 
 package de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene;
 
-import de.amr.basics.math.RectShort;
-import de.amr.basics.ui.assets.SpriteSheet;
 import de.amr.basics.ui.rendering.BaseRenderer;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.util.Ufx;
-import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.tengenmspacman.config.TengenMsPacMan_UISettings;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
-import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
+import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
-import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
-import static de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene.TengenMsPacMan_OptionsScene.RenderableMenuOption;
-import static de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene.TengenMsPacMan_OptionsScene.RenderableMenuSeparatorBar;
 import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SceneRendererUtils.drawJoypadKeyBinding;
 
 public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer {
@@ -41,7 +33,7 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer {
     @Override
     public void render(Renderable r, long tick) {
         switch (r) {
-            case TengenMsPacMan_OptionsScene optionsScene -> renderMenu(optionsScene);
+            case TengenMsPacMan_OptionsScene optionsScene -> drawJoypadBinding(optionsScene.app());
             case RenderableMenuOption menuOption -> renderMenuOption(menuOption);
             case RenderableMenuSeparatorBar bar -> renderBar(bar);
             default -> {}
@@ -77,17 +69,11 @@ public class TengenMsPacMan_OptionsScene_Renderer extends BaseRenderer {
         ctx.restore();
     }
 
-    //TODO refactor
-    private void renderMenu(TengenMsPacMan_OptionsScene optionsScene) {
-        final TengenMsPacMan_UISettings uiSettings = optionsScene.app().variantManager().currentRuntime()
+    private void drawJoypadBinding(GameApp app) {
+        final TengenMsPacMan_UISettings uiSettings = app.variantManager().currentRuntime()
             .extensionValue(TengenMsPacMan_GameExtension.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
-
-        final Font arcade8 = Ufx.deriveFont(GlobalFonts.ARCADE.font(), scaled(8));
-        ctx.setFont(arcade8);
-
         if (uiSettings.joypadBindingsDisplayed.get()) {
-            drawJoypadKeyBinding(ctx, scaling(), optionsScene.app().input().joypad().currentKeyBinding());
+            drawJoypadKeyBinding(ctx, scaling(), app.input().joypad().currentKeyBinding());
         }
     }
-
 }

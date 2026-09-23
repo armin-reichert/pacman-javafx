@@ -53,26 +53,6 @@ import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
  */
 public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
 
-    public record RenderableMenuOption(
-        boolean selected,
-        String label,
-        String value,
-        int separatorTileX,
-        RenderingLayer layer, int z,
-        Vector2f offset
-    ) implements Renderable {}
-
-    public record RenderableMenuSeparatorBar(
-        float width,
-        float height,
-        Vector2f offset
-    ) implements Renderable {
-        @Override
-        public RenderingLayer layer() {
-            return RenderingLayer.SCENE;
-        }
-    }
-
     public static final byte OPTION_PLAY_MODE = 0;
     public static final byte OPTION_PAC_BOOSTER = 1;
     public static final byte OPTION_DIFFICULTY = 2;
