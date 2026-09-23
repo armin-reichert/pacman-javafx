@@ -178,18 +178,18 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig, Dispo
     @Override
     public Image killedGhostPointsImage(int killedGhostIndex) {
         final RectShort[] numberSprites = spriteSheet().findSpriteSequence(SpriteID.GHOST_NUMBERS);
-        return spriteSheet().image(numberSprites[killedGhostIndex]);
+        return spriteSheet().createImage(numberSprites[killedGhostIndex]);
     }
 
     @Override
     public Image bonusSymbolImage(int bonusCode) {
         final RectShort[] sprites = spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS);
-        return spriteSheet().image(sprites[bonusCode]);
+        return spriteSheet().createImage(sprites[bonusCode]);
     }
 
     @Override
     public Image bonusValueImage(int bonusCode) {
         final RectShort[] sprites = spriteSheet().findSpriteSequence(SpriteID.BONUS_VALUES);
-        return spriteSheet().image(sprites[bonusCode]);
+        return spriteSheet().createImage(sprites[bonusCode]);
     }
 }

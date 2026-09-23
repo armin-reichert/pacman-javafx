@@ -231,20 +231,20 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     @Override
     public Image killedGhostPointsImage(int killedGhostIndex) {
         final RectShort[] numberSprites = spriteSheet().findSpriteSequence(SpriteID.GHOST_NUMBERS);
-        return spriteSheet().image(numberSprites[killedGhostIndex]);
+        return spriteSheet().createImage(numberSprites[killedGhostIndex]);
     }
 
     @Override
     public Image bonusSymbolImage(int bonusCode) {
         final RectShort[] symbolSprites = spriteSheet().findSpriteSequence(SpriteID.BONUS_SYMBOLS);
-        return spriteSheet().image(symbolSprites[bonusCode]);
+        return spriteSheet().createImage(symbolSprites[bonusCode]);
     }
 
     @Override
     public Image bonusValueImage(int bonusCode) {
         final int spriteIndex = bonusValueSpriteIndex(bonusCode);
         final RectShort sprite = spriteSheet().findSpriteSequence(SpriteID.BONUS_VALUES)[spriteIndex];
-        return spriteSheet().image(sprite);
+        return spriteSheet().createImage(sprite);
     }
 
     public int bonusValueSpriteIndex(int bonusCode) {

@@ -114,7 +114,7 @@ public class MapColoringService {
         NES_WorldMapColorScheme targetColorScheme)
     {
         // Make copy of spritesheet image region
-        final Image existingMapImage = spriteSheet.image(mapSprite);
+        final Image existingMapImage = spriteSheet.createImage(mapSprite);
         final Image recoloredMapImage = Ufx.replaceImageColors(
             existingMapImage,
             Color.valueOf(sourceColorScheme.wallFill()),

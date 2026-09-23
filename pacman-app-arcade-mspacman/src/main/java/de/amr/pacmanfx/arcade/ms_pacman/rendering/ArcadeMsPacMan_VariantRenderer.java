@@ -116,7 +116,7 @@ public class ArcadeMsPacMan_VariantRenderer extends BaseRenderer {
         RectShort sprite;
         if (animController.isSelected(ghost, CommonSpriteAnimationID.GHOST_NORMAL)) {
             final RectShort[] sprites = spriteSheet.ghostNormalSprites(ghost.personality(), ghost.worldNavigation().wishDir());
-            sprite = SpriteSheet.spriteOrDefault(sprites, animController.currentFrame(ghost));
+            sprite = SpriteSheet.spriteOrNullSprite(sprites, animController.currentFrame(ghost));
         }
         else if (animController.isSelected(ghost, CommonSpriteAnimationID.GHOST_EYES)) {
             sprite = spriteSheet.ghostEyesSprite(ghost.worldNavigation().wishDir());
@@ -134,11 +134,11 @@ public class ArcadeMsPacMan_VariantRenderer extends BaseRenderer {
         RectShort sprite;
         if (animController.isSelected(pac, CommonSpriteAnimationID.PAC_MOUTH_MOVING)) {
             final RectShort[] sprites = spriteSheet.msPacManMunchingSprites(pac.worldNavigation().moveDir());
-            sprite = SpriteSheet.spriteOrDefault(sprites, animController.currentFrame(pac));
+            sprite = SpriteSheet.spriteOrNullSprite(sprites, animController.currentFrame(pac));
         }
         else if (animController.isSelected(pac, CommonSpriteAnimationID.MR_PAC_MAN_MUNCHING)) {
             final RectShort[] sprites = spriteSheet.mrPacManMunchingSprites(pac.worldNavigation().moveDir());
-            sprite = SpriteSheet.spriteOrDefault(sprites, animController.currentFrame(pac));
+            sprite = SpriteSheet.spriteOrNullSprite(sprites, animController.currentFrame(pac));
         }
         else {
             sprite = animController.currentSprite(pac);
@@ -152,7 +152,7 @@ public class ArcadeMsPacMan_VariantRenderer extends BaseRenderer {
     // TODO decouple symbol code from sprite index
     private RectShort computeSprite(Bonus bonus) {
         return switch (bonus.state().enumValue()) {
-            case EDIBLE -> SpriteSheet.spriteOrDefault(spriteSheet.findSpriteSequence(SpriteID.BONUS_SYMBOLS), bonus.data().symbolCode());
+            case EDIBLE -> SpriteSheet.spriteOrNullSprite(spriteSheet.findSpriteSequence(SpriteID.BONUS_SYMBOLS), bonus.data().symbolCode());
             case EATEN, INACTIVE -> RectShort.NULL_RECTANGLE;
         };
     }

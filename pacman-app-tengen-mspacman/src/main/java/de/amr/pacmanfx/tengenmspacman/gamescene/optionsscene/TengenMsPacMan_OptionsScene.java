@@ -375,7 +375,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
                 case 3 -> SpriteID.CONTINUES_3;
                 default -> throw new IllegalArgumentException("Illegal number of continues: " + numContinues);
             });
-            imageDisplay.image().setImage(spriteSheet.image(sprite));
+            imageDisplay.image().setImage(spriteSheet.createImage(sprite));
             imageDisplay.show();
         }
         else {

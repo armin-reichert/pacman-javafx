@@ -186,7 +186,7 @@ public class IntroSceneView {
 
             final ImageDisplay imageDisplay = ghostImageDisplays[i];
             final RectShort sprite = spriteSheet.findSpriteSequence(GALLERY_GHOSTS)[i];
-            imageDisplay.image().setImage(spriteSheet.image(sprite));
+            imageDisplay.image().setImage(spriteSheet.createImage(sprite));
             imageDisplay.pos().set(TS * 4, y + offsetY - 1.5f * TS);
 
             final TextDisplay characterDisplay = ghostCharacterDisplays[i];

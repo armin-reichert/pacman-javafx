@@ -16,7 +16,7 @@ import javafx.scene.image.WritableImage;
  */
 public interface SpriteSheet<K extends Named> {
 
-    static RectShort spriteOrDefault(RectShort[] sprites, int index) {
+    static RectShort spriteOrNullSprite(RectShort[] sprites, int index) {
         if (0 <= index && index < sprites.length) {
             return sprites[index];
         }
@@ -46,8 +46,16 @@ public interface SpriteSheet<K extends Named> {
      * @param key sprite key
      * @return image cropped from sprite sheet for given sprite
      */
-    default Image image(K key) {
-        return image(findSprite(key));
+    default Image createImage(K key) {
+        return createImage(findSprite(key));
+    }
+
+    /**
+     * @param sprite rectangular area in sprite sheet
+     * @return image cropped from sprite sheet for given area
+     */
+    default Image createImage(RectShort sprite) {
+        return createImage(sprite.x(), sprite.y(), sprite.width(), sprite.height());
     }
 
     /**
@@ -57,17 +65,9 @@ public interface SpriteSheet<K extends Named> {
      * @param height height of rectangular area
      * @return image cropped from sprite sheet for given area
      */
-    default Image image(int x, int y, int width, int height) {
+    default Image createImage(int x, int y, int width, int height) {
         final var image = new WritableImage(width, height);
         image.getPixelWriter().setPixels(0, 0, width, height, sourceImage().getPixelReader(), x, y);
         return image;
-    }
-
-    /**
-     * @param sprite rectangular area in sprite sheet
-     * @return image cropped from sprite sheet for given area
-     */
-    default Image image(RectShort sprite) {
-        return image(sprite.x(), sprite.y(), sprite.width(), sprite.height());
     }
 }

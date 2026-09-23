@@ -185,7 +185,7 @@ public class ArcadePacMan_UIConfig implements GameVariantUIConfig {
 
     private Image createBrightEmptyMap() {
         return Ufx.recolorImage(
-            ArcadePacMan_SpriteSheet.instance().image(SpriteID.MAP_EMPTY),
+            ArcadePacMan_SpriteSheet.instance().createImage(SpriteID.MAP_EMPTY),
             BRIGHT_MAZE_COLOR_CHANGES);
     }
 }

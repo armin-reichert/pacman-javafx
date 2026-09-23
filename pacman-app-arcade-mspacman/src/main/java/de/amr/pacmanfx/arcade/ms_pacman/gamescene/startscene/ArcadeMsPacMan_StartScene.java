@@ -44,7 +44,7 @@ public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
 
 
         msPacManImage = new ImageDisplay();
-        msPacManImage.image().setImage(ArcadeMsPacMan_SpriteSheet.instance().image(SpriteID.LIVES_COUNTER_SYMBOL));
+        msPacManImage.image().setImage(ArcadeMsPacMan_SpriteSheet.instance().createImage(SpriteID.LIVES_COUNTER_SYMBOL));
         msPacManImage.pos().set(13 * TS, 23.5 * TS);
         msPacManImage.show();
 

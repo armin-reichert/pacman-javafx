@@ -216,7 +216,7 @@ public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
     private Image createBrightMazeImage(int index) {
         final var spriteSheet = ArcadeMsPacMan_SpriteSheet.instance();
         final RectShort mazeSprite = spriteSheet.findSpriteSequence(SpriteID.EMPTY_MAPS)[index];
-        final Image mazeImage = spriteSheet.image(mazeSprite);
+        final Image mazeImage = spriteSheet.createImage(mazeSprite);
         final GenericWorldMapColorScheme colorScheme = ArcadeMsPacMan_UIConfig.MAP_COLOR_SCHEMES[index];
         final Map<Color, Color> colorChanges = Map.of(
             Color.valueOf(colorScheme.wallStroke()), ArcadeColor.WHITE.color(),

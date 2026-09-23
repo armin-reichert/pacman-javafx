@@ -92,7 +92,7 @@ public class ArcadePacMan_VariantRenderer extends BaseRenderer {
         if (animController.isSelected(pac, CommonSpriteAnimationID.PAC_MOUTH_MOVING)) {
             final Direction dir = pac.worldNavigation().moveDir();
             final RectShort[] sprites = spriteSheet.pacMunchingSprites(dir);
-            return SpriteSheet.spriteOrDefault(sprites, animController.currentFrame(pac));
+            return SpriteSheet.spriteOrNullSprite(sprites, animController.currentFrame(pac));
         }
         else {
             return animController.currentSprite(pac);
@@ -102,7 +102,7 @@ public class ArcadePacMan_VariantRenderer extends BaseRenderer {
     private RectShort computeSprite(Ghost ghost) {
         if (animController.isSelected(ghost, CommonSpriteAnimationID.GHOST_NORMAL)) {
             final RectShort[] sprites = spriteSheet.ghostNormalSprites(ghost.personality(), ghost.worldNavigation().wishDir());
-            return SpriteSheet.spriteOrDefault(sprites, animController.currentFrame(ghost));
+            return SpriteSheet.spriteOrNullSprite(sprites, animController.currentFrame(ghost));
         }
         if (animController.isSelected(ghost, CommonSpriteAnimationID.GHOST_EYES)) {
             return spriteSheet.ghostEyesSprite(ghost.worldNavigation().wishDir());
@@ -127,7 +127,7 @@ public class ArcadePacMan_VariantRenderer extends BaseRenderer {
     //TODO: decouple symbol code from index in sprite array
     private RectShort computeSprite(Bonus bonus) {
         return switch (bonus.state().enumValue()) {
-            case EDIBLE   -> SpriteSheet.spriteOrDefault(spriteSheet.findSpriteSequence(SpriteID.BONUS_SYMBOLS), bonus.data().symbolCode());
+            case EDIBLE   -> SpriteSheet.spriteOrNullSprite(spriteSheet.findSpriteSequence(SpriteID.BONUS_SYMBOLS), bonus.data().symbolCode());
             case EATEN, INACTIVE  -> RectShort.NULL_RECTANGLE;
         };
     }

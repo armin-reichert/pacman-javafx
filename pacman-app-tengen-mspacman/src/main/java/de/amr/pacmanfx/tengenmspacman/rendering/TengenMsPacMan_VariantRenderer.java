@@ -142,7 +142,7 @@ public class TengenMsPacMan_VariantRenderer extends BaseRenderer {
     }
 
     private FacingSprite facingSprite(SpriteID spriteArrayID, int frame, Direction dir) {
-        return new FacingSprite(SpriteSheet.spriteOrDefault(spriteSheet.findSpriteSequence(spriteArrayID), frame), dir);
+        return new FacingSprite(SpriteSheet.spriteOrNullSprite(spriteSheet.findSpriteSequence(spriteArrayID), frame), dir);
     }
 
     // Dying animation is realized by providing a sprite facing to the corresponding direction for each animation frame
@@ -165,7 +165,7 @@ public class TengenMsPacMan_VariantRenderer extends BaseRenderer {
     private RectShort computeSprite(Ghost ghost) {
         if (animSystem.isSelected(ghost, CommonSpriteAnimationID.GHOST_NORMAL)) {
             final RectShort[] sprites = spriteSheet.ghostNormalSprites(ghost.personality(), ghost.worldNavigation().wishDir());
-            return SpriteSheet.spriteOrDefault(sprites, animSystem.currentFrame(ghost));
+            return SpriteSheet.spriteOrNullSprite(sprites, animSystem.currentFrame(ghost));
         }
         if (animSystem.isSelected(ghost, CommonSpriteAnimationID.GHOST_EYES)) {
             return spriteSheet.ghostEyesSprite(ghost.worldNavigation().wishDir());
@@ -190,7 +190,7 @@ public class TengenMsPacMan_VariantRenderer extends BaseRenderer {
 
     private RectShort computeSprite(Bonus bonus) {
         return switch (bonus.state().enumValue()) {
-            case EDIBLE -> SpriteSheet.spriteOrDefault(spriteSheet.findSpriteSequence(SpriteID.BONUS_SYMBOLS), bonus.data().symbolCode());
+            case EDIBLE -> SpriteSheet.spriteOrNullSprite(spriteSheet.findSpriteSequence(SpriteID.BONUS_SYMBOLS), bonus.data().symbolCode());
             case EATEN, INACTIVE -> RectShort.NULL_RECTANGLE;
         };
     }
