@@ -74,8 +74,8 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene {
         if (darkness) return Stream.empty();
         return Ufx.streamOf(
             createPropView(clapperboard),
-            createPacView(pacMan),
-            createPacView(msPacMan),
+            createPropView(pacMan),
+            createPropView(msPacMan),
             createPropView(stork),
             createPropView(bag)
         );

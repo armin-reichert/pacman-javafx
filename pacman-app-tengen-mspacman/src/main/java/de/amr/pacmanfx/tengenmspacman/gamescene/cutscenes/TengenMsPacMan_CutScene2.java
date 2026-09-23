@@ -64,8 +64,8 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene {
     public Stream<Renderable> renderables() {
         return Ufx.streamOf(
             createPropView(clapperboard),
-            createPacView(pacMan),
-            createPacView(msPacMan)
+            createPropView(pacMan),
+            createPropView(msPacMan)
         );
     }
 

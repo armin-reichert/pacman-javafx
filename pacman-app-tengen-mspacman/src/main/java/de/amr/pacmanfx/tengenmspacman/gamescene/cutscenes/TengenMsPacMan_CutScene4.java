@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.tengenmspacman.gamescene.cutscenes;
 
 import de.amr.basics.math.Direction;
@@ -50,6 +51,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
 
     public static final int TICK_CLAP = 2;
     public static final int TICK_EXPIRES = 1512;
+
     public static final Set<Integer> TICKS_JUNIOR_SPAWNED = Set.of(
         904, 968, 1032, 1096, 1160, 1224, 1288, 1352
     );
@@ -75,9 +77,9 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
     public Stream<Renderable> renderables() {
         return Ufx.streamOf(
             createPropView(clapperboard),
-            createPacView(pacMan),
-            createPacView(msPacMan),
-            juniors.stream().map(GameVariantRenderConfig::createPacView)
+            createPropView(pacMan),
+            createPropView(msPacMan),
+            juniors.stream().map(GameVariantRenderConfig::createPropView)
         );
     }
 
