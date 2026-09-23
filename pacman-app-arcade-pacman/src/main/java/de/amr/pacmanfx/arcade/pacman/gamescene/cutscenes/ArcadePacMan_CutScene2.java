@@ -6,18 +6,11 @@ package de.amr.pacmanfx.arcade.pacman.gamescene.cutscenes;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.ui.rendering.Renderable;
-import de.amr.basics.ui.rendering.RenderingLayer;
-import de.amr.basics.ecs.GameEntity;
-import de.amr.basics.ui.ecs.comp.SpriteAnimationComp;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
-import de.amr.basics.ui.spriteanim.LazySAM;
-import de.amr.basics.ui.spriteanim.SpriteAnimationBuilder;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
-import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
-import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
@@ -32,8 +25,7 @@ import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.game.GameVariantRenderConfig.createGhostView;
-import static de.amr.pacmanfx.game.GameVariantRenderConfig.createPacView;
+import static de.amr.pacmanfx.game.GameVariantRenderConfig.*;
 
 
 /**
@@ -43,96 +35,29 @@ import static de.amr.pacmanfx.game.GameVariantRenderConfig.createPacView;
  */
 public class ArcadePacMan_CutScene2 extends AbstractGameScene {
 
-    public enum NailDressState {
-        NAIL, STRETCHED_SMALL, STRETCHED_MEDIUM, STRETCHED_LARGE, RAPTURED
-    }
-
-    public static class TimingComp extends CutSceneTimingComp {
-
-        private final int TICK_PAC_MAN_STARTS_RUNNING;
-        private final int TICK_BLINKY_STARTS_RUNNING;
-        private final int TICK_BLINKY_GETS_CAUGHT;
-        private final int TICK_DRESS_STRETCHED_SMALL;
-        private final int TICK_DRESS_STRETCHED_MEDIUM;
-        private final int TICK_DRESS_STRETCHED_LARGE;
-        private final int TICK_BLINKY_STOPS_MOVING;
-        private final int TICK_DRESS_RAPTURES;
-        private final int TICK_BLINK_INSPECTS_DAMAGE;
-        private final int TICK_ANIMATION_ENDS;
-
-        public TimingComp(int animationStartTick) {
-            super(120);
-            TICK_PAC_MAN_STARTS_RUNNING = animationStartTick + 25;
-            TICK_BLINKY_STARTS_RUNNING  = animationStartTick + 111;
-            TICK_BLINKY_GETS_CAUGHT     = animationStartTick + 194;
-            TICK_DRESS_STRETCHED_SMALL  = animationStartTick + 198;
-            TICK_DRESS_STRETCHED_MEDIUM = animationStartTick + 230;
-            TICK_DRESS_STRETCHED_LARGE  = animationStartTick + 262;
-            TICK_BLINKY_STOPS_MOVING    = animationStartTick + 296;
-            TICK_DRESS_RAPTURES         = animationStartTick + 360;
-            TICK_BLINK_INSPECTS_DAMAGE  = animationStartTick + 420;
-            TICK_ANIMATION_ENDS         = animationStartTick + 508;
-        }
-    }
-
     public final int nailX = WorldMap.TS * 15 - 1;
     public final int nailY = WorldMap.TS * 20 - 1;
 
-    static class DressAnimation extends LazySAM {
-
-        public DressAnimation(SpriteAnimationContainer container) {
-            setFactory(id -> switch (id) {
-
-                case SpriteID.RED_GHOST_STRETCHED -> new SpriteAnimationBuilder()
-                    .sprites(ArcadePacMan_SpriteSheet.instance().findSpriteSequence(SpriteID.RED_GHOST_STRETCHED))
-                    .initiallyStopped()
-                    .build(container);
-
-                default -> throw new IllegalArgumentException("Unknown animation ID: " + id);
-            });
-        }
-    }
-
-    static class NailDress extends GameEntity implements Renderable {
-
-        public NailDress(SpriteAnimationContainer animContainer) {
-            setComp(SpriteAnimationComp.class, new SpriteAnimationComp());
-
-            reqComp(SpriteAnimationComp.class).setSpriteAnimations(new DressAnimation(animContainer));
-            setState(NailDressState.NAIL);
-        }
-
-        @Override
-        public RenderingLayer layer() {
-            return RenderingLayer.PROPS;
-        }
-
-        public void setState(NailDressState state) {
-            final int frame = state.ordinal();
-            reqComp(SpriteAnimationComp.class).spriteAnimations().setAnimationFrame(SpriteID.RED_GHOST_STRETCHED, frame);
-        }
-    }
-
     private Pac pacMan;
     private Ghost blinky;
-    private NailDress nailDress;
+    private NailDressRapturing nailDressRapturing;
 
     public ArcadePacMan_CutScene2() {
         setComp(GameSceneCanvasRenderingComp.class, new GameSceneCanvasRenderingComp());
-        setComp(CutSceneTimingComp.class, new TimingComp(120));
+        setComp(CutSceneTimingComp.class, new CutScene2TimingComp(120));
     }
 
     @Override
     public Stream<Renderable> renderables() {
         return Ufx.streamOf(
-            createPacView(pacMan),
-            createGhostView(blinky),
-            nailDress
+            createPropView(pacMan),
+            createPropView(blinky),
+            createPropView(nailDressRapturing)
         );
     }
 
-    private TimingComp timing() {
-        return (TimingComp) reqComp(CutSceneTimingComp.class);
+    private CutScene2TimingComp timing() {
+        return (CutScene2TimingComp) reqComp(CutSceneTimingComp.class);
     }
 
     @Override
@@ -148,9 +73,9 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene {
 
         blinky = renderConfig.createAnimatedGhost(animController, animContainer, GhostPersonality.RED_GHOST_SHADOW);
 
-        nailDress = new NailDress(animContainer);
-        nailDress.pos().set(nailX, nailY);
-        nailDress.show();
+        nailDressRapturing = new NailDressRapturing(animContainer);
+        nailDressRapturing.pos().set(nailX, nailY);
+        nailDressRapturing.show();
 
         timing().setTick(-1);
     }
@@ -158,7 +83,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene {
     @Override
     public void onTick(GameContext game) {
         final GameSystems systems = game.playConfig().systems();
-        final TimingComp timing = timing();
+        final CutScene2TimingComp timing = timing();
 
         timing.setTick(timing.tick() + 1);
 
@@ -175,11 +100,11 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene {
         } else if (timing.tick() == timing.TICK_BLINKY_GETS_CAUGHT) {
             blinkyGetsCaughtOnNail(systems);
         } else if (timing.tick() == timing.TICK_DRESS_STRETCHED_SMALL) {
-            nailDress.setState(NailDressState.STRETCHED_SMALL);
+            nailDressRapturing.setState(NailDressRapturingState.STRETCHED_SMALL);
         } else if (timing.tick() == timing.TICK_DRESS_STRETCHED_MEDIUM) {
-            nailDress.setState(NailDressState.STRETCHED_MEDIUM);
+            nailDressRapturing.setState(NailDressRapturingState.STRETCHED_MEDIUM);
         } else if (timing.tick() == timing.TICK_DRESS_STRETCHED_LARGE) {
-            nailDress.setState(NailDressState.STRETCHED_LARGE);
+            nailDressRapturing.setState(NailDressRapturingState.STRETCHED_LARGE);
         } else if (timing.tick() == timing.TICK_BLINKY_STOPS_MOVING) {
             blinkyStopsMoving(systems);
         } else if (timing.tick() == timing.TICK_DRESS_RAPTURES) {
@@ -199,7 +124,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene {
 
     private void startTheShow() {
         soundManager().play(PacManGameSoundID.INTERMISSION_2);
-        nailDress.setState(NailDressState.NAIL);
+        nailDressRapturing.setState(NailDressRapturingState.NAIL);
     }
 
     private void endTheShow() {
@@ -210,7 +135,7 @@ public class ArcadePacMan_CutScene2 extends AbstractGameScene {
     private void dressRaptures(GameSystems systems) {
         blinky.pos().sub(4, 0);
         systems.actorSpriteAnimController().select(blinky, CommonSpriteAnimationID.BLINKY_DAMAGED);
-        nailDress.setState(NailDressState.RAPTURED);
+        nailDressRapturing.setState(NailDressRapturingState.RAPTURED);
     }
 
     private void blinkyStopsMoving(GameSystems systems) {

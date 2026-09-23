@@ -11,6 +11,7 @@ import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.util.Ufx;
+import de.amr.pacmanfx.arcade.pacman.gamescene.cutscenes.NailDressRapturing;
 import de.amr.pacmanfx.core.Energizer;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
@@ -61,7 +62,7 @@ public class ArcadePacMan_VariantRenderer extends BaseRenderer {
         requireNonNull(r);
         switch (r) {
             case GameEntityView rge -> renderGameEntity(rge.entity(), tick);
-            case GameEntity gameEntity ->    renderGameEntity(gameEntity, tick);
+            case GameEntity gameEntity -> renderGameEntity(gameEntity, tick);
             default -> super.render(r, tick);
         }
     }
@@ -83,6 +84,7 @@ public class ArcadePacMan_VariantRenderer extends BaseRenderer {
             case LivesCounter livesCounter -> draw(livesCounter);
             case Pac pac -> drawSpriteCentered(computeSprite(pac), center);
             case Score score -> draw(score);
+            case NailDressRapturing nailDressRapturing -> draw(nailDressRapturing);
             default -> super.renderGameEntity(gameEntity, tick);
         }
         ctx.restore();
@@ -186,5 +188,10 @@ public class ArcadePacMan_VariantRenderer extends BaseRenderer {
             drawSprite(style.bonusSymbolSprites()[symbolCode], x, y, true);
             x -= tilesPx(2); // symbols are drawn from right to left
         }
+    }
+
+    private void draw(NailDressRapturing nailDressRapturing) {
+        final Vector2f center = nailDressRapturing.pos().bodyCenter();
+        drawSprite(animController.currentSprite(nailDressRapturing), center.x(), center.y(), true);
     }
 }
