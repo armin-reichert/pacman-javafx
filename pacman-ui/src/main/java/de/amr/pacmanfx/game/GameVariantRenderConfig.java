@@ -87,10 +87,10 @@ public interface GameVariantRenderConfig {
 
     SpriteAnimFacade createPacAnimations(SpriteAnimationContainer container);
 
-    Image killedGhostPointsImage(int killedGhostIndex);
+    Image createGhostPointsImage(int killedGhostIndex);
 
-    Image bonusSymbolImage(int bonusCode);
+    Image createBonusSymbolImage(int bonusCode);
 
-    Image bonusValueImage(int bonusCode);
+    Image createBonusPointsImage(int bonusCode);
 }
 

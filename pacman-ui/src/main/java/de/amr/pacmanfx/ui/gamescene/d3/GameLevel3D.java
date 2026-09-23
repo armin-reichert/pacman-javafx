@@ -196,7 +196,7 @@ public class GameLevel3D implements DisposableGraphicsObject {
     }
 
     public void addKilledGhostNumberBox(Ghost ghost, GameVariantUIConfig uiConfig, int killIndex) {
-        final Image numberImage = uiConfig.renderConfig().killedGhostPointsImage(killIndex);
+        final Image numberImage = uiConfig.renderConfig().createGhostPointsImage(killIndex);
         final NumberBox3D numberBox = new NumberBox3D(numberImage);
 
         final Ghost3DViewComp ghost3DView = ghost.reqComp(Ghost3DViewComp.class);
@@ -267,9 +267,9 @@ public class GameLevel3D implements DisposableGraphicsObject {
         final Bonus3DSettings config = uiConfig.worldSettings().bonus();
         final GameVariantRenderConfig renderConfig = uiConfig.renderConfig();
         final Bonus3DViewComp view3D = new Bonus3DViewComp(
-            renderConfig.bonusSymbolImage(bonus.data().symbolCode()),
+            renderConfig.createBonusSymbolImage(bonus.data().symbolCode()),
             config.symbolWidth(),
-            renderConfig.bonusValueImage(bonus.data().symbolCode()),
+            renderConfig.createBonusPointsImage(bonus.data().symbolCode()),
             config.pointsWidth()
         );
         bonus.setComp(Bonus3DViewComp.class, view3D);

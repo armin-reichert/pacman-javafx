@@ -33,7 +33,7 @@ public class LevelCounter3DFactory {
         final Group root = new Group();
         for (int i = 0; i < symbolCodes.size(); ++i) {
             final int code = symbolCodes.get(i);
-            final Image image = renderConfig.bonusSymbolImage(code);
+            final Image image = renderConfig.createBonusSymbolImage(code);
             final float cubeSize = config.symbolSize();
             // negative x position: cubes are placed from right to left!
             final Box cube = createCube(cubeSize, image, -(cubeSize + CUBE_SPACING) * i);
