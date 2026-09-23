@@ -4,8 +4,10 @@
 
 package de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene;
 
+import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.ui.entities.hud.score.Score;
+import de.amr.basics.ui.entities.props.imagedisplay.ImageDisplay;
 import de.amr.basics.ui.entities.props.textdisplay.TextDisplay;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.rendering.RenderingLayer;
@@ -22,6 +24,8 @@ import de.amr.pacmanfx.tengenmspacman.model.BoosterMode;
 import de.amr.pacmanfx.tengenmspacman.model.Difficulty;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
+import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
+import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
@@ -55,7 +59,18 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         String value,
         int separatorTileX,
         RenderingLayer layer, int z,
-        Vector2f offset) implements Renderable {
+        Vector2f offset
+    ) implements Renderable {}
+
+    public record RenderableMenuSeparatorBar(
+        float width,
+        float height,
+        Vector2f offset
+    ) implements Renderable {
+        @Override
+        public RenderingLayer layer() {
+            return RenderingLayer.SCENE;
+        }
     }
 
     public static final byte OPTION_PLAY_MODE = 0;
@@ -87,6 +102,8 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
     private final TextDisplay moveArrowTextDisplay;
     private final TextDisplay chooseOptionsTextDisplay;
     private final TextDisplay pressStartTextDisplay;
+    private final RenderableMenuSeparatorBar topBar;
+    private final RenderableMenuSeparatorBar botBar;
 
     public TengenMsPacMan_OptionsScene() {
         setComp(GameSceneCanvasRenderingComp.class, new GameSceneCanvasRenderingComp());
@@ -97,6 +114,9 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         moveArrowTextDisplay = createMoveArrowTextDisplay();
         chooseOptionsTextDisplay = createChooseOptionsTextDisplay();
         pressStartTextDisplay = createPressStartTextDisplay();
+
+        topBar = new RenderableMenuSeparatorBar(NES_SCREEN_WIDTH, 8, new Vector2f(0,  2.5f * TS));
+        botBar = new RenderableMenuSeparatorBar(NES_SCREEN_WIDTH, 8, new Vector2f(0, 26.5f * TS));
     }
 
     private TextDisplay createTitleTextDisplay() {
@@ -190,21 +210,56 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         );
     }
 
+    private RenderableMenuOption renderableStartingLevelOption() {
+        final int startLevelNumber = gameOptions(game().session()).startLevelNumber();
+        return new RenderableMenuOption(
+            selectedOption() == OPTION_STARTING_LEVEL,
+            "STARTING LEVEL",
+            String.valueOf(startLevelNumber),
+            19,
+            RenderingLayer.SCENE, 0,
+            new Vector2f(0, 10.5f * TS)
+        );
+    }
+
+    private ImageDisplay createNumContinuesImageDisplay() {
+        final int numContinues = gameOptions(game().session()).numContinues();
+        final ImageDisplay imageDisplay = new ImageDisplay();
+        imageDisplay.pos().set(24 * TS, 20 * TS);
+        if (numContinues < 4) {
+            final var spriteSheet = TengenMsPacMan_SpriteSheet.instance();
+            final RectShort sprite = spriteSheet.findSprite(switch (numContinues) {
+                case 0 -> SpriteID.CONTINUES_0;
+                case 1 -> SpriteID.CONTINUES_1;
+                case 2 -> SpriteID.CONTINUES_2;
+                case 3 -> SpriteID.CONTINUES_3;
+                default -> throw new IllegalArgumentException("Illegal number of continues: " + numContinues);
+            });
+            imageDisplay.image().setImage(spriteSheet.image(sprite));
+            imageDisplay.show();
+        }
+        else {
+            imageDisplay.hide();
+        }
+        return imageDisplay;
+    }
+
     @Override
     public Stream<Renderable> renderables() {
         if (initialDelay > 0) return Stream.empty();
 
         return Ufx.streamOf(
+            topBar,
             titleTextDisplay,
             renderablePlayModeOption(),
             renderableBoosterModeOption(),
             renderableGameDifficultyOption(),
             renderableMapCategoryOption(),
-            //TODO START LEVEL
+            renderableStartingLevelOption(), createNumContinuesImageDisplay(),
             moveArrowTextDisplay,
             chooseOptionsTextDisplay,
-            pressStartTextDisplay
-
+            pressStartTextDisplay,
+            botBar
         );
     }
 
