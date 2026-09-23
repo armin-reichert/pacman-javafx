@@ -69,9 +69,9 @@ public class BaseRenderer implements Renderer {
 
     protected void renderGameEntity(GameEntity gameEntity, long tick) {
         switch (gameEntity) {
-            case ImageView imageView -> renderImageDisplay(imageView);
-            case TextView textView -> renderTextDisplay(textView);
-            case MessageView messageView -> renderMessageView(messageView);
+            case ImageView imageView -> drawImageView(imageView);
+            case TextView textView -> drawTextView(textView);
+            case MessageView messageView -> drawMessageView(messageView);
             default -> {}
         }
     }
@@ -274,7 +274,7 @@ public class BaseRenderer implements Renderer {
 
     // ----------------
 
-    private void renderImageDisplay(ImageView imageView) {
+    private void drawImageView(ImageView imageView) {
         if (imageView.isVisible()) {
             final Image imageFX = imageView.image().image();
             final double s = scaling();
@@ -287,7 +287,7 @@ public class BaseRenderer implements Renderer {
         }
     }
 
-    private void renderTextDisplay(TextView textView) {
+    private void drawTextView(TextView textView) {
         if (!textView.isVisible()) {
             return;
         }
@@ -302,7 +302,7 @@ public class BaseRenderer implements Renderer {
         }
     }
 
-    private void renderMessageView(MessageView messageView) {
+    private void drawMessageView(MessageView messageView) {
         final var messageTexts = messageView.texts();
         messageView.optComp(MessageViewStyleComp.class).ifPresent(style -> {
             final MessageType messageType = messageView.type().messageType();
@@ -313,12 +313,12 @@ public class BaseRenderer implements Renderer {
         });
     }
 
-
     private void fillColoredRect(ColoredRect coloredRect) {
         final var rect = coloredRect.rect();
         ctx.save();
+        ctx.scale(scaling(), scaling());
         ctx.setFill(coloredRect.color());
-        ctx.fillRect(scaled(rect.x()), scaled(rect.y()), scaled(rect.width()), scaled(rect.height()));
+        ctx.fillRect(rect.x(), rect.y(), rect.width(), rect.height());
         ctx.restore();
     }
 }

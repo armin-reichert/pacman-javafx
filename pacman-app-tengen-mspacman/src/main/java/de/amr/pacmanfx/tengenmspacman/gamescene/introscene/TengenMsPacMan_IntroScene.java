@@ -90,6 +90,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
     @Override
     public Stream<Renderable> renderables() {
         return Ufx.streamOf(
+            this,
             createEntityView(marquee, RenderingLayer.PROPS, 0),
             createPacView(msPacMan),
             ghosts.stream().map(GameVariantRenderConfig::createGhostView)
