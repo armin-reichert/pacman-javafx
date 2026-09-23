@@ -12,6 +12,7 @@ import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.GameApp;
+import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import javafx.scene.input.KeyCode;
 
 import java.util.Set;
@@ -33,6 +34,7 @@ public final class Arcade_Actions {
                 app.ui().soundManager().voice().stop();
                 app.ui().soundManager().setEnabled(true);
                 app.game().coinMechanism().insertCoin();
+                app.variantManager().currentRuntime().uiConfig().optSoundEffects().ifPresent(GameSoundEffects::playCoinInsertedSound);
                 app.game().playConfig().gameFlow().enterGameState(app.game(), CommonGameStateID.GAME_PREPARATION);
                 app.game().eventManager().publishEvent(new CreditAddedEvent(1));
             }
