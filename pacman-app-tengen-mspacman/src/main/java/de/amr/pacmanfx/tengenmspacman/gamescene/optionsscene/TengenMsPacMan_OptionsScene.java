@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene;
 
+import de.amr.basics.EnumMethods;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.ui.entities.hud.score.Score;
@@ -54,22 +55,12 @@ import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
  */
 public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
 
-    enum PlayOption {
-
+    public enum PlayOption implements EnumMethods<PlayOption> {
         PLAY_MODE, PAC_BOOSTER, DIFFICULTY, MAP_CATEGORY, STARTING_LEVEL;
 
-        public PlayOption pred() {
-            final int pred = ordinal() == 0 ? count() - 1 : ordinal() - 1;
-            return PlayOption.values()[pred];
-        }
-
-        public PlayOption succ() {
-            final int succ = ordinal() + 1 == count() ? 0 : ordinal() + 1;
-            return PlayOption.values()[succ];
-        }
-
-        public static int count() {
-            return values().length;
+        @Override
+        public PlayOption[] enumValues() {
+            return values();
         }
     }
 
