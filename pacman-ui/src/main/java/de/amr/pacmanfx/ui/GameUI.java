@@ -5,6 +5,7 @@
 package de.amr.pacmanfx.ui;
 
 import de.amr.basics.json.JsonLoader;
+import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.pacmanfx.core.event.GameEvent;
 import de.amr.pacmanfx.core.event.GenericChangeEvent;
 import de.amr.pacmanfx.core.event.HighScoreAccessErrorEvent;
@@ -31,7 +32,6 @@ import de.amr.pacmanfx.ui.views.editor.EditorView;
 import de.amr.pacmanfx.ui.views.playview.GamePlayView;
 import de.amr.pacmanfx.ui.views.startpages.StartPagesView;
 import de.amr.pacmanfx.ui.window.GameWindow;
-import de.amr.basics.ui.assets.TranslationManager;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import org.tinylog.Logger;

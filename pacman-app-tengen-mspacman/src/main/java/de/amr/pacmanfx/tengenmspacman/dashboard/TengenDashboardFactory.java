@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.tengenmspacman.dashboard;
 
 import de.amr.basics.Named;
-import de.amr.pacmanfx.ui.views.dashboard.*;
 import de.amr.basics.ui.assets.TranslationManager;
+import de.amr.pacmanfx.ui.views.dashboard.*;
 
 import java.util.Optional;
 

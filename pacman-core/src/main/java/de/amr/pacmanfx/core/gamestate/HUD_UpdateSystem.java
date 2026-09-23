@@ -4,11 +4,11 @@
 
 package de.amr.pacmanfx.core.gamestate;
 
+import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
 import de.amr.basics.ui.entities.props.textdisplay.TextView;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.HUD;
-import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
 import de.amr.pacmanfx.core.level.GameLevel;
 
 public class HUD_UpdateSystem {

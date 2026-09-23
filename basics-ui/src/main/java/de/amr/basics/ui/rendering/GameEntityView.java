@@ -4,8 +4,8 @@
 
 package de.amr.basics.ui.rendering;
 
-import de.amr.basics.math.Vector2f;
 import de.amr.basics.ecs.GameEntity;
+import de.amr.basics.math.Vector2f;
 
 import static java.util.Objects.requireNonNull;
 

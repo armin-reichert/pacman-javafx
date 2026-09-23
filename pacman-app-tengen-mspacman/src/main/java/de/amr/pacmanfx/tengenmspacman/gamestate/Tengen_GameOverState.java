@@ -6,6 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.gamestate;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
+import de.amr.basics.ui.entities.props.messageview.MessageType;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.entities.world.House;
@@ -13,7 +14,6 @@ import de.amr.pacmanfx.core.event.HighScoreAccessErrorEvent;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.basics.ui.entities.props.messageview.MessageType;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Extras;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;

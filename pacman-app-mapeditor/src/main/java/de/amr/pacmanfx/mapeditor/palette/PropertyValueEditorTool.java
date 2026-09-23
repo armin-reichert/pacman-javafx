@@ -3,8 +3,8 @@
  */
 package de.amr.pacmanfx.mapeditor.palette;
 
-import de.amr.pacmanfx.mapeditor.TileMapEditorGlobals;
 import de.amr.basics.ui.rendering.Renderer;
+import de.amr.pacmanfx.mapeditor.TileMapEditorGlobals;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 

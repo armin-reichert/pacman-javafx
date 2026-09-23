@@ -3,18 +3,17 @@
  */
 package de.amr.pacmanfx.arcade.pacman.gamescene.bootscene;
 
-import de.amr.basics.util.Ufx;
-import de.amr.basics.ui.rendering.Renderable;
-import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.basics.ui.assets.SpriteSheet;
 import de.amr.basics.ui.rendering.BaseRenderer;
+import de.amr.basics.ui.rendering.Renderable;
+import de.amr.basics.util.Ufx;
+import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.uilib.ArcadeColor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.text.Font;
 
 import java.util.Optional;
 
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static java.util.Objects.requireNonNull;
 
 /**

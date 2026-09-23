@@ -8,8 +8,8 @@ import de.amr.basics.Named;
 import de.amr.basics.timer.Pulse;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
-import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.actor.bonus.BonusMoveAndJumpComp;
+import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.actor.pac.PacState;
 import de.amr.pacmanfx.core.level.GameLevel;
 

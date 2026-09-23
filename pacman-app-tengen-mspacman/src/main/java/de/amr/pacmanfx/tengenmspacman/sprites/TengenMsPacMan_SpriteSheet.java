@@ -5,11 +5,11 @@ package de.amr.pacmanfx.tengenmspacman.sprites;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.RectShort;
+import de.amr.basics.ui.assets.SpriteMap;
+import de.amr.basics.ui.assets.SpriteSheet;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_ResourceManager;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
-import de.amr.basics.ui.assets.SpriteMap;
-import de.amr.basics.ui.assets.SpriteSheet;
 import javafx.scene.image.Image;
 
 import java.util.stream.IntStream;

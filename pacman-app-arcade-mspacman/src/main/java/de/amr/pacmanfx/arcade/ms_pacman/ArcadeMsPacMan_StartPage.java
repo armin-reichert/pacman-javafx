@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman;
 
-import de.amr.pacmanfx.ui.views.startpages.FlyerStartPage;
 import de.amr.basics.ui.assets.ResourceManager;
+import de.amr.pacmanfx.ui.views.startpages.FlyerStartPage;
 
 public class ArcadeMsPacMan_StartPage extends FlyerStartPage {
 

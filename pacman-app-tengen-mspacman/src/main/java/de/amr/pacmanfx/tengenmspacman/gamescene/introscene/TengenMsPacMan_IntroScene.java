@@ -4,27 +4,27 @@
 
 package de.amr.pacmanfx.tengenmspacman.gamescene.introscene;
 
+import de.amr.basics.ecs.system.MovementSystem;
 import de.amr.basics.fsm.State;
 import de.amr.basics.fsm.StateMachine;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.timer.TickTimer;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
-import de.amr.basics.ecs.system.MovementSystem;
 import de.amr.basics.ui.entities.props.marquee.Marquee;
+import de.amr.basics.ui.rendering.Renderable;
+import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
-import de.amr.basics.ui.rendering.RenderingLayer;
-import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
-import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;
+import de.amr.pacmanfx.core.entities.actor.pac.Pac;
+import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.gamestate.GameFlow;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.game.GameVariantUIConfig;

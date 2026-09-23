@@ -6,13 +6,13 @@ package de.amr.pacmanfx.game;
 
 import de.amr.basics.Disposable;
 import de.amr.basics.Named;
+import de.amr.basics.ui.assets.AssetMap;
+import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.GameVariantGameSceneConfig;
 import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
-import de.amr.basics.ui.assets.AssetMap;
-import de.amr.basics.ui.assets.TranslationManager;
 
 import java.util.Map;
 import java.util.Optional;

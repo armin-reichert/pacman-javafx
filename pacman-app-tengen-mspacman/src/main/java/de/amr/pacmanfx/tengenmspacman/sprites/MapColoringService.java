@@ -4,9 +4,9 @@
 package de.amr.pacmanfx.tengenmspacman.sprites;
 
 import de.amr.basics.math.RectShort;
+import de.amr.basics.ui.assets.SpriteSheet;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
-import de.amr.basics.ui.assets.SpriteSheet;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;

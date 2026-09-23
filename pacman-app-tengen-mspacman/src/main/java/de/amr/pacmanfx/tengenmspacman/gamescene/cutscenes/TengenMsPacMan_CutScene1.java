@@ -7,16 +7,16 @@ package de.amr.pacmanfx.tengenmspacman.gamescene.cutscenes;
 import de.amr.basics.math.Direction;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.entities.props.clapperboard.Clapperboard;
+import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
+import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.tengenmspacman.entities.Heart;
@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
-import static de.amr.pacmanfx.game.GameVariantRenderConfig.*;
+import static de.amr.pacmanfx.game.GameVariantRenderConfig.createPropView;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 

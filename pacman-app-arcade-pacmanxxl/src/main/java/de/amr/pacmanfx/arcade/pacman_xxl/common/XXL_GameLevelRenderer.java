@@ -5,11 +5,11 @@ package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
 import de.amr.basics.InfoMap;
 import de.amr.basics.math.Vector2f;
+import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
-import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.ui.gamescene.d2.GenericLevelRenderer;
 import de.amr.pacmanfx.uilib.rendering.GameLevelView;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapColoring;

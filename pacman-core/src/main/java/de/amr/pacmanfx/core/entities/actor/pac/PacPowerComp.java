@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.core.entities.actor.pac;
 
-import de.amr.basics.timer.TickTimer;
 import de.amr.basics.ecs.GameEntityComp;
+import de.amr.basics.timer.TickTimer;
 
 public class PacPowerComp implements GameEntityComp {
 

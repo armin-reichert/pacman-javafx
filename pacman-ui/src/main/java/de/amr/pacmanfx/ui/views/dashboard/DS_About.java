@@ -4,9 +4,9 @@
 
 package de.amr.pacmanfx.ui.views.dashboard;
 
+import de.amr.basics.ui.assets.ResourceManager;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
-import de.amr.basics.ui.assets.ResourceManager;
 import javafx.geometry.Insets;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;

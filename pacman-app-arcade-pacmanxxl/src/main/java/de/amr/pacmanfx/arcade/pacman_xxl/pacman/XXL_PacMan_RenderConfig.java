@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.arcade.pacman_xxl.pacman;
 
+import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_RenderConfig;
 import de.amr.pacmanfx.arcade.pacman_xxl.common.XXL_GameLevelRenderer;
@@ -12,7 +13,6 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
 import de.amr.pacmanfx.ui.assets.GlobalAssets;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
-import de.amr.basics.ui.assets.AssetMap;
 import javafx.scene.canvas.Canvas;
 
 import static java.util.Objects.requireNonNull;

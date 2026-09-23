@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.ui.gamescene.d3.animation;
 
-import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.basics.ui.animation.ManagedAnimation;
+import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import javafx.animation.Animation;
 import javafx.animation.Transition;
 import javafx.scene.paint.Color;

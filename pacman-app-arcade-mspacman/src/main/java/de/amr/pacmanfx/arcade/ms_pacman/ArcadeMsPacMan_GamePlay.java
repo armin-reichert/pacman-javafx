@@ -4,8 +4,11 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman;
 
-import de.amr.basics.math.Vector2i;
 import de.amr.basics.ecs.system.PositionSystem;
+import de.amr.basics.math.Vector2i;
+import de.amr.basics.ui.entities.hud.levelCounter.LevelCounter;
+import de.amr.basics.ui.entities.hud.levelCounter.LevelCounterBehavior;
+import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
 import de.amr.basics.ui.entities.props.textdisplay.TextView;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_GamePlay;
@@ -17,12 +20,9 @@ import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.bonus.BonusRouteInfo;
 import de.amr.pacmanfx.core.entities.actor.bonus.BonusState;
-import de.amr.pacmanfx.core.entities.world.House;
-import de.amr.pacmanfx.core.entities.world.HPortal;
-import de.amr.basics.ui.entities.hud.levelCounter.LevelCounter;
-import de.amr.basics.ui.entities.hud.levelCounter.LevelCounterBehavior;
-import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
+import de.amr.pacmanfx.core.entities.world.HPortal;
+import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.event.bonus.BonusActivatedEvent;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.level.GameLevelEntitySet;

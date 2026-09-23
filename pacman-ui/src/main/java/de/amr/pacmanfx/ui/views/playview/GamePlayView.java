@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.ui.views.playview;
 
+import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.level.GameLevel;
@@ -27,10 +28,9 @@ import de.amr.pacmanfx.ui.views.dashboard.GameDashboardSection;
 import de.amr.pacmanfx.ui.views.help.HelpView;
 import de.amr.pacmanfx.ui.views.miniview.MiniPlaySceneView;
 import de.amr.pacmanfx.ui.window.GameMainScene;
-import de.amr.basics.ui.assets.TranslationManager;
+import de.amr.pacmanfx.uilib.ArcadeColor;
 import de.amr.pacmanfx.uilib.controls.FontAwesomeIcon;
 import de.amr.pacmanfx.uilib.controls.FontAwesomeSymbol;
-import de.amr.pacmanfx.uilib.ArcadeColor;
 import de.amr.pacmanfx.uilib.widgets.decorationpane.DecorationPane;
 import de.amr.pacmanfx.uilib.widgets.decorationpane.DecorationPaneBorderConfig;
 import de.amr.pacmanfx.uilib.widgets.decorationpane.DecorationPaneConfig;

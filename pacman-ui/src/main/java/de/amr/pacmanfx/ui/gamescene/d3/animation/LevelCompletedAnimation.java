@@ -5,12 +5,12 @@
 package de.amr.pacmanfx.ui.gamescene.d3.animation;
 
 import de.amr.basics.ecs.GameEntity;
+import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.ui.gamescene.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.gamescene.d3.Maze3D;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
-import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3d.house.comp.House3DViewComp;
 import javafx.animation.*;
 import javafx.beans.property.DoubleProperty;

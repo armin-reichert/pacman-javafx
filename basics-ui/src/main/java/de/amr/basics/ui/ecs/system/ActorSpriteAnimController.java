@@ -5,8 +5,8 @@
 package de.amr.basics.ui.ecs.system;
 
 import de.amr.basics.Named;
-import de.amr.basics.math.RectShort;
 import de.amr.basics.ecs.GameEntity;
+import de.amr.basics.math.RectShort;
 import de.amr.basics.ui.ecs.comp.SpriteAnimationComp;
 import de.amr.basics.ui.spriteanim.SpriteAnimFacade;
 

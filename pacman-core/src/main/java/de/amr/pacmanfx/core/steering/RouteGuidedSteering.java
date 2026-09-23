@@ -4,10 +4,10 @@
 
 package de.amr.pacmanfx.core.steering;
 
-import de.amr.basics.math.Vector2i;
 import de.amr.basics.ecs.GameEntity;
-import de.amr.pacmanfx.core.entities.world.WorldNavigationComp;
+import de.amr.basics.math.Vector2i;
 import de.amr.pacmanfx.core.entities.world.WorldMovementPolicy;
+import de.amr.pacmanfx.core.entities.world.WorldNavigationComp;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.level.GameLevel;
 

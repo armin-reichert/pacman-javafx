@@ -5,8 +5,10 @@
 package de.amr.pacmanfx.tengenmspacman.gamescene.bootscene;
 
 import de.amr.basics.math.Direction;
+import de.amr.basics.ui.entities.hud.HUD_Style;
 import de.amr.basics.ui.entities.props.ColoredRect;
 import de.amr.basics.ui.entities.props.textdisplay.TextView;
+import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
@@ -14,13 +16,11 @@ import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
-import de.amr.basics.ui.entities.hud.HUD_Style;
 import javafx.scene.paint.Color;
 
 import java.util.stream.Stream;

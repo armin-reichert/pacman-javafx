@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.core.gamestate;
 
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.basics.ui.entities.props.messageview.MessageView;
+import de.amr.pacmanfx.core.GameContext;
 
 public final class Common_PreparationState extends AbstractGameState {
 

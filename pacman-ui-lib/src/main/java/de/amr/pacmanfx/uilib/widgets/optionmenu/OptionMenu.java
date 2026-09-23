@@ -5,10 +5,10 @@
 package de.amr.pacmanfx.uilib.widgets.optionmenu;
 
 import de.amr.basics.json.JsonLoader;
+import de.amr.basics.ui.assets.ResourceManager;
+import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.basics.ui.rendering.Renderable;
-import de.amr.basics.ui.assets.ResourceManager;
 import javafx.animation.AnimationTimer;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;

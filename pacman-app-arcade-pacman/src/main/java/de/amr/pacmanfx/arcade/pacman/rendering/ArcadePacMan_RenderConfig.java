@@ -5,9 +5,16 @@
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
 import de.amr.basics.Disposable;
-import de.amr.basics.math.RectShort;
 import de.amr.basics.ecs.GameEntity;
+import de.amr.basics.math.RectShort;
+import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
+import de.amr.basics.ui.entities.hud.HUD_Style;
+import de.amr.basics.ui.entities.props.bonuspoints.BonusPoints;
+import de.amr.basics.ui.entities.props.ghostpoints.GhostPoints;
+import de.amr.basics.ui.entities.props.messageview.MessageType;
+import de.amr.basics.ui.entities.props.messageview.MessageView;
+import de.amr.basics.ui.rendering.*;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
@@ -18,28 +25,18 @@ import de.amr.pacmanfx.arcade.pacman.gamescene.introscene.ArcadePacMan_IntroScen
 import de.amr.pacmanfx.arcade.pacman.gamescene.playscene.ArcadePacMan_GameLevel_Renderer;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.Energizer;
-import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
-import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
-import de.amr.basics.ui.entities.props.messageview.MessageType;
+import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.GenericWorldMapColorScheme;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.basics.ui.entities.props.bonuspoints.BonusPoints;
-import de.amr.basics.ui.entities.props.ghostpoints.GhostPoints;
-import de.amr.basics.ui.entities.props.messageview.MessageView;
-import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.assets.GlobalAssets;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
-import de.amr.basics.ui.assets.AssetMap;
-import de.amr.basics.ui.entities.hud.HUD_Style;
-import de.amr.basics.ui.rendering.BaseRenderer;
-import de.amr.basics.ui.rendering.Renderer;
 import de.amr.pacmanfx.uilib.ArcadeColor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.Image;
@@ -49,7 +46,6 @@ import java.util.EnumMap;
 import java.util.Map;
 
 import static de.amr.pacmanfx.game.GameVariantRenderConfig.*;
-import static de.amr.pacmanfx.game.GameVariantRenderConfig.createBonusView;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig, Disposable {
@@ -104,7 +100,7 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig, Dispo
     }
 
     @Override
-    public Renderable createEntityView(GameEntity gameEntity) {
+    public GameEntityView createEntityView(GameEntity gameEntity) {
         return switch(gameEntity) {
             case Pac pac     -> createPacView(pac);
             case Ghost ghost -> createGhostView(ghost);

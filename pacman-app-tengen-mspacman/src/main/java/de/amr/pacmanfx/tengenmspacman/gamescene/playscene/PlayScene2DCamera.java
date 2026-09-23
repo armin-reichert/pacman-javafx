@@ -3,8 +3,8 @@
  */
 package de.amr.pacmanfx.tengenmspacman.gamescene.playscene;
 
-import de.amr.basics.math.Direction;
 import de.amr.basics.ecs.GameEntity;
+import de.amr.basics.math.Direction;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationComp;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import javafx.beans.property.DoubleProperty;

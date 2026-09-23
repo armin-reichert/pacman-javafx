@@ -3,10 +3,10 @@
  */
 package de.amr.pacmanfx.tengenmspacman.model;
 
-import de.amr.basics.math.Vector2f;
 import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.ecs.comp.MovementComp;
 import de.amr.basics.ecs.system.MovementSystem;
+import de.amr.basics.math.Vector2f;
 
 /**
  * The "game over" message in Tengen Ms. Pac-Man (in non-Arcade maps) moves (after some delay) from the center of the

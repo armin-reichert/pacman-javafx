@@ -4,11 +4,11 @@
 
 package de.amr.pacmanfx.core.gamestate;
 
+import de.amr.basics.ui.entities.props.messageview.MessageType;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.entities.actor.pac.PacState;
 import de.amr.pacmanfx.core.event.gameplay.GameContinuedEvent;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.basics.ui.entities.props.messageview.MessageType;
 import de.amr.pacmanfx.core.rules.LevelContinuationRules;
 
 public class Common_LevelContinueState extends AbstractGameState {

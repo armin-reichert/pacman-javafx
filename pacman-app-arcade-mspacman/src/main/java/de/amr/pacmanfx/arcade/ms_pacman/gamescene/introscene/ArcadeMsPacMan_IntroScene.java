@@ -4,21 +4,21 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.gamescene.introscene;
 
+import de.amr.basics.ecs.system.MovementSystem;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
-import de.amr.basics.ecs.system.MovementSystem;
+import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
-import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
+import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.ui.assets.VoiceID;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;

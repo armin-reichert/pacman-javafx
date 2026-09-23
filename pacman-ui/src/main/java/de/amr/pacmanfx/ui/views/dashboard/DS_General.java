@@ -3,10 +3,10 @@
  */
 package de.amr.pacmanfx.ui.views.dashboard;
 
+import de.amr.basics.ui.assets.ResourceManager;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
-import de.amr.basics.ui.assets.ResourceManager;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;

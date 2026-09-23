@@ -7,8 +7,10 @@ package de.amr.pacmanfx.tengenmspacman.gamescene.playscene;
 import de.amr.basics.InfoMap;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
+import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.rendering.GameEntityView;
+import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.util.Ufx;
@@ -16,6 +18,7 @@ import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.HUD;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
+import de.amr.pacmanfx.core.entities.world.Door;
 import de.amr.pacmanfx.core.entities.world.DoorDataComp;
 import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
@@ -24,7 +27,6 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
-import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
@@ -42,9 +44,8 @@ import de.amr.pacmanfx.ui.gamescene.d2.FlashingState;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
-import de.amr.basics.ui.assets.TranslationManager;
-import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
 import de.amr.pacmanfx.uilib.rendering.GameLevelView;
+import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
@@ -121,18 +122,19 @@ public class TengenMsPacMan_PlayScene2D extends AbstractGameScene {
 
         final long tick = game().session().thisFrame().tick();
         final GameVariantRenderConfig renderConfig = app().variantManager().currentRuntime().uiConfig().renderConfig();
+
+        final Door door = level.entitySet().entities().theOne(House.class).door();
         return Ufx.streamOf(
             createRenderableLevel(level, tick),
 
             //TODO simplify!
             level.entitySet().all()
+                .filter(gameEntity -> gameEntity != door)
                 .map(renderConfig::createEntityView)
-                .filter(r -> r instanceof GameEntityView rge)
-                .map(r -> (GameEntityView) r)
-                .map(rge -> rge.newOffset(RENDER_OFFSET))
+                .map(entityView -> entityView.newOffset(RENDER_OFFSET)),
 
-            // In Tengen, the ghosts are drawn under(!) the house door, so reassign the door's z-index:
-//            assignLayer(level.entities().house().door(), RenderingLayer.SCENE, 100)
+            // Ghosts entering/leaving the house are drawn under the house door!
+            new GameEntityView(door, RenderingLayer.ACTORS, 100, RENDER_OFFSET)
         );
     }
 

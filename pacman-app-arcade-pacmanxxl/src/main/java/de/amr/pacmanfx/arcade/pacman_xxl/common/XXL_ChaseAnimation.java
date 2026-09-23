@@ -3,26 +3,26 @@
  */
 package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
-import de.amr.basics.math.Direction;
 import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.ecs.comp.MovementComp;
-import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ecs.system.MovementSystem;
+import de.amr.basics.math.Direction;
+import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
+import de.amr.basics.ui.entities.props.ghostpoints.GhostPoints;
+import de.amr.basics.ui.rendering.Renderer;
+import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.basics.ui.rendering.RenderingLayer;
-import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
-import de.amr.basics.ui.entities.props.ghostpoints.GhostPoints;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
+import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationTimer;
-import de.amr.basics.ui.rendering.Renderer;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;

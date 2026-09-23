@@ -6,11 +6,11 @@ package de.amr.pacmanfx.ui.entities3D.livescounter.comp;
 
 
 import de.amr.basics.ecs.GameEntityComp;
+import de.amr.basics.ui.assets.DisposableGraphicsObject;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.ui.gamescene.d3.Factory3D;
 import de.amr.pacmanfx.ui.gamescene.d3.animation.NodePositionTracker;
 import de.amr.pacmanfx.ui.settings.world.WorldSettings;
-import de.amr.basics.ui.assets.DisposableGraphicsObject;
 import javafx.beans.property.*;
 import javafx.scene.Group;
 import javafx.scene.Node;

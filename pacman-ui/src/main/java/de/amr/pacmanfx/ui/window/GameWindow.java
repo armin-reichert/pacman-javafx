@@ -4,12 +4,12 @@
 
 package de.amr.pacmanfx.ui.window;
 
+import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.ui.views.GameViewID;
-import de.amr.basics.ui.assets.TranslationManager;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;

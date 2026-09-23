@@ -4,16 +4,16 @@
 
 package de.amr.pacmanfx.uilib.widgets.optionmenu;
 
-import de.amr.basics.util.Ufx;
-import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.rendering.BaseRenderer;
+import de.amr.basics.ui.rendering.Renderable;
+import de.amr.basics.util.Ufx;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 import static de.amr.basics.util.Ufx.scaleFontBy;
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.*;
+import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 
 /**
  * Base renderer for {@link OptionMenu}.

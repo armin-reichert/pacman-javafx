@@ -4,10 +4,10 @@
 
 package de.amr.pacmanfx.core.entities.world;
 
+import de.amr.basics.ecs.GameEntityComp;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
-import de.amr.basics.ecs.GameEntityComp;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 
 import java.util.EnumMap;

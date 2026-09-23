@@ -4,16 +4,15 @@
 
 package de.amr.pacmanfx.tengenmspacman.gamescene.creditsscene;
 
-import de.amr.basics.util.Ufx;
+import de.amr.basics.ui.rendering.BaseRenderer;
 import de.amr.basics.ui.rendering.Renderable;
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
-import de.amr.basics.ui.rendering.BaseRenderer;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.text.Font;
 
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_SceneRendererUtils.drawHorizontalBar;
 

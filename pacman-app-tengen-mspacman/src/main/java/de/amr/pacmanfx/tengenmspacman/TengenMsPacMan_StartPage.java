@@ -4,8 +4,8 @@
 
 package de.amr.pacmanfx.tengenmspacman;
 
-import de.amr.pacmanfx.ui.views.startpages.FlyerStartPage;
 import de.amr.basics.ui.assets.ResourceManager;
+import de.amr.pacmanfx.ui.views.startpages.FlyerStartPage;
 
 public class TengenMsPacMan_StartPage extends FlyerStartPage {
 

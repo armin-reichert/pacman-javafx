@@ -6,9 +6,9 @@ package de.amr.basics.ui.entities.props.stork;
 
 import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.ecs.comp.MovementComp;
-import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.ui.ecs.comp.SpriteAnimationComp;
 import de.amr.basics.ui.rendering.Renderable;
+import de.amr.basics.ui.rendering.RenderingLayer;
 
 public class Stork extends GameEntity implements Renderable {
 

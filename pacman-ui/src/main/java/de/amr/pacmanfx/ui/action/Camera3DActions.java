@@ -4,13 +4,13 @@
 
 package de.amr.pacmanfx.ui.action;
 
+import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.ui.action.core.ActionKeyBinding;
 import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
-import de.amr.basics.ui.assets.TranslationManager;
 import javafx.scene.input.KeyCode;
 import javafx.scene.shape.DrawMode;
 

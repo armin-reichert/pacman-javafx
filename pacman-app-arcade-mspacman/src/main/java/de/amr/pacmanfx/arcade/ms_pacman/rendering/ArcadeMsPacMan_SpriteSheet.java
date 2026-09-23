@@ -5,11 +5,11 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.RectShort;
-import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
-import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.basics.ui.assets.ResourceManager;
 import de.amr.basics.ui.assets.SpriteMap;
 import de.amr.basics.ui.assets.SpriteSheet;
+import de.amr.pacmanfx.arcade.ms_pacman.ArcadeMsPacMan_UIConfig;
+import de.amr.pacmanfx.core.model.GhostPersonality;
 import javafx.scene.image.Image;
 
 import java.util.stream.IntStream;

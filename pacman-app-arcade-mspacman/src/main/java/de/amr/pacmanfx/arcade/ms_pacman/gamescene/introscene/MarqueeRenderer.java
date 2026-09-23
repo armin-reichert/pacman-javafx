@@ -4,10 +4,10 @@
 
 package de.amr.pacmanfx.arcade.ms_pacman.gamescene.introscene;
 
-import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.entities.props.marquee.*;
-import de.amr.basics.ui.rendering.GameEntityView;
 import de.amr.basics.ui.rendering.BaseRenderer;
+import de.amr.basics.ui.rendering.GameEntityView;
+import de.amr.basics.ui.rendering.Renderable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 

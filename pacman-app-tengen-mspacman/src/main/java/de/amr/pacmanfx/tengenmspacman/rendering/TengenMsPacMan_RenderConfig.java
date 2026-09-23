@@ -4,17 +4,17 @@
 
 package de.amr.pacmanfx.tengenmspacman.rendering;
 
+import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.assets.SpriteSheet;
-import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.entities.hud.HUD_Style;
 import de.amr.basics.ui.entities.props.bonuspoints.BonusPoints;
 import de.amr.basics.ui.entities.props.ghostpoints.GhostPoints;
 import de.amr.basics.ui.entities.props.messageview.MessageType;
 import de.amr.basics.ui.entities.props.messageview.MessageView;
-import de.amr.basics.ui.rendering.Renderable;
+import de.amr.basics.ui.rendering.GameEntityView;
 import de.amr.basics.ui.rendering.Renderer;
 import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
@@ -156,7 +156,7 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     }
 
     @Override
-    public Renderable createEntityView(GameEntity gameEntity) {
+    public GameEntityView createEntityView(GameEntity gameEntity) {
         return switch(gameEntity) {
             case Pac pac     -> createPacView(pac);
             case Ghost ghost -> createGhostView(ghost);

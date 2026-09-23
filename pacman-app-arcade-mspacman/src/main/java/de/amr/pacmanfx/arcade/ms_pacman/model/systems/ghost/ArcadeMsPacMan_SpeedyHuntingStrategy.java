@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.arcade.ms_pacman.model.systems.ghost;
 
 import de.amr.basics.math.Vector2i;
-import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
+import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.level.GameLevel;
 
 /**

@@ -4,10 +4,10 @@
 
 package de.amr.pacmanfx.ui.gamescene.d3.animation;
 
+import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3d.ghost.comp.Ghost3DViewComp;
 import de.amr.pacmanfx.uilib.entities3d.ghost.comp.GhostSettings;
 import javafx.animation.Animation;

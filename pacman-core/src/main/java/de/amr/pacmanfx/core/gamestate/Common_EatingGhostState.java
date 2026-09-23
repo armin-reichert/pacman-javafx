@@ -7,8 +7,8 @@ package de.amr.pacmanfx.core.gamestate;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
-import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;
+import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.actor.pac.PacState;
 import de.amr.pacmanfx.core.level.GameLevel;
 

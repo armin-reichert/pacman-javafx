@@ -5,12 +5,12 @@ package de.amr.pacmanfx.uilib.renderer;
 
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.ui.rendering.BaseRenderer;
+import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.pacmanfx.core.model.world.map.TerrainTile;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.obstacle.Obstacle;
 import de.amr.pacmanfx.core.model.world.obstacle.ObstacleSegment;
-import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapColoring;
 import de.amr.pacmanfx.uilib.rendering.WorldMapView;
 import javafx.beans.property.DoubleProperty;
@@ -20,7 +20,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
-import static de.amr.pacmanfx.core.model.world.map.WorldMap.HTS;
 import static java.util.Objects.requireNonNull;
 
 /**

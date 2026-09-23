@@ -4,12 +4,12 @@
 package de.amr.pacmanfx.ui.gamescene.d3;
 
 import de.amr.basics.Disposable;
+import de.amr.basics.ui.assets.TranslationManager;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.d3.camera.PerspectiveID;
 import de.amr.pacmanfx.ui.viewmodel.Game3DSettingsVM;
-import de.amr.basics.ui.assets.TranslationManager;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.RadioMenuItem;

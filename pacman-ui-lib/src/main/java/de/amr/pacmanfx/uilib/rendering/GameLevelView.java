@@ -6,9 +6,9 @@ package de.amr.pacmanfx.uilib.rendering;
 
 import de.amr.basics.InfoMap;
 import de.amr.basics.math.Vector2f;
+import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.basics.ui.rendering.Renderable;
 
 /**
  * Renderable game level object.

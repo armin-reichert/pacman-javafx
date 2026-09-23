@@ -3,21 +3,21 @@
  */
 package de.amr.pacmanfx.arcade.ms_pacman.gamescene.cutscenes;
 
+import de.amr.basics.ecs.system.MovementSystem;
 import de.amr.basics.math.Direction;
 import de.amr.basics.timer.TickTimer;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
-import de.amr.basics.ecs.system.MovementSystem;
 import de.amr.basics.ui.entities.props.clapperboard.Clapperboard;
 import de.amr.basics.ui.entities.props.clapperboard.ClapperboardStateSystem;
+import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
-import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
-import de.amr.basics.ui.rendering.Renderable;
+import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;

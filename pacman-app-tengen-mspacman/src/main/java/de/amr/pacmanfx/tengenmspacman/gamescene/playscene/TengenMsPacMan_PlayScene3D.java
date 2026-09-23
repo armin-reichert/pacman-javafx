@@ -4,10 +4,10 @@
 package de.amr.pacmanfx.tengenmspacman.gamescene.playscene;
 
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
+import de.amr.basics.ui.entities.hud.score.Score;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.HUD;
-import de.amr.basics.ui.entities.hud.score.Score;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;

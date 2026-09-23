@@ -4,12 +4,12 @@
 
 package de.amr.pacmanfx.ui.views.dashboard;
 
+import de.amr.basics.ui.animation.AnimationRegistry;
+import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.ui.gamescene.d3.GameLevel3D;
 import de.amr.pacmanfx.ui.gamescene.d3.GameLevel3DAnimationManager;
 import de.amr.pacmanfx.ui.gamescene.d3.PlayScene3D;
-import de.amr.basics.ui.animation.AnimationRegistry;
-import de.amr.basics.ui.animation.ManagedAnimation;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;

@@ -218,7 +218,6 @@ public class TengenMsPacMan_VariantRenderer extends BaseRenderer {
         ctx().restore();
     }
 
-
     private void draw(Door door) {
         final var data = door.reqComp(DoorDataComp.class);
 

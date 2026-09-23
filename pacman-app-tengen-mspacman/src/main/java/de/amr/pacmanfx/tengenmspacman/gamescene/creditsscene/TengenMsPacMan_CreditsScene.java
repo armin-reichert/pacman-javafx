@@ -5,8 +5,8 @@
 package de.amr.pacmanfx.tengenmspacman.gamescene.creditsscene;
 
 import de.amr.basics.timer.TickTimer;
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.basics.ui.rendering.Renderable;
+import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;

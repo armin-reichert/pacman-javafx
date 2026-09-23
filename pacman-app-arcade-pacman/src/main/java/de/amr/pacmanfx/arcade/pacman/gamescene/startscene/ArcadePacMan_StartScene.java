@@ -3,10 +3,10 @@
  */
 package de.amr.pacmanfx.arcade.pacman.gamescene.startscene;
 
+import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
-import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.uilib.ArcadeColor;

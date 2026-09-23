@@ -5,14 +5,14 @@
 package de.amr.pacmanfx.ui.gamescene.d3.animation.energizer;
 
 import de.amr.basics.Disposable;
+import de.amr.basics.Pool;
 import de.amr.basics.math.Vector3f;
+import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.basics.ui.animation.ManagedAnimation;
 import de.amr.pacmanfx.uilib.entities3d.world.EnergizerParticle3D;
 import de.amr.pacmanfx.uilib.entities3d.world.EnergizerParticle3D.ParticleState;
-import de.amr.basics.Pool;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
