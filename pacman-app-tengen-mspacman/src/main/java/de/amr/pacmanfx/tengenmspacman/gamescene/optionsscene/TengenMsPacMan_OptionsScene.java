@@ -32,8 +32,8 @@ import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.input.JoypadButton;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.input.KeyCode;
 
 import java.io.IOException;
@@ -55,21 +55,32 @@ import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
  */
 public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
 
-    public static final byte OPTION_PLAY_MODE = 0;
-    public static final byte OPTION_PAC_BOOSTER = 1;
-    public static final byte OPTION_DIFFICULTY = 2;
-    public static final byte OPTION_MAP_CATEGORY = 3;
-    public static final byte OPTION_STARTING_LEVEL = 4;
+    enum PlayOption {
 
-    public static final byte NUM_OPTIONS = 5;
+        PLAY_MODE, PAC_BOOSTER, DIFFICULTY, MAP_CATEGORY, STARTING_LEVEL;
 
-    private static final byte MIN_START_LEVEL = 1;
-    private static final byte MAX_START_LEVEL = 32;
+        public PlayOption pred() {
+            final int pred = ordinal() == 0 ? count() - 1 : ordinal() - 1;
+            return PlayOption.values()[pred];
+        }
+
+        public PlayOption succ() {
+            final int succ = ordinal() + 1 == count() ? 0 : ordinal() + 1;
+            return PlayOption.values()[succ];
+        }
+
+        public int count() {
+            return values().length;
+        }
+    }
+
+    private static final int MIN_START_LEVEL = 1;
+    private static final int MAX_START_LEVEL = 32;
 
     private static final int INITIAL_DELAY = 20; //TODO verify
     private static final int IDLE_TIMEOUT = 1530; // 25,5 sec TODO verify
 
-    private final IntegerProperty selectedOption = new SimpleIntegerProperty() {
+    private final ObjectProperty<PlayOption> selectedOption = new SimpleObjectProperty<>(PlayOption.PLAY_MODE) {
         @Override
         protected void invalidated() {
             soundManager().play(TengenMsPacManSoundID.OPTION_SELECTION_CHANGE);
@@ -101,131 +112,6 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         botBar = new RenderableMenuSeparatorBar(NES_SCREEN_WIDTH, 8, new Vector2f(0, 26.5f * TS));
     }
 
-    private TextDisplay createTitleTextDisplay() {
-        final TextDisplay textDisplay = new TextDisplay();
-        textDisplay.pos().set(7 * TS, 6 * TS);
-        textDisplay.data().setFont(GlobalFonts.ARCADE.font(TS));
-        textDisplay.data().setText("MS PAC-MAN OPTIONS");
-        textDisplay.data().setFillColor(NES_Palette.color(0x28));
-        textDisplay.show();
-        return textDisplay;
-    }
-
-    private TextDisplay createMoveArrowTextDisplay() {
-        final TextDisplay textDisplay = new TextDisplay();
-        textDisplay.pos().set(4 * TS, 24 * TS);
-        textDisplay.data().setFont(GlobalFonts.ARCADE.font(TS));
-        textDisplay.data().setText("MOVE ARROW WITH JOYPAD");
-        textDisplay.data().setFillColor(NES_Palette.color(0x28));
-        textDisplay.show();
-        return textDisplay;
-    }
-
-    private TextDisplay createChooseOptionsTextDisplay() {
-        final TextDisplay textDisplay = new TextDisplay();
-        textDisplay.pos().set(2 * TS, 25 * TS);
-        textDisplay.data().setFont(GlobalFonts.ARCADE.font(TS));
-        textDisplay.data().setText("CHOOSE OPTIONS WITH A AND B");
-        textDisplay.data().setFillColor(NES_Palette.color(0x28));
-        textDisplay.show();
-        return textDisplay;
-    }
-
-    private TextDisplay createPressStartTextDisplay() {
-        final TextDisplay textDisplay = new TextDisplay();
-        textDisplay.pos().set(3 * TS, 26 * TS);
-        textDisplay.data().setFont(GlobalFonts.ARCADE.font(TS));
-        textDisplay.data().setText("PRESS START TO START GAME");
-        textDisplay.data().setFillColor(NES_Palette.color(0x28));
-        textDisplay.show();
-        return textDisplay;
-    }
-
-    private RenderableMenuOption renderablePlayModeOption() {
-        return new RenderableMenuOption(
-            selectedOption() == OPTION_PLAY_MODE,
-            "TYPE",
-            "1 PLAYER",
-            8,
-            RenderingLayer.HUD, 0,
-            new Vector2f(0, 4.5f * TS)
-        );
-    }
-
-    private RenderableMenuOption renderableBoosterModeOption() {
-        final BoosterMode boosterMode = gameOptions(game().session()).boosterMode();
-        return new RenderableMenuOption(
-            selectedOption() == OPTION_PAC_BOOSTER,
-            "PAC BOOSTER",
-            switch (boosterMode) {
-                case BOOSTER_OFF -> "OFF";
-                case BOOSTER_ALWAYS_ON -> "ALWAYS ON";
-                case ACTIVATE_WITH_A_OR_B -> "USE A OR B";
-            },
-            19,
-            RenderingLayer.HUD, 0,
-            new Vector2f(0, 6 * TS)
-        );
-    }
-
-    private RenderableMenuOption renderableGameDifficultyOption() {
-        final Difficulty difficulty = gameOptions(game().session()).difficulty();
-        return new RenderableMenuOption(
-            selectedOption() == OPTION_DIFFICULTY,
-            "GAME DIFFICULTY",
-            difficulty.name(),
-            19,
-            RenderingLayer.HUD, 0,
-            new Vector2f(0, 7.5f * TS)
-        );
-    }
-
-    private RenderableMenuOption renderableMapCategoryOption() {
-        final MapCategory mapCategory = gameOptions(game().session()).mapCategory();
-        return new RenderableMenuOption(
-            selectedOption() == OPTION_MAP_CATEGORY,
-            "MAZE SELECTION",
-            mapCategory.name(),
-            19,
-            RenderingLayer.HUD, 0,
-            new Vector2f(0, 9f * TS)
-        );
-    }
-
-    private RenderableMenuOption renderableStartingLevelOption() {
-        final int startLevelNumber = gameOptions(game().session()).startLevelNumber();
-        return new RenderableMenuOption(
-            selectedOption() == OPTION_STARTING_LEVEL,
-            "STARTING LEVEL",
-            String.valueOf(startLevelNumber),
-            19,
-            RenderingLayer.HUD, 0,
-            new Vector2f(0, 10.5f * TS)
-        );
-    }
-
-    private ImageDisplay createNumContinuesImageDisplay() {
-        final int numContinues = gameOptions(game().session()).numContinues();
-        final ImageDisplay imageDisplay = new ImageDisplay();
-        imageDisplay.pos().set(24 * TS, 20 * TS);
-        if (numContinues < 4) {
-            final var spriteSheet = TengenMsPacMan_SpriteSheet.instance();
-            final RectShort sprite = spriteSheet.findSprite(switch (numContinues) {
-                case 0 -> SpriteID.CONTINUES_0;
-                case 1 -> SpriteID.CONTINUES_1;
-                case 2 -> SpriteID.CONTINUES_2;
-                case 3 -> SpriteID.CONTINUES_3;
-                default -> throw new IllegalArgumentException("Illegal number of continues: " + numContinues);
-            });
-            imageDisplay.image().setImage(spriteSheet.image(sprite));
-            imageDisplay.show();
-        }
-        else {
-            imageDisplay.hide();
-        }
-        return imageDisplay;
-    }
-
     @Override
     public Stream<Renderable> renderables() {
         if (initialDelay > 0) return Stream.empty();
@@ -246,16 +132,6 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         );
     }
 
-    private RenderableJoypadKeyBindings renderableJoyPadKeyBindings() {
-        final GameVariantRuntime runtime = app().variantManager().currentRuntime();
-        final var uiSettings = runtime.extensionValue(
-            TengenMsPacMan_GameExtension.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
-
-        return uiSettings.joypadBindingsDisplayed.get()
-            ? new RenderableJoypadKeyBindings(app().input().joypad().currentKeyBinding(), new Vector2f(0,0))
-            : null;
-    }
-
     @Override
     public void onActivate() {
         final GameSession session = game().session();
@@ -270,7 +146,7 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         bindingsMap.bindActionToKeyCombination(actions.actionSelectNextJoypadKeyBinding(), combine().alt().key(KeyCode.J));
         bindingsMap.registerAllBindings(app().commonActions().sceneTestActions().bindings());
 
-        selectedOption.set(OPTION_PAC_BOOSTER);
+        selectedOption.set(PlayOption.PAC_BOOSTER);
         gameOptions(session).setCanStartNewGame(true);
 
         idleTicks = 0;
@@ -290,41 +166,32 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         }
     }
 
-    private void optionValueChanged() {
-        soundManager().play(TengenMsPacManSoundID.OPTION_VALUE_CHANGE);
-        idleTicks = 0;
-    }
-
-    public int selectedOption() {
-        return selectedOption.get();
-    }
-
     @Override
     public void onInput() {
         final GameSession session = game().session();
 
         if (app().input().joypad().isButtonPressed(JoypadButton.DOWN)) {
-            selectedOption.set(selectedOption() + 1 < NUM_OPTIONS ? selectedOption() + 1 : 0);
+            selectedOption.set(selectedOption.get().succ());
         }
         else if (app().input().joypad().isButtonPressed(JoypadButton.UP)) {
-            selectedOption.set(selectedOption() == 0 ? NUM_OPTIONS - 1 : selectedOption() - 1);
+            selectedOption.set(selectedOption.get().pred());
         }
         // Button "A" on the joypad is located right of "B": select next value
         else if (app().input().joypad().isButtonPressed(JoypadButton.A) || app().input().keyboard().isKeyPressed(KeyCode.RIGHT)) {
-            switch (selectedOption()) {
-                case OPTION_PAC_BOOSTER    -> setNextPacBoosterValue(session);
-                case OPTION_DIFFICULTY     -> setNextDifficultyValue(session);
-                case OPTION_MAP_CATEGORY -> setNextMapCategoryValue(session);
-                case OPTION_STARTING_LEVEL -> setNextStartLevelValue();
+            switch (selectedOption.get()) {
+                case PAC_BOOSTER    -> setNextPacBoosterValue(session);
+                case DIFFICULTY     -> setNextDifficultyValue(session);
+                case MAP_CATEGORY -> setNextMapCategoryValue(session);
+                case STARTING_LEVEL -> setNextStartLevelValue();
             }
         }
         // Button "B" is left of "A": select previous value
         else if (app().input().joypad().isButtonPressed(JoypadButton.B) || app().input().keyboard().isKeyPressed(KeyCode.LEFT)) {
-            switch (selectedOption()) {
-                case OPTION_PAC_BOOSTER    -> setPrevPacBoosterValue(session);
-                case OPTION_DIFFICULTY     -> setPrevDifficultyValue(session);
-                case OPTION_MAP_CATEGORY -> setPrevMapCategoryValue(session);
-                case OPTION_STARTING_LEVEL -> setPrevStartLevelValue();
+            switch (selectedOption.get()) {
+                case PAC_BOOSTER    -> setPrevPacBoosterValue(session);
+                case DIFFICULTY     -> setPrevDifficultyValue(session);
+                case MAP_CATEGORY -> setPrevMapCategoryValue(session);
+                case STARTING_LEVEL -> setPrevStartLevelValue();
             }
         }
         else {
@@ -410,6 +277,12 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         optionValueChanged();
     }
 
+    private void optionValueChanged() {
+        soundManager().play(TengenMsPacManSoundID.OPTION_VALUE_CHANGE);
+        idleTicks = 0;
+    }
+
+
     private void saveHighScore() {
         final ScoreSystem scoreSystem = game().playConfig().systems().scoreSystem();
         final Score highScore = game().session().hud().highScore();
@@ -418,5 +291,140 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         } catch (IOException x) {
             game().eventManager().publishEvent(new HighScoreAccessErrorEvent(x));
         }
+    }
+
+    private TextDisplay createTitleTextDisplay() {
+        final TextDisplay textDisplay = new TextDisplay();
+        textDisplay.pos().set(7 * TS, 6 * TS);
+        textDisplay.data().setFont(GlobalFonts.ARCADE.font(TS));
+        textDisplay.data().setText("MS PAC-MAN OPTIONS");
+        textDisplay.data().setFillColor(NES_Palette.color(0x28));
+        textDisplay.show();
+        return textDisplay;
+    }
+
+    private TextDisplay createMoveArrowTextDisplay() {
+        final TextDisplay textDisplay = new TextDisplay();
+        textDisplay.pos().set(4 * TS, 24 * TS);
+        textDisplay.data().setFont(GlobalFonts.ARCADE.font(TS));
+        textDisplay.data().setText("MOVE ARROW WITH JOYPAD");
+        textDisplay.data().setFillColor(NES_Palette.color(0x28));
+        textDisplay.show();
+        return textDisplay;
+    }
+
+    private TextDisplay createChooseOptionsTextDisplay() {
+        final TextDisplay textDisplay = new TextDisplay();
+        textDisplay.pos().set(2 * TS, 25 * TS);
+        textDisplay.data().setFont(GlobalFonts.ARCADE.font(TS));
+        textDisplay.data().setText("CHOOSE OPTIONS WITH A AND B");
+        textDisplay.data().setFillColor(NES_Palette.color(0x28));
+        textDisplay.show();
+        return textDisplay;
+    }
+
+    private TextDisplay createPressStartTextDisplay() {
+        final TextDisplay textDisplay = new TextDisplay();
+        textDisplay.pos().set(3 * TS, 26 * TS);
+        textDisplay.data().setFont(GlobalFonts.ARCADE.font(TS));
+        textDisplay.data().setText("PRESS START TO START GAME");
+        textDisplay.data().setFillColor(NES_Palette.color(0x28));
+        textDisplay.show();
+        return textDisplay;
+    }
+
+    private RenderableMenuOption renderablePlayModeOption() {
+        return new RenderableMenuOption(
+            selectedOption.get() == PlayOption.PLAY_MODE,
+            "TYPE",
+            "1 PLAYER",
+            8,
+            RenderingLayer.HUD, 0,
+            new Vector2f(0, 4.5f * TS)
+        );
+    }
+
+    private RenderableMenuOption renderableBoosterModeOption() {
+        final BoosterMode boosterMode = gameOptions(game().session()).boosterMode();
+        return new RenderableMenuOption(
+            selectedOption.get() == PlayOption.PAC_BOOSTER,
+            "PAC BOOSTER",
+            switch (boosterMode) {
+                case BOOSTER_OFF -> "OFF";
+                case BOOSTER_ALWAYS_ON -> "ALWAYS ON";
+                case ACTIVATE_WITH_A_OR_B -> "USE A OR B";
+            },
+            19,
+            RenderingLayer.HUD, 0,
+            new Vector2f(0, 6 * TS)
+        );
+    }
+
+    private RenderableMenuOption renderableGameDifficultyOption() {
+        final Difficulty difficulty = gameOptions(game().session()).difficulty();
+        return new RenderableMenuOption(
+            selectedOption.get() == PlayOption.DIFFICULTY,
+            "GAME DIFFICULTY",
+            difficulty.name(),
+            19,
+            RenderingLayer.HUD, 0,
+            new Vector2f(0, 7.5f * TS)
+        );
+    }
+
+    private RenderableMenuOption renderableMapCategoryOption() {
+        final MapCategory mapCategory = gameOptions(game().session()).mapCategory();
+        return new RenderableMenuOption(
+            selectedOption.get() == PlayOption.MAP_CATEGORY,
+            "MAZE SELECTION",
+            mapCategory.name(),
+            19,
+            RenderingLayer.HUD, 0,
+            new Vector2f(0, 9f * TS)
+        );
+    }
+
+    private RenderableMenuOption renderableStartingLevelOption() {
+        final int startLevelNumber = gameOptions(game().session()).startLevelNumber();
+        return new RenderableMenuOption(
+            selectedOption.get() == PlayOption.STARTING_LEVEL,
+            "STARTING LEVEL",
+            String.valueOf(startLevelNumber),
+            19,
+            RenderingLayer.HUD, 0,
+            new Vector2f(0, 10.5f * TS)
+        );
+    }
+
+    private ImageDisplay createNumContinuesImageDisplay() {
+        final int numContinues = gameOptions(game().session()).numContinues();
+        final ImageDisplay imageDisplay = new ImageDisplay();
+        imageDisplay.pos().set(24 * TS, 20 * TS);
+        if (numContinues < 4) {
+            final var spriteSheet = TengenMsPacMan_SpriteSheet.instance();
+            final RectShort sprite = spriteSheet.findSprite(switch (numContinues) {
+                case 0 -> SpriteID.CONTINUES_0;
+                case 1 -> SpriteID.CONTINUES_1;
+                case 2 -> SpriteID.CONTINUES_2;
+                case 3 -> SpriteID.CONTINUES_3;
+                default -> throw new IllegalArgumentException("Illegal number of continues: " + numContinues);
+            });
+            imageDisplay.image().setImage(spriteSheet.image(sprite));
+            imageDisplay.show();
+        }
+        else {
+            imageDisplay.hide();
+        }
+        return imageDisplay;
+    }
+
+    private RenderableJoypadKeyBindings renderableJoyPadKeyBindings() {
+        final GameVariantRuntime runtime = app().variantManager().currentRuntime();
+        final var uiSettings = runtime.extensionValue(
+            TengenMsPacMan_GameExtension.EXT_UI_SETTINGS, TengenMsPacMan_UISettings.class);
+
+        return uiSettings.joypadBindingsDisplayed.get()
+            ? new RenderableJoypadKeyBindings(app().input().joypad().currentKeyBinding(), new Vector2f(0,0))
+            : null;
     }
 }
