@@ -8,6 +8,7 @@ import de.amr.basics.Named;
 public enum SpriteID implements Named {
     MAP_FULL,
     MAP_EMPTY,
+    PELLET,
     ENERGIZER,
     PACMAN_FULL,
     PACMAN_MUNCHING_RIGHT,

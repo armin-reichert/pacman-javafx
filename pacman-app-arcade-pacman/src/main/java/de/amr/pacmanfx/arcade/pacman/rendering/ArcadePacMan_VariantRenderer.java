@@ -4,28 +4,28 @@
 
 package de.amr.pacmanfx.arcade.pacman.rendering;
 
+import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
-import de.amr.basics.ecs.GameEntity;
+import de.amr.basics.ui.assets.SpriteSheet;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
+import de.amr.basics.ui.entities.hud.HUD_Style;
+import de.amr.basics.ui.entities.hud.levelCounter.LevelCounter;
+import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
+import de.amr.basics.ui.entities.hud.score.Score;
+import de.amr.basics.ui.entities.props.bonuspoints.BonusPoints;
+import de.amr.basics.ui.entities.props.ghostpoints.GhostPoints;
+import de.amr.basics.ui.rendering.BaseRenderer;
+import de.amr.basics.ui.rendering.GameEntityView;
+import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.pacman.gamescene.cutscenes.NailDressRapturing;
 import de.amr.pacmanfx.core.Energizer;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
-import de.amr.basics.ui.entities.hud.levelCounter.LevelCounter;
-import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
-import de.amr.basics.ui.entities.hud.score.Score;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
-import de.amr.basics.ui.entities.props.bonuspoints.BonusPoints;
-import de.amr.basics.ui.entities.props.ghostpoints.GhostPoints;
-import de.amr.basics.ui.rendering.Renderable;
-import de.amr.basics.ui.rendering.GameEntityView;
-import de.amr.basics.ui.assets.SpriteSheet;
-import de.amr.basics.ui.entities.hud.HUD_Style;
-import de.amr.basics.ui.rendering.BaseRenderer;
 import de.amr.pacmanfx.uilib.ArcadeColor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -77,7 +77,7 @@ public class ArcadePacMan_VariantRenderer extends BaseRenderer {
         switch (gameEntity) {
             case Bonus bonus -> drawSpriteCentered(computeSprite(bonus), center);
             case BonusPoints bonusPoints -> drawSpriteCentered(computeSprite(bonusPoints), center);
-            case Energizer energizer -> draw(energizer);
+            case Energizer energizer -> drawInactiveEnergizer(energizer);
             case Ghost ghost -> drawSpriteCentered(computeSprite(ghost), center);
             case GhostPoints points -> drawSpriteCentered(computeSprite(points), center);
             case LevelCounter levelCounter -> draw(levelCounter);
@@ -152,7 +152,7 @@ public class ArcadePacMan_VariantRenderer extends BaseRenderer {
         }
     }
 
-    private void draw(Energizer energizer) {
+    private void drawInactiveEnergizer(Energizer energizer) {
         if (!energizer.on()) {
             final double size = scaled(9);
             ctx.save();

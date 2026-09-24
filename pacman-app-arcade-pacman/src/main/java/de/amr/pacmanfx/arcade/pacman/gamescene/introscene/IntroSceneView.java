@@ -14,17 +14,17 @@ import de.amr.basics.ui.entities.props.textdisplay.TextView;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
-import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
+import de.amr.pacmanfx.arcade.pacman.rendering.SpriteID;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
-import de.amr.pacmanfx.core.event.GameEvent;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
 import de.amr.pacmanfx.ui.rendering.RenderableFactory;
 import de.amr.pacmanfx.uilib.ArcadeColor;
+import javafx.scene.image.Image;
 
 import java.util.Arrays;
 import java.util.stream.Stream;
@@ -45,8 +45,8 @@ public class IntroSceneView {
     private static final ArcadeColor[] GHOST_COLORS = { ArcadeColor.RED, ArcadeColor.PINK, ArcadeColor.CYAN, ArcadeColor.ORANGE };
 
     private static final int LEFT_TILE_X = 4;
-    private static final int ENERGIZER_CENTER_X = TS * LEFT_TILE_X + HTS;
-    private static final int ENERGIZER_CENTER_Y = TS * 20 + HTS;
+    private static final int TARGET_ENERGIZER_CENTER_X = TS * LEFT_TILE_X + 2;
+    private static final int TARGET_ENERGIZER_CENTER_Y = TS * 20 + 2;
 
     final Pulse pulse = new Pulse(10, Pulse.State.ON);
 
@@ -58,14 +58,14 @@ public class IntroSceneView {
     final TextView[]  ghostCharacterDisplays;
 
     // Chase animation
-    final Energizer targetEnergizer;
+    ImageView targetEnergizer;
     GhostPoints points;
     Pac pacMan;
     Ghost[] ghosts;
 
     // Points display
-    final Energizer energizer;
-    final Pellet pellet;
+    ImageView pointsEnergizer;
+    final ImageView pellet;
     final TextView text10;
     final TextView text10Pts;
     final TextView text50;
@@ -85,12 +85,15 @@ public class IntroSceneView {
             ghostNicknameDisplays[i] = new TextView();
         }
 
-        // Chase animation
-        targetEnergizer = new Energizer();
+        final ArcadePacMan_SpriteSheet spriteSheet = ArcadePacMan_SpriteSheet.instance();
+        final Image energizerImage = spriteSheet.createImage(SpriteID.ENERGIZER);
 
-        // Points display
-        energizer = new Energizer();
-        pellet = new Pellet();
+        final Image pelletImage = spriteSheet.createImage(SpriteID.PELLET);
+
+        pellet = new ImageView();
+        pellet.image().setImage(pelletImage);
+        pellet.pos().set(tilesPx(10) + HTS, tilesPx(24) + HTS);
+
         text10 = new TextView();
         text10Pts = new TextView();
         text50 = new TextView();
@@ -99,9 +102,32 @@ public class IntroSceneView {
 
         initTitleText();
         initGhostGallery();
-        initTargetEnergizer();
         initPointsExplanation();
         initCopyrightText();
+    }
+
+    public void createAndShowPointsEnergizer() {
+        final ArcadePacMan_SpriteSheet spriteSheet = ArcadePacMan_SpriteSheet.instance();
+        final Image energizerImage = spriteSheet.createImage(SpriteID.ENERGIZER);
+        pointsEnergizer = new ImageView();
+        pointsEnergizer.image().setImage(energizerImage);
+        pointsEnergizer.pos().set(tilesPx(LEFT_TILE_X + 6), tilesPx(26));
+    }
+
+    public void removePointsEnergizer() {
+        pointsEnergizer = null;
+    }
+
+    public void createAndShowTargetEnergizer() {
+        final ArcadePacMan_SpriteSheet spriteSheet = ArcadePacMan_SpriteSheet.instance();
+        final Image energizerImage = spriteSheet.createImage(SpriteID.ENERGIZER);
+        targetEnergizer = new ImageView();
+        targetEnergizer.image().setImage(energizerImage);
+        targetEnergizer.pos().set(TARGET_ENERGIZER_CENTER_X, TARGET_ENERGIZER_CENTER_Y);
+    }
+
+    public void removeTargetEnergizer() {
+        targetEnergizer = null;
     }
 
     public void createPacManAndGhosts(GameVariantRenderConfig renderConfig, ActorSpriteAnimController animController, SpriteAnimationContainer animContainer) {
@@ -121,27 +147,23 @@ public class IntroSceneView {
     }
 
     public Stream<Renderable> renderables() {
-        return Ufx.streamOf(
+        return Renderable.createRenderableStream(
             createPropView(titleTextView),
             visibleEntities(ghostImageViews).map(RenderableFactory::createPropView),
             visibleEntities(ghostCharacterDisplays).map(RenderableFactory::createPropView),
             visibleEntities(ghostNicknameDisplays).map(RenderableFactory::createPropView),
-            targetEnergizer.isVisible() ? targetEnergizer :null,
+            targetEnergizer != null ? createPropView(targetEnergizer) : null,
             createPropView(text10),
             createPropView(text10Pts),
             createPropView(text50),
             createPropView(text50Pts),
-            nullIfInvisible(pellet),
-            nullIfInvisible(energizer),
+            createPropView(pellet),
+            pointsEnergizer != null ? createPropView(pointsEnergizer) : null,
             copyrightText.isVisible() ? createPropView(copyrightText) : null,
             pacMan.isVisible() ? createPropView(pacMan) : null,
             visibleEntities(ghosts).map(RenderableFactory::createPropView),
             points != null && points.isVisible() ? createPropView(points) : null
         );
-    }
-
-    private GameEntity nullIfInvisible(GameEntity gameEntity) {
-        return gameEntity != null && gameEntity.isVisible() ? gameEntity : null;
     }
 
     private Stream<GameEntity> visibleEntities(GameEntity[] entityArray) {
@@ -164,14 +186,14 @@ public class IntroSceneView {
                 ghosts[i].hide();
             }
         }
-        targetEnergizer.hide();
+        targetEnergizer = null;
         points = null; // points for killed ghost
 
         pellet.hide();
         text10.hide();
         text10Pts.hide();
 
-        energizer.hide();
+        pointsEnergizer = null;
         text50.hide();
         text50Pts.hide();
 
@@ -212,11 +234,6 @@ public class IntroSceneView {
     }
 
     private void initPointsExplanation() {
-        pellet.pos().set(tilesPx(LEFT_TILE_X + 6) + HTS, tilesPx(24) + 4);
-
-        energizer.setPulse(pulse);
-        energizer.pos().set(tilesPx(LEFT_TILE_X + 6) + HTS, tilesPx(26) + HTS);
-
         text10.data().setText("10");
         text10.data().setFillColor(ArcadeColor.WHITE.color());
         text10.data().setFont(GlobalFonts.ARCADE.font(TS));
@@ -236,11 +253,6 @@ public class IntroSceneView {
         text50Pts.data().setFillColor(ArcadeColor.WHITE.color());
         text50Pts.data().setFont(GlobalFonts.ARCADE.font(6));
         text50Pts.pos().set(tilesPx(LEFT_TILE_X + 11), tilesPx(27));
-    }
-
-    private void initTargetEnergizer() {
-        targetEnergizer.setPulse(pulse);
-        targetEnergizer.pos().set(ENERGIZER_CENTER_X, ENERGIZER_CENTER_Y);
     }
 
     private void initCopyrightText() {

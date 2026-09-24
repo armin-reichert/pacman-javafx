@@ -1,11 +1,9 @@
 package de.amr.pacmanfx.core;
 
-import de.amr.basics.math.Vector2i;
 import de.amr.basics.ecs.GameEntity;
-import de.amr.basics.ui.rendering.Renderable;
-import de.amr.basics.ui.rendering.RenderingLayer;
+import de.amr.basics.math.Vector2i;
 
-public class Energizer extends GameEntity implements Renderable {
+public class Energizer extends GameEntity {
 
     private final Vector2i tile;
 
@@ -13,11 +11,6 @@ public class Energizer extends GameEntity implements Renderable {
 
     public Energizer(Vector2i tile) {
         this.tile = tile;
-    }
-
-    @Override
-    public RenderingLayer layer() {
-        return RenderingLayer.LEVEL;
     }
 
     public boolean on() {

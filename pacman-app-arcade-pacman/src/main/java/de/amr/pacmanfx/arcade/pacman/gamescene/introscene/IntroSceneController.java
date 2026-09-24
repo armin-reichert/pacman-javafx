@@ -7,6 +7,7 @@ package de.amr.pacmanfx.arcade.pacman.gamescene.introscene;
 import de.amr.basics.fsm.State;
 import de.amr.basics.fsm.StateMachine;
 import de.amr.basics.math.Direction;
+import de.amr.basics.timer.Pulse;
 import de.amr.basics.timer.TickTimer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
@@ -101,7 +102,7 @@ public class IntroSceneController extends StateMachine<ArcadePacMan_IntroScene> 
             @Override
             public void onEnter(ArcadePacMan_IntroScene scene) {
                 scene.view.pulse.stopAndReset();
-                scene.view.energizer.show();
+                scene.view.createAndShowPointsEnergizer();
                 scene.view.pellet.show();
                 scene.view.text10.show();
                 scene.view.text10Pts.show();
@@ -114,6 +115,7 @@ public class IntroSceneController extends StateMachine<ArcadePacMan_IntroScene> 
                 if (timer.tickCount() == TICK_SHOW_POINTS_DURATION) {
                     controller.enterState(scene, CHASING_PAC_MAN);
                 }
+                updateEnergizers(scene);
             }
         },
 
@@ -122,8 +124,8 @@ public class IntroSceneController extends StateMachine<ArcadePacMan_IntroScene> 
             public void onEnter(ArcadePacMan_IntroScene scene) {
                 timer.restartTicks(TICK_CHASING_PAC_MAN_END);
                 scene.view.pacMan.hide();
-                scene.view.targetEnergizer.show();
                 scene.view.copyrightText.show();
+                scene.view.createAndShowTargetEnergizer();
             }
 
             @Override
@@ -136,7 +138,7 @@ public class IntroSceneController extends StateMachine<ArcadePacMan_IntroScene> 
                 }
                 else if (tick == TICK_PAC_MAN_REACHES_ENERGIZER) {
                     scene.turnCardsStopPacMan(scene.game());
-                    scene.view.targetEnergizer.hide();
+                    scene.view.removeTargetEnergizer();
                 }
                 else if (tick == TICK_PAC_MAN_MOVES_AGAIN) {
                     scene.turnCardsRestartPacMan(systems);
@@ -145,6 +147,7 @@ public class IntroSceneController extends StateMachine<ArcadePacMan_IntroScene> 
                     controller.enterState(scene, CHASING_GHOSTS);
                     return;
                 }
+                updateEnergizers(scene);
                 scene.chasePacMan(tick);
             }
         },
@@ -170,6 +173,7 @@ public class IntroSceneController extends StateMachine<ArcadePacMan_IntroScene> 
                     scene.view.pacMan.hide();
                     controller.enterState(scene, WAIT_FOR_DEMO_LEVEL);
                 } else {
+                    updateEnergizers(scene);
                     scene.chaseGhosts(scene.game(), tick);
                 }
             }
@@ -186,6 +190,7 @@ public class IntroSceneController extends StateMachine<ArcadePacMan_IntroScene> 
                 final GameContext game = scene.game();
 
                 scene.view.pulse.triggerPulse();
+                updateEnergizers(scene);
 
                 if (timer.tickCount() == TICK_START_DEMO_LEVEL) {
                     scene.view.ghosts[GhostPersonality.ORANGE_GHOST_POKEY.ordinal()].hide();
@@ -193,6 +198,25 @@ public class IntroSceneController extends StateMachine<ArcadePacMan_IntroScene> 
                 }
             }
         };
+
+        void updateEnergizers(ArcadePacMan_IntroScene scene) {
+            if (scene.view.pulse.state() == Pulse.State.ON) {
+                if (scene.view.pointsEnergizer != null) {
+                    scene.view.pointsEnergizer.show();
+                }
+                if (scene.view.targetEnergizer != null) {
+                    scene.view.targetEnergizer.show();
+                }
+            }
+            else {
+                if (scene.view.pointsEnergizer != null) {
+                    scene.view.pointsEnergizer.hide();
+                }
+                if (scene.view.targetEnergizer != null) {
+                    scene.view.targetEnergizer.hide();
+                }
+            }
+        }
 
         IntroSceneController controller;
 

@@ -52,6 +52,9 @@ public final class ArcadePacMan_SpriteSheet implements SpriteSheet<SpriteID> {
             sprite(504, 133, 16, 7)   // 1600
         );
 
+        // Pellet (needed in intro scene=
+        spriteMap.add(SpriteID.PELLET, sprite(11, 11, 2, 2));
+
         // Energizer
         spriteMap.add(SpriteID.ENERGIZER, sprite(8, 24, 8, 8));
 
