@@ -8,8 +8,6 @@ import de.amr.basics.Composition;
 import de.amr.basics.Disposable;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.ui.entities.props.textdisplay.TextView;
-import de.amr.basics.ui.rendering.Renderable;
-import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.ui.action.core.GameApp;
@@ -32,7 +30,7 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class AbstractGameScene
     extends Composition<Object>
-    implements GameScene, QuitHandler, Disposable, Renderable
+    implements GameScene, QuitHandler, Disposable
 {
     public static TextView createText(String text, Color color, int fontSize, float tileX, float tileY) {
         final var textDisplay = new TextView();
@@ -136,12 +134,5 @@ public abstract class AbstractGameScene
     @Override
     public void onQuit() {
         deactivate();
-    }
-
-    // --- Renderable
-
-    @Override
-    public RenderingLayer layer() {
-        return RenderingLayer.SCENE;
     }
 }

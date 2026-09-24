@@ -12,6 +12,7 @@ import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Actions;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameExtension;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.GameSceneView;
 
 import java.util.stream.Stream;
 
@@ -38,7 +39,9 @@ public class TengenMsPacMan_CreditsScene extends AbstractGameScene {
 
     @Override
     public Stream<Renderable> renderables() {
-        return Ufx.streamOf(this);
+        return Ufx.streamOf(
+            new GameSceneView(this)
+        );
     }
 
     @Override

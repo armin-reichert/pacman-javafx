@@ -5,33 +5,33 @@
 package de.amr.pacmanfx.ui.gamescene.d2;
 
 import de.amr.basics.Named;
+import de.amr.basics.ecs.GameEntity;
+import de.amr.basics.ecs.system.PositionSystem;
 import de.amr.basics.math.Direction;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.timer.TickTimer;
-import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.ui.ecs.comp.SpriteAnimationComp;
-import de.amr.pacmanfx.core.entities.world.WorldNavigationComp;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
-import de.amr.basics.ecs.system.PositionSystem;
+import de.amr.basics.ui.rendering.BaseRenderer;
+import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
-import de.amr.pacmanfx.core.entities.world.House;
-import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.actor.ghost.GhostAnimationComp;
+import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.actor.pac.PacAnimationComp;
+import de.amr.pacmanfx.core.entities.world.House;
+import de.amr.pacmanfx.core.entities.world.WorldNavigationComp;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.TerrainLayer;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.core.rules.HuntingTimer;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.common.GameScene;
-import de.amr.basics.ui.rendering.BaseRenderer;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
@@ -76,10 +76,13 @@ public class BaseGameSceneDebugInfoRenderer extends BaseRenderer {
 
     @Override
     public void render(Renderable r, long tick) {
-        if (!(r instanceof AbstractGameScene gameScene)) {
-            return;
+        switch (r) {
+            case GameSceneView(AbstractGameScene gameScene) -> render(gameScene);
+            default -> {}
         }
+    }
 
+    public void render(AbstractGameScene gameScene) {
         final GameSession session = gameScene.game().session();
         final GameSceneCanvasRenderingComp canvasRendering = gameScene.reqComp(GameSceneCanvasRenderingComp.class);
 

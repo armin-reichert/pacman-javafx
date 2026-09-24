@@ -9,7 +9,9 @@ import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
+import de.amr.pacmanfx.ui.gamescene.common.GameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.GameSceneView;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.text.Font;
 
@@ -72,10 +74,13 @@ public class TengenMsPacMan_CreditsScene_Renderer extends BaseRenderer {
 
     @Override
     public void render(Renderable r, long tick) {
-        if (!(r instanceof TengenMsPacMan_CreditsScene creditsScene)) {
-            return;
+        switch (r) {
+            case GameSceneView(TengenMsPacMan_CreditsScene creditsScene) -> render(creditsScene);
+            default -> {}
         }
+    }
 
+    public void render(TengenMsPacMan_CreditsScene creditsScene) {
         final GameSceneCanvasRenderingComp canvasRendering = creditsScene.reqComp(GameSceneCanvasRenderingComp.class);
 
         final int width = canvasRendering.unscaledWidth();

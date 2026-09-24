@@ -50,7 +50,7 @@ public class Arcade_BootScene extends AbstractGameScene {
 
     public SceneState currentState;
 
-    private Renderable renderable;
+    private Renderable currentSceneContent;
 
     public Arcade_BootScene() {
         final var rendering = new GameSceneCanvasRenderingComp();
@@ -66,7 +66,7 @@ public class Arcade_BootScene extends AbstractGameScene {
 
     @Override
     public Stream<Renderable> renderables() {
-        return Ufx.streamOf(renderable);
+        return Ufx.streamOf(currentSceneContent);
     }
 
     @Override
@@ -103,29 +103,29 @@ public class Arcade_BootScene extends AbstractGameScene {
         final int mod4 = (int) (t - currentState.startTick()) % 4;
 
         switch (currentState) {
-            case DARK -> renderable = BLANK_CANVAS;
+            case DARK -> currentSceneContent = BLANK_CANVAS;
 
             case HEX_CODES -> {
                 if (mod4 == 0) {
-                    renderable = BLANK_CANVAS;
+                    currentSceneContent = BLANK_CANVAS;
                 } else if (mod4 == 1) {
-                    renderable = HexDigitsBlock.randomHexDigits(WIDTH_IN_TILES, HEIGHT_IN_TILES);
+                    currentSceneContent = HexDigitsBlock.randomHexDigits(WIDTH_IN_TILES, HEIGHT_IN_TILES);
                 }
             }
 
             case SPRITE_NOISE -> {
                 if (mod4 == 0) {
-                    renderable = BLANK_CANVAS;
+                    currentSceneContent = BLANK_CANVAS;
                 } else if (mod4 == 1) {
-                    renderable = SpritesBlock.randomSpritesBlock(16, WIDTH_IN_TILES, HEIGHT_IN_TILES);
+                    currentSceneContent = SpritesBlock.randomSpritesBlock(16, WIDTH_IN_TILES, HEIGHT_IN_TILES);
                 }
             }
 
             case GRID -> {
                 if (t == currentState.startTick()) {
-                    renderable = BLANK_CANVAS;
+                    currentSceneContent = BLANK_CANVAS;
                 } else {
-                    renderable = GRID;
+                    currentSceneContent = GRID;
                 }
             }
 

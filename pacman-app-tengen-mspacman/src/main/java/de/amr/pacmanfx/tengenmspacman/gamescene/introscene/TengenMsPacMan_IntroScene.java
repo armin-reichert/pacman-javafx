@@ -35,6 +35,7 @@ import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
+import de.amr.pacmanfx.ui.gamescene.d2.GameSceneView;
 import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
 import de.amr.pacmanfx.uilib.entities3d.ghost.comp.GhostSettings;
 import javafx.scene.paint.Color;
@@ -89,7 +90,7 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
     @Override
     public Stream<Renderable> renderables() {
         return Ufx.streamOf(
-            this,
+            new GameSceneView(this),
             propView(marquee),
             propView(msPacMan),
             ghosts.stream().map(GameEntityViewBuilder::propView)
