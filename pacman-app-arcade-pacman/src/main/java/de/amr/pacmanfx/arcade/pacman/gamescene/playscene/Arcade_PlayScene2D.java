@@ -14,6 +14,7 @@ import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
+import de.amr.pacmanfx.core.Energizer;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSession;
 import de.amr.pacmanfx.core.event.base.GameEventListener;
@@ -25,6 +26,7 @@ import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.ActorAnimationManager;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.gamescene.d2.LevelCompletedAnimation;
+import de.amr.pacmanfx.ui.rendering.RenderableFactory;
 import de.amr.pacmanfx.uilib.rendering.GameLevelView;
 import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
 import javafx.scene.control.CheckMenuItem;
@@ -69,7 +71,12 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
         final GameVariantRenderConfig renderConfig = app().variantManager().currentRuntime().uiConfig().renderConfig();
         return Ufx.streamOf(
             createRenderableLevel(level),
-            level.entitySet().all().map(renderConfig::createEntityView)
+            level.entitySet().all()
+                .filter(e -> !(e instanceof Energizer))
+                .map(renderConfig::createEntityView),
+            // Render energizers using level renderer
+            level.entitySet().entities().ofType(Energizer.class)
+                .map(energizer -> RenderableFactory.createGameEntityView(energizer, RenderingLayer.LEVEL, 0))
         );
     }
 

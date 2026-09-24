@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui.gamescene.d2;
 import de.amr.basics.InfoMap;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.ui.rendering.BaseRenderer;
+import de.amr.basics.ui.rendering.GameEntityView;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.pacmanfx.core.Energizer;
@@ -75,7 +76,7 @@ public class GenericLevelRenderer extends BaseRenderer {
                 info.put(GenericLevelRenderer.RenderInfoKey.TERRAIN_MAP_COLORING, mapColoring);
                 draw(level);
             }
-            case Energizer energizer -> draw(energizer);
+            case GameEntityView(Energizer energizer, RenderingLayer layer, int z, Vector2f offset) -> draw(energizer);
             default -> super.render(r, tick);
         }
     }
@@ -116,11 +117,11 @@ public class GenericLevelRenderer extends BaseRenderer {
 
     public void draw(Energizer energizer) {
         if (energizer.isVisible() && energizer.on()) {
-            final Vector2f center = energizer.pos().bodyCenter();
+            final Vector2f center = energizer.pos().asVector2f();
             ctx.save();
             ctx.setFill(Color.WHITE);
             ctx.scale(scaling(), scaling());
-            ctx.fillOval(center.x(), center.y(), 2, 2);
+            ctx.fillOval(center.x(), center.y(), 8, 8);
             ctx.restore();
         }
     }
