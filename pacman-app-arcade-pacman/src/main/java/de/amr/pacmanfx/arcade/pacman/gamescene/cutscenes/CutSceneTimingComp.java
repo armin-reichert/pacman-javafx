@@ -4,9 +4,7 @@
 
 package de.amr.pacmanfx.arcade.pacman.gamescene.cutscenes;
 
-import de.amr.pacmanfx.ui.gamescene.common.GameSceneComponent;
-
-public class CutSceneTimingComp implements GameSceneComponent {
+public class CutSceneTimingComp {
 
     private final long animationStartTick;
 

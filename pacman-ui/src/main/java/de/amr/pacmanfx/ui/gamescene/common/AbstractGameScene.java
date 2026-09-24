@@ -31,7 +31,7 @@ import static java.util.Objects.requireNonNull;
  * Abstract base class for all game scenes (2D and 3D).
  */
 public abstract class AbstractGameScene
-    extends Composition<GameSceneComponent>
+    extends Composition<Object>
     implements GameScene, QuitHandler, Disposable, Renderable
 {
     public static TextView createText(String text, Color color, int fontSize, float tileX, float tileY) {

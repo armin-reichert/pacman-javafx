@@ -7,7 +7,7 @@ package de.amr.pacmanfx.ui.gamescene.common;
 import de.amr.pacmanfx.ui.action.core.ActionBindingsRegistry;
 import de.amr.pacmanfx.ui.action.core.GameActionBindingsRegistry;
 
-public record ActionBindingsComp(ActionBindingsRegistry registry) implements GameSceneComponent {
+public record ActionBindingsComp(ActionBindingsRegistry registry) {
 
     public ActionBindingsComp(GameScene gameScene) {
         this(new GameActionBindingsRegistry("Action Bindings for '%s'".formatted(gameScene)));

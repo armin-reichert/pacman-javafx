@@ -7,7 +7,6 @@ package de.amr.pacmanfx.ui.gamescene.d2;
 import de.amr.basics.Disposable;
 import de.amr.pacmanfx.core.Validations;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
-import de.amr.pacmanfx.ui.gamescene.common.GameSceneComponent;
 import de.amr.basics.ui.rendering.Renderer;
 import javafx.beans.property.*;
 import javafx.scene.canvas.Canvas;
@@ -15,7 +14,7 @@ import javafx.scene.paint.Color;
 
 import static java.util.Objects.requireNonNull;
 
-public class GameSceneCanvasRenderingComp implements GameSceneComponent, Disposable {
+public class GameSceneCanvasRenderingComp implements Disposable {
 
     private final ObjectProperty<Canvas> canvas = new SimpleObjectProperty<>();
 
