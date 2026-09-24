@@ -10,7 +10,6 @@ import de.amr.basics.math.Direction;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.entities.props.ghostpoints.GhostPoints;
 import de.amr.basics.ui.rendering.Renderer;
-import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
@@ -23,6 +22,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationTimer;
+import de.amr.pacmanfx.ui.rendering.RenderableFactory;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -36,8 +36,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static de.amr.pacmanfx.game.GameVariantRenderConfig.createEntityView;
-import static de.amr.pacmanfx.game.GameVariantRenderConfig.createPacView;
+import static de.amr.pacmanfx.ui.rendering.RenderableFactory.createPacView;
+import static de.amr.pacmanfx.ui.rendering.RenderableFactory.createPropView;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -95,12 +95,12 @@ class XXL_ChaseAnimation {
         variantRenderer.render(createPacView(pac), tick);
 
         ghosts.stream()
-            .map(GameVariantRenderConfig::createGhostView)
+            .map(RenderableFactory::createGhostView)
             .forEach(rg -> variantRenderer.render(rg, tick));
 
 
         if (ghostPoints != null) {
-            final var r = createEntityView(ghostPoints, RenderingLayer.PROPS, 0);
+            final var r = createPropView(ghostPoints);
             variantRenderer.render(r, tick);
         }
         ctx.restore();

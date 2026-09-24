@@ -13,7 +13,6 @@ import de.amr.basics.timer.TickTimer;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.entities.props.marquee.Marquee;
 import de.amr.basics.ui.rendering.Renderable;
-import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.util.Ufx;
@@ -36,6 +35,7 @@ import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
+import de.amr.pacmanfx.ui.rendering.RenderableFactory;
 import de.amr.pacmanfx.uilib.entities3d.ghost.comp.GhostSettings;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
@@ -44,11 +44,10 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
-import static de.amr.pacmanfx.game.GameVariantRenderConfig.createEntityView;
-import static de.amr.pacmanfx.game.GameVariantRenderConfig.createPacView;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
+import static de.amr.pacmanfx.ui.rendering.RenderableFactory.createPropView;
 
 public class TengenMsPacMan_IntroScene extends AbstractGameScene {
 
@@ -91,9 +90,9 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
     public Stream<Renderable> renderables() {
         return Ufx.streamOf(
             this,
-            createEntityView(marquee, RenderingLayer.PROPS, 0),
-            createPacView(msPacMan),
-            ghosts.stream().map(GameVariantRenderConfig::createGhostView)
+            createPropView(marquee),
+            createPropView(msPacMan),
+            ghosts.stream().map(RenderableFactory::createPropView)
         );
     }
 

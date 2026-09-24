@@ -29,6 +29,7 @@ import de.amr.pacmanfx.ui.action.core.GameAction;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
 import de.amr.pacmanfx.ui.input.JoypadButton;
+import de.amr.pacmanfx.ui.rendering.RenderableFactory;
 import de.amr.pacmanfx.ui.sound.GameSoundEffects;
 import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 import de.amr.pacmanfx.ui.sound.SoundID;
@@ -42,9 +43,9 @@ import java.util.stream.Stream;
 import static de.amr.basics.math.RandomNumbers.randomInt;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
-import static de.amr.pacmanfx.game.GameVariantRenderConfig.createPropView;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
+import static de.amr.pacmanfx.ui.rendering.RenderableFactory.createPropView;
 
 public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
 
@@ -78,7 +79,7 @@ public class TengenMsPacMan_CutScene4 extends AbstractGameScene {
             createPropView(clapperboard),
             createPropView(pacMan),
             createPropView(msPacMan),
-            juniors.stream().map(GameVariantRenderConfig::createPropView)
+            juniors.stream().map(RenderableFactory::createPropView)
         );
     }
 

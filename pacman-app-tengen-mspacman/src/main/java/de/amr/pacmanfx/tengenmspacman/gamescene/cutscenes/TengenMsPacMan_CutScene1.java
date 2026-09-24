@@ -33,9 +33,9 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
-import static de.amr.pacmanfx.game.GameVariantRenderConfig.createPropView;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
+import static de.amr.pacmanfx.ui.rendering.RenderableFactory.createPropView;
 
 /**
  * Intermission scene 1: "They meet".

@@ -35,7 +35,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
-import static de.amr.pacmanfx.game.GameVariantRenderConfig.*;
+import static de.amr.pacmanfx.ui.rendering.RenderableFactory.createPropView;
 
 /**
  * Intermission scene 1: "They meet".

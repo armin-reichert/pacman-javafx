@@ -26,10 +26,10 @@ import javafx.scene.paint.Color;
 import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
-import static de.amr.pacmanfx.game.GameVariantRenderConfig.createGhostView;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConfig.shadeOfBlue;
+import static de.amr.pacmanfx.ui.rendering.RenderableFactory.createPropView;
 
 /**
  * Shows moving and color changing "TENGEN PRESENTS" text and ghost running through scene.
@@ -66,7 +66,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
         if (gray) return Stream.of(grayRect);
         return Ufx.streamOf(
             tengenPresentsTextView,
-            createGhostView(ghost)
+            createPropView(ghost)
         );
     }
 

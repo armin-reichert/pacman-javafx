@@ -25,8 +25,7 @@ import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.game.GameVariantRenderConfig.createPropView;
-
+import static de.amr.pacmanfx.ui.rendering.RenderableFactory.createPropView;
 
 /**
  * Second cut scene in Arcade Pac-Man game:<br>

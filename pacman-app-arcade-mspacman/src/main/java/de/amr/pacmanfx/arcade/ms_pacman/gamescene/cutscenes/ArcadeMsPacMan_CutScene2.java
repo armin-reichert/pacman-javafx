@@ -29,8 +29,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
-import static de.amr.pacmanfx.game.GameVariantRenderConfig.createPacView;
-import static de.amr.pacmanfx.game.GameVariantRenderConfig.createPropView;
+import static de.amr.pacmanfx.ui.rendering.RenderableFactory.createPropView;
 
 /**
  * Intermission scene 2: "The chase".
@@ -75,8 +74,8 @@ public class ArcadeMsPacMan_CutScene2 extends AbstractGameScene {
     public Stream<Renderable> renderables() {
         return Ufx.streamOf(
             createPropView(clapperboard),
-            createPacView(msPacMan),
-            createPacView(pacMan)
+            createPropView(msPacMan),
+            createPropView(pacMan)
         );
     }
 

@@ -40,11 +40,11 @@ import java.io.IOException;
 import java.util.stream.Stream;
 
 import static de.amr.basics.ui.rendering.Renderer.TS;
-import static de.amr.pacmanfx.game.GameVariantRenderConfig.createPropView;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
+import static de.amr.pacmanfx.ui.rendering.RenderableFactory.createPropView;
 
 /**
  * Options scene for Ms. Pac-Man Tengen.

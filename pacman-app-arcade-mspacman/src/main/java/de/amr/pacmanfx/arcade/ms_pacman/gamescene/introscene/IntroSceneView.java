@@ -23,6 +23,7 @@ import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
+import de.amr.pacmanfx.ui.rendering.RenderableFactory;
 import de.amr.pacmanfx.uilib.ArcadeColor;
 import javafx.scene.paint.Color;
 
@@ -33,8 +34,8 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.arcade.ms_pacman.gamescene.introscene.ArcadeMsPacMan_IntroScene.*;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
-import static de.amr.pacmanfx.game.GameVariantRenderConfig.createPropView;
 import static de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene.createText;
+import static de.amr.pacmanfx.ui.rendering.RenderableFactory.createPropView;
 
 public class IntroSceneView {
 
@@ -64,7 +65,7 @@ public class IntroSceneView {
             marqueeTextView1,
             marqueeTextView2,
             createPropView(msPacMan),
-            ghosts.stream().map(GameVariantRenderConfig::createPropView),
+            ghosts.stream().map(RenderableFactory::createPropView),
             createPropView(copyrightImageView),
             copyrightTexts);
     }

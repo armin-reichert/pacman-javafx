@@ -4,14 +4,14 @@
 
 package de.amr.pacmanfx.arcade.pacman.gamescene.introscene;
 
-import de.amr.basics.math.RectShort;
-import de.amr.basics.ui.rendering.Renderable;
-import de.amr.basics.ui.rendering.RenderingLayer;
-import de.amr.basics.timer.Pulse;
 import de.amr.basics.ecs.GameEntity;
+import de.amr.basics.math.RectShort;
+import de.amr.basics.timer.Pulse;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
+import de.amr.basics.ui.entities.props.ghostpoints.GhostPoints;
 import de.amr.basics.ui.entities.props.imagedisplay.ImageView;
 import de.amr.basics.ui.entities.props.textdisplay.TextView;
+import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.util.Ufx;
@@ -19,10 +19,10 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
-import de.amr.basics.ui.entities.props.ghostpoints.GhostPoints;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
+import de.amr.pacmanfx.ui.rendering.RenderableFactory;
 import de.amr.pacmanfx.uilib.ArcadeColor;
 
 import java.util.Arrays;
@@ -30,8 +30,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.arcade.pacman.rendering.SpriteID.GALLERY_GHOSTS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.*;
-import static de.amr.pacmanfx.game.GameVariantRenderConfig.createEntityView;
-import static de.amr.pacmanfx.game.GameVariantRenderConfig.createPacView;
+import static de.amr.pacmanfx.ui.rendering.RenderableFactory.createPropView;
 
 public class IntroSceneView {
 
@@ -123,7 +122,7 @@ public class IntroSceneView {
     public Stream<Renderable> renderables() {
         return Ufx.streamOf(
             titleTextView,
-            Arrays.stream(ghostImageViews).filter(GameEntity::isVisible).map(GameVariantRenderConfig::createPropView),
+            Arrays.stream(ghostImageViews).filter(GameEntity::isVisible).map(RenderableFactory::createPropView),
             Arrays.stream(ghostCharacterDisplays).filter(GameEntity::isVisible),
             Arrays.stream(ghostNicknameDisplays).filter(GameEntity::isVisible),
             targetEnergizer.isVisible() ? targetEnergizer :null,
@@ -134,9 +133,9 @@ public class IntroSceneView {
             pellet.isVisible() ? pellet : null,
             energizer.isVisible() ? energizer : null,
             copyrightText.isVisible() ? copyrightText : null,
-            pacMan.isVisible() ? createPacView(pacMan) : null,
-            Arrays.stream(ghosts).filter(Ghost::isVisible).map(GameVariantRenderConfig::createGhostView),
-            points != null && points.isVisible() ? createEntityView(points, RenderingLayer.PROPS, 0) : null
+            pacMan.isVisible() ? createPropView(pacMan) : null,
+            Arrays.stream(ghosts).filter(Ghost::isVisible).map(RenderableFactory::createPropView),
+            points != null && points.isVisible() ? createPropView(points) : null
         );
     }
 

@@ -14,7 +14,10 @@ import de.amr.basics.ui.entities.props.bonuspoints.BonusPoints;
 import de.amr.basics.ui.entities.props.ghostpoints.GhostPoints;
 import de.amr.basics.ui.entities.props.messageview.MessageType;
 import de.amr.basics.ui.entities.props.messageview.MessageView;
-import de.amr.basics.ui.rendering.*;
+import de.amr.basics.ui.rendering.BaseRenderer;
+import de.amr.basics.ui.rendering.GameEntityView;
+import de.amr.basics.ui.rendering.Renderer;
+import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
@@ -45,7 +48,7 @@ import javafx.scene.paint.Color;
 import java.util.EnumMap;
 import java.util.Map;
 
-import static de.amr.pacmanfx.game.GameVariantRenderConfig.*;
+import static de.amr.pacmanfx.ui.rendering.RenderableFactory.*;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig, Disposable {
@@ -105,12 +108,12 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig, Dispo
             case Pac pac     -> createPacView(pac);
             case Ghost ghost -> createGhostView(ghost);
             case Bonus bonus -> createBonusView(bonus);
-            case Energizer energizer -> GameVariantRenderConfig.createEntityView(energizer, RenderingLayer.LEVEL, 0);
-            case House house -> GameVariantRenderConfig.createEntityView(house, RenderingLayer.LEVEL, 0);
-            case MessageView messageView -> GameVariantRenderConfig.createEntityView(messageView, RenderingLayer.MESSAGE, 0);
-            case GhostPoints ghostPoints -> GameVariantRenderConfig.createEntityView(ghostPoints, RenderingLayer.PROPS, 0);
-            case BonusPoints bonusPoints -> GameVariantRenderConfig.createEntityView(bonusPoints, RenderingLayer.PROPS, 0);
-            default -> GameVariantRenderConfig.createEntityView(gameEntity, RenderingLayer.PROPS, 0);
+            case Energizer energizer -> createGameEntityView(energizer, RenderingLayer.LEVEL, 0);
+            case House house -> createGameEntityView(house, RenderingLayer.LEVEL, 0);
+            case MessageView messageView -> createGameEntityView(messageView, RenderingLayer.MESSAGE, 0);
+            case GhostPoints ghostPoints -> createPropView(ghostPoints);
+            case BonusPoints bonusPoints -> createPropView(bonusPoints);
+            default -> createPropView(gameEntity);
         };
     }
 
