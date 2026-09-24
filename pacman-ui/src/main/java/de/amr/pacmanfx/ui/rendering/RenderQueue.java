@@ -7,6 +7,7 @@ package de.amr.pacmanfx.ui.rendering;
 import de.amr.basics.ui.rendering.Renderable;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
@@ -31,7 +32,7 @@ public class RenderQueue {
         renderables.add(renderable);
     }
 
-    public void addAll(Stream<Renderable> renderables) {
+    public void addAll(Collection<Renderable> renderables) {
         renderables.forEach(this::add);
     }
 

@@ -227,23 +227,29 @@ public class GamePlayView implements GameView {
         app.ui().viewManager().selectStartPagesView();
     }
 
+    @Override
+    public StackPane rootPane() {
+        return rootPane;
+    }
+
     public void render(RenderManager renderManager, long tick) {
         final GameViewModel viewModel = app.ui().viewModel();
         final boolean debugMode = viewModel.debugModeOnProperty().get();
 
-        renderManager.renderQueue().clear();
+        renderManager.clearRenderQueue();
 
+        // HUD
         final GameSession session = app.game().session();
         if (session.isHUDVisible()) {
-            renderManager.renderQueue().addAll(session.hud().renderables());
+            session.hud().renderables().forEach(renderManager::addRenderable);
         }
 
-        renderManager.renderQueue().addAll(layers.miniViewLayer().renderables());
+        // Mini view
+        layers.miniViewLayer().renderables().forEach(renderManager::addRenderable);
 
-        // Add game scene renderables
+        // Game scene renderables
         final GameScene currentGameScene = app.gameSceneManager().optCurrentGameScene().orElseThrow();
         if (!(currentGameScene instanceof AbstractGameScene abstractGameScene)) {
-//            Logger.error("Current game scene is not an AbstractGameScene");
             return;
         }
 
@@ -254,9 +260,10 @@ public class GamePlayView implements GameView {
             layers.miniViewLayer()
         );
 
-        renderManager.renderQueue().addAll(currentGameScene.renderables());
+        currentGameScene.renderables().forEach(renderManager::addRenderable);
+
         if (debugMode) {
-            renderManager.renderQueue().add(new GameSceneView(abstractGameScene)); //TODO change this
+            renderManager.addRenderable(new GameSceneView(abstractGameScene)); //TODO change this
         }
 
         // Clear canvases
@@ -273,11 +280,6 @@ public class GamePlayView implements GameView {
         }
 
         layers.miniViewLayer().update(app.gameSceneManager());
-    }
-
-    @Override
-    public StackPane rootPane() {
-        return rootPane;
     }
 
     public void replaceGameScene(GameScene currentGameScene, GameScene nextGameScene) {

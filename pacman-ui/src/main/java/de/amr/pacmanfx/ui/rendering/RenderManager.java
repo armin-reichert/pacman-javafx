@@ -36,6 +36,18 @@ public class RenderManager {
         clearAllRenderers();
     }
 
+    public void clearRenderQueue() {
+        renderQueue.clear();
+    }
+
+    public int renderQueueSize() {
+        return renderQueue.size();
+    }
+
+    public void addRenderable(Renderable renderable) {
+        renderQueue.add(renderable);
+    }
+
     private void clearAllRenderers() {
         variantRenderer = null;
         levelRenderer = null;
@@ -81,10 +93,6 @@ public class RenderManager {
         bindRendererProperties(variantRenderer, rendering2D.backgroundColorProperty(), rendering2D.scalingProperty());
         bindRendererProperties(sceneDebugRenderer, rendering2D.backgroundColorProperty(), rendering2D.scalingProperty());
         bindRendererProperties(levelRenderer, rendering2D.backgroundColorProperty(), rendering2D.scalingProperty());
-    }
-
-    public RenderQueue renderQueue() {
-        return renderQueue;
     }
 
     public void clearSceneCanvas(AbstractGameScene gameScene) {
