@@ -53,6 +53,11 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
     }
 
     @Override
+    public Stream<Renderable> renderables() {
+        return view.renderables();
+    }
+
+    @Override
     public void onActivate() {
         final Arcade_Actions actions = app().variantManager().currentRuntime()
             .extensionValue(Arcade_GameExtensions.ACTIONS, Arcade_Actions.class);
@@ -73,11 +78,6 @@ public class ArcadePacMan_IntroScene extends AbstractGameScene {
     @Override
     public void onTick(GameContext game) {
         flow.update(this);
-    }
-
-    @Override
-    public Stream<Renderable> renderables() {
-        return view.renderables();
     }
 
     void initState() {

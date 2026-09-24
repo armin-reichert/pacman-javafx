@@ -86,8 +86,8 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
     private final TextView moveArrowTextView;
     private final TextView chooseOptionsTextView;
     private final TextView pressStartTextView;
-    private final MenuSeparatorBarView topBar;
-    private final MenuSeparatorBarView botBar;
+    private final MenuSeparatorBarView topBarView;
+    private final MenuSeparatorBarView botBarView;
 
     public TengenMsPacMan_OptionsScene() {
         setComp(GameSceneCanvasRenderingComp.class, new GameSceneCanvasRenderingComp());
@@ -99,8 +99,8 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
         chooseOptionsTextView = createChooseOptionsTextDisplay();
         pressStartTextView = createPressStartTextDisplay();
 
-        topBar = new MenuSeparatorBarView(NES_SCREEN_WIDTH, 8, new Vector2f(0,  2.5f * TS));
-        botBar = new MenuSeparatorBarView(NES_SCREEN_WIDTH, 8, new Vector2f(0, 26.5f * TS));
+        topBarView = new MenuSeparatorBarView(NES_SCREEN_WIDTH, 8, new Vector2f(0,  2.5f * TS));
+        botBarView = new MenuSeparatorBarView(NES_SCREEN_WIDTH, 8, new Vector2f(0, 26.5f * TS));
     }
 
     @Override
@@ -109,18 +109,18 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
 
         return Ufx.streamOf(
             renderableJoyPadKeyBindings(),
-            topBar,
-            titleTextView,
+            topBarView,
+            createPropView(titleTextView),
             createPlayModeOptionView(),
             createBoosterModeOptionView(),
             createGameDifficultyOptionView(),
             createMapCategoryOptionView(),
             createStartingLevelOptionView(),
             createPropView(createNumContinuesImageView()),
-            moveArrowTextView,
-            chooseOptionsTextView,
-            pressStartTextView,
-            botBar
+            createPropView(moveArrowTextView),
+            createPropView(chooseOptionsTextView),
+            createPropView(pressStartTextView),
+            botBarView
         );
     }
 

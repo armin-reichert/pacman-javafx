@@ -65,7 +65,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
     public Stream<Renderable> renderables() {
         if (gray) return Stream.of(grayRect);
         return Ufx.streamOf(
-            tengenPresentsTextView,
+            createPropView(tengenPresentsTextView),
             createPropView(ghost)
         );
     }

@@ -60,14 +60,15 @@ public class IntroSceneView {
 
     public Stream<Renderable> renderables() {
         return Ufx.streamOf(
-            titleTextView,
+            createPropView(titleTextView),
             createPropView(marquee),
-            marqueeTextView1,
-            marqueeTextView2,
+            createPropView(marqueeTextView1),
+            createPropView(marqueeTextView2),
             createPropView(msPacMan),
             ghosts.stream().map(RenderableFactory::createPropView),
             createPropView(copyrightImageView),
-            copyrightTexts);
+            copyrightTexts.stream().map(RenderableFactory::createPropView)
+        );
     }
 
     public Pac msPacMan() {

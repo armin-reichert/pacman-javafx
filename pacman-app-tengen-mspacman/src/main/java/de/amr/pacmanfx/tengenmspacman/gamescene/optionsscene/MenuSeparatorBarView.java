@@ -15,6 +15,6 @@ public record MenuSeparatorBarView(
 ) implements Renderable {
     @Override
     public RenderingLayer layer() {
-        return RenderingLayer.HUD;
+        return RenderingLayer.PROPS;
     }
 }

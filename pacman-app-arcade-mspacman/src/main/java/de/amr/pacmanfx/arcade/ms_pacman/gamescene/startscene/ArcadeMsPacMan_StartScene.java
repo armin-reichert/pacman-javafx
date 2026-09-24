@@ -16,6 +16,7 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
+import de.amr.pacmanfx.ui.rendering.RenderableFactory;
 import de.amr.pacmanfx.uilib.ArcadeColor;
 
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ import static de.amr.pacmanfx.ui.rendering.RenderableFactory.createPropView;
 
 public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
 
-    private final List<Renderable> texts = List.of(
+    private final List<TextView> texts = List.of(
         createText("PUSH START BUTTON",      ArcadeColor.ORANGE.color(), 8,  6, 16),
         createText("1 PLAYER ONLY",          ArcadeColor.ORANGE.color(), 8,  8, 18),
         createText("ADDITIONAL    AT 10000", ArcadeColor.ORANGE.color(), 8,  2, 25),
@@ -60,19 +61,19 @@ public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
     }
 
     @Override
-    protected void onAppConnected() {
-        final AssetMap assets = app().variantManager().currentRuntime().uiConfig().assets();
-        copyrightImageView.image().setImage(assets.image("logo.midway"));
+    public Stream<Renderable> renderables() {
+        return Ufx.streamOf(
+            texts.stream().map(RenderableFactory::createPropView),
+            createPropView(msPacManImageView),
+            createPropView(copyrightImageView),
+            copyrightTexts.stream().map(RenderableFactory::createPropView)
+        );
     }
 
     @Override
-    public Stream<Renderable> renderables() {
-        return Ufx.streamOf(
-            texts,
-            createPropView(msPacManImageView),
-            createPropView(copyrightImageView),
-            copyrightTexts
-        );
+    protected void onAppConnected() {
+        final AssetMap assets = app().variantManager().currentRuntime().uiConfig().assets();
+        copyrightImageView.image().setImage(assets.image("logo.midway"));
     }
 
     @Override

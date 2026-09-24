@@ -3,12 +3,14 @@
  */
 package de.amr.pacmanfx.arcade.pacman.gamescene.startscene;
 
+import de.amr.basics.ui.entities.props.textdisplay.TextView;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.arcade.pacman.Arcade_Actions;
 import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
+import de.amr.pacmanfx.ui.rendering.RenderableFactory;
 import de.amr.pacmanfx.uilib.ArcadeColor;
 
 import java.util.List;
@@ -19,7 +21,7 @@ import java.util.stream.Stream;
  */
 public class ArcadePacMan_StartScene extends AbstractGameScene {
 
-    private final List<Renderable> texts = List.of(
+    private final List<TextView> texts = List.of(
         createText("PUSH START BUTTON",       ArcadeColor.ORANGE.color(), 8,  6, 17),
         createText("1 PLAYER ONLY",           ArcadeColor.CYAN.color(),   8,  8, 21),
         createText("BONUS PAC-MAN FOR 10000", ArcadeColor.ROSE.color(),   8,  1, 25),
@@ -33,7 +35,7 @@ public class ArcadePacMan_StartScene extends AbstractGameScene {
 
     @Override
     public Stream<Renderable> renderables() {
-        return texts.stream();
+        return texts.stream().map(RenderableFactory::createPropView);
     }
 
     @Override

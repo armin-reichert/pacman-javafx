@@ -19,6 +19,7 @@ import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.pacman.rendering.ArcadePacMan_SpriteSheet;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
+import de.amr.pacmanfx.core.event.GameEvent;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
@@ -121,22 +122,30 @@ public class IntroSceneView {
 
     public Stream<Renderable> renderables() {
         return Ufx.streamOf(
-            titleTextView,
-            Arrays.stream(ghostImageViews).filter(GameEntity::isVisible).map(RenderableFactory::createPropView),
-            Arrays.stream(ghostCharacterDisplays).filter(GameEntity::isVisible),
-            Arrays.stream(ghostNicknameDisplays).filter(GameEntity::isVisible),
+            createPropView(titleTextView),
+            visibleEntities(ghostImageViews).map(RenderableFactory::createPropView),
+            visibleEntities(ghostCharacterDisplays).map(RenderableFactory::createPropView),
+            visibleEntities(ghostNicknameDisplays).map(RenderableFactory::createPropView),
             targetEnergizer.isVisible() ? targetEnergizer :null,
-            text10,
-            text10Pts,
-            text50,
-            text50Pts,
-            pellet.isVisible() ? pellet : null,
-            energizer.isVisible() ? energizer : null,
-            copyrightText.isVisible() ? copyrightText : null,
+            createPropView(text10),
+            createPropView(text10Pts),
+            createPropView(text50),
+            createPropView(text50Pts),
+            nullIfInvisible(pellet),
+            nullIfInvisible(energizer),
+            copyrightText.isVisible() ? createPropView(copyrightText) : null,
             pacMan.isVisible() ? createPropView(pacMan) : null,
-            Arrays.stream(ghosts).filter(Ghost::isVisible).map(RenderableFactory::createPropView),
+            visibleEntities(ghosts).map(RenderableFactory::createPropView),
             points != null && points.isVisible() ? createPropView(points) : null
         );
+    }
+
+    private GameEntity nullIfInvisible(GameEntity gameEntity) {
+        return gameEntity != null && gameEntity.isVisible() ? gameEntity : null;
+    }
+
+    private Stream<GameEntity> visibleEntities(GameEntity[] entityArray) {
+        return Arrays.stream(entityArray).filter(GameEntity::isVisible);
     }
 
     public void hideEverything() {

@@ -6,10 +6,8 @@ package de.amr.basics.ui.entities.props.textdisplay;
 
 import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.ecs.comp.MovementComp;
-import de.amr.basics.ui.rendering.Renderable;
-import de.amr.basics.ui.rendering.RenderingLayer;
 
-public class TextView extends GameEntity implements Renderable {
+public class TextView extends GameEntity {
 
     public TextView() {
         setComp(TextViewDataComp.class, new TextViewDataComp());
@@ -22,10 +20,5 @@ public class TextView extends GameEntity implements Renderable {
 
     public MovementComp movement() {
         return reqComp(MovementComp.class);
-    }
-
-    @Override
-    public RenderingLayer layer() {
-        return RenderingLayer.PROPS;
     }
 }

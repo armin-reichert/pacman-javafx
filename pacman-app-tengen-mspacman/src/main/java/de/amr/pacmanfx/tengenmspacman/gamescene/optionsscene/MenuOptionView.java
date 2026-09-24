@@ -18,6 +18,6 @@ public record MenuOptionView(
 {
     @Override
     public RenderingLayer layer() {
-        return RenderingLayer.HUD;
+        return RenderingLayer.PROPS;
     }
 }
