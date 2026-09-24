@@ -4,7 +4,12 @@
 
 package de.amr.pacmanfx.ui.gamescene.d2;
 
+import de.amr.basics.InfoMap;
+import de.amr.basics.math.Vector2f;
 import de.amr.basics.ui.rendering.BaseRenderer;
+import de.amr.basics.ui.rendering.Renderable;
+import de.amr.basics.ui.rendering.RenderingLayer;
+import de.amr.pacmanfx.core.Energizer;
 import de.amr.pacmanfx.core.entities.world.House;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.FoodLayer;
@@ -13,6 +18,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMapConfigKey;
 import de.amr.pacmanfx.uilib.renderer.ArcadeHouseRenderer;
 import de.amr.pacmanfx.uilib.renderer.FoodMapRenderer;
 import de.amr.pacmanfx.uilib.renderer.TerrainMapVectorRenderer;
+import de.amr.pacmanfx.uilib.rendering.GameLevelView;
 import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
 import de.amr.pacmanfx.uilib.rendering.TerrainMapColoring;
 import javafx.scene.canvas.Canvas;
@@ -54,6 +60,26 @@ public class GenericLevelRenderer extends BaseRenderer {
         updateColors(backgroundColor());
     }
 
+    @Override
+    public void render(Renderable r, long tick) {
+        switch (r) {
+            case GameLevelView(GameLevel level, InfoMap _, RenderingLayer _, int _, Vector2f _) -> {
+                //TODO don't do this in every render frame
+                final GenericWorldMapColorScheme worldMapColorScheme = level.worldMap().getConfigValue(WorldMapConfigKey.COLOR_SCHEME);
+                final var mapColoring = new TerrainMapColoring(
+                    backgroundColor(),
+                    Color.valueOf(worldMapColorScheme.wallFill()),
+                    Color.valueOf(worldMapColorScheme.wallStroke()),
+                    Color.valueOf(worldMapColorScheme.door())
+                );
+                info.put(GenericLevelRenderer.RenderInfoKey.TERRAIN_MAP_COLORING, mapColoring);
+                draw(level);
+            }
+            case Energizer energizer -> draw(energizer);
+            default -> super.render(r, tick);
+        }
+    }
+
     public void draw(GameLevel level) {
         if (info.getBoolean(LevelRenderInfoKey.SHOW_BRIGHT_MAZE)) {
             terrainRenderer.setMapColoring(info.getBoolean(LevelRenderInfoKey.ENERGIZERS_SHOWN) ? blinkingOnMapColoring : blinkingOffMapColoring);
@@ -85,6 +111,17 @@ public class GenericLevelRenderer extends BaseRenderer {
                     .filter(level.food()::hasFoodAtTile)
                     .forEach(foodRenderer::drawEnergizer);
             }
+        }
+    }
+
+    public void draw(Energizer energizer) {
+        if (energizer.isVisible() && energizer.on()) {
+            final Vector2f center = energizer.pos().bodyCenter();
+            ctx.save();
+            ctx.setFill(Color.WHITE);
+            ctx.scale(scaling(), scaling());
+            ctx.fillOval(center.x(), center.y(), 2, 2);
+            ctx.restore();
         }
     }
 

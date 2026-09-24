@@ -86,8 +86,6 @@ public class IntroSceneView {
         }
 
         final ArcadePacMan_SpriteSheet spriteSheet = ArcadePacMan_SpriteSheet.instance();
-        final Image energizerImage = spriteSheet.createImage(SpriteID.ENERGIZER);
-
         final Image pelletImage = spriteSheet.createImage(SpriteID.PELLET);
 
         pellet = new ImageView();
