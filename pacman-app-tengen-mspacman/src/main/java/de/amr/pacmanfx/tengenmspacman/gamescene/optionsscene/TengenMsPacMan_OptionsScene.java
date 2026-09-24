@@ -44,7 +44,7 @@ import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 import static de.amr.pacmanfx.ui.input.KeyCodeCombinationBuilder.combine;
-import static de.amr.pacmanfx.ui.rendering.RenderableFactory.createPropView;
+import static de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder.streamOfPropViews;
 
 /**
  * Options scene for Ms. Pac-Man Tengen.
@@ -109,17 +109,13 @@ public class TengenMsPacMan_OptionsScene extends AbstractGameScene {
 
         return Ufx.streamOf(
             renderableJoyPadKeyBindings(),
-            topBarView,
-            createPropView(titleTextView),
             createPlayModeOptionView(),
             createBoosterModeOptionView(),
             createGameDifficultyOptionView(),
             createMapCategoryOptionView(),
             createStartingLevelOptionView(),
-            createPropView(createNumContinuesImageView()),
-            createPropView(moveArrowTextView),
-            createPropView(chooseOptionsTextView),
-            createPropView(pressStartTextView),
+            streamOfPropViews(titleTextView, createNumContinuesImageView(), moveArrowTextView, chooseOptionsTextView, pressStartTextView),
+            topBarView,
             botBarView
         );
     }

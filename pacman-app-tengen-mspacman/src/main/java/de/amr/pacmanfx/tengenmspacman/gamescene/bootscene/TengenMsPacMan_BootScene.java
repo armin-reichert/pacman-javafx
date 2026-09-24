@@ -9,7 +9,6 @@ import de.amr.basics.ui.entities.hud.HUD_Style;
 import de.amr.basics.ui.entities.props.ColoredBackground;
 import de.amr.basics.ui.entities.props.textdisplay.TextView;
 import de.amr.basics.ui.rendering.Renderable;
-import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.HUD;
@@ -29,7 +28,7 @@ import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
 import static de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConfig.shadeOfBlue;
-import static de.amr.pacmanfx.ui.rendering.RenderableFactory.createPropView;
+import static de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder.streamOfPropViews;
 
 /**
  * Shows moving and color changing "TENGEN PRESENTS" text and ghost running through scene.
@@ -64,10 +63,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
     @Override
     public Stream<Renderable> renderables() {
         if (gray) return Stream.of(grayRect);
-        return Ufx.streamOf(
-            createPropView(tengenPresentsTextView),
-            createPropView(ghost)
-        );
+        return streamOfPropViews(tengenPresentsTextView, ghost);
     }
 
     @Override

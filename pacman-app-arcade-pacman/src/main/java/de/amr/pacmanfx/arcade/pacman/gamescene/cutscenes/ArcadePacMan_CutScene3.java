@@ -24,7 +24,7 @@ import de.amr.pacmanfx.ui.sound.PacManGameSoundID;
 
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.ui.rendering.RenderableFactory.createPropView;
+import static de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder.propView;
 
 /**
  * Third cut scene in Arcade Pac-Man game:<br>
@@ -48,10 +48,7 @@ public class ArcadePacMan_CutScene3 extends AbstractGameScene {
 
     @Override
     public Stream<Renderable> renderables() {
-        return Ufx.streamOf(
-            createPropView(pacMan),
-            createPropView(blinky)
-        );
+        return Ufx.streamOf(propView(pacMan), propView(blinky));
     }
 
     @Override

@@ -12,7 +12,6 @@ import de.amr.basics.ui.entities.props.stork.Stork;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
-import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.ms_pacman.props.bag.ArcadeMsPacMan_BagSAM;
 import de.amr.pacmanfx.arcade.ms_pacman.props.bag.Bag;
@@ -33,7 +32,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
-import static de.amr.pacmanfx.ui.rendering.RenderableFactory.createPropView;
+import static de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder.streamOfPropViews;
 
 /**
  * Intermission scene 3: "Junior".
@@ -98,13 +97,7 @@ public class ArcadeMsPacMan_CutScene3 extends AbstractGameScene {
     }
 
     public Stream<Renderable> renderables() {
-        return Ufx.streamOf(
-            createPropView(clapperboard),
-            createPropView(msPacMan),
-            createPropView(pacMan),
-            createPropView(stork),
-            createPropView(bag)
-        );
+        return streamOfPropViews(clapperboard, msPacMan, pacMan, stork, bag);
     }
 
     private void initScene() {

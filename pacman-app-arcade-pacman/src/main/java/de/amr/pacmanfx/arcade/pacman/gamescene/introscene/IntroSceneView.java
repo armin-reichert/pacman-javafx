@@ -22,7 +22,7 @@ import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
-import de.amr.pacmanfx.ui.rendering.RenderableFactory;
+import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
 import de.amr.pacmanfx.uilib.ArcadeColor;
 import javafx.scene.image.Image;
 
@@ -31,7 +31,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.arcade.pacman.rendering.SpriteID.GALLERY_GHOSTS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.*;
-import static de.amr.pacmanfx.ui.rendering.RenderableFactory.createPropView;
+import static de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder.propView;
 
 public class IntroSceneView {
 
@@ -146,21 +146,21 @@ public class IntroSceneView {
 
     public Stream<Renderable> renderables() {
         return Renderable.createRenderableStream(
-            createPropView(titleTextView),
-            visibleEntities(ghostImageViews).map(RenderableFactory::createPropView),
-            visibleEntities(ghostCharacterDisplays).map(RenderableFactory::createPropView),
-            visibleEntities(ghostNicknameDisplays).map(RenderableFactory::createPropView),
-            targetEnergizer != null ? createPropView(targetEnergizer) : null,
-            createPropView(text10),
-            createPropView(text10Pts),
-            createPropView(text50),
-            createPropView(text50Pts),
-            createPropView(pellet),
-            pointsEnergizer != null ? createPropView(pointsEnergizer) : null,
-            copyrightText.isVisible() ? createPropView(copyrightText) : null,
-            pacMan.isVisible() ? createPropView(pacMan) : null,
-            visibleEntities(ghosts).map(RenderableFactory::createPropView),
-            points != null && points.isVisible() ? createPropView(points) : null
+            propView(titleTextView),
+            visibleEntities(ghostImageViews).map(GameEntityViewBuilder::propView),
+            visibleEntities(ghostCharacterDisplays).map(GameEntityViewBuilder::propView),
+            visibleEntities(ghostNicknameDisplays).map(GameEntityViewBuilder::propView),
+            targetEnergizer != null ? propView(targetEnergizer) : null,
+            propView(text10),
+            propView(text10Pts),
+            propView(text50),
+            propView(text50Pts),
+            propView(pellet),
+            pointsEnergizer != null ? propView(pointsEnergizer) : null,
+            copyrightText.isVisible() ? propView(copyrightText) : null,
+            pacMan.isVisible() ? propView(pacMan) : null,
+            visibleEntities(ghosts).map(GameEntityViewBuilder::propView),
+            points != null && points.isVisible() ? propView(points) : null
         );
     }
 

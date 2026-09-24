@@ -6,7 +6,6 @@ package de.amr.pacmanfx.tengenmspacman.rendering;
 
 import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.math.RectShort;
-import de.amr.basics.math.Vector2f;
 import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.assets.SpriteSheet;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
@@ -17,7 +16,6 @@ import de.amr.basics.ui.entities.props.messageview.MessageType;
 import de.amr.basics.ui.entities.props.messageview.MessageView;
 import de.amr.basics.ui.rendering.GameEntityView;
 import de.amr.basics.ui.rendering.Renderer;
-import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.core.Energizer;
@@ -54,7 +52,7 @@ import javafx.scene.paint.Color;
 import java.util.EnumMap;
 import java.util.Map;
 
-import static de.amr.pacmanfx.ui.rendering.RenderableFactory.*;
+import static de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder.*;
 import static java.util.Objects.requireNonNull;
 
 public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
@@ -159,15 +157,15 @@ public class TengenMsPacMan_RenderConfig implements GameVariantRenderConfig {
     @Override
     public GameEntityView createEntityView(GameEntity gameEntity) {
         return switch(gameEntity) {
-            case Pac pac     -> createPacView(pac);
-            case Ghost ghost -> createGhostView(ghost);
-            case Bonus bonus -> createBonusView(bonus);
-            case Energizer energizer -> createGameEntityView(energizer, RenderingLayer.LEVEL, 0, Vector2f.ZERO, null);
-            case House house -> createGameEntityView(house, RenderingLayer.LEVEL, 0, Vector2f.ZERO, null);
-            case MessageView messageView -> createGameEntityView(messageView, RenderingLayer.MESSAGE, 0, Vector2f.ZERO, null);
-            case GhostPoints ghostPoints -> createPropView(ghostPoints);
-            case BonusPoints bonusPoints -> createPropView(bonusPoints);
-            default -> createPropView(gameEntity);
+            case Pac pac     -> pacView(pac);
+            case Ghost ghost -> ghostView(ghost);
+            case Bonus bonus -> bonusView(bonus);
+            case Energizer energizer -> levelEntityView(energizer);
+            case House house -> levelEntityView(house);
+            case MessageView messageView -> messageEntityView(messageView);
+            case GhostPoints ghostPoints -> propView(ghostPoints);
+            case BonusPoints bonusPoints -> propView(bonusPoints);
+            default -> propView(gameEntity);
         };
     }
 

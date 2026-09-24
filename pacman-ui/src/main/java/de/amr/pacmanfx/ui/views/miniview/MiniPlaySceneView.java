@@ -15,6 +15,7 @@ import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.ui.gamescene.common.CommonGameSceneID;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
+import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
 import de.amr.pacmanfx.ui.viewmodel.GameViewModel;
 import de.amr.pacmanfx.uilib.rendering.GameLevelView;
 import de.amr.pacmanfx.uilib.rendering.LevelRenderInfoKey;
@@ -36,7 +37,6 @@ import javafx.util.Duration;
 
 import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.ui.rendering.RenderableFactory.createGameEntityView;
 import static java.util.Objects.requireNonNull;
 
 public class MiniPlaySceneView extends HBox {
@@ -112,8 +112,10 @@ public class MiniPlaySceneView extends HBox {
 
         return Ufx.streamOf(
             createRenderableLevel(level),
-            level.entitySet().entities().all()
-                .map(entity -> createGameEntityView(entity, RenderingLayer.MINIVIEW_OVERLAY, 0, Vector2f.ZERO, null))
+            level.entitySet().entities()
+                .all()
+                .map(entity ->
+                    GameEntityViewBuilder.builder().entity(entity).layer(RenderingLayer.MINIVIEW_OVERLAY).build())
         );
     }
 

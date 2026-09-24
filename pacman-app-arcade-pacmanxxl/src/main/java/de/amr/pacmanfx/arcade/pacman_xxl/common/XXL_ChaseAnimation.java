@@ -22,7 +22,7 @@ import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationTimer;
-import de.amr.pacmanfx.ui.rendering.RenderableFactory;
+import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -36,8 +36,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static de.amr.pacmanfx.ui.rendering.RenderableFactory.createPacView;
-import static de.amr.pacmanfx.ui.rendering.RenderableFactory.createPropView;
+import static de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder.pacView;
+import static de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder.propView;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -92,17 +92,12 @@ class XXL_ChaseAnimation {
         ctx.save();
         ctx.translate(0, scaling.get() * y);
 
-        variantRenderer.render(createPacView(pac), tick);
-
-        ghosts.stream()
-            .map(RenderableFactory::createGhostView)
-            .forEach(rg -> variantRenderer.render(rg, tick));
-
-
+        variantRenderer.render(pacView(pac), tick);
+        ghosts.stream().map(GameEntityViewBuilder::ghostView).forEach(rg -> variantRenderer.render(rg, tick));
         if (ghostPoints != null) {
-            final var r = createPropView(ghostPoints);
-            variantRenderer.render(r, tick);
+            variantRenderer.render(propView(ghostPoints), tick);
         }
+
         ctx.restore();
     }
 

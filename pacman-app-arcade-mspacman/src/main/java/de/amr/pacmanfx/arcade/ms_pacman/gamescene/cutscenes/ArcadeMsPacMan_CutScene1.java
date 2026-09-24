@@ -14,7 +14,6 @@ import de.amr.basics.ui.entities.props.clapperboard.ClapperboardStateSystem;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
-import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.arcade.ms_pacman.props.Heart;
 import de.amr.pacmanfx.core.GameConstants;
@@ -35,7 +34,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
-import static de.amr.pacmanfx.ui.rendering.RenderableFactory.createPropView;
+import static de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder.streamOfPropViews;
 
 /**
  * Intermission scene 1: "They meet".
@@ -90,14 +89,7 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene {
 
     @Override
     public Stream<Renderable> renderables() {
-        return Ufx.streamOf(
-            createPropView(clapperboard),
-            createPropView(msPacMan),
-            createPropView(pacMan),
-            createPropView(inky),
-            createPropView(pinky),
-            createPropView(heart)
-        );
+        return streamOfPropViews(clapperboard, msPacMan, pacMan, inky, pinky, heart);
     }
 
     private void initScene() {

@@ -35,7 +35,7 @@ import de.amr.pacmanfx.tengenmspacman.rendering.NES_Palette;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
-import de.amr.pacmanfx.ui.rendering.RenderableFactory;
+import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
 import de.amr.pacmanfx.uilib.entities3d.ghost.comp.GhostSettings;
 import javafx.scene.paint.Color;
 import org.tinylog.Logger;
@@ -47,7 +47,7 @@ import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay.gameOptions;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
-import static de.amr.pacmanfx.ui.rendering.RenderableFactory.createPropView;
+import static de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder.propView;
 
 public class TengenMsPacMan_IntroScene extends AbstractGameScene {
 
@@ -90,9 +90,9 @@ public class TengenMsPacMan_IntroScene extends AbstractGameScene {
     public Stream<Renderable> renderables() {
         return Ufx.streamOf(
             this,
-            createPropView(marquee),
-            createPropView(msPacMan),
-            ghosts.stream().map(RenderableFactory::createPropView)
+            propView(marquee),
+            propView(msPacMan),
+            ghosts.stream().map(GameEntityViewBuilder::propView)
         );
     }
 

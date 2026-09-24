@@ -10,7 +10,6 @@ import de.amr.basics.ui.entities.props.clapperboard.Clapperboard;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
-import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
@@ -35,7 +34,7 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
-import static de.amr.pacmanfx.ui.rendering.RenderableFactory.createPropView;
+import static de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder.streamOfPropViews;
 
 /**
  * Intermission scene 1: "They meet".
@@ -76,14 +75,7 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene {
 
     @Override
     public Stream<Renderable> renderables() {
-        return Ufx.streamOf(
-            createPropView(clapperboard),
-            createPropView(heart),
-            createPropView(msPacMan),
-            createPropView(pacMan),
-            createPropView(pinky),
-            createPropView(inky)
-        );
+        return streamOfPropViews(clapperboard, heart, msPacMan, pacMan, pinky, inky);
     }
 
     @Override

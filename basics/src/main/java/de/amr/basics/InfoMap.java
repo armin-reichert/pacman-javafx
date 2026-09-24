@@ -11,6 +11,13 @@ import static java.util.Objects.requireNonNull;
 
 public class InfoMap {
 
+    public static final InfoMap EMPTY = new InfoMap() {
+        @Override
+        public Map<Object, Object> entries() {
+            return Map.of();
+        }
+    };
+
     // create on-access
     private Map<Object, Object> entries;
 

@@ -16,7 +16,7 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
-import de.amr.pacmanfx.ui.rendering.RenderableFactory;
+import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
 import de.amr.pacmanfx.uilib.ArcadeColor;
 
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
-import static de.amr.pacmanfx.ui.rendering.RenderableFactory.createPropView;
+import static de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder.propView;
 
 public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
 
@@ -63,10 +63,10 @@ public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
     @Override
     public Stream<Renderable> renderables() {
         return Ufx.streamOf(
-            texts.stream().map(RenderableFactory::createPropView),
-            createPropView(msPacManImageView),
-            createPropView(copyrightImageView),
-            copyrightTexts.stream().map(RenderableFactory::createPropView)
+            texts.stream().map(GameEntityViewBuilder::propView),
+            propView(msPacManImageView),
+            propView(copyrightImageView),
+            copyrightTexts.stream().map(GameEntityViewBuilder::propView)
         );
     }
 

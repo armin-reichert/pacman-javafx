@@ -10,7 +10,7 @@ import de.amr.pacmanfx.arcade.pacman.Arcade_GameExtensions;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene;
 import de.amr.pacmanfx.ui.gamescene.d2.GameSceneCanvasRenderingComp;
-import de.amr.pacmanfx.ui.rendering.RenderableFactory;
+import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
 import de.amr.pacmanfx.uilib.ArcadeColor;
 
 import java.util.List;
@@ -35,7 +35,7 @@ public class ArcadePacMan_StartScene extends AbstractGameScene {
 
     @Override
     public Stream<Renderable> renderables() {
-        return texts.stream().map(RenderableFactory::createPropView);
+        return texts.stream().map(GameEntityViewBuilder::propView);
     }
 
     @Override

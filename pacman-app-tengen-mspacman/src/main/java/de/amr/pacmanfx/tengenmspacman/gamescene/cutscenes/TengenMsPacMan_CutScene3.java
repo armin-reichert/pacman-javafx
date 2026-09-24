@@ -11,7 +11,6 @@ import de.amr.basics.ui.entities.props.stork.Stork;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
-import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameSystems;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
@@ -36,7 +35,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
-import static de.amr.pacmanfx.ui.rendering.RenderableFactory.createPropView;
+import static de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder.streamOfPropViews;
 
 /**
  * Intermission scene 3: "Junior".
@@ -71,13 +70,7 @@ public class TengenMsPacMan_CutScene3 extends AbstractGameScene {
     @Override
     public Stream<Renderable> renderables() {
         if (darkness) return Stream.empty();
-        return Ufx.streamOf(
-            createPropView(clapperboard),
-            createPropView(pacMan),
-            createPropView(msPacMan),
-            createPropView(stork),
-            createPropView(bag)
-        );
+        return streamOfPropViews(clapperboard, pacMan, msPacMan, stork, bag);
     }
 
     @Override

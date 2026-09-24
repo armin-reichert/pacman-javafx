@@ -10,7 +10,6 @@ import de.amr.basics.ui.entities.props.clapperboard.Clapperboard;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
-import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
@@ -30,7 +29,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_HEIGHT;
 import static de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH;
-import static de.amr.pacmanfx.ui.rendering.RenderableFactory.createPropView;
+import static de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder.streamOfPropViews;
 
 /**
  * Intermission scene 2: "The chase".
@@ -61,11 +60,7 @@ public class TengenMsPacMan_CutScene2 extends AbstractGameScene {
 
     @Override
     public Stream<Renderable> renderables() {
-        return Ufx.streamOf(
-            createPropView(clapperboard),
-            createPropView(pacMan),
-            createPropView(msPacMan)
-        );
+        return streamOfPropViews(clapperboard, pacMan, msPacMan);
     }
 
     @Override

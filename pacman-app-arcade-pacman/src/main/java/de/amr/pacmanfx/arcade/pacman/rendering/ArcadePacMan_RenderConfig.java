@@ -7,7 +7,6 @@ package de.amr.pacmanfx.arcade.pacman.rendering;
 import de.amr.basics.Disposable;
 import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.math.RectShort;
-import de.amr.basics.math.Vector2f;
 import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.entities.hud.HUD_Style;
@@ -18,7 +17,6 @@ import de.amr.basics.ui.entities.props.messageview.MessageView;
 import de.amr.basics.ui.rendering.BaseRenderer;
 import de.amr.basics.ui.rendering.GameEntityView;
 import de.amr.basics.ui.rendering.Renderer;
-import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.pacmanfx.arcade.pacman.ArcadePacMan_UIConfig;
@@ -47,7 +45,7 @@ import javafx.scene.paint.Color;
 import java.util.EnumMap;
 import java.util.Map;
 
-import static de.amr.pacmanfx.ui.rendering.RenderableFactory.*;
+import static de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder.*;
 import static java.util.Objects.requireNonNull;
 
 public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig, Disposable {
@@ -104,15 +102,15 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig, Dispo
     @Override
     public GameEntityView createEntityView(GameEntity gameEntity) {
         return switch(gameEntity) {
-            case Pac pac     -> createPacView(pac);
-            case Ghost ghost -> createGhostView(ghost);
-            case Bonus bonus -> createBonusView(bonus);
-            case Energizer energizer -> createGameEntityView(energizer, RenderingLayer.LEVEL, 0, Vector2f.ZERO, null);
-            case House house -> createGameEntityView(house, RenderingLayer.LEVEL, 0, Vector2f.ZERO, null);
-            case MessageView messageView -> createGameEntityView(messageView, RenderingLayer.MESSAGE, 0, Vector2f.ZERO, null);
-            case GhostPoints ghostPoints -> createPropView(ghostPoints);
-            case BonusPoints bonusPoints -> createPropView(bonusPoints);
-            default -> createPropView(gameEntity);
+            case Pac pac -> pacView(pac);
+            case Ghost ghost -> ghostView(ghost);
+            case Bonus bonus -> bonusView(bonus);
+            case Energizer energizer -> levelEntityView(energizer);
+            case House house -> levelEntityView(house);
+            case MessageView messageView -> messageEntityView(messageView);
+            case GhostPoints ghostPoints -> propView(ghostPoints);
+            case BonusPoints bonusPoints -> propView(bonusPoints);
+            default -> propView(gameEntity);
         };
     }
 
@@ -123,6 +121,7 @@ public class ArcadePacMan_RenderConfig implements GameVariantRenderConfig, Dispo
         requireNonNull(canvas);
 
         return switch (gameScene) {
+            //TODO Get rid of all scene renderers!
             case Arcade_BootScene ignored -> new Arcade_BootScene_Renderer(canvas, spriteSheet());
             default -> null;
         };

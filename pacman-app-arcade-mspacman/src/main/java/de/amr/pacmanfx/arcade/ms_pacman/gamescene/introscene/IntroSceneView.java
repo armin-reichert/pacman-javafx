@@ -23,7 +23,7 @@ import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
-import de.amr.pacmanfx.ui.rendering.RenderableFactory;
+import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
 import de.amr.pacmanfx.uilib.ArcadeColor;
 import javafx.scene.paint.Color;
 
@@ -35,7 +35,7 @@ import static de.amr.pacmanfx.arcade.ms_pacman.gamescene.introscene.ArcadeMsPacM
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
 import static de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene.createText;
-import static de.amr.pacmanfx.ui.rendering.RenderableFactory.createPropView;
+import static de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder.streamOfPropViews;
 
 public class IntroSceneView {
 
@@ -60,14 +60,9 @@ public class IntroSceneView {
 
     public Stream<Renderable> renderables() {
         return Ufx.streamOf(
-            createPropView(titleTextView),
-            createPropView(marquee),
-            createPropView(marqueeTextView1),
-            createPropView(marqueeTextView2),
-            createPropView(msPacMan),
-            ghosts.stream().map(RenderableFactory::createPropView),
-            createPropView(copyrightImageView),
-            copyrightTexts.stream().map(RenderableFactory::createPropView)
+            streamOfPropViews(titleTextView, marquee, marqueeTextView1, marqueeTextView2, msPacMan, copyrightImageView),
+            ghosts.stream().map(GameEntityViewBuilder::propView),
+            copyrightTexts.stream().map(GameEntityViewBuilder::propView)
         );
     }
 
