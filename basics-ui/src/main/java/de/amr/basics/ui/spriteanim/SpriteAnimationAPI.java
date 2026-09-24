@@ -12,16 +12,16 @@ import static java.util.Objects.requireNonNull;
 /**
  * Facade for accessing animations.
  */
-public interface SpriteAnimFacade {
+public interface SpriteAnimationAPI {
 
-    SpriteAnimFacade EMPTY_SPRITE_ANIMATION_FACADE = new EmptySpriteAnimFacade();
+    SpriteAnimationAPI EMPTY_SPRITE_ANIMATION = new EmptySpriteAnimation();
 
-    static SpriteAnimFacade singleSpriteAnimationFacade(RectShort sprite) {
+    static SpriteAnimationAPI singleSpriteAnimation(RectShort sprite) {
         return new SingletonSpriteAnimFacade(sprite);
     }
 
     default boolean isEmpty() {
-        return this == EMPTY_SPRITE_ANIMATION_FACADE;
+        return this == EMPTY_SPRITE_ANIMATION;
     }
 
     Object animation(Named animationID);

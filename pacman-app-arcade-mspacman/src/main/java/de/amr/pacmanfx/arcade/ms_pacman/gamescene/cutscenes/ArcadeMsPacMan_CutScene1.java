@@ -92,11 +92,12 @@ public class ArcadeMsPacMan_CutScene1 extends AbstractGameScene {
     public Stream<Renderable> renderables() {
         return Ufx.streamOf(
             createPropView(clapperboard),
-            createPacView(msPacMan),
-            createPacView(pacMan),
-            createGhostView(inky),
-            createGhostView(pinky),
-            heart);
+            createPropView(msPacMan),
+            createPropView(pacMan),
+            createPropView(inky),
+            createPropView(pinky),
+            createPropView(heart)
+        );
     }
 
     private void initScene() {

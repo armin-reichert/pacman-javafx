@@ -7,10 +7,7 @@ package de.amr.basics.ui.spriteanim;
 import de.amr.basics.Named;
 import de.amr.basics.math.RectShort;
 
-/**
- * Null object for sprite animation facade interface.
- */
-public class EmptySpriteAnimFacade implements SpriteAnimFacade {
+public class EmptySpriteAnimation implements SpriteAnimationAPI {
 
     @Override
     public Object animation(Named animationID) {
@@ -24,7 +21,7 @@ public class EmptySpriteAnimFacade implements SpriteAnimFacade {
 
     @Override
     public boolean isSelected(Named animationID) {
-        return SpriteAnimFacade.super.isSelected(animationID);
+        return SpriteAnimationAPI.super.isSelected(animationID);
     }
 
     @Override

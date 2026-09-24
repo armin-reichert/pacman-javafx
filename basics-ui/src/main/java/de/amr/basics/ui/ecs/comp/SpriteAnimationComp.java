@@ -5,19 +5,19 @@
 package de.amr.basics.ui.ecs.comp;
 
 import de.amr.basics.ecs.GameEntityComp;
-import de.amr.basics.ui.spriteanim.SpriteAnimFacade;
+import de.amr.basics.ui.spriteanim.SpriteAnimationAPI;
 
 public class SpriteAnimationComp implements GameEntityComp {
 
     public SpriteAnimationComp() {}
 
-    private SpriteAnimFacade facade = SpriteAnimFacade.EMPTY_SPRITE_ANIMATION_FACADE;
+    private SpriteAnimationAPI facade = SpriteAnimationAPI.EMPTY_SPRITE_ANIMATION;
 
-    public void setSpriteAnimations(SpriteAnimFacade facade) {
+    public void setSpriteAnimations(SpriteAnimationAPI facade) {
         this.facade = facade;
     }
 
-    public SpriteAnimFacade spriteAnimations() {
+    public SpriteAnimationAPI spriteAnimations() {
         return facade;
     }
 }

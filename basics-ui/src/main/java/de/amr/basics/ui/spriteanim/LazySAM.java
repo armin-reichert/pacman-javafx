@@ -18,7 +18,7 @@ import static java.util.Objects.requireNonNull;
  * A sprite animation container implementing the sprite animation accessor facade.
  * Sprite animations are created on-demand by the assigned animation factory.
  */
-public class LazySAM implements SpriteAnimFacade {
+public class LazySAM implements SpriteAnimationAPI {
 
     private Map<Named, SpriteAnimation> animationsByName;
 

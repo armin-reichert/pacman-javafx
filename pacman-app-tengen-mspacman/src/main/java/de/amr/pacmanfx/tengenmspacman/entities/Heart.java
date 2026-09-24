@@ -11,14 +11,14 @@ import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.pacmanfx.tengenmspacman.sprites.SpriteID;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 
-import static de.amr.basics.ui.spriteanim.SpriteAnimFacade.singleSpriteAnimationFacade;
+import static de.amr.basics.ui.spriteanim.SpriteAnimationAPI.singleSpriteAnimation;
 
 public class Heart extends GameEntity implements Renderable {
 
     public Heart() {
         final SpriteAnimationComp animationComp = new SpriteAnimationComp();
         animationComp.setSpriteAnimations(
-            singleSpriteAnimationFacade(TengenMsPacMan_SpriteSheet.instance().findSprite(SpriteID.HEART))
+            singleSpriteAnimation(TengenMsPacMan_SpriteSheet.instance().findSprite(SpriteID.HEART))
         );
         setComp(SpriteAnimationComp.class, animationComp);
     }

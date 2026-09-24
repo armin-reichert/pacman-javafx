@@ -13,7 +13,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @param sprite the singleton sprite
  */
-record SingletonSpriteAnimFacade(RectShort sprite) implements SpriteAnimFacade {
+record SingletonSpriteAnimFacade(RectShort sprite) implements SpriteAnimationAPI {
 
     public SingletonSpriteAnimFacade(RectShort sprite) {
         this.sprite = requireNonNull(sprite);
