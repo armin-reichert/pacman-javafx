@@ -56,7 +56,7 @@ public class ArcadePacMan_GameLevel_Renderer extends BaseRenderer {
     public void render(Renderable r, long tick) {
         switch (r) {
             case GameLevelView(GameLevel level, InfoMap renderInfo, RenderingLayer _, int _, Vector2f _) -> renderGameLevel(level, renderInfo);
-            case GameEntityView(Energizer energizer, RenderingLayer _, int _, Vector2f _) -> hideEnergizerIfOff(energizer);
+            case GameEntityView(Energizer energizer, RenderingLayer _, int _, Vector2f _, InfoMap _) -> hideEnergizerIfOff(energizer);
             default -> {}
         }
     }

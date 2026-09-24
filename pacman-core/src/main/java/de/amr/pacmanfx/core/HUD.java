@@ -2,6 +2,7 @@ package de.amr.pacmanfx.core;
 
 import de.amr.basics.QuerySet;
 import de.amr.basics.ecs.GameEntity;
+import de.amr.basics.math.Vector2f;
 import de.amr.basics.ui.entities.hud.levelCounter.LevelCounter;
 import de.amr.basics.ui.entities.hud.livescounter.LivesCounter;
 import de.amr.basics.ui.entities.hud.score.Score;
@@ -74,7 +75,7 @@ public class HUD {
             highScore,
             additionalEntities.all()
         )
-            .map(e -> new GameEntityView((GameEntity) e, RenderingLayer.HUD, 0))
+            .map(e -> new GameEntityView((GameEntity) e, RenderingLayer.HUD, 0, Vector2f.ZERO))
             .map(Renderable.class::cast)
             .toList();
     }

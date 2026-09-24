@@ -76,7 +76,7 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
                 .map(renderConfig::createEntityView),
             // Render energizers using level renderer
             level.entitySet().entities().ofType(Energizer.class)
-                .map(energizer -> RenderableFactory.createGameEntityView(energizer, RenderingLayer.LEVEL, 0))
+                .map(energizer -> RenderableFactory.createGameEntityView(energizer, RenderingLayer.LEVEL, 0, Vector2f.ZERO, null))
         );
     }
 

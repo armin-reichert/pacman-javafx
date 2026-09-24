@@ -4,7 +4,9 @@
 
 package de.amr.pacmanfx.ui.rendering;
 
+import de.amr.basics.InfoMap;
 import de.amr.basics.ecs.GameEntity;
+import de.amr.basics.math.Vector2f;
 import de.amr.basics.ui.rendering.GameEntityView;
 import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.pacmanfx.core.entities.actor.bonus.Bonus;
@@ -28,12 +30,12 @@ public final class RenderableFactory {
         };
     }
 
-    public static GameEntityView createGameEntityView(GameEntity gameEntity, RenderingLayer layer, int z) {
-        return new GameEntityView(gameEntity, layer, z);
+    public static GameEntityView createGameEntityView(GameEntity gameEntity, RenderingLayer layer, int z, Vector2f offset, InfoMap renderInfo) {
+        return new GameEntityView(gameEntity, layer, z, offset, renderInfo);
     }
 
     public static GameEntityView createPropView(GameEntity gameEntity, int z) {
-        return createGameEntityView(gameEntity, RenderingLayer.PROPS, z);
+        return createGameEntityView(gameEntity, RenderingLayer.PROPS, z, Vector2f.ZERO, null);
     }
 
     public static GameEntityView createPropView(GameEntity gameEntity) {
@@ -41,14 +43,14 @@ public final class RenderableFactory {
     }
 
     public static GameEntityView createPacView(Pac pac) {
-        return createGameEntityView(pac, RenderingLayer.ACTORS, PAC_Z);
+        return createGameEntityView(pac, RenderingLayer.ACTORS, PAC_Z, Vector2f.ZERO, null);
     }
 
     public static GameEntityView createGhostView(Ghost ghost) {
-        return createGameEntityView(ghost, RenderingLayer.ACTORS, ghostZ(ghost.personality()));
+        return createGameEntityView(ghost, RenderingLayer.ACTORS, ghostZ(ghost.personality()), Vector2f.ZERO, null);
     }
 
     public static GameEntityView createBonusView(Bonus bonus) {
-        return createGameEntityView(bonus, RenderingLayer.ACTORS, BONUS_Z);
+        return createGameEntityView(bonus, RenderingLayer.ACTORS, BONUS_Z, Vector2f.ZERO, null);
     }
 }

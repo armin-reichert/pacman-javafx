@@ -113,7 +113,7 @@ public class MiniPlaySceneView extends HBox {
         return Ufx.streamOf(
             createRenderableLevel(level),
             level.entitySet().entities().all()
-                .map(entity -> createGameEntityView(entity, RenderingLayer.MINIVIEW_OVERLAY, 0))
+                .map(entity -> createGameEntityView(entity, RenderingLayer.MINIVIEW_OVERLAY, 0, Vector2f.ZERO, null))
         );
     }
 

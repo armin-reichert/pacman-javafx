@@ -4,6 +4,7 @@
 
 package de.amr.pacmanfx.uilib.renderer;
 
+import de.amr.basics.InfoMap;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.ui.rendering.BaseRenderer;
 import de.amr.basics.ui.rendering.GameEntityView;
@@ -75,11 +76,11 @@ public class ArcadeHouseRenderer extends BaseRenderer {
     public void render(Renderable r, long tick) {
         if (r instanceof GameEntityView rge
             && rge.entity() instanceof House house) {
-            renderHouse(house);
+            drawHouse(house, rge.renderInfo());
         }
     }
 
-    public void renderHouse(House house) {
+    public void drawHouse(House house, InfoMap renderInfo) {
         drawHouse(
             house.floorplan().minTile(),
             house.sizeInTiles(),

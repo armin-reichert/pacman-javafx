@@ -6,6 +6,7 @@ package de.amr.pacmanfx.arcade.ms_pacman.rendering;
 
 import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.math.RectShort;
+import de.amr.basics.math.Vector2f;
 import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.assets.SpriteSheet;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
@@ -92,9 +93,9 @@ public class ArcadeMsPacMan_RenderConfig implements GameVariantRenderConfig {
             case Pac pac     -> createPacView(pac);
             case Ghost ghost -> createGhostView(ghost);
             case Bonus bonus -> createBonusView(bonus);
-            case Energizer energizer -> createGameEntityView(energizer, RenderingLayer.LEVEL, 0);
-            case House house -> createGameEntityView(house, RenderingLayer.LEVEL, 0);
-            case MessageView messageView -> createGameEntityView(messageView, RenderingLayer.MESSAGE, 0);
+            case Energizer energizer -> createGameEntityView(energizer, RenderingLayer.LEVEL, 0, Vector2f.ZERO, null);
+            case House house -> createGameEntityView(house, RenderingLayer.LEVEL, 0, Vector2f.ZERO, null);
+            case MessageView messageView -> createGameEntityView(messageView, RenderingLayer.MESSAGE, 0, Vector2f.ZERO, null);
             case GhostPoints ghostPoints -> createPropView(ghostPoints);
             case BonusPoints bonusPoints -> createPropView(bonusPoints);
             default -> createPropView(gameEntity);

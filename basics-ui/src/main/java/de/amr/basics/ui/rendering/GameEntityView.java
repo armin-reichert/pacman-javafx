@@ -4,30 +4,24 @@
 
 package de.amr.basics.ui.rendering;
 
+import de.amr.basics.InfoMap;
 import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.math.Vector2f;
 
 import static java.util.Objects.requireNonNull;
 
-public record GameEntityView(GameEntity entity, RenderingLayer layer, int z, Vector2f offset) implements Renderable {
+public record GameEntityView(GameEntity entity, RenderingLayer layer, int z, Vector2f offset, InfoMap renderInfo) implements Renderable {
 
-    public GameEntityView(GameEntity entity, RenderingLayer layer, int z, Vector2f offset) {
+    public GameEntityView(GameEntity entity, RenderingLayer layer, int z, Vector2f offset, InfoMap renderInfo) {
         this.entity = requireNonNull(entity);
         this.layer = requireNonNull(layer);
         this.z = z;
-        this.offset = offset;
+        this.offset = requireNonNull(offset);
+        this.renderInfo = renderInfo;
     }
 
-    public GameEntityView(GameEntity entity, RenderingLayer layer, int z) {
-        this(entity, layer, z, Vector2f.ZERO);
-    }
-
-    public GameEntityView newLayer(RenderingLayer newLayer) {
-        return new GameEntityView(entity, newLayer, z);
-    }
-
-    public GameEntityView newLayer(RenderingLayer newLayer, int newZ) {
-        return new GameEntityView(entity, newLayer, newZ);
+    public GameEntityView(GameEntity entity, RenderingLayer layer, int z, Vector2f offset) {
+        this(entity, layer, z, offset, null);
     }
 
     public GameEntityView newOffset(Vector2f offset) {

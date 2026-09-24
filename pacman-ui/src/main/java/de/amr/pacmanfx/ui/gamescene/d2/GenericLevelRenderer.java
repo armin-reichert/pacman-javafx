@@ -76,7 +76,8 @@ public class GenericLevelRenderer extends BaseRenderer {
                 info.put(GenericLevelRenderer.RenderInfoKey.TERRAIN_MAP_COLORING, mapColoring);
                 draw(level);
             }
-            case GameEntityView(Energizer energizer, RenderingLayer layer, int z, Vector2f offset) -> draw(energizer);
+            case GameEntityView(House house, RenderingLayer layer, int z, Vector2f offset, InfoMap renderInfo) -> houseRenderer.drawHouse(house, renderInfo);
+            case GameEntityView(Energizer energizer, RenderingLayer layer, int z, Vector2f offset, InfoMap renderInfo) -> draw(energizer, renderInfo);
             default -> super.render(r, tick);
         }
     }
@@ -90,11 +91,6 @@ public class GenericLevelRenderer extends BaseRenderer {
             final TerrainMapColoring mapColoring = info.get(RenderInfoKey.TERRAIN_MAP_COLORING, TerrainMapColoring.class);
             terrainRenderer.setMapColoring(mapColoring);
             terrainRenderer.draw(level.worldMap());
-
-            if (level.entitySet().entities().anyOfType(House.class).isPresent()) {
-                final House house = level.entitySet().entities().theOne(House.class);
-                houseRenderer.renderHouse(house);
-            }
 
             // Color scheme is set by the map selector
             final FoodLayer foodLayer = level.worldMap().foodLayer();
@@ -115,7 +111,7 @@ public class GenericLevelRenderer extends BaseRenderer {
         }
     }
 
-    public void draw(Energizer energizer) {
+    private void draw(Energizer energizer, InfoMap renderInfo) {
         if (energizer.isVisible() && energizer.on()) {
             final Vector2f center = energizer.pos().asVector2f();
             ctx.save();
