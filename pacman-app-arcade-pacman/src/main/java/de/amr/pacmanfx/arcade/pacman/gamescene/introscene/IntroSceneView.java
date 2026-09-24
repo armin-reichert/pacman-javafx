@@ -123,7 +123,7 @@ public class IntroSceneView {
     public Stream<Renderable> renderables() {
         return Ufx.streamOf(
             titleTextView,
-            Arrays.stream(ghostImageViews).filter(GameEntity::isVisible),
+            Arrays.stream(ghostImageViews).filter(GameEntity::isVisible).map(GameVariantRenderConfig::createPropView),
             Arrays.stream(ghostCharacterDisplays).filter(GameEntity::isVisible),
             Arrays.stream(ghostNicknameDisplays).filter(GameEntity::isVisible),
             targetEnergizer.isVisible() ? targetEnergizer :null,

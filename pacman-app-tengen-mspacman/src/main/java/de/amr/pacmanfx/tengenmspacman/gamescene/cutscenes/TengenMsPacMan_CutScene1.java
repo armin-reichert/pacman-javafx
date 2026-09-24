@@ -277,5 +277,4 @@ public class TengenMsPacMan_CutScene1 extends AbstractGameScene {
 
         heart = new Heart();
     }
-
 }

@@ -5,25 +5,24 @@
 package de.amr.pacmanfx.arcade.ms_pacman.gamescene.introscene;
 
 import de.amr.basics.math.Direction;
+import de.amr.basics.ui.assets.AssetMap;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.entities.props.imagedisplay.ImageView;
 import de.amr.basics.ui.entities.props.marquee.Marquee;
 import de.amr.basics.ui.entities.props.textdisplay.TextView;
+import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.spriteanim.SpriteAnimationContainer;
 import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.ms_pacman.model.ArcadeMsPacMan_ActorFactory;
 import de.amr.pacmanfx.core.GameSystems;
-import de.amr.basics.ui.rendering.RenderingLayer;
-import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
-import de.amr.pacmanfx.core.entities.actor.pac.Pac;
 import de.amr.pacmanfx.core.entities.actor.ghost.GhostState;
+import de.amr.pacmanfx.core.entities.actor.pac.Pac;
+import de.amr.pacmanfx.core.entities.world.WorldNavigationSystem;
 import de.amr.pacmanfx.core.model.GhostPersonality;
-import de.amr.basics.ui.rendering.Renderable;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
-import de.amr.basics.ui.assets.AssetMap;
 import de.amr.pacmanfx.uilib.ArcadeColor;
 import javafx.scene.paint.Color;
 
@@ -34,8 +33,7 @@ import java.util.stream.Stream;
 import static de.amr.pacmanfx.arcade.ms_pacman.gamescene.introscene.ArcadeMsPacMan_IntroScene.*;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
-import static de.amr.pacmanfx.game.GameVariantRenderConfig.createEntityView;
-import static de.amr.pacmanfx.game.GameVariantRenderConfig.createPacView;
+import static de.amr.pacmanfx.game.GameVariantRenderConfig.createPropView;
 import static de.amr.pacmanfx.ui.gamescene.common.AbstractGameScene.createText;
 
 public class IntroSceneView {
@@ -62,12 +60,13 @@ public class IntroSceneView {
     public Stream<Renderable> renderables() {
         return Ufx.streamOf(
             titleTextView,
-            createEntityView(marquee, RenderingLayer.PROPS, 0),
+            createPropView(marquee),
             marqueeTextView1,
             marqueeTextView2,
-            createPacView(msPacMan),
-            ghosts.stream().map(GameVariantRenderConfig::createGhostView),
-            copyrightImageView, copyrightTexts);
+            createPropView(msPacMan),
+            ghosts.stream().map(GameVariantRenderConfig::createPropView),
+            createPropView(copyrightImageView),
+            copyrightTexts);
     }
 
     public Pac msPacMan() {

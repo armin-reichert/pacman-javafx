@@ -10,7 +10,7 @@ import de.amr.basics.math.RectShort;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.ui.assets.SpriteSheet;
-import de.amr.basics.ui.entities.props.ColoredRect;
+import de.amr.basics.ui.entities.props.ColoredBackground;
 import de.amr.basics.ui.entities.props.imagedisplay.ImageView;
 import de.amr.basics.ui.entities.props.messageview.MessageType;
 import de.amr.basics.ui.entities.props.messageview.MessageView;
@@ -85,7 +85,7 @@ public class BaseRenderer implements Renderer {
             case null -> {}
             case GameEntityView rge -> renderGameEntity(rge.entity(), tick);
             case GameEntity gameEntity -> renderGameEntity(gameEntity, tick);
-            case ColoredRect coloredRect -> fillColoredRect(coloredRect);
+            case ColoredBackground coloredBackground -> fillColoredRect(coloredBackground);
             default -> throw new IllegalStateException("Cannot render: " + r);
         }
         ctx.restore();
@@ -313,11 +313,11 @@ public class BaseRenderer implements Renderer {
         });
     }
 
-    private void fillColoredRect(ColoredRect coloredRect) {
-        final var rect = coloredRect.rect();
+    private void fillColoredRect(ColoredBackground coloredBackground) {
+        final var rect = coloredBackground.rect();
         ctx.save();
         ctx.scale(scaling(), scaling());
-        ctx.setFill(coloredRect.color());
+        ctx.setFill(coloredBackground.color());
         ctx.fillRect(rect.x(), rect.y(), rect.width(), rect.height());
         ctx.restore();
     }

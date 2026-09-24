@@ -9,12 +9,12 @@ import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.ui.rendering.Renderable;
 import javafx.scene.paint.Color;
 
-public class ColoredRect implements Renderable {
+public class ColoredBackground implements Renderable {
 
     private final RectShort rect;
     private final Color color;
 
-    public ColoredRect(int xMin, int yMin, int width, int height, Color color) {
+    public ColoredBackground(int xMin, int yMin, int width, int height, Color color) {
         rect = new RectShort((short) xMin, (short) yMin, (short) width, (short) height);
         this.color = color;
     }

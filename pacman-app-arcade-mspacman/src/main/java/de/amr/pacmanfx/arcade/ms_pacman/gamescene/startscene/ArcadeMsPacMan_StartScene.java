@@ -24,6 +24,7 @@ import java.util.stream.Stream;
 
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.TS;
 import static de.amr.pacmanfx.core.model.world.map.WorldMap.tilesPx;
+import static de.amr.pacmanfx.game.GameVariantRenderConfig.createPropView;
 
 public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
 
@@ -68,8 +69,8 @@ public class ArcadeMsPacMan_StartScene extends AbstractGameScene {
     public Stream<Renderable> renderables() {
         return Ufx.streamOf(
             texts,
-            msPacManImageView,
-            copyrightImageView,
+            createPropView(msPacManImageView),
+            createPropView(copyrightImageView),
             copyrightTexts
         );
     }

@@ -5,10 +5,8 @@
 package de.amr.basics.ui.entities.props.imagedisplay;
 
 import de.amr.basics.ecs.GameEntity;
-import de.amr.basics.ui.rendering.Renderable;
-import de.amr.basics.ui.rendering.RenderingLayer;
 
-public class ImageView extends GameEntity implements Renderable {
+public class ImageView extends GameEntity {
 
     public ImageView() {
         setComp(ImageViewComp.class, new ImageViewComp());
@@ -16,10 +14,5 @@ public class ImageView extends GameEntity implements Renderable {
 
     public ImageViewComp image() {
         return reqComp(ImageViewComp.class);
-    }
-
-    @Override
-    public RenderingLayer layer() {
-        return RenderingLayer.PROPS;
     }
 }

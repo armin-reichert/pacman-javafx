@@ -13,7 +13,7 @@ import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_SpriteSheet;
 
 import static de.amr.basics.ui.spriteanim.SpriteAnimationAPI.singleSpriteAnimation;
 
-public class Heart extends GameEntity implements Renderable {
+public class Heart extends GameEntity {
 
     public Heart() {
         final SpriteAnimationComp animationComp = new SpriteAnimationComp();
@@ -21,10 +21,5 @@ public class Heart extends GameEntity implements Renderable {
             singleSpriteAnimation(TengenMsPacMan_SpriteSheet.instance().findSprite(SpriteID.HEART))
         );
         setComp(SpriteAnimationComp.class, animationComp);
-    }
-
-    @Override
-    public RenderingLayer layer() {
-        return RenderingLayer.PROPS;
     }
 }

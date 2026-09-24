@@ -6,7 +6,7 @@ package de.amr.pacmanfx.tengenmspacman.gamescene.bootscene;
 
 import de.amr.basics.math.Direction;
 import de.amr.basics.ui.entities.hud.HUD_Style;
-import de.amr.basics.ui.entities.props.ColoredRect;
+import de.amr.basics.ui.entities.props.ColoredBackground;
 import de.amr.basics.ui.entities.props.textdisplay.TextView;
 import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.util.Ufx;
@@ -42,7 +42,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
 
     private boolean gray;
 
-    private final ColoredRect grayRect;
+    private final ColoredBackground grayRect;
     private final TextView tengenPresentsTextView;
 
     private Ghost ghost;
@@ -53,7 +53,7 @@ public class TengenMsPacMan_BootScene extends AbstractGameScene {
         rendering.unscaledWidthProperty().set(NES_SCREEN_WIDTH);
         rendering.unscaledHeightProperty().set(NES_SCREEN_HEIGHT);
 
-        grayRect = new ColoredRect(0, 0, NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT, NES_Palette.color(0x10));
+        grayRect = new ColoredBackground(0, 0, NES_SCREEN_WIDTH, NES_SCREEN_HEIGHT, NES_Palette.color(0x10));
 
         tengenPresentsTextView = new TextView();
         tengenPresentsTextView.data().setText(TENGEN_PRESENTS);
