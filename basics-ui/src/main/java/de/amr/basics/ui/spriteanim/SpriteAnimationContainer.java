@@ -23,7 +23,7 @@ public class SpriteAnimationContainer {
 
     public SpriteAnimationContainer() {}
 
-    public Iterable<SpriteAnimation> activeAnimations() {
+    public void update() {
         if (clearRequested) {
             activeAnimations.clear();
             animationsWaitingToBeAdded.clear();
@@ -40,7 +40,10 @@ public class SpriteAnimationContainer {
             activeAnimations.addAll(animationsWaitingToBeAdded);
             animationsWaitingToBeAdded.clear();
         }
+    }
 
+    public Iterable<SpriteAnimation> activeAnimations() {
+        update();
         return activeAnimations;
     }
 

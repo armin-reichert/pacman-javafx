@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 2021-2026 Armin Reichert (MIT License)
  */
+
 package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
 import de.amr.basics.ecs.GameEntity;
@@ -18,16 +19,9 @@ import de.amr.pacmanfx.core.model.GhostPersonality;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.game.GameVariantRenderConfig;
 import de.amr.pacmanfx.game.GameVariantRuntime;
-import de.amr.pacmanfx.ui.gamescene.d2.SpriteAnimationTimer;
 import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.beans.property.FloatProperty;
-import javafx.beans.property.SimpleFloatProperty;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.util.Duration;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -44,8 +38,6 @@ class XXL_ChaseAnimation {
 
     public enum ChasingState {GHOSTS_CHASING_PAC, PAC_CHASING_GHOSTS}
 
-    public static final Duration FRAME_TIME = Duration.millis(1000f / 60f);
-
     public static final int[] GHOST_POINTS = { 200, 400, 800, 1600 };
     public static final int GHOST_POINTS_DISPLAY_SEC = 1;
     public static final int GHOST_DISTANCE = 18;
@@ -54,11 +46,8 @@ class XXL_ChaseAnimation {
 
     private final int numTilesX;
 
-    private final Timeline chaseSimulation;
-
-    private final FloatProperty scaling = new SimpleFloatProperty(1);
-
-    private GameVariantRuntime runtime;
+    private final GameVariantRuntime runtime;
+    private final Renderer renderer;
 
     private Pac pac;
     private List<Ghost> ghosts;
@@ -68,73 +57,43 @@ class XXL_ChaseAnimation {
     private float y;
     private int collisionCount;
 
-    private Renderer variantRenderer;
-
-    public XXL_ChaseAnimation(int numTilesX) {
+    public XXL_ChaseAnimation(int numTilesX, GameVariantRuntime runtime, Canvas canvas) {
         this.numTilesX = numTilesX;
+        this.runtime = requireNonNull(runtime);
+        requireNonNull(canvas);
 
-        final var animationFrame = new KeyFrame(FRAME_TIME, _ -> {
-            switch (state) {
-                case GHOSTS_CHASING_PAC -> letGhostsChasePacMan();
-                case PAC_CHASING_GHOSTS -> letPacManChaseGhosts();
-            }
-        });
-        chaseSimulation = new Timeline();
-        chaseSimulation.getKeyFrames().add(animationFrame);
-        chaseSimulation.setCycleCount(Animation.INDEFINITE);
+        renderer = runtime.uiConfig().renderConfig().createVariantRenderer(
+            runtime.playConfig().systems().actorSpriteAnimController(),
+            canvas);
+
+        createPac();
+        createGhosts();
+        //TODO check this
+        startGhostsChasePacMan();
     }
 
-    public void draw(long tick) {
-        if (variantRenderer == null) {
-            return;
+    public void simulate() {
+        switch (state) {
+            case GHOSTS_CHASING_PAC -> letGhostsChasePacMan();
+            case PAC_CHASING_GHOSTS -> letPacManChaseGhosts();
         }
+    }
 
-        final GraphicsContext ctx = variantRenderer.ctx();
+    public void draw(double scaling) {
+        final GraphicsContext ctx = renderer.ctx();
         ctx.save();
-        ctx.translate(0, scaling.get() * y);
-
-        variantRenderer.render(pacView(pac), tick);
-        ghosts.stream().map(GameEntityViewBuilder::ghostView).forEach(rg -> variantRenderer.render(rg, tick));
+        ctx.scale(scaling, scaling);
+        ctx.translate(0, y);
+        renderer.render(pacView(pac), 0);
+        ghosts.stream().map(GameEntityViewBuilder::ghostView).forEach(rg -> renderer.render(rg, 0));
         if (ghostPoints != null) {
-            variantRenderer.render(propView(ghostPoints), tick);
+            renderer.render(propView(ghostPoints), 0);
         }
-
         ctx.restore();
-    }
-
-    public FloatProperty scalingProperty() {
-        return scaling;
     }
 
     public void setY(float y) {
         this.y = y;
-    }
-
-    public void startChaseSimulation(SpriteAnimationTimer animationTimer) {
-        chaseSimulation.play();
-        animationTimer.start();
-    }
-
-    public void stopChaseSimulation(SpriteAnimationTimer animationTimer) {
-        chaseSimulation.stop();
-        animationTimer.stop();
-    }
-
-    public void setGameVariant(GameVariantRuntime runtime, Canvas canvas) {
-        this.runtime = requireNonNull(runtime);
-        requireNonNull(canvas);
-
-        final GameVariantRenderConfig renderConfig = runtime.uiConfig().renderConfig();
-        final ActorSpriteAnimController animController = runtime.playConfig().systems().actorSpriteAnimController();
-
-        variantRenderer = renderConfig.createVariantRenderer(animController, canvas);
-        variantRenderer.scalingProperty().bind(scalingProperty());
-
-        createPac();
-        createGhosts();
-
-        //TODO check this
-        startGhostsChasePacMan();
     }
 
     private void createPac() {
@@ -193,7 +152,7 @@ class XXL_ChaseAnimation {
         }
     }
 
-    private void startGhostsChasePacMan() {
+    public void startGhostsChasePacMan() {
         final ActorSpriteAnimController animController = runtime.playConfig().systems().actorSpriteAnimController();
         final WorldNavigationSystem navigator = runtime.playConfig().systems().navigator();
 

@@ -8,6 +8,7 @@ import de.amr.basics.filesystem.DirectoryWatchdog;
 import de.amr.pacmanfx.core.GameClock;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.game.GameVariantManager;
+import de.amr.pacmanfx.game.GameVariantRuntime;
 import de.amr.pacmanfx.ui.GameUI;
 import de.amr.pacmanfx.ui.action.CommonGameActions;
 import de.amr.pacmanfx.ui.gamescene.common.GameSceneManager;
@@ -18,6 +19,8 @@ import de.amr.pacmanfx.ui.rendering.RenderManager;
  * The game application context.
  */
 public interface GameApp {
+
+    void enterGameVariant(GameVariantRuntime runtime);
 
     void startGame();
 

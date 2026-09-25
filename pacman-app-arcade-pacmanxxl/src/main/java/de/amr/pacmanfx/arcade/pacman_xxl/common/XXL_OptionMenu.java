@@ -4,7 +4,6 @@
 
 package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
-import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.GameVariantID;
 import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
@@ -15,9 +14,14 @@ import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenuEntry;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenuSettings;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.beans.property.ReadOnlyDoubleProperty;
 import javafx.beans.value.ObservableValue;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.input.KeyCode;
+import javafx.util.Duration;
 import org.tinylog.Logger;
 
 import java.util.List;
@@ -34,7 +38,8 @@ public class XXL_OptionMenu extends OptionMenu {
     private final OptionMenuEntry<Boolean> meCutScenesEnabled;
     private final OptionMenuEntry<WorldMapSelectionMode> meMapOrder;
 
-    private final XXL_ChaseAnimation chaseAnimation;
+    private final Timeline animationTimer;
+    private XXL_ChaseAnimation chaseAnimation;
 
     private GameApp app;
 
@@ -61,15 +66,14 @@ public class XXL_OptionMenu extends OptionMenu {
         addEntry(meCutScenesEnabled);
         addEntry(meMapOrder);
 
-        chaseAnimation = new XXL_ChaseAnimation(settings.numTilesX());
-        chaseAnimation.setY((settings.numTilesY() - 12) * WorldMap.TS);
-        chaseAnimation.scalingProperty().bind(scalingProperty());
-    }
-
-    //TODO make animation work again!
-    public void draw(long tick) {
-        menuRenderer.render(this, tick);
-        chaseAnimation.draw(tick);
+        final var animationFrame = new KeyFrame(Duration.millis(1000f / 60f), _ -> {
+            chaseAnimation.simulate();
+            menuRenderer.clearCanvas();
+            menuRenderer.draw(this);
+            chaseAnimation.draw(scaling());
+        });
+        animationTimer = new Timeline(animationFrame);
+        animationTimer.setCycleCount(Animation.INDEFINITE);
     }
 
     @Override
@@ -86,9 +90,9 @@ public class XXL_OptionMenu extends OptionMenu {
         this.app = requireNonNull(app);
 
         final String variantName = app.variantManager().currentVariantName();
-        final GameVariantRuntime variant = app.variantManager().currentRuntime();
+        final GameVariantRuntime runtime = app.variantManager().currentRuntime();
 
-        final WorldMapManager mapManager = variant.playConfig().worldMapManager();
+        final WorldMapManager mapManager = runtime.playConfig().worldMapManager();
         if (!(mapManager instanceof XXL_WorldMapManager xxlMapManager)) {
             final String message = "Expected XXL map manager but found %s".formatted(mapManager.getClass().getSimpleName());
             throw new IllegalStateException(message);
@@ -106,7 +110,21 @@ public class XXL_OptionMenu extends OptionMenu {
 
         soundEnabledProperty().bind(app.ui().soundManager().muteProperty().not());
         scaling = computeScalingValue(app.ui().window().stage().heightProperty());
-        chaseAnimation.setGameVariant(variant, canvas);
+    }
+
+    public void restartAnimation() {
+        animationTimer.stop();
+        createNewChaseAnimation(app.variantManager().currentRuntime(), canvas);
+        animationTimer.playFromStart();
+    }
+
+    private void createNewChaseAnimation(GameVariantRuntime runtime, Canvas canvas) {
+        chaseAnimation = new XXL_ChaseAnimation(settings.numTilesX(), runtime, canvas);
+        chaseAnimation.setY((settings.numTilesY() - 12) * WorldMap.TS);
+    }
+
+    public void stopAnimation() {
+        animationTimer.stop();
     }
 
     public void bind() {
@@ -122,14 +140,6 @@ public class XXL_OptionMenu extends OptionMenu {
         meView3DEnabled.valueProperty().removeListener(this::onPlay3DSettingsChange);
         meCutScenesEnabled.valueProperty().removeListener(this::onCutScenesEnabledSettingsChange);
         scalingProperty().unbind();
-    }
-
-    public void startAnimation() {
-        chaseAnimation.startChaseSimulation();
-    }
-
-    public void stopAnimation() {
-        chaseAnimation.stopChaseSimulation();
     }
 
     public OptionMenuEntry<GameVariantID> meGameVariantID() {
@@ -163,17 +173,12 @@ public class XXL_OptionMenu extends OptionMenu {
         app.game().session().setCutScenesEnabled(newValue);
     }
 
-    private void changeGameVariant(GameContext game, GameVariantRuntime newVariant) {
-        requireNonNull(game);
-        requireNonNull(newVariant);
+    private void changeRuntime(GameVariantRuntime newRuntime) {
+        app.enterGameVariant(newRuntime);
 
         stopAnimation();
-
-        final GameVariantUIConfig uiConfig = newVariant.uiConfig();
-        uiConfig.load(app);
-
-        chaseAnimation.setGameVariant(newVariant, canvas);
-        startAnimation();
+        createNewChaseAnimation(newRuntime, canvas);
+        restartAnimation();
     }
 
     private OptionMenuEntry<GameVariantID> createGameVariantIDEntry() {
@@ -185,8 +190,8 @@ public class XXL_OptionMenu extends OptionMenu {
             @Override
             public void onValueChanged(GameVariantID oldVariantID, GameVariantID newVariantID) {
                 if (app != null) {
-                    final GameVariantRuntime newGameVariantRuntime = app.variantManager().variantConfigByName(newVariantID.name());
-                    changeGameVariant(app.game(), newGameVariantRuntime);
+                    final GameVariantRuntime newRuntime = app.variantManager().variantRuntimeByName(newVariantID.name());
+                    changeRuntime(newRuntime);
                 }
             }
         };

@@ -31,7 +31,6 @@ public class SpriteAnimationTimer {
         requireNonNull(animContainer);
 
         detachAnimationContainer();
-
         final var frame = new KeyFrame(Duration.seconds(1.0 / FPS), _ -> {
             for (SpriteAnimation animation : animContainer.activeAnimations()) {
                 animation.tick();

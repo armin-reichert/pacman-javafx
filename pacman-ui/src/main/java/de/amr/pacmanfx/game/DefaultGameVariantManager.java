@@ -64,11 +64,11 @@ public class DefaultGameVariantManager implements GameVariantManager {
 
     @Override
     public GameVariantRuntime currentRuntime() {
-        return variantConfigByName(currentVariantName());
+        return variantRuntimeByName(currentVariantName());
     }
 
     @Override
-    public GameVariantRuntime variantConfigByName(String variantName) {
+    public GameVariantRuntime variantRuntimeByName(String variantName) {
         requireNonNull(variantName);
         return configsByName.get(variantName);
     }
@@ -86,7 +86,7 @@ public class DefaultGameVariantManager implements GameVariantManager {
         if (!isVariantRegistered(variantName)) {
             registerVariantConfig(variantName);
         }
-        variantConfigByName(variantName).playConfig().worldMapManager().loadCustomMaps();
+        variantRuntimeByName(variantName).playConfig().worldMapManager().loadCustomMaps();
         Logger.info("Loaded custom maps for game variant {}", variantName);
         selectedVariantName.set(variantName);
     }

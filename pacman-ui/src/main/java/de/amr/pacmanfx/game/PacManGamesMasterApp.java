@@ -166,6 +166,38 @@ public final class PacManGamesMasterApp implements GameApp {
         return success;
     }
 
+    //TODO This method is messy and needs a cleanup!
+    @Override
+    public void enterGameVariant(GameVariantRuntime runtime) {
+        requireNonNull(runtime);
+
+        // Create new game context
+        game = new GameContext(runtime.playConfig(), runtime.coinMechanism(), new DefaultGameEventManager());
+
+        final GameSession session = new GameSession(gameVariantManager.currentVariantName(), new GameCheats(), runtime.playConfig().initialLifeCount());
+        game.setSession(session);
+
+        stateChangeEventMapper = new StateChangeEventMapper(game.eventManager());
+
+        // Update game scene manager
+        gameSceneManager.setGameSceneConfig(runtime.uiConfig().gameSceneConfig());
+
+        // Just to be sure:
+        game.eventManager().removeAllSubscribers();
+        game.eventManager().addSubscriber(ui);
+        game.eventManager().addSubscriber(new PacEatingEventHandler(game));
+        game.eventManager().addSubscriber(new PacPowerEventHandler(game));
+
+        runtime.playConfig().gameFlow().addStateChangeListener(stateChangeEventMapper);
+
+        // Init UI for new runtime (game variant)
+        runtime.uiConfig().load(this);
+
+        ui.spriteAnimTimer().attachAnimContainer(runtime.spriteAnimContainer());
+        ui.spriteAnimTimer().start();
+        ui.viewModel().maze3DSettings().init(runtime.uiConfig().worldSettings().maze());
+    }
+
     // GameLifecycle
 
     @Override
@@ -208,11 +240,11 @@ public final class PacManGamesMasterApp implements GameApp {
 
             if (oldVariantName != null) {
                 Logger.info("<<< Exit Game variant '{}'", oldVariantName);
-                exitGameVariant(gameVariantManager.variantConfigByName(oldVariantName));
+                exitGameVariant(gameVariantManager.variantRuntimeByName(oldVariantName));
             }
             if (newVariantName != null) {
                 Logger.info(">>> Enter game variant '{}'", newVariantName);
-                enterGameVariant(gameVariantManager.variantConfigByName(newVariantName));
+                enterGameVariant(gameVariantManager.variantRuntimeByName(newVariantName));
             }
         });
     }
@@ -225,42 +257,6 @@ public final class PacManGamesMasterApp implements GameApp {
 
         //noinspection ResultOfMethodCallIgnored
         PacMan3DModel.instance(); // loads 3D assets as side effect of accessing the singleton
-    }
-
-    //TODO This method is messy and needs a cleanup!
-    private void enterGameVariant(GameVariantRuntime variantRuntime) {
-        requireNonNull(variantRuntime);
-
-        final GameVariantUIConfig uiConfig = variantRuntime.uiConfig();
-        uiConfig.load(this);
-
-        // Update game scene manager
-        gameSceneManager.setGameSceneConfig(uiConfig.gameSceneConfig());
-
-        ui.viewModel().maze3DSettings().init(variantRuntime.uiConfig().worldSettings().maze());
-
-        ui.spriteAnimTimer().attachAnimContainer(variantRuntime.spriteAnimContainer());
-
-        //TODO do not start animation timer here
-        ui.spriteAnimTimer().start();
-
-        game = new GameContext(
-            variantRuntime.playConfig(),
-            variantRuntime.coinMechanism(),
-            new DefaultGameEventManager()
-        );
-        game.setSession(new GameSession(gameVariantManager.currentVariantName(), new GameCheats(), variantRuntime.playConfig().initialLifeCount()));
-
-        stateChangeEventMapper = new StateChangeEventMapper(game.eventManager());
-
-        // Just to be sure:
-        game.eventManager().removeAllSubscribers();
-
-        game.eventManager().addSubscriber(ui);
-        game.eventManager().addSubscriber(new PacEatingEventHandler(game));
-        game.eventManager().addSubscriber(new PacPowerEventHandler(game));
-
-        variantRuntime.playConfig().gameFlow().addStateChangeListener(stateChangeEventMapper);
     }
 
     private void exitGameVariant(GameVariantRuntime variantRuntime) {
