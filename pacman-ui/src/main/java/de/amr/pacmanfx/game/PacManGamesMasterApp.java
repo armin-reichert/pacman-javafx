@@ -201,9 +201,7 @@ public final class PacManGamesMasterApp implements GameApp {
     @Override
     public void exitGameVariant(GameVariantRuntime variantRuntime) {
         variantRuntime.playConfig().gameFlow().removeStateChangeListener(stateChangeEventMapper);
-
         variantRuntime.uiConfig().unload(this);
-
         variantRuntime.spriteAnimContainer().clear();
         ui.spriteAnimTimer().detachAnimationContainer();
         ui.soundManager().dispose();

@@ -74,12 +74,12 @@ public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
 
     // Non-static members
 
-    private final AssetMap assets;
     private final ResourceBundle textBundle;
     private final TengenMsPacMan_Factory3D factory3D;
     private final TengenMsPacMan_GameSceneConfig gameSceneConfig;
 
     private TengenMsPacMan_RenderConfig renderConfig;
+    private AssetMap assets;
     private GameSoundEffects soundEffects;
 
     public TengenMsPacMan_UIConfig() {
@@ -91,6 +91,7 @@ public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
 
     @Override
     public void load(GameApp app) {
+        assets = new AssetMap();
         assets.addAsset("app_icon",         RM.loadImage("graphics/icons/mspacman.png"));
         assets.addAsset("startpage.image1", RM.loadImage("graphics/flyer-page-1.png"));
         assets.addAsset("startpage.image2", RM.loadImage("graphics/flyer-page-2.png"));
@@ -124,6 +125,7 @@ public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
         if (assets != null) {
             Logger.info("Dispose assets");
             assets.dispose();
+            assets = null;
         }
     }
 

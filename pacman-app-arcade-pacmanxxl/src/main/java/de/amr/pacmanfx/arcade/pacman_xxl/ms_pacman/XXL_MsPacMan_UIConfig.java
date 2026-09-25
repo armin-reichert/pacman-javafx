@@ -58,12 +58,12 @@ public final class XXL_MsPacMan_UIConfig implements GameVariantUIConfig {
         mediaPlayer(PacManGameSoundID.PAC_MAN_POWER,         ARCADE_RM.url("sound/ScaredGhost.mp3"))
     );
 
-    private final AssetMap assets;
     private final TranslationManager translations;
     private final ArcadeMsPacMan_Factory3D factory3D;
     private final ArcadeMsPacMan_GameSceneConfig gameSceneConfig;
 
     private XXL_MsPacMan_RenderConfig renderConfig;
+    private AssetMap assets;
     private GameSoundEffects soundEffects;
 
     public XXL_MsPacMan_UIConfig() {
@@ -80,8 +80,7 @@ public final class XXL_MsPacMan_UIConfig implements GameVariantUIConfig {
 
     @Override
     public void load(GameApp app) {
-        assets.dispose();
-
+        assets = new AssetMap();
         assets.addAsset("app_icon", XXL_RM.loadImage(XXL_PATH + "graphics/icons/mspacman.png"));
         assets.addAsset("logo.midway", ARCADE_RM.loadImage("graphics/midway_logo.png"));
         assets.addAsset("color.game_over_message", ArcadeColor.RED.color());
@@ -107,6 +106,7 @@ public final class XXL_MsPacMan_UIConfig implements GameVariantUIConfig {
         if (assets != null) {
             Logger.info("Dispose assets");
             assets.dispose();
+            assets = null;
         }
     }
 

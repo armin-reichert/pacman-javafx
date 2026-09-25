@@ -83,12 +83,12 @@ public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
         return gameFlow;
     }
 
-    private final AssetMap assets;
     private final Factory3D factory3D;
     private final GameVariantGameSceneConfig gameSceneConfig;
     private final TranslationManager translations;
 
     private ArcadeMsPacMan_RenderConfig renderConfig;
+    private AssetMap assets;
     private GameSoundEffects soundEffects;
 
     public ArcadeMsPacMan_UIConfig() {
@@ -100,6 +100,7 @@ public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
 
     @Override
     public void load(GameApp app) {
+        assets = new AssetMap();
         assets.addAsset("app_icon",    RM.loadImage("graphics/icons/mspacman.png"));
         assets.addAsset("logo.midway", RM.loadImage("graphics/midway_logo.png"));
         assets.addAsset("color.game_over_message", ArcadeColor.RED.color());
@@ -133,6 +134,7 @@ public class ArcadeMsPacMan_UIConfig implements GameVariantUIConfig {
         if (assets != null) {
             Logger.info("Dispose assets");
             assets.dispose();
+            assets = null;
         }
     }
 

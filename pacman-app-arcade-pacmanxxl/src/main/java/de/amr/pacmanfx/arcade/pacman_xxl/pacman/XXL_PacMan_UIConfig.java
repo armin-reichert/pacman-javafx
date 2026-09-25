@@ -56,12 +56,12 @@ public final class XXL_PacMan_UIConfig implements GameVariantUIConfig {
         mediaPlayer  (PacManGameSoundID.PAC_MAN_POWER,         ARCADE_PACMAN_RM.url("sound/ghost-turn-to-blue.mp3"))
     );
 
-    private final AssetMap assets;
     private final ResourceBundle textBundle;
     private final Factory3D factory3D;
     private final ArcadePacMan_GameSceneConfig gameSceneConfig;
 
     private XXL_PacMan_RenderConfig renderConfig;
+    private AssetMap assets;
     private GameSoundEffects soundEffects;
 
     public XXL_PacMan_UIConfig() {
@@ -73,8 +73,7 @@ public final class XXL_PacMan_UIConfig implements GameVariantUIConfig {
 
     @Override
     public void load(GameApp app) {
-        assets.dispose();
-
+        assets = new AssetMap();
         assets.addAsset("app_icon", XXL_RM.loadImage(XXL_PATH + "graphics/icons/pacman.png"));
         assets.addAsset("color.game_over_message", ArcadeColor.RED.color());
         assets.freeze();
@@ -104,6 +103,7 @@ public final class XXL_PacMan_UIConfig implements GameVariantUIConfig {
         if (assets != null) {
             Logger.info("Dispose assets");
             assets.dispose();
+            assets = null;
         }
     }
 

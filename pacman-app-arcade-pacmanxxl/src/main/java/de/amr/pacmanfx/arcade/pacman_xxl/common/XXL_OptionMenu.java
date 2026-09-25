@@ -181,8 +181,8 @@ public class XXL_OptionMenu extends OptionMenu {
         scalingProperty().unbind();
     }
 
-    public OptionMenuEntry<GameVariantID> meGameVariantID() {
-        return meGameVariantID;
+    public GameVariantID selectedGameVariantID() {
+        return meGameVariantID.value();
     }
 
     public WorldMapSelectionMode selectedMapSelectionMode() {
