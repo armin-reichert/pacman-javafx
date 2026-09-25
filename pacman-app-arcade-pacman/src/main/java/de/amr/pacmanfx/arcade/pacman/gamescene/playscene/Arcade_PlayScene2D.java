@@ -159,11 +159,6 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
         final var renderInfo = new InfoMap();
         renderInfo.put(LevelRenderInfoKey.ENERGIZERS_SHOWN, level.heartbeat().state() == Pulse.State.ON);
         renderInfo.put(LevelRenderInfoKey.SHOW_EMPTY_MAZE, level.food().remainingFoodCount() == 0);
-        updateFlashingRenderInfo(renderInfo);
-        return new GameLevelView(level, renderInfo, RenderingLayer.LEVEL, 0, Vector2f.ZERO);
-    }
-
-    private void updateFlashingRenderInfo(InfoMap renderInfo) {
         boolean showBrightMaze = false;
         boolean mazeIsFlashing = false;
         if (levelCompletedAnimation != null) {
@@ -175,5 +170,6 @@ public class Arcade_PlayScene2D extends AbstractGameScene {
         }
         renderInfo.put(LevelRenderInfoKey.SHOW_BRIGHT_MAZE, showBrightMaze);
         renderInfo.put(LevelRenderInfoKey.MAZE_IS_FLASHING, mazeIsFlashing);
+        return new GameLevelView(level, renderInfo, RenderingLayer.LEVEL, 0, Vector2f.ZERO);
     }
 }
