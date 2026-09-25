@@ -42,7 +42,7 @@ public class SpriteAnimationContainer {
         }
     }
 
-    public Iterable<SpriteAnimation> activeAnimations() {
+    public Set<SpriteAnimation> activeAnimations() {
         update();
         return activeAnimations;
     }

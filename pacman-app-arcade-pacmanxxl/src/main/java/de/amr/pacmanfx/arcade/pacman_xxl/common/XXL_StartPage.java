@@ -107,7 +107,7 @@ public class XXL_StartPage implements StartPage {
 
         menu.init(app);
         menu.bind();
-        menu.restartAnimation(app.variantManager().currentRuntime());
+        menu.restartChaseAnimation(app.variantManager().currentRuntime());
 
         Platform.runLater(() -> {
             menu.requestFocus();
@@ -120,7 +120,7 @@ public class XXL_StartPage implements StartPage {
         stopTalking();
         menu.unbind();
         menu.stopDrawLoop();
-        menu.stopAnimation();
+        menu.stopChaseAnimation();
     }
 
     @Override

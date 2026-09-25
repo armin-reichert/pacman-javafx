@@ -38,9 +38,10 @@ public class XXL_OptionMenu extends OptionMenu {
     private final OptionMenuEntry<Boolean> meCutScenesEnabled;
     private final OptionMenuEntry<WorldMapSelectionMode> meMapOrder;
 
-    private final Timeline animationTimer;
+    private final Timeline chaseAnimationTimer;
     private XXL_ChaseAnimation chaseAnimation;
     private Renderer chaseAnimationRenderer;
+    private boolean animationDirty;
 
     private GameApp app;
 
@@ -68,11 +69,18 @@ public class XXL_OptionMenu extends OptionMenu {
         addEntry(meMapOrder);
 
         final var animationFrame = new KeyFrame(Duration.millis(1000f / 60f), _ -> {
+            if (animationDirty) {
+                final var runtime = app.variantManager().currentRuntime();
+                stopChaseAnimation();
+                createNewChaseAnimation(runtime, canvas);
+                animationDirty = false;
+                restartChaseAnimation(runtime);
+            }
             chaseAnimation.simulate();
             draw();
         });
-        animationTimer = new Timeline(animationFrame);
-        animationTimer.setCycleCount(Animation.INDEFINITE);
+        chaseAnimationTimer = new Timeline(animationFrame);
+        chaseAnimationTimer.setCycleCount(Animation.INDEFINITE);
     }
 
     private void draw() {
@@ -125,13 +133,19 @@ public class XXL_OptionMenu extends OptionMenu {
 
         soundEnabledProperty().bind(app.ui().soundManager().muteProperty().not());
         scaling = computeScalingValue(app.ui().window().stage().heightProperty());
+
+        app.variantManager().addVariantListener((_,_,newVariantName) -> {
+            final GameVariantRuntime newRuntime = app.variantManager().variantRuntimeByName(newVariantName);
+            app.enterGameVariant(newRuntime);
+            restartChaseAnimation(newRuntime);
+        });
     }
 
-    public void restartAnimation(GameVariantRuntime runtime) {
-        animationTimer.stop();
+    public void restartChaseAnimation(GameVariantRuntime runtime) {
+        chaseAnimationTimer.stop();
         createNewChaseAnimation(runtime, canvas);
         chaseAnimation.startGhostsChasePacMan();
-        animationTimer.playFromStart();
+        chaseAnimationTimer.playFromStart();
     }
 
     private void createNewChaseAnimation(GameVariantRuntime runtime, Canvas canvas) {
@@ -145,8 +159,9 @@ public class XXL_OptionMenu extends OptionMenu {
             canvas);
     }
 
-    public void stopAnimation() {
-        animationTimer.stop();
+
+    public void stopChaseAnimation() {
+        chaseAnimationTimer.stop();
     }
 
     public void bind() {
@@ -195,14 +210,6 @@ public class XXL_OptionMenu extends OptionMenu {
         app.game().session().setCutScenesEnabled(newValue);
     }
 
-    private void changeRuntime(GameVariantRuntime newRuntime) {
-        app.enterGameVariant(newRuntime);
-
-        stopAnimation();
-        createNewChaseAnimation(newRuntime, canvas);
-        restartAnimation(newRuntime);
-    }
-
     private OptionMenuEntry<GameVariantID> createGameVariantIDEntry() {
         final var entry = new OptionMenuEntry<>(
             "GAME VARIANT",
@@ -211,10 +218,7 @@ public class XXL_OptionMenu extends OptionMenu {
         {
             @Override
             public void onValueChanged(GameVariantID oldVariantID, GameVariantID newVariantID) {
-                if (app != null) {
-                    final GameVariantRuntime newRuntime = app.variantManager().variantRuntimeByName(newVariantID.name());
-                    changeRuntime(newRuntime);
-                }
+                animationDirty = true;
             }
         };
 
