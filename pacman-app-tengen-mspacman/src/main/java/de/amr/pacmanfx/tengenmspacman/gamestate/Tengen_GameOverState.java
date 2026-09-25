@@ -7,6 +7,8 @@ package de.amr.pacmanfx.tengenmspacman.gamestate;
 import de.amr.basics.math.Vector2f;
 import de.amr.basics.math.Vector2i;
 import de.amr.basics.ui.entities.props.messageview.MessageType;
+import de.amr.basics.ui.entities.props.messageview.MessageView;
+import de.amr.basics.ui.rendering.BaseRenderer;
 import de.amr.pacmanfx.core.GameConstants;
 import de.amr.pacmanfx.core.GameContext;
 import de.amr.pacmanfx.core.entities.world.House;
@@ -14,10 +16,15 @@ import de.amr.pacmanfx.core.event.HighScoreAccessErrorEvent;
 import de.amr.pacmanfx.core.gamestate.AbstractGameState;
 import de.amr.pacmanfx.core.gamestate.CommonGameStateID;
 import de.amr.pacmanfx.core.level.GameLevel;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Extras;
 import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GamePlay;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_GameSystems;
+import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_UIConfig;
 import de.amr.pacmanfx.tengenmspacman.model.MapCategory;
-import de.amr.pacmanfx.tengenmspacman.model.MessageAnimation;
+import de.amr.pacmanfx.tengenmspacman.entities.messageview.MessageAnimationComp;
+import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConfig;
+import de.amr.pacmanfx.ui.assets.GlobalFonts;
+import javafx.scene.text.Font;
+import org.tinylog.Logger;
 
 import java.io.IOException;
 
@@ -55,7 +62,8 @@ public class Tengen_GameOverState extends AbstractGameState {
 
         final MapCategory mapCategory = gameOptions(session).mapCategory();
         if (!session.isAttractMode() && mapCategory != MapCategory.ARCADE) {
-            startGameOverMessageAnimation();
+            final MessageView messageView = level.entitySet().entities().theOne(MessageView.class);
+            createAndStartMessageAnimation(messageView, game);
             timer().restartIndefinitely(); // animation completion triggers state exit
         }
         else {
@@ -83,28 +91,46 @@ public class Tengen_GameOverState extends AbstractGameState {
         }
 
         // Show animated game over message moving horizontally over scene and wrapping around
-        final var messageAnimation = session.value(TengenMsPacMan_Extras.GAME_OVER_MESSAGE_ANIMATION, MessageAnimation.class);
-        if (messageAnimation != null) {
+        final MessageView messageView = level.entitySet().entities().theOne(MessageView.class);
+        messageView.optComp(MessageAnimationComp.class).ifPresent(messageAnimation -> {
+            final var systems = (TengenMsPacMan_GameSystems) game.playConfig().systems();
             if (messageAnimation.finished() && countdownAfter == 0) {
                 countdownAfter = COUNTDOWN_AFTER_ANIMATION;
             } else {
-                messageAnimation.update(systems.motor());
+                systems.messageAnimationSystem().update(messageView);
             }
-        }
+        });
     }
 
     @Override
     public void onExit(GameContext game) {
         session.level().clearMessage();
-        session.clearValue(TengenMsPacMan_Extras.GAME_OVER_MESSAGE_ANIMATION);
+        final MessageView messageView = level.entitySet().entities().theOne(MessageView.class);
+        messageView.removeComp(MessageAnimationComp.class);
     }
 
-    // For map categories MINI, BIG and STRANGE, the GAME OVER message is animated
-    private void startGameOverMessageAnimation() {
-        final var messageAnimation = new MessageAnimation();
-        session.setValue(TengenMsPacMan_Extras.GAME_OVER_MESSAGE_ANIMATION, messageAnimation);
+    private void createAndStartMessageAnimation(MessageView messageView, GameContext game) {
+        final MessageAnimationComp messageAnimation = new MessageAnimationComp();
+
+        // Compute exact message size and wrap position at right border
+        final Font font = GlobalFonts.ARCADE.font();
+        final String gameOverText = TengenMsPacMan_RenderConfig.MESSAGE_TEXTS.get(MessageType.GAME_OVER);
+        final double width = BaseRenderer.textWidth(gameOverText, font);
+        final double wrapX = TengenMsPacMan_UIConfig.NES_SCREEN_WIDTH + 0.5 * width;
+
+        messageAnimation.setWidth(width);
+        messageAnimation.setWrapX(wrapX);
         messageAnimation.setDelayTicks(GAME_OVER_MESSAGE_DELAY_SEC * GameConstants.SIMULATION_FPS);
-        messageAnimation.start(computeMessageStartPosition(), systems.motor());
+        messageView.setComp(MessageAnimationComp.class, messageAnimation);
+
+        Logger.info("Message animation bounds computed: width={}, wrapX={}", width, wrapX);
+
+        final var systems = (TengenMsPacMan_GameSystems) game.playConfig().systems();
+        systems.messageAnimationSystem().start(
+            messageView,
+            computeMessageStartPosition(),
+            GAME_OVER_MESSAGE_DELAY_SEC * GameConstants.SIMULATION_FPS
+        );
     }
 
     private Vector2f computeMessageStartPosition() {

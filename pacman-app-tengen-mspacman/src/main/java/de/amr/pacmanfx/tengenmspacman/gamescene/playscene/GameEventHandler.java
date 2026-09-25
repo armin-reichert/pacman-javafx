@@ -23,9 +23,7 @@ import de.amr.pacmanfx.core.event.ghost.GhostEatenEvent;
 import de.amr.pacmanfx.core.event.pac.*;
 import de.amr.pacmanfx.core.level.GameLevel;
 import de.amr.pacmanfx.core.model.test.TestStateID;
-import de.amr.pacmanfx.tengenmspacman.TengenMsPacMan_Extras;
 import de.amr.pacmanfx.tengenmspacman.gamestate.Tengen_GameState;
-import de.amr.pacmanfx.tengenmspacman.model.MessageAnimation;
 import de.amr.pacmanfx.tengenmspacman.rendering.TengenMsPacMan_RenderConfig;
 import de.amr.pacmanfx.tengenmspacman.sprites.TengenMsPacMan_AnimationID;
 import de.amr.pacmanfx.ui.assets.GlobalFonts;
@@ -111,21 +109,6 @@ class GameEventHandler implements DefaultGameEventListener {
             final PlayScene2DCamera camera = gameScene.dynamicCamera();
 
             optSoundEffects().ifPresent(GameSoundEffects::stopAll);
-
-            final MessageAnimation messageAnimation = session.value(
-                TengenMsPacMan_Extras.GAME_OVER_MESSAGE_ANIMATION, MessageAnimation.class);
-
-            //TODO This does not belong here!
-            if (messageAnimation != null) {
-                // Compute exact message size and wrap position at right border
-                final Font font = GlobalFonts.ARCADE.font();
-                final String gameOverText = TengenMsPacMan_RenderConfig.MESSAGE_TEXTS.get(MessageType.GAME_OVER);
-                final double width = BaseRenderer.textWidth(gameOverText, font);
-                final double wrapX = gameScene.reqCanvasRendering().unscaledWidth() + 0.5 * width;
-                messageAnimation.setWidth(width);
-                messageAnimation.setWrapX(wrapX);
-                Logger.info("Message animation bounds computed: width={}, wrapX={}", width, wrapX);
-            }
 
             camera.enterManualMode();
             camera.setToTopPosition();

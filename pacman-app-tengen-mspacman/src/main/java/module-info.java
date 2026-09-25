@@ -40,4 +40,5 @@ open module de.amr.pacmanfx.tengenmspacman {
     exports de.amr.pacmanfx.tengenmspacman.gamescene.optionsscene;
     exports de.amr.pacmanfx.tengenmspacman.gamescene.playscene;
     exports de.amr.pacmanfx.tengenmspacman.gamescene.creditsscene;
+    exports de.amr.pacmanfx.tengenmspacman.entities.messageview;
 }

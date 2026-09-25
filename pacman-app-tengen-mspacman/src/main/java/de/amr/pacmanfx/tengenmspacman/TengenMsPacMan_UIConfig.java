@@ -66,6 +66,9 @@ public class TengenMsPacMan_UIConfig implements GameVariantUIConfig {
     public static final String REL_PATH_ARCADE_MAPS_IMAGE     = "graphics/arcade_mazes.png";
     public static final String REL_PATH_NON_ARCADE_MAPS_IMAGE = "graphics/non_arcade_mazes.png";
 
+    public static final int NES_SCREEN_WIDTH_TILES  = 32; // 32 tiles
+    public static final int NES_SCREEN_HEIGHT_TILES = 30; // 30 tiles
+
     public static final int NES_SCREEN_WIDTH  = 256; // 32 tiles
     public static final int NES_SCREEN_HEIGHT = 240; // 30 tiles
 

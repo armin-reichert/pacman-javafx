@@ -26,10 +26,10 @@ public class GameSystems {
 
     protected final ActorSpriteAnimController actorSpriteAnimController = new ActorSpriteAnimController();
 
-    protected LifetimeSystem lifetime = new LifetimeSystem();
-    protected MovementSystem motor =  new MovementSystem();
-    protected WorldNavigationSystem navigator = new WorldNavigationSystem(motor);
-    protected WorldRoamingSystem roamingSystem = new WorldRoamingSystem(navigator);
+    protected final LifetimeSystem lifetime = new LifetimeSystem();
+    protected final MovementSystem motor =  new MovementSystem();
+    protected final WorldNavigationSystem navigator = new WorldNavigationSystem(motor);
+    protected final WorldRoamingSystem roamingSystem = new WorldRoamingSystem(navigator);
 
     protected HUD_UpdateSystem hudUpdateSystem;
 
