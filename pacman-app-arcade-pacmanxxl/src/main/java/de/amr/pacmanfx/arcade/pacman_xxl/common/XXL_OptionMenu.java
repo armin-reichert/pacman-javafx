@@ -5,11 +5,9 @@
 package de.amr.pacmanfx.arcade.pacman_xxl.common;
 
 import de.amr.pacmanfx.core.GameVariantID;
-import de.amr.pacmanfx.core.model.world.map.WorldMap;
 import de.amr.pacmanfx.core.model.world.map.WorldMapManager;
 import de.amr.pacmanfx.core.model.world.map.WorldMapSelectionMode;
 import de.amr.pacmanfx.game.GameVariantRuntime;
-import de.amr.pacmanfx.game.GameVariantUIConfig;
 import de.amr.pacmanfx.ui.action.core.GameApp;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenu;
 import de.amr.pacmanfx.uilib.widgets.optionmenu.OptionMenuEntry;
@@ -119,8 +117,10 @@ public class XXL_OptionMenu extends OptionMenu {
     }
 
     private void createNewChaseAnimation(GameVariantRuntime runtime, Canvas canvas) {
-        chaseAnimation = new XXL_ChaseAnimation(settings.numTilesX(), runtime, canvas);
-        chaseAnimation.setY((settings.numTilesY() - 12) * WorldMap.TS);
+        chaseAnimation = new XXL_ChaseAnimation(
+            settings.numTilesX(),
+            (settings.numTilesY() - 12) * TS,
+            runtime, canvas);
     }
 
     public void stopAnimation() {

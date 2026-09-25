@@ -7,10 +7,15 @@ package de.amr.pacmanfx.arcade.pacman_xxl.common;
 import de.amr.basics.ecs.GameEntity;
 import de.amr.basics.ecs.comp.MovementComp;
 import de.amr.basics.math.Direction;
+import de.amr.basics.math.Vector2f;
 import de.amr.basics.ui.ecs.system.ActorSpriteAnimController;
 import de.amr.basics.ui.entities.props.ghostpoints.GhostPoints;
+import de.amr.basics.ui.rendering.GameEntityView;
+import de.amr.basics.ui.rendering.Renderable;
 import de.amr.basics.ui.rendering.Renderer;
+import de.amr.basics.ui.rendering.RenderingLayer;
 import de.amr.basics.ui.spriteanim.CommonSpriteAnimationID;
+import de.amr.basics.util.Ufx;
 import de.amr.pacmanfx.arcade.pacman.model.ArcadePacMan_ActorFactory;
 import de.amr.pacmanfx.core.entities.actor.ghost.Ghost;
 import de.amr.pacmanfx.core.entities.actor.pac.Pac;
@@ -23,12 +28,9 @@ import de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Stream;
 
-import static de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder.pacView;
-import static de.amr.pacmanfx.ui.rendering.GameEntityViewBuilder.propView;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -54,11 +56,17 @@ class XXL_ChaseAnimation {
     private GhostPoints ghostPoints;
     private ChasingState state;
 
-    private float y;
+    private GameEntityView pacView;
+    private final Map<Ghost, GameEntityView> ghostViews = new HashMap<>();
+    private GameEntityView ghostPointsView;
+
+    private final float offsetY;
+
     private int collisionCount;
 
-    public XXL_ChaseAnimation(int numTilesX, GameVariantRuntime runtime, Canvas canvas) {
+    public XXL_ChaseAnimation(int numTilesX, float offsetY, GameVariantRuntime runtime, Canvas canvas) {
         this.numTilesX = numTilesX;
+        this.offsetY = offsetY;
         this.runtime = requireNonNull(runtime);
         requireNonNull(canvas);
 
@@ -79,21 +87,33 @@ class XXL_ChaseAnimation {
         }
     }
 
+    private Stream<Renderable> renderables() {
+        return Ufx.streamOf(
+            pacView,
+            ghostViews.values().stream().filter(view -> view.entity().isVisible()),
+            ghostPointsView
+        );
+    }
+
+    private GameEntityView createView(GameEntity entity) {
+        return GameEntityViewBuilder.builder()
+            .entity(entity)
+            .layer(RenderingLayer.PROPS)
+            .offset(new Vector2f(0, offsetY))
+            .build();
+    }
+
     public void draw(double scaling) {
         final GraphicsContext ctx = renderer.ctx();
         ctx.save();
         ctx.scale(scaling, scaling);
-        ctx.translate(0, y);
-        renderer.render(pacView(pac), 0);
-        ghosts.stream().map(GameEntityViewBuilder::ghostView).forEach(rg -> renderer.render(rg, 0));
-        if (ghostPoints != null) {
-            renderer.render(propView(ghostPoints), 0);
-        }
+        renderables().forEach(r -> {
+            ctx.save();
+            ctx.translate(r.offset().x(), r.offset().y());
+            renderer.render(r, 0);
+            ctx.restore();
+        });
         ctx.restore();
-    }
-
-    public void setY(float y) {
-        this.y = y;
     }
 
     private void createPac() {
@@ -113,6 +133,8 @@ class XXL_ChaseAnimation {
         animController.setAnimations(pac, renderConfig.createPacAnimations(runtime.spriteAnimContainer()));
         animController.select(pac, CommonSpriteAnimationID.PAC_MOUTH_MOVING);
         animController.playSelected(pac);
+
+        pacView = createView(pac);
     }
 
     private void createGhosts() {
@@ -125,6 +147,8 @@ class XXL_ChaseAnimation {
             renderConfig.createAnimatedGhost(animController, runtime.spriteAnimContainer(), GhostPersonality.CYAN_GHOST_BASHFUL),
             renderConfig.createAnimatedGhost(animController, runtime.spriteAnimContainer(), GhostPersonality.ORANGE_GHOST_POKEY)
         ));
+
+        ghosts.forEach(ghost -> ghostViews.put(ghost, createView(ghost)));
     }
 
     private void letPacManChaseGhosts() {
@@ -147,6 +171,7 @@ class XXL_ChaseAnimation {
                 ghostPoints.lifetime().becomeOlder();
                 if (ghostPoints.lifetime().ends()) {
                     ghostPoints = null;
+                    ghostPointsView = null;
                 }
             }
         }
@@ -206,6 +231,7 @@ class XXL_ChaseAnimation {
     private void checkCollisionPacGhost() {
         for (Iterator<Ghost> it = ghosts.iterator(); it.hasNext(); ) {
             final Ghost ghost = it.next();
+
             if (colliding(pac, ghost)) {
                 ++collisionCount;
 
@@ -216,7 +242,11 @@ class XXL_ChaseAnimation {
                 ghostPoints.setLifetimeSec(GHOST_POINTS_DISPLAY_SEC);
                 ghostPoints.show();
 
+                ghostPointsView = createView(ghostPoints);
+
                 it.remove();
+                ghostViews.remove(ghost);
+
                 pac.hide();
                 break;
             }
